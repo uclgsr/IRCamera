@@ -81,6 +81,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
 
                         else -> {
                             HistoryList(
+                                viewModel = viewModel,
                                 historyItems = historyItems,
                                 selectedItems = selectedItems,
                                 isSelectionMode = isSelectionMode,
@@ -297,6 +298,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
 
     @Composable
     private fun HistoryList(
+        viewModel: IRMonitorHistoryViewModel,
         historyItems: List<HistoryItem>,
         selectedItems: Set<String>,
         isSelectionMode: Boolean,
@@ -309,6 +311,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
         ) {
             items(historyItems) { item ->
                 HistoryListItem(
+                    viewModel = viewModel,
                     item = item,
                     isSelected = selectedItems.contains(item.id),
                     isSelectionMode = isSelectionMode,
@@ -321,6 +324,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
 
     @Composable
     private fun HistoryListItem(
+        viewModel: IRMonitorHistoryViewModel,
         item: HistoryItem,
         isSelected: Boolean,
         isSelectionMode: Boolean,

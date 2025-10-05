@@ -105,4 +105,8 @@ class IRPlushViewModel : BaseViewModel() {
         PROFESSIONAL("Professional", Icons.Default.WorkspacePremium),
         FUSION("Fusion", Icons.Default.Merge)
     }
+
+    fun showAdvancedSettings() {
+        // Placeholder for advanced settings functionality
+    }
 }

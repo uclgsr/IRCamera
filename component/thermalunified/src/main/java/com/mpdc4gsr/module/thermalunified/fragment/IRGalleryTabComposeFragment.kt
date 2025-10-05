@@ -58,6 +58,7 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
             ) {
                 // Top app bar with directory switcher
                 GalleryTopBar(
+                    viewModel = viewModel,
                     currentDirType = currentDirType,
                     canSwitchDir = canSwitchDir,
                     hasBackIcon = hasBackIcon,
@@ -120,6 +121,7 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun GalleryTopBar(
+        viewModel: IRGalleryTabViewModel,
         currentDirType: DirType,
         canSwitchDir: Boolean,
         hasBackIcon: Boolean,

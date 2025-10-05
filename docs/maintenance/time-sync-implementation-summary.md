@@ -1,5 +1,7 @@
 # Time Synchronization Implementation Summary
 
+> **Note:** For complete implementation details, protocol specifications, and testing procedures, see the comprehensive guide: **[pc-controller/docs/time_sync_implementation.md](../../pc-controller/docs/time_sync_implementation.md)**
+
 ## Issue Description
 
 The issue stated that time synchronization was completely dormant - no actual NTP-style protocol exchange was happening, and all sensor data was timestamped using only the Android device's clock without any alignment to the PC master clock.
@@ -65,19 +67,27 @@ The time synchronization infrastructure was already implemented but never trigge
 - Can be triggered via `TimeSyncManager.triggerManualSync()`
 - Same protocol flow as automatic sync
 
-## What's Left to Implement
+## Related Documentation
 
-### PC Controller Side (CRITICAL)
-The PC controller must be updated to:
-1. Handle incoming SYNC_INIT messages
-2. Respond with SYNC_REQUEST when receiving SYNC_INIT
-3. Process SYNC_RESPONSE and calculate offset/RTT
-4. Send SYNC_RESULT back to phone
+### Complete Implementation Guide
+See **[pc-controller/docs/time_sync_implementation.md](../../pc-controller/docs/time_sync_implementation.md)** for:
+- Full protocol specifications and message definitions
+- PC controller implementation requirements
+- Offset calculation details
+- Comprehensive testing procedures
+- Troubleshooting guide
+- Performance metrics and examples
 
-See `pc-controller/docs/TIME_SYNC_IMPLEMENTATION.md` for detailed implementation guide.
+### Testing Guide
+See **[docs/summaries/testing-time-sync.md](../summaries/testing-time-sync.md)** for:
+- Quick test procedures
+- Success indicators
+- Common issues and solutions
 
-### Testing
-- End-to-end testing with actual PC controller
+### Thesis Documentation
+See **[docs/thesis/diagrams/time-sync-timeline.md](../thesis/diagrams/time-sync-timeline.md)** for:
+- Mermaid diagrams of temporal alignment
+- Multi-sensor synchronization timeline visualization
 - Verify offset calculation is correct
 - Test with multiple devices syncing to same PC
 - Verify periodic sync works during long sessions

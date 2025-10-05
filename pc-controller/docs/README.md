@@ -5,15 +5,17 @@ Consolidated documentation for the IRCamera PC Controller application.
 ## Quick Start
 
 - **[quick_start.md](quick_start.md)** - Installation and usage guide
-- **[pc_controller_implementation.md](pc_controller_implementation.md)** - Main implementation documentation
+- **[implementation.md](implementation.md)** - Comprehensive implementation documentation
 
 ## Core Documentation
 
 ### Implementation
 - **[implementation.md](implementation.md)** - Complete implementation guide
-  - Feature implementation matrix
-  - Implementation summary
-  - Integration status
+  - Feature implementation matrix with line-by-line mapping
+  - Architecture summary and data flow
+  - Dependencies, build and installation
+  - Usage examples and performance metrics
+  - Integration status and test coverage
 
 ### Protocol
 - **[protocol.md](protocol.md)** - Protocol documentation
@@ -44,8 +46,7 @@ Consolidated documentation for the IRCamera PC Controller application.
 docs/
 ├── README.md (this file)
 ├── quick_start.md              # Getting started guide
-├── pc_controller_implementation.md  # Main implementation doc
-├── implementation.md           # Consolidated implementation details
+├── implementation.md           # Comprehensive implementation documentation
 ├── protocol.md                 # Consolidated protocol documentation
 ├── verification.md             # Consolidated verification & testing
 ├── code_review.md              # Consolidated code review

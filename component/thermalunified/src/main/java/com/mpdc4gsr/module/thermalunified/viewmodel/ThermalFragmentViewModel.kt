@@ -649,6 +649,10 @@ class ThermalFragmentViewModel(
         }
     }
 
+    fun showSettings() {
+        // Placeholder for settings functionality
+    }
+
     override fun onCleared() {
         super.onCleared()
         disconnectCamera()

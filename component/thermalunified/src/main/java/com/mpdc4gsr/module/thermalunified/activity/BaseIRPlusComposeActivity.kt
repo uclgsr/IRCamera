@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.launch
 
 class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -100,6 +101,8 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         // Plus feature overlay
                         if (isPlushActive) {
                             PlusFeatureOverlay(
+                                scope = scope,
+                                snackbarHostState = snackbarHostState,
                                 modifier = Modifier
                                     .align(Alignment.TopEnd)
                                     .padding(16.dp)
@@ -111,6 +114,8 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             plusMode = plusMode,
                             onModeChange = { plusMode = it },
                             advancedVisible = advancedSettings,
+                            scope = scope,
+                            snackbarHostState = snackbarHostState,
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .fillMaxWidth()
@@ -292,6 +297,8 @@ private fun PlusIndicatorItem(
 
 @Composable
 private fun PlusFeatureOverlay(
+    scope: kotlinx.coroutines.CoroutineScope,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -383,6 +390,8 @@ private fun PlusControlsOverlay(
     plusMode: String,
     onModeChange: (String) -> Unit,
     advancedVisible: Boolean,
+    scope: kotlinx.coroutines.CoroutineScope,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
     Card(
