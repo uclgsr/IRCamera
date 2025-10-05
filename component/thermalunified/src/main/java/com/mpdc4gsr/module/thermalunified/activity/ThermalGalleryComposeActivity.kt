@@ -225,7 +225,7 @@ private fun ThermalGridView() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(generateSampleThermalImages()) { image ->
-            ThermalImageCard(image = image)
+            ThermalImageCard(image = image, onMoreClick = {})
         }
     }
 }
@@ -244,7 +244,7 @@ private fun ThermalListView() {
 }
 
 @Composable
-private fun ThermalImageCard(image: GalleryThermalImage) {
+private fun ThermalImageCard(image: GalleryThermalImage, onMoreClick: () -> Unit = {}) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -299,7 +299,7 @@ private fun ThermalImageCard(image: GalleryThermalImage) {
 }
 
 @Composable
-private fun ThermalImageListItem(image: GalleryThermalImage) {
+private fun ThermalImageListItem(image: GalleryThermalImage, onMoreClick: () -> Unit = {}) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),

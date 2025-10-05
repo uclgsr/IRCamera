@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.launch
 
 class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -30,6 +31,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
     override fun Content(viewModel: ThermalViewModel) {
         var showAIDialog by remember { mutableStateOf(false) }
         val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
         
         LibUnifiedTheme {
             Scaffold(
@@ -80,6 +82,8 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                 }
             ) { paddingValues ->
                 ImagePickerPlusContent(
+                    scope = scope,
+                    snackbarHostState = snackbarHostState,
                     modifier = Modifier.padding(paddingValues)
                 )
             }
@@ -121,6 +125,8 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
 
     @Composable
     private fun ImagePickerPlusContent(
+        scope: kotlinx.coroutines.CoroutineScope,
+        snackbarHostState: SnackbarHostState,
         modifier: Modifier = Modifier
     ) {
         var captureMode by remember { mutableStateOf("Smart") }
@@ -333,7 +339,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
             ) {
                 OutlinedButton(
                     onClick = {
-                        kotlinx.coroutines.GlobalScope.launch {
+                        scope.launch {
                             snackbarHostState.showSnackbar("Loading recent images...")
                         }
                     },
@@ -349,7 +355,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
 
                 Button(
                     onClick = {
-                        kotlinx.coroutines.GlobalScope.launch {
+                        scope.launch {
                             snackbarHostState.showSnackbar("Starting AI batch processing...")
                         }
                     },

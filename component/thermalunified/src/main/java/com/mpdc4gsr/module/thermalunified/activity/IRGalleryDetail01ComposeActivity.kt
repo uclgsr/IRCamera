@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.activity.ThermalReportCreationComposeActivity
+import com.mpdc4gsr.module.thermalunified.report.activity.ThermalReportCreationComposeActivity
 import com.mpdc4gsr.module.thermalunified.fragment.GalleryComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryEditViewModel
 import kotlinx.coroutines.launch
@@ -431,6 +431,8 @@ private fun ImageActionButtons(
 
 // Data classes
 data class ImageInfo(
+    val id: Long = 0,
+    val path: String = "",
     val width: Int = 384,
     val height: Int = 288,
     val fileSize: String = "2.1 MB",

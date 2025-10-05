@@ -84,6 +84,7 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
 
                     // Controls panel
                     IRPlusControlsPanel(
+                        viewModel = viewModel,
                         dualViewState = dualViewState,
                         processingMode = processingMode,
                         onModeChange = { mode ->
@@ -376,6 +377,7 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
 
     @Composable
     private fun IRPlusControlsPanel(
+        viewModel: IRPlushViewModel,
         dualViewState: DualViewState,
         processingMode: ProcessingMode,
         onModeChange: (ProcessingMode) -> Unit,

@@ -21,9 +21,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.launch
 
 class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -56,6 +60,22 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var showControls by remember { mutableStateOf(true) }
         var playbackSpeed by remember { mutableFloatStateOf(1.0f) }
         var pointAnalysisEnabled by remember { mutableStateOf(false) }
+
+        // Handle system UI changes for fullscreen using modern WindowInsetsController
+        LaunchedEffect(isFullscreen) {
+            val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+            windowInsetsController.apply {
+                if (isFullscreen) {
+                    // Hide system bars
+                    hide(WindowInsetsCompat.Type.systemBars())
+                    // Set behavior for immersive mode
+                    systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                } else {
+                    // Show system bars
+                    show(WindowInsetsCompat.Type.systemBars())
+                }
+            }
+        }
 
         LibUnifiedTheme {
             Scaffold(
@@ -114,9 +134,13 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             currentPosition = currentPosition,
                             duration = duration,
                             playbackSpeed = playbackSpeed,
+                            isFullscreen = isFullscreen,
+                            scope = scope,
+                            snackbarHostState = snackbarHostState,
                             onPlayPause = { isPlaying = !isPlaying },
                             onSeek = { position -> currentPosition = position },
                             onSpeedChange = { speed -> playbackSpeed = speed },
+                            onFullscreenToggle = { isFullscreen = !isFullscreen },
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .fillMaxWidth()
@@ -176,11 +200,16 @@ private fun VideoControlsOverlay(
     currentPosition: Long,
     duration: Long,
     playbackSpeed: Float,
+    isFullscreen: Boolean,
+    scope: kotlinx.coroutines.CoroutineScope,
+    snackbarHostState: SnackbarHostState,
     onPlayPause: () -> Unit,
     onSeek: (Long) -> Unit,
     onSpeedChange: (Float) -> Unit,
+    onFullscreenToggle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -315,15 +344,7 @@ private fun VideoControlsOverlay(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     IconButton(onClick = { 
-                        isFullscreen = !isFullscreen
-                        // Update system UI visibility based on fullscreen state
-                        window.decorView.systemUiVisibility = if (isFullscreen) {
-                            android.view.View.SYSTEM_UI_FLAG_FULLSCREEN or
-                            android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                            android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        } else {
-                            android.view.View.SYSTEM_UI_FLAG_VISIBLE
-                        }
+                        onFullscreenToggle()
                     }) {
                         Icon(
                             if (isFullscreen) Icons.Default.FullscreenExit else Icons.Default.Fullscreen,
@@ -341,7 +362,7 @@ private fun VideoControlsOverlay(
                                     put(android.provider.MediaStore.Images.Media.RELATIVE_PATH, android.os.Environment.DIRECTORY_PICTURES)
                                 }
                                 // Insert into MediaStore (actual frame capture would happen here)
-                                contentResolver.insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                                context.contentResolver.insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
                                 snackbarHostState.showSnackbar("Frame exported to gallery")
                             } catch (e: Exception) {
                                 snackbarHostState.showSnackbar("Failed to export frame: ${e.message}")

@@ -81,6 +81,8 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             ) { paddingValues ->
                 MonitorChartContent(
+                    scope = scope,
+                    snackbarHostState = snackbarHostState,
                     modifier = Modifier.padding(paddingValues)
                 )
             }
@@ -89,6 +91,8 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     @Composable
     private fun MonitorChartContent(
+        scope: kotlinx.coroutines.CoroutineScope,
+        snackbarHostState: SnackbarHostState,
         modifier: Modifier = Modifier
     ) {
         var timeRange by remember { mutableStateOf("1hr") }

@@ -131,6 +131,8 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         ProcessingControls(
                             isProcessing = isProcessing,
                             selectedAlgorithm = selectedAlgorithm,
+                            coroutineScope = coroutineScope,
+                            snackbarHostState = snackbarHostState,
                             onProcess = {
                                 isProcessing = true
                                 processingProgress = 0f
@@ -335,6 +337,8 @@ private fun AlgorithmChip(
 private fun ProcessingControls(
     isProcessing: Boolean,
     selectedAlgorithm: String,
+    coroutineScope: kotlinx.coroutines.CoroutineScope,
+    snackbarHostState: SnackbarHostState,
     onProcess: () -> Unit,
     onStop: () -> Unit
 ) {
