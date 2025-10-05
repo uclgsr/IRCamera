@@ -12,6 +12,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
+import android.content.pm.ServiceInfo
 import com.csl.irCamera.R
 import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.*
