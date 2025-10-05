@@ -19,6 +19,7 @@ class CommandHandler(
 ) {
     companion object {
         private const val TAG = "CommandHandler"
+        private const val STATUS_UPDATE_INTERVAL_MS = 5000L
     }
 
     private val handlerScope = CoroutineScope(Dispatchers.IO)
@@ -203,7 +204,7 @@ class CommandHandler(
     fun startPeriodicStatusUpdates() {
         handlerScope.launch {
             while (true) {
-                kotlinx.coroutines.delay(5000) // Every 5 seconds
+                kotlinx.coroutines.delay(STATUS_UPDATE_INTERVAL_MS)
 
                 if (recordingController.isRecording) {
                     try {

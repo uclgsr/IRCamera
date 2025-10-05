@@ -38,6 +38,12 @@ class ComprehensiveRecordingController(
         // Sensor configuration constants
         private const val RGB_SENSOR_NAME = "RGB"
         private const val THERMAL_SENSOR_NAME = "Thermal"
+        
+        // Health monitoring constants
+        private const val HEALTH_CHECK_INTERVAL_MS = 5000L
+        private const val HEALTH_CHECK_ERROR_DELAY_MS = 10000L
+        private const val STATS_UPDATE_INTERVAL_MS = 2000L
+        private const val STATS_UPDATE_ERROR_DELAY_MS = 5000L
         private const val GSR_SENSOR_NAME = "GSR"
         private const val THERMAL_SENSOR_ID = "thermal_camera_1"
         private const val GSR_SENSOR_ID = "gsr_shimmer_1"
@@ -559,10 +565,10 @@ class ComprehensiveRecordingController(
                         }
                     }
                     updateSensorStatusFlow()
-                    delay(5000)
+                    delay(HEALTH_CHECK_INTERVAL_MS)
                 } catch (e: Exception) {
                     AppLogger.w(TAG, "Error during health monitoring", e)
-                    delay(10000)
+                    delay(HEALTH_CHECK_ERROR_DELAY_MS)
                 }
             }
         }
@@ -625,10 +631,10 @@ class ComprehensiveRecordingController(
             while (_isRecording.get()) {
                 try {
                     updateRecordingStats()
-                    delay(2000)
+                    delay(STATS_UPDATE_INTERVAL_MS)
                 } catch (e: Exception) {
                     AppLogger.w(TAG, "Error updating statistics", e)
-                    delay(5000)
+                    delay(STATS_UPDATE_ERROR_DELAY_MS)
                 }
             }
         }

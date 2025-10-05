@@ -34,6 +34,7 @@ class NetworkClient(private val context: Context) {
         private const val CONNECTION_TIMEOUT = 10000L
         private const val QUERY_TIMEOUT = 2000
         private const val HEARTBEAT_INTERVAL = 5000L
+        private const val DISCOVERY_WAIT_MS = 5000L
     }
 
     private var socket: Socket? = null
@@ -224,7 +225,7 @@ class NetworkClient(private val context: Context) {
                 AppLogger.i(TAG, "Starting enhanced controller discovery")
                 discoveryService.startDiscovery()
 
-                delay(5000)
+                delay(DISCOVERY_WAIT_MS)
 
                 val discoveredDevices =
                     discoveryService.getDiscoveredDevicesByType(
