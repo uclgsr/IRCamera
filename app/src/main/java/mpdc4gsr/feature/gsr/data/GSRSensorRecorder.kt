@@ -47,6 +47,13 @@ class GSRSensorRecorder(
         private const val SHIMMER_DEFAULT_SAMPLING_RATE = 128.0
         private const val GSR_CHANNEL_ID = 0x01
         private const val GSR_RANGE_AUTO = 0x00
+        
+        // Monitoring and connection delays
+        private const val STATUS_MONITORING_INTERVAL_MS = 1000L
+        private const val CONNECTION_VERIFICATION_DELAY_MS = 2000L
+        private const val CONNECTION_STATE_MONITOR_INTERVAL_MS = 1000L
+        private const val CONNECTION_STATE_ERROR_DELAY_MS = 5000L
+        private const val RECONNECTION_VERIFY_DELAY_MS = 1000L
 
         private const val SHIMMER_MIN_SAMPLING_RATE = 1.0
         private const val SHIMMER_MAX_SAMPLING_RATE = 512.0
@@ -284,7 +291,7 @@ class GSRSensorRecorder(
                         monitorGSRData()
                         emitStatus()
                     }
-                    delay(1000)
+                    delay(STATUS_MONITORING_INTERVAL_MS)
                 }
             }
     }
@@ -1393,7 +1400,7 @@ class GSRSensorRecorder(
 
                         if (connectionSuccess) {
                             // Wait for connection to establish
-                            delay(2000)
+                            delay(CONNECTION_VERIFICATION_DELAY_MS)
 
                             // Verify connection by checking if we can get a device from the manager
                             val connectedDevice = try {
@@ -1491,10 +1498,10 @@ class GSRSensorRecorder(
             while (isActive) {
                 try {
                     monitorConnectionState()
-                    delay(1000)
+                    delay(CONNECTION_STATE_MONITOR_INTERVAL_MS)
                 } catch (e: Exception) {
                     AppLogger.e(TAG, "Error in connection state monitoring", e)
-                    delay(5000)
+                    delay(CONNECTION_STATE_ERROR_DELAY_MS)
                 }
             }
         }
@@ -1566,7 +1573,7 @@ class GSRSensorRecorder(
                 device.connect()
 
                 // Wait briefly to confirm connection
-                delay(1000L)
+                delay(RECONNECTION_VERIFY_DELAY_MS)
 
                 val connectionState = device.getBluetoothRadioState()
                 if (connectionState == BT_STATE.CONNECTED || connectionState == BT_STATE.STREAMING) {

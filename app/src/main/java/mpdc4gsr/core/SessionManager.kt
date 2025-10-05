@@ -25,6 +25,10 @@ class SessionManager(
         private const val MAX_DEVICES_PER_SESSION = 10
         private const val STATE_SYNC_INTERVAL_MS = 5000L
         private const val SYNC_TO_RECORDING_DELAY_MS = 2000L
+        private const val DEVICE_DISCOVERY_DELAY_MS = 2000L
+        private const val DEVICE_CONNECTION_DELAY_MS = 3000L
+        private const val TIME_SYNC_DELAY_MS = 1000L
+        private const val RECORDING_SETUP_DELAY_MS = 1000L
     }
 
     private val currentSession = AtomicReference<SessionInfo?>(null)
@@ -705,7 +709,7 @@ class SessionManager(
 
     private suspend fun discoverDevices(expectedDevices: List<String>): Boolean {
 
-        delay(2000)
+        delay(DEVICE_DISCOVERY_DELAY_MS)
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "SessionManager",
@@ -717,7 +721,7 @@ class SessionManager(
 
     private suspend fun connectToDevices(): Boolean {
 
-        delay(3000)
+        delay(DEVICE_CONNECTION_DELAY_MS)
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "SessionManager",
@@ -729,7 +733,7 @@ class SessionManager(
 
     private suspend fun performTimeSynchronization(): Boolean {
 
-        delay(1000)
+        delay(TIME_SYNC_DELAY_MS)
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "SessionManager",
@@ -741,7 +745,7 @@ class SessionManager(
 
     private suspend fun setupRecording(config: SessionConfig): Boolean {
 
-        delay(1000)
+        delay(RECORDING_SETUP_DELAY_MS)
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "SessionManager",
