@@ -32,6 +32,7 @@ fun RGBCameraSensorCard(
     onAction: (CameraAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     // TODO: Replace with real camera parameters from Camera API via ViewModel
     var resolution by remember { mutableStateOf("1920×1080") }
     var frameRate by remember { mutableIntStateOf(30) }
@@ -182,7 +183,7 @@ fun RGBCameraSensorCard(
                                 // TODO: Implement photo capture functionality
                                 // Should trigger camera capture and save to gallery
                                 android.widget.Toast.makeText(
-                                    androidx.compose.ui.platform.LocalContext.current,
+                                    context,
                                     "Capturing photo...",
                                     android.widget.Toast.LENGTH_SHORT
                                 ).show()

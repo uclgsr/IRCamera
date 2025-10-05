@@ -223,11 +223,15 @@ class AdaptiveThermalStreamer {
                     }
                 } ?: run {
                     // Fallback to simulation if no network client available
-                    simulateNetworkSend(frame)
+                    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+                        simulateNetworkSend(frame)
+                    }
                 }
             } catch (e: Exception) {
                 AppLogger.w(TAG, "Network send failed, using simulation fallback", e)
-                simulateNetworkSend(frame)
+                kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+                    simulateNetworkSend(frame)
+                }
             }
 
             val endTime = System.currentTimeMillis()

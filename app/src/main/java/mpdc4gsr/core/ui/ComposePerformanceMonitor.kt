@@ -32,10 +32,7 @@ object ComposePerformanceMonitor {
     
     // Performance thresholds
     private const val FRAME_BUDGET_MS = 16L // 60fps target
-    private const val MAX_SAMPLES = 100
-    private const val SENSOR_PROCESSING_THRESHOLD_MS = 100L
-    private const val SENSOR_PROCESSING_CRITICAL_MS = 200L
-    private const val NAVIGATION_SLOW_THRESHOLD_MS = 300L
+    const val MAX_SAMPLES = 100
 
     private val _recompositionCount = MutableStateFlow(0)
     val recompositionCount: StateFlow<Int> = _recompositionCount
@@ -232,6 +229,9 @@ fun PerformanceOverlay(
  * Hook for tracking sensor data processing performance
  */
 object SensorDataPerformanceTracker {
+    private const val SENSOR_PROCESSING_THRESHOLD_MS = 100L
+    private const val SENSOR_PROCESSING_CRITICAL_MS = 200L
+    private const val NAVIGATION_SLOW_THRESHOLD_MS = 300L
 
     fun trackGSRDataProcessing(dataPoints: Int, processingTimeMs: Long) {
         val throughput = dataPoints / (processingTimeMs / 1000.0)
