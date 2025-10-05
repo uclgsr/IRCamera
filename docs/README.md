@@ -17,6 +17,14 @@ docs/
 
 ## Quick Navigation
 
+### PC Controller (Desktop Application)
+- **[PC Controller Documentation](../pc-controller/docs/)** - Complete PC controller implementation
+  - [Implementation Guide](../pc-controller/docs/implementation.md) - Comprehensive feature documentation
+  - [Quick Start](../pc-controller/docs/quick_start.md) - Installation and usage
+  - [Time Sync Implementation](../pc-controller/docs/time_sync_implementation.md) - Time synchronization guide
+  - [Protocol Documentation](../pc-controller/docs/protocol.md) - Network protocol specs
+  - [Verification & Testing](../pc-controller/docs/verification.md) - Test coverage and verification
+
 ### Android Application
 - [PC Networking Guide](android/pc-networking-guide.md) - PC-Android communication setup
 - [PC Networking Changes](android/pc-networking-changes.md) - Recent networking changes
