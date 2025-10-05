@@ -173,33 +173,17 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        // Use a background thread with timeout to avoid blocking the main thread
-        // and prevent ANR while ensuring cleanup completes.
-        val latch = CountDownLatch(1)
-        Thread {
+        // Launch async cleanup in viewModelScope before it gets cancelled
+        // This ensures proper cleanup without blocking the main thread
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                // Use withContext to run cleanup on IO dispatcher
-                kotlinx.coroutines.runBlocking(Dispatchers.IO) {
-                    try {
-                        thermalRecorder?.cleanup()
-                        AppLogger.i(TAG, "Thermal recorder cleanup completed")
-                    } catch (e: Exception) {
-                        AppLogger.e(TAG, "Error cleaning up thermal recorder", e)
-                    }
-                }
-            } finally {
-                latch.countDown()
+                thermalRecorder?.cleanup()
+                AppLogger.i(TAG, "Thermal recorder cleanup completed")
+            } catch (e: Exception) {
+                AppLogger.e(TAG, "Error cleaning up thermal recorder", e)
             }
-        }.start()
-
-        // Wait for cleanup to complete with a timeout to prevent indefinite blocking
-        try {
-            if (!latch.await(3, TimeUnit.SECONDS)) {
-                AppLogger.w(TAG, "Thermal recorder cleanup timed out after 3 seconds")
-            }
-        } catch (e: InterruptedException) {
-            AppLogger.e(TAG, "Thermal recorder cleanup interrupted", e)
-            Thread.currentThread().interrupt()
         }
+        
+        // Note: viewModelScope will be automatically cancelled after onCleared returns
     }
 }

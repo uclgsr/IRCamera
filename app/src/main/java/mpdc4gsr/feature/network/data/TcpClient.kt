@@ -173,6 +173,8 @@ class TcpClient(
             disconnect()
         }
         clientScope.cancel()
+        messageCallback = null
+        connectionCallback = null
     }
 
     private fun startReaderLoop() {

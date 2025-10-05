@@ -4,7 +4,10 @@ import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RecordingStats
@@ -24,6 +27,7 @@ class EnhancedThermalRecorder(private val context: Context) {
     private val thermalCameraRecorder = ThermalCameraRecorder(context)
     private var currentSessionDirectory: File? = null
     private var syncEventWriter: FileWriter? = null
+    private val recorderScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     suspend fun initialize(): Boolean {
         return thermalCameraRecorder.initialize()
@@ -42,8 +46,7 @@ class EnhancedThermalRecorder(private val context: Context) {
 
             setupSyncEventsFile()
 
-            @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
-            GlobalScope.launch {
+            recorderScope.launch {
                 val success = if (sessionMetadata != null) {
                     thermalCameraRecorder.startRecording(
                         currentSessionDirectory!!.absolutePath,
@@ -70,8 +73,7 @@ class EnhancedThermalRecorder(private val context: Context) {
     fun stopRecording(): SessionInfo? {
         return try {
 
-            @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
-            GlobalScope.launch {
+            recorderScope.launch {
                 thermalCameraRecorder.stopRecording()
             }
 
@@ -119,10 +121,10 @@ class EnhancedThermalRecorder(private val context: Context) {
         try {
             closeSyncEventsFile()
 
-            @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
-            GlobalScope.launch {
+            recorderScope.launch {
                 thermalCameraRecorder.cleanup()
             }
+            recorderScope.cancel()
             currentSessionDirectory = null
             AppLogger.i(TAG, "Enhanced thermal recorder cleaned up")
         } catch (e: Exception) {

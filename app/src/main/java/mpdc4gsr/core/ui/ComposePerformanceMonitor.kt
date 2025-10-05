@@ -29,6 +29,13 @@ import kotlin.system.measureTimeMillis
  */
 object ComposePerformanceMonitor {
     private const val TAG = "ComposePerformance"
+    
+    // Performance thresholds
+    private const val FRAME_BUDGET_MS = 16L // 60fps target
+    private const val MAX_SAMPLES = 100
+    private const val SENSOR_PROCESSING_THRESHOLD_MS = 100L
+    private const val SENSOR_PROCESSING_CRITICAL_MS = 200L
+    private const val NAVIGATION_SLOW_THRESHOLD_MS = 300L
 
     private val _recompositionCount = MutableStateFlow(0)
     val recompositionCount: StateFlow<Int> = _recompositionCount
@@ -128,7 +135,7 @@ object ComposePerformanceMonitor {
             drawContent()
         }
 
-        if (drawTime > 16) { // Frame budget is 16ms for 60fps
+        if (drawTime > FRAME_BUDGET_MS) {
             AppLogger.w(TAG, "$name draw took ${drawTime}ms (potential jank)")
         }
     }
@@ -143,8 +150,8 @@ data class PerformanceMetric(
 ) {
     fun addSample(value: Long) {
         samples.add(value)
-        // Keep only last 100 samples to prevent memory growth
-        if (samples.size > 100) {
+        // Keep only last MAX_SAMPLES samples to prevent memory growth
+        if (samples.size > ComposePerformanceMonitor.MAX_SAMPLES) {
             samples.removeAt(0)
         }
     }
@@ -238,7 +245,7 @@ object SensorDataPerformanceTracker {
             } points/sec)"
         )
 
-        if (processingTimeMs > 100) {
+        if (processingTimeMs > SENSOR_PROCESSING_THRESHOLD_MS) {
             Log.w(
                 "SensorPerformance",
                 "GSR processing slower than expected: ${processingTimeMs}ms for $dataPoints points"
@@ -249,7 +256,7 @@ object SensorDataPerformanceTracker {
     fun trackThermalImageProcessing(imageSize: String, processingTimeMs: Long) {
         AppLogger.d("SensorPerformance", "Thermal image processing: $imageSize in ${processingTimeMs}ms")
 
-        if (processingTimeMs > 200) {
+        if (processingTimeMs > SENSOR_PROCESSING_CRITICAL_MS) {
             Log.w(
                 "SensorPerformance",
                 "Thermal processing slower than expected: ${processingTimeMs}ms"
@@ -260,7 +267,7 @@ object SensorDataPerformanceTracker {
     fun trackNavigationPerformance(fromRoute: String, toRoute: String, transitionTimeMs: Long) {
         AppLogger.d("SensorPerformance", "Navigation from $fromRoute to $toRoute: ${transitionTimeMs}ms")
 
-        if (transitionTimeMs > 300) {
+        if (transitionTimeMs > NAVIGATION_SLOW_THRESHOLD_MS) {
             AppLogger.w("SensorPerformance", "Navigation slower than expected: ${transitionTimeMs}ms")
         }
     }
@@ -270,6 +277,10 @@ object SensorDataPerformanceTracker {
  * Memory optimization utilities
  */
 object ComposeMemoryOptimizer {
+    // Memory pressure thresholds
+    private const val MEMORY_CRITICAL_THRESHOLD = 0.9f
+    private const val MEMORY_HIGH_THRESHOLD = 0.7f
+    private const val MEMORY_MODERATE_THRESHOLD = 0.5f
 
     /**
      * Checks if the app is using excessive memory
@@ -281,9 +292,9 @@ object ComposeMemoryOptimizer {
         val memoryRatio = usedMemory.toFloat() / maxMemory.toFloat()
 
         return when {
-            memoryRatio > 0.9f -> MemoryPressureLevel.CRITICAL
-            memoryRatio > 0.7f -> MemoryPressureLevel.HIGH
-            memoryRatio > 0.5f -> MemoryPressureLevel.MODERATE
+            memoryRatio > MEMORY_CRITICAL_THRESHOLD -> MemoryPressureLevel.CRITICAL
+            memoryRatio > MEMORY_HIGH_THRESHOLD -> MemoryPressureLevel.HIGH
+            memoryRatio > MEMORY_MODERATE_THRESHOLD -> MemoryPressureLevel.MODERATE
             else -> MemoryPressureLevel.LOW
         }
     }

@@ -52,6 +52,9 @@ docs/
 - [Thesis Evaluation Tests](thesis/evaluation/) - Test suite for thesis
 
 ### Code Quality
+- **[REPOSITORY_ANALYSIS.md](REPOSITORY_ANALYSIS.md) - 2024 Comprehensive Code Quality Analysis (NEW)**
+- **[QUICK_FIX_GUIDE.md](QUICK_FIX_GUIDE.md) - Quick Reference for Common Fixes (NEW)**
+- **[android/code-quality-analysis.md](android/code-quality-analysis.md) - Detailed Android Analysis (NEW)**
 - [anti-patterns-readme.md](anti-patterns-readme.md) - Anti-patterns overview
 - [anti-patterns-analysis.md](anti-patterns-analysis.md) - Detailed analysis
 - [anti-patterns-checklist.md](anti-patterns-checklist.md) - Developer checklist
@@ -100,17 +103,27 @@ docs/
 
 ### Security & Quality (CRITICAL - READ FIRST)
 
-**New comprehensive anti-patterns analysis covering:**
-- Critical security vulnerabilities (hardcoded credentials, no obfuscation)
-- Memory leaks (ViewModel context references)
-- Resource leaks (unclosed streams)
-- Threading issues (blocking operations)
-- Code quality issues
+**🆕 2024 Comprehensive Code Quality Analysis:**
+- **[REPOSITORY_ANALYSIS.md](REPOSITORY_ANALYSIS.md)** - Complete repository analysis
+  - 3 CRITICAL issues (GlobalScope, runBlocking, ExecutorService leaks)
+  - 9 HIGH priority issues
+  - 11 MEDIUM priority issues
+  - Detailed fixes and recommendations
+  
+- **[QUICK_FIX_GUIDE.md](QUICK_FIX_GUIDE.md)** - Quick reference for developers
+  - Code examples for common fixes
+  - Before/after comparisons
+  - Testing guidelines
+  
+- **[android/code-quality-analysis.md](android/code-quality-analysis.md)** - Android deep dive
+  - Memory leak analysis
+  - Concurrency issues
+  - Performance problems
+  - Testing recommendations
 
-**Start with**: [anti-patterns-readme.md](anti-patterns-readme.md)
-
-**Key Documents**:
-- [anti-patterns-analysis.md](anti-patterns-analysis.md) - 16 anti-patterns identified
+**Previous Anti-Patterns Analysis (Still Relevant):**
+- [anti-patterns-readme.md](anti-patterns-readme.md) - Overview
+- [anti-patterns-analysis.md](anti-patterns-analysis.md) - 16 patterns identified
 - [anti-patterns-checklist.md](anti-patterns-checklist.md) - Daily development reference
 - [anti-patterns-action-plan.md](anti-patterns-action-plan.md) - 9-week remediation plan
 
@@ -156,8 +169,10 @@ docs/
 
 ### 🔴 Critical (Read Immediately)
 
-1. [anti-patterns-analysis.md](anti-patterns-analysis.md) - Security and quality issues
-2. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Development standards
+1. **[REPOSITORY_ANALYSIS.md](REPOSITORY_ANALYSIS.md) - 2024 comprehensive analysis (START HERE)**
+2. **[QUICK_FIX_GUIDE.md](QUICK_FIX_GUIDE.md) - Quick reference for fixes**
+3. [anti-patterns-analysis.md](anti-patterns-analysis.md) - Previous anti-patterns analysis
+4. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Development standards
 
 ### 🟡 Important (Read This Week)
 
@@ -176,32 +191,37 @@ docs/
 ### Daily Development Workflow
 
 ```
-1. Check anti-patterns-checklist.md before coding
-2. Write code following guidelines
-3. Run lint and tests
-4. Review pre-commit checklist
-5. Submit for code review
+1. Check QUICK_FIX_GUIDE.md for common patterns to avoid
+2. Check anti-patterns-checklist.md before coding
+3. Write code following guidelines
+4. Run lint and tests
+5. Review pre-commit checklist
+6. Submit for code review
 ```
 
 ### Code Review Workflow
 
 ```
-1. Open anti-patterns-checklist.md
-2. Check "Code Review Red Flags" section
-3. Verify pre-commit checklist items
-4. Reference specific anti-patterns if issues found
-5. Approve or request changes
+1. Check for issues listed in REPOSITORY_ANALYSIS.md
+2. Open QUICK_FIX_GUIDE.md for quick reference
+3. Open anti-patterns-checklist.md
+4. Check "Code Review Red Flags" section
+5. Verify pre-commit checklist items
+6. Reference specific anti-patterns if issues found
+7. Approve or request changes
 ```
 
 ### Bug Fix Workflow
 
 ```
 1. Reproduce issue
-2. Check anr-prevention-guide.md if performance-related
-3. Check anti-patterns-analysis.md for similar patterns
-4. Implement fix following best practices
-5. Add test coverage
-6. Update documentation if needed
+2. Check REPOSITORY_ANALYSIS.md for similar issues
+3. Check QUICK_FIX_GUIDE.md for fix patterns
+4. Check anr-prevention-guide.md if performance-related
+5. Check anti-patterns-analysis.md for similar patterns
+6. Implement fix following best practices
+7. Add test coverage
+8. Update documentation if needed
 ```
 
 ## Project Status Overview
@@ -250,6 +270,10 @@ docs/
 
 ### Current Status
 
+- **2024 Code Quality Analysis: ✅ Complete**
+  - 3 CRITICAL issues identified
+  - 9 HIGH priority issues
+  - Comprehensive fix guide created
 - Anti-patterns documented: ✅ 16 identified
 - Action plan created: ✅ 5-sprint roadmap
 - Developer guidelines: ✅ Checklist available
@@ -312,8 +336,8 @@ This documentation is maintained by the IRCamera development team.
 - Quarterly: Full documentation review
 - Per Release: Migration status updates
 
-**Last Updated**: 2024-10-03
-**Next Review**: After P0/P1 completion
+**Last Updated**: 2024 (Code Quality Analysis Added)
+**Next Review**: After Critical Issues Fixed
 
 ---
 

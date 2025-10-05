@@ -142,6 +142,7 @@ class NetworkErrorRecoveryManager(
         isRecoveryActive.set(false)
         healthCheckJob?.cancel()
         recoveryJob.cancel()
+        eventListener = null
         AppLogger.i(TAG, "Network error recovery manager cleaned up")
     }
 }

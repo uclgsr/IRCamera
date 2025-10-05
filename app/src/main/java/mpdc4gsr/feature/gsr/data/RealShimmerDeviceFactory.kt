@@ -149,6 +149,8 @@ class RealShimmerDevice(
                 device.stop()
                 isConnected = false
                 connectionCallback?.invoke("DISCONNECTED")
+                dataCallback = null
+                connectionCallback = null
                 AppLogger.i(TAG, "Disconnected from Shimmer device")
                 true
             } ?: false

@@ -199,6 +199,8 @@ class BluetoothClient(
             disconnect()
         }
         clientScope.cancel()
+        messageCallback = null
+        connectionCallback = null
     }
 
     private fun startReaderLoop() {

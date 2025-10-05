@@ -134,6 +134,8 @@ class CommandServer(
         _serverStatus.value = ServerStatus.STOPPED
         _connectionStatus.value = ConnectionStatus.DISCONNECTED
 
+        commandCallback = null
+
         AppLogger.i(TAG, "Command server stopped")
     }
 

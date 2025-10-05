@@ -2947,6 +2947,9 @@ class ThermalCameraRecorder(
             hasUsbPermission = false
             thermalCameraDevice = null
 
+            previewCallback = null
+            frameListener = null
+
             recordingScope.cancel()
 
             AppLogger.i(TAG, "Thermal camera cleaned up")
