@@ -264,7 +264,7 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                     ) {
                                         Icon(
                                             imageVector = Icons.Default.Thermostat,
-                                            contentDescription = null,
+                                            contentDescription = "Thermal Image",
                                             modifier = Modifier.size(48.dp),
                                             tint = Color.White
                                         )
@@ -294,7 +294,7 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                     }
                                     Icon(
                                         imageVector = Icons.Default.Image,
-                                        contentDescription = null,
+                                        contentDescription = "Image Placeholder",
                                         modifier = Modifier.size(64.dp),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -437,7 +437,7 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Save,
-                                    contentDescription = null,
+                                    contentDescription = "Save Image",
                                     modifier = Modifier.size(18.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
@@ -451,7 +451,7 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.FileDownload,
-                                    contentDescription = null,
+                                    contentDescription = "Export Image",
                                     modifier = Modifier.size(18.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
@@ -488,7 +488,7 @@ private fun EditToolButton(
         ) {
             Icon(
                 imageVector = tool.icon,
-                contentDescription = null,
+                contentDescription = tool.name,
                 modifier = Modifier.size(24.dp),
                 tint = if (isSelected)
                     MaterialTheme.colorScheme.primary

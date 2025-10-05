@@ -211,14 +211,14 @@ fun QuickRecordingStatusCard(
                     ),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(Icons.Default.Stop, contentDescription = null)
+                    Icon(Icons.Default.Stop, contentDescription = "Stop Recording")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Stop Recording", style = MaterialTheme.typography.titleMedium)
                 }
             } else {
                 Icon(
                     imageVector = Icons.Default.FiberManualRecord,
-                    contentDescription = null,
+                    contentDescription = "Ready to Record",
                     modifier = Modifier.size(64.dp),
                     tint = Color(0xFF4CAF50)
                 )
@@ -246,7 +246,7 @@ fun QuickRecordingStatusCard(
                     ),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(Icons.Default.PlayArrow, contentDescription = null)
+                    Icon(Icons.Default.PlayArrow, contentDescription = "Start Recording")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Start Recording", style = MaterialTheme.typography.titleMedium)
                 }
@@ -272,7 +272,7 @@ fun GSRDeviceStatusCard(
             ) {
                 Icon(
                     imageVector = Icons.Default.Sensors,
-                    contentDescription = null,
+                    contentDescription = "Sensor Status: $deviceStatus",
                     tint = when (deviceStatus) {
                         "Connected" -> Color(0xFF4CAF50)
                         "Connecting" -> Color(0xFFFF9800)
@@ -454,7 +454,7 @@ fun QuickSessionCard(
         ) {
             Icon(
                 imageVector = Icons.Default.Timeline,
-                contentDescription = null,
+                contentDescription = "GSR Data",
                 tint = MaterialTheme.colorScheme.primary
             )
 
