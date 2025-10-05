@@ -1,5 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
+import android.content.Intent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
@@ -38,6 +40,9 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var sortBy by remember { mutableStateOf("date") }
         var filterBy by remember { mutableStateOf("all") }
         val galleryItems = remember { getGalleryItems() }
+        var showSearchDialog by remember { mutableStateOf(false) }
+        var showMoreOptionsDialog by remember { mutableStateOf(false) }
+        var selectedItemForOptions by remember { mutableStateOf<GalleryItem?>(null) }
 
         LibUnifiedTheme {
             Scaffold(
@@ -60,7 +65,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Show gallery search */ }) {
+                            IconButton(onClick = { showSearchDialog = true }) {
                                 Icon(
                                     Icons.Default.Search,
                                     contentDescription = "Search",
@@ -84,7 +89,9 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 },
                 floatingActionButton = {
                     FloatingActionButton(
-                        onClick = { /* Add new thermal capture */ },
+                        onClick = {
+                            startActivity(Intent(this, ImagePickIRComposeActivity::class.java))
+                        },
                         containerColor = Color(0xFFFF6B35)
                     ) {
                         Icon(
@@ -115,15 +122,67 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     if (selectedView == "grid") {
                         GalleryGrid(
                             items = galleryItems,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
+                            onItemClick = { item ->
+                                val intent = Intent(this, IRGalleryDetail01ComposeActivity::class.java)
+                                intent.putExtra("item_id", item.id)
+                                startActivity(intent)
+                            },
+                            onItemMoreClick = { item ->
+                                selectedItemForOptions = item
+                                showMoreOptionsDialog = true
+                            }
                         )
                     } else {
                         GalleryList(
                             items = galleryItems,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
+                            onItemClick = { item ->
+                                val intent = Intent(this, IRGalleryDetail01ComposeActivity::class.java)
+                                intent.putExtra("item_id", item.id)
+                                startActivity(intent)
+                            },
+                            onItemMoreClick = { item ->
+                                selectedItemForOptions = item
+                                showMoreOptionsDialog = true
+                            }
                         )
                     }
                 }
+            }
+            
+            // Search Dialog
+            if (showSearchDialog) {
+                GallerySearchDialog(
+                    onDismiss = { showSearchDialog = false },
+                    onSearch = { query ->
+                        // TODO: Apply search filter
+                        showSearchDialog = false
+                    }
+                )
+            }
+            
+            // More Options Dialog
+            if (showMoreOptionsDialog && selectedItemForOptions != null) {
+                GalleryItemOptionsDialog(
+                    item = selectedItemForOptions!!,
+                    onDismiss = { 
+                        showMoreOptionsDialog = false
+                        selectedItemForOptions = null
+                    },
+                    onShare = {
+                        // TODO: Share item
+                        showMoreOptionsDialog = false
+                    },
+                    onDelete = {
+                        // TODO: Delete item
+                        showMoreOptionsDialog = false
+                    },
+                    onExport = {
+                        // TODO: Export item
+                        showMoreOptionsDialog = false
+                    }
+                )
             }
         }
     }
@@ -214,7 +273,9 @@ private fun GalleryControls(
 @Composable
 private fun GalleryGrid(
     items: List<GalleryItem>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onItemClick: (GalleryItem) -> Unit = {},
+    onItemMoreClick: (GalleryItem) -> Unit = {}
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -226,7 +287,7 @@ private fun GalleryGrid(
         items(items) { item ->
             GalleryGridItem(
                 item = item,
-                onClick = { /* Open image detail view */ }
+                onClick = { onItemClick(item) }
             )
         }
     }
@@ -317,7 +378,9 @@ private fun GalleryGridItem(
 @Composable
 private fun GalleryList(
     items: List<GalleryItem>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onItemClick: (GalleryItem) -> Unit = {},
+    onItemMoreClick: (GalleryItem) -> Unit = {}
 ) {
     LazyColumn(
         modifier = modifier,
@@ -327,7 +390,8 @@ private fun GalleryList(
         items(items) { item ->
             GalleryListItem(
                 item = item,
-                onClick = { /* Open image detail view */ }
+                onClick = { onItemClick(item) },
+                onMoreClick = { onItemMoreClick(item) }
             )
         }
     }
@@ -336,7 +400,8 @@ private fun GalleryList(
 @Composable
 private fun GalleryListItem(
     item: GalleryItem,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onMoreClick: () -> Unit = {}
 ) {
     Card(
         onClick = onClick,
@@ -405,7 +470,7 @@ private fun GalleryListItem(
 
             // Actions
             IconButton(
-                onClick = { /* Show image options menu */ }
+                onClick = onMoreClick
             ) {
                 Icon(
                     Icons.Default.MoreVert,
@@ -426,6 +491,113 @@ data class GalleryItem(
     val maxTemp: Float,
     val isVideo: Boolean
 )
+
+@Composable
+private fun GallerySearchDialog(
+    onDismiss: () -> Unit,
+    onSearch: (String) -> Unit
+) {
+    var searchText by remember { mutableStateOf(TextFieldValue("")) }
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Search Gallery", color = Color.White) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                OutlinedTextField(
+                    value = searchText,
+                    onValueChange = { searchText = it },
+                    label = { Text("Search by name or date") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White,
+                        focusedBorderColor = Color(0xFFFF6B35),
+                        unfocusedBorderColor = Color(0xFF7D8590)
+                    )
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onSearch(searchText.text) }
+            ) {
+                Text("Search", color = Color(0xFFFF6B35))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel", color = Color(0xFF7D8590))
+            }
+        },
+        containerColor = Color(0xFF21262D)
+    )
+}
+
+@Composable
+private fun GalleryItemOptionsDialog(
+    item: GalleryItem,
+    onDismiss: () -> Unit,
+    onShare: () -> Unit,
+    onDelete: () -> Unit,
+    onExport: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Image Options", color = Color.White) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("${item.name}", color = Color(0xFF7D8590), fontSize = 14.sp)
+                
+                TextButton(
+                    onClick = onShare,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.Share, "Share", tint = Color.White)
+                        Text("Share", color = Color.White)
+                    }
+                }
+                
+                TextButton(
+                    onClick = onExport,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.Download, "Export", tint = Color.White)
+                        Text("Export", color = Color.White)
+                    }
+                }
+                
+                TextButton(
+                    onClick = onDelete,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.Delete, "Delete", tint = Color(0xFFFF6B35))
+                        Text("Delete", color = Color(0xFFFF6B35))
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Close", color = Color(0xFF7D8590))
+            }
+        },
+        containerColor = Color(0xFF21262D)
+    )
+}
 
 private fun getGalleryItems(): List<GalleryItem> {
     return listOf(
