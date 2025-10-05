@@ -121,8 +121,16 @@ private fun UserProfileCard(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Edit profile button
+            val context = androidx.compose.ui.platform.LocalContext.current
             Button(
-                onClick = { /* Edit profile */ },
+                onClick = {
+                    // TODO: Navigate to profile edit screen
+                    android.widget.Toast.makeText(
+                        context,
+                        "Edit profile feature coming soon",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Icon(Icons.Default.Edit, contentDescription = null)
@@ -275,6 +283,7 @@ private fun QuickActionsCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -282,17 +291,38 @@ private fun QuickActionsCard(
                 QuickActionButton(
                     icon = Icons.Default.Science,
                     label = "Research Templates",
-                    onClick = { /* Open templates */ }
+                    onClick = {
+                        // TODO: Navigate to research templates screen
+                        android.widget.Toast.makeText(
+                            context,
+                            "Opening research templates...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 )
                 QuickActionButton(
                     icon = Icons.Default.CloudUpload,
                     label = "Export Data",
-                    onClick = { /* Export data */ }
+                    onClick = {
+                        // TODO: Export user data
+                        android.widget.Toast.makeText(
+                            context,
+                            "Exporting data...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 )
                 QuickActionButton(
                     icon = Icons.Default.Settings,
                     label = "Preferences",
-                    onClick = { /* Open preferences */ }
+                    onClick = {
+                        // TODO: Navigate to preferences screen
+                        android.widget.Toast.makeText(
+                            context,
+                            "Opening preferences...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 )
             }
         }

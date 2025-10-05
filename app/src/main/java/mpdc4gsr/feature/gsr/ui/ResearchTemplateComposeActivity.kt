@@ -80,10 +80,24 @@ class ResearchTemplateComposeActivity : BaseComposeActivity<AppBaseViewModel>() 
                             IconButton(onClick = { showCreateDialog = true }) {
                                 Icon(Icons.Default.Add, contentDescription = "Create Template")
                             }
-                            IconButton(onClick = { /* Import template */ }) {
+                            IconButton(onClick = {
+                                // TODO: Import template from file
+                                android.widget.Toast.makeText(
+                                    this@ResearchTemplateComposeActivity,
+                                    "Import template feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.FileOpen, contentDescription = "Import")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = {
+                                // TODO: Show more options menu
+                                android.widget.Toast.makeText(
+                                    this@ResearchTemplateComposeActivity,
+                                    "More options coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
