@@ -5,11 +5,12 @@ Documentation specific to the Android application component of IRCamera.
 ## Contents
 
 ### Code Quality
-- [code-quality-analysis.md](code-quality-analysis.md) - Comprehensive code quality analysis (NEW)
+- [android-code-quality-guide.md](android-code-quality-guide.md) - Complete code quality guide (consolidated)
+  - Critical issues with immediate fixes
+  - Quick-fix reference for common problems
   - Anti-patterns and memory leaks
-  - Concurrency issues
-  - Performance problems
-  - Detailed recommendations
+  - Concurrency issues and performance problems
+  - Detailed recommendations with code examples
 
 ### Networking
 - See [../summaries/pc-networking-summary.md](../summaries/pc-networking-summary.md) for complete PC networking implementation summary (consolidated)
@@ -19,9 +20,9 @@ Documentation specific to the Android application component of IRCamera.
 
 ## Related Documentation
 
-### Code Quality
-- [../REPOSITORY_ANALYSIS.md](../REPOSITORY_ANALYSIS.md) - Repository-wide code quality analysis
-- [../QUICK_FIX_GUIDE.md](../QUICK_FIX_GUIDE.md) - Quick reference for fixing common issues
+### Related Documentation
+- [android-code-quality-guide.md](android-code-quality-guide.md) - Complete Android code quality guide
+- [../maintenance/](../maintenance/) - Maintenance and fix documentation
 
 ### PC Controller
 See [../../pc-controller/docs/](../../pc-controller/docs/) for PC controller documentation including:

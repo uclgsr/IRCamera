@@ -71,10 +71,11 @@ Anti-patterns analysis and code quality guidelines.
 4. See [thesis/evaluation/](thesis/evaluation/) for test results
 
 ### For Code Review
-1. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Quick checklist
-2. [anti-patterns-analysis.md](anti-patterns-analysis.md) - Detailed analysis
-3. [anr-prevention-guide.md](anr-prevention-guide.md) - Performance guidelines
-4. [maintenance/](maintenance/) - Previous fixes and patterns
+1. [android/android-code-quality-guide.md](android/android-code-quality-guide.md) - Complete code quality guide (consolidated)
+2. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Quick checklist
+3. [anti-patterns-analysis.md](anti-patterns-analysis.md) - Detailed analysis
+4. [anr-prevention-guide.md](anr-prevention-guide.md) - Performance guidelines
+5. [maintenance/](maintenance/) - Previous fixes and patterns
 
 ### For System Integration
 1. [summaries/pc-networking-summary.md](summaries/pc-networking-summary.md) - Complete PC networking implementation (consolidated)
@@ -90,7 +91,7 @@ docs/
 │
 ├── android/                      # Android application docs
 │   ├── README.md
-│   ├── code-quality-analysis.md
+│   ├── android-code-quality-guide.md (consolidated)
 │   └── time-sync-flow-diagram.txt
 │
 ├── developer-guides/             # Developer technical guides
