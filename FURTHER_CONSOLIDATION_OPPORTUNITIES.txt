@@ -2,6 +2,19 @@
 
 This document outlines potential future consolidation opportunities in the app/ directory that were analyzed but not implemented due to complexity or active usage.
 
+## Completed Android App Consolidation
+
+**Files removed during Android-focused analysis:**
+1. MainRecordingController.kt (163 lines) - Unused recording controller variant
+
+**Verified as appropriate (NOT duplicates):**
+- NetworkManager vs NetworkConnectionManager - Different purposes (client vs server)
+- RecordingController vs ComprehensiveRecordingController - Different feature sets  
+- Background scanning files (Service, Manager, Helper) - All actively used
+- GSRConstants vs RecordingConstants - Domain-specific separation
+- Multiple ViewModel factories - All actively used
+- Activity/Screen pairs - Proper Compose architecture
+
 ## ViewModelFactory Pattern Modernization
 
 **Files affected:** 9 ViewModelFactory files
