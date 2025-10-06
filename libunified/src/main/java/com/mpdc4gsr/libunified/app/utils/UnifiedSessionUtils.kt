@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object UnifiedSessionUtils {
-
     // Directory constants
     private const val SESSIONS_ROOT_DIR = "sessions"
     private const val RGB_SUBDIR = "RGB"
@@ -22,24 +21,20 @@ object UnifiedSessionUtils {
     const val THERMAL_FRAMES_FILE = "thermal_frames.csv"
     const val THERMAL_METADATA_FILE = "thermal_metadata.csv"
     const val SESSION_INFO_FILE = "session_info.json"
-
     fun createSessionDirectory(context: Context, sessionName: String? = null): File {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val dirName = sessionName?.let { "${it}_$timestamp" } ?: "session_$timestamp"
-
         val sessionDir = File(getSessionsRootDirectory(context), dirName)
         return createSessionDirectoryStructure(sessionDir)
     }
 
     private fun createSessionDirectoryStructure(sessionDir: File): File {
         sessionDir.mkdirs()
-
         // Create subdirectories
         File(sessionDir, RGB_SUBDIR).mkdirs()
         File(sessionDir, THERMAL_SUBDIR).mkdirs()
         File(sessionDir, SHIMMER_SUBDIR).mkdirs()
         File(sessionDir, METADATA_SUBDIR).mkdirs()
-
         return sessionDir
     }
 
@@ -82,7 +77,6 @@ object UnifiedSessionUtils {
                 put(key, value)
             }
         }
-
         val infoFile = File(sessionDir, SESSION_INFO_FILE)
         infoFile.writeText(sessionInfo.toString(2))
         return infoFile
@@ -112,7 +106,6 @@ object UnifiedSessionUtils {
         val cutoffTime = System.currentTimeMillis() - (olderThanDays * 24 * 60 * 60 * 1000L)
         val sessionsDir = getSessionsRootDirectory(context)
         var deletedCount = 0
-
         sessionsDir.listFiles()?.forEach { sessionDir ->
             if (sessionDir.isDirectory && sessionDir.lastModified() < cutoffTime) {
                 if (sessionDir.deleteRecursively()) {
@@ -120,7 +113,6 @@ object UnifiedSessionUtils {
                 }
             }
         }
-
         return deletedCount
     }
 

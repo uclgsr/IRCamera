@@ -14,7 +14,6 @@ import com.mpdc4gsr.libunified.app.matrix.utils.HexDump
 import java.util.*
 
 class GuideUsbManager {
-
     private var mContext: Context? = null
     private val mPermissionIntent: PendingIntent? = null
     private var mUsbManager: UsbManager? = null
@@ -33,10 +32,6 @@ class GuideUsbManager {
         val PRODUCT_ID = 0x3702
     }
 
-    /*
-        public static final int VENDOR_ID = 0x0525;
-        public static final int PRODUCT_ID = 0xa4a0;
-    */
     private var mConnectCode: Int = ResultCode.READY_CONNECT_DEVICE
     private val TAG = "guidecore"
     private var mNativeGuideCore: NativeGuideCore? = null
@@ -69,13 +64,6 @@ class GuideUsbManager {
     }
 
     fun isUsbValid(): Boolean {
-        /*
-                if (mConnection == null || mEndpointDataIn == null || mEndpointControlIn == null || mEndpointControlOut == null) {
-                    return false;
-                } else {
-                    return true;
-                }
-        */
         return true
     }
 
@@ -121,7 +109,6 @@ class GuideUsbManager {
             } else {
                 for (i in 0 until count) {
                     val usbInterface = mUsbDevice!!.getInterface(i)
-
                     if (usbInterface.endpointCount == 3 && usbInterface.alternateSetting == 0) {
                         mUsbInterface = usbInterface
                         mConnectCode = ResultCode.SUCC_FIND_DEVICE_INTERFACE
@@ -205,7 +192,6 @@ class GuideUsbManager {
 
     fun upgrade(data: ByteArray): Boolean {
         val PAGE_SIZE = 3000
-
         val header = byteArrayOf(0x02)
         val cmd = byteArrayOf(0x07, 0x00)
         val reserve = byteArrayOf(0x00)
@@ -225,7 +211,6 @@ class GuideUsbManager {
         if (!send(upgradeHead)) {
             return false
         }
-
         if (data.size <= PAGE_SIZE) {
             if (!send(data)) {
                 return false
@@ -247,12 +232,10 @@ class GuideUsbManager {
                 }
             }
         }
-
         val tail = byteArrayOf(0x03)
         if (!send(tail)) {
             return false
         }
-
         val upgradeResultCmd = byteArrayOf(0x08, 0x00)
         return receive(upgradeResultCmd)
     }

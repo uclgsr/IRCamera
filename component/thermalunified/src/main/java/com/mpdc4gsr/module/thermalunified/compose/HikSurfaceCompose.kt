@@ -40,10 +40,8 @@ fun HikSurfaceCompose(
     modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
-
     // Calculate dimensions based on rotation and amplification
     val baseDimensions = getThermalDimensions(rotateAngle, isOpenAmplify)
-
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -66,7 +64,6 @@ fun HikSurfaceCompose(
                     alarmSettings = alarmSettings
                 )
             }
-
             // Overlay controls and indicators
             ThermalOverlayControls(
                 rotateAngle = rotateAngle,
@@ -74,7 +71,6 @@ fun HikSurfaceCompose(
                 alarmSettings = alarmSettings,
                 modifier = Modifier.align(Alignment.TopEnd)
             )
-
             // Temperature range indicator
             if (limitTempMin != Float.MIN_VALUE || limitTempMax != Float.MAX_VALUE) {
                 TemperatureRangeIndicator(
@@ -123,7 +119,6 @@ private fun ThermalOverlayControls(
                 }
             }
         }
-
         // Amplification indicator
         if (isAmplified) {
             Card(
@@ -150,7 +145,6 @@ private fun ThermalOverlayControls(
                 }
             }
         }
-
         // Alarm indicator
         if (alarmSettings.isEnabled) {
             Card(
@@ -196,7 +190,6 @@ private fun TemperatureRangeIndicator(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
-
             minTemp?.let { temp ->
                 Text(
                     text = "Min: ${temp.toInt()}°C",
@@ -204,7 +197,6 @@ private fun TemperatureRangeIndicator(
                     color = Color.Blue
                 )
             }
-
             maxTemp?.let { temp ->
                 Text(
                     text = "Max: ${temp.toInt()}°C",
@@ -228,7 +220,6 @@ private fun DrawScope.drawThermalSurface(
         color = Color.Black,
         size = size
     )
-
     if (thermalData == null) {
         // Draw placeholder thermal pattern
         drawPlaceholderThermalImage(dimensions, rotateAngle, isAmplified)
@@ -236,7 +227,6 @@ private fun DrawScope.drawThermalSurface(
         // Draw actual thermal data (simplified representation)
         drawThermalData(thermalData, dimensions, rotateAngle, isAmplified)
     }
-
     // Draw alarm overlay if active
     if (alarmSettings.isEnabled && alarmSettings.isAlarmActive) {
         drawAlarmOverlay(alarmSettings)
@@ -251,7 +241,6 @@ private fun DrawScope.drawPlaceholderThermalImage(
     val centerX = size.width / 2f
     val centerY = size.height / 2f
     val scale = if (isAmplified) 2f else 1f
-
     rotate(rotateAngle.toFloat(), pivot = Offset(centerX, centerY)) {
         // Create a gradient thermal pattern
         val gradientBrush = Brush.radialGradient(
@@ -264,7 +253,6 @@ private fun DrawScope.drawPlaceholderThermalImage(
             center = Offset(centerX, centerY),
             radius = kotlin.math.min(size.width, size.height) / 4f * scale
         )
-
         drawRect(
             brush = gradientBrush,
             topLeft = Offset(
@@ -276,12 +264,10 @@ private fun DrawScope.drawPlaceholderThermalImage(
                 dimensions.height * scale
             )
         )
-
         // Add some thermal "hotspots"
         repeat(5) { i ->
             val hotspotX = centerX + (kotlin.math.cos(i * 1.2) * 30 * scale).toFloat()
             val hotspotY = centerY + (kotlin.math.sin(i * 1.2) * 30 * scale).toFloat()
-
             drawCircle(
                 color = Color.Red.copy(alpha = 0.6f),
                 radius = 15f * scale,
@@ -300,17 +286,14 @@ private fun DrawScope.drawThermalData(
     // Simplified thermal data rendering
     // In a real implementation, this would process the thermal byte array
     // and convert it to temperature values and corresponding colors
-
     val centerX = size.width / 2f
     val centerY = size.height / 2f
     val scale = if (isAmplified) 2f else 1f
-
     rotate(rotateAngle.toFloat(), pivot = Offset(centerX, centerY)) {
         // Simulate thermal data visualization
         val pixelSize = 2f * scale
         val dataWidth = dimensions.width.toInt()
         val dataHeight = dimensions.height.toInt()
-
         for (y in 0 until dataHeight step 4) {
             for (x in 0 until dataWidth step 4) {
                 // Simulate temperature value from data
@@ -318,7 +301,6 @@ private fun DrawScope.drawThermalData(
                 if (dataIndex + 1 < thermalData.size) {
                     val tempValue = ((thermalData[dataIndex].toInt() and 0xFF) or
                             ((thermalData[dataIndex + 1].toInt() and 0xFF) shl 8))
-
                     // Convert to color (simplified)
                     val normalizedTemp = (tempValue % 256) / 255f
                     val color = Color.hsv(
@@ -326,7 +308,6 @@ private fun DrawScope.drawThermalData(
                         saturation = 1f,
                         value = 1f
                     )
-
                     drawRect(
                         color = color,
                         topLeft = Offset(
@@ -348,7 +329,6 @@ private fun DrawScope.drawAlarmOverlay(alarmSettings: ThermalAlarmSettings) {
         color = Color.Red.copy(alpha = alpha.coerceIn(0.1f, 0.7f)),
         size = size
     )
-
     // Draw alarm border
     drawRect(
         color = Color.Red,
@@ -360,7 +340,6 @@ private fun DrawScope.drawAlarmOverlay(alarmSettings: ThermalAlarmSettings) {
 private fun getThermalDimensions(rotateAngle: Int, isAmplified: Boolean): ThermalDimensions {
     val multiplier = if (isAmplified) 2 else 1
     val isPortrait = rotateAngle == 90 || rotateAngle == 270
-
     return ThermalDimensions(
         width = (if (isPortrait) 192 else 256) * multiplier,
         height = (if (isPortrait) 256 else 192) * multiplier
@@ -368,7 +347,6 @@ private fun getThermalDimensions(rotateAngle: Int, isAmplified: Boolean): Therma
 }
 
 // Data classes
-
 data class ThermalDimensions(
     val width: Int,
     val height: Int
@@ -429,7 +407,6 @@ fun HikSurfaceComposePreview() {
     var rotateAngle by remember { mutableIntStateOf(270) }
     var isAmplified by remember { mutableStateOf(false) }
     var alarmActive by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -442,7 +419,6 @@ fun HikSurfaceComposePreview() {
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
-
         // Controls
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -455,7 +431,6 @@ fun HikSurfaceComposePreview() {
                 Icon(Icons.AutoMirrored.Filled.RotateRight, contentDescription = "Rotate")
                 Text("Rotate")
             }
-
             Button(
                 onClick = { isAmplified = !isAmplified }
             ) {
@@ -465,7 +440,6 @@ fun HikSurfaceComposePreview() {
                 )
                 Text(if (isAmplified) "1x" else "2x")
             }
-
             Button(
                 onClick = { alarmActive = !alarmActive },
                 colors = ButtonDefaults.buttonColors(
@@ -476,7 +450,6 @@ fun HikSurfaceComposePreview() {
                 Text("Alarm")
             }
         }
-
         // Thermal surface
         HikSurfaceCompose(
             rotateAngle = rotateAngle,
@@ -492,7 +465,6 @@ fun HikSurfaceComposePreview() {
                 .fillMaxWidth()
                 .height(300.dp)
         )
-
         // Status display
         Card {
             Column(

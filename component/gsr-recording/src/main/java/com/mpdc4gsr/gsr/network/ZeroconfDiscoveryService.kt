@@ -19,7 +19,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
     private val nsdManager: NsdManager by lazy {
         context.getSystemService(Context.NSD_SERVICE) as NsdManager
     }
-
     private val discoveredServices = ConcurrentHashMap<String, NsdServiceInfo>()
     private var discoveryListener: NsdManager.DiscoveryListener? = null
     private var registrationListener: NsdManager.RegistrationListener? = null
@@ -28,11 +27,8 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
     interface ServiceDiscoveryListener {
         fun onServiceDiscovered(serviceInfo: NetworkClient.ControllerInfo)
-
         fun onServiceLost(serviceName: String)
-
         fun onServiceRegistered(serviceName: String)
-
         fun onDiscoveryError(
             errorCode: Int,
             message: String,
@@ -40,7 +36,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
     }
 
     private var serviceListener: ServiceDiscoveryListener? = null
-
     fun setServiceListener(listener: ServiceDiscoveryListener?) {
         serviceListener = listener
     }
@@ -51,7 +46,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 Log.w(TAG, "Discovery already in progress")
                 return@withContext true
             }
-
             try {
                 discoveryListener = createDiscoveryListener()
                 nsdManager.discoverServices(
@@ -71,7 +65,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
     fun stopDiscovery() {
         if (!isDiscovering) return
-
         try {
             discoveryListener?.let { nsdManager.stopServiceDiscovery(it) }
             isDiscovering = false
@@ -91,16 +84,13 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 Log.w(TAG, "Service already registered")
                 return@withContext true
             }
-
             try {
                 val serviceInfo =
                     NsdServiceInfo().apply {
                         serviceName = "$SERVICE_NAME-$deviceId"
                         serviceType = SERVICE_TYPE
                         setPort(port)
-
                     }
-
                 registrationListener = createRegistrationListener()
                 nsdManager.registerService(
                     serviceInfo,
@@ -117,7 +107,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
     fun unregisterService() {
         if (!isRegistered) return
-
         try {
             registrationListener?.let { nsdManager.unregisterService(it) }
             isRegistered = false
@@ -135,7 +124,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 val port = serviceInfo.port
                 val deviceName = serviceInfo.serviceName
                 val capabilities = emptyList<String>()
-
                 NetworkClient.ControllerInfo(
                     ipAddress = host,
                     port = port,
@@ -157,11 +145,9 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
             override fun onServiceFound(service: NsdServiceInfo) {
                 Log.d(TAG, "Service discovery success: ${service.serviceName}")
-
                 if (service.serviceName.startsWith(SERVICE_NAME)) {
                     return
                 }
-
                 @Suppress("DEPRECATION")
                 nsdManager.resolveService(service, createResolveListener())
             }
@@ -211,16 +197,13 @@ class ZeroconfDiscoveryService(private val context: Context) {
                     TAG,
                     "Service resolved: ${serviceInfo.serviceName} at ${serviceInfo.host}:${serviceInfo.port}"
                 )
-
                 discoveredServices[serviceInfo.serviceName] = serviceInfo
-
                 try {
                     val host = serviceInfo.host?.hostAddress ?: return
                     val port = serviceInfo.port
                     val deviceName = serviceInfo.serviceName
                     val capabilities =
                         emptyList<String>()
-
                     val controllerInfo =
                         NetworkClient.ControllerInfo(
                             ipAddress = host,
@@ -228,7 +211,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
                             deviceName = deviceName,
                             capabilities = capabilities,
                         )
-
                     serviceListener?.onServiceDiscovered(controllerInfo)
                 } catch (e: Exception) {
                     Log.w(TAG, "Failed to parse resolved service", e)

@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class IRThermalFragmentViewModel : BaseViewModel() {
-
     data class DeviceConnectionState(
         val hasConnection: Boolean = false,
         val isTC007Connected: Boolean = false,
@@ -37,10 +36,8 @@ class IRThermalFragmentViewModel : BaseViewModel() {
     // Individual state flows required by the Compose fragment
     private val _connectionStatus = MutableStateFlow(ConnectionStatus.DISCONNECTED)
     val connectionStatus: StateFlow<ConnectionStatus> = _connectionStatus.asStateFlow()
-
     private val _isTC007 = MutableStateFlow(false)
     val isTC007: StateFlow<Boolean> = _isTC007.asStateFlow()
-
     private val _deviceInfo = MutableStateFlow<String?>(null)
     val deviceInfo: StateFlow<String?> = _deviceInfo.asStateFlow()
 
@@ -82,7 +79,6 @@ class IRThermalFragmentViewModel : BaseViewModel() {
                 } else {
                     if (connectionState.hasUsbDevice) "USB Device Available" else "No Device Detected"
                 }
-
                 uiState.copy(
                     isConnected = connectionState.hasConnection,
                     isTC007Connected = connectionState.isTC007Connected,
@@ -100,16 +96,13 @@ class IRThermalFragmentViewModel : BaseViewModel() {
         } else {
             DeviceTools.isConnect(isAutoRequest = false)
         }
-
         val hasUsbDevice = DeviceTools.findUsbDevice() != null
-
         _deviceConnectionState.value = DeviceConnectionState(
             hasConnection = hasConnection,
             isTC007Connected = isTC007 && hasConnection,
             hasUsbDevice = hasUsbDevice,
             isTC007Device = isTC007
         )
-
         // Update individual state flows
         _connectionStatus.value = if (hasConnection) ConnectionStatus.CONNECTED else ConnectionStatus.DISCONNECTED
         _isTC007.value = isTC007
@@ -124,7 +117,6 @@ class IRThermalFragmentViewModel : BaseViewModel() {
         if (!isTC007Device) {
             SharedManager.hasTcLine = true
         }
-
         _deviceConnectionState.value = _deviceConnectionState.value.copy(
             hasConnection = true,
             isTC007Connected = isTC007Device,
@@ -186,7 +178,6 @@ class IRThermalFragmentViewModel : BaseViewModel() {
 
     fun handleMainEnter() {
         val connectionState = _deviceConnectionState.value
-
         if (!connectionState.hasConnection) {
             if (!connectionState.hasUsbDevice) {
                 _thermalAction.value = ThermalAction.ShowDeviceConnectTip
@@ -216,7 +207,6 @@ class IRThermalFragmentViewModel : BaseViewModel() {
             } else {
                 DeviceTools.isConnect(isAutoRequest = false)
             }
-
             if (hasConnection) {
                 _connectionStatus.value = ConnectionStatus.CONNECTED
                 onDeviceConnected(isTC007Device)

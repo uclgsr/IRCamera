@@ -2,11 +2,6 @@ package mpdc4gsr.feature.gsr.data
 
 import java.io.Serializable
 
-/**
- * Data models for GSR plot functionality
- * These classes define the structure for data passed between GSRDataViewActivity and GSRPlotActivity
- */
-
 data class GSRPlotData(
     val timestamps: List<Double>,
     val gsrValues: List<Double>,

@@ -3,7 +3,6 @@ package com.mpdc4gsr.module.thermalunified.view.compass
 import android.content.Context
 import android.hardware.Sensor
 import com.kylecorry.andromeda.sense.Sensors
-
 import com.kylecorry.andromeda.sense.compass.ICompass
 import com.kylecorry.andromeda.sense.compass.LegacyCompass
 import com.kylecorry.andromeda.sense.orientation.GeomagneticRotationSensor
@@ -13,19 +12,14 @@ class CompassProvider(private val context: Context) {
     fun get(): ICompass {
         val smoothing = 1
         val useTrueNorth = true
-
         var source = CompassSource.RotationVector
-
         val allSources = getAvailableSources(context)
-
         if (allSources.isEmpty()) {
             return NullCompass()
         }
-
         if (!allSources.contains(source)) {
             source = allSources.firstOrNull() ?: CompassSource.CustomMagnetometer
         }
-
         val compass =
             when (source) {
                 CompassSource.RotationVector -> {
@@ -37,7 +31,6 @@ class CompassProvider(private val context: Context) {
                 }
 
                 CompassSource.CustomMagnetometer -> {
-
                     RotationSensor(context, SensorService.MOTION_SENSOR_DELAY)
                 }
 
@@ -45,32 +38,25 @@ class CompassProvider(private val context: Context) {
                     LegacyCompass(context, useTrueNorth, SensorService.MOTION_SENSOR_DELAY)
                 }
             }
-
         return compass as ICompass
     }
 
     companion object {
-
         fun getAvailableSources(context: Context): List<CompassSource> {
             val sources = mutableListOf<CompassSource>()
-
             if (Sensors.hasSensor(context, Sensor.TYPE_ROTATION_VECTOR)) {
                 sources.add(CompassSource.RotationVector)
             }
-
             if (Sensors.hasSensor(context, Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR)) {
                 sources.add(CompassSource.GeomagneticRotationVector)
             }
-
             if (Sensors.hasSensor(context, Sensor.TYPE_MAGNETIC_FIELD)) {
                 sources.add(CompassSource.CustomMagnetometer)
             }
-
             @Suppress("DEPRECATION")
             if (Sensors.hasSensor(context, Sensor.TYPE_ORIENTATION)) {
                 sources.add(CompassSource.Orientation)
             }
-
             return sources
         }
     }

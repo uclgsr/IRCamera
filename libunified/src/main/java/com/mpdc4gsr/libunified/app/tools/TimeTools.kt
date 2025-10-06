@@ -39,7 +39,6 @@ object TimeTools {
             dateFormat.timeZone = timeZone
             dateFormat.parse(timeStr, ParsePosition(0))?.time ?: 1609430400000
         } catch (e: Exception) {
-
             1609430400000
         }
     }
@@ -50,7 +49,6 @@ object TimeTools {
         type: Int = 0,
     ): String {
         val date = Date(time)
-
         val pattern =
             when (type) {
                 1 -> "HH:mm:ss.SSS"

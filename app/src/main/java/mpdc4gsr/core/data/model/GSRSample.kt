@@ -9,15 +9,12 @@ data class GSRSample(
     val qualityScore: Double,
     val connectionRssi: Int
 ) {
-
     val isValid: Boolean
         get() = gsrRaw in 0..4095 &&
                 gsrMicrosiemens > 0.0 &&
                 qualityScore >= 0.5
-
     val resistanceOhms: Double
         get() = if (gsrMicrosiemens > 0) 1_000_000.0 / gsrMicrosiemens else Double.MAX_VALUE
-
     val qualityLevel: QualityLevel
         get() = when {
             qualityScore >= 0.9 -> QualityLevel.EXCELLENT
@@ -53,7 +50,6 @@ data class GSRSample(
     }
 
     companion object {
-
         const val CSV_HEADER =
             "timestamp_ns,timestamp_iso,gsr_microsiemens,gsr_raw,ppg_raw,quality_score,connection_rssi"
 
@@ -65,14 +61,12 @@ data class GSRSample(
             ppgRawValue: Int = 0,
             connectionRssi: Int = -50
         ): GSRSample {
-
             val qualityScore = when {
                 gsrRawValue < 0 || gsrRawValue > 4095 -> 0.0
                 gsrCalibratedValue <= 0 -> 0.3
                 gsrRawValue < 50 || gsrRawValue > 4000 -> 0.6
                 else -> 0.9
             }
-
             return GSRSample(
                 timestamp = timestamp,
                 timestampIso = timestampIso,

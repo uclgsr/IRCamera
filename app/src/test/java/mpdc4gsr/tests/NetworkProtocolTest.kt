@@ -5,7 +5,6 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class NetworkProtocolTest {
-
     @Test
     fun testCreateSyncInitMessage() {
         val syncInit = Protocol.createSyncInitMessage()

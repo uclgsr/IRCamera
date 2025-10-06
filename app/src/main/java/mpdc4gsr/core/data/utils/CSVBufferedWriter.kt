@@ -12,13 +12,11 @@ class CSVBufferedWriter(
     bufferSize: Int = 8192,
     flushIntervalMs: Long = 1000L
 ) : BufferedDataWriter(outputFile, bufferSize, flushIntervalMs) {
-
     companion object {
         private const val TAG = "CSVBufferedWriter"
     }
 
     private val headerWritten = AtomicBoolean(false)
-
     suspend fun startWithHeaders(): Boolean {
         val started = start()
         if (started && !headerWritten.get()) {
@@ -72,7 +70,6 @@ data class CSVWriteStats(
 ) {
     val rowsWritten: Long
         get() = if (headerWritten) baseStats.linesWritten - 1 else baseStats.linesWritten
-
     val averageRowSize: Double
         get() = if (rowsWritten > 0) baseStats.bytesWritten.toDouble() / rowsWritten else 0.0
 }

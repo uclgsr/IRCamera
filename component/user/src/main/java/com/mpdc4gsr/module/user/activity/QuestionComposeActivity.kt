@@ -24,7 +24,6 @@ import com.mpdc4gsr.module.user.model.QuestionData
 import com.mpdc4gsr.module.user.viewmodel.QuestionViewModel
 
 class QuestionComposeActivity : BaseComposeActivity<QuestionViewModel>() {
-
     override fun createViewModel(): QuestionViewModel {
         return viewModels<QuestionViewModel>().value
     }
@@ -33,15 +32,12 @@ class QuestionComposeActivity : BaseComposeActivity<QuestionViewModel>() {
     @Composable
     override fun Content(viewModel: QuestionViewModel) {
         val questions by viewModel.questions.collectAsState()
-
         // Get isTS001 from intent extras
         val isTS001 = intent.getBooleanExtra("isTS001", false)
-
         // Load questions on start
         LaunchedEffect(Unit) {
             viewModel.loadQuestions(isTS001)
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -112,7 +108,6 @@ private fun QuestionItem(
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f)
             )
-
             Icon(
                 Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = "View Answer",

@@ -25,10 +25,6 @@ import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * Gallery Screen - Media gallery for thermal images, recordings, and data
- * Replaces thermal gallery activities with unified Compose implementation
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GalleryScreen(
@@ -37,7 +33,6 @@ fun GalleryScreen(
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
     var searchQuery by remember { mutableStateOf("") }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -63,7 +58,6 @@ fun GalleryScreen(
                 }
             )
         }
-
         // Tab selector
         PrimaryTabRow(
             selectedTabIndex = selectedTab,
@@ -86,7 +80,6 @@ fun GalleryScreen(
                 text = { Text("Data Exports") }
             )
         }
-
         // Content based on selected tab
         Box(
             modifier = Modifier
@@ -102,9 +95,6 @@ fun GalleryScreen(
     }
 }
 
-/**
- * Thermal images grid
- */
 @Composable
 private fun ThermalImagesGrid(
     modifier: Modifier = Modifier
@@ -122,7 +112,6 @@ private fun ThermalImagesGrid(
             )
         }
     }
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -135,9 +124,6 @@ private fun ThermalImagesGrid(
     }
 }
 
-/**
- * Recordings grid
- */
 @Composable
 private fun RecordingsGrid(
     modifier: Modifier = Modifier
@@ -153,7 +139,6 @@ private fun RecordingsGrid(
             )
         }
     }
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -165,9 +150,6 @@ private fun RecordingsGrid(
     }
 }
 
-/**
- * Data exports grid
- */
 @Composable
 private fun DataExportsGrid(
     modifier: Modifier = Modifier
@@ -181,7 +163,6 @@ private fun DataExportsGrid(
             DataExport("Thermal_Report_005.pdf", "3.5MB", "Report")
         )
     }
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -193,9 +174,6 @@ private fun DataExportsGrid(
     }
 }
 
-/**
- * Thermal image card component
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ThermalImageCard(
@@ -203,7 +181,6 @@ private fun ThermalImageCard(
     modifier: Modifier = Modifier
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
-
     val context = androidx.compose.ui.platform.LocalContext.current
     Card(
         onClick = {
@@ -233,14 +210,12 @@ private fun ThermalImageCard(
                     // Draw thermal pattern
                     val width = size.width
                     val height = size.height
-
                     // Hot spot
                     drawCircle(
                         color = Color.Red.copy(alpha = 0.8f),
                         radius = width * 0.15f,
                         center = Offset(width * 0.6f, height * 0.4f)
                     )
-
                     // Cool spot
                     drawCircle(
                         color = primaryColor.copy(alpha = 0.8f),
@@ -248,7 +223,6 @@ private fun ThermalImageCard(
                         center = Offset(width * 0.3f, height * 0.7f)
                     )
                 }
-
                 // Temperature overlay
                 Column(
                     modifier = Modifier
@@ -280,7 +254,6 @@ private fun ThermalImageCard(
                     }
                 }
             }
-
             // Image info
             Column(
                 modifier = Modifier.padding(8.dp)
@@ -301,9 +274,6 @@ private fun ThermalImageCard(
     }
 }
 
-/**
- * Recording card component
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RecordingCard(
@@ -335,9 +305,7 @@ private fun RecordingCard(
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(48.dp)
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -362,9 +330,6 @@ private fun RecordingCard(
     }
 }
 
-/**
- * Data export card component
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DataExportCard(
@@ -396,9 +361,7 @@ private fun DataExportCard(
                 tint = Color.Green,
                 modifier = Modifier.size(48.dp)
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -423,9 +386,6 @@ private fun DataExportCard(
     }
 }
 
-/**
- * Data classes for gallery items
- */
 data class ThermalImage(
     val id: Int,
     val name: String,

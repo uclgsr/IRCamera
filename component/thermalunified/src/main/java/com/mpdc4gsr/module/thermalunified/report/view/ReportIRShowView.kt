@@ -41,9 +41,7 @@ class ReportIRShowView : LinearLayout {
     private lateinit var clRect5: View
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -76,19 +74,16 @@ class ReportIRShowView : LinearLayout {
 
     private fun initTitleTexts() {
         initTitleText(clFull, TYPE_FULL, 0)
-
         initTitleText(clPoint1, TYPE_POINT, 0)
         initTitleText(clPoint2, TYPE_POINT, 1)
         initTitleText(clPoint3, TYPE_POINT, 2)
         initTitleText(clPoint4, TYPE_POINT, 3)
         initTitleText(clPoint5, TYPE_POINT, 4)
-
         initTitleText(clLine1, TYPE_LINE, 0)
         initTitleText(clLine2, TYPE_LINE, 1)
         initTitleText(clLine3, TYPE_LINE, 2)
         initTitleText(clLine4, TYPE_LINE, 3)
         initTitleText(clLine5, TYPE_LINE, 4)
-
         initTitleText(clRect1, TYPE_RECT, 0)
         initTitleText(clRect2, TYPE_RECT, 1)
         initTitleText(clRect3, TYPE_RECT, 2)
@@ -104,7 +99,6 @@ class ReportIRShowView : LinearLayout {
         val tvTitle = itemRoot.findViewById<TextView>(R.id.tv_title)
         val tvAverageTitle = itemRoot.findViewById<TextView>(R.id.tv_average_title)
         val tvExplainTitle = itemRoot.findViewById<TextView>(R.id.tv_explain_title)
-
         tvTitle.isVisible = index == 0
         tvTitle.text =
             when (type) {
@@ -131,21 +125,17 @@ class ReportIRShowView : LinearLayout {
     fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
         result.add(clImage)
-
         getItemChild(clFull, result)
-
         getItemChild(clPoint1, result)
         getItemChild(clPoint2, result)
         getItemChild(clPoint3, result)
         getItemChild(clPoint4, result)
         getItemChild(clPoint5, result)
-
         getItemChild(clLine1, result)
         getItemChild(clLine2, result)
         getItemChild(clLine3, result)
         getItemChild(clLine4, result)
         getItemChild(clLine5, result)
-
         getItemChild(clRect1, result)
         getItemChild(clRect2, result)
         getItemChild(clRect3, result)
@@ -162,7 +152,6 @@ class ReportIRShowView : LinearLayout {
             val clRange = itemRoot.findViewById<View>(R.id.cl_range)
             val clAverage = itemRoot.findViewById<View>(R.id.cl_average)
             val clExplain = itemRoot.findViewById<View>(R.id.cl_explain)
-
             if (clRange.isVisible) {
                 resultList.add(clRange)
             }
@@ -196,14 +185,11 @@ class ReportIRShowView : LinearLayout {
         val tvHead = findViewById<TextView>(R.id.tv_head)
         val viewNotHead = findViewById<View>(R.id.view_not_head)
         val viewImageBg = findViewById<View>(R.id.view_image_bg)
-
         tvHead.isVisible = isFirst
         viewNotHead.isVisible = !isFirst
         viewImageBg.setBackgroundResource(if (isFirst) R.drawable.layer_report_ir_show_top_bg else R.drawable.layer_report_ir_show_item_bg)
         clImage.setPadding(0, if (isFirst) 20f.dpToPx(context).toInt() else 0, 0, 0)
-
         refreshItem(clFull, reportIRBean.full_graph_data, TYPE_FULL, 0)
-
         val pointList = reportIRBean.point_data
         for (i in pointList.indices) {
             when (i) {
@@ -214,18 +200,15 @@ class ReportIRShowView : LinearLayout {
                 4 -> refreshItem(clPoint5, pointList[i], TYPE_POINT, i)
             }
         }
-
         val tvTitlePoint2 = clPoint2.findViewById<TextView>(R.id.tv_title)
         val tvTitlePoint3 = clPoint3.findViewById<TextView>(R.id.tv_title)
         val tvTitlePoint4 = clPoint4.findViewById<TextView>(R.id.tv_title)
         val tvTitlePoint5 = clPoint5.findViewById<TextView>(R.id.tv_title)
-
         tvTitlePoint2.isVisible = !clPoint1.isVisible
         tvTitlePoint3.isVisible = !clPoint1.isVisible && !clPoint2.isVisible
         tvTitlePoint4.isVisible = !clPoint1.isVisible && !clPoint2.isVisible && !clPoint3.isVisible
         tvTitlePoint5.isVisible =
             !clPoint1.isVisible && !clPoint2.isVisible && !clPoint3.isVisible && !clPoint4.isVisible
-
         val lineList = reportIRBean.line_data
         for (i in lineList.indices) {
             when (i) {
@@ -236,18 +219,15 @@ class ReportIRShowView : LinearLayout {
                 4 -> refreshItem(clLine5, lineList[i], TYPE_LINE, i)
             }
         }
-
         val tvTitleLine2 = clLine2.findViewById<TextView>(R.id.tv_title)
         val tvTitleLine3 = clLine3.findViewById<TextView>(R.id.tv_title)
         val tvTitleLine4 = clLine4.findViewById<TextView>(R.id.tv_title)
         val tvTitleLine5 = clLine5.findViewById<TextView>(R.id.tv_title)
-
         tvTitleLine2.isVisible = !clLine1.isVisible
         tvTitleLine3.isVisible = !clLine1.isVisible && !clLine2.isVisible
         tvTitleLine4.isVisible = !clLine1.isVisible && !clLine2.isVisible && !clLine3.isVisible
         tvTitleLine5.isVisible =
             !clLine1.isVisible && !clLine2.isVisible && !clLine3.isVisible && !clLine4.isVisible
-
         val rectList = reportIRBean.surface_data
         for (i in rectList.indices) {
             when (i) {
@@ -258,18 +238,15 @@ class ReportIRShowView : LinearLayout {
                 4 -> refreshItem(clRect5, rectList[i], TYPE_RECT, i)
             }
         }
-
         val tvTitleRect2 = clRect2.findViewById<TextView>(R.id.tv_title)
         val tvTitleRect3 = clRect3.findViewById<TextView>(R.id.tv_title)
         val tvTitleRect4 = clRect4.findViewById<TextView>(R.id.tv_title)
         val tvTitleRect5 = clRect5.findViewById<TextView>(R.id.tv_title)
-
         tvTitleRect2.isVisible = !clRect1.isVisible
         tvTitleRect3.isVisible = !clRect1.isVisible && !clRect2.isVisible
         tvTitleRect4.isVisible = !clRect1.isVisible && !clRect2.isVisible && !clRect3.isVisible
         tvTitleRect5.isVisible =
             !clRect1.isVisible && !clRect2.isVisible && !clRect3.isVisible && !clRect4.isVisible
-
         if (rectList.isNotEmpty()) {
             when (rectList.size) {
                 1 -> hideLastLine(isLast, clRect1, rectList[0], TYPE_RECT)
@@ -312,11 +289,9 @@ class ReportIRShowView : LinearLayout {
         if (tempBean == null) {
             return
         }
-
         val viewLineExplain = itemRoot.findViewById<View>(R.id.view_line_explain)
         val viewLineAverage = itemRoot.findViewById<View>(R.id.view_line_average)
         val viewLineRange = itemRoot.findViewById<View>(R.id.view_line_range)
-
         if (tempBean.isExplainOpen()) {
             viewLineExplain.isVisible = !isLast
         } else if ((type == TYPE_LINE || type == TYPE_RECT) && tempBean.isAverageOpen()) {
@@ -336,7 +311,6 @@ class ReportIRShowView : LinearLayout {
             itemRoot.isVisible = false
             return
         }
-
         itemRoot.isVisible =
             when (type) {
                 TYPE_FULL -> tempBean.isMaxOpen() || tempBean.isMinOpen() || tempBean.isExplainOpen()
@@ -346,7 +320,6 @@ class ReportIRShowView : LinearLayout {
         if (!itemRoot.isVisible) {
             return
         }
-
         val rangeTitle =
             if (type == TYPE_POINT) {
                 "P${index + 1} " + context.getString(LibR.string.chart_temperature)
@@ -380,7 +353,6 @@ class ReportIRShowView : LinearLayout {
                     tempBean.max_temperature
                 }
             }
-
         val tvRangeTitle = itemRoot.findViewById<TextView>(R.id.tv_range_title)
         val tvRangeValue = itemRoot.findViewById<TextView>(R.id.tv_range_value)
         val viewLineRange = itemRoot.findViewById<View>(R.id.view_line_range)
@@ -388,7 +360,6 @@ class ReportIRShowView : LinearLayout {
         val clExplain = itemRoot.findViewById<View>(R.id.cl_explain)
         val tvAverageValue = itemRoot.findViewById<TextView>(R.id.tv_average_value)
         val tvExplainValue = itemRoot.findViewById<TextView>(R.id.tv_explain_value)
-
         tvRangeTitle.isVisible =
             if (type == TYPE_POINT) tempBean.isTempOpen() else tempBean.isMinOpen() || tempBean.isMaxOpen()
         tvRangeValue.isVisible =

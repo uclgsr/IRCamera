@@ -24,7 +24,6 @@ fun LoadingDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.3f else 0.15f
-
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
@@ -50,7 +49,6 @@ fun LoadingDialog(
                     modifier = Modifier.size(48.dp),
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 if (message.isNotEmpty()) {
                     Text(
                         text = message,

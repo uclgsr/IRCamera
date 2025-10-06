@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.ConcurrentHashMap
 
 class ReportRepository : BaseRepository() {
-
     private val reportCache = ConcurrentHashMap<String, CachedReportData>()
 
     data class ReportData(
@@ -19,7 +18,6 @@ class ReportRepository : BaseRepository() {
 
     enum class ReportType { GSR, THERMAL, COMBINED, ANALYSIS }
     enum class ReportStatus { DRAFT, PROCESSING, COMPLETED, ERROR }
-
     data class CachedReportData(
         val data: List<ReportData>,
         val cachedAt: Long,
@@ -31,27 +29,21 @@ class ReportRepository : BaseRepository() {
         page: Int,
         pageSize: Int = 20
     ): Flow<BaseRepository.Result<List<ReportData>>> = safeFlow {
-
         val cacheKey = "reports_${if (isTC007) "tc007" else "ts004"}_$page"
         val cached = reportCache[cacheKey]
-
         // Return cached data if valid
         if (cached != null && System.currentTimeMillis() - cached.cachedAt < 60000) {
             return@safeFlow cached.data
         }
-
         // Simulate network call
         delay(1000)
-
         val reports = generateSampleReports(isTC007, page, pageSize)
-
         // Cache the results
         reportCache[cacheKey] = CachedReportData(
             data = reports,
             cachedAt = System.currentTimeMillis(),
             page = page
         )
-
         reports
     }
 

@@ -31,19 +31,14 @@ class IRGalleryViewModel : BaseViewModel() {
     // StateFlow properties for Compose
     private val _galleryItems = MutableStateFlow<List<GalleryBean>>(emptyList())
     val galleryItems: StateFlow<List<GalleryBean>> = _galleryItems.asStateFlow()
-
     private val _currentDirType = MutableStateFlow(GalleryRepository.DirType.LINE)
     val currentDirType: StateFlow<GalleryRepository.DirType> = _currentDirType.asStateFlow()
-
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
     private val _selectedItems = MutableStateFlow<Set<String>>(emptySet())
     val selectedItems: StateFlow<Set<String>> = _selectedItems.asStateFlow()
-
     private val _isSelectionMode = MutableStateFlow(false)
     val isSelectionMode: StateFlow<Boolean> = _isSelectionMode.asStateFlow()
-
     private val _isGridView = MutableStateFlow(true)
     val isGridView: StateFlow<Boolean> = _isGridView.asStateFlow()
 
@@ -82,14 +77,12 @@ class IRGalleryViewModel : BaseViewModel() {
     fun toggleItemSelection(item: GalleryBean) {
         val currentSelected = _selectedItems.value.toMutableSet()
         val itemPath = item.path ?: return
-
         if (currentSelected.contains(itemPath)) {
             currentSelected.remove(itemPath)
         } else {
             currentSelected.add(itemPath)
         }
         _selectedItems.value = currentSelected
-
         if (currentSelected.isEmpty()) {
             _isSelectionMode.value = false
         }
@@ -109,7 +102,6 @@ class IRGalleryViewModel : BaseViewModel() {
     fun deleteSelectedItems() {
         val selectedPaths = _selectedItems.value
         if (selectedPaths.isEmpty()) return
-
         viewModelScope.launch {
             val itemsToDelete = _galleryItems.value.filter { selectedPaths.contains(it.path) }
             delete(itemsToDelete, _currentDirType.value, true)
@@ -130,12 +122,10 @@ class IRGalleryViewModel : BaseViewModel() {
     }
 
     var hasLoadPage = 0
-
     fun queryAllReportImg(dirType: GalleryRepository.DirType) {
         viewModelScope.launch(Dispatchers.IO) {
             val sourceList: ArrayList<GalleryBean> = GalleryRepository.loadAllReportImg(dirType)
             sourceListLD.postValue(sourceList)
-
             val showList: ArrayList<GalleryBean> = ArrayList(sourceList.size)
             var beforeTime = 0L
             for (galleryBean in sourceList) {
@@ -158,7 +148,6 @@ class IRGalleryViewModel : BaseViewModel() {
             val pageList: ArrayList<GalleryBean>? =
                 GalleryRepository.loadByPage(isVideo, dirType, hasLoadPage + 1, PAGE_COUNT)
             pageListLD.postValue(pageList)
-
             if (pageList != null) {
                 val sourceList =
                     if (hasLoadPage == 0) ArrayList(pageList.size) else sourceListLD.value
@@ -168,7 +157,6 @@ class IRGalleryViewModel : BaseViewModel() {
                 if (pageList.isNotEmpty()) {
                     hasLoadPage++
                 }
-
                 var beforeTime = if (sourceList.isEmpty()) 0 else TimeTools.timeToMinute(
                     sourceList.last().timeMillis,
                     4
@@ -181,7 +169,6 @@ class IRGalleryViewModel : BaseViewModel() {
                     }
                     showList.add(galleryBean)
                 }
-
                 sourceList.addAll(pageList)
                 sourceListLD.postValue(sourceList)
                 showListLD.postValue(showList)

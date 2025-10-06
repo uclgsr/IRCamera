@@ -15,18 +15,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.settings.*
 
-/**
- * Task D: Complete Settings Activity using Compose
- *
- * This activity demonstrates:
- * - Modern settings UI with Material 3 components
- * - Device configuration settings
- * - Recording preferences
- * - Display options
- * - Data export preferences
- */
 class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
-
     override fun createViewModel(): SettingsViewModel {
         return viewModels<SettingsViewModel>().value
     }
@@ -43,7 +32,6 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
         var sampleRate by remember { mutableStateOf("51.2Hz") }
         var darkMode by remember { mutableStateOf(false) }
         var exportFormat by remember { mutableStateOf("CSV") }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -77,18 +65,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         checked = thermalCameraEnabled,
                         onCheckedChange = { thermalCameraEnabled = it }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     SwitchSettingsItem(
                         title = "GSR Sensor",
                         subtitle = "Enable Shimmer3 GSR sensor via BLE",
                         checked = gsrSensorEnabled,
                         onCheckedChange = { gsrSensorEnabled = it }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     SettingsItem(
                         title = "Device Calibration",
                         subtitle = "Calibrate thermal camera and sensors",
@@ -102,7 +86,6 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         }
                     )
                 }
-
                 // Recording Preferences Section
                 SettingsSection(title = "Recording Preferences") {
                     SwitchSettingsItem(
@@ -111,18 +94,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         checked = autoRecording,
                         onCheckedChange = { autoRecording = it }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     RadioButtonSettingsItem(
                         title = "Recording Quality",
                         options = listOf("Low", "Medium", "High", "Ultra"),
                         selectedOption = recordingQuality,
                         onOptionSelected = { recordingQuality = it }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     SliderSettingsItem(
                         title = "Thermal Camera Frame Rate",
                         subtitle = "Adjust thermal camera capture rate",
@@ -131,9 +110,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         valueRange = 1f..30f,
                         valueLabel = { "${it.toInt()} Hz" }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     RadioButtonSettingsItem(
                         title = "GSR Sample Rate",
                         options = listOf("25.6Hz", "51.2Hz", "128Hz", "256Hz"),
@@ -141,7 +118,6 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onOptionSelected = { sampleRate = it }
                     )
                 }
-
                 // Display Options Section
                 SettingsSection(title = "Display Options") {
                     SwitchSettingsItem(
@@ -150,9 +126,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         checked = darkMode,
                         onCheckedChange = { darkMode = it }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     SettingsItem(
                         title = "Thermal Color Palette",
                         subtitle = "Choose thermal imaging color scheme",
@@ -165,9 +139,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                             ).show()
                         }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     SettingsItem(
                         title = "Temperature Units",
                         subtitle = "Celsius, Fahrenheit, or Kelvin",
@@ -180,9 +152,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                             ).show()
                         }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     SettingsItem(
                         title = "Display Resolution",
                         subtitle = "Adjust thermal image display resolution",
@@ -196,7 +166,6 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         }
                     )
                 }
-
                 // Data Export Section
                 SettingsSection(title = "Data Export") {
                     RadioButtonSettingsItem(
@@ -205,9 +174,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         selectedOption = exportFormat,
                         onOptionSelected = { exportFormat = it }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     SettingsItem(
                         title = "Export Location",
                         subtitle = "Choose where to save exported data",
@@ -220,9 +187,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                             ).show()
                         }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     ActionSettingsItem(
                         title = "Export All Data",
                         subtitle = "Export all recorded sensor data",
@@ -237,7 +202,6 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         }
                     )
                 }
-
                 // Network Settings Section
                 SettingsSection(title = "Network Settings") {
                     SettingsItem(
@@ -252,9 +216,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                             ).show()
                         }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     SettingsItem(
                         title = "Network Discovery",
                         subtitle = "Enable automatic PC discovery",
@@ -267,9 +229,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                             ).show()
                         }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     ActionSettingsItem(
                         title = "Test Connection",
                         subtitle = "Test connection to PC controller",
@@ -284,7 +244,6 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         }
                     )
                 }
-
                 // Advanced Settings Section
                 SettingsSection(title = "Advanced Settings") {
                     SettingsItem(
@@ -299,9 +258,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                             ).show()
                         }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     SettingsItem(
                         title = "Logging Settings",
                         subtitle = "Configure application logging",
@@ -314,9 +271,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                             ).show()
                         }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     ActionSettingsItem(
                         title = "Reset All Settings",
                         subtitle = "Reset all settings to default values",
@@ -331,9 +286,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         },
                         isDestructive = true
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     ActionSettingsItem(
                         title = "Clear All Data",
                         subtitle = "Delete all recorded sensor data",
@@ -349,7 +302,6 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         isDestructive = true
                     )
                 }
-
                 // About Section
                 SettingsSection(title = "About") {
                     SettingsItem(
@@ -364,9 +316,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                             ).show()
                         }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     SettingsItem(
                         title = "Privacy Policy",
                         subtitle = "View privacy policy and terms",
@@ -379,9 +329,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                             ).show()
                         }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     SettingsItem(
                         title = "Help & Support",
                         subtitle = "Get help and contact support",
@@ -400,9 +348,6 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
     }
 }
 
-/**
- * SettingsViewModel - Manages settings state
- */
 class SettingsViewModel : AppBaseViewModel() {
     // Settings-specific state management
     private val _settingsState = mutableStateOf(SettingsState())

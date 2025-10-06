@@ -40,16 +40,12 @@ class PolicyViewModel : AppBaseViewModel() {
 
     private val _policyType = mutableStateOf(PolicyType.USER_AGREEMENT)
     val policyType: State<PolicyType> = _policyType
-
     private val _isLoading = mutableStateOf(true)
     val isLoading: State<Boolean> = _isLoading
-
     private val _showError = mutableStateOf(false)
     val showError: State<Boolean> = _showError
-
     private val _htmlContent = mutableStateOf("")
     val htmlContent: State<String> = _htmlContent
-
     fun setPolicyType(type: Int) {
         _policyType.value = when (type) {
             1 -> PolicyType.USER_AGREEMENT
@@ -71,16 +67,13 @@ class PolicyViewModel : AppBaseViewModel() {
         try {
             _isLoading.value = true
             _showError.value = false
-
             // Simulate loading delay
             delay(500)
-
             val content = when (_policyType.value) {
                 PolicyType.USER_AGREEMENT -> generateUserAgreementContent()
                 PolicyType.PRIVACY_POLICY -> generatePrivacyPolicyContent()
                 PolicyType.THIRD_PARTY -> generateThirdPartyContent()
             }
-
             _htmlContent.value = content
             _isLoading.value = false
         } catch (e: Exception) {
@@ -119,12 +112,10 @@ class PolicyViewModel : AppBaseViewModel() {
             <div class="highlight">
                 <strong>Effective Date:</strong> This agreement is effective as of the date you first use the IRCamera application.
             </div>
-
             <div class="section">
                 <h2>1. Acceptance of Terms</h2>
                 <p>By downloading, installing, or using the IRCamera application ("App"), you agree to be bound by this User Services Agreement ("Agreement"). If you do not agree to these terms, please do not use the App.</p>
             </div>
-
             <div class="section">
                 <h2>2. Description of Service</h2>
                 <p>IRCamera is a multi-modal data collection platform that enables:</p>
@@ -136,7 +127,6 @@ class PolicyViewModel : AppBaseViewModel() {
                     <li>Research template management</li>
                 </ul>
             </div>
-
             <div class="section">
                 <h2>3. Data Collection and Privacy</h2>
                 <p>The App collects various types of data for research purposes:</p>
@@ -148,7 +138,6 @@ class PolicyViewModel : AppBaseViewModel() {
                 </ul>
                 <p>All data collection is performed with your explicit consent and in accordance with our Privacy Policy.</p>
             </div>
-
             <div class="section">
                 <h2>4. User Responsibilities</h2>
                 <p>As a user of the App, you agree to:</p>
@@ -160,17 +149,14 @@ class PolicyViewModel : AppBaseViewModel() {
                     <li>Report any bugs or security issues to the development team</li>
                 </ul>
             </div>
-
             <div class="section">
                 <h2>5. Intellectual Property</h2>
                 <p>The App and its original content, features, and functionality are owned by the development team and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.</p>
             </div>
-
             <div class="section">
                 <h2>6. Limitation of Liability</h2>
                 <p>The App is provided "as is" without any warranties. We shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of your use of the App.</p>
             </div>
-
             <div class="section">
                 <h2>7. Contact Information</h2>
                 <p>If you have any questions about this Agreement, please contact us at the support channels provided in the App.</p>
@@ -212,7 +198,6 @@ class PolicyViewModel : AppBaseViewModel() {
             <div class="highlight">
                 <strong>Last Updated:</strong> This privacy policy was last updated on the date of the latest app release.
             </div>
-
             <div class="section">
                 <h2>1. Information We Collect</h2>
                 <p>IRCamera collects the following types of information:</p>
@@ -245,7 +230,6 @@ class PolicyViewModel : AppBaseViewModel() {
                     </tr>
                 </table>
             </div>
-
             <div class="section">
                 <h2>2. How We Use Your Information</h2>
                 <p>We use the collected information to:</p>
@@ -257,7 +241,6 @@ class PolicyViewModel : AppBaseViewModel() {
                     <li>Ensure compliance with research protocols</li>
                 </ul>
             </div>
-
             <div class="section">
                 <h2>3. Data Sharing and Disclosure</h2>
                 <p>We do not sell, trade, or otherwise transfer your personal information to third parties. Data may be shared only in the following circumstances:</p>
@@ -268,7 +251,6 @@ class PolicyViewModel : AppBaseViewModel() {
                     <li>With authorized research collaborators under data use agreements</li>
                 </ul>
             </div>
-
             <div class="section">
                 <h2>4. Data Security</h2>
                 <p>We implement appropriate security measures to protect your information:</p>
@@ -280,7 +262,6 @@ class PolicyViewModel : AppBaseViewModel() {
                     <li>Device-level security requirements</li>
                 </ul>
             </div>
-
             <div class="section">
                 <h2>5. Your Rights</h2>
                 <p>You have the right to:</p>
@@ -292,12 +273,10 @@ class PolicyViewModel : AppBaseViewModel() {
                     <li>Export your data in a machine-readable format</li>
                 </ul>
             </div>
-
             <div class="section">
                 <h2>6. Data Retention</h2>
                 <p>We retain your data only as long as necessary for the purposes outlined in this policy or as required by law. Research data may be retained for extended periods to support longitudinal studies.</p>
             </div>
-
             <div class="section">
                 <h2>7. Contact Us</h2>
                 <p>If you have questions about this Privacy Policy or wish to exercise your rights, please contact us through the app's support channels.</p>
@@ -334,75 +313,64 @@ class PolicyViewModel : AppBaseViewModel() {
             <h1>Third Party Components</h1>
             
             <p>IRCamera uses the following third-party libraries and components. We are grateful to the open source community for these excellent tools.</p>
-
             <div class="component">
                 <div class="component-name">Jetpack Compose</div>
                 <div class="component-version">Version: 2025.01.01</div>
                 <div class="component-license">License: Apache License 2.0</div>
                 <div class="component-description">Modern UI toolkit for Android development.</div>
             </div>
-
             <div class="component">
                 <div class="component-name">Kotlin Coroutines</div>
                 <div class="component-version">Version: 1.9.0</div>
                 <div class="component-license">License: Apache License 2.0</div>
                 <div class="component-description">Asynchronous programming support for Kotlin.</div>
             </div>
-
             <div class="component">
                 <div class="component-name">OkHttp</div>
                 <div class="component-version">Version: 4.12.0</div>
                 <div class="component-license">License: Apache License 2.0</div>
                 <div class="component-description">HTTP client for efficient network operations.</div>
             </div>
-
             <div class="component">
                 <div class="component-name">Glide</div>
                 <div class="component-version">Version: 5.0.5</div>
                 <div class="component-license">License: BSD, MIT</div>
                 <div class="component-description">Image loading and caching library for Android.</div>
             </div>
-
             <div class="component">
                 <div class="component-name">RxJava</div>
                 <div class="component-version">Version: 2.2.21</div>
                 <div class="component-license">License: Apache License 2.0</div>
                 <div class="component-description">Reactive programming library for Java and Android.</div>
             </div>
-
             <div class="component">
                 <div class="component-name">EventBus</div>
                 <div class="component-version">Version: 3.x</div>
                 <div class="component-license">License: Apache License 2.0</div>
                 <div class="component-description">Event bus for Android and Java.</div>
             </div>
-
             <div class="component">
                 <div class="component-name">Shimmer Android API</div>
                 <div class="component-version">Version: 1.0.0</div>
                 <div class="component-license">License: BSD</div>
                 <div class="component-description">API for Shimmer sensing devices integration.</div>
             </div>
-
             <div class="component">
                 <div class="component-name">Nordic BLE Library</div>
                 <div class="component-version">Version: 2.11.0</div>
                 <div class="component-license">License: BSD</div>
                 <div class="component-description">Bluetooth Low Energy library for Android.</div>
             </div>
-
             <div class="component">
                 <div class="component-name">TOPDON Thermal SDK</div>
                 <div class="component-version">Version: TC001</div>
                 <div class="component-license">License: Proprietary</div>
                 <div class="component-description">SDK for TOPDON thermal camera integration.</div>
             </div>
-
             <h2>License Information</h2>
             <p>Most of the third-party components used in this application are licensed under the Apache License 2.0, which allows for commercial use, modification, distribution, and patent use, while requiring preservation of copyright and license notices.</p>
             
             <p>For the full text of the Apache License 2.0, please visit: <a href="https://www.apache.org/licenses/LICENSE-2.0">https://www.apache.org/licenses/LICENSE-2.0</a></p>
-
             <p>If you have any questions about the third-party components used in this application, please contact us through the app's support channels.</p>
         </body>
         </html>
@@ -410,17 +378,14 @@ class PolicyViewModel : AppBaseViewModel() {
 }
 
 class PolicyComposeActivity : BaseComposeActivity<PolicyViewModel>() {
-
     companion object {
         const val KEY_THEME_TYPE = "key_theme_type"
         const val KEY_USE_TYPE = "key_use_type"
     }
 
     override fun createViewModel(): PolicyViewModel = viewModels<PolicyViewModel>().value
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val themeType = intent.getIntExtra(KEY_THEME_TYPE, 1)
         val viewModel = viewModels<PolicyViewModel>().value
         viewModel.setPolicyType(themeType)
@@ -435,11 +400,9 @@ class PolicyComposeActivity : BaseComposeActivity<PolicyViewModel>() {
             val isLoading by viewModel.isLoading
             val showError by viewModel.showError
             val htmlContent by viewModel.htmlContent
-
             LaunchedEffect(policyType) {
                 viewModel.loadContent(context)
             }
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -449,7 +412,6 @@ class PolicyComposeActivity : BaseComposeActivity<PolicyViewModel>() {
                     title = policyType.title,
                     onBackClick = { finish() }
                 )
-
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -461,7 +423,6 @@ class PolicyComposeActivity : BaseComposeActivity<PolicyViewModel>() {
                             onError = { viewModel.setError(true) }
                         )
                     }
-
                     if (isLoading) {
                         Box(
                             modifier = Modifier
@@ -484,7 +445,6 @@ class PolicyComposeActivity : BaseComposeActivity<PolicyViewModel>() {
                             }
                         }
                     }
-
                     if (showError) {
                         Card(
                             modifier = Modifier
@@ -559,7 +519,6 @@ fun PolicyWebView(
                 webSettings.setSupportZoom(true)
                 webSettings.builtInZoomControls = true
                 webSettings.displayZoomControls = false
-
                 webViewClient = object : BridgeWebViewClient(this) {
                     override fun onReceivedError(
                         view: WebView?,
@@ -572,7 +531,6 @@ fun PolicyWebView(
                         }
                     }
                 }
-
                 isScrollContainer = true
             }
         },

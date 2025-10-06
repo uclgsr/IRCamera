@@ -33,7 +33,6 @@ class ReportIRInputView : LinearLayout {
     private lateinit var clExplain: View
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     @SuppressLint("SetTextI18n")
@@ -44,34 +43,26 @@ class ReportIRInputView : LinearLayout {
     ) {
         inflate(context, R.layout.view_report_ir_input, this)
         initViews()
-
         val etExplain = clExplain.findViewById<EditText>(R.id.et_item)
         etExplain.inputType = InputType.TYPE_CLASS_TEXT
         etExplain.filters = arrayOf(LengthFilter(150))
-
         val switchMax = clMax.findViewById<SwitchCompat>(R.id.switch_item)
         val etMax = clMax.findViewById<EditText>(R.id.et_item)
         setSwitchListener(switchMax, etMax)
-
         val switchMin = clMin.findViewById<SwitchCompat>(R.id.switch_item)
         val etMin = clMin.findViewById<EditText>(R.id.et_item)
         setSwitchListener(switchMin, etMin)
-
         val switchAverage = clAverage.findViewById<SwitchCompat>(R.id.switch_item)
         val etAverage = clAverage.findViewById<EditText>(R.id.et_item)
         setSwitchListener(switchAverage, etAverage)
-
         val switchExplain = clExplain.findViewById<SwitchCompat>(R.id.switch_item)
         setSwitchListener(switchExplain, etExplain)
-
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.ReportIRInputView)
         val type = typeArray.getInt(R.styleable.ReportIRInputView_type, TYPE_FULL)
         val index = typeArray.getInt(R.styleable.ReportIRInputView_index, 0)
         typeArray.recycle()
-
         clTitle.isVisible = index == 0
         viewLine.isVisible = index > 0
-
         setupTypeSpecificViews(type, index)
     }
 
@@ -93,7 +84,6 @@ class ReportIRInputView : LinearLayout {
         val tvMinName = clMin.findViewById<TextView>(R.id.tv_item_name)
         val tvAverageName = clAverage.findViewById<TextView>(R.id.tv_item_name)
         val tvExplainName = clExplain.findViewById<TextView>(R.id.tv_item_name)
-
         when (type) {
             TYPE_FULL -> {
                 tvTitle.setText(LibR.string.thermal_full_rect)
@@ -191,7 +181,6 @@ class ReportIRInputView : LinearLayout {
         val etMin = clMin.findViewById<EditText>(R.id.et_item)
         val etAverage = clAverage.findViewById<EditText>(R.id.et_item)
         val etExplain = clExplain.findViewById<EditText>(R.id.et_item)
-
         tempBean?.max?.let {
             etMax.setText(UnitTools.showUnitValue(it.toFloat())?.toString())
         }

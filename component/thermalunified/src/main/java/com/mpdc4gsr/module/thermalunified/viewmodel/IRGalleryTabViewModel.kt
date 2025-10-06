@@ -10,20 +10,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class IRGalleryTabViewModel : BaseViewModel() {
-
     val isEditModeLD: MutableLiveData<Boolean> = MutableLiveData(false)
-
     val selectSizeLD: MutableLiveData<Int> = MutableLiveData(0)
-
     val selectAllIndex: MutableLiveData<Int> = MutableLiveData(0)
 
     // StateFlow properties for Compose
     private val _currentDirType = MutableStateFlow(DirType.LINE)
     val currentDirType: StateFlow<DirType> = _currentDirType.asStateFlow()
-
     private val _canSwitchDir = MutableStateFlow(true)
     val canSwitchDir: StateFlow<Boolean> = _canSwitchDir.asStateFlow()
-
     private val _hasBackIcon = MutableStateFlow(false)
     val hasBackIcon: StateFlow<Boolean> = _hasBackIcon.asStateFlow()
 

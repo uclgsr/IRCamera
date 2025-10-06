@@ -19,10 +19,6 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * Profile Screen - User profile and research data management
- * Provides user account information and research template management
- */
 @Composable
 fun ProfileScreen(
     onBackClick: (() -> Unit)? = null,
@@ -43,7 +39,6 @@ fun ProfileScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         // Profile content
         Column(
             modifier = Modifier
@@ -56,13 +51,10 @@ fun ProfileScreen(
             UserProfileCard(
                 onNavigateToEditProfile = onNavigateToEditProfile
             )
-
             // Research statistics
             ResearchStatsCard()
-
             // Recent activities
             RecentActivitiesCard()
-
             // Quick actions
             QuickActionsCard(
                 onNavigateToResearchTemplates = onNavigateToResearchTemplates,
@@ -73,9 +65,6 @@ fun ProfileScreen(
     }
 }
 
-/**
- * User profile information card
- */
 @Composable
 private fun UserProfileCard(
     onNavigateToEditProfile: (() -> Unit)? = null,
@@ -108,9 +97,7 @@ private fun UserProfileCard(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // User information
             Text(
                 text = "Research User",
@@ -128,9 +115,7 @@ private fun UserProfileCard(
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 12.sp
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Edit profile button
             val context = androidx.compose.ui.platform.LocalContext.current
             Button(
@@ -153,9 +138,6 @@ private fun UserProfileCard(
     }
 }
 
-/**
- * Research statistics card
- */
 @Composable
 private fun ResearchStatsCard(
     modifier: Modifier = Modifier
@@ -175,9 +157,7 @@ private fun ResearchStatsCard(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -198,9 +178,7 @@ private fun ResearchStatsCard(
                     color = Color.Cyan
                 )
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Progress indicators
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -228,9 +206,6 @@ private fun ResearchStatsCard(
     }
 }
 
-/**
- * Recent activities card
- */
 @Composable
 private fun RecentActivitiesCard(
     modifier: Modifier = Modifier
@@ -250,16 +225,13 @@ private fun RecentActivitiesCard(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             val activities = listOf(
                 Activity("GSR Session recorded", "2 hours ago", Icons.Default.Sensors),
                 Activity("Thermal calibration completed", "1 day ago", Icons.Default.Thermostat),
                 Activity("Data exported to CSV", "2 days ago", Icons.Default.FileDownload),
                 Activity("Multi-modal recording", "3 days ago", Icons.Default.VideoCall)
             )
-
             activities.forEach { activity ->
                 ActivityItem(activity = activity)
                 if (activity != activities.last()) {
@@ -270,9 +242,6 @@ private fun RecentActivitiesCard(
     }
 }
 
-/**
- * Quick actions card
- */
 @Composable
 private fun QuickActionsCard(
     onNavigateToResearchTemplates: (() -> Unit)? = null,
@@ -295,9 +264,7 @@ private fun QuickActionsCard(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -347,9 +314,6 @@ private fun QuickActionsCard(
     }
 }
 
-/**
- * Statistic item component
- */
 @Composable
 private fun StatItem(
     label: String,
@@ -375,9 +339,6 @@ private fun StatItem(
     }
 }
 
-/**
- * Progress item component
- */
 @Composable
 private fun ProgressItem(
     label: String,
@@ -404,9 +365,7 @@ private fun ProgressItem(
                 fontSize = 12.sp
             )
         }
-
         Spacer(modifier = Modifier.height(4.dp))
-
         LinearProgressIndicator(
             progress = { current.toFloat() / total.toFloat() },
             modifier = Modifier.fillMaxWidth(),
@@ -416,9 +375,6 @@ private fun ProgressItem(
     }
 }
 
-/**
- * Activity item component
- */
 @Composable
 private fun ActivityItem(
     activity: Activity,
@@ -434,9 +390,7 @@ private fun ActivityItem(
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(20.dp)
         )
-
         Spacer(modifier = Modifier.width(12.dp))
-
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -454,9 +408,6 @@ private fun ActivityItem(
     }
 }
 
-/**
- * Quick action button component
- */
 @Composable
 private fun QuickActionButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -479,9 +430,7 @@ private fun QuickActionButton(
                 tint = Color.White
             )
         }
-
         Spacer(modifier = Modifier.height(8.dp))
-
         Text(
             text = label,
             color = Color.White,
@@ -491,9 +440,6 @@ private fun QuickActionButton(
     }
 }
 
-/**
- * Data classes
- */
 data class Activity(
     val description: String,
     val timestamp: String,

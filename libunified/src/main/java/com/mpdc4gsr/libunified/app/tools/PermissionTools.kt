@@ -18,10 +18,8 @@ import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import java.lang.ref.WeakReference
 
 object PermissionTools {
-
     private const val REQUEST_CODE_PERMISSIONS = 1001
     private const val REQUEST_CODE_BLUETOOTH = 1002
-
     private var permissionCallbacks = mutableMapOf<Int, PermissionCallback>()
 
     private data class PermissionCallback(
@@ -91,24 +89,20 @@ object PermissionTools {
                         listOf(Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_IMAGES)
                     }
             }
-
         // Check if permissions are already granted
         val allGranted = permissions.all { permission ->
             ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
         }
-
         if (allGranted) {
             callback.invoke()
             return
         }
-
         // Store callback for result handling
         permissionCallbacks[REQUEST_CODE_PERMISSIONS] = PermissionCallback(
             WeakReference(activity),
             type,
             callback
         )
-
         // Request permissions using the standard API
         ActivityCompat.requestPermissions(
             activity,
@@ -135,20 +129,16 @@ object PermissionTools {
     ) {
         val callbackData = permissionCallbacks.remove(requestCode) ?: return
         val activity = callbackData.activityRef.get() ?: return
-
         val allGranted = grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }
-
         if (allGranted) {
             callbackData.callback.invoke()
         } else {
             val deniedPermissions = permissions.filterIndexed { index, _ ->
                 grantResults.getOrNull(index) != PackageManager.PERMISSION_GRANTED
             }
-
             val shouldShowRationale = deniedPermissions.any { permission ->
                 ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
             }
-
             if (!shouldShowRationale && deniedPermissions.isNotEmpty()) {
                 val tipsResId: Int =
                     when (callbackData.type) {
@@ -224,17 +214,14 @@ object PermissionTools {
                     Manifest.permission.BLUETOOTH_CONNECT,
                 )
             }
-
         // Check if permissions are already granted
         val allGranted = permissionList.all { permission ->
             ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
         }
-
         if (allGranted) {
             callback.onResult(true)
             return
         }
-
         // Store callback for result handling
         permissionCallbacks[REQUEST_CODE_BLUETOOTH] = PermissionCallback(
             WeakReference(activity),
@@ -243,7 +230,6 @@ object PermissionTools {
             callback,
             isBtFirst
         )
-
         // Request permissions using the standard API
         ActivityCompat.requestPermissions(
             activity,
@@ -261,23 +247,18 @@ object PermissionTools {
         val activity = callbackData.activityRef.get() ?: return
         val callback = callbackData.btCallback ?: return
         val isBtFirst = callbackData.isBtFirst
-
         val allGranted = grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }
         XLog.i("onGranted($allGranted)")
-
         if (allGranted) {
             callback.onResult(true)
         } else {
             val deniedPermissions = permissions.filterIndexed { index, _ ->
                 grantResults.getOrNull(index) != PackageManager.PERMISSION_GRANTED
             }
-
             val shouldShowRationale = deniedPermissions.any { permission ->
                 ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
             }
-
             XLog.i("onDenied(never=${!shouldShowRationale})")
-
             if (!shouldShowRationale && deniedPermissions.isNotEmpty()) {
                 var isBtNever = false
                 var isLocationNever = false
@@ -289,7 +270,6 @@ object PermissionTools {
                         isLocationNever = true
                     }
                 }
-
                 val tipDialogState = TipDialogState(activity)
                 val messageResId = if (!isLocationNever || (isBtNever && isBtFirst))
                     R.string.app_bluetooth_content
@@ -317,9 +297,7 @@ object PermissionTools {
     }
 
     interface Callback {
-
         fun onResult(allGranted: Boolean)
-
         fun onNever(isJump: Boolean)
     }
 }

@@ -19,11 +19,9 @@ import kotlin.math.floor
 object IRCmdTools {
     val TAG = "IRCmdTool"
     var dispNumber = 30
-
     fun getDualBytes(irCmd: IRCMD?): ByteArray {
         val calibrationDataSize = 192
         val INIT_ALIGN_DATA = floatArrayOf(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
-
         val oemInfo = ByteArray(512)
         val snData = ByteArray(256)
         val dispData = ByteArray(5)
@@ -79,7 +77,6 @@ object IRCmdTools {
                     Log.e(TAG, "read file fail ")
                 }
                 parameters[length] = 1
-
                 val alignByte = SharedManager.getManualData(snStr)
                 System.arraycopy(alignByte, 0, parameters, calibrationDataSize + 1, alignByte.size)
                 XLog.w("[ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]")
@@ -272,15 +269,12 @@ object IRCmdTools {
         moveY: Int,
     ) {
         val newSrc = ByteArray(8)
-
         val xSrc = ByteArray(4)
         HexDump.float2byte(moveX.toFloat(), xSrc)
         System.arraycopy(xSrc, 0, newSrc, 0, 4)
-
         val ySrc = ByteArray(4)
         HexDump.float2byte(moveY.toFloat(), ySrc)
         System.arraycopy(ySrc, 0, newSrc, 4, 4)
-
         dualView?.dualUVCCamera?.setAlignTranslateParameter(newSrc)
     }
 
@@ -291,7 +285,6 @@ object IRCmdTools {
         if (syncImage.type == 1) {
             irCmd?.tc1bShutterManual()
         } else {
-
             irCmd?.updateOOCOrB(CommonParams.UpdateOOCOrBType.B_UPDATE)
         }
     }

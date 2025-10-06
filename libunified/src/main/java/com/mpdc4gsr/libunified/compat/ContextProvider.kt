@@ -4,13 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 
-/**
- * AndroidX alternative to utilcode Utils.getApp()
- * Provides global context access without using hidden APIs
- *
- * Initialize in Application.onCreate():
- * ContextProvider.init(this)
- */
 @SuppressLint("StaticFieldLeak")
 object ContextProvider {
     private lateinit var applicationContext: Context

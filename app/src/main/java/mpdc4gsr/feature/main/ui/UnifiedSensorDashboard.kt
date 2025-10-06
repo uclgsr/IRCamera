@@ -24,11 +24,6 @@ import mpdc4gsr.core.ui.components.sensors.UnifiedSensorStatus
 import mpdc4gsr.core.ui.model.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * Unified Sensor Dashboard - Comprehensive view of all sensor modalities
- * Replaces SensorDashboardFragment with modern Compose implementation
- * Includes GSR, Thermal IR, and RGB Camera sensors in a unified interface
- */
 @Composable
 fun UnifiedSensorDashboard(
     onBackClick: (() -> Unit)? = null,
@@ -44,7 +39,6 @@ fun UnifiedSensorDashboard(
     var thermalState by remember { mutableStateOf(SensorState.Disconnected) }
     var rgbState by remember { mutableStateOf(SensorState.Disconnected) }
     var unifiedState by remember { mutableStateOf(UnifiedSystemState.Inactive) }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -62,13 +56,11 @@ fun UnifiedSensorDashboard(
                 onClick = onSettingsClick
             )
         }
-
         // Breadcrumb navigation for context
         NavigationBreadcrumb(
             currentScreen = "Sensor Overview",
             previousScreen = "Home"
         )
-
         // Scrollable sensor content
         Column(
             modifier = Modifier
@@ -101,7 +93,6 @@ fun UnifiedSensorDashboard(
                     }
                 }
             )
-
             // Individual sensor cards
             GSRSensorCard(
                 state = gsrState,
@@ -113,13 +104,12 @@ fun UnifiedSensorDashboard(
                         is GSRAction.Disconnect -> gsrState = SensorState.Disconnected
                         is GSRAction.StartStream -> gsrState = SensorState.Streaming
                         is GSRAction.StopStream -> gsrState = SensorState.Connected
-                        is GSRAction.ConfigureDevice -> { /* Handle device configuration */
+                        is GSRAction.ConfigureDevice -> {
                         }
                     }
                 },
                 onSettingsClick = onGSRSettingsClick
             )
-
             ThermalSensorCard(
                 state = thermalState,
                 onStateChange = { thermalState = it },
@@ -130,16 +120,15 @@ fun UnifiedSensorDashboard(
                         is ThermalAction.Disconnect -> thermalState = SensorState.Disconnected
                         is ThermalAction.StartPreview -> thermalState = SensorState.Streaming
                         is ThermalAction.StopPreview -> thermalState = SensorState.Connected
-                        is ThermalAction.Calibrate -> { /* Handle calibration */
+                        is ThermalAction.Calibrate -> {
                         }
 
-                        is ThermalAction.OpenSettings -> { /* Handle settings */
+                        is ThermalAction.OpenSettings -> {
                         }
                     }
                 },
                 onSettingsClick = onThermalSettingsClick
             )
-
             RGBCameraSensorCard(
                 state = rgbState,
                 onStateChange = { rgbState = it },
@@ -150,7 +139,7 @@ fun UnifiedSensorDashboard(
                         is CameraAction.Disconnect -> rgbState = SensorState.Disconnected
                         is CameraAction.StartPreview -> rgbState = SensorState.Streaming
                         is CameraAction.StopPreview -> rgbState = SensorState.Connected
-                        is CameraAction.SetResolution -> { /* Handle resolution change */
+                        is CameraAction.SetResolution -> {
                         }
                     }
                 },

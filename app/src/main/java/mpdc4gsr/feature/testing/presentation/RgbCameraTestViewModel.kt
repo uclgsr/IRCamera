@@ -13,7 +13,6 @@ import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.core.ui.AppBaseViewModel
 
 class RgbCameraTestViewModel : AppBaseViewModel() {
-
     companion object {
         private const val TAG = "RgbCameraTestViewModel"
     }
@@ -32,18 +31,13 @@ class RgbCameraTestViewModel : AppBaseViewModel() {
 
     private val _testResults = MutableStateFlow<List<TestCase>>(emptyList())
     val testResults: StateFlow<List<TestCase>> = _testResults.asStateFlow()
-
     private val _isTestRunning = MutableStateFlow(false)
     val isTestRunning: StateFlow<Boolean> = _isTestRunning.asStateFlow()
-
     private val _cameraCapabilities = MutableStateFlow<Map<String, Any>>(emptyMap())
     val cameraCapabilities: StateFlow<Map<String, Any>> = _cameraCapabilities.asStateFlow()
-
     private val _recordingStatus = MutableStateFlow("Ready")
     val recordingStatus: StateFlow<String> = _recordingStatus.asStateFlow()
-
     private var cameraRecorder: RgbCameraRecorder? = null
-
     fun initializeTestCases() {
         _testResults.value = listOf(
             TestCase(
@@ -110,7 +104,6 @@ class RgbCameraTestViewModel : AppBaseViewModel() {
     }
 
     fun getCameraRecorder(): RgbCameraRecorder? = cameraRecorder
-
     override fun onCleared() {
         super.onCleared()
         viewModelScope.launch {

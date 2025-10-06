@@ -16,7 +16,6 @@ import androidx.core.content.res.ResourcesCompat
 import com.mpdc4gsr.libunified.R
 
 class CountDownView : View {
-
     //
     private var mRingColor = 0
 
@@ -44,15 +43,11 @@ class CountDownView : View {
     private var mProgressTextColor = 0
     private var mCountdownTime = 0
     private var mCurrentProgress = 0f
-
     private var valueAnimator: ValueAnimator? = null
-
     private var mListener: OnCountDownListener? = null
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -143,10 +138,8 @@ class CountDownView : View {
         mTextPaint.typeface = font
         // (5 4 3 2 1)
         // val text: String = (mCountdownTime - (mCurrentProgress / 360f * mCountdownTime)).toInt().toString()
-
         mTextPaint.textSize = mRingProgressTextSize.toFloat()
         mTextPaint.color = mProgressTextColor
-
         //
         val fontMetrics = mTextPaint.fontMetricsInt
         val baseline =

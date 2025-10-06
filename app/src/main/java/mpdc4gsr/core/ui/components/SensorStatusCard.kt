@@ -42,23 +42,18 @@ fun SensorStatusCard(
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
             SensorStatusRow(
                 label = "Thermal Camera",
                 state = thermalCameraState,
                 details = "TC001 384x288"
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             SensorStatusRow(
                 label = "GSR Sensor",
                 state = gsrSensorState,
                 details = "Shimmer3 51.2Hz"
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             SensorStatusRow(
                 label = "BLE Connection",
                 state = bleConnectionState,
@@ -94,7 +89,6 @@ private fun SensorStatusRow(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
         }
-
         StatusIndicator(state = state)
     }
 }
@@ -126,7 +120,6 @@ private fun StatusIndicator(state: ConnectionState) {
             "Error"
         )
     }
-
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {

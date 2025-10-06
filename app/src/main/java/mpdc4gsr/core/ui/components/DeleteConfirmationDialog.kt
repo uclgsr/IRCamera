@@ -14,10 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.csl.irCamera.R
 
-/**
- * Compose replacement for DelPopup
- * A modern confirmation dialog for delete actions
- */
 @Composable
 fun DeleteConfirmationDialog(
     onConfirm: () -> Unit,
@@ -73,10 +69,6 @@ fun DeleteConfirmationDialog(
     )
 }
 
-/**
- * Alternative popup-style delete confirmation
- * More similar to the original DelPopup appearance
- */
 @Composable
 fun DeleteConfirmationPopup(
     onConfirm: () -> Unit,

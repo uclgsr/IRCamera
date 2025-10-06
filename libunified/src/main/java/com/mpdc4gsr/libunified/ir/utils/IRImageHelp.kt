@@ -9,19 +9,16 @@ import org.opencv.imgproc.Imgproc
 import java.io.IOException
 
 class IRImageHelp {
-
     @Volatile
     private var colorList: IntArray? = null
 
     @Volatile
     private var places: FloatArray? = null
-
     private var isUseGray = true
     private var customMaxTemp = 0f
     private var customMinTemp = 0f
     private var maxRGB = IntArray(3)
     private var minRGB = IntArray(3)
-
     fun getColorList(): IntArray? {
         return colorList
     }
@@ -64,10 +61,8 @@ class IRImageHelp {
             if (colorList != null) {
                 var j = 0
                 val imageDstLength: Int = imageWidth * imageHeight * 4
-
                 var index = 0
                 while (index < imageDstLength) {
-
                     var temperature0: Float =
                         (
                                 (temperatureSrc.get(j).toInt() and 0xff) + (
@@ -77,7 +72,6 @@ class IRImageHelp {
                                 ).toFloat()
                     temperature0 = (temperature0 / 64 - 273.15).toFloat()
                     if (temperature0 >= customMinTemp && temperature0 <= customMaxTemp) {
-
                         val intensity =
                             ((temperature0 - customMinTemp) / (customMaxTemp - customMinTemp) * 255).toInt()
                                 .coerceIn(0, 255)
@@ -103,7 +97,6 @@ class IRImageHelp {
                     index += 4
                     j += 2
                 }
-
             }
         } catch (exception: Exception) {
             Log.e("[ph][ph][ph][ph]", exception.message!!)
@@ -126,10 +119,8 @@ class IRImageHelp {
             val biaochiMax: Float = max
             val biaochiMin: Float = min
             val startTimeAll = System.currentTimeMillis()
-
             var index = 0
             while (index < imageDstLength) {
-
                 var temperature0: Float =
                     (
                             (temperatureSrc[j].toInt() and 0xff) + (
@@ -143,7 +134,6 @@ class IRImageHelp {
                     val r: Int = imageDst!![index].toInt() and 0xff
                     val g: Int = imageDst!![index + 1].toInt() and 0xff
                     val b: Int = imageDst!![index + 2].toInt() and 0xff
-
                     val grey = (r * 0.3f + g * 0.59f + b * 0.11f).toInt()
                     imageDst!![index] = grey.toByte()
                     imageDst!![index + 1] = grey.toByte()
@@ -182,14 +172,12 @@ class IRImageHelp {
                             alarmBean.lowColor,
                             alarmBean.markType,
                         )
-
                     // Convert Bitmap to byte array
                     val mat = Mat(resultBitmap.height, resultBitmap.width, CvType.CV_8UC4)
                     Utils.bitmapToMat(resultBitmap, mat)
                     Imgproc.cvtColor(mat, mat, Imgproc.COLOR_RGBA2BGR)
                     val grayData = ByteArray(mat.cols() * mat.rows() * 3)
                     mat[0, 0, grayData]
-
                     // Now convert to RGBA for return
                     val diffMat =
                         Mat(

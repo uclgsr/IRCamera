@@ -15,13 +15,9 @@ import kotlinx.coroutines.launch
 
 abstract class BaseFragment : Fragment() {
     val TAG = BaseFragment::class.java.simpleName
-
     abstract fun initContentView(): Int
-
     abstract fun initView()
-
     abstract fun initData()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,9 +38,7 @@ abstract class BaseFragment : Fragment() {
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (hidden) {
-
         } else {
-
             initData()
         }
     }
@@ -54,7 +48,6 @@ abstract class BaseFragment : Fragment() {
     }
 
     private val loadingDialogState by lazy { LoadingDialogState(requireContext()) }
-
     fun showLoadingDialog(
         @StringRes resId: Int = 0,
     ) {
@@ -82,7 +75,6 @@ abstract class BaseFragment : Fragment() {
                 }
             }
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
             DeviceEventManager.socketConnectionState.collectLatest { state ->
                 state?.let {

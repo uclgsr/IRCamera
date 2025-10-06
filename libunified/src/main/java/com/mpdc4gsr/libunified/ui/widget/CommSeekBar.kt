@@ -9,21 +9,16 @@ import com.mpdc4gsr.libunified.R
 import kotlin.math.roundToInt
 
 class CommSeekBar : AppCompatSeekBar {
-
     private val orientation: Int
-
     private var mMaxWidth = 48
     private var mMaxHeight = 48
     private var mMinWidth = 24
     private var mMinHeight = 24
     var level = 0;
-
     private var onSeekBarChangeListener: OnSeekBarChangeListener? = null
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -40,7 +35,6 @@ class CommSeekBar : AppCompatSeekBar {
             typedArray.getDimensionPixelSize(R.styleable.CommSeekBar_android_minWidth, mMinWidth)
         mMinHeight =
             typedArray.getDimensionPixelSize(R.styleable.CommSeekBar_android_minHeight, mMinHeight)
-
         typedArray.recycle()
     }
 
@@ -78,7 +72,6 @@ class CommSeekBar : AppCompatSeekBar {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         } else {
             val d = progressDrawable
-
             val thumbWidth = thumb?.intrinsicWidth ?: 0
             var dw = 0
             var dh = 0
@@ -89,7 +82,6 @@ class CommSeekBar : AppCompatSeekBar {
             }
             dw += paddingLeft + paddingRight
             dh += paddingTop + paddingBottom
-
             setMeasuredDimension(
                 resolveSizeAndState(dw, widthMeasureSpec, 0),
                 resolveSizeAndState(dh, heightMeasureSpec, 0)
@@ -107,11 +99,9 @@ class CommSeekBar : AppCompatSeekBar {
     private fun calculateDrawable(w: Int, h: Int) {
         val paddingWidth: Int = w - paddingLeft - paddingRight
         val paddingHeight: Int = h - paddingTop - paddingBottom
-
         val trackWidth = mMaxWidth.coerceAtMost(paddingWidth)
         val thumbWidth = thumb?.intrinsicWidth ?: 0
         val thumbHeight = thumb?.intrinsicHeight ?: 0
-
         val trackOffset: Int
         val thumbTopOffset: Int
         if (thumbWidth > trackWidth) {
@@ -126,7 +116,6 @@ class CommSeekBar : AppCompatSeekBar {
         if (progressDrawable != null) {
             progressDrawable.setBounds(0, trackOffset, paddingHeight, trackOffset + trackWidth)
         }
-
         if (thumb != null) {
             val available: Int = paddingHeight - thumbHeight + thumbOffset * 2
             val left = progress / max.toFloat() * available + 0.5f
@@ -160,7 +149,6 @@ class CommSeekBar : AppCompatSeekBar {
         if (!isEnabled) {
             return false
         }
-
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 isPressed = true

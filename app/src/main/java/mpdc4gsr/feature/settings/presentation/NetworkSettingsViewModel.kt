@@ -18,24 +18,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.ShimmerDeviceManager
 
-/**
- * Network Settings ViewModel - MVVM Integration
- * Manages WiFi, Bluetooth, and device pairing with existing ShimmerDeviceManager
- */
 class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
-
     private val context: Context = context.applicationContext
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var wifiManager: WifiManager? = null
     private var shimmerDeviceManager: ShimmerDeviceManager? = null
-
     private val _networkSettings = MutableStateFlow(NetworkSettings())
     val networkSettings: StateFlow<NetworkSettings> = _networkSettings.asStateFlow()
-
     private val _pairedDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())
     val pairedDevices: StateFlow<List<DeviceInfo>> = _pairedDevices.asStateFlow()
-
     private val _networkInfo = MutableStateFlow(NetworkInfo())
     val networkInfo: StateFlow<NetworkInfo> = _networkInfo.asStateFlow()
 
@@ -72,7 +64,6 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
         val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         bluetoothAdapter = bluetoothManager?.adapter
         wifiManager = context.getSystemService(Context.WIFI_SERVICE) as? WifiManager
-
         loadSettings()
         updateNetworkInfo()
         loadPairedDevices()
@@ -106,7 +97,6 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
                     (it shr 24 and 0xff)
                 )
             } ?: "N/A"
-
             _networkInfo.value = NetworkInfo(
                 wifiNetwork = wifiInfo?.ssid?.replace("\"", "") ?: "Not Connected",
                 ipAddress = ipAddress,
@@ -118,7 +108,6 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
     private fun loadPairedDevices() {
         viewModelScope.launch {
             val devices = mutableListOf<DeviceInfo>()
-
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT)
                 == PackageManager.PERMISSION_GRANTED
             ) {
@@ -143,7 +132,6 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
                     )
                 }
             }
-
             _pairedDevices.value = devices
         }
     }
@@ -162,20 +150,10 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
         }
     }
 
-    /**
-     * Refreshes WiFi network information.
-     * Note: Direct WiFi control (enable/disable) requires system-level permissions
-     * in Android 10+ and is not available to regular applications.
-     */
     fun refreshWifiInfo() {
         updateNetworkInfo()
     }
 
-    /**
-     * Refreshes Bluetooth status information.
-     * Note: Direct Bluetooth control (enable/disable) requires BLUETOOTH_ADMIN permission
-     * and user interaction via system dialogs in modern Android versions.
-     */
     fun refreshBluetoothInfo() {
         updateNetworkInfo()
     }

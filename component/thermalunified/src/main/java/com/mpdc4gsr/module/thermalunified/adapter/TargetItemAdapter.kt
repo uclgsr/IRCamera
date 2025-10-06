@@ -17,7 +17,6 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
     private var selected = -1
-
     fun selected(index: Int) {
         selected = index
         notifyDataSetChanged()
@@ -83,6 +82,5 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         val lay: View = itemView.findViewById(R.id.item_menu_tab_lay)
         val img: ImageView = itemView.findViewById(R.id.item_menu_tab_img)
         val name: TextView = itemView.findViewById(R.id.item_menu_tab_text)
-
     }
 }

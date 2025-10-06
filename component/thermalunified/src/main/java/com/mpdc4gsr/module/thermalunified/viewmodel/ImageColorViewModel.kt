@@ -8,19 +8,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ImageColorViewModel : BaseViewModel() {
-
     private val _timestamp = MutableStateFlow("")
     val timestamp: StateFlow<String> = _timestamp.asStateFlow()
-
     private val _showData = MutableStateFlow(false)
     val showData: StateFlow<Boolean> = _showData.asStateFlow()
-
     private val _leftImagePath = MutableStateFlow("")
     val leftImagePath: StateFlow<String> = _leftImagePath.asStateFlow()
-
     private val _rightImagePath = MutableStateFlow("")
     val rightImagePath: StateFlow<String> = _rightImagePath.asStateFlow()
-
     private val _comparisonResult = MutableStateFlow("")
     val comparisonResult: StateFlow<String> = _comparisonResult.asStateFlow()
 

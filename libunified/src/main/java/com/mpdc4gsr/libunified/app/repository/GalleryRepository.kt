@@ -38,7 +38,6 @@ object GalleryRepository {
             if (!targetDir.exists()) {
                 targetDir.mkdirs()
             }
-
             fileList?.forEach {
                 val path = sourceDir.absolutePath + File.separator + it.name
                 copyPictureFile(path, targetDir.absolutePath + File.separator + it.name)
@@ -77,7 +76,6 @@ object GalleryRepository {
             val dirFile = File(path)
             if (dirFile.isDirectory) {
                 val files = dirFile.listFiles()!!
-
                 files.sortByDescending {
                     it.lastModified()
                 }
@@ -124,7 +122,6 @@ object GalleryRepository {
                     XLog.e(": ${e.message}")
                 }
             }
-
             return@withContext resultList
         }
     }
@@ -177,14 +174,12 @@ object GalleryRepository {
         if (files.isNullOrEmpty()) {
             files = loadAllLocaleByMediaStore(dirType)
         }
-
         val resultList: ArrayList<File> = ArrayList(files.size)
         files.forEach {
             if (it.name.endsWith(if (isVideo) "MP4" else "JPG", true)) {
                 resultList.add(it)
             }
         }
-
         resultList.sortByDescending {
             it.lastModified()
         }
@@ -193,12 +188,10 @@ object GalleryRepository {
 
     private fun loadAllLocaleByMediaStore(dirType: DirType): Array<out File> {
         val tc001Files: MutableList<File> = ArrayList()
-
         val projection =
             arrayOf(
                 MediaStore.Images.Media.DATA,
             )
-
         val selection = MediaStore.Images.Media.DATA + " LIKE ?"
         val path =
             when (dirType) {
@@ -207,9 +200,7 @@ object GalleryRepository {
                 else -> "%DCIM/TS004%"
             }
         val selectionArgs = arrayOf(path)
-
         val contentResolver: ContentResolver = ContextProvider.getContext().contentResolver
-
         val queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val cursor =
             contentResolver.query(

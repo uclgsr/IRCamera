@@ -18,7 +18,6 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
 class ShimmerFactoryResolverTest {
-
     private lateinit var context: Context
 
     @Before
@@ -30,7 +29,6 @@ class ShimmerFactoryResolverTest {
     fun `resolver creates factory successfully`() {
         // When
         val factory = ShimmerDeviceFactoryResolver.createFactory(context)
-
         // Then
         assertNotNull("Factory should not be null", factory)
         // factory is always ShimmerDeviceFactory by contract, no need for type check
@@ -40,10 +38,8 @@ class ShimmerFactoryResolverTest {
     fun `resolver factory creates device interface`() {
         // Given
         val factory = ShimmerDeviceFactoryResolver.createFactory(context)
-
         // When
         val device = factory.createShimmerDevice()
-
         // Then
         assertNotNull("Device should not be null", device)
         // device is always ShimmerDeviceInterface by contract, no need for type check
@@ -53,10 +49,8 @@ class ShimmerFactoryResolverTest {
     fun `resolver falls back to mock in test environment`() {
         // Given
         val factory = ShimmerDeviceFactoryResolver.createFactory(context)
-
         // When
         val device = factory.createShimmerDevice()
-
         // Then
         // In test environment, should fall back to mock since real implementation class is not available
         assertTrue(
@@ -74,29 +68,24 @@ class ShimmerFactoryResolverTest {
         // Given
         val factory = ShimmerDeviceFactoryResolver.createFactory(context)
         val device = factory.createShimmerDevice()
-
         // When/Then - Test that all interface methods work
         val connected = device.isConnected()
         assertTrue("Should be able to call isConnected", connected == false || connected == true)
-
         val connectResult = device.connect("00:00:00:00:00:00", "test")
         assertTrue(
             "Should be able to call connect",
             connectResult == true || connectResult == false
         )
-
         val streamResult = device.startStreaming()
         assertTrue(
             "Should be able to call startStreaming",
             streamResult == true || streamResult == false
         )
-
         val stopResult = device.stopStreaming()
         assertTrue(
             "Should be able to call stopStreaming",
             stopResult == true || stopResult == false
         )
-
         val disconnectResult = device.disconnect()
         assertTrue(
             "Should be able to call disconnect",

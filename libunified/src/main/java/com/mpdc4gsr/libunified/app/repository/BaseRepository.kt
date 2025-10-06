@@ -10,7 +10,6 @@ import kotlinx.coroutines.withContext
 abstract class BaseRepository(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
-
     sealed class Result<out T> {
         data class Success<T>(val data: T) : Result<T>()
         data class Error(val exception: Throwable) : Result<Nothing>()
@@ -28,7 +27,6 @@ abstract class BaseRepository(
 
     // Simple in-memory cache
     private val cache = mutableMapOf<String, CachedData<Any>>()
-
     protected suspend fun <T> safeCall(
         operation: suspend () -> T
     ): Result<T> {
@@ -64,7 +62,6 @@ abstract class BaseRepository(
         operation: suspend () -> T
     ): T {
         val cached = cache[cacheKey] as? CachedData<T>
-
         return if (cached != null && !cached.isExpired) {
             cached.data
         } else {
@@ -89,7 +86,6 @@ abstract class BaseRepository(
         shouldFetch: (T?) -> Boolean = { true }
     ): Flow<Result<T>> = flow {
         emit(Result.Loading)
-
         val data = query().collect { localData ->
             if (shouldFetch(localData)) {
                 try {

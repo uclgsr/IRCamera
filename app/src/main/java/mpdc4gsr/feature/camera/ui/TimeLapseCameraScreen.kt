@@ -24,10 +24,6 @@ import mpdc4gsr.feature.camera.presentation.TimeLapseCameraViewModel
 import mpdc4gsr.feature.camera.presentation.TimeLapseCameraViewModelFactory
 import mpdc4gsr.feature.camera.presentation.TimeLapseMode
 
-/**
- * Time-Lapse Camera Screen - Interface for time-lapse photography
- * Captures photos at specified intervals to create time-lapse videos
- */
 @Composable
 fun TimeLapseCameraScreen(
     viewModel: TimeLapseCameraViewModel = viewModel(
@@ -39,7 +35,6 @@ fun TimeLapseCameraScreen(
     modifier: Modifier = Modifier
 ) {
     val timeLapseState by viewModel.timeLapseState.collectAsState()
-
     IRCameraTheme {
         Scaffold(
             topBar = {
@@ -91,7 +86,6 @@ fun TimeLapseCameraScreen(
                         }
                     }
                 }
-
                 // Recording Status
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -118,16 +112,13 @@ fun TimeLapseCameraScreen(
                                 else Color.Gray
                             )
                         }
-
                         HorizontalDivider()
-
                         InfoRow("Frames Captured", "${timeLapseState.capturedFrames}")
                         InfoRow("Interval", "${timeLapseState.intervalSeconds}s")
                         InfoRow("Est. Video Length", "${timeLapseState.estimatedVideoLength}s")
                         InfoRow("Duration", "${timeLapseState.totalDuration}s")
                     }
                 }
-
                 // Mode Selection
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -142,7 +133,6 @@ fun TimeLapseCameraScreen(
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
-
                         TimeLapseMode.entries.forEach { mode ->
                             Row(
                                 modifier = Modifier
@@ -160,7 +150,6 @@ fun TimeLapseCameraScreen(
                         }
                     }
                 }
-
                 // Manual Interval Control
                 if (timeLapseState.mode == TimeLapseMode.MANUAL) {
                     Card(
@@ -176,7 +165,6 @@ fun TimeLapseCameraScreen(
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
-
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -204,7 +192,6 @@ fun TimeLapseCameraScreen(
                                     }
                                 }
                             }
-
                             Slider(
                                 value = timeLapseState.intervalSeconds.toFloat(),
                                 onValueChange = { viewModel.updateInterval(it.toInt()) },
@@ -214,7 +201,6 @@ fun TimeLapseCameraScreen(
                         }
                     }
                 }
-
                 // Control Buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -246,7 +232,6 @@ fun TimeLapseCameraScreen(
                         }
                     }
                 }
-
                 // Error Display
                 timeLapseState.error?.let { error ->
                     Card(

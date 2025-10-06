@@ -21,7 +21,6 @@ data class CustomPseudoBean(
     var customRecommendIndex: Int = 0,
     var isUseGray: Boolean = true,
 ) : Parcelable {
-
     companion object {
         fun loadFromShared(isTC007: Boolean = false): CustomPseudoBean {
             // TC007 functionality removed - always use default
@@ -81,9 +80,7 @@ data class CustomPseudoBean(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as CustomPseudoBean
-
         if (selectIndex != other.selectIndex) return false
         if (colors != null) {
             if (other.colors == null) return false
@@ -106,7 +103,6 @@ data class CustomPseudoBean(
         if (customMaxColor != other.customMaxColor) return false
         if (customRecommendIndex != other.customRecommendIndex) return false
         if (isUseGray != other.isUseGray) return false
-
         return true
     }
 

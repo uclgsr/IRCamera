@@ -17,15 +17,12 @@ class SecurityMonitor(
 ) {
     companion object {
         private const val TAG = "SecurityMonitor"
-
         private const val MAX_FAILED_LOGINS_PER_HOUR = 10
         private const val MAX_CONNECTIONS_PER_DEVICE = 5
         private const val SUSPICIOUS_ACTIVITY_THRESHOLD = 5
         private const val SESSION_TIMEOUT_WARNING_MS = 5 * 60 * 1000L
-
         private const val MONITORING_INTERVAL_MS = 30 * 1000L
         private const val CLEANUP_INTERVAL_MS = 60 * 60 * 1000L
-
         const val ALERT_BRUTE_FORCE = "brute_force_attack"
         const val ALERT_SUSPICIOUS_CONNECTION = "suspicious_connection"
         const val ALERT_UNUSUAL_ACTIVITY = "unusual_activity"
@@ -38,12 +35,10 @@ class SecurityMonitor(
 
     private val isMonitoring = AtomicBoolean(false)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
     private val connectionAttempts = ConcurrentHashMap<String, MutableList<Long>>()
     private val failedLogins = ConcurrentHashMap<String, MutableList<Long>>()
     private val sessionActivities = ConcurrentHashMap<String, SessionActivity>()
     private val securityAlerts = mutableListOf<SecurityAlert>()
-
     private val totalConnections = AtomicLong(0)
     private val totalFailedLogins = AtomicLong(0)
     private val totalSecurityAlerts = AtomicLong(0)
@@ -83,7 +78,6 @@ class SecurityMonitor(
 
     interface SecurityEventListener {
         fun onSecurityAlert(alert: SecurityAlert)
-
         fun onSuspiciousActivity(
             deviceId: String,
             activityType: String,
@@ -103,11 +97,9 @@ class SecurityMonitor(
     }
 
     private var securityListener: SecurityEventListener? = null
-
     fun initialize(): Boolean {
         return try {
             AppLogger.i(TAG, "Initializing security monitoring system")
-
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 TAG,
@@ -118,7 +110,6 @@ class SecurityMonitor(
                     "alert_types_count" to 8,
                 ),
             )
-
             true
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize security monitor", e)
@@ -143,9 +134,7 @@ class SecurityMonitor(
             AppLogger.w(TAG, "Security monitoring already started")
             return
         }
-
         isMonitoring.set(true)
-
         scope.launch {
             while (isMonitoring.get()) {
                 try {
@@ -156,7 +145,6 @@ class SecurityMonitor(
                 }
             }
         }
-
         scope.launch {
             while (isMonitoring.get()) {
                 try {
@@ -167,9 +155,7 @@ class SecurityMonitor(
                 }
             }
         }
-
         AppLogger.i(TAG, "Security monitoring started")
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
@@ -183,9 +169,7 @@ class SecurityMonitor(
     fun stopMonitoring() {
         isMonitoring.set(false)
         scope.cancel()
-
         AppLogger.i(TAG, "Security monitoring stopped")
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
@@ -204,23 +188,18 @@ class SecurityMonitor(
         details: Map<String, Any> = emptyMap(),
     ) {
         val currentTime = System.currentTimeMillis()
-
         connectionAttempts.computeIfAbsent(deviceId) { mutableListOf() }.add(currentTime)
         totalConnections.incrementAndGet()
-
         if (!successful) {
             failedLogins.computeIfAbsent(deviceId) { mutableListOf() }.add(currentTime)
             totalFailedLogins.incrementAndGet()
-
             checkBruteForceAttack(deviceId)
         }
-
         updateSessionActivity(
             deviceId,
             "connection_attempt",
             details + mapOf("successful" to successful)
         )
-
         logger.log(
             StructuredLogger.LogLevel.DEBUG,
             TAG,
@@ -238,15 +217,11 @@ class SecurityMonitor(
         details: Map<String, Any>,
     ) {
         val deviceId = details["device_id"] as? String ?: "unknown"
-
         updateSessionActivity(deviceId, eventType, details)
-
         val severity = determineSeverity(eventType, details)
-
         if (severity.level >= Severity.MEDIUM.level) {
             generateSecurityAlert(eventType, severity, deviceId, details)
         }
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
@@ -262,11 +237,9 @@ class SecurityMonitor(
     fun checkSessionActivity(deviceId: String) {
         val activity = sessionActivities[deviceId] ?: return
         val currentTime = System.currentTimeMillis()
-
         if (currentTime - activity.lastActivity > SESSION_TIMEOUT_WARNING_MS) {
             securityListener?.onSessionAnomalyDetected(deviceId, "session_timeout_warning")
         }
-
         if (activity.activityCount > 100 && (currentTime - activity.startTime) < 60 * 1000L) {
             generateSecurityAlert(
                 ALERT_UNUSUAL_ACTIVITY,
@@ -278,7 +251,6 @@ class SecurityMonitor(
                 ),
             )
         }
-
         if (activity.suspiciousEvents >= SUSPICIOUS_ACTIVITY_THRESHOLD) {
             generateSecurityAlert(
                 ALERT_SUSPICIOUS_CONNECTION,
@@ -294,23 +266,17 @@ class SecurityMonitor(
 
     private suspend fun performSecurityCheck() {
         val currentTime = System.currentTimeMillis()
-
         sessionActivities.values.forEach { activity ->
             checkSessionActivity(activity.deviceId)
         }
-
         checkConnectionPatterns()
-
         checkCertificateViolations()
-
         analyzeThreatPatterns()
-
         updateMonitoringStatistics()
     }
 
     private fun checkBruteForceAttack(deviceId: String) {
         val recentFailures = getRecentFailedLogins(deviceId, 60 * 60 * 1000L)
-
         if (recentFailures.size >= MAX_FAILED_LOGINS_PER_HOUR) {
             generateSecurityAlert(
                 ALERT_BRUTE_FORCE,
@@ -330,7 +296,6 @@ class SecurityMonitor(
                 attempts.filter {
                     System.currentTimeMillis() - it < 60 * 1000L
                 }
-
             if (recentAttempts.size > MAX_CONNECTIONS_PER_DEVICE) {
                 generateSecurityAlert(
                     ALERT_SUSPICIOUS_CONNECTION,
@@ -346,17 +311,13 @@ class SecurityMonitor(
     }
 
     private fun checkCertificateViolations() {
-
     }
 
     private fun analyzeThreatPatterns() {
         val recentAlerts = getRecentAlerts(60 * 60 * 1000L)
-
         val alertsByDevice = recentAlerts.groupBy { it.deviceId }
-
         alertsByDevice.forEach { (deviceId, alerts) ->
             if (alerts.size >= 5) {
-
                 securityListener?.onThreatDetected(
                     "device_compromise",
                     0.8f,
@@ -368,7 +329,6 @@ class SecurityMonitor(
                 )
             }
         }
-
         if (recentAlerts.size >= 10) {
             val uniqueDevices = recentAlerts.map { it.deviceId }.distinct().size
             if (uniqueDevices >= 3) {
@@ -390,7 +350,6 @@ class SecurityMonitor(
         details: Map<String, Any>,
     ) {
         val currentTime = System.currentTimeMillis()
-
         val activity =
             sessionActivities.computeIfAbsent(deviceId) {
                 SessionActivity(
@@ -402,16 +361,12 @@ class SecurityMonitor(
                     activityPattern = mutableListOf(),
                 )
             }
-
         activity.lastActivity = currentTime
         activity.activityCount++
-
         if (isSuspiciousActivity(activityType, details)) {
             activity.suspiciousEvents++
         }
-
         activity.activityPattern.add(ActivityEvent(activityType, currentTime, details))
-
         if (activity.activityPattern.size > 1000) {
             activity.activityPattern.removeAt(0)
         }
@@ -447,19 +402,14 @@ class SecurityMonitor(
                 description = generateAlertDescription(alertType, details),
                 details = details,
             )
-
         synchronized(securityAlerts) {
             securityAlerts.add(alert)
-
             if (securityAlerts.size > 1000) {
                 securityAlerts.removeAt(0)
             }
         }
-
         totalSecurityAlerts.incrementAndGet()
-
         securityListener?.onSecurityAlert(alert)
-
         logger.log(
             StructuredLogger.LogLevel.WARNING,
             TAG,
@@ -529,24 +479,19 @@ class SecurityMonitor(
     private fun performCleanup() {
         val currentTime = System.currentTimeMillis()
         val cleanupCutoff = currentTime - (24 * 60 * 60 * 1000L)
-
         connectionAttempts.values.forEach { attempts ->
             attempts.removeAll { it < cleanupCutoff }
         }
-
         failedLogins.values.forEach { failures ->
             failures.removeAll { it < cleanupCutoff }
         }
-
         val inactiveSessions =
             sessionActivities.filterValues {
                 currentTime - it.lastActivity > (60 * 60 * 1000L)
             }.keys
-
         inactiveSessions.forEach { deviceId ->
             sessionActivities.remove(deviceId)
         }
-
         logger.log(
             StructuredLogger.LogLevel.DEBUG,
             TAG,
@@ -558,7 +503,6 @@ class SecurityMonitor(
     }
 
     private fun updateMonitoringStatistics() {
-
     }
 
     fun getSecurityAlerts(limit: Int = 100): List<SecurityAlert> {

@@ -6,19 +6,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class ThermalIrNightViewModel : BaseViewModel() {
-
     private val _selectedMode = MutableStateFlow(0)
     val selectedMode: StateFlow<Int> = _selectedMode.asStateFlow()
-
     private val _nightModeEnabled = MutableStateFlow(true)
     val nightModeEnabled: StateFlow<Boolean> = _nightModeEnabled.asStateFlow()
-
     private val _showOverlay = MutableStateFlow(true)
     val showOverlay: StateFlow<Boolean> = _showOverlay.asStateFlow()
-
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
-
     fun selectMode(mode: Int) {
         launchWithErrorHandling {
             _selectedMode.value = mode

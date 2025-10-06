@@ -7,13 +7,11 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 
 class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
-
     private var mHolder: SurfaceHolder? = null
     private var mCanvas: Canvas? = null
     private val p: Paint by lazy { Paint() }
     private val mMatrix: Matrix by lazy { Matrix() }
     private var openLut = false
-
     private val mBeforeRotateMatrixValues = FloatArray(9)
     private val mScaleMatrixValues = FloatArray(9)
     private val mRotateMatrixValues = FloatArray(9)
@@ -23,9 +21,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 
     @Volatile
     private var isLockImage = false
-
     private var callback: IfrCamOpenOverCallback? = null
-
     private var mCtx: Context? = null;
 
     constructor(context: Context) : super(context) {
@@ -50,13 +46,12 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         isLockImage = isLock
     }
 
-//    fun setMatrix(scale: Float, x: Float, y: Float) {
+    //    fun setMatrix(scale: Float, x: Float, y: Float) {
 //        mMatrix.reset()
 //        mMatrix.setScale(scale, scale)
 //        mMatrix.postTranslate(x, y)
 //        mMatrix.getValues(mBeforeRotateMatrixValues)
 //    }
-
     fun setMatrix(rotate: Float, w: Float, h: Float) {
         val screenWidth = resources.displayMetrics.widthPixels.toFloat()
         mMatrix.reset()
@@ -76,7 +71,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
             }
 
             270f -> {
-
                 val sca = screenWidth / h
                 mMatrix.setRotate(rotate, 0f, 0f)
                 mMatrix.postTranslate(0f, w)
@@ -91,14 +85,11 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
     }
 
     fun doDraw(bitmap: Bitmap?, shutterFlag: Int) {
-
         synchronized(this) {
             if (isLockImage || !isPrepare || null == bitmap || shutterFlag == 1) {
                 return@doDraw
             }
-
             mCanvas = mHolder?.lockCanvas()
-
             try {
                 mCanvas?.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
 //                mCanvas?.drawBitmap(bitmap, mMatrix, p)
@@ -121,7 +112,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
                     }
                 }
             }
-
         }
     }
 
@@ -133,7 +123,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
             0f, 0f, 0f, 01f, 0f
         )
     )
-
     private var mColorMatrixLut = ColorMatrix(
         floatArrayOf(
             1f, 0f, 0f, 0f, 0f,
@@ -143,7 +132,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         )
     )
     private val n = 1f
-
     private var mColorMatrixEnhance = ColorMatrix(
 //        floatArrayOf(
 //            n, 0f, 0f, 0f, 128 * (1 - n),
@@ -158,9 +146,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
             0f, 0f, 0f, 1f, 0f
         )
     )
-
     private var saturation = 0
-
     fun setOpenLut() {
 //        openLut = !openLut
         openLut = true
@@ -205,5 +191,4 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
     interface IfrCamOpenOverCallback {
         fun onSurfaceCreated()
     }
-
 }

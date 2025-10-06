@@ -28,7 +28,6 @@ fun ComposeToast(
         delay(duration)
         onDismiss()
     }
-
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
@@ -56,10 +55,8 @@ fun ComposeToast(
 
 object ComposeToastHelper {
     private var currentToast: android.app.Dialog? = null
-
     fun show(context: Context, message: String, duration: Long = 2000L) {
         dismiss()
-
         currentToast = android.app.Dialog(context, android.R.style.Theme_Translucent_NoTitleBar).apply {
             val composeView = ComposeView(context).apply {
                 setContent {

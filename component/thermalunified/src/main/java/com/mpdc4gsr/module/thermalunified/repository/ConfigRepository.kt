@@ -14,7 +14,6 @@ object ConfigRepository {
                 ModelBean::class.java
             )
         } catch (_: Exception) {
-
             ModelBean(DataBean(id = 0, use = true))
         }
 

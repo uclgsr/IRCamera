@@ -20,12 +20,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 
 class PermissionController(private val activity: ComponentActivity) {
-
     private val usbManager: UsbManager =
         activity.getSystemService(Context.USB_SERVICE) as UsbManager
     private var onPermissionsResult: ((isGranted: Boolean, denied: List<String>) -> Unit)? = null
     private var currentDialog: AlertDialog? = null
-
     private val permissionLauncher: ActivityResultLauncher<Array<String>> =
         activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
             val denied = grants.filter { !it.value }.keys.toList()
@@ -38,7 +36,6 @@ class PermissionController(private val activity: ComponentActivity) {
                 onPermissionsResult?.invoke(false, denied)
             }
         }
-
     private val batteryOptimizationLauncher: ActivityResultLauncher<Intent> =
         activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             AppLogger.i(TAG, "Returned from battery optimization settings.")
@@ -135,7 +132,6 @@ class PermissionController(private val activity: ComponentActivity) {
 
     fun canStartRecording(): Boolean = hasCameraPermissions() && hasStoragePermissions()
     fun canConnectToShimmer(): Boolean = hasBluetoothPermissions() && hasLocationPermission()
-
     fun isBatteryOptimizationDisabled(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val powerManager =
@@ -164,13 +160,11 @@ class PermissionController(private val activity: ComponentActivity) {
     private fun showPermissionRationaleDialog(missing: List<String>, onResult: (Boolean) -> Unit) {
         // Dismiss any existing dialog first
         dismissCurrentDialog()
-
         // Check if activity is still valid
         if (activity.isFinishing || activity.isDestroyed) {
             onResult(false)
             return
         }
-
         val names = getPermissionNames(missing)
         val message = """
             This app requires the following permissions for multi-sensor recording:
@@ -185,7 +179,6 @@ class PermissionController(private val activity: ComponentActivity) {
             
             The app will not function correctly without these permissions.
         """.trimIndent()
-
         currentDialog = AlertDialog.Builder(activity)
             .setTitle("Permissions Required")
             .setMessage(message)
@@ -200,7 +193,6 @@ class PermissionController(private val activity: ComponentActivity) {
             .setCancelable(false)
             .setOnDismissListener { currentDialog = null }
             .create()
-
         currentDialog?.show()
     }
 
@@ -216,12 +208,10 @@ class PermissionController(private val activity: ComponentActivity) {
     private fun showPermanentlyDeniedDialog(permanentlyDenied: List<String>) {
         // Dismiss any existing dialog first
         dismissCurrentDialog()
-
         // Check if activity is still valid
         if (activity.isFinishing || activity.isDestroyed) {
             return
         }
-
         val names = getPermissionNames(permanentlyDenied)
         val message = """
             You have permanently denied the following critical permissions:
@@ -230,7 +220,6 @@ class PermissionController(private val activity: ComponentActivity) {
             
             To enable the app's core features, please grant these permissions manually in your device settings.
         """.trimIndent()
-
         currentDialog = AlertDialog.Builder(activity)
             .setTitle("Permissions Permanently Denied")
             .setMessage(message)
@@ -243,7 +232,6 @@ class PermissionController(private val activity: ComponentActivity) {
             }
             .setOnDismissListener { currentDialog = null }
             .create()
-
         currentDialog?.show()
     }
 
@@ -267,7 +255,6 @@ class PermissionController(private val activity: ComponentActivity) {
                 callback(false)
             }
             .create()
-
         currentDialog?.show()
     }
 
@@ -288,7 +275,6 @@ class PermissionController(private val activity: ComponentActivity) {
                 callback(false)
             }
             .create()
-
         currentDialog?.show()
     }
 
@@ -384,7 +370,6 @@ class PermissionController(private val activity: ComponentActivity) {
     companion object {
         private const val TAG = "PermissionController"
         const val ACTION_USB_PERMISSION = "mpdc4gsr.USB_PERMISSION"
-
         private fun Context.isPermissionGranted(permission: String): Boolean {
             return ContextCompat.checkSelfPermission(
                 this,

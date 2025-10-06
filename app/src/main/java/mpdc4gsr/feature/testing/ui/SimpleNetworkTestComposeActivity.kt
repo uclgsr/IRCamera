@@ -29,12 +29,7 @@ import mpdc4gsr.feature.network.data.MockRecordingController
 import mpdc4gsr.feature.network.data.SimpleCommandHandler
 import mpdc4gsr.feature.network.data.TcpClient
 
-/**
- * Compose version of Simple Network Test Activity
- * Tests PC Remote Control and Bidirectional Telemetry functionality
- */
 class SimpleNetworkTestComposeActivity : ComponentActivity() {
-
     companion object {
         private const val TAG = "SimpleNetworkTestCompose"
         private const val DEFAULT_PC_IP = "192.168.1.100"
@@ -62,10 +57,8 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
     private val _networkCommands = mutableStateOf(listOf<NetworkCommand>())
     private val _networkMetrics = mutableStateOf(mapOf<String, Any>())
     private val _isTestRunning = mutableStateOf(false)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             LibUnifiedTheme {
                 SimpleNetworkTestScreen()
@@ -80,12 +73,10 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
         var connectionStatus by remember { mutableStateOf(ConnectionStatus.DISCONNECTED) }
         var ipAddress by remember { mutableStateOf(DEFAULT_PC_IP) }
         var port by remember { mutableStateOf(DEFAULT_PC_PORT.toString()) }
-
         // Use hoisted state
         val networkCommands by _networkCommands
         val networkMetrics by _networkMetrics
         val isTestRunning by _isTestRunning
-
         // Initialize test cases
         LaunchedEffect(Unit) {
             testResults = listOf(
@@ -121,7 +112,6 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                 )
             )
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -180,7 +170,6 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                                     fontWeight = FontWeight.Medium
                                 )
                             }
-
                             if (connectionStatus == ConnectionStatus.CONNECTING) {
                                 CircularProgressIndicator(
                                     modifier = Modifier.size(20.dp),
@@ -188,7 +177,6 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                                 )
                             }
                         }
-
                         if (connectionStatus == ConnectionStatus.CONNECTED) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
@@ -198,9 +186,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Connection Configuration
                 Card {
                     Column(modifier = Modifier.padding(16.dp)) {
@@ -210,7 +196,6 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(12.dp))
-
                         OutlinedTextField(
                             value = ipAddress,
                             onValueChange = { ipAddress = it },
@@ -220,9 +205,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                             },
                             modifier = Modifier.fillMaxWidth()
                         )
-
                         Spacer(modifier = Modifier.height(8.dp))
-
                         OutlinedTextField(
                             value = port,
                             onValueChange = { port = it },
@@ -235,9 +218,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Test Progress
                 TestProgressIndicator(
                     totalTests = testResults.size,
@@ -245,9 +226,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                     passedTests = testResults.count { it.status == TestStatus.PASSED },
                     failedTests = testResults.count { it.status == TestStatus.FAILED }
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Network Metrics
                 if (networkMetrics.isNotEmpty()) {
                     TestMetricsDisplay(
@@ -256,7 +235,6 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 // Connection Control Buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -276,7 +254,6 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Connect WiFi")
                     }
-
                     OutlinedButton(
                         onClick = {
                             connectionStatus = ConnectionStatus.CONNECTING
@@ -292,9 +269,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                         Text("Connect BT")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -311,7 +286,6 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Disconnect")
                     }
-
                     Button(
                         onClick = {
                             lifecycleScope.launch { testCommands() }
@@ -324,9 +298,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                         Text("Test Commands")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Run All Tests Button
                 Button(
                     onClick = {
@@ -349,9 +321,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                         Text("Run All Network Tests")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Individual Test Cases
                 testResults.forEach { testCase ->
                     TestResultCard(
@@ -360,11 +330,9 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                 }
-
                 // Network Commands Log
                 if (networkCommands.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -373,7 +341,6 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                                 fontWeight = FontWeight.Medium
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-
                             networkCommands.takeLast(5).forEach { command ->
                                 NetworkCommandItem(command = command)
                                 Spacer(modifier = Modifier.height(6.dp))
@@ -478,7 +445,6 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
 
     private suspend fun testCommands() {
         AppLogger.d(TAG, "Testing network commands")
-
         val commands = listOf(
             NetworkCommand("PING", "Test connection latency", "PONG", true),
             NetworkCommand("GET_STATUS", "Get PC system status", "OK:READY", true),
@@ -486,38 +452,30 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             NetworkCommand("STOP_RECORDING", "Stop remote recording", "OK:STOPPED", true),
             NetworkCommand("INVALID_CMD", "Test error handling", "ERROR:UNKNOWN", false)
         )
-
         val updatedCommands = mutableListOf<NetworkCommand>()
         commands.forEach { command ->
             delay(500)
             updatedCommands.add(command)
         }
-
         _networkCommands.value = _networkCommands.value + updatedCommands
     }
 
     private suspend fun runAllNetworkTests() {
         AppLogger.i(TAG, "Running all network tests")
-
         val metrics = mutableMapOf<String, Any>()
-
         try {
             // Test WiFi connection
             testWiFiConnection()
             delay(2000)
-
             // Test command execution
             testCommandExecution()
             delay(2000)
-
             // Test bidirectional telemetry
             testBidirectionalTelemetry()
             delay(2000)
-
             // Test connection stability
             testConnectionStability()
             delay(2000)
-
             // Calculate metrics
             metrics["Connection Type"] = "WiFi"
             metrics["Commands Sent"] = _networkCommands.value.size
@@ -528,9 +486,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             }%"
             metrics["Average Latency"] = "45ms"
             metrics["Connection Uptime"] = "99.8%"
-
             _networkMetrics.value = metrics
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Network tests failed: ${e.message}")
         } finally {

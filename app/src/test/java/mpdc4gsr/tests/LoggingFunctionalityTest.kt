@@ -9,7 +9,6 @@ import org.junit.Before
 import org.junit.Test
 
 class LoggingFunctionalityTest {
-
     private lateinit var structuredLogger: StructuredLogger
 
     @Before
@@ -26,7 +25,6 @@ class LoggingFunctionalityTest {
         every { Log.i(any<String>(), any<String>(), any<Throwable>()) } returns 0
         every { Log.w(any<String>(), any<String>(), any<Throwable>()) } returns 0
         every { Log.e(any<String>(), any<String>(), any<Throwable>()) } returns 0
-
         structuredLogger = mockk(relaxed = true)
         AppLogger.initialize(
             minLevel = AppLogger.LogLevel.DEBUG,
@@ -44,36 +42,28 @@ class LoggingFunctionalityTest {
     @Test
     fun testDebugLoggingRespectesMinLevel() {
         AppLogger.setMinLogLevel(AppLogger.LogLevel.INFO)
-
         AppLogger.d("TEST", "Debug message")
-
         verify(exactly = 0) { Log.d("TEST", "Debug message") }
     }
 
     @Test
     fun testInfoLoggingWorks() {
         AppLogger.setMinLogLevel(AppLogger.LogLevel.DEBUG)
-
         AppLogger.i("TEST", "Info message")
-
         verify(exactly = 1) { Log.i("TEST", "Info message") }
     }
 
     @Test
     fun testWarningLoggingWorks() {
         AppLogger.setMinLogLevel(AppLogger.LogLevel.DEBUG)
-
         AppLogger.w("TEST", "Warning message")
-
         verify(exactly = 1) { Log.w("TEST", "Warning message") }
     }
 
     @Test
     fun testErrorLoggingWorks() {
         AppLogger.setMinLogLevel(AppLogger.LogLevel.DEBUG)
-
         AppLogger.e("TEST", "Error message")
-
         verify(exactly = 1) { Log.e("TEST", "Error message") }
     }
 
@@ -81,9 +71,7 @@ class LoggingFunctionalityTest {
     fun testLoggingWithThrowable() {
         AppLogger.setMinLogLevel(AppLogger.LogLevel.DEBUG)
         val exception = RuntimeException("Test exception")
-
         AppLogger.e("TEST", "Error with exception", exception)
-
         verify(exactly = 1) { Log.e("TEST", "Error with exception", exception) }
     }
 
@@ -94,9 +82,7 @@ class LoggingFunctionalityTest {
             enableStructured = true,
             structuredLoggerInstance = structuredLogger,
         )
-
         AppLogger.e("TEST", "Error message", component = "TestComponent")
-
         verify(exactly = 1) {
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
@@ -114,9 +100,7 @@ class LoggingFunctionalityTest {
             enableStructured = false,
             structuredLoggerInstance = structuredLogger,
         )
-
         AppLogger.e("TEST", "Error message", component = "TestComponent")
-
         verify(exactly = 0) {
             structuredLogger.log(
                 any(),
@@ -130,18 +114,14 @@ class LoggingFunctionalityTest {
     @Test
     fun testVerboseLoggingRespectesMinLevel() {
         AppLogger.setMinLogLevel(AppLogger.LogLevel.INFO)
-
         AppLogger.v("TEST", "Verbose message")
-
         verify(exactly = 0) { Log.v("TEST", "Verbose message") }
     }
 
     @Test
     fun testVerboseLoggingWhenEnabled() {
         AppLogger.setMinLogLevel(AppLogger.LogLevel.VERBOSE)
-
         AppLogger.v("TEST", "Verbose message")
-
         verify(exactly = 1) { Log.v("TEST", "Verbose message") }
     }
 }

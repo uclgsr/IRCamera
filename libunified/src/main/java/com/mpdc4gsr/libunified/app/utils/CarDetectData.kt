@@ -11,7 +11,6 @@ object CarDetectData {
         val dataList: MutableList<CarDetectBean> = ArrayList()
         val data1List: MutableList<CarDetectChildBean> = ArrayList()
         val data2List: MutableList<CarDetectChildBean> = ArrayList()
-
         data1List.add(
             CarDetectChildBean(
                 0,
@@ -129,7 +128,6 @@ object CarDetectData {
                 "80~100",
             ),
         )
-
         data2List.add(
             CarDetectChildBean(
                 1,
@@ -175,7 +173,6 @@ object CarDetectData {
                 "20~50",
             ),
         )
-
         dataList.add(
             CarDetectBean(
                 BaseApplication.instance.getString(R.string.abnormal_title1),

@@ -7,9 +7,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.atomic.AtomicLong
 
-/**
- * Connection quality metrics tracking for network connections
- */
 class ConnectionMetrics {
     companion object {
         private const val TAG = "ConnectionMetrics"
@@ -24,7 +21,6 @@ class ConnectionMetrics {
     private val totalReconnectAttempts = AtomicLong(0)
     private val totalBytesSent = AtomicLong(0)
     private val totalBytesReceived = AtomicLong(0)
-
     private val latencyHistory = mutableListOf<Long>()
     private val bandwidthHistory = mutableListOf<BandwidthSample>()
     private val maxHistorySize = 100
@@ -36,25 +32,16 @@ class ConnectionMetrics {
         val intervalMs: Long
     )
 
-    /**
-     * Record connection establishment
-     */
     fun recordConnectionStart() {
         connectionStartTime.set(System.currentTimeMillis())
         AppLogger.d(TAG, "Connection metrics started")
     }
 
-    /**
-     * Record connection end
-     */
     fun recordConnectionEnd() {
         val duration = getConnectionDuration()
         AppLogger.d(TAG, "Connection ended after ${duration}ms")
     }
 
-    /**
-     * Record message sent
-     */
     fun recordMessageSent(messageSize: Int = 0) {
         totalMessagesSent.incrementAndGet()
         if (messageSize > 0) {
@@ -62,9 +49,6 @@ class ConnectionMetrics {
         }
     }
 
-    /**
-     * Record message received
-     */
     fun recordMessageReceived(messageSize: Int = 0) {
         totalMessagesReceived.incrementAndGet()
         if (messageSize > 0) {
@@ -72,16 +56,10 @@ class ConnectionMetrics {
         }
     }
 
-    /**
-     * Record ping sent
-     */
     fun recordPingSent() {
         lastPingTime.set(System.currentTimeMillis())
     }
 
-    /**
-     * Record pong received and calculate latency
-     */
     suspend fun recordPongReceived() {
         val pingTime = lastPingTime.get()
         if (pingTime > 0) {
@@ -96,16 +74,10 @@ class ConnectionMetrics {
         }
     }
 
-    /**
-     * Record reconnection attempt
-     */
     fun recordReconnectAttempt() {
         totalReconnectAttempts.incrementAndGet()
     }
 
-    /**
-     * Get current connection duration in milliseconds
-     */
     fun getConnectionDuration(): Long {
         val startTime = connectionStartTime.get()
         return if (startTime > 0) {
@@ -115,9 +87,6 @@ class ConnectionMetrics {
         }
     }
 
-    /**
-     * Get average latency in milliseconds
-     */
     suspend fun getAverageLatency(): Long = mutex.withLock {
         if (latencyHistory.isEmpty()) {
             -1L
@@ -126,16 +95,10 @@ class ConnectionMetrics {
         }
     }
 
-    /**
-     * Get latest latency in milliseconds
-     */
     suspend fun getLatestLatency(): Long = mutex.withLock {
         latencyHistory.lastOrNull() ?: -1L
     }
 
-    /**
-     * Get connection quality metrics summary
-     */
     suspend fun getMetricsSummary(): Map<String, Any> = mutex.withLock {
         mapOf(
             "connection_duration_ms" to getConnectionDuration(),
@@ -154,9 +117,6 @@ class ConnectionMetrics {
         )
     }
 
-    /**
-     * Reset all metrics
-     */
     suspend fun reset() = mutex.withLock {
         connectionStartTime.set(0)
         lastPingTime.set(0)
@@ -170,9 +130,6 @@ class ConnectionMetrics {
         AppLogger.d(TAG, "Connection metrics reset")
     }
 
-    /**
-     * Get average send bandwidth in bytes per second
-     */
     private suspend fun getAverageSendBandwidth(): Double = mutex.withLock {
         val duration = getConnectionDuration()
         if (duration > 0) {
@@ -182,9 +139,6 @@ class ConnectionMetrics {
         }
     }
 
-    /**
-     * Get average receive bandwidth in bytes per second
-     */
     private suspend fun getAverageReceiveBandwidth(): Double = mutex.withLock {
         val duration = getConnectionDuration()
         if (duration > 0) {
@@ -194,9 +148,6 @@ class ConnectionMetrics {
         }
     }
 
-    /**
-     * Record bandwidth sample for detailed monitoring
-     */
     suspend fun recordBandwidthSample() = mutex.withLock {
         val now = System.currentTimeMillis()
         val sample = BandwidthSample(
@@ -209,19 +160,14 @@ class ConnectionMetrics {
                 1000L // Default 1 second interval
             }
         )
-
         bandwidthHistory.add(sample)
         if (bandwidthHistory.size > maxHistorySize) {
             bandwidthHistory.removeAt(0)
         }
     }
 
-    /**
-     * Get connection quality score (0-100)
-     */
     suspend fun getConnectionQualityScore(): Int = mutex.withLock {
         var score = 100
-
         // Reduce score based on latency
         val avgLatency = getAverageLatency()
         if (avgLatency > 0) {
@@ -232,13 +178,11 @@ class ConnectionMetrics {
                 avgLatency > 100 -> score -= 5    // Slight latency
             }
         }
-
         // Reduce score based on reconnection attempts
         val reconnects = totalReconnectAttempts.get()
         if (reconnects > 0) {
             score -= (reconnects * 10).toInt().coerceAtMost(30)
         }
-
         // Ensure score is in valid range
         score.coerceIn(0, 100)
     }

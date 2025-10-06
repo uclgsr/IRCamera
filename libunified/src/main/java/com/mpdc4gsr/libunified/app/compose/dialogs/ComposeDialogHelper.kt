@@ -14,11 +14,9 @@ class ComposeDialogWrapper(
     context: Context,
     private val content: @Composable () -> Unit
 ) : Dialog(context) {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-
         val composeView = ComposeView(context).apply {
             setContent {
                 LibUnifiedTheme {
@@ -26,7 +24,6 @@ class ComposeDialogWrapper(
                 }
             }
         }
-
         setContentView(composeView)
         window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -39,7 +36,6 @@ class ComposeDialogWrapper(
 class LoadingDialogState(private val context: Context) {
     private var dialog: Dialog? = null
     private val messageState = mutableStateOf("")
-
     fun show(message: String = "") {
         dismiss()
         messageState.value = message
@@ -101,7 +97,6 @@ class ProgressDialogState(private val context: Context) {
     private var dialog: Dialog? = null
     private val messageState = mutableStateOf("")
     private val progressState = mutableStateOf(-1f)
-
     fun show(message: String = "", progress: Float = -1f, cancelable: Boolean = true) {
         dismiss()
         messageState.value = message

@@ -31,7 +31,6 @@ fun textHeight(
 }
 
 val measurementRect = Rect()
-
 fun textDimensions(
     text: String,
     paint: Paint,
@@ -76,7 +75,6 @@ fun deltaAngle(
     angle1: Float,
     angle2: Float,
 ): Float {
-
     val a = normalizeAngle(angle1 - angle2)
     val b = normalizeAngle(angle2 - angle1)
     return if (a < b) {
@@ -103,15 +101,12 @@ fun wrap(
     min: Double,
     max: Double,
 ): Double {
-
     val range = max - min
     if (value < min) {
         return max - (min - value) % range
     }
-
     if (value > max) {
         return min + (value - min) % range
     }
-
     return value
 }

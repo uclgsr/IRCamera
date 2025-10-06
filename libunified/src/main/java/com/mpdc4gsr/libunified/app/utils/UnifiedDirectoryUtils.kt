@@ -5,7 +5,6 @@ import android.util.Log
 import java.io.File
 
 object UnifiedDirectoryUtils {
-
     // Root directory constants
     private const val APP_ROOT_DIR = "IRCamera"
 
@@ -20,7 +19,6 @@ object UnifiedDirectoryUtils {
     private const val LOGS_DIR = "logs"
     private const val CONFIG_DIR = "config"
     private const val TEMP_DIR = "temp"
-
     fun getAppRootDirectory(context: Context): File {
         val rootDir = context.getExternalFilesDir(null) ?: context.filesDir
         return File(rootDir, APP_ROOT_DIR).apply { mkdirs() }
@@ -94,7 +92,6 @@ object UnifiedDirectoryUtils {
 
     fun getDirectorySize(directory: File): Long {
         if (!directory.exists() || !directory.isDirectory) return 0L
-
         var size = 0L
         directory.walkTopDown().forEach { file ->
             if (file.isFile) {
@@ -145,7 +142,6 @@ object UnifiedDirectoryUtils {
             "Config" to getConfigDirectory(context),
             "Temp" to getTempDirectory(context)
         )
-
         return directories.map { (name, dir) ->
             DirectoryInfo(
                 name = name,

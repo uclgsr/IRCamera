@@ -1,7 +1,6 @@
 package com.mpdc4gsr.libunified.app.menu.util
 
 object PseudoColorConfig {
-
     @JvmStatic
     fun getColors(code: Int): IntArray =
         when (code) {

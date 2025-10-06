@@ -8,9 +8,7 @@ import android.view.MotionEvent
 
 class Temperature07View : TemperatureBaseView {
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
@@ -39,7 +37,6 @@ class Temperature07View : TemperatureBaseView {
             Mode.LINE -> operateLine?.let { drawLine(canvas, it) }
             Mode.RECT -> operateRect?.let { drawRect(canvas, it) }
             Mode.TREND -> {
-
             }
 
             else -> {

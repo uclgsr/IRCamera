@@ -8,23 +8,15 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.mpdc4gsr.libunified.R
 
 class MyTextView : AppCompatTextView {
-
     private var topHeight = 0
-
     private var bottomHeight = 0
-
     private var startHeight = 0
-
     private var endHeight = 0
-
     private var leftHeight = 0
-
     private var rightHeight = 0
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -49,7 +41,6 @@ class MyTextView : AppCompatTextView {
         rightHeight =
             typedArray.getDimensionPixelSize(R.styleable.MyTextView_right_height, drawableHeight)
         typedArray.recycle()
-
         val drawables = compoundDrawables
         val relativeDrawables = compoundDrawablesRelative
         val left = drawables[0]
@@ -58,7 +49,6 @@ class MyTextView : AppCompatTextView {
         val bottom = drawables[3]
         val start = relativeDrawables[0]
         val end = relativeDrawables[2]
-
         if (start != null || end != null) {
             setCompoundDrawablesRelative(start, top, end, bottom)
         } else {

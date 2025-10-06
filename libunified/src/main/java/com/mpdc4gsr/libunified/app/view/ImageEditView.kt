@@ -12,34 +12,25 @@ import kotlin.math.sqrt
 
 class ImageEditView : View {
     companion object {
-
         private const val PAINT_WIDTH = 6
-
         private const val HALF_PAINT_WIDTH = 3
-
         private const val ARROW_WIDTH = 30
-
         private const val PAINT_COLOR = 0xffe22400.toInt()
     }
 
     enum class Type {
-
         CIRCLE,
-
         RECT,
-
         ARROW,
     }
 
     var type: Type = Type.CIRCLE
-
     var color: Int
         get() = paint.color
         set(value) {
             paint.color = value
             invalidate()
         }
-
     var sourceBitmap: Bitmap? = null
         set(value) {
             if (value == null) {
@@ -53,23 +44,15 @@ class ImageEditView : View {
             }
             field = value
         }
-
     private var hasEditData = false
-
     private var bgBitmap: Bitmap? = null
-
     private var editBitmap: Bitmap? = null
-
     private var canvas: Canvas? = null
-
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-
     private val path = Path()
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
@@ -179,12 +162,9 @@ class ImageEditView : View {
                 if (abs(downX - currentX) < ARROW_WIDTH && abs(downY - currentY) < ARROW_WIDTH) {
                     return
                 }
-
                 paint.style = Paint.Style.FILL
                 path.reset()
-
                 if (downX == currentX) {
-
                     val endY =
                         if (downY > currentY) currentY + PAINT_WIDTH else (currentY - PAINT_WIDTH)
                     canvas?.drawLine(
@@ -194,21 +174,17 @@ class ImageEditView : View {
                         endY.toFloat(),
                         paint
                     )
-
                     val triangleH: Float = (ARROW_WIDTH / 2) * sqrt(3f)
                     val y: Float =
                         if (downY > currentY) currentY + triangleH else (currentY - triangleH)
-
                     val x1: Float = downX - (ARROW_WIDTH / 2f)
                     val x2: Float = downX + (ARROW_WIDTH / 2f)
-
                     path.moveTo(currentX.toFloat(), currentY.toFloat())
                     path.lineTo(x1, y)
                     path.lineTo(x2, y)
                     path.close()
                     canvas?.drawPath(path, paint)
                 } else if (downY == currentY) {
-
                     val endX =
                         if (downX > currentX) currentX + PAINT_WIDTH else (currentX - PAINT_WIDTH)
                     canvas?.drawLine(
@@ -218,25 +194,20 @@ class ImageEditView : View {
                         currentY.toFloat(),
                         paint
                     )
-
                     val triangleH: Float = (ARROW_WIDTH / 2) * sqrt(3f)
                     val x: Float =
                         if (downX > currentX) currentX + triangleH else (currentX - triangleH)
-
                     val y1: Float = downY - (ARROW_WIDTH / 2f)
                     val y2: Float = downY + (ARROW_WIDTH / 2f)
-
                     path.moveTo(currentX.toFloat(), currentY.toFloat())
                     path.lineTo(x, y1)
                     path.lineTo(x, y2)
                     path.close()
                     canvas?.drawPath(path, paint)
                 } else {
-
                     val k1: Float = (downY - currentY).toFloat() / (downX - currentX).toFloat()
                     val b1: Float = downY - k1 * downX
                     val a1: Float = -b1 / k1
-
                     val backWidth = PAINT_WIDTH
                     val endY: Float =
                         if (k1 > 0) {
@@ -258,7 +229,6 @@ class ImageEditView : View {
                         }
                     val endX = (endY - b1) / k1
                     canvas?.drawLine(downX.toFloat(), downY.toFloat(), endX, endY, paint)
-
                     val triangleH: Float = (ARROW_WIDTH / 2) * sqrt(3f)
                     val y: Float =
                         if (k1 > 0) {
@@ -279,18 +249,15 @@ class ImageEditView : View {
                             }
                         }
                     val x = (y - b1) / k1
-
                     val k2: Float = -1 / k1
                     val b2: Float = y - k2 * x
                     val a2: Float = -b2 / k2
-
                     val hypotenuse2: Float =
                         sqrt((if (k2 > 0) x - a2 else (a2 - x)).pow(2) + y.pow(2))
                     val yLeft = y * (hypotenuse2 - ARROW_WIDTH / 2) / hypotenuse2
                     val yRight = y * (hypotenuse2 + ARROW_WIDTH / 2) / hypotenuse2
                     val xLeft = (yLeft - b2) / k2
                     val xRight = (yRight - b2) / k2
-
                     path.moveTo(currentX.toFloat(), currentY.toFloat())
                     path.lineTo(xLeft, yLeft)
                     path.lineTo(xRight, yRight)

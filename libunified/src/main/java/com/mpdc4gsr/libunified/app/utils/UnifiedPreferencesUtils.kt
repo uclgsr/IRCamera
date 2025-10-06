@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.util.Log
 
 object UnifiedPreferencesUtils {
-
     private const val TAG = "UnifiedPreferences"
     private const val DEFAULT_PREFS_NAME = "ir_camera_prefs"
 
@@ -304,7 +303,6 @@ object UnifiedPreferencesUtils {
     fun initializePreferences(context: Context, defaults: Map<String, Any>) {
         val prefs = getSharedPreferences(context)
         val editor = prefs.edit()
-
         defaults.forEach { (key, value) ->
             if (!prefs.contains(key)) {
                 when (value) {
@@ -316,7 +314,6 @@ object UnifiedPreferencesUtils {
                 }
             }
         }
-
         editor.apply()
     }
 

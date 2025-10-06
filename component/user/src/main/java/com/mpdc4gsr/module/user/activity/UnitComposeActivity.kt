@@ -21,7 +21,6 @@ import com.mpdc4gsr.module.user.viewmodel.UnitViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
 class UnitComposeActivity : BaseComposeActivity<UnitViewModel>() {
-
     override fun createViewModel(): UnitViewModel {
         return viewModels<UnitViewModel>().value
     }
@@ -30,7 +29,6 @@ class UnitComposeActivity : BaseComposeActivity<UnitViewModel>() {
     @Composable
     override fun Content(viewModel: UnitViewModel) {
         val selectedUnit by viewModel.selectedUnit.collectAsState()
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -104,7 +102,6 @@ class UnitComposeActivity : BaseComposeActivity<UnitViewModel>() {
                                 MaterialTheme.colorScheme.onSurface
                             }
                         )
-
                         if (selectedUnit == UnitViewModel.CELSIUS) {
                             Icon(
                                 Icons.Default.Check,
@@ -114,7 +111,6 @@ class UnitComposeActivity : BaseComposeActivity<UnitViewModel>() {
                         }
                     }
                 }
-
                 // Fahrenheit Option
                 Card(
                     modifier = Modifier
@@ -150,7 +146,6 @@ class UnitComposeActivity : BaseComposeActivity<UnitViewModel>() {
                                 MaterialTheme.colorScheme.onSurface
                             }
                         )
-
                         if (selectedUnit == UnitViewModel.FAHRENHEIT) {
                             Icon(
                                 Icons.Default.Check,

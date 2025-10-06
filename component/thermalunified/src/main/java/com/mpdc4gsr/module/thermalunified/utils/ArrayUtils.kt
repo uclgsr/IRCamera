@@ -1,7 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.utils
 
 object ArrayUtils {
-
     fun getMaxIndex(
         data: FloatArray,
         rotateType: Int = 0,
@@ -45,7 +44,6 @@ object ArrayUtils {
         selectIndexList: ArrayList<Int> = arrayListOf(),
     ): Int {
         if (selectIndexList.size == 0) {
-
             var maxIndex = 0
             for (i in 1 until data.size - 1) {
                 if (data[i] > data[maxIndex]) {

@@ -6,25 +6,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class IRThermalDoubleViewModel : BaseViewModel() {
-
     private val _selectedMode = MutableStateFlow(0)
     val selectedMode: StateFlow<Int> = _selectedMode.asStateFlow()
-
     private val _showOverlay = MutableStateFlow(true)
     val showOverlay: StateFlow<Boolean> = _showOverlay.asStateFlow()
-
     private val _showTrendChart = MutableStateFlow(false)
     val showTrendChart: StateFlow<Boolean> = _showTrendChart.asStateFlow()
-
     private val _showCompass = MutableStateFlow(false)
     val showCompass: StateFlow<Boolean> = _showCompass.asStateFlow()
-
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
-
     private val _isRangeLocked = MutableStateFlow(false)
     val isRangeLocked: StateFlow<Boolean> = _isRangeLocked.asStateFlow()
-
     fun selectMode(mode: Int) {
         launchWithErrorHandling {
             _selectedMode.value = mode

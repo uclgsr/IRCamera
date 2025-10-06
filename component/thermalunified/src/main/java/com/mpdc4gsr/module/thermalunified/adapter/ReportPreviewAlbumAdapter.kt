@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-
 import com.mpdc4gsr.libunified.app.bean.HouseRepPreviewAlbumItemBean
 import com.mpdc4gsr.module.thermalunified.R
 
@@ -19,7 +18,6 @@ class ReportPreviewAlbumAdapter(
     private var dataList: List<HouseRepPreviewAlbumItemBean>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var jumpListener: ((item: HouseRepPreviewAlbumItemBean, position: Int) -> Unit)? = null
-
     override fun getItemViewType(position: Int): Int {
         return position
     }

@@ -8,4 +8,3 @@ interface IRTempConfig {
     val humidity: Float
     val transmittance: Float
 }
-

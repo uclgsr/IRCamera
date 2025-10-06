@@ -10,12 +10,10 @@ import android.widget.TextView
 import com.mpdc4gsr.libunified.R
 
 class SteeringWheelView : LinearLayout, OnClickListener {
-
     private lateinit var tvConfirm: TextView
     private lateinit var steeringWheelStartBtn: ImageView
     private lateinit var steeringWheelCenterBtn: ImageView
     private lateinit var steeringWheelEndBtn: ImageView
-
     var listener: ((action: Int, moveX: Int) -> Unit)? = null
     var moveX = 30
     var rotationIR = 270
@@ -32,7 +30,6 @@ class SteeringWheelView : LinearLayout, OnClickListener {
         }
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         initView()
     }
@@ -49,11 +46,9 @@ class SteeringWheelView : LinearLayout, OnClickListener {
         steeringWheelStartBtn = findViewById(R.id.steering_wheel_start_btn)
         steeringWheelCenterBtn = findViewById(R.id.steering_wheel_center_btn)
         steeringWheelEndBtn = findViewById(R.id.steering_wheel_end_btn)
-
         steeringWheelStartBtn.setOnClickListener(this)
         steeringWheelCenterBtn.setOnClickListener(this)
         steeringWheelEndBtn.setOnClickListener(this)
-
         if (rotationIR == 270 || rotationIR == 90) {
             tvConfirm.rotation = 270f
             rotation = 90f
@@ -86,5 +81,4 @@ class SteeringWheelView : LinearLayout, OnClickListener {
             }
         }
     }
-
 }

@@ -31,7 +31,6 @@ fun FirmwareUpdateDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.8f else 0.4f
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -62,7 +61,6 @@ fun FirmwareUpdateDialog(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 if (sizeInfo.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
@@ -73,7 +71,6 @@ fun FirmwareUpdateDialog(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-
                 if (content.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
@@ -84,7 +81,6 @@ fun FirmwareUpdateDialog(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-
                 if (showRestartTips) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
@@ -95,9 +91,7 @@ fun FirmwareUpdateDialog(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-
                 Spacer(modifier = Modifier.height(20.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -116,7 +110,6 @@ fun FirmwareUpdateDialog(
                             )
                         }
                     }
-
                     Button(
                         onClick = {
                             onConfirm()

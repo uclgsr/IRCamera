@@ -21,11 +21,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
-/**
- * Compose replacement for ComprehensiveSensorStatusWidget
- * Enhanced Multi-Modal Sensor Dashboard with real-time status updates
- */
-
 enum class SensorType {
     THERMAL, RGB, GSR, AUDIO
 }
@@ -79,20 +74,16 @@ fun ComprehensiveSensorStatusDashboard(
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
-
         // Overall Status
         OverallStatusCard(sensors, recordingState)
-
         // Recording Status
         RecordingStatusCard(recordingState)
-
         // Sensor Connections
         Text(
             text = "📡 Sensor Connections",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-
         sensors.forEach { sensor ->
             SensorStatusCard(
                 sensor = sensor,
@@ -109,7 +100,6 @@ private fun OverallStatusCard(
 ) {
     val activeSensors = sensors.count { it.status == SensorStatus.CONNECTED || it.status == SensorStatus.STREAMING }
     val errorSensors = sensors.count { it.status == SensorStatus.ERROR }
-
     val statusText = when {
         recordingState.isRecording -> "🔴 RECORDING - Session: ${recordingState.sessionId ?: "Unknown"}"
         errorSensors > 0 -> "⚠️ $errorSensors Sensor Error(s) Detected"
@@ -117,7 +107,6 @@ private fun OverallStatusCard(
         activeSensors < sensors.size -> "🟡 $activeSensors/${sensors.size} Sensors Connected"
         else -> "🟢 All Sensors Connected"
     }
-
     val statusColor = when {
         recordingState.isRecording -> MaterialTheme.colorScheme.error
         errorSensors > 0 -> MaterialTheme.colorScheme.error
@@ -125,7 +114,6 @@ private fun OverallStatusCard(
         activeSensors < sensors.size -> MaterialTheme.colorScheme.tertiary
         else -> MaterialTheme.colorScheme.primary
     }
-
     Surface(
         color = statusColor.copy(alpha = 0.1f),
         shape = MaterialTheme.shapes.medium
@@ -163,7 +151,6 @@ private fun RecordingStatusCard(recordingState: RecordingState) {
             ),
             label = "alpha"
         )
-
         Box(
             modifier = Modifier
                 .size(24.dp)
@@ -175,9 +162,7 @@ private fun RecordingStatusCard(recordingState: RecordingState) {
                     shape = CircleShape
                 )
         )
-
         Spacer(modifier = Modifier.width(8.dp))
-
         if (recordingState.isRecording && recordingState.startTime > 0) {
             RecordingTimer(recordingState.startTime)
         } else {
@@ -193,18 +178,15 @@ private fun RecordingStatusCard(recordingState: RecordingState) {
 @Composable
 private fun RecordingTimer(startTime: Long) {
     var duration by remember { mutableLongStateOf(0L) }
-
     LaunchedEffect(startTime) {
         while (true) {
             duration = (System.currentTimeMillis() - startTime) / 1000
             delay(1000)
         }
     }
-
     val hours = duration / 3600
     val minutes = (duration % 3600) / 60
     val seconds = duration % 60
-
     Text(
         text = String.format("⏱️ Recording: %02d:%02d:%02d", hours, minutes, seconds),
         style = MaterialTheme.typography.bodyMedium,
@@ -253,22 +235,18 @@ private fun SensorStatusCard(
                     tint = getStatusColor(sensor.status),
                     modifier = Modifier.size(32.dp)
                 )
-
                 Spacer(modifier = Modifier.width(12.dp))
-
                 Column {
                     Text(
                         text = sensor.displayName,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Medium
                     )
-
                     Text(
                         text = getStatusText(sensor),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-
                     // Multi-device info for GSR
                     if (sensor.type == SensorType.GSR && sensor.maxDevices > 1) {
                         Text(
@@ -277,7 +255,6 @@ private fun SensorStatusCard(
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
-
                     // Simulation warning
                     if (sensor.isSimulation) {
                         Text(
@@ -287,7 +264,6 @@ private fun SensorStatusCard(
                             fontWeight = FontWeight.Bold
                         )
                     }
-
                     // Error message
                     if (sensor.errorMessage != null) {
                         Text(
@@ -298,7 +274,6 @@ private fun SensorStatusCard(
                     }
                 }
             }
-
             // Status Indicator
             StatusIndicator(sensor.status)
         }

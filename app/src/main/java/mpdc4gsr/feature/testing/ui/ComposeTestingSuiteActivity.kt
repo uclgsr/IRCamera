@@ -22,19 +22,13 @@ import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.launch
 
-/**
- * Activity wrapper for ComposeTestingSuite
- * Provides UI for comprehensive testing with results display
- */
 class ComposeTestingSuiteActivity : ComponentActivity() {
-
     companion object {
         private const val TAG = "ComposeTestingSuiteActivity"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             LibUnifiedTheme {
                 ComposeTestingSuiteScreen()
@@ -48,7 +42,6 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
         var testResults by remember { mutableStateOf<List<TestResult>>(emptyList()) }
         var isTestRunning by remember { mutableStateOf(false) }
         var testProgress by remember { mutableStateOf(0f) }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -89,7 +82,6 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
                             style = MaterialTheme.typography.bodyMedium
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-
                         if (isTestRunning) {
                             LinearProgressIndicator(
                                 progress = { testProgress },
@@ -101,7 +93,6 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
                                 style = MaterialTheme.typography.bodySmall
                             )
                         }
-
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(
                             onClick = {
@@ -127,9 +118,7 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Test Results
                 if (testResults.isNotEmpty()) {
                     Text(
@@ -138,7 +127,6 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
                         fontWeight = FontWeight.SemiBold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-
                     LazyColumn(
                         modifier = Modifier.height(400.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -159,21 +147,15 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
         onProgress: (Float, List<TestResult>) -> Unit
     ) {
         AppLogger.i(TAG, "Starting comprehensive testing suite")
-
         try {
             val testingSuite = ComposeTestingSuite()
             val results = mutableListOf<TestResult>()
-
             // Simulate progressive testing with updates
             onProgress(0.1f, results)
-
             val finalResults = testingSuite.runAllTests()
             results.addAll(finalResults)
-
             onProgress(1f, results)
-
             AppLogger.i(TAG, "Comprehensive tests completed: ${results.size} tests executed")
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Comprehensive tests failed: ${e.message}")
             // Add error result

@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import java.util.*
 
 class MonitorThermalViewModel : BaseViewModel() {
-
     // Monitoring State
     private val _monitoringState = MutableStateFlow(MonitoringState.STOPPED)
     val monitoringState: StateFlow<MonitoringState> = _monitoringState.asStateFlow()
@@ -23,7 +22,6 @@ class MonitorThermalViewModel : BaseViewModel() {
     // Monitoring Alerts
     private val _monitoringAlerts = MutableStateFlow<List<MonitoringAlert>>(emptyList())
     val monitoringAlerts: StateFlow<List<MonitoringAlert>> = _monitoringAlerts.asStateFlow()
-
     fun toggleMonitoring() {
         launchWithErrorHandling {
             _monitoringState.value = when (_monitoringState.value) {
@@ -85,11 +83,8 @@ class MonitorThermalViewModel : BaseViewModel() {
     )
 
     data class FenceData(val data: String)
-
     data class TemperatureThreshold(val high: Float, val low: Float)
-
     data class AlertSettings(val soundEnabled: Boolean, val vibrationEnabled: Boolean)
-
     data class MonitoringAlert(
         val message: String,
         val severity: AlertSeverity,

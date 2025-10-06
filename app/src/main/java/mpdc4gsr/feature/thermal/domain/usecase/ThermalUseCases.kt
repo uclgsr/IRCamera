@@ -5,9 +5,6 @@ import mpdc4gsr.feature.thermal.data.source.ThermalFrameData
 import mpdc4gsr.feature.thermal.data.source.ThermalSnapshot
 import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
 
-/**
- * Use case for connecting to thermal camera
- */
 class ConnectThermalCameraUseCase(
     private val repository: ThermalRepository
 ) {
@@ -16,9 +13,6 @@ class ConnectThermalCameraUseCase(
     }
 }
 
-/**
- * Use case for disconnecting from thermal camera
- */
 class DisconnectThermalCameraUseCase(
     private val repository: ThermalRepository
 ) {
@@ -27,9 +21,6 @@ class DisconnectThermalCameraUseCase(
     }
 }
 
-/**
- * Use case for streaming thermal frames
- */
 class StartThermalStreamingUseCase(
     private val repository: ThermalRepository
 ) {
@@ -41,9 +32,6 @@ class StartThermalStreamingUseCase(
     }
 }
 
-/**
- * Use case for stopping thermal stream
- */
 class StopThermalStreamingUseCase(
     private val repository: ThermalRepository
 ) {
@@ -52,9 +40,6 @@ class StopThermalStreamingUseCase(
     }
 }
 
-/**
- * Use case for capturing thermal snapshot
- */
 class CaptureThermalSnapshotUseCase(
     private val repository: ThermalRepository
 ) {
@@ -66,9 +51,6 @@ class CaptureThermalSnapshotUseCase(
     }
 }
 
-/**
- * Use case for starting thermal recording
- */
 class StartThermalRecordingUseCase(
     private val repository: ThermalRepository
 ) {
@@ -80,9 +62,6 @@ class StartThermalRecordingUseCase(
     }
 }
 
-/**
- * Use case for stopping thermal recording
- */
 class StopThermalRecordingUseCase(
     private val repository: ThermalRepository
 ) {
@@ -91,9 +70,6 @@ class StopThermalRecordingUseCase(
     }
 }
 
-/**
- * Use case for setting temperature range
- */
 class SetTemperatureRangeUseCase(
     private val repository: ThermalRepository
 ) {
@@ -105,9 +81,6 @@ class SetTemperatureRangeUseCase(
     }
 }
 
-/**
- * Use case for checking camera connection
- */
 class CheckCameraConnectionUseCase(
     private val repository: ThermalRepository
 ) {

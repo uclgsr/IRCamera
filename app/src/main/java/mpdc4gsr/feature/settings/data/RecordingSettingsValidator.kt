@@ -7,11 +7,9 @@ import mpdc4gsr.core.utils.ErrorHandler
 
 object RecordingSettingsValidator {
     private const val TAG = "RecordingSettingsValidator"
-
     fun validateAndLogSettings(context: Context) {
         val repository = RecordingSettingsRepository.getInstance(context)
         val settings = repository.getSettings()
-
         AppLogger.i(TAG, "========== Recording Settings Validation ==========")
         AppLogger.i(TAG, "Auto Recording: ${settings.autoRecording}")
         AppLogger.i(TAG, "Recording Quality: ${settings.recordingQuality}")
@@ -22,7 +20,6 @@ object RecordingSettingsValidator {
         AppLogger.i(TAG, "Video Format: ${settings.videoFormat}")
         AppLogger.i(TAG, "Audio Format: ${settings.audioFormat}")
         AppLogger.i(TAG, "Sensor Data Format: ${settings.sensorDataFormat}")
-
         val qualityConfig = repository.getQualityConfig(settings.recordingQuality)
         AppLogger.i(TAG, "Quality Config - Resolution: ${qualityConfig.videoWidth}x${qualityConfig.videoHeight}")
         AppLogger.i(TAG, "Quality Config - Bitrate: ${qualityConfig.videoBitrate}")
@@ -40,13 +37,11 @@ object RecordingSettingsValidator {
         val repository = RecordingSettingsRepository.getInstance(context)
         val settings = repository.getSettings()
         val qualityConfig = repository.getQualityConfig(settings.recordingQuality)
-
         val audioMatch = actualAudioEnabled == settings.audioEnabled
         val resolutionMatch = actualVideoWidth == qualityConfig.videoWidth &&
                 actualVideoHeight == qualityConfig.videoHeight
         val fpsMatch = actualVideoFps >= (settings.videoFrameRate - 5) &&
                 actualVideoFps <= (settings.videoFrameRate + 5)
-
         AppLogger.i(TAG, "========== Settings Application Verification ==========")
         AppLogger.i(
             TAG,
@@ -59,7 +54,6 @@ object RecordingSettingsValidator {
         AppLogger.i(TAG, "FPS Match: $fpsMatch (Expected: ${settings.videoFrameRate}, Actual: $actualVideoFps)")
         AppLogger.i(TAG, "Overall Settings Applied: ${audioMatch && resolutionMatch && fpsMatch}")
         AppLogger.i(TAG, "======================================================")
-
         return audioMatch && resolutionMatch && fpsMatch
     }
 }

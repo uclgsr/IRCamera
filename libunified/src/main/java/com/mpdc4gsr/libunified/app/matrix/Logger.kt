@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object Logger {
-
     @JvmStatic
     fun e(clazz: Class<*>, msg: String) {
         if (BuildConfig.DEBUG) {
@@ -81,13 +80,9 @@ object Logger {
     }
 
     private val MYLOG_PATH_SDCARD_DIR = "/sdcard/Guide/log"
-
     private val MYLOGFILEName = "Log.txt"
-
     private val myLogSdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-
     private val logfile = SimpleDateFormat("yyyy-MM-dd")
-
     fun f(tag: String, text: String) {
         val nowtime = Date()
         val needWriteFiel = logfile.format(nowtime)

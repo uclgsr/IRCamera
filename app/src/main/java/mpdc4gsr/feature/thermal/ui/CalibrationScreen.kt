@@ -30,10 +30,6 @@ import mpdc4gsr.core.ui.components.settings.SettingsToggle
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.thermal.presentation.CalibrationViewModel
 
-/**
- * Calibration Screen - System calibration and alignment tools
- * Integrated with CalibrationViewModel for persistence
- */
 @Composable
 fun CalibrationScreen(
     onBackClick: (() -> Unit)? = null,
@@ -43,11 +39,9 @@ fun CalibrationScreen(
     val context = LocalContext.current
     val settings by viewModel.calibrationSettings.collectAsState()
     val calibrationInfo by viewModel.calibrationInfo.collectAsState()
-
     LaunchedEffect(Unit) {
         viewModel.initialize(context)
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -58,7 +52,6 @@ fun CalibrationScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -91,7 +84,6 @@ fun CalibrationScreen(
                     value = calibrationInfo.thermalLastCalibrated
                 )
             }
-
             // GSR Sensor Calibration
             SettingsCard(
                 title = "GSR Sensor Calibration",
@@ -118,7 +110,6 @@ fun CalibrationScreen(
                     value = calibrationInfo.gsrLastCalibrated
                 )
             }
-
             // Camera Alignment
             SettingsCard(
                 title = "Camera Alignment",

@@ -48,60 +48,47 @@ data class PdfDocument(
 class PdfViewModel : AppBaseViewModel() {
     private val _isLoading = mutableStateOf(true)
     val isLoading: State<Boolean> = _isLoading
-
     private val _pdfDocument = mutableStateOf<PdfDocument?>(null)
     val pdfDocument: State<PdfDocument?> = _pdfDocument
-
     private val _error = mutableStateOf<String?>(null)
     val error: State<String?> = _error
-
     fun loadPdf(isTS001: Boolean, context: android.content.Context) {
         val pdfType = if (isTS001) PdfType.TC001 else PdfType.TS004
-
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO + exceptionHandler) {
             try {
                 _isLoading.value = true
                 _error.value = null
-
                 // Simulate loading delay
                 delay(1000)
-
                 val externalDir = context.getExternalFilesDir("pdf")
                 if (externalDir == null) {
                     _error.value = "External storage not available"
                     _isLoading.value = false
                     return@launch
                 }
-
                 val pdfDir = externalDir
                 if (!pdfDir.exists()) {
                     pdfDir.mkdirs()
                 }
-
                 val pdfFile = File(pdfDir, pdfType.fileName)
                 val isAvailable = pdfFile.exists()
-
                 if (!isAvailable) {
                     // Copy from assets if available
                     copyPdfFromAssets(context, pdfType.fileName, pdfFile)
                 }
-
                 val fileSize = if (pdfFile.exists()) {
                     formatFileSize(pdfFile.length())
                 } else {
                     "0 KB"
                 }
-
                 val document = PdfDocument(
                     type = pdfType,
                     file = if (pdfFile.exists()) pdfFile else null,
                     isAvailable = pdfFile.exists(),
                     fileSize = fileSize
                 )
-
                 _pdfDocument.value = document
                 _isLoading.value = false
-
             } catch (e: Exception) {
                 _error.value = "Failed to load PDF: ${e.message}"
                 _isLoading.value = false
@@ -117,7 +104,6 @@ class PdfViewModel : AppBaseViewModel() {
         try {
             val inputStream = context.assets.open("manuals/$fileName")
             val outputStream = FileOutputStream(destinationFile)
-
             inputStream.copyTo(outputStream)
             inputStream.close()
             outputStream.close()
@@ -137,12 +123,9 @@ class PdfViewModel : AppBaseViewModel() {
 }
 
 class PdfComposeActivity : BaseComposeActivity<PdfViewModel>() {
-
     override fun createViewModel(): PdfViewModel = viewModels<PdfViewModel>().value
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val isTS001 = intent.getBooleanExtra("isTS001", false)
         viewModels<PdfViewModel>().value.loadPdf(isTS001, this)
     }
@@ -160,7 +143,6 @@ class PdfComposeActivity : BaseComposeActivity<PdfViewModel>() {
             val isLoading by viewModel.isLoading
             val pdfDocument by viewModel.pdfDocument
             val error by viewModel.error
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -170,7 +152,6 @@ class PdfComposeActivity : BaseComposeActivity<PdfViewModel>() {
                     title = pdfDocument?.type?.displayName ?: "Manual Viewer",
                     onBackClick = { finish() }
                 )
-
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -331,7 +312,6 @@ private fun PdfContent(document: PdfDocument) {
                 }
             }
         }
-
         if (document.isAvailable) {
             // PDF available - show viewer placeholder
             Card(
@@ -408,9 +388,7 @@ private fun PdfContent(document: PdfDocument) {
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(24.dp))
-
         // Quick help section
         Card(
             modifier = Modifier.fillMaxWidth(),

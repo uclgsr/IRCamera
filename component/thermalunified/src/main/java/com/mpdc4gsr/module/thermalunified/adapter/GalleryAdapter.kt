@@ -24,7 +24,6 @@ class GalleryAdapter(val context: Context) :
     var selectCallback: ((List<GalleryBean>) -> Unit)? = null
     var itemClickCallback: ((Int) -> Unit)? = null
     var isTS004Remote: Boolean = false
-
     var datas = arrayListOf<String>()
         set(value) {
             field = value

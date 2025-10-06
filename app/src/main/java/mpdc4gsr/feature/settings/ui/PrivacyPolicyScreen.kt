@@ -18,9 +18,6 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * Privacy Policy Screen - Data privacy and usage policy
- */
 @Composable
 fun PrivacyPolicyScreen(
     onBackClick: (() -> Unit)? = null,
@@ -36,7 +33,6 @@ fun PrivacyPolicyScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -49,37 +45,30 @@ fun PrivacyPolicyScreen(
                 color = Color.Gray,
                 fontSize = 14.sp
             )
-
             PolicySection(
                 title = "Data Collection",
                 content = "This application collects multi-modal sensor data including GSR (Galvanic Skin Response), thermal imaging, and RGB camera data for research purposes. All data is collected with explicit user consent."
             )
-
             PolicySection(
                 title = "Data Storage",
                 content = "Collected data is stored locally on the device and can be exported by the user. No data is transmitted to external servers without explicit user action."
             )
-
             PolicySection(
                 title = "Data Usage",
                 content = "Data collected through this application is intended for research purposes only. Users maintain full control over their data and can delete it at any time."
             )
-
             PolicySection(
                 title = "Third-Party Access",
                 content = "No third-party services have access to your data. Data export and sharing are entirely controlled by the user."
             )
-
             PolicySection(
                 title = "Data Security",
                 content = "We implement appropriate technical measures to protect your data from unauthorized access, alteration, or destruction."
             )
-
             PolicySection(
                 title = "User Rights",
                 content = "You have the right to access, modify, or delete your data at any time. You can also request a copy of all data collected."
             )
-
             PolicySection(
                 title = "Contact",
                 content = "For questions or concerns about this privacy policy, please contact the research team at UCL GSR."
