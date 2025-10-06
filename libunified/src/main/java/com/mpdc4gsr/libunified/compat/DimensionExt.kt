@@ -7,7 +7,7 @@ import android.util.TypedValue
 /**
  * Modern AndroidX replacement for utilcode SizeUtils
  * Provides context-aware, type-safe dimension conversions without external dependencies
- * 
+ *
  * IMPORTANT: These utilities use context-aware patterns to ensure correct UI rendering
  * across different device configurations and themes.
  */

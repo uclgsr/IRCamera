@@ -69,7 +69,7 @@ class LinearCompassView : View {
         longLineSize = 0.5f.spToPx(context).toFloat()
         positionSize = 11f.spToPx(context).toFloat()
         markerSize = 2f.spToPx(context).toFloat()
-        
+
         val attributes =
             context.obtainStyledAttributes(attrs, R.styleable.LinearCompassView, 0, 0)
         lineColor = attributes.getColor(R.styleable.LinearCompassView_lineColor, Color.WHITE)

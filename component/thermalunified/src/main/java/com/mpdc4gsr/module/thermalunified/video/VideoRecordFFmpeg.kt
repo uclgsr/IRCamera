@@ -448,7 +448,7 @@ class VideoRecordFFmpeg(
                     launch(Dispatchers.Main) {
                         exportJob?.cancel()
                         bitmapJob?.cancel()
-                        
+
                         if (RECORDSTATE_RECORDING == audioRecord?.recordingState) {
                             audioRecord?.stop()
                             audioRecord?.release()

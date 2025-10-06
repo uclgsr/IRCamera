@@ -123,7 +123,7 @@ private fun ThermalGalleryScreen(
             }
         }
     }
-    
+
     // Search Dialog
     if (showSearchDialog) {
         AlertDialog(
@@ -151,7 +151,7 @@ private fun ThermalGalleryScreen(
             }
         )
     }
-    
+
     // More Options Dialog
     if (showMoreOptionsDialog) {
         AlertDialog(
@@ -159,7 +159,13 @@ private fun ThermalGalleryScreen(
             title = { Text("Gallery Options") },
             text = {
                 Column {
-                    listOf("Sort by Date", "Sort by Temperature", "Batch Export", "Delete Selected", "Settings").forEach { option ->
+                    listOf(
+                        "Sort by Date",
+                        "Sort by Temperature",
+                        "Batch Export",
+                        "Delete Selected",
+                        "Settings"
+                    ).forEach { option ->
                         TextButton(
                             onClick = { showMoreOptionsDialog = false },
                             modifier = Modifier.fillMaxWidth()

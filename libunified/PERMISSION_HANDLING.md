@@ -1,7 +1,8 @@
 # Permission Handling Guide
 
 **Note:** This documentation has been consolidated into the main docs directory.  
-Please refer to: [docs/developer-guides/permission-handling-guide.md](/docs/developer-guides/permission-handling-guide.md)
+Please refer
+to: [docs/developer-guides/permission-handling-guide.md](/docs/developer-guides/permission-handling-guide.md)
 
 ---
 

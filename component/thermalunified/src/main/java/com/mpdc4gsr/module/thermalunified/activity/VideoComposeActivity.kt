@@ -148,7 +148,7 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     // Thermal analysis overlay
                     ThermalAnalysisOverlay(
                         pointAnalysisEnabled = pointAnalysisEnabled,
-                        onTogglePointAnalysis = { 
+                        onTogglePointAnalysis = {
                             pointAnalysisEnabled = !pointAnalysisEnabled
                         },
                         modifier = Modifier
@@ -349,17 +349,26 @@ private fun VideoControlsOverlay(
                             tint = Color.White
                         )
                     }
-                    IconButton(onClick = { 
+                    IconButton(onClick = {
                         scope.launch {
                             try {
                                 // Capture current frame from video and save to MediaStore
                                 val contentValues = android.content.ContentValues().apply {
-                                    put(android.provider.MediaStore.Images.Media.DISPLAY_NAME, "thermal_frame_${System.currentTimeMillis()}.jpg")
+                                    put(
+                                        android.provider.MediaStore.Images.Media.DISPLAY_NAME,
+                                        "thermal_frame_${System.currentTimeMillis()}.jpg"
+                                    )
                                     put(android.provider.MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-                                    put(android.provider.MediaStore.Images.Media.RELATIVE_PATH, android.os.Environment.DIRECTORY_PICTURES)
+                                    put(
+                                        android.provider.MediaStore.Images.Media.RELATIVE_PATH,
+                                        android.os.Environment.DIRECTORY_PICTURES
+                                    )
                                 }
                                 // Insert into MediaStore (actual frame capture would happen here)
-                                context.contentResolver.insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                                context.contentResolver.insert(
+                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                    contentValues
+                                )
                                 snackbarHostState.showSnackbar("Frame exported to gallery")
                             } catch (e: Exception) {
                                 snackbarHostState.showSnackbar("Failed to export frame: ${e.message}")
@@ -421,7 +430,7 @@ private fun ThermalAnalysisOverlay(
                     modifier = Modifier.size(16.dp)
                 )
             }
-            
+
             if (pointAnalysisEnabled) {
                 Text(
                     "Point Analysis ON",

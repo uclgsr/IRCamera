@@ -58,11 +58,11 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
     @Composable
     override fun Content(viewModel: BLEIntegrationTestViewModel) {
         val logMessages = remember { mutableStateListOf<String>() }
-        
+
         LibUnifiedTheme {
             BLEIntegrationTestScreen(
                 onRunTest = { testType -> runTest(testType) },
-                onClearLogs = { 
+                onClearLogs = {
                     // Clear log messages and provide feedback
                     logMessages.clear()
                 },

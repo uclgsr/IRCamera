@@ -15,11 +15,11 @@ logger = logging.getLogger(__name__)
 
 class SyncHandler:
     """Handles time synchronization protocol with Android devices"""
-    
+
     def __init__(self):
         self.pending_syncs = {}
         self.sync_history = {}
-        
+
     def handle_sync_init(self, device_id: str, socket: 'socket.socket') -> bool:
         """
         Handle SYNC_INIT message from Android device.
@@ -37,27 +37,28 @@ class SyncHandler:
         try:
             # Capture T1 (PC send time)
             t1 = int(time.time() * 1000)
-            
+
             # Create SYNC_REQUEST message
             sync_request = f"SYNC_REQUEST t_pc={t1}\n"
-            
+
             # Send to Android
             socket.send(sync_request.encode('utf-8'))
-            
+
             # Store T1 for later calculation
             self.pending_syncs[device_id] = {
                 't1': t1,
                 'sent_at': time.time()
             }
-            
+
             logger.info(f"SYNC_INIT received from {device_id}, sent SYNC_REQUEST with t1={t1}")
             return True
-            
+
         except Exception as e:
             logger.error(f"Failed to handle SYNC_INIT from {device_id}: {e}")
             return False
-    
-    def handle_sync_response(self, device_id: str, t_pc: int, t_ph: int, socket: 'socket.socket') -> Optional[Dict[str, Any]]:
+
+    def handle_sync_response(self, device_id: str, t_pc: int, t_ph: int, socket: 'socket.socket') -> Optional[
+        Dict[str, Any]]:
         """
         Handle SYNC_RESPONSE message from Android device.
         
@@ -77,35 +78,35 @@ class SyncHandler:
             if device_id not in self.pending_syncs:
                 logger.warning(f"Received SYNC_RESPONSE from {device_id} but no pending sync")
                 return None
-            
+
             pending = self.pending_syncs[device_id]
             t1 = pending['t1']
-            
+
             # Verify t_pc matches our t1
             if t_pc != t1:
                 logger.warning(f"SYNC_RESPONSE t_pc={t_pc} doesn't match our t1={t1}")
                 # Continue anyway, use the t_pc from response
                 t1 = t_pc
-            
+
             t2 = t_ph
-            
+
             # Capture T3 (PC receive time)
             t3 = int(time.time() * 1000)
-            
+
             # Calculate offset and RTT
             # offset = T2 - ((T1 + T3) / 2)
             # Positive offset means phone is ahead of PC
             offset = int(t2 - ((t1 + t3) / 2))
-            
+
             # rtt = T3 - T1
             rtt = t3 - t1
-            
+
             # Create SYNC_RESULT message
             sync_result_msg = f"SYNC_RESULT t1={t1} t2={t2} t3={t3} offset={offset} rtt={rtt}\n"
-            
+
             # Send to Android
             socket.send(sync_result_msg.encode('utf-8'))
-            
+
             # Store sync results
             sync_data = {
                 't1': t1,
@@ -116,21 +117,21 @@ class SyncHandler:
                 'timestamp': time.time(),
                 'quality': self._calculate_quality(rtt)
             }
-            
+
             self.sync_history[device_id] = sync_data
             del self.pending_syncs[device_id]
-            
+
             logger.info(
                 f"Time sync completed with {device_id}: "
                 f"offset={offset}ms, rtt={rtt}ms, quality={sync_data['quality']}"
             )
-            
+
             return sync_data
-            
+
         except Exception as e:
             logger.error(f"Failed to handle SYNC_RESPONSE from {device_id}: {e}")
             return None
-    
+
     def _calculate_quality(self, rtt_ms: int) -> str:
         """Calculate sync quality based on RTT"""
         if rtt_ms < 50:
@@ -141,24 +142,24 @@ class SyncHandler:
             return "ACCEPTABLE"
         else:
             return "POOR"
-    
+
     def get_sync_stats(self, device_id: str) -> Optional[Dict[str, Any]]:
         """Get sync statistics for a device"""
         return self.sync_history.get(device_id)
-    
+
     def get_all_sync_stats(self) -> Dict[str, Dict[str, Any]]:
         """Get sync statistics for all devices"""
         return self.sync_history.copy()
-    
+
     def cleanup_expired_syncs(self, timeout_seconds: float = 30.0):
         """Remove pending syncs that haven't completed within timeout"""
         current_time = time.time()
         expired = []
-        
+
         for device_id, pending in self.pending_syncs.items():
             if current_time - pending['sent_at'] > timeout_seconds:
                 expired.append(device_id)
-        
+
         for device_id in expired:
             logger.warning(f"Sync timeout for {device_id}, removing from pending")
             del self.pending_syncs[device_id]
@@ -170,7 +171,7 @@ if __name__ == "__main__":
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
-    
+
     print("SyncHandler Example")
     print("=" * 60)
     print()

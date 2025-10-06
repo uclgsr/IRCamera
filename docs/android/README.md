@@ -1,12 +1,14 @@
 # Android Application Documentation
 
-Documentation for the Android application component of IRCamera, including development best practices, code quality guidelines, and implementation guides.
+Documentation for the Android application component of IRCamera, including development best practices, code quality
+guidelines, and implementation guides.
 
 ## Quick Start
 
 ### For New Developers
 
-1. **Start Here:** [android-core-priorities.md](android-core-priorities.md) - Comprehensive overview of Android development priorities
+1. **Start Here:** [android-core-priorities.md](android-core-priorities.md) - Comprehensive overview of Android
+   development priorities
 2. **Read Next:** [android-code-quality-guide.md](android-code-quality-guide.md) - Critical issues and fixes
 3. **Before Committing:** Review the code quality checklist
 
@@ -20,18 +22,18 @@ Documentation for the Android application component of IRCamera, including devel
 
 ### Essential Guides
 
-| Document | Purpose | Priority |
-|----------|---------|----------|
-| [android-core-priorities.md](android-core-priorities.md) | Comprehensive guide covering all Android development priorities (correctness, performance, reliability, security, architecture, testing, accessibility, observability) | HIGH |
-| [android-code-quality-guide.md](android-code-quality-guide.md) | Specific code quality issues with immediate fixes - Critical issues that need attention | CRITICAL |
-| [performance-optimization-guide.md](performance-optimization-guide.md) | Strategies for optimizing cold start, rendering, memory, battery, and I/O performance | HIGH |
-| [accessibility-guidelines.md](accessibility-guidelines.md) | Complete accessibility implementation guide with TalkBack, contrast, touch targets | MEDIUM |
-| [core-priorities-implementation-summary.md](core-priorities-implementation-summary.md) | Summary of implemented framework and next steps | INFO |
+| Document                                                                               | Purpose                                                                                                                                                                | Priority |
+|----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| [android-core-priorities.md](android-core-priorities.md)                               | Comprehensive guide covering all Android development priorities (correctness, performance, reliability, security, architecture, testing, accessibility, observability) | HIGH     |
+| [android-code-quality-guide.md](android-code-quality-guide.md)                         | Specific code quality issues with immediate fixes - Critical issues that need attention                                                                                | CRITICAL |
+| [performance-optimization-guide.md](performance-optimization-guide.md)                 | Strategies for optimizing cold start, rendering, memory, battery, and I/O performance                                                                                  | HIGH     |
+| [accessibility-guidelines.md](accessibility-guidelines.md)                             | Complete accessibility implementation guide with TalkBack, contrast, touch targets                                                                                     | MEDIUM   |
+| [core-priorities-implementation-summary.md](core-priorities-implementation-summary.md) | Summary of implemented framework and next steps                                                                                                                        | INFO     |
 
 ### Specialized Topics
 
-| Document | Purpose |
-|----------|---------|
+| Document                                                 | Purpose                                    |
+|----------------------------------------------------------|--------------------------------------------|
 | [time-sync-flow-diagram.txt](time-sync-flow-diagram.txt) | Time synchronization protocol flow diagram |
 
 ## Code Quality Standards
@@ -50,6 +52,7 @@ See [android-code-quality-guide.md](android-code-quality-guide.md) for complete 
 **Location:** `.github/workflows/android-quality-gates.yml`
 
 **Automated Checks:**
+
 1. Android Lint
 2. Detekt (Kotlin static analysis)
 3. Unit Tests
@@ -66,6 +69,7 @@ Run locally: `./gradlew lint detekt testDebugUnitTest assembleDebug`
 - **StrictMode:** Automatic detection of performance issues in debug builds
 
 **Usage:**
+
 ```kotlin
 // Initialize in App.onCreate()
 PerformanceMetrics.initialize()
@@ -94,15 +98,19 @@ See [android-core-priorities.md](android-core-priorities.md) Section 7 for archi
 ## Related Documentation
 
 ### PC Networking
+
 - [../summaries/pc-networking-summary.md](../summaries/pc-networking-summary.md) - PC networking implementation
 
 ### PC Controller
+
 - [../../pc-controller/docs/](../../pc-controller/docs/) - Protocol bridge, integration guides
 
 ### Maintenance
+
 - [../maintenance/](../maintenance/) - Migration and fix documentation
 
 ### Implementation Summaries
+
 - [../summaries/](../summaries/) - Feature implementation summaries
 
 ## Common Tasks
@@ -141,6 +149,7 @@ cd IRCamera
 ## Key Performance Indicators
 
 **Targets:**
+
 - Cold start time: < 2 seconds
 - Crash-free sessions: > 99.5%
 - ANR rate: < 0.1%
@@ -159,11 +168,11 @@ See [android-core-priorities.md](android-core-priorities.md) Section 10 for full
 ## Version History
 
 - **2024:** Comprehensive framework implementation
-  - Core priorities documentation
-  - Performance monitoring framework
-  - Accessibility guidelines
-  - CI/CD pipeline
-  - Telemetry and observability
+    - Core priorities documentation
+    - Performance monitoring framework
+    - Accessibility guidelines
+    - CI/CD pipeline
+    - Telemetry and observability
 
 ---
 

@@ -38,13 +38,13 @@ class ComprehensiveRecordingController(
         // Sensor configuration constants
         private const val RGB_SENSOR_NAME = "RGB"
         private const val THERMAL_SENSOR_NAME = "Thermal"
-        
+
         // Health monitoring constants
         private const val HEALTH_CHECK_INTERVAL_MS = 5000L
         private const val HEALTH_CHECK_ERROR_DELAY_MS = 10000L
         private const val STATS_UPDATE_INTERVAL_MS = 2000L
         private const val STATS_UPDATE_ERROR_DELAY_MS = 5000L
-        
+
         // Reconnection settings
         private const val MAX_RECONNECTION_ATTEMPTS = 3
         private const val GSR_SENSOR_NAME = "GSR"

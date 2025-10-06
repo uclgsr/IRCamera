@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Network Security Configuration for IRCamera
     
     This configuration allows cleartext traffic only for local network communication
@@ -23,7 +22,7 @@
             or using a VPN/secure channel for sensitive data transfer.
         -->
     </domain-config>
-    
+
     <!-- Base configuration: HTTPS only for external traffic -->
     <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
@@ -33,7 +32,7 @@
             <certificates src="user" />
         </trust-anchors>
     </base-config>
-    
+
     <!-- 
         TODO for production:
         1. Set cleartextTrafficPermitted="false" in base-config

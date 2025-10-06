@@ -215,7 +215,7 @@ class App : BaseApplication() {
 
     private fun enableStrictMode() {
         AppLogger.d("App", "Enabling StrictMode for debug build")
-        
+
         StrictMode.setThreadPolicy(
             StrictMode.ThreadPolicy.Builder()
                 .detectAll()
@@ -229,7 +229,7 @@ class App : BaseApplication() {
                 }
                 .build()
         )
-        
+
         StrictMode.setVmPolicy(
             StrictMode.VmPolicy.Builder()
                 .detectAll()
@@ -243,7 +243,10 @@ class App : BaseApplication() {
                 }
                 .build()
         )
-        
-        AppLogger.i("App", "StrictMode enabled - will detect: disk reads/writes on main thread, network on main thread, memory leaks, unclosed resources")
+
+        AppLogger.i(
+            "App",
+            "StrictMode enabled - will detect: disk reads/writes on main thread, network on main thread, memory leaks, unclosed resources"
+        )
     }
 }

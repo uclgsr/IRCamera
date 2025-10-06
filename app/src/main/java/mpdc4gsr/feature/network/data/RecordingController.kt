@@ -29,7 +29,7 @@ class RecordingController(
 ) {
     companion object {
         private const val TAG = "RecordingController"
-        
+
         // Reconnection settings
         private const val MAX_RECONNECTION_ATTEMPTS = 3
 

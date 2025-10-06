@@ -10,6 +10,7 @@
     \chapter{Background and Literature Review}
     \label{ch:background}
 
+
     \section{Emotion Analysis Applications}
     \label{sec:emotion_apps}
 
@@ -19,14 +20,15 @@
 
     The current platform integrates a Shimmer3 GSR+ sensor (128~Hz, 16-bit resolution) with a Topdon TC-series thermal camera ($256 \times 192$~pixels, 25~Hz) and RGB video (30~fps) to capture synchronised physiological and thermal responses. Hardware timestamps align data streams within 21~ms median offset using Network Time Protocol synchronisation. This configuration targets real-time stress assessment during controlled laboratory tasks, specifically Stroop colour-word conflict tests and Trier Social Stress Test (TSST) protocols, where ground-truth GSR can be collected simultaneously with contactless thermal and visual data for supervised learning.
 
-For readers unfamiliar with GSR signals or thermal imagery, Figure~\ref{fig:gsr-thermal-examples} illustrates typical data characteristics from these modalities. The figure shows a sample GSR signal with both tonic (baseline) and phasic (response) components, alongside thermal image characteristics including region-of-interest temperature distributions and stress-induced patterns such as nasal cooling and forehead warming.
+    For readers unfamiliar with GSR signals or thermal imagery, Figure~\ref{fig:gsr-thermal-examples} illustrates typical data characteristics from these modalities. The figure shows a sample GSR signal with both tonic (baseline) and phasic (response) components, alongside thermal image characteristics including region-of-interest temperature distributions and stress-induced patterns such as nasal cooling and forehead warming.
 
-\begin{figure}[htbp]
-    \centering
-    \fbox{\textit{[See docs/thesis-diagrams/chapter2-gsr-thermal-examples.md for Mermaid visualizations]}}
-    \caption{Basic GSR and Thermal Data Examples: (A) Sample GSR signal showing tonic SCL baseline and phasic SCR events during a 2-minute stress task. (B) Thermal image characteristics with facial ROI temperatures. (C) Synchronized multi-modal response timeline showing correlations between GSR peaks and thermal changes.}
-    \label{fig:gsr-thermal-examples}
-\end{figure}
+    \begin{figure}[htbp]
+        \centering
+        \fbox{\textit{[See docs/thesis-diagrams/chapter2-gsr-thermal-examples.md for Mermaid visualizations]}}
+        \caption{Basic GSR and Thermal Data Examples: (A) Sample GSR signal showing tonic SCL baseline and phasic SCR events during a 2-minute stress task. (B) Thermal image characteristics with facial ROI temperatures. (C) Synchronized multi-modal response timeline showing correlations between GSR peaks and thermal changes.}
+        \label{fig:gsr-thermal-examples}
+    \end{figure}
+
 
     \section{Rationale for Contactless Physiological Measurement}
     \label{sec:rationale_contactless}
@@ -39,6 +41,7 @@ For readers unfamiliar with GSR signals or thermal imagery, Figure~\ref{fig:gsr-
 
     The goal is predicting GSR levels from thermal and RGB features during controlled stress induction protocols. Unlike previous studies that focused on binary stress classification, this approach targets continuous GSR prediction to enable real-time stress level estimation rather than simple stressed/not-stressed categorization.
 
+
     \section{Definitions of "Stress" (Scientific vs. Colloquial)}
     \label{sec:stress_definitions}
 
@@ -47,6 +50,7 @@ For readers unfamiliar with GSR signals or thermal imagery, Figure~\ref{fig:gsr-
     Current stress measurement faces competing theoretical frameworks. The Selye model emphasizes physiological response mechanisms (HPA axis, sympathetic arousal), while psychological stress models focus on cognitive appraisal and coping resources. Lazarus and Folkman's transactional model argues that stress results from person--environment interactions rather than simple stimulus-response patterns. These theoretical differences matter for GSR interpretation: a cognitive load task might produce similar GSR responses to an anxiety-inducing stimulus, but the underlying stress mechanisms differ.
 
     Measurement implications for this study: GSR responses during controlled stress induction (Stroop tasks, TSST protocols) reflect acute sympathetic activation rather than chronic stress states. The platform measures phasic GSR responses (skin conductance responses, SCRs) that occur $1$--$5$ seconds after stimulus presentation, not tonic stress levels. Ground truth stress classification relies on standardized laboratory stressors with established physiological response profiles rather than subjective stress self-reports. This approach sidesteps definitional ambiguity by focusing on measurable autonomic responses to controlled stimuli, though it limits generalizability to real-world stress experiences where cognitive appraisal varies significantly across individuals and contexts.
+
 
     \section{Cortisol vs. GSR as Stress Indicators}
     \label{sec:cortisol_vs_gsr}
@@ -59,6 +63,7 @@ For readers unfamiliar with GSR signals or thermal imagery, Figure~\ref{fig:gsr-
 
     Response correlation varies by stressor type and individual characteristics. Patel et al. (2024) found moderate correlation ($r = 0.43, p < 0.01$) between peak GSR amplitude and cortisol area-under-curve during TSST protocols, but this relationship weakened during cognitive tasks ($r = 0.22, p > 0.05$) \cite{patel2024}. The current platform focuses on GSR prediction because its immediate response enables real-time stress assessment, though cortisol validation could strengthen future work by confirming HPA axis activation during thermal signature collection.
 
+
     \section{GSR Physiology and Measurement Limitations}
     \label{sec:gsr_physiology}
 
@@ -67,6 +72,7 @@ For readers unfamiliar with GSR signals or thermal imagery, Figure~\ref{fig:gsr-
     Observed measurement limitations during preliminary testing affect data quality. Motion artifacts occur when finger movement changes electrode contact pressure; accelerometer data from the Shimmer unit shows movement events correlate with GSR spikes $>2~\mu$S that exceed physiological SCR amplitudes (typically $0.1$--$0.8~\mu$S for stress responses). Environmental temperature variations of $\pm 2^{\circ}$C change baseline skin conductance by $15$--$25$\%, requiring temperature logging and baseline normalisation. Electrode gel drying over $45$--$60$ minute sessions causes conductance drift and signal attenuation.
 
     Individual response variability challenges cross-participant modelling. Boucsein (2012) documented $5$--$10$\% of participants as ``non-responders'' with SCR amplitudes $<0.05~\mu$S even during strong stimuli \cite{boucsein2012}. Baseline skin conductance levels range $2$--$40~\mu$S across individuals, requiring subject-specific normalisation. Age correlates negatively with GSR responsiveness ($r = -0.34$), while skin hydration and medication use (particularly beta-blockers) affect response magnitude.
+
 
     \section{Thermal Cues of Stress in Humans}
     \label{sec:thermal_cues}
@@ -81,6 +87,7 @@ For readers unfamiliar with GSR signals or thermal imagery, Figure~\ref{fig:gsr-
 
     Validation approach compares thermal features with synchronised GSR responses. Thermal ROI temperature changes during identified GSR peaks establish ground truth correlations for supervised learning. Cross-validation tests thermal-only stress detection against GSR-validated stress events, targeting prediction accuracy improvements over baseline RGB-only approaches documented in prior studies (78.3\% accuracy from smartphone cameras).
 
+
     \section{RGB vs. Thermal Imaging for Stress Detection (Machine Learning Hypothesis)}
     \label{sec:rgb_vs_thermal}
 
@@ -93,6 +100,7 @@ For readers unfamiliar with GSR signals or thermal imagery, Figure~\ref{fig:gsr-
     Synchronisation approach enables temporal feature alignment between modalities. Hardware timestamps from both cameras sync via Network Time Protocol to within 21~ms median offset. Cross-correlation analysis of breathing signals from both thermal (nostril temperature cycles) and RGB (chest movement detection) validates synchronisation accuracy. Frame-level alignment uses shared event markers (LED flash visible in RGB, thermal heating from LED) to correct any remaining temporal offset.
 
     Hypothesis validation tests complementary information combination. Initial analysis compares GSR prediction accuracy using thermal-only features (nose temperature, breathing rate) versus RGB-only features (facial expressions, rPPG heart rate) versus combined feature sets. Ground truth GSR events (SCR amplitude $>0.1~\mu$S) provide supervised learning targets. Cross-validation tests whether multimodal fusion exceeds best single-modality performance by statistically significant margins ($p < 0.05$).
+
 
     \section{Comparative Platforms and Open-Source Toolkits for Physiological Data Collection}
     \label{sec:platforms}
@@ -111,32 +119,33 @@ For readers unfamiliar with GSR signals or thermal imagery, Figure~\ref{fig:gsr-
 
     Collectively, these tools guided our architecture: emphasizing modular sensor integration (PhysioKit), structured multimodal dataset planning (iBVP), precise stimulus-timing (PsychoPy), and unified synchronization principles (LSL). Table~\ref{tab:related-systems} provides a comprehensive comparison of these and other related systems, highlighting the novelty and advantages of the current work. In the next section, we examine our chosen sensors and devices -- the Shimmer3 GSR+ and Topdon TC thermal camera -- and explain how their characteristics align with these design principles.
 
-\begin{table}[htbp]
-    \centering
-    \small
-    \caption{Related Systems and Methods Comparison}
-    \label{tab:related-systems}
-    \fbox{\textit{[See docs/thesis-diagrams/chapter2-related-systems-comparison.md for detailed comparison table]}}
-    
-    \vspace{0.3cm}
-    \textbf{Key Insights:} This work addresses gaps by integrating research-grade GSR with thermal imaging in a synchronized, portable, and affordable setup ($\sim$\$1,500) compared to high-end systems ($\sim$\$18,000). Real-time synchronization (<5ms) enables live coordination unlike post-hoc alignment approaches. The platform is open-source and mobile-based, contrasting with proprietary or PC-only solutions.
-\end{table}
+    \begin{table}[htbp]
+        \centering
+        \small
+        \caption{Related Systems and Methods Comparison}
+        \label{tab:related-systems}
+        \fbox{\textit{[See docs/thesis-diagrams/chapter2-related-systems-comparison.md for detailed comparison table]}}
+
+        \vspace{0.3cm}
+        \textbf{Key Insights:} This work addresses gaps by integrating research-grade GSR with thermal imaging in a synchronized, portable, and affordable setup ($\sim$\$1,500) compared to high-end systems ($\sim$\$18,000). Real-time synchronization (<5ms) enables live coordination unlike post-hoc alignment approaches. The platform is open-source and mobile-based, contrasting with proprietary or PC-only solutions.
+    \end{table}
+
 
     \section{Sensor Device Selection Rationale (Shimmer GSR Sensor and Topdon Thermal Camera)}
     \label{sec:sensor_selection}
 
     To implement the multi-modal platform described, hardware components were carefully selected that balance signal quality, integration capability, and practical considerations. In particular, the design chose the Shimmer3 GSR+ wearable sensor for electrodermal activity measurement and the Topdon TC-series thermal camera for infrared imaging, alongside a standard smartphone camera for RGB video. This section explains why these devices were chosen over alternatives, and how their characteristics support the system's goals. Table~\ref{tab:hardware-specs} summarizes the key specifications of all hardware components.
 
-\begin{table}[htbp]
-    \centering
-    \small
-    \caption{Summary of Hardware Components and Specifications}
-    \label{tab:hardware-specs}
-    \fbox{\textit{[See docs/thesis-diagrams/chapter2-hardware-specs-table.md for detailed specifications table]}}
-    
-    \vspace{0.3cm}
-    \textbf{Summary:} Shimmer3 GSR+ (128 Hz, 16-bit), Topdon TC001 (256×192, 25fps), Phone RGB (1080p, 30fps), Android device (flagship specs), PC controller (Python-based), Wi-Fi network (<5ms latency). Total hardware cost $\sim$\$1,500.
-\end{table}
+    \begin{table}[htbp]
+        \centering
+        \small
+        \caption{Summary of Hardware Components and Specifications}
+        \label{tab:hardware-specs}
+        \fbox{\textit{[See docs/thesis-diagrams/chapter2-hardware-specs-table.md for detailed specifications table]}}
+
+        \vspace{0.3cm}
+        \textbf{Summary:} Shimmer3 GSR+ (128 Hz, 16-bit), Topdon TC001 (256×192, 25fps), Phone RGB (1080p, 30fps), Android device (flagship specs), PC controller (Python-based), Wi-Fi network (<5ms latency). Total hardware cost $\sim$\$1,500.
+    \end{table}
 
     \subsection*{Shimmer3 GSR+ Sensor}
     The Shimmer3 GSR+ is a research-grade wireless sensor designed specifically for capturing GSR (EDA) along with other signals like photoplethysmography (PPG) and motion. Several key factors motivated this choice:

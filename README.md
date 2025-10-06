@@ -1,6 +1,8 @@
 # IRCamera - Multi-Sensor Recording System
 
-IRCamera is a comprehensive multi-sensor recording system for synchronized data capture from GSR (Galvanic Skin Response), thermal camera, and RGB camera sensors. The system consists of an Android application for mobile recording and a PC controller for remote orchestration.
+IRCamera is a comprehensive multi-sensor recording system for synchronized data capture from GSR (Galvanic Skin
+Response), thermal camera, and RGB camera sensors. The system consists of an Android application for mobile recording
+and a PC controller for remote orchestration.
 
 ## Key Features
 
@@ -26,6 +28,7 @@ IRCamera is a comprehensive multi-sensor recording system for synchronized data 
 ## Quick Start
 
 ### Android Application
+
 ```bash
 # Open in Android Studio
 ./gradlew build
@@ -35,6 +38,7 @@ IRCamera is a comprehensive multi-sensor recording system for synchronized data 
 ```
 
 ### PC Controller
+
 ```bash
 cd pc-controller
 pip install -r requirements.txt
@@ -46,24 +50,28 @@ python run_unified_controller.py
 All documentation is organized in the `docs/` directory:
 
 ### 📱 Android Application
+
 - [Android Documentation](docs/android/) - PC-Android communication, time sync
 - [Code Quality](docs/anti-patterns-readme.md) - Anti-patterns analysis and best practices
 - [Performance](docs/anr-prevention-guide.md) - ANR prevention guidelines
 
 ### 💻 PC Controller
+
 - [PC Controller Documentation](pc-controller/docs/) - Complete PC controller reference
 - [Quick Start](pc-controller/docs/quick-start.md) - Getting started guide
 - [Protocol Guide](pc-controller/docs/protocol-bridge-guide.md) - Communication protocol
 
 ### 📚 Thesis Content
+
 - [Thesis Documentation](docs/thesis/) - Complete thesis content
-  - System design (Chapter 3)
-  - Experimental evaluation (Chapter 5)
-  - Requirements evaluation (Chapter 6)
-  - Diagrams and figures
-  - Evaluation test suite
+    - System design (Chapter 3)
+    - Experimental evaluation (Chapter 5)
+    - Requirements evaluation (Chapter 6)
+    - Diagrams and figures
+    - Evaluation test suite
 
 ### 🔧 Maintenance & Summaries
+
 - [Implementation Summaries](docs/summaries/) - Feature implementations
 - [Maintenance Records](docs/maintenance/) - Migrations and fixes
 - [Complete Documentation Index](docs/INDEX.md) - Full documentation index
@@ -92,12 +100,14 @@ IRCamera/
 ## Development
 
 ### Requirements
+
 - Android Studio Arctic Fox or later
 - Kotlin 1.9+
 - Python 3.8+ (for PC controller)
 - Gradle 8.0+
 
 ### Building
+
 ```bash
 # Build all modules
 ./gradlew build
@@ -110,6 +120,7 @@ IRCamera/
 ```
 
 ### Code Quality
+
 - Follow [Kotlin coding conventions](https://kotlinlang.org/docs/coding-conventions.html)
 - Review [anti-patterns checklist](docs/anti-patterns-checklist.md) before commits
 - Run lint: `./gradlew lint`
@@ -118,6 +129,7 @@ IRCamera/
 ## Testing
 
 ### Android Tests
+
 ```bash
 # Unit tests
 ./gradlew test
@@ -127,12 +139,14 @@ IRCamera/
 ```
 
 ### PC Controller Tests
+
 ```bash
 cd pc-controller
 python -m pytest tests/
 ```
 
 ### Thesis Evaluation Tests
+
 ```bash
 cd docs/thesis/evaluation
 python run_tests.py

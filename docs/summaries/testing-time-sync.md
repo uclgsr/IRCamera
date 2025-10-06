@@ -2,7 +2,8 @@
 
 ## Overview
 
-This document provides a quick reference for testing the time synchronization feature. For complete implementation details, protocol specifications, and troubleshooting, see the comprehensive documentation in:
+This document provides a quick reference for testing the time synchronization feature. For complete implementation
+details, protocol specifications, and troubleshooting, see the comprehensive documentation in:
 
 **[pc-controller/docs/time_sync_implementation.md](../../pc-controller/docs/time_sync_implementation.md)**
 
@@ -19,8 +20,8 @@ This document provides a quick reference for testing the time synchronization fe
 3. **Start recording session** - automatic sync will occur
 
 4. **Verify in logs:**
-   - PC: `INFO - Time sync completed with <device>: offset=Xms, rtt=Yms`
-   - Android: `adb logcat | grep TimeSyncManager`
+    - PC: `INFO - Time sync completed with <device>: offset=Xms, rtt=Yms`
+    - Android: `adb logcat | grep TimeSyncManager`
 
 ## Key Test Commands
 
@@ -47,26 +48,28 @@ adb pull /sdcard/Android/data/<package>/files/<session>/timesync_log.csv
 
 ## Common Issues
 
-| Issue | Solution |
-|-------|----------|
-| SYNC_INIT not received | Check network connection and firewall |
-| Large offset values | Check RTT, sync PC with NTP |
-| Periodic sync not working | Verify session duration >10 min |
+| Issue                     | Solution                              |
+|---------------------------|---------------------------------------|
+| SYNC_INIT not received    | Check network connection and firewall |
+| Large offset values       | Check RTT, sync PC with NTP           |
+| Periodic sync not working | Verify session duration >10 min       |
 
 ## Documentation Structure
 
-- **[time_sync_implementation.md](../../pc-controller/docs/time_sync_implementation.md)** - Complete implementation guide
-  - Protocol flow and message definitions
-  - PC controller implementation requirements
-  - Comprehensive testing procedures
-  - Troubleshooting guide
-  - Performance metrics and examples
+- **[time_sync_implementation.md](../../pc-controller/docs/time_sync_implementation.md)** - Complete implementation
+  guide
+    - Protocol flow and message definitions
+    - PC controller implementation requirements
+    - Comprehensive testing procedures
+    - Troubleshooting guide
+    - Performance metrics and examples
 
-- **[time-sync-implementation-summary.md](../maintenance/time-sync-implementation-summary.md)** - Android implementation changes
-  - Root cause analysis
-  - Changes implemented
-  - Impact on codebase
+- **[time-sync-implementation-summary.md](../maintenance/time-sync-implementation-summary.md)** - Android implementation
+  changes
+    - Root cause analysis
+    - Changes implemented
+    - Impact on codebase
 
 - **[time-sync-timeline.md](../thesis/diagrams/time-sync-timeline.md)** - Thesis visualization
-  - Mermaid diagrams for temporal alignment
-  - Multi-sensor synchronization timeline
+    - Mermaid diagrams for temporal alignment
+    - Multi-sensor synchronization timeline

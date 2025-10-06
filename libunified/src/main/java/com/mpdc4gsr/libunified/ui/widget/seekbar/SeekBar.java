@@ -409,8 +409,8 @@ public class SeekBar {
             this.indicatorDrawableId = indicatorDrawableId;
             indicatorBitmap = BitmapFactory.decodeResource(getResources(), indicatorDrawableId);
             if (indicatorBitmap == null) {
-                indicatorBitmap = Utils.drawableToBitmap(indicatorWidth, indicatorHeight, 
-                    ResourcesCompat.getDrawable(getResources(), indicatorDrawableId, getContext().getTheme()));
+                indicatorBitmap = Utils.drawableToBitmap(indicatorWidth, indicatorHeight,
+                        ResourcesCompat.getDrawable(getResources(), indicatorDrawableId, getContext().getTheme()));
             }
         }
     }
@@ -542,8 +542,8 @@ public class SeekBar {
     public void setThumbInactivatedDrawableId(@DrawableRes int thumbInactivatedDrawableId, int width, int height) {
         if (thumbInactivatedDrawableId != 0 && getResources() != null) {
             this.thumbInactivatedDrawableId = thumbInactivatedDrawableId;
-            thumbInactivatedBitmap = Utils.drawableToBitmap(width, height, 
-                ResourcesCompat.getDrawable(getResources(), thumbInactivatedDrawableId, getContext().getTheme()));
+            thumbInactivatedBitmap = Utils.drawableToBitmap(width, height,
+                    ResourcesCompat.getDrawable(getResources(), thumbInactivatedDrawableId, getContext().getTheme()));
         }
     }
 
@@ -557,16 +557,16 @@ public class SeekBar {
         }
         if (thumbDrawableId != 0 && getResources() != null) {
             this.thumbDrawableId = thumbDrawableId;
-            thumbBitmap = Utils.drawableToBitmap(thumbWidth, thumbHeight, 
-                ResourcesCompat.getDrawable(getResources(), thumbDrawableId, getContext().getTheme()));
+            thumbBitmap = Utils.drawableToBitmap(thumbWidth, thumbHeight,
+                    ResourcesCompat.getDrawable(getResources(), thumbDrawableId, getContext().getTheme()));
         }
     }
 
     public void setThumbDrawableId(@DrawableRes int thumbDrawableId, int width, int height) {
         if (thumbDrawableId != 0 && getResources() != null && width > 0 && height > 0) {
             this.thumbDrawableId = thumbDrawableId;
-            thumbBitmap = Utils.drawableToBitmap(width, height, 
-                ResourcesCompat.getDrawable(getResources(), thumbDrawableId, getContext().getTheme()));
+            thumbBitmap = Utils.drawableToBitmap(width, height,
+                    ResourcesCompat.getDrawable(getResources(), thumbDrawableId, getContext().getTheme()));
         }
     }
 

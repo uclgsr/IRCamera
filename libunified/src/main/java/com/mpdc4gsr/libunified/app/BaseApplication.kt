@@ -251,11 +251,11 @@ abstract class BaseApplication : Application() {
         // locale setting during Activity/Application initialization.
         val config = resources.configuration
         config.setLocale(Locale.ENGLISH)
-        
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             config.setLocales(android.os.LocaleList(Locale.ENGLISH))
         }
-        
+
         resources.updateConfiguration(config, resources.displayMetrics)
         SharedManager.setLanguage(baseContext, ConstantLanguages.ENGLISH)
         WebView(this).destroy()

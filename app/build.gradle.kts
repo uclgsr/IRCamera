@@ -89,7 +89,7 @@ android {
         checkReleaseBuilds = true
         warningsAsErrors = false
         checkDependencies = true
-        
+
         baseline = file("lint-baseline.xml")
 
         disable += listOf(
@@ -103,7 +103,7 @@ android {
             "ResourceType",
             "ObsoleteSdkInt"
         )
-        
+
         error += listOf(
             "StopShip",
             "NewApi",

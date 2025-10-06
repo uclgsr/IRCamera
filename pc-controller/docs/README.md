@@ -10,31 +10,35 @@ Consolidated documentation for the IRCamera PC Controller application.
 ## Core Documentation
 
 ### Implementation
+
 - **[implementation.md](implementation.md)** - Complete implementation guide
-  - Feature implementation matrix with line-by-line mapping
-  - Architecture summary and data flow
-  - Dependencies, build and installation
-  - Usage examples and performance metrics
-  - Integration status and test coverage
+    - Feature implementation matrix with line-by-line mapping
+    - Architecture summary and data flow
+    - Dependencies, build and installation
+    - Usage examples and performance metrics
+    - Integration status and test coverage
 
 ### Protocol
+
 - **[protocol.md](protocol.md)** - Protocol documentation
-  - Protocol bridge guide
-  - Gap analysis
-  - Verification guide and report
-  - Protocol flow diagrams
+    - Protocol bridge guide
+    - Gap analysis
+    - Verification guide and report
+    - Protocol flow diagrams
 
 ### Verification
+
 - **[verification.md](verification.md)** - Testing and verification
-  - Verification status
-  - Detailed verification report
-  - Pull request summary
+    - Verification status
+    - Detailed verification report
+    - Pull request summary
 
 ### Code Quality
+
 - **[code_review.md](code_review.md)** - Code review findings
-  - Review findings
-  - Fixes implemented
-  - Summary
+    - Review findings
+    - Fixes implemented
+    - Summary
 
 ## Feature-Specific Documentation
 

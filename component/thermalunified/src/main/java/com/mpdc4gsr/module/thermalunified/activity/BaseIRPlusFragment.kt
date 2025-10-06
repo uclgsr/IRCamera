@@ -184,7 +184,8 @@ abstract class BaseIRPlusFragment :
         var width = 0
         var height = 0
         val screenWidth: Int = UnifiedScreenUtils.getScreenWidth(requireContext())
-        val screenHeight: Int = UnifiedScreenUtils.getScreenHeight(requireContext()) - 52f.dpToPx(requireContext()).toInt()
+        val screenHeight: Int =
+            UnifiedScreenUtils.getScreenHeight(requireContext()) - 52f.dpToPx(requireContext()).toInt()
         if (screenWidth > screenHeight) {
             width = screenHeight * imageWidth / imageHeight
             height = screenHeight

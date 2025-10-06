@@ -185,8 +185,10 @@ open class TitleView : ViewGroup {
             tvTitle?.measure(widthSpec, MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY))
         } else {
             var titleWidth = measuredWidth
-            titleWidth -= if (tvLeft?.isVisible == true) tvLeft?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context).toInt()
-            titleWidth -= if (tvRight1?.isVisible == true) tvRight1?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context).toInt()
+            titleWidth -= if (tvLeft?.isVisible == true) tvLeft?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context)
+                .toInt()
+            titleWidth -= if (tvRight1?.isVisible == true) tvRight1?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context)
+                .toInt()
             if (tvRight2?.isVisible == true) {
                 titleWidth -= tvRight2?.measuredWidth ?: 0
             }
@@ -237,7 +239,8 @@ open class TitleView : ViewGroup {
                         child.layout(margin, 0, margin + childWidth, measuredHeight)
                     } else {
                         val left =
-                            if (tvLeft?.isVisible == true) tvLeft?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context).toInt()
+                            if (tvLeft?.isVisible == true) tvLeft?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context)
+                                .toInt()
                         child.layout(left, 0, left + childWidth, measuredHeight)
                     }
                 }

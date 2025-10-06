@@ -7,18 +7,18 @@ import mpdc4gsr.core.utils.AppLogger
 
 /**
  * WorkManager configuration for IRCamera background tasks.
- * 
+ *
  * WorkManager should be used for deferrable background work that needs guaranteed execution:
  * - File uploads
  * - Data synchronization
  * - Periodic cleanup tasks
  * - Database maintenance
- * 
+ *
  * DO NOT use WorkManager for:
  * - User-initiated immediate tasks (use coroutines instead)
  * - Real-time recording (use Foreground Service)
  * - Time-critical operations
- * 
+ *
  * Configuration requirements:
  * 1. Add androidx.work:work-runtime-ktx dependency
  * 2. Initialize in Application.onCreate()
@@ -26,9 +26,9 @@ import mpdc4gsr.core.utils.AppLogger
  * 4. Set appropriate constraints (network, battery, etc.)
  */
 object WorkManagerConfiguration {
-    
+
     private const val TAG = "WorkManagerConfig"
-    
+
     /**
      * Initialize WorkManager with custom configuration.
      * Call this from Application.onCreate().
@@ -38,17 +38,17 @@ object WorkManagerConfiguration {
             val config = Configuration.Builder()
                 .setMinimumLoggingLevel(android.util.Log.INFO)
                 .build()
-            
+
             WorkManager.initialize(context, config)
             AppLogger.i(TAG, "WorkManager initialized successfully")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize WorkManager", e)
         }
     }
-    
+
     /**
      * Example: Schedule file upload work
-     * 
+     *
      * Usage:
      * ```
      * WorkManagerConfiguration.scheduleFileUpload(context, fileUri)
@@ -78,10 +78,10 @@ object WorkManagerConfiguration {
         )
     }
     */
-    
+
     /**
      * Example: Schedule periodic cleanup
-     * 
+     *
      * Usage:
      * ```
      * WorkManagerConfiguration.schedulePeriodicCleanup(context)

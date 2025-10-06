@@ -6,6 +6,7 @@ APPLOGGER
 ---------
 
 AppLogger is a centralized logging utility that provides:
+
 - Configurable log levels (VERBOSE, DEBUG, INFO, WARN, ERROR)
 - Integration with StructuredLogger for file-based logging
 - Consistent API across the application
@@ -34,7 +35,6 @@ Usage:
 
     // Change log level at runtime
     AppLogger.setMinLogLevel(AppLogger.LogLevel.WARN)
-
 
 ERRORHANDLER
 ------------
@@ -70,7 +70,6 @@ Usage:
         }
     }
 
-
 MIGRATION FROM EXISTING CODE
 -----------------------------
 
@@ -83,7 +82,6 @@ Replace direct android.util.Log calls:
     // After
     AppLogger.d("TAG", "Message")
     AppLogger.e("TAG", "Error", exception)
-
 
 Replace try-catch blocks:
 
@@ -104,7 +102,6 @@ Replace try-catch blocks:
     }.onFailure {
         showError()
     }
-
 
 EXISTING LOGGERS
 ----------------

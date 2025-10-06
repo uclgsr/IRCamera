@@ -2,6 +2,7 @@
 
 This chapter evaluates the production-ready Multi-Sensor Recording System developed during this project. The system integrates true hardware SDK capabilities including Topdon TC001 thermal camera with ±2°C calibrated accuracy and Shimmer3 GSR+ sensor with scientifically-accurate 12-bit ADC precision. The platform combines a Python desktop controller, Android capture app with production-ready hardware integration, providing both real device support for research applications and comprehensive simulation fallback for development environments. Through extensive testing and validation, the system demonstrates research-grade reliability with sub-5ms synchronisation accuracy and comprehensive multi-modal data capture suitable for physiological sensing applications.
 
+
 \section{Achievements and Technical Contributions}
 
 The \textbf{Multi-Sensor Recording System} made notable advancements in physiological data collection technology and engineering methodologies. Key achievements and technical contributions include:
@@ -15,6 +16,7 @@ The \textbf{Multi-Sensor Recording System} made notable advancements in physiolo
     \item \textbf{TCP Socket Protocol Implementation:} The networking layer uses Python \texttt{socketserver.ThreadingTCPServer} (port 8080) with JSON message protocol for device coordination \cite{ref21}. Message types include: \texttt{DEVICE\_CONNECT}, \texttt{SESSION\_START}, \texttt{STATUS\_UPDATE}, and \texttt{DATA\_STREAM} with 2-second heartbeat intervals. Client devices (\texttt{AndroidSocketClient.kt}, 312 lines) maintain persistent connections with exponential backoff retry (initial 500 ms, max 8 s). During testing, socket reliability degraded beyond 50 ms network RTT; 95th percentile message latency was 23 ms on local gigabit Ethernet, 187 ms on office Wi-Fi. Connection recovery typically required 3--5 seconds after brief network interruptions. TLS implementation exists (\texttt{--enable-tls} flag) but increases message latency by \textasciitilde{}12 ms average. Device discovery relies on manual IP configuration; automatic mDNS discovery was implemented but removed due to unreliable performance across different network configurations. The framework enables \textbf{scalable multi-device recording} and is a key technical contribution of the project.
     \item \textbf{Qt6 Desktop Interface Implementation:} The desktop controller (\texttt{MainWindow.py}, 487 lines) uses PyQt6 with custom widgets for device management, session control, and live status monitoring \cite{ref17}. Key components: device tree view showing connection status, session configuration panel with stream selection checkboxes, and calibration wizard with step-by-step progression. The Android app (\texttt{MainActivity.kt}, 298 lines) implements a minimal interface with basic Start/Stop recording buttons, with no on-screen camera previews or detailed status indicators (preview frames are sent to the PC controller for display). Usability testing with 3 lab users revealed the main friction points: device connection requires manual IP entry (no auto-discovery UI), session configuration lacks validation (allows invalid combinations), and error messages are technical rather than user-friendly. Average setup time for experienced users: 4.2 minutes; for new users: 12.8 minutes with brief training. The interface prevents basic configuration errors but requires technical knowledge for troubleshooting connection issues.
 \end{itemize}
+
 
 \section{Evaluation of Objectives and Outcomes}
 
@@ -38,6 +40,7 @@ shortfall. While core functionality is operational, usability testing with 3 lab
 \end{itemize}
 The lack of pilot data prevents me from demonstrating the system's effectiveness for contactless GSR measurement\textemdash only showing that the technical infrastructure functions. This is a significant gap that limits project validation.
 
+
 \section{System Limitations and Failure Modes}
 
 Several critical issues hinder the system's deployment readiness. These limitations became apparent during testing and would need resolution before any real research use:
@@ -52,6 +55,7 @@ Several critical issues hinder the system's deployment readiness. These limitati
 
 These aren't minor bugs \textemdash they're fundamental reliability issues that would undermine any serious research
 use of the system.
+
 
 \section{Specific Technical Improvements Needed}
 
@@ -78,6 +82,7 @@ Replace software timestamps with hardware sync using an Arduino Nano connected t
 
 \subsection{Contactless GSR Algorithm Development (Target: 6--8 weeks)}
 With reliable data collection, I can focus on the core research question. Initial approach: extract thermal features from palmar regions (temperature gradients, perspiration patterns) and correlate with Shimmer GSR readings using ridge regression. Target dataset: 20 participants \texttimes{} 10-minute sessions with controlled stress stimuli (Trier Social Stress Test protocol). Success metric: R\textsuperscript{2} \textgreater{} 0.6 correlation between predicted and actual GSR peaks.
+
 
 \section{Code and Data Availability}
 
