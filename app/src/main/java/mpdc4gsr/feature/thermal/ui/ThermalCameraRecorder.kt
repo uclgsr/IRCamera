@@ -492,85 +492,44 @@ class ThermalCameraRecorder(
         try {
             Log.i(
                 TAG,
-                "Initializing thermal camera for sensor $sensorId with USB permission handling"
+                "Initializing thermal camera using USBMonitor automatic permission framework"
             )
 
             observeDeviceEvents()
 
             usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
 
-            val deviceFound = scanForThermalCameraDevicesWithPermissions()
+            val initSuccess = initializeIRUVCTCWithAutomaticPermissions()
 
-            if (!deviceFound) {
+            if (!initSuccess) {
                 Log.w(
                     TAG,
-                    "No thermal cameras found or permission denied, enabling simulation mode"
+                    "IRUVCTC initialization failed, enabling simulation mode"
                 )
                 isSimulationMode = true
                 emitError(
                     ErrorType.DEVICE_ERROR,
-                    "No thermal camera detected - using simulation mode"
+                    "Thermal camera initialization failed - using simulation mode"
                 )
 
                 recordingScope.launch {
-                    AppLogger.i(TAG, "Testing simulation mode with sample thermal frame generation")
+                    AppLogger.i(TAG, "Testing simulation mode")
                     try {
                         val testFrame = generateTestThermalFrame()
                         if (testFrame != null) {
                             Log.i(
                                 TAG,
-                                "Simulation mode test successful - thermal frame generated with ${testFrame.temperatureMatrix.size}x${testFrame.temperatureMatrix[0].size} matrix"
-                            )
-                            Log.d(
-                                TAG,
-                                "Test frame temperature range: ${testFrame.minTemperature}°C to ${testFrame.maxTemperature}°C"
+                                "Simulation mode ready - thermal frame generated (${testFrame.temperatureMatrix.size}x${testFrame.temperatureMatrix[0].size})"
                             )
                         } else {
-                            AppLogger.w(TAG, "Simulation mode test failed - null frame generated")
+                            AppLogger.w(TAG, "Simulation mode test failed - null frame")
                         }
                     } catch (e: Exception) {
                         AppLogger.e(TAG, "Simulation mode test failed", e)
                     }
                 }
-
-                return@withContext true
-            }
-
-            val device = thermalCameraDevice
-            if (device != null) {
-                hasUsbPermission = usbManager?.hasPermission(device) ?: false
-
-                if (!hasUsbPermission) {
-                    AppLogger.w(TAG, "USB permission not granted for thermal camera")
-                    Log.i(
-                        TAG,
-                        "Device info: VID=${device.vendorId.toString(16)}, PID=${
-                            device.productId.toString(16)
-                        }, Name=${device.productName}"
-                    )
-
-                    requestUsbPermission(device)
-
-                    Log.i(
-                        TAG,
-                        "USB permission request initiated, thermal camera initialization deferred"
-                    )
-                    return@withContext true
-                }
-
-                val connectionSuccess = initializeRealThermalCamera(device)
-
-                if (!connectionSuccess) {
-                    AppLogger.w(TAG, "Failed to initialize real thermal camera, enabling simulation mode")
-                    isSimulationMode = true
-                    emitError(
-                        ErrorType.DEVICE_ERROR,
-                        "Thermal camera initialization failed - using simulation mode"
-                    )
-                    return@withContext true
-                }
-
-                AppLogger.i(TAG, "Real thermal camera initialized successfully")
+            } else {
+                AppLogger.i(TAG, "IRUVCTC registered - waiting for USB device attach and permission")
             }
 
             emitStatus()
@@ -604,6 +563,184 @@ class ThermalCameraRecorder(
             return@withContext true
         }
     }
+
+    private suspend fun initializeIRUVCTCWithAutomaticPermissions(): Boolean =
+        withContext(Dispatchers.IO) {
+            try {
+                AppLogger.i(TAG, "Initializing IRUVCTC with automatic USB permission handling")
+                
+                AppLogger.d(TAG, "Following reference implementation pattern from github.com/CoderCaiSL/IRCamera")
+                AppLogger.d(TAG, "Flow: Create IRUVCTC -> registerUSB() -> USBMonitor auto-detects devices")
+                AppLogger.d(TAG, "USBMonitor will: 1) onAttach -> requestPermission, 2) onGranted, 3) onConnect -> open camera")
+
+                val connectCallback = object : com.energy.iruvc.uvc.ConnectCallback {
+                    override fun onCameraOpened(uvcCamera: UVCCamera?) {
+                        AppLogger.i(TAG, "Thermal camera opened successfully by USBMonitor")
+                        isIRCameraConnected = true
+
+                        if (uvcCamera != null) {
+                            recordingScope.launch {
+                                try {
+                                    initializeIrcamEngineWithHandle(uvcCamera)
+                                    AppLogger.i(TAG, "IrcamEngine initialized with UVC handle")
+                                } catch (e: Exception) {
+                                    AppLogger.e(TAG, "Failed to initialize IrcamEngine with handle", e)
+                                }
+                                emitStatus()
+                            }
+                        } else {
+                            recordingScope.launch {
+                                emitStatus()
+                            }
+                        }
+                    }
+
+                    override fun onIRCMDCreate(ircmd: com.energy.iruvc.ircmd.IRCMD?) {
+                        AppLogger.d(TAG, "IRCMD created for thermal camera")
+
+                        ircmd?.let { ircmdInstance ->
+                            try {
+                                ircmdInstance.setPropImageParams(
+                                    com.energy.iruvc.utils.CommonParams.PropImageParams.IMAGE_PROP_SEL_MIRROR_FLIP,
+                                    com.energy.iruvc.utils.CommonParams.PropImageParamsValue.MirrorFlipType.NO_MIRROR_FLIP
+                                )
+                                AppLogger.d(TAG, "Image mirror/flip properties configured")
+
+                                val fwBuildVersionInfoBytes = ByteArray(50)
+                                ircmdInstance.getDeviceInfo(
+                                    com.energy.iruvc.utils.CommonParams.DeviceInfoType.DEV_INFO_FW_BUILD_VERSION_INFO,
+                                    fwBuildVersionInfoBytes
+                                )
+
+                                val firmwareVersion = String(fwBuildVersionInfoBytes.copyOfRange(0, 8))
+                                AppLogger.d(TAG, "Device firmware version: $firmwareVersion")
+
+                                val isTS001Device = firmwareVersion.contains("Mini256", ignoreCase = true)
+                                AppLogger.d(TAG, "Is TS001 device: $isTS001Device")
+
+                                val gainValue = IntArray(1)
+                                ircmdInstance.getPropTPDParams(
+                                    com.energy.iruvc.utils.CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL,
+                                    gainValue
+                                )
+
+                                val currentGainStatus = if (gainValue[0] == 1) {
+                                    com.energy.iruvc.utils.CommonParams.GainStatus.HIGH_GAIN
+                                } else {
+                                    com.energy.iruvc.utils.CommonParams.GainStatus.LOW_GAIN
+                                }
+
+                                Log.d(TAG, "Current gain status: $currentGainStatus (value=${gainValue[0]})")
+
+                            } catch (e: Exception) {
+                                AppLogger.w(TAG, "Error configuring IRCMD device settings", e)
+                            }
+                        }
+                    }
+                }
+
+                val usbMonitorCallback = object : USBMonitorCallback {
+                    override fun onAttach() {
+                        AppLogger.i(TAG, "USB thermal camera attached - permission will be requested automatically")
+                    }
+
+                    override fun onGranted() {
+                        AppLogger.i(TAG, "USB permission granted - camera will connect automatically")
+                        hasUsbPermission = true
+                    }
+
+                    override fun onConnect() {
+                        AppLogger.i(TAG, "USB thermal camera connected successfully")
+                        isIRCameraConnected = true
+                    }
+
+                    override fun onDisconnect() {
+                        AppLogger.w(TAG, "USB thermal camera disconnected")
+                        isIRCameraConnected = false
+                    }
+
+                    override fun onDettach() {
+                        AppLogger.w(TAG, "USB thermal camera detached")
+                        isIRCameraConnected = false
+
+                        handleThermalError(
+                            "USB Device",
+                            "Thermal camera unplugged during operation",
+                            isRecoverable = false
+                        )
+                    }
+
+                    override fun onCancel() {
+                        AppLogger.w(TAG, "USB permission cancelled by user")
+                        hasUsbPermission = false
+                        
+                        recordingScope.launch {
+                            emitError(
+                                ErrorType.PERMISSION_DENIED,
+                                "USB permission cancelled - thermal camera unavailable"
+                            )
+                        }
+                    }
+                }
+
+                AppLogger.d(TAG, "Creating IRUVCTC instance")
+                val syncBitmap = com.energy.iruvc.utils.SynchronizedBitmap()
+
+                try {
+                    iruvctc = IRUVCTC(
+                        IR_CAMERA_WIDTH,
+                        IR_CAMERA_HEIGHT,
+                        context,
+                        syncBitmap,
+                        com.energy.iruvc.utils.CommonParams.DataFlowMode.TEMP_OUTPUT,
+                        connectCallback,
+                        usbMonitorCallback
+                    )
+                    AppLogger.i(TAG, "IRUVCTC instance created successfully")
+                } catch (e: Exception) {
+                    AppLogger.e(TAG, "Failed to create IRUVCTC instance", e)
+                    return@withContext false
+                }
+
+                iruvctc?.setIFrameCallBackListener(object : IFrameCallBackListener {
+                    override fun updateData() {
+                        if (_isRecording.get()) {
+                            AppLogger.v(TAG, "IRUVCTC frame callback triggered")
+                        }
+                    }
+                })
+
+                iruvctc?.let { iruvctcInstance ->
+                    try {
+                        val imageDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
+                        val temperatureDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
+
+                        iruvctcInstance.setImageSrc(imageDataBuffer)
+                        iruvctcInstance.setTemperatureSrc(temperatureDataBuffer)
+                        iruvctcInstance.setRotate(0)
+
+                        AppLogger.d(TAG, "IRUVCTC image sources and rotation configured")
+                    } catch (e: Exception) {
+                        AppLogger.w(TAG, "Error configuring IRUVCTC data sources", e)
+                    }
+                }
+
+                AppLogger.i(TAG, "Registering USB monitor - will auto-detect and request permissions")
+                try {
+                    iruvctc?.registerUSB()
+                    AppLogger.i(TAG, "USB monitor registered - listening for thermal camera devices")
+                } catch (e: Exception) {
+                    AppLogger.e(TAG, "Failed to register USB monitor", e)
+                    return@withContext false
+                }
+
+                return@withContext true
+
+            } catch (e: Exception) {
+                AppLogger.e(TAG, "Failed to initialize IRUVCTC with automatic permissions", e)
+                return@withContext false
+            }
+        }
 
     private suspend fun scanForThermalCameraDevicesWithPermissions(): Boolean =
         withContext(Dispatchers.IO) {
