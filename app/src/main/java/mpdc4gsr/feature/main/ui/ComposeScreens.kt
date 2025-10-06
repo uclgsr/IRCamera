@@ -214,7 +214,7 @@ fun ConnectionStatusItem(name: String, connected: Boolean) {
             imageVector = if (connected) Icons.Default.CheckCircle else Icons.Default.Error,
             contentDescription = if (connected) "$name Connected" else "$name Disconnected",
             tint = if (connected) Color.Green else Color.Red,
-            modifier = Modifier.size(Spacing.touchTarget)
+            modifier = Modifier.size(Spacing.large)
         )
         Spacer(modifier = Modifier.height(Spacing.extraSmall))
         Text(
