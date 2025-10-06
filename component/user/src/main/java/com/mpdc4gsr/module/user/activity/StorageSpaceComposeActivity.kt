@@ -198,7 +198,7 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
                                 Icon(
                                     Icons.Default.Delete,
                                     contentDescription = null,
-                                    modifier = Modifier.size(Spacing.normal + Spacing.extraSmall)
+                                    modifier = Modifier.size(Spacing.large)
                                 )
                                 Spacer(modifier = Modifier.width(Spacing.small))
                                 Text("Format")
