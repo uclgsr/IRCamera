@@ -395,7 +395,7 @@ private fun ActivityItem(
     ) {
         Icon(
             imageVector = activity.icon,
-            contentDescription = activity.title,
+            contentDescription = activity.description,
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(20.dp)
         )
