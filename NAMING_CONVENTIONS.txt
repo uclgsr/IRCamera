@@ -1,0 +1,96 @@
+# Naming Conventions for Shimmer GSR Implementation
+
+## Overview
+This document provides guidelines for naming classes, files, and variables related to Shimmer GSR sensors.
+
+## Key Principle
+- **Shimmer** = Device/Hardware (e.g., Shimmer3)
+- **GSR** = Measurement type (Galvanic Skin Response)
+- **Shimmer GSR** = Shimmer device measuring GSR
+
+## Naming Guidelines
+
+### Device-Level Code (Hardware Interface)
+Use "Shimmer" when referring to device management:
+- ✅ `ShimmerDeviceManager` - manages Shimmer devices
+- ✅ `ShimmerBluetoothManager` - handles Shimmer BLE connections
+- ✅ `shimmer.h` - Shimmer device interface header
+
+### Data-Level Code (Measurement)
+Use "GSR" when referring to the data being measured:
+- ✅ `GSRData` - structure holding GSR measurements
+- ✅ `GSRSample` - individual GSR sample
+- ✅ `gsr_analytics.py` - analyzes GSR data
+
+### Combined (Device + Measurement)
+Use "ShimmerGSR" or "Shimmer3GSR" when the context requires both:
+- ✅ `Shimmer3GSRRecorder` - records GSR from Shimmer3 device
+- ✅ `ShimmerGSRRecorder` - records GSR from Shimmer devices
+- ✅ `SHIMMER_GSR` device type enum
+
+### Examples
+
+#### Good Naming:
+```kotlin
+class ShimmerDeviceManager {
+    fun connect(device: ShimmerDevice): Boolean
+    fun readGSR(): GSRData
+}
+
+data class GSRData(
+    val timestamp: Long,
+    val gsrMicrosiemens: Double,
+    val deviceId: String  // Shimmer device ID
+)
+```
+
+#### Avoid:
+```kotlin
+// Don't use "GSR" for device management
+class GSRDeviceManager  // ❌ - use ShimmerDeviceManager
+
+// Don't use "Shimmer" for data structures
+class ShimmerData  // ❌ - use GSRData if it's measurement data
+
+// Exception: ShimmerData is acceptable when it contains multiple sensor readings
+class ShimmerData {
+    val gsr: Double
+    val ppg: Double
+    val accel: Triple<Double, Double, Double>
+}  // ✅ - represents all data from Shimmer device
+```
+
+## File Organization
+
+### C++ Files
+- `shimmer.h` / `shimmer.cpp` - Main Shimmer device interface
+- Contains `GSRData` structure for measurements
+
+### Kotlin Files
+- `ShimmerDeviceManager.kt` - Device management
+- `Shimmer3GSRRecorder.kt` - Recording implementation
+- `GSRDataRepository.kt` - Data layer for GSR measurements
+
+### Python Files
+- `gsr_analytics.py` - GSR data analysis
+- `gsr_ingestor.py` - GSR data ingestion
+- `gsr_receiver.py` - GSR data reception
+
+## When to Use Each Term
+
+### Use "Shimmer":
+- Bluetooth/device connection code
+- Device enumeration and discovery
+- Firmware and hardware configuration
+- Device state management
+
+### Use "GSR":
+- Data structures for measurements
+- Analysis and processing algorithms
+- Visualization and plotting
+- Database storage schemas
+
+### Use "ShimmerGSR":
+- End-to-end recording workflows
+- High-level API that handles both device and data
+- Configuration that specifies both device type and measurement type
