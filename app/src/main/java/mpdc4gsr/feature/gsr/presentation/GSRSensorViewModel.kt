@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.data.UnifiedGSRRecorder
+import mpdc4gsr.core.data.Shimmer3GSRRecorder
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
 import java.text.SimpleDateFormat
@@ -62,7 +62,7 @@ class GSRSensorViewModel(
     private var settingsRepository: GSRSettingsRepository? = null
 
     // Expose recorder for lifecycle management from UI layer
-    var gsrRecorder: UnifiedGSRRecorder? = null
+    var gsrRecorder: Shimmer3GSRRecorder? = null
         private set
 
     fun initializeRecorder(
@@ -86,7 +86,7 @@ class GSRSensorViewModel(
                         )
                     } ?: ReconnectionConfig()
                 this@GSRSensorViewModel.reconnectionConfig = configToUse
-                gsrRecorder = UnifiedGSRRecorder(
+                gsrRecorder = Shimmer3GSRRecorder(
                     context = context,
                     lifecycleOwner = lifecycleOwner,
                     samplingRateHz = 128
