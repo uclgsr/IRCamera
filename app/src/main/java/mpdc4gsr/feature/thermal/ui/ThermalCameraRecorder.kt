@@ -570,8 +570,8 @@ class ThermalCameraRecorder(
                 AppLogger.i(TAG, "Initializing IRUVCTC with automatic USB permission handling")
                 
                 AppLogger.d(TAG, "Following reference implementation pattern from github.com/CoderCaiSL/IRCamera")
-                AppLogger.d(TAG, "Flow: Create IRUVCTC -> registerUSB() -> USBMonitor auto-detects devices")
-                AppLogger.d(TAG, "USBMonitor will: 1) onAttach -> requestPermission, 2) onGranted, 3) onConnect -> open camera")
+                AppLogger.d(TAG, "Flow: Create IRUVCTC -> registerUSB -> USBMonitor auto-detects devices")
+                AppLogger.d(TAG, "USBMonitor will: 1 onAttach -> requestPermission, 2 onGranted, 3 onConnect -> open camera")
 
                 val connectCallback = object : com.energy.iruvc.uvc.ConnectCallback {
                     override fun onCameraOpened(uvcCamera: UVCCamera?) {
