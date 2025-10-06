@@ -66,7 +66,7 @@ class IntegrationTestViewModel : AppBaseViewModel() {
         // GSR Sensors
         TestItem("GSRQuickRecordingActivity", "Rapid GSR data collection", true, TestCategory.GSR_SENSORS),
         TestItem("GSRDeviceManagementActivity", "GSR device configuration", true, TestCategory.GSR_SENSORS),
-        TestItem("UnifiedSessionManager", "Multi-sensor session management", true, TestCategory.GSR_SENSORS),
+        TestItem("SessionManager", "Multi-sensor session management", true, TestCategory.GSR_SENSORS),
         // Network Integration
         TestItem("DevicePairingActivity", "Network device discovery and pairing", true, TestCategory.NETWORK),
         TestItem("Flash Overlay", "Sync flash visual feedback", true, TestCategory.NETWORK),
