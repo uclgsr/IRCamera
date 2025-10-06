@@ -339,7 +339,7 @@ private fun GSRDeviceCard(
                     modifier = Modifier.padding(start = 8.dp)
                 ) {
                     Text(
-                        text = device.status.uppercase(),
+                        text = device.status?.uppercase() ?: "N/A",
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
@@ -466,7 +466,7 @@ private fun DeviceDetailsDialog(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
                 DeviceDetailItem("Device ID", device.deviceId)
-                DeviceDetailItem("Status", device.status.replaceFirstChar { it.uppercaseChar() })
+                DeviceDetailItem("Status", device.status?.replaceFirstChar { it.uppercaseChar() } ?: "N/A")
                 DeviceDetailItem("Battery Level", "${device.batteryLevel}%")
                 DeviceDetailItem("Signal Strength", "${device.signalStrength} dBm")
                 DeviceDetailItem("Sampling Rate", "${device.samplingRate} Hz")
@@ -559,11 +559,12 @@ private fun BulkActionsDialog(
     )
 }
 
-private fun getDeviceStatusColor(status: String) = when (status) {
+private fun getDeviceStatusColor(status: String?) = when (status) {
     "connected" -> Color(0xFF4CAF50)
     "connecting" -> Color(0xFFFF9800)
     "available" -> Color(0xFF2196F3)
     "disconnected" -> Color(0xFF9E9E9E)
+    null -> Color(0xFF9E9E9E).copy(alpha = 0.6f)
     else -> Color(0xFFE53E3E)
 }
 
@@ -577,7 +578,7 @@ private fun getBatteryIcon(batteryLevel: Int) = when {
 data class GSRDeviceInfo(
     val name: String,
     val deviceId: String,
-    val status: String,
+    val status: String?,
     val batteryLevel: Int,
     val signalStrength: Int,
     val samplingRate: Int,
@@ -585,8 +586,8 @@ data class GSRDeviceInfo(
 )
 
 private fun getMockGSRDevices() = listOf(
-    GSRDeviceInfo("Shimmer3 GSR+ #001", "shimmer_001", "connected", 89, -42, 128, "Just now"),
-    GSRDeviceInfo("Shimmer3 GSR+ #002", "shimmer_002", "connected", 76, -38, 256, "2 min ago"),
+    GSRDeviceInfo("Shimmer3 GSR+ #001", "shimmer_001", "disconnected", 89, -42, 128, "Just now"),
+    GSRDeviceInfo("Shimmer3 GSR+ #002", "shimmer_002", "disconnected", 76, -38, 256, "2 min ago"),
     GSRDeviceInfo("Shimmer3 GSR+ #003", "shimmer_003", "available", 92, -55, 128, "5 min ago"),
     GSRDeviceInfo("Shimmer3 GSR+ #004", "shimmer_004", "disconnected", 45, -68, 128, "1 hour ago"),
     GSRDeviceInfo("Shimmer3 GSR+ #005", "shimmer_005", "available", 83, -48, 256, "10 min ago")

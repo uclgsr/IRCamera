@@ -280,27 +280,29 @@ private fun getSampleDevices() = listOf(
         id = "TC001-A5B2C1",
         name = "TOPDON TC001 Thermal Camera",
         type = DeviceType.THERMAL_CAMERA,
-        isConnected = null
+        isConnected = false
     ),
     PairableDevice(
         id = "SHIMMER-3D4E5F",
         name = "Shimmer3 GSR Sensor",
         type = DeviceType.GSR_SENSOR,
         signalStrength = 85,
-        batteryLevel = 67
+        batteryLevel = 67,
+        isConnected = false
     ),
     PairableDevice(
         id = "RGB-CAM-123",
         name = "Built-in RGB Camera",
         type = DeviceType.RGB_CAMERA,
-        isConnected = null
+        isConnected = false
     ),
     PairableDevice(
         id = "BT-DEV-456",
         name = "Research Device Alpha",
         type = DeviceType.BLUETOOTH_DEVICE,
         signalStrength = 45,
-        batteryLevel = 89
+        batteryLevel = 89,
+        isConnected = false
     )
 )
 

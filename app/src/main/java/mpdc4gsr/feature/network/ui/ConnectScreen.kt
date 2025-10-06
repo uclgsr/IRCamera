@@ -24,9 +24,26 @@ fun ConnectScreen(
     val context = LocalContext.current
 
     val deviceTypes = remember {
+        val hasUsbDevice = try {
+            com.mpdc4gsr.libunified.app.tools.DeviceTools.findUsbDevice() != null
+        } catch (e: Exception) {
+            false
+        }
+        
+        val tc001Available = hasUsbDevice
+        val tc007Available = false
+        
         listOf(
-            ConnectedDevice("TC001", "TOPDON TC001 Thermal Camera", null),
-            ConnectedDevice("TC007", "TOPDON TC007 Thermal Camera", null)
+            ConnectedDevice(
+                "TC001", 
+                "TOPDON TC001 Thermal Camera", 
+                if (tc001Available) false else null
+            ),
+            ConnectedDevice(
+                "TC007", 
+                "TOPDON TC007 Thermal Camera", 
+                if (tc007Available) false else null
+            )
         )
     }
     Column(
