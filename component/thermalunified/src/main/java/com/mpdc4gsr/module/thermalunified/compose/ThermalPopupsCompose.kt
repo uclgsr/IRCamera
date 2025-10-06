@@ -370,7 +370,7 @@ private fun GalleryOptionItemCompose(
     ) {
         Icon(
             imageVector = Icons.Default.Folder,
-            contentDescription = name,
+            contentDescription = galleryName,
             modifier = Modifier.size(20.dp),
             tint = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
             else MaterialTheme.colorScheme.onSurfaceVariant

@@ -280,7 +280,7 @@ private fun CameraModeItem(
         ) {
             Icon(
                 icon,
-                contentDescription = cameraName,
+                contentDescription = title,
                 tint = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
             )
 

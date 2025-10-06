@@ -324,7 +324,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
         ) {
             Icon(
                 icon,
-                contentDescription = label,
+                contentDescription = title,
                 tint = if (isActive) Color.Green else MaterialTheme.colorScheme.onPrimaryContainer.copy(
                     alpha = 0.6f
                 ),
@@ -418,7 +418,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
             ) {
                 Icon(
                     icon,
-                    contentDescription = label,
+                    contentDescription = title,
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(32.dp)
                 )
