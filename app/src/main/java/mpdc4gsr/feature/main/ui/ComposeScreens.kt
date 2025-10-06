@@ -483,7 +483,7 @@ fun GSRConnectionCard() {
                     Icons.Default.CheckCircle,
                     contentDescription = "Connected",
                     tint = Color.Green,
-                    modifier = Modifier.size(Spacing.touchTarget)
+                    modifier = Modifier.size(Spacing.large)
                 )
             }
             Text(
