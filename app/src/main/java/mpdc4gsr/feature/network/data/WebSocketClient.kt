@@ -500,15 +500,21 @@ class WebSocketClient(private val context: Context) {
                 "handshake_sent",
                 emptyMap()
             )
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error performing handshake", e)
+        } catch (e: java.io.IOException) {
+            AppLogger.e(TAG, "Network I/O error during handshake", e)
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "WebSocketClient",
-                "handshake_error",
-                mapOf(
-                    "error" to e.message.orEmpty(),
-                ),
+                "handshake_io_error",
+                mapOf("error" to e.message.orEmpty())
+            )
+        } catch (e: org.json.JSONException) {
+            AppLogger.e(TAG, "JSON error during handshake", e)
+            logger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "WebSocketClient",
+                "handshake_json_error",
+                mapOf("error" to e.message.orEmpty())
             )
         }
     }
@@ -574,15 +580,21 @@ class WebSocketClient(private val context: Context) {
                     eventListener?.onMessage(messageType, message)
                 }
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling message", e)
+        } catch (e: org.json.JSONException) {
+            AppLogger.e(TAG, "JSON parsing error handling message", e)
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "WebSocketClient",
-                "message_error",
-                mapOf(
-                    "error" to e.message.orEmpty(),
-                ),
+                "message_json_error",
+                mapOf("error" to e.message.orEmpty())
+            )
+        } catch (e: IllegalStateException) {
+            AppLogger.e(TAG, "Invalid state error handling message", e)
+            logger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "WebSocketClient",
+                "message_state_error",
+                mapOf("error" to e.message.orEmpty()),
             )
         }
     }
