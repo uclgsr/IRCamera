@@ -39,7 +39,7 @@ object NavigationManager {
         RouterConfig.LOG_MP_CHART to "com.mpdc4gsr.module.thermalunified.activity.LogMPChartComposeActivity",
 
         RouterConfig.IR_TCLITE to "com.mpdc4gsr.module.thermalunified.lite.activity.IRThermalLiteComposeActivity",
-        RouterConfig.IR_THERMAL_MONITOR_LITE to "com.mpdc4gsr.module.thermalunified.lite.activity.IRMonitorLiteComposeActivity",
+        RouterConfig.IR_THERMAL_MONITOR_LITE to "com.mpdc4gsr.module.thermalunified.activity.IRMonitorComposeActivity",
         RouterConfig.IR_IMG_PICK_LITE to "com.mpdc4gsr.module.thermalunified.lite.activity.ImagePickIRLiteComposeActivity",
         RouterConfig.IR_MONITOR_CHART_LITE to "com.mpdc4gsr.module.thermalunified.activity.IRMonitorChartComposeActivity",
         RouterConfig.IR_CORRECTION_THREE_LITE to "com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteThreeComposeActivity",
