@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.gsr.ui
-
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,7 +20,6 @@ import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import kotlin.math.sin
-
 data class SessionInfo(
     val id: String,
     val title: String,
@@ -32,7 +30,6 @@ data class SessionInfo(
     val dataPoints: Int,
     val notes: String
 )
-
 data class SessionMetrics(
     val gsrMean: Double,
     val gsrStd: Double,
@@ -43,13 +40,11 @@ data class SessionMetrics(
     val heartRateAvg: Int,
     val stressLevel: String
 )
-
 data class TimeSeriesData(
     val timestamp: Long,
     val gsrValue: Double,
     val thermalValue: Double
 )
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionDetailScreen(
@@ -61,7 +56,6 @@ fun SessionDetailScreen(
     val session = remember { getSampleSession(sessionId) }
     val metrics = remember { getSampleMetrics() }
     val timeSeriesData = remember { getSampleTimeSeriesData() }
-
     IRCameraTheme {
         Column(
             modifier = Modifier
@@ -84,7 +78,6 @@ fun SessionDetailScreen(
                     onClick = onPlayVideo
                 )
             }
-
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
@@ -94,27 +87,22 @@ fun SessionDetailScreen(
                 item {
                     SessionHeaderCard(session = session)
                 }
-
                 // Metrics Overview
                 item {
                     MetricsOverviewCard(metrics = metrics)
                 }
-
                 // GSR Waveform
                 item {
                     GSRWaveformCard(data = timeSeriesData)
                 }
-
                 // Thermal Data
                 item {
                     ThermalDataCard(data = timeSeriesData)
                 }
-
                 // Analysis Summary
                 item {
                     AnalysisSummaryCard(session = session, metrics = metrics)
                 }
-
                 // Export Options
                 item {
                     ExportOptionsCard(
@@ -127,7 +115,6 @@ fun SessionDetailScreen(
         }
     }
 }
-
 @Composable
 fun SessionHeaderCard(session: SessionInfo) {
     Card(
@@ -143,9 +130,7 @@ fun SessionHeaderCard(session: SessionInfo) {
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -161,9 +146,7 @@ fun SessionHeaderCard(session: SessionInfo) {
                     value = session.duration
                 )
             }
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -179,7 +162,6 @@ fun SessionHeaderCard(session: SessionInfo) {
                     value = session.dataPoints.toString()
                 )
             }
-
             if (session.notes.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
@@ -191,7 +173,6 @@ fun SessionHeaderCard(session: SessionInfo) {
         }
     }
 }
-
 @Composable
 fun SessionInfoItem(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -223,7 +204,6 @@ fun SessionInfoItem(
         )
     }
 }
-
 @Composable
 fun MetricsOverviewCard(metrics: SessionMetrics) {
     Card(
@@ -240,7 +220,6 @@ fun MetricsOverviewCard(metrics: SessionMetrics) {
                 color = Color.White,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -261,9 +240,7 @@ fun MetricsOverviewCard(metrics: SessionMetrics) {
                     color = Color(0xFF6B73FF)
                 )
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -288,7 +265,6 @@ fun MetricsOverviewCard(metrics: SessionMetrics) {
         }
     }
 }
-
 @Composable
 private fun MetricItem(
     label: String,
@@ -311,7 +287,6 @@ private fun MetricItem(
         )
     }
 }
-
 @Composable
 fun GSRWaveformCard(data: List<TimeSeriesData>) {
     Card(
@@ -328,7 +303,6 @@ fun GSRWaveformCard(data: List<TimeSeriesData>) {
                 color = Color.White,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -337,26 +311,22 @@ fun GSRWaveformCard(data: List<TimeSeriesData>) {
                 val path = Path()
                 val width = size.width
                 val height = size.height
-
                 if (data.isNotEmpty()) {
                     val minValue = data.minOf { it.gsrValue }
                     val maxValue = data.maxOf { it.gsrValue }
                     val valueRange = maxValue - minValue
-
                     data.forEachIndexed { index, point ->
                         val x = (index.toFloat() / (data.size - 1)) * width
                         val normalizedValue = if (valueRange > 0) {
                             ((point.gsrValue - minValue) / valueRange)
                         } else 0.5
                         val y = height - (normalizedValue.toFloat() * height)
-
                         if (index == 0) {
                             path.moveTo(x, y)
                         } else {
                             path.lineTo(x, y)
                         }
                     }
-
                     drawPath(
                         path = path,
                         color = Color(0xFF4ECDC4),
@@ -367,7 +337,6 @@ fun GSRWaveformCard(data: List<TimeSeriesData>) {
         }
     }
 }
-
 @Composable
 fun ThermalDataCard(data: List<TimeSeriesData>) {
     Card(
@@ -384,7 +353,6 @@ fun ThermalDataCard(data: List<TimeSeriesData>) {
                 color = Color.White,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -393,26 +361,22 @@ fun ThermalDataCard(data: List<TimeSeriesData>) {
                 val path = Path()
                 val width = size.width
                 val height = size.height
-
                 if (data.isNotEmpty()) {
                     val minValue = data.minOf { it.thermalValue }
                     val maxValue = data.maxOf { it.thermalValue }
                     val valueRange = maxValue - minValue
-
                     data.forEachIndexed { index, point ->
                         val x = (index.toFloat() / (data.size - 1)) * width
                         val normalizedValue = if (valueRange > 0) {
                             ((point.thermalValue - minValue) / valueRange)
                         } else 0.5
                         val y = height - (normalizedValue.toFloat() * height)
-
                         if (index == 0) {
                             path.moveTo(x, y)
                         } else {
                             path.lineTo(x, y)
                         }
                     }
-
                     drawPath(
                         path = path,
                         color = Color(0xFFFF6B6B),
@@ -423,7 +387,6 @@ fun ThermalDataCard(data: List<TimeSeriesData>) {
         }
     }
 }
-
 @Composable
 fun AnalysisSummaryCard(
     session: SessionInfo,
@@ -443,7 +406,6 @@ fun AnalysisSummaryCard(
                 color = Color.White,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
             val summaryText = buildString {
                 append("This ${session.duration} session recorded ${session.dataPoints} data points ")
                 append("from ${session.sensorTypes.joinToString(", ")} sensors. ")
@@ -459,7 +421,6 @@ fun AnalysisSummaryCard(
                 )
                 append("Overall stress level assessed as ${metrics.stressLevel.lowercase()}.")
             }
-
             Text(
                 text = summaryText,
                 fontSize = 14.sp,
@@ -469,7 +430,6 @@ fun AnalysisSummaryCard(
         }
     }
 }
-
 @Composable
 fun ExportOptionsCard(
     onExportRaw: () -> Unit,
@@ -490,7 +450,6 @@ fun ExportOptionsCard(
                 color = Color.White,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -509,7 +468,6 @@ fun ExportOptionsCard(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Raw Data")
                 }
-
                 OutlinedButton(
                     onClick = onExportReport,
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -524,7 +482,6 @@ fun ExportOptionsCard(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Report")
                 }
-
                 OutlinedButton(
                     onClick = onExportVideo,
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -543,7 +500,6 @@ fun ExportOptionsCard(
         }
     }
 }
-
 private fun getSampleSession(id: String) = SessionInfo(
     id = id,
     title = "Stress Response Study - Session A",
@@ -554,7 +510,6 @@ private fun getSampleSession(id: String) = SessionInfo(
     dataPoints = 15420,
     notes = "Baseline recording with cognitive stress tasks. Participant reported feeling moderately stressed during math problems."
 )
-
 private fun getSampleMetrics() = SessionMetrics(
     gsrMean = 12.45,
     gsrStd = 3.21,
@@ -565,7 +520,6 @@ private fun getSampleMetrics() = SessionMetrics(
     heartRateAvg = 78,
     stressLevel = "Medium"
 )
-
 private fun getSampleTimeSeriesData(): List<TimeSeriesData> {
     return (0..100).map { i ->
         TimeSeriesData(
@@ -575,7 +529,6 @@ private fun getSampleTimeSeriesData(): List<TimeSeriesData> {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 fun SessionDetailScreenPreview() {

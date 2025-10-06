@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.testing.ui
-
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -27,39 +26,27 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-
 class ComposeComponentsShowcaseViewModel : AppBaseViewModel() {
     private val _showSensorDialog = mutableStateOf(false)
     val showSensorDialog: State<Boolean> = _showSensorDialog
-
     private val _selectedSensors = mutableStateOf<Set<mpdc4gsr.core.ui.components.SensorType>>(emptySet())
     val selectedSensors: State<Set<mpdc4gsr.core.ui.components.SensorType>> = _selectedSensors
-
     fun showSensorSelection() {
         _showSensorDialog.value = true
     }
-
     fun hideSensorSelection() {
         _showSensorDialog.value = false
     }
-
     fun updateSelectedSensors(sensors: Set<mpdc4gsr.core.ui.components.SensorType>) {
         _selectedSensors.value = sensors
     }
 }
 
-/**
- * Showcase activity for all new Compose components
- * Demonstrates the enhanced UI components that can be used throughout the application
- */
 class ComposeComponentsShowcaseActivity :
     BaseComposeActivity<ComposeComponentsShowcaseViewModel>() {
-
     private val showcaseVM: ComposeComponentsShowcaseViewModel by viewModels()
-
     override fun createViewModel(): ComposeComponentsShowcaseViewModel =
         showcaseVM
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ComposeComponentsShowcaseViewModel) {
@@ -67,7 +54,6 @@ class ComposeComponentsShowcaseActivity :
             val context = LocalContext.current
             val showSensorDialog by viewModel.showSensorDialog
             val selectedSensors by viewModel.selectedSensors
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -77,7 +63,6 @@ class ComposeComponentsShowcaseActivity :
                     title = "Compose Components",
                     onBackClick = { finish() }
                 )
-
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -119,7 +104,6 @@ class ComposeComponentsShowcaseActivity :
                             )
                         }
                     }
-
                     // Component sections
                     ComponentSection(
                         title = "Sensor Dashboard",
@@ -134,18 +118,14 @@ class ComposeComponentsShowcaseActivity :
                             }
                         )
                     }
-
                     Spacer(modifier = Modifier.height(24.dp))
-
                     ComponentSection(
                         title = "Recording Controls",
                         description = "Advanced recording controls with session management"
                     ) {
                         RecordingControlsDemo()
                     }
-
                     Spacer(modifier = Modifier.height(24.dp))
-
                     ComponentSection(
                         title = "Sensor Selection",
                         description = "Interactive sensor selection with availability checks"
@@ -174,44 +154,10 @@ class ComposeComponentsShowcaseActivity :
                                     Text("Select Sensors (${selectedSensors.size})")
                                 }
 
-                                /* Sensor display temporarily disabled - requires SensorAvailability component
-                                if (selectedSensors.isNotEmpty()) {
-                                    Spacer(modifier = Modifier.height(12.dp))
-
-                                    Text(
-                                        text = "Selected Sensors:",
-                                        style = MaterialTheme.typography.titleSmall,
-                                        fontWeight = FontWeight.Medium
-                                    )
-
-                                    Spacer(modifier = Modifier.height(8.dp))
-
-                                    selectedSensors.forEach { sensor ->
-                                        Row(
-                                            modifier = Modifier.padding(vertical = 2.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Icon(
-                                                imageVector = sensor.icon,
-                                                contentDescription = null,
-                                                modifier = Modifier.size(16.dp),
-                                                tint = MaterialTheme.colorScheme.primary
-                                            )
-                                            Spacer(modifier = Modifier.width(8.dp))
-                                            Text(
-                                                text = sensor.displayName,
-                                                style = MaterialTheme.typography.bodySmall
-                                            )
-                                        }
-                                    }
-                                }
-                                */
                             }
                         }
                     }
-
                     Spacer(modifier = Modifier.height(24.dp))
-
                     // Benefits section
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -239,7 +185,6 @@ class ComposeComponentsShowcaseActivity :
                                 )
                             }
                             Spacer(modifier = Modifier.height(12.dp))
-
                             val benefits = listOf(
                                 "Real-time animated status indicators",
                                 "Improved user interaction and feedback",
@@ -250,7 +195,6 @@ class ComposeComponentsShowcaseActivity :
                                 "Modern UI patterns and animations",
                                 "Better error handling and recovery"
                             )
-
                             benefits.forEach { benefit ->
                                 Row(
                                     modifier = Modifier.padding(vertical = 2.dp),
@@ -274,7 +218,6 @@ class ComposeComponentsShowcaseActivity :
                     }
                 }
             }
-
             // Sensor selection dialog
             if (showSensorDialog) {
                 SensorSelectionDialog(
@@ -291,7 +234,6 @@ class ComposeComponentsShowcaseActivity :
         }
     }
 }
-
 @Composable
 private fun ComponentSection(
     title: String,
@@ -311,34 +253,6 @@ private fun ComponentSection(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(bottom = 12.dp)
         )
-
         content()
     }
 }
-
-/* Sensor availability sample data temporarily disabled
-private fun getSampleSensorAvailability(): List<mpdc4gsr.compose.components.SensorAvailability> {
-    return listOf(
-        mpdc4gsr.compose.components.SensorAvailability(
-            sensorType = mpdc4gsr.compose.components.SensorType.THERMAL,
-            isAvailable = true,
-            isSelected = false
-        ),
-        mpdc4gsr.compose.components.SensorAvailability(
-            sensorType = mpdc4gsr.compose.components.SensorType.GSR,
-            isAvailable = true,
-            isSelected = false
-        ),
-        mpdc4gsr.compose.components.SensorAvailability(
-            sensorType = mpdc4gsr.compose.components.SensorType.RGB,
-            isAvailable = true,
-            isSelected = false
-        ),
-        mpdc4gsr.compose.components.SensorAvailability(
-            sensorType = mpdc4gsr.compose.components.SensorType.AUDIO,
-            isAvailable = true,
-            isSelected = false
-        )
-    )
-}
-*/

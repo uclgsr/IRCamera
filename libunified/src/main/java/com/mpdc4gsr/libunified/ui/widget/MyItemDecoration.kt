@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.ui.widget
-
 import android.content.Context
 import android.graphics.Rect
 import android.view.View
@@ -7,27 +6,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-
 class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
-
     var wholeLeft: Float? = null
-
     var wholeRight: Float? = null
-
     var wholeTop: Float? = null
-
     var wholeBottom: Float? = null
-
     var itemLeft: Float? = null
-
     var itemRight: Float? = null
-
     var itemTop: Float? = null
-
     var itemBottom: Float? = null
-
     private val density: Float = context.resources.displayMetrics.density
-
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -35,11 +23,9 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         state: RecyclerView.State
     ) {
         super.getItemOffsets(outRect, view, parent, state)
-
         val itemCount = parent.adapter?.itemCount ?: return
         val position = parent.getChildAdapterPosition(view)
         val layoutManager = parent.layoutManager
-
         when (layoutManager) {
             is GridLayoutManager -> {
                 if (layoutManager.orientation == LinearLayoutManager.VERTICAL) {
@@ -48,7 +34,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
                     setHorizontalMulti(outRect, position, itemCount, layoutManager.spanCount)
                 }
             }
-
             is LinearLayoutManager -> {
                 if (layoutManager.orientation == LinearLayoutManager.VERTICAL) {
                     setVerticalOne(outRect, position, itemCount)
@@ -56,7 +41,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
                     setHorizontalOne(outRect, position, itemCount)
                 }
             }
-
             is StaggeredGridLayoutManager -> {
                 val layoutParams = view.layoutParams
                 val spanIndex =
@@ -75,7 +59,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
             }
         }
     }
-
     private fun setVerticalOne(outRect: Rect, position: Int, itemCount: Int) {
         val left: Int = dp2px(wholeLeft ?: ((itemLeft ?: 0f) * 2))
         val right: Int = dp2px(wholeRight ?: ((itemRight ?: 0f) * 2))
@@ -88,7 +71,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
             )
         outRect.set(left, top, right, bottom)
     }
-
     private fun setHorizontalOne(outRect: Rect, position: Int, itemCount: Int) {
         val left: Int =
             dp2px(if (position == 0) wholeLeft ?: ((itemLeft ?: 0f) * 2) else (itemLeft ?: 0f))
@@ -101,12 +83,10 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         val bottom: Int = dp2px(wholeBottom ?: ((itemBottom ?: 0f) * 2))
         outRect.set(left, top, right, bottom)
     }
-
     private fun setVerticalMulti(outRect: Rect, position: Int, itemCount: Int, spanCount: Int) {
         val totalRow = itemCount / spanCount + if (itemCount % spanCount == 0) 0 else 1 //
         val rowPosition = position / spanCount    // position [0, totalRow)
         val columnPosition = position % spanCount // position [0, spanCount)
-
         val left: Int = dp2px(
             if (columnPosition == 0) wholeLeft ?: ((itemLeft ?: 0f) * 2) else (itemLeft ?: 0f)
         )
@@ -124,7 +104,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
             )
         outRect.set(left, top, right, bottom)
     }
-
     private fun setVerticalMultiStaggered(
         outRect: Rect,
         position: Int,
@@ -134,7 +113,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     ) {
         val totalRow = itemCount / spanCount + if (itemCount % spanCount == 0) 0 else 1 //
         val rowPosition = position / spanCount //position[0, totalRow)
-
         val left: Int =
             dp2px(if (spanIndex == 0) wholeLeft ?: ((itemLeft ?: 0f) * 2) else (itemLeft ?: 0f))
         val right: Int =
@@ -151,13 +129,11 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
             )
         outRect.set(left, top, right, bottom)
     }
-
     private fun setHorizontalMulti(outRect: Rect, position: Int, itemCount: Int, spanCount: Int) {
         // MVP implementation: Basic horizontal multi-row spacing
         // Can be enhanced when horizontal multi-row requirements are clarified
         val column = position % spanCount
         val row = position / spanCount
-
         val left: Int =
             dp2px(if (column == 0) wholeLeft ?: ((itemLeft ?: 0f) * 2) else (itemLeft ?: 0f))
         val right: Int =
@@ -169,6 +145,5 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         val bottom: Int = dp2px(wholeBottom ?: ((itemBottom ?: 0f) * 2))
         outRect.set(left, top, right, bottom)
     }
-
     private fun dp2px(dpValue: Float): Int = (dpValue * density + 0.5f).toInt()
 }

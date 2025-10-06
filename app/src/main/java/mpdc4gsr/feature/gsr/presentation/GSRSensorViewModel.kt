@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.gsr.presentation
-
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,39 +12,22 @@ import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * ViewModel for GSR Sensor Screen
- * Manages UnifiedGSRRecorder lifecycle and data flow
- *
- * Features:
- * - Automatic reconnection with exponential backoff
- * - Device address tracking for targeted reconnection
- * - Recording state preservation across reconnections
- * - Configurable reconnection parameters
- * - Automatic device scanning when cache is empty
- * - Recording resumption after successful reconnection
- */
 class GSRSensorViewModel(
     context: Context
 ) : AppBaseViewModel() {
-
     private val application: Context = context.applicationContext
-
     companion object {
         // Reuse SimpleDateFormat instance for better performance
         private val ISO_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
             timeZone = TimeZone.getTimeZone("UTC")
         }
         private const val MAX_HISTORY_SIZE = 100
-
         // Reconnection configuration (can be made user-configurable)
         const val DEFAULT_MAX_RECONNECTION_ATTEMPTS = 3
         const val DEFAULT_BASE_RECONNECTION_DELAY_MS = 2000L
-
         // Device scanning delay
         private const val DEVICE_SCAN_DELAY_MS = 3000L
     }
-
     data class GSRSensorState(
         val isConnected: Boolean = false,
         val isRecording: Boolean = false,
@@ -60,29 +42,21 @@ class GSRSensorViewModel(
         val reconnectionAttempt: Int = 0,
         val maxReconnectionAttempts: Int = 0
     )
-
     data class ReconnectionConfig(
         val maxAttempts: Int = DEFAULT_MAX_RECONNECTION_ATTEMPTS,
         val baseDelayMs: Long = DEFAULT_BASE_RECONNECTION_DELAY_MS,
         val enabled: Boolean = true
     )
-
     private val _sensorState = MutableStateFlow(GSRSensorState())
     val sensorState: StateFlow<GSRSensorState> = _sensorState.asStateFlow()
-
     private var reconnectionConfig = ReconnectionConfig()
     private var lastConnectedDeviceAddress: String? = null
     private var wasRecordingBeforeDisconnect = false
     private var settingsRepository: GSRSettingsRepository? = null
-
     // Expose recorder for lifecycle management from UI layer
     var gsrRecorder: UnifiedGSRRecorder? = null
         private set
 
-    /**
-     * Initialize GSR recorder without lifecycle owner
-     * Lifecycle should be managed from UI layer using DisposableEffect
-     */
     fun initializeRecorder(
         context: android.content.Context,
         lifecycleOwner: androidx.lifecycle.LifecycleOwner,
@@ -94,7 +68,6 @@ class GSRSensorViewModel(
                 if (settingsRepository == null) {
                     settingsRepository = GSRSettingsRepository(context)
                 }
-
                 // Load reconnection config from settings if not provided
                 val configToUse =
                     reconnectionConfig ?: settingsRepository?.deviceSettings?.value?.let { deviceSettings ->
@@ -104,15 +77,12 @@ class GSRSensorViewModel(
                             enabled = deviceSettings.autoReconnect
                         )
                     } ?: ReconnectionConfig()
-
                 this@GSRSensorViewModel.reconnectionConfig = configToUse
-
                 gsrRecorder = UnifiedGSRRecorder(
                     context = context,
                     lifecycleOwner = lifecycleOwner,
                     samplingRateHz = 128
                 )
-
                 val initialized = gsrRecorder?.initialize() ?: false
                 if (initialized) {
                     _sensorState.update {
@@ -144,9 +114,6 @@ class GSRSensorViewModel(
         }
     }
 
-    /**
-     * Observe settings changes and update reconnection config dynamically
-     */
     private fun observeSettingsChanges() {
         viewModelScope.launch {
             settingsRepository?.deviceSettings?.collect { deviceSettings ->
@@ -164,9 +131,6 @@ class GSRSensorViewModel(
         }
     }
 
-    /**
-     * Connect to GSR device
-     */
     fun connectDevice() {
         viewModelScope.launch {
             try {
@@ -176,7 +140,6 @@ class GSRSensorViewModel(
                     _sensorState.update { it.copy(error = "No devices found. Please scan first.") }
                     return@launch
                 }
-
                 // Connect to first available device
                 val device = devices.firstOrNull()
                 if (device != null) {
@@ -197,9 +160,6 @@ class GSRSensorViewModel(
         }
     }
 
-    /**
-     * Update reconnection configuration
-     */
     fun updateReconnectionConfig(config: ReconnectionConfig) {
         reconnectionConfig = config
         mpdc4gsr.core.utils.AppLogger.d(
@@ -209,19 +169,10 @@ class GSRSensorViewModel(
         )
     }
 
-    /**
-     * Get current reconnection configuration
-     */
     fun getReconnectionConfig(): ReconnectionConfig = reconnectionConfig
 
-    /**
-     * Get settings repository for UI integration
-     */
     fun getSettingsRepository() = settingsRepository
 
-    /**
-     * Disconnect from GSR device
-     */
     fun disconnectDevice() {
         viewModelScope.launch {
             try {
@@ -233,25 +184,19 @@ class GSRSensorViewModel(
         }
     }
 
-    /**
-     * Start recording GSR data
-     */
     fun startRecording() {
         viewModelScope.launch {
             try {
                 val sessionDir = application.getExternalFilesDir("gsr_sessions")?.absolutePath
                     ?: application.filesDir.absolutePath
-
                 val currentTimeMs = System.currentTimeMillis()
                 val currentMonotonicNs = System.nanoTime()
-
                 val metadata = mpdc4gsr.core.data.SessionMetadata(
                     sessionId = "gsr_${currentTimeMs}",
                     sessionStartTimestampMs = currentTimeMs,
                     sessionStartMonotonicNs = currentMonotonicNs,
                     sessionStartIso = ISO_DATE_FORMAT.format(java.util.Date(currentTimeMs))
                 )
-
                 gsrRecorder?.startRecording(sessionDir, metadata)
                 _sensorState.update { it.copy(isRecording = true, error = null) }
             } catch (e: Exception) {
@@ -260,9 +205,6 @@ class GSRSensorViewModel(
         }
     }
 
-    /**
-     * Stop recording GSR data
-     */
     fun stopRecording() {
         viewModelScope.launch {
             try {
@@ -274,9 +216,6 @@ class GSRSensorViewModel(
         }
     }
 
-    /**
-     * Start collecting GSR data from recorder
-     */
     private fun startDataCollection() {
         // Collect recording status
         viewModelScope.launch {
@@ -289,17 +228,14 @@ class GSRSensorViewModel(
                 }
             }
         }
-
         // Collect actual GSR data samples
         viewModelScope.launch {
             gsrRecorder?.getDataStream()?.collect { gsrSample ->
                 _sensorState.update { currentState ->
                     val newGSR = gsrSample.gsrMicrosiemens.toFloat()
                     val newHistory = (currentState.gsrHistory + newGSR).takeLast(MAX_HISTORY_SIZE)
-
                     // Calculate skin conductance (same as GSR in microsiemens)
                     val skinConductance = newGSR
-
                     currentState.copy(
                         currentGSR = newGSR,
                         skinConductance = skinConductance,
@@ -310,30 +246,23 @@ class GSRSensorViewModel(
         }
     }
 
-    /**
-     * Start monitoring connection status and handle reconnection
-     */
     private fun startConnectionMonitoring() {
         viewModelScope.launch {
             gsrRecorder?.deviceStatus?.collect { status ->
                 val isConnectedNow = status.contains("Connected", ignoreCase = true)
                 val isDisconnected = status.contains("Disconnected", ignoreCase = true)
-
                 _sensorState.update { currentState ->
                     val wasConnected = currentState.isConnected
-
                     // Detect disconnection and trigger reconnection
                     if (wasConnected && isDisconnected && !currentState.isReconnecting) {
                         // Save recording state before disconnection
                         wasRecordingBeforeDisconnect = currentState.isRecording
-
                         if (reconnectionConfig.enabled) {
                             viewModelScope.launch {
                                 attemptReconnection()
                             }
                         }
                     }
-
                     currentState.copy(
                         isConnected = isConnectedNow,
                         connectionStatus = status
@@ -343,13 +272,9 @@ class GSRSensorViewModel(
         }
     }
 
-    /**
-     * Attempt automatic reconnection with exponential backoff
-     */
     private suspend fun attemptReconnection() {
         val maxAttempts = reconnectionConfig.maxAttempts
         val baseDelay = reconnectionConfig.baseDelayMs
-
         for (attempt in 1..maxAttempts) {
             _sensorState.update {
                 it.copy(
@@ -359,18 +284,14 @@ class GSRSensorViewModel(
                     connectionStatus = "Reconnecting (attempt $attempt/$maxAttempts)..."
                 )
             }
-
             // True exponential backoff: baseDelay * 2^(attempt-1)
             val delay = baseDelay * (1L shl (attempt - 1))
             kotlinx.coroutines.delay(delay)
-
             try {
                 // Try to get cached devices first
                 var devices = gsrRecorder?.getDiscoveredDevices() ?: emptyList()
-
                 // If no cached devices and we have a last connected address, try to find it
                 var targetDevice = devices.find { it.address == lastConnectedDeviceAddress }
-
                 // If still no device found, trigger a quick scan
                 if (targetDevice == null && devices.isEmpty()) {
                     mpdc4gsr.core.utils.AppLogger.i("GSRSensorViewModel", "No cached devices, triggering scan...")
@@ -379,7 +300,6 @@ class GSRSensorViewModel(
                             connectionStatus = "Scanning for device (attempt $attempt/$maxAttempts)..."
                         )
                     }
-
                     val scanSuccess = gsrRecorder?.startDeviceDiscovery() ?: false
                     if (scanSuccess) {
                         kotlinx.coroutines.delay(DEVICE_SCAN_DELAY_MS)
@@ -391,7 +311,6 @@ class GSRSensorViewModel(
                     // Use first available device if last connected not found
                     targetDevice = devices.firstOrNull()
                 }
-
                 if (targetDevice != null) {
                     mpdc4gsr.core.utils.AppLogger.i(
                         "GSRSensorViewModel",
@@ -409,7 +328,6 @@ class GSRSensorViewModel(
                                 error = null
                             )
                         }
-
                         // Resume recording if it was active before disconnection
                         if (wasRecordingBeforeDisconnect) {
                             mpdc4gsr.core.utils.AppLogger.i(
@@ -420,7 +338,6 @@ class GSRSensorViewModel(
                             startRecording()
                             wasRecordingBeforeDisconnect = false
                         }
-
                         return
                     }
                 } else {
@@ -433,7 +350,6 @@ class GSRSensorViewModel(
                 )
             }
         }
-
         // All attempts failed
         _sensorState.update {
             it.copy(
@@ -447,9 +363,6 @@ class GSRSensorViewModel(
         wasRecordingBeforeDisconnect = false // Reset flag
     }
 
-    /**
-     * Export GSR data
-     */
     fun exportData() {
         viewModelScope.launch {
             try {
@@ -461,7 +374,6 @@ class GSRSensorViewModel(
             }
         }
     }
-
     override fun onCleared() {
         super.onCleared()
         viewModelScope.launch {

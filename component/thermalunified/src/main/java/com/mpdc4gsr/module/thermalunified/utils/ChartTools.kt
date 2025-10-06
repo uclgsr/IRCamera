@@ -1,10 +1,8 @@
 package com.mpdc4gsr.module.thermalunified.utils
-
 import android.graphics.Point
 import android.util.Log
 import com.mpdc4gsr.libunified.ui.charts.LineChart
 import kotlin.math.abs
-
 object ChartTools {
     fun getLineTemps(
         point1: Point,
@@ -16,7 +14,6 @@ object ChartTools {
         if (point1 == point2) {
             return tempList
         }
-
         val pointList: ArrayList<Point> = ArrayList()
         if (point1.x == point2.x) {
             val startY = point1.y.coerceAtMost(point2.y)
@@ -49,9 +46,7 @@ object ChartTools {
                 }
             }
         }
-
         val width = if (rotate == 90 || rotate == 270) 192 else 256
-
         pointList.forEach {
             val index = (it.y * width + it.x) * 2
             val tempInt =
@@ -59,10 +54,8 @@ object ChartTools {
             val tempValue = tempInt / 64f - 273.15f
             tempList.add(tempValue)
         }
-
         return tempList
     }
-
     fun scale(type: Int): Long {
         return when (type) {
             1 -> 1 * 1000
@@ -72,7 +65,6 @@ object ChartTools {
             else -> 1
         }
     }
-
     fun getMinimum(type: Int): Float {
         val min =
             when (type) {
@@ -84,11 +76,9 @@ object ChartTools {
             }
         return min
     }
-
     fun getMaximum(type: Int): Float {
         return getMinimum(type) * 50f
     }
-
     fun setY(chart: LineChart) {
         var maxVol = 0f
         var minVol = 0f
@@ -98,25 +88,21 @@ object ChartTools {
                 maxVol = dataSet.yMax
                 minVol = dataSet.yMin
             }
-
             2 -> {
                 val dataSet1 = chart.data.getDataSetByIndex(0)
                 val dataSet2 = chart.data.getDataSetByIndex(1)
                 maxVol = if (dataSet1.yMax > dataSet2.yMax) dataSet1.yMax else dataSet2.yMax
                 minVol = if (dataSet1.yMin < dataSet2.yMin) dataSet1.yMin else dataSet2.yMin
             }
-
             3 -> {
                 val dataSet1 = chart.data.getDataSetByIndex(0)
                 val dataSet2 = chart.data.getDataSetByIndex(1)
                 val dataSet3 = chart.data.getDataSetByIndex(2)
                 maxVol = if (dataSet1.yMax > dataSet2.yMax) dataSet1.yMax else dataSet2.yMax
                 minVol = if (dataSet1.yMin < dataSet2.yMin) dataSet1.yMin else dataSet2.yMin
-
                 maxVol = if (dataSet3.yMax > maxVol) dataSet3.yMax else maxVol
                 minVol = if (dataSet3.yMin < minVol) dataSet3.yMin else minVol
             }
-
             else -> {
                 return
             }
@@ -135,28 +121,22 @@ object ChartTools {
         }
         Log.w("chart", "yAxis max:${chart.axisLeft.axisMaximum}, min:${chart.axisLeft.axisMinimum}")
     }
-
     fun setX(
         chart: LineChart,
         type: Int,
     ) {
-
         val xLen = chart.xChartMax - chart.xChartMin
-
         chart.xAxis.setLabelCount(getLabCount(xLen.toInt()), xLen <= 3)
     }
-
     private fun getLabCount(count: Int): Int {
         return when {
             count <= 2 -> 1
             count in 3..4 -> 2
             count in 5..7 -> 3
-
             count >= 8 -> 4
             else -> count
         }
     }
-
     fun getChartX(
         x: Long,
         startTime: Long,

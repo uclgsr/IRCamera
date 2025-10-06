@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.camera.ui
-
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -24,24 +23,11 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.camera.presentation.DualModeCameraViewModel
 
-/**
- * DualModeCameraComposeActivity - Advanced Dual Camera Recording with Compose
- *
- * Comprehensive dual-mode camera interface featuring:
- * - Simultaneous thermal and RGB camera recording with synchronized controls
- * - Real-time preview with picture-in-picture mode selection
- * - Advanced recording settings with quality presets and manual controls
- * - Cross-sensor synchronization with GSR and other sensors
- * - Live metadata overlay with temperature readings and sensor data
- * - Export capabilities with multi-format support and session management
- */
 class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewModel>() {
-
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, DualModeCameraComposeActivity::class.java))
         }
-
         fun startWithMode(context: Context, mode: String) {
             val intent = Intent(context, DualModeCameraComposeActivity::class.java).apply {
                 putExtra("INITIAL_MODE", mode)
@@ -49,11 +35,9 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
             context.startActivity(intent)
         }
     }
-
     override fun createViewModel(): DualModeCameraViewModel {
         return viewModels<DualModeCameraViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: DualModeCameraViewModel) {
@@ -62,7 +46,6 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
         var recordingDuration by remember { mutableStateOf(0L) }
         var cameraMode by remember { mutableStateOf("Dual") }
         var showSettingsDialog by remember { mutableStateOf(false) }
-
         IRCameraTheme {
             Scaffold(
                 topBar = {
@@ -117,7 +100,6 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
                 )
             }
         }
-
         if (showSettingsDialog) {
             CameraSettingsDialog(
                 onDismiss = { showSettingsDialog = false },
@@ -129,7 +111,6 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
         }
     }
 }
-
 @Composable
 private fun DualModeCameraContent(
     isRecording: Boolean,
@@ -151,7 +132,6 @@ private fun DualModeCameraContent(
                 .fillMaxWidth()
                 .weight(1f)
         )
-
         // Camera Controls
         CameraControlsSection(
             isRecording = isRecording,
@@ -165,7 +145,6 @@ private fun DualModeCameraContent(
         )
     }
 }
-
 @Composable
 private fun CameraPreviewSection(
     cameraMode: String,
@@ -190,7 +169,6 @@ private fun CameraPreviewSection(
                         ThermalCameraPreview(
                             modifier = Modifier.fillMaxSize()
                         )
-
                         // RGB camera PiP
                         Card(
                             modifier = Modifier
@@ -202,7 +180,6 @@ private fun CameraPreviewSection(
                                 modifier = Modifier.fillMaxSize()
                             )
                         }
-
                         // Temperature overlay
                         TemperatureOverlay(
                             centerTemp = 36.8f,
@@ -213,19 +190,16 @@ private fun CameraPreviewSection(
                     }
                 }
             }
-
             "Thermal" -> {
                 ThermalCameraPreview(
                     modifier = Modifier.fillMaxSize()
                 )
             }
-
             "RGB" -> {
                 RGBCameraPreview(
                     modifier = Modifier.fillMaxSize()
                 )
             }
-
             "Split" -> {
                 Row(
                     modifier = Modifier.fillMaxSize()
@@ -243,7 +217,6 @@ private fun CameraPreviewSection(
                 }
             }
         }
-
         // Recording indicator
         if (isRecording) {
             RecordingIndicator(
@@ -252,7 +225,6 @@ private fun CameraPreviewSection(
                     .padding(16.dp)
             )
         }
-
         // Camera mode indicator
         CameraModeIndicator(
             mode = cameraMode,
@@ -262,7 +234,6 @@ private fun CameraPreviewSection(
         )
     }
 }
-
 @Composable
 private fun CameraControlsSection(
     isRecording: Boolean,
@@ -282,14 +253,12 @@ private fun CameraControlsSection(
             onModeChange = onCameraModeChange,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         // Recording status
         RecordingStatusCard(
             isRecording = isRecording,
             duration = recordingDuration,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         // Main controls
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -313,7 +282,6 @@ private fun CameraControlsSection(
                     contentDescription = "Gallery"
                 )
             }
-
             // Record button
             Button(
                 onClick = onRecordingToggle,
@@ -335,7 +303,6 @@ private fun CameraControlsSection(
                     fontWeight = FontWeight.Bold
                 )
             }
-
             // Capture button
             OutlinedButton(
                 onClick = {
@@ -356,7 +323,6 @@ private fun CameraControlsSection(
         }
     }
 }
-
 @Composable
 private fun CameraModeSelector(
     selectedMode: String,
@@ -364,7 +330,6 @@ private fun CameraModeSelector(
     modifier: Modifier = Modifier
 ) {
     val modes = listOf("Dual", "Thermal", "RGB", "Split")
-
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -382,7 +347,6 @@ private fun CameraModeSelector(
         }
     }
 }
-
 @Composable
 private fun RecordingStatusCard(
     isRecording: Boolean,
@@ -418,7 +382,6 @@ private fun RecordingStatusCard(
                     color = if (isRecording) Color(0xFFE53E3E) else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             if (isRecording) {
                 Box(
                     modifier = Modifier
@@ -430,7 +393,6 @@ private fun RecordingStatusCard(
         }
     }
 }
-
 @Composable
 private fun ThermalCameraPreview(
     modifier: Modifier = Modifier
@@ -458,7 +420,6 @@ private fun ThermalCameraPreview(
         }
     }
 }
-
 @Composable
 private fun RGBCameraPreview(
     modifier: Modifier = Modifier
@@ -488,7 +449,6 @@ private fun RGBCameraPreview(
         }
     }
 }
-
 @Composable
 private fun TemperatureOverlay(
     centerTemp: Float,
@@ -534,7 +494,6 @@ private fun TemperatureOverlay(
         }
     }
 }
-
 @Composable
 private fun RecordingIndicator(
     modifier: Modifier = Modifier
@@ -565,7 +524,6 @@ private fun RecordingIndicator(
         }
     }
 }
-
 @Composable
 private fun CameraModeIndicator(
     mode: String,
@@ -585,7 +543,6 @@ private fun CameraModeIndicator(
         )
     }
 }
-
 @Composable
 private fun CameraSettingsDialog(
     onDismiss: () -> Unit,
@@ -594,7 +551,6 @@ private fun CameraSettingsDialog(
     var videoQuality by remember { mutableStateOf("4K") }
     var frameRate by remember { mutableStateOf(30f) }
     var enableStabilization by remember { mutableStateOf(true) }
-
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Camera Settings") },
@@ -607,7 +563,6 @@ private fun CameraSettingsDialog(
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -620,9 +575,7 @@ private fun CameraSettingsDialog(
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Text(
                     text = "Frame Rate: ${frameRate.toInt()} fps",
                     style = MaterialTheme.typography.labelMedium,
@@ -634,9 +587,7 @@ private fun CameraSettingsDialog(
                     valueRange = 15f..60f,
                     steps = 8
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -674,7 +625,6 @@ private fun CameraSettingsDialog(
         }
     )
 }
-
 private fun formatDuration(seconds: Long): String {
     val minutes = seconds / 60
     val remainingSeconds = seconds % 60

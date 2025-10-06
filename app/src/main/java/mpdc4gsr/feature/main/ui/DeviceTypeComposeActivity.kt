@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.main.ui
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,7 +31,6 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-
 enum class IRDeviceType(
     val displayName: String,
     val description: String,
@@ -52,18 +50,14 @@ enum class IRDeviceType(
         false
     )
 }
-
 class DeviceTypeViewModel : AppBaseViewModel() {
     private val _selectedDevice = mutableStateOf<IRDeviceType?>(null)
     val selectedDevice: State<IRDeviceType?> = _selectedDevice
-
     private val _availableDevices = mutableStateOf(IRDeviceType.values().toList())
     val availableDevices: State<List<IRDeviceType>> = _availableDevices
-
     fun selectDevice(device: IRDeviceType) {
         _selectedDevice.value = device
     }
-
     fun getDeviceList(): List<IRDeviceType> {
         return listOf(
             IRDeviceType.TS004,
@@ -71,13 +65,9 @@ class DeviceTypeViewModel : AppBaseViewModel() {
         )
     }
 }
-
 class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
-
     private val deviceTypeVM: DeviceTypeViewModel by viewModels()
-
     override fun createViewModel(): DeviceTypeViewModel = deviceTypeVM
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: DeviceTypeViewModel) {
@@ -85,7 +75,6 @@ class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
             val context = LocalContext.current
             val selectedDevice by viewModel.selectedDevice
             val devices = viewModel.getDeviceList()
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -95,7 +84,6 @@ class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
                     title = stringResource(R.string.device_type_selection),
                     onBackClick = { finish() }
                 )
-
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -137,7 +125,6 @@ class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
                             )
                         }
                     }
-
                     // Device list
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -156,7 +143,6 @@ class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
                                                 .withBoolean("isTS004", true)
                                                 .navigation(context as DeviceTypeComposeActivity)
                                         }
-
                                         IRDeviceType.TC007 -> {
                                             NavigationManager.getInstance()
                                                 .build(RouterConfig.IR_DEVICE_ADD)
@@ -168,9 +154,7 @@ class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
                             )
                         }
                     }
-
                     Spacer(modifier = Modifier.height(24.dp))
-
                     // Information section
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -211,7 +195,6 @@ class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
         }
     }
 }
-
 @Composable
 private fun DeviceTypeCard(
     device: IRDeviceType,
@@ -261,9 +244,7 @@ private fun DeviceTypeCard(
                         MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
-
             Spacer(modifier = Modifier.width(16.dp))
-
             // Device info
             Column(
                 modifier = Modifier.weight(1f)
@@ -287,7 +268,6 @@ private fun DeviceTypeCard(
                         MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             // Selection indicator
             if (isSelected) {
                 Icon(

@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.settings.ui
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -27,16 +26,12 @@ import mpdc4gsr.core.ui.components.settings.SettingsCard
 import mpdc4gsr.core.ui.components.settings.SettingsRow
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * Help & Support Screen - User guide and technical support
- */
 @Composable
 fun HelpScreen(
     onBackClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -47,7 +42,6 @@ fun HelpScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -70,7 +64,6 @@ fun HelpScreen(
                     lineHeight = 20.sp
                 )
             }
-
             // FAQ
             SettingsCard(
                 title = "Frequently Asked Questions",
@@ -91,7 +84,6 @@ fun HelpScreen(
                     answer = "Data is stored locally on your device in the configured storage location."
                 )
             }
-
             // Support Contact
             SettingsCard(
                 title = "Technical Support",
@@ -127,7 +119,6 @@ fun HelpScreen(
                     Text("Contact Support")
                 }
             }
-
             // Troubleshooting
             SettingsCard(
                 title = "Troubleshooting",
@@ -147,7 +138,6 @@ fun HelpScreen(
         }
     }
 }
-
 @Composable
 private fun FAQItem(
     question: String,
@@ -168,7 +158,6 @@ private fun FAQItem(
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun HelpScreenPreview() {

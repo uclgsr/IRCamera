@@ -1,7 +1,5 @@
 package com.mpdc4gsr.libunified.app.socket
-
 data class SocketFrameBean(
-
     val isMaxShow: Boolean,
     val isMinShow: Boolean,
     val isCenterShow: Boolean,
@@ -17,7 +15,6 @@ data class SocketFrameBean(
     val isMaxWarn: Boolean,
     val isMinWarn: Boolean,
     val isCenterWarn: Boolean,
-
     val isP1Show: Boolean,
     val p1X: Int,
     val p1Y: Int,
@@ -39,7 +36,6 @@ data class SocketFrameBean(
     val isP3MaxWarn: Boolean,
     val isP3MinWarn: Boolean,
     val isP3CenterWarn: Boolean,
-
     val isL1Show: Boolean,
     val l1StartX: Int,
     val l1StartY: Int,
@@ -85,7 +81,6 @@ data class SocketFrameBean(
     val isL3MaxWarn: Boolean,
     val isL3MinWarn: Boolean,
     val isL3CenterWarn: Boolean,
-
     val isR1Show: Boolean,
     val r1StartX: Int,
     val r1StartY: Int,
@@ -260,17 +255,13 @@ data class SocketFrameBean(
         isR3MinWarn = byteArray[251].toInt() and 0xff == 1,
         isR3CenterWarn = byteArray[252].toInt() and 0xff == 1,
     )
-
     companion object {
         private fun Boolean.openText(): String = if (this) "[ph][ph]" else "[ph][ph]"
-
         private fun Int.toCStr(): String =
             "${this / 10}${if (this % 10 == 0) "" else ".${this % 10}"}°C"
     }
-
     override fun toString(): String {
         val stringBuilder = StringBuilder()
-
         if (isMaxShow) {
             stringBuilder.append("[ph][ph][ph] ($maxX, $maxY) [ph][ph]${maxValue.toCStr()} [ph][ph]${isMaxWarn.openText()}\n")
         }
@@ -280,7 +271,6 @@ data class SocketFrameBean(
         if (isCenterShow) {
             stringBuilder.append("[ph][ph][ph] ($centerX, $centerY) [ph][ph]${centerValue.toCStr()} [ph][ph]${isCenterWarn.openText()}\n")
         }
-
         if (isP1Show) {
             stringBuilder.append("[ph]1 ($p1X, $p1Y) [ph][ph]${p1Value.toCStr()}\n")
         }
@@ -290,7 +280,6 @@ data class SocketFrameBean(
         if (isP3Show) {
             stringBuilder.append("[ph]3 ($p3X, $p3Y) [ph][ph]${p3Value.toCStr()}\n")
         }
-
         if (isL1Show) {
             stringBuilder.append("[ph]1 ($l1StartX, $l1StartY)-($l1EndX, $l1EndY) ")
             stringBuilder.append("[ph][ph][ph]${l1MinValue.toCStr()}($l1MinX, $l1MinY) [ph][ph][ph]${l1MaxValue.toCStr()}($l1MaxX, $l1MaxY) ")
@@ -306,7 +295,6 @@ data class SocketFrameBean(
             stringBuilder.append("[ph][ph][ph]${l3MinValue.toCStr()}($l3MinX, $l3MinY) [ph][ph][ph]${l3MaxValue.toCStr()}($l3MaxX, $l3MaxY) ")
             stringBuilder.append("[ph][ph][ph]${l3AveValue.toCStr()}\n")
         }
-
         if (isR1Show) {
             stringBuilder.append("[ph]1 ($r1StartX, $r1StartY)-($r1EndX, $r1EndY) ")
             stringBuilder.append("[ph][ph][ph]${r1MinValue.toCStr()}($r1MinX, $r1MinY) [ph][ph][ph]${r1MaxValue.toCStr()}($r1MaxX, $r1MaxY) ")

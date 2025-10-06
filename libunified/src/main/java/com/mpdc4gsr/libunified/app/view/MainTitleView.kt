@@ -1,8 +1,6 @@
 package com.mpdc4gsr.libunified.app.view
-
 import android.content.Context
 import android.util.AttributeSet
-
 class MainTitleView
 @JvmOverloads
 constructor(

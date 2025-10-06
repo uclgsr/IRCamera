@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,13 +22,10 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorChartLiteViewModel
-
 class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLiteViewModel>() {
-
     override fun createViewModel(): IRMonitorChartLiteViewModel {
         return viewModels<IRMonitorChartLiteViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRMonitorChartLiteViewModel) {
@@ -38,7 +34,6 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
         val showOverlay by viewModel.showOverlay.collectAsState()
         val currentTemp by viewModel.currentTemp.collectAsState()
         val lowTemp by viewModel.lowTemp.collectAsState()
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -130,9 +125,7 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
                                     )
                                 }
                             }
-
                             Spacer(modifier = Modifier.height(12.dp))
-
                             // Legend
                             Row(
                                 modifier = Modifier
@@ -157,9 +150,7 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
                                         fontSize = 10.sp
                                     )
                                 }
-
                                 Spacer(modifier = Modifier.width(16.dp))
-
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -177,7 +168,6 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
                                     )
                                 }
                             }
-
                             // Chart placeholder
                             Box(
                                 modifier = Modifier
@@ -197,7 +187,6 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
                             }
                         }
                     }
-
                     // Thermal image view area
                     Card(
                         modifier = Modifier

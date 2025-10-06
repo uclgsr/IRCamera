@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.view
-
 import android.content.Context
 import android.graphics.Color
 import android.os.Handler
@@ -25,10 +24,8 @@ import com.mpdc4gsr.module.thermalunified.chart.YValueFormatter
 import com.mpdc4gsr.module.thermalunified.utils.ChartTools
 import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.module.thermalunified.R as ThermalR
-
 class ChartMonitorView : LineChart, OnChartGestureListener {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }
-
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(
@@ -38,16 +35,13 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
     ) {
         initChart()
     }
-
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         mHandler.removeCallbacksAndMessages(null)
     }
-
     private val textColor by lazy { ContextCompat.getColor(context, LibR.color.chart_text) }
     private val axisChartColors by lazy { ContextCompat.getColor(context, LibR.color.chart_axis) }
     private val axisLine by lazy { ContextCompat.getColor(context, LibR.color.circle_white) }
-
     private fun initChart() {
         synchronized(this) {
             this.setTouchEnabled(true)
@@ -79,7 +73,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             l.form = Legend.LegendForm.CIRCLE
             l.textColor = textColor
             l.isEnabled = false
-
             val xAxis = this.xAxis
             xAxis.textColor = textColor
             xAxis.setDrawGridLines(false)
@@ -91,7 +84,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             xAxis.granularity = 1f
             xAxis.isGranularityEnabled = true
             xAxis.textSize = 8f
-
             val leftAxis = this.axisLeft
             leftAxis.textColor = textColor
             leftAxis.axisLineColor = 0x00000000
@@ -101,13 +93,10 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             leftAxis.setLabelCount(6, true)
             leftAxis.valueFormatter = YValueFormatter()
             leftAxis.textSize = 8f
-
             this.axisRight.isEnabled = false
         }
     }
-
     private var startTime = 0L
-
     fun addPointToChart(
         bean: ThermalEntity,
         timeType: Int = 1,
@@ -144,9 +133,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         volDataSet.addEntry(entity)
                         Log.w("123", ":$entity")
                     }
-
                     2 -> {
-
                         if (volDataSet == null) {
                             volDataSet = createSet(0, "line max temp")
                             lineData.addDataSet(volDataSet)
@@ -155,7 +142,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         val entity = Entry(x, bean.thermalMax)
                         entity.data = bean
                         volDataSet.addEntry(entity)
-
                         var secondDataSet = lineData.getDataSetByIndex(1)
                         if (secondDataSet == null) {
                             secondDataSet = createSet(1, "line min temp")
@@ -165,9 +151,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         secondEntity.data = bean
                         secondDataSet.addEntry(secondEntity)
                     }
-
                     else -> {
-
                         if (volDataSet == null) {
                             volDataSet = createSet(0, "fence max temp")
                             lineData.addDataSet(volDataSet)
@@ -175,7 +159,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         val entity = Entry(x, bean.thermalMax)
                         entity.data = bean
                         volDataSet.addEntry(entity)
-
                         var secondDataSet = lineData.getDataSetByIndex(1)
                         if (secondDataSet == null) {
                             secondDataSet = createSet(1, "fence min temp")
@@ -186,13 +169,11 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         secondDataSet.addEntry(secondEntity)
                     }
                 }
-
                 lineData.notifyDataChanged()
                 notifyDataSetChanged()
                 setVisibleXRangeMinimum(ChartTools.getMinimum(type = timeType) / 2)
                 setVisibleXRangeMaximum(ChartTools.getMaximum(type = timeType))
                 ChartTools.setX(this, timeType)
-
                 if ((highestVisibleX + ChartTools.getMinimum(timeType) / 2f) > xChartMax) {
                     moveViewToX(xChartMax)
                 }
@@ -206,7 +187,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             }
         }
     }
-
     private val bgChartColors =
         intArrayOf(
             R.drawable.bg_chart_fill,
@@ -225,7 +205,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             LibR.color.chart_point_min,
             LibR.color.chart_point_center,
         )
-
     private fun createSet(
         index: Int,
         label: String,
@@ -246,28 +225,22 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
         set.setDrawValues(false)
         return set
     }
-
     override fun onChartGestureStart(
         me: MotionEvent?,
         lastPerformedGesture: ChartTouchListener.ChartGesture?,
     ) {
     }
-
     override fun onChartGestureEnd(
         me: MotionEvent?,
         lastPerformedGesture: ChartTouchListener.ChartGesture?,
     ) {
     }
-
     override fun onChartLongPressed(me: MotionEvent?) {
     }
-
     override fun onChartDoubleTapped(me: MotionEvent?) {
     }
-
     override fun onChartSingleTapped(me: MotionEvent?) {
     }
-
     override fun onChartFling(
         me1: MotionEvent?,
         me2: MotionEvent?,
@@ -275,16 +248,13 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
         velocityY: Float,
     ) {
     }
-
     override fun onChartScale(
         me: MotionEvent?,
         scaleX: Float,
         scaleY: Float,
     ) {
-
         highlightValue(null)
     }
-
     override fun onChartTranslate(
         me: MotionEvent?,
         dX: Float,

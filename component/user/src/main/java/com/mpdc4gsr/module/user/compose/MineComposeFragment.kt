@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.user.compose
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -24,7 +23,6 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.utils.Constants
 import com.mpdc4gsr.module.user.viewmodel.MineFragmentViewModel
 import com.mpdc4gsr.libunified.R as RCore
-
 @Composable
 fun MineComposeFragment(
     viewModel: MineFragmentViewModel,
@@ -33,7 +31,6 @@ fun MineComposeFragment(
     val context = LocalContext.current
     val userProfile by viewModel.userProfile.collectAsState()
     val showWinterPoint by viewModel.showWinterPoint.collectAsState()
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -74,9 +71,7 @@ fun MineComposeFragment(
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.width(16.dp))
-
                 // User Info
                 Column(
                     modifier = Modifier.weight(1f)
@@ -87,14 +82,12 @@ fun MineComposeFragment(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-
                     Text(
                         text = if (userProfile.isLoggedIn) "Logged In" else "Guest",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
                 }
-
                 // Winter Easter Egg
                 if (showWinterPoint) {
                     IconButton(
@@ -109,7 +102,6 @@ fun MineComposeFragment(
                 }
             }
         }
-
         // Settings Options
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -132,14 +124,12 @@ fun MineComposeFragment(
                             .navigation(context)
                     }
                 )
-
                 ListItemComponent(
                     leftText = stringResource(RCore.string.set_clear_cache),
                     leftIcon = Icons.Default.Delete,
                     showLine = true,
                     onClick = { viewModel.clearCache() }
                 )
-
                 ListItemComponent(
                     leftText = stringResource(RCore.string.electronic_manual),
                     leftIcon = Icons.Default.Book,
@@ -151,7 +141,6 @@ fun MineComposeFragment(
                             .navigation(context)
                     }
                 )
-
                 ListItemComponent(
                     leftText = stringResource(RCore.string.app_question),
                     leftIcon = Icons.AutoMirrored.Filled.Help,
@@ -163,7 +152,6 @@ fun MineComposeFragment(
                             .navigation(context)
                     }
                 )
-
                 ListItemComponent(
                     leftText = stringResource(RCore.string.setting_feedback),
                     leftIcon = Icons.Default.Feedback,
@@ -172,7 +160,6 @@ fun MineComposeFragment(
                         // Feedback navigation
                     }
                 )
-
                 ListItemComponent(
                     leftText = stringResource(RCore.string.setting_unit),
                     leftIcon = Icons.Default.Settings,

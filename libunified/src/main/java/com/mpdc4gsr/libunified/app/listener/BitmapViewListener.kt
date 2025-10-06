@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.listener
-
 public interface BitmapViewListener {
     val viewX: Float
     val viewY: Float

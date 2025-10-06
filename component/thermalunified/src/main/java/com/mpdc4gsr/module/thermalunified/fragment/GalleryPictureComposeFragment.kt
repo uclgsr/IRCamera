@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.fragment
-
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -33,24 +32,19 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-
 class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
-
     override fun createViewModel(): GalleryViewModel {
         return viewModels<GalleryViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: GalleryViewModel) {
         val context = LocalContext.current
-
         // Observe ViewModel state
         val galleryItems by viewModel.galleryItems.collectAsStateWithLifecycle()
         val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
         val selectedItems by viewModel.selectedItems.collectAsStateWithLifecycle()
         val isSelectionMode by viewModel.isSelectionMode.collectAsStateWithLifecycle()
-
         LibUnifiedTheme {
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -69,7 +63,6 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         }
                     )
                 }
-
                 // Gallery content
                 Box(
                     modifier = Modifier.fillMaxSize()
@@ -78,13 +71,11 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         isLoading -> {
                             LoadingState()
                         }
-
                         galleryItems.isEmpty() -> {
                             EmptyGalleryState(
                                 onRefresh = { viewModel.refreshGallery() }
                             )
                         }
-
                         else -> {
                             PictureGrid(
                                 pictures = galleryItems,
@@ -110,7 +101,6 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @Composable
     private fun SelectionToolbar(
         selectedCount: Int,
@@ -139,7 +129,6 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -163,7 +152,6 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @Composable
     private fun LoadingState() {
         Box(
@@ -183,7 +171,6 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @Composable
     private fun EmptyGalleryState(
         onRefresh: () -> Unit
@@ -202,20 +189,17 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = "No Pictures Found",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = "Capture thermal images to see them here",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Button(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -224,7 +208,6 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @Composable
     private fun PictureGrid(
         pictures: List<GalleryViewModel.MediaItem>,
@@ -235,7 +218,6 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
     ) {
         // Adaptive grid columns based on screen size
         val columns = remember { mutableIntStateOf(3) }
-
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns.intValue),
             contentPadding = PaddingValues(8.dp),
@@ -253,7 +235,6 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @Composable
     private fun PictureGridItem(
         item: GalleryViewModel.MediaItem,
@@ -293,7 +274,6 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         .clip(RoundedCornerShape(12.dp)),
                     contentScale = ContentScale.Crop
                 )
-
                 // Thermal image overlay indicator
                 if (!item.isVideo) {
                     Card(
@@ -313,7 +293,6 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         )
                     }
                 }
-
                 // Selection indicator
                 if (isSelectionMode) {
                     Box(
@@ -348,7 +327,6 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         }
                     }
                 }
-
                 // Image info overlay
                 Card(
                     modifier = Modifier
@@ -383,7 +361,6 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     // Helper functions
     private fun previewPicture(context: android.content.Context, path: String) {
         try {
@@ -396,7 +373,6 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             // Handle error - maybe show a toast or use internal image viewer
         }
     }
-
     private fun shareSelectedImages(context: android.content.Context, selectedPaths: List<String>) {
         try {
             val uris = selectedPaths.map { path ->
@@ -406,7 +382,6 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     File(path)
                 )
             }
-
             val intent = Intent().apply {
                 if (uris.size == 1) {
                     action = Intent.ACTION_SEND
@@ -418,28 +393,23 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                 type = "image/*"
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-
             context.startActivity(Intent.createChooser(intent, "Share Images"))
         } catch (e: Exception) {
             // Handle error
         }
     }
-
     private fun exportSelectedImages(context: android.content.Context, selectedPaths: List<String>) {
         // Implementation for exporting images to external storage
         // This would typically involve copying files to a user-accessible location
     }
-
     private fun formatFileSize(bytes: Long): String {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()
         var unitIndex = 0
-
         while (size >= 1024 && unitIndex < units.size - 1) {
             size /= 1024
             unitIndex++
         }
-
         return "%.1f %s".format(size, units[unitIndex])
     }
 }

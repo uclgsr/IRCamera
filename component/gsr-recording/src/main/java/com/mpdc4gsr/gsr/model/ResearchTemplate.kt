@@ -1,5 +1,4 @@
 package com.mpdc4gsr.gsr.model
-
 data class ResearchTemplate(
     val id: String,
     val name: String,
@@ -22,25 +21,20 @@ data class ResearchTemplate(
         BEHAVIORAL_ANALYSIS,
         CUSTOM,
     }
-
     enum class SensorType {
         GSR,
         THERMAL_CAMERA,
         RGB_CAMERA,
     }
-
     enum class VideoResolution(val width: Int, val height: Int) {
         SD(720, 480),
         HD(1280, 720),
         FULL_HD(1920, 1080),
         UHD_4K(3840, 2160),
     }
-
     companion object {
-
         val PREDEFINED_TEMPLATES =
             listOf(
-
                 ResearchTemplate(
                     id = "stress_response_basic",
                     name = "Stress Response - Basic",
@@ -82,7 +76,6 @@ data class ResearchTemplate(
                     instructions = "Multi-modal stress response study:\n1. Attach GSR sensors\n2. Position thermal and RGB cameras\n3. Record 5min baseline → 10min stress task → 5min recovery",
                     icon = "",
                 ),
-
                 ResearchTemplate(
                     id = "cognitive_load_mental_tasks",
                     name = "Cognitive Load - Mental Tasks",
@@ -122,7 +115,6 @@ data class ResearchTemplate(
                     instructions = "Learning session with physiological monitoring:\n1. 10min instruction phase\n2. 15min practice phase\n3. 5min assessment phase\nMonitor engagement and cognitive load throughout.",
                     icon = "",
                 ),
-
                 ResearchTemplate(
                     id = "emotion_recognition_basic",
                     name = "Emotion Recognition - Basic",
@@ -165,7 +157,6 @@ data class ResearchTemplate(
                     instructions = "Comprehensive emotion recognition study:\n- RGB: facial expressions\n- Thermal: arousal patterns\n- GSR: autonomic responses\nPresent varied emotional stimuli and record multi-modal responses.",
                     icon = "",
                 ),
-
                 ResearchTemplate(
                     id = "physio_monitoring_baseline",
                     name = "Physiological Monitoring - Baseline",
@@ -184,7 +175,6 @@ data class ResearchTemplate(
                     instructions = "Long-term physiological baseline recording. Participant should remain in comfortable resting position. Monitor for consistent GSR patterns and thermal stability.",
                     icon = "",
                 ),
-
                 ResearchTemplate(
                     id = "behavioral_analysis_social",
                     name = "Behavioral Analysis - Social Interaction",
@@ -208,7 +198,6 @@ data class ResearchTemplate(
                     instructions = "Social interaction study with multi-modal monitoring:\n- RGB: behavioral coding\n- Thermal: arousal detection\n- GSR: stress/engagement\nRecord natural conversation or structured interaction tasks.",
                     icon = "",
                 ),
-
                 ResearchTemplate(
                     id = "custom_template",
                     name = "Custom Research Template",
@@ -227,15 +216,12 @@ data class ResearchTemplate(
                     icon = "",
                 ),
             )
-
         fun getTemplatesByCategory(category: TemplateCategory): List<ResearchTemplate> {
             return PREDEFINED_TEMPLATES.filter { it.category == category }
         }
-
         fun getTemplateById(id: String): ResearchTemplate? {
             return PREDEFINED_TEMPLATES.find { it.id == id }
         }
-
         fun getTemplatesWithSensor(sensorType: SensorType): List<ResearchTemplate> {
             return PREDEFINED_TEMPLATES.filter { it.sensors.contains(sensorType) }
         }

@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.matrix
-
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
@@ -13,9 +12,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.nio.charset.StandardCharsets
 import kotlin.experimental.and
-
 class GuideInterface {
-
     private val TAG = "guidecore"
     private val IR_WIDTH = 256
     private val IR_HEIGHT = 192
@@ -38,18 +35,14 @@ class GuideInterface {
     private var mIrDataCallback: IrDataCallback? = null
     private var mUsbBufferWriteThread: Thread? = null
     private var mUsbBufferReadThread: Thread? = null
-
     @Volatile
     private var mWriteThreadFlag = false
-
     @Volatile
     private var mReadThreadFlag = false
     private val mLock = Any()
-
     interface IrDataCallback {
         fun processIrData(yuv: ByteArray, temp: FloatArray)
     }
-
     private fun startUsbBufferWriteThread() {
         mWriteThreadFlag = true
         mUsbBufferWriteThread = Thread {
@@ -71,9 +64,7 @@ class GuideInterface {
         }
         mUsbBufferWriteThread!!.start()
     }
-
     var startTime = 0L
-
     private fun startUsbBufferReadThread() {
         mReadThreadFlag = true
         mUsbBufferReadThread = Thread {
@@ -99,7 +90,6 @@ class GuideInterface {
                         )
                     }
                     mNativeGuideCore!!.toFloatTempMatrix(mTempMatrixFloat, mTempMatrixByte)
-
                     if (mIrDataCallback != null) {
                         mIrDataCallback!!.processIrData(mYuv, mTempMatrixFloat)
                     }
@@ -110,7 +100,6 @@ class GuideInterface {
         }
         mUsbBufferReadThread!!.start()
     }
-
     private fun stopUsbBufferWriteThread() {
         if (mUsbBufferWriteThread != null) {
             mWriteThreadFlag = false
@@ -122,7 +111,6 @@ class GuideInterface {
             mUsbBufferWriteThread = null
         }
     }
-
     private fun stopUsbBufferReadThread() {
         if (mUsbBufferReadThread != null) {
             mReadThreadFlag = false
@@ -134,19 +122,16 @@ class GuideInterface {
             mUsbBufferReadThread = null
         }
     }
-
     private fun getParam(offset: Int, len: Int, index: Int): Byte {
         val param = ByteArray(len)
         synchronized(mLock) { System.arraycopy(mParam, offset, param, 0, len) }
         return param[index]
     }
-
     private fun getParam(offset: Int, len: Int): ByteArray {
         val param = ByteArray(len)
         synchronized(mLock) { System.arraycopy(mParam, offset, param, 0, len) }
         return param
     }
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     fun init(context: Context?, irDataCallback: IrDataCallback?): Int {
         mNativeGuideCore = NativeGuideCore()
@@ -163,7 +148,6 @@ class GuideInterface {
         startUsbBufferWriteThread()
         return ret
     }
-
     fun exit() {
         stopUsbBufferWriteThread()
         stopUsbBufferReadThread()
@@ -175,21 +159,18 @@ class GuideInterface {
             mNativeGuideCore = null
         }
     }
-
     fun shutter() {
         if (mGuideUsbManager == null) {
             return
         }
         mGuideUsbManager!!.shutter()
     }
-
     fun nuc() {
         if (mGuideUsbManager == null) {
             return
         }
         mGuideUsbManager!!.nuc()
     }
-
     fun changePalette(i: Int) {
         Log.d(TAG, "changePalette() called with: i = [$i]")
         if (mGuideUsbManager == null) {
@@ -200,14 +181,12 @@ class GuideInterface {
         }
         mGuideUsbManager!!.changePalette(i)
     }
-
     fun setDistance(distance: Float) {
         if (mGuideUsbManager == null) {
             return
         }
         mGuideUsbManager!!.setDistance(distance)
     }
-
     fun getDistance(): Float {
         if (mNativeGuideCore == null) {
             return (-1).toFloat()
@@ -215,7 +194,6 @@ class GuideInterface {
         val PARAM_INDEX_DISTANCE = 163
         return getParam(PARAM_INDEX_DISTANCE * 2, 1, 0) * 1.0f / 10
     }
-
     fun setBright(bright: Int) {
         if (mGuideUsbManager == null) {
             return
@@ -225,7 +203,6 @@ class GuideInterface {
         }
         mGuideUsbManager!!.setBright(bright)
     }
-
     fun getBright(): Int {
         if (mNativeGuideCore == null) {
             return -1
@@ -233,7 +210,6 @@ class GuideInterface {
         val PARAM_INDEX_BRIGHT = 164
         return getParam(PARAM_INDEX_BRIGHT * 2, 1, 0).toInt()
     }
-
     fun setContrast(contrast: Int) {
         if (mGuideUsbManager == null) {
             return
@@ -243,7 +219,6 @@ class GuideInterface {
         }
         mGuideUsbManager!!.setContrast(contrast)
     }
-
     fun getContrast(): Int {
         if (mNativeGuideCore == null) {
             return -1
@@ -251,27 +226,23 @@ class GuideInterface {
         val PARAM_INDEX_CONTRAST = 164
         return getParam(PARAM_INDEX_CONTRAST * 2, 2, 1).toInt()
     }
-
     fun yuv2Bitmap(bitmap: Bitmap?, yuv: ByteArray?) {
         if (mNativeGuideCore == null) {
             return
         }
         mNativeGuideCore!!.yuv2Bitmap(bitmap!!, yuv!!)
     }
-
     fun saveTempMatrix(path: String?) {
         synchronized(mLock) {
             FileUtils.saveFile(path ?: "", mTempMatrixByte ?: ByteArray(0))
         }
     }
-
     fun setRange(range: Int) {
         if (mGuideUsbManager == null) {
             return
         }
         mGuideUsbManager!!.setRange(range)
     }
-
     fun setEmiss(emiss: Int) {
         if (mGuideUsbManager == null) {
             return
@@ -281,7 +252,6 @@ class GuideInterface {
         }
         mGuideUsbManager!!.setEmiss(emiss)
     }
-
     fun getEmiss(): Int {
         if (mNativeGuideCore == null) {
             return -1
@@ -289,7 +259,6 @@ class GuideInterface {
         val PARAM_INDEX_EMISS = 162
         return getParam(PARAM_INDEX_EMISS * 2, 1, 0).toInt()
     }
-
     fun getFirmwareVersion(): String? {
         val PARAM_INDEX_ASIC_MAIN_VERSION = 32
         val DOT = "."
@@ -313,29 +282,24 @@ class GuideInterface {
             .append(HexDump.toHexString(bytes[4]))
         return asicVersion.toString()
     }
-
     fun getSN(): String {
         val PARAM_INDEX_SN = 39
         val bytes = getParam(PARAM_INDEX_SN * 2, 15)
         return String(bytes, StandardCharsets.US_ASCII)
     }
-
     fun getId(): String {
         val PARAM_INDEX_ID = 192
         val bytes = getParam(PARAM_INDEX_ID * 2, 17)
         return String(bytes, StandardCharsets.US_ASCII)
     }
-
     fun getShutterStatus(): Int {
         val PARAM_INDEX_SHUTTER_STATUS = 12
         return getParam(PARAM_INDEX_SHUTTER_STATUS * 2, 1, 0).toInt()
     }
-
     fun getImageStatus(): Int {
         val PARAM_INDEX_IMAGE_STATUS = 13
         return getParam(PARAM_INDEX_IMAGE_STATUS * 2, 1, 0).toInt()
     }
-
     fun upgrade(path: String?): FirmwareUpgradeResultCode? {
         if (mGuideUsbManager == null) {
             return FirmwareUpgradeResultCode.USB_DEVICE_ERROR

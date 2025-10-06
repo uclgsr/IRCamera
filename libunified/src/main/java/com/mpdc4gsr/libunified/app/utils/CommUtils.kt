@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.utils
-
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
@@ -9,9 +8,7 @@ import com.elvishew.xlog.XLog
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-
 object CommUtils {
-
     fun getAppName(): String {
         var msg = ""
         val context = ContextProvider.getContext()
@@ -27,19 +24,15 @@ object CommUtils {
         }
         return msg
     }
-
     // Additional compatibility methods
     private const val DATE_FORMAT_DEFAULT = "yyyy-MM-dd HH:mm:ss"
-
     fun getCurrentTimeString(): String {
         val formatter = SimpleDateFormat(DATE_FORMAT_DEFAULT, Locale.getDefault())
         return formatter.format(Date())
     }
-
     fun getAppStorageDir(context: Context): File {
         return context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: context.filesDir
     }
-
     fun createDirectory(dirPath: String): Boolean {
         val dir = File(dirPath)
         return if (!dir.exists()) {
@@ -48,7 +41,6 @@ object CommUtils {
             true
         }
     }
-
     fun formatFileSize(size: Long): String {
         if (size <= 0) return "0 B"
         val units = arrayOf("B", "KB", "MB", "GB", "TB")
@@ -59,11 +51,9 @@ object CommUtils {
             units[digitGroups]
         )
     }
-
     fun isValidString(str: String?): Boolean {
         return !str.isNullOrEmpty() && str.trim().isNotEmpty()
     }
-
     fun getFileExtension(fileName: String): String {
         return if (fileName.contains(".")) {
             fileName.substring(fileName.lastIndexOf(".") + 1)
@@ -71,7 +61,6 @@ object CommUtils {
             ""
         }
     }
-
     fun generateUniqueFileName(prefix: String, extension: String): String {
         val timestamp = System.currentTimeMillis()
         return "${prefix}_${timestamp}.${extension}"

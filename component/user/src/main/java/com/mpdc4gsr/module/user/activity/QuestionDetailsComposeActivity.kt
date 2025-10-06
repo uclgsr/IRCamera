@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.user.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,26 +16,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.QuestionDetailsViewModel
-
 class QuestionDetailsComposeActivity : BaseComposeActivity<QuestionDetailsViewModel>() {
-
     override fun createViewModel(): QuestionDetailsViewModel {
         return viewModels<QuestionDetailsViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: QuestionDetailsViewModel) {
         val question by viewModel.question.collectAsState()
         val answer by viewModel.answer.collectAsState()
-
         // Load question details from intent
         LaunchedEffect(Unit) {
             val questionText = intent.getStringExtra("question")
             val answerText = intent.getStringExtra("answer")
             viewModel.loadQuestionDetails(questionText, answerText)
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -81,7 +75,6 @@ class QuestionDetailsComposeActivity : BaseComposeActivity<QuestionDetailsViewMo
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-
                         Text(
                             text = question,
                             style = MaterialTheme.typography.bodyLarge,
@@ -89,7 +82,6 @@ class QuestionDetailsComposeActivity : BaseComposeActivity<QuestionDetailsViewMo
                         )
                     }
                 }
-
                 // Answer Card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -109,7 +101,6 @@ class QuestionDetailsComposeActivity : BaseComposeActivity<QuestionDetailsViewMo
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-
                         Text(
                             text = answer,
                             style = MaterialTheme.typography.bodyMedium,

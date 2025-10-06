@@ -1,8 +1,6 @@
 package com.mpdc4gsr.libunified.ir.utils
-
 import android.view.View
 import android.view.ViewStub
-
 object ViewStubUtils {
     fun showViewStub(viewStub: ViewStub?, isShow: Boolean, callback: ((view: View?) -> Unit)?) {
         if (viewStub != null) {

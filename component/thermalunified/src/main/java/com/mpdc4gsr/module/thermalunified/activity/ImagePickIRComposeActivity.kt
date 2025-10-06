@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,13 +25,10 @@ import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorThermalComposeFragme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 class ImagePickIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -41,7 +37,6 @@ class ImagePickIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var isCapturing by remember { mutableStateOf(false) }
         val recentImages = remember { getRecentImages() }
         val coroutineScope = rememberCoroutineScope()
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -121,14 +116,12 @@ class ImagePickIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             .fillMaxWidth()
                             .weight(0.6f)
                     )
-
                     // Capture mode selector
                     CaptureModeSelector(
                         selectedMode = captureMode,
                         onModeSelected = { captureMode = it },
                         modifier = Modifier.fillMaxWidth()
                     )
-
                     // Recent images gallery
                     RecentImagesSection(
                         images = recentImages,
@@ -153,7 +146,6 @@ class ImagePickIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
-
 @Composable
 private fun ThermalPreviewSection(
     isCapturing: Boolean,
@@ -180,7 +172,6 @@ private fun ThermalPreviewSection(
                 },
                 modifier = Modifier.fillMaxSize()
             )
-
             // Capture overlay
             if (isCapturing) {
                 Box(
@@ -214,7 +205,6 @@ private fun ThermalPreviewSection(
                     }
                 }
             }
-
             // Temperature overlay
             ThermalInfoOverlay(
                 modifier = Modifier
@@ -224,7 +214,6 @@ private fun ThermalPreviewSection(
         }
     }
 }
-
 @Composable
 private fun ThermalInfoOverlay(
     modifier: Modifier = Modifier
@@ -264,7 +253,6 @@ private fun ThermalInfoOverlay(
         }
     }
 }
-
 @Composable
 private fun CaptureModeSelector(
     selectedMode: String,
@@ -291,13 +279,11 @@ private fun CaptureModeSelector(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
             )
-
             val modes = listOf(
                 "single" to "Single Select",
                 "multiple" to "Multiple Select",
                 "burst" to "Burst Mode"
             )
-
             modes.forEach { (mode, label) ->
                 FilterChip(
                     onClick = { onModeSelected(mode) },
@@ -314,7 +300,6 @@ private fun CaptureModeSelector(
         }
     }
 }
-
 @Composable
 private fun RecentImagesSection(
     images: List<RecentImage>,
@@ -340,9 +325,7 @@ private fun RecentImagesSection(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -357,7 +340,6 @@ private fun RecentImagesSection(
         }
     }
 }
-
 @Composable
 private fun RecentImageItem(
     image: RecentImage,
@@ -395,7 +377,6 @@ private fun RecentImageItem(
                     modifier = Modifier.size(20.dp)
                 )
             }
-
             // Image info
             Column(
                 modifier = Modifier.weight(1f),
@@ -420,7 +401,6 @@ private fun RecentImageItem(
                     fontWeight = FontWeight.Bold
                 )
             }
-
             // Selection indicator
             if (isSelected) {
                 Icon(
@@ -442,7 +422,6 @@ private fun RecentImageItem(
         }
     }
 }
-
 // Data classes
 data class RecentImage(
     val id: String,
@@ -450,7 +429,6 @@ data class RecentImage(
     val timestamp: String,
     val maxTemp: Float
 )
-
 private fun getRecentImages(): List<RecentImage> {
     return listOf(
         RecentImage("1", "thermal_capture_001.jpg", "14:30:25", 45.2f),

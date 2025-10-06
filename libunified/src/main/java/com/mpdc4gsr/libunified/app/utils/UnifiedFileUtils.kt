@@ -1,14 +1,11 @@
 package com.mpdc4gsr.libunified.app.utils
-
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Environment
 import com.energy.iruvc.utils.CommonParams
 import java.io.File
 import java.io.FileOutputStream
-
 object UnifiedFileUtils {
-
     fun isFileExist(filePath: String): Boolean {
         if (UnifiedStringUtils.isBlank(filePath)) {
             return false
@@ -16,7 +13,6 @@ object UnifiedFileUtils {
         val file = File(filePath)
         return file.exists() && file.isFile
     }
-
     fun isDirectoryExist(dirPath: String): Boolean {
         if (UnifiedStringUtils.isBlank(dirPath)) {
             return false
@@ -24,7 +20,6 @@ object UnifiedFileUtils {
         val dir = File(dirPath)
         return dir.exists() && dir.isDirectory
     }
-
     fun createDirectory(dirPath: String): Boolean {
         if (UnifiedStringUtils.isBlank(dirPath)) {
             return false
@@ -36,7 +31,6 @@ object UnifiedFileUtils {
             true
         }
     }
-
     fun deleteDirectory(dirPath: String): Boolean {
         return try {
             val dir = File(dirPath)
@@ -45,7 +39,6 @@ object UnifiedFileUtils {
             false
         }
     }
-
     private fun deleteRecursively(file: File): Boolean {
         if (file.isDirectory) {
             file.listFiles()?.forEach { child ->
@@ -56,7 +49,6 @@ object UnifiedFileUtils {
         }
         return file.delete()
     }
-
     fun deleteFile(filePath: String): Boolean {
         return try {
             val file = File(filePath)
@@ -65,7 +57,6 @@ object UnifiedFileUtils {
             false
         }
     }
-
     fun getFileSize(filePath: String): Long {
         return try {
             val file = File(filePath)
@@ -74,7 +65,6 @@ object UnifiedFileUtils {
             0L
         }
     }
-
     fun readTextFile(filePath: String): String? {
         return try {
             File(filePath).readText()
@@ -82,7 +72,6 @@ object UnifiedFileUtils {
             null
         }
     }
-
     fun writeTextFile(filePath: String, content: String): Boolean {
         return try {
             File(filePath).writeText(content)
@@ -91,7 +80,6 @@ object UnifiedFileUtils {
             false
         }
     }
-
     fun appendTextFile(filePath: String, content: String): Boolean {
         return try {
             File(filePath).appendText(content)
@@ -100,30 +88,24 @@ object UnifiedFileUtils {
             false
         }
     }
-
     fun copyFile(sourcePath: String, destPath: String): Boolean {
         return try {
             val sourceFile = File(sourcePath)
             val destFile = File(destPath)
-
             // Create parent directories if they don't exist
             destFile.parentFile?.mkdirs()
-
             sourceFile.copyTo(destFile, overwrite = true)
             true
         } catch (e: Exception) {
             false
         }
     }
-
     fun getExternalStorageDirectory(): String {
         return Environment.getExternalStorageDirectory().absolutePath
     }
-
     fun getAppExternalFilesDir(context: Context, type: String? = null): String? {
         return context.getExternalFilesDir(type)?.absolutePath
     }
-
     fun saveBitmapToFile(
         bitmap: Bitmap,
         filePath: String,
@@ -133,7 +115,6 @@ object UnifiedFileUtils {
         return try {
             val file = File(filePath)
             file.parentFile?.mkdirs()
-
             FileOutputStream(file).use { fos ->
                 bitmap.compress(format, quality, fos)
             }
@@ -142,7 +123,6 @@ object UnifiedFileUtils {
             false
         }
     }
-
     @JvmStatic
     fun getY16SrcTypeByDataFlowMode(dataFlowMode: CommonParams.DataFlowMode): CommonParams.Y16ModePreviewSrcType {
         return when (dataFlowMode) {

@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.utils
-
 object WsCmdConstants {
     const val AR_COMMAND_IP: String = "127.0.0.1"
     const val AR_COMMAND_LOGIN: Int = 1

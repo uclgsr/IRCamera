@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.bean.json
-
 data class StatementJson(
     val content: Any,
     val createTime: String,

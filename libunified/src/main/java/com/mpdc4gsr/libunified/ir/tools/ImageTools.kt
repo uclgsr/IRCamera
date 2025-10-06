@@ -1,12 +1,10 @@
 package com.mpdc4gsr.libunified.ir.tools
-
 import androidx.annotation.ColorInt
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.utils.ByteUtils
 import com.mpdc4gsr.libunified.ir.tools.bean.SelectIndexBean
 import java.util.concurrent.LinkedBlockingQueue
-
 object ImageTools {
     fun readFrame(
         imageBytes: ByteArray,
@@ -18,10 +16,8 @@ object ImageTools {
             return
         }
         val selectBean = getTempIndex(tempBytes, max, min)
-
         bitmapFromRgbaGrey(bytes = imageBytes, bean = selectBean)
     }
-
     fun readFrame(
         imageBytes: ByteArray,
         tempBytes: ByteArray,
@@ -41,7 +37,6 @@ object ImageTools {
             minColor = minColor,
         )
     }
-
     private fun bitmapFromRgba(
         bytes: ByteArray,
         bean: SelectIndexBean,
@@ -85,7 +80,6 @@ object ImageTools {
             }
         }
     }
-
     private fun bitmapFromRgbaGrey(
         bytes: ByteArray,
         bean: SelectIndexBean,
@@ -106,7 +100,6 @@ object ImageTools {
                 r = bytes[i * 4].toInt() and 0xff
                 g = bytes[i * 4 + 1].toInt() and 0xff
                 b = bytes[i * 4 + 2].toInt() and 0xff
-
                 grey = (r * 0.3f).toInt() + (g * 0.59f).toInt() + (b * 0.11f).toInt()
                 bytes[i * 4] = grey.toByte()
                 bytes[i * 4 + 1] = grey.toByte()
@@ -115,7 +108,6 @@ object ImageTools {
             }
         }
     }
-
     private fun getTempIndex(
         bytes: ByteArray,
         max: Float,
@@ -138,14 +130,12 @@ object ImageTools {
         val minIndex: IntArray = minList.toIntArray()
         return SelectIndexBean(maxIndex, minIndex)
     }
-
     private fun readTempValue(bytes: ByteArray): Float {
         val data: ByteArray = with(ByteUtils) { bytes.descBytes() }
         val scale = 16
         val tempInt = with(ByteUtils) { bytesToInt(data) } / 4
         return (tempInt.toDouble() / scale.toDouble() - 273.15).toFloat()
     }
-
     fun dualReadFrame(
         imageBytes: ByteArray,
         tempBytes: ByteArray,
@@ -159,7 +149,6 @@ object ImageTools {
         }
         dualReplaceColor(imageBytes, tempBytes, max, min, maxColor, minColor)
     }
-
     @JvmStatic
     private fun dualReplaceColor(
         imageBytes: ByteArray,
@@ -182,11 +171,9 @@ object ImageTools {
                     data = tempBytes.copyOfRange(i * 2, i * 2 + 2)
                     value = readTempValue(data)
                     if (value > max || value < min) {
-
                         r = imageBytes[i * 4].toInt() and 0xff
                         g = imageBytes[i * 4 + 1].toInt() and 0xff
                         b = imageBytes[i * 4 + 2].toInt() and 0xff
-
                         grey = (r * 0.3f).toInt() + (g * 0.59f).toInt() + (b * 0.11f).toInt()
                         imageBytes[i * 4] = grey.toByte()
                         imageBytes[i * 4 + 1] = grey.toByte()
@@ -209,14 +196,12 @@ object ImageTools {
                     data = tempBytes.copyOfRange(i * 2, i * 2 + 2)
                     value = readTempValue(data)
                     if (value > max) {
-
                         imageBytes[i * 4] = maxR
                         imageBytes[i * 4 + 1] = maxG
                         imageBytes[i * 4 + 2] = maxB
                         imageBytes[i * 4 + 3] = maxA
                     }
                     if (value < min) {
-
                         imageBytes[i * 4] = minR
                         imageBytes[i * 4 + 1] = minG
                         imageBytes[i * 4 + 2] = minB

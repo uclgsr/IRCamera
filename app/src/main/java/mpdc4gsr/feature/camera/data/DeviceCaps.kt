@@ -1,7 +1,5 @@
 package mpdc4gsr.feature.camera.data
-
 import android.util.Size
-
 data class DeviceCaps(
     val supportsRaw: Boolean,
     val rawSize: Size,

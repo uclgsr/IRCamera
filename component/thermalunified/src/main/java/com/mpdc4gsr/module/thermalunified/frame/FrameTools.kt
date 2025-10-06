@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.frame
-
 import android.graphics.Bitmap
 import android.graphics.Rect
 import com.elvishew.xlog.XLog
@@ -13,7 +12,6 @@ import com.mpdc4gsr.libunified.ir.utils.IRImageHelp
 import com.mpdc4gsr.libunified.ir.utils.OpencvTools
 import java.io.IOException
 import java.nio.ByteBuffer
-
 class FrameTool {
     val imageWidth = 256
     val imageHeight = 192
@@ -23,14 +21,11 @@ class FrameTool {
     val temperatureBytes = ByteArray(srcTemperatureLen)
     private val imageRes = LibIRProcess.ImageRes_t()
     private var struct: FrameStruct = FrameStruct()
-
     private var maxLimit = -273f
     private var minLimit = -273f
     private var irImageHelp = IRImageHelp()
-
     private val supImageData = ByteArray(imageWidth * imageHeight * 4 * 4)
     private var dstArgbBytes: ByteArray? = null
-
     fun read(bytes: ByteArray) {
         try {
             val frame = ByteArray(bytes.size)
@@ -51,13 +46,11 @@ class FrameTool {
             XLog.e("Failed to read frame raw data: ${e.message}")
         }
     }
-
     fun initStruct(struct: FrameStruct) {
         this.struct = struct
         imageRes.width = imageWidth.toChar()
         imageRes.height = imageHeight.toChar()
     }
-
     fun initRotate(): ImageParams {
         var rotate = ImageParams.ROTATE_0
         when (struct.rotate) {
@@ -68,7 +61,6 @@ class FrameTool {
         }
         return rotate
     }
-
     fun getTempBytes(rotate: ImageParams = ImageParams.ROTATE_0): ByteArray {
         val tempBytes = ByteArray(srcTemperatureLen)
         val dstTempBytes = ByteArray(srcTemperatureLen)
@@ -81,7 +73,6 @@ class FrameTool {
                     CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
                     dstTempBytes,
                 )
-
             ImageParams.ROTATE_90 ->
                 LibIRProcess.rotateRight90(
                     tempBytes,
@@ -89,7 +80,6 @@ class FrameTool {
                     CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
                     dstTempBytes,
                 )
-
             ImageParams.ROTATE_180 ->
                 LibIRProcess.rotate180(
                     tempBytes,
@@ -97,12 +87,10 @@ class FrameTool {
                     CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
                     dstTempBytes,
                 )
-
             else -> System.arraycopy(temperatureBytes, 0, dstTempBytes, 0, srcTemperatureLen)
         }
         return dstTempBytes
     }
-
     fun getRotate90Temp(temperatureBytes: ByteArray): ByteArray {
         val tempBytes = ByteArray(temperatureBytes.size)
         val dstTempBytes = ByteArray(temperatureBytes.size)
@@ -118,7 +106,6 @@ class FrameTool {
         )
         return dstTempBytes
     }
-
     fun getScrPseudoColorScaledBitmap(
         pseudoColorMode: CommonParams.PseudoColorType = CommonParams.PseudoColorType.PSEUDO_3,
         max: Float = -273f,
@@ -140,7 +127,6 @@ class FrameTool {
         val maxRGB = IntArray(3)
         val minRGB = IntArray(3)
         if (customPseudoBean.isUseCustomPseudo) {
-
             LibIRProcess.convertYuyvMapToARGBPseudocolor(
                 imageBytesTemp,
                 pixNum.toLong(),
@@ -162,10 +148,8 @@ class FrameTool {
                 minRGB[2] = minColor and 0xFF
                 var j = 0
                 val argbBytesLength = imageWidth * imageHeight * 4
-
                 var index = 0
                 while (index < argbBytesLength) {
-
                     var temperature0: Float =
                         (
                                 (temperatureBytes[j].toInt() and 0xff) + (
@@ -222,7 +206,6 @@ class FrameTool {
                 )
             }
         }
-
         if ((struct.alarmBean.isHighOpen && struct.alarmBean.highTemp != Float.MAX_VALUE) ||
             (struct.alarmBean.isLowOpen && struct.alarmBean.lowTemp != Float.MIN_VALUE)
         ) {
@@ -237,7 +220,6 @@ class FrameTool {
             } catch (e: IOException) {
             }
         }
-
         argbBytesRotate(argbBytes, dstArgbBytes!!, rotate)
         val dstImageRes = getDstImageRes(rotate)
         var scrBitmap: Bitmap? = null
@@ -278,7 +260,6 @@ class FrameTool {
         }
         return scrBitmap
     }
-
     fun getBaseBitmap(rotate: ImageParams): Bitmap {
         val dstImageRes = getDstImageRes(rotate)
         val scrBitmap =
@@ -292,7 +273,6 @@ class FrameTool {
         }
         return scrBitmap
     }
-
     private fun getDstImageRes(rotate: ImageParams): LibIRProcess.ImageRes_t {
         val dstImageRes = LibIRProcess.ImageRes_t()
         if (rotate == ImageParams.ROTATE_270 || rotate == ImageParams.ROTATE_90) {
@@ -304,7 +284,6 @@ class FrameTool {
         }
         return dstImageRes
     }
-
     private fun argbBytesRotate(
         argbBytes: ByteArray,
         dstArgbBytes: ByteArray,
@@ -318,7 +297,6 @@ class FrameTool {
                     CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
                     dstArgbBytes,
                 )
-
             ImageParams.ROTATE_90 ->
                 LibIRProcess.rotateRight90(
                     argbBytes,
@@ -326,7 +304,6 @@ class FrameTool {
                     CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
                     dstArgbBytes,
                 )
-
             ImageParams.ROTATE_180 ->
                 LibIRProcess.rotate180(
                     argbBytes,
@@ -334,13 +311,10 @@ class FrameTool {
                     CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
                     dstArgbBytes,
                 )
-
             else -> System.arraycopy(argbBytes, 0, dstArgbBytes, 0, argbBytes.size)
         }
     }
-
     fun getSrcTemp(): LibIRTemp.TemperatureSampleResult {
-
         val irTemp = LibIRTemp(imageWidth, imageHeight)
         irTemp.setTempData(temperatureBytes)
         return irTemp.getTemperatureOfRect(Rect(0, 0, imageWidth, imageHeight))

@@ -1,5 +1,4 @@
 package mpdc4gsr.core.ui.components.settings
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-
 @Composable
 fun SettingsSection(
     title: String,
@@ -40,7 +38,6 @@ fun SettingsSection(
         }
     }
 }
-
 @Composable
 fun SettingsItem(
     title: String,
@@ -81,7 +78,6 @@ fun SettingsItem(
                     )
                 }
             }
-
             if (trailing != null) {
                 trailing()
             } else {
@@ -94,7 +90,6 @@ fun SettingsItem(
         }
     }
 }
-
 @Composable
 fun SwitchSettingsItem(
     title: String,
@@ -134,7 +129,6 @@ fun SwitchSettingsItem(
                     )
                 }
             }
-
             Switch(
                 checked = checked,
                 onCheckedChange = onCheckedChange
@@ -142,7 +136,6 @@ fun SwitchSettingsItem(
         }
     }
 }
-
 @Composable
 fun SliderSettingsItem(
     title: String,
@@ -188,7 +181,6 @@ fun SliderSettingsItem(
                         )
                     }
                 }
-
                 Text(
                     text = valueLabel(value),
                     style = MaterialTheme.typography.bodyMedium,
@@ -196,9 +188,7 @@ fun SliderSettingsItem(
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Slider(
                 value = value,
                 onValueChange = onValueChange,
@@ -209,7 +199,6 @@ fun SliderSettingsItem(
         }
     }
 }
-
 @Composable
 fun RadioButtonSettingsItem(
     title: String,
@@ -237,7 +226,6 @@ fun RadioButtonSettingsItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-
             options.forEach { option ->
                 Row(
                     modifier = Modifier
@@ -264,7 +252,6 @@ fun RadioButtonSettingsItem(
         }
     }
 }
-
 @Composable
 fun ActionSettingsItem(
     title: String,
@@ -305,7 +292,6 @@ fun ActionSettingsItem(
                     )
                 }
             }
-
             Button(
                 onClick = onAction,
                 colors = if (isDestructive) {
@@ -321,7 +307,6 @@ fun ActionSettingsItem(
         }
     }
 }
-
 @Composable
 fun SettingsCard(
     title: String,
@@ -363,7 +348,6 @@ fun SettingsCard(
         }
     }
 }
-
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDropdown(
@@ -375,7 +359,6 @@ fun SettingsDropdown(
     enabled: Boolean = true
 ) {
     var expanded by remember { mutableStateOf(false) }
-
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = label,
@@ -387,7 +370,6 @@ fun SettingsDropdown(
             },
             modifier = Modifier.padding(bottom = 4.dp)
         )
-
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { if (enabled) expanded = !expanded }
@@ -405,7 +387,6 @@ fun SettingsDropdown(
                     .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true),
                 colors = OutlinedTextFieldDefaults.colors()
             )
-
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
@@ -423,7 +404,6 @@ fun SettingsDropdown(
         }
     }
 }
-
 @Composable
 fun SettingsSlider(
     label: String,
@@ -460,7 +440,6 @@ fun SettingsSlider(
                 }
             )
         }
-
         Slider(
             value = value,
             onValueChange = onValueChange,
@@ -470,7 +449,6 @@ fun SettingsSlider(
         )
     }
 }
-
 @Composable
 fun SettingsToggle(
     label: String,
@@ -511,7 +489,6 @@ fun SettingsToggle(
                 )
             }
         }
-
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
@@ -519,7 +496,6 @@ fun SettingsToggle(
         )
     }
 }
-
 @Composable
 fun SettingsRow(
     label: String,

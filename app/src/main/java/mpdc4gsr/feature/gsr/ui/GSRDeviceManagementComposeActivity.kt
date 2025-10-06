@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.gsr.ui
-
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -25,29 +24,15 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.AppBaseViewModel
 
-/**
- * GSRDeviceManagementComposeActivity - Advanced GSR Device Management with Compose
- *
- * Comprehensive GSR device management interface featuring:
- * - Real-time GSR device discovery and connection monitoring
- * - Device health diagnostics with battery level and signal quality
- * - Bulk device operations and configuration management
- * - Device calibration wizard with step-by-step guidance
- * - Historical connection logs and performance analytics
- * - Advanced troubleshooting tools and device diagnostics
- */
 class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
-
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, GSRDeviceManagementComposeActivity::class.java))
         }
     }
-
     override fun createViewModel(): AppBaseViewModel {
         return viewModels<AppBaseViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: AppBaseViewModel) {
@@ -56,7 +41,6 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
         var selectedDevice by remember { mutableStateOf<GSRDeviceInfo?>(null) }
         var showDeviceDetails by remember { mutableStateOf(false) }
         var showBulkActions by remember { mutableStateOf(false) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -108,7 +92,6 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                 )
             }
         }
-
         if (showDeviceDetails && selectedDevice != null) {
             DeviceDetailsDialog(
                 device = selectedDevice!!,
@@ -119,7 +102,6 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                 }
             )
         }
-
         if (showBulkActions) {
             BulkActionsDialog(
                 onDismiss = { showBulkActions = false },
@@ -131,7 +113,6 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
         }
     }
 }
-
 @Composable
 private fun GSRDeviceManagementContent(
     isScanning: Boolean,
@@ -153,7 +134,6 @@ private fun GSRDeviceManagementContent(
             isScanning = isScanning,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         // Connected Devices Section
         Text(
             text = "Connected Devices",
@@ -161,14 +141,12 @@ private fun GSRDeviceManagementContent(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 12.dp)
         )
-
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.weight(1f)
         ) {
             val connectedDevices = getMockGSRDevices().filter { it.status == "connected" }
             val availableDevices = getMockGSRDevices().filter { it.status != "connected" }
-
             items(connectedDevices) { device ->
                 GSRDeviceCard(
                     device = device,
@@ -191,7 +169,6 @@ private fun GSRDeviceManagementContent(
                     }
                 )
             }
-
             if (availableDevices.isNotEmpty()) {
                 item {
                     Text(
@@ -201,7 +178,6 @@ private fun GSRDeviceManagementContent(
                         modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
                     )
                 }
-
                 items(availableDevices) { device ->
                     GSRDeviceCard(
                         device = device,
@@ -228,7 +204,6 @@ private fun GSRDeviceManagementContent(
         }
     }
 }
-
 @Composable
 private fun DeviceStatusOverview(
     connectedDevices: Int,
@@ -255,7 +230,6 @@ private fun DeviceStatusOverview(
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
-
                 if (isScanning) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
@@ -263,9 +237,7 @@ private fun DeviceStatusOverview(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -289,7 +261,6 @@ private fun DeviceStatusOverview(
         }
     }
 }
-
 @Composable
 private fun DeviceStatusItem(
     label: String,
@@ -314,7 +285,6 @@ private fun DeviceStatusItem(
         )
     }
 }
-
 @Composable
 private fun GSRDeviceCard(
     device: GSRDeviceInfo,
@@ -355,7 +325,6 @@ private fun GSRDeviceCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
                 // Status indicator
                 Surface(
                     shape = RoundedCornerShape(12.dp),
@@ -370,9 +339,7 @@ private fun GSRDeviceCard(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(12.dp))
-
             // Device metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -394,9 +361,7 @@ private fun GSRDeviceCard(
                     icon = Icons.Default.Timeline
                 )
             }
-
             Spacer(modifier = Modifier.height(12.dp))
-
             // Device actions
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -413,7 +378,6 @@ private fun GSRDeviceCard(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Details")
                 }
-
                 if (device.status == "connected") {
                     Button(
                         onClick = onDisconnect,
@@ -448,7 +412,6 @@ private fun GSRDeviceCard(
         }
     }
 }
-
 @Composable
 private fun DeviceMetricItem(
     label: String,
@@ -478,7 +441,6 @@ private fun DeviceMetricItem(
         )
     }
 }
-
 @Composable
 private fun DeviceDetailsDialog(
     device: GSRDeviceInfo,
@@ -500,7 +462,6 @@ private fun DeviceDetailsDialog(
                 DeviceDetailItem("Signal Strength", "${device.signalStrength} dBm")
                 DeviceDetailItem("Sampling Rate", "${device.samplingRate} Hz")
                 DeviceDetailItem("Last Seen", device.lastSeen)
-
                 if (device.status == "connected") {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
@@ -529,7 +490,6 @@ private fun DeviceDetailsDialog(
         }
     )
 }
-
 @Composable
 private fun DeviceDetailItem(
     label: String,
@@ -553,7 +513,6 @@ private fun DeviceDetailItem(
         )
     }
 }
-
 @Composable
 private fun BulkActionsDialog(
     onDismiss: () -> Unit,
@@ -566,7 +525,6 @@ private fun BulkActionsDialog(
             Column {
                 Text("Select an action to perform on all devices:")
                 Spacer(modifier = Modifier.height(16.dp))
-
                 listOf(
                     "Disconnect All" to "disconnect_all",
                     "Update Firmware" to "update_firmware",
@@ -589,7 +547,6 @@ private fun BulkActionsDialog(
         }
     )
 }
-
 private fun getDeviceStatusColor(status: String) = when (status) {
     "connected" -> Color(0xFF4CAF50)
     "connecting" -> Color(0xFFFF9800)
@@ -597,14 +554,12 @@ private fun getDeviceStatusColor(status: String) = when (status) {
     "disconnected" -> Color(0xFF9E9E9E)
     else -> Color(0xFFE53E3E)
 }
-
 private fun getBatteryIcon(batteryLevel: Int) = when {
     batteryLevel > 75 -> Icons.Default.BatteryFull
     batteryLevel > 50 -> Icons.Default.Battery6Bar
     batteryLevel > 25 -> Icons.Default.Battery3Bar
     else -> Icons.Default.Battery1Bar
 }
-
 data class GSRDeviceInfo(
     val name: String,
     val deviceId: String,
@@ -614,7 +569,6 @@ data class GSRDeviceInfo(
     val samplingRate: Int,
     val lastSeen: String
 )
-
 private fun getMockGSRDevices() = listOf(
     GSRDeviceInfo("Shimmer3 GSR+ #001", "shimmer_001", "connected", 89, -42, 128, "Just now"),
     GSRDeviceInfo("Shimmer3 GSR+ #002", "shimmer_002", "connected", 76, -38, 256, "2 min ago"),

@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.network.ui
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,7 +15,6 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-
 data class PairableDevice(
     val id: String,
     val name: String,
@@ -26,14 +24,12 @@ data class PairableDevice(
     val signalStrength: Int = 0, // 0-100
     val batteryLevel: Int? = null
 )
-
 enum class DeviceType {
     THERMAL_CAMERA,
     GSR_SENSOR,
     RGB_CAMERA,
     BLUETOOTH_DEVICE
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DevicePairingScreen(
@@ -42,7 +38,6 @@ fun DevicePairingScreen(
 ) {
     var isScanning by remember { mutableStateOf(false) }
     var devices by remember { mutableStateOf(getSampleDevices()) }
-
     IRCameraTheme {
         Column(
             modifier = Modifier
@@ -71,7 +66,6 @@ fun DevicePairingScreen(
                     }
                 )
             }
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -103,7 +97,6 @@ fun DevicePairingScreen(
                         }
                     }
                 }
-
                 // Instructions
                 Card(
                     modifier = Modifier
@@ -129,7 +122,6 @@ fun DevicePairingScreen(
                         )
                     }
                 }
-
                 // Device List
                 Text(
                     text = "Available Devices",
@@ -138,7 +130,6 @@ fun DevicePairingScreen(
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -153,7 +144,6 @@ fun DevicePairingScreen(
         }
     }
 }
-
 @Composable
 fun DevicePairingItem(
     device: PairableDevice,
@@ -184,9 +174,7 @@ fun DevicePairingItem(
                 },
                 modifier = Modifier.size(32.dp)
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             // Device Info
             Column(
                 modifier = Modifier.weight(1f)
@@ -197,7 +185,6 @@ fun DevicePairingItem(
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -206,7 +193,6 @@ fun DevicePairingItem(
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                     )
-
                     if (device.signalStrength > 0) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(
@@ -221,7 +207,6 @@ fun DevicePairingItem(
                             modifier = Modifier.size(16.dp)
                         )
                     }
-
                     device.batteryLevel?.let { battery ->
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(
@@ -243,7 +228,6 @@ fun DevicePairingItem(
                     }
                 }
             }
-
             // Pair Button
             when {
                 device.isConnected -> {
@@ -254,7 +238,6 @@ fun DevicePairingItem(
                         modifier = Modifier.size(24.dp)
                     )
                 }
-
                 device.isPairing -> {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
@@ -262,7 +245,6 @@ fun DevicePairingItem(
                         strokeWidth = 2.dp
                     )
                 }
-
                 else -> {
                     OutlinedButton(
                         onClick = onPair,
@@ -277,7 +259,6 @@ fun DevicePairingItem(
         }
     }
 }
-
 private fun getSampleDevices() = listOf(
     PairableDevice(
         id = "TC001-A5B2C1",
@@ -306,7 +287,6 @@ private fun getSampleDevices() = listOf(
         batteryLevel = 89
     )
 )
-
 @Preview(showBackground = true)
 @Composable
 fun DevicePairingScreenPreview() {

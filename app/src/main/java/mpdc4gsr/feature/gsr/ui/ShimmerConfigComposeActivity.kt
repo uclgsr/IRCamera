@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.gsr.ui
-
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -28,36 +27,21 @@ import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.feature.gsr.presentation.ShimmerConfigViewModel
 import mpdc4gsr.feature.gsr.presentation.ShimmerConfigViewModelFactory
 
-/**
- * ShimmerConfigComposeActivity - Modern Shimmer Device Configuration with Compose
- *
- * Advanced Shimmer3 GSR+ device configuration interface with:
- * - Real-time device discovery and connection management
- * - Interactive configuration panels for sampling rates and sensors
- * - Live device status monitoring with visual indicators
- * - Calibration wizard with step-by-step guidance
- * - Advanced sensor configuration (GSR range, PPG channels)
- * - Firmware update management and device diagnostics
- */
 class ShimmerConfigComposeActivity : ComponentActivity() {
-
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, ShimmerConfigComposeActivity::class.java))
         }
     }
-
     private val viewModel: ShimmerConfigViewModel by viewModels {
         ShimmerConfigViewModelFactory(application, this)
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Content(viewModel)
         }
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun Content(viewModel: ShimmerConfigViewModel) {
@@ -65,7 +49,6 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
         var isScanning by remember { mutableStateOf(false) }
         var selectedDevice by remember { mutableStateOf<DeviceInfo?>(null) }
         var showConfigDialog by remember { mutableStateOf(false) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -113,7 +96,6 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
                 )
             }
         }
-
         if (showConfigDialog && selectedDevice != null) {
             DeviceConfigurationDialog(
                 device = selectedDevice!!,
@@ -126,7 +108,6 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
         }
     }
 }
-
 @Composable
 private fun ShimmerConfigContent(
     isScanning: Boolean,
@@ -147,7 +128,6 @@ private fun ShimmerConfigContent(
             isScanning = isScanning,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         // Device List
         Text(
             text = "Available Devices",
@@ -155,7 +135,6 @@ private fun ShimmerConfigContent(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 12.dp)
         )
-
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.weight(1f)
@@ -165,7 +144,6 @@ private fun ShimmerConfigContent(
                 DeviceInfo("shimmer_002", "Shimmer3 GSR+ #002", "Shimmer3", -62, true),
                 DeviceInfo("shimmer_003", "Shimmer3 GSR+ #003", "Shimmer3", -38, true)
             )
-
             items(mockDevices) { device ->
                 DeviceCard(
                     device = device,
@@ -186,7 +164,6 @@ private fun ShimmerConfigContent(
                 )
             }
         }
-
         // Selected Device Configuration Panel
         selectedDevice?.let { device ->
             SelectedDevicePanel(
@@ -197,7 +174,6 @@ private fun ShimmerConfigContent(
         }
     }
 }
-
 @Composable
 private fun ScanningStatusCard(
     isScanning: Boolean,
@@ -231,7 +207,6 @@ private fun ScanningStatusCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             if (isScanning) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
@@ -247,7 +222,6 @@ private fun ScanningStatusCard(
         }
     }
 }
-
 @Composable
 private fun DeviceCard(
     device: DeviceInfo,
@@ -285,7 +259,6 @@ private fun DeviceCard(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-
                     // Status and signal strength
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -311,9 +284,7 @@ private fun DeviceCard(
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-
                         Spacer(modifier = Modifier.width(12.dp))
-
                         // Signal strength
                         Icon(
                             Icons.Default.Wifi,
@@ -334,7 +305,6 @@ private fun DeviceCard(
                         )
                     }
                 }
-
                 IconButton(onClick = onSelect) {
                     Icon(
                         if (isSelected) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
@@ -342,10 +312,8 @@ private fun DeviceCard(
                     )
                 }
             }
-
             if (isSelected) {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
-
                 // Device actions
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -362,7 +330,6 @@ private fun DeviceCard(
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Connect")
                     }
-
                     Button(
                         onClick = onConfigure,
                         modifier = Modifier.weight(1f)
@@ -380,7 +347,6 @@ private fun DeviceCard(
         }
     }
 }
-
 @Composable
 private fun SelectedDevicePanel(
     device: DeviceInfo,
@@ -402,20 +368,17 @@ private fun SelectedDevicePanel(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-
             Text(
                 text = device.name,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium
             )
-
             Text(
                 text = "Status: ${device.deviceType.replaceFirstChar { it.uppercaseChar() }}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-
             Button(
                 onClick = onConfigure,
                 modifier = Modifier.fillMaxWidth()
@@ -431,7 +394,6 @@ private fun SelectedDevicePanel(
         }
     }
 }
-
 @Composable
 private fun DeviceConfigurationDialog(
     device: DeviceInfo,
@@ -441,7 +403,6 @@ private fun DeviceConfigurationDialog(
     var samplingRate by remember { mutableStateOf(128f) }
     var gsrRange by remember { mutableStateOf("Auto") }
     var enablePPG by remember { mutableStateOf(true) }
-
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
@@ -465,13 +426,11 @@ private fun DeviceConfigurationDialog(
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
                 Text(
                     text = "GSR Range",
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically

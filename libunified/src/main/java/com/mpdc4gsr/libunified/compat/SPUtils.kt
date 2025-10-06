@@ -1,20 +1,12 @@
 package com.mpdc4gsr.libunified.compat
-
 import android.content.Context
 import android.content.SharedPreferences
 
-/**
- * AndroidX alternative to utilcode SPUtils
- * Provides a simple SharedPreferences wrapper without external dependencies
- */
 class SPUtils private constructor(private val prefs: SharedPreferences) {
-
     companion object {
         @Volatile
         private var defaultInstance: SPUtils? = null
-
         private val namedInstances = mutableMapOf<String, SPUtils>()
-
         @JvmStatic
         fun getInstance(): SPUtils {
             return defaultInstance ?: synchronized(this) {
@@ -26,7 +18,6 @@ class SPUtils private constructor(private val prefs: SharedPreferences) {
                 ).also { defaultInstance = it }
             }
         }
-
         @JvmStatic
         fun getInstance(name: String): SPUtils {
             return namedInstances[name] ?: synchronized(this) {
@@ -41,7 +32,6 @@ class SPUtils private constructor(private val prefs: SharedPreferences) {
             }
         }
     }
-
     fun put(key: String, value: Any?) {
         val editor = prefs.edit()
         when (value) {
@@ -54,35 +44,27 @@ class SPUtils private constructor(private val prefs: SharedPreferences) {
         }
         editor.apply()
     }
-
     fun getString(key: String, defaultValue: String = ""): String {
         return prefs.getString(key, defaultValue) ?: defaultValue
     }
-
     fun getInt(key: String, defaultValue: Int = 0): Int {
         return prefs.getInt(key, defaultValue)
     }
-
     fun getBoolean(key: String, defaultValue: Boolean = false): Boolean {
         return prefs.getBoolean(key, defaultValue)
     }
-
     fun getFloat(key: String, defaultValue: Float = 0f): Float {
         return prefs.getFloat(key, defaultValue)
     }
-
     fun getLong(key: String, defaultValue: Long = 0L): Long {
         return prefs.getLong(key, defaultValue)
     }
-
     fun contains(key: String): Boolean {
         return prefs.contains(key)
     }
-
     fun remove(key: String) {
         prefs.edit().remove(key).apply()
     }
-
     fun clear() {
         prefs.edit().clear().apply()
     }

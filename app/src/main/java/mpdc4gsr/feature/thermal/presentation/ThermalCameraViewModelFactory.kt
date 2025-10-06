@@ -1,9 +1,7 @@
 package mpdc4gsr.feature.thermal.presentation
-
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-
 class ThermalCameraViewModelFactory(
     private val application: Application
 ) : ViewModelProvider.Factory {

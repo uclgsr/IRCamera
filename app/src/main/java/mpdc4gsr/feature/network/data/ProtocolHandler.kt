@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.network.data
-
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -7,10 +6,6 @@ import mpdc4gsr.core.utils.ErrorHandler
 import mpdc4gsr.core.data.TimeSyncManager
 import mpdc4gsr.core.data.utils.TimeManager
 
-/**
- * Handles protocol messages according to the standardized networking specification.
- * Processes incoming commands from PC and generates appropriate responses.
- */
 class ProtocolHandler(
     private val context: Context,
     private val networkServer: NetworkServer
@@ -18,55 +13,41 @@ class ProtocolHandler(
     companion object {
         private const val TAG = "ProtocolHandler"
     }
-
     private val timeManager = TimeManager.getInstance(context)
     private var timeSyncManager: TimeSyncManager? = null
-
     // Command callback interfaces
     interface CommandHandler {
         suspend fun onStartRecording(sessionId: String): CommandResult
         suspend fun onStopRecording(sessionId: String): CommandResult
         suspend fun onSyncRequest(pcTimestamp: Long): SyncResult
     }
-
     // Extended interface for cases that need configuration and client address
     interface CommandCallback {
         suspend fun onStartRecording(sessionId: String, configuration: org.json.JSONObject): Boolean
         suspend fun onStopRecording(): Boolean
         suspend fun onSyncRequest(pcAddress: String): Boolean
     }
-
     data class CommandResult(
         val success: Boolean,
         val message: String = "",
         val data: Map<String, String> = emptyMap()
     )
-
     data class SyncResult(
         val success: Boolean,
         val phoneTimestamp: Long = 0L,
         val offsetNs: Long = 0L
     )
-
     private var commandHandler: CommandHandler? = null
-
     fun setCommandHandler(handler: CommandHandler) {
         commandHandler = handler
     }
 
-    /**
-     * Set the TimeSyncManager for enhanced sync handling
-     */
     fun setTimeSyncManager(syncManager: TimeSyncManager?) {
         timeSyncManager = syncManager
     }
 
-    /**
-     * Process incoming protocol messages and return appropriate responses
-     */
     suspend fun processMessage(message: Protocol.ProtocolMessage): String? {
         AppLogger.d(TAG, "Processing protocol message: ${message.type}")
-
         return when (message.type) {
             Protocol.MSG_SYNC_REQUEST -> handleSyncRequest(message)
             Protocol.MSG_SYNC_RESULT -> handleSyncResult(message)
@@ -78,7 +59,6 @@ class ProtocolHandler(
             }
         }
     }
-
     private suspend fun handleSyncRequest(message: Protocol.ProtocolMessage): String {
         return try {
             val pcTimestamp = message.parameters["t_pc"]?.toLong()
@@ -146,9 +126,6 @@ class ProtocolHandler(
         }
     }
 
-    /**
-     * Handle SYNC_RESULT message from PC containing calculated offset and RTT
-     */
     private suspend fun handleSyncResult(message: Protocol.ProtocolMessage): String? {
         return try {
             val syncManager = timeSyncManager
@@ -156,18 +133,15 @@ class ProtocolHandler(
                 AppLogger.w(TAG, "No TimeSyncManager available for SYNC_RESULT")
                 return null // No response needed for SYNC_RESULT
             }
-
             val t1 = message.parameters["t1"]?.toLong()
             val t2 = message.parameters["t2"]?.toLong()
             val t3 = message.parameters["t3"]?.toLong()
             val offset = message.parameters["offset"]?.toLong()
             val rtt = message.parameters["rtt"]?.toLong()
-
             if (t1 == null || t2 == null || t3 == null || offset == null || rtt == null) {
                 AppLogger.w(TAG, "SYNC_RESULT missing required parameters")
                 return null
             }
-
             // Complete the sync calculation with data from PC
             try {
                 syncManager.completeSyncCalculation(t1, t2, t3, offset, rtt, 0)
@@ -175,14 +149,12 @@ class ProtocolHandler(
             } catch (e: Exception) {
                 AppLogger.w(TAG, "TimeSyncManager completeSyncCalculation failed", e)
             }
-
             null // No response needed for SYNC_RESULT
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error handling sync result", e)
             null
         }
     }
-
     private suspend fun handleStartRecord(message: Protocol.ProtocolMessage): String {
         return try {
             val sessionId = message.parameters["session_id"]
@@ -225,7 +197,6 @@ class ProtocolHandler(
             )
         }
     }
-
     private suspend fun handleStopRecord(message: Protocol.ProtocolMessage): String {
         return try {
             val sessionId = message.parameters["session_id"]
@@ -269,35 +240,22 @@ class ProtocolHandler(
         }
     }
 
-    /**
-     * Send a GSR data update to the PC
-     */
     suspend fun sendGsrData(timestamp: Long, value: Double): Boolean {
         val message = Protocol.createDataGsrMessage(timestamp, value)
         return networkServer.sendMessage(message)
     }
 
-    /**
-     * Send a thermal/RGB frame to the PC
-     */
     suspend fun sendFrame(frameType: String, timestamp: Long, frameData: ByteArray): Boolean {
         val header = "${Protocol.MSG_FRAME} type=$frameType ts=$timestamp size=${frameData.size}"
         return networkServer.sendBinaryData(header, frameData)
     }
 
-    /**
-     * Start live preview streaming to PC
-     * This integrates with the existing PreviewStreamer but sends protocol messages
-     */
     suspend fun enablePreviewStreaming() {
         // Note: This would integrate with existing preview streaming infrastructure
         // For now, log that protocol-based streaming is enabled
         AppLogger.i(TAG, "Protocol-based preview streaming enabled")
     }
 
-    /**
-     * Stop live preview streaming
-     */
     suspend fun disablePreviewStreaming() {
         AppLogger.i(TAG, "Protocol-based preview streaming disabled")
     }

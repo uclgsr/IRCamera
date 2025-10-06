@@ -1,20 +1,15 @@
 package com.mpdc4gsr.module.thermalunified.stubs
-
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-
 class TipGuideDialog : DialogFragment() {
-
     var closeEvent: ((Boolean) -> Unit)? = null
-
     companion object {
         fun newInstance(): TipGuideDialog {
             return TipGuideDialog()
         }
     }
-
     override fun onCreateDialog(savedInstanceState: Bundle?): android.app.Dialog {
         return AlertDialog.Builder(requireContext())
             .setTitle("Guide")
@@ -28,17 +23,13 @@ class TipGuideDialog : DialogFragment() {
             .create()
     }
 }
-
 class TipPreviewDialog : DialogFragment() {
-
     var closeEvent: ((Boolean) -> Unit)? = null
-
     companion object {
         fun newInstance(): TipPreviewDialog {
             return TipPreviewDialog()
         }
     }
-
     override fun onCreateDialog(savedInstanceState: Bundle?): android.app.Dialog {
         return AlertDialog.Builder(requireContext())
             .setTitle("Preview Tip")
@@ -52,28 +43,23 @@ class TipPreviewDialog : DialogFragment() {
             .create()
     }
 }
-
 class TipObserveDialog {
     class Builder(private val context: Context) {
         private var title: String = "Tip"
         private var message: String = ""
         private var cancelListener: ((Boolean) -> Unit)? = null
-
         fun setTitle(resId: Int): Builder {
             this.title = context.getString(resId)
             return this
         }
-
         fun setMessage(resId: Int): Builder {
             this.message = context.getString(resId)
             return this
         }
-
         fun setCancelListener(listener: (Boolean) -> Unit): Builder {
             this.cancelListener = listener
             return this
         }
-
         fun create(): TipObserveDialog = TipObserveDialog().apply {
             this.context = this@Builder.context
             this.title = this@Builder.title
@@ -81,12 +67,10 @@ class TipObserveDialog {
             this.cancelListener = this@Builder.cancelListener
         }
     }
-
     private lateinit var context: Context
     private var title: String = ""
     private var message: String = ""
     private var cancelListener: ((Boolean) -> Unit)? = null
-
     fun show() {
         val dialog = AlertDialog.Builder(context)
             .setTitle(title)
@@ -98,38 +82,31 @@ class TipObserveDialog {
                 cancelListener?.invoke(true)
             }
             .create()
-
         dialog.show()
     }
 }
-
 class TipDialog {
     class Builder(private val context: Context) {
         private var title: String = "Tip"
         private var message: String = ""
         private var positiveListener: (() -> Unit)? = null
         private var negativeListener: (() -> Unit)? = null
-
         fun setTitle(resId: Int): Builder {
             this.title = context.getString(resId)
             return this
         }
-
         fun setMessage(resId: Int): Builder {
             this.message = context.getString(resId)
             return this
         }
-
         fun setPositiveListener(resId: Int, listener: () -> Unit): Builder {
             this.positiveListener = listener
             return this
         }
-
         fun setNegativeListener(resId: Int, listener: () -> Unit): Builder {
             this.negativeListener = listener
             return this
         }
-
         fun create(): TipDialog = TipDialog().apply {
             this.context = this@Builder.context
             this.title = this@Builder.title
@@ -138,13 +115,11 @@ class TipDialog {
             this.negativeListener = this@Builder.negativeListener
         }
     }
-
     private lateinit var context: Context
     private var title: String = ""
     private var message: String = ""
     private var positiveListener: (() -> Unit)? = null
     private var negativeListener: (() -> Unit)? = null
-
     fun show() {
         val builder = AlertDialog.Builder(context)
             .setTitle(title)
@@ -152,35 +127,28 @@ class TipDialog {
             .setPositiveButton("Yes") { _, _ ->
                 positiveListener?.invoke()
             }
-
         negativeListener?.let {
             builder.setNegativeButton("No") { _, _ ->
                 it.invoke()
             }
         }
-
         builder.create().show()
     }
 }
-
 class TempAlarmSetDialog {
     class Builder(private val context: Context) {
         private var numText: String = ""
-
         fun setNum(num: String): Builder {
             numText = num
             return this
         }
-
         fun create(): TempAlarmSetDialog = TempAlarmSetDialog().apply {
             this.context = this@Builder.context
             this.numText = this@Builder.numText
         }
     }
-
     private lateinit var context: Context
     private var numText: String = ""
-
     fun show() {
         AlertDialog.Builder(context)
             .setTitle("Temperature Alarm")

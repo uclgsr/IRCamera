@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.compose.dialogs
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +14,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-
 @Composable
 fun LoadingDialog(
     message: String = "",
@@ -24,7 +22,6 @@ fun LoadingDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.3f else 0.15f
-
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
@@ -50,7 +47,6 @@ fun LoadingDialog(
                     modifier = Modifier.size(48.dp),
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 if (message.isNotEmpty()) {
                     Text(
                         text = message,

@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.bean.json
-
 data class CheckVersionJson(
     val downloadPackageUrl: String,
     val downloadPageUrl: String,
@@ -10,7 +9,6 @@ data class CheckVersionJson(
     val versionNo: String?,
     val notUnZipSize: Double,
 )
-
 data class SoftConfigOtherTypeVO(
     val descType: Int,
     val descTypeName: String,

@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.settings.ui
-
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -31,13 +30,10 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import java.util.*
-
 class VersionViewModel : AppBaseViewModel() {
-
     companion object {
         private const val DEFAULT_VERSION = "1.0.0"
     }
-
     data class VersionInfo(
         val appVersion: String,
         val buildCode: String,
@@ -46,7 +42,6 @@ class VersionViewModel : AppBaseViewModel() {
         val thermalVersion: String,
         val gsrVersion: String
     )
-
     private val _versionInfo = mutableStateOf(
         VersionInfo(
             appVersion = BuildConfig.VERSION_NAME,
@@ -58,30 +53,24 @@ class VersionViewModel : AppBaseViewModel() {
         )
     )
     val versionInfo: State<VersionInfo> = _versionInfo
-
     fun updateVersionInfo(context: android.content.Context) {
         _versionInfo.value = _versionInfo.value.copy(
             unifiedVersion = UnifiedVersionUtils.getVersionName(context)
         )
     }
 }
-
 class VersionComposeActivity : BaseComposeActivity<VersionViewModel>() {
-
     override fun createViewModel(): VersionViewModel = viewModels<VersionViewModel>().value
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModels<VersionViewModel>().value.updateVersionInfo(this)
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: VersionViewModel) {
         IRCameraTheme {
             val context = LocalContext.current
             val versionInfo by viewModel.versionInfo
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -91,7 +80,6 @@ class VersionComposeActivity : BaseComposeActivity<VersionViewModel>() {
                     title = stringResource(R.string.version_info),
                     onBackClick = { finish() }
                 )
-
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -134,7 +122,6 @@ class VersionComposeActivity : BaseComposeActivity<VersionViewModel>() {
                             )
                         }
                     }
-
                     // Version Information
                     Card(
                         modifier = Modifier
@@ -154,7 +141,6 @@ class VersionComposeActivity : BaseComposeActivity<VersionViewModel>() {
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.padding(bottom = 12.dp)
                             )
-
                             VersionInfoRow(
                                 label = "App Version",
                                 value = versionInfo.appVersion,
@@ -177,7 +163,6 @@ class VersionComposeActivity : BaseComposeActivity<VersionViewModel>() {
                             )
                         }
                     }
-
                     // Module Versions
                     Card(
                         modifier = Modifier
@@ -197,7 +182,6 @@ class VersionComposeActivity : BaseComposeActivity<VersionViewModel>() {
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.padding(bottom = 12.dp)
                             )
-
                             VersionInfoRow(
                                 label = "Thermal Camera",
                                 value = versionInfo.thermalVersion,
@@ -210,7 +194,6 @@ class VersionComposeActivity : BaseComposeActivity<VersionViewModel>() {
                             )
                         }
                     }
-
                     // System Information
                     Card(
                         modifier = Modifier
@@ -230,7 +213,6 @@ class VersionComposeActivity : BaseComposeActivity<VersionViewModel>() {
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.padding(bottom = 12.dp)
                             )
-
                             VersionInfoRow(
                                 label = "Android Version",
                                 value = android.os.Build.VERSION.RELEASE,
@@ -248,7 +230,6 @@ class VersionComposeActivity : BaseComposeActivity<VersionViewModel>() {
                             )
                         }
                     }
-
                     // Copyright and Legal
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -272,7 +253,6 @@ class VersionComposeActivity : BaseComposeActivity<VersionViewModel>() {
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 textAlign = TextAlign.Center
                             )
-
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -292,7 +272,6 @@ class VersionComposeActivity : BaseComposeActivity<VersionViewModel>() {
                                 ) {
                                     Text("Privacy Policy")
                                 }
-
                                 OutlinedButton(
                                     onClick = {
                                         // Navigate to terms
@@ -314,7 +293,6 @@ class VersionComposeActivity : BaseComposeActivity<VersionViewModel>() {
         }
     }
 }
-
 @Composable
 private fun VersionInfoRow(
     label: String,

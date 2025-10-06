@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,13 +15,10 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
-
 class IRCorrectionThreeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -59,7 +55,6 @@ class IRCorrectionThreeComposeActivity : BaseComposeActivity<ThermalViewModel>()
             }
         }
     }
-
     @Composable
     private fun CorrectionStep3Content(
         modifier: Modifier = Modifier
@@ -68,7 +63,6 @@ class IRCorrectionThreeComposeActivity : BaseComposeActivity<ThermalViewModel>()
         var thermalRange by remember { mutableFloatStateOf(0.8f) }
         var enhancementLevel by remember { mutableFloatStateOf(0.5f) }
         var isProcessing by remember { mutableStateOf(false) }
-
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -89,15 +83,12 @@ class IRCorrectionThreeComposeActivity : BaseComposeActivity<ThermalViewModel>()
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Text(
                         "Color Temperature: ${colorTemperature.toInt()}K",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp
                     )
-
                     Slider(
                         value = colorTemperature,
                         onValueChange = { colorTemperature = it },
@@ -109,7 +100,6 @@ class IRCorrectionThreeComposeActivity : BaseComposeActivity<ThermalViewModel>()
                     )
                 }
             }
-
             // Thermal Range Optimization
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -123,15 +113,12 @@ class IRCorrectionThreeComposeActivity : BaseComposeActivity<ThermalViewModel>()
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Text(
                         "Dynamic Range: ${(thermalRange * 100).toInt()}%",
                         color = Color(0xFF7D8590),
                         fontSize = 14.sp
                     )
-
                     Slider(
                         value = thermalRange,
                         onValueChange = { thermalRange = it },
@@ -142,7 +129,6 @@ class IRCorrectionThreeComposeActivity : BaseComposeActivity<ThermalViewModel>()
                     )
                 }
             }
-
             // Quality Enhancement
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -156,15 +142,12 @@ class IRCorrectionThreeComposeActivity : BaseComposeActivity<ThermalViewModel>()
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Text(
                         "Enhancement Level: ${(enhancementLevel * 100).toInt()}%",
                         color = Color(0xFF7D8590),
                         fontSize = 14.sp
                     )
-
                     Slider(
                         value = enhancementLevel,
                         onValueChange = { enhancementLevel = it },
@@ -175,9 +158,7 @@ class IRCorrectionThreeComposeActivity : BaseComposeActivity<ThermalViewModel>()
                     )
                 }
             }
-
             Spacer(modifier = Modifier.weight(1f))
-
             // Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -192,7 +173,6 @@ class IRCorrectionThreeComposeActivity : BaseComposeActivity<ThermalViewModel>()
                 ) {
                     Text("Cancel")
                 }
-
                 Button(
                     onClick = { isProcessing = true },
                     modifier = Modifier.weight(1f),

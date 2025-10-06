@@ -1,10 +1,7 @@
 package com.mpdc4gsr.libunified.app.tools
-
 import com.elvishew.xlog.XLog
 import java.util.regex.Pattern
-
 object VersionTools {
-
     fun getVersion(str: String): String {
         var versionStr = "1.0"
         if (str.uppercase().contains("V")) {
@@ -16,13 +13,10 @@ object VersionTools {
                 str.toFloat()
                 versionStr = str
             } catch (e: Exception) {
-
             }
         }
-
         return versionStr
     }
-
     fun checkNewVersion(
         serverVersionStr: String,
         localVersionStr: String,
@@ -31,13 +25,11 @@ object VersionTools {
             val serverV = getVersion(serverVersionStr)
             val localV = getVersion(localVersionStr)
             return serverV.toFloat() > localV.toFloat()
-
         } catch (e: Exception) {
             XLog.e("[ph][ph][ph][ph][ph][ph][ph][ph]: ${e.message}")
             return false
         }
     }
-
     fun checkVersion(
         remoteStr: String,
         localStr: String,

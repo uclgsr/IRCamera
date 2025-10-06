@@ -1,7 +1,5 @@
 @file:OptIn(kotlin.ExperimentalStdlibApi::class)
-
 package com.mpdc4gsr.libunified.app.tools
-
 import android.app.Activity
 import android.app.PendingIntent
 import android.content.Context
@@ -16,9 +14,7 @@ import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcLiteDevice
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
 import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import com.mpdc4gsr.libunified.app.utils.ByteUtils
-
 object DeviceTools {
-
     fun isConnect(
         isSendConnectEvent: Boolean = false,
         isAutoRequest: Boolean = true,
@@ -44,7 +40,6 @@ object DeviceTools {
         }
         return false
     }
-
     fun findUsbDevice(): UsbDevice? {
         val usbManager = ContextProvider.getContext().getSystemService(Context.USB_SERVICE) as UsbManager
         val deviceList: HashMap<String, UsbDevice> = usbManager.deviceList
@@ -71,7 +66,6 @@ object DeviceTools {
         XLog.i("[ph][ph][ph]${deviceList.size}[ph][ph][ph], [ph][ph][ph][ph][ph][ph]usb[ph][ph]")
         return null
     }
-
     fun isTC001PlusConnect(): Boolean {
         val usbManager = ContextProvider.getContext().getSystemService(Context.USB_SERVICE) as UsbManager
         val deviceList: HashMap<String, UsbDevice> = usbManager.deviceList
@@ -87,7 +81,6 @@ object DeviceTools {
         }
         return isTcTsDev && usbCameraNumber > 1
     }
-
     fun isTC001LiteConnect(): Boolean {
         val usbManager = ContextProvider.getContext().getSystemService(Context.USB_SERVICE) as UsbManager
         val deviceList: HashMap<String, UsbDevice> = usbManager.deviceList
@@ -98,7 +91,6 @@ object DeviceTools {
         }
         return false
     }
-
     fun isHikConnect(): Boolean {
         val usbManager: UsbManager =
             ContextProvider.getContext().getSystemService(Context.USB_SERVICE) as UsbManager
@@ -109,7 +101,6 @@ object DeviceTools {
         }
         return false
     }
-
     fun requestUsb(
         activity: Activity,
         requestCode: Int,

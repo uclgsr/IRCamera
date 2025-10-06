@@ -1,25 +1,18 @@
 package com.mpdc4gsr.libunified.app.utils
-
 import java.util.*
-
 @OptIn(ExperimentalUnsignedTypes::class)
 object UnifiedByteUtils {
-
     fun ByteArray.toHexString(separator: String = " "): String =
         asUByteArray().joinToString(separator) {
             it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
         }
-
     fun ByteArray.toHexMd5String(): String =
         asUByteArray().joinToString(":") {
             it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
         }
-
     fun String.hexStringToByteArray(): ByteArray =
         ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
-
     fun UUID.getTag(): String = toString().substring(4, 8)
-
     fun ByteArray.bytesToInt(): Int {
         var total = 0
         val size = this.size
@@ -28,7 +21,6 @@ object UnifiedByteUtils {
         }
         return total
     }
-
     fun byteToInt(bytes: ByteArray): Int {
         var count = 0
         var b: Int
@@ -38,7 +30,6 @@ object UnifiedByteUtils {
         }
         return count
     }
-
     fun numberToBytes(bigEndian: Boolean, value: Long, len: Int): ByteArray {
         val bytes = ByteArray(8)
         for (i in 0..7) {
@@ -51,7 +42,6 @@ object UnifiedByteUtils {
             Arrays.copyOfRange(bytes, if (bigEndian) 8 - len else 0, if (bigEndian) 8 else len)
         }
     }
-
     fun splitPackage(src: ByteArray, size: Int): List<ByteArray> {
         val list = mutableListOf<ByteArray>()
         val loop = src.size / size + if (src.size % size == 0) 0 else 1
@@ -62,7 +52,6 @@ object UnifiedByteUtils {
         }
         return list
     }
-
     fun joinPackage(vararg src: ByteArray): ByteArray {
         var bytes = ByteArray(0)
         for (bs in src) {

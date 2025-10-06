@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.camera.data
-
 import android.content.Context
 import android.graphics.ImageFormat
 import android.hardware.camera2.*
@@ -16,36 +15,28 @@ import android.view.Surface
 import java.util.concurrent.Executor
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
-
 class CameraController(private val context: Context) {
     companion object {
         private const val TAG = "CameraController"
         private const val CAMERA_OPEN_TIMEOUT_MS = 2500L
     }
-
     private var cameraDevice: CameraDevice? = null
     private var captureSession: CameraCaptureSession? = null
     private var currentCameraId: String = "0"
     private var deviceCaps: DeviceCaps? = null
-
     private var backgroundThread: HandlerThread? = null
     private var backgroundHandler: Handler? = null
     private val cameraOpenCloseLock = Semaphore(1)
-
     var onCameraOpened: ((DeviceCaps) -> Unit)? = null
     var onCameraError: ((String) -> Unit)? = null
-
     init {
         startBackgroundThread()
     }
-
     fun openCamera(cameraId: String = "0") {
         AppLogger.i(TAG, "Opening camera $cameraId")
-
         var lockAcquired = false
         try {
             val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-
             val cameraIdList = try {
                 manager.cameraIdList
             } catch (e: CameraAccessException) {
@@ -53,24 +44,19 @@ class CameraController(private val context: Context) {
                 onCameraError?.invoke("Camera service unavailable: ${e.message}")
                 return
             }
-
             if (cameraIdList.isEmpty()) {
                 AppLogger.e(TAG, "No cameras available on device")
                 onCameraError?.invoke("No cameras found on this device")
                 return
             }
-
             if (!cameraIdList.contains(cameraId)) {
                 AppLogger.e(TAG, "Camera $cameraId not found. Available cameras: ${cameraIdList.joinToString()}")
                 onCameraError?.invoke("Camera $cameraId not available. Available: ${cameraIdList.joinToString()}")
                 return
             }
-
             val characteristics = manager.getCameraCharacteristics(cameraId)
-
             deviceCaps = detectCapabilities(characteristics)
             AppLogger.i(TAG, "Device capabilities: $deviceCaps")
-
             if (!cameraOpenCloseLock.tryAcquire(CAMERA_OPEN_TIMEOUT_MS, TimeUnit.MILLISECONDS)) {
                 val errorMsg = "Timeout waiting to lock camera opening. Camera may be in use by another process"
                 AppLogger.e(TAG, errorMsg)
@@ -78,7 +64,6 @@ class CameraController(private val context: Context) {
                 return
             }
             lockAcquired = true
-
             AppLogger.d(TAG, "Requesting camera open with ID: $cameraId")
             manager.openCamera(cameraId, stateCallback, backgroundHandler)
             currentCameraId = cameraId
@@ -116,19 +101,15 @@ class CameraController(private val context: Context) {
             onCameraError?.invoke("Failed to open camera: ${e.javaClass.simpleName} - ${e.message}")
         }
     }
-
     fun createCaptureSession(
         surfaces: List<Surface>,
         callback: CameraCaptureSession.StateCallback,
     ) {
         cameraDevice?.let { device ->
             try {
-
                 captureSession?.close()
                 captureSession = null
-
                 AppLogger.i(TAG, "Creating capture session with ${surfaces.size} surfaces")
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     val outputConfigs = surfaces.map { OutputConfiguration(it) }
                     val sessionConfig = SessionConfiguration(
@@ -155,7 +136,6 @@ class CameraController(private val context: Context) {
             onCameraError?.invoke("Camera not opened")
         }
     }
-
     fun createCaptureRequest(template: Int): CaptureRequest.Builder? {
         return try {
             cameraDevice?.createCaptureRequest(template)
@@ -164,17 +144,12 @@ class CameraController(private val context: Context) {
             null
         }
     }
-
     fun getDeviceCaps(): DeviceCaps? = deviceCaps
-
     fun isOpen(): Boolean = cameraDevice != null
-
     fun setCaptureSession(session: CameraCaptureSession) {
         captureSession = session
     }
-
     fun getCaptureSession(): CameraCaptureSession? = captureSession
-
     fun getCameraCharacteristics(): CameraCharacteristics? {
         return try {
             if (currentCameraId.isNotEmpty()) {
@@ -186,7 +161,6 @@ class CameraController(private val context: Context) {
             null
         }
     }
-
     fun close() {
         try {
             cameraOpenCloseLock.acquire()
@@ -199,28 +173,21 @@ class CameraController(private val context: Context) {
         } finally {
             cameraOpenCloseLock.release()
         }
-
         stopBackgroundThread()
     }
-
     private fun detectCapabilities(characteristics: CameraCharacteristics): DeviceCaps {
         val capabilities =
             characteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES) ?: IntArray(0)
         val supportsRaw =
             capabilities.contains(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_RAW)
-
         val map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
-
         val rawSizes = map?.getOutputSizes(ImageFormat.RAW_SENSOR) ?: arrayOf(Size(0, 0))
         val rawSize = rawSizes.maxByOrNull { it.width * it.height } ?: Size(0, 0)
-
         var supports4k60 = false
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
                 map?.getHighSpeedVideoSizes()?.forEach { size ->
                     if (size.width == 3840 && size.height == 2160) {
-
                         map.getHighSpeedVideoFpsRangesFor(size)?.forEach { range ->
                             if (range.upper >= 60) {
                                 supports4k60 = true
@@ -232,9 +199,7 @@ class CameraController(private val context: Context) {
         } catch (e: Exception) {
             AppLogger.d(TAG, "High-speed video detection failed: ${e.message}")
         }
-
         val sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION) ?: 0
-
         return DeviceCaps(
             supportsRaw = supportsRaw,
             rawSize = rawSize,
@@ -242,19 +207,16 @@ class CameraController(private val context: Context) {
             sensorOrientation = sensorOrientation,
         )
     }
-
     private val stateCallback =
         object : CameraDevice.StateCallback() {
             override fun onOpened(camera: CameraDevice) {
                 cameraOpenCloseLock.release()
                 cameraDevice = camera
                 AppLogger.i(TAG, "Camera opened successfully")
-
                 deviceCaps?.let { caps ->
                     onCameraOpened?.invoke(caps)
                 }
             }
-
             override fun onDisconnected(camera: CameraDevice) {
                 cameraOpenCloseLock.release()
                 camera.close()
@@ -262,7 +224,6 @@ class CameraController(private val context: Context) {
                 AppLogger.w(TAG, "Camera disconnected")
                 onCameraError?.invoke("Camera disconnected")
             }
-
             override fun onError(
                 camera: CameraDevice,
                 error: Int,
@@ -270,7 +231,6 @@ class CameraController(private val context: Context) {
                 cameraOpenCloseLock.release()
                 camera.close()
                 cameraDevice = null
-
                 val errorMessage =
                     when (error) {
                         CameraDevice.StateCallback.ERROR_CAMERA_IN_USE -> "Camera is in use by another app"
@@ -280,18 +240,15 @@ class CameraController(private val context: Context) {
                         CameraDevice.StateCallback.ERROR_CAMERA_SERVICE -> "Camera service error"
                         else -> "Unknown camera error: $error"
                     }
-
                 AppLogger.e(TAG, "Camera error: $errorMessage")
                 onCameraError?.invoke("Camera error: $errorMessage")
             }
         }
-
     private fun startBackgroundThread() {
         backgroundThread = HandlerThread("CameraBackground")
         backgroundThread!!.start()
         backgroundHandler = Handler(backgroundThread!!.looper)
     }
-
     private fun stopBackgroundThread() {
         backgroundThread?.quitSafely()
         try {

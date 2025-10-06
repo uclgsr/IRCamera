@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.gsr.ui
-
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -24,23 +23,10 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.AppBaseViewModel
 
-/**
- * GSRDataViewComposeActivity - Advanced Data Processing & Analytics
- *
- * Modern implementation of GSR data viewing with:
- * - Tabular data display with sorting and filtering
- * - Real-time data processing and analysis
- * - Advanced search and filtering capabilities
- * - Data quality assessment and validation
- * - Export and batch processing tools
- * - Multiple data views (raw, processed, summary)
- */
 class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
-
     companion object {
         private const val EXTRA_FILE_PATH = "file_path"
         private const val EXTRA_SESSION_ID = "session_id"
-
         fun startActivity(
             context: Context,
             filePath: String,
@@ -53,18 +39,15 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
             context.startActivity(intent)
         }
     }
-
     override fun createViewModel(): GSRDataViewViewModel {
         return viewModels<GSRDataViewViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: GSRDataViewViewModel) {
         val localContext = this@GSRDataViewComposeActivity
         val filePath = intent.getStringExtra(EXTRA_FILE_PATH) ?: ""
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -134,7 +117,6 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GSRDataViewContent(
@@ -143,13 +125,11 @@ private fun GSRDataViewContent(
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
-
     Column(
         modifier = modifier.fillMaxSize()
     ) {
         // Data Info Header
         DataInfoCard(filePath = filePath, sessionId = sessionId)
-
         // Tab Selection
         PrimaryScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -181,7 +161,6 @@ private fun GSRDataViewContent(
                 text = { Text("Events") }
             )
         }
-
         // Tab Content
         when (selectedTab) {
             0 -> RawDataView()
@@ -192,7 +171,6 @@ private fun GSRDataViewContent(
         }
     }
 }
-
 @Composable
 private fun DataInfoCard(
     filePath: String,
@@ -218,16 +196,13 @@ private fun DataInfoCard(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-
                 Badge(
                     containerColor = MaterialTheme.colorScheme.primary
                 ) {
                     Text("Loaded")
                 }
             }
-
             HorizontalDivider()
-
             DataInfoRow("File Path", filePath.substringAfterLast("/"))
             DataInfoRow("Session ID", sessionId ?: "N/A")
             DataInfoRow("File Size", "2.3 MB")
@@ -237,7 +212,6 @@ private fun DataInfoCard(
         }
     }
 }
-
 @Composable
 private fun DataInfoRow(
     label: String,
@@ -262,7 +236,6 @@ private fun DataInfoRow(
         }
     }
 }
-
 @Composable
 private fun RawDataView() {
     val localContext = androidx.compose.ui.platform.LocalContext.current
@@ -270,7 +243,6 @@ private fun RawDataView() {
     val sampleData = remember {
         generateSampleGSRDataRows(1000)
     }
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -293,7 +265,6 @@ private fun RawDataView() {
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -320,7 +291,6 @@ private fun RawDataView() {
                 }
             }
         }
-
         // Data Table Header
         Card(
             modifier = Modifier
@@ -360,7 +330,6 @@ private fun RawDataView() {
                 )
             }
         }
-
         // Data Rows
         LazyColumn(
             modifier = Modifier
@@ -374,7 +343,6 @@ private fun RawDataView() {
         }
     }
 }
-
 @Composable
 private fun GSRDataRow(dataRow: GSRDataRowModel) {
     Card(
@@ -427,7 +395,6 @@ private fun GSRDataRow(dataRow: GSRDataRowModel) {
         }
     }
 }
-
 @Composable
 private fun ProcessedDataView() {
     Column(
@@ -442,7 +409,6 @@ private fun ProcessedDataView() {
         ProcessingResultsCard()
     }
 }
-
 @Composable
 private fun ProcessingOptionsCard() {
     val localContext = androidx.compose.ui.platform.LocalContext.current
@@ -459,13 +425,10 @@ private fun ProcessingOptionsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             var smoothingEnabled by remember { mutableStateOf(true) }
             var artifactRemoval by remember { mutableStateOf(false) }
             var normalizeData by remember { mutableStateOf(true) }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -477,7 +440,6 @@ private fun ProcessingOptionsCard() {
                     onCheckedChange = { smoothingEnabled = it }
                 )
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -489,7 +451,6 @@ private fun ProcessingOptionsCard() {
                     onCheckedChange = { artifactRemoval = it }
                 )
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -501,7 +462,6 @@ private fun ProcessingOptionsCard() {
                     onCheckedChange = { normalizeData = it }
                 )
             }
-
             Button(
                 onClick = {
                     // TODO: Apply data processing
@@ -520,7 +480,6 @@ private fun ProcessingOptionsCard() {
         }
     }
 }
-
 @Composable
 private fun ProcessedDataPreviewCard() {
     Card(
@@ -536,15 +495,12 @@ private fun ProcessedDataPreviewCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             Text(
                 "Processing Status: Complete",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.primary
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -556,7 +512,6 @@ private fun ProcessedDataPreviewCard() {
         }
     }
 }
-
 @Composable
 private fun ProcessingMetric(
     label: String,
@@ -578,7 +533,6 @@ private fun ProcessingMetric(
         )
     }
 }
-
 @Composable
 private fun ProcessingResultsCard() {
     val localContext = androidx.compose.ui.platform.LocalContext.current
@@ -595,9 +549,7 @@ private fun ProcessingResultsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -617,7 +569,6 @@ private fun ProcessingResultsCard() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("View Data")
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Export processed data
@@ -637,7 +588,6 @@ private fun ProcessingResultsCard() {
         }
     }
 }
-
 @Composable
 private fun StatisticsView() {
     Column(
@@ -652,7 +602,6 @@ private fun StatisticsView() {
         TimeSeriesAnalysisCard()
     }
 }
-
 @Composable
 private fun DescriptiveStatisticsCard() {
     Card(
@@ -668,9 +617,7 @@ private fun DescriptiveStatisticsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -679,7 +626,6 @@ private fun DescriptiveStatisticsCard() {
                 StatisticItem("Median", "11.87 μS")
                 StatisticItem("Mode", "11.2 μS")
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -688,7 +634,6 @@ private fun DescriptiveStatisticsCard() {
                 StatisticItem("Variance", "10.3")
                 StatisticItem("Range", "12.8 μS")
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -700,7 +645,6 @@ private fun DescriptiveStatisticsCard() {
         }
     }
 }
-
 @Composable
 private fun DistributionAnalysisCard() {
     Card(
@@ -716,9 +660,7 @@ private fun DistributionAnalysisCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -728,7 +670,6 @@ private fun DistributionAnalysisCard() {
                 StatisticItem("Q3", "14.8 μS")
                 StatisticItem("IQR", "5.6 μS")
             }
-
             Text(
                 "Distribution Type: Normal (p=0.023)",
                 style = MaterialTheme.typography.bodyMedium,
@@ -737,7 +678,6 @@ private fun DistributionAnalysisCard() {
         }
     }
 }
-
 @Composable
 private fun TimeSeriesAnalysisCard() {
     Card(
@@ -753,9 +693,7 @@ private fun TimeSeriesAnalysisCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -764,7 +702,6 @@ private fun TimeSeriesAnalysisCard() {
                 StatisticItem("Seasonality", "None")
                 StatisticItem("Stationarity", "Non-stationary")
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -776,7 +713,6 @@ private fun TimeSeriesAnalysisCard() {
         }
     }
 }
-
 @Composable
 private fun QualityAssessmentView() {
     Column(
@@ -791,7 +727,6 @@ private fun QualityAssessmentView() {
         DataIntegrityCard()
     }
 }
-
 @Composable
 private fun OverallQualityCard() {
     Card(
@@ -807,9 +742,7 @@ private fun OverallQualityCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -819,7 +752,6 @@ private fun OverallQualityCard() {
                     "Quality Score",
                     style = MaterialTheme.typography.titleMedium
                 )
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -837,7 +769,6 @@ private fun OverallQualityCard() {
                     }
                 }
             }
-
             LinearProgressIndicator(
                 progress = { 0.92f },
                 modifier = Modifier.fillMaxWidth(),
@@ -845,7 +776,6 @@ private fun OverallQualityCard() {
         }
     }
 }
-
 @Composable
 private fun SignalQualityCard() {
     Card(
@@ -861,9 +791,7 @@ private fun SignalQualityCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             QualityMetric("Signal-to-Noise Ratio", 0.89f, "High")
             QualityMetric("Baseline Stability", 0.95f, "Excellent")
             QualityMetric("Motion Artifacts", 0.78f, "Good")
@@ -871,7 +799,6 @@ private fun SignalQualityCard() {
         }
     }
 }
-
 @Composable
 private fun QualityMetric(
     name: String,
@@ -900,7 +827,6 @@ private fun QualityMetric(
                 }
             )
         }
-
         LinearProgressIndicator(
             progress = { score },
             modifier = Modifier.fillMaxWidth(),
@@ -912,7 +838,6 @@ private fun QualityMetric(
         )
     }
 }
-
 @Composable
 private fun DataIntegrityCard() {
     Card(
@@ -928,9 +853,7 @@ private fun DataIntegrityCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             IntegrityCheck("Missing Data Points", false, "0.1%")
             IntegrityCheck("Timestamp Gaps", false, "None")
             IntegrityCheck("Value Range Violations", true, "3 instances")
@@ -938,7 +861,6 @@ private fun DataIntegrityCard() {
         }
     }
 }
-
 @Composable
 private fun IntegrityCheck(
     name: String,
@@ -965,7 +887,6 @@ private fun IntegrityCheck(
                 style = MaterialTheme.typography.bodyMedium
             )
         }
-
         Text(
             details,
             style = MaterialTheme.typography.bodySmall,
@@ -973,7 +894,6 @@ private fun IntegrityCheck(
         )
     }
 }
-
 @Composable
 private fun EventsView() {
     Column(
@@ -994,7 +914,6 @@ private fun EventsView() {
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-
                 Text(
                     "24 events detected during recording session",
                     style = MaterialTheme.typography.bodyMedium,
@@ -1002,7 +921,6 @@ private fun EventsView() {
                 )
             }
         }
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -1015,7 +933,6 @@ private fun EventsView() {
         }
     }
 }
-
 @Composable
 private fun EventItem(event: GSREventModel) {
     Card(
@@ -1044,7 +961,6 @@ private fun EventItem(event: GSREventModel) {
                     else -> MaterialTheme.colorScheme.onSurface
                 }
             )
-
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -1059,7 +975,6 @@ private fun EventItem(event: GSREventModel) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             Text(
                 event.value,
                 style = MaterialTheme.typography.bodySmall,
@@ -1068,7 +983,6 @@ private fun EventItem(event: GSREventModel) {
         }
     }
 }
-
 // Data Models
 data class GSRDataRowModel(
     val timestamp: String,
@@ -1076,14 +990,12 @@ data class GSRDataRowModel(
     val quality: Float,
     val flags: String
 )
-
 data class GSREventModel(
     val timestamp: String,
     val type: String,
     val description: String,
     val value: String
 )
-
 // Helper functions
 private fun generateSampleGSRDataRows(count: Int): List<GSRDataRowModel> {
     return (0 until count).map { i ->
@@ -1097,7 +1009,6 @@ private fun generateSampleGSRDataRows(count: Int): List<GSRDataRowModel> {
         )
     }
 }
-
 private fun generateSampleEvents(): List<GSREventModel> {
     return listOf(
         GSREventModel("00:02:15.123", "Peak", "High conductance detected", "18.4 μS"),
@@ -1108,7 +1019,6 @@ private fun generateSampleEvents(): List<GSREventModel> {
         GSREventModel("00:18:12.890", "Peak", "Emotional response detected", "17.2 μS")
     )
 }
-
 @Composable
 private fun StatisticItem(label: String, value: String) {
     Column(
@@ -1127,7 +1037,6 @@ private fun StatisticItem(label: String, value: String) {
         )
     }
 }
-
 class GSRDataViewViewModel : AppBaseViewModel() {
     // ViewModel implementation for managing data loading, processing, filtering, etc.
     // Future implementation would include:

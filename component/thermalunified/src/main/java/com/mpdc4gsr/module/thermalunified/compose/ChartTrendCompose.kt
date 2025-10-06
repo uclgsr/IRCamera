@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.compose
-
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,7 +20,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 @Composable
 fun ChartTrendCompose(
     dataPoints: List<Float>,
@@ -34,7 +32,6 @@ fun ChartTrendCompose(
     modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
-
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -51,7 +48,6 @@ fun ChartTrendCompose(
                 color = textColor,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
             // Chart area
             if (dataPoints.isEmpty()) {
                 Box(
@@ -82,7 +78,6 @@ fun ChartTrendCompose(
                     )
                 }
             }
-
             // Legend/Labels
             Row(
                 modifier = Modifier
@@ -109,7 +104,6 @@ fun ChartTrendCompose(
         }
     }
 }
-
 private fun DrawScope.drawTrendChart(
     dataPoints: List<Float>,
     minValue: Float,
@@ -119,14 +113,11 @@ private fun DrawScope.drawTrendChart(
     textColor: Color
 ) {
     if (dataPoints.isEmpty()) return
-
     val padding = 40.dp.toPx()
     val chartWidth = size.width - 2 * padding
     val chartHeight = size.height - 2 * padding
     val valueRange = maxValue - minValue
-
     if (valueRange <= 0) return
-
     // Draw grid lines
     val gridLineCount = 5
     for (i in 0..gridLineCount) {
@@ -138,7 +129,6 @@ private fun DrawScope.drawTrendChart(
             strokeWidth = 1.dp.toPx()
         )
     }
-
     // Draw vertical grid lines
     val verticalGridCount = 4
     for (i in 0..verticalGridCount) {
@@ -150,14 +140,12 @@ private fun DrawScope.drawTrendChart(
             strokeWidth = 0.5.dp.toPx()
         )
     }
-
     // Draw Y-axis labels
     val textPaint = android.graphics.Paint().apply {
         color = textColor.value.toInt()
         textSize = 11.sp.toPx()
         isAntiAlias = true
     }
-
     for (i in 0..gridLineCount) {
         val y = padding + (chartHeight * i / gridLineCount)
         val value = maxValue - (valueRange * i / gridLineCount)
@@ -168,25 +156,21 @@ private fun DrawScope.drawTrendChart(
             textPaint
         )
     }
-
     // Draw trend line
     if (dataPoints.size >= 2) {
         val path = Path()
         var isFirstPoint = true
-
         dataPoints.forEachIndexed { index, value ->
             val x =
                 if (dataPoints.size > 1) padding + (chartWidth * index / (dataPoints.size - 1)) else padding + chartWidth / 2f
             val normalizedValue = ((value - minValue) / valueRange).coerceIn(0f, 1f)
             val y = padding + chartHeight - (normalizedValue * chartHeight)
-
             if (isFirstPoint) {
                 path.moveTo(x, y)
                 isFirstPoint = false
             } else {
                 path.lineTo(x, y)
             }
-
             // Draw data points
             drawCircle(
                 color = lineColor,
@@ -194,7 +178,6 @@ private fun DrawScope.drawTrendChart(
                 center = Offset(x, y)
             )
         }
-
         // Draw the trend line
         drawPath(
             path = path,
@@ -203,7 +186,6 @@ private fun DrawScope.drawTrendChart(
         )
     }
 }
-
 @Composable
 fun TemperatureTrendCompose(
     temperatures: List<Float>,
@@ -216,7 +198,6 @@ fun TemperatureTrendCompose(
     val maxTemp = temperatures.maxOrNull() ?: 50f
     val adjustedMin = (minTemp - 5).coerceAtLeast(0f)
     val adjustedMax = (maxTemp + 5).coerceAtMost(100f)
-
     ChartTrendCompose(
         dataPoints = temperatures,
         minValue = adjustedMin,
@@ -230,7 +211,6 @@ fun TemperatureTrendCompose(
         modifier = modifier
     )
 }
-
 @Composable
 fun ChartTrendComposePreview() {
     Column(
@@ -242,13 +222,11 @@ fun ChartTrendComposePreview() {
     ) {
         // Sample temperature data
         val sampleTemps = listOf(22f, 24f, 26f, 25f, 28f, 30f, 27f, 29f, 31f, 28f)
-
         TemperatureTrendCompose(
             temperatures = sampleTemps,
             lowTemp = 25f,
             highTemp = 30f
         )
-
         // Empty state
         ChartTrendCompose(
             dataPoints = emptyList(),

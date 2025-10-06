@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.gsr.ui
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-
 data class ResearchTemplate(
     val id: String,
     val title: String,
@@ -34,13 +32,11 @@ data class ResearchTemplate(
     val category: TemplateCategory,
     val isCustom: Boolean = false
 )
-
 enum class TemplateDifficulty {
     BEGINNER,
     INTERMEDIATE,
     ADVANCED
 }
-
 enum class TemplateCategory {
     STRESS_RESPONSE,
     COGNITIVE_LOAD,
@@ -48,7 +44,6 @@ enum class TemplateCategory {
     PHYSIOLOGICAL_MONITORING,
     CUSTOM
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResearchTemplateScreen(
@@ -60,16 +55,13 @@ fun ResearchTemplateScreen(
     var searchQuery by remember { mutableStateOf("") }
     val templates = remember { getSampleTemplates() }
     val keyboardController = LocalSoftwareKeyboardController.current
-
     val filteredTemplates = templates.filter { template ->
         val matchesCategory = selectedCategory == null || template.category == selectedCategory
         val matchesSearch = if (searchQuery.isBlank()) true
         else template.title.contains(searchQuery, ignoreCase = true) ||
                 template.description.contains(searchQuery, ignoreCase = true)
-
         matchesCategory && matchesSearch
     }
-
     IRCameraTheme {
         Column(
             modifier = Modifier
@@ -87,7 +79,6 @@ fun ResearchTemplateScreen(
                     onClick = onCreateCustomTemplate
                 )
             }
-
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -125,7 +116,6 @@ fun ResearchTemplateScreen(
                         }
                     )
                 )
-
                 // Category Filter Chips
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -138,18 +128,15 @@ fun ResearchTemplateScreen(
                             onCategorySelected = { selectedCategory = it }
                         )
                     }
-
                     item {
                         TemplateStatsCard(templates = templates)
                     }
-
                     items(filteredTemplates) { template ->
                         TemplateItem(
                             template = template,
                             onUse = { onUseTemplate(template) }
                         )
                     }
-
                     if (filteredTemplates.isEmpty()) {
                         item {
                             EmptyTemplatesState(
@@ -164,7 +151,6 @@ fun ResearchTemplateScreen(
         }
     }
 }
-
 @Composable
 fun CategoryFilterChips(
     selectedCategory: TemplateCategory?,
@@ -178,7 +164,6 @@ fun CategoryFilterChips(
             color = Color.White,
             modifier = Modifier.padding(bottom = 12.dp)
         )
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -195,7 +180,6 @@ fun CategoryFilterChips(
                     labelColor = Color.White
                 )
             )
-
             // Category-specific chips (showing only a few due to space)
             listOf(
                 TemplateCategory.STRESS_RESPONSE to "Stress",
@@ -219,13 +203,11 @@ fun CategoryFilterChips(
         }
     }
 }
-
 @Composable
 fun TemplateStatsCard(templates: List<ResearchTemplate>) {
     val totalTemplates = templates.size
     val customTemplates = templates.count { it.isCustom }
     val avgDuration = templates.map { parseDuration(it.duration) }.average().toInt()
-
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -252,7 +234,6 @@ fun TemplateStatsCard(templates: List<ResearchTemplate>) {
         }
     }
 }
-
 @Composable
 private fun StatItem(
     label: String,
@@ -275,7 +256,6 @@ private fun StatItem(
         )
     }
 }
-
 @Composable
 fun TemplateItem(
     template: ResearchTemplate,
@@ -303,18 +283,13 @@ fun TemplateItem(
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
-
                     Spacer(modifier = Modifier.height(4.dp))
-
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         DifficultyBadge(difficulty = template.difficulty)
-
                         Spacer(modifier = Modifier.width(8.dp))
-
                         CategoryBadge(category = template.category)
-
                         if (template.isCustom) {
                             Spacer(modifier = Modifier.width(8.dp))
                             Surface(
@@ -332,7 +307,6 @@ fun TemplateItem(
                         }
                     }
                 }
-
                 Button(
                     onClick = onUse,
                     colors = ButtonDefaults.buttonColors(
@@ -342,9 +316,7 @@ fun TemplateItem(
                     Text("Use Template")
                 }
             }
-
             Spacer(modifier = Modifier.height(12.dp))
-
             // Description
             Text(
                 text = template.description,
@@ -352,9 +324,7 @@ fun TemplateItem(
                 color = Color(0xFFCCFFFFFF),
                 lineHeight = 20.sp
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Details Row
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -377,9 +347,7 @@ fun TemplateItem(
                         fontSize = 12.sp,
                         color = Color(0xFFCCFFFFFF)
                     )
-
                     Spacer(modifier = Modifier.width(16.dp))
-
                     Icon(
                         imageVector = Icons.Default.Sensors,
                         contentDescription = "Sensors",
@@ -393,7 +361,6 @@ fun TemplateItem(
                         color = Color(0xFFCCFFFFFF)
                     )
                 }
-
                 // Sensor Type Icons
                 Row {
                     template.sensorTypes.take(3).forEach { sensorType ->
@@ -416,7 +383,6 @@ fun TemplateItem(
                                 .padding(horizontal = 2.dp)
                         )
                     }
-
                     if (template.sensorTypes.size > 3) {
                         Text(
                             text = "+${template.sensorTypes.size - 3}",
@@ -427,11 +393,9 @@ fun TemplateItem(
                     }
                 }
             }
-
             // Tasks Preview
             if (template.tasks.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Text(
                     text = "Tasks: ${
                         template.tasks.take(2).joinToString(", ")
@@ -443,7 +407,6 @@ fun TemplateItem(
         }
     }
 }
-
 @Composable
 fun DifficultyBadge(difficulty: TemplateDifficulty) {
     val (color, text) = when (difficulty) {
@@ -451,7 +414,6 @@ fun DifficultyBadge(difficulty: TemplateDifficulty) {
         TemplateDifficulty.INTERMEDIATE -> Color(0xFFFFB74D) to "Intermediate"
         TemplateDifficulty.ADVANCED -> Color(0xFFFF6B6B) to "Advanced"
     }
-
     Surface(
         color = color.copy(alpha = 0.2f),
         shape = MaterialTheme.shapes.small
@@ -465,7 +427,6 @@ fun DifficultyBadge(difficulty: TemplateDifficulty) {
         )
     }
 }
-
 @Composable
 fun CategoryBadge(category: TemplateCategory) {
     val (color, text) = when (category) {
@@ -475,7 +436,6 @@ fun CategoryBadge(category: TemplateCategory) {
         TemplateCategory.PHYSIOLOGICAL_MONITORING -> Color(0xFF4ECDC4) to "Physiology"
         TemplateCategory.CUSTOM -> Color(0xFF9E9E9E) to "Custom"
     }
-
     Surface(
         color = color.copy(alpha = 0.2f),
         shape = MaterialTheme.shapes.small
@@ -489,7 +449,6 @@ fun CategoryBadge(category: TemplateCategory) {
         )
     }
 }
-
 @Composable
 fun EmptyTemplatesState(
     searchQuery: String,
@@ -509,9 +468,7 @@ fun EmptyTemplatesState(
             tint = Color(0xFF6B73FF),
             modifier = Modifier.size(64.dp)
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             text = if (searchQuery.isBlank() && selectedCategory == null)
                 "No templates available" else "No templates found",
@@ -519,9 +476,7 @@ fun EmptyTemplatesState(
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
         Text(
             text = if (searchQuery.isBlank() && selectedCategory == null)
                 "Create your first custom template to get started"
@@ -530,10 +485,8 @@ fun EmptyTemplatesState(
             fontSize = 14.sp,
             color = Color(0xFFCCFFFFFF)
         )
-
         if (searchQuery.isBlank() && selectedCategory == null) {
             Spacer(modifier = Modifier.height(16.dp))
-
             Button(
                 onClick = onCreateCustom,
                 colors = ButtonDefaults.buttonColors(
@@ -551,12 +504,10 @@ fun EmptyTemplatesState(
         }
     }
 }
-
 private fun parseDuration(duration: String): Int {
     // Parse "25 min" format to minutes
     return duration.replace(" min", "").toIntOrNull() ?: 0
 }
-
 private fun getSampleTemplates() = listOf(
     ResearchTemplate(
         id = "TEMPLATE-001",
@@ -610,7 +561,6 @@ private fun getSampleTemplates() = listOf(
         isCustom = true
     )
 )
-
 @Preview(showBackground = true)
 @Composable
 fun ResearchTemplateScreenPreview() {

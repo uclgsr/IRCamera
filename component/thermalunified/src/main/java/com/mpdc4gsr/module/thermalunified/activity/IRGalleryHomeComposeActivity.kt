@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import android.content.Intent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -26,13 +25,10 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
-
 class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -43,7 +39,6 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var showSearchDialog by remember { mutableStateOf(false) }
         var showMoreOptionsDialog by remember { mutableStateOf(false) }
         var selectedItemForOptions by remember { mutableStateOf<GalleryItem?>(null) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -117,7 +112,6 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         onFilterChange = { filterBy = it },
                         modifier = Modifier.fillMaxWidth()
                     )
-
                     // Gallery grid/list
                     if (selectedView == "grid") {
                         GalleryGrid(
@@ -156,7 +150,6 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 }
             }
-
             // Search Dialog
             if (showSearchDialog) {
                 GallerySearchDialog(
@@ -167,7 +160,6 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 )
             }
-
             // More Options Dialog
             if (showMoreOptionsDialog && selectedItemForOptions != null) {
                 GalleryItemOptionsDialog(
@@ -193,7 +185,6 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
-
 @Composable
 private fun GalleryControls(
     sortBy: String,
@@ -227,7 +218,6 @@ private fun GalleryControls(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
                 )
-
                 val sortOptions = listOf("date", "name", "size", "temperature")
                 sortOptions.forEach { option ->
                     FilterChip(
@@ -243,7 +233,6 @@ private fun GalleryControls(
                     )
                 }
             }
-
             // Filter options
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -256,7 +245,6 @@ private fun GalleryControls(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
                 )
-
                 val filterOptions = listOf("all", "images", "videos", "recent")
                 filterOptions.forEach { option ->
                     FilterChip(
@@ -275,7 +263,6 @@ private fun GalleryControls(
         }
     }
 }
-
 @Composable
 private fun GalleryGrid(
     items: List<GalleryItem>,
@@ -298,7 +285,6 @@ private fun GalleryGrid(
         }
     }
 }
-
 @Composable
 private fun GalleryGridItem(
     item: GalleryItem,
@@ -331,7 +317,6 @@ private fun GalleryGridItem(
                     tint = Color(0xFFFF6B35),
                     modifier = Modifier.size(32.dp)
                 )
-
                 // Temperature overlay
                 Box(
                     modifier = Modifier
@@ -351,7 +336,6 @@ private fun GalleryGridItem(
                     )
                 }
             }
-
             // Item info
             Column(
                 modifier = Modifier
@@ -380,7 +364,6 @@ private fun GalleryGridItem(
         }
     }
 }
-
 @Composable
 private fun GalleryList(
     items: List<GalleryItem>,
@@ -402,7 +385,6 @@ private fun GalleryList(
         }
     }
 }
-
 @Composable
 private fun GalleryListItem(
     item: GalleryItem,
@@ -440,7 +422,6 @@ private fun GalleryListItem(
                     modifier = Modifier.size(24.dp)
                 )
             }
-
             // Item details
             Column(
                 modifier = Modifier.weight(1f),
@@ -473,7 +454,6 @@ private fun GalleryListItem(
                     )
                 }
             }
-
             // Actions
             IconButton(
                 onClick = onMoreClick
@@ -487,7 +467,6 @@ private fun GalleryListItem(
         }
     }
 }
-
 // Data classes
 data class GalleryItem(
     val id: String,
@@ -497,14 +476,12 @@ data class GalleryItem(
     val maxTemp: Float,
     val isVideo: Boolean
 )
-
 @Composable
 private fun GallerySearchDialog(
     onDismiss: () -> Unit,
     onSearch: (String) -> Unit
 ) {
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
-
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Search Gallery", color = Color.White) },
@@ -540,7 +517,6 @@ private fun GallerySearchDialog(
         containerColor = Color(0xFF21262D)
     )
 }
-
 @Composable
 private fun GalleryItemOptionsDialog(
     item: GalleryItem,
@@ -555,7 +531,6 @@ private fun GalleryItemOptionsDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("${item.name}", color = Color(0xFF7D8590), fontSize = 14.sp)
-
                 TextButton(
                     onClick = onShare,
                     modifier = Modifier.fillMaxWidth()
@@ -568,7 +543,6 @@ private fun GalleryItemOptionsDialog(
                         Text("Share", color = Color.White)
                     }
                 }
-
                 TextButton(
                     onClick = onExport,
                     modifier = Modifier.fillMaxWidth()
@@ -581,7 +555,6 @@ private fun GalleryItemOptionsDialog(
                         Text("Export", color = Color.White)
                     }
                 }
-
                 TextButton(
                     onClick = onDelete,
                     modifier = Modifier.fillMaxWidth()
@@ -604,7 +577,6 @@ private fun GalleryItemOptionsDialog(
         containerColor = Color(0xFF21262D)
     )
 }
-
 private fun getGalleryItems(): List<GalleryItem> {
     return listOf(
         GalleryItem("1", "thermal_001.jpg", "2024-01-15 14:30", "2.1 MB", 45.2f, false),

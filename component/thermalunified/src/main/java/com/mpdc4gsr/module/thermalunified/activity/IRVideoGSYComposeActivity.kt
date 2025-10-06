@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -18,13 +17,10 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-
 class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
-
     override fun createViewModel(): IRVideoGSYViewModel {
         return IRVideoGSYViewModel()
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRVideoGSYViewModel) {
@@ -61,7 +57,6 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
             }
         }
     }
-
     @Composable
     private fun IRVideoGSYContent(
         viewModel: IRVideoGSYViewModel,
@@ -72,7 +67,6 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
         var totalTime by remember { mutableStateOf(120f) }
         var playbackSpeed by remember { mutableStateOf(1f) }
         var showThermalOverlay by remember { mutableStateOf(true) }
-
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -114,7 +108,6 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
-
                     // Thermal overlay indicator
                     if (showThermalOverlay) {
                         Card(
@@ -133,7 +126,6 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                     }
                 }
             }
-
             // Video controls
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -170,7 +162,6 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                             )
                         }
                     }
-
                     // Control buttons
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -182,7 +173,6 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                         ) {
                             Icon(Icons.Default.Replay10, contentDescription = "Back 10s")
                         }
-
                         FloatingActionButton(
                             onClick = { isPlaying = !isPlaying },
                             containerColor = Color(0xFFFF6B35)
@@ -193,14 +183,12 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                                 tint = Color.White
                             )
                         }
-
                         IconButton(
                             onClick = { currentTime = (currentTime + 10f).coerceAtMost(totalTime) }
                         ) {
                             Icon(Icons.Default.Forward10, contentDescription = "Forward 10s")
                         }
                     }
-
                     // Speed and overlay controls
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -226,7 +214,6 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                                 Spacer(modifier = Modifier.width(4.dp))
                             }
                         }
-
                         // Thermal overlay toggle
                         Row(
                             verticalAlignment = Alignment.CenterVertically
@@ -244,7 +231,6 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                     }
                 }
             }
-
             // Temperature analysis
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -260,7 +246,6 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFFFF6B35)
                     )
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
@@ -283,5 +268,4 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
         }
     }
 }
-
 class IRVideoGSYViewModel : BaseViewModel()

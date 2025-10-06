@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.compose.components
-
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,7 +19,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 @Composable
 fun MenuEditView(
     @DrawableRes menu1Icon: Int,
@@ -52,7 +50,6 @@ fun MenuEditView(
             isSelected = selectedPosition == 0,
             onClick = { onMenuItemClick(0) }
         )
-
         // Menu 2
         MenuEditItem(
             iconRes = menu2Icon,
@@ -60,7 +57,6 @@ fun MenuEditView(
             isSelected = selectedPosition == 1,
             onClick = { onMenuItemClick(1) }
         )
-
         // Menu 3
         MenuEditItem(
             iconRes = menu3Icon,
@@ -68,7 +64,6 @@ fun MenuEditView(
             isSelected = selectedPosition == 2,
             onClick = { onMenuItemClick(2) }
         )
-
         // Menu 4 (Bar Toggle)
         MenuEditItem(
             iconRes = menu4Icon,
@@ -78,7 +73,6 @@ fun MenuEditView(
         )
     }
 }
-
 @Composable
 private fun MenuEditItem(
     @DrawableRes iconRes: Int? = null,
@@ -112,7 +106,6 @@ private fun MenuEditItem(
                         tint = if (isSelected) Color.White else Color.Gray
                     )
                 }
-
                 iconRes != null -> {
                     Image(
                         painter = painterResource(id = iconRes),
@@ -125,7 +118,6 @@ private fun MenuEditItem(
                 }
             }
         }
-
         Text(
             text = label,
             fontSize = 12.sp,
@@ -134,7 +126,6 @@ private fun MenuEditItem(
         )
     }
 }
-
 @Composable
 fun CameraMenuView(
     @DrawableRes actionIcon: Int? = null,
@@ -177,14 +168,12 @@ fun CameraMenuView(
                         .clickable { onModeSwitch(false) }
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
-
                 Box(
                     modifier = Modifier
                         .width(2.dp)
                         .height(20.dp)
                         .background(Color.Gray)
                 )
-
                 Text(
                     text = "Video",
                     fontSize = 16.sp,
@@ -196,7 +185,6 @@ fun CameraMenuView(
                 )
             }
         }
-
         // Camera controls
         Row(
             modifier = Modifier
@@ -223,7 +211,6 @@ fun CameraMenuView(
                             modifier = Modifier.fillMaxSize()
                         )
                     }
-
                     galleryIcon != null -> {
                         Image(
                             painter = painterResource(id = galleryIcon),
@@ -234,7 +221,6 @@ fun CameraMenuView(
                     }
                 }
             }
-
             // Main action button (Photo or Video)
             Box(
                 modifier = Modifier
@@ -260,7 +246,6 @@ fun CameraMenuView(
                     )
                 }
             }
-
             // More button
             Box(
                 modifier = Modifier
@@ -279,7 +264,6 @@ fun CameraMenuView(
                             modifier = Modifier.fillMaxSize()
                         )
                     }
-
                     moreIcon != null -> {
                         Image(
                             painter = painterResource(id = moreIcon),

@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.testing.ui
-
 import android.os.Bundle
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -26,23 +25,16 @@ import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
 import kotlin.system.measureTimeMillis
 
-/**
- * Compose version of RAW Capture Test Activity
- * Tests RAW image capture functionality and Stage 3/Level 3 DNG capabilities
- */
 class RawCaptureTestComposeActivity : ComponentActivity() {
-
     companion object {
         private const val TAG = "RawCaptureTestCompose"
     }
-
     data class CaptureFormat(
         val name: String,
         val description: String,
         val supported: Boolean,
         val fileExtension: String
     )
-
     data class CaptureResult(
         val format: String,
         val success: Boolean,
@@ -50,24 +42,19 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
         val captureDurationMs: Long,
         val details: String
     )
-
     private var rgbCameraRecorder: RgbCameraRecorder? = null
     private var isRecording = false
     private var captureResults by mutableStateOf(listOf<CaptureResult>())
     private var isTestRunning by mutableStateOf(false)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initializeCamera()
-
         setContent {
             LibUnifiedTheme {
                 RawCaptureTestScreen()
             }
         }
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun RawCaptureTestScreen() {
@@ -76,7 +63,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
         var deviceCompatibility by remember { mutableStateOf(mapOf<String, Any>()) }
         var selectedFormat by remember { mutableStateOf("DNG") }
         var captureSettings by remember { mutableStateOf(mapOf<String, Boolean>()) }
-
         // Initialize test cases and formats
         LaunchedEffect(Unit) {
             testResults = listOf(
@@ -111,7 +97,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                     description = "Test RAW capture speed and efficiency"
                 )
             )
-
             captureFormats = listOf(
                 CaptureFormat(
                     name = "DNG",
@@ -132,18 +117,15 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                     fileExtension = ".jpg+.dng"
                 )
             )
-
             captureSettings = mapOf(
                 "Manual Focus" to false,
                 "Manual Exposure" to false,
                 "Stage 3 Processing" to SamsungDeviceCompatibility.isStage3Compatible(),
                 "Metadata Embedding" to true
             )
-
             // Load device compatibility info
             val isStage3Compatible = SamsungDeviceCompatibility.isStage3Compatible()
             val deviceInfo = SamsungDeviceCompatibility.getDeviceInfo()
-
             deviceCompatibility = mapOf(
                 "Device Model" to deviceInfo,
                 "Stage 3 Compatible" to isStage3Compatible,
@@ -153,7 +135,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                 "Max Resolution" to "64MP"
             )
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -220,9 +201,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Device Compatibility Metrics
                 if (deviceCompatibility.isNotEmpty()) {
                     TestMetricsDisplay(
@@ -231,7 +210,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 // Capture Format Selection
                 Card {
                     Column(modifier = Modifier.padding(16.dp)) {
@@ -241,7 +219,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-
                         captureFormats.forEach { format ->
                             CaptureFormatItem(
                                 format = format,
@@ -252,9 +229,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Capture Settings
                 Card {
                     Column(modifier = Modifier.padding(16.dp)) {
@@ -264,7 +239,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-
                         captureSettings.forEach { (setting, enabled) ->
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -287,9 +261,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Test Progress
                 TestProgressIndicator(
                     totalTests = testResults.size,
@@ -297,9 +269,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                     passedTests = testResults.count { it.status == TestStatus.PASSED },
                     failedTests = testResults.count { it.status == TestStatus.FAILED }
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Capture Control Buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -326,7 +296,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                             Text("Run All Tests")
                         }
                     }
-
                     OutlinedButton(
                         onClick = {
                             lifecycleScope.launch { captureRawImage(selectedFormat) }
@@ -339,9 +308,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                         Text("Capture $selectedFormat")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Individual Test Cases
                 testResults.forEach { testCase ->
                     TestResultCard(
@@ -350,11 +317,9 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                 }
-
                 // Capture Results
                 if (captureResults.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -363,7 +328,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                                 fontWeight = FontWeight.Medium
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-
                             captureResults.forEach { result ->
                                 CaptureResultItem(result = result)
                                 Spacer(modifier = Modifier.height(8.dp))
@@ -374,7 +338,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             }
         }
     }
-
     @Composable
     fun CaptureFormatItem(
         format: CaptureFormat,
@@ -398,7 +361,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (format.supported) {
                     RadioButton(
@@ -416,7 +378,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             }
         }
     }
-
     @Composable
     fun CaptureResultItem(result: CaptureResult) {
         Row(
@@ -445,7 +406,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = "${result.fileSizeMB} MB",
@@ -458,7 +418,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             }
         }
     }
-
     private fun initializeCamera() {
         try {
             rgbCameraRecorder = RgbCameraRecorder(this, this)
@@ -467,48 +426,36 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Failed to initialize camera: ${e.message}")
         }
     }
-
     private suspend fun runAllCaptureTests() {
         AppLogger.i(TAG, "Running all RAW capture tests")
-
         val results = mutableListOf<CaptureResult>()
-
         try {
             // Test DNG capture
             val dngResult = captureRawImage("DNG")
             if (dngResult != null) results.add(dngResult)
-
             delay(2000)
-
             // Test RAW capture if supported
             if (SamsungDeviceCompatibility.isStage3Compatible()) {
                 val rawResult = captureRawImage("RAW")
                 if (rawResult != null) results.add(rawResult)
             }
-
             delay(2000)
-
             // Test JPEG + RAW
             val combinedResult = captureRawImage("JPEG + RAW")
             if (combinedResult != null) results.add(combinedResult)
-
             captureResults = results
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "All capture tests failed: ${e.message}")
         } finally {
             isTestRunning = false
         }
     }
-
     private suspend fun captureRawImage(format: String): CaptureResult? {
         AppLogger.d(TAG, "Capturing RAW image in $format format")
-
         return try {
             val captureDuration = measureTimeMillis {
                 delay(3000) // Simulate capture time
             }
-
             // Simulate different file sizes and success rates
             val success = when (format) {
                 "DNG" -> true
@@ -516,14 +463,12 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                 "JPEG + RAW" -> true
                 else -> false
             }
-
             val fileSizeMB = when (format) {
                 "DNG" -> 25.6
                 "RAW" -> 32.1
                 "JPEG + RAW" -> 28.3
                 else -> 0.0
             }
-
             CaptureResult(
                 format = format,
                 success = success,
@@ -531,7 +476,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                 captureDurationMs = captureDuration,
                 details = if (success) "Capture completed successfully" else "Format not supported on this device"
             )
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "$format capture failed: ${e.message}")
             CaptureResult(
@@ -543,7 +487,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             )
         }
     }
-
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {
@@ -556,7 +499,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             }
         }
     }
-
     private suspend fun testDeviceCompatibility() {
         AppLogger.d(TAG, "Testing device compatibility")
         try {
@@ -566,7 +508,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Device compatibility test failed: ${e.message}")
         }
     }
-
     private suspend fun testStage3Support() {
         AppLogger.d(TAG, "Testing Stage 3/Level 3 support")
         try {
@@ -576,7 +517,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Stage 3 support test failed: ${e.message}")
         }
     }
-
     private suspend fun testCaptureQuality() {
         AppLogger.d(TAG, "Testing capture quality")
         try {
@@ -586,7 +526,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Capture quality test failed: ${e.message}")
         }
     }
-
     private suspend fun testFileFormats() {
         AppLogger.d(TAG, "Testing file formats")
         try {
@@ -596,7 +535,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "File formats test failed: ${e.message}")
         }
     }
-
     private suspend fun testCapturePerformance() {
         AppLogger.d(TAG, "Testing capture performance")
         try {

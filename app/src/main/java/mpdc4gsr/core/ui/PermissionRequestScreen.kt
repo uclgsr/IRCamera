@@ -1,5 +1,4 @@
 package mpdc4gsr.core.ui
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,7 +18,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.collectLatest
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermissionRequestScreen(
@@ -30,7 +28,6 @@ fun PermissionRequestScreen(
     val permissionStates by viewModel.permissionStates.collectAsStateWithLifecycle()
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
     val logMessages by viewModel.logMessages.collectAsStateWithLifecycle()
-
     // Handle one-time events
     LaunchedEffect(viewModel) {
         viewModel.events.collectLatest { event ->
@@ -38,18 +35,15 @@ fun PermissionRequestScreen(
                 is PermissionRequestViewModel.PermissionEvent.ShowError -> {
                     // Handle error display
                 }
-
                 is PermissionRequestViewModel.PermissionEvent.ShowSuccess -> {
                     // Handle success display
                 }
-
                 PermissionRequestViewModel.PermissionEvent.NavigateToRecording -> {
                     // Navigate to recording activity
                 }
             }
         }
     }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -81,7 +75,6 @@ fun PermissionRequestScreen(
                 screenState = screenState,
                 permissionStates = permissionStates
             )
-
             // Permission Cards
             PermissionCardsSection(
                 permissionStates = permissionStates,
@@ -91,7 +84,6 @@ fun PermissionRequestScreen(
                 onRequestStorage = { viewModel.requestStoragePermissions() },
                 isRequestingPermissions = screenState.isRequestingPermissions
             )
-
             // Action Buttons
             ActionButtonsSection(
                 screenState = screenState,
@@ -99,7 +91,6 @@ fun PermissionRequestScreen(
                 onTestCapabilities = { viewModel.testRecordingCapabilities() },
                 onStartRecording = { viewModel.startRecordingSession() }
             )
-
             // Log Section
             LogSection(
                 logMessages = logMessages,
@@ -108,7 +99,6 @@ fun PermissionRequestScreen(
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StatusOverviewCard(
@@ -155,12 +145,10 @@ private fun StatusOverviewCard(
                     )
                 }
             }
-
             Text(
                 text = screenState.statusMessage,
                 style = MaterialTheme.typography.bodyMedium
             )
-
             // Permission quick status
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -174,7 +162,6 @@ private fun StatusOverviewCard(
         }
     }
 }
-
 @Composable
 private fun PermissionStatusChip(
     name: String,
@@ -186,14 +173,12 @@ private fun PermissionStatusChip(
         PermissionRequestViewModel.PermissionStatus.NOT_AVAILABLE -> MaterialTheme.colorScheme.outline
         PermissionRequestViewModel.PermissionStatus.UNKNOWN -> MaterialTheme.colorScheme.outline
     }
-
     val text = when (status) {
         PermissionRequestViewModel.PermissionStatus.GRANTED -> "OK"
         PermissionRequestViewModel.PermissionStatus.DENIED -> "Need"
         PermissionRequestViewModel.PermissionStatus.NOT_AVAILABLE -> "N/A"
         PermissionRequestViewModel.PermissionStatus.UNKNOWN -> "?"
     }
-
     AssistChip(
         onClick = { },
         label = {
@@ -208,7 +193,6 @@ private fun PermissionStatusChip(
         )
     )
 }
-
 @Composable
 private fun PermissionCardsSection(
     permissionStates: PermissionRequestViewModel.PermissionStates,
@@ -228,7 +212,6 @@ private fun PermissionCardsSection(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -250,7 +233,6 @@ private fun PermissionCardsSection(
                 modifier = Modifier.weight(1f)
             )
         }
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -274,7 +256,6 @@ private fun PermissionCardsSection(
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PermissionCard(
@@ -290,7 +271,6 @@ private fun PermissionCard(
         PermissionRequestViewModel.PermissionStatus.DENIED -> MaterialTheme.colorScheme.errorContainer
         else -> MaterialTheme.colorScheme.surfaceVariant
     }
-
     Card(
         onClick = onClick,
         modifier = modifier,
@@ -329,7 +309,6 @@ private fun PermissionCard(
         }
     }
 }
-
 @Composable
 private fun ActionButtonsSection(
     screenState: PermissionRequestViewModel.ScreenState,
@@ -355,7 +334,6 @@ private fun ActionButtonsSection(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Request All")
             }
-
             OutlinedButton(
                 onClick = onTestCapabilities,
                 enabled = !screenState.isRequestingPermissions,
@@ -366,7 +344,6 @@ private fun ActionButtonsSection(
                 Text("Test")
             }
         }
-
         Button(
             onClick = onStartRecording,
             enabled = screenState.canStartRecording && !screenState.isRequestingPermissions,
@@ -378,7 +355,6 @@ private fun ActionButtonsSection(
         }
     }
 }
-
 @Composable
 private fun LogSection(
     logMessages: List<PermissionRequestViewModel.LogMessage>,
@@ -393,7 +369,6 @@ private fun LogSection(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
@@ -401,14 +376,12 @@ private fun LogSection(
             )
         ) {
             val listState = rememberLazyListState()
-
             // Auto-scroll to bottom when new messages arrive
             LaunchedEffect(logMessages.size) {
                 if (logMessages.isNotEmpty()) {
                     listState.animateScrollToItem(logMessages.size - 1)
                 }
             }
-
             LazyColumn(
                 state = listState,
                 modifier = Modifier

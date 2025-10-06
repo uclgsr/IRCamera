@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.camera.ui
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,15 +14,6 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.deferAction
 
-/**
- * Camera Dashboard Screen - Modern Compose Implementation
- *
- * Centralizes camera functionality with modern UI:
- * - RGB camera controls and preview
- * - Dual-mode camera integration
- * - Camera settings and configuration
- * - Recording status and controls
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraDashboardScreen(
@@ -68,7 +58,6 @@ fun CameraDashboardScreen(
         }
     }
 }
-
 @Composable
 private fun CameraDashboardContent(
     onNavigateToDualMode: () -> Unit,
@@ -85,7 +74,6 @@ private fun CameraDashboardContent(
             android.widget.Toast.LENGTH_SHORT
         ).show()
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -95,7 +83,6 @@ private fun CameraDashboardContent(
     ) {
         // Camera Status Card
         CameraStatusCard()
-
         // Camera Modes Card
         CameraModesCard(
             onNavigateToDualMode = onNavigateToDualMode,
@@ -103,15 +90,12 @@ private fun CameraDashboardContent(
             onNavigateToTimeLapse = onNavigateToTimeLapse,
             showToast = showToast
         )
-
         // Recording Controls Card
         RecordingControlsCard(
             onNavigateToSingleCamera = onNavigateToSingleCamera
         )
-
         // Camera Settings Card
         CameraSettingsCard()
-
         // Preview and Gallery Card
         PreviewGalleryCard(
             onNavigateToSingleCamera = onNavigateToSingleCamera,
@@ -120,7 +104,6 @@ private fun CameraDashboardContent(
         )
     }
 }
-
 @Composable
 private fun CameraStatusCard() {
     Card(
@@ -146,14 +129,11 @@ private fun CameraStatusCard() {
                     fontWeight = FontWeight.Bold
                 )
             }
-
             HorizontalDivider()
-
             // Camera availability indicators
             CameraStatusRow("Front Camera", true)
             CameraStatusRow("Back Camera", true)
             CameraStatusRow("External Camera", false)
-
             // Current camera info
             CameraInfoRow("Active Camera", "Back Camera")
             CameraInfoRow("Resolution", "1920x1080")
@@ -162,7 +142,6 @@ private fun CameraStatusCard() {
         }
     }
 }
-
 @Composable
 private fun CameraStatusRow(
     cameraName: String,
@@ -177,7 +156,6 @@ private fun CameraStatusRow(
             text = cameraName,
             style = MaterialTheme.typography.bodyMedium
         )
-
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -196,7 +174,6 @@ private fun CameraStatusRow(
         }
     }
 }
-
 @Composable
 private fun CameraInfoRow(
     label: String,
@@ -219,7 +196,6 @@ private fun CameraInfoRow(
         )
     }
 }
-
 @Composable
 private fun CameraModesCard(
     onNavigateToDualMode: () -> Unit,
@@ -240,9 +216,7 @@ private fun CameraModesCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             // Single Camera Mode
             CameraModeItem(
                 title = "Single Camera Mode",
@@ -253,7 +227,6 @@ private fun CameraModesCard(
                     onNavigateToSingleCamera?.invoke() ?: showToast("Single camera mode coming soon")
                 }
             )
-
             // Dual Camera Mode
             CameraModeItem(
                 title = "Dual Camera Mode",
@@ -262,7 +235,6 @@ private fun CameraModesCard(
                 isActive = true,
                 onClick = onNavigateToDualMode
             )
-
             // Time-lapse Mode
             CameraModeItem(
                 title = "Time-lapse Mode",
@@ -276,7 +248,6 @@ private fun CameraModesCard(
         }
     }
 }
-
 @Composable
 private fun CameraModeItem(
     title: String,
@@ -306,7 +277,6 @@ private fun CameraModeItem(
                 contentDescription = title,
                 tint = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
             )
-
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -321,7 +291,6 @@ private fun CameraModeItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             if (isActive) {
                 Badge {
                     Text("Active")
@@ -330,13 +299,11 @@ private fun CameraModeItem(
         }
     }
 }
-
 @Composable
 private fun RecordingControlsCard(
     onNavigateToSingleCamera: (() -> Unit)? = null
 ) {
     var isRecording by remember { mutableStateOf(false) }
-
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -350,9 +317,7 @@ private fun RecordingControlsCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             // Recording status
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -363,7 +328,6 @@ private fun RecordingControlsCard(
                     "Recording Status",
                     style = MaterialTheme.typography.bodyMedium
                 )
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -381,7 +345,6 @@ private fun RecordingControlsCard(
                     )
                 }
             }
-
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -409,7 +372,6 @@ private fun RecordingControlsCard(
                         Text("Record")
                     }
                 }
-
                 OutlinedButton(
                     onClick = {
                         onNavigateToSingleCamera?.invoke()
@@ -424,7 +386,6 @@ private fun RecordingControlsCard(
         }
     }
 }
-
 @Composable
 private fun CameraSettingsCard() {
     Card(
@@ -440,23 +401,19 @@ private fun CameraSettingsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             // Flash setting
             SettingRow(
                 title = "Flash",
                 value = "Auto",
                 icon = Icons.Default.FlashOn
             )
-
             // Quality setting
             SettingRow(
                 title = "Video Quality",
                 value = "1080p",
                 icon = Icons.Default.HighQuality
             )
-
             // Storage location
             SettingRow(
                 title = "Storage",
@@ -466,7 +423,6 @@ private fun CameraSettingsCard() {
         }
     }
 }
-
 @Composable
 private fun SettingRow(
     title: String,
@@ -483,13 +439,11 @@ private fun SettingRow(
             contentDescription = title,
             tint = MaterialTheme.colorScheme.primary
         )
-
         Text(
             title,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f)
         )
-
         Text(
             value,
             style = MaterialTheme.typography.bodyMedium,
@@ -498,7 +452,6 @@ private fun SettingRow(
         )
     }
 }
-
 @Composable
 private fun PreviewGalleryCard(
     onNavigateToSingleCamera: (() -> Unit)? = null,
@@ -518,9 +471,7 @@ private fun PreviewGalleryCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -535,7 +486,6 @@ private fun PreviewGalleryCard(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Preview")
                 }
-
                 OutlinedButton(
                     onClick = {
                         onNavigateToGallery?.invoke() ?: showToast("Gallery feature coming soon")

@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.gsr.ui
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -10,11 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-
-/**
- * Placeholder screens for GSR navigation integration
- * These integrate with the new Compose activities via navigation
- */
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +39,6 @@ fun GSRSettingsScreenPlaceholder(
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionDetailScreen(
@@ -82,7 +75,6 @@ fun SessionDetailScreen(
                     )
                     Text("Session ID: $sessionId")
                     Text("Use SessionDetailComposeActivity for full functionality")
-
                     Button(onClick = onNavigateToGSRPlot) {
                         Text("View Plot")
                     }
@@ -91,7 +83,6 @@ fun SessionDetailScreen(
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun GSRPlotScreenPlaceholder(
@@ -132,7 +123,6 @@ internal fun GSRPlotScreenPlaceholder(
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRDataViewScreen(

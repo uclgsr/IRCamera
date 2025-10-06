@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.compose
-
 import androidx.compose.animation.*
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -27,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-
 @Composable
 fun VideoPlayerCompose(
     url: String?,
@@ -47,7 +45,6 @@ fun VideoPlayerCompose(
     var currentPosition by remember { mutableStateOf(0L) }
     var duration by remember { mutableStateOf(0L) }
     var volume by remember { mutableStateOf(1f) }
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -71,7 +68,6 @@ fun VideoPlayerCompose(
                 )
             }
         }
-
         // Video controls overlay
         if (isTouchWidget) {
             VideoControlsOverlayCompose(
@@ -103,7 +99,6 @@ fun VideoPlayerCompose(
                 modifier = Modifier.fillMaxSize()
             )
         }
-
         // Loading indicator
         if (isLoading) {
             Box(
@@ -118,7 +113,6 @@ fun VideoPlayerCompose(
         }
     }
 }
-
 @Composable
 private fun EmptyVideoStateCompose() {
     Column(
@@ -139,7 +133,6 @@ private fun EmptyVideoStateCompose() {
         )
     }
 }
-
 @Composable
 private fun VideoSurfaceCompose(
     url: String,
@@ -161,7 +154,6 @@ private fun VideoSurfaceCompose(
                 tint = Color.White.copy(alpha = 0.8f)
             )
         }
-
         // URL display for preview
         Text(
             text = "Video: ${url.takeLast(30)}",
@@ -173,7 +165,6 @@ private fun VideoSurfaceCompose(
         )
     }
 }
-
 @Composable
 private fun VideoControlsOverlayCompose(
     isPlaying: Boolean,
@@ -191,7 +182,6 @@ private fun VideoControlsOverlayCompose(
 ) {
     var showControls by remember { mutableStateOf(true) }
     var showVolumeSlider by remember { mutableStateOf(false) }
-
     LaunchedEffect(showControls) {
         if (showControls && isPlaying) {
             // Auto-hide controls after 3 seconds when playing
@@ -199,7 +189,6 @@ private fun VideoControlsOverlayCompose(
             showControls = false
         }
     }
-
     Box(
         modifier = modifier.clickable { showControls = !showControls }
     ) {
@@ -225,7 +214,6 @@ private fun VideoControlsOverlayCompose(
                     color = Color.White,
                     modifier = Modifier.weight(1f)
                 )
-
                 IconButton(
                     onClick = onFullscreenToggle
                 ) {
@@ -237,7 +225,6 @@ private fun VideoControlsOverlayCompose(
                 }
             }
         }
-
         // Center play/pause button
         AnimatedVisibility(
             visible = showControls && !isLoading,
@@ -258,7 +245,6 @@ private fun VideoControlsOverlayCompose(
                 )
             }
         }
-
         // Bottom controls
         AnimatedVisibility(
             visible = showControls,
@@ -284,7 +270,6 @@ private fun VideoControlsOverlayCompose(
         }
     }
 }
-
 @Composable
 private fun VideoBottomControlsCompose(
     currentPosition: Long,
@@ -314,7 +299,6 @@ private fun VideoBottomControlsCompose(
                 color = Color.White,
                 modifier = Modifier.width(48.dp)
             )
-
             Slider(
                 value = if (duration > 0) currentPosition.toFloat() / duration else 0f,
                 onValueChange = { progress ->
@@ -327,7 +311,6 @@ private fun VideoBottomControlsCompose(
                     inactiveTrackColor = Color.White.copy(alpha = 0.3f)
                 )
             )
-
             Text(
                 text = formatTime(duration),
                 style = MaterialTheme.typography.bodySmall,
@@ -336,7 +319,6 @@ private fun VideoBottomControlsCompose(
                 textAlign = TextAlign.End
             )
         }
-
         // Volume controls
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -364,7 +346,6 @@ private fun VideoBottomControlsCompose(
                     Spacer(modifier = Modifier.width(8.dp))
                 }
             }
-
             IconButton(
                 onClick = onVolumeToggle
             ) {
@@ -381,7 +362,6 @@ private fun VideoBottomControlsCompose(
         }
     }
 }
-
 @Composable
 fun ThermalImageLoaderCompose(
     url: String?,
@@ -403,7 +383,6 @@ fun ThermalImageLoaderCompose(
         onError = { onImageError?.invoke() }
     )
 }
-
 @Composable
 fun MediaUtilsCompose(
     mediaFiles: List<MediaFile>,
@@ -428,7 +407,6 @@ fun MediaUtilsCompose(
         }
     }
 }
-
 @Composable
 private fun MediaFileItemCompose(
     file: MediaFile,
@@ -462,9 +440,7 @@ private fun MediaFileItemCompose(
                 modifier = Modifier.size(40.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -479,7 +455,6 @@ private fun MediaFileItemCompose(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             }
-
             IconButton(onClick = onShare) {
                 Icon(
                     imageVector = Icons.Default.Share,
@@ -487,7 +462,6 @@ private fun MediaFileItemCompose(
                     tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             }
-
             IconButton(onClick = onDelete) {
                 Icon(
                     imageVector = Icons.Default.Delete,
@@ -498,7 +472,6 @@ private fun MediaFileItemCompose(
         }
     }
 }
-
 // Helper functions
 private fun formatTime(milliseconds: Long): String {
     val seconds = milliseconds / 1000
@@ -510,7 +483,6 @@ private fun formatTime(milliseconds: Long): String {
         "%02d:%02d".format(minutes, seconds % 60)
     }
 }
-
 private fun formatFileSize(bytes: Long): String {
     val kb = bytes / 1024.0
     val mb = kb / 1024.0
@@ -522,7 +494,6 @@ private fun formatFileSize(bytes: Long): String {
         else -> "$bytes B"
     }
 }
-
 // Data classes and interfaces
 interface VideoPlayerCallback {
     fun onPlayStateChanged(isPlaying: Boolean)
@@ -530,7 +501,6 @@ interface VideoPlayerCallback {
     fun onVolumeChanged(volume: Float)
     fun onFullscreenChanged(isFullscreen: Boolean)
 }
-
 data class MediaFile(
     val id: String,
     val name: String,
@@ -540,11 +510,9 @@ data class MediaFile(
     val duration: Long,
     val thumbnailPath: String? = null
 )
-
 enum class MediaFileType {
     VIDEO, IMAGE, AUDIO
 }
-
 // Preview functions
 @Preview(showBackground = true)
 @Composable
@@ -557,7 +525,6 @@ private fun VideoPlayerComposePreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun MediaUtilsComposePreview() {

@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.testing.ui
-
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -33,21 +32,13 @@ import mpdc4gsr.feature.testing.presentation.PermissionRequestTestViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Compose version of Permission Request Activity
- * Tests permission system functionality and validation
- * Migrated to BaseComposeActivity for consistency
- */
 class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionRequestTestViewModel>() {
-
     companion object {
         private const val TAG = "PermissionRequestTestCompose"
     }
-
     enum class PermissionStatus {
         GRANTED, DENIED, NOT_REQUESTED, REQUESTING
     }
-
     data class PermissionInfo(
         val permission: String,
         val name: String,
@@ -56,40 +47,33 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
         val isRequired: Boolean,
         val lastChecked: Long = System.currentTimeMillis()
     )
-
     data class PermissionLog(
         val timestamp: String,
         val action: String,
         val permission: String,
         val result: String
     )
-
     private lateinit var permissionController: PermissionController
     private lateinit var permissionManager: PermissionManager
     private var isTestRunning by mutableStateOf(false)
-
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         handlePermissionResults(permissions)
     }
-
     override fun createViewModel(): PermissionRequestTestViewModel {
         return viewModels<PermissionRequestTestViewModel>().value
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializePermissionSystem()
     }
-
     @Composable
     override fun Content(viewModel: PermissionRequestTestViewModel) {
         LibUnifiedTheme {
             PermissionRequestTestScreen()
         }
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun PermissionRequestTestScreen() {
@@ -98,7 +82,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
         var permissionLogs by remember { mutableStateOf(listOf<PermissionLog>()) }
         var overallPermissionStatus by remember { mutableStateOf("Not Checked") }
         var canStartRecording by remember { mutableStateOf(false) }
-
         // Function to update permission status (defined before being used)
         fun updatePermissionStatus() {
             val permissionList = listOf(
@@ -152,19 +135,15 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                     isRequired = false
                 )
             )
-
             permissions = permissionList
-
             val grantedCount = permissions.count { it.status == PermissionStatus.GRANTED }
             val requiredCount = permissions.count { it.isRequired }
             val requiredGrantedCount =
                 permissions.count { it.isRequired && it.status == PermissionStatus.GRANTED }
-
             overallPermissionStatus =
                 "$requiredGrantedCount/$requiredCount required permissions granted"
             canStartRecording = requiredGrantedCount == requiredCount
         }
-
         // Initialize test cases and permissions
         LaunchedEffect(Unit) {
             testResults = listOf(
@@ -199,10 +178,8 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                     description = "Test permission state persistence"
                 )
             )
-
             updatePermissionStatus()
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -259,7 +236,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                                     fontWeight = FontWeight.Medium
                                 )
                             }
-
                             if (canStartRecording) {
                                 AssistChip(
                                     onClick = { },
@@ -273,7 +249,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                                 )
                             }
                         }
-
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = overallPermissionStatus,
@@ -281,9 +256,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Permission List
                 Card {
                     Column(modifier = Modifier.padding(16.dp)) {
@@ -293,7 +266,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-
                         permissions.forEach { permission ->
                             PermissionItem(
                                 permission = permission,
@@ -303,9 +275,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Test Progress
                 TestProgressIndicator(
                     totalTests = testResults.size,
@@ -313,9 +283,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                     passedTests = testResults.count { it.status == TestStatus.PASSED },
                     failedTests = testResults.count { it.status == TestStatus.FAILED }
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Permission Control Buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -332,7 +300,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Request All")
                     }
-
                     OutlinedButton(
                         onClick = {
                             updatePermissionStatus()
@@ -344,9 +311,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                         Text("Refresh Status")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -372,7 +337,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                             Text("Run Tests")
                         }
                     }
-
                     OutlinedButton(
                         onClick = {
                             if (canStartRecording) {
@@ -392,9 +356,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                         Text("Start Recording")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Individual Test Cases
                 testResults.forEach { testCase ->
                     TestResultCard(
@@ -403,11 +365,9 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                 }
-
                 // Permission Logs
                 if (permissionLogs.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Row(
@@ -426,9 +386,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                                     Text("Clear")
                                 }
                             }
-
                             Spacer(modifier = Modifier.height(8.dp))
-
                             permissionLogs.takeLast(8).forEach { log ->
                                 PermissionLogItem(log = log)
                                 Spacer(modifier = Modifier.height(4.dp))
@@ -439,7 +397,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             }
         }
     }
-
     @Composable
     fun PermissionItem(
         permission: PermissionInfo,
@@ -479,7 +436,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             if (permission.status != PermissionStatus.GRANTED) {
                 TextButton(onClick = onRequest) {
                     Text("Request")
@@ -487,7 +443,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             }
         }
     }
-
     @Composable
     fun PermissionLogItem(log: PermissionLog) {
         Row(
@@ -512,7 +467,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             )
         }
     }
-
     private fun getPermissionIcon(status: PermissionStatus): androidx.compose.ui.graphics.vector.ImageVector {
         return when (status) {
             PermissionStatus.GRANTED -> Icons.Default.CheckCircle
@@ -521,7 +475,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             PermissionStatus.REQUESTING -> Icons.Default.HourglassEmpty
         }
     }
-
     @Composable
     private fun getPermissionColor(status: PermissionStatus): androidx.compose.ui.graphics.Color {
         return when (status) {
@@ -531,12 +484,10 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             PermissionStatus.REQUESTING -> MaterialTheme.colorScheme.tertiary
         }
     }
-
     private fun initializePermissionSystem() {
         permissionController = PermissionController(this)
         permissionManager = PermissionManager(this, permissionController)
     }
-
     private fun getPermissionStatus(permission: String): PermissionStatus {
         return when (ContextCompat.checkSelfPermission(this, permission)) {
             PackageManager.PERMISSION_GRANTED -> PermissionStatus.GRANTED
@@ -544,7 +495,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             else -> PermissionStatus.NOT_REQUESTED
         }
     }
-
     private fun requestAllPermissions() {
         val requiredPermissions = arrayOf(
             Manifest.permission.CAMERA,
@@ -555,58 +505,45 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
-
         addPermissionLog("REQUEST_ALL", "Multiple", "Requesting all required permissions")
         permissionLauncher.launch(requiredPermissions)
     }
-
     private fun requestSinglePermission(permission: String) {
         addPermissionLog("REQUEST_SINGLE", permission, "Requesting single permission")
         permissionLauncher.launch(arrayOf(permission))
     }
-
     private fun handlePermissionResults(permissions: Map<String, Boolean>) {
         permissions.forEach { (permission, granted) ->
             val result = if (granted) "GRANTED" else "DENIED"
             addPermissionLog("RESULT", permission, result)
         }
     }
-
     private fun addPermissionLog(action: String, permission: String, result: String) {
         val timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
         val log = PermissionLog(timestamp, action, permission, result)
         // In a real implementation, this would update the state properly
         AppLogger.d(TAG, "Permission log: $log")
     }
-
     private suspend fun runAllPermissionTests() {
         AppLogger.i(TAG, "Running all permission tests")
-
         try {
             testCameraPermissions()
             delay(1000)
-
             testBluetoothPermissions()
             delay(1000)
-
             testStoragePermissions()
             delay(1000)
-
             testMicrophonePermissions()
             delay(1000)
-
             testPermissionFlow()
             delay(1000)
-
             testPermissionPersistence()
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Permission tests failed: ${e.message}")
         } finally {
             isTestRunning = false
         }
     }
-
     private suspend fun testCameraPermissions() {
         AppLogger.d(TAG, "Testing camera permissions")
         try {
@@ -616,7 +553,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             AppLogger.e(TAG, "Camera permissions test failed: ${e.message}")
         }
     }
-
     private suspend fun testBluetoothPermissions() {
         AppLogger.d(TAG, "Testing Bluetooth permissions")
         try {
@@ -626,7 +562,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             AppLogger.e(TAG, "Bluetooth permissions test failed: ${e.message}")
         }
     }
-
     private suspend fun testStoragePermissions() {
         AppLogger.d(TAG, "Testing storage permissions")
         try {
@@ -636,7 +571,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             AppLogger.e(TAG, "Storage permissions test failed: ${e.message}")
         }
     }
-
     private suspend fun testMicrophonePermissions() {
         AppLogger.d(TAG, "Testing microphone permissions")
         try {
@@ -646,7 +580,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             AppLogger.e(TAG, "Microphone permissions test failed: ${e.message}")
         }
     }
-
     private suspend fun testPermissionFlow() {
         AppLogger.d(TAG, "Testing permission flow")
         try {
@@ -656,7 +589,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             AppLogger.e(TAG, "Permission flow test failed: ${e.message}")
         }
     }
-
     private suspend fun testPermissionPersistence() {
         AppLogger.d(TAG, "Testing permission persistence")
         try {
@@ -666,7 +598,6 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             AppLogger.e(TAG, "Permission persistence test failed: ${e.message}")
         }
     }
-
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {

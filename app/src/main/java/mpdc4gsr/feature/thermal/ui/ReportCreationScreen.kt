@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.thermal.ui
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -26,10 +25,6 @@ import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * Report Creation Screen - Create thermal imaging reports with annotations
- * Replaces report creation activities with Compose implementation
- */
 @Composable
 fun ReportCreationScreen(
     imageUri: String? = null,
@@ -44,9 +39,7 @@ fun ReportCreationScreen(
     var includeAnnotations by remember { mutableStateOf(true) }
     var reportFormat by remember { mutableStateOf(ReportFormat.PDF) }
     var currentStep by remember { mutableIntStateOf(0) }
-
     val steps = listOf("Basic Info", "Content", "Format", "Preview")
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -71,7 +64,6 @@ fun ReportCreationScreen(
                 }
             )
         }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -83,7 +75,6 @@ fun ReportCreationScreen(
                 steps = steps,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
             // Step Content
             when (currentStep) {
                 0 -> BasicInfoStep(
@@ -92,7 +83,6 @@ fun ReportCreationScreen(
                     description = description,
                     onDescriptionChange = { description = it }
                 )
-
                 1 -> ContentStep(
                     observations = observations,
                     onObservationsChange = { observations = it },
@@ -103,12 +93,10 @@ fun ReportCreationScreen(
                     includeAnnotations = includeAnnotations,
                     onAnnotationsChange = { includeAnnotations = it }
                 )
-
                 2 -> FormatStep(
                     selectedFormat = reportFormat,
                     onFormatChange = { reportFormat = it }
                 )
-
                 3 -> PreviewStep(
                     title = reportTitle,
                     description = description,
@@ -116,9 +104,7 @@ fun ReportCreationScreen(
                     format = reportFormat
                 )
             }
-
             Spacer(modifier = Modifier.weight(1f))
-
             // Navigation Buttons
             val context = androidx.compose.ui.platform.LocalContext.current
             ReportNavigationButtons(
@@ -138,7 +124,6 @@ fun ReportCreationScreen(
         }
     }
 }
-
 @Composable
 private fun ReportProgressIndicator(
     currentStep: Int,
@@ -158,9 +143,7 @@ private fun ReportProgressIndicator(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             LinearProgressIndicator(
                 progress = { (currentStep + 1).toFloat() / steps.size },
                 modifier = Modifier.fillMaxWidth(),
@@ -170,7 +153,6 @@ private fun ReportProgressIndicator(
         }
     }
 }
-
 @Composable
 private fun BasicInfoStep(
     title: String,
@@ -179,7 +161,6 @@ private fun BasicInfoStep(
     onDescriptionChange: (String) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -200,7 +181,6 @@ private fun BasicInfoStep(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
                 OutlinedTextField(
                     value = title,
                     onValueChange = onTitleChange,
@@ -222,9 +202,7 @@ private fun BasicInfoStep(
                         }
                     )
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 OutlinedTextField(
                     value = description,
                     onValueChange = onDescriptionChange,
@@ -250,12 +228,10 @@ private fun BasicInfoStep(
                 )
             }
         }
-
         // Metadata Card
         MetadataInfoCard()
     }
 }
-
 @Composable
 private fun ContentStep(
     observations: String,
@@ -268,7 +244,6 @@ private fun ContentStep(
     onAnnotationsChange: (Boolean) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -289,7 +264,6 @@ private fun ContentStep(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
                 OutlinedTextField(
                     value = observations,
                     onValueChange = onObservationsChange,
@@ -315,7 +289,6 @@ private fun ContentStep(
                 )
             }
         }
-
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -330,21 +303,18 @@ private fun ContentStep(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
                 ContentToggleItem(
                     label = "Image Metadata",
                     description = "Include capture date, settings, and device info",
                     checked = includeMetadata,
                     onCheckedChange = onMetadataChange
                 )
-
                 ContentToggleItem(
                     label = "Temperature Data",
                     description = "Include temperature measurements and statistics",
                     checked = includeTemperatureData,
                     onCheckedChange = onTemperatureDataChange
                 )
-
                 ContentToggleItem(
                     label = "Annotations",
                     description = "Include all measurement points and areas",
@@ -355,7 +325,6 @@ private fun ContentStep(
         }
     }
 }
-
 @Composable
 private fun FormatStep(
     selectedFormat: ReportFormat,
@@ -375,7 +344,6 @@ private fun FormatStep(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
             ReportFormat.entries.forEach { format ->
                 ReportFormatOption(
                     format = format,
@@ -387,7 +355,6 @@ private fun FormatStep(
         }
     }
 }
-
 @Composable
 private fun PreviewStep(
     title: String,
@@ -411,7 +378,6 @@ private fun PreviewStep(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
             // Report Preview Content
             Text(
                 text = title,
@@ -420,7 +386,6 @@ private fun PreviewStep(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-
             if (description.isNotEmpty()) {
                 Text(
                     text = description,
@@ -429,7 +394,6 @@ private fun PreviewStep(
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
             }
-
             if (observations.isNotEmpty()) {
                 Text(
                     text = "Observations:",
@@ -445,7 +409,6 @@ private fun PreviewStep(
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
             }
-
             Text(
                 text = "Export Format: ${format.displayName}",
                 color = MaterialTheme.colorScheme.primary,
@@ -455,7 +418,6 @@ private fun PreviewStep(
         }
     }
 }
-
 @Composable
 private fun MetadataInfoCard() {
     Card(
@@ -472,7 +434,6 @@ private fun MetadataInfoCard() {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-
             val metadata = listOf(
                 "Capture Date" to "2024-01-15 14:30:22",
                 "Device" to "TOPDON TC001",
@@ -480,7 +441,6 @@ private fun MetadataInfoCard() {
                 "Temperature Range" to "-20°C to 120°C",
                 "Emissivity" to "0.95"
             )
-
             metadata.forEach { (label, value) ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -494,7 +454,6 @@ private fun MetadataInfoCard() {
         }
     }
 }
-
 @Composable
 private fun ContentToggleItem(
     label: String,
@@ -523,7 +482,6 @@ private fun ContentToggleItem(
                 fontSize = 12.sp
             )
         }
-
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
@@ -536,7 +494,6 @@ private fun ContentToggleItem(
         )
     }
 }
-
 @Composable
 private fun ReportFormatOption(
     format: ReportFormat,
@@ -564,9 +521,7 @@ private fun ReportFormatOption(
                     unselectedColor = Color.Gray
                 )
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Column {
                 Text(
                     text = format.displayName,
@@ -583,7 +538,6 @@ private fun ReportFormatOption(
         }
     }
 }
-
 @Composable
 private fun ReportNavigationButtons(
     currentStep: Int,
@@ -610,7 +564,6 @@ private fun ReportNavigationButtons(
         } else {
             Spacer(modifier = Modifier.width(1.dp))
         }
-
         if (currentStep < totalSteps - 1) {
             Button(
                 onClick = onNext,
@@ -636,14 +589,12 @@ private fun ReportNavigationButtons(
         }
     }
 }
-
 enum class ReportFormat(val displayName: String, val description: String) {
     PDF("PDF Document", "Portable document format with images and text"),
     WORD("Word Document", "Microsoft Word document with editable content"),
     HTML("HTML Report", "Web-based report with interactive elements"),
     EXCEL("Excel Spreadsheet", "Data-focused report with temperature analysis")
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun ReportCreationScreenPreview() {

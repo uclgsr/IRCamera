@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.ktbase
-
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -32,29 +31,19 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
-
 abstract class BaseActivity : AppCompatActivity() {
     val TAG = this.javaClass.simpleName
-
     protected abstract fun initContentView(): Int
-
     protected abstract fun initView()
-
     protected abstract fun initData()
-
     protected var savedInstanceState: Bundle? = null
-
     protected open fun isLockPortrait(): Boolean = true
-
     private val activityScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BaseApplication.instance.activitys.add(this)
         this.savedInstanceState = savedInstanceState
-
         observeDeviceEvents()
-
         if (isLockPortrait()) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
@@ -65,7 +54,6 @@ abstract class BaseActivity : AppCompatActivity() {
         initData()
         synLogin()
     }
-
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(
             AppLanguageUtils.attachBaseContext(
@@ -74,26 +62,21 @@ abstract class BaseActivity : AppCompatActivity() {
             )
         )
     }
-
     override fun onStart() {
         super.onStart()
     }
-
     override fun onResume() {
         super.onResume()
     }
-
     override fun onStop() {
         super.onStop()
     }
-
     override fun onDestroy() {
         cameraDialogState.dismiss()
         super.onDestroy()
         activityScope.cancel()
         BaseApplication.instance.activitys.remove(this)
     }
-
     private fun observeDeviceEvents() {
         activityScope.launch {
             DeviceEventManager.deviceConnectionState.collectLatest { state ->
@@ -106,7 +89,6 @@ abstract class BaseActivity : AppCompatActivity() {
                 }
             }
         }
-
         activityScope.launch {
             DeviceEventManager.socketConnectionState.collectLatest { state ->
                 state?.let {
@@ -120,37 +102,27 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         }
     }
-
     protected open fun connected() {
     }
-
     protected open fun disConnected() {
     }
-
     protected open fun onSocketConnected(isTS004: Boolean) {
     }
-
     protected open fun onSocketDisConnected(isTS004: Boolean) {
     }
-
     private val loadingDialogState by lazy { LoadingDialogState(this) }
-
     fun showLoadingDialog(
         @StringRes resId: Int = R.string.tip_loading,
     ) {
         showLoadingDialog(getString(resId))
     }
-
     fun showLoadingDialog(text: CharSequence?) {
         loadingDialogState.show(text?.toString() ?: "")
     }
-
     fun dismissLoadingDialog() {
         loadingDialogState.dismiss()
     }
-
     private val cameraDialogState by lazy { ProgressDialogState(this) }
-
     fun showCameraLoading() {
         try {
             if (!(isFinishing && isDestroyed)) {
@@ -164,11 +136,9 @@ abstract class BaseActivity : AppCompatActivity() {
             Log.e(TAG, "Error showing camera loading: ${e.message}")
         }
     }
-
     fun dismissCameraLoading() {
         cameraDialogState.dismiss()
     }
-
     private fun synLogin() {
         if (this.javaClass.simpleName == "MainComposeActivity") {
             LMS.getInstance().syncUserInfo()
@@ -191,15 +161,12 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         } else {
             if (UserInfoManager.getInstance().isLogin()) {
-
                 UserInfoManager.getInstance().logout()
             }
         }
     }
-
     protected class TakePhotoResult : ActivityResultContract<File, File?>() {
         private lateinit var file: File
-
         override fun createIntent(
             context: Context,
             input: File,
@@ -209,7 +176,6 @@ abstract class BaseActivity : AppCompatActivity() {
                 FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
             return Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
         }
-
         override fun parseResult(
             resultCode: Int,
             intent: Intent?,

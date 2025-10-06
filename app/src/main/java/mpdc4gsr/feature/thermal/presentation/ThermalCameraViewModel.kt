@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.thermal.presentation
-
 import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
@@ -19,25 +18,15 @@ import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-/**
- * ViewModel for Thermal Camera functionality with full ThermalCameraRecorder integration
- *
- * Manages thermal camera state following MVVM architecture and connects
- * ThermalCameraRecorder to the UI for live preview and recording.
- */
 class ThermalCameraViewModel(application: Application) : ViewModel() {
-
     private val context: Context = application.applicationContext
-
     companion object {
         private const val TAG = "ThermalCameraViewModel"
     }
-
     private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         AppLogger.e(TAG, "Coroutine exception in ThermalCameraViewModel", exception)
         _uiState.update { it.copy(errorMessage = "Error: ${exception.message}") }
     }
-
     data class ThermalCameraUiState(
         val isConnected: Boolean = false,
         val isRecording: Boolean = false,
@@ -53,22 +42,17 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
         val isSimulationMode: Boolean = false,
         val frameCount: Long = 0L
     )
-
     private val _uiState = MutableStateFlow(ThermalCameraUiState())
     val uiState: StateFlow<ThermalCameraUiState> = _uiState.asStateFlow()
-
     private var thermalRecorder: ThermalCameraRecorder? = null
     private var recordingStartTime: Long = 0L
-
     init {
         initializeThermalRecorder()
     }
-
     private fun initializeThermalRecorder() {
         viewModelScope.launch(exceptionHandler) {
             try {
                 thermalRecorder = ThermalCameraRecorder(context, "thermal_preview_1")
-
                 // Set preview callback to receive thermal frames
                 thermalRecorder?.setThermalPreviewCallback(object : ThermalCameraRecorder.ThermalPreviewCallback {
                     override fun onThermalFrame(
@@ -92,17 +76,14 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
                         }
                     }
                 })
-
                 // Initialize the thermal camera
                 val success = thermalRecorder?.initialize() ?: false
-
                 // Update connection status after initialization
                 val status = thermalRecorder?.getThermalSystemStatus()
                 _uiState.value = _uiState.value.copy(
                     isConnected = status?.isConnected ?: false,
                     isSimulationMode = status?.isSimulationMode ?: false
                 )
-
                 if (success) {
                     AppLogger.i(TAG, "Thermal camera initialized successfully")
                 } else {
@@ -119,7 +100,6 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
             }
         }
     }
-
     fun connectToDevice() {
         viewModelScope.launch(exceptionHandler) {
             val status = thermalRecorder?.getThermalSystemStatus()
@@ -129,20 +109,17 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
             )
         }
     }
-
     fun rescanForThermalCamera() {
         viewModelScope.launch(exceptionHandler) {
             try {
                 AppLogger.i(TAG, "Triggering thermal camera rescan from ViewModel")
                 val found = thermalRecorder?.rescanForThermalCamera() ?: false
-
                 val status = thermalRecorder?.getThermalSystemStatus()
                 _uiState.value = _uiState.value.copy(
                     isConnected = status?.isConnected ?: false,
                     isSimulationMode = status?.isSimulationMode ?: false,
                     errorMessage = if (found) null else status?.statusMessage
                 )
-
                 if (found) {
                     AppLogger.i(TAG, "Thermal camera found during rescan")
                 } else {
@@ -156,7 +133,6 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
             }
         }
     }
-
     fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata) {
         viewModelScope.launch(exceptionHandler) {
             try {
@@ -181,7 +157,6 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
             }
         }
     }
-
     fun stopRecording() {
         viewModelScope.launch(exceptionHandler) {
             try {
@@ -196,14 +171,12 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
             }
         }
     }
-
     fun updateRecordingDuration() {
         if (_uiState.value.isRecording) {
             val duration = System.currentTimeMillis() - recordingStartTime
             _uiState.value = _uiState.value.copy(recordingDuration = duration)
         }
     }
-
     override fun onCleared() {
         super.onCleared()
         // Launch async cleanup in viewModelScope before it gets cancelled
@@ -216,7 +189,6 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
                 AppLogger.e(TAG, "Error cleaning up thermal recorder", e)
             }
         }
-
         // Note: viewModelScope will be automatically cancelled after onCleared returns
     }
 }

@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.settings.presentation
-
 import android.Manifest
 import android.app.Application
 import android.bluetooth.BluetoothAdapter
@@ -18,73 +17,56 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.ShimmerDeviceManager
 
-/**
- * Network Settings ViewModel - MVVM Integration
- * Manages WiFi, Bluetooth, and device pairing with existing ShimmerDeviceManager
- */
 class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
-
     private val context: Context = context.applicationContext
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var wifiManager: WifiManager? = null
     private var shimmerDeviceManager: ShimmerDeviceManager? = null
-
     private val _networkSettings = MutableStateFlow(NetworkSettings())
     val networkSettings: StateFlow<NetworkSettings> = _networkSettings.asStateFlow()
-
     private val _pairedDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())
     val pairedDevices: StateFlow<List<DeviceInfo>> = _pairedDevices.asStateFlow()
-
     private val _networkInfo = MutableStateFlow(NetworkInfo())
     val networkInfo: StateFlow<NetworkInfo> = _networkInfo.asStateFlow()
-
     data class NetworkSettings(
         val wifiEnabled: Boolean = true,
         val bluetoothEnabled: Boolean = true,
         val autoConnect: Boolean = true
     )
-
     data class DeviceInfo(
         val name: String,
         val address: String,
         val type: DeviceType,
         val isConnected: Boolean
     )
-
     enum class DeviceType {
         SHIMMER_GSR, TOPDON_THERMAL, UNKNOWN
     }
-
     data class NetworkInfo(
         val wifiNetwork: String = "Not Connected",
         val ipAddress: String = "N/A",
         val bluetoothStatus: String = "Unknown"
     )
-
     companion object {
         private const val KEY_WIFI_ENABLED = "network_wifi_enabled"
         private const val KEY_BLUETOOTH_ENABLED = "network_bluetooth_enabled"
         private const val KEY_AUTO_CONNECT = "network_auto_connect"
     }
-
     init {
         val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         bluetoothAdapter = bluetoothManager?.adapter
         wifiManager = context.getSystemService(Context.WIFI_SERVICE) as? WifiManager
-
         loadSettings()
         updateNetworkInfo()
         loadPairedDevices()
     }
-
     fun initialize() {
         // Kept for compatibility, but initialization now happens in init block
         loadSettings()
         updateNetworkInfo()
         loadPairedDevices()
     }
-
     private fun loadSettings() {
         _networkSettings.value = NetworkSettings(
             wifiEnabled = wifiManager?.isWifiEnabled ?: true,
@@ -92,7 +74,6 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
             autoConnect = prefs.getBoolean(KEY_AUTO_CONNECT, true)
         )
     }
-
     @Suppress("DEPRECATION")
     private fun updateNetworkInfo() {
         viewModelScope.launch {
@@ -106,7 +87,6 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
                     (it shr 24 and 0xff)
                 )
             } ?: "N/A"
-
             _networkInfo.value = NetworkInfo(
                 wifiNetwork = wifiInfo?.ssid?.replace("\"", "") ?: "Not Connected",
                 ipAddress = ipAddress,
@@ -114,11 +94,9 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
             )
         }
     }
-
     private fun loadPairedDevices() {
         viewModelScope.launch {
             val devices = mutableListOf<DeviceInfo>()
-
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT)
                 == PackageManager.PERMISSION_GRANTED
             ) {
@@ -130,7 +108,6 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
                         device.name?.contains("Shimmer", ignoreCase = true) == true -> DeviceType.SHIMMER_GSR
                         device.name?.contains("Topdon", ignoreCase = true) == true ||
                                 device.name?.contains("TC001", ignoreCase = true) == true -> DeviceType.TOPDON_THERMAL
-
                         else -> DeviceType.UNKNOWN
                     }
                     devices.add(
@@ -143,18 +120,15 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
                     )
                 }
             }
-
             _pairedDevices.value = devices
         }
     }
-
     fun updateAutoConnect(enabled: Boolean) {
         viewModelScope.launch {
             prefs.edit().putBoolean(KEY_AUTO_CONNECT, enabled).apply()
             _networkSettings.value = _networkSettings.value.copy(autoConnect = enabled)
         }
     }
-
     fun scanForDevices() {
         viewModelScope.launch {
             loadPairedDevices()
@@ -162,20 +136,10 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
         }
     }
 
-    /**
-     * Refreshes WiFi network information.
-     * Note: Direct WiFi control (enable/disable) requires system-level permissions
-     * in Android 10+ and is not available to regular applications.
-     */
     fun refreshWifiInfo() {
         updateNetworkInfo()
     }
 
-    /**
-     * Refreshes Bluetooth status information.
-     * Note: Direct Bluetooth control (enable/disable) requires BLUETOOTH_ADMIN permission
-     * and user interaction via system dialogs in modern Android versions.
-     */
     fun refreshBluetoothInfo() {
         updateNetworkInfo()
     }

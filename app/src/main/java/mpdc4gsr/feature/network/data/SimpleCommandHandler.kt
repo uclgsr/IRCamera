@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.network.data
-
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -9,10 +8,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
-/**
- * Simplified command handler for PC remote control that works with basic recording interface.
- * Handles START, STOP, SYNC, PING, and GET_STATUS commands as specified in the requirements.
- */
 class SimpleCommandHandler(
     private val recordingController: SimpleRecordingInterface,
     private val networkManager: NetworkManager
@@ -21,16 +16,11 @@ class SimpleCommandHandler(
         private const val TAG = "SimpleCommandHandler"
         private const val STATUS_UPDATE_INTERVAL_MS = 5000L
     }
-
     private val handlerScope = CoroutineScope(Dispatchers.IO)
 
-    /**
-     * Process incoming command from PC
-     */
     suspend fun handleCommand(commandLine: String) {
         try {
             AppLogger.d(TAG, "Processing command: $commandLine")
-
             val response = when {
                 commandLine.startsWith("START") -> handleStartCommand()
                 commandLine.startsWith("STOP") -> handleStopCommand()
@@ -43,11 +33,9 @@ class SimpleCommandHandler(
                     "ERROR cmd=UNKNOWN code=UNKNOWN_COMMAND msg=\"Unknown command: $commandLine\""
                 }
             }
-
             if (response.isNotEmpty()) {
                 networkManager.sendResponse(response)
             }
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error handling command: $commandLine", e)
             val errorResponse =
@@ -55,17 +43,14 @@ class SimpleCommandHandler(
             networkManager.sendResponse(errorResponse)
         }
     }
-
     private suspend fun handleStartCommand(): String = withContext(Dispatchers.IO) {
         try {
             if (recordingController.isRecording) {
                 AppLogger.w(TAG, "START command received but already recording")
                 return@withContext "ERROR cmd=START code=ALREADY_RECORDING msg=\"Recording session already active\""
             }
-
             AppLogger.i(TAG, "Executing START command")
             val success = recordingController.startRecording()
-
             if (success) {
                 AppLogger.i(TAG, "Recording started successfully via remote command")
                 val sessionId = "session_${System.currentTimeMillis()}"
@@ -79,17 +64,14 @@ class SimpleCommandHandler(
             "ERROR cmd=START code=START_EXCEPTION msg=\"Start error: ${e.message}\""
         }
     }
-
     private suspend fun handleStopCommand(): String = withContext(Dispatchers.IO) {
         try {
             if (!recordingController.isRecording) {
                 AppLogger.i(TAG, "STOP command received but not currently recording")
                 return@withContext "STOP-ACK msg=\"No active recording session\""
             }
-
             AppLogger.i(TAG, "Executing STOP command")
             val success = recordingController.stopRecording()
-
             if (success) {
                 AppLogger.i(TAG, "Recording stopped successfully via remote command")
                 "STOP-ACK msg=\"Recording session stopped\""
@@ -102,16 +84,13 @@ class SimpleCommandHandler(
             "ERROR cmd=STOP code=STOP_EXCEPTION msg=\"Stop error: ${e.message}\""
         }
     }
-
     private suspend fun handleSyncCommand(commandLine: String): String =
         withContext(Dispatchers.IO) {
             try {
                 AppLogger.i(TAG, "Executing SYNC command")
                 val phoneTimestamp = System.currentTimeMillis()
-
                 // Extract PC timestamp if provided in the command
                 val pcTimestamp = extractTimestampFromCommand(commandLine)
-
                 if (pcTimestamp != null) {
                     Log.d(
                         TAG,
@@ -127,23 +106,19 @@ class SimpleCommandHandler(
                 "ERROR cmd=SYNC code=SYNC_EXCEPTION msg=\"Sync error: ${e.message}\""
             }
         }
-
     private fun handlePingCommand(): String {
         AppLogger.d(TAG, "Responding to PING")
         return "PONG"
     }
-
     private suspend fun handleGetStatusCommand(): String = withContext(Dispatchers.IO) {
         try {
             val statusMap = recordingController.getStatus()
-
             // Create JSON response for rich status info
             val statusJson = JSONObject().apply {
                 statusMap.forEach { (key, value) ->
                     put(key, value)
                 }
             }
-
             AppLogger.d(TAG, "Status query response: $statusJson")
             "STATUS $statusJson"
         } catch (e: Exception) {
@@ -151,13 +126,11 @@ class SimpleCommandHandler(
             "ERROR cmd=GET_STATUS code=STATUS_EXCEPTION msg=\"Status error: ${e.message}\""
         }
     }
-
     private suspend fun handleJsonCommand(jsonString: String): String =
         withContext(Dispatchers.IO) {
             try {
                 val jsonObj = JSONObject(jsonString)
                 val command = jsonObj.optString("cmd", "")
-
                 return@withContext when (command) {
                     "START" -> handleStartCommand()
                     "STOP" -> handleStopCommand()
@@ -166,7 +139,6 @@ class SimpleCommandHandler(
                         val syncCmd = if (pcTimestamp > 0) "SYNC t_pc=$pcTimestamp" else "SYNC"
                         handleSyncCommand(syncCmd)
                     }
-
                     "PING" -> handlePingCommand()
                     "GET_STATUS" -> handleGetStatusCommand()
                     else -> "ERROR cmd=$command code=UNKNOWN_JSON_COMMAND msg=\"Unknown JSON command: $command\""
@@ -176,7 +148,6 @@ class SimpleCommandHandler(
                 "ERROR cmd=JSON code=JSON_PARSE_ERROR msg=\"Invalid JSON command: ${e.message}\""
             }
         }
-
     private fun extractTimestampFromCommand(commandLine: String): Long? {
         return try {
             val regex = Regex("t_pc=(\\d+)")
@@ -187,14 +158,10 @@ class SimpleCommandHandler(
         }
     }
 
-    /**
-     * Send periodic status updates while recording
-     */
     fun startPeriodicStatusUpdates() {
         handlerScope.launch {
             while (true) {
                 kotlinx.coroutines.delay(STATUS_UPDATE_INTERVAL_MS)
-
                 if (recordingController.isRecording) {
                     try {
                         val statusResponse = handleGetStatusCommand()
@@ -207,9 +174,6 @@ class SimpleCommandHandler(
         }
     }
 
-    /**
-     * Send event-driven notifications for significant events
-     */
     fun notifySessionStarted(sessionId: String) {
         handlerScope.launch {
             try {
@@ -222,7 +186,6 @@ class SimpleCommandHandler(
             }
         }
     }
-
     fun notifySessionStopped(sessionId: String, duration: Long) {
         handlerScope.launch {
             try {
@@ -235,7 +198,6 @@ class SimpleCommandHandler(
             }
         }
     }
-
     fun notifyError(errorType: String, errorMessage: String) {
         handlerScope.launch {
             try {

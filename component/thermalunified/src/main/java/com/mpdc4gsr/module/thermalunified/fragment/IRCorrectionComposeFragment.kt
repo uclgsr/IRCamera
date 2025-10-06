@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.fragment
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,16 +22,12 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.CalibrationStatus
 import com.mpdc4gsr.module.thermalunified.viewmodel.CorrectionState
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRCorrectionViewModel
 import com.mpdc4gsr.module.thermalunified.viewmodel.TemperatureData
-
 class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>() {
-
     // Compatibility property for legacy code that checks frameReady
     val frameReady: Boolean get() = createViewModel().correctionState.value == CorrectionState.ACTIVE
-
     override fun createViewModel(): IRCorrectionViewModel {
         return viewModels<IRCorrectionViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRCorrectionViewModel) {
@@ -41,7 +36,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
         val temperatureData by viewModel.temperatureData.collectAsStateWithLifecycle()
         val calibrationStatus by viewModel.calibrationStatus.collectAsStateWithLifecycle()
         val isProcessing by viewModel.isProcessing.collectAsStateWithLifecycle()
-
         LibUnifiedTheme {
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -53,7 +47,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
                     isProcessing = isProcessing,
                     onToggleCorrection = { viewModel.toggleCorrection() }
                 )
-
                 // Main content area
                 Row(
                     modifier = Modifier
@@ -73,14 +66,12 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
                                 viewModel.updateTemperaturePoint(temp, x, y)
                             }
                         )
-
                         // Temperature overlay
                         TemperatureOverlay(
                             temperatureData = temperatureData,
                             modifier = Modifier.align(Alignment.TopEnd)
                         )
                     }
-
                     // Correction controls panel
                     CorrectionControlsPanel(
                         correctionState = correctionState,
@@ -98,7 +89,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
-
     @Composable
     private fun CorrectionStatusBar(
         correctionState: CorrectionState,
@@ -137,7 +127,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -148,7 +137,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
                             strokeWidth = 2.dp
                         )
                     }
-
                     Switch(
                         checked = correctionState == CorrectionState.ACTIVE,
                         onCheckedChange = { onToggleCorrection() },
@@ -158,7 +146,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
-
     @Composable
     private fun ThermalCorrectionView(
         temperatureData: TemperatureData?,
@@ -187,7 +174,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
                     },
                     modifier = Modifier.fillMaxSize()
                 )
-
                 // Camera view overlay
                 AndroidView(
                     factory = { context ->
@@ -200,7 +186,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
-
     @Composable
     private fun TemperatureOverlay(
         temperatureData: TemperatureData?,
@@ -216,13 +201,11 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
                     temperature = "${data.currentTemp}°C",
                     isMain = true
                 )
-
                 TemperatureCard(
                     label = "Corrected",
                     temperature = "${data.correctedTemp}°C",
                     color = Color.Green
                 )
-
                 TemperatureCard(
                     label = "Offset",
                     temperature = "${data.offsetValue}°C",
@@ -231,7 +214,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
-
     @Composable
     private fun TemperatureCard(
         label: String,
@@ -269,7 +251,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
-
     @Composable
     private fun CorrectionControlsPanel(
         correctionState: CorrectionState,
@@ -294,29 +275,22 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-
                 // Correction value slider
                 CorrectionValueSlider(
                     onValueChange = onCorrectionValueChange,
                     enabled = correctionState == CorrectionState.ACTIVE
                 )
-
                 HorizontalDivider()
-
                 // Calibration section
                 CalibrationSection(
                     onCalibrate = onCalibrate,
                     onReset = onReset,
                     enabled = correctionState != CorrectionState.CALIBRATING
                 )
-
                 HorizontalDivider()
-
                 // Temperature regions
                 TemperatureRegionsSection()
-
                 Spacer(modifier = Modifier.weight(1f))
-
                 // Action buttons
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -329,7 +303,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Save Settings")
                     }
-
                     OutlinedButton(
                         onClick = onReset,
                         modifier = Modifier.fillMaxWidth()
@@ -342,20 +315,17 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
-
     @Composable
     private fun CorrectionValueSlider(
         onValueChange: (Float) -> Unit,
         enabled: Boolean
     ) {
         var sliderValue by remember { mutableFloatStateOf(0f) }
-
         Column {
             Text(
                 text = "Correction Offset: ${String.format("%.1f", sliderValue)}°C",
                 style = MaterialTheme.typography.bodyMedium
             )
-
             Slider(
                 value = sliderValue,
                 onValueChange = {
@@ -369,7 +339,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             )
         }
     }
-
     @Composable
     private fun CalibrationSection(
         onCalibrate: () -> Unit,
@@ -384,7 +353,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Medium
             )
-
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -397,7 +365,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Calibrate")
                 }
-
                 OutlinedButton(
                     onClick = onReset,
                     enabled = enabled,
@@ -410,7 +377,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
-
     @Composable
     private fun TemperatureRegionsSection() {
         Column(
@@ -421,7 +387,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Medium
             )
-
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -431,14 +396,12 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
-
     @Composable
     private fun RegionButton(
         text: String,
         icon: androidx.compose.ui.graphics.vector.ImageVector
     ) {
         var isSelected by remember { mutableStateOf(false) }
-
         FilterChip(
             onClick = { isSelected = !isSelected },
             label = { Text(text, style = MaterialTheme.typography.labelSmall) },
@@ -452,7 +415,6 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         )
     }
-
     private fun getStatusText(
         correctionState: CorrectionState,
         calibrationStatus: CalibrationStatus
@@ -461,5 +423,4 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
         correctionState == CorrectionState.ACTIVE -> "Active - ${calibrationStatus.name.lowercase()}"
         else -> "Inactive"
     }
-
 }

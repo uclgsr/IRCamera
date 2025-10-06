@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.testing.ui
-
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -30,12 +29,7 @@ import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.launch
 
-/**
- * Testing Suite Hub - Consolidated dashboard for all testing activities
- * Provides centralized access to all testing functionality in Compose
- */
 class TestingSuiteHubActivity : ComponentActivity() {
-
     data class TestingModule(
         val id: String,
         val title: String,
@@ -46,33 +40,27 @@ class TestingSuiteHubActivity : ComponentActivity() {
         val category: TestCategory,
         val priority: TestPriority = TestPriority.MEDIUM
     )
-
     enum class TestCategory {
         BLE_INTEGRATION, GSR_SENSORS, CAMERA_SYSTEMS,
         SYNCHRONIZATION, DATA_INTEGRITY, PERFORMANCE,
         USER_INTERFACE, NETWORK, SYSTEM
     }
-
     enum class TestPriority {
         HIGH, MEDIUM, LOW
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             LibUnifiedTheme {
                 TestingSuiteHubScreen()
             }
         }
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun TestingSuiteHubScreen() {
         var selectedCategory by remember { mutableStateOf<TestCategory?>(null) }
         var searchQuery by remember { mutableStateOf("") }
-
         val testingModules = remember {
             listOf(
                 // BLE Integration Tests
@@ -95,7 +83,6 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     legacyActivity = null,
                     category = TestCategory.BLE_INTEGRATION
                 ),
-
                 // GSR Sensor Tests
                 TestingModule(
                     id = "gsr_bench",
@@ -117,7 +104,6 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     category = TestCategory.DATA_INTEGRITY,
                     priority = TestPriority.HIGH
                 ),
-
                 // Camera System Tests  
                 TestingModule(
                     id = "rgb_camera",
@@ -138,7 +124,6 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     legacyActivity = null,
                     category = TestCategory.CAMERA_SYSTEMS
                 ),
-
                 // Synchronization Tests
                 TestingModule(
                     id = "cross_modal_sync",
@@ -167,7 +152,6 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     legacyActivity = null,
                     category = TestCategory.SYNCHRONIZATION
                 ),
-
                 // Session & Performance Tests
                 TestingModule(
                     id = "session_lifecycle",
@@ -198,7 +182,6 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     category = TestCategory.PERFORMANCE,
                     priority = TestPriority.HIGH
                 ),
-
                 // Additional Testing Activities
                 TestingModule(
                     id = "sensor_dashboard",
@@ -229,7 +212,6 @@ class TestingSuiteHubActivity : ComponentActivity() {
                 )
             )
         }
-
         val filteredModules = testingModules.filter { module ->
             (selectedCategory == null || module.category == selectedCategory) &&
                     (searchQuery.isEmpty() || module.title.contains(
@@ -238,7 +220,6 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     ) ||
                             module.description.contains(searchQuery, ignoreCase = true))
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -257,7 +238,6 @@ class TestingSuiteHubActivity : ComponentActivity() {
             }
         ) { paddingValues ->
             val keyboardController = LocalSoftwareKeyboardController.current
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -283,9 +263,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                         }
                     )
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Category Filter Chips
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
@@ -355,9 +333,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Testing Modules List
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -377,7 +353,6 @@ class TestingSuiteHubActivity : ComponentActivity() {
                             }
                         )
                     }
-
                     item {
                         // Comprehensive Testing Button
                         Card(
@@ -419,7 +394,6 @@ class TestingSuiteHubActivity : ComponentActivity() {
             }
         }
     }
-
     @Composable
     fun TestingModuleCard(
         module: TestingModule,
@@ -445,7 +419,6 @@ class TestingSuiteHubActivity : ComponentActivity() {
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-
                     Column(modifier = Modifier.weight(1f)) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
@@ -473,9 +446,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -493,7 +464,6 @@ class TestingSuiteHubActivity : ComponentActivity() {
                             Text("Compose")
                         }
                     }
-
                     if (module.legacyActivity != null) {
                         OutlinedButton(
                             onClick = onLegacyClick,
@@ -512,7 +482,6 @@ class TestingSuiteHubActivity : ComponentActivity() {
             }
         }
     }
-
     private fun runComprehensiveTests() {
         lifecycleScope.launch {
             // Run comprehensive testing suite using activity launcher
@@ -521,7 +490,6 @@ class TestingSuiteHubActivity : ComponentActivity() {
                 val intent =
                     Intent(this@TestingSuiteHubActivity, ComposeTestingSuiteActivity::class.java)
                 startActivity(intent)
-
             } catch (e: Exception) {
                 AppLogger.e("TestingSuiteHub", "Failed to run comprehensive tests: ${e.message}")
             }

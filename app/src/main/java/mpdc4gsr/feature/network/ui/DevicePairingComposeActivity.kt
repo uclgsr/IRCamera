@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.network.ui
-
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -26,29 +25,15 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.feature.network.presentation.DevicePairingViewModel
 import mpdc4gsr.core.ui.deferAction
 
-/**
- * DevicePairingComposeActivity - Modern Device Discovery & Pairing with Compose
- *
- * Advanced BLE device discovery and pairing interface featuring:
- * - Real-time device scanning with RSSI indicators
- * - Interactive device pairing workflow with status updates
- * - Connection health monitoring and diagnostics
- * - Multi-device management with connection priorities
- * - Advanced filtering and device categorization
- * - Secure pairing with authentication validation
- */
 class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>() {
-
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, DevicePairingComposeActivity::class.java))
         }
     }
-
     override fun createViewModel(): DevicePairingViewModel {
         return viewModels<DevicePairingViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: DevicePairingViewModel) {
@@ -56,7 +41,6 @@ class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>
         var selectedDevice by remember { mutableStateOf<BluetoothDeviceInfo?>(null) }
         var showPairingDialog by remember { mutableStateOf(false) }
         var deviceFilter by remember { mutableStateOf("All") }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -105,7 +89,6 @@ class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>
                 )
             }
         }
-
         if (showPairingDialog && selectedDevice != null) {
             DevicePairingDialog(
                 device = selectedDevice!!,
@@ -118,7 +101,6 @@ class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>
         }
     }
 }
-
 @Composable
 private fun DevicePairingContent(
     isScanning: Boolean,
@@ -141,14 +123,12 @@ private fun DevicePairingContent(
             devicesFound = 8, // Replace with actual count
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         // Device Filter Row
         DeviceFilterRow(
             selectedFilter = deviceFilter,
             onFilterChange = onFilterChange,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         // Device List
         Text(
             text = "Discovered Devices",
@@ -156,7 +136,6 @@ private fun DevicePairingContent(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 12.dp)
         )
-
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.weight(1f)
@@ -164,7 +143,6 @@ private fun DevicePairingContent(
             val mockDevices = getMockBluetoothDevices().filter { device ->
                 deviceFilter == "All" || device.type == deviceFilter
             }
-
             items(mockDevices) { device ->
                 DeviceCard(
                     device = device,
@@ -177,7 +155,6 @@ private fun DevicePairingContent(
                 )
             }
         }
-
         // Connection Status Footer
         selectedDevice?.let { device ->
             ConnectionStatusFooter(
@@ -188,7 +165,6 @@ private fun DevicePairingContent(
         }
     }
 }
-
 @Composable
 private fun ScanningStatusCard(
     isScanning: Boolean,
@@ -223,7 +199,6 @@ private fun ScanningStatusCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             if (isScanning) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
@@ -240,7 +215,6 @@ private fun ScanningStatusCard(
         }
     }
 }
-
 @Composable
 private fun DeviceFilterRow(
     selectedFilter: String,
@@ -248,7 +222,6 @@ private fun DeviceFilterRow(
     modifier: Modifier = Modifier
 ) {
     val filters = listOf("All", "Thermal", "GSR", "Camera", "Unknown")
-
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
@@ -265,7 +238,6 @@ private fun DeviceFilterRow(
         }
     }
 }
-
 @Composable
 private fun DeviceCard(
     device: BluetoothDeviceInfo,
@@ -304,7 +276,6 @@ private fun DeviceCard(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-
                     // Device type and signal strength
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -323,7 +294,6 @@ private fun DeviceCard(
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                             )
                         }
-
                         // Signal strength
                         Icon(
                             Icons.Default.Wifi,
@@ -339,7 +309,6 @@ private fun DeviceCard(
                         )
                     }
                 }
-
                 // Connection status indicator
                 Box(
                     modifier = Modifier
@@ -355,10 +324,8 @@ private fun DeviceCard(
                         )
                 )
             }
-
             if (isSelected) {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
-
                 // Device actions
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -383,7 +350,6 @@ private fun DeviceCard(
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Connect")
                     }
-
                     Button(
                         onClick = onPair,
                         modifier = Modifier.weight(1f)
@@ -401,7 +367,6 @@ private fun DeviceCard(
         }
     }
 }
-
 @Composable
 private fun ConnectionStatusFooter(
     device: BluetoothDeviceInfo,
@@ -423,20 +388,17 @@ private fun ConnectionStatusFooter(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-
             Text(
                 text = "${device.name} (${device.address})",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
-
             Text(
                 text = "Status: ${device.connectionStatus.replaceFirstChar { it.uppercaseChar() }}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-
             Button(
                 onClick = onPair,
                 modifier = Modifier.fillMaxWidth()
@@ -452,7 +414,6 @@ private fun ConnectionStatusFooter(
         }
     }
 }
-
 @Composable
 private fun DevicePairingDialog(
     device: BluetoothDeviceInfo,
@@ -460,7 +421,6 @@ private fun DevicePairingDialog(
     onPair: (BluetoothDeviceInfo) -> Unit
 ) {
     var isPairing by remember { mutableStateOf(false) }
-
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
@@ -471,7 +431,6 @@ private fun DevicePairingDialog(
                 Text(text = "Device Address: ${device.address}")
                 Text(text = "Device Type: ${device.type}")
                 Text(text = "Signal Strength: ${device.rssi} dBm")
-
                 if (isPairing) {
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
@@ -505,7 +464,6 @@ private fun DevicePairingDialog(
         }
     )
 }
-
 @Composable
 private fun getDeviceTypeColor(type: String) = when (type) {
     "Thermal" -> MaterialTheme.colorScheme.error
@@ -513,14 +471,12 @@ private fun getDeviceTypeColor(type: String) = when (type) {
     "Camera" -> MaterialTheme.colorScheme.tertiary
     else -> MaterialTheme.colorScheme.outline
 }
-
 @Composable
 private fun getSignalStrengthColor(rssi: Int) = when {
     rssi > -50 -> MaterialTheme.colorScheme.primary
     rssi > -60 -> MaterialTheme.colorScheme.secondary
     else -> MaterialTheme.colorScheme.error
 }
-
 data class BluetoothDeviceInfo(
     val name: String,
     val address: String,
@@ -528,7 +484,6 @@ data class BluetoothDeviceInfo(
     val rssi: Int,
     val connectionStatus: String
 )
-
 private fun getMockBluetoothDevices() = listOf(
     BluetoothDeviceInfo("TOPDON TC001", "00:11:22:33:44:55", "Thermal", -45, "available"),
     BluetoothDeviceInfo("Shimmer3 GSR+", "AA:BB:CC:DD:EE:FF", "GSR", -52, "paired"),

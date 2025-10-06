@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,13 +24,10 @@ import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorCaptureComposeFragme
 import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorHistoryComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.launch
-
 class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -43,22 +39,18 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var showSettingsDialog by remember { mutableStateOf(false) }
         val exportStatus by viewModel.exportStatus.collectAsState()
         val snackbarHostState = remember { SnackbarHostState() }
-
         // Handle export status
         LaunchedEffect(exportStatus) {
             when (exportStatus) {
                 is ThermalViewModel.ExportStatus.Success -> {
                     snackbarHostState.showSnackbar("Data exported successfully")
                 }
-
                 is ThermalViewModel.ExportStatus.Error -> {
                     snackbarHostState.showSnackbar("Export failed: ${(exportStatus as ThermalViewModel.ExportStatus.Error).message}")
                 }
-
                 else -> {}
             }
         }
-
         LibUnifiedTheme {
             Scaffold(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -140,7 +132,6 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
-
                     // Tab selector
                     MonitorTabRow(
                         selectedTab = selectedTab,
@@ -152,7 +143,6 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
-
                     // Content pager
                     HorizontalPager(
                         state = pagerState,
@@ -163,20 +153,18 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             1 -> MonitorRealTimeTab(
                                 isRecording = isRecording,
                                 onSnapshot = { viewModel.captureSnapshot() },
-                                onZoom = { /* Toggle zoom level */ },
-                                onAdjust = { /* Show adjustment dialog */ }
+                                onZoom = {  },
+                                onAdjust = {  }
                             )
                         }
                     }
                 }
             }
         }
-
         // Sync pager with tabs
         LaunchedEffect(pagerState.currentPage) {
             selectedTab = pagerState.currentPage
         }
-
         // Export format selection dialog
         if (showExportDialog) {
             AlertDialog(
@@ -207,7 +195,6 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             )
         }
-
         // Settings dialog
         if (showSettingsDialog) {
             AlertDialog(
@@ -233,7 +220,6 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
-
 @Composable
 private fun RecordingStatusBar(
     modifier: Modifier = Modifier
@@ -268,7 +254,6 @@ private fun RecordingStatusBar(
         }
     }
 }
-
 @Composable
 private fun MonitorTabRow(
     selectedTab: Int,
@@ -295,7 +280,6 @@ private fun MonitorTabRow(
                 onClick = { onTabSelected(0) },
                 modifier = Modifier.weight(1f)
             )
-
             MonitorTab(
                 text = "Real-time",
                 icon = Icons.AutoMirrored.Filled.ShowChart,
@@ -306,7 +290,6 @@ private fun MonitorTabRow(
         }
     }
 }
-
 @Composable
 private fun MonitorTab(
     text: String,
@@ -341,7 +324,6 @@ private fun MonitorTab(
         }
     }
 }
-
 @Composable
 private fun MonitorHistoryTab() {
     // Embed existing history fragment using AndroidView
@@ -359,7 +341,6 @@ private fun MonitorHistoryTab() {
             },
             modifier = Modifier.fillMaxSize()
         )
-
         // History stats overlay
         HistoryStatsOverlay(
             modifier = Modifier
@@ -368,7 +349,6 @@ private fun MonitorHistoryTab() {
         )
     }
 }
-
 @Composable
 private fun HistoryStatsOverlay(
     modifier: Modifier = Modifier
@@ -408,7 +388,6 @@ private fun HistoryStatsOverlay(
         }
     }
 }
-
 @Composable
 private fun MonitorRealTimeTab(
     isRecording: Boolean,
@@ -431,7 +410,6 @@ private fun MonitorRealTimeTab(
             },
             modifier = Modifier.fillMaxSize()
         )
-
         // Real-time monitor overlay
         RealTimeMonitorOverlay(
             isRecording = isRecording,
@@ -439,7 +417,6 @@ private fun MonitorRealTimeTab(
                 .align(Alignment.TopStart)
                 .padding(16.dp)
         )
-
         // Quick controls
         QuickControlsOverlay(
             onSnapshot = onSnapshot,
@@ -451,14 +428,12 @@ private fun MonitorRealTimeTab(
         )
     }
 }
-
 @Composable
 private fun RealTimeMonitorOverlay(
     isRecording: Boolean,
     modifier: Modifier = Modifier
 ) {
     var recordingTime by remember { mutableIntStateOf(0) }
-
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -489,7 +464,6 @@ private fun RealTimeMonitorOverlay(
                     fontWeight = FontWeight.Bold
                 )
             }
-
             if (isRecording) {
                 Text(
                     "Duration: ${recordingTime}s",
@@ -497,7 +471,6 @@ private fun RealTimeMonitorOverlay(
                     fontSize = 9.sp
                 )
             }
-
             Text(
                 "Live: 35.2°C",
                 color = Color(0xFFFF6B35),
@@ -506,7 +479,6 @@ private fun RealTimeMonitorOverlay(
             )
         }
     }
-
     // Simulate recording timer
     LaunchedEffect(isRecording) {
         if (isRecording) {
@@ -519,7 +491,6 @@ private fun RealTimeMonitorOverlay(
         }
     }
 }
-
 @Composable
 private fun QuickControlsOverlay(
     onSnapshot: () -> Unit = {},
@@ -543,7 +514,6 @@ private fun QuickControlsOverlay(
                 modifier = Modifier.size(18.dp)
             )
         }
-
         FloatingActionButton(
             onClick = onZoom,
             modifier = Modifier.size(40.dp),
@@ -556,7 +526,6 @@ private fun QuickControlsOverlay(
                 modifier = Modifier.size(18.dp)
             )
         }
-
         FloatingActionButton(
             onClick = onAdjust,
             modifier = Modifier.size(40.dp),

@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.testing.ui
-
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -30,33 +29,24 @@ import mpdc4gsr.feature.network.ui.DevicePairingComposeActivity
 import mpdc4gsr.feature.settings.ui.*
 import mpdc4gsr.feature.thermal.ui.IRGalleryEditComposeActivity
 
-/**
- * Launch Activity for demonstrating the complete Compose migration
- * This activity serves as an entry point to all implemented tasks
- */
 class ComposeMigrationLauncherActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             IRCameraTheme {
                 LifecycleAwareMigrationLauncherScreen()
             }
         }
     }
-
     override fun onStop() {
         super.onStop()
         window.decorView.post {
             window.decorView.clearAnimation()
         }
     }
-
     @Composable
     private fun LifecycleAwareMigrationLauncherScreen() {
         val lifecycleOwner = LocalLifecycleOwner.current
-
         DisposableEffect(lifecycleOwner) {
             val observer = LifecycleEventObserver { _, event ->
                 when (event) {
@@ -65,21 +55,16 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                             window.decorView.clearAnimation()
                         }
                     }
-
                     else -> {}
                 }
             }
-
             lifecycleOwner.lifecycle.addObserver(observer)
-
             onDispose {
                 lifecycleOwner.lifecycle.removeObserver(observer)
             }
         }
-
         MigrationLauncherScreen()
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun MigrationLauncherScreen() {
@@ -128,7 +113,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 }
-
                 // Enhanced implementations
                 Text(
                     text = "Enhanced Implementations (Updated)",
@@ -136,7 +120,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 LauncherCard(
                     title = "Unified Main Activity",
                     subtitle = "Single unified MainActivity with all features",
@@ -150,7 +133,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Enhanced Sensor Dashboard",
                     subtitle = "Multi-modal sensor integration with consolidated patterns",
@@ -164,7 +146,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 // Original implementations
                 Text(
                     text = "Original Implementations",
@@ -172,7 +153,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.secondary
                 )
-
                 LauncherCard(
                     title = "Task A: Main Dashboard",
                     subtitle = "Original hybrid MainActivity with modern Compose UI",
@@ -186,7 +166,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Task B: Thermal Camera",
                     subtitle = "Enhanced thermal UI with preserved functionality",
@@ -200,7 +179,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Task C: Sensor Dashboard",
                     subtitle = "Real-time GSR visualization and monitoring",
@@ -214,7 +192,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Task D: Settings Migration",
                     subtitle = "Complete Compose-based settings screens",
@@ -228,7 +205,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Task E: Navigation System",
                     subtitle = "Unified navigation system testing",
@@ -242,7 +218,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Testing Suite Hub",
                     subtitle = "Comprehensive testing dashboard with 14+ test activities",
@@ -256,7 +231,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 // New Compose Activities Section
                 Text(
                     text = "Additional Compose Conversions",
@@ -265,7 +239,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier.padding(top = 16.dp)
                 )
-
                 LauncherCard(
                     title = "WebView Activity",
                     subtitle = "Modern WebView implementation with error handling",
@@ -279,7 +252,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(intent)
                     }
                 )
-
                 LauncherCard(
                     title = "Version Info",
                     subtitle = "Complete app version information with modern UI",
@@ -293,7 +265,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Policy Viewer",
                     subtitle = "Privacy policy and terms with rich content display",
@@ -307,7 +278,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(intent)
                     }
                 )
-
                 LauncherCard(
                     title = "Device Type Selection",
                     subtitle = "Modern device selection with enhanced UX",
@@ -321,7 +291,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Help & Support",
                     subtitle = "Interactive help guide with actionable steps",
@@ -335,7 +304,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(intent)
                     }
                 )
-
                 LauncherCard(
                     title = "PDF Manual Viewer",
                     subtitle = "Enhanced manual viewer with modern UI",
@@ -349,7 +317,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(intent)
                     }
                 )
-
                 LauncherCard(
                     title = "Terms & Conditions",
                     subtitle = "Modern agreement screen with interactive elements",
@@ -363,7 +330,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Network Configuration",
                     subtitle = "Advanced network setup with device discovery",
@@ -377,7 +343,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Unified Sensor Control",
                     subtitle = "Comprehensive sensor management and monitoring",
@@ -391,7 +356,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Network Client Test",
                     subtitle = "Test Wi-Fi and Bluetooth network connections",
@@ -405,7 +369,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 // New GSR Sensor Activities Section
                 Text(
                     text = "GSR Sensor Activities (High Priority)",
@@ -414,7 +377,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(top = 16.dp)
                 )
-
                 LauncherCard(
                     title = "Session Manager",
                     subtitle = "Modern session management with search and batch operations",
@@ -428,7 +390,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Multi-Modal Recording",
                     subtitle = "Advanced multi-sensor recording with real-time monitoring",
@@ -442,7 +403,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Shimmer Configuration",
                     subtitle = "Device discovery and configuration with modern UI",
@@ -456,7 +416,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Research Templates",
                     subtitle = "Interactive template gallery with creation wizard",
@@ -470,7 +429,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "GSR Video Player",
                     subtitle = "Enhanced video playback with synchronized sensor data",
@@ -484,7 +442,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "GSR Data Plot",
                     subtitle = "Modern data visualization with interactive charts",
@@ -498,7 +455,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 // Network & Device Management Section
                 Text(
                     text = "Network & Device Management (Priority 2)",
@@ -507,7 +463,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.padding(top = 16.dp)
                 )
-
                 LauncherCard(
                     title = "Device Pairing",
                     subtitle = "Advanced BLE device discovery and pairing with diagnostics",
@@ -521,7 +476,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Permission Manager",
                     subtitle = "Interactive permission management with educational content",
@@ -535,7 +489,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "GSR Device Management",
                     subtitle = "Comprehensive GSR device monitoring and configuration",
@@ -549,7 +502,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 // Camera Integration Section
                 Text(
                     text = "Camera Integration Activities (Priority 2)",
@@ -558,7 +510,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.padding(top = 16.dp)
                 )
-
                 LauncherCard(
                     title = "Dual Mode Camera",
                     subtitle = "Advanced dual camera recording with thermal and RGB sync",
@@ -572,7 +523,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 // Thermal Camera Module Section
                 Text(
                     text = "Thermal Camera Module Activities (Priority 3)",
@@ -581,7 +531,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier.padding(top = 16.dp)
                 )
-
                 LauncherCard(
                     title = "Thermal Gallery",
                     subtitle = "Advanced thermal image gallery with filtering and analysis",
@@ -595,7 +544,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Thermal Report Creation",
                     subtitle = "Professional thermal report generation with templates",
@@ -609,7 +557,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Thermal Video Player",
                     subtitle = "Advanced thermal video playback with analysis tools",
@@ -623,7 +570,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "IR Thermal",
                     subtitle = "Thermal camera interface with essential controls",
@@ -637,7 +583,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Thermal Monitoring",
                     subtitle = "Advanced thermal monitoring dashboard with alerts",
@@ -651,7 +596,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Thermal Camera",
                     subtitle = "Thermal camera interface with correction and calibration tools",
@@ -665,7 +609,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 // Fragment Migration Section
                 Text(
                     text = "Fragment to Compose Migration (Priority 3)",
@@ -674,7 +617,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier.padding(top = 16.dp)
                 )
-
                 LauncherCard(
                     title = "Sensor Dashboard Fragment",
                     subtitle = "Modern Fragment with Compose UI for sensor monitoring",
@@ -689,7 +631,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         ).show()
                     }
                 )
-
                 // Advanced Features Section
                 Text(
                     text = "Advanced Features",
@@ -698,7 +639,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.padding(top = 16.dp)
                 )
-
                 LauncherCard(
                     title = "Fault-Tolerant Recording",
                     subtitle = "Enhanced recording with automatic error recovery",
@@ -712,7 +652,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Main Interface",
                     subtitle = "Unified main interface with all features",
@@ -726,7 +665,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Thermal Image Editor",
                     subtitle = "Advanced thermal image editing and analysis",
@@ -740,7 +678,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 // Testing & Development Section
                 Text(
                     text = "Testing & Development Tools",
@@ -749,7 +686,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.padding(top = 16.dp)
                 )
-
                 LauncherCard(
                     title = "Shimmer GSR Configuration",
                     subtitle = "Advanced GSR device configuration and testing with real-time data monitoring",
@@ -763,7 +699,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Sensor Dashboard Test",
                     subtitle = "Comprehensive sensor dashboard testing interface",
@@ -777,7 +712,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Network Test Interface",
                     subtitle = "PC Remote Control and bidirectional telemetry testing",
@@ -791,7 +725,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 // UI Components Section
                 Text(
                     text = "Enhanced UI Components",
@@ -800,7 +733,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.padding(top = 16.dp)
                 )
-
                 LauncherCard(
                     title = "Compose Components Showcase",
                     subtitle = "Interactive showcase of modernized UI components with enhanced functionality",
@@ -814,7 +746,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 // GSR Sensor Suite
                 Text(
                     text = "GSR Sensor Suite",
@@ -823,7 +754,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.padding(top = 16.dp)
                 )
-
                 LauncherCard(
                     title = "GSR Device Management",
                     subtitle = "Enhanced GSR device discovery, connection, and real-time monitoring",
@@ -837,7 +767,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Multi-Modal Recording",
                     subtitle = "Advanced coordinated multi-sensor recording with live statistics",
@@ -851,7 +780,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 LauncherCard(
                     title = "Session Manager",
                     subtitle = "Comprehensive session management with filtering and export capabilities",
@@ -865,7 +793,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-
                 // Comparison option
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -887,7 +814,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                             style = MaterialTheme.typography.bodyMedium
                         )
                         Spacer(modifier = Modifier.height(12.dp))
-
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -905,7 +831,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                             ) {
                                 Text("Original UI")
                             }
-
                             OutlinedButton(
                                 onClick = {
                                     startActivity(
@@ -925,7 +850,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
             }
         }
     }
-
     @Composable
     private fun LauncherCard(
         title: String,

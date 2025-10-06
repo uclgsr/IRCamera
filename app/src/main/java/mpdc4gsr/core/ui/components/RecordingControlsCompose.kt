@@ -1,5 +1,4 @@
 package mpdc4gsr.core.ui.components
-
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloatAsState
@@ -25,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 enum class RecordingState {
     IDLE,
     STARTING,
@@ -33,14 +31,12 @@ enum class RecordingState {
     STOPPING,
     ERROR
 }
-
 enum class TriggerSource {
     LOCAL,
     REMOTE_PC,
     REMOTE_MOBILE,
     SCHEDULED
 }
-
 data class RecordingSession(
     val state: RecordingState,
     val triggerSource: TriggerSource,
@@ -51,7 +47,6 @@ data class RecordingSession(
     val errorMessage: String? = null,
     val startTime: Long = 0L
 )
-
 @Composable
 fun RecordingControlsCompose(
     session: RecordingSession,
@@ -77,9 +72,7 @@ fun RecordingControlsCompose(
         ) {
             // Header with status
             RecordingHeader(session = session)
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Main recording controls
             RecordingControls(
                 session = session,
@@ -87,17 +80,14 @@ fun RecordingControlsCompose(
                 onStopRecording = onStopRecording,
                 onEmergencyStop = onEmergencyStop
             )
-
             if (showAdvancedControls && session.state != RecordingState.IDLE) {
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Session details
                 SessionDetails(session = session)
             }
         }
     }
 }
-
 @Composable
 private fun RecordingHeader(session: RecordingSession) {
     Row(
@@ -117,12 +107,10 @@ private fun RecordingHeader(session: RecordingSession) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-
         // Status indicator
         RecordingStatusIndicator(state = session.state)
     }
 }
-
 @Composable
 private fun RecordingStatusIndicator(state: RecordingState) {
     val color by animateColorAsState(
@@ -135,7 +123,6 @@ private fun RecordingStatusIndicator(state: RecordingState) {
         },
         animationSpec = tween(durationMillis = 300)
     )
-
     val scale by animateFloatAsState(
         targetValue = if (state == RecordingState.RECORDING) 1.0f else 0.8f,
         animationSpec = infiniteRepeatable(
@@ -143,7 +130,6 @@ private fun RecordingStatusIndicator(state: RecordingState) {
             repeatMode = RepeatMode.Reverse
         )
     )
-
     Box(
         modifier = Modifier
             .size(16.dp)
@@ -152,7 +138,6 @@ private fun RecordingStatusIndicator(state: RecordingState) {
             .background(color)
     )
 }
-
 @Composable
 private fun RecordingControls(
     session: RecordingSession,
@@ -182,7 +167,6 @@ private fun RecordingControls(
                     Text("Start Recording")
                 }
             }
-
             RecordingState.STARTING -> {
                 Button(
                     onClick = {}, // Disabled during starting state
@@ -198,7 +182,6 @@ private fun RecordingControls(
                     Text("Starting...")
                 }
             }
-
             RecordingState.RECORDING -> {
                 Button(
                     onClick = onStopRecording,
@@ -215,7 +198,6 @@ private fun RecordingControls(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Stop Recording")
                 }
-
                 OutlinedButton(
                     onClick = onEmergencyStop,
                     modifier = Modifier.width(120.dp),
@@ -232,7 +214,6 @@ private fun RecordingControls(
                     Text("Emergency", fontSize = 12.sp)
                 }
             }
-
             RecordingState.STOPPING -> {
                 Button(
                     onClick = {}, // Disabled during stopping state
@@ -248,7 +229,6 @@ private fun RecordingControls(
                     Text("Stopping...")
                 }
             }
-
             RecordingState.ERROR -> {
                 Button(
                     onClick = onStartRecording,
@@ -269,14 +249,11 @@ private fun RecordingControls(
         }
     }
 }
-
 @Composable
 private fun SessionDetails(session: RecordingSession) {
     Column {
         HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
-
         Spacer(modifier = Modifier.height(12.dp))
-
         // Session info grid
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -287,22 +264,18 @@ private fun SessionDetails(session: RecordingSession) {
                 value = session.duration,
                 icon = Icons.Default.Timer
             )
-
             SessionDetailItem(
                 label = "Data Size",
                 value = session.dataSize,
                 icon = Icons.Default.Storage
             )
-
             SessionDetailItem(
                 label = "Frames",
                 value = session.frameCount.toString(),
                 icon = Icons.Default.VideoLibrary
             )
         }
-
         Spacer(modifier = Modifier.height(12.dp))
-
         // Trigger source and session ID
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -310,7 +283,6 @@ private fun SessionDetails(session: RecordingSession) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             TriggerSourceChip(triggerSource = session.triggerSource)
-
             if (session.sessionId.isNotEmpty()) {
                 Text(
                     text = "ID: ${session.sessionId}",
@@ -319,7 +291,6 @@ private fun SessionDetails(session: RecordingSession) {
                 )
             }
         }
-
         // Error message if any
         session.errorMessage?.let { error ->
             Spacer(modifier = Modifier.height(8.dp))
@@ -351,7 +322,6 @@ private fun SessionDetails(session: RecordingSession) {
         }
     }
 }
-
 @Composable
 private fun SessionDetailItem(
     label: String,
@@ -382,7 +352,6 @@ private fun SessionDetailItem(
         )
     }
 }
-
 @Composable
 private fun TriggerSourceChip(triggerSource: TriggerSource) {
     val (text, color) = when (triggerSource) {
@@ -391,7 +360,6 @@ private fun TriggerSourceChip(triggerSource: TriggerSource) {
         TriggerSource.REMOTE_MOBILE -> "Mobile Remote" to Color(0xFF4CAF50)
         TriggerSource.SCHEDULED -> "Scheduled" to Color(0xFFFF9800)
     }
-
     Surface(
         shape = RoundedCornerShape(12.dp),
         color = color.copy(alpha = 0.1f)
@@ -421,7 +389,6 @@ private fun TriggerSourceChip(triggerSource: TriggerSource) {
         }
     }
 }
-
 private fun getStatusMessage(session: RecordingSession): String {
     return when (session.state) {
         RecordingState.IDLE -> "Ready to start recording"
@@ -431,7 +398,6 @@ private fun getStatusMessage(session: RecordingSession): String {
         RecordingState.ERROR -> session.errorMessage ?: "Recording error occurred"
     }
 }
-
 // Demo component with simulated recording
 @Composable
 fun RecordingControlsDemo(
@@ -446,7 +412,6 @@ fun RecordingControlsDemo(
             )
         )
     }
-
     // Simulate recording timer
     LaunchedEffect(session.state) {
         if (session.state == RecordingState.RECORDING) {
@@ -457,7 +422,6 @@ fun RecordingControlsDemo(
                 val seconds = (elapsed / 1000) % 60
                 val minutes = (elapsed / 60000) % 60
                 val hours = elapsed / 3600000
-
                 session = session.copy(
                     duration = String.format("%02d:%02d:%02d", hours, minutes, seconds),
                     dataSize = "${(elapsed / 10000)} MB",
@@ -466,7 +430,6 @@ fun RecordingControlsDemo(
             }
         }
     }
-
     RecordingControlsCompose(
         session = session,
         onStartRecording = {
@@ -475,7 +438,6 @@ fun RecordingControlsDemo(
                 sessionId = "REC_${System.currentTimeMillis()}",
                 startTime = System.currentTimeMillis()
             )
-
             // Simulate start delay
             scope.launch {
                 delay(2000)
@@ -484,7 +446,6 @@ fun RecordingControlsDemo(
         },
         onStopRecording = {
             session = session.copy(state = RecordingState.STOPPING)
-
             // Simulate stop delay
             scope.launch {
                 delay(1500)

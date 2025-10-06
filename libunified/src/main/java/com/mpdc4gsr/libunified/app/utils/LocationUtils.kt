@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.utils
-
 import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -19,7 +18,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.coroutines.resume
-
 object LocationUtils {
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     suspend fun getLastLocationStr(context: Context): String? = withContext(Dispatchers.IO) {
@@ -64,13 +62,11 @@ object LocationUtils {
             return@withContext null
         }
     }
-
     fun addBtStateListener(activity: ComponentActivity, listener: ((isEnable: Boolean) -> Unit)) {
         if (Build.VERSION.SDK_INT >= 28) {//Android 9
             activity.lifecycle.addObserver(ModeChangeObserver(activity, listener))
         }
     }
-
     @RequiresApi(Build.VERSION_CODES.P)
     private class ModeChangeObserver(
         val context: Context,
@@ -79,16 +75,13 @@ object LocationUtils {
         private val receiver = ModeChangeReceiver()
         private val locationManager =
             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
         override fun onCreate(owner: LifecycleOwner) {
             context.registerReceiver(receiver, IntentFilter(LocationManager.MODE_CHANGED_ACTION))
         }
-
         override fun onDestroy(owner: LifecycleOwner) {
             context.unregisterReceiver(receiver)
             owner.lifecycle.removeObserver(this)
         }
-
         private inner class ModeChangeReceiver : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 listener.invoke(locationManager.isLocationEnabled)

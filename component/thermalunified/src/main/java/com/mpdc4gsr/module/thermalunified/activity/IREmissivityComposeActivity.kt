@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,19 +22,15 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
-
 class IREmissivityComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
         var selectedEmissivity by remember { mutableFloatStateOf(0.95f) }
         var selectedCategory by remember { mutableStateOf("Common Materials") }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -76,7 +71,6 @@ class IREmissivityComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             .fillMaxWidth()
                             .padding(16.dp)
                     )
-
                     // Material categories and list
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
@@ -101,7 +95,6 @@ class IREmissivityComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
-
 @Composable
 private fun CurrentSelectionCard(
     selectedEmissivity: Float,
@@ -135,7 +128,6 @@ private fun CurrentSelectionCard(
                     fontWeight = FontWeight.Bold
                 )
             }
-
             // Visual indicator
             Box(
                 modifier = Modifier
@@ -156,7 +148,6 @@ private fun CurrentSelectionCard(
         }
     }
 }
-
 @Composable
 private fun EmissivityCategorySection(
     category: EmissivityCategory,
@@ -192,9 +183,7 @@ private fun EmissivityCategorySection(
                     fontWeight = FontWeight.Bold
                 )
             }
-
             Spacer(modifier = Modifier.height(12.dp))
-
             // Materials in this category
             category.materials.forEach { material ->
                 EmissivityMaterialItem(
@@ -207,7 +196,6 @@ private fun EmissivityCategorySection(
         }
     }
 }
-
 @Composable
 private fun EmissivityMaterialItem(
     material: EmissivityMaterial,
@@ -248,7 +236,6 @@ private fun EmissivityMaterialItem(
                     )
                 }
             }
-
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -259,7 +246,6 @@ private fun EmissivityMaterialItem(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )
-
                 if (isSelected) {
                     Icon(
                         Icons.Default.Check,
@@ -272,20 +258,17 @@ private fun EmissivityMaterialItem(
         }
     }
 }
-
 // Data classes
 data class EmissivityCategory(
     val name: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector,
     val materials: List<EmissivityMaterial>
 )
-
 data class EmissivityMaterial(
     val name: String,
     val emissivity: Float,
     val description: String = ""
 )
-
 private fun getEmissivityCategories(): List<EmissivityCategory> {
     return listOf(
         EmissivityCategory(
@@ -301,7 +284,6 @@ private fun getEmissivityCategories(): List<EmissivityCategory> {
                 EmissivityMaterial("Fabric", 0.900f, "Cotton/polyester cloth")
             )
         ),
-
         EmissivityCategory(
             name = "Metals",
             icon = Icons.Default.Build,
@@ -316,7 +298,6 @@ private fun getEmissivityCategories(): List<EmissivityCategory> {
                 EmissivityMaterial("Brass (polished)", 0.060f, "Bright brass")
             )
         ),
-
         EmissivityCategory(
             name = "Building Materials",
             icon = Icons.Default.Home,
@@ -330,7 +311,6 @@ private fun getEmissivityCategories(): List<EmissivityCategory> {
                 EmissivityMaterial("Insulation", 0.950f, "Foam insulation")
             )
         ),
-
         EmissivityCategory(
             name = "Plastics & Polymers",
             icon = Icons.Default.Build,
@@ -343,7 +323,6 @@ private fun getEmissivityCategories(): List<EmissivityCategory> {
                 EmissivityMaterial("Nylon", 0.900f, "Synthetic fabric")
             )
         ),
-
         EmissivityCategory(
             name = "Food & Organic",
             icon = Icons.Default.Home,

@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,13 +21,10 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -37,7 +33,6 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var processingProgress by remember { mutableFloatStateOf(0f) }
         val coroutineScope = rememberCoroutineScope()
         val snackbarHostState = remember { SnackbarHostState() }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -95,7 +90,6 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             selectedAlgorithm = selectedAlgorithm,
                             modifier = Modifier.fillMaxSize()
                         )
-
                         // Processing indicator
                         if (isProcessing) {
                             ProcessingOverlay(
@@ -103,7 +97,6 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 modifier = Modifier.align(Alignment.Center)
                             )
                         }
-
                         // Algorithm info overlay
                         AlgorithmInfoOverlay(
                             selectedAlgorithm = selectedAlgorithm,
@@ -112,7 +105,6 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 .padding(16.dp)
                         )
                     }
-
                     // Control panel
                     Column(
                         modifier = Modifier
@@ -126,7 +118,6 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             selectedAlgorithm = selectedAlgorithm,
                             onAlgorithmSelected = { selectedAlgorithm = it }
                         )
-
                         // Processing controls
                         ProcessingControls(
                             isProcessing = isProcessing,
@@ -156,7 +147,6 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
-
 @Composable
 private fun AlgorithmImageView(
     selectedAlgorithm: String,
@@ -197,7 +187,6 @@ private fun AlgorithmImageView(
         }
     }
 }
-
 @Composable
 private fun ProcessingOverlay(
     progress: Float,
@@ -220,14 +209,12 @@ private fun ProcessingOverlay(
                 color = Color(0xFFFF6B35),
                 modifier = Modifier.size(48.dp)
             )
-
             Text(
                 "Processing...",
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Text(
                 "${(progress * 100).toInt()}%",
                 color = Color(0xFFFF6B35),
@@ -236,7 +223,6 @@ private fun ProcessingOverlay(
         }
     }
 }
-
 @Composable
 private fun AlgorithmInfoOverlay(
     selectedAlgorithm: String,
@@ -266,14 +252,12 @@ private fun AlgorithmInfoOverlay(
         }
     }
 }
-
 @Composable
 private fun AlgorithmSelector(
     selectedAlgorithm: String,
     onAlgorithmSelected: (String) -> Unit
 ) {
     val algorithms = getAlgorithmOptions()
-
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF21262D)
@@ -291,9 +275,7 @@ private fun AlgorithmSelector(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -308,7 +290,6 @@ private fun AlgorithmSelector(
         }
     }
 }
-
 @Composable
 private fun AlgorithmChip(
     algorithm: AlgorithmOption,
@@ -332,7 +313,6 @@ private fun AlgorithmChip(
         )
     )
 }
-
 @Composable
 private fun ProcessingControls(
     isProcessing: Boolean,
@@ -388,7 +368,6 @@ private fun ProcessingControls(
                     Text("Stop", fontSize = 14.sp)
                 }
             }
-
             OutlinedButton(
                 onClick = {
                     coroutineScope.launch {
@@ -412,13 +391,11 @@ private fun ProcessingControls(
         }
     }
 }
-
 // Data classes
 data class AlgorithmOption(
     val name: String,
     val description: String
 )
-
 private fun getAlgorithmOptions(): List<AlgorithmOption> {
     return listOf(
         AlgorithmOption("Edge Detection", "Detect temperature boundaries"),

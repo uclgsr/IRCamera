@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.testing.ui
-
 import android.os.Bundle
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -24,16 +23,10 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * Compose version of Parallel Recording Test Activity
- * Tests simultaneous recording from multiple sensors (GSR, Thermal, RGB)
- */
 class ParallelRecordingTestComposeActivity : ComponentActivity() {
-
     companion object {
         private const val TAG = "ParallelRecordingTestCompose"
     }
-
     data class SensorStatus(
         val sensorName: String,
         val isRecording: Boolean = false,
@@ -43,21 +36,17 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
         val avgDataRate: Float = 0f,
         val bufferUtilization: Float = 0f
     )
-
     enum class RecordingState {
         IDLE, STARTING, RECORDING, STOPPING, COMPLETED, ERROR
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             LibUnifiedTheme {
                 ParallelRecordingTestScreen()
             }
         }
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun ParallelRecordingTestScreen() {
@@ -67,7 +56,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
         var isTestRunning by remember { mutableStateOf(false) }
         var testMetrics by remember { mutableStateOf(mapOf<String, Any>()) }
         var recordingDuration by remember { mutableStateOf(0L) }
-
         // Initialize test cases and sensor statuses
         LaunchedEffect(Unit) {
             testResults = listOf(
@@ -102,14 +90,12 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                     description = "Stop all sensors simultaneously and save data"
                 )
             )
-
             sensorStatuses = listOf(
                 SensorStatus(sensorName = "GSR Sensor"),
                 SensorStatus(sensorName = "Thermal Camera"),
                 SensorStatus(sensorName = "RGB Camera")
             )
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -164,7 +150,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                                 fontWeight = FontWeight.Medium
                             )
                         }
-
                         if (recordingDuration > 0) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
@@ -174,9 +159,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Sensor Status Cards
                 Text(
                     text = "Sensor Status",
@@ -184,16 +167,13 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                     fontWeight = FontWeight.Medium
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-
                 sensorStatuses.forEach { sensor ->
                     SensorStatusCard(
                         sensor = sensor,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Test Progress
                 TestProgressIndicator(
                     totalTests = testResults.size,
@@ -201,9 +181,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                     passedTests = testResults.count { it.status == TestStatus.PASSED },
                     failedTests = testResults.count { it.status == TestStatus.FAILED }
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Test Metrics
                 if (testMetrics.isNotEmpty()) {
                     TestMetricsDisplay(
@@ -212,7 +190,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 // Recording Control Buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -247,7 +224,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                             Text("Start Test")
                         }
                     }
-
                     OutlinedButton(
                         onClick = {
                             lifecycleScope.launch {
@@ -266,9 +242,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                         Text("Stop")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Individual Test Cases
                 testResults.forEach { testCase ->
                     TestResultCard(
@@ -280,7 +254,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             }
         }
     }
-
     @Composable
     fun SensorStatusCard(
         sensor: SensorStatus,
@@ -320,7 +293,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                             fontWeight = FontWeight.Medium
                         )
                     }
-
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         if (sensor.isRecording) {
                             Icon(
@@ -337,7 +309,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                         )
                     }
                 }
-
                 if (sensor.isRecording && sensor.dataPointsCollected > 0) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(
@@ -353,7 +324,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                             style = MaterialTheme.typography.bodySmall
                         )
                     }
-
                     if (sensor.bufferUtilization > 0) {
                         Spacer(modifier = Modifier.height(4.dp))
                         LinearProgressIndicator(
@@ -366,7 +336,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                         )
                     }
                 }
-
                 if (sensor.errorCount > 0) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
@@ -378,7 +347,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             }
         }
     }
-
     private fun getRecordingStateIcon(state: RecordingState): androidx.compose.ui.graphics.vector.ImageVector {
         return when (state) {
             RecordingState.IDLE -> Icons.Default.Stop
@@ -389,7 +357,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             RecordingState.ERROR -> Icons.Default.Error
         }
     }
-
     private fun getSensorIcon(sensorName: String): androidx.compose.ui.graphics.vector.ImageVector {
         return when {
             sensorName.contains("GSR") -> Icons.Default.Sensors
@@ -398,7 +365,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             else -> Icons.Default.DeviceHub
         }
     }
-
     private suspend fun runParallelRecordingTest(
         onStateUpdate: (RecordingState) -> Unit,
         onDurationUpdate: (Long) -> Unit,
@@ -407,7 +373,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
         onComplete: () -> Unit
     ) {
         AppLogger.i(TAG, "Starting parallel recording test")
-
         val testMetricsMap = mutableMapOf<String, Any>()
         val startTime = System.currentTimeMillis()
         var currentStatuses = listOf(
@@ -415,17 +380,14 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             SensorStatus(sensorName = "Thermal Camera"),
             SensorStatus(sensorName = "RGB Camera")
         )
-
         try {
             // Initialize sensors
             onStateUpdate(RecordingState.STARTING)
             delay(2000)
-
             // Start parallel recording
             onStateUpdate(RecordingState.RECORDING)
             currentStatuses = startParallelRecording(currentStatuses)
             onSensorStatusesUpdate(currentStatuses)
-
             // Simulate recording for 10 seconds
             repeat(10) { second ->
                 delay(1000)
@@ -433,13 +395,11 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                 currentStatuses = updateSensorStatuses(currentStatuses, second + 1)
                 onSensorStatusesUpdate(currentStatuses)
             }
-
             // Stop recording
             onStateUpdate(RecordingState.STOPPING)
             currentStatuses = stopParallelRecording(currentStatuses)
             onSensorStatusesUpdate(currentStatuses)
             delay(2000)
-
             // Calculate metrics
             val totalTime = System.currentTimeMillis() - startTime
             testMetricsMap["Total Test Time"] = "${totalTime}ms"
@@ -449,10 +409,8 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                 "${currentStatuses.map { it.avgDataRate }.average().toInt()} Hz"
             testMetricsMap["Total Errors"] = currentStatuses.sumOf { it.errorCount }
             testMetricsMap["Success Rate"] = "95%"
-
             onMetricsUpdate(testMetricsMap)
             onStateUpdate(RecordingState.COMPLETED)
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Parallel recording test failed: ${e.message}")
             onStateUpdate(RecordingState.ERROR)
@@ -460,35 +418,27 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             onComplete()
         }
     }
-
     private suspend fun startParallelRecording(currentStatuses: List<SensorStatus>): List<SensorStatus> {
         AppLogger.d(TAG, "Starting parallel recording from all sensors")
-
         var statuses = currentStatuses
         // Start GSR recording
         delay(200)
         statuses = updateSensorRecordingState(statuses, "GSR Sensor", true)
-
         // Start Thermal recording
         delay(300)
         statuses = updateSensorRecordingState(statuses, "Thermal Camera", true)
-
         // Start RGB recording
         delay(400)
         statuses = updateSensorRecordingState(statuses, "RGB Camera", true)
-
         return statuses
     }
-
     private suspend fun stopParallelRecording(currentStatuses: List<SensorStatus>): List<SensorStatus> {
         AppLogger.d(TAG, "Stopping parallel recording")
-
         // Stop all sensors
         return currentStatuses.map { sensor ->
             sensor.copy(isRecording = false)
         }
     }
-
     private fun updateSensorRecordingState(
         currentStatuses: List<SensorStatus>,
         sensorName: String,
@@ -502,7 +452,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             }
         }
     }
-
     private fun updateSensorStatuses(currentStatuses: List<SensorStatus>, second: Int): List<SensorStatus> {
         return currentStatuses.map { sensor ->
             if (sensor.isRecording) {
@@ -513,7 +462,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                     sensor.sensorName.contains("RGB") -> 30 // 30 Hz
                     else -> 10
                 }
-
                 sensor.copy(
                     dataPointsCollected = sensor.dataPointsCollected + newDataPoints,
                     lastDataTimestamp = System.currentTimeMillis(),
@@ -526,7 +474,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             }
         }
     }
-
     private suspend fun stopRecording(
         currentStatuses: List<SensorStatus>,
         onStateUpdate: (RecordingState) -> Unit,
@@ -538,7 +485,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
         delay(1000)
         onStateUpdate(RecordingState.COMPLETED)
     }
-
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {
@@ -551,7 +497,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             }
         }
     }
-
     private suspend fun testSensorInitialization() {
         AppLogger.d(TAG, "Testing sensor initialization")
         try {
@@ -561,7 +506,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Sensor initialization test failed: ${e.message}")
         }
     }
-
     private suspend fun testSynchronizedStart() {
         AppLogger.d(TAG, "Testing synchronized start")
         try {
@@ -577,7 +521,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Synchronized start test failed: ${e.message}")
         }
     }
-
     private suspend fun testDataCollection() {
         AppLogger.d(TAG, "Testing data collection")
         try {
@@ -587,7 +530,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Data collection test failed: ${e.message}")
         }
     }
-
     private suspend fun testBufferManagement() {
         AppLogger.d(TAG, "Testing buffer management")
         try {
@@ -597,7 +539,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Buffer management test failed: ${e.message}")
         }
     }
-
     private suspend fun testErrorHandling() {
         AppLogger.d(TAG, "Testing error handling")
         try {
@@ -607,7 +548,6 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Error handling test failed: ${e.message}")
         }
     }
-
     private suspend fun testSynchronizedStop() {
         AppLogger.d(TAG, "Testing synchronized stop")
         try {

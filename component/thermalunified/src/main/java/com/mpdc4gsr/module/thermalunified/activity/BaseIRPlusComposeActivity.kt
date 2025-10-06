@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,13 +18,10 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.launch
-
 class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -34,7 +30,6 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var advancedSettings by remember { mutableStateOf(false) }
         val snackbarHostState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
-
         LibUnifiedTheme {
             Scaffold(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -85,7 +80,6 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         onTogglePlus = { isPlushActive = !isPlushActive },
                         modifier = Modifier.fillMaxWidth()
                     )
-
                     // Main thermal view with plus features
                     Box(
                         modifier = Modifier
@@ -97,7 +91,6 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             isPlushActive = isPlushActive,
                             modifier = Modifier.fillMaxSize()
                         )
-
                         // Plus feature overlay
                         if (isPlushActive) {
                             PlusFeatureOverlay(
@@ -108,7 +101,6 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     .padding(16.dp)
                             )
                         }
-
                         // Advanced controls
                         PlusControlsOverlay(
                             plusMode = plusMode,
@@ -126,7 +118,6 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
-
 @Composable
 private fun PlusStatusCard(
     isPlushActive: Boolean,
@@ -159,7 +150,6 @@ private fun PlusStatusCard(
                     tint = if (isPlushActive) Color(0xFFFFD700) else Color(0xFF7D8590),
                     modifier = Modifier.size(24.dp)
                 )
-
                 Column {
                     Text(
                         "Thermal Plus Mode",
@@ -174,7 +164,6 @@ private fun PlusStatusCard(
                     )
                 }
             }
-
             // Toggle switch
             Switch(
                 checked = isPlushActive,
@@ -189,7 +178,6 @@ private fun PlusStatusCard(
         }
     }
 }
-
 @Composable
 private fun PlusThermalSurface(
     isPlushActive: Boolean,
@@ -229,7 +217,6 @@ private fun PlusThermalSurface(
                     )
                 }
             }
-
             // Plus enhancement indicators
             if (isPlushActive) {
                 PlusEnhancementIndicators(
@@ -241,7 +228,6 @@ private fun PlusThermalSurface(
         }
     }
 }
-
 @Composable
 private fun PlusEnhancementIndicators(
     modifier: Modifier = Modifier
@@ -263,7 +249,6 @@ private fun PlusEnhancementIndicators(
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold
             )
-
             PlusIndicatorItem("AI Enhancement", true)
             PlusIndicatorItem("Noise Reduction", true)
             PlusIndicatorItem("Edge Detection", true)
@@ -271,7 +256,6 @@ private fun PlusEnhancementIndicators(
         }
     }
 }
-
 @Composable
 private fun PlusIndicatorItem(
     feature: String,
@@ -294,7 +278,6 @@ private fun PlusIndicatorItem(
         )
     }
 }
-
 @Composable
 private fun PlusFeatureOverlay(
     scope: kotlinx.coroutines.CoroutineScope,
@@ -318,7 +301,6 @@ private fun PlusFeatureOverlay(
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
             )
-
             PlusFeatureButton(
                 icon = Icons.Default.AutoFixHigh,
                 text = "Auto Enhance",
@@ -328,7 +310,6 @@ private fun PlusFeatureOverlay(
                     }
                 }
             )
-
             PlusFeatureButton(
                 icon = Icons.Default.Tune,
                 text = "Manual Tune",
@@ -338,7 +319,6 @@ private fun PlusFeatureOverlay(
                     }
                 }
             )
-
             PlusFeatureButton(
                 icon = Icons.Default.Analytics,
                 text = "AI Analysis",
@@ -351,7 +331,6 @@ private fun PlusFeatureOverlay(
         }
     }
 }
-
 @Composable
 private fun PlusFeatureButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -384,7 +363,6 @@ private fun PlusFeatureButton(
         }
     }
 }
-
 @Composable
 private fun PlusControlsOverlay(
     plusMode: String,
@@ -412,12 +390,10 @@ private fun PlusControlsOverlay(
                 selectedMode = plusMode,
                 onModeSelected = onModeChange
             )
-
             // Advanced controls (when visible)
             if (advancedVisible) {
                 AdvancedPlusControls()
             }
-
             // Quick actions
             PlusQuickActions(
                 onCapture = {
@@ -439,14 +415,12 @@ private fun PlusControlsOverlay(
         }
     }
 }
-
 @Composable
 private fun PlusModeSelector(
     selectedMode: String,
     onModeSelected: (String) -> Unit
 ) {
     val modes = getPlusModes()
-
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -456,7 +430,6 @@ private fun PlusModeSelector(
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -477,12 +450,10 @@ private fun PlusModeSelector(
         }
     }
 }
-
 @Composable
 private fun AdvancedPlusControls() {
     var aiStrength by remember { mutableFloatStateOf(75f) }
     var noiseReduction by remember { mutableFloatStateOf(50f) }
-
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -492,7 +463,6 @@ private fun AdvancedPlusControls() {
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
-
         // AI Enhancement Strength
         Column {
             Row(
@@ -522,7 +492,6 @@ private fun AdvancedPlusControls() {
                 )
             )
         }
-
         // Noise Reduction
         Column {
             Row(
@@ -554,7 +523,6 @@ private fun AdvancedPlusControls() {
         }
     }
 }
-
 @Composable
 private fun PlusQuickActions(
     onCapture: () -> Unit = {},
@@ -581,7 +549,6 @@ private fun PlusQuickActions(
             Spacer(modifier = Modifier.width(4.dp))
             Text("Plus Capture", fontSize = 11.sp)
         }
-
         OutlinedButton(
             onClick = onRecord,
             modifier = Modifier.weight(1f),
@@ -598,7 +565,6 @@ private fun PlusQuickActions(
             Spacer(modifier = Modifier.width(4.dp))
             Text("Plus Record", fontSize = 11.sp)
         }
-
         OutlinedButton(
             onClick = onProcess,
             modifier = Modifier.weight(1f),
@@ -617,7 +583,6 @@ private fun PlusQuickActions(
         }
     }
 }
-
 private fun getPlusModes(): List<String> {
     return listOf("enhanced", "precision", "speed", "balanced")
 }

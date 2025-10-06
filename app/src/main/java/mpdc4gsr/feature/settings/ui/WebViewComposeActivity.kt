@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.settings.ui
-
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.webkit.WebResourceError
@@ -29,46 +28,34 @@ import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-
 class WebViewViewModel : AppBaseViewModel() {
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
-
     private val _showError = mutableStateOf(false)
     val showError: State<Boolean> = _showError
-
     private val _url = mutableStateOf("")
     val url: State<String> = _url
-
     fun setUrl(url: String) {
         _url.value = url
     }
-
     fun setWebViewLoading(loading: Boolean) {
         _isLoading.value = loading
     }
-
     fun setError(error: Boolean) {
         _showError.value = error
     }
-
     fun reload() {
         _showError.value = false
         _isLoading.value = true
     }
 }
-
 class WebViewComposeActivity : BaseComposeActivity<WebViewViewModel>() {
-
     override fun createViewModel(): WebViewViewModel = viewModels<WebViewViewModel>().value
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val url = intent.extras?.getString(ExtraKeyConfig.URL) ?: ""
         viewModels<WebViewViewModel>().value.setUrl(url)
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: WebViewViewModel) {
@@ -77,7 +64,6 @@ class WebViewComposeActivity : BaseComposeActivity<WebViewViewModel>() {
             val url by viewModel.url
             val isLoading by viewModel.isLoading
             val showError by viewModel.showError
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -87,7 +73,6 @@ class WebViewComposeActivity : BaseComposeActivity<WebViewViewModel>() {
                     title = stringResource(R.string.web_content),
                     onBackClick = { finish() }
                 )
-
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -108,7 +93,6 @@ class WebViewComposeActivity : BaseComposeActivity<WebViewViewModel>() {
                             onReload = { viewModel.reload() }
                         )
                     }
-
                     if (isLoading) {
                         Box(
                             modifier = Modifier
@@ -121,7 +105,6 @@ class WebViewComposeActivity : BaseComposeActivity<WebViewViewModel>() {
                             )
                         }
                     }
-
                     if (showError) {
                         Card(
                             modifier = Modifier
@@ -165,7 +148,6 @@ class WebViewComposeActivity : BaseComposeActivity<WebViewViewModel>() {
         }
     }
 }
-
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun ComposeWebView(
@@ -176,7 +158,6 @@ fun ComposeWebView(
     onReload: () -> Unit = {}
 ) {
     var webView by remember { mutableStateOf<BridgeWebView?>(null) }
-
     AndroidView(
         factory = { context ->
             BridgeWebView(context).apply {
@@ -189,13 +170,11 @@ fun ComposeWebView(
                 webSettings.allowFileAccess = true
                 webSettings.cacheMode = WebSettings.LOAD_NO_CACHE
                 webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-
                 webViewClient = object : BridgeWebViewClient(this) {
                     override fun onPageFinished(view: WebView?, url: String?) {
                         super.onPageFinished(view, url)
                         onLoadFinish()
                     }
-
                     override fun onReceivedError(
                         view: WebView?,
                         request: WebResourceRequest?,
@@ -207,11 +186,9 @@ fun ComposeWebView(
                         }
                     }
                 }
-
                 registerHandler("goBack") { _, function ->
                     function.onCallBack("android")
                 }
-
                 isScrollContainer = false
                 webView = this
             }
@@ -223,7 +200,6 @@ fun ComposeWebView(
             view.loadUrl(url)
         }
     }
-
     LaunchedEffect(onReload) {
         webView?.let { wv ->
             if (url.isNotEmpty()) {

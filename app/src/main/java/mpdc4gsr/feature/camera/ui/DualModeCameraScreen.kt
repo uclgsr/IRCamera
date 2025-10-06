@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.camera.ui
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,15 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
-/**
- * Dual Mode Camera Screen - Advanced Camera Integration
- *
- * Modern implementation of dual-mode camera functionality:
- * - Simultaneous RGB and thermal camera operation
- * - Real-time preview synchronization
- * - Advanced recording controls
- * - Camera calibration and alignment tools
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DualModeCameraScreen(
@@ -69,7 +59,6 @@ fun DualModeCameraScreen(
         }
     }
 }
-
 @Composable
 private fun DualModeCameraContent(
     modifier: Modifier = Modifier
@@ -79,7 +68,6 @@ private fun DualModeCameraContent(
     var thermalCameraActive by remember { mutableStateOf(true) }
     var isRecording by remember { mutableStateOf(false) }
     var syncEnabled by remember { mutableStateOf(true) }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -92,7 +80,6 @@ private fun DualModeCameraContent(
             selectedMode = selectedMode,
             onModeChange = { selectedMode = it }
         )
-
         // Dual Camera Preview
         DualCameraPreviewCard(
             mode = selectedMode,
@@ -100,7 +87,6 @@ private fun DualModeCameraContent(
             thermalActive = thermalCameraActive,
             syncEnabled = syncEnabled
         )
-
         // Camera Status and Controls
         CameraControlsCard(
             rgbActive = rgbCameraActive,
@@ -112,22 +98,18 @@ private fun DualModeCameraContent(
             onRecordingToggle = { isRecording = it },
             onSyncToggle = { syncEnabled = it }
         )
-
         // Recording Settings
         RecordingSettingsCard()
-
         // Calibration Tools
         CalibrationToolsCard()
     }
 }
-
 enum class CameraMode {
     RGB_ONLY,
     THERMAL_ONLY,
     DUAL_VIEW,
     OVERLAY
 }
-
 @Composable
 private fun CameraModeSelector(
     selectedMode: CameraMode,
@@ -146,7 +128,6 @@ private fun CameraModeSelector(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -158,7 +139,6 @@ private fun CameraModeSelector(
                     onClick = { onModeChange(CameraMode.RGB_ONLY) },
                     modifier = Modifier.weight(1f)
                 )
-
                 CameraModeChip(
                     mode = CameraMode.THERMAL_ONLY,
                     label = "Thermal Only",
@@ -167,7 +147,6 @@ private fun CameraModeSelector(
                     modifier = Modifier.weight(1f)
                 )
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -179,7 +158,6 @@ private fun CameraModeSelector(
                     onClick = { onModeChange(CameraMode.DUAL_VIEW) },
                     modifier = Modifier.weight(1f)
                 )
-
                 CameraModeChip(
                     mode = CameraMode.OVERLAY,
                     label = "Overlay",
@@ -191,7 +169,6 @@ private fun CameraModeSelector(
         }
     }
 }
-
 @Composable
 private fun CameraModeChip(
     mode: CameraMode,
@@ -212,7 +189,6 @@ private fun CameraModeChip(
         modifier = modifier
     )
 }
-
 @Composable
 private fun DualCameraPreviewCard(
     mode: CameraMode,
@@ -238,7 +214,6 @@ private fun DualCameraPreviewCard(
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-
                 if (syncEnabled) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -258,24 +233,20 @@ private fun DualCameraPreviewCard(
                     }
                 }
             }
-
             // Preview area based on mode
             when (mode) {
                 CameraMode.RGB_ONLY -> {
                     RGBPreviewArea(active = rgbActive)
                 }
-
                 CameraMode.THERMAL_ONLY -> {
                     ThermalPreviewArea(active = thermalActive)
                 }
-
                 CameraMode.DUAL_VIEW -> {
                     DualViewPreviewArea(
                         rgbActive = rgbActive,
                         thermalActive = thermalActive
                     )
                 }
-
                 CameraMode.OVERLAY -> {
                     OverlayPreviewArea(
                         rgbActive = rgbActive,
@@ -286,7 +257,6 @@ private fun DualCameraPreviewCard(
         }
     }
 }
-
 @Composable
 private fun RGBPreviewArea(active: Boolean) {
     Box(
@@ -336,7 +306,6 @@ private fun RGBPreviewArea(active: Boolean) {
         }
     }
 }
-
 @Composable
 private fun ThermalPreviewArea(active: Boolean) {
     Box(
@@ -391,7 +360,6 @@ private fun ThermalPreviewArea(active: Boolean) {
         }
     }
 }
-
 @Composable
 private fun DualViewPreviewArea(
     rgbActive: Boolean,
@@ -427,7 +395,6 @@ private fun DualViewPreviewArea(
                 )
             }
         }
-
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -456,7 +423,6 @@ private fun DualViewPreviewArea(
         }
     }
 }
-
 @Composable
 private fun OverlayPreviewArea(
     rgbActive: Boolean,
@@ -503,7 +469,6 @@ private fun OverlayPreviewArea(
         }
     }
 }
-
 @Composable
 private fun CameraControlsCard(
     rgbActive: Boolean,
@@ -528,9 +493,7 @@ private fun CameraControlsCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             // Camera toggles
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -548,7 +511,6 @@ private fun CameraControlsCard(
                     onCheckedChange = onRGBToggle
                 )
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -565,7 +527,6 @@ private fun CameraControlsCard(
                     onCheckedChange = onThermalToggle
                 )
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -582,9 +543,7 @@ private fun CameraControlsCard(
                     onCheckedChange = onSyncToggle
                 )
             }
-
             HorizontalDivider()
-
             // Recording controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -613,7 +572,6 @@ private fun CameraControlsCard(
                         Text("Start Recording")
                     }
                 }
-
                 val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
                     onClick = {
@@ -635,7 +593,6 @@ private fun CameraControlsCard(
         }
     }
 }
-
 @Composable
 private fun RecordingSettingsCard() {
     Card(
@@ -651,9 +608,7 @@ private fun RecordingSettingsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             // Quality settings
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -662,7 +617,6 @@ private fun RecordingSettingsCard() {
                 Text("RGB Quality")
                 Text("1080p @ 30fps", fontWeight = FontWeight.Medium)
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -670,7 +624,6 @@ private fun RecordingSettingsCard() {
                 Text("Thermal Quality")
                 Text("384x288 @ 25fps", fontWeight = FontWeight.Medium)
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -681,7 +634,6 @@ private fun RecordingSettingsCard() {
         }
     }
 }
-
 @Composable
 private fun CalibrationToolsCard() {
     Card(
@@ -697,9 +649,7 @@ private fun CalibrationToolsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -720,7 +670,6 @@ private fun CalibrationToolsCard() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Align")
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Start color calibration

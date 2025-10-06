@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.compose
-
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -25,7 +24,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 @Composable
 fun Temperature07Compose(
     mode: TemperatureMeasurementMode = TemperatureMeasurementMode.POINT,
@@ -38,18 +36,15 @@ fun Temperature07Compose(
     var currentLine by remember { mutableStateOf<Pair<Offset, Offset>?>(null) }
     var currentRect by remember { mutableStateOf<Rect?>(null) }
     var startPoint by remember { mutableStateOf<Offset?>(null) }
-
     Box(
         modifier = modifier
             .fillMaxSize()
             .pointerInput(mode, isEnabled) {
                 if (!isEnabled) return@pointerInput
-
                 detectTapGestures(
                     onPress = { offset ->
                         isTouching = true
                         startPoint = offset
-
                         when (mode) {
                             TemperatureMeasurementMode.POINT -> {
                                 currentPoint = offset
@@ -60,23 +55,19 @@ fun Temperature07Compose(
                                     )
                                 )
                             }
-
                             TemperatureMeasurementMode.LINE -> {
                                 // For line, we need start and end points
                                 // This is simplified - in real implementation would need drag handling
                                 currentLine = Pair(offset, offset)
                             }
-
                             TemperatureMeasurementMode.RECT -> {
                                 // For rect, we need drag to define rectangle
                                 currentRect = Rect(offset, offset)
                             }
-
                             TemperatureMeasurementMode.TREND -> {
                                 // Trend mode - could accumulate points over time
                             }
                         }
-
                         tryAwaitRelease()
                         isTouching = false
                     }
@@ -92,26 +83,22 @@ fun Temperature07Compose(
                             drawMeasurementPoint(point)
                         }
                     }
-
                     TemperatureMeasurementMode.LINE -> {
                         currentLine?.let { (start, end) ->
                             drawMeasurementLine(start, end)
                         }
                     }
-
                     TemperatureMeasurementMode.RECT -> {
                         currentRect?.let { rect ->
                             drawMeasurementRect(rect)
                         }
                     }
-
                     TemperatureMeasurementMode.TREND -> {
                         // Draw trend indicators
                     }
                 }
             }
         }
-
         // Mode indicator
         MeasurementModeIndicator(
             mode = mode,
@@ -122,7 +109,6 @@ fun Temperature07Compose(
         )
     }
 }
-
 private fun DrawScope.drawMeasurementPoint(point: Offset) {
     // Draw crosshair
     val crosshairSize = 20.dp.toPx()
@@ -138,7 +124,6 @@ private fun DrawScope.drawMeasurementPoint(point: Offset) {
         end = Offset(point.x, point.y + crosshairSize),
         strokeWidth = 2.dp.toPx()
     )
-
     // Draw center point
     drawCircle(
         color = Color.Red,
@@ -146,7 +131,6 @@ private fun DrawScope.drawMeasurementPoint(point: Offset) {
         center = point
     )
 }
-
 private fun DrawScope.drawMeasurementLine(start: Offset, end: Offset) {
     drawLine(
         color = Color.Green,
@@ -154,12 +138,10 @@ private fun DrawScope.drawMeasurementLine(start: Offset, end: Offset) {
         end = end,
         strokeWidth = 3.dp.toPx()
     )
-
     // Draw endpoints
     drawCircle(color = Color.Green, radius = 6.dp.toPx(), center = start)
     drawCircle(color = Color.Green, radius = 6.dp.toPx(), center = end)
 }
-
 private fun DrawScope.drawMeasurementRect(rect: Rect) {
     drawRect(
         color = Color.Blue,
@@ -167,7 +149,6 @@ private fun DrawScope.drawMeasurementRect(rect: Rect) {
         size = rect.size,
         style = Stroke(width = 3.dp.toPx())
     )
-
     // Draw corner indicators
     val cornerSize = 8.dp.toPx()
     listOf(
@@ -183,7 +164,6 @@ private fun DrawScope.drawMeasurementRect(rect: Rect) {
         )
     }
 }
-
 @Composable
 private fun MeasurementModeIndicator(
     mode: TemperatureMeasurementMode,
@@ -216,7 +196,6 @@ private fun MeasurementModeIndicator(
                     MaterialTheme.colorScheme.onSurface
                 }
             )
-
             Text(
                 text = mode.displayName,
                 style = MaterialTheme.typography.bodySmall,
@@ -226,7 +205,6 @@ private fun MeasurementModeIndicator(
                     MaterialTheme.colorScheme.onSurface
                 }
             )
-
             if (isActive) {
                 Box(
                     modifier = Modifier
@@ -238,7 +216,6 @@ private fun MeasurementModeIndicator(
         }
     }
 }
-
 @Composable
 fun TemperatureModeSelector(
     selectedMode: TemperatureMeasurementMode,
@@ -275,9 +252,7 @@ fun TemperatureModeSelector(
         }
     }
 }
-
 // Data classes and enums
-
 enum class TemperatureMeasurementMode(
     val displayName: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector
@@ -287,13 +262,11 @@ enum class TemperatureMeasurementMode(
     RECT("Rectangle", Icons.Default.CropFree),
     TREND("Trend", Icons.AutoMirrored.Filled.TrendingUp)
 }
-
 sealed class TemperatureMeasurement {
     data class Point(
         val position: Offset,
         val temperature: Float
     ) : TemperatureMeasurement()
-
     data class Line(
         val start: Offset,
         val end: Offset,
@@ -301,25 +274,21 @@ sealed class TemperatureMeasurement {
         val minTemperature: Float,
         val maxTemperature: Float
     ) : TemperatureMeasurement()
-
     data class Rectangle(
         val rect: Rect,
         val averageTemperature: Float,
         val minTemperature: Float,
         val maxTemperature: Float
     ) : TemperatureMeasurement()
-
     data class Trend(
         val points: List<Offset>,
         val temperatures: List<Float>
     ) : TemperatureMeasurement()
 }
-
 @Composable
 fun Temperature07ComposePreview() {
     var selectedMode by remember { mutableStateOf(TemperatureMeasurementMode.POINT) }
     var lastMeasurement by remember { mutableStateOf<TemperatureMeasurement?>(null) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -331,9 +300,7 @@ fun Temperature07ComposePreview() {
             onModeSelected = { selectedMode = it },
             modifier = Modifier.fillMaxWidth()
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -348,7 +315,6 @@ fun Temperature07ComposePreview() {
                 isEnabled = true,
                 modifier = Modifier.fillMaxSize()
             )
-
             Text(
                 text = "Thermal Camera View\n(Tap to measure)",
                 color = Color.White,
@@ -356,9 +322,7 @@ fun Temperature07ComposePreview() {
                 fontSize = 16.sp
             )
         }
-
         Spacer(modifier = Modifier.height(16.dp))
-
         // Show last measurement
         lastMeasurement?.let { measurement ->
             Card(
@@ -372,20 +336,16 @@ fun Temperature07ComposePreview() {
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold
                     )
-
                     when (measurement) {
                         is TemperatureMeasurement.Point -> {
                             Text("Point: ${measurement.temperature}°C at (${measurement.position.x.toInt()}, ${measurement.position.y.toInt()})")
                         }
-
                         is TemperatureMeasurement.Line -> {
                             Text("Line: Avg ${measurement.averageTemperature}°C, Range ${measurement.minTemperature}°C - ${measurement.maxTemperature}°C")
                         }
-
                         is TemperatureMeasurement.Rectangle -> {
                             Text("Rect: Avg ${measurement.averageTemperature}°C, Range ${measurement.minTemperature}°C - ${measurement.maxTemperature}°C")
                         }
-
                         is TemperatureMeasurement.Trend -> {
                             Text("Trend: ${measurement.points.size} points")
                         }

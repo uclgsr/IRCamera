@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -33,24 +32,19 @@ import com.mpdc4gsr.module.thermalunified.fragment.PDFListComposeFragment
 import com.mpdc4gsr.module.user.compose.MoreComposeFragment
 import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
 import kotlinx.coroutines.launch
-
 class IRMainComposeActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             LibUnifiedTheme {
                 MainContent()
             }
         }
     }
-
     @Composable
     private fun MainContent() {
         val pagerState = rememberPagerState(pageCount = { 5 })
         val scope = rememberCoroutineScope()
-
         Scaffold(
             containerColor = Color(0xFF16131E)
         ) { paddingValues ->
@@ -75,7 +69,6 @@ class IRMainComposeActivity : AppCompatActivity() {
                         4 -> MoreTabContent()
                     }
                 }
-
                 // Bottom navigation (15% of screen)
                 ThermalBottomNavigation(
                     selectedPage = pagerState.currentPage,
@@ -92,12 +85,10 @@ class IRMainComposeActivity : AppCompatActivity() {
         }
     }
 }
-
 @Composable
 private fun ThermalTabContent() {
     val context = LocalContext.current
     val activity = context as? IRMainComposeActivity
-
     // Embed existing thermal fragment using AndroidView with proper FragmentManager integration
     AndroidView(
         factory = { context ->
@@ -116,12 +107,10 @@ private fun ThermalTabContent() {
         modifier = Modifier.fillMaxSize()
     )
 }
-
 @Composable
 private fun GalleryTabContent() {
     val context = LocalContext.current
     val activity = context as? IRMainComposeActivity
-
     // Embed existing gallery fragment using AndroidView with proper FragmentManager integration
     AndroidView(
         factory = { context ->
@@ -140,12 +129,10 @@ private fun GalleryTabContent() {
         modifier = Modifier.fillMaxSize()
     )
 }
-
 @Composable
 private fun AbilityTabContent() {
     val context = LocalContext.current
     val activity = context as? IRMainComposeActivity
-
     // Embed existing ability fragment using AndroidView with proper FragmentManager integration
     AndroidView(
         factory = { context ->
@@ -163,14 +150,11 @@ private fun AbilityTabContent() {
         },
         modifier = Modifier.fillMaxSize()
     )
-
 }
-
 @Composable
 private fun PDFTabContent() {
     val context = LocalContext.current
     val activity = context as? IRMainComposeActivity
-
     // Embed existing PDF fragment using AndroidView with proper FragmentManager integration
     AndroidView(
         factory = { context ->
@@ -189,7 +173,6 @@ private fun PDFTabContent() {
         modifier = Modifier.fillMaxSize()
     )
 }
-
 @Composable
 private fun MoreTabContent() {
     val viewModel: MoreComposeFragmentViewModel = viewModel()
@@ -199,7 +182,6 @@ private fun MoreTabContent() {
         modifier = Modifier.fillMaxSize()
     )
 }
-
 @Composable
 private fun ThermalBottomNavigation(
     selectedPage: Int,
@@ -207,7 +189,6 @@ private fun ThermalBottomNavigation(
     modifier: Modifier = Modifier
 ) {
     val tabs = getThermalTabs()
-
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -233,7 +214,6 @@ private fun ThermalBottomNavigation(
         }
     }
 }
-
 @Composable
 private fun ThermalTabButton(
     tab: MainThermalTab,
@@ -264,7 +244,6 @@ private fun ThermalTabButton(
                 )
             }
         }
-
         Text(
             tab.title,
             color = if (isSelected) Color(0xFFFF6B35) else Color(0xFF7D8590),
@@ -273,13 +252,11 @@ private fun ThermalTabButton(
         )
     }
 }
-
 // Data class for tab configuration
 internal data class MainThermalTab(
     val title: String,
     val icon: ImageVector
 )
-
 private fun getThermalTabs(): List<MainThermalTab> {
     return listOf(
         MainThermalTab("Thermal", Icons.Default.Videocam),

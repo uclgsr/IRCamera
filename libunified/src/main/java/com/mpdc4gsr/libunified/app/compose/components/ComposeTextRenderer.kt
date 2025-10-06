@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.compose.components
-
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -15,7 +14,6 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 @Composable
 fun ComposeLegendTextDemo(
     modifier: Modifier = Modifier
@@ -25,7 +23,6 @@ fun ComposeLegendTextDemo(
         fontSize = 12.sp,
         color = MaterialTheme.colorScheme.onSurface
     )
-
     Canvas(
         modifier = modifier.size(200.dp, 100.dp)
     ) {
@@ -35,7 +32,6 @@ fun ComposeLegendTextDemo(
         )
     }
 }
-
 private fun DrawScope.drawComposeLegendText(
     textMeasurer: TextMeasurer,
     textStyle: TextStyle
@@ -45,16 +41,13 @@ private fun DrawScope.drawComposeLegendText(
         "Data Points",
         "Threshold"
     )
-
     legendItems.forEachIndexed { index, text ->
         val textLayoutResult = textMeasurer.measure(
             text = text,
             style = textStyle
         )
-
         val x = 20f
         val y = 20f + (index * 25f)
-
         // Using Compose's drawText instead of Canvas.drawText with Paint
         drawText(
             textLayoutResult = textLayoutResult,
@@ -62,7 +55,6 @@ private fun DrawScope.drawComposeLegendText(
         )
     }
 }
-
 @Composable
 fun rememberThemeAwarePaintColor(): Int {
     val color = MaterialTheme.colorScheme.onSurface

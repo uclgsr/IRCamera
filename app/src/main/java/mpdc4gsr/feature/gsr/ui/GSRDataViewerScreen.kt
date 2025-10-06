@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.gsr.ui
-
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,10 +23,6 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 import kotlin.math.sin
 import kotlin.random.Random
 
-/**
- * GSR Data Viewer Screen - Comprehensive GSR data analysis and visualization
- * Replaces GSRDataViewActivity with Compose implementation
- */
 @Composable
 fun GSRDataViewerScreen(
     sessionId: String = "GSR_Session_001",
@@ -38,7 +33,6 @@ fun GSRDataViewerScreen(
     // Sample GSR data - in real app, this would come from ViewModel
     val gsrData = remember { generateSampleGSRData() }
     var selectedAnalysis by remember { mutableStateOf(AnalysisType.RAW_SIGNAL) }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -62,7 +56,6 @@ fun GSRDataViewerScreen(
                 }
             )
         }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -72,13 +65,11 @@ fun GSRDataViewerScreen(
         ) {
             // Session Info Card
             SessionInfoCard(sessionId = sessionId)
-
             // Analysis Type Selector
             AnalysisTypeSelector(
                 selectedType = selectedAnalysis,
                 onTypeSelected = { selectedAnalysis = it }
             )
-
             // Data Visualization
             when (selectedAnalysis) {
                 AnalysisType.RAW_SIGNAL -> {
@@ -88,7 +79,6 @@ fun GSRDataViewerScreen(
                         color = Color.Cyan
                     )
                 }
-
                 AnalysisType.FILTERED -> {
                     GSRSignalChart(
                         title = "Filtered Signal",
@@ -96,21 +86,17 @@ fun GSRDataViewerScreen(
                         color = Color.Green
                     )
                 }
-
                 AnalysisType.FEATURES -> {
                     GSRFeaturesCard(gsrData)
                 }
-
                 AnalysisType.STATISTICS -> {
                     GSRStatisticsCard(gsrData)
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
-
 @Composable
 private fun SessionInfoCard(sessionId: String) {
     Card(
@@ -127,7 +113,6 @@ private fun SessionInfoCard(sessionId: String) {
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -152,7 +137,6 @@ private fun SessionInfoCard(sessionId: String) {
         }
     }
 }
-
 @Composable
 private fun AnalysisTypeSelector(
     selectedType: AnalysisType,
@@ -172,7 +156,6 @@ private fun AnalysisTypeSelector(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -199,7 +182,6 @@ private fun AnalysisTypeSelector(
         }
     }
 }
-
 @Composable
 private fun GSRSignalChart(
     title: String,
@@ -220,7 +202,6 @@ private fun GSRSignalChart(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -229,25 +210,21 @@ private fun GSRSignalChart(
                 val width = size.width
                 val height = size.height
                 val pointSpacing = width / data.size
-
                 val path = Path()
                 data.forEachIndexed { index, value ->
                     val x = index * pointSpacing
                     val y = height - (value * height)
-
                     if (index == 0) {
                         path.moveTo(x, y)
                     } else {
                         path.lineTo(x, y)
                     }
                 }
-
                 drawPath(
                     path = path,
                     color = color,
                     style = Stroke(width = 3.dp.toPx())
                 )
-
                 // Draw grid lines
                 for (i in 0..4) {
                     val y = (height / 4) * i
@@ -262,7 +239,6 @@ private fun GSRSignalChart(
         }
     }
 }
-
 @Composable
 private fun GSRFeaturesCard(data: List<Float>) {
     Card(
@@ -279,7 +255,6 @@ private fun GSRFeaturesCard(data: List<Float>) {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-
             val features = listOf(
                 "Skin Conductance Response (SCR) Count" to "23",
                 "Average SCR Amplitude" to "0.15 μS",
@@ -287,7 +262,6 @@ private fun GSRFeaturesCard(data: List<Float>) {
                 "Arousal Index" to "High",
                 "Stress Level" to "Moderate"
             )
-
             features.forEach { (label, value) ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -301,7 +275,6 @@ private fun GSRFeaturesCard(data: List<Float>) {
         }
     }
 }
-
 @Composable
 private fun GSRStatisticsCard(data: List<Float>) {
     Card(
@@ -318,7 +291,6 @@ private fun GSRStatisticsCard(data: List<Float>) {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-
             val stats = listOf(
                 "Mean" to String.format("%.3f μS", data.average()),
                 "Standard Deviation" to "0.045 μS",
@@ -329,7 +301,6 @@ private fun GSRStatisticsCard(data: List<Float>) {
                     (data.maxOrNull() ?: 0f) - (data.minOrNull() ?: 0f)
                 )
             )
-
             stats.forEach { (label, value) ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -343,20 +314,17 @@ private fun GSRStatisticsCard(data: List<Float>) {
         }
     }
 }
-
 enum class AnalysisType(val displayName: String) {
     RAW_SIGNAL("Raw"),
     FILTERED("Filtered"),
     FEATURES("Features"),
     STATISTICS("Stats")
 }
-
 private fun generateSampleGSRData(): List<Float> {
     return (0..200).map { i ->
         0.5f + 0.3f * sin(i * 0.1).toFloat() + 0.1f * Random.nextFloat()
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun GSRDataViewerScreenPreview() {

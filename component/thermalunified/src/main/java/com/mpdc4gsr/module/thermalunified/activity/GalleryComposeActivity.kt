@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,20 +24,16 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryActivityViewModel
 import kotlinx.coroutines.launch
-
 class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
-
     override fun createViewModel(): GalleryActivityViewModel {
         return viewModels<GalleryActivityViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: GalleryActivityViewModel) {
         val pagerState = rememberPagerState(pageCount = { 2 })
         val scope = rememberCoroutineScope()
         var selectedTab by remember { mutableIntStateOf(0) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -113,7 +108,6 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
-
                     // Content pager
                     HorizontalPager(
                         state = pagerState,
@@ -127,14 +121,12 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
                 }
             }
         }
-
         // Sync pager with tabs
         LaunchedEffect(pagerState.currentPage) {
             selectedTab = pagerState.currentPage
         }
     }
 }
-
 @Composable
 private fun GalleryTabRow(
     selectedTab: Int,
@@ -161,7 +153,6 @@ private fun GalleryTabRow(
                 onClick = { onTabSelected(0) },
                 modifier = Modifier.weight(1f)
             )
-
             GalleryTab(
                 text = "Videos",
                 icon = Icons.Default.VideoLibrary,
@@ -172,7 +163,6 @@ private fun GalleryTabRow(
         }
     }
 }
-
 @Composable
 private fun GalleryTab(
     text: String,
@@ -207,7 +197,6 @@ private fun GalleryTab(
         }
     }
 }
-
 @Composable
 private fun GalleryPictureTab() {
     // Embed existing picture fragment using AndroidView wrapper
@@ -220,7 +209,6 @@ private fun GalleryPictureTab() {
         modifier = Modifier.fillMaxSize()
     )
 }
-
 @Composable
 private fun GalleryVideoTab() {
     // Embed existing video fragment using AndroidView wrapper

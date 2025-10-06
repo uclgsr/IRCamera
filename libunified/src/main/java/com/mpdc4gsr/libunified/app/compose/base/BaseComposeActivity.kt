@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.compose.base
-
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,31 +14,23 @@ import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
 import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
 abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
-
     protected abstract fun createViewModel(): VM
-
     @Composable
     protected abstract fun Content(viewModel: VM)
-
     protected open fun onDeviceConnected() {}
     protected open fun onDeviceDisconnected() {}
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContent {
             LibUnifiedTheme {
                 val viewModel = createViewModel()
                 Content(viewModel)
-
                 HandleConnectionEvents(viewModel)
             }
         }
     }
-
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(
             AppLanguageUtils.attachBaseContext(
@@ -48,7 +39,6 @@ abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
             )
         )
     }
-
     @Composable
     private fun HandleConnectionEvents(viewModel: VM) {
         LaunchedEffect(Unit) {

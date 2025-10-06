@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import android.content.Intent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -23,13 +22,10 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalDoubleViewModel
-
 class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewModel>() {
-
     override fun createViewModel(): IRThermalDoubleViewModel {
         return viewModels<IRThermalDoubleViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRThermalDoubleViewModel) {
@@ -39,14 +35,11 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
         val showCompass by viewModel.showCompass.collectAsState()
         val isRecording by viewModel.isRecording.collectAsState()
         val isRangeLocked by viewModel.isRangeLocked.collectAsState()
-
         var showRangeEditDialog by remember { mutableStateOf(false) }
         var showMoreOptionsDialog by remember { mutableStateOf(false) }
         var minTemp by remember { mutableStateOf("0") }
         var maxTemp by remember { mutableStateOf("100") }
-
         val context = androidx.compose.ui.platform.LocalContext.current
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -72,7 +65,6 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                         }
                                     }
                                 }
-
                                 TextButton(
                                     onClick = { viewModel.selectMode(1) },
                                     colors = ButtonDefaults.textButtonColors(
@@ -157,7 +149,6 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                 fontSize = 16.sp
                             )
                         }
-
                         // Overlay controls
                         if (showOverlay) {
                             Column(
@@ -198,7 +189,6 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                 }
                             }
                         }
-
                         // Recording indicator
                         if (isRecording) {
                             Card(
@@ -223,7 +213,6 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                 }
                             }
                         }
-
                         // Trend chart overlay
                         if (showTrendChart) {
                             Card(
@@ -266,7 +255,6 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                             }
                         }
                     }
-
                     // Bottom menu controls
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -298,9 +286,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                     )
                                 }
                             }
-
                             HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
-
                             // Primary menu
                             Row(
                                 modifier = Modifier
@@ -341,7 +327,6 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                 }
             }
         }
-
         // Range Edit Dialog
         if (showRangeEditDialog) {
             AlertDialog(
@@ -383,7 +368,6 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                 }
             )
         }
-
         // More Options Dialog
         if (showMoreOptionsDialog) {
             AlertDialog(

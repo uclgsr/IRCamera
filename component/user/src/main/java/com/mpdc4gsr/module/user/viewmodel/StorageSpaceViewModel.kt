@@ -1,13 +1,10 @@
 package com.mpdc4gsr.module.user.viewmodel
-
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.text.DecimalFormat
-
 class StorageSpaceViewModel : BaseViewModel() {
-
     companion object {
         private const val MOCK_TOTAL_SPACE = 32_000_000_000L
         private const val MOCK_USED_SPACE = 12_000_000_000L
@@ -16,7 +13,6 @@ class StorageSpaceViewModel : BaseViewModel() {
         private const val MOCK_VIDEO_SPACE = 6_000_000_000L
         private const val MOCK_SYSTEM_SPACE = 1_000_000_000L
     }
-
     data class StorageInfo(
         val totalSpace: Long = 0L,
         val usedSpace: Long = 0L,
@@ -25,10 +21,8 @@ class StorageSpaceViewModel : BaseViewModel() {
         val videoSpace: Long = 0L,
         val systemSpace: Long = 0L
     )
-
     private val _storageInfo = MutableStateFlow(StorageInfo())
     val storageInfo: StateFlow<StorageInfo> = _storageInfo.asStateFlow()
-
     fun loadStorageInfo() {
         launchWithErrorHandling {
             // Original TS004Repository functionality removed - use mock data
@@ -43,7 +37,6 @@ class StorageSpaceViewModel : BaseViewModel() {
             _storageInfo.value = mockStorageInfo
         }
     }
-
     fun getUsagePercentage(): Float {
         val info = _storageInfo.value
         return if (info.totalSpace > 0) {
@@ -52,7 +45,6 @@ class StorageSpaceViewModel : BaseViewModel() {
             0f
         }
     }
-
     fun formatFileSize(fileSize: Long): String {
         return when {
             fileSize == 0L -> "0 B"
@@ -62,7 +54,6 @@ class StorageSpaceViewModel : BaseViewModel() {
             else -> DecimalFormat("#.0").format(fileSize.toDouble() / 1073741824) + " GB"
         }
     }
-
     fun formatStorage() {
         launchWithErrorHandling {
             // Original format storage operation removed - just show confirmation

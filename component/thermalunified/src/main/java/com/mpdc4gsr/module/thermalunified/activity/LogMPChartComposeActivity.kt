@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,13 +21,10 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.launch
-
 class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -40,7 +36,6 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var showSettingsDialog by remember { mutableStateOf(false) }
         val snackbarHostState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
-
         LibUnifiedTheme {
             Scaffold(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -105,7 +100,6 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         )
                     }
-
                     // Chart display
                     item {
                         ChartDisplayCard(
@@ -113,7 +107,6 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             dataPoints = dataPoints
                         )
                     }
-
                     // Time range selector
                     item {
                         TimeRangeSelector(
@@ -121,12 +114,10 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             onRangeSelected = { selectedTimeRange = it }
                         )
                     }
-
                     // Chart statistics
                     item {
                         ChartStatisticsCard()
                     }
-
                     // Export and management
                     item {
                         DataManagementCard(
@@ -157,7 +148,6 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             }
         }
-
         // Simulate logging
         LaunchedEffect(isLogging) {
             if (isLogging) {
@@ -168,7 +158,6 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             }
         }
-
         // Export dialog
         if (showExportDialog) {
             AlertDialog(
@@ -201,7 +190,6 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             )
         }
-
         // Settings dialog
         if (showSettingsDialog) {
             AlertDialog(
@@ -226,7 +214,6 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
-
 @Composable
 private fun LoggingStatusCard(
     isLogging: Boolean,
@@ -263,7 +250,6 @@ private fun LoggingStatusCard(
                         fontSize = 14.sp
                     )
                 }
-
                 Switch(
                     checked = isLogging,
                     onCheckedChange = { onToggleLogging() },
@@ -275,9 +261,7 @@ private fun LoggingStatusCard(
                     )
                 )
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Statistics
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -290,7 +274,6 @@ private fun LoggingStatusCard(
         }
     }
 }
-
 @Composable
 private fun LogStatItem(
     label: String,
@@ -312,7 +295,6 @@ private fun LogStatItem(
         )
     }
 }
-
 @Composable
 private fun ChartDisplayCard(
     selectedTimeRange: String,
@@ -335,9 +317,7 @@ private fun ChartDisplayCard(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Chart placeholder
             Box(
                 modifier = Modifier
@@ -374,7 +354,6 @@ private fun ChartDisplayCard(
         }
     }
 }
-
 @Composable
 private fun TimeRangeSelector(
     selectedRange: String,
@@ -397,15 +376,12 @@ private fun TimeRangeSelector(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 val timeRanges = listOf("15 Min", "1 Hour", "6 Hours", "24 Hours")
-
                 timeRanges.forEach { range ->
                     FilterChip(
                         onClick = { onRangeSelected(range) },
@@ -423,7 +399,6 @@ private fun TimeRangeSelector(
         }
     }
 }
-
 @Composable
 private fun ChartStatisticsCard() {
     Card(
@@ -443,9 +418,7 @@ private fun ChartStatisticsCard() {
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -458,7 +431,6 @@ private fun ChartStatisticsCard() {
         }
     }
 }
-
 @Composable
 private fun StatItem(
     label: String,
@@ -481,7 +453,6 @@ private fun StatItem(
         )
     }
 }
-
 @Composable
 private fun DataManagementCard(
     onExportCsv: () -> Unit,
@@ -505,9 +476,7 @@ private fun DataManagementCard(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -521,7 +490,6 @@ private fun DataManagementCard(
                 ) {
                     Text("Export CSV", fontSize = 12.sp)
                 }
-
                 Button(
                     onClick = onExportPdf,
                     modifier = Modifier.weight(1f),
@@ -531,7 +499,6 @@ private fun DataManagementCard(
                 ) {
                     Text("Export PDF", fontSize = 12.sp)
                 }
-
                 OutlinedButton(
                     onClick = onClearData,
                     modifier = Modifier.weight(1f),

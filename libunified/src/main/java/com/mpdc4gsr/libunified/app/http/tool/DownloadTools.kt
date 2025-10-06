@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.http.tool
-
 import com.mpdc4gsr.libunified.app.http.HttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -8,7 +7,6 @@ import okhttp3.OkHttpClient
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-
 object DownloadTools {
     private val okHttpClient: OkHttpClient by lazy {
         HttpClient.createClient(
@@ -18,7 +16,6 @@ object DownloadTools {
             retryOnConnectionFailure = false
         )
     }
-
     suspend fun download(
         url: String,
         file: File,
@@ -36,7 +33,6 @@ object DownloadTools {
             try {
                 inputStream = responseBody.byteStream()
                 fileOutputString = FileOutputStream(file)
-
                 val totalCount = responseBody.contentLength()
                 val buffer = ByteArray(4096)
                 var hasReadCount = 0L
@@ -51,11 +47,9 @@ object DownloadTools {
                             listener.invoke(hasReadCount, totalCount)
                         }
                     }
-
                     readLength = inputStream.read(buffer)
                 }
                 fileOutputString.flush()
-
                 return@withContext true
             } catch (_: Exception) {
                 return@withContext false

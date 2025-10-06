@@ -1,5 +1,4 @@
 package mpdc4gsr.core.ui.components
-
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -23,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
-
 enum class SensorStatus {
     DISCONNECTED,
     CONNECTING,
@@ -32,7 +30,6 @@ enum class SensorStatus {
     ERROR,
     SIMULATION
 }
-
 data class SensorInfo(
     val id: String,
     val name: String,
@@ -44,7 +41,6 @@ data class SensorInfo(
     val signalStrength: Int = 0,
     val isAnimating: Boolean = false
 )
-
 @Composable
 fun SensorDashboardCompose(
     sensors: List<SensorInfo>,
@@ -65,7 +61,6 @@ fun SensorDashboardCompose(
                 onRefresh = onRefresh
             )
         }
-
         items(sensors) { sensor ->
             SensorCard(
                 sensor = sensor,
@@ -74,7 +69,6 @@ fun SensorDashboardCompose(
         }
     }
 }
-
 @Composable
 private fun DashboardHeader(
     connectedCount: Int,
@@ -107,7 +101,6 @@ private fun DashboardHeader(
                     color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                 )
             }
-
             IconButton(onClick = onRefresh) {
                 Icon(
                     imageVector = Icons.Default.Refresh,
@@ -118,7 +111,6 @@ private fun DashboardHeader(
         }
     }
 }
-
 @Composable
 private fun SensorCard(
     sensor: SensorInfo,
@@ -135,12 +127,10 @@ private fun SensorCard(
         },
         animationSpec = tween(durationMillis = 300)
     )
-
     val scale by animateFloatAsState(
         targetValue = if (sensor.isAnimating) 1.05f else 1.0f,
         animationSpec = tween(durationMillis = 200)
     )
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -164,9 +154,7 @@ private fun SensorCard(
                     .clip(CircleShape)
                     .background(statusColor)
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             // Sensor icon
             Icon(
                 imageVector = sensor.icon,
@@ -174,9 +162,7 @@ private fun SensorCard(
                 modifier = Modifier.size(32.dp),
                 tint = statusColor
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             // Sensor information
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -189,7 +175,6 @@ private fun SensorCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 if (sensor.status == SensorStatus.CONNECTED || sensor.status == SensorStatus.STREAMING) {
                     Row(
                         modifier = Modifier.padding(top = 4.dp),
@@ -213,13 +198,11 @@ private fun SensorCard(
                     }
                 }
             }
-
             // Status badge
             StatusBadge(status = sensor.status)
         }
     }
 }
-
 @Composable
 private fun StatusBadge(status: SensorStatus) {
     val (text, containerColor, textColor) = when (status) {
@@ -230,7 +213,6 @@ private fun StatusBadge(status: SensorStatus) {
         SensorStatus.SIMULATION -> Triple("Simulation", Color(0xFFFFEB3B), Color.Black)
         SensorStatus.DISCONNECTED -> Triple("Disconnected", Color(0xFF9E9E9E), Color.White)
     }
-
     Surface(
         shape = RoundedCornerShape(12.dp),
         color = containerColor
@@ -256,7 +238,6 @@ private fun StatusBadge(status: SensorStatus) {
         }
     }
 }
-
 // Sample data generator for testing - returns disconnected sensors by default
 fun getSampleSensorData(): List<SensorInfo> {
     return listOf(
@@ -322,7 +303,6 @@ fun getSampleSensorData(): List<SensorInfo> {
         )
     )
 }
-
 // Static sensor dashboard for demo purposes - shows disconnected sensors
 // For actual sensor connections, use SensorDashboardCompose with real sensor data
 @Composable
@@ -332,7 +312,6 @@ fun SensorDashboardDemo(
     onRefresh: () -> Unit = {}
 ) {
     val sensors = remember { getSampleSensorData() }
-
     SensorDashboardCompose(
         sensors = sensors,
         modifier = modifier,
@@ -340,7 +319,6 @@ fun SensorDashboardDemo(
         onRefresh = onRefresh
     )
 }
-
 @Deprecated(
     message = "Function renamed to SensorDashboardDemo to reflect its static demo nature",
     replaceWith = ReplaceWith("SensorDashboardDemo(modifier, onSensorClick, onRefresh)")

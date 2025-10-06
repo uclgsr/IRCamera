@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.comm
-
 import android.content.ContentValues
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -20,7 +19,6 @@ import com.mpdc4gsr.libunified.app.config.FileConfig
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
-
 object PDFHelp {
     fun savePdfFileByListView(
         name: String,
@@ -29,16 +27,12 @@ object PDFHelp {
         watermarkView: View,
     ): String {
         val onePageHeight: Int = (view.width * 297f / 210f).toInt()
-
         var onePageContentHeight = 0f
-
         val pdfDocument = PdfDocument()
         var page: PdfDocument.Page? = null
         var canvas: Canvas? = null
-
         val paint = Paint()
         paint.color = 0xff16131e.toInt()
-
         for (index in 0 until viewList.size) {
             val contentHeight = viewList[index].measuredHeight
             if (onePageContentHeight + contentHeight > onePageHeight) {
@@ -54,31 +48,26 @@ object PDFHelp {
                 page = pdfDocument.startPage(pageInfo)
                 canvas = page.canvas
                 canvas.drawRect(0f, 0f, view.width.toFloat(), onePageHeight.toFloat(), paint)
-
                 if (index == 0) {
                     val bgTopDrawable: Drawable? =
                         ContextCompat.getDrawable(view.context, R.drawable.ic_report_create_bg_top)
                     bgTopDrawable?.setBounds(0, 0, view.width, (view.width * 1026 / 1125f).toInt())
                     bgTopDrawable?.draw(canvas)
                 }
-
                 canvas.save()
                 watermarkView.draw(canvas)
                 canvas.restore()
             }
-
             canvas?.save()
             canvas?.translate((view.width - viewList[index].measuredWidth) / 2f, 0f)
             viewList[index].draw(canvas!!)
             canvas?.restore()
-
             canvas?.translate(0f, contentHeight.toFloat())
             onePageContentHeight += contentHeight
             if (page != null && index == viewList.size - 1) {
                 pdfDocument.finishPage(page)
             }
         }
-
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             val pdfFile = File(FileConfig.getPdfDir(), "$name.pdf")
             val fos = FileOutputStream(pdfFile)

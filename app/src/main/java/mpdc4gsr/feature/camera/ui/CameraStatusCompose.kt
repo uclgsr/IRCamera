@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.camera.ui
-
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -15,10 +14,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.delay
 import mpdc4gsr.core.data.RgbCameraRecorder
 
-/**
- * Compose replacement for CameraStatusWidget
- * Displays camera status and preview with statistics
- */
 @Composable
 fun CameraStatusWidget(
     cameraRecorder: RgbCameraRecorder?,
@@ -27,7 +22,6 @@ fun CameraStatusWidget(
 ) {
     var statusText by remember { mutableStateOf("Camera Status: Not Initialized") }
     var statsText by remember { mutableStateOf("Camera Statistics:\nNot Available") }
-
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -42,9 +36,7 @@ fun CameraStatusWidget(
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Medium
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
         // Camera Preview
         Card(
             modifier = Modifier
@@ -79,9 +71,7 @@ fun CameraStatusWidget(
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(8.dp))
-
         // Statistics
         Text(
             text = statsText,
@@ -91,7 +81,6 @@ fun CameraStatusWidget(
             modifier = Modifier.fillMaxWidth()
         )
     }
-
     // Update status based on camera recorder state
     LaunchedEffect(cameraRecorder) {
         if (cameraRecorder != null) {
@@ -109,12 +98,10 @@ fun CameraStatusWidget(
         }
     }
 }
-
 @Composable
 private fun CameraPreviewView(cameraRecorder: RgbCameraRecorder) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-
     AndroidView(
         factory = { ctx ->
             PreviewView(ctx).apply {
@@ -127,9 +114,6 @@ private fun CameraPreviewView(cameraRecorder: RgbCameraRecorder) {
     )
 }
 
-/**
- * Compact camera status indicator
- */
 @Composable
 fun CameraStatusBadge(
     isInitialized: Boolean,

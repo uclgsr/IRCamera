@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.frame
-
 enum class ImageParams(val value: Int) {
     ROTATE_0(0),
     ROTATE_90(1),

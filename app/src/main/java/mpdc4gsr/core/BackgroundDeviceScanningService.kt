@@ -1,5 +1,4 @@
 package mpdc4gsr.core
-
 import android.app.*
 import android.content.Context
 import android.content.Intent
@@ -16,30 +15,24 @@ import com.mpdc4gsr.module.user.ble.BleDeviceManager
 import kotlinx.coroutines.*
 import mpdc4gsr.feature.main.ui.MainComposeActivity
 import kotlin.coroutines.CoroutineContext
-
 class BackgroundDeviceScanningService : Service(), CoroutineScope {
     private val serviceJob = SupervisorJob()
-
     companion object {
         private const val TAG = "BackgroundDeviceScanning"
         private const val NOTIFICATION_ID = 2001
         private const val CHANNEL_ID = "background_device_scanning"
         private const val CHANNEL_NAME = "Background Device Scanning"
-
         // Scanning configuration
         private const val SCAN_DURATION_MS = 30000L // 30 seconds
         private const val SCAN_INTERVAL_MS = 120000L // 2 minutes between scans
         private const val IDLE_SCAN_INTERVAL_MS = 300000L // 5 minutes when idle
-
         // Actions
         const val ACTION_START_SCANNING = "mpdc4gsr.action.START_BACKGROUND_SCANNING"
         const val ACTION_STOP_SCANNING = "mpdc4gsr.action.STOP_BACKGROUND_SCANNING"
         const val ACTION_PAUSE_SCANNING = "mpdc4gsr.action.PAUSE_BACKGROUND_SCANNING"
         const val ACTION_RESUME_SCANNING = "mpdc4gsr.action.RESUME_BACKGROUND_SCANNING"
     }
-
     override val coroutineContext: CoroutineContext = Dispatchers.IO + serviceJob
-
     private var bleDeviceManager: BleDeviceManager? = null
     private var scanningJob: Job? = null
     private var wakeLock: PowerManager.WakeLock? = null
@@ -47,17 +40,13 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
     private var isPaused = false
     private var scanCount = 0
     private var lastDeviceCount = 0
-
     private val binder = LocalBinder()
-
     inner class LocalBinder : Binder() {
         fun getService(): BackgroundDeviceScanningService = this@BackgroundDeviceScanningService
     }
-
     override fun onBind(intent: Intent): IBinder {
         return binder
     }
-
     override fun onCreate() {
         super.onCreate()
         AppLogger.i(TAG, "Background Device Scanning Service created")
@@ -65,10 +54,8 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
         createNotificationChannel()
         acquireWakeLock()
     }
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-
         when (intent?.action) {
             ACTION_START_SCANNING -> startBackgroundScanning()
             ACTION_STOP_SCANNING -> stopBackgroundScanning()
@@ -76,10 +63,8 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
             ACTION_RESUME_SCANNING -> resumeBackgroundScanning()
             else -> startBackgroundScanning()
         }
-
         return START_STICKY // Restart if killed by system
     }
-
     private fun initializeBleManager() {
         try {
             bleDeviceManager = BleDeviceManager(applicationContext)
@@ -89,36 +74,28 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
             AppLogger.e(TAG, "Failed to initialize BLE Device Manager", e)
         }
     }
-
     private fun startBackgroundScanning() {
         if (isScanning) {
             AppLogger.d(TAG, "Background scanning already active")
             return
         }
-
         AppLogger.i(TAG, "Starting background device scanning service")
         isScanning = true
         isPaused = false
         scanCount = 0
-
         val notification = createOngoingNotification()
         startForeground(NOTIFICATION_ID, notification)
-
         scanningJob = launch {
             performBackgroundScanning()
         }
     }
-
     private fun stopBackgroundScanning() {
         AppLogger.i(TAG, "Stopping background device scanning service")
         isScanning = false
         isPaused = false
-
         scanningJob?.cancel()
         scanningJob = null
-
         bleDeviceManager?.stopDeviceDiscovery()
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             stopForeground(STOP_FOREGROUND_REMOVE)
         } else {
@@ -127,27 +104,23 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
         }
         stopSelf()
     }
-
     private fun pauseBackgroundScanning() {
         AppLogger.i(TAG, "Pausing background device scanning")
         isPaused = true
         bleDeviceManager?.stopDeviceDiscovery()
         updateNotification("Background scanning paused")
     }
-
     private fun resumeBackgroundScanning() {
         AppLogger.i(TAG, "Resuming background device scanning")
         isPaused = false
         updateNotification("Background scanning active")
     }
-
     private suspend fun performBackgroundScanning() = withContext(Dispatchers.IO) {
         while (isActive && isScanning) {
             try {
                 if (!isPaused) {
                     performSingleScan()
                 }
-
                 // Use different intervals based on activity and results
                 val interval = if (isPaused) {
                     IDLE_SCAN_INTERVAL_MS
@@ -156,55 +129,42 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
                 } else {
                     IDLE_SCAN_INTERVAL_MS // Less frequent when no devices
                 }
-
                 delay(interval)
-
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Error during background scanning cycle", e)
                 delay(SCAN_INTERVAL_MS) // Standard interval on error
             }
         }
     }
-
     private suspend fun performSingleScan() {
         try {
             scanCount++
             val scanStartTime = System.currentTimeMillis()
-
             AppLogger.d(TAG, "Starting background scan #$scanCount")
             updateNotification("Scanning for devices... (#$scanCount)")
-
             // Start scanning
             bleDeviceManager?.startDeviceDiscovery()
-
             // Let scan run for configured duration
             delay(SCAN_DURATION_MS)
-
             // Stop scanning
             bleDeviceManager?.stopDeviceDiscovery()
-
             // Get current device count (this would need to be exposed by BleDeviceManager)
             val deviceCount = getCurrentDeviceCount()
             lastDeviceCount = deviceCount
-
             val scanDuration = System.currentTimeMillis() - scanStartTime
-
             Log.i(
                 TAG,
                 "Background scan #$scanCount completed in ${scanDuration}ms, found $deviceCount devices"
             )
             updateNotification("Found $deviceCount devices (Scan #$scanCount)")
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error during single background scan", e)
             updateNotification("Scan error occurred")
         }
     }
-
     private fun getCurrentDeviceCount(): Int {
         return bleDeviceManager?.getDiscoveredDeviceCount() ?: 0
     }
-
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -217,20 +177,17 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
                 enableVibration(false)
                 setSound(null, null)
             }
-
             val notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
-
     private fun createOngoingNotification(): Notification {
         val intent = Intent(this, MainComposeActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
             this, 0, intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
         val stopIntent = Intent(this, BackgroundDeviceScanningService::class.java).apply {
             action = ACTION_STOP_SCANNING
         }
@@ -238,7 +195,6 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
             this, 1, stopIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
         val pauseResumeAction = if (isPaused) {
             val resumeIntent = Intent(this, BackgroundDeviceScanningService::class.java).apply {
                 action = ACTION_RESUME_SCANNING
@@ -266,7 +222,6 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
                 pausePendingIntent
             )
         }
-
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Background Device Scanning")
             .setContentText("Continuously scanning for BLE devices")
@@ -284,12 +239,10 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
             )
             .build()
     }
-
     private fun updateNotification(statusText: String) {
         val notification = createOngoingNotification().apply {
             // Update content text
         }
-
         val updatedNotification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Background Device Scanning")
             .setContentText(statusText)
@@ -297,12 +250,10 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
             .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
-
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(NOTIFICATION_ID, updatedNotification)
     }
-
     private fun acquireWakeLock() {
         try {
             val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
@@ -311,14 +262,13 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
                 "$TAG::BackgroundScanWakeLock"
             ).apply {
                 setReferenceCounted(false)
-                acquire(10 * 60 * 1000L /*10 minutes*/)
+                acquire(10 * 60 * 1000L )
             }
             AppLogger.d(TAG, "Wake lock acquired for background scanning")
         } catch (e: Exception) {
             AppLogger.w(TAG, "Failed to acquire wake lock", e)
         }
     }
-
     private fun releaseWakeLock() {
         try {
             wakeLock?.let {
@@ -332,24 +282,17 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
             AppLogger.w(TAG, "Failed to release wake lock", e)
         }
     }
-
     override fun onDestroy() {
         AppLogger.i(TAG, "Background Device Scanning Service destroyed")
-
         isScanning = false
         scanningJob?.cancel()
-
         bleDeviceManager?.stopDeviceDiscovery()
         bleDeviceManager?.release()
-
         releaseWakeLock()
-
         // Cancel all coroutines launched in this service's scope
         serviceJob.cancel()
-
         super.onDestroy()
     }
-
     // Public interface for controlling the service
     fun getStatus(): ServiceStatus {
         return ServiceStatus(
@@ -359,7 +302,6 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
             lastDeviceCount = lastDeviceCount
         )
     }
-
     data class ServiceStatus(
         val isScanning: Boolean,
         val isPaused: Boolean,

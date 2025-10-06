@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.video
-
 import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
@@ -9,16 +8,13 @@ import com.elvishew.xlog.XLog
 import org.bytedeco.javacv.FFmpegFrameRecorder
 import java.lang.ref.WeakReference
 import java.nio.ShortBuffer
-
 class AudioRecordHelp private constructor() {
     private var audioRecord: AudioRecord? = null
     private var audioRecordRunnable: AudioRecordRunnable? = null
     private var audioThread: Thread? = null
-
     @Volatile
     private var recordingAudio = false
     private var startTime: Long = 0
-
     @Volatile
     var runAudioThread = true
     var audioData: ShortBuffer? = null
@@ -31,11 +27,9 @@ class AudioRecordHelp private constructor() {
         )
     var type: Int = 0
     private var startRecordTime: Long = 0L
-
     object AudioUtilHolder {
         val INSTANCE = AudioRecordHelp()
     }
-
     @SuppressLint("MissingPermission")
     fun startRecording(
         recorder: FFmpegFrameRecorder,
@@ -58,29 +52,22 @@ class AudioRecordHelp private constructor() {
             e.printStackTrace()
         }
     }
-
     private fun initRecorder(recorder: FFmpegFrameRecorder) {
         audioRecordRunnable = AudioRecordRunnable(recorder)
         audioThread = Thread(audioRecordRunnable)
-
         runAudioThread = true
     }
-
     internal inner class AudioRecordRunnable(recorder: FFmpegFrameRecorder) : Runnable {
         private val recorder: WeakReference<FFmpegFrameRecorder> = WeakReference(recorder)
-
         @SuppressLint("MissingPermission")
         override fun run() {
-
             if (audioRecord == null) {
                 return
             }
-
             if (audioData == null) {
                 audioData = ShortBuffer.allocate(bufferSize)
             }
             audioRecord!!.startRecording()
-
             try {
                 while (runAudioThread) {
                     bufferReadResult =
@@ -97,7 +84,6 @@ class AudioRecordHelp private constructor() {
                                 VideoRecordFFmpeg.AUDIO_CHANNELS,
                                 audioData,
                             )
-
                         }
                     } else {
                         for (i in 0 until bufferSize) {
@@ -111,17 +97,14 @@ class AudioRecordHelp private constructor() {
                         Thread.sleep(1000L / VideoRecordFFmpeg.RATE)
                     }
                 }
-
             } catch (e: Exception) {
                 XLog.e("[ph][ph][ph][ph][ph][ph]")
             }
         }
     }
-
     public fun updateAudioRecordingState(boolean: Boolean) {
         recordingAudio = boolean
     }
-
     fun stopAudioRecording() {
         type = 2
         if (!runAudioThread) {
@@ -140,16 +123,13 @@ class AudioRecordHelp private constructor() {
         audioThread = null
         recordingAudio = false
     }
-
     fun stopRecording() {
         if (!runAudioThread) {
             return
         }
     }
-
     companion object {
         private val LOG_TAG = AudioRecordHelp::class.java.name
-
         fun getInstance(): AudioRecordHelp {
             return AudioUtilHolder.INSTANCE
         }

@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.thermal.ui
-
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,10 +24,6 @@ import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * CalibrateScreen composable - handles dual-camera alignment calibration
- * Can be used as full screen or modal overlay for thermal camera calibration
- */
 @Composable
 fun CalibrateScreen(
     onBackClick: (() -> Unit)? = null,
@@ -39,7 +34,6 @@ fun CalibrateScreen(
     var calibrationStep by remember { mutableIntStateOf(1) }
     var isCalibrating by remember { mutableStateOf(false) }
     var calibrationProgress by remember { mutableFloatStateOf(0f) }
-
     // Simulate calibration progress
     LaunchedEffect(isCalibrating) {
         if (isCalibrating) {
@@ -53,7 +47,6 @@ fun CalibrateScreen(
             }
         }
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -78,7 +71,6 @@ fun CalibrateScreen(
                 )
             }
         }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -90,7 +82,6 @@ fun CalibrateScreen(
                 step = calibrationStep,
                 isCalibrating = isCalibrating
             )
-
             // Dual camera preview with alignment overlay
             DualCameraPreview(
                 step = calibrationStep,
@@ -100,7 +91,6 @@ fun CalibrateScreen(
                     .fillMaxWidth()
                     .weight(1f)
             )
-
             // Progress indicator
             if (isCalibrating) {
                 CalibrationProgress(progress = calibrationProgress)
@@ -116,9 +106,6 @@ fun CalibrateScreen(
     }
 }
 
-/**
- * Calibration instructions component
- */
 @Composable
 private fun CalibrationInstructions(
     step: Int,
@@ -140,9 +127,7 @@ private fun CalibrationInstructions(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             val instruction = when {
                 isCalibrating -> "Please wait while the thermal and RGB cameras are being aligned. Keep the device steady."
                 step == 1 -> "Point both cameras at a distinctive object with clear temperature contrast (e.g., a warm cup on a cool table)."
@@ -150,7 +135,6 @@ private fun CalibrationInstructions(
                 step == 3 -> "Verify the alignment and tap the check button to complete calibration."
                 else -> "Calibration complete. The thermal and RGB cameras are now aligned."
             }
-
             Text(
                 text = instruction,
                 color = Color.Gray,
@@ -161,10 +145,6 @@ private fun CalibrationInstructions(
     }
 }
 
-/**
- * Dual camera preview with alignment overlays
- * Shows thermal and RGB camera feeds side by side with alignment guides
- */
 @Composable
 private fun DualCameraPreview(
     step: Int,
@@ -189,8 +169,7 @@ private fun DualCameraPreview(
                 progress = progress,
                 modifier = Modifier.weight(1f)
             )
-
-            // RGB camera view  
+            // RGB camera view
             RGBCameraView(
                 step = step,
                 isCalibrating = isCalibrating,
@@ -201,9 +180,6 @@ private fun DualCameraPreview(
     }
 }
 
-/**
- * Thermal camera view with calibration overlay
- */
 @Composable
 private fun ThermalCameraView(
     step: Int,
@@ -212,7 +188,6 @@ private fun ThermalCameraView(
     modifier: Modifier = Modifier
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
-
     Box(
         modifier = modifier
             .fillMaxHeight()
@@ -229,7 +204,6 @@ private fun ThermalCameraView(
                 color = Color(0xFF1A1A2E),
                 size = size
             )
-
             // Draw thermal hotspots
             drawCircle(
                 color = Color.Red,
@@ -246,7 +220,6 @@ private fun ThermalCameraView(
                 radius = 15f,
                 center = Offset(size.width * 0.5f, size.height * 0.2f)
             )
-
             // Draw crosshair
             val centerX = size.width / 2
             val centerY = size.height / 2
@@ -262,18 +235,15 @@ private fun ThermalCameraView(
                 end = Offset(centerX, centerY + 20),
                 strokeWidth = 2f
             )
-
             // Sample thermal hotspot
             drawCircle(
                 color = Color.Red,
                 radius = 40f,
                 center = Offset(size.width * 0.6f, size.height * 0.4f)
             )
-
             // Draw calibration overlays
             drawCalibrationOverlay(step, isCalibrating, progress, size)
         }
-
         // Camera label
         Text(
             text = "Thermal",
@@ -290,9 +260,6 @@ private fun ThermalCameraView(
     }
 }
 
-/**
- * RGB camera view with calibration overlay
- */
 @Composable
 private fun RGBCameraView(
     step: Int,
@@ -316,7 +283,6 @@ private fun RGBCameraView(
                 color = Color(0xFF4A4A4A),
                 size = size
             )
-
             // Draw some sample objects
             drawRoundRect(
                 color = Color(0xFF6A6A6A),
@@ -329,7 +295,6 @@ private fun RGBCameraView(
                 radius = 25f,
                 center = Offset(size.width * 0.8f, size.height * 0.3f)
             )
-
             // Draw calibration crosshair
             val centerX = size.width / 2
             val centerY = size.height / 2
@@ -349,18 +314,15 @@ private fun RGBCameraView(
                 color = Color(0xFF2E2E2E),
                 size = size
             )
-
             // Sample RGB features
             drawRect(
                 color = Color.Gray,
                 topLeft = Offset(size.width * 0.5f, size.height * 0.3f),
                 size = Size(size.width * 0.2f, size.height * 0.2f)
             )
-
             // Draw calibration overlays
             drawCalibrationOverlay(step, isCalibrating, progress, size)
         }
-
         // Camera label
         Text(
             text = "RGB",
@@ -377,9 +339,6 @@ private fun RGBCameraView(
     }
 }
 
-/**
- * Draw calibration overlay on camera preview
- */
 private fun DrawScope.drawCalibrationOverlay(
     step: Int,
     isCalibrating: Boolean,
@@ -387,7 +346,6 @@ private fun DrawScope.drawCalibrationOverlay(
     canvasSize: Size
 ) {
     val center = Offset(canvasSize.width / 2, canvasSize.height / 2)
-
     when {
         isCalibrating -> {
             // Draw progress indicator
@@ -407,12 +365,10 @@ private fun DrawScope.drawCalibrationOverlay(
                 size = Size(radius * 2, radius * 2)
             )
         }
-
         step >= 1 -> {
             // Draw crosshair for alignment
             val crosshairSize = 30f
             val strokeWidth = 2.dp.toPx()
-
             // Horizontal line
             drawLine(
                 color = Color.Yellow,
@@ -420,7 +376,6 @@ private fun DrawScope.drawCalibrationOverlay(
                 end = Offset(center.x + crosshairSize, center.y),
                 strokeWidth = strokeWidth
             )
-
             // Vertical line
             drawLine(
                 color = Color.Yellow,
@@ -428,7 +383,6 @@ private fun DrawScope.drawCalibrationOverlay(
                 end = Offset(center.x, center.y + crosshairSize),
                 strokeWidth = strokeWidth
             )
-
             // Center dot
             drawCircle(
                 color = Color.Yellow,
@@ -437,7 +391,6 @@ private fun DrawScope.drawCalibrationOverlay(
             )
         }
     }
-
     if (step >= 2 && !isCalibrating) {
         // Draw alignment grid
         val gridSpacing = canvasSize.width / 6
@@ -450,7 +403,6 @@ private fun DrawScope.drawCalibrationOverlay(
                 strokeWidth = 1.dp.toPx()
             )
         }
-
         val gridSpacingY = canvasSize.height / 6
         for (i in 1..5) {
             val y = i * gridSpacingY
@@ -464,9 +416,6 @@ private fun DrawScope.drawCalibrationOverlay(
     }
 }
 
-/**
- * Calibration progress indicator
- */
 @Composable
 private fun CalibrationProgress(
     progress: Float,
@@ -482,9 +431,7 @@ private fun CalibrationProgress(
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
         LinearProgressIndicator(
             progress = { progress },
             modifier = Modifier
@@ -496,9 +443,6 @@ private fun CalibrationProgress(
     }
 }
 
-/**
- * Step controls for manual calibration process
- */
 @Composable
 private fun CalibrationStepControls(
     currentStep: Int,
@@ -533,7 +477,6 @@ private fun CalibrationStepControls(
                 }
             }
         }
-
         // Control buttons
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -547,7 +490,6 @@ private fun CalibrationStepControls(
                     Text("Previous")
                 }
             }
-
             if (currentStep < 3) {
                 Button(
                     onClick = { onStepChange(currentStep + 1) }
@@ -566,9 +508,6 @@ private fun CalibrationStepControls(
     }
 }
 
-/**
- * Modal calibration overlay that can be shown over other screens
- */
 @Composable
 fun CalibrationOverlay(
     onDismiss: () -> Unit,
@@ -596,7 +535,6 @@ fun CalibrationOverlay(
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun CalibrateScreenPreview() {

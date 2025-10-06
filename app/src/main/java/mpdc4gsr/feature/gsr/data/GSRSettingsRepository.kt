@@ -1,26 +1,17 @@
 package mpdc4gsr.feature.gsr.data
-
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-/**
- * Repository for GSR Settings - Phase 4 MVVM Implementation
- * Centralized data management for GSR sensor configuration and preferences
- */
 class GSRSettingsRepository(private val context: Context) {
-
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-
     // StateFlow for reactive settings updates
     private val _gsrSettings = MutableStateFlow(loadGSRSettings())
     val gsrSettings: StateFlow<GSRSettings> = _gsrSettings
-
     private val _deviceSettings = MutableStateFlow(loadDeviceSettings())
     val deviceSettings: StateFlow<DeviceSettings> = _deviceSettings
-
     data class GSRSettings(
         val isEnabled: Boolean = true,
         val samplingRate: Int = 128,
@@ -31,7 +22,6 @@ class GSRSettingsRepository(private val context: Context) {
         val enableFiltering: Boolean = true,
         val notificationEnabled: Boolean = true
     )
-
     data class DeviceSettings(
         val selectedDeviceId: String? = null,
         val deviceName: String? = null,
@@ -42,11 +32,9 @@ class GSRSettingsRepository(private val context: Context) {
         val keepDeviceConnected: Boolean = false,
         val deviceCalibrationEnabled: Boolean = true
     )
-
     enum class DataFormat {
         CSV, JSON, BINARY
     }
-
     companion object {
         // SharedPreferences keys
         private const val KEY_GSR_ENABLED = "gsr_enabled"
@@ -57,7 +45,6 @@ class GSRSettingsRepository(private val context: Context) {
         private const val KEY_BUFFER_SIZE = "gsr_buffer_size"
         private const val KEY_ENABLE_FILTERING = "gsr_enable_filtering"
         private const val KEY_NOTIFICATION_ENABLED = "gsr_notification_enabled"
-
         private const val KEY_SELECTED_DEVICE_ID = "gsr_selected_device_id"
         private const val KEY_DEVICE_NAME = "gsr_device_name"
         private const val KEY_CONNECTION_TIMEOUT = "gsr_connection_timeout"
@@ -66,13 +53,11 @@ class GSRSettingsRepository(private val context: Context) {
         private const val KEY_RECONNECTION_BASE_DELAY = "gsr_reconnection_base_delay"
         private const val KEY_KEEP_DEVICE_CONNECTED = "gsr_keep_device_connected"
         private const val KEY_DEVICE_CALIBRATION = "gsr_device_calibration"
-
         // Default values
         private const val DEFAULT_SAMPLING_RATE = 128
         private const val DEFAULT_CONNECTION_TIMEOUT = 30
         private const val DEFAULT_BUFFER_SIZE = 1024
     }
-
     private fun loadGSRSettings(): GSRSettings {
         return GSRSettings(
             isEnabled = prefs.getBoolean(KEY_GSR_ENABLED, true),
@@ -87,7 +72,6 @@ class GSRSettingsRepository(private val context: Context) {
             notificationEnabled = prefs.getBoolean(KEY_NOTIFICATION_ENABLED, true)
         )
     }
-
     private fun loadDeviceSettings(): DeviceSettings {
         return DeviceSettings(
             selectedDeviceId = prefs.getString(KEY_SELECTED_DEVICE_ID, null),
@@ -100,7 +84,6 @@ class GSRSettingsRepository(private val context: Context) {
             deviceCalibrationEnabled = prefs.getBoolean(KEY_DEVICE_CALIBRATION, true)
         )
     }
-
     suspend fun updateGSRSettings(settings: GSRSettings) {
         prefs.edit().apply {
             putBoolean(KEY_GSR_ENABLED, settings.isEnabled)
@@ -115,7 +98,6 @@ class GSRSettingsRepository(private val context: Context) {
         }
         _gsrSettings.value = settings
     }
-
     suspend fun updateDeviceSettings(settings: DeviceSettings) {
         prefs.edit().apply {
             putString(KEY_SELECTED_DEVICE_ID, settings.selectedDeviceId)
@@ -130,48 +112,37 @@ class GSRSettingsRepository(private val context: Context) {
         }
         _deviceSettings.value = settings
     }
-
     suspend fun resetToDefaults() {
         val defaultGSRSettings = GSRSettings()
         val defaultDeviceSettings = DeviceSettings()
-
         updateGSRSettings(defaultGSRSettings)
         updateDeviceSettings(defaultDeviceSettings)
     }
-
     fun getSamplingRateOptions(): List<Int> {
         return listOf(32, 64, 128, 256, 512, 1024)
     }
-
     fun getDataFormatOptions(): List<DataFormat> {
         return DataFormat.values().toList()
     }
-
     fun getConnectionTimeoutOptions(): List<Int> {
         return listOf(10, 15, 30, 45, 60)
     }
-
     fun getBufferSizeOptions(): List<Int> {
         return listOf(256, 512, 1024, 2048, 4096)
     }
-
     fun isValidSamplingRate(rate: Int): Boolean {
         return rate in getSamplingRateOptions()
     }
-
     fun isValidConnectionTimeout(timeout: Int): Boolean {
         return timeout in getConnectionTimeoutOptions()
     }
-
     fun isValidBufferSize(size: Int): Boolean {
         return size in getBufferSizeOptions()
     }
-
     // Export current settings for backup/sharing
     fun exportSettings(): Map<String, Any> {
         val currentGSR = _gsrSettings.value
         val currentDevice = _deviceSettings.value
-
         return mapOf(
             "gsr_settings" to mapOf(
                 "enabled" to currentGSR.isEnabled,
@@ -193,16 +164,13 @@ class GSRSettingsRepository(private val context: Context) {
             )
         )
     }
-
     // Import settings from backup
     suspend fun importSettings(settingsMap: Map<String, Any>): Boolean {
         return try {
             @Suppress("UNCHECKED_CAST")
             val gsrMap = settingsMap["gsr_settings"] as? Map<String, Any> ?: return false
-
             @Suppress("UNCHECKED_CAST")
             val deviceMap = settingsMap["device_settings"] as? Map<String, Any> ?: return false
-
             val gsrSettings = GSRSettings(
                 isEnabled = gsrMap["enabled"] as? Boolean ?: true,
                 samplingRate = gsrMap["sampling_rate"] as? Int ?: DEFAULT_SAMPLING_RATE,
@@ -217,7 +185,6 @@ class GSRSettingsRepository(private val context: Context) {
                 enableFiltering = gsrMap["enable_filtering"] as? Boolean ?: true,
                 notificationEnabled = gsrMap["notification_enabled"] as? Boolean ?: true
             )
-
             val deviceSettings = DeviceSettings(
                 selectedDeviceId = deviceMap["selected_device_id"] as? String,
                 deviceName = deviceMap["device_name"] as? String,
@@ -228,7 +195,6 @@ class GSRSettingsRepository(private val context: Context) {
                 deviceCalibrationEnabled = deviceMap["device_calibration_enabled"] as? Boolean
                     ?: true
             )
-
             updateGSRSettings(gsrSettings)
             updateDeviceSettings(deviceSettings)
             true

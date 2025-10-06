@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.gsr.ui
-
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -26,23 +25,10 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.AppBaseViewModel
 
-/**
- * GSRVideoPlayerComposeActivity - Modern Video Playback with Compose
- *
- * Advanced video player for GSR session recordings with:
- * - Modern media player controls with Compose UI
- * - Synchronized GSR data overlay during playback
- * - Timeline scrubbing with data markers
- * - Multi-modal recording playback (video + sensor data)
- * - Export and sharing capabilities
- * - Performance-optimized video rendering
- */
 class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
-
     companion object {
         private const val EXTRA_VIDEO_PATH = "video_path"
         private const val EXTRA_SESSION_ID = "session_id"
-
         fun startActivity(
             context: Context,
             videoPath: String,
@@ -55,17 +41,14 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
             context.startActivity(intent)
         }
     }
-
     override fun createViewModel(): AppBaseViewModel {
         return viewModels<AppBaseViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: AppBaseViewModel) {
         val videoPath = intent.getStringExtra(EXTRA_VIDEO_PATH) ?: ""
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -125,7 +108,6 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
         }
     }
 }
-
 @Composable
 private fun GSRVideoPlayerContent(
     videoPath: String,
@@ -137,7 +119,6 @@ private fun GSRVideoPlayerContent(
     var duration by remember { mutableFloatStateOf(100f) }
     var showDataOverlay by remember { mutableStateOf(true) }
     var playbackSpeed by remember { mutableFloatStateOf(1.0f) }
-
     Column(
         modifier = modifier.fillMaxSize()
     ) {
@@ -151,7 +132,6 @@ private fun GSRVideoPlayerContent(
             onPlayPause = { isPlaying = !isPlaying },
             onSeek = { currentPosition = it }
         )
-
         // Scrollable content below video
         Column(
             modifier = Modifier
@@ -172,14 +152,12 @@ private fun GSRVideoPlayerContent(
                 onSpeedChange = { playbackSpeed = it },
                 onOverlayToggle = { showDataOverlay = it }
             )
-
             // Video Information
             VideoInfoCard(
                 videoPath = videoPath,
                 sessionId = sessionId,
                 duration = duration
             )
-
             // GSR Data Timeline
             if (sessionId != null) {
                 GSRDataTimelineCard(
@@ -188,14 +166,12 @@ private fun GSRVideoPlayerContent(
                     duration = duration
                 )
             }
-
             // Playback Statistics
             PlaybackStatisticsCard(
                 currentPosition = currentPosition,
                 duration = duration,
                 playbackSpeed = playbackSpeed
             )
-
             // Export Options
             VideoExportCard(
                 videoPath = videoPath,
@@ -204,7 +180,6 @@ private fun GSRVideoPlayerContent(
         }
     }
 }
-
 @Composable
 private fun VideoPlayerCard(
     videoPath: String,
@@ -230,7 +205,6 @@ private fun VideoPlayerCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             // Video View Container
             Box(
                 modifier = Modifier
@@ -252,7 +226,6 @@ private fun VideoPlayerCard(
                     },
                     modifier = Modifier.fillMaxSize()
                 )
-
                 // GSR Data Overlay
                 if (showDataOverlay) {
                     GSRDataOverlay(
@@ -260,7 +233,6 @@ private fun VideoPlayerCard(
                         modifier = Modifier.align(Alignment.TopEnd)
                     )
                 }
-
                 // Play/Pause Overlay
                 IconButton(
                     onClick = onPlayPause,
@@ -280,7 +252,6 @@ private fun VideoPlayerCard(
                     )
                 }
             }
-
             // Seek Bar
             Column {
                 Slider(
@@ -289,7 +260,6 @@ private fun VideoPlayerCard(
                     valueRange = 0f..duration,
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -307,7 +277,6 @@ private fun VideoPlayerCard(
         }
     }
 }
-
 @Composable
 private fun GSRDataOverlay(
     currentPosition: Float,
@@ -340,7 +309,6 @@ private fun GSRDataOverlay(
         }
     }
 }
-
 @Composable
 private fun VideoControlsCard(
     isPlaying: Boolean,
@@ -366,9 +334,7 @@ private fun VideoControlsCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             // Main Controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -378,11 +344,9 @@ private fun VideoControlsCard(
                 IconButton(onClick = { onSeek(0f) }) {
                     Icon(Icons.Default.SkipPrevious, contentDescription = "Restart")
                 }
-
                 IconButton(onClick = { onSeek(maxOf(0f, currentPosition - 10f)) }) {
                     Icon(Icons.Default.Replay10, contentDescription = "Rewind 10s")
                 }
-
                 IconButton(
                     onClick = onPlayPause,
                     modifier = Modifier
@@ -399,23 +363,19 @@ private fun VideoControlsCard(
                         modifier = Modifier.size(32.dp)
                     )
                 }
-
                 IconButton(onClick = { onSeek(minOf(duration, currentPosition + 10f)) }) {
                     Icon(Icons.Default.Forward10, contentDescription = "Forward 10s")
                 }
-
                 IconButton(onClick = { onSeek(duration) }) {
                     Icon(Icons.Default.SkipNext, contentDescription = "End")
                 }
             }
-
             // Playback Speed
             Text(
                 "Playback Speed: ${String.format("%.1f", playbackSpeed)}x",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -429,7 +389,6 @@ private fun VideoControlsCard(
                     )
                 }
             }
-
             // Overlay Toggle
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -448,7 +407,6 @@ private fun VideoControlsCard(
         }
     }
 }
-
 @Composable
 private fun VideoInfoCard(
     videoPath: String,
@@ -468,9 +426,7 @@ private fun VideoInfoCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             VideoInfoRow("File Name", videoPath.substringAfterLast("/"))
             VideoInfoRow("Session ID", sessionId ?: "N/A")
             VideoInfoRow("Duration", formatTime(duration))
@@ -481,7 +437,6 @@ private fun VideoInfoCard(
         }
     }
 }
-
 @Composable
 private fun VideoInfoRow(
     label: String,
@@ -503,7 +458,6 @@ private fun VideoInfoRow(
         )
     }
 }
-
 @Composable
 private fun GSRDataTimelineCard(
     sessionId: String,
@@ -523,9 +477,7 @@ private fun GSRDataTimelineCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             // Timeline visualization
             Box(
                 modifier = Modifier
@@ -555,7 +507,6 @@ private fun GSRDataTimelineCard(
                             )
                     )
                 }
-
                 Text(
                     "GSR Timeline Visualization",
                     modifier = Modifier.align(Alignment.Center),
@@ -563,7 +514,6 @@ private fun GSRDataTimelineCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             // Current GSR values
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -577,7 +527,6 @@ private fun GSRDataTimelineCard(
         }
     }
 }
-
 @Composable
 private fun GSRTimelineMetric(
     label: String,
@@ -599,7 +548,6 @@ private fun GSRTimelineMetric(
         )
     }
 }
-
 @Composable
 private fun PlaybackStatisticsCard(
     currentPosition: Float,
@@ -619,9 +567,7 @@ private fun PlaybackStatisticsCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -633,7 +579,6 @@ private fun PlaybackStatisticsCard(
         }
     }
 }
-
 @Composable
 private fun PlaybackStatistic(
     label: String,
@@ -655,7 +600,6 @@ private fun PlaybackStatistic(
         )
     }
 }
-
 @Composable
 private fun VideoExportCard(
     videoPath: String,
@@ -674,9 +618,7 @@ private fun VideoExportCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -697,7 +639,6 @@ private fun VideoExportCard(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Export Video")
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Export audio track
@@ -714,7 +655,6 @@ private fun VideoExportCard(
                     Text("Export Audio")
                 }
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -734,7 +674,6 @@ private fun VideoExportCard(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Share Video")
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Save current frame as image
@@ -754,7 +693,6 @@ private fun VideoExportCard(
         }
     }
 }
-
 // Helper function to format time
 private fun formatTime(seconds: Float): String {
     val totalSeconds = seconds.toInt()
@@ -762,7 +700,6 @@ private fun formatTime(seconds: Float): String {
     val remainingSeconds = totalSeconds % 60
     return String.format("%02d:%02d", minutes, remainingSeconds)
 }
-
 class GSRVideoPlayerViewModel : AppBaseViewModel() {
     // ViewModel implementation for managing video playback state, GSR data synchronization, etc.
     // Future implementation would include:

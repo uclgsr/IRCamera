@@ -1,8 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.report.bean
-
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-
 @Parcelize
 data class ImageTempBean(
     val full: TempBean?,
@@ -10,7 +8,6 @@ data class ImageTempBean(
     val lineList: ArrayList<TempBean>,
     val rectList: ArrayList<TempBean>,
 ) : Parcelable {
-
     @Parcelize
     data class TempBean(
         val max: String,

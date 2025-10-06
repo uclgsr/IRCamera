@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.settings.ui
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -26,9 +25,6 @@ import mpdc4gsr.core.ui.components.settings.SettingsCard
 import mpdc4gsr.core.ui.components.settings.SettingsRow
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * App Information Screen - Version and app details
- */
 @Composable
 fun AppInfoScreen(
     onBackClick: (() -> Unit)? = null,
@@ -44,7 +40,6 @@ fun AppInfoScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -79,7 +74,6 @@ fun AppInfoScreen(
                     color = Color.Gray
                 )
             }
-
             // Version Information
             SettingsCard(
                 title = "Version Information",
@@ -100,7 +94,6 @@ fun AppInfoScreen(
                     value = "January 2024"
                 )
             }
-
             // Developer Information
             SettingsCard(
                 title = "Developer",
@@ -116,7 +109,6 @@ fun AppInfoScreen(
                     value = "Multi-Modal Data Collection"
                 )
             }
-
             // Legal
             SettingsCard(
                 title = "Legal",
@@ -133,7 +125,6 @@ fun AppInfoScreen(
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun AppInfoScreenPreview() {

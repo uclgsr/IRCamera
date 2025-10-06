@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.network.ui
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,15 +16,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * Modern Compose implementation of Network Client Test
- * Provides comprehensive network testing with Material 3 UI
- */
 class NetworkClientTestComposeActivity : BaseComposeActivity<NetworkClientTestViewModel>() {
-
     override fun createViewModel(): NetworkClientTestViewModel =
         viewModels<NetworkClientTestViewModel>().value
-
     @Composable
     override fun Content(viewModel: NetworkClientTestViewModel) {
         IRCameraTheme {
@@ -36,7 +29,6 @@ class NetworkClientTestComposeActivity : BaseComposeActivity<NetworkClientTestVi
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NetworkClientTestScreen(
@@ -45,7 +37,6 @@ fun NetworkClientTestScreen(
 ) {
     val localContext = androidx.compose.ui.platform.LocalContext.current
     val uiState by viewModel.networkTestUiState.collectAsState()
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -68,7 +59,6 @@ fun NetworkClientTestScreen(
                         tint = if (uiState.isTestRunning) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
                 IconButton(onClick = { viewModel.refreshNetworkStatus() }) {
                     Icon(
                         imageVector = Icons.Default.Refresh,
@@ -81,7 +71,6 @@ fun NetworkClientTestScreen(
                 titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
-
         // Content
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -106,7 +95,6 @@ fun NetworkClientTestScreen(
                     onRunQuickTest = { viewModel.runQuickNetworkTest() }
                 )
             }
-
             // Test Progress (if running)
             if (uiState.isTestRunning) {
                 item {
@@ -117,7 +105,6 @@ fun NetworkClientTestScreen(
                     )
                 }
             }
-
             // Test Categories
             item {
                 Text(
@@ -126,14 +113,12 @@ fun NetworkClientTestScreen(
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
-
             items(uiState.testCategories) { category ->
                 TestCategoryCard(
                     category = category,
                     onRunCategoryTest = { viewModel.runCategoryTest(category) }
                 )
             }
-
             // Test Results
             if (uiState.testResults.isNotEmpty()) {
                 item {
@@ -143,7 +128,6 @@ fun NetworkClientTestScreen(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-
                 items(uiState.testResults.take(5)) { result ->
                     TestResultCard(
                         result = result,
@@ -151,7 +135,6 @@ fun NetworkClientTestScreen(
                     )
                 }
             }
-
             // Network Configuration
             item {
                 NetworkConfigurationCard(
@@ -161,7 +144,6 @@ fun NetworkClientTestScreen(
                     }
                 )
             }
-
             // Error Display
             uiState.error?.let { errorMessage ->
                 item {
@@ -174,7 +156,6 @@ fun NetworkClientTestScreen(
         }
     }
 }
-
 @Composable
 private fun NetworkStatusOverviewCard(
     networkStatus: NetworkTestStatus,
@@ -210,7 +191,6 @@ private fun NetworkStatusOverviewCard(
                             TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
                         }
                     )
-
                     Text(
                         text = networkStatus.overallStatus.displayName,
                         style = MaterialTheme.typography.bodySmall,
@@ -222,7 +202,6 @@ private fun NetworkStatusOverviewCard(
                         }
                     )
                 }
-
                 Button(onClick = onRunQuickTest) {
                     Icon(
                         imageVector = Icons.Default.NetworkCheck,
@@ -233,9 +212,7 @@ private fun NetworkStatusOverviewCard(
                     Text("Quick Test")
                 }
             }
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -245,20 +222,17 @@ private fun NetworkStatusOverviewCard(
                     value = "${networkStatus.latency}ms",
                     status = if (networkStatus.latency < 100) TestStatus.PASS else TestStatus.WARNING
                 )
-
                 NetworkMetric(
                     label = "Bandwidth",
                     value = "${networkStatus.bandwidth} Mbps",
                     status = if (networkStatus.bandwidth > 10) TestStatus.PASS else TestStatus.WARNING
                 )
-
                 NetworkMetric(
                     label = "Packet Loss",
                     value = "${networkStatus.packetLoss}%",
                     status = if (networkStatus.packetLoss < 5) TestStatus.PASS else TestStatus.FAIL
                 )
             }
-
             if (networkStatus.connectedDevices > 0) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -275,7 +249,6 @@ private fun NetworkStatusOverviewCard(
         }
     }
 }
-
 @Composable
 private fun NetworkMetric(
     label: String,
@@ -302,7 +275,6 @@ private fun NetworkMetric(
         )
     }
 }
-
 @Composable
 private fun TestProgressCard(
     currentTest: String,
@@ -329,14 +301,12 @@ private fun TestProgressCard(
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
-
                     Text(
                         text = currentTest,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                 }
-
                 Button(
                     onClick = onStopTest,
                     colors = ButtonDefaults.buttonColors(
@@ -352,16 +322,12 @@ private fun TestProgressCard(
                     Text("Stop")
                 }
             }
-
             Spacer(modifier = Modifier.height(12.dp))
-
             LinearProgressIndicator(
                 progress = { progress },
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = "${(progress * 100).toInt()}% Complete",
                 style = MaterialTheme.typography.bodySmall,
@@ -370,7 +336,6 @@ private fun TestProgressCard(
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TestCategoryCard(
@@ -415,9 +380,7 @@ private fun TestCategoryCard(
                             TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
                         }
                     )
-
                     Spacer(modifier = Modifier.width(12.dp))
-
                     Column {
                         Text(
                             text = category.name,
@@ -429,7 +392,6 @@ private fun TestCategoryCard(
                                 TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
                             }
                         )
-
                         Text(
                             text = "${category.testCount} tests",
                             style = MaterialTheme.typography.bodySmall,
@@ -442,7 +404,6 @@ private fun TestCategoryCard(
                         )
                     }
                 }
-
                 Icon(
                     imageVector = when (category.lastResult) {
                         TestStatus.PASS -> Icons.Default.CheckCircle
@@ -459,9 +420,7 @@ private fun TestCategoryCard(
                     }
                 )
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = category.description,
                 style = MaterialTheme.typography.bodyMedium,
@@ -472,9 +431,7 @@ private fun TestCategoryCard(
                     TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
                 }
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Button(
                 onClick = onRunCategoryTest,
                 modifier = Modifier.fillMaxWidth()
@@ -490,7 +447,6 @@ private fun TestCategoryCard(
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TestResultCard(
@@ -523,9 +479,7 @@ private fun TestResultCard(
                     TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
                 }
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -534,13 +488,11 @@ private fun TestResultCard(
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-
                 Text(
                     text = "${result.timestamp} - ${result.duration}ms",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 if (result.details.isNotEmpty()) {
                     Text(
                         text = result.details,
@@ -549,7 +501,6 @@ private fun TestResultCard(
                     )
                 }
             }
-
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = "View details",
@@ -558,7 +509,6 @@ private fun TestResultCard(
         }
     }
 }
-
 @Composable
 private fun NetworkConfigurationCard(
     configuration: NetworkConfiguration,
@@ -566,7 +516,6 @@ private fun NetworkConfigurationCard(
 ) {
     val localContext = androidx.compose.ui.platform.LocalContext.current
     var expanded by remember { mutableStateOf(false) }
-
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -583,7 +532,6 @@ private fun NetworkConfigurationCard(
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-
                 IconButton(onClick = { expanded = !expanded }) {
                     Icon(
                         imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
@@ -591,10 +539,8 @@ private fun NetworkConfigurationCard(
                     )
                 }
             }
-
             if (expanded) {
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -602,25 +548,20 @@ private fun NetworkConfigurationCard(
                         label = "Server Address",
                         value = configuration.serverAddress
                     )
-
                     ConfigurationItem(
                         label = "Port",
                         value = configuration.port.toString()
                     )
-
                     ConfigurationItem(
                         label = "Timeout",
                         value = "${configuration.timeoutMs}ms"
                     )
-
                     ConfigurationItem(
                         label = "Retry Attempts",
                         value = configuration.retryAttempts.toString()
                     )
                 }
-
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Button(
                     onClick = {
                         // TODO: Implement network configuration editor dialog
@@ -644,7 +585,6 @@ private fun NetworkConfigurationCard(
         }
     }
 }
-
 @Composable
 private fun ConfigurationItem(
     label: String,
@@ -659,7 +599,6 @@ private fun ConfigurationItem(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface
         )
-
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
@@ -667,7 +606,6 @@ private fun ConfigurationItem(
         )
     }
 }
-
 @Composable
 private fun ErrorCard(
     error: String,
@@ -690,16 +628,13 @@ private fun ErrorCard(
                 contentDescription = "Error",
                 tint = MaterialTheme.colorScheme.onErrorContainer
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Text(
                 text = error,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onErrorContainer,
                 modifier = Modifier.weight(1f)
             )
-
             IconButton(onClick = onDismiss) {
                 Icon(
                     imageVector = Icons.Default.Close,
@@ -710,14 +645,12 @@ private fun ErrorCard(
         }
     }
 }
-
 // Type aliases to use ViewModel types
 typealias NetworkTestCategory = NetworkClientTestViewModel.NetworkTestCategory
 typealias NetworkTestResult = NetworkClientTestViewModel.NetworkTestResult
 typealias TestStatus = NetworkClientTestViewModel.TestStatus
 typealias NetworkTestType = NetworkClientTestViewModel.NetworkTestType
 typealias NetworkConfiguration = NetworkClientTestViewModel.NetworkConfiguration
-
 // Data classes specific to this activity
 data class NetworkTestStatus(
     val overallStatus: TestStatus,

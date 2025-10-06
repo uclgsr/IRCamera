@@ -1,8 +1,6 @@
 package com.mpdc4gsr.module.user.model
-
 import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.R as RCore
-
 object FaqRepository {
     fun getQuestionList(isTS001: Boolean): ArrayList<QuestionData> =
         if (isTS001) {
@@ -65,7 +63,6 @@ object FaqRepository {
             )
         }
 }
-
 data class QuestionData(
     val question: String,
     val answer: String,

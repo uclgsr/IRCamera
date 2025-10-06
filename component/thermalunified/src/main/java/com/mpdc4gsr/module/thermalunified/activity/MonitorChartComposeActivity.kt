@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,20 +19,16 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
-
 class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
         var showSettings by remember { mutableStateOf(false) }
         val snackbarHostState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -67,7 +62,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 },
                 floatingActionButton = {
                     var isRecording by remember { mutableStateOf(false) }
-
                     FloatingActionButton(
                         onClick = { isRecording = !isRecording },
                         containerColor = if (isRecording) Color(0xFFDC2626) else Color(0xFFFF6B35)
@@ -88,7 +82,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             }
         }
     }
-
     @Composable
     private fun MonitorChartContent(
         scope: kotlinx.coroutines.CoroutineScope,
@@ -98,7 +91,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var timeRange by remember { mutableStateOf("1hr") }
         var alertThreshold by remember { mutableFloatStateOf(35f) }
         var showAlerts by remember { mutableStateOf(true) }
-
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -124,7 +116,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     StatCard("Sensors", "4", Color(0xFF238636))
                 }
             }
-
             // Chart Display Area
             Card(
                 modifier = Modifier
@@ -146,24 +137,19 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             tint = Color(0xFFFF6B35),
                             modifier = Modifier.size(64.dp)
                         )
-
                         Spacer(modifier = Modifier.height(16.dp))
-
                         Text(
                             "Real-time Temperature Chart",
                             color = Color.White,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
-
                         Text(
                             "Multi-sensor monitoring with threshold alerts",
                             color = Color(0xFF7D8590),
                             fontSize = 14.sp
                         )
-
                         Spacer(modifier = Modifier.height(16.dp))
-
                         // Chart legend
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -176,7 +162,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 }
             }
-
             // Time Range Selection
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -190,9 +175,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )
-
                     Spacer(modifier = Modifier.height(12.dp))
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -205,7 +188,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 }
             }
-
             // Alert Settings
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -224,7 +206,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
-
                         Switch(
                             checked = showAlerts,
                             onCheckedChange = { showAlerts = it },
@@ -234,16 +215,13 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         )
                     }
-
                     if (showAlerts) {
                         Spacer(modifier = Modifier.height(12.dp))
-
                         Text(
                             "Threshold: ${alertThreshold.toInt()}°C",
                             color = Color(0xFF7D8590),
                             fontSize = 14.sp
                         )
-
                         Slider(
                             value = alertThreshold,
                             onValueChange = { alertThreshold = it },
@@ -256,7 +234,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 }
             }
-
             // Chart Controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -277,7 +254,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Export")
                 }
-
                 OutlinedButton(
                     onClick = {
                         scope.launch {
@@ -293,7 +269,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Clear")
                 }
-
                 Button(
                     onClick = {
                         scope.launch {
@@ -312,7 +287,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             }
         }
     }
-
     @Composable
     private fun StatCard(
         label: String,
@@ -326,7 +300,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Text(
                 label,
                 color = Color(0xFF7D8590),
@@ -334,7 +307,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             )
         }
     }
-
     @Composable
     private fun TimeRangeChip(
         label: String,
@@ -353,7 +325,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             )
         )
     }
-
     @Composable
     private fun LegendItem(
         label: String,
@@ -368,7 +339,6 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     .size(12.dp)
                     .background(color, RoundedCornerShape(2.dp))
             )
-
             Text(
                 label,
                 color = Color(0xFF7D8590),

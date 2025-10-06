@@ -1,16 +1,11 @@
 package mpdc4gsr.core.data
 
-/**
- * Data classes for recording session management and networking integration
- */
-
 data class SessionManifest(
     val sessionId: String,
     val startTimestamp: Long,
     val activeSensors: List<String>,
     val sessionDirectory: String
 )
-
 data class SessionEvent(
     val eventType: String,
     val timestampMs: Long,
@@ -20,7 +15,6 @@ data class SessionEvent(
     val success: Boolean = true,
     val errorMessage: String? = null
 )
-
 data class SensorActivityInfo(
     val sensorName: String,
     val wasActive: Boolean,
@@ -30,7 +24,6 @@ data class SensorActivityInfo(
     val samplesCollected: Long = 0,
     val lastActivityTimestamp: Long = System.currentTimeMillis()
 )
-
 data class SensorHealthInfo(
     val sensorId: String,
     val isHealthy: Boolean,
@@ -38,13 +31,11 @@ data class SensorHealthInfo(
     val consecutiveFailures: Int = 0,
     val lastError: String? = null
 )
-
 data class DropoutEvent(
     val sensorType: String,
     val timestamp: Long,
     val reason: String
 )
-
 data class ReconnectionEvent(
     val sensorType: String,
     val timestamp: Long,

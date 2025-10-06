@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.tools
-
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -12,16 +11,12 @@ import com.mpdc4gsr.libunified.compat.dpToPx
 import com.mpdc4gsr.libunified.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-
 object CoilLoader {
-
     private const val TAG = "CoilLoader"
     private const val CORNER_RADIUS_DP = 6f
-
     private fun getPhotoOptions(context: Context): RoundedCornersTransformation {
         return RoundedCornersTransformation(CORNER_RADIUS_DP.dpToPx(context))
     }
-
     private fun loadCircleWithData(
         img: ImageView,
         data: Any,
@@ -34,31 +29,26 @@ object CoilLoader {
             .build()
         img.context.imageLoader.enqueue(request)
     }
-
     fun loadCircle(
         img: ImageView,
         resourceId: Int,
         options: ((ImageRequest.Builder) -> Unit)? = null,
     ) = loadCircleWithData(img, resourceId, options)
-
     fun loadCircle(
         img: ImageView,
         url: String,
         options: ((ImageRequest.Builder) -> Unit)? = null,
     ) = loadCircleWithData(img, url, options)
-
     fun loadCircle(
         img: ImageView,
         drawable: Drawable,
         options: ((ImageRequest.Builder) -> Unit)? = null,
     ) = loadCircleWithData(img, drawable, options)
-
     fun loadCircle(
         img: ImageView,
         uri: Uri,
         options: ((ImageRequest.Builder) -> Unit)? = null,
     ) = loadCircleWithData(img, uri, options)
-
     fun loadCircle(
         img: ImageView,
         url: String,
@@ -74,7 +64,6 @@ object CoilLoader {
             .build()
         img.context.imageLoader.enqueue(request)
     }
-
     private fun loadRoundedWithData(
         img: ImageView,
         data: Any,
@@ -87,27 +76,22 @@ object CoilLoader {
             .build()
         img.context.imageLoader.enqueue(request)
     }
-
     fun loadRounded(
         img: ImageView,
         resourceId: Int,
     ) = loadRoundedWithData(img, resourceId)
-
     fun loadRounded(
         img: ImageView,
         url: String,
     ) = loadRoundedWithData(img, url)
-
     fun loadRounded(
         img: ImageView,
         drawable: Drawable,
     ) = loadRoundedWithData(img, drawable)
-
     fun loadRounded(
         img: ImageView,
         uri: Uri,
     ) = loadRoundedWithData(img, uri)
-
     fun load(
         img: ImageView,
         url: String?,
@@ -120,7 +104,6 @@ object CoilLoader {
             .build()
         img.context.imageLoader.enqueue(request)
     }
-
     fun loadGallery(
         img: ImageView,
         url: String?,
@@ -133,7 +116,6 @@ object CoilLoader {
             .build()
         img.context.imageLoader.enqueue(request)
     }
-
     fun loadFit(
         img: ImageView,
         url: String?,
@@ -146,7 +128,6 @@ object CoilLoader {
             .build()
         img.context.imageLoader.enqueue(request)
     }
-
     fun load(
         img: ImageView,
         resourceId: Int,
@@ -157,7 +138,6 @@ object CoilLoader {
             .build()
         img.context.imageLoader.enqueue(request)
     }
-
     fun loadP(
         img: ImageView,
         url: String?,
@@ -169,7 +149,6 @@ object CoilLoader {
             .build()
         img.context.imageLoader.enqueue(request)
     }
-
     suspend fun getDrawable(
         context: Context,
         url: String?,

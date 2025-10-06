@@ -1,30 +1,19 @@
 package com.mpdc4gsr.libunified.app.view
-
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
 import com.mpdc4gsr.libunified.R
-
 class MyTextView : AppCompatTextView {
-
     private var topHeight = 0
-
     private var bottomHeight = 0
-
     private var startHeight = 0
-
     private var endHeight = 0
-
     private var leftHeight = 0
-
     private var rightHeight = 0
-
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -49,7 +38,6 @@ class MyTextView : AppCompatTextView {
         rightHeight =
             typedArray.getDimensionPixelSize(R.styleable.MyTextView_right_height, drawableHeight)
         typedArray.recycle()
-
         val drawables = compoundDrawables
         val relativeDrawables = compoundDrawablesRelative
         val left = drawables[0]
@@ -58,14 +46,12 @@ class MyTextView : AppCompatTextView {
         val bottom = drawables[3]
         val start = relativeDrawables[0]
         val end = relativeDrawables[2]
-
         if (start != null || end != null) {
             setCompoundDrawablesRelative(start, top, end, bottom)
         } else {
             setCompoundDrawables(left, top, right, bottom)
         }
     }
-
     override fun setCompoundDrawables(
         left: Drawable?,
         top: Drawable?,
@@ -78,7 +64,6 @@ class MyTextView : AppCompatTextView {
         setDrawableBounds(right, rightHeight)
         super.setCompoundDrawables(left, top, right, bottom)
     }
-
     override fun setCompoundDrawablesWithIntrinsicBounds(
         left: Drawable?,
         top: Drawable?,
@@ -87,7 +72,6 @@ class MyTextView : AppCompatTextView {
     ) {
         setCompoundDrawables(left, top, right, bottom)
     }
-
     override fun setCompoundDrawablesRelative(
         start: Drawable?,
         top: Drawable?,
@@ -100,7 +84,6 @@ class MyTextView : AppCompatTextView {
         setDrawableBounds(end, endHeight)
         super.setCompoundDrawablesRelative(start, top, end, bottom)
     }
-
     override fun setCompoundDrawablesRelativeWithIntrinsicBounds(
         start: Drawable?,
         top: Drawable?,
@@ -109,7 +92,6 @@ class MyTextView : AppCompatTextView {
     ) {
         setCompoundDrawablesRelative(start, top, end, bottom)
     }
-
     fun setDrawableHeightPx(pxHeight: Int) {
         topHeight = pxHeight
         bottomHeight = pxHeight
@@ -119,17 +101,14 @@ class MyTextView : AppCompatTextView {
         rightHeight = pxHeight
         invalidate()
     }
-
     fun setOnlyDrawableStart(drawable: Drawable?) {
         setCompoundDrawablesRelative(drawable, null, null, null)
     }
-
     fun setOnlyDrawableStart(
         @DrawableRes start: Int,
     ) {
         setCompoundDrawablesRelativeWithIntrinsicBounds(start, 0, 0, 0)
     }
-
     fun hasAnyDrawable(): Boolean {
         for (drawable in compoundDrawables) {
             if (drawable != null) {
@@ -143,7 +122,6 @@ class MyTextView : AppCompatTextView {
         }
         return false
     }
-
     private fun setDrawableBounds(
         drawable: Drawable?,
         height: Int,

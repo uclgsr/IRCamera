@@ -1,27 +1,19 @@
 package com.mpdc4gsr.libunified.app.matrix
-
 class RingBuffer {
-
     private lateinit var byteArray: ByteArray
-
     private var mReadPositon = 0
-
     private var mUnReadLength = 0
-
     constructor(size: Int) {
         byteArray = ByteArray(size)
     }
-
     constructor(buffer: ByteArray) {
         byteArray = buffer
     }
-
     constructor(buffer: ByteArray, tail: Int, length: Int) {
         byteArray = buffer
         mReadPositon = tail
         mUnReadLength = length
     }
-
     fun write(buffer: ByteArray?, offset: Int, length: Int): Int {
         var head: Int
         var toEnd: Int
@@ -42,16 +34,13 @@ class RingBuffer {
                 // write the whole thing at once
                 System.arraycopy(buffer!!, offset, byteArray, head, toWrite)
             }
-
             // writing increases the length
             synchronized(this) { mUnReadLength += toWrite }
         }
         return toWrite
     }
-
     fun read(buffer: ByteArray?, offset: Int, length: Int): Int {
         if (buffer == null) return 0
-
         var toEnd: Int
         var toRead: Int
         synchronized(this) {
@@ -68,7 +57,6 @@ class RingBuffer {
             // read the whole requested thing at once
             System.arraycopy(byteArray, mReadPositon, buffer, offset, toRead)
         }
-
         // reading moves the tail and decreases the length
         synchronized(this) {
             mReadPositon = (mReadPositon + toRead) % byteArray.size
@@ -76,7 +64,6 @@ class RingBuffer {
         }
         return toRead
     }
-
     fun moveForward(length: Int): Int {
         synchronized(this) {
             mReadPositon = (mReadPositon + length) % byteArray.size
@@ -84,7 +71,6 @@ class RingBuffer {
         }
         return length
     }
-
     fun moveBack(length: Int): Int {
         synchronized(this) {
             if (mReadPositon > length) {
@@ -96,29 +82,22 @@ class RingBuffer {
         }
         return length
     }
-
     fun getUnReadLength(): Int {
         return mUnReadLength
     }
-
     fun getMaxLength(): Int {
         return byteArray.size
     }
-
     fun getFreeSpace(): Int {
         return byteArray.size - mUnReadLength
     }
-
     fun getByteArray(): ByteArray? {
         return byteArray
     }
-
     fun getReadPositon(): Int {
         return mReadPositon
     }
-
     override fun toString(): String {
         return "RingBuffer(byteArray=${byteArray.contentToString()}, mReadPositon=$mReadPositon, mUnReadLength=$mUnReadLength)"
     }
-
 }

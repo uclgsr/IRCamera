@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -14,13 +13,10 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
-
 class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewModel>() {
-
     override fun createViewModel(): ThermalFragmentViewModel {
         return viewModels<ThermalFragmentViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalFragmentViewModel) {
@@ -49,7 +45,6 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
             }
         }
     }
-
     @Composable
     private fun ThermalCameraContent(
         viewModel: ThermalFragmentViewModel,
@@ -99,7 +94,6 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Capture")
                 }
-
                 Button(
                     onClick = {
                         // TODO: Implement thermal video recording

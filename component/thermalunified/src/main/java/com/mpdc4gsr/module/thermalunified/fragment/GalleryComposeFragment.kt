@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.fragment
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,13 +32,10 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryViewModel
 import java.text.SimpleDateFormat
 import java.util.*
-
 class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
-
     override fun createViewModel(): GalleryViewModel {
         return viewModels<GalleryViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: GalleryViewModel) {
@@ -48,7 +44,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             val isGridView by viewModel.isGridView.collectAsStateWithLifecycle()
             val selectedItems by viewModel.selectedItems.collectAsStateWithLifecycle()
             val isSelectionMode by viewModel.isSelectionMode.collectAsStateWithLifecycle()
-
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -62,7 +57,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     onDeleteSelected = { viewModel.deleteSelectedItems() },
                     onShareSelected = { viewModel.shareSelectedItems() }
                 )
-
                 // Media content
                 when {
                     mediaItems.isEmpty() -> {
@@ -70,7 +64,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                             modifier = Modifier.fillMaxSize()
                         )
                     }
-
                     isGridView -> {
                         GridGalleryView(
                             mediaItems = mediaItems,
@@ -90,7 +83,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                             }
                         )
                     }
-
                     else -> {
                         ListGalleryView(
                             mediaItems = mediaItems,
@@ -114,7 +106,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun GalleryTopBar(
@@ -159,7 +150,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         )
     }
-
     @Composable
     private fun GridGalleryView(
         mediaItems: List<GalleryViewModel.MediaItem>,
@@ -185,7 +175,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @Composable
     private fun ListGalleryView(
         mediaItems: List<GalleryViewModel.MediaItem>,
@@ -209,7 +198,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @Composable
     private fun GridMediaItem(
         item: GalleryViewModel.MediaItem,
@@ -246,7 +234,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
-
                 // Selection indicator
                 if (isSelectionMode) {
                     Box(
@@ -269,7 +256,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         }
                     }
                 }
-
                 // Media info overlay
                 Card(
                     modifier = Modifier
@@ -298,7 +284,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @Composable
     private fun ListMediaItem(
         item: GalleryViewModel.MediaItem,
@@ -336,7 +321,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
-
                 // File info
                 Column(
                     modifier = Modifier.weight(1f)
@@ -358,7 +342,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
                 // Selection indicator
                 if (isSelectionMode) {
                     Checkbox(
@@ -369,7 +352,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @Composable
     private fun EmptyGalleryState(
         modifier: Modifier = Modifier
@@ -388,13 +370,11 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = "No Media Files",
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = "Capture photos or videos with the thermal camera to see them here",
                     style = MaterialTheme.typography.bodyMedium,
@@ -403,17 +383,14 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     private fun formatFileSize(bytes: Long): String {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()
         var unitIndex = 0
-
         while (size >= 1024 && unitIndex < units.size - 1) {
             size /= 1024
             unitIndex++
         }
-
         return "%.1f %s".format(size, units[unitIndex])
     }
 }

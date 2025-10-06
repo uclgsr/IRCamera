@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -29,26 +28,20 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-
 class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     companion object {
         const val KEY_PATH = "video_path"
     }
-
     private var videoPath = ""
-
     override fun onCreate(savedInstanceState: Bundle?) {
         if (intent.hasExtra(KEY_PATH)) {
             videoPath = intent.getStringExtra(KEY_PATH) ?: ""
         }
         super.onCreate(savedInstanceState)
     }
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -61,7 +54,6 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var showControls by remember { mutableStateOf(true) }
         var playbackSpeed by remember { mutableFloatStateOf(1.0f) }
         var pointAnalysisEnabled by remember { mutableStateOf(false) }
-
         LaunchedEffect(isFullscreen) {
             val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
             windowInsetsController.apply {
@@ -73,7 +65,6 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             }
         }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -123,7 +114,6 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         currentPosition = currentPosition,
                         modifier = Modifier.fillMaxSize()
                     )
-
                     // Video controls overlay
                     if (showControls) {
                         VideoControlsOverlay(
@@ -144,7 +134,6 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 .fillMaxWidth()
                         )
                     }
-
                     // Thermal analysis overlay
                     ThermalAnalysisOverlay(
                         pointAnalysisEnabled = pointAnalysisEnabled,
@@ -158,7 +147,6 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             }
         }
-
         // Update current position periodically if playing
         LaunchedEffect(isPlaying) {
             if (isPlaying) {
@@ -170,7 +158,6 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
-
 @Composable
 private fun ThermalVideoPlayer(
     videoPath: String,
@@ -191,7 +178,6 @@ private fun ThermalVideoPlayer(
         modifier = modifier
     )
 }
-
 @Composable
 private fun VideoControlsOverlay(
     isPlaying: Boolean,
@@ -232,7 +218,6 @@ private fun VideoControlsOverlay(
                         inactiveTrackColor = Color(0xFF21262D)
                     )
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -249,7 +234,6 @@ private fun VideoControlsOverlay(
                     )
                 }
             }
-
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -265,7 +249,6 @@ private fun VideoControlsOverlay(
                         modifier = Modifier.size(32.dp)
                     )
                 }
-
                 // Play/Pause
                 IconButton(
                     onClick = onPlayPause,
@@ -281,7 +264,6 @@ private fun VideoControlsOverlay(
                         modifier = Modifier.size(32.dp)
                     )
                 }
-
                 // Skip forward
                 IconButton(onClick = { onSeek(minOf(duration, currentPosition + 10000)) }) {
                     Icon(
@@ -292,7 +274,6 @@ private fun VideoControlsOverlay(
                     )
                 }
             }
-
             // Speed and additional controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -337,7 +318,6 @@ private fun VideoControlsOverlay(
                         )
                     )
                 }
-
                 // Additional controls
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -386,7 +366,6 @@ private fun VideoControlsOverlay(
         }
     }
 }
-
 @Composable
 private fun ThermalAnalysisOverlay(
     pointAnalysisEnabled: Boolean,
@@ -410,14 +389,11 @@ private fun ThermalAnalysisOverlay(
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
             )
-
             // Temperature readings
             AnalysisItem("Max", "45.2°C", Color(0xFFFF4444))
             AnalysisItem("Min", "18.7°C", Color(0xFF4444FF))
             AnalysisItem("Avg", "32.1°C", Color(0xFFFFAA00))
-
             HorizontalDivider(color = Color(0xFF21262D), thickness = 1.dp)
-
             // Analysis tools - Point analysis toggle
             IconButton(
                 onClick = onTogglePointAnalysis,
@@ -430,7 +406,6 @@ private fun ThermalAnalysisOverlay(
                     modifier = Modifier.size(16.dp)
                 )
             }
-
             if (pointAnalysisEnabled) {
                 Text(
                     "Point Analysis ON",
@@ -442,7 +417,6 @@ private fun ThermalAnalysisOverlay(
         }
     }
 }
-
 @Composable
 private fun AnalysisItem(
     label: String,
@@ -467,12 +441,10 @@ private fun AnalysisItem(
         )
     }
 }
-
 private fun formatTime(timeMs: Long): String {
     val seconds = (timeMs / 1000) % 60
     val minutes = (timeMs / (1000 * 60)) % 60
     val hours = (timeMs / (1000 * 60 * 60)) % 24
-
     return if (hours > 0) {
         String.format("%d:%02d:%02d", hours, minutes, seconds)
     } else {

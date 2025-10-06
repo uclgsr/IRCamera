@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -15,13 +14,10 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-
 class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewModel>() {
-
     override fun createViewModel(): IRCorrectionTwoViewModel {
         return IRCorrectionTwoViewModel()
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRCorrectionTwoViewModel) {
@@ -58,7 +54,6 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
             }
         }
     }
-
     @Composable
     private fun IRCorrectionTwoContent(
         viewModel: IRCorrectionTwoViewModel,
@@ -68,7 +63,6 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
         var distortion by remember { mutableStateOf(0f) }
         var rotation by remember { mutableStateOf(0f) }
         var scale by remember { mutableStateOf(1f) }
-
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -100,7 +94,6 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                     )
                 }
             }
-
             // Correction controls
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -115,7 +108,6 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-
                     // Perspective correction
                     Column {
                         Text("Perspective: ${perspective.toInt()}°")
@@ -129,7 +121,6 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                             )
                         )
                     }
-
                     // Distortion correction
                     Column {
                         Text("Distortion: ${(distortion * 100).toInt()}%")
@@ -143,7 +134,6 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                             )
                         )
                     }
-
                     // Rotation
                     Column {
                         Text("Rotation: ${rotation.toInt()}°")
@@ -157,7 +147,6 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                             )
                         )
                     }
-
                     // Scale
                     Column {
                         Text("Scale: ${(scale * 100).toInt()}%")
@@ -173,7 +162,6 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                     }
                 }
             }
-
             // Preview area
             Card(
                 modifier = Modifier
@@ -201,7 +189,6 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                     )
                 }
             }
-
             // Action buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -223,9 +210,8 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Reset")
                 }
-
                 Button(
-                    onClick = { /* Apply corrections and navigate to next step */ },
+                    onClick = {  },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFF6B35)
@@ -239,5 +225,4 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
         }
     }
 }
-
 class IRCorrectionTwoViewModel : BaseViewModel()

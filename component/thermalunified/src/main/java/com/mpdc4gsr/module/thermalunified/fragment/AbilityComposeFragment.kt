@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.fragment
-
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,9 +28,7 @@ import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.MonitoryHomeComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
-
 class AbilityComposeFragment : Fragment() {
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,18 +40,15 @@ class AbilityComposeFragment : Fragment() {
             }
         }
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun Content() {
         val context = LocalContext.current
         var isTC007 by remember { mutableStateOf(false) }
-
         // Get TC007 status from arguments
         LaunchedEffect(Unit) {
             isTC007 = arguments?.getBoolean("IS_TC007", false) ?: false
         }
-
         LibUnifiedTheme {
             Column(
                 modifier = Modifier
@@ -68,14 +62,12 @@ class AbilityComposeFragment : Fragment() {
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
                 Text(
                     text = "Explore advanced thermal imaging capabilities and specialized modes",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
-
                 // Abilities grid
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
@@ -94,7 +86,6 @@ class AbilityComposeFragment : Fragment() {
             }
         }
     }
-
     @Composable
     private fun AbilityCard(
         ability: AbilityItem,
@@ -133,16 +124,13 @@ class AbilityComposeFragment : Fragment() {
                         tint = ability.iconTint
                     )
                 }
-
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Text(
                     text = ability.title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = ability.textColor
                 )
-
                 if (ability.description.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
@@ -151,7 +139,6 @@ class AbilityComposeFragment : Fragment() {
                         color = ability.textColor.copy(alpha = 0.8f)
                     )
                 }
-
                 if (ability.badge.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Card(
@@ -171,7 +158,6 @@ class AbilityComposeFragment : Fragment() {
             }
         }
     }
-
     private fun getAbilityItems(isTC007: Boolean): List<AbilityItem> {
         return listOf(
             AbilityItem(
@@ -236,7 +222,6 @@ class AbilityComposeFragment : Fragment() {
             )
         )
     }
-
     private fun handleAbilityClick(
         context: android.content.Context,
         ability: AbilityItem,
@@ -246,33 +231,28 @@ class AbilityComposeFragment : Fragment() {
             "winter" -> {
                 // Handle winter mode - winter mode tracking
             }
-
             "monitoring" -> {
                 // Navigate to monitoring home
                 val intent = Intent(context, MonitoryHomeComposeActivity::class.java)
                 context.startActivity(intent)
             }
-
             "residential" -> {
                 // Navigate to residential thermal analysis
                 NavigationManager.getInstance()
                     .build("IR_RESIDENTIAL")
                     .navigation(context)
             }
-
             "automotive" -> {
                 // Navigate to automotive thermal analysis
                 NavigationManager.getInstance()
                     .build("IR_AUTOMOTIVE")
                     .navigation(context)
             }
-
             "night_vision" -> {
                 // Navigate to night vision thermal mode
                 val intent = Intent(context, ThermalIrNightComposeActivity::class.java)
                 context.startActivity(intent)
             }
-
             "thermal_plus" -> {
                 // Navigate to thermal plus features
                 val intent = Intent(context, IRThermalPlusComposeActivity::class.java)
@@ -280,7 +260,6 @@ class AbilityComposeFragment : Fragment() {
             }
         }
     }
-
     data class AbilityItem(
         val id: String,
         val title: String,
