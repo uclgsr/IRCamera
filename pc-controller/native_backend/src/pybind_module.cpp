@@ -3,7 +3,7 @@
 #include <pybind11/numpy.h>
 #include <pybind11/functional.h>
 
-#include "enhanced_shimmer.h"
+#include "shimmer.h"
 #include "data_processor.h"
 
 namespace py = pybind11;
