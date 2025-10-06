@@ -210,27 +210,66 @@ class RgbCameraRecorder(
 
             // Wrap CameraProvider initialization in try-catch for robust error handling
             cameraProvider = try {
-                ProcessCameraProvider.getInstance(context).get()
+                AppLogger.d(TAG, "Requesting CameraProvider instance...")
+                val provider = ProcessCameraProvider.getInstance(context).get()
+                AppLogger.d(TAG, "CameraProvider instance obtained successfully")
+                provider
+            } catch (e: java.util.concurrent.TimeoutException) {
+                AppLogger.e(TAG, "Timeout getting CameraProvider instance", e)
+                _cameraStatus.value = "Camera Service Timeout"
+                emitError(
+                    ErrorType.INITIALIZATION_FAILED,
+                    "Camera service timeout. Camera may be in use by another app"
+                )
+                return@withContext false
+            } catch (e: java.util.concurrent.ExecutionException) {
+                AppLogger.e(TAG, "ExecutionException getting CameraProvider", e)
+                _cameraStatus.value = "Camera Service Error"
+                emitError(
+                    ErrorType.INITIALIZATION_FAILED,
+                    "Camera service error: ${e.cause?.message ?: e.message}"
+                )
+                return@withContext false
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Failed to get CameraProvider instance", e)
                 _cameraStatus.value = "Camera Service Unavailable"
                 emitError(
                     ErrorType.INITIALIZATION_FAILED,
-                    "Camera service unavailable: ${e.message}"
+                    "Camera service unavailable: ${e.javaClass.simpleName} - ${e.message}"
                 )
                 return@withContext false
             }
 
+            val cameraType = if (isUsingFrontCamera) "Front" else "Back"
+            AppLogger.d(TAG, "Checking if $cameraType camera is available...")
+            
             if (!cameraProvider!!.hasCamera(currentCameraSelector)) {
-                val cameraType = if (isUsingFrontCamera) "Front" else "Back"
                 AppLogger.w(TAG, "$cameraType camera not available on this device")
+                
+                val availableCameras = mutableListOf<String>()
+                if (cameraProvider!!.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)) {
+                    availableCameras.add("Back")
+                }
+                if (cameraProvider!!.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA)) {
+                    availableCameras.add("Front")
+                }
+                
+                val availableMsg = if (availableCameras.isNotEmpty()) {
+                    "Available: ${availableCameras.joinToString()}"
+                } else {
+                    "No cameras available"
+                }
+                
+                AppLogger.i(TAG, availableMsg)
                 _cameraStatus.value = "$cameraType Camera Not Available"
                 emitError(
                     ErrorType.INITIALIZATION_FAILED,
-                    "$cameraType camera not available on this device"
+                    "$cameraType camera not available on this device. $availableMsg"
                 )
                 return@withContext false
             }
+            
+            AppLogger.i(TAG, "$cameraType camera is available")
 
             // Detect device capabilities and configure camera
             detectDeviceCapabilities()

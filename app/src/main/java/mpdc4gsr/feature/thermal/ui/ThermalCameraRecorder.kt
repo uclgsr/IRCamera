@@ -836,13 +836,19 @@ class ThermalCameraRecorder(
             try {
                 Log.i(
                     TAG,
-                    "Initializing real thermal camera with USB device: ${device.productName}"
+                    "Initializing real thermal camera with USB device: ${device.productName} (VID=${device.vendorId.toString(16)}, PID=${device.productId.toString(16)})"
                 )
+                
+                AppLogger.d(TAG, "USB device info - Vendor: ${device.manufacturerName}, Product: ${device.productName}, Serial: ${device.serialNumber}")
 
                 // IrcamEngine will be initialized in onCameraOpened callback
                 // after UVCCamera provides the native handle
                 // Pre-initialize SDK for potential fallback paths
-                initializeTopdonSdk()
+                AppLogger.d(TAG, "Pre-initializing Topdon SDK...")
+                val sdkInitSuccess = initializeTopdonSdk()
+                if (!sdkInitSuccess) {
+                    AppLogger.w(TAG, "SDK pre-initialization failed but continuing with camera initialization")
+                }
 
                 val connectCallback = object : com.energy.iruvc.uvc.ConnectCallback {
                     override fun onCameraOpened(p0: UVCCamera?) {
@@ -955,16 +961,24 @@ class ThermalCameraRecorder(
                         }
                     }
 
+                AppLogger.d(TAG, "Creating IRUVCTC instance with ${IR_CAMERA_WIDTH}x${IR_CAMERA_HEIGHT} resolution")
                 val syncBitmap = com.energy.iruvc.utils.SynchronizedBitmap()
-                iruvctc = IRUVCTC(
-                    IR_CAMERA_WIDTH,
-                    IR_CAMERA_HEIGHT,
-                    context,
-                    syncBitmap,
-                    com.energy.iruvc.utils.CommonParams.DataFlowMode.TEMP_OUTPUT,
-                    connectCallback,
-                    usbMonitorCallback
-                )
+                
+                try {
+                    iruvctc = IRUVCTC(
+                        IR_CAMERA_WIDTH,
+                        IR_CAMERA_HEIGHT,
+                        context,
+                        syncBitmap,
+                        com.energy.iruvc.utils.CommonParams.DataFlowMode.TEMP_OUTPUT,
+                        connectCallback,
+                        usbMonitorCallback
+                    )
+                    AppLogger.i(TAG, "IRUVCTC instance created successfully")
+                } catch (e: Exception) {
+                    AppLogger.e(TAG, "Failed to create IRUVCTC instance", e)
+                    throw e
+                }
 
                 iruvctc?.setIFrameCallBackListener(object :
                     IFrameCallBackListener {
@@ -980,7 +994,7 @@ class ThermalCameraRecorder(
                     }
                 })
 
-                AppLogger.i(TAG, "IRUVCTC thermal camera initialized")
+                AppLogger.i(TAG, "IRUVCTC thermal camera initialized with frame callback")
 
                 // Configure IRUVCTC settings equivalent to reference implementation
                 iruvctc?.let { iruvctcInstance ->
@@ -1003,13 +1017,34 @@ class ThermalCameraRecorder(
                     }
                 }
 
-                iruvctc?.registerUSB()
+                AppLogger.d(TAG, "Registering USB device with IRUVCTC...")
+                try {
+                    iruvctc?.registerUSB()
+                    AppLogger.i(TAG, "USB device registered successfully with IRUVCTC")
+                } catch (e: Exception) {
+                    AppLogger.e(TAG, "Failed to register USB device", e)
+                    throw e
+                }
 
-                AppLogger.i(TAG, "Real thermal camera initialization completed")
+                AppLogger.i(TAG, "Real thermal camera initialization completed successfully")
                 return@withContext true
 
+            } catch (e: java.lang.UnsatisfiedLinkError) {
+                AppLogger.e(TAG, "Native library error during thermal camera initialization", e)
+                AppLogger.e(TAG, "Check that libircamera-native.so is properly loaded")
+                return@withContext false
+            } catch (e: java.lang.NoSuchMethodError) {
+                AppLogger.e(TAG, "Method not found error - possible SDK version mismatch", e)
+                return@withContext false
+            } catch (e: SecurityException) {
+                AppLogger.e(TAG, "Security exception - USB permission may have been revoked", e)
+                return@withContext false
+            } catch (e: IllegalArgumentException) {
+                AppLogger.e(TAG, "Invalid argument during thermal camera initialization", e)
+                return@withContext false
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to initialize real thermal camera", e)
+                AppLogger.e(TAG, "Failed to initialize real thermal camera: ${e.javaClass.simpleName}", e)
+                AppLogger.e(TAG, "Error details: ${e.message}")
                 return@withContext false
             }
         }

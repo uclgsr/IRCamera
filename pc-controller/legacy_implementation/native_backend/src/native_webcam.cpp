@@ -2,6 +2,7 @@
 #include <iostream>
 #include <chrono>
 #include <algorithm>
+#include <thread>
 
 namespace ircamera {
 
@@ -26,13 +27,29 @@ namespace ircamera {
             config_ = config;
             device_id_ = config.device_id;
 
+            std::cout << "Attempting to open camera device " << device_id_ << std::endl;
+
             capture_.open(device_id_);
             if (!capture_.isOpened()) {
-                last_error_ = "Failed to open camera device " + std::to_string(device_id_);
-                return false;
+                last_error_ = "Failed to open camera device " + std::to_string(device_id_) + 
+                              ". Possible causes: device not found, already in use, or insufficient permissions";
+                std::cerr << last_error_ << std::endl;
+                
+                std::cout << "Attempting to open with different API..." << std::endl;
+                capture_.open(device_id_, cv::CAP_V4L2);
+                if (!capture_.isOpened()) {
+                    capture_.open(device_id_, cv::CAP_ANY);
+                    if (!capture_.isOpened()) {
+                        std::cerr << "Failed with all available APIs" << std::endl;
+                        return false;
+                    }
+                }
             }
 
+            std::cout << "Camera device " << device_id_ << " opened successfully" << std::endl;
+
             if (!apply_configuration()) {
+                std::cerr << "Configuration failed: " << last_error_ << std::endl;
                 close_camera();
                 return false;
             }
@@ -41,11 +58,17 @@ namespace ircamera {
 
             cv::Mat test_frame;
             if (!capture_.read(test_frame) || test_frame.empty()) {
-                last_error_ = "Camera opened but failed to capture test frame";
-                close_camera();
-                return false;
+                last_error_ = "Camera opened but failed to capture test frame. Camera may be initializing, try again";
+                std::cerr << last_error_ << std::endl;
+                
+                std::this_thread::sleep_for(std::chrono::milliseconds(500));
+                if (!capture_.read(test_frame) || test_frame.empty()) {
+                    close_camera();
+                    return false;
+                }
             }
 
+            std::cout << "Test frame captured successfully: " << test_frame.cols << "x" << test_frame.rows << std::endl;
             return true;
         }
 
