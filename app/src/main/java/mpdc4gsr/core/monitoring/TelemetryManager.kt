@@ -279,7 +279,7 @@ object TelemetryManager {
     }
     
     private fun generateSessionId(): String {
-        return "session_${System.currentTimeMillis()}_${(Math.random() * 10000).toInt()}"
+        return "session_${System.currentTimeMillis()}_${java.util.UUID.randomUUID().toString().substring(0, 8)}"
     }
 }
 

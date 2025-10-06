@@ -93,8 +93,7 @@ android {
         baseline = file("lint-baseline.xml")
 
         disable += listOf(
-            "MissingTranslation",
-            "ContentDescription"
+            "MissingTranslation"
         )
 
         warning += listOf(
