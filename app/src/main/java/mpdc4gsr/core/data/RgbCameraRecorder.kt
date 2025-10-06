@@ -24,7 +24,7 @@ import mpdc4gsr.feature.camera.data.CameraConfigurationManager
 import mpdc4gsr.feature.camera.data.CameraControlsManager
 import mpdc4gsr.feature.camera.data.CameraPerformanceManager
 import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
-import RecordingSettingsRepository
+import mpdc4gsr.feature.settings.data.RecordingSettingsRepository
 import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.ExecutorService

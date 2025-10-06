@@ -54,6 +54,8 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel
 import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModelFactory
 
+private const val CAMERA_RESCAN_DELAY_MS = 500L
+
 /**
  * ThermalMonitorScreen composable - replaces MonitorThermalFragment layout
  * Main screen for thermal camera preview with overlays and controls

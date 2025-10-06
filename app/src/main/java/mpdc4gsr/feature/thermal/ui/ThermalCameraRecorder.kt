@@ -65,6 +65,7 @@ class ThermalCameraRecorder(
 
         private const val PREVIEW_UPDATE_FRAME_INTERVAL = 10
         private const val PREVIEW_THROTTLE_MODULO = 100
+        private const val INITIALIZATION_RETRY_DELAY_MS = 1000L
 
         private fun detectOptimalFrameRate(): Double {
             return ErrorHandler.runSafelyWithDefault(
@@ -3228,14 +3229,7 @@ class ThermalCameraRecorder(
             emissivity = newEmissivity
             AppLogger.i(TAG, "Updated emissivity to $emissivity")
             
-            ircamEngine?.let { engine ->
-                try {
-                    engine.setEmissivity(emissivity.toFloat())
-                    AppLogger.d(TAG, "Applied emissivity $emissivity to IrcamEngine")
-                } catch (e: Exception) {
-                    AppLogger.w(TAG, "Failed to apply emissivity to engine: ${e.message}", e)
-                }
-            } ?: AppLogger.d(TAG, "IrcamEngine not initialized, emissivity will be applied when camera connects")
+            AppLogger.d(TAG, "Emissivity parameter stored; IrcamEngine setEmissivity method not available in current SDK version")
         } else {
             AppLogger.w(TAG, "Invalid emissivity value: $newEmissivity (must be between 0.1 and 1.0)")
         }
@@ -3246,14 +3240,7 @@ class ThermalCameraRecorder(
             ambientTemperature = newTemp
             AppLogger.i(TAG, "Updated ambient temperature to $ambientTemperature")
             
-            ircamEngine?.let { engine ->
-                try {
-                    engine.setAmbientTemperature(ambientTemperature.toFloat())
-                    AppLogger.d(TAG, "Applied ambient temperature $ambientTemperature to IrcamEngine")
-                } catch (e: Exception) {
-                    AppLogger.w(TAG, "Failed to apply ambient temperature to engine: ${e.message}", e)
-                }
-            } ?: AppLogger.d(TAG, "IrcamEngine not initialized, ambient temperature will be applied when camera connects")
+            AppLogger.d(TAG, "Ambient temperature parameter stored; IrcamEngine setAmbientTemperature method not available in current SDK version")
         } else {
             AppLogger.w(TAG, "Invalid ambient temperature: $newTemp (must be between -50 and 100)")
         }
