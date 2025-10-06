@@ -25,6 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.libunified.R as LibcoreR
@@ -32,7 +33,7 @@ import com.mpdc4gsr.module.thermalunified.R as ThermalR
 
 class ChartLogView : LineChart {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }
-    private val viewScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private var viewScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -42,6 +43,14 @@ class ChartLogView : LineChart {
         defStyle,
     ) {
         initChart()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        // Recreate the scope if it was cancelled
+        if (!viewScope.isActive) {
+            viewScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+        }
     }
 
     override fun onDetachedFromWindow() {

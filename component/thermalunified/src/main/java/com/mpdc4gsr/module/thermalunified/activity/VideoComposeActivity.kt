@@ -63,12 +63,14 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var pointAnalysisEnabled by remember { mutableStateOf(false) }
 
         LaunchedEffect(isFullscreen) {
-            window.decorView.systemUiVisibility = if (isFullscreen) {
-                android.view.View.SYSTEM_UI_FLAG_FULLSCREEN or
-                android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            } else {
-                android.view.View.SYSTEM_UI_FLAG_VISIBLE
+            val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+            windowInsetsController.apply {
+                if (isFullscreen) {
+                    hide(WindowInsetsCompat.Type.systemBars())
+                    systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                } else {
+                    show(WindowInsetsCompat.Type.systemBars())
+                }
             }
         }
 
