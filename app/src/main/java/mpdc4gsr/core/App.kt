@@ -2,7 +2,9 @@ package mpdc4gsr.core
 
 import android.app.Activity
 import android.app.Application
+import android.os.Build
 import android.os.Bundle
+import android.os.StrictMode
 import androidx.appcompat.app.AppCompatDelegate
 import com.csl.irCamera.BuildConfig
 import com.elvishew.xlog.XLog
@@ -80,11 +82,22 @@ class App : BaseApplication() {
         @Suppress("DEPRECATION")
         instance = this
 
+        // Enable StrictMode in debug builds to catch performance issues early
+        if (BuildConfig.DEBUG) {
+            enableStrictMode()
+        }
+
+        // Initialize performance metrics tracking as early as possible
+        mpdc4gsr.core.monitoring.PerformanceMetrics.initialize()
+
         // Initialize ContextProvider for AndroidX migration
         ContextProvider.init(this)
 
         // Initialize centralized logging
         initializeAppLogger()
+
+        // Initialize telemetry and observability
+        mpdc4gsr.core.monitoring.TelemetryManager.initialize(this)
 
         setupGlobalExceptionHandler()
 
@@ -198,5 +211,42 @@ class App : BaseApplication() {
         } catch (e: Exception) {
             AppLogger.e("App", "Failed to start RecordingService - PC networking will not be available", e)
         }
+    }
+
+    private fun enableStrictMode() {
+        AppLogger.d("App", "Enabling StrictMode for debug build")
+
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .apply {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        penaltyListener(mainExecutor) { violation ->
+                            AppLogger.w("StrictMode", "Thread policy violation: ${violation.javaClass.simpleName}")
+                        }
+                    }
+                }
+                .build()
+        )
+
+        StrictMode.setVmPolicy(
+            StrictMode.VmPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .apply {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        penaltyListener(mainExecutor) { violation ->
+                            AppLogger.w("StrictMode", "VM policy violation: ${violation.javaClass.simpleName}")
+                        }
+                    }
+                }
+                .build()
+        )
+
+        AppLogger.i(
+            "App",
+            "StrictMode enabled - will detect: disk reads/writes on main thread, network on main thread, memory leaks, unclosed resources"
+        )
     }
 }

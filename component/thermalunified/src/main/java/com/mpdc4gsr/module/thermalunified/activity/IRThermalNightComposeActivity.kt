@@ -64,7 +64,7 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                             IconButton(onClick = { showSettings = true }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
                             }
-                            
+
                             if (showSettings) {
                                 AlertDialog(
                                     onDismissRequest = { showSettings = false },
@@ -300,7 +300,10 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                         containerColor = if (isRecording) Color(0xFFDA3633) else Color(0xFF58A6FF)
                     )
                 ) {
-                    Icon(Icons.Default.VideoCall, contentDescription = if (isRecording) "Stop Recording" else "Start Recording")
+                    Icon(
+                        Icons.Default.VideoCall,
+                        contentDescription = if (isRecording) "Stop Recording" else "Start Recording"
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(if (isRecording) "Stop" else "Record")
                 }

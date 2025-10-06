@@ -47,7 +47,7 @@ class GSRSensorRecorder(
         private const val SHIMMER_DEFAULT_SAMPLING_RATE = 128.0
         private const val GSR_CHANNEL_ID = 0x01
         private const val GSR_RANGE_AUTO = 0x00
-        
+
         // Monitoring and connection delays
         private const val STATUS_MONITORING_INTERVAL_MS = 1000L
         private const val CONNECTION_VERIFICATION_DELAY_MS = 2000L

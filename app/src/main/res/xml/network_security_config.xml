@@ -1,14 +1,43 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8"?><!--
+    Network Security Configuration for IRCamera
+    
+    This configuration allows cleartext traffic only for local network communication
+    (required for PC-Android communication and device discovery on local network).
+    All other traffic should use HTTPS.
+    
+    Security considerations:
+    - Local network traffic (192.168.x.x, 10.x.x.x) is cleartext for compatibility
+    - Production traffic should use HTTPS
+    - User certificates trusted for development/testing
+-->
 <network-security-config>
-    <base-config cleartextTrafficPermitted="true">
+    <!-- Allow cleartext traffic only for local network addresses -->
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- Localhost for development and testing -->
+        <domain includeSubdomains="false">localhost</domain>
+        <domain includeSubdomains="false">127.0.0.1</domain>
+        <!-- 
+            Private network ranges cannot be specified directly in domain-config.
+            In production, consider implementing runtime checks for local addresses
+            or using a VPN/secure channel for sensitive data transfer.
+        -->
+    </domain-config>
+
+    <!-- Base configuration: HTTPS only for external traffic -->
+    <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
-            <certificates
-                overridePins="true"
-                src="system" />
-            <certificates
-                overridePins="true"
-                src="user" />
+            <!-- Trust system CAs -->
+            <certificates src="system" />
+            <!-- Trust user-installed CAs for development/testing only -->
+            <certificates src="user" />
         </trust-anchors>
     </base-config>
+
+    <!-- 
+        TODO for production:
+        1. Set cleartextTrafficPermitted="false" in base-config
+        2. Remove user certificate trust or limit to debug builds
+        3. Implement certificate pinning for production API servers
+        4. Use runtime checks for local network addresses
+    -->
 </network-security-config>

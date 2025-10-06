@@ -37,7 +37,7 @@ class UnifiedSessionManager(
         private const val MIN_DATA_QUALITY_SCORE = 0.7
         private const val MAX_SENSOR_LAG_MS = 1000
         private const val MIN_NETWORK_QUALITY = 0.6
-        
+
         // Timeout constants for sensor operations
         private const val SENSOR_INIT_TIMEOUT_MS = 5000L
         private const val SENSOR_START_TIMEOUT_MS = 10000L

@@ -27,7 +27,8 @@ abstract class TemperatureBaseView : View {
 
     private val TOUCH_TOLERANCE by lazy { 8f.dpToPx(context).toInt() }
 
-    private val DELETE_TOLERANCE by lazy { 2f.dpToPx(context)
+    private val DELETE_TOLERANCE by lazy {
+        2f.dpToPx(context)
     }
 
     enum class Mode {

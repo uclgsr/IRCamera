@@ -32,7 +32,7 @@ class Camera2System(
     private var currentSessionId: String = ""
     private var isRecording = false
     private var outputDirectory: File? = null
-    
+
     // CoroutineScope for managing release cleanup
     private val releaseScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -202,7 +202,7 @@ class Camera2System(
         rawEngine.release()
         cameraController.close()
         uiBridge.release()
-        
+
         // Cancel the release scope to clean up any remaining coroutines
         releaseScope.cancel()
 

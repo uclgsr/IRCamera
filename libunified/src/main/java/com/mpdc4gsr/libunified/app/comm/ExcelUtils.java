@@ -180,8 +180,8 @@ public class ExcelUtils {
             } else {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
                 timeStr = Instant.ofEpochMilli(listData.get(0).getStartTime())
-                    .atZone(ZoneId.systemDefault())
-                    .format(formatter);
+                        .atZone(ZoneId.systemDefault())
+                        .format(formatter);
             }
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 File excel = new File(FileConfig.getExcelDir(), "TCView_" + timeStr + ".xlsx");

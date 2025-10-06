@@ -29,7 +29,7 @@ import kotlin.system.measureTimeMillis
  */
 object ComposePerformanceMonitor {
     private const val TAG = "ComposePerformance"
-    
+
     // Performance thresholds
     private const val FRAME_BUDGET_MS = 16L // 60fps target
     const val MAX_SAMPLES = 100

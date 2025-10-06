@@ -234,7 +234,7 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFF16131E))
+                    .background(MaterialTheme.colorScheme.background)
             ) {
                 TitleBar(
                     title = "Network Configuration",
@@ -266,7 +266,7 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
                         ) {
                             Icon(
                                 imageVector = if (connectedDevice != null) Icons.Default.CheckCircle else Icons.Default.Circle,
-                                contentDescription = null,
+                                contentDescription = if (connectedDevice != null) "Connected" else "Not connected",
                                 tint = if (connectedDevice != null)
                                     MaterialTheme.colorScheme.primary
                                 else
@@ -326,7 +326,7 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
                             ) {
                                 Icon(
                                     imageVector = currentConnectionType.icon,
-                                    contentDescription = null,
+                                    contentDescription = "${currentConnectionType.name} connection",
                                     tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(24.dp)
                                 )
@@ -385,7 +385,7 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.SearchOff,
-                                        contentDescription = null,
+                                        contentDescription = "No devices found",
                                         modifier = Modifier.size(48.dp),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                                     )

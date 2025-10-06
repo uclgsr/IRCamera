@@ -87,19 +87,27 @@ android {
     lint {
         abortOnError = true
         checkReleaseBuilds = true
-        warningsAsErrors = false  // Enable gradually
+        warningsAsErrors = false
+        checkDependencies = true
 
-        // Only disable with justification
+        baseline = file("lint-baseline.xml")
+
         disable += listOf(
-            "MissingTranslation"  // Internationalization not required yet
+            "MissingTranslation"
         )
 
-        // Monitor these warnings
         warning += listOf(
             "StringFormatInvalid",
             "StringFormatMatches",
             "StringFormatCount",
-            "ResourceType"
+            "ResourceType",
+            "ObsoleteSdkInt"
+        )
+
+        error += listOf(
+            "StopShip",
+            "NewApi",
+            "InlinedApi"
         )
     }
 

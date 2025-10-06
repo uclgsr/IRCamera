@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 /**
  * Helper composable that creates and manages a MutableInteractionSource
  * with automatic press interaction cancellation on dispose.
- * 
+ *
  * This centralizes the logic for tracking and canceling press interactions,
  * preventing ripple animations from starting on detached views.
  */
@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 private fun rememberCancellableInteractionSource(): MutableInteractionSource {
     val interactionSource = remember { MutableInteractionSource() }
     var press: PressInteraction.Press? by remember { mutableStateOf(null) }
-    
+
     LaunchedEffect(interactionSource) {
         interactionSource.interactions.collect { interaction ->
             when (interaction) {
@@ -42,29 +42,29 @@ private fun rememberCancellableInteractionSource(): MutableInteractionSource {
             }
         }
     }
-    
+
     DisposableEffect(Unit) {
         onDispose {
             press?.let { interactionSource.tryEmit(PressInteraction.Cancel(it)) }
         }
     }
-    
+
     return interactionSource
 }
 
 /**
  * Safe clickable modifier that prevents ANR issues with ripple animations.
- * 
+ *
  * This modifier wraps the standard clickable modifier with additional safety checks
  * to prevent IllegalStateException when animations try to start on detached views.
- * 
+ *
  * The approach:
  * - Uses composed() to ensure the modifier is lifecycle-aware
  * - Creates interaction source within the composition scope
  * - Tracks press interactions and cancels them on dispose
  * - Properly manages ripple indication lifecycle
  * - Uses LocalIndication.current to respect any custom indication set at higher levels
- * 
+ *
  * This prevents the ANR scenario where:
  * 1. User taps a button triggering ripple + navigation
  * 2. Main thread blocks (from other operations)
@@ -79,7 +79,7 @@ fun Modifier.safeClickable(
     onClick: () -> Unit
 ): Modifier = composed {
     val interactionSource = rememberCancellableInteractionSource()
-    
+
     this.clickable(
         enabled = enabled,
         onClickLabel = onClickLabel,
@@ -103,7 +103,7 @@ fun Modifier.safeClickableWithRipple(
     onClick: () -> Unit
 ): Modifier = composed {
     val interactionSource = rememberCancellableInteractionSource()
-    
+
     this.clickable(
         enabled = enabled,
         onClickLabel = onClickLabel,
@@ -126,7 +126,7 @@ fun Modifier.safeClickableNoRipple(
     onClick: () -> Unit
 ): Modifier = composed {
     val interactionSource = remember { MutableInteractionSource() }
-    
+
     this.clickable(
         enabled = enabled,
         onClickLabel = onClickLabel,
@@ -152,7 +152,7 @@ fun Modifier.safeClickableDeferred(
 ): Modifier = composed {
     val scope = rememberCoroutineScope()
     val interactionSource = rememberCancellableInteractionSource()
-    
+
     this.clickable(
         enabled = enabled,
         onClickLabel = onClickLabel,
@@ -171,7 +171,7 @@ fun Modifier.safeClickableDeferred(
 /**
  * Helper function to defer an action by one frame.
  * Use for navigation actions that need to let ripple animations settle.
- * 
+ *
  * Example:
  * ```
  * IconButton(onClick = deferAction { finish() }) {

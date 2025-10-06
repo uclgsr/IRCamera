@@ -4,53 +4,68 @@ Complete index of all documentation in the IRCamera repository.
 
 ## Overview
 
-This repository contains documentation for the IRCamera multi-sensor recording system, including Android application, PC controller, thesis content, and maintenance records.
+This repository contains documentation for the IRCamera multi-sensor recording system, including Android application, PC
+controller, thesis content, and maintenance records.
 
 ## Documentation Categories
 
 ### 1. Android Application ([android/](android/))
+
 Documentation for the Android application component.
+
 - PC-Android networking protocols
 - Time synchronization
 - Implementation details
 
 ### 2. Developer Guides ([developer-guides/](developer-guides/))
+
 Technical guides for developers working on the codebase.
+
 - Permissions handling system
 - Logging and error handling utilities
 - Core system documentation
 
 ### 3. PC Controller ([../pc-controller/docs/](../pc-controller/docs/))
+
 Documentation for the PC controller application.
+
 - Protocol bridge implementation
 - Integration guides
 - Code reviews and verification
 
 ### 4. Thesis Content ([thesis/](thesis/))
+
 All thesis-related content including chapters, diagrams, and evaluation tests.
+
 - Chapter 3: System Design and Architecture
 - Chapter 4: Implementation
-- Chapter 5: Experimental Evaluation  
+- Chapter 5: Experimental Evaluation
 - Chapter 6: Requirements Evaluation
 - Thesis diagrams and figures
 - Evaluation test suite
 
 ### 5. Implementation Summaries ([summaries/](summaries/))
+
 High-level summaries of major implementations and analyses.
+
 - PC networking implementation
 - Android system analysis
 - Testing procedures
 - Planning documents
 
 ### 6. Maintenance Records ([maintenance/](maintenance/))
+
 Documentation of migrations, fixes, and maintenance activities.
+
 - AndroidX migration
 - Bug fix summaries
 - Feature implementations
 - Code pattern analyses
 
 ### 7. Code Quality (Root Level)
+
 Anti-patterns analysis and code quality guidelines.
+
 - Anti-patterns analysis and checklist
 - ANR prevention guide
 - Migration status tracking
@@ -59,26 +74,32 @@ Anti-patterns analysis and code quality guidelines.
 ## Quick Access
 
 ### For New Developers
+
 1. Start with [README.md](README.md) for overview
 2. Review [android/README.md](android/README.md) for Android app
 3. Check [../pc-controller/README.md](../pc-controller/README.md) for PC controller
 4. Read [anti-patterns-checklist.md](anti-patterns-checklist.md) for coding standards
 
 ### For Thesis Writing
+
 1. Navigate to [thesis/](thesis/) directory
 2. Review chapter-specific content
 3. Check [thesis/diagrams/index.md](thesis/diagrams/index.md) for figures
 4. See [thesis/evaluation/](thesis/evaluation/) for test results
 
 ### For Code Review
-1. [android/android-code-quality-guide.md](android/android-code-quality-guide.md) - Complete code quality guide (consolidated)
+
+1. [android/android-code-quality-guide.md](android/android-code-quality-guide.md) - Complete code quality guide (
+   consolidated)
 2. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Quick checklist
 3. [anti-patterns-analysis.md](anti-patterns-analysis.md) - Detailed analysis
 4. [anr-prevention-guide.md](anr-prevention-guide.md) - Performance guidelines
 5. [maintenance/](maintenance/) - Previous fixes and patterns
 
 ### For System Integration
-1. [summaries/pc-networking-summary.md](summaries/pc-networking-summary.md) - Complete PC networking implementation (consolidated)
+
+1. [summaries/pc-networking-summary.md](summaries/pc-networking-summary.md) - Complete PC networking implementation (
+   consolidated)
 2. [../pc-controller/docs/protocol.md](../pc-controller/docs/protocol.md) - Protocol details
 3. [../pc-controller/docs/implementation.md](../pc-controller/docs/implementation.md) - PC controller implementation
 
@@ -160,7 +181,7 @@ docs/
 - Total directories: 14
 - Android docs: 4 files
 - Developer guides: 3 files
-- Summaries: 5 files  
+- Summaries: 5 files
 - Maintenance: 6 files
 - Thesis chapters: 4 chapter directories
 - Thesis diagrams: 15+ diagram files
@@ -170,6 +191,7 @@ docs/
 ## Maintenance
 
 When adding new documentation:
+
 1. Place in appropriate category directory
 2. Add entry to category README.md
 3. Update this INDEX.md if adding new categories
@@ -179,9 +201,11 @@ When adding new documentation:
 ## Related Documentation
 
 ### PC Controller
+
 See [../pc-controller/docs/](../pc-controller/docs/) for comprehensive PC controller documentation.
 
 ### Source Code
+
 - Android: [../app/src/main/java/mpdc4gsr/](../app/src/main/java/mpdc4gsr/)
 - Components: [../component/](../component/)
 - Libraries: [../libunified/](../libunified/)

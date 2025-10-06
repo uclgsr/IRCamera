@@ -5,14 +5,17 @@ This document summarizes the fixes applied based on code review feedback.
 ## Issues Addressed
 
 ### 1. Type Hints for Socket Arguments ✅
+
 **Issue:** Socket arguments lacked type hints, reducing code clarity.
 
 **Fix:** Added proper type hints using string forward references to avoid circular imports.
 
 **Files Changed:**
+
 - `pc-controller/sync_handler.py`
 
 **Changes:**
+
 ```python
 # Before
 def handle_sync_init(self, device_id: str, socket) -> bool:
@@ -22,14 +25,17 @@ def handle_sync_init(self, device_id: str, socket: 'socket.socket') -> bool:
 ```
 
 ### 2. Timestamp Validation ✅
+
 **Issue:** Using `params.get(key, 0)` could silently corrupt timing data if parameters were missing.
 
 **Fix:** Added explicit validation for missing and zero timestamps with proper error handling.
 
 **Files Changed:**
+
 - `pc-controller/example_sync_server.py`
 
 **Changes:**
+
 ```python
 # Before
 t_pc = int(params.get('t_pc', 0))
@@ -49,14 +55,17 @@ if t_pc == 0 or t_ph == 0:
 ```
 
 ### 3. Integer Division Precision ✅
+
 **Issue:** Using `//` operator could introduce precision loss in time calculations.
 
 **Fix:** Changed to float division before converting to int.
 
 **Files Changed:**
+
 - `pc-controller/sync_handler.py`
 
 **Changes:**
+
 ```python
 # Before
 offset = t2 - ((t1 + t3) // 2)
@@ -66,14 +75,17 @@ offset = int(t2 - ((t1 + t3) / 2))
 ```
 
 ### 4. Deprecated ntpdate Command ✅
+
 **Issue:** Documentation recommended deprecated `ntpdate` command.
 
 **Fix:** Updated to suggest modern alternatives.
 
 **Files Changed:**
+
 - `TESTING_TIME_SYNC.md`
 
 **Changes:**
+
 ```bash
 # Before
 Sync PC with NTP: `sudo ntpdate pool.ntp.org`
@@ -85,14 +97,17 @@ or `timedatectl set-ntp true` (enable automatic time sync)
 ```
 
 ### 5. Blocking Server Warning ✅
+
 **Issue:** Server handles clients sequentially, which could block new connections.
 
 **Fix:** Added clear warning in docstring and inline comments.
 
 **Files Changed:**
+
 - `pc-controller/example_sync_server.py`
 
 **Changes:**
+
 ```python
 class PCServer:
     """Simple PC server that handles Android connections and time sync
@@ -103,14 +118,17 @@ class PCServer:
 ```
 
 ### 6. Import Mechanism ✅
+
 **Issue:** Direct `sys.path` manipulation is fragile.
 
 **Fix:** Improved with try/except fallback that supports proper module execution.
 
 **Files Changed:**
+
 - `pc-controller/tests/test_sync_handler.py`
 
 **Changes:**
+
 ```python
 # Before
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -126,14 +144,17 @@ except ImportError:
 ```
 
 ### 7. Thread Safety Documentation ✅
+
 **Issue:** Callback access could have race conditions if called from multiple threads.
 
 **Fix:** Added documentation clarifying thread-safety guarantees.
 
 **Files Changed:**
+
 - `app/src/main/java/mpdc4gsr/core/data/TimeSyncManager.kt`
 
 **Changes:**
+
 ```kotlin
 /**
  * Set callback for manual sync triggers (typically called by PC or user action)
@@ -161,14 +182,14 @@ cd pc-controller && python3 tests/test_sync_handler.py -v
 
 ## Summary
 
-| Issue | Severity | Status | Files Changed |
-|-------|----------|--------|---------------|
-| Type hints missing | Medium | ✅ Fixed | sync_handler.py |
-| Default 0 for timestamps | High | ✅ Fixed | example_sync_server.py |
-| Integer division precision | Medium | ✅ Fixed | sync_handler.py |
-| ntpdate deprecated | Medium | ✅ Fixed | TESTING_TIME_SYNC.md |
-| Blocking server | Nitpick | ✅ Documented | example_sync_server.py |
-| sys.path manipulation | Nitpick | ✅ Improved | test_sync_handler.py |
-| Thread safety | Nitpick | ✅ Documented | TimeSyncManager.kt |
+| Issue                      | Severity | Status       | Files Changed          |
+|----------------------------|----------|--------------|------------------------|
+| Type hints missing         | Medium   | ✅ Fixed      | sync_handler.py        |
+| Default 0 for timestamps   | High     | ✅ Fixed      | example_sync_server.py |
+| Integer division precision | Medium   | ✅ Fixed      | sync_handler.py        |
+| ntpdate deprecated         | Medium   | ✅ Fixed      | TESTING_TIME_SYNC.md   |
+| Blocking server            | Nitpick  | ✅ Documented | example_sync_server.py |
+| sys.path manipulation      | Nitpick  | ✅ Improved   | test_sync_handler.py   |
+| Thread safety              | Nitpick  | ✅ Documented | TimeSyncManager.kt     |
 
 All high and medium priority issues have been addressed. All tests pass.

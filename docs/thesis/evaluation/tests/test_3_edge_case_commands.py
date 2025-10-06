@@ -284,7 +284,7 @@ class EdgeCaseCommandTest:
 
         # Validate: Should get error or indicate no active session
         stop_before_start_valid = response and (
-                    'ERROR' in response or 'not active' in response.lower() or 'no session' in response.lower())
+                'ERROR' in response or 'not active' in response.lower() or 'no session' in response.lower())
         validation_results.append({
             'test': 'STOP before START',
             'expected': 'Error response or indication of no active session',
@@ -334,7 +334,7 @@ class EdgeCaseCommandTest:
 
         # Validate: Should get error indicating already recording
         duplicate_start_valid = response and (
-                    'ERROR' in response or 'already' in response.lower() or 'active' in response.lower())
+                'ERROR' in response or 'already' in response.lower() or 'active' in response.lower())
         validation_results.append({
             'test': 'Duplicate START',
             'expected': 'Error response indicating session already active',
@@ -383,7 +383,7 @@ class EdgeCaseCommandTest:
 
         # Validate: Should get error or indicate no active session
         duplicate_stop_valid = response and (
-                    'ERROR' in response or 'not active' in response.lower() or 'no session' in response.lower())
+                'ERROR' in response or 'not active' in response.lower() or 'no session' in response.lower())
         validation_results.append({
             'test': 'STOP after session ended',
             'expected': 'Error response or indication of no active session',

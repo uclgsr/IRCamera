@@ -267,7 +267,7 @@ class PermissionController(private val activity: ComponentActivity) {
                 callback(false)
             }
             .create()
-        
+
         currentDialog?.show()
     }
 
@@ -288,7 +288,7 @@ class PermissionController(private val activity: ComponentActivity) {
                 callback(false)
             }
             .create()
-        
+
         currentDialog?.show()
     }
 

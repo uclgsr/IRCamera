@@ -132,13 +132,19 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         DataManagementCard(
                             onExportCsv = {
                                 scope.launch {
-                                    viewModel.exportData(this@LogMPChartComposeActivity, ThermalViewModel.ExportFormat.CSV)
+                                    viewModel.exportData(
+                                        this@LogMPChartComposeActivity,
+                                        ThermalViewModel.ExportFormat.CSV
+                                    )
                                     snackbarHostState.showSnackbar("Exporting data as CSV...")
                                 }
                             },
                             onExportPdf = {
                                 scope.launch {
-                                    viewModel.exportData(this@LogMPChartComposeActivity, ThermalViewModel.ExportFormat.PDF)
+                                    viewModel.exportData(
+                                        this@LogMPChartComposeActivity,
+                                        ThermalViewModel.ExportFormat.PDF
+                                    )
                                     snackbarHostState.showSnackbar("Exporting data as PDF...")
                                 }
                             },
@@ -162,7 +168,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             }
         }
-        
+
         // Export dialog
         if (showExportDialog) {
             AlertDialog(
@@ -195,7 +201,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             )
         }
-        
+
         // Settings dialog
         if (showSettingsDialog) {
             AlertDialog(

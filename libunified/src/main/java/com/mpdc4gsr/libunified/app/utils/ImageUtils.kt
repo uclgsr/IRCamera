@@ -29,7 +29,7 @@ object ImageUtils {
     fun save(bitmap: Bitmap, isTC007: Boolean = false): String {
         val dicName = if (isTC007) "TC007" else CommUtils.getAppName()
         val fileName = "${dicName}_${System.currentTimeMillis()}.jpg"
-        
+
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val values = ContentValues().apply {
@@ -37,7 +37,10 @@ object ImageUtils {
                     put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
                     put(MediaStore.Images.Media.RELATIVE_PATH, "${Environment.DIRECTORY_PICTURES}/$dicName")
                 }
-                val uri = ContextProvider.getContext().contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+                val uri = ContextProvider.getContext().contentResolver.insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    values
+                )
                 uri?.let {
                     ContextProvider.getContext().contentResolver.openOutputStream(it)?.use { outputStream ->
                         BufferedOutputStream(outputStream).use { bos ->
@@ -61,7 +64,7 @@ object ImageUtils {
         } catch (e: Exception) {
             XLog.e("Failed to save image: ${e.message}")
         }
-        
+
         return fileName.removeSuffix(".jpg")
     }
 

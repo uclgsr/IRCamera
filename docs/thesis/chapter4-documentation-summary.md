@@ -2,16 +2,19 @@
 
 ## Overview
 
-Successfully implemented comprehensive documentation for Thesis Chapter 4 (Implementation and Development) including figures, tables, and code snippets as specified in the requirements.
+Successfully implemented comprehensive documentation for Thesis Chapter 4 (Implementation and Development) including
+figures, tables, and code snippets as specified in the requirements.
 
 ## Deliverables
 
 ### 1. Figure 4.1: Mobile App UI and Data Flow
+
 **File**: `docs/thesis-diagrams/chapter4-implementation.md` (Lines 5-97)
 
 **Type**: Mermaid diagram (graph TB)
 
-**Content**: 
+**Content**:
+
 - Complete visualization of Android app architecture
 - User Interface Layer (5 screens: Main, Thermal, GSR, RGB, Settings)
 - Data Flow Control (User Actions + PC Commands → Recording Service)
@@ -21,19 +24,23 @@ Successfully implemented comprehensive documentation for Thesis Chapter 4 (Imple
 - Network Communication (TCP Server + Protocol Handler)
 
 **Features**:
+
 - Color-coded components for visual clarity
 - Bidirectional data flow arrows
 - Status feedback loops (dotted lines)
 - Comprehensive connection mapping
 
 ### 2. Code Snippet 4.2: Bluetooth GSR Connection and Reading
+
 **File**: `docs/thesis-diagrams/chapter4-implementation.md` (Lines 119-267)
 
 **Source Files Referenced**:
+
 - `app/src/main/java/mpdc4gsr/core/data/ShimmerDeviceManager.kt`
 - `app/src/main/java/mpdc4gsr/feature/gsr/data/GSRSensorRecorder.kt`
 
 **Content**:
+
 - Shimmer Bluetooth manager initialization
 - BLE permission handling
 - Device connection with retry logic
@@ -42,19 +49,23 @@ Successfully implemented comprehensive documentation for Thesis Chapter 4 (Imple
 - Timestamp synchronization integration
 
 **Key Implementation Details**:
+
 - Official Shimmer SDK usage
 - Auto-ranging GSR configuration
 - Error recovery mechanisms
 - Nanosecond precision timestamps
 
 ### 3. Code Snippet 4.3: Thermal Camera Frame Capture (USB)
+
 **File**: `docs/thesis-diagrams/chapter4-implementation.md` (Lines 269-465)
 
 **Source Files Referenced**:
+
 - `app/src/main/java/mpdc4gsr/feature/thermal/ui/ThermalCameraRecorder.kt`
 - `libunified/src/main/java/com/mpdc4gsr/libunified/ir/camera/IRUVCTC.java`
 
 **Content**:
+
 - USB OTG device initialization
 - Topdon TC001 VID/PID detection
 - UVC camera setup and frame callbacks
@@ -64,19 +75,23 @@ Successfully implemented comprehensive documentation for Thesis Chapter 4 (Imple
 - CSV data formatting
 
 **Key Implementation Details**:
+
 - USB Video Class (UVC) protocol
 - 49,152 temperature points per frame
 - ±2°C accuracy specification
 - Reflected temperature compensation
 
 ### 4. Code Snippet 4.4: Timestamp Synchronization Logic
+
 **File**: `docs/thesis-diagrams/chapter4-implementation.md` (Lines 467-697)
 
 **Source Files Referenced**:
+
 - `app/src/main/java/mpdc4gsr/core/data/TimeSyncManager.kt`
 - `app/src/main/java/mpdc4gsr/core/data/utils/TimeManager.kt`
 
 **Content**:
+
 - NTP-style 4-timestamp exchange protocol
 - Clock offset calculation algorithm
 - Round-trip time (RTT) measurement
@@ -85,27 +100,32 @@ Successfully implemented comprehensive documentation for Thesis Chapter 4 (Imple
 - CSV logging for validation
 
 **Mathematical Implementation**:
+
 ```
 RTT = (t4 - t1) - (t3 - t2)
 Offset = ((t2 - t1) + (t3 - t4)) / 2
 ```
 
 **Key Implementation Details**:
+
 - Non-intrusive (no system clock modification)
 - Nanosecond precision throughout
 - Quality thresholds: Excellent <10ms, Good <50ms, Fair <200ms
 - Periodic re-sync every 5 minutes
 
 ### 5. Code Snippet 4.5: Remote Command Handling (TCP Server)
+
 **File**: `docs/thesis-diagrams/chapter4-implementation.md` (Lines 699-1098)
 
 **Source Files Referenced**:
+
 - `app/src/main/java/mpdc4gsr/feature/network/data/CommandServer.kt`
 - `app/src/main/java/mpdc4gsr/feature/network/data/NetworkServer.kt`
 - `app/src/main/java/mpdc4gsr/feature/network/data/ProtocolHandler.kt`
 - `app/src/main/java/mpdc4gsr/feature/network/data/Protocol.kt`
 
 **Content**:
+
 - TCP server initialization (port 8080)
 - Connection handling with timeout management
 - Message processing loop
@@ -114,12 +134,14 @@ Offset = ((t2 - t1) + (t3 - t4)) / 2
 - Error handling and structured responses
 
 **Supported Commands**:
+
 - `START_RECORD` - Begin multi-sensor recording
 - `STOP_RECORD` - Halt recording and save data
 - `SYNC_REQUEST` - Perform time synchronization
 - `STATUS` - Query device status
 
 **Key Implementation Details**:
+
 - Asynchronous coroutine-based processing
 - TCP_NODELAY for low latency
 - Structured error codes (SUCCESS, FAIL, INVALID_PARAMS, NOT_READY)
@@ -148,18 +170,21 @@ docs/thesis-diagrams/
 ## Technical Quality Assurance
 
 ### Code Accuracy
+
 - All code snippets extracted from actual implementation files
 - Cross-referenced with source files to ensure accuracy
 - File paths documented in comments
 - Kotlin and Java syntax preserved
 
 ### Diagram Validity
+
 - Mermaid syntax validated
 - Graph structure follows best practices
 - Color coding for visual hierarchy
 - All node connections verified
 
 ### Documentation Standards
+
 - ASCII-safe characters only (no emojis)
 - Consistent formatting and structure
 - Professional technical writing style
@@ -181,17 +206,17 @@ The new Chapter 4 implementation documentation complements existing thesis diagr
 
 ### Viewing the Documentation
 
-1. **On GitHub** (Recommended): 
-   - Navigate to `docs/thesis-diagrams/chapter4-implementation.md`
-   - GitHub renders Mermaid diagrams automatically
+1. **On GitHub** (Recommended):
+    - Navigate to `docs/thesis-diagrams/chapter4-implementation.md`
+    - GitHub renders Mermaid diagrams automatically
 
 2. **In VS Code**:
-   - Install "Markdown Preview Mermaid Support" extension
-   - Open file and use preview (Ctrl+Shift+V)
+    - Install "Markdown Preview Mermaid Support" extension
+    - Open file and use preview (Ctrl+Shift+V)
 
 3. **Mermaid Live Editor**:
-   - Visit https://mermaid.live/
-   - Copy diagram code block and paste
+    - Visit https://mermaid.live/
+    - Copy diagram code block and paste
 
 ### Incorporating into Thesis
 
@@ -204,6 +229,7 @@ The documentation is structured for direct inclusion in the thesis:
 5. **Code Snippet 4.5** → Chapter 4, Section 4.4 (Remote Control)
 
 Each section includes:
+
 - Contextual introduction
 - Well-commented code examples
 - Key implementation details summary
@@ -222,18 +248,21 @@ When updating the codebase:
 ## Benefits
 
 ### For Thesis Writing
+
 - Ready-to-use figures and code snippets
 - Professional technical documentation
 - Clear explanations of complex implementations
 - Reproducible research details
 
 ### For Code Understanding
+
 - Comprehensive architectural overview
 - Implementation details with context
 - Visual data flow representation
 - Integration points clearly identified
 
 ### For Future Development
+
 - Documentation synchronized with code
 - Implementation patterns documented
 - Error handling approaches shown
@@ -254,6 +283,9 @@ All deliverables have been validated:
 
 ## Conclusion
 
-The Chapter 4 implementation documentation provides comprehensive coverage of the multi-sensor recording system's implementation details. All required figures and code snippets have been created with high technical accuracy, professional presentation, and clear explanations suitable for inclusion in the thesis.
+The Chapter 4 implementation documentation provides comprehensive coverage of the multi-sensor recording system's
+implementation details. All required figures and code snippets have been created with high technical accuracy,
+professional presentation, and clear explanations suitable for inclusion in the thesis.
 
-The documentation follows the project's coding conventions, uses Mermaid for maintainable diagrams, and is synchronized with the actual codebase to ensure accuracy and reproducibility.
+The documentation follows the project's coding conventions, uses Mermaid for maintainable diagrams, and is synchronized
+with the actual codebase to ensure accuracy and reproducibility.

@@ -32,7 +32,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
         val nightModeEnabled by viewModel.nightModeEnabled.collectAsState()
         val showOverlay by viewModel.showOverlay.collectAsState()
         val isRecording by viewModel.isRecording.collectAsState()
-        
+
         var showInfoDialog by remember { mutableStateOf(false) }
         var showPaletteDialog by remember { mutableStateOf(false) }
         var showSettingsDialog by remember { mutableStateOf(false) }
@@ -286,8 +286,12 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 IconButton(onClick = {
-                                    startActivity(Intent(this@ThermalIrNightComposeActivity, 
-                                        ThermalGalleryComposeActivity::class.java))
+                                    startActivity(
+                                        Intent(
+                                            this@ThermalIrNightComposeActivity,
+                                            ThermalGalleryComposeActivity::class.java
+                                        )
+                                    )
                                 }) {
                                     Icon(Icons.Default.PhotoLibrary, "Gallery", tint = Color.White)
                                 }
@@ -309,13 +313,13 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                     }
                 }
             }
-            
+
             // Info Dialog
             if (showInfoDialog) {
                 AlertDialog(
                     onDismissRequest = { showInfoDialog = false },
                     title = { Text("Night Vision Mode") },
-                    text = { 
+                    text = {
                         Column {
                             Text("Enhanced thermal imaging optimized for low-light conditions:")
                             Spacer(modifier = Modifier.height(8.dp))
@@ -332,7 +336,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                     }
                 )
             }
-            
+
             // Palette Dialog
             if (showPaletteDialog) {
                 AlertDialog(
@@ -354,7 +358,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                     }
                 )
             }
-            
+
             // Settings Dialog (reuse from IRThermalNightComposeActivity)
             if (showSettingsDialog) {
                 AlertDialog(
@@ -381,7 +385,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                     }
                 )
             }
-            
+
             // Range Edit Dialog
             if (showRangeEditDialog) {
                 AlertDialog(
@@ -410,7 +414,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                     }
                 )
             }
-            
+
             // More Options Menu
             if (showMoreOptions) {
                 AlertDialog(

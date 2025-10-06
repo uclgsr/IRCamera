@@ -59,7 +59,7 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { 
+                            IconButton(onClick = {
                                 coroutineScope.launch {
                                     snackbarHostState.showSnackbar("Processed result saved to gallery")
                                 }
@@ -390,7 +390,7 @@ private fun ProcessingControls(
             }
 
             OutlinedButton(
-                onClick = { 
+                onClick = {
                     coroutineScope.launch {
                         snackbarHostState.showSnackbar("Image reset to original state")
                     }

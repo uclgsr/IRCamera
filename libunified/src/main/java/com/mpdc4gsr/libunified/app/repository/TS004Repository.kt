@@ -18,7 +18,7 @@ import java.util.*
 
 object TS004Repository {
     private const val BASE_URL = "http://192.168.40.1:8080"
-    
+
     private fun calculateMD5(file: File): String {
         val md = MessageDigest.getInstance("MD5")
         FileInputStream(file).use { fis ->
@@ -37,14 +37,14 @@ object TS004Repository {
             field = value
             HttpClient.network = value
         }
-    
+
     private val okHttpClient: OkHttpClient
         get() {
             return HttpClient.createClient().newBuilder()
                 .addInterceptor(OKLogInterceptor(false))
                 .build()
         }
-    
+
     private suspend inline fun <reified T> post(
         endpoint: String,
         body: Any
@@ -56,7 +56,7 @@ object TS004Repository {
             T::class.java
         )
     }
-    
+
     private suspend fun postOctet(
         endpoint: String,
         data: ByteArray
@@ -230,7 +230,8 @@ object TS004Repository {
 
     suspend fun updateFirmware(file: File): Boolean = withContext(Dispatchers.IO) {
         try {
-            val isStartSuccess = post<TS004Response<Boolean>>("/api/v1/system/remoteUpgrade", emptyMap<String, Any>()).isSuccess()
+            val isStartSuccess =
+                post<TS004Response<Boolean>>("/api/v1/system/remoteUpgrade", emptyMap<String, Any>()).isSuccess()
             if (!isStartSuccess) {
                 return@withContext false
             }
@@ -250,10 +251,16 @@ object TS004Repository {
                 return@withContext false
             }
 
-            var status = post<TS004Response<UpgradeStatus>>("/api/v1/system/getUpgradeStatus", emptyMap<String, Any>()).data?.status
+            var status = post<TS004Response<UpgradeStatus>>(
+                "/api/v1/system/getUpgradeStatus",
+                emptyMap<String, Any>()
+            ).data?.status
             while (status == 0 || status == 1 || status == 2) {
                 delay(1000)
-                status = post<TS004Response<UpgradeStatus>>("/api/v1/system/getUpgradeStatus", emptyMap<String, Any>()).data?.status
+                status = post<TS004Response<UpgradeStatus>>(
+                    "/api/v1/system/getUpgradeStatus",
+                    emptyMap<String, Any>()
+                ).data?.status
             }
 
             status == 4

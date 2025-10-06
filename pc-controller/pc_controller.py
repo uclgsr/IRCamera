@@ -520,7 +520,7 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
 
                 # Set socket timeout to prevent hanging
                 client_socket.settimeout(CLIENT_SOCKET_TIMEOUT)
-                
+
                 # Apply SSL wrapping if enabled
                 if self.ssl_context:
                     client_socket = self.ssl_context.wrap_socket(client_socket, server_side=True)
