@@ -114,7 +114,9 @@ class PcServerDiscovery(private val context: Context) {
         val servers = mutableListOf<DiscoveredServer>()
 
         try {
+            android.net.TrafficStats.setThreadStatsTag(android.os.Process.myTid())
             val socket = DatagramSocket()
+            android.net.TrafficStats.tagDatagramSocket(socket)
             socket.broadcast = true
             socket.soTimeout = DISCOVERY_TIMEOUT.toInt()
 
@@ -161,6 +163,8 @@ class PcServerDiscovery(private val context: Context) {
 
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error in broadcast discovery", e)
+        } finally {
+            android.net.TrafficStats.clearThreadStatsTag()
         }
 
         servers
@@ -205,8 +209,10 @@ class PcServerDiscovery(private val context: Context) {
     private suspend fun testServerConnection(ipAddress: String): DiscoveredServer? =
         withContext(Dispatchers.IO) {
             try {
+                android.net.TrafficStats.setThreadStatsTag(android.os.Process.myTid())
                 val startTime = System.currentTimeMillis()
                 val socket = Socket()
+                android.net.TrafficStats.tagSocket(socket)
                 socket.connect(InetSocketAddress(ipAddress, PC_SERVER_PORT), 2000)
                 val responseTime = System.currentTimeMillis() - startTime
 
@@ -237,6 +243,8 @@ class PcServerDiscovery(private val context: Context) {
                 }
             } catch (e: Exception) {
                 // Server not responding or not a PC server
+            } finally {
+                android.net.TrafficStats.clearThreadStatsTag()
             }
 
             null

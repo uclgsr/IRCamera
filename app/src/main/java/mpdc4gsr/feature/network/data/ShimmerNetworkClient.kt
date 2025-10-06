@@ -1,5 +1,7 @@
 package mpdc4gsr.feature.network.data
 
+import android.net.TrafficStats
+import android.os.Process
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -44,12 +46,16 @@ class ShimmerNetworkClient(
             }
 
             AppLogger.i(TAG, "Connecting to PC Controller at $serverHost:$serverPort")
+            
+            TrafficStats.setThreadStatsTag(Process.myTid())
 
             socket = Socket()
             socket?.connect(
                 java.net.InetSocketAddress(serverHost, serverPort),
                 CONNECTION_TIMEOUT_MS
             )
+            
+            socket?.let { TrafficStats.tagSocket(it) }
 
             outputStream = PrintWriter(socket?.getOutputStream()!!, true)
             inputStream = BufferedReader(InputStreamReader(socket?.getInputStream()!!))
@@ -281,9 +287,11 @@ class ShimmerNetworkClient(
         networkScope.cancel()
 
         try {
+            socket?.let { TrafficStats.untagSocket(it) }
             outputStream?.close()
             inputStream?.close()
             socket?.close()
+            TrafficStats.clearThreadStatsTag()
         } catch (e: Exception) {
             AppLogger.w(TAG, "Error during cleanup: ${e.message}")
         }

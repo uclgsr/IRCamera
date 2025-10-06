@@ -1,6 +1,8 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
+import android.net.TrafficStats
+import android.os.Process
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -53,6 +55,8 @@ class NetworkServer(
                 }
 
                 AppLogger.i(TAG, "Starting TCP server on port $port")
+                
+                TrafficStats.setThreadStatsTag(Process.myTid())
 
                 serverSocket = ServerSocket().apply {
                     reuseAddress = true
@@ -91,12 +95,15 @@ class NetworkServer(
                 serverJob?.cancel()
                 messageListenerJob?.cancel()
 
+                clientSocket?.let { TrafficStats.untagSocket(it) }
                 outputWriter?.close()
                 inputReader?.close()
                 binaryOutputStream?.close()
                 clientSocket?.close()
 
                 serverSocket?.close()
+                
+                TrafficStats.clearThreadStatsTag()
 
                 outputWriter = null
                 inputReader = null
@@ -166,6 +173,7 @@ class NetworkServer(
 
                 val socket = serverSocket?.accept()
                 if (socket != null && isRunning.get()) {
+                    TrafficStats.tagSocket(socket)
                     AppLogger.i(TAG, "PC Controller connected from ${socket.remoteSocketAddress}")
 
                     disconnectClient()
@@ -256,6 +264,7 @@ class NetworkServer(
             messageListenerJob?.cancel()
 
             try {
+                clientSocket?.let { TrafficStats.untagSocket(it) }
                 outputWriter?.close()
                 inputReader?.close()
                 binaryOutputStream?.close()

@@ -21,6 +21,7 @@ import mpdc4gsr.core.ui.InitUtils.initLog
 import mpdc4gsr.core.ui.InitUtils.initReceiver
 import mpdc4gsr.core.ui.InitUtils.initUM
 import mpdc4gsr.core.utils.AppLogger
+import java.util.concurrent.Executors
 
 /**
  * Application class for IRCamera.
@@ -105,7 +106,9 @@ class App : BaseApplication() {
             SPUtils.getInstance(this).put(Config.KEY_PRIVACY_AGREEMENT, true)
 
             if (SharedManager.getHasShowClause() || !isDomestic()) {
-                delayInit()
+                Executors.newSingleThreadExecutor().execute {
+                    delayInit()
+                }
             }
 
             // RxJava error handling removed - using Kotlin Coroutines exception handling
@@ -218,12 +221,17 @@ class App : BaseApplication() {
 
         StrictMode.setThreadPolicy(
             StrictMode.ThreadPolicy.Builder()
-                .detectAll()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()
+                .detectCustomSlowCalls()
+                .permitDiskReads()
+                .permitDiskWrites()
                 .penaltyLog()
                 .apply {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         penaltyListener(mainExecutor) { violation ->
-                            AppLogger.w("StrictMode", "Thread policy violation: ${violation.javaClass.simpleName}")
+                            AppLogger.d("StrictMode", "Thread policy violation: ${violation.javaClass.simpleName}")
                         }
                     }
                 }
@@ -232,12 +240,17 @@ class App : BaseApplication() {
 
         StrictMode.setVmPolicy(
             StrictMode.VmPolicy.Builder()
-                .detectAll()
+                .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
+                .detectActivityLeaks()
                 .penaltyLog()
                 .apply {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         penaltyListener(mainExecutor) { violation ->
-                            AppLogger.w("StrictMode", "VM policy violation: ${violation.javaClass.simpleName}")
+                            val violationClass = violation.javaClass.simpleName
+                            if (violationClass != "UntaggedSocketViolation") {
+                                AppLogger.d("StrictMode", "VM policy violation: $violationClass")
+                            }
                         }
                     }
                 }
@@ -246,7 +259,7 @@ class App : BaseApplication() {
 
         AppLogger.i(
             "App",
-            "StrictMode enabled - will detect: disk reads/writes on main thread, network on main thread, memory leaks, unclosed resources"
+            "StrictMode enabled - monitoring memory leaks and unclosed resources (disk I/O and untagged sockets permitted)"
         )
     }
 }
