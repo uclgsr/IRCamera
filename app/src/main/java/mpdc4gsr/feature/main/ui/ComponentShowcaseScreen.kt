@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import mpdc4gsr.core.ui.theme.Spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,9 +54,9 @@ private fun ComponentShowcaseContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(Spacing.normal)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(Spacing.normal)
     ) {
         // Typography showcase
         TypographyShowcase()
@@ -76,11 +77,11 @@ private fun ComponentShowcaseContent(
 private fun TypographyShowcase() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
         ) {
             Text(
                 "Typography Styles",
@@ -128,11 +129,11 @@ private fun TypographyShowcase() {
 private fun ColorPaletteShowcase() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
         ) {
             Text(
                 "Thermal Imaging Color Palette",
@@ -142,7 +143,7 @@ private fun ColorPaletteShowcase() {
             HorizontalDivider()
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small)
             ) {
                 ColorSwatch("Primary", MaterialTheme.colorScheme.primary, Modifier.weight(1f))
                 ColorSwatch("Secondary", MaterialTheme.colorScheme.secondary, Modifier.weight(1f))
@@ -150,7 +151,7 @@ private fun ColorPaletteShowcase() {
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small)
             ) {
                 ColorSwatch("Error", MaterialTheme.colorScheme.error, Modifier.weight(1f))
                 ColorSwatch("Background", MaterialTheme.colorScheme.background, Modifier.weight(1f))
@@ -173,7 +174,7 @@ private fun ColorSwatch(
         Text(
             name,
             modifier = Modifier
-                .padding(8.dp)
+                .padding(Spacing.small)
                 .fillMaxWidth(),
             style = MaterialTheme.typography.bodySmall,
             color = androidx.compose.ui.graphics.Color.White
@@ -188,11 +189,11 @@ private fun InteractiveComponentsShowcase() {
     var selectedChip by remember { mutableStateOf("Option 1") }
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
         ) {
             Text(
                 "Interactive Components",
@@ -203,7 +204,7 @@ private fun InteractiveComponentsShowcase() {
             // Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small)
             ) {
                 Button(
                     onClick = { },
@@ -247,7 +248,7 @@ private fun InteractiveComponentsShowcase() {
             }
             // Filter Chips
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small)
             ) {
                 listOf("Option 1", "Option 2", "Option 3").forEach { option ->
                     FilterChip(
@@ -265,11 +266,11 @@ private fun InteractiveComponentsShowcase() {
 private fun StatusIndicatorsShowcase() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
         ) {
             Text(
                 "Status Indicators",
@@ -279,7 +280,7 @@ private fun StatusIndicatorsShowcase() {
             HorizontalDivider()
             // Progress indicators
             Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(Spacing.small)
             ) {
                 Text("Linear Progress")
                 LinearProgressIndicator(
@@ -289,7 +290,7 @@ private fun StatusIndicatorsShowcase() {
                 Text("Circular Progress")
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.normal)
                 ) {
                     CircularProgressIndicator(
                         progress = { 0.75f }
@@ -299,7 +300,7 @@ private fun StatusIndicatorsShowcase() {
             }
             // Badges
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text("Badges:")
@@ -333,13 +334,13 @@ private fun StatusIcon(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(Spacing.extraSmall)
     ) {
         Icon(
             icon,
             contentDescription = label,
             tint = color,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(Spacing.large)
         )
         Text(
             label,
@@ -352,11 +353,11 @@ private fun StatusIcon(
 private fun CardLayoutsShowcase() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
         ) {
             Text(
                 "Card Layouts",
@@ -406,10 +407,10 @@ private fun CardLayoutsShowcase() {
             ) {
                 Row(
                     modifier = Modifier
-                        .padding(12.dp)
+                        .padding(Spacing.medium)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.medium)
                 ) {
                     Icon(
                         Icons.Default.TouchApp,
@@ -445,11 +446,11 @@ private fun CardLayoutsShowcase() {
 private fun NavigationComponentsShowcase() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
         ) {
             Text(
                 "Navigation Components",
@@ -462,7 +463,7 @@ private fun NavigationComponentsShowcase() {
                 style = MaterialTheme.typography.bodyMedium
             )
             Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(Spacing.small)
             ) {
                 NavigationFeature("Type-safe navigation routes")
                 NavigationFeature("Smooth page transitions")
@@ -484,13 +485,13 @@ private fun NavigationComponentsShowcase() {
 private fun NavigationFeature(feature: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(Spacing.small)
     ) {
         Icon(
             Icons.Default.Check,
             contentDescription = "Feature Available",
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(16.dp)
+            modifier = Modifier.size(Spacing.normal)
         )
         Text(
             feature,
