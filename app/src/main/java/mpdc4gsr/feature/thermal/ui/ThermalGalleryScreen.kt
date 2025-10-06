@@ -25,10 +25,6 @@ import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * Thermal Gallery Screen - Browse and manage thermal images and recordings
- * Replaces thermal GalleryActivity with Compose implementation
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThermalGalleryScreen(
@@ -37,9 +33,7 @@ fun ThermalGalleryScreen(
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
     var viewMode by remember { mutableStateOf(ViewMode.GRID) }
-
     val tabs = listOf("Images", "Videos", "Reports")
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -71,12 +65,10 @@ fun ThermalGalleryScreen(
                 }
             )
         }
-
         NavigationBreadcrumb(
             currentScreen = "Gallery",
             previousScreen = "Home"
         )
-
         // Tab Row
         PrimaryTabRow(
             selectedTabIndex = selectedTab,
@@ -96,7 +88,6 @@ fun ThermalGalleryScreen(
                 )
             }
         }
-
         // Content based on selected tab
         when (selectedTab) {
             0 -> ThermalImagesContent(viewMode = viewMode)
@@ -109,7 +100,6 @@ fun ThermalGalleryScreen(
 @Composable
 private fun ThermalImagesContent(viewMode: ViewMode) {
     val sampleImages = remember { generateSampleThermalImages() }
-
     if (viewMode == ViewMode.GRID) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -136,7 +126,6 @@ private fun ThermalImagesContent(viewMode: ViewMode) {
 @Composable
 private fun ThermalVideosContent(viewMode: ViewMode) {
     val sampleVideos = remember { generateSampleThermalVideos() }
-
     if (viewMode == ViewMode.GRID) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -163,7 +152,6 @@ private fun ThermalVideosContent(viewMode: ViewMode) {
 @Composable
 private fun ThermalReportsContent(viewMode: ViewMode) {
     val sampleReports = remember { generateSampleThermalReports() }
-
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -208,7 +196,6 @@ private fun ThermalImageGridItem(item: ThermalMediaItem) {
                         .align(Alignment.Center)
                 )
             }
-
             // Temperature overlay
             Box(
                 modifier = Modifier
@@ -227,7 +214,6 @@ private fun ThermalImageGridItem(item: ThermalMediaItem) {
                     fontWeight = FontWeight.Bold
                 )
             }
-
             // File info
             Column(
                 modifier = Modifier
@@ -275,9 +261,7 @@ private fun ThermalImageListItem(item: ThermalMediaItem) {
                         .align(Alignment.Center)
                 )
             }
-
             Spacer(modifier = Modifier.width(12.dp))
-
             // File info
             Column(
                 modifier = Modifier.weight(1f)
@@ -299,7 +283,6 @@ private fun ThermalImageListItem(item: ThermalMediaItem) {
                     fontSize = 12.sp
                 )
             }
-
             // Actions
             val context = androidx.compose.ui.platform.LocalContext.current
             IconButton(onClick = {
@@ -351,7 +334,6 @@ private fun ThermalVideoGridItem(item: ThermalMediaItem) {
                         .align(Alignment.Center)
                 )
             }
-
             // Duration
             Box(
                 modifier = Modifier
@@ -370,7 +352,6 @@ private fun ThermalVideoGridItem(item: ThermalMediaItem) {
                     fontWeight = FontWeight.Bold
                 )
             }
-
             // File info
             Column(
                 modifier = Modifier
@@ -419,9 +400,7 @@ private fun ThermalVideoListItem(item: ThermalMediaItem) {
                         .align(Alignment.Center)
                 )
             }
-
             Spacer(modifier = Modifier.width(12.dp))
-
             // Video info
             Column(
                 modifier = Modifier.weight(1f)
@@ -443,7 +422,6 @@ private fun ThermalVideoListItem(item: ThermalMediaItem) {
                     fontSize = 12.sp
                 )
             }
-
             // Actions
             val context = androidx.compose.ui.platform.LocalContext.current
             IconButton(onClick = {
@@ -476,9 +454,7 @@ private fun ThermalReportItem(item: ThermalMediaItem) {
                 tint = Color.Green,
                 modifier = Modifier.size(32.dp)
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -499,7 +475,6 @@ private fun ThermalReportItem(item: ThermalMediaItem) {
                     fontSize = 12.sp
                 )
             }
-
             val context = androidx.compose.ui.platform.LocalContext.current
             Row {
                 IconButton(onClick = {

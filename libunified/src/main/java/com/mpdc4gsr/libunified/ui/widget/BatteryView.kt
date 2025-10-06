@@ -8,26 +8,21 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 
 class BatteryView : AppCompatImageView {
-
     var battery = -1
         set(value) {
             field = value
             invalidate()
         }
-
     var isCharging = false
         set(value) {
             field = value
             invalidate()
         }
-
     private val paint = Paint()
     private val path = Path()
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -108,14 +103,11 @@ class BatteryView : AppCompatImageView {
                 }
             }
         }
-
         drawWidth =
             if ((measuredWidth * 30 / 58f).toInt() <= measuredHeight) measuredWidth else (measuredHeight * 58 / 30f).toInt()
         drawHeight =
             if ((measuredWidth * 30 / 58f).toInt() <= measuredHeight) (measuredWidth * 30 / 58f).toInt() else measuredHeight
-
         paint.strokeWidth = drawWidth * 2 / 58f
-
         val levelWidth = drawWidth * 42 / 58f
         val levelHeight = drawHeight * 20 / 30f
         val radius = drawWidth * 4 / 58f
@@ -137,7 +129,6 @@ class BatteryView : AppCompatImageView {
 
     private var drawWidth: Int = 0
     private var drawHeight: Int = 0
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         //
@@ -156,7 +147,6 @@ class BatteryView : AppCompatImageView {
             roundSize,
             paint
         )
-
         //
         val anodeWidth = drawWidth * 3 / 58f
         val anodeHeight = drawHeight * 8 / 30f - lineSize
@@ -166,7 +156,6 @@ class BatteryView : AppCompatImageView {
         paint.strokeCap = Paint.Cap.ROUND
         paint.strokeWidth = anodeWidth
         canvas.drawLine(anodeX, anodeStartY, anodeX, anodeStartY + anodeHeight, paint)
-
         //
         if (battery <= 0) {
             return

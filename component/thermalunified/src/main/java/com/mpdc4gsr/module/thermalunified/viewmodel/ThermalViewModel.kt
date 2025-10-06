@@ -10,13 +10,10 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class ThermalViewModel : BaseViewModel() {
-
     private val _exportStatus = MutableStateFlow<ExportStatus>(ExportStatus.Idle)
     val exportStatus: StateFlow<ExportStatus> = _exportStatus.asStateFlow()
-
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
-
     fun yuvArea(
         yuv: ByteArray,
         temp: FloatArray,

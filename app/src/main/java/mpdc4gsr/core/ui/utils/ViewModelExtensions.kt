@@ -7,34 +7,17 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.StateFlow
 
-/**
- * Extension functions to bridge existing ViewModels with Compose
- * These utilities enable seamless integration of existing ViewModels
- * with new Compose UI without requiring ViewModel modifications
- */
 
-/**
- * Convert LiveData to Compose State
- * Preserves existing ViewModel patterns while enabling Compose observation
- */
 @Composable
 fun <T> LiveData<T>.observeAsComposeState(initial: T): State<T> {
     return this.observeAsState(initial)
 }
 
-/**
- * Convert StateFlow to Compose State
- * For ViewModels already using StateFlow
- */
 @Composable
 fun <T> StateFlow<T>.collectAsComposeState(): State<T> {
     return this.collectAsState()
 }
 
-/**
- * Thermal data wrapper for Compose
- * Bridges existing thermal data structures with Compose components
- */
 data class ComposeThermalData(
     val centerTemp: Float,
     val maxTemp: Float,
@@ -45,9 +28,7 @@ data class ComposeThermalData(
     val connectionState: String = "Disconnected"
 ) {
     companion object {
-        /**
-         * Convert existing thermal data to Compose-friendly format
-         */
+
         fun fromExistingData(
             center: Float,
             max: Float,
@@ -64,10 +45,6 @@ data class ComposeThermalData(
     }
 }
 
-/**
- * GSR data wrapper for Compose
- * Bridges existing GSR data structures with Compose components
- */
 data class ComposeGSRData(
     val currentValue: Float,
     val batteryLevel: Int,
@@ -90,25 +67,14 @@ data class ComposeGSRData(
     }
 }
 
-/**
- * Connection states wrapper for Compose
- * Provides unified connection state representation
- */
 data class ComposeConnectionStates(
     val thermalCamera: mpdc4gsr.core.ui.ConnectionState,
     val gsrSensor: mpdc4gsr.core.ui.ConnectionState,
     val bleConnection: mpdc4gsr.core.ui.ConnectionState
 )
 
-/**
- * ViewModel state bridge utilities
- * Helper functions to adapt existing ViewModel patterns to Compose
- */
 object ViewModelStateBridge {
 
-    /**
-     * Create thermal data state from existing ViewModel properties
-     */
     @Composable
     fun createThermalDataState(
         centerTempLiveData: LiveData<Float>,
@@ -120,7 +86,6 @@ object ViewModelStateBridge {
         val maxTemp = maxTempLiveData.observeAsState(0f)
         val minTemp = minTempLiveData.observeAsState(0f)
         val isRecording = isRecordingLiveData.observeAsState(false)
-
         return androidx.compose.runtime.derivedStateOf {
             ComposeThermalData.fromExistingData(
                 center = centerTemp.value,
@@ -131,9 +96,6 @@ object ViewModelStateBridge {
         }
     }
 
-    /**
-     * Create GSR data state from existing ViewModel properties
-     */
     @Composable
     fun createGSRDataState(
         currentValueFlow: StateFlow<Float>,
@@ -143,7 +105,6 @@ object ViewModelStateBridge {
         val currentValue = currentValueFlow.collectAsState()
         val batteryLevel = batteryLevelFlow.collectAsState()
         val isConnected = connectionStateFlow.collectAsState()
-
         return androidx.compose.runtime.derivedStateOf {
             ComposeGSRData.fromShimmerData(
                 value = currentValue.value,
@@ -154,24 +115,14 @@ object ViewModelStateBridge {
     }
 }
 
-/**
- * Compose-friendly event handling
- * Bridges EventBus events with Compose UI updates
- */
 object ComposeEventBridge {
 
-    /**
-     * Handle thermal camera events in Compose
-     */
     @Composable
     fun handleThermalEvents(onEvent: (String) -> Unit) {
         // Integration with existing EventBus patterns
         // Can be extended to convert EventBus events to Compose actions
     }
 
-    /**
-     * Handle sensor connection events in Compose
-     */
     @Composable
     fun handleConnectionEvents(onConnectionChange: (Boolean) -> Unit) {
         // Integration with existing connection event handling

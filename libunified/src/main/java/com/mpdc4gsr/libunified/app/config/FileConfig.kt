@@ -9,7 +9,6 @@ import com.mpdc4gsr.libunified.app.utils.CommUtils
 import java.io.File
 
 object FileConfig {
-
     fun getDetectImageDir(
         context: Context,
         child: String,

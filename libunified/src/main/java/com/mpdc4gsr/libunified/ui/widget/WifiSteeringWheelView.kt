@@ -10,14 +10,12 @@ import android.widget.TextView
 import com.mpdc4gsr.libunified.R
 
 class WifiSteeringWheelView : LinearLayout, OnClickListener {
-
     private lateinit var tvConfirm: TextView
     private lateinit var steeringWheelStartBtn: ImageView
     private lateinit var steeringWheelCenterBtn: ImageView
     private lateinit var steeringWheelEndBtn: ImageView
     private lateinit var steeringWheelTopBtn: ImageView
     private lateinit var steeringWheelBottomBtn: ImageView
-
     var listener: ((action: Int, moveX: Int, moveY: Int) -> Unit)? = null
     var moveX = 0
     var moveY = 0
@@ -35,7 +33,6 @@ class WifiSteeringWheelView : LinearLayout, OnClickListener {
         }
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         initView()
     }
@@ -54,13 +51,11 @@ class WifiSteeringWheelView : LinearLayout, OnClickListener {
         steeringWheelEndBtn = findViewById(R.id.steering_wheel_end_btn)
         steeringWheelTopBtn = findViewById(R.id.steering_wheel_top_btn)
         steeringWheelBottomBtn = findViewById(R.id.steering_wheel_bottom_btn)
-
         steeringWheelStartBtn.setOnClickListener(this)
         steeringWheelCenterBtn.setOnClickListener(this)
         steeringWheelEndBtn.setOnClickListener(this)
         steeringWheelTopBtn.setOnClickListener(this)
         steeringWheelBottomBtn.setOnClickListener(this)
-
         if (rotationIR == 270 || rotationIR == 90) {
             tvConfirm.rotation = 270f
             rotation = 90f
@@ -98,5 +93,4 @@ class WifiSteeringWheelView : LinearLayout, OnClickListener {
             }
         }
     }
-
 }

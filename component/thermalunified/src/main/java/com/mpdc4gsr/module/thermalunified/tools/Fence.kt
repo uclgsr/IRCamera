@@ -53,7 +53,6 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
         val k: Float =
             (start[1].toFloat() - end[1].toFloat()) / (start[0].toFloat() - end[0].toFloat())
         Log.w("123", "k: $k")
-
         val startX: Int = (startPoint[0] * scale).toInt()
         val startY: Int = (startPoint[1] * scale).toInt()
         val endX: Int = (endPoint[0] * scale).toInt()

@@ -13,7 +13,6 @@ val ThermalOrange = Color(0xFFFF6B35)
 val ThermalRed = Color(0xFFE63946)
 val ThermalBlue = Color(0xFF457B9D)
 val ThermalDark = Color(0xFF1D3557)
-
 private val LightColorScheme = lightColorScheme(
     primary = ThermalBlue,
     secondary = ThermalOrange,
@@ -21,7 +20,6 @@ private val LightColorScheme = lightColorScheme(
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE)
 )
-
 private val DarkColorScheme = darkColorScheme(
     primary = ThermalBlue,
     secondary = ThermalOrange,
@@ -36,7 +34,6 @@ fun LibUnifiedTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
-
     MaterialTheme(
         colorScheme = colorScheme,
         content = content

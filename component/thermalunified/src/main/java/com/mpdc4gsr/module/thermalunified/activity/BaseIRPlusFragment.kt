@@ -49,18 +49,12 @@ abstract class BaseIRPlusFragment :
     ITsTempListener,
     IIRFrameCallback {
     val INIT_ALIGN_DATA = floatArrayOf(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
-
     protected var dualView: DualViewWithExternalCameraCommonApi? = null
-
     protected var pseudoColorModeDual = CommonParams.PseudoColorUsbDualType.IRONBOW_MODE
-
     private var hasStartPreview = false
     protected var ircmd: IRCMD? = null
-
     protected var snStr = ""
-
     protected var defaultDataFlowMode = CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT
-
     private var irPid = 0x5830
     private var irFps = 25
     private var irCameraWidth =
@@ -74,49 +68,33 @@ abstract class BaseIRPlusFragment :
     private var imageHeight =
         0
     protected var temperatureSrc: ByteArray? = null
-
     protected var mCurrentFusionType = DualParamsUtils.fusionTypeToParams(SaveSettingUtils.fusionType)
     private var syncimage = SynchronizedBitmap()
     protected var isConfigWait = true
     protected var pseudoColorMode = SaveSettingUtils.pseudoColorMode
-
     private var vlPid = 12337
     private var vlFps = 30
-
     protected var vlCameraWidth = 1280
     protected var vlCameraHeight = 720
     private var vlData = ByteArray(vlCameraWidth * vlCameraHeight * 3)
-
     private var dualCameraWidth = 480
     private var dualCameraHeight = 640
-
     protected var isrun = false
-
     protected val isUseIRISP = false
-
     protected var fullScreenlayoutParams: FrameLayout.LayoutParams? = null
-
     protected var psedocolor: Array<ByteArray>? = null
-
     protected var dualRotate = 0
-
     protected var dualDisp = 30
-
     private var vlUVCCamera: IRUVCDual? = null
-
     abstract fun getSurfaceView(): SurfaceView
-
     abstract fun getTemperatureDualView(): TemperatureView
-
     abstract suspend fun onDualViewCreate(dualView: DualViewWithExternalCameraCommonApi?)
-
     open fun initdata() {
     }
 
     open fun initDataFlowMode(dataFlowMode: CommonParams.DataFlowMode) {
         when (dataFlowMode) {
             CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT -> {
-
                 irCameraWidth = 256
                 irCameraHeight = 384
                 irTempHeight = 192
@@ -126,7 +104,6 @@ abstract class BaseIRPlusFragment :
             }
 
             CommonParams.DataFlowMode.IMAGE_OUTPUT -> {
-
                 irCameraWidth = 256
                 irCameraHeight = 192
                 irTempHeight = 0
@@ -136,7 +113,6 @@ abstract class BaseIRPlusFragment :
             }
 
             CommonParams.DataFlowMode.TEMP_OUTPUT -> {
-
                 irCameraWidth = 256
                 irCameraHeight = 192
                 irTempHeight = 0
@@ -168,9 +144,7 @@ abstract class BaseIRPlusFragment :
     }
 
     abstract fun isDualIR(): Boolean
-
     abstract fun setTemperatureViewType()
-
     override fun initView() {
         if (isDualIR()) {
             getTemperatureDualView().setTextSize(SaveSettingUtils.tempTextSize)
@@ -180,7 +154,6 @@ abstract class BaseIRPlusFragment :
     }
 
     private fun initIrDualdata() {
-
         var width = 0
         var height = 0
         val screenWidth: Int = UnifiedScreenUtils.getScreenWidth(requireContext())
@@ -214,7 +187,6 @@ abstract class BaseIRPlusFragment :
         val am = requireContext().assets
         var `is`: InputStream? = null
         try {
-
             psedocolor = Array(11) { ByteArray(0) }
             `is` = am.open("pseudocolor/White_Hot.bin")
             var lenth = `is`.available()
@@ -230,7 +202,6 @@ abstract class BaseIRPlusFragment :
                 CommonParams.PseudoColorUsbDualType.WHITE_HOT_MODE,
                 psedocolor!![0],
             )
-
             setFusion(mCurrentFusionType)
             `is`.close()
         } catch (e: IOException) {
@@ -256,7 +227,6 @@ abstract class BaseIRPlusFragment :
 
     val calibrationDataSize = 192
     val SAVE_DUAL_BIN = "dual_calibration_parameters2.bin"
-
     open fun initDefIntegralArgsDISP_VALUE(typeLoadParameters: DualCameraParams.TypeLoadParameters) {
         if (!isDualIR()) {
             return
@@ -266,7 +236,6 @@ abstract class BaseIRPlusFragment :
             val data = dualView?.dualUVCCamera?.loadParameters(parameters, typeLoadParameters)
             dualDisp = IRCmdTools.dispNumber
             setDispViewData(dualDisp)
-
             dualView?.dualUVCCamera?.setDisp(dualDisp)
             dualView?.startPreview()
         }
@@ -297,9 +266,7 @@ abstract class BaseIRPlusFragment :
             TAG,
             "dualStart",
         )
-
         USBMonitorManager.getInstance().registerUSB()
-
         getTemperatureDualView().setUseIRISP(isUseIRISP)
         if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
             getTemperatureDualView().setImageSize(Const.IR_HEIGHT, Const.IR_WIDTH, null)
@@ -332,11 +299,9 @@ abstract class BaseIRPlusFragment :
                         TAG,
                         "USBMonitorManager HANDLE_CONNECT",
                     )
-
                     lifecycleScope.launch(Dispatchers.Main) {
                         startVLCamera(vlPid, vlFps, vlCameraWidth, vlCameraHeight)
                         initDualCamera()
-
                         initDefIntegralArgsDISP_VALUE(DualCameraParams.TypeLoadParameters.ROTATE_270)
                     }
                 } else if (msg.what == Const.HANDLE_REGISTER) {
@@ -384,10 +349,8 @@ abstract class BaseIRPlusFragment :
                 isUseIRISP, dualRotate, this,
             )
         dualView?.addFrameCallback(getTemperatureDualView())
-
         getTemperatureDualView().setDualUVCCamera(dualView!!.getDualUVCCamera())
         initPseudocolor()
-
         dualView?.setHandler(mIrHandler)
         isrun = true
     }
@@ -453,14 +416,12 @@ abstract class BaseIRPlusFragment :
             TAG,
             "ConnectCallback-startVLCamera-onIRCMDCreate",
         )
-
     }
 
     override fun onStart() {
         super.onStart()
         if (!isrun) {
             isrun = true
-
             configParam()
         }
     }
@@ -468,7 +429,6 @@ abstract class BaseIRPlusFragment :
     private var isFirst = true
     private var configJob: Job? = null
     private val timeMillis = 150L
-
     private fun configParam() {
         configJob =
             lifecycleScope.launch {
@@ -481,40 +441,31 @@ abstract class BaseIRPlusFragment :
                 val emsChar = (config.radiation * 128).toInt()
                 XLog.w("TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 delay(timeMillis)
-
                 ircmd?.setPropTPDParams(
                     CommonParams.PropTPDParams.TPD_PROP_EMS,
                     CommonParams.PropTPDParamsValue.NumberType(emsChar.toString()),
                 )
                 delay(timeMillis)
-
                 ircmd?.setPropTPDParams(
                     CommonParams.PropTPDParams.TPD_PROP_DISTANCE,
                     CommonParams.PropTPDParamsValue.NumberType(disChar.toString()),
                 )
-
                 delay(timeMillis)
                 XLog.w("TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 if (isFirst && isrun) {
-
                     ircmd?.setMirror(false)
-
                     delay(timeMillis)
                     withContext(Dispatchers.IO) {
-
                         ircmd?.setAutoShutter(true)
                         isFirst = false
                     }
-
                     ircmd?.setPropDdeLevel(2)
-
                     ircmd?.setContrast(128)
                 }
                 ircmd?.setPropImageParams(
                     CommonParams.PropImageParams.IMAGE_PROP_ONOFF_AGC,
                     CommonParams.PropImageParamsValue.StatusSwith.ON,
                 )
-
                 if (syncimage.type == 1) {
                     ircmd?.tc1bShutterManual()
                 } else {
@@ -544,13 +495,11 @@ abstract class BaseIRPlusFragment :
             dualView?.removeFrameCallback(getTemperatureDualView())
             dualView?.dualUVCCamera?.onPausePreview()
             USBMonitorManager.getInstance().stopPreview()
-
             if (vlUVCCamera != null) {
                 vlUVCCamera?.unregisterUSB()
                 vlUVCCamera?.stopPreview()
                 vlUVCCamera = null
             }
-
             SystemClock.sleep(100)
             dualView?.stopPreview()
             dualView = null
@@ -629,7 +578,6 @@ abstract class BaseIRPlusFragment :
     protected val preIrARGBData = ByteArray(256 * 192 * 4)
     protected val preIrData = ByteArray(256 * 192 * 2)
     protected val preTempData = ByteArray(256 * 192 * 2)
-
     override fun onIrFrame(irFrame: ByteArray?): ByteArray {
         irFrame?.let {
             System.arraycopy(it, 0, preIrData, 0, preIrData.size)

@@ -26,10 +26,6 @@ import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * AnnotateScreen composable - replaces report preview functionality
- * Shows captured thermal image with annotations and report information
- */
 @Composable
 fun AnnotateScreen(
     onBackClick: (() -> Unit)? = null,
@@ -50,7 +46,6 @@ fun AnnotateScreen(
             )
         )
     }
-
     var reportInfo by remember {
         mutableStateOf(
             ReportInfo(
@@ -61,7 +56,6 @@ fun AnnotateScreen(
             )
         )
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -84,7 +78,6 @@ fun AnnotateScreen(
                 onClick = onSave
             )
         }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -99,33 +92,25 @@ fun AnnotateScreen(
                     .fillMaxWidth()
                     .aspectRatio(4f / 3f)
             )
-
             // Report information panel
             ReportInfoPanel(
                 reportInfo = reportInfo,
                 onInfoChanged = { reportInfo = it }
             )
-
             // Measurement summary
             MeasurementSummary(annotations = annotations)
-
             // Watermark preview area
             WatermarkPreview()
         }
     }
 }
 
-/**
- * Component showing thermal image with measurement annotations
- * Replaces the TemperatureView overlay functionality for captured images
- */
 @Composable
 private fun ThermalImageWithAnnotations(
     annotations: List<ThermalAnnotation>,
     modifier: Modifier = Modifier
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
-
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = Color.Black)
@@ -144,7 +129,6 @@ private fun ThermalImageWithAnnotations(
                     color = Color(0xFF1A1A2E),
                     size = size
                 )
-
                 // Draw thermal patterns
                 drawCircle(
                     color = Color.Red,
@@ -156,7 +140,6 @@ private fun ThermalImageWithAnnotations(
                     radius = 30f,
                     center = Offset(size.width * 0.7f, size.height * 0.6f)
                 )
-
                 // Draw annotations
                 annotations.forEach { annotation ->
                     drawAnnotation(annotation, size.width, size.height)
@@ -166,9 +149,6 @@ private fun ThermalImageWithAnnotations(
     }
 }
 
-/**
- * Draw thermal annotations on the canvas
- */
 private fun DrawScope.drawAnnotation(
     annotation: ThermalAnnotation,
     imageWidth: Float,
@@ -241,9 +221,6 @@ private fun DrawScope.drawAnnotation(
     }
 }
 
-/**
- * Report information panel - replaces ReportInfoView functionality
- */
 @Composable
 private fun ReportInfoPanel(
     reportInfo: ReportInfo,
@@ -251,7 +228,6 @@ private fun ReportInfoPanel(
     modifier: Modifier = Modifier
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -268,7 +244,6 @@ private fun ReportInfoPanel(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-
             OutlinedTextField(
                 value = reportInfo.title,
                 onValueChange = { onInfoChanged(reportInfo.copy(title = it)) },
@@ -288,7 +263,6 @@ private fun ReportInfoPanel(
                     }
                 )
             )
-
             OutlinedTextField(
                 value = reportInfo.notes,
                 onValueChange = { onInfoChanged(reportInfo.copy(notes = it)) },
@@ -308,7 +282,6 @@ private fun ReportInfoPanel(
                     }
                 )
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -328,9 +301,6 @@ private fun ReportInfoPanel(
     }
 }
 
-/**
- * Measurement summary showing temperature statistics
- */
 @Composable
 private fun MeasurementSummary(
     annotations: List<ThermalAnnotation>,
@@ -352,7 +322,6 @@ private fun MeasurementSummary(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-
             annotations.forEach { annotation ->
                 when (annotation) {
                     is ThermalAnnotation.Point -> {
@@ -417,9 +386,6 @@ private fun MeasurementSummary(
     }
 }
 
-/**
- * Watermark preview component - replaces WatermarkView functionality
- */
 @Composable
 private fun WatermarkPreview(
     modifier: Modifier = Modifier
@@ -439,9 +405,7 @@ private fun WatermarkPreview(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             // Watermark preview area
             Box(
                 modifier = Modifier
@@ -464,9 +428,6 @@ private fun WatermarkPreview(
     }
 }
 
-/**
- * Sealed class representing different types of thermal annotations
- */
 sealed class ThermalAnnotation {
     data class Point(
         val position: Offset,
@@ -489,9 +450,6 @@ sealed class ThermalAnnotation {
     ) : ThermalAnnotation()
 }
 
-/**
- * Data class for report information
- */
 data class ReportInfo(
     val title: String,
     val notes: String,

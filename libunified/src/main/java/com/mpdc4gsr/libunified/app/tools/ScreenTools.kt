@@ -8,7 +8,6 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 object ScreenTools {
-
     fun isLandPhone(): Boolean {
         val displayMetrics: DisplayMetrics = ContextProvider.getContext().resources.displayMetrics
         val width = displayMetrics.widthPixels.toFloat()

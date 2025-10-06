@@ -5,7 +5,6 @@ import com.kylecorry.andromeda.core.time.CoroutineTimer
 
 abstract class NullSensor(private val interval: Long = 0) : AbstractSensor() {
     override val hasValidReading: Boolean = true
-
     private val timer =
         CoroutineTimer {
             notifyListeners()

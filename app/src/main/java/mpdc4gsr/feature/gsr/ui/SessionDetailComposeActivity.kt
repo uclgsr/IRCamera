@@ -21,19 +21,9 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.AppBaseViewModel
 
-/**
- * SessionDetailComposeActivity - Modern Compose Implementation
- *
- * Demonstrates migration from simple BaseBindingActivity to Compose:
- * - Clean, modern Material 3 UI
- * - Better data presentation with cards and structured layout
- * - Enhanced user interactions with action buttons
- * - Consistent theming with other modernized activities
- */
 class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
     companion object {
         private const val EXTRA_SESSION_ID = "session_id"
-
         fun startActivity(
             context: Context,
             sessionId: String,
@@ -53,7 +43,6 @@ class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
     @Composable
     override fun Content(viewModel: AppBaseViewModel) {
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID) ?: "Unknown"
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -117,16 +106,12 @@ private fun SessionDetailContent(
     ) {
         // Session Overview Card
         SessionOverviewCard(sessionId = sessionId)
-
         // Session Statistics Card
         SessionStatisticsCard()
-
         // Data Quality Card
         DataQualityCard()
-
         // Session Timeline Card
         SessionTimelineCard()
-
         // Actions Card
         val context = androidx.compose.ui.platform.LocalContext.current
         SessionActionsCard(
@@ -183,9 +168,7 @@ private fun SessionOverviewCard(sessionId: String) {
                     fontWeight = FontWeight.Bold
                 )
             }
-
             HorizontalDivider()
-
             SessionInfoRow("Session ID", sessionId)
             SessionInfoRow("Date", "2024-01-15 14:30:00")
             SessionInfoRow("Duration", "45 minutes")
@@ -245,9 +228,7 @@ private fun SessionStatisticsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -294,9 +275,7 @@ private fun DataQualityCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             QualityIndicator("Signal Quality", 0.95f)
             QualityIndicator("Data Completeness", 0.98f)
             QualityIndicator("Noise Level", 0.15f, isInverse = true)
@@ -316,7 +295,6 @@ private fun QualityIndicator(
         displayValue >= 0.6f -> MaterialTheme.colorScheme.tertiary
         else -> MaterialTheme.colorScheme.error
     }
-
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -356,9 +334,7 @@ private fun SessionTimelineCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             Text(
                 " Session started at 14:30:00\n" +
                         " Device connected at 14:30:15\n" +
@@ -392,9 +368,7 @@ private fun SessionActionsCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -405,7 +379,6 @@ private fun SessionActionsCard(
                 ) {
                     Text("View Data")
                 }
-
                 OutlinedButton(
                     onClick = onExportData,
                     modifier = Modifier.weight(1f)
@@ -413,7 +386,6 @@ private fun SessionActionsCard(
                     Text("Export")
                 }
             }
-
             OutlinedButton(
                 onClick = onDeleteSession,
                 modifier = Modifier.fillMaxWidth(),

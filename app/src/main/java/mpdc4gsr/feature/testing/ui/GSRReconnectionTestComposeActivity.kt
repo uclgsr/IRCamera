@@ -27,12 +27,7 @@ import mpdc4gsr.feature.network.data.RecordingController
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Compose version of GSR Reconnection Test Activity
- * Tests automatic reconnection logic and UI indicators for GSR devices
- */
 class GSRReconnectionTestComposeActivity : ComponentActivity() {
-
     companion object {
         private const val TAG = "GSRReconnectionTestCompose"
         private const val RECONNECTION_TEST_DURATION = 60 // 60 seconds total test
@@ -56,12 +51,9 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
     private var testStartTime: Long = 0
     private var disconnectTime: Long = 0
     private var reconnectTime: Long = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initializeComponents()
-
         setContent {
             LibUnifiedTheme {
                 GSRReconnectionTestScreen()
@@ -79,7 +71,6 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
         var connectionEvents by remember { mutableStateOf(listOf<ConnectionEvent>()) }
         var reconnectionMetrics by remember { mutableStateOf(mapOf<String, Any>()) }
         var dataGapDuration by remember { mutableStateOf(0L) }
-
         // Initialize test cases
         LaunchedEffect(Unit) {
             testResults = listOf(
@@ -115,16 +106,13 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                 )
             )
         }
-
         // Timer for test progression
         LaunchedEffect(isTestRunning) {
             if (isTestRunning) {
                 testStartTime = System.currentTimeMillis()
-
                 while (isTestRunning && elapsedTime < RECONNECTION_TEST_DURATION) {
                     delay(1000)
                     elapsedTime += 1
-
                     // Simulate connection events based on elapsed time
                     when (elapsedTime.toInt()) {
                         DISCONNECT_SIMULATION_TIME -> {
@@ -170,10 +158,8 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                         }
                     }
                 }
-
                 if (elapsedTime >= RECONNECTION_TEST_DURATION) {
                     isTestRunning = false
-
                     // Generate final metrics
                     val metrics = mutableMapOf<String, Any>()
                     metrics["Test Duration"] = "${RECONNECTION_TEST_DURATION}s"
@@ -185,7 +171,6 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                 }
             }
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -244,7 +229,6 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                                     fontWeight = FontWeight.Medium
                                 )
                             }
-
                             if (isTestRunning) {
                                 Text(
                                     text = "${elapsedTime}s / ${RECONNECTION_TEST_DURATION}s",
@@ -252,7 +236,6 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                                 )
                             }
                         }
-
                         if (isTestRunning) {
                             Spacer(modifier = Modifier.height(12.dp))
                             LinearProgressIndicator(
@@ -260,7 +243,6 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
-
                         if (dataGapDuration > 0) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
@@ -271,9 +253,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Test Progress
                 TestProgressIndicator(
                     totalTests = testResults.size,
@@ -281,9 +261,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                     passedTests = testResults.count { it.status == TestStatus.PASSED },
                     failedTests = testResults.count { it.status == TestStatus.FAILED }
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Test Metrics
                 if (reconnectionMetrics.isNotEmpty()) {
                     TestMetricsDisplay(
@@ -292,7 +270,6 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 // Test Control Buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -331,7 +308,6 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                             Text("Start Test")
                         }
                     }
-
                     OutlinedButton(
                         onClick = {
                             connectionState = ConnectionState.DISCONNECTED
@@ -345,9 +321,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                         Text("Simulate Disconnect")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -364,7 +338,6 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Simulate Reconnect")
                     }
-
                     OutlinedButton(
                         onClick = {
                             lifecycleScope.launch { analyzeDataGaps() }
@@ -377,9 +350,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                         Text("Analyze Gaps")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Individual Test Cases
                 testResults.forEach { testCase ->
                     TestResultCard(
@@ -388,11 +359,9 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                 }
-
                 // Connection Events Log
                 if (connectionEvents.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -401,7 +370,6 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                                 fontWeight = FontWeight.Medium
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-
                             connectionEvents.takeLast(8).forEach { event ->
                                 ConnectionEventItem(event = event)
                                 Spacer(modifier = Modifier.height(6.dp))
@@ -441,7 +409,6 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             Text(
                 text = event.timestamp,
                 style = MaterialTheme.typography.bodySmall

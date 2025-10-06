@@ -58,26 +58,19 @@ class SensorDashboardTestViewModel : AppBaseViewModel() {
         }
     )
     val sensorStatuses: State<List<SensorTestStatus>> = _sensorStatuses
-
     private val _isRunningTest = mutableStateOf(false)
     val isRunningTest: State<Boolean> = _isRunningTest
-
     private val _testProgress = mutableStateOf(0f)
     val testProgress: State<Float> = _testProgress
-
     private val _testMessage = mutableStateOf("Ready to start sensor testing")
     val testMessage: State<String> = _testMessage
-
     fun runCompleteTest() {
         launchWithErrorHandling {
             _isRunningTest.value = true
             _testProgress.value = 0f
-
             val sensors = TestSensorType.values()
-
             sensors.forEachIndexed { index, sensorType ->
                 _testMessage.value = "Testing ${sensorType.displayName}..."
-
                 // Update to connecting
                 updateSensorStatus(
                     sensorType,
@@ -85,9 +78,7 @@ class SensorDashboardTestViewModel : AppBaseViewModel() {
                     "Connecting...",
                     "Just now"
                 )
-
                 delay(1500)
-
                 // Simulate different test outcomes
                 val testResult = when (index % 4) {
                     0 -> {
@@ -133,7 +124,6 @@ class SensorDashboardTestViewModel : AppBaseViewModel() {
                         )
                     }
                 }
-
                 updateSensorStatus(
                     sensorType,
                     testResult.first,
@@ -141,11 +131,9 @@ class SensorDashboardTestViewModel : AppBaseViewModel() {
                     "Just tested",
                     testResult.third
                 )
-
                 _testProgress.value = (index + 1).toFloat() / sensors.size
                 delay(1000)
             }
-
             _testMessage.value = "Testing complete. Results displayed above."
             _isRunningTest.value = false
         }
@@ -154,19 +142,15 @@ class SensorDashboardTestViewModel : AppBaseViewModel() {
     fun testIndividualSensor(sensorType: TestSensorType) {
         launchWithErrorHandling {
             _testMessage.value = "Testing ${sensorType.displayName}..."
-
             updateSensorStatus(
                 sensorType,
                 SensorStatus.CONNECTING,
                 "Testing connection...",
                 "Testing now"
             )
-
             delay(2000)
-
             // Simulate random test result
             val success = kotlin.random.Random.nextFloat() > 0.3f
-
             if (success) {
                 updateSensorStatus(
                     sensorType,
@@ -228,7 +212,6 @@ class SensorDashboardTestViewModel : AppBaseViewModel() {
 }
 
 class SensorDashboardTestComposeActivity : BaseComposeActivity<SensorDashboardTestViewModel>() {
-
     override fun createViewModel(): SensorDashboardTestViewModel =
         viewModels<SensorDashboardTestViewModel>().value
 
@@ -241,7 +224,6 @@ class SensorDashboardTestComposeActivity : BaseComposeActivity<SensorDashboardTe
             val isRunningTest by viewModel.isRunningTest
             val testProgress by viewModel.testProgress
             val testMessage by viewModel.testMessage
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -260,7 +242,6 @@ class SensorDashboardTestComposeActivity : BaseComposeActivity<SensorDashboardTe
                         }
                     }
                 )
-
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -299,9 +280,7 @@ class SensorDashboardTestComposeActivity : BaseComposeActivity<SensorDashboardTe
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
-
                                 Spacer(modifier = Modifier.width(12.dp))
-
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = if (isRunningTest) "Running Tests..." else "Test Controls",
@@ -315,7 +294,6 @@ class SensorDashboardTestComposeActivity : BaseComposeActivity<SensorDashboardTe
                                     )
                                 }
                             }
-
                             if (isRunningTest) {
                                 Spacer(modifier = Modifier.height(12.dp))
                                 LinearProgressIndicator(
@@ -332,7 +310,6 @@ class SensorDashboardTestComposeActivity : BaseComposeActivity<SensorDashboardTe
                             }
                         }
                     }
-
                     // Control buttons
                     Row(
                         modifier = Modifier
@@ -353,7 +330,6 @@ class SensorDashboardTestComposeActivity : BaseComposeActivity<SensorDashboardTe
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Run All Tests")
                         }
-
                         OutlinedButton(
                             onClick = { viewModel.resetAllSensors() },
                             modifier = Modifier.weight(1f),
@@ -368,7 +344,6 @@ class SensorDashboardTestComposeActivity : BaseComposeActivity<SensorDashboardTe
                             Text("Reset All")
                         }
                     }
-
                     // Sensor status cards
                     Text(
                         text = "Sensor Test Results",
@@ -376,7 +351,6 @@ class SensorDashboardTestComposeActivity : BaseComposeActivity<SensorDashboardTe
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 12.dp)
                     )
-
                     sensorStatuses.forEach { sensorStatus ->
                         SensorTestCard(
                             sensorStatus = sensorStatus,
@@ -385,9 +359,7 @@ class SensorDashboardTestComposeActivity : BaseComposeActivity<SensorDashboardTe
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     // Information card
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -470,9 +442,7 @@ private fun SensorTestCard(
                     }
                 )
             }
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = sensorStatus.sensorType.displayName,
@@ -499,7 +469,6 @@ private fun SensorTestCard(
                     )
                 }
             }
-
             Column(
                 horizontalAlignment = Alignment.End
             ) {
@@ -524,9 +493,7 @@ private fun SensorTestCard(
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
                 }
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 OutlinedButton(
                     onClick = onTest,
                     enabled = isTestingEnabled,

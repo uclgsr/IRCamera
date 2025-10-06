@@ -20,7 +20,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 
 class IRCorrectionFourComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
@@ -68,7 +67,6 @@ class IRCorrectionFourComposeActivity : BaseComposeActivity<ThermalViewModel>() 
     ) {
         var isExporting by remember { mutableStateOf(false) }
         var qualityScore by remember { mutableStateOf(92) }
-
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -94,7 +92,6 @@ class IRCorrectionFourComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
-
                         Card(
                             colors = CardDefaults.cardColors(
                                 containerColor = if (qualityScore >= 90) Color(0xFF238636) else Color(0xFFFF6B35)
@@ -110,16 +107,13 @@ class IRCorrectionFourComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                             )
                         }
                     }
-
                     Spacer(modifier = Modifier.height(12.dp))
-
                     QualityMetric("Geometric Correction", 95)
                     QualityMetric("Color Calibration", 88)
                     QualityMetric("Thermal Range", 94)
                     QualityMetric("Noise Reduction", 91)
                 }
             }
-
             // Before/After Comparison Placeholder
             Card(
                 modifier = Modifier
@@ -141,16 +135,13 @@ class IRCorrectionFourComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                         tint = Color(0xFF7D8590),
                         modifier = Modifier.size(48.dp)
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     Text(
                         "Before/After Comparison",
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )
-
                     Text(
                         "Side-by-side thermal image comparison",
                         color = Color(0xFF7D8590),
@@ -158,7 +149,6 @@ class IRCorrectionFourComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                     )
                 }
             }
-
             // Export Settings
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -172,9 +162,7 @@ class IRCorrectionFourComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-
                     Spacer(modifier = Modifier.height(12.dp))
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -185,7 +173,6 @@ class IRCorrectionFourComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                     }
                 }
             }
-
             // Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -200,7 +187,6 @@ class IRCorrectionFourComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                 ) {
                     Text("Discard")
                 }
-
                 Button(
                     onClick = { isExporting = true },
                     modifier = Modifier.weight(1f),
@@ -240,7 +226,6 @@ class IRCorrectionFourComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                 color = Color(0xFF7D8590),
                 fontSize = 14.sp
             )
-
             Text(
                 "$score%",
                 color = if (score >= 90) Color(0xFF238636) else Color(0xFFFF6B35),

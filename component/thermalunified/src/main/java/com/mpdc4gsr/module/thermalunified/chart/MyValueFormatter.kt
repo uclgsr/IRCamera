@@ -27,7 +27,6 @@ class MyValueFormatter(private val startTime: Long, private val type: Int = 1) :
     @SuppressLint("SimpleDateFormat")
     fun showDateSecond(time: Long): String {
         val date = Date(time)
-
         val pattern =
             when (type) {
                 TYPE_TIME_SECOND -> "HH:mm:ss"

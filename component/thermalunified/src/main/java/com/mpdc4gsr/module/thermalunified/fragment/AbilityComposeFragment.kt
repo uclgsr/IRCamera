@@ -31,7 +31,6 @@ import com.mpdc4gsr.module.thermalunified.activity.MonitoryHomeComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
 
 class AbilityComposeFragment : Fragment() {
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,12 +48,10 @@ class AbilityComposeFragment : Fragment() {
     fun Content() {
         val context = LocalContext.current
         var isTC007 by remember { mutableStateOf(false) }
-
         // Get TC007 status from arguments
         LaunchedEffect(Unit) {
             isTC007 = arguments?.getBoolean("IS_TC007", false) ?: false
         }
-
         LibUnifiedTheme {
             Column(
                 modifier = Modifier
@@ -68,14 +65,12 @@ class AbilityComposeFragment : Fragment() {
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
                 Text(
                     text = "Explore advanced thermal imaging capabilities and specialized modes",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
-
                 // Abilities grid
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
@@ -133,16 +128,13 @@ class AbilityComposeFragment : Fragment() {
                         tint = ability.iconTint
                     )
                 }
-
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Text(
                     text = ability.title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = ability.textColor
                 )
-
                 if (ability.description.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
@@ -151,7 +143,6 @@ class AbilityComposeFragment : Fragment() {
                         color = ability.textColor.copy(alpha = 0.8f)
                     )
                 }
-
                 if (ability.badge.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Card(

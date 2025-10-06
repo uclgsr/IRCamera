@@ -4,7 +4,6 @@ import android.util.Log
 import java.util.*
 
 object ByteUtils {
-
     fun byteMerger(byte1: ByteArray, byte2: Int, byte3: Int, byte4: Int): ByteArray {
         return byteMerger(
             byte1,
@@ -80,7 +79,6 @@ object ByteUtils {
     // Compatibility methods for existing code
     fun ByteArray.descBytes(): ByteArray = this.reversedArray()
     fun ByteArray.toBytes(): ByteArray = this
-
     fun String.toBytes(length: Int): ByteArray {
         val bytes = this.toByteArray()
         val result = ByteArray(length)
@@ -126,7 +124,6 @@ object ByteUtils {
     }
 
     fun joinPackage(vararg src: ByteArray): ByteArray = byteMerger(*src)
-
     fun numberToBytes(bigEndian: Boolean, value: Long, len: Int): ByteArray {
         val bytes = ByteArray(8)
         for (i in 0..7) {

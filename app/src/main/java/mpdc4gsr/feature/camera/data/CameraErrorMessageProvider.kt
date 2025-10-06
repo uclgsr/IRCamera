@@ -2,15 +2,8 @@ package mpdc4gsr.feature.camera.data
 
 import mpdc4gsr.core.data.ErrorType
 
-/**
- * Provides user-friendly error messages with actionable suggestions
- * Extracted to improve error handling and user experience
- */
 object CameraErrorMessageProvider {
 
-    /**
-     * Get user-friendly error message with actionable suggestions
-     */
     fun getUserFriendlyErrorMessage(errorType: ErrorType, originalMessage: String): String {
         return when (errorType) {
             ErrorType.PERMISSION_DENIED -> {
@@ -178,9 +171,6 @@ object CameraErrorMessageProvider {
         }
     }
 
-    /**
-     * Get short error message for notifications/toasts
-     */
     fun getShortErrorMessage(errorType: ErrorType): String {
         return when (errorType) {
             ErrorType.PERMISSION_DENIED -> "Camera permission required - check Settings"
@@ -195,28 +185,21 @@ object CameraErrorMessageProvider {
         }
     }
 
-    /**
-     * Get suggestions for improving camera performance
-     */
     fun getPerformanceSuggestions(
         deviceSupports4K: Boolean,
         supportsRAW: Boolean,
         supports60fps: Boolean
     ): List<String> {
         val suggestions = mutableListOf<String>()
-
         if (!deviceSupports4K) {
             suggestions.add("• Device doesn't support 4K - use 1080p for best quality")
         }
-
         if (!supports60fps) {
             suggestions.add("• 60fps not available - use 30fps for stability")
         }
-
         if (!supportsRAW) {
             suggestions.add("• RAW capture not supported - use maximum JPEG quality")
         }
-
         suggestions.addAll(
             listOf(
                 "• Close unnecessary apps before recording",
@@ -226,7 +209,6 @@ object CameraErrorMessageProvider {
                 "• Free up storage space (recommended: 5GB+)"
             )
         )
-
         return suggestions
     }
 }

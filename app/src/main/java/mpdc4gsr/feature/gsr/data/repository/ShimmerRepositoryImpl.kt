@@ -9,7 +9,6 @@ import mpdc4gsr.feature.gsr.domain.repository.ShimmerRepository
 class ShimmerRepositoryImpl(
     private val shimmerDataSource: ShimmerDataSource
 ) : ShimmerRepository {
-
     override suspend fun scanForDevices(): Flow<List<DeviceInfo>> {
         return shimmerDataSource.scanForDevices()
     }

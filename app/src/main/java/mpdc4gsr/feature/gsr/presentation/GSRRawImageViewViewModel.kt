@@ -12,14 +12,9 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 import java.io.File
 
-/**
- * ViewModel for GSR Raw Image View Compose Activity
- * Manages GSR image file loading and display state
- */
 class GSRRawImageViewViewModel(
     context: Context
 ) : AppBaseViewModel() {
-
     private val application: Context = context.applicationContext
 
     data class GSRImageViewState(
@@ -36,13 +31,9 @@ class GSRRawImageViewViewModel(
         loadImages()
     }
 
-    /**
-     * Load GSR image files from storage
-     */
     fun loadImages() {
         viewModelScope.launch {
             _imageViewState.value = _imageViewState.value.copy(isLoading = true, error = null)
-
             try {
                 val imageFiles = getGSRImageFiles()
                 _imageViewState.value = _imageViewState.value.copy(
@@ -58,9 +49,6 @@ class GSRRawImageViewViewModel(
         }
     }
 
-    /**
-     * Open image file with system intent
-     */
     fun openImage(imageFile: File) {
         viewModelScope.launch {
             try {
@@ -70,157 +58,118 @@ class GSRRawImageViewViewModel(
                     "${context.packageName}.fileprovider",
                     imageFile
                 )
-
                 val intent = Intent(Intent.ACTION_VIEW).apply {
-                    setDataAndType(uri, "image/*")
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
+                    setDataAndType(
+                        uri, "image
+                        fun shareImage(imageFile: File) {
+                            viewModelScope.launch {
+                                try {
+                                    val context = application.applicationContext
+                                    val uri = FileProvider.getUriForFile(
+                                        context,
+                                        "${context.packageName}.fileprovider",
+                                        imageFile
+                                    )
+                                    val intent = Intent(Intent.ACTION_SEND).apply {
+                                        type = "image
+                                        fun deleteImage(imageFile: File) {
+                                            viewModelScope.launch {
+                                                try {
+                                                    if (imageFile.delete()) {
+                                                        // Reload images after deletion
+                                                        loadImages()
+                                                    } else {
+                                                        _imageViewState.value = _imageViewState.value.copy(
+                                                            error = "Failed to delete image"
+                                                        )
+                                                    }
+                                                } catch (e: Exception) {
+                                                    _imageViewState.value = _imageViewState.value.copy(
+                                                        error = "Error deleting image: ${e.message}"
+                                                    )
+                                                }
+                                            }
+                                        }
 
-                context.startActivity(intent)
+                                        private fun getGSRImageFiles(): List<File> {
+                                            val imageFiles = mutableListOf<File>()
+                                            // Check multiple possible directories
+                                            val possibleDirectories = listOf(
+                                                // External storage directories
+                                                File(Environment.getExternalStorageDirectory(), "GSR/Images"),
+                                                File(Environment.getExternalStorageDirectory(), "IRCamera/GSR"),
+                                                File(Environment.getExternalStorageDirectory(), "DCIM/GSR"),
+                                                // App-specific directories
+                                                File(application.externalCacheDir, "gsr_images"),
+                                                File(
+                                                    application.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                                                    "GSR"
+                                                ),
+                                                File(application.filesDir, "gsr_images")
+                                            )
+                                            for (directory in possibleDirectories) {
+                                                if (directory.exists() && directory.isDirectory) {
+                                                    directory.listFiles { file ->
+                                                        file.isFile && isImageFile(file.name)
+                                                    }?.let { files ->
+                                                        imageFiles.addAll(files)
+                                                    }
+                                                }
+                                            }
+                                            // Sort by last modified (newest first)
+                                            return imageFiles.sortedByDescending { it.lastModified() }
+                                        }
 
-                _imageViewState.value = _imageViewState.value.copy(selectedImage = imageFile)
-            } catch (e: Exception) {
-                _imageViewState.value = _imageViewState.value.copy(
-                    error = "Failed to open image: ${e.message}"
-                )
-            }
-        }
-    }
+                                        private fun isImageFile(fileName: String): Boolean {
+                                            val imageExtensions =
+                                                listOf(".jpg", ".jpeg", ".png", ".bmp", ".gif", ".webp")
+                                            return imageExtensions.any { fileName.lowercase().endsWith(it) }
+                                        }
 
-    /**
-     * Share image file
-     */
-    fun shareImage(imageFile: File) {
-        viewModelScope.launch {
-            try {
-                val context = application.applicationContext
-                val uri = FileProvider.getUriForFile(
-                    context,
-                    "${context.packageName}.fileprovider",
-                    imageFile
-                )
+                                        fun getImageMetadata(imageFile: File): Map<String, String> {
+                                            val metadata = mutableMapOf<String, String>()
+                                            try {
+                                                metadata["Name"] = imageFile.name
+                                                metadata["Size"] = formatFileSize(imageFile.length())
+                                                metadata["Modified"] = formatDate(imageFile.lastModified())
+                                                metadata["Path"] = imageFile.absolutePath
+                                                // Try to get image dimensions
+                                                val options = android.graphics.BitmapFactory.Options().apply {
+                                                    inJustDecodeBounds = true
+                                                }
+                                                android.graphics.BitmapFactory.decodeFile(
+                                                    imageFile.absolutePath,
+                                                    options
+                                                )
+                                                if (options.outWidth > 0 && options.outHeight > 0) {
+                                                    metadata["Dimensions"] =
+                                                        "${options.outWidth} x ${options.outHeight}"
+                                                    metadata["Type"] = options.outMimeType ?: "Unknown"
+                                                }
+                                            } catch (e: Exception) {
+                                                metadata["Error"] = "Failed to read metadata: ${e.message}"
+                                            }
+                                            return metadata
+                                        }
 
-                val intent = Intent(Intent.ACTION_SEND).apply {
-                    type = "image/*"
-                    putExtra(Intent.EXTRA_STREAM, uri)
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
+                                        private fun formatFileSize(bytes: Long): String {
+                                            return when {
+                                                bytes < 1024 -> "$bytes B"
+                                                bytes < 1024 * 1024 -> String.format("%.1f KB", bytes / 1024.0)
+                                                bytes < 1024 * 1024 * 1024 -> String.format(
+                                                    "%.1f MB",
+                                                    bytes / (1024.0 * 1024.0)
+                                                )
 
-                context.startActivity(Intent.createChooser(intent, "Share GSR Image"))
-            } catch (e: Exception) {
-                _imageViewState.value = _imageViewState.value.copy(
-                    error = "Failed to share image: ${e.message}"
-                )
-            }
-        }
-    }
+                                                else -> String.format("%.1f GB", bytes / (1024.0 * 1024.0 * 1024.0))
+                                            }
+                                        }
 
-    /**
-     * Delete image file
-     */
-    fun deleteImage(imageFile: File) {
-        viewModelScope.launch {
-            try {
-                if (imageFile.delete()) {
-                    // Reload images after deletion
-                    loadImages()
-                } else {
-                    _imageViewState.value = _imageViewState.value.copy(
-                        error = "Failed to delete image"
-                    )
-                }
-            } catch (e: Exception) {
-                _imageViewState.value = _imageViewState.value.copy(
-                    error = "Error deleting image: ${e.message}"
-                )
-            }
-        }
-    }
-
-    /**
-     * Get GSR image files from various possible directories
-     */
-    private fun getGSRImageFiles(): List<File> {
-        val imageFiles = mutableListOf<File>()
-
-        // Check multiple possible directories
-        val possibleDirectories = listOf(
-            // External storage directories
-            File(Environment.getExternalStorageDirectory(), "GSR/Images"),
-            File(Environment.getExternalStorageDirectory(), "IRCamera/GSR"),
-            File(Environment.getExternalStorageDirectory(), "DCIM/GSR"),
-
-            // App-specific directories
-            File(application.externalCacheDir, "gsr_images"),
-            File(application.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "GSR"),
-            File(application.filesDir, "gsr_images")
-        )
-
-        for (directory in possibleDirectories) {
-            if (directory.exists() && directory.isDirectory) {
-                directory.listFiles { file ->
-                    file.isFile && isImageFile(file.name)
-                }?.let { files ->
-                    imageFiles.addAll(files)
-                }
-            }
-        }
-
-        // Sort by last modified (newest first)
-        return imageFiles.sortedByDescending { it.lastModified() }
-    }
-
-    /**
-     * Check if file is an image based on extension
-     */
-    private fun isImageFile(fileName: String): Boolean {
-        val imageExtensions = listOf(".jpg", ".jpeg", ".png", ".bmp", ".gif", ".webp")
-        return imageExtensions.any { fileName.lowercase().endsWith(it) }
-    }
-
-    /**
-     * Get image file metadata
-     */
-    fun getImageMetadata(imageFile: File): Map<String, String> {
-        val metadata = mutableMapOf<String, String>()
-
-        try {
-            metadata["Name"] = imageFile.name
-            metadata["Size"] = formatFileSize(imageFile.length())
-            metadata["Modified"] = formatDate(imageFile.lastModified())
-            metadata["Path"] = imageFile.absolutePath
-
-            // Try to get image dimensions
-            val options = android.graphics.BitmapFactory.Options().apply {
-                inJustDecodeBounds = true
-            }
-            android.graphics.BitmapFactory.decodeFile(imageFile.absolutePath, options)
-
-            if (options.outWidth > 0 && options.outHeight > 0) {
-                metadata["Dimensions"] = "${options.outWidth} x ${options.outHeight}"
-                metadata["Type"] = options.outMimeType ?: "Unknown"
-            }
-
-        } catch (e: Exception) {
-            metadata["Error"] = "Failed to read metadata: ${e.message}"
-        }
-
-        return metadata
-    }
-
-    private fun formatFileSize(bytes: Long): String {
-        return when {
-            bytes < 1024 -> "$bytes B"
-            bytes < 1024 * 1024 -> String.format("%.1f KB", bytes / 1024.0)
-            bytes < 1024 * 1024 * 1024 -> String.format("%.1f MB", bytes / (1024.0 * 1024.0))
-            else -> String.format("%.1f GB", bytes / (1024.0 * 1024.0 * 1024.0))
-        }
-    }
-
-    private fun formatDate(timestamp: Long): String {
-        return java.text.SimpleDateFormat("MMM dd, yyyy HH:mm", java.util.Locale.getDefault())
-            .format(java.util.Date(timestamp))
-    }
-}
+                                        private fun formatDate(timestamp: Long): String {
+                                            return java.text.SimpleDateFormat(
+                                                "MMM dd, yyyy HH:mm",
+                                                java.util.Locale.getDefault()
+                                            )
+                                                .format(java.util.Date(timestamp))
+                                        }
+                                    }

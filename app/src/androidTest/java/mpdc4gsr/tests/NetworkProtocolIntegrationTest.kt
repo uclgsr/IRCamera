@@ -15,15 +15,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.net.Socket
 
-/**
- * Network protocol integration test for PC-Android communication
- *
- * Verifies protocol parsing, command handling, and time synchronization
- */
 @Ignore("All tests disabled")
 @RunWith(AndroidJUnit4::class)
 class NetworkProtocolIntegrationTest {
-
     private lateinit var context: Context
     private lateinit var networkServer: NetworkServer
     private lateinit var protocolHandler: ProtocolHandler
@@ -45,7 +39,6 @@ class NetworkProtocolIntegrationTest {
     fun cleanup() = runBlocking {
         mockPcSocket?.close()
         mockPcSocket = null
-
         if (::networkServer.isInitialized) {
             networkServer.stop()
         }
@@ -62,7 +55,6 @@ class NetworkProtocolIntegrationTest {
             "ACK cmd=START_RECORD",
             "ERROR cmd=START_RECORD code=FAIL msg=\"Test error\""
         )
-
         testMessages.forEach { message ->
             val parsed = Protocol.parseMessage(message)
             assertNotNull("Should parse: $message", parsed)
@@ -75,27 +67,20 @@ class NetworkProtocolIntegrationTest {
         val hello = Protocol.createHelloMessage("test_device", listOf("GSR", "RGB"))
         assertTrue("HELLO should contain device name", hello.contains("device_name=test_device"))
         assertTrue("HELLO should contain sensors", hello.contains("sensors=[GSR,RGB]"))
-
         val startRecord = Protocol.createStartRecordMessage("session_001")
         assertTrue("START_RECORD should contain session_id", startRecord.contains("session_id=session_001"))
-
         val stopRecord = Protocol.createStopRecordMessage("session_001")
         assertTrue("STOP_RECORD should contain session_id", stopRecord.contains("session_id=session_001"))
-
         val syncInit = Protocol.createSyncInitMessage()
         assertEquals("SYNC_INIT message should match", "SYNC_INIT", syncInit)
-
         val syncRequest = Protocol.createSyncRequestMessage(1234567890L)
         assertTrue("SYNC_REQUEST should contain t_pc", syncRequest.contains("t_pc=1234567890"))
-
         val syncResponse = Protocol.createSyncResponseMessage(1234567890L, 1234567895L)
         assertTrue("SYNC_RESPONSE should contain t_pc", syncResponse.contains("t_pc=1234567890"))
         assertTrue("SYNC_RESPONSE should contain t_ph", syncResponse.contains("t_ph=1234567895"))
-
         val ack = Protocol.createAckMessage("START_RECORD", mapOf("session_id" to "test"))
         assertTrue("ACK should contain cmd", ack.contains("cmd=START_RECORD"))
         assertTrue("ACK should contain session_id", ack.contains("session_id=test"))
-
         val error = Protocol.createErrorMessage("START_RECORD", Protocol.ERR_FAIL, "Test error")
         assertTrue("ERROR should contain cmd", error.contains("cmd=START_RECORD"))
         assertTrue("ERROR should contain code", error.contains("code=FAIL"))
@@ -106,11 +91,9 @@ class NetworkProtocolIntegrationTest {
     fun testProtocolHandlerWithMockCommands() = runBlocking {
         networkServer = NetworkServer(context, TEST_PORT)
         protocolHandler = ProtocolHandler(context, networkServer)
-
         var startRecordingCalled = false
         var stopRecordingCalled = false
         var syncRequestCalled = false
-
         protocolHandler.setCommandHandler(object : ProtocolHandler.CommandHandler {
             override suspend fun onStartRecording(sessionId: String): ProtocolHandler.CommandResult {
                 startRecordingCalled = true
@@ -141,26 +124,20 @@ class NetworkProtocolIntegrationTest {
                 )
             }
         })
-
         val startMessage = Protocol.parseMessage("START_RECORD session_id=test_session_001")
         assertNotNull("START_RECORD should parse", startMessage)
-
         val startResponse = protocolHandler.processMessage(startMessage!!)
         assertNotNull("Should return response", startResponse)
         assertTrue("Should call handler", startRecordingCalled)
         assertTrue("Response should be ACK", startResponse!!.contains("ACK"))
-
         val stopMessage = Protocol.parseMessage("STOP_RECORD session_id=test_session_001")
         assertNotNull("STOP_RECORD should parse", stopMessage)
-
         val stopResponse = protocolHandler.processMessage(stopMessage!!)
         assertNotNull("Should return response", stopResponse)
         assertTrue("Should call handler", stopRecordingCalled)
         assertTrue("Response should be ACK", stopResponse!!.contains("ACK"))
-
         val syncMessage = Protocol.parseMessage("SYNC_REQUEST t_pc=1234567890")
         assertNotNull("SYNC_REQUEST should parse", syncMessage)
-
         val syncResponse = protocolHandler.processMessage(syncMessage!!)
         assertNotNull("Should return response", syncResponse)
         assertTrue("Should call handler", syncRequestCalled)
@@ -171,7 +148,6 @@ class NetworkProtocolIntegrationTest {
     fun testProtocolHandlerErrorCases() = runBlocking {
         networkServer = NetworkServer(context, TEST_PORT)
         protocolHandler = ProtocolHandler(context, networkServer)
-
         protocolHandler.setCommandHandler(object : ProtocolHandler.CommandHandler {
             override suspend fun onStartRecording(sessionId: String): ProtocolHandler.CommandResult {
                 return ProtocolHandler.CommandResult(
@@ -193,7 +169,6 @@ class NetworkProtocolIntegrationTest {
                 )
             }
         })
-
         val startMessage = Protocol.parseMessage("START_RECORD session_id=test")
         val startResponse = protocolHandler.processMessage(startMessage!!)
         assertTrue("Failed start should return ERROR", startResponse!!.contains("ERROR"))
@@ -201,7 +176,6 @@ class NetworkProtocolIntegrationTest {
             "Error should mention failure",
             startResponse.contains("FAIL") || startResponse.contains("Sensor not connected")
         )
-
         val stopMessage = Protocol.parseMessage("STOP_RECORD session_id=test")
         val stopResponse = protocolHandler.processMessage(stopMessage!!)
         assertTrue("Failed stop should return ERROR", stopResponse!!.contains("ERROR"))
@@ -215,11 +189,9 @@ class NetworkProtocolIntegrationTest {
             "SYNC_REQUEST t_pc=1234567890",
             "SYNC_RESULT t1=1000 t2=1005 t3=1010 offset=5 rtt=10"
         )
-
         pcFormattedMessages.forEach { message ->
             val parsed = Protocol.parseMessage(message)
             assertNotNull("Android should parse PC message: $message", parsed)
-
             when (parsed!!.type) {
                 Protocol.MSG_START_RECORD -> {
                     assertTrue(
@@ -274,7 +246,6 @@ class NetworkProtocolIntegrationTest {
         assertNotNull(message)
         assertEquals("START_RECORD", message!!.type)
         assertEquals("test_session_123", message.parameters["session_id"])
-
         val messageWithQuotes = Protocol.parseMessage("ERROR cmd=START_RECORD code=FAIL msg=\"Sensor not found\"")
         assertNotNull(messageWithQuotes)
         assertEquals("ERROR", messageWithQuotes!!.type)
@@ -289,7 +260,6 @@ class NetworkProtocolIntegrationTest {
         assertNotNull(message)
         assertEquals("HELLO", message!!.type)
         assertEquals("test", message.parameters["device_name"])
-
         val sensors = message.parameters["sensors"]
         assertNotNull(sensors)
         assertTrue("Sensors should contain array brackets", sensors!!.contains("["))

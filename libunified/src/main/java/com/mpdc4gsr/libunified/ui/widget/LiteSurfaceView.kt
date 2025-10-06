@@ -9,16 +9,11 @@ import java.nio.ByteBuffer
 class LiteSurfaceView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : SurfaceView(context, attrs) {
-
     var mFinalImageWidth = 0
-
     var mFinalImageHeight = 0
-
     var tmpData: ByteArray? = null
     var mIrRotateData: ByteArray? = null
-
     var imageBitmap: Bitmap? = null
-
     fun scaleBitmap(): Bitmap {
         try {
             val irData =
@@ -53,5 +48,4 @@ class LiteSurfaceView @JvmOverloads constructor(
             return Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
         }
     }
-
 }

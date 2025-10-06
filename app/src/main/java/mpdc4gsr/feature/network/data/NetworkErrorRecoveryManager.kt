@@ -29,14 +29,12 @@ class NetworkErrorRecoveryManager(
 
     private val recoveryJob = SupervisorJob()
     private val recoveryScope = CoroutineScope(Dispatchers.IO + recoveryJob)
-
     private val isRecoveryActive = AtomicBoolean(false)
     private val reconnectionAttempts = AtomicInteger(0)
     private val rapidFailureCount = AtomicInteger(0)
     private var lastFailureTime = 0L
     private var lastKnownGoodController: NetworkClient.ControllerInfo? = null
     private var healthCheckJob: Job? = null
-
     private val totalBytesTransferred = AtomicLong(0)
     private val latencySum = AtomicLong(0)
     private val latencyCount = AtomicLong(0)
@@ -44,23 +42,18 @@ class NetworkErrorRecoveryManager(
 
     interface RecoveryEventListener {
         fun onRecoveryStarted(reason: String)
-
         fun onRecoveryAttempt(
             attempt: Int,
             maxAttempts: Int,
         )
 
         fun onRecoverySuccess(controller: NetworkClient.ControllerInfo)
-
         fun onRecoveryFailed(reason: String)
-
         fun onConnectionHealthChanged(isHealthy: Boolean)
-
         fun onRapidFailureDetected(failureCount: Int)
     }
 
     private var eventListener: RecoveryEventListener? = null
-
     fun setEventListener(listener: RecoveryEventListener?) {
         eventListener = listener
     }
@@ -70,7 +63,6 @@ class NetworkErrorRecoveryManager(
             AppLogger.w(TAG, "Auto recovery already enabled")
             return
         }
-
         isRecoveryActive.set(true)
         AppLogger.i(TAG, "Network error recovery enabled")
     }
@@ -80,7 +72,6 @@ class NetworkErrorRecoveryManager(
             AppLogger.w(TAG, "Auto recovery not active")
             return
         }
-
         isRecoveryActive.set(false)
         AppLogger.i(TAG, "Network error recovery disabled")
     }
@@ -97,7 +88,6 @@ class NetworkErrorRecoveryManager(
         error: String,
     ) {
         AppLogger.w(TAG, "Network error in $operation: $error")
-
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastFailureTime < RAPID_FAILURE_WINDOW_MS) {
             rapidFailureCount.incrementAndGet()
@@ -105,7 +95,6 @@ class NetworkErrorRecoveryManager(
             rapidFailureCount.set(1)
         }
         lastFailureTime = currentTime
-
         if (rapidFailureCount.get() >= RAPID_FAILURE_THRESHOLD) {
             eventListener?.onRapidFailureDetected(rapidFailureCount.get())
         }

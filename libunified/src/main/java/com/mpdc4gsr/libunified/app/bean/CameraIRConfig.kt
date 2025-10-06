@@ -13,22 +13,18 @@ class ObserveBean {
         const val TYPE_DYN_R = 0 //
         const val TYPE_TMP_H_S = 1 //
         const val TYPE_TMP_L_S = 2 //
-
         const val TYPE_MEASURE_PERSON = 10 //
         const val TYPE_MEASURE_SHEEP = 11 //
         const val TYPE_MEASURE_DOG = 12 //
         const val TYPE_MEASURE_BIRD = 13 //
-
         const val TYPE_TARGET_HORIZONTAL = 15 //
         const val TYPE_TARGET_VERTICAL = 16 //
         const val TYPE_TARGET_CIRCLE = 17 //
-
         const val TYPE_TARGET_COLOR_GREEN = 20 //
         const val TYPE_TARGET_COLOR_RED = 21 //
         const val TYPE_TARGET_COLOR_BLUE = 22 //
         const val TYPE_TARGET_COLOR_BLACK = 23 //
         const val TYPE_TARGET_COLOR_WHITE = 24 //
-
         const val TYPE_TARGET_AREA = 30
         const val TYPE_TARGET_LINE = 31
         const val TYPE_TARGET_SPOT = 32
@@ -52,7 +48,6 @@ data class CameraItemBean(
     var time: Int = DELAY_TIME_0,
     var isSel: Boolean = false,
 ) {
-
     fun changeDelayType() {
         if (type == TYPE_DELAY) {
             when (time) {
@@ -77,7 +72,6 @@ data class CameraItemBean(
         const val TYPE_SDKM = 2
         const val TYPE_AUDIO = 3
         const val TYPE_SETTING = 4
-
         const val DELAY_TIME_0 = 0//3
         const val DELAY_TIME_3 = 3//3
         const val DELAY_TIME_6 = 6//6
@@ -86,7 +80,5 @@ data class CameraItemBean(
         const val TYPE_TMP_ZD = -1 //
         const val TYPE_TMP_C = 1 // 
         const val TYPE_TMP_H = 0 //
-
     }
-
 }

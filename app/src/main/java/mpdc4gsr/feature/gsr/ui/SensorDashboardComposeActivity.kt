@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.gsr.ui
-
 // Note: MainActivityViewModel was moved to backup during cleanup
 // Using modern Compose ViewModels instead
 import android.os.Bundle
@@ -25,24 +24,11 @@ import mpdc4gsr.core.ui.components.sensors.GSRData
 import mpdc4gsr.core.ui.components.sensors.GSRVisualizationCard
 import mpdc4gsr.feature.main.presentation.MainActivityViewModel
 
-/**
- * Task C: Complete Sensor Dashboard using Compose
- *
- * This activity demonstrates:
- * - Modern sensor monitoring dashboard
- * - Real-time GSR data visualization
- * - Connection status monitoring
- * - Data export and statistics
- * - Enhanced visual feedback
- */
 class SensorDashboardComposeActivity : ComponentActivity() {
-
     private lateinit var dashboardViewModel: MainActivityViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dashboardViewModel = viewModels<MainActivityViewModel>().value
-
         setContent {
             LibUnifiedTheme {
                 Content(dashboardViewModel)
@@ -58,10 +44,8 @@ class SensorDashboardComposeActivity : ComponentActivity() {
         val gsrSensorState by viewModel.gsrSensorState.collectAsState()
         val gsrConnectionState by viewModel.gsrConnectionState.collectAsState()
         val gsrBatteryLevel by viewModel.gsrBatteryLevel.collectAsState()
-
         // Use real GSR data from ViewModel
         val gsrDataState by viewModel.gsrData.collectAsState()
-
         // Map ViewModel GSRDataState to UI GSRData with battery level
         val gsrData by remember {
             derivedStateOf {
@@ -75,7 +59,6 @@ class SensorDashboardComposeActivity : ComponentActivity() {
                 )
             }
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -108,13 +91,11 @@ class SensorDashboardComposeActivity : ComponentActivity() {
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 SensorStatusCard(
                     thermalCameraState = mapSensorStateToConnectionState(thermalCameraState),
                     gsrSensorState = mapSensorStateToConnectionState(gsrSensorState),
                     bleConnectionState = mapGSRConnectionToConnectionState(gsrConnectionState)
                 )
-
                 // GSR Sensor detailed visualization
                 Text(
                     text = "GSR Sensor Details",
@@ -122,7 +103,6 @@ class SensorDashboardComposeActivity : ComponentActivity() {
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 GSRVisualizationCard(
                     gsrData = gsrData,
                     connectionState = GSRConnectionState(
@@ -147,13 +127,11 @@ class SensorDashboardComposeActivity : ComponentActivity() {
                         ).show()
                     }
                 )
-
                 // Additional sensor information cards
                 AdditionalSensorInfo(
                     thermalCameraState = mapSensorStateToConnectionState(thermalCameraState),
                     gsrSensorState = mapSensorStateToConnectionState(gsrSensorState)
                 )
-
                 // Data export and management section
                 DataManagementSection(
                     onExportAllData = {
@@ -235,7 +213,6 @@ class SensorDashboardComposeActivity : ComponentActivity() {
                     )
                 }
             }
-
             // GSR sensor info
             Card(
                 modifier = Modifier.weight(1f),
@@ -301,7 +278,6 @@ class SensorDashboardComposeActivity : ComponentActivity() {
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -312,14 +288,12 @@ class SensorDashboardComposeActivity : ComponentActivity() {
                     ) {
                         Text("Export All Data")
                     }
-
                     OutlinedButton(
                         onClick = onClearData,
                         modifier = Modifier.weight(1f)
                     ) {
                         Text("Clear Data")
                     }
-
                     OutlinedButton(
                         onClick = onOpenSettings,
                         modifier = Modifier.weight(1f)

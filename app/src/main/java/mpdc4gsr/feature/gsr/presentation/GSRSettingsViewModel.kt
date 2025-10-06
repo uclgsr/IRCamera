@@ -10,12 +10,7 @@ import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
 import mpdc4gsr.feature.network.data.RecordingController
 
-/**
- * Modern GSR Settings ViewModel - MVVM StateFlow Implementation
- * Manages GSR sensor configuration, permissions, and device management with Repository pattern
- */
 class GSRSettingsViewModel : AppBaseViewModel() {
-
     data class UIState(
         val gsrSettings: GSRSettingsRepository.GSRSettings = GSRSettingsRepository.GSRSettings(),
         val deviceSettings: GSRSettingsRepository.DeviceSettings = GSRSettingsRepository.DeviceSettings(),
@@ -74,14 +69,11 @@ class GSRSettingsViewModel : AppBaseViewModel() {
     private val _permissionState =
         MutableStateFlow(PermissionState(false, emptyList(), emptyList()))
     val permissionState: StateFlow<PermissionState> = _permissionState.asStateFlow()
-
     private val _deviceConnectionState = MutableStateFlow(DeviceConnectionState(false))
     val deviceConnectionState: StateFlow<DeviceConnectionState> =
         _deviceConnectionState.asStateFlow()
-
     private val _availableDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())
     val availableDevices: StateFlow<List<DeviceInfo>> = _availableDevices.asStateFlow()
-
     private val _scanningState = MutableStateFlow(ScanningState.IDLE)
     val scanningState: StateFlow<ScanningState> = _scanningState.asStateFlow()
 
@@ -162,13 +154,11 @@ class GSRSettingsViewModel : AppBaseViewModel() {
     fun checkPermissions(context: Context) {
         val missingPermissions = getMissingPermissions(context)
         val shouldShowRationale = mutableListOf<String>()
-
         // Check rationale for missing permissions
         missingPermissions.forEach { permission ->
             // Note: shouldShowRequestPermissionRationale check would be handled in Activity
             // ViewModel focuses on permission state management
         }
-
         _permissionState.value = PermissionState(
             hasAllPermissions = missingPermissions.isEmpty(),
             missingPermissions = missingPermissions,
@@ -179,7 +169,6 @@ class GSRSettingsViewModel : AppBaseViewModel() {
     fun onPermissionsResult(permissions: Array<String>, grantResults: IntArray) {
         val deniedPermissions = mutableListOf<String>()
         val permanentlyDeniedPermissions = mutableListOf<String>()
-
         for (i in permissions.indices) {
             if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                 deniedPermissions.add(permissions[i])
@@ -187,7 +176,6 @@ class GSRSettingsViewModel : AppBaseViewModel() {
                 permanentlyDeniedPermissions.add(permissions[i])
             }
         }
-
         launchWithErrorHandling {
             when {
                 deniedPermissions.isEmpty() -> {
@@ -224,7 +212,6 @@ class GSRSettingsViewModel : AppBaseViewModel() {
 
     fun startDeviceScan() {
         if (_scanningState.value == ScanningState.SCANNING) return
-
         _scanningState.value = ScanningState.SCANNING
         launchWithErrorHandling {
             try {
@@ -257,10 +244,8 @@ class GSRSettingsViewModel : AppBaseViewModel() {
                     deviceInfo = deviceInfo,
                     connectionStatus = "Connecting..."
                 )
-
                 // Simulate connection process
                 kotlinx.coroutines.delay(2000)
-
                 // Update device settings in repository
                 val currentDeviceSettings = repository.deviceSettings.value
                 repository.updateDeviceSettings(
@@ -269,21 +254,18 @@ class GSRSettingsViewModel : AppBaseViewModel() {
                         deviceName = deviceInfo.name
                     )
                 )
-
                 _deviceConnectionState.value = DeviceConnectionState(
                     isConnected = true,
                     deviceInfo = deviceInfo,
                     connectionStatus = "Connected",
                     signalStrength = 85
                 )
-
                 _settingsEvents.emit(
                     SettingsEvent.DeviceConnected(
                         deviceInfo,
                         "Connected to ${deviceInfo.name}"
                     )
                 )
-
             } catch (e: Exception) {
                 _deviceConnectionState.value = DeviceConnectionState(
                     isConnected = false,
@@ -369,21 +351,17 @@ class GSRSettingsViewModel : AppBaseViewModel() {
                     _settingsEvents.emit(SettingsEvent.ShowError("Cannot calibrate: No device connected"))
                     return@launchWithErrorHandling
                 }
-
                 // According to Shimmer Android API documentation:
                 // The Shimmer device stores calibration parameters that are automatically
                 // applied during streaming. The ObjectCluster contains both RAW and CAL formats.
                 // For GSR sensors, calibration converts raw ADC values to microsiemens.
-
                 // Since GSRSensorRecorder already uses the Shimmer API's built-in calibration
                 // (via ObjectCluster.getFormatClusterValue with CAL format), the calibration
                 // is active whenever the device streams data.
-
                 // A full calibration workflow would involve:
                 // 1. Reading current calibration parameters from device
                 // 2. Optionally writing new calibration coefficients
                 // 3. Verifying calibration by checking sensor readings
-
                 // Verify that the device is providing calibrated data
                 if (gsrSensorRecorder != null) {
                     _settingsEvents.emit(

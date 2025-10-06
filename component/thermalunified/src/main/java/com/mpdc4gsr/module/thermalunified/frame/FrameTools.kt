@@ -23,14 +23,11 @@ class FrameTool {
     val temperatureBytes = ByteArray(srcTemperatureLen)
     private val imageRes = LibIRProcess.ImageRes_t()
     private var struct: FrameStruct = FrameStruct()
-
     private var maxLimit = -273f
     private var minLimit = -273f
     private var irImageHelp = IRImageHelp()
-
     private val supImageData = ByteArray(imageWidth * imageHeight * 4 * 4)
     private var dstArgbBytes: ByteArray? = null
-
     fun read(bytes: ByteArray) {
         try {
             val frame = ByteArray(bytes.size)
@@ -140,7 +137,6 @@ class FrameTool {
         val maxRGB = IntArray(3)
         val minRGB = IntArray(3)
         if (customPseudoBean.isUseCustomPseudo) {
-
             LibIRProcess.convertYuyvMapToARGBPseudocolor(
                 imageBytesTemp,
                 pixNum.toLong(),
@@ -162,10 +158,8 @@ class FrameTool {
                 minRGB[2] = minColor and 0xFF
                 var j = 0
                 val argbBytesLength = imageWidth * imageHeight * 4
-
                 var index = 0
                 while (index < argbBytesLength) {
-
                     var temperature0: Float =
                         (
                                 (temperatureBytes[j].toInt() and 0xff) + (
@@ -222,7 +216,6 @@ class FrameTool {
                 )
             }
         }
-
         if ((struct.alarmBean.isHighOpen && struct.alarmBean.highTemp != Float.MAX_VALUE) ||
             (struct.alarmBean.isLowOpen && struct.alarmBean.lowTemp != Float.MIN_VALUE)
         ) {
@@ -237,7 +230,6 @@ class FrameTool {
             } catch (e: IOException) {
             }
         }
-
         argbBytesRotate(argbBytes, dstArgbBytes!!, rotate)
         val dstImageRes = getDstImageRes(rotate)
         var scrBitmap: Bitmap? = null
@@ -340,7 +332,6 @@ class FrameTool {
     }
 
     fun getSrcTemp(): LibIRTemp.TemperatureSampleResult {
-
         val irTemp = LibIRTemp(imageWidth, imageHeight)
         irTemp.setTempData(temperatureBytes)
         return irTemp.getTemperatureOfRect(Rect(0, 0, imageWidth, imageHeight))

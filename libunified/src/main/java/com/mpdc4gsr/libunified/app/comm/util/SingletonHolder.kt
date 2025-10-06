@@ -1,15 +1,8 @@
 package com.mpdc4gsr.libunified.app.comm.util
 
-/**
- * Thread-safe singleton holder using double-checked locking pattern.
- *
- * Improved implementation that eliminates the !! operator and properly
- * handles the creator function to avoid potential NPE in race conditions.
- */
 open class SingletonHolder<out T, in A>(private val creator: (A) -> T) {
     @Volatile
     private var instance: T? = null
-
     fun getInstance(arg: A): T {
         // First check without synchronization for performance
         return instance ?: synchronized(this) {

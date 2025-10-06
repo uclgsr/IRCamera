@@ -1,10 +1,6 @@
 package mpdc4gsr.feature.network.data
 
-/**
- * Standardized error codes for network operations with granular failure classification
- */
 object NetworkErrorCodes {
-
     // Connection Error Codes (1xxx)
     const val ERROR_CONNECTION_FAILED = 1001
     const val ERROR_CONNECTION_TIMEOUT = 1002
@@ -58,9 +54,6 @@ object NetworkErrorCodes {
     // Unknown/Generic Error
     const val ERROR_UNKNOWN = 9999
 
-    /**
-     * Get human-readable error message for error code
-     */
     fun getErrorMessage(errorCode: Int): String {
         return when (errorCode) {
             // Connection errors
@@ -71,7 +64,6 @@ object NetworkErrorCodes {
             ERROR_CONNECTION_RESET -> "Connection reset by peer"
             ERROR_AUTHENTICATION_FAILED -> "Authentication failed"
             ERROR_SSL_HANDSHAKE_FAILED -> "SSL handshake failed"
-
             // Bluetooth errors
             ERROR_BLUETOOTH_NOT_SUPPORTED -> "Bluetooth not supported"
             ERROR_BLUETOOTH_DISABLED -> "Bluetooth is disabled"
@@ -79,47 +71,38 @@ object NetworkErrorCodes {
             ERROR_BLUETOOTH_DEVICE_NOT_FOUND -> "Bluetooth device not found"
             ERROR_BLUETOOTH_PAIRING_FAILED -> "Bluetooth pairing failed"
             ERROR_BLUETOOTH_SERVICE_DISCOVERY_FAILED -> "Bluetooth service discovery failed"
-
             // Wi-Fi errors
             ERROR_WIFI_DISABLED -> "Wi-Fi is disabled"
             ERROR_WIFI_NO_NETWORK -> "No Wi-Fi network available"
             ERROR_WIFI_INVALID_IP -> "Invalid IP address"
             ERROR_WIFI_PORT_UNREACHABLE -> "Port unreachable"
             ERROR_WIFI_DNS_RESOLUTION_FAILED -> "DNS resolution failed"
-
             // Protocol errors
             ERROR_PROTOCOL_VERSION_MISMATCH -> "Protocol version mismatch"
             ERROR_INVALID_MESSAGE_FORMAT -> "Invalid message format"
             ERROR_UNSUPPORTED_COMMAND -> "Unsupported command"
             ERROR_MESSAGE_TOO_LARGE -> "Message too large"
             ERROR_PROTOCOL_VIOLATION -> "Protocol violation"
-
             // Recording errors
             ERROR_RECORDING_ALREADY_ACTIVE -> "Recording already active"
             ERROR_RECORDING_NOT_ACTIVE -> "No active recording"
             ERROR_RECORDING_PERMISSION_DENIED -> "Recording permission denied"
             ERROR_RECORDING_HARDWARE_FAILURE -> "Recording hardware failure"
             ERROR_RECORDING_STORAGE_FULL -> "Storage full"
-
             // Configuration errors
             ERROR_INVALID_CONFIGURATION -> "Invalid configuration"
             ERROR_SETTINGS_NOT_FOUND -> "Settings not found"
             ERROR_SETTINGS_CORRUPTED -> "Settings corrupted"
             ERROR_UNSUPPORTED_SETTING -> "Unsupported setting"
-
             // System errors
             ERROR_INSUFFICIENT_MEMORY -> "Insufficient memory"
             ERROR_INSUFFICIENT_BATTERY -> "Insufficient battery"
             ERROR_DEVICE_OVERHEATING -> "Device overheating"
             ERROR_SYSTEM_RESOURCE_UNAVAILABLE -> "System resource unavailable"
-
             else -> "Unknown error"
         }
     }
 
-    /**
-     * Get error category for error code
-     */
     fun getErrorCategory(errorCode: Int): String {
         return when (errorCode / 1000) {
             1 -> "Connection"
@@ -133,9 +116,6 @@ object NetworkErrorCodes {
         }
     }
 
-    /**
-     * Check if error is recoverable
-     */
     fun isRecoverable(errorCode: Int): Boolean {
         return when (errorCode) {
             ERROR_CONNECTION_TIMEOUT,
@@ -148,9 +128,6 @@ object NetworkErrorCodes {
         }
     }
 
-    /**
-     * Create structured error result
-     */
     data class NetworkError(
         val code: Int,
         val message: String = getErrorMessage(code),

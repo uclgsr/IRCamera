@@ -62,7 +62,6 @@ class AudioRecordHelp private constructor() {
     private fun initRecorder(recorder: FFmpegFrameRecorder) {
         audioRecordRunnable = AudioRecordRunnable(recorder)
         audioThread = Thread(audioRecordRunnable)
-
         runAudioThread = true
     }
 
@@ -71,16 +70,13 @@ class AudioRecordHelp private constructor() {
 
         @SuppressLint("MissingPermission")
         override fun run() {
-
             if (audioRecord == null) {
                 return
             }
-
             if (audioData == null) {
                 audioData = ShortBuffer.allocate(bufferSize)
             }
             audioRecord!!.startRecording()
-
             try {
                 while (runAudioThread) {
                     bufferReadResult =
@@ -97,7 +93,6 @@ class AudioRecordHelp private constructor() {
                                 VideoRecordFFmpeg.AUDIO_CHANNELS,
                                 audioData,
                             )
-
                         }
                     } else {
                         for (i in 0 until bufferSize) {
@@ -111,7 +106,6 @@ class AudioRecordHelp private constructor() {
                         Thread.sleep(1000L / VideoRecordFFmpeg.RATE)
                     }
                 }
-
             } catch (e: Exception) {
                 XLog.e("[ph][ph][ph][ph][ph][ph]")
             }
@@ -149,7 +143,6 @@ class AudioRecordHelp private constructor() {
 
     companion object {
         private val LOG_TAG = AudioRecordHelp::class.java.name
-
         fun getInstance(): AudioRecordHelp {
             return AudioUtilHolder.INSTANCE
         }

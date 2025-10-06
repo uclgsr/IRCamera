@@ -12,7 +12,6 @@ class SessionManager private constructor(context: Context) {
 
         @Volatile
         private var INSTANCE: SessionManager? = null
-
         fun getInstance(context: Context): SessionManager {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: SessionManager(context.applicationContext).also { INSTANCE = it }
@@ -21,17 +20,13 @@ class SessionManager private constructor(context: Context) {
     }
 
     private val appContext = context.applicationContext
-
     private val activeSessions = ConcurrentHashMap<String, SessionInfo>()
     private val sessionListeners = mutableListOf<SessionListener>()
 
     interface SessionListener {
         fun onSessionCreated(session: SessionInfo)
-
         fun onSessionUpdated(session: SessionInfo)
-
         fun onSessionCompleted(session: SessionInfo)
-
         fun onSessionError(
             sessionId: String,
             error: String,
@@ -53,7 +48,6 @@ class SessionManager private constructor(context: Context) {
         metadata: Map<String, String> = emptyMap(),
     ): SessionInfo {
         val finalSessionId = sessionId ?: TimeUtils.generateSessionId("MultiModal")
-
         val session =
             SessionInfo(
                 sessionId = finalSessionId,
@@ -63,10 +57,8 @@ class SessionManager private constructor(context: Context) {
             ).apply {
                 this.metadata.putAll(metadata)
             }
-
         activeSessions[finalSessionId] = session
         sessionListeners.forEach { it.onSessionCreated(session) }
-
         Log.i(TAG, "Session created: $finalSessionId")
         return session
     }
@@ -84,31 +76,25 @@ class SessionManager private constructor(context: Context) {
         updates: (SessionInfo) -> Unit,
     ): Boolean {
         val session = activeSessions[sessionId] ?: return false
-
         updates(session)
         sessionListeners.forEach { it.onSessionUpdated(session) }
-
         Log.d(TAG, "Session updated: $sessionId")
         return true
     }
 
     fun completeSession(sessionId: String): SessionInfo? {
         val session = activeSessions.remove(sessionId) ?: return null
-
         session.endTime = System.currentTimeMillis()
         sessionListeners.forEach { it.onSessionCompleted(session) }
-
         Log.i(TAG, "Session completed: $sessionId, duration: ${session.getDurationMs()}ms")
         return session
     }
 
     fun completeAllSessions(): List<SessionInfo> {
         val completed = mutableListOf<SessionInfo>()
-
         activeSessions.keys.forEach { sessionId ->
             completeSession(sessionId)?.let { completed.add(it) }
         }
-
         return completed
     }
 
@@ -118,7 +104,6 @@ class SessionManager private constructor(context: Context) {
 
     fun getSessionStats(sessionId: String): SessionStats? {
         val session = activeSessions[sessionId] ?: return null
-
         return SessionStats(
             sessionId = sessionId,
             duration = session.getDurationMs(),

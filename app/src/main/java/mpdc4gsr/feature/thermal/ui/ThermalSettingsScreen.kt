@@ -27,10 +27,6 @@ import mpdc4gsr.core.ui.components.settings.SettingsToggle
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.thermal.presentation.ThermalSettingsViewModel
 
-/**
- * Thermal Settings Screen - Configure thermal camera parameters
- * Integrated with ThermalSettingsViewModel and ThermalSettingsRepository
- */
 @Composable
 fun ThermalSettingsScreen(
     onBackClick: (() -> Unit)? = null,
@@ -39,11 +35,9 @@ fun ThermalSettingsScreen(
 ) {
     val context = LocalContext.current
     val settings by viewModel.thermalSettings.collectAsState()
-
     LaunchedEffect(Unit) {
         viewModel.initialize(context)
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -54,7 +48,6 @@ fun ThermalSettingsScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -82,7 +75,6 @@ fun ThermalSettingsScreen(
                     onCheckedChange = { viewModel.updateSaveRawImages(it) }
                 )
             }
-
             // Display Settings
             SettingsCard(
                 title = "Display Settings",
@@ -109,7 +101,6 @@ fun ThermalSettingsScreen(
                     onValueChange = { viewModel.updateTemperatureRange(it) }
                 )
             }
-
             // Measurement Settings
             SettingsCard(
                 title = "Measurement",
@@ -137,7 +128,6 @@ fun ThermalSettingsScreen(
                     onCheckedChange = { viewModel.updateShowCrosshair(it) }
                 )
             }
-
             // Calibration Controls
             SettingsCard(
                 title = "Calibration",

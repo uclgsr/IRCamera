@@ -25,12 +25,9 @@ import java.util.concurrent.CountDownLatch
 
 class UpReportViewModel : BaseViewModel() {
     val commonBeanLD = SingleLiveEvent<CommonBean>()
-
     val exceptionLD = SingleLiveEvent<Exception?>()
-
     private val gson = Gson()
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-
     fun upload(
         isTC007: Boolean,
         reportBean: ReportBean?,

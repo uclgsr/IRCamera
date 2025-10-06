@@ -4,7 +4,6 @@ import android.util.Log
 import com.energy.iruvc.ircmd.IRCMD
 
 private const val TAG = "IRCMDExtensions"
-
 fun IRCMD.setMirror(enabled: Boolean) {
     try {
         val result = if (enabled) {

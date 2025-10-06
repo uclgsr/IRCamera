@@ -3,14 +3,12 @@ package com.mpdc4gsr.module.thermalunified.report.bean
 import com.google.gson.Gson
 
 class ReportData {
-
     var code = 0
     var data: DataBean? = null
     var msg: String? = null
     var serverTime: String? = null
 
     class DataBean {
-
         var total = 0
         var current = 0
         var isHitCount = false

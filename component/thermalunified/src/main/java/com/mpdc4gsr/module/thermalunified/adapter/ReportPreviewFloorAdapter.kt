@@ -53,7 +53,6 @@ class ReportPreviewFloorAdapter(
                     )
                 },
             )
-
             if (position == 0) {
                 holder.tvProject.text = cxt.getString(R.string.pdf_project_item)
                 holder.tvRemark.text = cxt.getString(R.string.report_remark)

@@ -8,7 +8,6 @@ import kotlin.math.floor
 import kotlin.math.roundToInt
 
 object ColorUtils {
-
     fun setColorAlpha(@ColorInt color: Int, alpha: Float): Int {
         val maxAlpha = 0xff
         return color and 0x00ffffff or ((alpha * maxAlpha).toInt() shl 24)
@@ -60,7 +59,6 @@ object ColorUtils {
     }
 
     fun colorToHex(color: Int): String = toHexColorString(color)
-
     fun adjustColorBrightness(color: Int, factor: Float): Int {
         val a = android.graphics.Color.alpha(color)
         val r = Math.round(android.graphics.Color.red(color) * factor)

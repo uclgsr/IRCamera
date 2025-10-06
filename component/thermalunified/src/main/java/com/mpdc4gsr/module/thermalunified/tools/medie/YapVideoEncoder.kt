@@ -24,7 +24,6 @@ class YapVideoEncoder(
     private var mTrackIndex = 0
     private var colorFormat = 0
     private val defaultTimeOutUs = 10000L
-
     private val mediaCodecList: IntArray
         get() {
             val numCodecs = MediaCodecList.getCodecCount()
@@ -38,7 +37,6 @@ class YapVideoEncoder(
                 }
                 val types = info.supportedTypes
                 var found = false
-
                 var j = 0
                 while (j < types.size && !found) {
                     if (types[j] == "video/avc") {
@@ -87,7 +85,6 @@ class YapVideoEncoder(
                 else -> break@lab
             }
         }
-
         if (colorFormat <= 0) {
             colorFormat = MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar
         }
@@ -105,10 +102,8 @@ class YapVideoEncoder(
         mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, widthFix * heightFix)
         mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, mFrameRate)
         mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 10)
-
         try {
             mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC)
-
             if (!out.exists()) {
                 out.createNewFile()
             }
@@ -198,7 +193,6 @@ class YapVideoEncoder(
                     }
                     val input = getNV12(widthFix, heightFix, bitmap)
                     bitmap = null
-
                     val inputBuffer =
                         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
                             buffers!![inputBufferIndex]
@@ -207,7 +201,6 @@ class YapVideoEncoder(
                         }
                     inputBuffer!!.clear()
                     inputBuffer.put(input)
-
                     mediaCodec!!.queueInputBuffer(inputBufferIndex, 0, input.size, ptsUsec, 0)
                     drainEncoder(false, info)
                 }
@@ -355,7 +348,6 @@ class YapVideoEncoder(
         var index = 0
         for (j in 0 until height) {
             for (i in 0 until width) {
-
                 val r = argb[index] and 0xff0000 shr 16
                 val g = argb[index] and 0xff00 shr 8
                 val b = argb[index] and 0xff shr 0
@@ -412,7 +404,6 @@ class YapVideoEncoder(
         var index = 0
         for (j in 0 until height) {
             for (i in 0 until width) {
-
                 val r = argb[index] and 0xff0000 shr 16
                 val g = argb[index] and 0xff00 shr 8
                 val b = argb[index] and 0xff shr 0
@@ -466,7 +457,6 @@ class YapVideoEncoder(
         var index = 0
         for (j in 0 until height) {
             for (i in 0 until width) {
-
                 val r = argb[index] and 0xff0000 shr 16
                 val g = argb[index] and 0xff00 shr 8
                 val b = argb[index] and 0xff shr 0
@@ -524,7 +514,6 @@ class YapVideoEncoder(
         var index = 0
         for (j in 0 until height) {
             for (i in 0 until width) {
-
                 val r = argb[index] and 0xff0000 shr 16
                 val g = argb[index] and 0xff00 shr 8
                 val b = argb[index] and 0xff shr 0

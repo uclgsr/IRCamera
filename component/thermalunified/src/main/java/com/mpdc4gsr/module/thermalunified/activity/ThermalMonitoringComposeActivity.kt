@@ -26,7 +26,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 class ThermalMonitoringComposeActivity : BaseComposeActivity<BaseViewModel>() {
-
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, ThermalMonitoringComposeActivity::class.java))
@@ -43,7 +42,6 @@ class ThermalMonitoringComposeActivity : BaseComposeActivity<BaseViewModel>() {
         var selectedTab by remember { mutableStateOf(0) }
         var isMonitoring by remember { mutableStateOf(false) }
         var showAlertDialog by remember { mutableStateOf(false) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -97,7 +95,6 @@ class ThermalMonitoringComposeActivity : BaseComposeActivity<BaseViewModel>() {
                 )
             }
         }
-
         if (showAlertDialog) {
             AlertConfigurationDialog(
                 onDismiss = { showAlertDialog = false },
@@ -144,7 +141,6 @@ private fun RealTimeMonitoringTab(
             isMonitoring = isMonitoring,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         // Temperature zones
         Text(
             text = "Temperature Zones",
@@ -152,7 +148,6 @@ private fun RealTimeMonitoringTab(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 12.dp)
         )
-
         val temperatureZones = getMockTemperatureZones()
         temperatureZones.forEach { zone ->
             TemperatureZoneCard(
@@ -160,7 +155,6 @@ private fun RealTimeMonitoringTab(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
-
         // Recent alerts
         Text(
             text = "Recent Alerts",
@@ -168,7 +162,6 @@ private fun RealTimeMonitoringTab(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
         )
-
         val recentAlerts = getMockAlerts()
         if (recentAlerts.isEmpty()) {
             Card(
@@ -229,7 +222,6 @@ private fun MonitoringStatusCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             if (isMonitoring) {
                 Box(
                     modifier = Modifier
@@ -269,9 +261,7 @@ private fun TemperatureZoneCard(
                     .clip(CircleShape)
                     .background(getZoneStatusColor(zone.status))
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = zone.name,
@@ -284,7 +274,6 @@ private fun TemperatureZoneCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             Column(
                 horizontalAlignment = Alignment.End
             ) {
@@ -338,9 +327,7 @@ private fun AlertCard(
                 },
                 modifier = Modifier.size(24.dp)
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = alert.message,
@@ -402,7 +389,6 @@ private fun AlertsHistoryTab(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -457,7 +443,6 @@ private fun MonitoringNavigationBar(
             "Alerts" to Icons.Default.Notifications,
             "Settings" to Icons.Default.Settings
         )
-
         tabs.forEachIndexed { index, (label, icon) ->
             NavigationBarItem(
                 selected = selectedTab == index,
@@ -477,7 +462,6 @@ private fun AlertConfigurationDialog(
     var highTempThreshold by remember { mutableStateOf(80f) }
     var lowTempThreshold by remember { mutableStateOf(0f) }
     var enableNotifications by remember { mutableStateOf(true) }
-
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Alert Configuration") },
@@ -495,9 +479,7 @@ private fun AlertConfigurationDialog(
                     onValueChange = { highTempThreshold = it },
                     valueRange = 30f..150f
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Text(
                     text = "Low Temperature Alert: ${lowTempThreshold.toInt()}°C",
                     style = MaterialTheme.typography.labelMedium,
@@ -508,9 +490,7 @@ private fun AlertConfigurationDialog(
                     onValueChange = { lowTempThreshold = it },
                     valueRange = -20f..30f
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically

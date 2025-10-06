@@ -16,13 +16,11 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 
 object WifiUtils {
-
     @Suppress("DEPRECATION")
     fun ScanResult.getWifiName(): String =
         if (Build.VERSION.SDK_INT < 33) SSID else removeQuotation(wifiSsid.toString())
 
     fun WifiInfo.getWifiName(): String = removeQuotation(ssid)
-
     private fun removeQuotation(source: String): String {
         return if (source.length > 1 && source[0] == '\"' && source[source.length - 1] == '\"') {
             source.subSequence(1, source.length - 1).toString()
@@ -60,7 +58,6 @@ object WifiUtils {
 
     private class WifiStateObserver(val context: Context, val receiver: BroadcastReceiver) :
         DefaultLifecycleObserver {
-
         override fun onResume(owner: LifecycleOwner) {
             super.onResume(owner)
             context.registerReceiver(receiver, IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION))
@@ -74,7 +71,6 @@ object WifiUtils {
 
     private class WifiScanObserver(val context: Context, val receiver: BroadcastReceiver) :
         DefaultLifecycleObserver {
-
         override fun onResume(owner: LifecycleOwner) {
             super.onResume(owner)
             context.registerReceiver(

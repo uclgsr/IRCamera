@@ -25,15 +25,10 @@ open class DirBase {
 
     @ColumnInfo
     var dangerCount: Int = 0
-
     override fun equals(other: Any?): Boolean = other is DirBase && other.id == id
-
     override fun hashCode(): Int = id.toInt()
-
     fun getGoodCountStr(): String = if (goodCount > 99) "99+" else goodCount.toString()
-
     fun getWarnCountStr(): String = if (warnCount > 99) "99+" else warnCount.toString()
-
     fun getDangerCountStr(): String = if (dangerCount > 99) "99+" else dangerCount.toString()
 }
 
@@ -70,7 +65,6 @@ class DirDetect() : DirBase() {
 
     @Ignore
     var itemList: ArrayList<ItemDetect> = ArrayList()
-
     fun copyOne(): DirDetect {
         val newDirDetect = DirDetect()
         newDirDetect.id = 0
@@ -100,7 +94,6 @@ class DirDetect() : DirBase() {
         dirReport.goodCount = goodCount
         dirReport.warnCount = warnCount
         dirReport.dangerCount = dangerCount
-
         val newItemList: ArrayList<ItemReport> = ArrayList(itemList.size)
         for (itemDetect in itemList) {
             if (itemDetect.state > 0 || itemDetect.inputText.isNotEmpty() || itemDetect.image1.isNotEmpty()) {
@@ -112,7 +105,6 @@ class DirDetect() : DirBase() {
     }
 
     companion object {
-
         fun buildDefaultDirList(parentId: Long): ArrayList<DirDetect> =
             arrayListOf(
                 DirDetect(parentId, 0, ContextProvider.getContext().getString(R.string.detect_dir1_root)),
@@ -142,7 +134,6 @@ class DirDetect() : DirBase() {
     ],
 )
 class DirReport : DirBase() {
-
     @ColumnInfo(index = true)
     override var parentId: Long = 0
 

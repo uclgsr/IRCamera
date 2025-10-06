@@ -25,12 +25,7 @@ import mpdc4gsr.feature.gsr.presentation.GSRRawImageViewViewModel
 import mpdc4gsr.feature.gsr.presentation.GSRRawImageViewViewModelFactory
 import java.io.File
 
-/**
- * Modern Compose implementation of GSR Raw Image View
- * Displays raw GSR image files with enhanced Material 3 UI
- */
 class GSRRawImageViewComposeActivity : BaseComposeActivity<GSRRawImageViewViewModel>() {
-
     override fun createViewModel(): GSRRawImageViewViewModel =
         viewModels<GSRRawImageViewViewModel> {
             GSRRawImageViewViewModelFactory(application)
@@ -58,7 +53,6 @@ fun GSRRawImageViewScreen(
     onNavigateBack: () -> Unit = {}
 ) {
     val uiState by viewModel.imageViewState.collectAsState()
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -78,7 +72,6 @@ fun GSRRawImageViewScreen(
                 titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
-
         // Content Area
         when {
             uiState.isLoading -> {
@@ -181,9 +174,7 @@ private fun GSRImageCard(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.width(16.dp))
-
             // Image Information
             Column(
                 modifier = Modifier.weight(1f),
@@ -194,13 +185,11 @@ private fun GSRImageCard(
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-
                 Text(
                     text = "Size: ${formatFileSize(imageFile.length())}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = "Modified: ${formatDate(imageFile.lastModified())}",
                     style = MaterialTheme.typography.bodySmall,
@@ -230,19 +219,16 @@ private fun ErrorContent(
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.error
             )
-
             Text(
                 text = "Error loading images",
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurface
             )
-
             Text(
                 text = error,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
             Button(onClick = onRetry) {
                 Text("Retry")
             }
@@ -266,13 +252,11 @@ private fun EmptyContent() {
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
             Text(
                 text = "No GSR images found",
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurface
             )
-
             Text(
                 text = "GSR images will appear here when available",
                 style = MaterialTheme.typography.bodyMedium,

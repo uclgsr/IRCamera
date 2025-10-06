@@ -44,20 +44,14 @@ abstract class BaseApplication : Application() {
 
     // Application-scoped coroutine scope for database operations
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-
     var tau_data_H: ByteArray? = null
     var tau_data_L: ByteArray? = null
     var config: IRTempConfig? = null
-
     val module: String get() = javaClass.simpleName
-
     var activitys = arrayListOf<Activity>()
     var hasOtgShow = false
-
     abstract fun getSoftWareCode(): String
-
     abstract fun isDomestic(): Boolean
-
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -66,7 +60,6 @@ abstract class BaseApplication : Application() {
             webviewSetPath(this)
         }
         onLanguageChange()
-
         WebSocketProxy.getInstance().onMessageListener = {
             parserSocketMessage(it)
         }
@@ -74,14 +67,12 @@ abstract class BaseApplication : Application() {
 
     open fun initWebSocket() {
         connectWebSocket()
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkRequest =
                 android.net.NetworkRequest.Builder()
                     .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                     .build()
-
             manager.registerNetworkCallback(
                 networkRequest,
                 object : ConnectivityManager.NetworkCallback() {
@@ -96,7 +87,6 @@ abstract class BaseApplication : Application() {
                 },
             )
         } else {
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 registerReceiver(
                     NetworkChangedReceiver(),
@@ -137,7 +127,6 @@ abstract class BaseApplication : Application() {
 
     private fun parserSocketMessage(msgJson: String) {
         if (TextUtils.isEmpty(msgJson)) return
-
         if (SharedManager.is04AutoSync) {
             when (SocketCmdUtils.getCmdResponse(msgJson)) {
                 WsCmdConstants.AR_COMMAND_SNAPSHOT -> {
@@ -185,7 +174,6 @@ abstract class BaseApplication : Application() {
             if (intent?.action == "android.net.conn.CONNECTIVITY_CHANGE") {
                 val manager =
                     context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     val activeNetwork = manager.activeNetwork
                     val capabilities = manager.getNetworkCapabilities(activeNetwork)
@@ -196,7 +184,6 @@ abstract class BaseApplication : Application() {
                         Log.i("WebSocket", "WiFi network connected: ${'$'}activeNetwork")
                     }
                 } else {
-
                     @Suppress("DEPRECATION")
                     val activeNetwork = manager.activeNetworkInfo
                     @Suppress("DEPRECATION")
@@ -251,11 +238,9 @@ abstract class BaseApplication : Application() {
         // locale setting during Activity/Application initialization.
         val config = resources.configuration
         config.setLocale(Locale.ENGLISH)
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             config.setLocales(android.os.LocaleList(Locale.ENGLISH))
         }
-
         resources.updateConfiguration(config, resources.displayMetrics)
         SharedManager.setLanguage(baseContext, ConstantLanguages.ENGLISH)
         WebView(this).destroy()

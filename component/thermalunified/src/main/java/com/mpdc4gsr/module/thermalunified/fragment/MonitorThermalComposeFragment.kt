@@ -28,7 +28,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewModel>() {
-
     override fun createViewModel(): MonitorThermalViewModel {
         return viewModels<MonitorThermalViewModel>().value
     }
@@ -41,7 +40,6 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
         val thermalData by viewModel.thermalData.collectAsStateWithLifecycle()
         val recordingStatus by viewModel.recordingStatus.collectAsStateWithLifecycle()
         val monitoringAlerts by viewModel.monitoringAlerts.collectAsStateWithLifecycle()
-
         LibUnifiedTheme {
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -53,7 +51,6 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
                     onToggleMonitoring = { viewModel.toggleMonitoring() },
                     onToggleRecording = { viewModel.toggleRecording() }
                 )
-
                 // Main monitoring interface
                 Row(
                     modifier = Modifier
@@ -73,20 +70,17 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
                                 viewModel.updateMonitoringFence(fence)
                             }
                         )
-
                         // Monitoring overlays
                         MonitoringOverlays(
                             thermalData = thermalData,
                             modifier = Modifier.align(Alignment.TopEnd)
                         )
-
                         // Alert notifications
                         AlertNotifications(
                             alerts = monitoringAlerts,
                             modifier = Modifier.align(Alignment.BottomStart)
                         )
                     }
-
                     // Monitoring controls and data panel
                     MonitoringControlsPanel(
                         monitoringState = monitoringState,
@@ -154,7 +148,6 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
                         }
                     }
                 }
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -178,7 +171,6 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
                             tint = Color.White
                         )
                     }
-
                     // Monitoring toggle
                     Switch(
                         checked = monitoringState == MonitoringState.ACTIVE,
@@ -230,7 +222,6 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
                     },
                     modifier = Modifier.fillMaxSize()
                 )
-
                 // Fence overlays for monitoring regions
                 AndroidView(
                     factory = { context ->
@@ -251,14 +242,12 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
                     },
                     modifier = Modifier.fillMaxSize()
                 )
-
                 AndroidView(
                     factory = { context ->
                         FencePointView(context)
                     },
                     modifier = Modifier.fillMaxSize()
                 )
-
                 AndroidView(
                     factory = { context ->
                         FenceLineView(context)
@@ -285,19 +274,16 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
                     isAlarm = data.isAlarmTriggered,
                     isMain = true
                 )
-
                 TemperatureMonitorCard(
                     label = "Max",
                     temperature = "${data.maxTemp}°C",
                     color = Color.Red
                 )
-
                 TemperatureMonitorCard(
                     label = "Min",
                     temperature = "${data.minTemp}°C",
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 TemperatureMonitorCard(
                     label = "Avg",
                     temperature = "${data.avgTemp}°C",
@@ -399,9 +385,7 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
                         AlertSeverity.LOW -> MaterialTheme.colorScheme.onTertiaryContainer
                     }
                 )
-
                 Spacer(modifier = Modifier.width(8.dp))
-
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = alert.message,
@@ -444,38 +428,31 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
                         fontWeight = FontWeight.Bold
                     )
                 }
-
                 item {
                     ThresholdControls(
                         onThresholdChange = onThresholdChange,
                         enabled = monitoringState == MonitoringState.ACTIVE
                     )
                 }
-
                 item {
                     HorizontalDivider()
                 }
-
                 item {
                     AlertSettingsSection(
                         onAlertSettingsChange = onAlertSettingsChange
                     )
                 }
-
                 item {
                     HorizontalDivider()
                 }
-
                 item {
                     MonitoringDataSection(
                         thermalData = thermalData
                     )
                 }
-
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 item {
                     Button(
                         onClick = onExportData,
@@ -497,7 +474,6 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
     ) {
         var highThreshold by remember { mutableFloatStateOf(50f) }
         var lowThreshold by remember { mutableFloatStateOf(10f) }
-
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -506,7 +482,6 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Medium
             )
-
             // High threshold slider
             Text(
                 text = "High Alert: ${String.format("%.1f", highThreshold)}°C",
@@ -522,7 +497,6 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
                 enabled = enabled,
                 modifier = Modifier.fillMaxWidth()
             )
-
             // Low threshold slider
             Text(
                 text = "Low Alert: ${String.format("%.1f", lowThreshold)}°C",
@@ -547,7 +521,6 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
     ) {
         var enableSound by remember { mutableStateOf(true) }
         var enableVibration by remember { mutableStateOf(true) }
-
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -556,7 +529,6 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Medium
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -571,7 +543,6 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
                     }
                 )
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -601,7 +572,6 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Medium
             )
-
             thermalData?.let { data ->
                 DataRow("Duration", data.sessionDuration)
                 DataRow("Samples", "${data.sampleCount}")
@@ -642,5 +612,4 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
         MonitoringState.PAUSED -> Color(0xFFFFA500)
         MonitoringState.STOPPED -> Color.Gray
     }
-
 }

@@ -11,31 +11,25 @@ import com.mpdc4gsr.libunified.app.bean.WatermarkBean
 import com.mpdc4gsr.libunified.app.utils.CarDetectData
 
 object SharedManager {
-
     var hasClickWinter: Boolean
         get() = SPUtils.getInstance().getBoolean("hasClickWinter", false)
         set(value) = SPUtils.getInstance().put("hasClickWinter", value)
-
     var isNeedShowTrendTips: Boolean
         get() = SPUtils.getInstance().getBoolean("isNeedShowTrendTips", true)
         set(value) = SPUtils.getInstance().put("isNeedShowTrendTips", value)
-
     var hasShownStoragePermissionTip: Boolean
         get() = SPUtils.getInstance().getBoolean("hasShownStoragePermissionTip", false)
         set(value) = SPUtils.getInstance().put("hasShownStoragePermissionTip", value)
-
     var houseSpaceUnit: Int
         get() = SPUtils.getInstance().getInt("houseSpaceUnit", 0)
         set(value) {
             SPUtils.getInstance().put("houseSpaceUnit", value)
         }
-
     var costUnit: Int
         get() = SPUtils.getInstance().getInt("costUnit", 0)
         set(value) {
             SPUtils.getInstance().put("costUnit", value)
         }
-
     var hasTcLine: Boolean
         get() = SPUtils.getInstance().getBoolean("hasConnectTcLine", false)
         set(value) {
@@ -43,11 +37,8 @@ object SharedManager {
         }
 
     // hasTS004 and hasTC007 properties removed - TS004/TC007 device support discontinued
-
     // hasTC007 property removed - TC007 device support discontinued
-
     // irConfigJsonTC007 property removed - TC007 device support discontinued
-
     var homeGuideStep: Int
         get() {
             val value = SPUtils.getInstance().getInt("homeGuideStep", 2)
@@ -56,29 +47,24 @@ object SharedManager {
         set(value) {
             SPUtils.getInstance().put("homeGuideStep", value)
         }
-
     var configGuideStep: Int
         get() = SPUtils.getInstance().getInt("configGuideStep", 1)
         set(value) = SPUtils.getInstance().put("configGuideStep", value)
-
     var isHideEmissivityTips: Boolean
         get() = SPUtils.getInstance().getBoolean("isHideEmissivityTips", false)
         set(value) {
             SPUtils.getInstance().put("isHideEmissivityTips", value)
         }
-
     var is07HideEmissivityTips: Boolean
         get() = SPUtils.getInstance().getBoolean("is07HideEmissivityTips", false)
         set(value) {
             SPUtils.getInstance().put("is07HideEmissivityTips", value)
         }
-
     var is04TISR: Boolean
         get() = SPUtils.getInstance().getBoolean("is04TISR", false)
         set(value) {
             SPUtils.getInstance().put("is04TISR", value)
         }
-
     var is04AutoSync: Boolean
         get() = SPUtils.getInstance().getBoolean("is04AutoSync", false)
         set(value) {
@@ -99,7 +85,6 @@ object SharedManager {
     fun getManualData(sId: String): ByteArray {
         val strValue = SPUtils.getInstance().getString("manualData_$sId")
         return if (strValue.isNullOrEmpty()) {
-
             byteArrayOf(
                 0,
                 0,
@@ -146,55 +131,46 @@ object SharedManager {
         set(value) {
             SPUtils.getInstance().put("isConnectAutoOpen", value)
         }
-
     var isConnect07AutoOpen: Boolean
         get() = SPUtils.getInstance().getBoolean("isConnect07AutoOpen", false)
         set(value) {
             SPUtils.getInstance().put("isConnect07AutoOpen", value)
         }
-
     var isTipOTG: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipOTG", true)
         set(value) {
             SPUtils.getInstance().put("isTipOTG", value)
         }
-
     var isTipShutter: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipShutter", true)
         set(value) {
             SPUtils.getInstance().put("isTipShutter", value)
         }
-
     var isTipHighTemp: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipHighTemp", true)
         set(value) {
             SPUtils.getInstance().put("isTipHighTemp", value)
         }
-
     var isTipPinP: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipPinP", true)
         set(value) {
             SPUtils.getInstance().put("isTipPinP", value)
         }
-
     var isTipCoordinate: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipCoordinate", true)
         set(value) {
             SPUtils.getInstance().put("isTipCoordinate", value)
         }
-
     var isTipAIRecognition: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipAIRecognition", true)
         set(value) {
             SPUtils.getInstance().put("isTipAIRecognition", value)
         }
-
     var isTipObservePhoto: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipObservePhoto", true)
         set(value) {
             SPUtils.getInstance().put("isTipObservePhoto", value)
         }
-
     var continuousBean: ContinuousBean
         get() {
             val json = SPUtils.getInstance().getString("continuousBean", "")
@@ -210,7 +186,6 @@ object SharedManager {
         set(value) {
             SPUtils.getInstance().put("continuousBean", Gson().toJson(value))
         }
-
     var wifiWatermarkBean: WatermarkBean
         get() {
             val json = SPUtils.getInstance().getString("wifiWatermarkBean", "")
@@ -226,7 +201,6 @@ object SharedManager {
         set(value) {
             SPUtils.getInstance().put("watermarkBean", Gson().toJson(value))
         }
-
     var watermarkBean: WatermarkBean
         get() {
             val json = SPUtils.getInstance().getString("watermarkBean", "")
@@ -242,48 +216,37 @@ object SharedManager {
         set(value) {
             SPUtils.getInstance().put("watermarkBean", Gson().toJson(value))
         }
-
     var isTipChangeDevice: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipChangeDevice", true)
         set(value) {
             SPUtils.getInstance().put("isTipChangeDevice", value)
         }
-
     var isChangeDevice: Boolean
         get() = SPUtils.getInstance().getBoolean("isChangeDevice", false)
         set(value) {
             SPUtils.getInstance().put("isChangeDevice", value)
         }
-
     private const val TOKEN: String = "token"
     private const val USER_ID: String = "user_id"
     private const val USERNAME: String = "username"
     private const val NICKNAME: String = "nickname"
     private const val HEAD_ICON: String = "head_icon"
-
     private const val BASE_HOST: String = "base_host"
     private const val LANGUAGE = "language"
-
     private const val HAS_SHOW_CLAUSE = "hasShowClause"
     private const val TEMPERATURE_UNIT = "temperature"
     private const val VERSION_CHECK_DATE = "version_check_date"
-
     private const val DEVICE_SN = "deviceSn"
     private const val DEVICE_VERSION = "deviceVersion"
-
     private const val IR_CONFIG = "ir_config"
     private const val SP_CUSTOM_PSEUDO = "sp_custom_pseudo"
     private const val SP_TARGET_POP = "sp_target_pop"
-
     private const val SP_SETTING_IS_PUSH = "sp_setting_is_push"
     private const val SP_SETTING_IS_RECOMMEND = "sp_setting_is_recommend"
-
     private const val SP_HOT_MODE = "sp_hot_mode"
     private const val SP_CHANGE_DEVICE = "sp_change_device"
     private const val SP_TC007_CUSTOM_PSEUDO = "sp_tc007_custom_pseudo"
-
     private const val SP_CAR_DETECT = "sp_car_detect"
-
     fun setToken(token: String) {
         SPUtils.getInstance().put(TOKEN, token)
     }
@@ -401,7 +364,6 @@ object SharedManager {
     }
 
     // saveTC007CustomPseudo and getTC0007CustomPseudo methods removed - TC007 device support discontinued
-
     fun getTargetPop(): Boolean {
         return SPUtils.getInstance().getBoolean(SP_TARGET_POP, false)
     }
@@ -412,7 +374,6 @@ object SharedManager {
 
     private const val IR_DUAL_DISP = "ir_dual_disp"
     private const val IR_DUAL_DISP_V = "ir_dual_disp_v"
-
     fun saveSettingIsPush(isPush: Boolean) {
         SPUtils.getInstance().put(SP_SETTING_IS_PUSH, isPush)
     }

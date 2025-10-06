@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class AutoSaveViewModel : BaseViewModel() {
-
     private val _isAutoSaveEnabled = MutableStateFlow(false)
     val isAutoSaveEnabled: StateFlow<Boolean> = _isAutoSaveEnabled.asStateFlow()
 

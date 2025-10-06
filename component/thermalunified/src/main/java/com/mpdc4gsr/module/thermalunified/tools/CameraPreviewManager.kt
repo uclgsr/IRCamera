@@ -7,7 +7,6 @@ import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.ui.camera.CameraPreviewManager as LibUnifiedCameraPreviewManager
 
 class CameraPreviewManager private constructor() {
-
     private val delegate = LibUnifiedCameraPreviewManager.getInstance()
 
     companion object {
@@ -15,7 +14,6 @@ class CameraPreviewManager private constructor() {
 
         @Volatile
         private var INSTANCE: CameraPreviewManager? = null
-
         fun getInstance(): CameraPreviewManager {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: CameraPreviewManager().also { INSTANCE = it }
@@ -60,16 +58,13 @@ class CameraPreviewManager private constructor() {
     }
 
     fun getImageRotation(): Int = delegate.getImageRotation()
-
     fun setTemperatureLimits(min: Float, max: Float) {
         delegate.setTemperatureLimits(min, max)
     }
 
     fun getMinTemperature(): Float = delegate.getMinTemperature()
     fun getMaxTemperature(): Float = delegate.getMaxTemperature()
-
     fun getPseudocolorMode(): Int = delegate.getPseudocolorMode()
-
     fun applyPseudocolor(bitmap: Bitmap): Bitmap {
         return delegate.applyPseudocolor(bitmap)
     }

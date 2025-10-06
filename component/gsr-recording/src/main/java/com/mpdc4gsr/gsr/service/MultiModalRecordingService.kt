@@ -26,12 +26,10 @@ class MultiModalRecordingService : Service() {
         private const val ACTION_START_RECORDING = "action_start_recording"
         private const val ACTION_STOP_RECORDING = "action_stop_recording"
         private const val ACTION_SYNC_EVENT = "action_sync_event"
-
         private const val EXTRA_SESSION_ID = "extra_session_id"
         private const val EXTRA_PARTICIPANT_ID = "extra_participant_id"
         private const val EXTRA_STUDY_NAME = "extra_study_name"
         private const val EXTRA_EVENT_TYPE = "extra_event_type"
-
         fun startRecording(
             context: Context,
             sessionId: String,
@@ -77,7 +75,6 @@ class MultiModalRecordingService : Service() {
     private lateinit var sessionManager: SessionManager
     private var isRecording = false
     private var currentSessionId: String? = null
-
     private val gsrListener =
         object : GSRRecorder.GSRRecordingListener {
             override fun onRecordingStarted(sessionInfo: SessionInfo) {
@@ -94,7 +91,6 @@ class MultiModalRecordingService : Service() {
             }
 
             override fun onSampleRecorded(sample: GSRSample) {
-
                 if (sample.sampleIndex % 1280 == 0L) {
                     updateNotification("Recording... ${sample.sampleIndex} samples")
                 }
@@ -106,7 +102,6 @@ class MultiModalRecordingService : Service() {
 
             override fun onError(error: String) {
                 Log.e(TAG, "GSR recording error: $error")
-
             }
         }
 
@@ -129,7 +124,6 @@ class MultiModalRecordingService : Service() {
                 val sessionId = intent.getStringExtra(EXTRA_SESSION_ID) ?: return START_NOT_STICKY
                 val participantId = intent.getStringExtra(EXTRA_PARTICIPANT_ID)
                 val studyName = intent.getStringExtra(EXTRA_STUDY_NAME)
-
                 startRecording(sessionId, participantId, studyName)
             }
 
@@ -142,12 +136,10 @@ class MultiModalRecordingService : Service() {
                 triggerSyncEvent(eventType)
             }
         }
-
         return START_STICKY
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
-
     private fun startRecording(
         sessionId: String,
         participantId: String?,
@@ -157,11 +149,8 @@ class MultiModalRecordingService : Service() {
             Log.w(TAG, "Recording already in progress")
             return
         }
-
         sessionManager.createSession(sessionId, participantId, studyName)
-
         startForeground(NOTIFICATION_ID, createNotification("Starting recording..."))
-
         CoroutineScope(Dispatchers.IO).launch {
             if (gsrRecorder.startRecording(sessionId, participantId, studyName)) {
                 isRecording = true
@@ -179,12 +168,10 @@ class MultiModalRecordingService : Service() {
             Log.w(TAG, "No recording in progress")
             return
         }
-
         val session = gsrRecorder.stopRecording()
         session?.let {
             sessionManager.completeSession(it.sessionId)
         }
-
         Log.i(TAG, "Multi-modal recording stopped")
     }
 
@@ -208,7 +195,6 @@ class MultiModalRecordingService : Service() {
                     description = "Multi-modal physiological data recording"
                     setSound(null, null)
                 }
-
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)
         }

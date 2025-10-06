@@ -24,12 +24,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.system.measureTimeMillis
 
-/**
- * Compose version of Cross-Modal Sync Test Activity
- * Tests synchronization between GSR, thermal, and RGB sensors
- */
 class CrossModalSyncTestComposeActivity : ComponentActivity() {
-
     companion object {
         private const val TAG = "CrossModalSyncTestCompose"
         private const val SYNC_TOLERANCE_MS = 50L
@@ -44,7 +39,6 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             LibUnifiedTheme {
                 CrossModalSyncTestScreen()
@@ -59,7 +53,6 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
         var syncResults by remember { mutableStateOf(listOf<SyncResult>()) }
         var isTestRunning by remember { mutableStateOf(false) }
         var overallSyncStatus by remember { mutableStateOf("Not Tested") }
-
         // Initialize test cases
         LaunchedEffect(Unit) {
             testResults = listOf(
@@ -95,7 +88,6 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
                 )
             )
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -150,7 +142,6 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
                                 fontWeight = FontWeight.Medium
                             )
                         }
-
                         if (syncResults.isNotEmpty()) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
@@ -160,9 +151,7 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Test Progress
                 TestProgressIndicator(
                     totalTests = testResults.size,
@@ -170,9 +159,7 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
                     passedTests = testResults.count { it.status == TestStatus.PASSED },
                     failedTests = testResults.count { it.status == TestStatus.FAILED }
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Sync Results
                 if (syncResults.isNotEmpty()) {
                     Card {
@@ -183,7 +170,6 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
                                 fontWeight = FontWeight.Medium
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-
                             syncResults.forEach { result ->
                                 SyncResultItem(result = result)
                                 Spacer(modifier = Modifier.height(4.dp))
@@ -192,7 +178,6 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 // Test Control Buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -225,7 +210,6 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
                             Text("Run All")
                         }
                     }
-
                     OutlinedButton(
                         onClick = {
                             lifecycleScope.launch { runRealTimeSync() }
@@ -238,9 +222,7 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
                         Text("Live Sync")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Individual Test Cases
                 testResults.forEach { testCase ->
                     TestResultCard(
@@ -249,9 +231,7 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Technical Details Card
                 Card {
                     Column(modifier = Modifier.padding(16.dp)) {
@@ -261,7 +241,6 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-
                         listOf(
                             "Sync Method" to "Hardware timestamping + NTP correction",
                             "GSR Sample Rate" to "128 Hz",
@@ -310,7 +289,6 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "${result.timeDifferenceMs}ms",
@@ -337,36 +315,28 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
         onComplete: () -> Unit
     ) {
         AppLogger.i(TAG, "Starting comprehensive cross-modal sync tests")
-
         val newSyncResults = mutableListOf<SyncResult>()
-
         try {
             // Test GSR-Thermal sync
             val gsrThermalSync = testSensorPairSync("GSR", "Thermal")
             newSyncResults.add(gsrThermalSync)
             delay(1000)
-
             // Test GSR-RGB sync
             val gsrRgbSync = testSensorPairSync("GSR", "RGB")
             newSyncResults.add(gsrRgbSync)
             delay(1000)
-
             // Test Thermal-RGB sync
             val thermalRgbSync = testSensorPairSync("Thermal", "RGB")
             newSyncResults.add(thermalRgbSync)
             delay(1000)
-
             // Test triple sensor sync
             val tripleSync = testTripleSensorSync()
             newSyncResults.add(tripleSync)
-
             // Update sync results
             onSyncResults(newSyncResults)
-
             // Determine overall sync status
             val allSynced = newSyncResults.all { it.isSynchronized }
             onStatusUpdate(if (allSynced) "Synchronized" else "Out of Sync")
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Sync tests failed: ${e.message}")
             onStatusUpdate("Test Failed")
@@ -377,16 +347,13 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
 
     private suspend fun testSensorPairSync(sensor1: String, sensor2: String): SyncResult {
         AppLogger.d(TAG, "Testing sync between $sensor1 and $sensor2")
-
         val testTime = measureTimeMillis {
             // Simulate sensor pair synchronization test
             delay(2000)
         }
-
         // Simulate time difference calculation
         val timeDifference = (10..100).random().toLong()
         val isSynchronized = timeDifference <= SYNC_TOLERANCE_MS
-
         return SyncResult(
             sensorPair = "$sensor1 ↔ $sensor2",
             timeDifferenceMs = timeDifference,
@@ -397,16 +364,13 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
 
     private suspend fun testTripleSensorSync(): SyncResult {
         AppLogger.d(TAG, "Testing triple sensor synchronization")
-
         val testTime = measureTimeMillis {
             // Simulate triple sensor sync test
             delay(3000)
         }
-
         // Simulate worst-case time difference across all three sensors
         val maxTimeDifference = (15..80).random().toLong()
         val isSynchronized = maxTimeDifference <= SYNC_TOLERANCE_MS
-
         return SyncResult(
             sensorPair = "GSR ↔ Thermal ↔ RGB",
             timeDifferenceMs = maxTimeDifference,

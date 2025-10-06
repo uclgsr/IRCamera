@@ -17,7 +17,6 @@ import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
 import mpdc4gsr.feature.thermal.domain.usecase.*
 
 class AppContainerExt(private val context: Context) {
-
     // Shimmer SDK Integration
     private fun provideShimmerDeviceManager(lifecycleOwner: LifecycleOwner): ShimmerDeviceManager {
         return ShimmerDeviceManager(context, lifecycleOwner)

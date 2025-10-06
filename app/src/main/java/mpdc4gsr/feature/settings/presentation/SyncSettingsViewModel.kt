@@ -10,14 +10,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 
-/**
- * Synchronization Settings ViewModel - MVVM Integration
- * Manages time synchronization and data alignment settings with persistence
- */
 class SyncSettingsViewModel : AppBaseViewModel() {
-
     private lateinit var prefs: SharedPreferences
-
     private val _syncSettings = MutableStateFlow(SyncSettings())
     val syncSettings: StateFlow<SyncSettings> = _syncSettings.asStateFlow()
 

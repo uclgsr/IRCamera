@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 open class BaseViewModel : ViewModel(), LifecycleObserver {
-
     // Common UI states
     data class UiState(
         val isLoading: Boolean = false,
@@ -27,7 +26,6 @@ open class BaseViewModel : ViewModel(), LifecycleObserver {
     // Protected state management
     protected val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
-
     protected val _uiEvents = MutableSharedFlow<UiEvent>()
     val uiEvents: SharedFlow<UiEvent> = _uiEvents.asSharedFlow()
 

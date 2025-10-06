@@ -3,10 +3,8 @@ package com.mpdc4gsr.module.thermalunified.stubs
 import android.content.Context
 
 class MonitorSelectDialog {
-
     class Builder(private val context: Context) {
         private var positiveListener: ((Int) -> Unit)? = null
-
         fun setPositiveListener(listener: (Int) -> Unit): Builder {
             this.positiveListener = listener
             return this

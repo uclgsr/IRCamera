@@ -24,9 +24,7 @@ class ColorPickDialog(
     var textSize: Int,
     var textSizeIsDP: Boolean = false,
 ) : Dialog(context, R.style.InfoDialog), View.OnClickListener {
-
     var onPickListener: ((color: Int, textSize: Int) -> Unit)? = null
-
     private val rootView: View =
         LayoutInflater.from(context).inflate(R.layout.dialog_color_pick, null)
 
@@ -35,14 +33,12 @@ class ColorPickDialog(
         setCancelable(true)
         setCanceledOnTouchOutside(true)
         setContentView(rootView)
-
         window?.let {
             val layoutParams = it.attributes
             layoutParams.width = (ScreenUtils.getScreenWidth(context) * 0.9).toInt()
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }
-
         val activeTrackColor =
             ColorUtils.setColorAlpha(
                 ContextCompat.getColor(context, R.color.we_read_theme_color),
@@ -53,7 +49,6 @@ class ColorPickDialog(
                 ContextCompat.getColor(context, R.color.we_read_theme_color),
                 0.7f
             )
-
         when (color) {
             0xff0000ff.toInt() -> rootView.findViewById<View>(R.id.view_color1).isSelected = true
             0xffff0000.toInt() -> rootView.findViewById<View>(R.id.view_color2).isSelected = true
@@ -64,7 +59,6 @@ class ColorPickDialog(
             else -> rootView.findViewById<ColorSelectView>(R.id.color_select_view)
                 .selectColor(color)
         }
-
         rootView.findViewById<ColorSelectView>(R.id.color_select_view).onSelectListener = {
             unSelect6Color()
             color = it
@@ -145,7 +139,6 @@ class ColorPickDialog(
     override fun onClick(v: View?) {
         when (v) {
             rootView.findViewById<View>(R.id.rl_close) -> dismiss()
-
             rootView.findViewById<View>(R.id.tv_save) -> {
                 dismiss()
                 onPickListener?.invoke(color, textSize)

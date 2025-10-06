@@ -33,7 +33,6 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryEditViewModel
 import kotlinx.coroutines.launch
 
 class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>() {
-
     override fun createViewModel(): IRGalleryEditViewModel {
         return viewModels<IRGalleryEditViewModel>().value
     }
@@ -46,7 +45,6 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
         var imageInfo by remember { mutableStateOf(ImageInfo()) }
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -113,7 +111,6 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
                         GalleryImageView(
                             modifier = Modifier.fillMaxSize()
                         )
-
                         // Image info overlay
                         ImageInfoOverlay(
                             imageInfo = imageInfo,
@@ -122,7 +119,6 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
                                 .padding(16.dp)
                         )
                     }
-
                     // Edit tools and controls
                     Column(
                         modifier = Modifier
@@ -138,10 +134,8 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
                                 onToolSelected = { selectedTool = it }
                             )
                         }
-
                         // Image information
                         ImageInfoCard(imageInfo = imageInfo)
-
                         // Action buttons
                         ImageActionButtons(
                             onExport = {
@@ -246,7 +240,6 @@ private fun EditToolsPanel(
     onToolSelected: (String) -> Unit
 ) {
     val tools = getEditTools()
-
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF21262D)
@@ -264,9 +257,7 @@ private fun EditToolsPanel(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -336,9 +327,7 @@ private fun ImageInfoCard(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             InfoItem("Resolution", "${imageInfo.width} x ${imageInfo.height}")
             InfoItem("File size", imageInfo.fileSize)
             InfoItem("Max Temperature", "${imageInfo.maxTemp}°C")
@@ -398,7 +387,6 @@ private fun ImageActionButtons(
             Spacer(modifier = Modifier.width(4.dp))
             Text("Export", fontSize = 12.sp)
         }
-
         Button(
             onClick = onReport,
             modifier = Modifier.weight(1f),
@@ -414,7 +402,6 @@ private fun ImageActionButtons(
             Spacer(modifier = Modifier.width(4.dp))
             Text("Report", fontSize = 12.sp)
         }
-
         OutlinedButton(
             onClick = onDelete,
             modifier = Modifier.weight(1f),

@@ -10,20 +10,17 @@ data class GSRSample(
     val sessionId: String,
 ) {
     companion object {
-
         fun createSimulated(
             timestamp: Long,
             utcTimestamp: Long,
             sampleIndex: Long,
             sessionId: String,
         ): GSRSample {
-
             val baseConductance = 10.0
             val variation = Math.sin(sampleIndex * 0.1) * 2.0 + Math.random() * 1.0
             val conductance = baseConductance + variation
             val resistance = 1000.0 / conductance
             val rawValue = (2048 + variation * 100).toInt()
-
             return GSRSample(
                 timestamp = timestamp,
                 utcTimestamp = utcTimestamp,
@@ -63,7 +60,6 @@ data class SyncMark(
             } else {
                 ""
             }
-
         return arrayOf(
             timestamp.toString(),
             utcTimestamp.toString(),

@@ -28,12 +28,7 @@ import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.network.data.RecordingController
 import kotlin.system.measureTimeMillis
 
-/**
- * Compose version of GSR Bench Test Activity
- * Tests GSR sensor functionality and performance benchmarks
- */
 class GSRBenchTestComposeActivity : ComponentActivity() {
-
     companion object {
         private const val TAG = "GSRBenchTestCompose"
         private const val TEST_DURATION_SECONDS = 10
@@ -42,12 +37,9 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
 
     private var gsrRecorder: GSRSensorRecorder? = null
     private var recordingController: RecordingController? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initializeComponents()
-
         setContent {
             LibUnifiedTheme {
                 GSRBenchTestScreen()
@@ -62,7 +54,6 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
         var isTestRunning by remember { mutableStateOf(false) }
         var benchmarkMetrics by remember { mutableStateOf(mapOf<String, Any>()) }
         var testLogs by remember { mutableStateOf(listOf<String>()) }
-
         // Initialize test cases
         LaunchedEffect(Unit) {
             testResults = listOf(
@@ -93,7 +84,6 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
                 )
             )
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -125,9 +115,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
                     passedTests = testResults.count { it.status == TestStatus.PASSED },
                     failedTests = testResults.count { it.status == TestStatus.FAILED }
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Benchmark Metrics
                 if (benchmarkMetrics.isNotEmpty()) {
                     TestMetricsDisplay(
@@ -136,7 +124,6 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 // Quick Test Buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -153,7 +140,6 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Full Bench")
                     }
-
                     OutlinedButton(
                         onClick = {
                             lifecycleScope.launch { runConnectionTest() }
@@ -166,9 +152,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
                         Text("Quick Test")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Individual Test Cases
                 testResults.forEach { testCase ->
                     TestResultCard(
@@ -177,11 +161,9 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                 }
-
                 // Test Logs
                 if (testLogs.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Row(
@@ -200,9 +182,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
                                     Text("Clear")
                                 }
                             }
-
                             Spacer(modifier = Modifier.height(8.dp))
-
                             testLogs.takeLast(10).forEach { message ->
                                 Text(
                                     text = message,
@@ -230,44 +210,33 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
 
     private suspend fun runComprehensiveBenchTest() {
         AppLogger.i(TAG, "Starting comprehensive GSR bench test")
-
         val overallStartTime = System.currentTimeMillis()
         val testMetrics = mutableMapOf<String, Any>()
-
         try {
             // Connection Test
             val connectionTime = measureTimeMillis {
                 runConnectionTest()
             }
             testMetrics["Connection Time"] = "${connectionTime}ms"
-
             delay(1000)
-
             // Calibration Test
             val calibrationTime = measureTimeMillis {
                 runCalibrationTest()
             }
             testMetrics["Calibration Time"] = "${calibrationTime}ms"
-
             delay(1000)
-
             // Data Quality Test
             val qualityResults = runDataQualityTest()
             testMetrics.putAll(qualityResults)
-
             delay(1000)
-
             // Performance Benchmark
             val performanceResults = runPerformanceBenchmark()
             testMetrics.putAll(performanceResults)
-
             // Update metrics
             val totalTime = System.currentTimeMillis() - overallStartTime
             testMetrics["Total Test Time"] = "${totalTime}ms"
-
             // Update state (this would be done with proper state management in real implementation)
             AppLogger.d(TAG, "Benchmark completed with metrics: $testMetrics")
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Comprehensive bench test failed: ${e.message}")
         }
@@ -298,27 +267,22 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
     private suspend fun runDataQualityTest(): Map<String, Any> {
         AppLogger.d(TAG, "Running GSR data quality test")
         val qualityMetrics = mutableMapOf<String, Any>()
-
         try {
             // Simulate data quality analysis
             delay(2000)
-
             qualityMetrics["Sample Rate"] = "128 Hz"
             qualityMetrics["Data Integrity"] = "99.8%"
             qualityMetrics["Signal Quality"] = "Excellent"
-
             AppLogger.d(TAG, "Data quality test completed: $qualityMetrics")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Data quality test failed: ${e.message}")
         }
-
         return qualityMetrics
     }
 
     private suspend fun runPerformanceBenchmark(): Map<String, Any> {
         AppLogger.d(TAG, "Running GSR performance benchmark")
         val performanceMetrics = mutableMapOf<String, Any>()
-
         try {
             // Simulate performance testing
             val processingTime = measureTimeMillis {
@@ -328,16 +292,13 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
                     GSRCalculationUtils.calculateGSRMicrosiemens(500)
                 }
             }
-
             performanceMetrics["Processing Speed"] = "${processingTime}ms/1000 samples"
             performanceMetrics["Memory Usage"] = "~15MB"
             performanceMetrics["CPU Usage"] = "~12%"
-
             AppLogger.d(TAG, "Performance benchmark completed: $performanceMetrics")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Performance benchmark failed: ${e.message}")
         }
-
         return performanceMetrics
     }
 

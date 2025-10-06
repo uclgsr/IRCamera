@@ -22,12 +22,9 @@ import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper.Companion.correct
 import com.mpdc4gsr.libunified.ir.utils.TempUtils
 
 class TemperatureHikView : TemperatureBaseView {
-
     @Volatile
     private var tempInfo = TempInfo()
-
     private var libIRTemp = LibIRTemp()
-
     private var calculateThread: CalculateThread? = null
 
     @Volatile
@@ -40,17 +37,11 @@ class TemperatureHikView : TemperatureBaseView {
 
     @Volatile
     var onTempChangeListener: ((min: Float, max: Float) -> Unit)? = null
-
     var onTrendChangeListener: ((tempList: List<Float>) -> Unit)? = null
-
     var onTempResultListener: ((tempInfo: TempInfo) -> Unit)? = null
-
     private var wantAddPoint: Point? = null
-
     private var wantAddLine: Line? = null
-
     private var wantAddRect: Rect? = null
-
     fun addSourcePoint(point: Point) {
         if (xScale > 0 && yScale > 0) {
             synchronized(this) {
@@ -100,18 +91,13 @@ class TemperatureHikView : TemperatureBaseView {
     }
 
     private val imageRes = LibIRProcess.ImageRes_t()
-
     private var beforeTime: Long = 0
-
     private val sourceTempArray = ByteArray(256 * 192 * 2)
-
     private val rotateTempArray = ByteArray(256 * 192 * 2)
-
     fun refreshTemp(newData: ByteArray) {
         val currentTime: Long = System.currentTimeMillis()
         if (currentTime - beforeTime > 1000) {
             beforeTime = currentTime
-
             System.arraycopy(newData, 0, sourceTempArray, 0, sourceTempArray.size)
             when (rotateAngle) {
                 90 -> LibIRProcess.rotateLeft90(
@@ -143,7 +129,6 @@ class TemperatureHikView : TemperatureBaseView {
                     rotateTempArray.size
                 )
             }
-
             libIRTemp.setTempData(rotateTempArray)
             if (mode != Mode.CLEAR) {
                 calculateThread?.calculateTemp()
@@ -152,9 +137,7 @@ class TemperatureHikView : TemperatureBaseView {
     }
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
@@ -210,28 +193,24 @@ class TemperatureHikView : TemperatureBaseView {
 
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
-
         if (isShowFull || pointList.isNotEmpty() || lineList.isNotEmpty() || rectList.isNotEmpty()) {
             drawPoint(canvas, Point(width / 2, height / 2))
             tempInfo.center?.let {
                 drawTempText(canvas, width / 2, height / 2, it.maxTemperature)
             }
         }
-
         if (isShowFull) {
             tempInfo.full?.let {
                 val minX: Int = (it.minTemperaturePixel.x * xScale).toInt()
                 val minY: Int = (it.minTemperaturePixel.y * yScale).toInt()
                 drawCircle(canvas, minX, minY, false)
                 drawTempText(canvas, minX, minY, it.minTemperature)
-
                 val maxX: Int = (it.maxTemperaturePixel.x * xScale).toInt()
                 val maxY: Int = (it.maxTemperaturePixel.y * yScale).toInt()
                 drawCircle(canvas, maxX, maxY, true)
                 drawTempText(canvas, maxX, maxY, it.maxTemperature)
             }
         }
-
         for (i in pointList.indices) {
             val point: Point = pointList[i]
             drawPoint(canvas, point)
@@ -241,7 +220,6 @@ class TemperatureHikView : TemperatureBaseView {
             }
         }
         operatePoint?.let { drawPoint(canvas, it) }
-
         for (i in lineList.indices) {
             drawLine(canvas, lineList[i])
             if (i < tempInfo.lineResults.size) {
@@ -257,7 +235,6 @@ class TemperatureHikView : TemperatureBaseView {
             }
         }
         operateLine?.let { drawLine(canvas, it) }
-
         for (i in rectList.indices) {
             drawRect(canvas, rectList[i])
             if (i < tempInfo.rectResults.size) {
@@ -273,7 +250,6 @@ class TemperatureHikView : TemperatureBaseView {
             }
         }
         operateRect?.let { drawRect(canvas, it) }
-
         trendLine?.let {
             drawLine(canvas, it)
             drawTrendText(canvas, it)
@@ -296,7 +272,6 @@ class TemperatureHikView : TemperatureBaseView {
     private inner class CalculateThread : HandlerThread("Calculate Thread") {
         private val mainHandler = Handler(Looper.getMainLooper())
         private var currentHandler: Handler? = null
-
         override fun start() {
             super.start()
             val looper: Looper = getLooper() ?: return
@@ -321,18 +296,15 @@ class TemperatureHikView : TemperatureBaseView {
                         fullResult.maxTemperature
                     )
                 }
-
                 if (mode == Mode.CLEAR) {
                     return
                 }
-
                 val centerResult = if (isShowFull) libIRTemp.getTemperatureOfPoint(
                     Point(
                         imageWidth / 2,
                         imageHeight / 2
                     )
                 ) else null
-
                 var trendResult: TemperatureSampleResult? = null
                 trendLine?.let {
                     val startPoint =
@@ -341,16 +313,13 @@ class TemperatureHikView : TemperatureBaseView {
                     try {
                         trendResult = libIRTemp.getTemperatureOfLine(Line(startPoint, endPoint))
                     } catch (_: IllegalArgumentException) {
-
                     }
-
                     val tempList: List<Float> =
                         TempUtils.getLineTemps(startPoint, endPoint, rotateTempArray, imageWidth)
                     mainHandler.post {
                         onTrendChangeListener?.invoke(tempList)
                     }
                 }
-
                 val pointList: List<Point> = getPointListSafe()
                 val pointResultList: ArrayList<TemperatureSampleResult> = ArrayList(pointList.size)
                 for (point in pointList) {
@@ -358,10 +327,8 @@ class TemperatureHikView : TemperatureBaseView {
                     try {
                         pointResultList.add(libIRTemp.getTemperatureOfPoint(sourcePoint))
                     } catch (_: IllegalArgumentException) {
-
                     }
                 }
-
                 val lineList: List<Line> = getLineListSafe()
                 val lineResultList: ArrayList<TemperatureSampleResult> = ArrayList(lineList.size)
                 for (line in lineList) {
@@ -373,10 +340,8 @@ class TemperatureHikView : TemperatureBaseView {
                     try {
                         lineResultList.add(libIRTemp.getTemperatureOfLine(sourceLine))
                     } catch (_: IllegalArgumentException) {
-
                     }
                 }
-
                 val rectList: List<Rect> = getRectListSafe()
                 val rectResultList: ArrayList<TemperatureSampleResult> = ArrayList(rectList.size)
                 for (rect in rectList) {
@@ -390,10 +355,8 @@ class TemperatureHikView : TemperatureBaseView {
                     try {
                         rectResultList.add(libIRTemp.getTemperatureOfRect(sourceRect))
                     } catch (_: IllegalArgumentException) {
-
                     }
                 }
-
                 tempInfo = TempInfo(
                     centerResult,
                     if (isShowFull) fullResult else null,

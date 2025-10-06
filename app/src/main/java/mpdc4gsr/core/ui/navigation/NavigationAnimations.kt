@@ -8,7 +8,6 @@ import androidx.compose.animation.core.tween
 object NavigationAnimations {
     private const val ANIMATION_DURATION_MS = 300
     private const val FAST_ANIMATION_DURATION_MS = 200
-
     private fun <S> AnimatedContentTransitionScope<S>.slideTransition(
         direction: AnimatedContentTransitionScope.SlideDirection,
         duration: Int,

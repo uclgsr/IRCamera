@@ -4,14 +4,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object UnifiedTimeUtils {
-
     // Common date/time formats
     private const val FORMAT_TIMESTAMP = "yyyy-MM-dd HH:mm:ss"
     private const val FORMAT_DATE = "yyyy-MM-dd"
     private const val FORMAT_TIME = "HH:mm:ss"
     private const val FORMAT_FILENAME = "yyyyMMdd_HHmmss"
     private const val FORMAT_ISO = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-
     fun getCurrentTimestamp(): String {
         return SimpleDateFormat(FORMAT_TIMESTAMP, Locale.getDefault()).format(Date())
     }
@@ -61,7 +59,6 @@ object UnifiedTimeUtils {
         val minutes = seconds / 60
         val hours = minutes / 60
         val days = hours / 24
-
         return when {
             days > 0 -> "${days}d ${hours % 24}h ${minutes % 60}m"
             hours > 0 -> "${hours}h ${minutes % 60}m ${seconds % 60}s"
@@ -73,7 +70,6 @@ object UnifiedTimeUtils {
     fun isToday(timestamp: Long): Boolean {
         val today = Calendar.getInstance()
         val date = Calendar.getInstance().apply { timeInMillis = timestamp }
-
         return today.get(Calendar.YEAR) == date.get(Calendar.YEAR) &&
                 today.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR)
     }

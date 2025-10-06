@@ -16,7 +16,6 @@ class IRMyValueFormatter(private val startTime: Long, private val type: Int = 1)
     }
 
     override fun getFormattedValue(value: Float): String {
-
         val time =
             if (value.toLong() % 1000 == 999L) {
                 value.toLong() + 1L
@@ -30,7 +29,6 @@ class IRMyValueFormatter(private val startTime: Long, private val type: Int = 1)
     @SuppressLint("SimpleDateFormat")
     fun showDateSecond(time: Long): String {
         val date = Date(time)
-
         val pattern =
             when (type) {
                 TYPE_TIME_SECOND -> "HH:mm:ss"

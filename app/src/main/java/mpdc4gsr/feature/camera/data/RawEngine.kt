@@ -33,10 +33,8 @@ class RawEngine(private val context: Context) {
     // Camera characteristics for DNG creation
     private var cameraCharacteristics: CameraCharacteristics? = null
     private var enableStage3Processing = true // Enable Samsung Stage3/Level3 by default
-
     var onRawImageSaved: ((File) -> Unit)? = null
     var onError: ((String) -> Unit)? = null
-
     fun setup(
         rawSize: Size,
         outputDirectory: File,
@@ -50,7 +48,6 @@ class RawEngine(private val context: Context) {
             this.rawCaptureCount = 0
             this.cameraCharacteristics = characteristics
             this.enableStage3Processing = enableStage3
-
             rawImageReader =
                 ImageReader.newInstance(
                     rawSize.width,
@@ -58,9 +55,7 @@ class RawEngine(private val context: Context) {
                     ImageFormat.RAW_SENSOR,
                     2,
                 )
-
             rawImageReader?.setOnImageAvailableListener(rawImageAvailableListener, null)
-
             val processingMode = if (enableStage3) "Stage3/Level3" else "Standard"
             Log.i(
                 TAG,
@@ -73,7 +68,6 @@ class RawEngine(private val context: Context) {
     }
 
     fun getSurface(): Surface? = rawImageReader?.surface
-
     fun startCapture() {
         isCapturing = true
         rawCaptureCount = 0
@@ -89,7 +83,6 @@ class RawEngine(private val context: Context) {
         if (isCapturing) {
             val timestamp = result.get(CaptureResult.SENSOR_TIMESTAMP) ?: System.nanoTime()
             pendingCaptureResults[timestamp] = result
-
             if (pendingCaptureResults.size > 10) {
                 val oldestKey = pendingCaptureResults.keys.minOrNull()
                 oldestKey?.let { pendingCaptureResults.remove(it) }
@@ -98,23 +91,15 @@ class RawEngine(private val context: Context) {
     }
 
     fun isCapturing(): Boolean = isCapturing
-
     fun getCaptureCount(): Int = rawCaptureCount
 
-    /**
-     * Enable or disable Samsung Stage 3/Level 3 processing for RAW DNG capture
-     */
     fun setStage3ProcessingEnabled(enabled: Boolean) {
         enableStage3Processing = enabled
         val mode = if (enabled) "Stage3/Level3" else "Standard"
         AppLogger.i(TAG, "RAW processing mode changed to: $mode")
     }
 
-    /**
-     * Check if Stage 3/Level 3 processing is enabled
-     */
     fun isStage3ProcessingEnabled(): Boolean = enableStage3Processing
-
     fun release() {
         stopCapture()
         rawImageReader?.close()
@@ -126,18 +111,14 @@ class RawEngine(private val context: Context) {
     private val rawImageAvailableListener =
         ImageReader.OnImageAvailableListener { reader ->
             if (!isCapturing) return@OnImageAvailableListener
-
             val image = reader.acquireLatestImage() ?: return@OnImageAvailableListener
-
             try {
                 val timestamp = image.timestamp
                 val captureResult = pendingCaptureResults.remove(timestamp)
-
                 if (captureResult != null) {
                     saveRawImageAsDng(image, captureResult)
                 } else {
                     AppLogger.w(TAG, "No capture result found for timestamp $timestamp")
-
                     saveRawImageAsRaw(image)
                 }
             } catch (e: Exception) {
@@ -155,32 +136,27 @@ class RawEngine(private val context: Context) {
         val outputDir = rawOutputDirectory ?: return
         val timestamp = System.currentTimeMillis()
         val dngFile = File(outputDir, "${sessionId}_raw_stage3_$timestamp.dng")
-
         try {
             val characteristics = cameraCharacteristics
             if (characteristics != null) {
                 // Create proper DNG file using Android's DngCreator for Stage3/Level3 processing
                 val dngCreator = DngCreator(characteristics, captureResult)
-
                 // Configure DNG creator for Samsung Stage3/Level3 processing
                 if (enableStage3Processing) {
                     // Set Stage3/Level3 specific metadata
                     try {
                         // Disable thumbnail for maximum raw data preservation
                         // Note: Skipping thumbnail to preserve raw data
-
                         // Set DNG orientation based on device orientation
                         captureResult.get(CaptureResult.JPEG_ORIENTATION)?.let { orientation ->
                             dngCreator.setOrientation(orientation)
                         }
-
                         // Note: Additional Samsung Stage3/Level3 specific EXIF tags would be set here
                         // if Samsung provides specific DNG tag constants for Stage3/Level3 processing
                         // These may include:
                         // - Custom processing pipeline identifiers
                         // - Stage3/Level3 specific color space information
                         // - Advanced sensor readout parameters
-
                         Log.d(
                             TAG,
                             "Configured DNG for Samsung Stage3/Level3 processing with orientation and no thumbnail"
@@ -189,12 +165,10 @@ class RawEngine(private val context: Context) {
                         AppLogger.w(TAG, "Could not set Stage3/Level3 specific metadata: ${e.message}")
                     }
                 }
-
                 FileOutputStream(dngFile).use { outputStream ->
                     dngCreator.writeImage(outputStream, image)
                 }
                 dngCreator.close()
-
                 rawCaptureCount++
                 Log.d(
                     TAG,
@@ -222,14 +196,11 @@ class RawEngine(private val context: Context) {
         val outputDir = rawOutputDirectory ?: return
         val timestamp = System.currentTimeMillis()
         val rawFile = File(outputDir, "${sessionId}_raw_$timestamp.raw")
-
         try {
             val buffer = image.planes[0].buffer
             val bytes = ByteArray(buffer.remaining())
             buffer.get(bytes)
-
             rawFile.writeBytes(bytes)
-
             rawCaptureCount++
             AppLogger.d(TAG, "Saved RAW binary: ${rawFile.name} (${image.width}x${image.height})")
             onRawImageSaved?.invoke(rawFile)

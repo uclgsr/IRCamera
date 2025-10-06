@@ -35,7 +35,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
-
     override fun createViewModel(): GalleryViewModel {
         return viewModels<GalleryViewModel>().value
     }
@@ -48,7 +47,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             val isGridView by viewModel.isGridView.collectAsStateWithLifecycle()
             val selectedItems by viewModel.selectedItems.collectAsStateWithLifecycle()
             val isSelectionMode by viewModel.isSelectionMode.collectAsStateWithLifecycle()
-
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -62,7 +60,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     onDeleteSelected = { viewModel.deleteSelectedItems() },
                     onShareSelected = { viewModel.shareSelectedItems() }
                 )
-
                 // Media content
                 when {
                     mediaItems.isEmpty() -> {
@@ -246,7 +243,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
-
                 // Selection indicator
                 if (isSelectionMode) {
                     Box(
@@ -269,7 +265,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         }
                     }
                 }
-
                 // Media info overlay
                 Card(
                     modifier = Modifier
@@ -336,7 +331,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
-
                 // File info
                 Column(
                     modifier = Modifier.weight(1f)
@@ -358,7 +352,6 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
                 // Selection indicator
                 if (isSelectionMode) {
                     Checkbox(
@@ -388,13 +381,11 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = "No Media Files",
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = "Capture photos or videos with the thermal camera to see them here",
                     style = MaterialTheme.typography.bodyMedium,
@@ -408,12 +399,10 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()
         var unitIndex = 0
-
         while (size >= 1024 && unitIndex < units.size - 1) {
             size /= 1024
             unitIndex++
         }
-
         return "%.1f %s".format(size, units[unitIndex])
     }
 }

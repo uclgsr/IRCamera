@@ -16,7 +16,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>() {
-
     override fun createViewModel(): IRLogMPChartViewModel {
         return IRLogMPChartViewModel()
     }
@@ -79,7 +78,6 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
         var dataPoints by remember { mutableStateOf(247) }
         var loggingDuration by remember { mutableStateOf("00:04:07") }
         var chartType by remember { mutableStateOf("Line Chart") }
-
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -130,7 +128,6 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                     )
                 }
             }
-
             // Chart type selection
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -146,7 +143,6 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                         color = Color(0xFFFF6B35)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -165,7 +161,6 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                     }
                 }
             }
-
             // Chart area
             Card(
                 modifier = Modifier
@@ -186,7 +181,6 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                         color = Color(0xFFFF6B35)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-
                     // Chart placeholder
                     Box(
                         modifier = Modifier
@@ -219,7 +213,6 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                     }
                 }
             }
-
             // Statistics
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -234,7 +227,6 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
@@ -246,7 +238,6 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                     }
                 }
             }
-
             // Action buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -270,7 +261,6 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Clear")
                 }
-
                 Button(
                     onClick = {
                         // TODO: Implement CSV export
@@ -289,7 +279,6 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Export CSV")
                 }
-
                 Button(
                     onClick = {
                         // TODO: Implement PDF export

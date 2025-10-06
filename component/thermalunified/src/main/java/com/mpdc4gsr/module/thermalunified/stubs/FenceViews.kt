@@ -9,9 +9,7 @@ class FenceView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
     var listener: CallBack? = null
-
     fun clear() {
         // Stub implementation for clear method
     }
@@ -30,9 +28,7 @@ class FencePointView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
     var listener: CallBack? = null
-
     fun clear() {
         // Stub implementation for clear method
     }
@@ -50,9 +46,7 @@ class FenceLineView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
     var listener: CallBack? = null
-
     fun clear() {
         // Stub implementation for clear method
     }

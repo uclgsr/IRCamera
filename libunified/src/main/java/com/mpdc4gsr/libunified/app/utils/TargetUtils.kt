@@ -6,7 +6,6 @@ import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 
 object TargetUtils {
-
     fun calculateTargetBounds(observeBean: ObserveBean): RectF {
         return RectF(
             observeBean.observeX,

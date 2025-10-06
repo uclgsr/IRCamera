@@ -9,15 +9,6 @@ import kotlinx.coroutines.flow.*
 import mpdc4gsr.core.data.TimeSyncManager
 import org.json.JSONObject
 
-/**
- * CommandServer - Handles command reception and coordination from PC
- *
- * This class manages the command server that listens for PC commands:
- * - START command - triggers coordinated sensor recording
- * - STOP command - halts recording and saves data
- * - SYNC command - performs time synchronization exchange
- * - STATUS commands - provides device status updates
- */
 class CommandServer(
     private val context: Context,
     private val port: Int = 8080
@@ -50,16 +41,12 @@ class CommandServer(
     }
 
     private val serverScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
     private val _serverStatus = MutableStateFlow(ServerStatus.STOPPED)
     val serverStatus: StateFlow<ServerStatus> = _serverStatus.asStateFlow()
-
     private val _commandEvents = MutableSharedFlow<CommandEvent>()
     val commandEvents: SharedFlow<CommandEvent> = _commandEvents.asSharedFlow()
-
     private val _connectionStatus = MutableStateFlow(ConnectionStatus.DISCONNECTED)
     val connectionStatus: StateFlow<ConnectionStatus> = _connectionStatus.asStateFlow()
-
     private var networkServer: NetworkServer? = null
     private var protocolHandler: ProtocolHandler? = null
     private var timeSyncManager: TimeSyncManager? = null
@@ -74,32 +61,24 @@ class CommandServer(
 
     private var commandCallback: CommandCallback? = null
 
-    /**
-     * Initialize and start the command server
-     */
     suspend fun start(callback: CommandCallback, syncManager: TimeSyncManager) {
         AppLogger.i(TAG, "Starting command server on port $port")
-
         this.commandCallback = callback
         this.timeSyncManager = syncManager
-
         try {
             // Initialize network components
             networkServer = NetworkServer(context, port)
-
             networkServer?.let { server ->
                 protocolHandler = ProtocolHandler(context, server).apply {
                     setCommandHandler(createProtocolCallback())
                 }
             }
-
             // Start network server and monitor connection status
             serverScope.launch {
                 val startResult = networkServer?.start()
                 if (startResult == true) {
                     _serverStatus.value = ServerStatus.RUNNING
                     AppLogger.i(TAG, "Command server started successfully")
-
                     // Monitor connection status
                     networkServer?.connectionStateFlow?.collect { connected ->
                         _connectionStatus.value = if (connected)
@@ -112,7 +91,6 @@ class CommandServer(
                     AppLogger.e(TAG, "Failed to start network server")
                 }
             }
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to start command server", e)
             _serverStatus.value = ServerStatus.ERROR
@@ -120,28 +98,18 @@ class CommandServer(
         }
     }
 
-    /**
-     * Stop the command server
-     */
     suspend fun stop() {
         AppLogger.i(TAG, "Stopping command server")
-
         serverScope.launch {
             networkServer?.stop()
         }.join()
         serverScope.cancel()
-
         _serverStatus.value = ServerStatus.STOPPED
         _connectionStatus.value = ConnectionStatus.DISCONNECTED
-
         commandCallback = null
-
         AppLogger.i(TAG, "Command server stopped")
     }
 
-    /**
-     * Send acknowledgment to PC
-     */
     suspend fun sendAck(
         originalMessageId: String,
         status: String = "success",
@@ -156,19 +124,13 @@ class CommandServer(
                 put("device_id", android.os.Build.MODEL)
                 data?.let { put("data", it) }
             }
-
             networkServer?.sendMessage(ackMessage.toString())
-
             AppLogger.d(TAG, "Sent ACK for message $originalMessageId with status $status")
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to send ACK", e)
         }
     }
 
-    /**
-     * Send status update to PC
-     */
     suspend fun sendStatusUpdate(status: String, data: JSONObject? = null) {
         try {
             val statusMessage = JSONObject().apply {
@@ -178,24 +140,17 @@ class CommandServer(
                 put("device_id", android.os.Build.MODEL)
                 data?.let { put("data", it) }
             }
-
             networkServer?.sendMessage(statusMessage.toString())
-
             AppLogger.d(TAG, "Sent status update: $status")
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to send status update", e)
         }
     }
 
-    /**
-     * Create protocol callback for handling received commands
-     */
     private fun createProtocolCallback(): ProtocolHandler.CommandHandler {
         return object : ProtocolHandler.CommandHandler {
             override suspend fun onStartRecording(sessionId: String): ProtocolHandler.CommandResult {
                 AppLogger.i(TAG, "Starting recording for session: $sessionId")
-
                 return try {
                     // Delegate to recording controller
                     commandCallback?.let { callback ->
@@ -221,7 +176,6 @@ class CommandServer(
 
             override suspend fun onStopRecording(sessionId: String): ProtocolHandler.CommandResult {
                 AppLogger.i(TAG, "Stopping recording for session: $sessionId")
-
                 return try {
                     commandCallback?.let { callback ->
                         val success = callback.onStopRecording()
@@ -245,7 +199,6 @@ class CommandServer(
 
             override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
                 AppLogger.i(TAG, "Processing sync request from PC")
-
                 return try {
                     commandCallback?.let { callback ->
                         // Protocol handler should provide PC address, using empty string for now

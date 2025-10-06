@@ -25,13 +25,11 @@ class TempLayout : LinearLayout {
     var type = -1
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         initView()
     }
 
     var animatorAlpha = 1f
-
     private fun initView() {
         rootV = LayoutInflater.from(context).inflate(R.layout.layout_temp_bg, this)
         bg = rootV?.findViewById(R.id.bg)
@@ -41,7 +39,6 @@ class TempLayout : LinearLayout {
             BreatheInterpolator()
         alphaAnimator?.addUpdateListener {
             animatorAlpha = it.getAnimatedValue("alpha") as Float
-
         }
         alphaAnimator?.repeatCount = ValueAnimator.INFINITE
     }
@@ -108,7 +105,6 @@ class TempLayout : LinearLayout {
             }
 
             override fun onAnimationCancel(animation: Animator) {}
-
             override fun onAnimationRepeat(animation: Animator) {}
         }
 

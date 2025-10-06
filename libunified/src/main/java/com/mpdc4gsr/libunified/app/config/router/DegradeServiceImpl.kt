@@ -6,7 +6,6 @@ import com.elvishew.xlog.XLog
 
 class DegradeServiceImpl {
     fun init(context: Context?) {
-
     }
 
     fun onLost(

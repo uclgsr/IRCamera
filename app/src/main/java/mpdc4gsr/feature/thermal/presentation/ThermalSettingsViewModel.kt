@@ -10,16 +10,12 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.thermal.data.ThermalSettingsRepository
 
 class ThermalSettingsViewModel : AppBaseViewModel() {
-
     private lateinit var repository: ThermalSettingsRepository
-
     private val _thermalSettings = MutableStateFlow(ThermalSettingsRepository.ThermalSettings())
     val thermalSettings: StateFlow<ThermalSettingsRepository.ThermalSettings> = _thermalSettings.asStateFlow()
-
     fun initialize(context: Context) {
         repository = ThermalSettingsRepository.getInstance(context)
         loadSettings()
-
         viewModelScope.launch {
             repository.thermalSettings.collect { repoSettings ->
                 _thermalSettings.value = repoSettings

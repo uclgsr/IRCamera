@@ -28,7 +28,6 @@ fun ProgressDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.52f else 0.35f
-
     @Suppress("UNCHECKED_CAST")
     Dialog(
         onDismissRequest = (if (cancelable) onDismiss else {
@@ -68,7 +67,6 @@ fun ProgressDialog(
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
-
                 if (message.isNotEmpty()) {
                     Text(
                         text = message,
@@ -92,7 +90,6 @@ fun ColorPickerDialog(
     var selectedColor by remember { mutableStateOf(initialColor) }
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -121,13 +118,11 @@ fun ColorPickerDialog(
                     color = Color.Black,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
                 val commonColors = listOf(
                     Color.Red, Color.Green, Color.Blue, Color.Yellow,
                     Color.Cyan, Color.Magenta, Color.White, Color.Gray,
                     Color.Black, Color(0xFFFFA500), Color(0xFF800080), Color(0xFFFFC0CB)
                 )
-
                 androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
                     columns = androidx.compose.foundation.lazy.grid.GridCells.Fixed(4),
                     modifier = Modifier
@@ -161,9 +156,7 @@ fun ColorPickerDialog(
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Button(
                     onClick = {
                         onColorSelected(selectedColor)

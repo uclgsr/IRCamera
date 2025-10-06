@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class UnitViewModel : BaseViewModel() {
-
     companion object {
         const val CELSIUS = 1
         const val FAHRENHEIT = 0

@@ -18,9 +18,6 @@ import mpdc4gsr.feature.network.ui.NetworkSettingsScreen
 import mpdc4gsr.feature.settings.ui.*
 import mpdc4gsr.feature.thermal.ui.*
 
-/**
- * Navigation routes for MainComposeActivity
- */
 private object MainNavRoutes {
     const val MAIN = "main"
     const val UNIFIED_DASHBOARD = "unified_dashboard"
@@ -47,10 +44,6 @@ private object MainNavRoutes {
     const val HELP = "help"
 }
 
-/**
- * Main Compose Activity - Unified entry point for the IR Camera application
- * Replaces the traditional MainActivity with a complete Compose implementation
- */
 class MainComposeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +59,6 @@ class MainComposeActivity : ComponentActivity() {
 @Composable
 fun MainApp() {
     val navController = rememberNavController()
-
     NavHost(
         navController = navController,
         startDestination = MainNavRoutes.MAIN
@@ -87,7 +79,6 @@ fun MainApp() {
                 }
             )
         }
-
         // Unified sensor dashboard
         composable(MainNavRoutes.UNIFIED_DASHBOARD) {
             UnifiedSensorDashboard(
@@ -105,14 +96,12 @@ fun MainApp() {
                 onThermalSettingsClick = { navController.navigate(MainNavRoutes.THERMAL_SETTINGS) }
             )
         }
-
         // Individual sensor screens
         composable(MainNavRoutes.GSR_SENSOR) {
             GSRSensorScreen(
                 navController = navController
             )
         }
-
         composable(MainNavRoutes.RGB_CAMERA) {
             RGBCameraScreen(
                 onBackClick = { navController.popBackStack() },
@@ -122,7 +111,6 @@ fun MainApp() {
                 }
             )
         }
-
         // Thermal camera workflow
         composable(MainNavRoutes.THERMAL_CONNECT) {
             ConnectScreen(
@@ -132,7 +120,6 @@ fun MainApp() {
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(MainNavRoutes.THERMAL_MONITOR) {
             ThermalMonitorScreen(
                 onBackClick = { navController.popBackStack() },
@@ -142,7 +129,6 @@ fun MainApp() {
                 }
             )
         }
-
         composable(MainNavRoutes.THERMAL_CALIBRATE) {
             CalibrateScreen(
                 onBackClick = { navController.popBackStack() },
@@ -152,7 +138,6 @@ fun MainApp() {
                 onCalibrationCancel = { navController.popBackStack() }
             )
         }
-
         composable(MainNavRoutes.THERMAL_ANNOTATE) {
             AnnotateScreen(
                 onBackClick = { navController.popBackStack() },
@@ -164,14 +149,12 @@ fun MainApp() {
                 }
             )
         }
-
         // Additional screens
         composable(MainNavRoutes.GALLERY) {
             GalleryScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(MainNavRoutes.SETTINGS) {
             SettingsScreen(
                 onBackClick = { navController.popBackStack() },
@@ -189,80 +172,67 @@ fun MainApp() {
                 onNavigateToHelp = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.Help.route) }
             )
         }
-
         composable(MainNavRoutes.PROFILE) {
             ProfileScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         // Settings screens
         composable(MainNavRoutes.GSR_SETTINGS) {
             GSRSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(MainNavRoutes.CAMERA_SETTINGS) {
             CameraSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(MainNavRoutes.THERMAL_SETTINGS) {
             ThermalSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(MainNavRoutes.RECORDING_SETTINGS) {
             RecordingSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(MainNavRoutes.STORAGE_SETTINGS) {
             StorageSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(MainNavRoutes.SYNC_SETTINGS) {
             SyncSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(MainNavRoutes.CALIBRATION) {
             CalibrationScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(MainNavRoutes.NETWORK_SETTINGS) {
             NetworkSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(MainNavRoutes.DIAGNOSTICS) {
             DiagnosticsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(MainNavRoutes.APP_INFO) {
             AppInfoScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(MainNavRoutes.PRIVACY_POLICY) {
             PrivacyPolicyScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(MainNavRoutes.HELP) {
             HelpScreen(
                 onBackClick = { navController.popBackStack() }

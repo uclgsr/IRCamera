@@ -9,7 +9,6 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 object UnifiedDataUtils {
-
     fun inputStreamToByteArray(inputStream: InputStream): ByteArray {
         return inputStream.use { it.readBytes() }
     }
@@ -130,25 +129,20 @@ object UnifiedDataUtils {
         val units = arrayOf("B", "KB", "MB", "GB", "TB")
         var size = bytes.toDouble()
         var unitIndex = 0
-
         while (size >= 1024 && unitIndex < units.size - 1) {
             size /= 1024
             unitIndex++
         }
-
         return String.format("%.2f %s", size, units[unitIndex])
     }
 
     @JvmStatic
     fun scaleWithWH(bitmap: Bitmap?, targetWidth: Int, targetHeight: Int): Bitmap? {
         if (bitmap == null || bitmap.isRecycled) return null
-
         val scaleX = targetWidth.toFloat() / bitmap.width
         val scaleY = targetHeight.toFloat() / bitmap.height
-
         val matrix = Matrix()
         matrix.postScale(scaleX, scaleY)
-
         return try {
             Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
         } catch (e: Exception) {
