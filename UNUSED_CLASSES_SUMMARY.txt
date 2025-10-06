@@ -1,0 +1,108 @@
+================================================================================
+                    UNUSED CLASSES - EXECUTIVE SUMMARY
+                              IRCamera Project
+================================================================================
+
+ANALYSIS OVERVIEW
+-----------------
+This document provides a high-level summary of unused classes found in the
+IRCamera project. For the complete detailed list, see UNUSED_CLASSES_REPORT.txt
+
+STATISTICS
+----------
+Total source files analyzed:           1,253
+Classes with no external references:     395
+Classes with 1-2 references:             551
+Total potentially unused:                946 (75.5% of all source files)
+
+BREAKDOWN BY MODULE
+-------------------
+libunified:           156 unused classes (39.5%)
+component/:           137 unused classes (34.7%)
+app/:                  84 unused classes (21.3%)
+BleModule/:            18 unused classes (4.5%)
+
+IMPORTANT NOTES
+---------------
+1. "Unused" means the class has no detectable external references in the code
+2. Some classes may be used through:
+   - Reflection (e.g., Android framework callbacks)
+   - Dependency injection frameworks
+   - Android Manifest declarations (Activities, Services, Receivers)
+   - JNI/native code
+   - Configuration files (XML layouts, resources)
+   
+3. Test classes are included in this analysis and may be legitimately unused
+   if they're not yet implemented or are outdated
+
+4. Old/legacy classes with "Old" suffix appear unused and are likely candidates
+   for removal
+
+RECOMMENDED NEXT STEPS
+----------------------
+1. Review the complete list in UNUSED_CLASSES_REPORT.txt
+2. Verify each class manually before deletion
+3. Start with obvious candidates:
+   - Classes with "Old" suffix (legacy code)
+   - Test classes that don't test anything
+   - Utility classes with no references
+   
+4. Use your IDE's "Find Usages" feature for confirmation
+5. Check Android Manifest and XML resources for references
+6. Consider creating a separate branch for cleanup
+7. Test thoroughly after removal
+
+KEY FINDINGS
+------------
+
+HIGH PRIORITY - Likely Safe to Remove:
+- ImageThreadTCOld, TemperatureViewOld (marked as "Old")
+- ChartActivity (unused Activity, but verify in Manifest first)
+- Multiple Compose UI components with no references
+- Various utility classes (AppUtils, DiagnoseEventBusBean, etc.)
+
+MEDIUM PRIORITY - Investigate Further:
+- Test classes (may be work in progress)
+- UI picker components (EthnicPicker, etc.)
+- Network/Service classes (may be future features)
+
+LOW PRIORITY - Keep for Now:
+- Base classes that may be extended
+- Interface definitions
+- Data model classes
+
+SAMPLE OF NOTABLE UNUSED CLASSES
+---------------------------------
+
+From BleModule:
+- com.topdon.commons.base.AppHolder
+- com.topdon.commons.util.DiagnoseEventBusBean
+- com.topdon.ble.Inspector
+
+From libunified:
+- com.mpdc4gsr.libunified.ui.utils.ColorTemplate
+- com.mpdc4gsr.libunified.ui.utils.ObjectPool
+- com.mpdc4gsr.libunified.app.utils.AppUtils
+- com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.EthnicPicker
+
+From app:
+- mpdc4gsr.ui_components.MyGLSurfaceView
+
+From component/gsr-recording:
+- Multiple test classes (GSRDataModelsTest, GSRRecordingServiceTest, etc.)
+- Network classes (FileTransferProtocol, MultiDeviceCoordination)
+- Service classes (ErrorRecoveryManager, MultiModalRecordingService)
+
+VERIFICATION COMMANDS
+---------------------
+To manually verify a class is unused, run from project root:
+
+  grep -r "ClassName" --include="*.java" --include="*.kt" \
+    --exclude-dir="build" --exclude-dir=".git"
+
+Or use your IDE's "Find Usages" feature (usually Shift+F12 or Alt+F7)
+
+================================================================================
+For complete details and full list of all 395 unused classes, see:
+  UNUSED_CLASSES_REPORT.txt
+================================================================================
