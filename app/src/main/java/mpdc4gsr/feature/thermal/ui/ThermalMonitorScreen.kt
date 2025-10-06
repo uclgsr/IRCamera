@@ -79,6 +79,11 @@ fun ThermalMonitorScreen(
     var showControls by remember { mutableStateOf(true) }
     var showAdvancedControls by remember { mutableStateOf(false) }
 
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(1000)
+        viewModel.rescanForThermalCamera()
+    }
+
     // Update recording duration periodically
     LaunchedEffect(uiState.isRecording) {
         if (uiState.isRecording) {

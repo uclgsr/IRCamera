@@ -504,36 +504,48 @@ class ThermalCameraRecorder(
             if (!deviceFound) {
                 Log.w(
                     TAG,
-                    "No thermal cameras found or permission denied, enabling simulation mode"
+                    "No thermal cameras found on initial scan, will retry after delay to allow USB enumeration"
                 )
-                isSimulationMode = true
-                emitError(
-                    ErrorType.DEVICE_ERROR,
-                    "No thermal camera detected - using simulation mode"
-                )
+                
+                delay(500)
+                
+                val retryFound = scanForThermalCameraDevicesWithPermissions()
+                if (!retryFound) {
+                    Log.w(
+                        TAG,
+                        "No thermal cameras found after retry, enabling simulation mode"
+                    )
+                    isSimulationMode = true
+                    emitError(
+                        ErrorType.DEVICE_ERROR,
+                        "No thermal camera detected - using simulation mode"
+                    )
 
-                recordingScope.launch {
-                    AppLogger.i(TAG, "Testing simulation mode with sample thermal frame generation")
-                    try {
-                        val testFrame = generateTestThermalFrame()
-                        if (testFrame != null) {
-                            Log.i(
-                                TAG,
-                                "Simulation mode test successful - thermal frame generated with ${testFrame.temperatureMatrix.size}x${testFrame.temperatureMatrix[0].size} matrix"
-                            )
-                            Log.d(
-                                TAG,
-                                "Test frame temperature range: ${testFrame.minTemperature}°C to ${testFrame.maxTemperature}°C"
-                            )
-                        } else {
-                            AppLogger.w(TAG, "Simulation mode test failed - null frame generated")
+                    recordingScope.launch {
+                        AppLogger.i(TAG, "Testing simulation mode with sample thermal frame generation")
+                        try {
+                            val testFrame = generateTestThermalFrame()
+                            if (testFrame != null) {
+                                Log.i(
+                                    TAG,
+                                    "Simulation mode test successful - thermal frame generated with ${testFrame.temperatureMatrix.size}x${testFrame.temperatureMatrix[0].size} matrix"
+                                )
+                                Log.d(
+                                    TAG,
+                                    "Test frame temperature range: ${testFrame.minTemperature}°C to ${testFrame.maxTemperature}°C"
+                                )
+                            } else {
+                                AppLogger.w(TAG, "Simulation mode test failed - null frame generated")
+                            }
+                        } catch (e: Exception) {
+                            AppLogger.e(TAG, "Simulation mode test failed", e)
                         }
-                    } catch (e: Exception) {
-                        AppLogger.e(TAG, "Simulation mode test failed", e)
                     }
-                }
 
-                return@withContext true
+                    return@withContext true
+                } else {
+                    Log.i(TAG, "Thermal camera found on retry attempt")
+                }
             }
 
             val device = thermalCameraDevice
@@ -2912,6 +2924,64 @@ class ThermalCameraRecorder(
         val qualityScore: Double
     )
 
+    suspend fun rescanForThermalCamera(): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                AppLogger.i(TAG, "Manually rescanning for thermal camera devices")
+                
+                val manager = usbManager
+                if (manager == null) {
+                    AppLogger.w(TAG, "USB manager not available for rescan")
+                    return@withContext false
+                }
+                
+                val deviceList = manager.deviceList
+                AppLogger.i(TAG, "Found ${deviceList.size} USB devices during rescan")
+                
+                for (device in deviceList.values) {
+                    Log.d(
+                        TAG,
+                        "Checking device: VID=${device.vendorId.toString(16)}, PID=${
+                            device.productId.toString(16)
+                        }, Name=${device.productName}"
+                    )
+                    
+                    if (device.isTcTsDevice()) {
+                        Log.i(
+                            TAG,
+                            "Found thermal camera during rescan: ${device.productName}"
+                        )
+                        
+                        if (manager.hasPermission(device)) {
+                            AppLogger.i(TAG, "Thermal camera has permission, initializing")
+                            thermalCameraDevice = device
+                            hasUsbPermission = true
+                            
+                            val success = initializeRealThermalCamera(device)
+                            if (success) {
+                                isSimulationMode = false
+                                Log.i(TAG, "Successfully initialized thermal camera from rescan")
+                                emitStatus()
+                                return@withContext true
+                            }
+                        } else {
+                            AppLogger.i(TAG, "Thermal camera found but needs permission, requesting")
+                            requestUsbPermission(device)
+                            return@withContext false
+                        }
+                    }
+                }
+                
+                AppLogger.w(TAG, "No thermal camera devices found during rescan")
+                return@withContext false
+                
+            } catch (e: Exception) {
+                AppLogger.e(TAG, "Error during thermal camera rescan", e)
+                return@withContext false
+            }
+        }
+    }
+
     override suspend fun cleanup() {
         try {
             if (_isRecording.get()) {
@@ -3125,17 +3195,11 @@ class ThermalCameraRecorder(
                             emitStatus()
                         }
                     } else {
-                        Log.w(
+                        Log.i(
                             TAG,
-                            "USB permission denied for thermal camera, using simulation mode"
+                            "USB permission not yet granted, requesting permission for thermal camera"
                         )
-                        isSimulationMode = true
-                        recordingScope.launch {
-                            emitError(
-                                ErrorType.DEVICE_ERROR,
-                                "USB permission denied - using simulation mode"
-                            )
-                        }
+                        requestUsbPermission(device)
                     }
                 }
             }
