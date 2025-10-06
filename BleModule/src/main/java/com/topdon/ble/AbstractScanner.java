@@ -62,6 +62,10 @@ abstract class AbstractScanner implements Scanner {
         scanListeners.remove(listener);
     }
 
+    protected EasyBLE getEasyBle() {
+        return easyBle;
+    }
+
     // Check if location service is enabled
     private boolean isLocationEnabled(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
