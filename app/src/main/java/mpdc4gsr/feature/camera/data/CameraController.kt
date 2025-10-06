@@ -45,36 +45,75 @@ class CameraController(private val context: Context) {
         var lockAcquired = false
         try {
             val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+            
+            val cameraIdList = try {
+                manager.cameraIdList
+            } catch (e: CameraAccessException) {
+                AppLogger.e(TAG, "Failed to get camera list", e)
+                onCameraError?.invoke("Camera service unavailable: ${e.message}")
+                return
+            }
+            
+            if (cameraIdList.isEmpty()) {
+                AppLogger.e(TAG, "No cameras available on device")
+                onCameraError?.invoke("No cameras found on this device")
+                return
+            }
+            
+            if (!cameraIdList.contains(cameraId)) {
+                AppLogger.e(TAG, "Camera $cameraId not found. Available cameras: ${cameraIdList.joinToString()}")
+                onCameraError?.invoke("Camera $cameraId not available. Available: ${cameraIdList.joinToString()}")
+                return
+            }
+
             val characteristics = manager.getCameraCharacteristics(cameraId)
 
             deviceCaps = detectCapabilities(characteristics)
             AppLogger.i(TAG, "Device capabilities: $deviceCaps")
 
             if (!cameraOpenCloseLock.tryAcquire(CAMERA_OPEN_TIMEOUT_MS, TimeUnit.MILLISECONDS)) {
-                throw RuntimeException("Time out waiting to lock camera opening.")
+                val errorMsg = "Timeout waiting to lock camera opening. Camera may be in use by another process"
+                AppLogger.e(TAG, errorMsg)
+                onCameraError?.invoke(errorMsg)
+                return
             }
             lockAcquired = true
 
+            AppLogger.d(TAG, "Requesting camera open with ID: $cameraId")
             manager.openCamera(cameraId, stateCallback, backgroundHandler)
             currentCameraId = cameraId
         } catch (e: CameraAccessException) {
             if (lockAcquired) {
                 cameraOpenCloseLock.release()
             }
-            AppLogger.e(TAG, "Failed to open camera $cameraId", e)
-            onCameraError?.invoke("Failed to open camera: ${e.message}")
+            val reason = when (e.reason) {
+                CameraAccessException.CAMERA_DISABLED -> "Camera disabled by device policy"
+                CameraAccessException.CAMERA_DISCONNECTED -> "Camera disconnected"
+                CameraAccessException.CAMERA_ERROR -> "Camera service error"
+                CameraAccessException.CAMERA_IN_USE -> "Camera already in use by another app"
+                CameraAccessException.MAX_CAMERAS_IN_USE -> "Maximum number of cameras in use"
+                else -> "Unknown camera access error (${e.reason})"
+            }
+            AppLogger.e(TAG, "Failed to open camera $cameraId: $reason", e)
+            onCameraError?.invoke("Failed to open camera: $reason")
         } catch (e: SecurityException) {
             if (lockAcquired) {
                 cameraOpenCloseLock.release()
             }
             AppLogger.e(TAG, "Camera permission not granted", e)
-            onCameraError?.invoke("Camera permission required")
+            onCameraError?.invoke("Camera permission required. Please grant camera permission in Settings")
+        } catch (e: IllegalArgumentException) {
+            if (lockAcquired) {
+                cameraOpenCloseLock.release()
+            }
+            AppLogger.e(TAG, "Invalid camera ID: $cameraId", e)
+            onCameraError?.invoke("Invalid camera ID: $cameraId")
         } catch (e: Exception) {
             if (lockAcquired) {
                 cameraOpenCloseLock.release()
             }
             AppLogger.e(TAG, "Unexpected error opening camera $cameraId", e)
-            onCameraError?.invoke("Failed to open camera: ${e.message}")
+            onCameraError?.invoke("Failed to open camera: ${e.javaClass.simpleName} - ${e.message}")
         }
     }
 

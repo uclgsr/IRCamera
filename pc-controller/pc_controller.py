@@ -117,30 +117,67 @@ class WebcamCapture:
         self.is_capturing = False
         self.frame_count = 0
 
-    def start_capture(self, camera_id=0, width=640, height=480):
+    def start_capture(self, camera_id=0, width=640, height=480, max_retries=3):
         """Start webcam capture"""
         if not OPENCV_AVAILABLE:
             logger.warning("OpenCV not available, webcam capture disabled")
             return False
 
-        try:
-            self.capture = cv2.VideoCapture(camera_id)
-            if not self.capture.isOpened():
-                logger.error(f"Failed to open camera {camera_id}")
-                return False
+        for attempt in range(max_retries):
+            try:
+                logger.info(f"Attempting to open camera {camera_id} (attempt {attempt + 1}/{max_retries})")
+                
+                self.capture = cv2.VideoCapture(camera_id)
+                if not self.capture.isOpened():
+                    logger.warning(f"Failed to open camera {camera_id} with default API")
+                    
+                    self.capture = cv2.VideoCapture(camera_id, cv2.CAP_DSHOW)
+                    if not self.capture.isOpened():
+                        logger.error(f"Failed to open camera {camera_id}. Possible causes: device not found, already in use, or insufficient permissions")
+                        
+                        if attempt < max_retries - 1:
+                            logger.info(f"Retrying in 1 second...")
+                            time.sleep(1)
+                            continue
+                        return False
 
-            # Set resolution
-            self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-            self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+                self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+                self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 
-            self.is_capturing = True
-            self.frame_count = 0
-            logger.info(f"Started webcam capture: {width}x{height}")
-            return True
+                ret, test_frame = self.capture.read()
+                if not ret or test_frame is None:
+                    logger.warning("Camera opened but failed to capture test frame")
+                    time.sleep(0.5)
+                    ret, test_frame = self.capture.read()
+                    if not ret or test_frame is None:
+                        logger.error("Failed to capture test frame after retry")
+                        self.capture.release()
+                        self.capture = None
+                        
+                        if attempt < max_retries - 1:
+                            continue
+                        return False
 
-        except Exception as e:
-            logger.error(f"Failed to start webcam capture: {e}")
-            return False
+                self.is_capturing = True
+                self.frame_count = 0
+                actual_width = int(self.capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+                actual_height = int(self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                logger.info(f"Started webcam capture: {actual_width}x{actual_height}")
+                return True
+
+            except Exception as e:
+                logger.error(f"Failed to start webcam capture: {e}")
+                if self.capture:
+                    self.capture.release()
+                    self.capture = None
+                
+                if attempt < max_retries - 1:
+                    logger.info(f"Retrying in 1 second...")
+                    time.sleep(1)
+                else:
+                    return False
+        
+        return False
 
     def capture_frame(self):
         """Capture a single frame and return as JPEG bytes"""

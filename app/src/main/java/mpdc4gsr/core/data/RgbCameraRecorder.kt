@@ -24,6 +24,7 @@ import mpdc4gsr.feature.camera.data.CameraConfigurationManager
 import mpdc4gsr.feature.camera.data.CameraControlsManager
 import mpdc4gsr.feature.camera.data.CameraPerformanceManager
 import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
+import RecordingSettingsRepository
 import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.ExecutorService
@@ -119,7 +120,7 @@ class RgbCameraRecorder(
     private var deviceSupportsRAW = false
     private var actualFrameRateAchieved = 0.0
 
-    private var recordingSettings: mpdc4gsr.feature.settings.data.RecordingSettingsRepository.RecordingSettings? = null
+    private var recordingSettings: RecordingSettingsRepository.RecordingSettings? = null
 
     private var cameraProvider: ProcessCameraProvider? = null
     private var preview: Preview? = null
@@ -186,11 +187,14 @@ class RgbCameraRecorder(
     override suspend fun initialize(): Boolean = withContext(Dispatchers.Main) {
         try {
             recordingSettings =
-                mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context).getSettings()
+                RecordingSettingsRepository.getInstance(context).getSettings()
             Log.d(
                 TAG,
                 "Recording settings loaded: quality=${recordingSettings?.recordingQuality}, fps=${recordingSettings?.videoFrameRate}, audio=${recordingSettings?.audioEnabled}"
             )
+
+            // Observe settings changes for real-time updates
+            observeRecordingSettingsChanges()
 
             Log.d(
                 TAG,
@@ -210,27 +214,66 @@ class RgbCameraRecorder(
 
             // Wrap CameraProvider initialization in try-catch for robust error handling
             cameraProvider = try {
-                ProcessCameraProvider.getInstance(context).get()
+                AppLogger.d(TAG, "Requesting CameraProvider instance...")
+                val provider = ProcessCameraProvider.getInstance(context).get()
+                AppLogger.d(TAG, "CameraProvider instance obtained successfully")
+                provider
+            } catch (e: java.util.concurrent.TimeoutException) {
+                AppLogger.e(TAG, "Timeout getting CameraProvider instance", e)
+                _cameraStatus.value = "Camera Service Timeout"
+                emitError(
+                    ErrorType.INITIALIZATION_FAILED,
+                    "Camera service timeout. Camera may be in use by another app"
+                )
+                return@withContext false
+            } catch (e: java.util.concurrent.ExecutionException) {
+                AppLogger.e(TAG, "ExecutionException getting CameraProvider", e)
+                _cameraStatus.value = "Camera Service Error"
+                emitError(
+                    ErrorType.INITIALIZATION_FAILED,
+                    "Camera service error: ${e.cause?.message ?: e.message}"
+                )
+                return@withContext false
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Failed to get CameraProvider instance", e)
                 _cameraStatus.value = "Camera Service Unavailable"
                 emitError(
                     ErrorType.INITIALIZATION_FAILED,
-                    "Camera service unavailable: ${e.message}"
+                    "Camera service unavailable: ${e.javaClass.simpleName} - ${e.message}"
                 )
                 return@withContext false
             }
 
+            val cameraType = if (isUsingFrontCamera) "Front" else "Back"
+            AppLogger.d(TAG, "Checking if $cameraType camera is available...")
+            
             if (!cameraProvider!!.hasCamera(currentCameraSelector)) {
-                val cameraType = if (isUsingFrontCamera) "Front" else "Back"
                 AppLogger.w(TAG, "$cameraType camera not available on this device")
+                
+                val availableCameras = mutableListOf<String>()
+                if (cameraProvider!!.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)) {
+                    availableCameras.add("Back")
+                }
+                if (cameraProvider!!.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA)) {
+                    availableCameras.add("Front")
+                }
+                
+                val availableMsg = if (availableCameras.isNotEmpty()) {
+                    "Available: ${availableCameras.joinToString()}"
+                } else {
+                    "No cameras available"
+                }
+                
+                AppLogger.i(TAG, availableMsg)
                 _cameraStatus.value = "$cameraType Camera Not Available"
                 emitError(
                     ErrorType.INITIALIZATION_FAILED,
-                    "$cameraType camera not available on this device"
+                    "$cameraType camera not available on this device. $availableMsg"
                 )
                 return@withContext false
             }
+            
+            AppLogger.i(TAG, "$cameraType camera is available")
 
             // Detect device capabilities and configure camera
             detectDeviceCapabilities()
@@ -554,7 +597,7 @@ class RgbCameraRecorder(
             val supports60fps = checkDevice60fpsSupport()
 
             val qualityConfig = recordingSettings?.let { settings ->
-                mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context)
+                RecordingSettingsRepository.getInstance(context)
                     .getQualityConfig(settings.recordingQuality)
             }
 
@@ -807,29 +850,76 @@ class RgbCameraRecorder(
     }
 
     private suspend fun checkAndRequestPermissions(): Boolean {
-        if (hasCameraPermission()) return true
+        AppLogger.d(TAG, "Checking camera and storage permissions for RGB recording")
+        
+        val hasCameraPermission = hasCameraPermission()
+        val hasStoragePermission = hasStoragePermission()
+        
+        if (hasCameraPermission && hasStoragePermission) {
+            AppLogger.i(TAG, "All required permissions already granted")
+            return true
+        }
 
-        _cameraStatus.value = "Camera Permission Required"
+        if (!hasCameraPermission) {
+            AppLogger.w(TAG, "Camera permission not granted")
+            _cameraStatus.value = "Camera Permission Required"
+        } else if (!hasStoragePermission) {
+            AppLogger.w(TAG, "Storage permission not granted - required for saving frames and RAW capture")
+            _cameraStatus.value = "Storage Permission Required"
+        }
 
         return permissionManager?.let { permissionManager ->
             try {
+                AppLogger.i(TAG, "Requesting camera and storage permissions")
                 val granted = permissionManager.requestCameraPermissions()
                 if (granted) {
-                    _cameraStatus.value = "Permissions Granted"
-                    true
+                    val recheckCamera = hasCameraPermission()
+                    val recheckStorage = hasStoragePermission()
+                    
+                    AppLogger.i(TAG, "Permission request completed - Camera: $recheckCamera, Storage: $recheckStorage")
+                    
+                    if (recheckCamera && recheckStorage) {
+                        _cameraStatus.value = "Permissions Granted"
+                        AppLogger.i(TAG, "All required permissions granted successfully")
+                        true
+                    } else {
+                        val missing = mutableListOf<String>()
+                        if (!recheckCamera) missing.add("Camera")
+                        if (!recheckStorage) missing.add("Storage")
+                        
+                        _cameraStatus.value = "Missing Permissions: ${missing.joinToString()}"
+                        AppLogger.e(TAG, "Still missing permissions after request: ${missing.joinToString()}")
+                        emitError(
+                            ErrorType.PERMISSION_DENIED, 
+                            "Required permissions denied: ${missing.joinToString()}. Please grant permissions in Settings."
+                        )
+                        false
+                    }
                 } else {
                     _cameraStatus.value = "Camera Permission Denied"
-                    emitError(ErrorType.PERMISSION_DENIED, "Camera permission denied")
+                    AppLogger.e(TAG, "Camera permission request denied by user")
+                    emitError(
+                        ErrorType.PERMISSION_DENIED, 
+                        "Camera permission denied. Required for video recording and frame capture."
+                    )
                     false
                 }
             } catch (e: Exception) {
                 _cameraStatus.value = "Permission Request Failed"
-                emitError(ErrorType.PERMISSION_DENIED, "Permission request failed: ${e.message}")
+                AppLogger.e(TAG, "Exception during permission request", e)
+                emitError(
+                    ErrorType.PERMISSION_DENIED, 
+                    "Permission request failed: ${e.message}. Please grant permissions manually in Settings."
+                )
                 false
             }
         } ?: run {
             _cameraStatus.value = "Permission Required - Check Settings"
-            emitError(ErrorType.PERMISSION_DENIED, "Camera permission required")
+            AppLogger.e(TAG, "PermissionManager not available - cannot request permissions")
+            emitError(
+                ErrorType.PERMISSION_DENIED, 
+                "Camera and storage permissions required. Please enable them in device Settings."
+            )
             false
         }
     }
@@ -973,6 +1063,19 @@ class RgbCameraRecorder(
                         return@withContext false
                     }
                 }
+            }
+
+            if (!hasStoragePermission()) {
+                AppLogger.e(TAG, "Cannot start recording - storage permission not granted")
+                emitError(
+                    ErrorType.PERMISSION_DENIED,
+                    "Storage permission required for saving recordings and frames"
+                )
+                return false
+            }
+            
+            if (deviceSupportsRAW && ENABLE_RAW_CAPTURE) {
+                AppLogger.i(TAG, "RAW capture enabled - will save DNG files alongside JPEG frames")
             }
 
             setupOutputFiles()
@@ -1250,7 +1353,11 @@ class RgbCameraRecorder(
                             }
 
                             if (rawFile != null && deviceSupportsRAW && ENABLE_RAW_CAPTURE) {
-                                captureRawFrameAsync(rawFile, timestampRecord, frameNumber)
+                                if (hasStoragePermission()) {
+                                    captureRawFrameAsync(rawFile, timestampRecord, frameNumber)
+                                } else {
+                                    AppLogger.w(TAG, "Skipping RAW capture - storage permission not granted")
+                                }
                             }
 
                             onComplete()
@@ -1288,6 +1395,11 @@ class RgbCameraRecorder(
         frameNumber: Long
     ) {
         try {
+            if (!hasStoragePermission()) {
+                AppLogger.e(TAG, "Cannot capture RAW frame - storage permission not granted")
+                return
+            }
+            
             AppLogger.d(TAG, "Capturing Stage 3/Level 3 DNG frame $frameNumber - ${rawFile.name}")
 
             val useStage3 = deviceSupportsRAW && ENABLE_RAW_CAPTURE &&
@@ -1881,6 +1993,22 @@ class RgbCameraRecorder(
         }
     }
 
+    private fun observeRecordingSettingsChanges() {
+        recordingScope.launch {
+            RecordingSettingsRepository.getInstance(context)
+                .settings.collectLatest { settings ->
+                    AppLogger.i(TAG, "Recording settings changed - quality: ${settings.recordingQuality}, fps: ${settings.videoFrameRate}, audio: ${settings.audioEnabled}")
+                    recordingSettings = settings
+                    
+                    // Note: Camera needs to be re-initialized for some settings like FPS and quality
+                    // Log a warning if recording is active as changes won't apply until restart
+                    if (_isRecording.get()) {
+                        AppLogger.w(TAG, "Recording settings changed during active recording - changes will apply on next recording session")
+                    }
+                }
+        }
+    }
+
     override suspend fun cleanup() {
         try {
             AppLogger.i(TAG, "Starting RGB CameraX recorder cleanup")
@@ -2034,8 +2162,66 @@ class RgbCameraRecorder(
     }
 
     fun hasCameraPermission(): Boolean {
-        return context.checkSelfPermission(android.Manifest.permission.CAMERA) ==
+        val hasCamera = context.checkSelfPermission(android.Manifest.permission.CAMERA) ==
                 android.content.pm.PackageManager.PERMISSION_GRANTED
+        
+        if (!hasCamera) {
+            AppLogger.w(TAG, "Camera permission not granted")
+            return false
+        }
+        
+        val audioEnabled = recordingSettings?.audioEnabled ?: true
+        if (!audioEnabled) {
+            AppLogger.d(TAG, "Audio recording disabled in settings, skipping audio permission check")
+            return true
+        }
+        
+        val hasAudio = context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) ==
+                android.content.pm.PackageManager.PERMISSION_GRANTED
+        
+        if (!hasAudio) {
+            AppLogger.w(TAG, "Audio recording permission not granted")
+        }
+        
+        return hasAudio
+    }
+    
+    fun hasStoragePermission(): Boolean {
+        val hasPermission = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            val hasImages = context.checkSelfPermission(android.Manifest.permission.READ_MEDIA_IMAGES) ==
+                    android.content.pm.PackageManager.PERMISSION_GRANTED
+            val hasVideo = context.checkSelfPermission(android.Manifest.permission.READ_MEDIA_VIDEO) ==
+                    android.content.pm.PackageManager.PERMISSION_GRANTED
+            
+            if (!hasImages) {
+                AppLogger.w(TAG, "READ_MEDIA_IMAGES permission not granted (Android 13+)")
+            }
+            if (!hasVideo) {
+                AppLogger.w(TAG, "READ_MEDIA_VIDEO permission not granted (Android 13+)")
+            }
+            
+            hasImages && hasVideo
+        } else {
+            val hasWrite = context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                    android.content.pm.PackageManager.PERMISSION_GRANTED
+            val hasRead = context.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    android.content.pm.PackageManager.PERMISSION_GRANTED
+            
+            if (!hasWrite) {
+                AppLogger.w(TAG, "WRITE_EXTERNAL_STORAGE permission not granted")
+            }
+            if (!hasRead) {
+                AppLogger.w(TAG, "READ_EXTERNAL_STORAGE permission not granted")
+            }
+            
+            hasWrite && hasRead
+        }
+        
+        if (!hasPermission) {
+            AppLogger.w(TAG, "Storage permission not granted - RAW capture and frame saving will fail")
+        }
+        
+        return hasPermission
     }
 
     fun supportsHighResolution(): Boolean {
