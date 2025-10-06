@@ -338,7 +338,7 @@ class NetworkClient(private val context: Context) {
                         sslSocket = sslSocketFactory.createSocket(ipAddress, port) as SSLSocket
                         sslSocket?.soTimeout = CONNECTION_TIMEOUT.toInt()
                         
-                        sslSocket?.let { TrafficStats.tagSocket(it) }
+                        sslSocket?.let { TrafficStats.tagSocket(it as Socket) }
 
                         sslSocket?.startHandshake()
 
@@ -408,11 +408,12 @@ class NetworkClient(private val context: Context) {
         return try {
             TrafficStats.setThreadStatsTag(Process.myTid())
             
-            socket = Socket()
-            socket?.connect(InetSocketAddress(ipAddress, port), CONNECTION_TIMEOUT.toInt())
-            socket?.soTimeout = CONNECTION_TIMEOUT.toInt()
+            val newSocket = Socket()
+            newSocket.connect(InetSocketAddress(ipAddress, port), CONNECTION_TIMEOUT.toInt())
+            newSocket.soTimeout = CONNECTION_TIMEOUT.toInt()
             
-            socket?.let { TrafficStats.tagSocket(it) }
+            TrafficStats.tagSocket(newSocket)
+            socket = newSocket
 
             outputStream = DataOutputStream(socket?.getOutputStream())
             inputStream = DataInputStream(socket?.getInputStream())
