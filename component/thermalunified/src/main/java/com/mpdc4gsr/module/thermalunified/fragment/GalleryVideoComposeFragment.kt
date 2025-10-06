@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.fragment
-
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -32,24 +31,19 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-
 class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
-
     override fun createViewModel(): GalleryViewModel {
         return viewModels<GalleryViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: GalleryViewModel) {
         val context = LocalContext.current
-
         // Observe ViewModel state
         val videoItems by viewModel.videoItems.collectAsStateWithLifecycle()
         val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
         val selectedItems by viewModel.selectedItems.collectAsStateWithLifecycle()
         val isSelectionMode by viewModel.isSelectionMode.collectAsStateWithLifecycle()
-
         LibUnifiedTheme {
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -68,7 +62,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         }
                     )
                 }
-
                 // Video gallery content
                 Box(
                     modifier = Modifier.fillMaxSize()
@@ -77,13 +70,11 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         isLoading -> {
                             LoadingState()
                         }
-
                         videoItems.isEmpty() -> {
                             EmptyVideoGalleryState(
                                 onRefresh = { viewModel.refreshVideoGallery() }
                             )
                         }
-
                         else -> {
                             VideoGrid(
                                 videos = videoItems,
@@ -109,7 +100,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @Composable
     private fun VideoSelectionToolbar(
         selectedCount: Int,
@@ -138,7 +128,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -162,7 +151,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @Composable
     private fun LoadingState() {
         Box(
@@ -182,7 +170,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @Composable
     private fun EmptyVideoGalleryState(
         onRefresh: () -> Unit
@@ -201,20 +188,17 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = "No Videos Found",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = "Record thermal videos to see them here",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Button(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -223,7 +207,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @Composable
     private fun VideoGrid(
         videos: List<GalleryViewModel.MediaItem>,
@@ -234,7 +217,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
     ) {
         // Adaptive grid columns based on screen size
         val columns = remember { mutableIntStateOf(3) }
-
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns.intValue),
             contentPadding = PaddingValues(8.dp),
@@ -252,7 +234,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     @Composable
     private fun VideoGridItem(
         item: GalleryViewModel.MediaItem,
@@ -292,7 +273,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         .clip(RoundedCornerShape(12.dp)),
                     contentScale = ContentScale.Crop
                 )
-
                 // Video play indicator
                 Box(
                     modifier = Modifier
@@ -309,7 +289,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         modifier = Modifier.size(32.dp)
                     )
                 }
-
                 // Thermal video indicator
                 if (item.isVideo) {
                     Card(
@@ -329,7 +308,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         )
                     }
                 }
-
                 // Selection indicator
                 if (isSelectionMode) {
                     Box(
@@ -364,7 +342,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         }
                     }
                 }
-
                 // Video info overlay
                 Card(
                     modifier = Modifier
@@ -403,7 +380,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
-
     // Helper functions
     private fun playVideo(context: android.content.Context, path: String) {
         try {
@@ -422,7 +398,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             // Handle error - maybe show a toast or use internal video player
         }
     }
-
     private fun shareSelectedVideos(context: android.content.Context, selectedPaths: List<String>) {
         try {
             val uris = selectedPaths.map { path ->
@@ -432,7 +407,6 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     File(path)
                 )
             }
-
             val intent = Intent().apply {
                 if (uris.size == 1) {
                     action = Intent.ACTION_SEND
@@ -444,28 +418,23 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                 type = "video/*"
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-
             context.startActivity(Intent.createChooser(intent, "Share Videos"))
         } catch (e: Exception) {
             // Handle error
         }
     }
-
     private fun exportSelectedVideos(context: android.content.Context, selectedPaths: List<String>) {
         // Implementation for exporting videos to external storage
         // This would typically involve copying files to a user-accessible location
     }
-
     private fun formatFileSize(bytes: Long): String {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()
         var unitIndex = 0
-
         while (size >= 1024 && unitIndex < units.size - 1) {
             size /= 1024
             unitIndex++
         }
-
         return "%.1f %s".format(size, units[unitIndex])
     }
 }

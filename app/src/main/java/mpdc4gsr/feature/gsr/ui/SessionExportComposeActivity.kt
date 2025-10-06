@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.gsr.ui
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,17 +23,11 @@ import mpdc4gsr.feature.gsr.presentation.GSRSession
 import mpdc4gsr.feature.gsr.presentation.SessionExportViewModel
 import mpdc4gsr.feature.gsr.presentation.SessionExportViewModelFactory
 
-/**
- * Modern Compose implementation of GSR Session Export
- * Provides export functionality for GSR session data with Material 3 UI
- */
 class SessionExportComposeActivity : BaseComposeActivity<SessionExportViewModel>() {
-
     override fun createViewModel(): SessionExportViewModel =
         viewModels<SessionExportViewModel> {
             SessionExportViewModelFactory(application)
         }.value
-
     @Composable
     override fun Content(viewModel: SessionExportViewModel) {
         IRCameraTheme {
@@ -45,7 +38,6 @@ class SessionExportComposeActivity : BaseComposeActivity<SessionExportViewModel>
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionExportScreen(
@@ -57,7 +49,6 @@ fun SessionExportScreen(
     onNavigateBack: () -> Unit = {}
 ) {
     val uiState by viewModel.exportState.collectAsState()
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -88,13 +79,11 @@ fun SessionExportScreen(
                 titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
-
         // Content
         when {
             uiState.isLoading -> {
                 LoadingContent()
             }
-
             uiState.error != null -> {
                 val errorMessage = uiState.error ?: "Unknown error"
                 ErrorContent(
@@ -102,11 +91,9 @@ fun SessionExportScreen(
                     onRetry = { viewModel.loadSessions() }
                 )
             }
-
             uiState.sessions.isEmpty() -> {
                 EmptyContent()
             }
-
             else -> {
                 ExportContent(
                     uiState = uiState,
@@ -119,7 +106,6 @@ fun SessionExportScreen(
         }
     }
 }
-
 @Composable
 private fun ExportContent(
     uiState: SessionExportViewModel.SessionExportState,
@@ -142,7 +128,6 @@ private fun ExportContent(
                 )
             }
         }
-
         // Export Configuration
         item {
             ExportConfigurationCard(
@@ -152,7 +137,6 @@ private fun ExportContent(
                 onDestinationChange = onExportDestinationChange
             )
         }
-
         // Session Selection Header
         item {
             Card(
@@ -178,7 +162,6 @@ private fun ExportContent(
                 }
             }
         }
-
         // Session List
         items(uiState.sessions) { session ->
             SessionSelectionCard(
@@ -187,7 +170,6 @@ private fun ExportContent(
                 onToggle = { onSessionToggle(session) }
             )
         }
-
         // Export Action
         if (!uiState.isExporting && uiState.selectedSessions.isNotEmpty()) {
             item {
@@ -208,7 +190,6 @@ private fun ExportContent(
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SessionSelectionCard(
@@ -237,9 +218,7 @@ private fun SessionSelectionCard(
                 checked = isSelected,
                 onCheckedChange = { onToggle() }
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -252,7 +231,6 @@ private fun SessionSelectionCard(
                         MaterialTheme.colorScheme.onSurface
                     }
                 )
-
                 Text(
                     text = "Duration: ${session.duration}",
                     style = MaterialTheme.typography.bodySmall,
@@ -262,7 +240,6 @@ private fun SessionSelectionCard(
                         MaterialTheme.colorScheme.onSurfaceVariant
                     }
                 )
-
                 Text(
                     text = "Data points: ${session.dataPointCount}",
                     style = MaterialTheme.typography.bodySmall,
@@ -273,7 +250,6 @@ private fun SessionSelectionCard(
                     }
                 )
             }
-
             Icon(
                 imageVector = if (isSelected) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked,
                 contentDescription = if (isSelected) "Selected" else "Not selected",
@@ -286,7 +262,6 @@ private fun SessionSelectionCard(
         }
     }
 }
-
 @Composable
 private fun ExportConfigurationCard(
     selectedFormat: ExportFormat,
@@ -305,18 +280,14 @@ private fun ExportConfigurationCard(
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Export Format Selection
             Text(
                 text = "Export Format",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             ExportFormat.values().forEach { format ->
                 Row(
                     modifier = Modifier
@@ -339,18 +310,14 @@ private fun ExportConfigurationCard(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Export Destination Selection
             Text(
                 text = "Export Destination",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             ExportDestination.values().forEach { destination ->
                 Row(
                     modifier = Modifier
@@ -376,7 +343,6 @@ private fun ExportConfigurationCard(
         }
     }
 }
-
 @Composable
 private fun ExportProgressCard(
     progress: Float,
@@ -405,14 +371,11 @@ private fun ExportProgressCard(
                     color = MaterialTheme.colorScheme.onTertiaryContainer
                 )
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             LinearProgressIndicator(
                 progress = { progress },
                 modifier = Modifier.fillMaxWidth()
             )
-
             if (currentFile != null) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -424,7 +387,6 @@ private fun ExportProgressCard(
         }
     }
 }
-
 @Composable
 private fun LoadingContent() {
     Box(
@@ -443,7 +405,6 @@ private fun LoadingContent() {
         }
     }
 }
-
 @Composable
 private fun ErrorContent(
     error: String,
@@ -463,24 +424,20 @@ private fun ErrorContent(
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.error
             )
-
             Text(
                 text = "Error loading sessions",
                 style = MaterialTheme.typography.headlineSmall
             )
-
             Text(
                 text = error,
                 style = MaterialTheme.typography.bodyMedium
             )
-
             Button(onClick = onRetry) {
                 Text("Retry")
             }
         }
     }
 }
-
 @Composable
 private fun EmptyContent() {
     Box(
@@ -497,12 +454,10 @@ private fun EmptyContent() {
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
             Text(
                 text = "No sessions available",
                 style = MaterialTheme.typography.headlineSmall
             )
-
             Text(
                 text = "GSR sessions will appear here when available for export",
                 style = MaterialTheme.typography.bodyMedium

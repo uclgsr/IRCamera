@@ -1,24 +1,19 @@
 package mpdc4gsr.core.data.utils
-
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
-
 class CSVBufferedWriter(
     outputFile: File,
     private val headers: List<String>,
     bufferSize: Int = 8192,
     flushIntervalMs: Long = 1000L
 ) : BufferedDataWriter(outputFile, bufferSize, flushIntervalMs) {
-
     companion object {
         private const val TAG = "CSVBufferedWriter"
     }
-
     private val headerWritten = AtomicBoolean(false)
-
     suspend fun startWithHeaders(): Boolean {
         val started = start()
         if (started && !headerWritten.get()) {
@@ -26,7 +21,6 @@ class CSVBufferedWriter(
         }
         return started
     }
-
     private suspend fun writeHeaders() {
         if (headerWritten.compareAndSet(false, true)) {
             val headerLine = headers.joinToString(",")
@@ -34,7 +28,6 @@ class CSVBufferedWriter(
             AppLogger.d(TAG, "CSV headers written: $headerLine")
         }
     }
-
     fun writeRow(values: List<Any>): Boolean {
         val csvLine = values.joinToString(",") { value ->
             when (value) {
@@ -44,7 +37,6 @@ class CSVBufferedWriter(
         }
         return writeLine(csvLine)
     }
-
     private fun escapeCSVValue(value: String): String {
         return if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
             "\"${value.replace("\"", "\"\"")}\""
@@ -52,7 +44,6 @@ class CSVBufferedWriter(
             value
         }
     }
-
     fun getCSVStats(): CSVWriteStats {
         val stats = getWriteStats()
         return CSVWriteStats(
@@ -63,7 +54,6 @@ class CSVBufferedWriter(
         )
     }
 }
-
 data class CSVWriteStats(
     val baseStats: WriteStats,
     val headerWritten: Boolean,
@@ -72,7 +62,6 @@ data class CSVWriteStats(
 ) {
     val rowsWritten: Long
         get() = if (headerWritten) baseStats.linesWritten - 1 else baseStats.linesWritten
-
     val averageRowSize: Double
         get() = if (rowsWritten > 0) baseStats.bytesWritten.toDouble() / rowsWritten else 0.0
 }

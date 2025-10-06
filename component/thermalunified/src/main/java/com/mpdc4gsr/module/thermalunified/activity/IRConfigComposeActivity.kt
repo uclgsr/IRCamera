@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -24,20 +23,15 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRConfigViewModel
-
 class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
-
     private var isTC007 = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
         super.onCreate(savedInstanceState)
     }
-
     override fun createViewModel(): IRConfigViewModel {
         return viewModels<IRConfigViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRConfigViewModel) {
@@ -46,7 +40,6 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
         var distance by remember { mutableFloatStateOf(1.0f) }
         var emissivity by remember { mutableFloatStateOf(0.95f) }
         var selectedMaterial by remember { mutableStateOf<MaterialPreset?>(null) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -89,7 +82,6 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             onSelectionChange = { useDefaultModel = it }
                         )
                     }
-
                     // Environment Temperature
                     item {
                         ConfigurationCard(
@@ -107,8 +99,7 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             }
                         )
                     }
-
-                    // Distance Configuration  
+                    // Distance Configuration
                     item {
                         ConfigurationCard(
                             title = "Measurement Distance",
@@ -125,7 +116,6 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             }
                         )
                     }
-
                     // Emissivity Configuration
                     item {
                         ConfigurationCard(
@@ -143,7 +133,6 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             }
                         )
                     }
-
                     // Material Presets Section
                     item {
                         Text(
@@ -154,7 +143,6 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             modifier = Modifier.padding(vertical = 8.dp)
                         )
                     }
-
                     items(getMaterialPresets()) { material ->
                         MaterialPresetCard(
                             material = material,
@@ -171,7 +159,6 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
         }
     }
 }
-
 @Composable
 private fun DefaultModelCard(
     isSelected: Boolean,
@@ -206,7 +193,6 @@ private fun DefaultModelCard(
                     fontSize = 14.sp
                 )
             }
-
             RadioButton(
                 selected = isSelected,
                 onClick = { onSelectionChange(!isSelected) },
@@ -218,7 +204,6 @@ private fun DefaultModelCard(
         }
     }
 }
-
 @Composable
 private fun ConfigurationCard(
     title: String,
@@ -253,7 +238,6 @@ private fun ConfigurationCard(
                     tint = Color(0xFFFF6B35),
                     modifier = Modifier.size(24.dp)
                 )
-
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         title,
@@ -268,7 +252,6 @@ private fun ConfigurationCard(
                     )
                 }
             }
-
             Text(
                 value,
                 color = Color(0xFFFF6B35),
@@ -278,7 +261,6 @@ private fun ConfigurationCard(
         }
     }
 }
-
 @Composable
 private fun MaterialPresetCard(
     material: MaterialPreset,
@@ -314,7 +296,6 @@ private fun MaterialPresetCard(
                     tint = if (isSelected) Color(0xFFFF6B35) else Color(0xFF7D8590),
                     modifier = Modifier.size(24.dp)
                 )
-
                 Column {
                     Text(
                         material.name,
@@ -329,7 +310,6 @@ private fun MaterialPresetCard(
                     )
                 }
             }
-
             if (isSelected) {
                 Icon(
                     Icons.Default.Check,
@@ -341,14 +321,12 @@ private fun MaterialPresetCard(
         }
     }
 }
-
 // Data classes and helper functions
 data class MaterialPreset(
     val name: String,
     val emissivity: Float,
     val icon: androidx.compose.ui.graphics.vector.ImageVector
 )
-
 private fun getMaterialPresets(): List<MaterialPreset> {
     return listOf(
         MaterialPreset("Human Skin", 0.98f, Icons.Default.Person),

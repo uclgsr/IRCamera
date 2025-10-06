@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -24,13 +23,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-
 class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
-
     companion object {
         private const val KEY_PATH = "video_path"
         private const val KEY_TITLE = "video_title"
-
         fun startWithPath(context: Context, videoPath: String, title: String = "Thermal Video") {
             val intent = Intent(context, ThermalVideoComposeActivity::class.java).apply {
                 putExtra(KEY_PATH, videoPath)
@@ -39,23 +35,19 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
             context.startActivity(intent)
         }
     }
-
     override fun createViewModel(): BaseViewModel {
         return viewModels<BaseViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: BaseViewModel) {
         val videoPath = intent.getStringExtra(KEY_PATH) ?: ""
         val videoTitle = intent.getStringExtra(KEY_TITLE) ?: "Thermal Video"
-
         var isPlaying by remember { mutableStateOf(false) }
         var currentPosition by remember { mutableStateOf(0L) }
         var videoDuration by remember { mutableStateOf(0L) }
         var showControls by remember { mutableStateOf(true) }
         var showThermalData by remember { mutableStateOf(true) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -118,7 +110,6 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
         }
     }
 }
-
 @Composable
 private fun ThermalVideoContent(
     videoPath: String,
@@ -146,7 +137,6 @@ private fun ThermalVideoContent(
             onClick = onControlsToggle,
             modifier = Modifier.fillMaxSize()
         )
-
         // Thermal data overlay
         if (showThermalData) {
             ThermalDataOverlay(
@@ -158,7 +148,6 @@ private fun ThermalVideoContent(
                     .padding(16.dp)
             )
         }
-
         // Video controls overlay
         if (showControls) {
             ThermalVideoControls(
@@ -173,7 +162,6 @@ private fun ThermalVideoContent(
                     .padding(16.dp)
             )
         }
-
         // Playback indicator
         if (isPlaying) {
             Box(
@@ -207,7 +195,6 @@ private fun ThermalVideoContent(
         }
     }
 }
-
 @Composable
 private fun ThermalVideoPlayer(
     videoPath: String,
@@ -218,20 +205,16 @@ private fun ThermalVideoPlayer(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-
     AndroidView(
         factory = { ctx ->
             android.widget.VideoView(ctx).apply {
                 val uri = Uri.parse(videoPath)
                 setVideoURI(uri)
-
                 // Set up media controller
                 val mediaController = android.widget.MediaController(ctx)
                 setMediaController(mediaController)
                 mediaController.setAnchorView(this)
-
                 setOnClickListener { onClick() }
-
                 // Set up completion listener
                 setOnCompletionListener {
                     onPositionChange(0L)
@@ -248,7 +231,6 @@ private fun ThermalVideoPlayer(
         modifier = modifier
     )
 }
-
 @Composable
 private fun ThermalDataOverlay(
     currentTemp: Float,
@@ -294,7 +276,6 @@ private fun ThermalDataOverlay(
         }
     }
 }
-
 @Composable
 private fun ThermalVideoControls(
     isPlaying: Boolean,
@@ -327,7 +308,6 @@ private fun ThermalVideoControls(
                         activeTrackColor = Color(0xFFFF6B35)
                     )
                 )
-
                 // Time indicators
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -345,9 +325,7 @@ private fun ThermalVideoControls(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(12.dp))
-
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -368,7 +346,6 @@ private fun ThermalVideoControls(
                         tint = Color.White
                     )
                 }
-
                 // Play/Pause button
                 IconButton(
                     onClick = { onPlayingChange(!isPlaying) },
@@ -386,7 +363,6 @@ private fun ThermalVideoControls(
                         modifier = Modifier.size(32.dp)
                     )
                 }
-
                 IconButton(onClick = {
                     // TODO: Go to next frame
                     android.widget.Toast.makeText(
@@ -402,9 +378,7 @@ private fun ThermalVideoControls(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             // Additional controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -431,7 +405,6 @@ private fun ThermalVideoControls(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Frame")
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Analyze thermal video
@@ -453,7 +426,6 @@ private fun ThermalVideoControls(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Analyze")
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Open video settings
@@ -479,7 +451,6 @@ private fun ThermalVideoControls(
         }
     }
 }
-
 private fun formatTime(timeMs: Long): String {
     val totalSeconds = timeMs / 1000
     val minutes = totalSeconds / 60

@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.compose.dialogs
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,7 +19,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.compose.components.TargetColorPicker
-
 @Composable
 fun TargetColorDialog(
     title: String = "Select Target Color",
@@ -32,7 +30,6 @@ fun TargetColorDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.9f else 0.35f
-
     Dialog(
         onDismissRequest = {
             onColorSelected(currentColor)
@@ -70,7 +67,6 @@ fun TargetColorDialog(
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
-
                     IconButton(onClick = {
                         onColorSelected(currentColor)
                         onDismiss()
@@ -82,7 +78,6 @@ fun TargetColorDialog(
                         )
                     }
                 }
-
                 TargetColorPicker(
                     selectedColor = currentColor,
                     onColorSelected = { color ->
@@ -95,19 +90,16 @@ fun TargetColorDialog(
         }
     }
 }
-
 data class CarDetectItem(
     val title: String,
     val children: List<CarDetectChildItem>,
     val isExpanded: Boolean = false
 )
-
 data class CarDetectChildItem(
     val name: String,
     val value: String,
     val isSelected: Boolean = false
 )
-
 @Composable
 fun CarDetectDialog(
     title: String = "Car Detection",
@@ -123,7 +115,6 @@ fun CarDetectDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.9f else 0.6f
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -156,7 +147,6 @@ fun CarDetectDialog(
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
-
                     IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.Default.Close,
@@ -165,7 +155,6 @@ fun CarDetectDialog(
                         )
                     }
                 }
-
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -184,7 +173,6 @@ fun CarDetectDialog(
                                 onDismiss()
                             }
                         )
-
                         if (index < items.size - 1) {
                             HorizontalDivider(
                                 color = Color.LightGray,
@@ -197,7 +185,6 @@ fun CarDetectDialog(
         }
     }
 }
-
 @Composable
 private fun CarDetectSection(
     item: CarDetectItem,
@@ -220,14 +207,12 @@ private fun CarDetectSection(
                 color = Color.Black,
                 modifier = Modifier.weight(1f)
             )
-
             Text(
                 text = if (isExpanded) "▼" else "▶",
                 fontSize = 12.sp,
                 color = Color.Gray
             )
         }
-
         if (isExpanded) {
             item.children.forEach { child ->
                 Row(
@@ -243,7 +228,6 @@ private fun CarDetectSection(
                         color = Color.DarkGray,
                         modifier = Modifier.weight(1f)
                     )
-
                     if (child.isSelected) {
                         Text(
                             text = "✓",
@@ -257,7 +241,6 @@ private fun CarDetectSection(
         }
     }
 }
-
 @Composable
 fun CameraProgressDialog(
     title: String = "Camera Progress",
@@ -271,7 +254,6 @@ fun CameraProgressDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.75f else 0.5f
-
     Dialog(
         onDismissRequest = {},
         properties = DialogProperties(
@@ -301,7 +283,6 @@ fun CameraProgressDialog(
                     color = Color.Black,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
                 if (totalSteps > 0) {
                     Text(
                         text = "Step $currentStepNumber of $totalSteps",
@@ -310,7 +291,6 @@ fun CameraProgressDialog(
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
-
                 if (currentStep.isNotEmpty()) {
                     Text(
                         text = currentStep,
@@ -320,7 +300,6 @@ fun CameraProgressDialog(
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
                 }
-
                 if (progress >= 0f) {
                     LinearProgressIndicator(
                         progress = { progress.coerceIn(0f, 1f) },
@@ -329,7 +308,6 @@ fun CameraProgressDialog(
                             .height(8.dp),
                         color = MaterialTheme.colorScheme.primary,
                     )
-
                     Text(
                         text = "${(progress * 100).toInt()}%",
                         fontSize = 16.sp,
@@ -345,9 +323,7 @@ fun CameraProgressDialog(
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 OutlinedButton(
                     onClick = {
                         onCancel()

@@ -1,17 +1,14 @@
 package mpdc4gsr.core.ui.theme
-
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-
 // Standard color constants for buttons and UI elements
 val Orange = Color(0xFFFF9800)
 val Green = Color(0xFF4CAF50)
 val Purple = Color(0xFF9C27B0)
-
 // Color scheme for IRCamera app - based on thermal imaging colors
 private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFF6B73FF), // Blue-purple for thermal UI
@@ -40,7 +37,6 @@ private val DarkColorScheme = darkColorScheme(
     inversePrimary = Color(0xFF415FDF),
     scrim = Color(0xFF000000)
 )
-
 private val LightColorScheme = lightColorScheme(
     primary = Color(0xFF415FDF),
     onPrimary = Color.White,
@@ -67,23 +63,19 @@ private val LightColorScheme = lightColorScheme(
     inverseSurface = Color(0xFF313033),
     inversePrimary = Color(0xFFBEC2FF),
 )
-
 @Composable
 fun IRCameraTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false, // Disabled for consistent thermal imaging theme
-
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-
         content = content
     )
 }

@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.settings.ui
-
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.viewModels
@@ -32,83 +31,66 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-
 enum class PdfType(val fileName: String, val displayName: String) {
     TC001("TC001.pdf", "TC001 Thermal Camera Manual"),
     TS004("TS004.pdf", "TS004 Thermal Camera Manual")
 }
-
 data class PdfDocument(
     val type: PdfType,
     val file: File?,
     val isAvailable: Boolean,
     val fileSize: String = ""
 )
-
 class PdfViewModel : AppBaseViewModel() {
     private val _isLoading = mutableStateOf(true)
     val isLoading: State<Boolean> = _isLoading
-
     private val _pdfDocument = mutableStateOf<PdfDocument?>(null)
     val pdfDocument: State<PdfDocument?> = _pdfDocument
-
     private val _error = mutableStateOf<String?>(null)
     val error: State<String?> = _error
-
     fun loadPdf(isTS001: Boolean, context: android.content.Context) {
         val pdfType = if (isTS001) PdfType.TC001 else PdfType.TS004
-
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO + exceptionHandler) {
             try {
                 _isLoading.value = true
                 _error.value = null
-
                 // Simulate loading delay
                 delay(1000)
-
                 val externalDir = context.getExternalFilesDir("pdf")
                 if (externalDir == null) {
                     _error.value = "External storage not available"
                     _isLoading.value = false
                     return@launch
                 }
-
                 val pdfDir = externalDir
                 if (!pdfDir.exists()) {
                     pdfDir.mkdirs()
                 }
-
                 val pdfFile = File(pdfDir, pdfType.fileName)
                 val isAvailable = pdfFile.exists()
-
                 if (!isAvailable) {
                     // Copy from assets if available
                     copyPdfFromAssets(context, pdfType.fileName, pdfFile)
                 }
-
                 val fileSize = if (pdfFile.exists()) {
                     formatFileSize(pdfFile.length())
                 } else {
                     "0 KB"
                 }
-
                 val document = PdfDocument(
                     type = pdfType,
                     file = if (pdfFile.exists()) pdfFile else null,
                     isAvailable = pdfFile.exists(),
                     fileSize = fileSize
                 )
-
                 _pdfDocument.value = document
                 _isLoading.value = false
-
             } catch (e: Exception) {
                 _error.value = "Failed to load PDF: ${e.message}"
                 _isLoading.value = false
             }
         }
     }
-
     private suspend fun copyPdfFromAssets(
         context: android.content.Context,
         fileName: String,
@@ -117,7 +99,6 @@ class PdfViewModel : AppBaseViewModel() {
         try {
             val inputStream = context.assets.open("manuals/$fileName")
             val outputStream = FileOutputStream(destinationFile)
-
             inputStream.copyTo(outputStream)
             inputStream.close()
             outputStream.close()
@@ -126,7 +107,6 @@ class PdfViewModel : AppBaseViewModel() {
             // We'll show a placeholder message
         }
     }
-
     private fun formatFileSize(bytes: Long): String {
         return when {
             bytes >= 1024 * 1024 -> String.format("%.1f MB", bytes / (1024.0 * 1024.0))
@@ -135,23 +115,17 @@ class PdfViewModel : AppBaseViewModel() {
         }
     }
 }
-
 class PdfComposeActivity : BaseComposeActivity<PdfViewModel>() {
-
     override fun createViewModel(): PdfViewModel = viewModels<PdfViewModel>().value
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val isTS001 = intent.getBooleanExtra("isTS001", false)
         viewModels<PdfViewModel>().value.loadPdf(isTS001, this)
     }
-
     override fun onResume() {
         super.onResume()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: PdfViewModel) {
@@ -160,7 +134,6 @@ class PdfComposeActivity : BaseComposeActivity<PdfViewModel>() {
             val isLoading by viewModel.isLoading
             val pdfDocument by viewModel.pdfDocument
             val error by viewModel.error
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -170,7 +143,6 @@ class PdfComposeActivity : BaseComposeActivity<PdfViewModel>() {
                     title = pdfDocument?.type?.displayName ?: "Manual Viewer",
                     onBackClick = { finish() }
                 )
-
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -180,7 +152,6 @@ class PdfComposeActivity : BaseComposeActivity<PdfViewModel>() {
                         isLoading -> {
                             LoadingContent()
                         }
-
                         error != null -> {
                             ErrorContent(
                                 error = error!!,
@@ -190,7 +161,6 @@ class PdfComposeActivity : BaseComposeActivity<PdfViewModel>() {
                                 }
                             )
                         }
-
                         pdfDocument != null -> {
                             PdfContent(document = pdfDocument!!)
                         }
@@ -200,7 +170,6 @@ class PdfComposeActivity : BaseComposeActivity<PdfViewModel>() {
         }
     }
 }
-
 @Composable
 private fun LoadingContent() {
     Box(
@@ -222,7 +191,6 @@ private fun LoadingContent() {
         }
     }
 }
-
 @Composable
 private fun ErrorContent(
     error: String,
@@ -284,7 +252,6 @@ private fun ErrorContent(
         }
     }
 }
-
 @Composable
 private fun PdfContent(document: PdfDocument) {
     Column(
@@ -331,7 +298,6 @@ private fun PdfContent(document: PdfDocument) {
                 }
             }
         }
-
         if (document.isAvailable) {
             // PDF available - show viewer placeholder
             Card(
@@ -408,9 +374,7 @@ private fun PdfContent(document: PdfDocument) {
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(24.dp))
-
         // Quick help section
         Card(
             modifier = Modifier.fillMaxWidth(),

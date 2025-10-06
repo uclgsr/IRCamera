@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -24,13 +23,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-
 class ThermalGalleryComposeActivity : BaseComposeActivity<ThermalGalleryViewModel>() {
-
     override fun createViewModel(): ThermalGalleryViewModel {
         return ThermalGalleryViewModel()
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalGalleryViewModel) {
@@ -39,11 +35,9 @@ class ThermalGalleryComposeActivity : BaseComposeActivity<ThermalGalleryViewMode
         )
     }
 }
-
 class ThermalGalleryViewModel : BaseViewModel() {
     // ViewModel implementation
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ThermalGalleryScreen(
@@ -54,7 +48,6 @@ private fun ThermalGalleryScreen(
     var selectedFilter by remember { mutableStateOf(FilterType.ALL) }
     var showSearchDialog by remember { mutableStateOf(false) }
     var showMoreOptionsDialog by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -102,13 +95,11 @@ private fun ThermalGalleryScreen(
                 }
             }
         )
-
         // Filter Bar
         ThermalFilterBar(
             selectedFilter = selectedFilter,
             onFilterSelected = { selectedFilter = it }
         )
-
         // Gallery Content
         Box(
             modifier = Modifier
@@ -123,7 +114,6 @@ private fun ThermalGalleryScreen(
             }
         }
     }
-
     // Search Dialog
     if (showSearchDialog) {
         AlertDialog(
@@ -151,7 +141,6 @@ private fun ThermalGalleryScreen(
             }
         )
     }
-
     // More Options Dialog
     if (showMoreOptionsDialog) {
         AlertDialog(
@@ -184,7 +173,6 @@ private fun ThermalGalleryScreen(
         )
     }
 }
-
 @Composable
 private fun ThermalFilterBar(
     selectedFilter: FilterType,
@@ -223,7 +211,6 @@ private fun ThermalFilterBar(
         }
     }
 }
-
 @Composable
 private fun ThermalGridView() {
     LazyVerticalGrid(
@@ -237,7 +224,6 @@ private fun ThermalGridView() {
         }
     }
 }
-
 @Composable
 private fun ThermalListView(
     onMoreClick: (GalleryThermalImage) -> Unit = {}
@@ -255,7 +241,6 @@ private fun ThermalListView(
         }
     }
 }
-
 @Composable
 private fun ThermalImageCard(image: GalleryThermalImage, onMoreClick: () -> Unit = {}) {
     Card(
@@ -286,9 +271,7 @@ private fun ThermalImageCard(image: GalleryThermalImage, onMoreClick: () -> Unit
                     modifier = Modifier.size(32.dp)
                 )
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             // Image info
             Text(
                 image.name,
@@ -310,7 +293,6 @@ private fun ThermalImageCard(image: GalleryThermalImage, onMoreClick: () -> Unit
         }
     }
 }
-
 @Composable
 private fun ThermalImageListItem(
     image: GalleryThermalImage,
@@ -344,9 +326,7 @@ private fun ThermalImageListItem(
                     modifier = Modifier.size(24.dp)
                 )
             }
-
             Spacer(modifier = Modifier.width(12.dp))
-
             // Image details
             Column(
                 modifier = Modifier.weight(1f)
@@ -368,7 +348,6 @@ private fun ThermalImageListItem(
                     fontSize = 10.sp
                 )
             }
-
             // Actions
             IconButton(onClick = onMoreClick) {
                 Icon(
@@ -380,7 +359,6 @@ private fun ThermalImageListItem(
         }
     }
 }
-
 private fun generateSampleThermalImages(): List<GalleryThermalImage> {
     return (1..20).map { index ->
         GalleryThermalImage(
@@ -393,7 +371,6 @@ private fun generateSampleThermalImages(): List<GalleryThermalImage> {
         )
     }
 }
-
 private data class GalleryThermalImage(
     val id: Int,
     val name: String,
@@ -402,11 +379,9 @@ private data class GalleryThermalImage(
     val resolution: String,
     val size: String
 )
-
 private enum class ViewMode {
     GRID, LIST
 }
-
 private enum class FilterType(val displayName: String) {
     ALL("All"),
     TODAY("Today"),

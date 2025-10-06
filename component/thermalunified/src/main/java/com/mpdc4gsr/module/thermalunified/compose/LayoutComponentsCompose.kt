@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.compose
-
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,7 +16,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 @Composable
 fun MonitorControlPanel(
     onLogQuery: () -> Unit = {},
@@ -54,7 +52,6 @@ fun MonitorControlPanel(
                 Spacer(modifier = Modifier.width(4.dp))
                 Text("Query Log", fontSize = 14.sp)
             }
-
             Button(
                 onClick = onCreateChart,
                 modifier = Modifier.weight(1f),
@@ -70,7 +67,6 @@ fun MonitorControlPanel(
                 Spacer(modifier = Modifier.width(4.dp))
                 Text("Create Chart", fontSize = 14.sp)
             }
-
             Button(
                 onClick = onStartMonitoring,
                 modifier = Modifier.weight(1f),
@@ -89,7 +85,6 @@ fun MonitorControlPanel(
         }
     }
 }
-
 @Composable
 fun ChartInfoPanel(
     currentValue: String,
@@ -117,21 +112,18 @@ fun ChartInfoPanel(
                 color = Color.Red,
                 icon = Icons.Default.FiberManualRecord
             )
-
             ChartInfoItem(
                 label = "Max",
                 value = maxValue,
                 color = Color.Green,
                 icon = Icons.Default.KeyboardArrowUp
             )
-
             ChartInfoItem(
                 label = "Min",
                 value = minValue,
                 color = Color.Blue,
                 icon = Icons.Default.KeyboardArrowDown
             )
-
             ChartInfoItem(
                 label = "Avg",
                 value = averageValue,
@@ -141,7 +133,6 @@ fun ChartInfoPanel(
         }
     }
 }
-
 @Composable
 private fun ChartInfoItem(
     label: String,
@@ -170,7 +161,6 @@ private fun ChartInfoItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-
         Text(
             text = value,
             fontSize = 16.sp,
@@ -179,7 +169,6 @@ private fun ChartInfoItem(
         )
     }
 }
-
 @Composable
 fun ReportInfoSection(
     reportName: String,
@@ -207,7 +196,6 @@ fun ReportInfoSection(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-
                 IconButton(onClick = onEditReport) {
                     Icon(
                         imageVector = Icons.Default.Edit,
@@ -215,9 +203,7 @@ fun ReportInfoSection(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             ReportInfoRow("Report Name", reportName)
             ReportInfoRow("Device Model", deviceModel)
             ReportInfoRow("Timestamp", timestamp)
@@ -226,7 +212,6 @@ fun ReportInfoSection(
         }
     }
 }
-
 @Composable
 private fun ReportInfoRow(
     label: String,
@@ -254,7 +239,6 @@ private fun ReportInfoRow(
         )
     }
 }
-
 @Composable
 fun TargetModeItem(
     title: String,
@@ -299,7 +283,6 @@ fun TargetModeItem(
                     MaterialTheme.colorScheme.onSurface
                 }
             )
-
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -313,7 +296,6 @@ fun TargetModeItem(
                         MaterialTheme.colorScheme.onSurface
                     }
                 )
-
                 if (description.isNotEmpty()) {
                     Text(
                         text = description,
@@ -328,7 +310,6 @@ fun TargetModeItem(
                     )
                 }
             }
-
             if (isSelected) {
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
@@ -340,7 +321,6 @@ fun TargetModeItem(
         }
     }
 }
-
 @Composable
 fun ConfigurationItem(
     title: String,
@@ -374,7 +354,6 @@ fun ConfigurationItem(
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Medium
                     )
-
                     if (range.isNotEmpty()) {
                         Text(
                             text = range,
@@ -383,7 +362,6 @@ fun ConfigurationItem(
                         )
                     }
                 }
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -394,7 +372,6 @@ fun ConfigurationItem(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     )
-
                     if (unit.isNotEmpty()) {
                         Text(
                             text = unit,
@@ -402,7 +379,6 @@ fun ConfigurationItem(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-
                     Icon(
                         imageVector = Icons.Default.ChevronRight,
                         contentDescription = "Configure",
@@ -414,7 +390,6 @@ fun ConfigurationItem(
         }
     }
 }
-
 @Composable
 fun EmptyStateComponent(
     title: String = "No Data Available",
@@ -437,9 +412,7 @@ fun EmptyStateComponent(
             modifier = Modifier.size(64.dp),
             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium,
@@ -447,26 +420,21 @@ fun EmptyStateComponent(
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
         Text(
             text = description,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
-
         if (actionText != null) {
             Spacer(modifier = Modifier.height(16.dp))
-
             Button(onClick = onActionClick) {
                 Text(actionText)
             }
         }
     }
 }
-
 @Composable
 fun LayoutComponentsPreview() {
     Column(
@@ -479,28 +447,24 @@ fun LayoutComponentsPreview() {
         MonitorControlPanel(
             isMonitoring = false
         )
-
         ChartInfoPanel(
             currentValue = "25.4°C",
             maxValue = "28.1°C",
             minValue = "22.3°C",
             averageValue = "25.0°C"
         )
-
         TargetModeItem(
             title = "Point Measurement",
             description = "Measure temperature at a specific point",
             icon = Icons.Default.Place,
             isSelected = true
         )
-
         ConfigurationItem(
             title = "Environment Temperature",
             currentValue = "25.0",
             unit = "°C",
             range = "(-10~55°C)"
         )
-
         EmptyStateComponent(
             title = "No measurements",
             description = "Start by taking some temperature measurements",

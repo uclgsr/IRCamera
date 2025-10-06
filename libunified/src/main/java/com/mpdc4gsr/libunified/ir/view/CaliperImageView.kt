@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.ir.view
-
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import com.mpdc4gsr.libunified.R
-
 class CaliperImageView : AppCompatImageView {
     private var showBitmapWidth: Float = 0f
     private var showBitmapHeight: Float = 0F
@@ -27,19 +25,15 @@ class CaliperImageView : AppCompatImageView {
     private var r: Int = 0
     private var t: Int = 0
     private var b: Int = 0
-
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         initView()
     }
-
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
         defStyleAttr,
     )
-
     private fun initView() {
         originalBitmap = (androidx.core.content.ContextCompat.getDrawable(
             context,
@@ -49,7 +43,6 @@ class CaliperImageView : AppCompatImageView {
         originalBitmapHeight = originalBitmap?.height?.toFloat() ?: 0f
         visibility = View.GONE
     }
-
     fun setImageSize(
         imageWidth: Int,
         imageHeight: Int,
@@ -90,7 +83,6 @@ class CaliperImageView : AppCompatImageView {
         layout(l, t, r, b)
         requestLayout()
     }
-
     override fun layout(
         l: Int,
         t: Int,
@@ -99,12 +91,9 @@ class CaliperImageView : AppCompatImageView {
     ) {
         super.layout(l, t, r, b)
     }
-
     private var downX = 0f
     private var downY = 0f
-
     private val downTime: Long = 0
-
     override fun onTouchEvent(event: MotionEvent): Boolean {
         super.onTouchEvent(event)
         if (this.isEnabled) {
@@ -113,7 +102,6 @@ class CaliperImageView : AppCompatImageView {
                     downX = event.getX()
                     downY = event.getY()
                 }
-
                 MotionEvent.ACTION_MOVE -> {
                     val xDistance: Float = event.getX() - downX
                     val yDistance: Float = event.getY() - downY
@@ -125,7 +113,6 @@ class CaliperImageView : AppCompatImageView {
                         layout(l, t, r, b)
                     }
                 }
-
                 MotionEvent.ACTION_UP -> isPressed = false
                 MotionEvent.ACTION_CANCEL -> isPressed = false
                 else -> {}

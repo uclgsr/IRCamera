@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.compose
-
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -17,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.libunified.app.compose.utils.deferAction
-
 @Composable
 fun HomeGuideDialogCompose(
     initialStep: Int = 1,
@@ -26,7 +24,6 @@ fun HomeGuideDialogCompose(
     onDismiss: () -> Unit
 ) {
     var currentStep by remember(initialStep) { mutableIntStateOf(initialStep) }
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -64,12 +61,10 @@ fun HomeGuideDialogCompose(
                                 currentStep = 2
                                 onNextStep(1)
                             }
-
                             2 -> {
                                 currentStep = 3
                                 onNextStep(2)
                             }
-
                             3 -> {
                                 onNextStep(3)
                                 onDismiss()
@@ -85,7 +80,6 @@ fun HomeGuideDialogCompose(
         }
     }
 }
-
 @Composable
 private fun GuideStepContent(
     step: Int,
@@ -111,7 +105,6 @@ private fun GuideStepContent(
         }
     }
 }
-
 @Composable
 private fun GuideStep1Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
     Column(
@@ -124,13 +117,11 @@ private fun GuideStep1Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
-
         Text(
             text = "Welcome to the thermal camera guide. This will help you get started with thermal imaging.",
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center
         )
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -141,7 +132,6 @@ private fun GuideStep1Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
             ) {
                 Text("Skin Detection")
             }
-
             Button(
                 onClick = onNext,
                 modifier = Modifier.weight(1f)
@@ -151,7 +141,6 @@ private fun GuideStep1Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
         }
     }
 }
-
 @Composable
 private fun GuideStep2Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
     Column(
@@ -164,13 +153,11 @@ private fun GuideStep2Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
-
         Text(
             text = "Position the camera properly and adjust the focus for optimal thermal imaging results.",
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center
         )
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -181,7 +168,6 @@ private fun GuideStep2Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
             ) {
                 Text("Skin Detection")
             }
-
             Button(
                 onClick = onNext,
                 modifier = Modifier.weight(1f)
@@ -191,7 +177,6 @@ private fun GuideStep2Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
         }
     }
 }
-
 @Composable
 private fun GuideStep3Content(onNext: () -> Unit) {
     Column(
@@ -204,13 +189,11 @@ private fun GuideStep3Content(onNext: () -> Unit) {
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
-
         Text(
             text = "You're all set! Start using the thermal camera to capture and analyze thermal images.",
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center
         )
-
         Button(
             onClick = deferAction { onNext() },
             modifier = Modifier.fillMaxWidth()
@@ -219,11 +202,9 @@ private fun GuideStep3Content(onNext: () -> Unit) {
         }
     }
 }
-
 @Composable
 fun HomeGuideDialogComposePreview() {
     var showDialog by remember { mutableStateOf(true) }
-
     if (showDialog) {
         HomeGuideDialogCompose(
             initialStep = 1,

@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.report.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,19 +20,15 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ReportPreviewViewModel
-
 class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewModel>() {
-
     override fun createViewModel(): ReportPreviewViewModel {
         return viewModels<ReportPreviewViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ReportPreviewViewModel) {
         var selectedLayout by remember { mutableIntStateOf(0) }
         var showConfirmDialog by remember { mutableStateOf(false) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -125,7 +120,6 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                                     color = Color.White.copy(alpha = 0.6f),
                                     fontSize = 16.sp
                                 )
-
                                 Column(
                                     modifier = Modifier
                                         .fillMaxWidth(0.8f)
@@ -154,7 +148,6 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                             }
                         }
                     }
-
                     // Layout selection
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -174,7 +167,6 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
                             )
-
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -190,7 +182,6 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                             }
                         }
                     }
-
                     // Options
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -210,11 +201,9 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
                             )
-
                             var showImages by remember { mutableStateOf(true) }
                             var showMetadata by remember { mutableStateOf(true) }
                             var showWatermark by remember { mutableStateOf(false) }
-
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -226,7 +215,6 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                                     onCheckedChange = { showImages = it }
                                 )
                             }
-
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -238,7 +226,6 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                                     onCheckedChange = { showMetadata = it }
                                 )
                             }
-
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -256,7 +243,6 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
             }
         }
     }
-
     @Composable
     fun LayoutOption(
         index: Int,

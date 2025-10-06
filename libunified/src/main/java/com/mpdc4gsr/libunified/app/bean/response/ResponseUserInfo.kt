@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.bean.response
-
 data class ResponseUserInfo(
     val topdonId: String,
     val userName: String,

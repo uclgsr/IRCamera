@@ -1,9 +1,7 @@
 package com.mpdc4gsr.libunified.ir.tools
-
 import androidx.annotation.ColorInt
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.utils.ByteUtils
-
 object BitmapTools {
     private fun readTempValue(bytes: ByteArray): Float {
         val data: ByteArray = with(ByteUtils) { bytes.descBytes() }
@@ -11,7 +9,6 @@ object BitmapTools {
         val tempInt = with(ByteUtils) { bytesToInt(data) } / 4
         return (tempInt.toDouble() / scale.toDouble() - 273.15).toFloat()
     }
-
     fun replaceBitmapColor(
         imageBytes: ByteArray,
         tempBytes: ByteArray,
@@ -36,16 +33,13 @@ object BitmapTools {
                     data = tempBytes.copyOfRange(i * 2, i * 2 + 2)
                     value = readTempValue(data)
                     if (value > max || value < min) {
-
                         r = imageBytes[i * 4].toInt() and 0xff
                         g = imageBytes[i * 4 + 1].toInt() and 0xff
                         b = imageBytes[i * 4 + 2].toInt() and 0xff
-
                         grey = (r * 0.3f).toInt() + (g * 0.59f).toInt() + (b * 0.11f).toInt()
                         imageBytes[i * 4] = grey.toByte()
                         imageBytes[i * 4 + 1] = grey.toByte()
                         imageBytes[i * 4 + 2] = grey.toByte()
-
                     }
                 }
             } else {
@@ -64,14 +58,12 @@ object BitmapTools {
                     data = tempBytes.copyOfRange(i * 2, i * 2 + 2)
                     value = readTempValue(data)
                     if (value > max) {
-
                         imageBytes[i * 4] = maxR
                         imageBytes[i * 4 + 1] = maxG
                         imageBytes[i * 4 + 2] = maxB
                         imageBytes[i * 4 + 3] = maxA
                     }
                     if (value < min) {
-
                         imageBytes[i * 4] = minR
                         imageBytes[i * 4 + 1] = minG
                         imageBytes[i * 4 + 2] = minB

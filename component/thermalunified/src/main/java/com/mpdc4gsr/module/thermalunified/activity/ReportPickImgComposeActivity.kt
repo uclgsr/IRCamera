@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -21,13 +20,10 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-
 class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>() {
-
     override fun createViewModel(): ReportPickImgViewModel {
         return ReportPickImgViewModel()
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ReportPickImgViewModel) {
@@ -52,10 +48,10 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Show image search dialog */ }) {
+                            IconButton(onClick = {  }) {
                                 Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
                             }
-                            IconButton(onClick = { /* Show filter options */ }) {
+                            IconButton(onClick = {  }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter", tint = Color.White)
                             }
                         },
@@ -72,7 +68,6 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
             }
         }
     }
-
     @Composable
     private fun ReportPickImgContent(
         viewModel: ReportPickImgViewModel,
@@ -81,7 +76,6 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
         var selectedImages by remember { mutableStateOf(setOf<Int>()) }
         var filterCriteria by remember { mutableStateOf("All Images") }
         var showAIRecommendations by remember { mutableStateOf(true) }
-
         val thermalImages = remember {
             (1..20).map { index ->
                 ReportThermalImage(
@@ -94,7 +88,6 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                 )
             }
         }
-
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -127,7 +120,6 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                             fontWeight = FontWeight.Medium
                         )
                     }
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -145,7 +137,6 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                     }
                 }
             }
-
             // Filter options
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -161,7 +152,6 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                         color = Color(0xFF1976D2)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -180,7 +170,6 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                     }
                 }
             }
-
             // Image grid
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
@@ -210,7 +199,6 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                     )
                 }
             }
-
             // Action buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -225,7 +213,6 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                 ) {
                     Text("Clear All")
                 }
-
                 Button(
                     onClick = {
                         // Auto-select recommended images
@@ -243,7 +230,6 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Auto Select")
                 }
-
                 Button(
                     onClick = { finish() },
                     modifier = Modifier.weight(1f),
@@ -259,7 +245,6 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
             }
         }
     }
-
     @Composable
     private fun ThermalImageCard(
         image: ReportThermalImage,
@@ -308,7 +293,6 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                             )
                         }
                     }
-
                     // Recommendation badge
                     if (showRecommendation && image.isRecommended) {
                         Card(
@@ -325,7 +309,6 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                             )
                         }
                     }
-
                     // Selection indicator
                     if (isSelected) {
                         Card(
@@ -343,9 +326,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 // Image info
                 Text(
                     image.name,
@@ -361,7 +342,6 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
         }
     }
 }
-
 private data class ReportThermalImage(
     val id: Int,
     val name: String,
@@ -370,5 +350,4 @@ private data class ReportThermalImage(
     val isRecommended: Boolean,
     val timestamp: String
 )
-
 class ReportPickImgViewModel : BaseViewModel()

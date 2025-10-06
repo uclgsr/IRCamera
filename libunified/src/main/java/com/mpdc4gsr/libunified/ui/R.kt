@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.ui
-
 object R {
     object drawable {
         // Target thermal menu items - reference existing drawables

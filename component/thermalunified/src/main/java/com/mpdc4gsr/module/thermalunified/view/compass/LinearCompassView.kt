@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.view.compass
-
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -21,7 +20,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.coroutines.EmptyCoroutineContext
-
 class LinearCompassView : View {
     private val paint = Paint()
     private val textPaint = Paint()
@@ -30,7 +28,6 @@ class LinearCompassView : View {
     private val longLinePaint = Paint()
     private val positionPaint = Paint()
     private lateinit var canvas: Canvas
-
     private var lineColor: Int = Color.WHITE
     private var textColor: Int = Color.WHITE
     private var shortLineColor: Int = Color.WHITE
@@ -44,20 +41,16 @@ class LinearCompassView : View {
     private var positionSize = 0f
     private var markerSize = 0f
     private var backgroundColor = Color.BLACK
-
     private var lastDrawTime = 0L
     private var step = 1000 / 10
     private var scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     var curBitmap: Bitmap? = null
-
     constructor(context: Context) : this(context, null) {
         initView()
     }
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0) {
         initView()
     }
-
     constructor(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         ctx,
         attrs,
@@ -69,7 +62,6 @@ class LinearCompassView : View {
         longLineSize = 0.5f.spToPx(context).toFloat()
         positionSize = 11f.spToPx(context).toFloat()
         markerSize = 2f.spToPx(context).toFloat()
-
         val attributes =
             context.obtainStyledAttributes(attrs, R.styleable.LinearCompassView, 0, 0)
         lineColor = attributes.getColor(R.styleable.LinearCompassView_lineColor, Color.WHITE)
@@ -107,64 +99,49 @@ class LinearCompassView : View {
         attributes.recycle()
         initView()
     }
-
     private fun initView() {
         paint.color = backgroundColor
         paint.style = Paint.Style.FILL_AND_STROKE
         paint.strokeWidth = 1f
         paint.isAntiAlias = true
-
         textPaint.color = textColor
         textPaint.textSize = textSize
         textPaint.style = Paint.Style.FILL_AND_STROKE
         textPaint.isAntiAlias = true
         textPaint.strokeWidth = 1f
-
         markerPaint.color = centerAzimuthColor
         markerPaint.strokeWidth = markerSize
         markerPaint.style = Paint.Style.FILL_AND_STROKE
         markerPaint.isAntiAlias = true
-
         shortLinePaint.color = shortLineColor
         shortLinePaint.strokeWidth = shortLineSize
         shortLinePaint.style = Paint.Style.STROKE
         shortLinePaint.isAntiAlias = true
-
         longLinePaint.color = longLineColor
         longLinePaint.strokeWidth = longLineSize
         longLinePaint.style = Paint.Style.STROKE
         longLinePaint.isAntiAlias = true
-
         positionPaint.color = positionColor
         positionPaint.textSize = positionSize
         positionPaint.style = Paint.Style.FILL_AND_STROKE
         positionPaint.isAntiAlias = true
         positionPaint.strokeWidth = 1f
     }
-
     private var showAzimuthArrow = true
-
     private var azimuth = 0f
     private var range = 180f
-
     private var text: String = ""
-
     private fun getRawMinimum() = azimuth - range / 2
-
     private fun getRawMaximum() = azimuth + range / 2
-
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
         this.canvas = canvas
-
         drawAzimuthArrow()
         drawCompassLine()
     }
-
     private fun drawBackGround() {
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
     }
-
     private fun drawAzimuthArrow() {
         if (!showAzimuthArrow) {
             return
@@ -178,13 +155,10 @@ class LinearCompassView : View {
             textPaint
         )
     }
-
     private fun drawCompassLine() {
-
         drawCompass()
         val bottomHeight = height * 7 / 10f
         canvas.drawLine(0f, (bottomHeight - 1), width.toFloat(), bottomHeight, shortLinePaint)
-
         canvas.drawLine(
             width / 2f + markerSize / 2,
             height * (3 / 10f),
@@ -193,7 +167,6 @@ class LinearCompassView : View {
             markerPaint,
         )
     }
-
     fun setCurAzimuth(azimuth: Int) {
         scope.launch(Dispatchers.IO) {
             this@LinearCompassView.azimuth = azimuth.toFloat()
@@ -208,28 +181,22 @@ class LinearCompassView : View {
             }
         }
     }
-
     private fun drawCompass() {
         getValuesBetween(getRawMinimum(), getRawMaximum(), 5f).map {
             it.toInt()
         }.toMutableList().forEach {
-
             val x = toPixel(it.toFloat())
-
             val lineHeight =
                 when {
                     it % 90 == 0 -> (3 / 10f) * height
                     it % 15 == 0 -> (4 / 10f) * height
                     else -> (5 / 10f) * height
                 }
-
             val bottomHeight = height * 7 / 10f
-
             when {
                 it % 90 == 0 -> canvas.drawLine(x, lineHeight, x, bottomHeight, longLinePaint)
                 else -> canvas.drawLine(x, lineHeight, x, bottomHeight, shortLinePaint)
             }
-
             if (it % 45 == 0) {
                 val coord = getPositionText(it)
                 canvas.drawText(
@@ -241,7 +208,6 @@ class LinearCompassView : View {
             }
         }
     }
-
     private fun getPositionText(position: Int): String =
         when (position) {
             -90, 270 -> resources.getString(R.string.compass_west)
@@ -254,7 +220,6 @@ class LinearCompassView : View {
             -135, 225 -> resources.getString(R.string.compass_southwest)
             else -> ""
         }
-
     private fun toPixel(bearing: Float): Float {
         return getPixelLinear(
             bearing,
@@ -263,7 +228,6 @@ class LinearCompassView : View {
             range,
         )
     }
-
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         // Recreate the scope if it was cancelled
@@ -271,7 +235,6 @@ class LinearCompassView : View {
             scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         }
     }
-
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         scope.cancel()

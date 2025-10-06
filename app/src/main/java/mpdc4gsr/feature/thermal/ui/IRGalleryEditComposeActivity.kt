@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.thermal.ui
-
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -30,7 +29,6 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-
 enum class EditTool(
     val displayName: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -43,7 +41,6 @@ enum class EditTool(
     FILTER("Filter", Icons.Default.FilterAlt, "Apply thermal filters"),
     EXPORT("Export", Icons.Default.FileDownload, "Export processed image")
 }
-
 enum class IRGalleryThermalPalette(
     val displayName: String,
     val colors: List<Color>
@@ -53,7 +50,6 @@ enum class IRGalleryThermalPalette(
     GRAYSCALE("Grayscale", listOf(Color.Black, Color.Gray, Color.White)),
     HOT("Hot", listOf(Color.Black, Color.Red, Color(0xFFFFA500), Color.Yellow))
 }
-
 data class ImageEditState(
     val isImageLoaded: Boolean = false,
     val selectedTool: EditTool? = null,
@@ -62,35 +58,27 @@ data class ImageEditState(
     val temperatureRange: Pair<Float, Float> = 20f to 40f,
     val annotations: List<String> = emptyList()
 )
-
 class IRGalleryEditViewModel : AppBaseViewModel() {
     private val _editState = mutableStateOf(ImageEditState())
     val editState: State<ImageEditState> = _editState
-
     private val _isProcessing = mutableStateOf(false)
     val isProcessing: State<Boolean> = _isProcessing
-
     private val _statusMessage = mutableStateOf("Image editor ready")
     val statusMessage: State<String> = _statusMessage
-
     fun loadImage(imagePath: String) {
         viewModelScope.launch {
             _isProcessing.value = true
             _statusMessage.value = "Loading thermal image..."
-
             delay(2000) // Simulate image loading
-
             _editState.value = _editState.value.copy(isImageLoaded = true)
             _statusMessage.value = "Image loaded successfully"
             _isProcessing.value = false
         }
     }
-
     fun selectTool(tool: EditTool) {
         _editState.value = _editState.value.copy(selectedTool = tool)
         _statusMessage.value = "Selected tool: ${tool.displayName}"
     }
-
     fun selectPalette(palette: IRGalleryThermalPalette) {
         _editState.value = _editState.value.copy(
             selectedPalette = palette,
@@ -98,7 +86,6 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
         )
         _statusMessage.value = "Applied ${palette.displayName} palette"
     }
-
     fun updateTemperatureRange(min: Float, max: Float) {
         _editState.value = _editState.value.copy(
             temperatureRange = min to max,
@@ -106,7 +93,6 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
         )
         _statusMessage.value = "Temperature range: ${min}°C - ${max}°C"
     }
-
     fun addAnnotation(text: String) {
         val currentAnnotations = _editState.value.annotations
         _editState.value = _editState.value.copy(
@@ -115,46 +101,34 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
         )
         _statusMessage.value = "Added annotation: $text"
     }
-
     fun saveImage() {
         viewModelScope.launch {
             _isProcessing.value = true
             _statusMessage.value = "Saving image..."
-
             delay(3000) // Simulate saving
-
             _editState.value = _editState.value.copy(hasUnsavedChanges = false)
             _statusMessage.value = "Image saved successfully"
             _isProcessing.value = false
         }
     }
-
     fun exportImage() {
         viewModelScope.launch {
             _isProcessing.value = true
             _statusMessage.value = "Exporting image..."
-
             delay(2500) // Simulate export
-
             _statusMessage.value = "Image exported to gallery"
             _isProcessing.value = false
         }
     }
 }
-
 class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>() {
-
     private val viewModelInstance: IRGalleryEditViewModel by viewModels()
-
     override fun createViewModel(): IRGalleryEditViewModel = viewModelInstance
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val imagePath = intent?.getStringExtra("image_path") ?: "sample_thermal_image.jpg"
         viewModelInstance.loadImage(imagePath)
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRGalleryEditViewModel) {
@@ -163,7 +137,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
             val editState by viewModel.editState
             val isProcessing by viewModel.isProcessing
             val statusMessage by viewModel.statusMessage
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -184,7 +157,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                         }
                     }
                 )
-
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -217,7 +189,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                 )
                                 Spacer(modifier = Modifier.width(12.dp))
                             }
-
                             Text(
                                 text = statusMessage,
                                 style = MaterialTheme.typography.bodyMedium,
@@ -225,7 +196,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                             )
                         }
                     }
-
                     // Image preview area
                     Card(
                         modifier = Modifier
@@ -308,7 +278,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                             }
                         }
                     }
-
                     // Tool selection
                     if (editState.isImageLoaded) {
                         Text(
@@ -317,7 +286,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -333,7 +301,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                 )
                             }
                         }
-
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -349,7 +316,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                 )
                             }
                         }
-
                         // Thermal palette selection
                         Text(
                             text = "Thermal Palette",
@@ -357,7 +323,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -373,7 +338,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                 )
                             }
                         }
-
                         // Temperature range control
                         Card(
                             modifier = Modifier
@@ -389,12 +353,10 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                     fontWeight = FontWeight.SemiBold,
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )
-
                                 Text(
                                     text = "Min: ${editState.temperatureRange.first}°C",
                                     style = MaterialTheme.typography.bodySmall
                                 )
-
                                 Slider(
                                     value = editState.temperatureRange.first,
                                     onValueChange = { newMin ->
@@ -406,12 +368,10 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                     valueRange = -10f..50f,
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )
-
                                 Text(
                                     text = "Max: ${editState.temperatureRange.second}°C",
                                     style = MaterialTheme.typography.bodySmall
                                 )
-
                                 Slider(
                                     value = editState.temperatureRange.second,
                                     onValueChange = { newMax ->
@@ -424,7 +384,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                 )
                             }
                         }
-
                         // Action buttons
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -443,7 +402,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Save")
                             }
-
                             Button(
                                 onClick = { viewModel.exportImage() },
                                 modifier = Modifier.weight(1f),
@@ -464,7 +422,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
         }
     }
 }
-
 @Composable
 private fun EditToolButton(
     tool: EditTool,
@@ -508,7 +465,6 @@ private fun EditToolButton(
         }
     }
 }
-
 @Composable
 private fun PaletteButton(
     palette: IRGalleryThermalPalette,

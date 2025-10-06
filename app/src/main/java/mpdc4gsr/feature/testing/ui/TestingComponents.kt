@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.testing.ui
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -12,10 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
-/**
- * Shared testing components for the Testing Suite Compose migration
- */
-
 data class TestCase(
     val id: String,
     val name: String,
@@ -24,11 +19,9 @@ data class TestCase(
     val duration: Long = 0,
     val details: String = ""
 )
-
 enum class TestStatus {
     PENDING, RUNNING, PASSED, FAILED, SKIPPED
 }
-
 @Composable
 fun TestResultCard(
     testCase: TestCase,
@@ -60,10 +53,8 @@ fun TestResultCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
                 TestStatusIcon(status = testCase.status)
             }
-
             if (testCase.details.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -72,7 +63,6 @@ fun TestResultCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             if (testCase.duration > 0) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
@@ -81,7 +71,6 @@ fun TestResultCard(
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-
             if (testCase.status == TestStatus.PENDING || testCase.status == TestStatus.FAILED) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
@@ -100,7 +89,6 @@ fun TestResultCard(
         }
     }
 }
-
 @Composable
 fun TestStatusIcon(
     status: TestStatus,
@@ -113,7 +101,6 @@ fun TestStatusIcon(
         TestStatus.FAILED -> Icons.Default.Error to MaterialTheme.colorScheme.error
         TestStatus.SKIPPED -> Icons.Default.SkipNext to MaterialTheme.colorScheme.outline
     }
-
     Icon(
         imageVector = icon,
         contentDescription = status.name,
@@ -121,7 +108,6 @@ fun TestStatusIcon(
         modifier = modifier.size(24.dp)
     )
 }
-
 @Composable
 fun TestProgressIndicator(
     totalTests: Int,
@@ -153,17 +139,13 @@ fun TestProgressIndicator(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             val progress = if (totalTests > 0) completedTests.toFloat() / totalTests else 0f
             LinearProgressIndicator(
                 progress = { progress },
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -187,7 +169,6 @@ fun TestProgressIndicator(
         }
     }
 }
-
 @Composable
 fun TestMetricChip(
     label: String,
@@ -210,7 +191,6 @@ fun TestMetricChip(
         modifier = modifier
     )
 }
-
 @Composable
 fun TestMetricsDisplay(
     metrics: Map<String, Any>,
@@ -227,9 +207,7 @@ fun TestMetricsDisplay(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             metrics.forEach { (key, value) ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),

@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.camera.presentation
-
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,14 +11,10 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Focus mode options for camera
- */
 enum class FocusMode(val displayName: String) {
     AUTO("Auto"),
     MANUAL("Manual"),
     CONTINUOUS("Continuous");
-
     fun getNext(): FocusMode {
         return when (this) {
             AUTO -> MANUAL
@@ -29,15 +24,11 @@ enum class FocusMode(val displayName: String) {
     }
 }
 
-/**
- * White balance options for camera
- */
 enum class WhiteBalance(val displayName: String) {
     AUTO("Auto"),
     DAYLIGHT("Daylight"),
     CLOUDY("Cloudy"),
     TUNGSTEN("Tungsten");
-
     fun getNext(): WhiteBalance {
         return when (this) {
             AUTO -> DAYLIGHT
@@ -48,23 +39,16 @@ enum class WhiteBalance(val displayName: String) {
     }
 }
 
-/**
- * ViewModel for RGB Camera Screen
- * Manages RgbCameraRecorder lifecycle and camera controls
- */
 class RGBCameraViewModel(
     context: Context
 ) : AppBaseViewModel() {
-
     private val application: Context = context.applicationContext
-
     companion object {
         // Reuse SimpleDateFormat instance for better performance
         private val ISO_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
             timeZone = TimeZone.getTimeZone("UTC")
         }
     }
-
     data class CameraState(
         val isPreviewActive: Boolean = false,
         val isRecording: Boolean = false,
@@ -79,16 +63,11 @@ class RGBCameraViewModel(
         val error: String? = null,
         val cameraChangeCounter: Int = 0
     )
-
     private val _cameraState = MutableStateFlow(CameraState())
     val cameraState: StateFlow<CameraState> = _cameraState.asStateFlow()
-
     private val _cameraRecorder = MutableStateFlow<RgbCameraRecorder?>(null)
     val cameraRecorder: StateFlow<RgbCameraRecorder?> = _cameraRecorder.asStateFlow()
 
-    /**
-     * Initialize camera recorder with lifecycle owner
-     */
     fun initializeCamera(lifecycleOwner: androidx.lifecycle.LifecycleOwner) {
         viewModelScope.launch {
             try {
@@ -96,7 +75,6 @@ class RGBCameraViewModel(
                     context = application,
                     lifecycleOwner = lifecycleOwner
                 )
-
                 val initialized = recorder.initialize()
                 if (initialized) {
                     _cameraRecorder.value = recorder
@@ -117,22 +95,12 @@ class RGBCameraViewModel(
         }
     }
 
-    /**
-     * Get camera recorder instance for preview binding
-     *
-     * @return The current RgbCameraRecorder instance, or null if not initialized
-     * @deprecated Use cameraRecorder StateFlow instead for reactive updates.
-     *             Replace `viewModel.getCameraRecorder()` with `viewModel.cameraRecorder.collectAsState()` in Compose.
-     */
     @Deprecated(
         message = "Use cameraRecorder StateFlow for reactive updates",
         replaceWith = ReplaceWith("cameraRecorder.value")
     )
     fun getCameraRecorder(): RgbCameraRecorder? = _cameraRecorder.value
 
-    /**
-     * Start recording
-     */
     fun startRecording() {
         viewModelScope.launch {
             try {
@@ -141,23 +109,18 @@ class RGBCameraViewModel(
                     _cameraState.update { it.copy(error = "Camera not initialized") }
                     return@launch
                 }
-
                 val sessionDir = application.getExternalFilesDir("camera_recordings")?.absolutePath
                     ?: application.filesDir.absolutePath
-
                 val currentTimeMs = System.currentTimeMillis()
                 val currentMonotonicNs = System.nanoTime()
-
                 val metadata = mpdc4gsr.core.data.SessionMetadata(
                     sessionId = "camera_${currentTimeMs}",
                     sessionStartTimestampMs = currentTimeMs,
                     sessionStartMonotonicNs = currentMonotonicNs,
                     sessionStartIso = ISO_DATE_FORMAT.format(java.util.Date(currentTimeMs))
                 )
-
                 recorder.startRecording(sessionDir, metadata)
                 _cameraState.update { it.copy(isRecording = true, recordingDuration = 0, error = null) }
-
                 // Start duration tracking
                 trackRecordingDuration()
             } catch (e: Exception) {
@@ -166,9 +129,6 @@ class RGBCameraViewModel(
         }
     }
 
-    /**
-     * Stop recording
-     */
     fun stopRecording() {
         viewModelScope.launch {
             try {
@@ -180,16 +140,10 @@ class RGBCameraViewModel(
         }
     }
 
-    /**
-     * Toggle preview
-     */
     fun togglePreview() {
         _cameraState.update { it.copy(isPreviewActive = !it.isPreviewActive) }
     }
 
-    /**
-     * Capture photo
-     */
     fun capturePhoto() {
         viewModelScope.launch {
             try {
@@ -201,9 +155,6 @@ class RGBCameraViewModel(
         }
     }
 
-    /**
-     * Switch between front and back camera
-     */
     fun switchCamera() {
         viewModelScope.launch {
             try {
@@ -212,9 +163,7 @@ class RGBCameraViewModel(
                     _cameraState.update { it.copy(error = "Camera not initialized") }
                     return@launch
                 }
-
                 val cameraInfo = recorder.getCurrentCameraInfo()
-
                 if (!cameraInfo.canSwitch) {
                     val reason = when {
                         _cameraState.value.isRecording -> "Cannot switch camera during recording"
@@ -226,13 +175,11 @@ class RGBCameraViewModel(
                     _cameraState.update { it.copy(error = reason) }
                     return@launch
                 }
-
                 val success = if (cameraInfo.isUsingFrontCamera) {
                     recorder.switchToBackCamera()
                 } else {
                     recorder.switchToFrontCamera()
                 }
-
                 if (success) {
                     // Increment counter to trigger preview rebind in UI
                     _cameraState.update {
@@ -250,43 +197,29 @@ class RGBCameraViewModel(
         }
     }
 
-    /**
-     * Update camera settings
-     */
     fun updateResolution(resolution: String) {
         _cameraState.update { it.copy(resolution = resolution) }
     }
-
     fun updateFrameRate(frameRate: Int) {
         _cameraState.update { it.copy(frameRate = frameRate) }
     }
-
     fun updateFocusMode(focusMode: FocusMode) {
         _cameraState.update { it.copy(focusMode = focusMode) }
     }
-
     fun updateWhiteBalance(whiteBalance: WhiteBalance) {
         _cameraState.update { it.copy(whiteBalance = whiteBalance) }
     }
-
     fun updateExposureTime(exposureTime: String) {
         _cameraState.update { it.copy(exposureTime = exposureTime) }
     }
-
     fun updateISO(iso: Int) {
         _cameraState.update { it.copy(iso = iso) }
     }
 
-    /**
-     * Dismiss error message
-     */
     fun dismissError() {
         _cameraState.update { it.copy(error = null) }
     }
 
-    /**
-     * Reinitialize camera after error or cleanup
-     */
     fun reinitializeCamera(lifecycleOwner: androidx.lifecycle.LifecycleOwner) {
         viewModelScope.launch {
             try {
@@ -296,10 +229,8 @@ class RGBCameraViewModel(
                     recorder.cleanup()
                     _cameraRecorder.value = null
                 }
-
                 // Reinitialize - cleanup() is a suspend function that completes before continuing
                 initializeCamera(lifecycleOwner)
-
                 // Increment counter to trigger UI updates
                 _cameraState.update {
                     it.copy(cameraChangeCounter = it.cameraChangeCounter + 1)
@@ -310,9 +241,6 @@ class RGBCameraViewModel(
         }
     }
 
-    /**
-     * Track recording duration
-     */
     private fun trackRecordingDuration() {
         viewModelScope.launch {
             while (_cameraState.value.isRecording) {
@@ -326,7 +254,6 @@ class RGBCameraViewModel(
             }
         }
     }
-
     override fun onCleared() {
         super.onCleared()
         viewModelScope.launch {

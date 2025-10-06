@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.testing.ui
-
 import android.os.Bundle
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -27,22 +26,13 @@ import mpdc4gsr.core.data.TimeSynchronizationService
 import mpdc4gsr.feature.network.data.RecordingController
 import kotlin.math.abs
 
-/**
- * Compose version consolidating multiple timestamp/synchronization activities:
- * - TimeSynchronizationTestActivity
- * - TimestampSyncVerificationActivity
- * - TimestampUnificationTestActivity
- * - SynchronizationTestActivity
- */
 class TimeSynchronizationTestComposeActivity : ComponentActivity() {
-
     companion object {
         private const val TAG = "TimeSynchronizationTestCompose"
         private const val SYNC_TOLERANCE_MS = 5L
         private const val FLASH_DURATION_MS = 500L
         private const val TEST_RECORDING_DURATION_MS = 10000L
     }
-
     data class TimestampCheck(
         val sensorName: String,
         val timestamp: Long,
@@ -50,7 +40,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
         val isSynchronized: Boolean,
         val details: String
     )
-
     data class SyncEvent(
         val eventName: String,
         val timestamp: String,
@@ -58,10 +47,8 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
         val maxDrift: Long,
         val synchronized: Boolean
     )
-
     private var timeSyncService: TimeSynchronizationService? = null
     private var recordingController: RecordingController? = null
-
     // State variables hoisted to activity level
     private val _timestampChecks = mutableStateOf(listOf<TimestampCheck>())
     private val _syncEvents = mutableStateOf(listOf<SyncEvent>())
@@ -69,24 +56,19 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
     private val _maxDriftMs = mutableStateOf(0L)
     private val _currentSyncStatus = mutableStateOf("Not Synchronized")
     private val _isTestRunning = mutableStateOf(false)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initializeComponents()
-
         setContent {
             LibUnifiedTheme {
                 TimeSynchronizationTestScreen()
             }
         }
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun TimeSynchronizationTestScreen() {
         var testResults by remember { mutableStateOf(listOf<TestCase>()) }
-
         // Use hoisted state
         val isTestRunning by _isTestRunning
         val timestampChecks by _timestampChecks
@@ -94,7 +76,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
         val syncMetrics by _syncMetrics
         val currentSyncStatus by _currentSyncStatus
         val maxDriftMs by _maxDriftMs
-
         // Initialize test cases
         LaunchedEffect(Unit) {
             testResults = listOf(
@@ -130,7 +111,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                 )
             )
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -196,7 +176,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                                     fontWeight = FontWeight.Medium
                                 )
                             }
-
                             if (maxDriftMs > 0) {
                                 Text(
                                     text = "Max Drift: ${maxDriftMs}ms",
@@ -208,7 +187,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                                 )
                             }
                         }
-
                         if (timestampChecks.isNotEmpty()) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
@@ -218,9 +196,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Test Progress
                 TestProgressIndicator(
                     totalTests = testResults.size,
@@ -228,9 +204,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                     passedTests = testResults.count { it.status == TestStatus.PASSED },
                     failedTests = testResults.count { it.status == TestStatus.FAILED }
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Sync Metrics
                 if (syncMetrics.isNotEmpty()) {
                     TestMetricsDisplay(
@@ -239,7 +213,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 // Test Control Buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -266,7 +239,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                             Text("Run All Tests")
                         }
                     }
-
                     OutlinedButton(
                         onClick = {
                             lifecycleScope.launch { performFlashSyncTest() }
@@ -279,9 +251,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                         Text("Flash Sync")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -297,7 +267,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Check Accuracy")
                     }
-
                     OutlinedButton(
                         onClick = {
                             lifecycleScope.launch { measureClockDrift() }
@@ -310,9 +279,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                         Text("Measure Drift")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Individual Test Cases
                 testResults.forEach { testCase ->
                     TestResultCard(
@@ -321,11 +288,9 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                 }
-
                 // Timestamp Checks
                 if (timestampChecks.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -334,7 +299,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                                 fontWeight = FontWeight.Medium
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-
                             timestampChecks.forEach { check ->
                                 TimestampCheckItem(check = check)
                                 Spacer(modifier = Modifier.height(6.dp))
@@ -342,11 +306,9 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                         }
                     }
                 }
-
                 // Sync Events
                 if (syncEvents.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -355,7 +317,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                                 fontWeight = FontWeight.Medium
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-
                             syncEvents.takeLast(5).forEach { event ->
                                 SyncEventItem(event = event)
                                 Spacer(modifier = Modifier.height(8.dp))
@@ -366,7 +327,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             }
         }
     }
-
     @Composable
     fun TimestampCheckItem(check: TimestampCheck) {
         Row(
@@ -386,7 +346,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             Column(horizontalAlignment = Alignment.End) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
@@ -412,7 +371,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             }
         }
     }
-
     @Composable
     fun SyncEventItem(event: SyncEvent) {
         Column {
@@ -438,7 +396,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                         fontWeight = FontWeight.Medium
                     )
                 }
-
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = event.timestamp,
@@ -456,7 +413,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             }
         }
     }
-
     private fun initializeComponents() {
         try {
             recordingController = RecordingController(this, this)
@@ -466,77 +422,58 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Failed to initialize components: ${e.message}")
         }
     }
-
     private suspend fun runAllSyncTests() {
         AppLogger.i(TAG, "Running all time synchronization tests")
-
         val startTime = System.currentTimeMillis()
         val metrics = mutableMapOf<String, Any>()
         val checks = mutableListOf<TimestampCheck>()
         val events = mutableListOf<SyncEvent>()
-
         try {
             // Test unified timestamp system
             val unifiedTest = testUnifiedTimestampSystem()
             checks.addAll(unifiedTest)
-
             delay(1000)
-
             // Test cross-sensor sync events
             val syncTest = testCrossSensorSyncEvents()
             events.addAll(syncTest)
-
             delay(1000)
-
             // Check timestamp accuracy
             checkTimestampAccuracy()
-
             delay(1000)
-
             // Measure clock drift
             measureClockDrift()
-
             // Calculate overall metrics
             val maxDrift = checks.maxOfOrNull { abs(it.syncOffset) } ?: 0L
             val syncedCount = checks.count { it.isSynchronized }
             val syncRate = if (checks.isNotEmpty()) (syncedCount * 100) / checks.size else 0
-
             metrics["Max Drift"] = "${maxDrift}ms"
             metrics["Sync Rate"] = "$syncRate%"
             metrics["Sensors Tested"] = checks.size
             metrics["Events Captured"] = events.size
             metrics["Test Duration"] = "${System.currentTimeMillis() - startTime}ms"
-
             _timestampChecks.value = checks
             _syncEvents.value = events
             _syncMetrics.value = metrics
             _maxDriftMs.value = maxDrift
             _currentSyncStatus.value =
                 if (maxDrift <= SYNC_TOLERANCE_MS) "Synchronized" else "Out of Sync"
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "All sync tests failed: ${e.message}")
         } finally {
             _isTestRunning.value = false
         }
     }
-
     private suspend fun testUnifiedTimestampSystem(): List<TimestampCheck> {
         AppLogger.d(TAG, "Testing unified timestamp system")
-
         val checks = mutableListOf<TimestampCheck>()
         val baseTimestamp = System.currentTimeMillis()
-
         try {
             delay(2000) // Simulate test time
-
             // Simulate timestamp checks for different sensors
             val sensors = listOf("GSR Sensor", "Thermal Camera", "RGB Camera", "Audio Recorder")
-
             sensors.forEach { sensor ->
                 val offset = (-10..10).random().toLong()
                 val isSynced = abs(offset) <= SYNC_TOLERANCE_MS
-
                 checks.add(
                     TimestampCheck(
                         sensorName = sensor,
@@ -546,25 +483,18 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                         details = "Timestamp verification completed"
                     )
                 )
-
                 delay(200)
             }
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Unified timestamp test failed: ${e.message}")
         }
-
         return checks
     }
-
     private suspend fun testCrossSensorSyncEvents(): List<SyncEvent> {
         AppLogger.d(TAG, "Testing cross-sensor sync events")
-
         val events = mutableListOf<SyncEvent>()
-
         try {
             delay(3000) // Simulate test time
-
             // Simulate sync events
             repeat(3) { i ->
                 val sensorData = mapOf(
@@ -572,10 +502,8 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                     "Thermal" to System.currentTimeMillis() + (-5..5).random(),
                     "RGB" to System.currentTimeMillis() + (-5..5).random()
                 )
-
                 val maxDrift = sensorData.values.maxOf { it } - sensorData.values.minOf { it }
                 val synchronized = maxDrift <= SYNC_TOLERANCE_MS
-
                 events.add(
                     SyncEvent(
                         eventName = "Sync Event ${i + 1}",
@@ -589,17 +517,13 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                         synchronized = synchronized
                     )
                 )
-
                 delay(1000)
             }
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Cross-sensor sync test failed: ${e.message}")
         }
-
         return events
     }
-
     private suspend fun checkTimestampAccuracy() {
         AppLogger.d(TAG, "Checking timestamp accuracy")
         try {
@@ -609,7 +533,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Timestamp accuracy check failed: ${e.message}")
         }
     }
-
     private suspend fun measureClockDrift() {
         AppLogger.d(TAG, "Measuring clock drift")
         try {
@@ -619,7 +542,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Clock drift measurement failed: ${e.message}")
         }
     }
-
     private suspend fun performFlashSyncTest() {
         AppLogger.d(TAG, "Performing flash sync test")
         try {
@@ -629,7 +551,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Flash sync test failed: ${e.message}")
         }
     }
-
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {
@@ -642,7 +563,6 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             }
         }
     }
-
     private suspend fun testSyncRecovery() {
         AppLogger.d(TAG, "Testing sync recovery")
         try {

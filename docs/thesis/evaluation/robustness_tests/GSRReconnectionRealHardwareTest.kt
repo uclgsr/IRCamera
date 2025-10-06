@@ -1,5 +1,4 @@
 package thesis_evaluation.robustness_tests
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,20 +24,16 @@ import mpdc4gsr.feature.network.data.RecordingController
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-
 class GSRReconnectionRealHardwareTest : ComponentActivity() {
-
     companion object {
         private const val TAG = "GSRReconnectionRealHardwareTest"
     }
-
     data class ConnectionEvent(
         val timestamp: Long,
         val eventType: String,
         val description: String,
         val connectionState: String
     )
-
     data class RecordingMetrics(
         val recordingStartTime: Long = 0,
         val recordingEndTime: Long = 0,
@@ -48,23 +43,18 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
         val totalSamplesAfterReconnect: Int = 0,
         val dataGapDuration: Long = 0
     )
-
     private var gsrRecorder: GSRSensorRecorder? = null
     private var recordingController: RecordingController? = null
     private var testOutputFile: File? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initializeTestComponents()
-
         setContent {
             LibUnifiedTheme {
                 GSRReconnectionRealHardwareTestScreen()
             }
         }
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun GSRReconnectionRealHardwareTestScreen() {
@@ -74,7 +64,6 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
         var currentState by remember { mutableStateOf("Idle") }
         var elapsedTime by remember { mutableStateOf(0L) }
         var isConnected by remember { mutableStateOf(false) }
-
         LaunchedEffect(isRecording) {
             if (isRecording) {
                 while (isRecording) {
@@ -83,7 +72,6 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
                 }
             }
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -121,9 +109,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -146,9 +132,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -183,9 +167,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 if (recordingMetrics.recordingStartTime > 0) {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -226,10 +208,8 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
                             }
                         }
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 if (connectionEvents.isNotEmpty()) {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -248,10 +228,8 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
                             }
                         }
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -284,7 +262,6 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Start Recording")
                     }
-
                     Button(
                         onClick = {
                             lifecycleScope.launch {
@@ -310,7 +287,6 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
                         Text("Stop Recording")
                     }
                 }
-
                 if (testOutputFile != null) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
@@ -322,7 +298,6 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
             }
         }
     }
-
     @Composable
     private fun MetricRow(label: String, value: String) {
         Row(
@@ -339,7 +314,6 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
             )
         }
     }
-
     @Composable
     private fun EventLogItem(event: ConnectionEvent) {
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
@@ -369,22 +343,18 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
             )
         }
     }
-
     private fun initializeTestComponents() {
         try {
             recordingController = RecordingController(this, this)
             gsrRecorder = GSRSensorRecorder(this, recordingController = recordingController!!)
-
             val outputDir = File(getExternalFilesDir(null), "thesis_evaluation")
             outputDir.mkdirs()
             testOutputFile = File(outputDir, "gsr_reconnection_real_${System.currentTimeMillis()}.log")
-
             AppLogger.i(TAG, "Test components initialized successfully")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize test components", e)
         }
     }
-
     private suspend fun startRecording(
         onStateChange: (String) -> Unit,
         onConnectionChange: (Boolean) -> Unit,
@@ -394,16 +364,12 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
         onStateChange("Starting recording...")
         logEvent("RECORDING_START", "Recording started", "RECORDING", onEvent)
         AppLogger.i(TAG, "Real hardware test recording started")
-
         val startTime = System.currentTimeMillis()
         onMetrics(RecordingMetrics(recordingStartTime = startTime))
-
         onStateChange("Recording - GSR connected")
         onConnectionChange(true)
-
         monitorGSRConnection(onStateChange, onConnectionChange, onEvent, onMetrics)
     }
-
     private suspend fun monitorGSRConnection(
         onStateChange: (String) -> Unit,
         onConnectionChange: (Boolean) -> Unit,
@@ -412,12 +378,9 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
     ) {
         var disconnectTime: Long? = null
         var reconnectTime: Long? = null
-
         while (true) {
             delay(2000)
-
             val isConnected = checkGSRConnectionState()
-
             if (!isConnected && disconnectTime == null) {
                 disconnectTime = System.currentTimeMillis()
                 onStateChange("GSR disconnected - attempting reconnection")
@@ -441,7 +404,6 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
                     onEvent
                 )
                 AppLogger.i(TAG, "GSR reconnection successful")
-
                 onMetrics(
                     RecordingMetrics(
                         disconnectDetectedTime = disconnectTime,
@@ -452,7 +414,6 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
             }
         }
     }
-
     private suspend fun stopRecording(
         onStateChange: (String) -> Unit,
         onEvent: (ConnectionEvent) -> Unit
@@ -460,15 +421,12 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
         onStateChange("Stopping recording...")
         logEvent("RECORDING_STOP", "Recording stopped", "STOPPED", onEvent)
         AppLogger.i(TAG, "Real hardware test recording stopped")
-
         delay(500)
         onStateChange("Recording complete")
     }
-
     private fun checkGSRConnectionState(): Boolean {
         return gsrRecorder?.isConnected ?: false
     }
-
     private fun logEvent(
         eventType: String,
         description: String,
@@ -482,16 +440,13 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
             connectionState = connectionState
         )
         onEvent(event)
-
         testOutputFile?.appendText(
             "${formatTimestamp(event.timestamp)} | $eventType | $connectionState | $description\n"
         )
     }
-
     private fun formatTimestamp(timestamp: Long): String {
         return SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault()).format(Date(timestamp))
     }
-
     private fun formatDuration(seconds: Long): String {
         val hours = seconds / 3600
         val minutes = (seconds % 3600) / 60

@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,13 +21,10 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
-
 class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -87,7 +83,6 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             }
         }
     }
-
     @Composable
     private fun ReportPreviewContent(
         modifier: Modifier = Modifier
@@ -95,7 +90,6 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var currentPage by remember { mutableStateOf(1) }
         var totalPages by remember { mutableStateOf(5) }
         var showNavigationBookmarks by remember { mutableStateOf(false) }
-
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -129,13 +123,11 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 tint = if (currentPage > 1) Color.White else Color(0xFF7D8590)
                             )
                         }
-
                         Text(
                             "Page $currentPage of $totalPages",
                             color = Color.White,
                             fontSize = 14.sp
                         )
-
                         IconButton(
                             onClick = { if (currentPage < totalPages) currentPage++ },
                             enabled = currentPage < totalPages
@@ -147,7 +139,6 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
                     }
-
                     // Quick Navigation
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -159,8 +150,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 tint = Color.White
                             )
                         }
-
-                        IconButton(onClick = { /* Adjust zoom to fit screen */ }) {
+                        IconButton(onClick = {  }) {
                             Icon(
                                 Icons.Default.FitScreen,
                                 contentDescription = "Fit to screen",
@@ -169,7 +159,6 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         }
                     }
                 }
-
                 // Navigation Bookmarks
                 if (showNavigationBookmarks) {
                     Column(
@@ -183,7 +172,6 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 }
             }
-
             // Report Content Display
             Card(
                 modifier = Modifier
@@ -208,7 +196,6 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 }
             }
-
             // Format Options
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -222,9 +209,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )
-
                     Spacer(modifier = Modifier.height(12.dp))
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -238,7 +223,6 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             }
         }
     }
-
     @Composable
     private fun BookmarkItem(
         title: String,
@@ -258,7 +242,6 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     color = Color(0xFF7D8590),
                     fontSize = 14.sp
                 )
-
                 Text(
                     "Page $pageNumber",
                     color = Color(0xFF7D8590),
@@ -267,7 +250,6 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             }
         }
     }
-
     @Composable
     private fun RowScope.FormatButton(
         label: String,
@@ -295,7 +277,6 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             )
         }
     }
-
     @Composable
     private fun ExecutiveSummaryPage() {
         Text(
@@ -304,33 +285,26 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             "This thermal analysis report presents comprehensive findings from thermal imaging inspection conducted on January 15, 2024. The inspection covered critical infrastructure components and identified several areas requiring attention.",
             color = Color.Black,
             fontSize = 14.sp,
             lineHeight = 20.sp
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             "Key Findings:",
             color = Color.Black,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
         BulletPoint("Temperature anomalies detected in sectors 3 and 7")
         BulletPoint("Average operating temperature: 28.7°C")
         BulletPoint("Peak temperature recorded: 42.1°C")
         BulletPoint("No critical temperature violations observed")
     }
-
     @Composable
     private fun ThermalAnalysisPage() {
         Text(
@@ -339,9 +313,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             "Detailed thermal analysis of captured data reveals normal operating conditions with isolated temperature variations within acceptable ranges.",
             color = Color.Black,
@@ -349,7 +321,6 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             lineHeight = 20.sp
         )
     }
-
     @Composable
     private fun TemperatureDataPage() {
         Text(
@@ -358,9 +329,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             "Comprehensive temperature measurements and statistical analysis of thermal imaging data.",
             color = Color.Black,
@@ -368,7 +337,6 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             lineHeight = 20.sp
         )
     }
-
     @Composable
     private fun ConclusionsPage() {
         Text(
@@ -377,9 +345,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             "Based on the thermal analysis results, all systems are operating within normal parameters with no immediate action required.",
             color = Color.Black,
@@ -387,7 +353,6 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             lineHeight = 20.sp
         )
     }
-
     @Composable
     private fun AppendixPage() {
         Text(
@@ -396,9 +361,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             "Additional technical specifications, calibration data, and supporting documentation.",
             color = Color.Black,
@@ -406,7 +369,6 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             lineHeight = 20.sp
         )
     }
-
     @Composable
     private fun BulletPoint(text: String) {
         Row(

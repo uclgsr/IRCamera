@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.fragment
-
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,18 +26,13 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.PDFListViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-
 // Type alias for cleaner code
 typealias PDFItem = PDFListViewModel.PDFItem
-
 class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
-
     private var isTC007 by mutableStateOf(false)
-
     override fun createViewModel(): PDFListViewModel {
         return viewModels<PDFListViewModel>().value
     }
-
     companion object {
         fun newInstance(isTC007: Boolean): PDFListComposeFragment {
             return PDFListComposeFragment().apply {
@@ -46,18 +40,15 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: PDFListViewModel) {
         val context = LocalContext.current
-
         // Observe ViewModel state
         val pdfItems by viewModel.pdfItems.collectAsStateWithLifecycle()
         val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
         val selectedItems by viewModel.selectedItems.collectAsStateWithLifecycle()
         val isSelectionMode by viewModel.isSelectionMode.collectAsStateWithLifecycle()
-
         LibUnifiedTheme {
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -67,7 +58,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                     isTC007 = isTC007,
                     totalReports = pdfItems.size
                 )
-
                 // Selection toolbar
                 if (isSelectionMode) {
                     PDFSelectionToolbar(
@@ -82,7 +72,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                         }
                     )
                 }
-
                 // PDF list content
                 Box(
                     modifier = Modifier.fillMaxSize()
@@ -91,13 +80,11 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                         isLoading -> {
                             LoadingState()
                         }
-
                         pdfItems.isEmpty() -> {
                             EmptyPDFState(
                                 onRefresh = { viewModel.refreshPDFList() }
                             )
                         }
-
                         else -> {
                             PDFList(
                                 viewModel = viewModel,
@@ -124,7 +111,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
-
     @Composable
     private fun PDFListHeader(
         isTC007: Boolean,
@@ -166,7 +152,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                         )
                     }
                 }
-
                 Icon(
                     Icons.Default.PictureAsPdf,
                     contentDescription = "PDF Reports",
@@ -176,7 +161,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
-
     @Composable
     private fun StatusChip(
         text: String,
@@ -196,7 +180,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             )
         }
     }
-
     @Composable
     private fun PDFSelectionToolbar(
         selectedCount: Int,
@@ -225,7 +208,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -249,7 +231,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
-
     @Composable
     private fun LoadingState() {
         Box(
@@ -269,7 +250,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
-
     @Composable
     private fun EmptyPDFState(
         onRefresh: () -> Unit
@@ -288,20 +268,17 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = "No Reports Found",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = "Generate thermal analysis reports to see them here",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Button(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -310,7 +287,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
-
     @Composable
     private fun PDFList(
         viewModel: PDFListViewModel,
@@ -336,7 +312,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
-
     @Composable
     private fun PDFListItem(
         viewModel: PDFListViewModel,
@@ -384,7 +359,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                         modifier = Modifier.size(24.dp)
                     )
                 }
-
                 // PDF info
                 Column(
                     modifier = Modifier.weight(1f),
@@ -396,7 +370,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                         fontWeight = FontWeight.Medium,
                         maxLines = 2
                     )
-
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -418,7 +391,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                             )
                         }
                     }
-
                     Text(
                         text = SimpleDateFormat(
                             "MMM dd, yyyy HH:mm",
@@ -428,7 +400,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
                 // Selection indicator or actions
                 if (isSelectionMode) {
                     if (isSelected) {
@@ -457,7 +428,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
-
     // Helper functions
     private fun openPDF(context: android.content.Context, path: String) {
         try {
@@ -477,7 +447,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             // Handle error - maybe show a toast or use internal PDF viewer
         }
     }
-
     private fun shareSelectedPDFs(context: android.content.Context, selectedPaths: List<String>) {
         try {
             val uris = selectedPaths.map { path ->
@@ -487,7 +456,6 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                     File(path)
                 )
             }
-
             val intent = Intent().apply {
                 if (uris.size == 1) {
                     action = Intent.ACTION_SEND
@@ -499,28 +467,23 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                 type = "application/pdf"
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-
             context.startActivity(Intent.createChooser(intent, "Share Reports"))
         } catch (e: Exception) {
             // Handle error
         }
     }
-
     private fun exportSelectedPDFs(context: android.content.Context, selectedPaths: List<String>) {
         // Implementation for exporting PDFs to external storage
         // This would typically involve copying files to a user-accessible location
     }
-
     private fun formatFileSize(bytes: Long): String {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()
         var unitIndex = 0
-
         while (size >= 1024 && unitIndex < units.size - 1) {
             size /= 1024
             unitIndex++
         }
-
         return "%.1f %s".format(size, units[unitIndex])
     }
 }

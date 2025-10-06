@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.socket
-
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Network
@@ -19,21 +18,15 @@ import com.mpdc4gsr.libunified.app.utils.WifiUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
 import okhttp3.*
 import okio.ByteString
-
 class WebSocketProxy {
-
     companion object {
-
         private const val TS004_URL = "wss://192.168.40.1:888"
         private const val TC007_URL = "wss://192.168.40.1:63206/v1/thermal/temp/template/data"
-
         private const val TS004_URL_FALLBACK = "ws://192.168.40.1:888"
         private const val TC007_URL_FALLBACK =
             "ws://192.168.40.1:63206/v1/thermal/temp/template/data"
-
         @JvmStatic
         private var mWebSocketProxy: WebSocketProxy? = null
-
         fun getInstance(): WebSocketProxy {
             if (mWebSocketProxy == null) {
                 synchronized(WebSocketProxy::class) {
@@ -45,7 +38,6 @@ class WebSocketProxy {
             return mWebSocketProxy!!
         }
     }
-
     private var currentSSID: String? = null
     private var mWsManager: WsManager? = null
     private var webSocketListener: MyWebSocketListener? = null
@@ -53,7 +45,6 @@ class WebSocketProxy {
     private var network: Network? = null
     private var certificateManager: CertificateManager? = null
     private var useSecureConnection = true
-
     fun initializeSecurity(context: android.content.Context) {
         certificateManager = CertificateManager(context)
         val initialized = certificateManager?.initialize() ?: false
@@ -65,34 +56,28 @@ class WebSocketProxy {
             XLog.tag("WebSocket").i("Certificate manager initialized successfully")
         }
     }
-
     private fun getOKHttpClient(): OkHttpClient {
         val builder =
             OkHttpClient.Builder()
-
                 .addInterceptor(
                     Interceptor { chain ->
                         val originalRequest = chain.request()
                         val requestBuilder: Request.Builder = originalRequest.newBuilder()
-
                         certificateManager?.let { certManager ->
                             val authToken = certManager.generateAuthToken()
                             requestBuilder.addHeader("Authorization", "Bearer $authToken")
                         }
-
                         val compressedRequest: Request = requestBuilder.build()
                         XLog.tag("WebSocket").d("request:$compressedRequest")
                         chain.proceed(compressedRequest)
                     },
                 )
                 .retryOnConnectionFailure(true)
-
         if (useSecureConnection && certificateManager != null) {
             try {
                 val sslSocketFactory = certificateManager?.createSSLSocketFactory()
                 val trustManager = certificateManager?.getTrustManager()
                 val hostnameVerifier = certificateManager?.createHostnameVerifier()
-
                 if (sslSocketFactory != null && trustManager != null && hostnameVerifier != null) {
                     builder.sslSocketFactory(sslSocketFactory, trustManager)
                     builder.hostnameVerifier(hostnameVerifier)
@@ -108,18 +93,14 @@ class WebSocketProxy {
                 useSecureConnection = false
             }
         }
-
         network?.socketFactory?.let {
             if (!useSecureConnection) {
                 builder.socketFactory(it)
             }
         }
-
         return builder.build()
     }
-
     private var onFrameListener: ((frame: SocketFrameBean) -> Unit)? = null
-
     fun setOnFrameListener(
         activity: ComponentActivity,
         listener: (frame: SocketFrameBean) -> Unit,
@@ -129,16 +110,13 @@ class WebSocketProxy {
                 override fun onCreate(owner: LifecycleOwner) {
                     onFrameListener = listener
                 }
-
                 override fun onDestroy(owner: LifecycleOwner) {
                     onFrameListener = null
                 }
             },
         )
     }
-
     var onMessageListener: ((text: String) -> Unit)? = null
-
     fun startWebSocket(
         ssid: String,
         network: Network? = null,
@@ -160,9 +138,7 @@ class WebSocketProxy {
             reconnectHandler.currentSSID = ssid
             stopWebSocket()
         }
-
         XLog.tag("WebSocket").d("$ssid startWebSocket()")
-
         if (mWsManager == null) {
             webSocketListener =
                 MyWebSocketListener(ssid, reconnectHandler, onMessageListener) {
@@ -177,46 +153,36 @@ class WebSocketProxy {
         }
         mWsManager?.startConnect()
     }
-
     fun stopWebSocket() {
         XLog.tag("WebSocket").d("stopWebSocket()")
         webSocketListener?.isNeedReconnect = false
         webSocketListener = null
-
         mWsManager?.stopConnect()
         mWsManager = null
     }
-
     fun isConnected(): Boolean = isTS004Connect() || isTC007Connect()
-
     fun isTS004Connect(): Boolean {
         // TS004 functionality removed
         return false
     }
-
     fun isTC007Connect(): Boolean {
         // TC007 functionality removed
         return false
     }
-
     fun sendMessage(cmd: String?) {
         mWsManager?.sendMessage(cmd)
     }
-
     private fun getWebSocketUrl(ssid: String): String {
         // TS004/TC007 functionality removed
         throw UnsupportedOperationException("TS004/TC007 device support removed")
     }
-
     private class MyWebSocketListener(
         val ssid: String,
         val handler: ReconnectHandler,
         val onMessageListener: ((text: String) -> Unit)?,
         val onFrameListener: (frame: SocketFrameBean) -> Unit,
     ) : WsManager.IWebSocketListener() {
-
         var isNeedReconnect = true
-
         override fun onOpen(
             webSocket: WebSocket,
             response: Response,
@@ -226,7 +192,6 @@ class WebSocketProxy {
             handler.reset()
             DeviceEventManager.emitSocketConnectionSync(true, false)
         }
-
         override fun onMessage(
             webSocket: WebSocket,
             text: String,
@@ -241,9 +206,7 @@ class WebSocketProxy {
             }
             onMessageListener?.invoke(text)
         }
-
         private var needPrint = false
-
         override fun onMessage(
             webSocket: WebSocket,
             bytes: ByteString,
@@ -251,7 +214,6 @@ class WebSocketProxy {
             XLog.tag("WebSocket")
                 .w("[ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph] bytes [ph][ph]，[ph][ph] ${bytes.size}")
         }
-
         override fun onClosing(
             webSocket: WebSocket,
             code: Int,
@@ -259,7 +221,6 @@ class WebSocketProxy {
         ) {
             XLog.tag("WebSocket").d("$ssid [ph][ph][ph][ph][ph]，[ph][ph]：$reason")
         }
-
         override fun onClosed(
             webSocket: WebSocket,
             code: Int,
@@ -275,7 +236,6 @@ class WebSocketProxy {
             }
             mWebSocketProxy?.currentSSID = ""
         }
-
         override fun onFailure(
             webSocket: WebSocket,
             t: Throwable,
@@ -298,15 +258,12 @@ class WebSocketProxy {
             }
             mWebSocketProxy?.currentSSID = ""
         }
-
         override fun onHeartBeat(): String? =
             SocketCmdUtils.getSocketCmd(WsCmdConstants.APP_EVENT_HEART_BEATS)
-
         override fun onHeartBeatTimeout() {
             XLog.tag("WebSocket").w("[ph][ph][ph][ph]")
             handler.handleFail(ssid)
         }
-
         private fun checkNeedReconnect(): Boolean {
             if (!isNeedReconnect) {
                 return false
@@ -323,15 +280,11 @@ class WebSocketProxy {
             return wifiName == ssid
         }
     }
-
     private class ReconnectHandler : Handler(Looper.getMainLooper()) {
         companion object {
-
             private const val MAX_RECONNECT_COUNT = 3
-
             private const val RECONNECT_MILLIS = 3000L
         }
-
         var currentSSID: String = ""
             set(value) {
                 if (value != field) {
@@ -339,16 +292,13 @@ class WebSocketProxy {
                     reset()
                 }
             }
-
         var reconnectCount: Int = 0
         var isReconnecting: Boolean = false
-
         fun reset() {
             reconnectCount = 0
             isReconnecting = false
             removeCallbacksAndMessages(null)
         }
-
         fun handleFail(currentSSID: String) {
             if (this.currentSSID != currentSSID) {
                 XLog.tag("WebSocket")
@@ -359,7 +309,6 @@ class WebSocketProxy {
                 reconnectCount++
                 if (reconnectCount < MAX_RECONNECT_COUNT) {
                     XLog.tag("WebSocket").w("[ph] $reconnectCount [ph][ph][ph][ph][ph]")
-
                     getInstance().stopWebSocket()
                     removeCallbacksAndMessages(null)
                     postDelayed(RECONNECT_MILLIS) {
@@ -378,7 +327,6 @@ class WebSocketProxy {
                     .d("[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph][ph]")
                 reconnectCount = 0
                 isReconnecting = true
-
                 getInstance().stopWebSocket()
                 removeCallbacksAndMessages(null)
                 postDelayed(RECONNECT_MILLIS) {

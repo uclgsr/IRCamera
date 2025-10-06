@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.testing.ui
-
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -27,11 +26,9 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.network.data.RecordingState
-
 enum class SensorConnectionStatus {
     DISCONNECTED, CONNECTING, CONNECTED, ERROR
 }
-
 data class RecordingSessionInfo(
     val sessionName: String = "Recording Session",
     val duration: String = "00:00:00",
@@ -40,11 +37,9 @@ data class RecordingSessionInfo(
     val thermalFrames: Int = 0,
     val gsrSamples: Int = 0
 )
-
 private const val DEFAULT_PLAYBACK_FPS = 30
 private const val THERMAL_FPS = 9
 private const val GSR_SAMPLING_RATE_HZ = 128
-
 data class SensorInfo(
     val name: String,
     val status: SensorConnectionStatus,
@@ -52,14 +47,11 @@ data class SensorInfo(
     val dataRate: String = "0 KB/s",
     val errorMessage: String? = null
 )
-
 class FaultTolerantRecordingViewModel : AppBaseViewModel() {
     private val _recordingState = mutableStateOf(RecordingState.IDLE)
     val recordingState: State<RecordingState> = _recordingState
-
     private val _sessionInfo = mutableStateOf(RecordingSessionInfo())
     val sessionInfo: State<RecordingSessionInfo> = _sessionInfo
-
     private val _sensorInfoList = mutableStateOf(
         listOf(
             SensorInfo("Thermal Camera", SensorConnectionStatus.DISCONNECTED),
@@ -69,26 +61,20 @@ class FaultTolerantRecordingViewModel : AppBaseViewModel() {
         )
     )
     val sensorInfoList: State<List<SensorInfo>> = _sensorInfoList
-
     private val _systemStatus = mutableStateOf("System initialized. Ready to start recording.")
     val systemStatus: State<String> = _systemStatus
-
     private val _isInitializing = mutableStateOf(false)
     val isInitializing: State<Boolean> = _isInitializing
-
     fun initializeSystem() {
         viewModelScope.launch {
             _isInitializing.value = true
             _systemStatus.value = "Initializing enhanced recording system..."
-
             delay(1000)
-
             // Simulate sensor initialization
             val sensors = listOf("Thermal Camera", "GSR Sensor", "RGB Camera", "Audio Recorder")
             sensors.forEachIndexed { index, sensorName ->
                 _systemStatus.value = "Connecting to $sensorName..."
                 delay(800)
-
                 _sensorInfoList.value = _sensorInfoList.value.map { sensor ->
                     if (sensor.name == sensorName) {
                         sensor.copy(
@@ -96,9 +82,7 @@ class FaultTolerantRecordingViewModel : AppBaseViewModel() {
                         )
                     } else sensor
                 }
-
                 delay(1200)
-
                 // Simulate successful connection (90% success rate)
                 val isConnected = kotlin.random.Random.nextFloat() > 0.1f
                 _sensorInfoList.value = _sensorInfoList.value.map { sensor ->
@@ -118,43 +102,36 @@ class FaultTolerantRecordingViewModel : AppBaseViewModel() {
                     } else sensor
                 }
             }
-
             val connectedSensors =
                 _sensorInfoList.value.count { it.status == SensorConnectionStatus.CONNECTED }
             _systemStatus.value = "System ready. $connectedSensors sensors connected."
             _isInitializing.value = false
         }
     }
-
     fun startRecording() {
         if (_sensorInfoList.value.none { it.status == SensorConnectionStatus.CONNECTED }) {
             _systemStatus.value = "Error: No sensors connected. Cannot start recording."
             return
         }
-
         viewModelScope.launch {
             _recordingState.value = RecordingState.RECORDING
             _systemStatus.value = "Recording started with fault-tolerant mode enabled."
-
             // Simulate recording progress
             var seconds = 0
             var frameCount = 0
             var thermalFrames = 0
             var gsrSamples = 0
-
             while (_recordingState.value == RecordingState.RECORDING) {
                 delay(1000)
                 seconds++
                 frameCount += DEFAULT_PLAYBACK_FPS
                 thermalFrames += THERMAL_FPS
                 gsrSamples += GSR_SAMPLING_RATE_HZ
-
                 val hours = seconds / 3600
                 val minutes = (seconds % 3600) / 60
                 val secs = seconds % 60
                 val duration = String.format("%02d:%02d:%02d", hours, minutes, secs)
                 val dataSize = "${(seconds * 0.8).toInt()} MB"
-
                 _sessionInfo.value = _sessionInfo.value.copy(
                     duration = duration,
                     dataSize = dataSize,
@@ -162,7 +139,6 @@ class FaultTolerantRecordingViewModel : AppBaseViewModel() {
                     thermalFrames = thermalFrames,
                     gsrSamples = gsrSamples
                 )
-
                 // Update sensor data rates
                 _sensorInfoList.value = _sensorInfoList.value.map { sensor ->
                     if (sensor.status == SensorConnectionStatus.CONNECTED) {
@@ -172,11 +148,9 @@ class FaultTolerantRecordingViewModel : AppBaseViewModel() {
             }
         }
     }
-
     fun stopRecording() {
         _recordingState.value = RecordingState.IDLE
         _systemStatus.value = "Recording stopped. Data saved successfully."
-
         // Reset sensor status
         _sensorInfoList.value = _sensorInfoList.value.map { sensor ->
             if (sensor.status == SensorConnectionStatus.CONNECTED) {
@@ -184,7 +158,6 @@ class FaultTolerantRecordingViewModel : AppBaseViewModel() {
             } else sensor
         }
     }
-
     fun reconnectSensor(sensorName: String) {
         viewModelScope.launch {
             _sensorInfoList.value = _sensorInfoList.value.map { sensor ->
@@ -192,9 +165,7 @@ class FaultTolerantRecordingViewModel : AppBaseViewModel() {
                     sensor.copy(status = SensorConnectionStatus.CONNECTING, errorMessage = null)
                 } else sensor
             }
-
             delay(2000)
-
             // Simulate reconnection attempt (70% success rate)
             val isConnected = kotlin.random.Random.nextFloat() > 0.3f
             _sensorInfoList.value = _sensorInfoList.value.map { sensor ->
@@ -209,18 +180,14 @@ class FaultTolerantRecordingViewModel : AppBaseViewModel() {
         }
     }
 }
-
 class FaultTolerantRecordingComposeActivity :
     BaseComposeActivity<FaultTolerantRecordingViewModel>() {
-
     override fun createViewModel(): FaultTolerantRecordingViewModel =
         viewModels<FaultTolerantRecordingViewModel>().value
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModels<FaultTolerantRecordingViewModel>().value.initializeSystem()
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: FaultTolerantRecordingViewModel) {
@@ -231,7 +198,6 @@ class FaultTolerantRecordingComposeActivity :
             val sensorInfoList by viewModel.sensorInfoList
             val systemStatus by viewModel.systemStatus
             val isInitializing by viewModel.isInitializing
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -241,7 +207,6 @@ class FaultTolerantRecordingComposeActivity :
                     title = "Fault-Tolerant Recording",
                     onBackClick = { finish() }
                 )
-
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -289,9 +254,7 @@ class FaultTolerantRecordingComposeActivity :
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
-
                             Spacer(modifier = Modifier.width(12.dp))
-
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = when (recordingState) {
@@ -310,7 +273,6 @@ class FaultTolerantRecordingComposeActivity :
                             }
                         }
                     }
-
                     // Recording session info
                     if (recordingState == RecordingState.RECORDING) {
                         Card(
@@ -331,7 +293,6 @@ class FaultTolerantRecordingComposeActivity :
                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )
-
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween
@@ -339,9 +300,7 @@ class FaultTolerantRecordingComposeActivity :
                                     InfoColumn("Duration", sessionInfo.duration)
                                     InfoColumn("Data Size", sessionInfo.dataSize)
                                 }
-
                                 Spacer(modifier = Modifier.height(8.dp))
-
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween
@@ -356,7 +315,6 @@ class FaultTolerantRecordingComposeActivity :
                             }
                         }
                     }
-
                     // Sensor status
                     Text(
                         text = "Sensor Status",
@@ -364,7 +322,6 @@ class FaultTolerantRecordingComposeActivity :
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 12.dp)
                     )
-
                     sensorInfoList.forEach { sensor ->
                         SensorStatusCard(
                             sensor = sensor,
@@ -372,9 +329,7 @@ class FaultTolerantRecordingComposeActivity :
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     // Control buttons
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -410,7 +365,6 @@ class FaultTolerantRecordingComposeActivity :
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Start Recording")
                             }
-
                             OutlinedButton(
                                 onClick = { viewModel.initializeSystem() },
                                 modifier = Modifier.weight(1f),
@@ -426,9 +380,7 @@ class FaultTolerantRecordingComposeActivity :
                             }
                         }
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     // Help information
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -468,7 +420,6 @@ class FaultTolerantRecordingComposeActivity :
         }
     }
 }
-
 @Composable
 private fun InfoColumn(
     label: String,
@@ -492,7 +443,6 @@ private fun InfoColumn(
         )
     }
 }
-
 @Composable
 private fun SensorStatusCard(
     sensor: SensorInfo,
@@ -538,9 +488,7 @@ private fun SensorStatusCard(
                     modifier = Modifier.size(24.dp)
                 )
             }
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = sensor.name,
@@ -567,7 +515,6 @@ private fun SensorStatusCard(
                     )
                 }
             }
-
             if (sensor.status == SensorConnectionStatus.ERROR) {
                 OutlinedButton(
                     onClick = onReconnect

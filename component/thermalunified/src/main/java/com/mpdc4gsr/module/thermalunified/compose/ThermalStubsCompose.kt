@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.compose
-
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-
 // Data classes for component state
 data class MonitorOption(
     val id: Int,
@@ -30,18 +28,15 @@ data class MonitorOption(
     val icon: ImageVector,
     val isEnabled: Boolean = true
 )
-
 data class TipDialogData(
     val title: String,
     val message: String,
     val icon: ImageVector,
     val type: TipType = TipType.INFO
 )
-
 enum class TipType {
     INFO, WARNING, ERROR, SUCCESS
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MonitorSelectDialogCompose(
@@ -87,9 +82,7 @@ fun MonitorSelectDialogCompose(
                             )
                         }
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     // Options list
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth(),
@@ -103,9 +96,7 @@ fun MonitorSelectDialogCompose(
                             )
                         }
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     // Action buttons
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -130,7 +121,6 @@ fun MonitorSelectDialogCompose(
         }
     }
 }
-
 @Composable
 private fun MonitorOptionItem(
     option: MonitorOption,
@@ -168,9 +158,7 @@ private fun MonitorOptionItem(
                 },
                 modifier = Modifier.size(24.dp)
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = option.name,
@@ -189,7 +177,6 @@ private fun MonitorOptionItem(
                     )
                 }
             }
-
             if (isSelected) {
                 Icon(
                     Icons.Default.CheckCircle,
@@ -201,7 +188,6 @@ private fun MonitorOptionItem(
         }
     }
 }
-
 @Composable
 fun TipDialogCompose(
     showDialog: Boolean,
@@ -261,7 +247,6 @@ fun TipDialogCompose(
         )
     }
 }
-
 @Composable
 fun FenceViewsCompose(
     fences: List<FenceData>,
@@ -282,7 +267,6 @@ fun FenceViewsCompose(
         }
     }
 }
-
 @Composable
 private fun FenceItemCompose(
     fence: FenceData,
@@ -308,9 +292,7 @@ private fun FenceItemCompose(
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(24.dp)
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = fence.name,
@@ -323,7 +305,6 @@ private fun FenceItemCompose(
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                 )
             }
-
             IconButton(onClick = onDeleted) {
                 Icon(
                     Icons.Default.Delete,
@@ -334,7 +315,6 @@ private fun FenceItemCompose(
         }
     }
 }
-
 @Composable
 fun GuideStubsCompose(
     guideSteps: List<GuideStep>,
@@ -358,36 +338,27 @@ fun GuideStubsCompose(
                 modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colorScheme.primary
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Current step content
             if (currentStep < guideSteps.size) {
                 val step = guideSteps[currentStep]
-
                 Text(
                     text = "Step ${currentStep + 1} of ${guideSteps.size}",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Text(
                     text = step.title,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Text(
                     text = step.description,
                     style = MaterialTheme.typography.bodyMedium
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Navigation buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -401,7 +372,6 @@ fun GuideStubsCompose(
                     ) {
                         Text("Previous")
                     }
-
                     Button(
                         onClick = {
                             if (currentStep < guideSteps.size - 1) {
@@ -418,7 +388,6 @@ fun GuideStubsCompose(
         }
     }
 }
-
 @Composable
 fun UIWidgetsCompose(
     widgets: List<WidgetData>,
@@ -433,7 +402,6 @@ fun UIWidgetsCompose(
         }
     }
 }
-
 @Composable
 private fun WidgetItemCompose(
     widget: WidgetData,
@@ -457,16 +425,13 @@ private fun WidgetItemCompose(
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
                 )
-
                 Spacer(modifier = Modifier.width(12.dp))
-
                 Text(
                     text = widget.title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
             }
-
             if (widget.description.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -478,7 +443,6 @@ private fun WidgetItemCompose(
         }
     }
 }
-
 // Data classes for components
 data class FenceData(
     val id: Int,
@@ -486,20 +450,17 @@ data class FenceData(
     val points: List<Pair<Float, Float>>,
     val temperature: Float
 )
-
 data class GuideStep(
     val title: String,
     val description: String,
     val imageRes: Int? = null
 )
-
 data class WidgetData(
     val id: Int,
     val title: String,
     val description: String,
     val icon: ImageVector
 )
-
 // Preview functions
 @Preview(showBackground = true)
 @Composable
@@ -510,7 +471,6 @@ private fun MonitorSelectDialogPreview() {
             MonitorOption(2, "Pressure Monitor", "Pressure level monitoring", Icons.Default.Speed),
             MonitorOption(3, "Humidity Monitor", "Humidity level tracking", Icons.Default.WaterDrop, false)
         )
-
         MonitorSelectDialogCompose(
             showDialog = true,
             options = sampleOptions,
@@ -520,7 +480,6 @@ private fun MonitorSelectDialogPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun TipDialogPreview() {
@@ -538,7 +497,6 @@ private fun TipDialogPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun FenceViewsPreview() {
@@ -547,7 +505,6 @@ private fun FenceViewsPreview() {
             FenceData(1, "Temperature Zone 1", listOf(0f to 0f, 100f to 100f), 25.5f),
             FenceData(2, "Critical Area", listOf(50f to 50f, 150f to 150f), 85.2f)
         )
-
         FenceViewsCompose(
             fences = sampleFences,
             onFenceSelected = {},

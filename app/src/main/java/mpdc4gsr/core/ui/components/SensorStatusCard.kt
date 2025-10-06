@@ -1,5 +1,4 @@
 package mpdc4gsr.core.ui.components
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -14,7 +13,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.ConnectionState
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SensorStatusCard(
@@ -42,23 +40,18 @@ fun SensorStatusCard(
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
             SensorStatusRow(
                 label = "Thermal Camera",
                 state = thermalCameraState,
                 details = "TC001 384x288"
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             SensorStatusRow(
                 label = "GSR Sensor",
                 state = gsrSensorState,
                 details = "Shimmer3 51.2Hz"
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             SensorStatusRow(
                 label = "BLE Connection",
                 state = bleConnectionState,
@@ -67,7 +60,6 @@ fun SensorStatusCard(
         }
     }
 }
-
 @Composable
 private fun SensorStatusRow(
     label: String,
@@ -94,11 +86,9 @@ private fun SensorStatusRow(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
         }
-
         StatusIndicator(state = state)
     }
 }
-
 @Composable
 private fun StatusIndicator(state: ConnectionState) {
     val (icon, color, text) = when (state) {
@@ -107,26 +97,22 @@ private fun StatusIndicator(state: ConnectionState) {
             Color.Green,
             "Connected"
         )
-
         is ConnectionState.Connecting -> Triple(
             Icons.Default.Warning,
             MaterialTheme.colorScheme.primary,
             "Connecting"
         )
-
         is ConnectionState.Disconnected -> Triple(
             Icons.Default.Error,
             Color.Red,
             "Disconnected"
         )
-
         is ConnectionState.Error -> Triple(
             Icons.Default.Error,
             Color.Red,
             "Error"
         )
     }
-
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {

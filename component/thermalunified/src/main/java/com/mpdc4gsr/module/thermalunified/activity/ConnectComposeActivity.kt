@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,20 +23,16 @@ import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
         var isConnected by remember { mutableStateOf(DeviceTools.isConnect()) }
         var isConnecting by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -74,16 +69,13 @@ class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-
                     // Connection Status Card
                     ConnectionStatusCard(
                         isConnected = isConnected,
                         isConnecting = isConnecting,
                         modifier = Modifier.fillMaxWidth()
                     )
-
                     Spacer(modifier = Modifier.height(32.dp))
-
                     // Connection Controls
                     ConnectionControls(
                         isConnected = isConnected,
@@ -102,9 +94,7 @@ class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             isConnecting = false
                         }
                     )
-
                     Spacer(modifier = Modifier.height(24.dp))
-
                     // Device Information
                     if (isConnected) {
                         DeviceInfoCard(
@@ -116,7 +106,6 @@ class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
-
 @Composable
 private fun ConnectionStatusCard(
     isConnected: Boolean,
@@ -144,7 +133,6 @@ private fun ConnectionStatusCard(
                         modifier = Modifier.size(48.dp)
                     )
                 }
-
                 isConnected -> {
                     Icon(
                         Icons.Default.CheckCircle,
@@ -153,7 +141,6 @@ private fun ConnectionStatusCard(
                         modifier = Modifier.size(48.dp)
                     )
                 }
-
                 else -> {
                     Icon(
                         Icons.Default.Error,
@@ -163,9 +150,7 @@ private fun ConnectionStatusCard(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Status Text
             Text(
                 when {
@@ -177,9 +162,7 @@ private fun ConnectionStatusCard(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 when {
                     isConnecting -> "Establishing connection to thermal camera"
@@ -192,7 +175,6 @@ private fun ConnectionStatusCard(
         }
     }
 }
-
 @Composable
 private fun ConnectionControls(
     isConnected: Boolean,
@@ -231,7 +213,6 @@ private fun ConnectionControls(
                 }
             }
         }
-
         if (isConnected) {
             OutlinedButton(
                 onClick = onDisconnect,
@@ -263,7 +244,6 @@ private fun ConnectionControls(
         }
     }
 }
-
 @Composable
 private fun DeviceInfoCard(
     modifier: Modifier = Modifier
@@ -286,9 +266,7 @@ private fun DeviceInfoCard(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             DeviceInfoItem("Model", "TC007 Thermal Camera")
             DeviceInfoItem("Status", "Ready")
             DeviceInfoItem("Connection", "Bluetooth")
@@ -297,7 +275,6 @@ private fun DeviceInfoCard(
         }
     }
 }
-
 @Composable
 private fun DeviceInfoItem(
     label: String,

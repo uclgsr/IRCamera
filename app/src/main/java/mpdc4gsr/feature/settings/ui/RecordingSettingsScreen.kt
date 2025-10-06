@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.settings.ui
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -25,10 +24,6 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.camera.data.CameraConfigurationManager
 import mpdc4gsr.feature.settings.presentation.RecordingSettingsViewModel
 
-/**
- * Recording Settings Screen - Configure multi-modal recording parameters
- * Integrated with RecordingSettingsViewModel for MVVM architecture
- */
 @Composable
 fun RecordingSettingsScreen(
     onBackClick: (() -> Unit)? = null,
@@ -37,17 +32,14 @@ fun RecordingSettingsScreen(
 ) {
     val context = LocalContext.current
     val settings by viewModel.recordingSettings.collectAsState()
-    
     val configManager = remember { CameraConfigurationManager() }
     val (_, _, supports60fps) = remember {
         configManager.detectDeviceCapabilities()
     }
     val maxFrameRate = if (supports60fps) 60f else 30f
-
     LaunchedEffect(Unit) {
         viewModel.initialize(context)
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -58,7 +50,6 @@ fun RecordingSettingsScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,18 +68,14 @@ fun RecordingSettingsScreen(
                     checked = settings.autoRecording,
                     onCheckedChange = { viewModel.updateAutoRecording(it) }
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 SettingsDropdown(
                     label = "Recording Quality",
                     value = settings.recordingQuality,
                     options = listOf("Low", "Medium", "High", "Ultra"),
                     onValueChange = { viewModel.updateRecordingQuality(it) }
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 SettingsSlider(
                     label = "Video Frame Rate",
                     value = settings.videoFrameRate.toFloat(),
@@ -97,7 +84,6 @@ fun RecordingSettingsScreen(
                     unit = " fps"
                 )
             }
-
             // Multi-Modal Recording Card
             SettingsCard(
                 title = "Multi-Modal Recording",
@@ -109,18 +95,14 @@ fun RecordingSettingsScreen(
                     checked = settings.audioEnabled,
                     onCheckedChange = { viewModel.updateAudioEnabled(it) }
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 SettingsToggle(
                     label = "Simultaneous Recording",
                     description = "Record all sensors at the same time",
                     checked = settings.simultaneousRecording,
                     onCheckedChange = { viewModel.updateSimultaneousRecording(it) }
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 SettingsToggle(
                     label = "Timestamp Synchronization",
                     description = "Synchronize timestamps across all recordings",
@@ -128,7 +110,6 @@ fun RecordingSettingsScreen(
                     onCheckedChange = { viewModel.updateTimestampSync(it) }
                 )
             }
-
             // Recording Format Card
             SettingsCard(
                 title = "Recording Format",
@@ -152,7 +133,6 @@ fun RecordingSettingsScreen(
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun RecordingSettingsScreenPreview() {

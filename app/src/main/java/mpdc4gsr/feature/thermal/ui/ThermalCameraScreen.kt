@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.thermal.ui
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -21,16 +20,6 @@ import mpdc4gsr.feature.thermal.data.MeasurementMode
 import mpdc4gsr.feature.thermal.data.TemperatureUnit
 import mpdc4gsr.feature.thermal.data.ThermalPalette
 
-/**
- * Thermal Camera Screen - Advanced Thermal Imaging Interface
- *
- * Modern implementation of thermal camera functionality:
- * - Real-time thermal image display with temperature overlay
- * - Temperature measurement tools and calibration
- * - Multiple color palettes for thermal visualization
- * - Recording and snapshot capabilities
- * - Advanced thermal analysis tools
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThermalCameraScreen(
@@ -71,7 +60,6 @@ fun ThermalCameraScreen(
         }
     }
 }
-
 @Composable
 private fun ThermalCameraContent(
     modifier: Modifier = Modifier
@@ -80,7 +68,6 @@ private fun ThermalCameraContent(
     var temperatureUnit by remember { mutableStateOf(TemperatureUnit.CELSIUS) }
     var isRecording by remember { mutableStateOf(false) }
     var measurementMode by remember { mutableStateOf(MeasurementMode.SPOT) }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -94,12 +81,10 @@ private fun ThermalCameraContent(
             measurementMode = measurementMode,
             temperatureUnit = temperatureUnit
         )
-
         // Temperature Measurements
         TemperatureMeasurementsCard(
             temperatureUnit = temperatureUnit
         )
-
         // Camera Controls
         ThermalCameraControlsCard(
             selectedPalette = selectedPalette,
@@ -111,18 +96,14 @@ private fun ThermalCameraContent(
             onRecordingToggle = { isRecording = it },
             onMeasurementModeChange = { measurementMode = it }
         )
-
         // Analysis Tools
         ThermalAnalysisToolsCard()
-
         // Camera Status
         ThermalCameraStatusCard()
     }
 }
-
 // ThermalPalette enum is defined in IRGalleryEditComposeActivity.kt
 // TemperatureUnit and MeasurementMode are imported from mpdc4gsr.feature.thermal.data.ThermalModels.kt
-
 @Composable
 private fun ThermalPreviewCard(
     selectedPalette: ThermalPalette,
@@ -147,7 +128,6 @@ private fun ThermalPreviewCard(
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -167,7 +147,6 @@ private fun ThermalPreviewCard(
                     }
                 }
             }
-
             // Thermal Preview Area
             Box(
                 modifier = Modifier
@@ -200,7 +179,6 @@ private fun ThermalPreviewCard(
                         color = Color.White.copy(alpha = 0.8f),
                         style = MaterialTheme.typography.bodyMedium
                     )
-
                     // Temperature overlay
                     when (measurementMode) {
                         MeasurementMode.SPOT -> {
@@ -210,7 +188,6 @@ private fun ThermalPreviewCard(
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
-
                         MeasurementMode.LINE -> {
                             Text(
                                 "Line Profile: Max ${formatTemperature(31.2f, temperatureUnit)}",
@@ -218,7 +195,6 @@ private fun ThermalPreviewCard(
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
-
                         MeasurementMode.AREA -> {
                             Text(
                                 "Area Avg: ${formatTemperature(27.8f, temperatureUnit)}",
@@ -226,7 +202,6 @@ private fun ThermalPreviewCard(
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
-
                         MeasurementMode.CONTINUOUS -> {
                             Text(
                                 "Continuous: ${formatTemperature(30.0f, temperatureUnit)}",
@@ -236,7 +211,6 @@ private fun ThermalPreviewCard(
                         }
                     }
                 }
-
                 // Temperature scale indicator
                 Box(
                     modifier = Modifier
@@ -250,7 +224,6 @@ private fun ThermalPreviewCard(
                         )
                 )
             }
-
             // Temperature range display
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -270,7 +243,6 @@ private fun ThermalPreviewCard(
         }
     }
 }
-
 @Composable
 private fun TemperatureMeasurementsCard(
     temperatureUnit: TemperatureUnit
@@ -288,17 +260,13 @@ private fun TemperatureMeasurementsCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             // Current measurements
             MeasurementRow("Hot Spot", 35.8f, temperatureUnit, Icons.Default.LocalFireDepartment)
             MeasurementRow("Cold Spot", 18.2f, temperatureUnit, Icons.Default.AcUnit)
             MeasurementRow("Center Point", 25.6f, temperatureUnit, Icons.Default.CenterFocusStrong)
             MeasurementRow("Average", 27.1f, temperatureUnit, Icons.Default.Analytics)
-
             HorizontalDivider()
-
             // Measurement controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -320,7 +288,6 @@ private fun TemperatureMeasurementsCard(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Add")
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Clear all measurements
@@ -340,7 +307,6 @@ private fun TemperatureMeasurementsCard(
         }
     }
 }
-
 @Composable
 private fun MeasurementRow(
     label: String,
@@ -368,7 +334,6 @@ private fun MeasurementRow(
                 style = MaterialTheme.typography.bodyMedium
             )
         }
-
         Text(
             formatTemperature(temperature, unit),
             style = MaterialTheme.typography.bodyMedium,
@@ -381,7 +346,6 @@ private fun MeasurementRow(
         )
     }
 }
-
 @Composable
 private fun ThermalCameraControlsCard(
     selectedPalette: ThermalPalette,
@@ -406,16 +370,13 @@ private fun ThermalCameraControlsCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             // Color Palette Selection
             Text(
                 "Color Palette",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -429,7 +390,6 @@ private fun ThermalCameraControlsCard(
                     )
                 }
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -443,14 +403,12 @@ private fun ThermalCameraControlsCard(
                     )
                 }
             }
-
             // Temperature Unit Selection
             Text(
                 "Temperature Unit",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -464,14 +422,12 @@ private fun ThermalCameraControlsCard(
                     )
                 }
             }
-
             // Measurement Mode Selection
             Text(
                 "Measurement Mode",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -485,7 +441,6 @@ private fun ThermalCameraControlsCard(
                     )
                 }
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -499,9 +454,7 @@ private fun ThermalCameraControlsCard(
                     )
                 }
             }
-
             HorizontalDivider()
-
             // Recording Controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -529,7 +482,6 @@ private fun ThermalCameraControlsCard(
                         Text("Record")
                     }
                 }
-
                 val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
                     onClick = {
@@ -550,7 +502,6 @@ private fun ThermalCameraControlsCard(
         }
     }
 }
-
 @Composable
 private fun ThermalAnalysisToolsCard() {
     Card(
@@ -566,9 +517,7 @@ private fun ThermalAnalysisToolsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -589,7 +538,6 @@ private fun ThermalAnalysisToolsCard() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Profile")
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Show histogram analysis
@@ -606,7 +554,6 @@ private fun ThermalAnalysisToolsCard() {
                     Text("Histogram")
                 }
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -626,7 +573,6 @@ private fun ThermalAnalysisToolsCard() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Compare")
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Generate thermal report
@@ -646,7 +592,6 @@ private fun ThermalAnalysisToolsCard() {
         }
     }
 }
-
 @Composable
 private fun ThermalCameraStatusCard() {
     Card(
@@ -662,17 +607,13 @@ private fun ThermalCameraStatusCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             StatusRow("Connection", "Connected", Icons.Default.CheckCircle, true)
             StatusRow("Temperature", "Calibrated", Icons.Default.Thermostat, true)
             StatusRow("Image Quality", "Excellent", Icons.Default.HighQuality, true)
             StatusRow("Battery", "87%", Icons.Default.Battery4Bar, true)
             StatusRow("Storage", "2.1 GB Free", Icons.Default.Storage, true)
-
             HorizontalDivider()
-
             val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -693,7 +634,6 @@ private fun ThermalCameraStatusCard() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Calibrate")
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Run diagnostic test
@@ -713,7 +653,6 @@ private fun ThermalCameraStatusCard() {
         }
     }
 }
-
 @Composable
 private fun StatusRow(
     label: String,
@@ -741,7 +680,6 @@ private fun StatusRow(
                 style = MaterialTheme.typography.bodyMedium
             )
         }
-
         Text(
             status,
             style = MaterialTheme.typography.bodyMedium,
@@ -750,7 +688,6 @@ private fun StatusRow(
         )
     }
 }
-
 // Helper functions
 private fun getThermalPreviewColor(palette: ThermalPalette): Color {
     return when (palette) {
@@ -764,7 +701,6 @@ private fun getThermalPreviewColor(palette: ThermalPalette): Color {
         ThermalPalette.CONTRAST -> Color(0xFF696969)
     }
 }
-
 private fun getThermalGradient(palette: ThermalPalette): Color {
     return when (palette) {
         ThermalPalette.IRON -> Color(0xFFFF4500)
@@ -777,7 +713,6 @@ private fun getThermalGradient(palette: ThermalPalette): Color {
         ThermalPalette.CONTRAST -> Color(0xFFFFFFFF)
     }
 }
-
 private fun formatTemperature(temperature: Float, unit: TemperatureUnit): String {
     return when (unit) {
         TemperatureUnit.CELSIUS -> "${String.format("%.1f", temperature)}°C"

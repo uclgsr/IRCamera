@@ -25,7 +25,7 @@ style:
   
   MagicNumber:
     active: true
-    ignoreNumbers: ['-1', '0', '1', '2', '100', '1000']
+    ignoreNumbers: [ '-1', '0', '1', '2', '100', '1000' ]
     ignoreHashCodeFunction: true
     ignorePropertyDeclaration: true
     ignoreLocalVariableDeclaration: false
@@ -38,7 +38,7 @@ style:
 potential-bugs:
   LateinitUsage:
     active: true
-    excludeAnnotatedProperties: ["Inject"]
+    excludeAnnotatedProperties: [ "Inject" ]
     ignoreOnClassesPattern: ""
   
   UnsafeCast:

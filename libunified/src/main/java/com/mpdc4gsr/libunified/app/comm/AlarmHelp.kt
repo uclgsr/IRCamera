@@ -1,15 +1,12 @@
 package com.mpdc4gsr.libunified.app.comm
-
 import android.content.Context
 import android.media.MediaPlayer
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.comm.util.SingletonHolder
 import com.mpdc4gsr.libunified.app.comm.view.TempLayout
-
 class AlarmHelp private constructor(val context: Context) {
     companion object : SingletonHolder<AlarmHelp, Context>(::AlarmHelp)
-
     private var mediaPlayer: MediaPlayer? = null
     private var ringtoneResPosition = -1
     private var isOpenLowTemp = false
@@ -19,7 +16,6 @@ class AlarmHelp private constructor(val context: Context) {
     private var minTemp: Float = 0f
     private var isPause = false
     private var alarmBean: AlarmBean? = null
-
     fun updateData(alarmBean: AlarmBean) {
         this.alarmBean = alarmBean
         isTempAlarmRingtoneOpen = alarmBean?.isRingtoneOpen ?: false
@@ -41,7 +37,6 @@ class AlarmHelp private constructor(val context: Context) {
             mediaPlayer = null
         }
     }
-
     fun updateData(
         low: Float?,
         high: Float?,
@@ -87,14 +82,12 @@ class AlarmHelp private constructor(val context: Context) {
             ringtoneResPosition = ringtone
         }
     }
-
     fun alarmData(
         realMax: Float,
         realMin: Float,
         tempLayout: TempLayout?,
     ) {
         if (isOpenHighTemp && isOpenLowTemp) {
-
             if (realMax > maxTemp && realMin < minTemp) {
                 tempLayout?.startAnimation(TempLayout.TYPE_A)
                 startMediaPlayer()
@@ -109,7 +102,6 @@ class AlarmHelp private constructor(val context: Context) {
                 stopPlayer()
             }
         } else if (isOpenHighTemp) {
-
             if (realMax > maxTemp) {
                 tempLayout?.startAnimation(TempLayout.TYPE_HOT)
                 startMediaPlayer()
@@ -118,7 +110,6 @@ class AlarmHelp private constructor(val context: Context) {
                 stopPlayer()
             }
         } else if (isOpenLowTemp) {
-
             if (realMin < minTemp) {
                 tempLayout?.startAnimation(TempLayout.TYPE_LT)
                 startMediaPlayer()
@@ -131,20 +122,17 @@ class AlarmHelp private constructor(val context: Context) {
             stopPlayer()
         }
     }
-
     private fun stopPlayer() {
         if (mediaPlayer?.isPlaying == true) {
             mediaPlayer?.pause()
         }
     }
-
     private fun startMediaPlayer() {
         if (mediaPlayer?.isPlaying != true && !isPause) {
             mediaPlayer?.seekTo(0)
             mediaPlayer?.start()
         }
     }
-
     fun onDestroy(isSaveSetting: Boolean) {
         if (!isSaveSetting) {
             isTempAlarmRingtoneOpen = false
@@ -159,7 +147,6 @@ class AlarmHelp private constructor(val context: Context) {
             mediaPlayer = null
         }
     }
-
     fun pause() {
         mediaPlayer?.let {
             if (it.isPlaying) {
@@ -168,7 +155,6 @@ class AlarmHelp private constructor(val context: Context) {
             }
         }
     }
-
     fun onResume() {
         isPause = false
     }

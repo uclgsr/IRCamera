@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.gsr.ui
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -27,20 +26,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * GSRGalleryComposeActivity - Enhanced GSR Data Gallery
- *
- * Modern gallery interface for GSR recordings with:
- * - Grid and list view modes for recorded sessions
- * - Advanced filtering and search capabilities
- * - Data visualization preview thumbnails
- * - Batch operations for multiple sessions
- * - Integration with analysis and export tools
- */
 class GSRGalleryComposeActivity : BaseComposeActivity<GSRGalleryViewModel>() {
-
     override fun createViewModel(): GSRGalleryViewModel = GSRGalleryViewModel()
-
     @Composable
     override fun Content(viewModel: GSRGalleryViewModel) {
         IRCameraTheme {
@@ -48,20 +35,16 @@ class GSRGalleryComposeActivity : BaseComposeActivity<GSRGalleryViewModel>() {
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
     val uiState by viewModel.galleryState.collectAsState()
-
     var searchQuery by remember { mutableStateOf("") }
     var isGridView by remember { mutableStateOf(true) }
     var showFilterDialog by remember { mutableStateOf(false) }
-
     LaunchedEffect(Unit) {
         viewModel.loadGSRSessions()
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -79,9 +62,7 @@ fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
             onShowFilter = { showFilterDialog = true },
             sessionsCount = uiState.sessions.size
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         // Content based on view mode
         if (isGridView) {
             GSRSessionGrid(
@@ -99,7 +80,6 @@ fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
             )
         }
     }
-
     // Filter Dialog
     if (showFilterDialog) {
         GSRFilterDialog(
@@ -111,7 +91,6 @@ fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
             }
         )
     }
-
     // Selection Actions
     if (uiState.selectedSessions.isNotEmpty()) {
         SelectionActionsBar(
@@ -122,7 +101,6 @@ fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
         )
     }
 }
-
 @Composable
 fun GSRGalleryHeader(
     searchQuery: String,
@@ -133,7 +111,6 @@ fun GSRGalleryHeader(
     sessionsCount: Int
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -145,16 +122,13 @@ fun GSRGalleryHeader(
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
-
             Text(
                 text = "$sessionsCount sessions",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
         }
-
         Spacer(modifier = Modifier.height(12.dp))
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -184,23 +158,19 @@ fun GSRGalleryHeader(
                     }
                 )
             )
-
             Spacer(modifier = Modifier.width(8.dp))
-
             IconButton(onClick = onViewToggle) {
                 Icon(
                     imageVector = if (isGridView) Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
                     contentDescription = if (isGridView) "List View" else "Grid View"
                 )
             }
-
             IconButton(onClick = onShowFilter) {
                 Icon(Icons.Default.FilterList, contentDescription = "Filter")
             }
         }
     }
 }
-
 @Composable
 fun GSRSessionGrid(
     sessions: List<GSRSession>,
@@ -223,7 +193,6 @@ fun GSRSessionGrid(
         }
     }
 }
-
 @Composable
 fun GSRSessionList(
     sessions: List<GSRSession>,
@@ -244,7 +213,6 @@ fun GSRSessionList(
         }
     }
 }
-
 @Composable
 fun GSRSessionGridItem(
     session: GSRSession,
@@ -290,23 +258,19 @@ fun GSRSessionGridItem(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = session.name,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold,
                 maxLines = 1
             )
-
             Text(
                 text = "${formatDuration(session.duration)} • ${session.sampleCount} samples",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 maxLines = 1
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -325,7 +289,6 @@ fun GSRSessionGridItem(
         }
     }
 }
-
 @Composable
 fun GSRSessionListItem(
     session: GSRSession,
@@ -358,16 +321,13 @@ fun GSRSessionListItem(
                     tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                 )
             }
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = session.name,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
-
                 if (session.participantId.isNotEmpty()) {
                     Text(
                         text = "Participant: ${session.participantId}",
@@ -375,7 +335,6 @@ fun GSRSessionListItem(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
                 }
-
                 Row {
                     Text(
                         text = formatDuration(session.duration),
@@ -398,7 +357,6 @@ fun GSRSessionListItem(
                     )
                 }
             }
-
             Text(
                 text = formatFileSize(session.fileSize),
                 style = MaterialTheme.typography.bodySmall,
@@ -407,7 +365,6 @@ fun GSRSessionListItem(
         }
     }
 }
-
 @Composable
 fun GSRFilterDialog(
     currentFilter: GSRFilter,
@@ -415,7 +372,6 @@ fun GSRFilterDialog(
     onApplyFilter: (GSRFilter) -> Unit
 ) {
     var filter by remember { mutableStateOf(currentFilter) }
-
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Filter GSR Sessions") },
@@ -429,9 +385,7 @@ fun GSRFilterDialog(
                     steps = 10
                 )
                 Text("${filter.minQuality}%")
-
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Text("Minimum Duration (minutes):")
                 Slider(
                     value = filter.minDuration.toFloat(),
@@ -440,9 +394,7 @@ fun GSRFilterDialog(
                     steps = 12
                 )
                 Text("${filter.minDuration} min")
-
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = filter.hasParticipant,
@@ -465,7 +417,6 @@ fun GSRFilterDialog(
         }
     )
 }
-
 @Composable
 fun SelectionActionsBar(
     selectedCount: Int,
@@ -486,7 +437,6 @@ fun SelectionActionsBar(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-
             Row {
                 TextButton(onClick = onClearSelection) {
                     Text("Clear")
@@ -516,14 +466,12 @@ fun SelectionActionsBar(
         }
     }
 }
-
 // Helper functions
 private fun formatDuration(millis: Long): String {
     val seconds = millis / 1000
     val minutes = seconds / 60
     return String.format("%d:%02d", minutes, seconds % 60)
 }
-
 private fun formatFileSize(bytes: Long): String {
     return when {
         bytes < 1024 -> "$bytes B"
@@ -531,7 +479,6 @@ private fun formatFileSize(bytes: Long): String {
         else -> "${bytes / (1024 * 1024)} MB"
     }
 }
-
 // Data classes
 data class GSRSession(
     val id: String,
@@ -543,13 +490,11 @@ data class GSRSession(
     val fileSize: Long,
     val timestamp: Long
 )
-
 data class GSRFilter(
     val minQuality: Int = 0,
     val minDuration: Int = 0,
     val hasParticipant: Boolean = false
 )
-
 data class GSRGalleryUiState(
     val sessions: List<GSRSession> = emptyList(),
     val filteredSessions: List<GSRSession> = emptyList(),
@@ -557,15 +502,12 @@ data class GSRGalleryUiState(
     val currentFilter: GSRFilter = GSRFilter(),
     val isLoading: Boolean = false
 )
-
 // ViewModel
 class GSRGalleryViewModel : AppBaseViewModel() {
     private val _galleryState = MutableStateFlow(GSRGalleryUiState())
     val galleryState: StateFlow<GSRGalleryUiState> = _galleryState.asStateFlow()
-
     fun loadGSRSessions() {
         _galleryState.value = _galleryState.value.copy(isLoading = true)
-
         val mockSessions = listOf(
             GSRSession(
                 "1",
@@ -618,14 +560,12 @@ class GSRGalleryViewModel : AppBaseViewModel() {
                 System.currentTimeMillis() - 432000000
             )
         )
-
         _galleryState.value = _galleryState.value.copy(
             sessions = mockSessions,
             filteredSessions = mockSessions,
             isLoading = false
         )
     }
-
     fun filterSessions(query: String) {
         val filtered = _galleryState.value.sessions.filter { session ->
             query.isEmpty() ||
@@ -634,7 +574,6 @@ class GSRGalleryViewModel : AppBaseViewModel() {
         }
         _galleryState.value = _galleryState.value.copy(filteredSessions = filtered)
     }
-
     fun applyFilter(filter: GSRFilter) {
         val filtered = _galleryState.value.sessions.filter { session ->
             session.dataQuality >= filter.minQuality &&
@@ -646,7 +585,6 @@ class GSRGalleryViewModel : AppBaseViewModel() {
             currentFilter = filter
         )
     }
-
     fun selectSession(session: GSRSession) {
         val currentSelection = _galleryState.value.selectedSessions
         val newSelection = if (currentSelection.contains(session.id)) {
@@ -656,19 +594,15 @@ class GSRGalleryViewModel : AppBaseViewModel() {
         }
         _galleryState.value = _galleryState.value.copy(selectedSessions = newSelection)
     }
-
     fun clearSelection() {
         _galleryState.value = _galleryState.value.copy(selectedSessions = emptySet())
     }
-
     fun openSession(session: GSRSession) {
         // Implementation for opening session details
     }
-
     fun exportSelectedSessions() {
         // Implementation for exporting selected sessions
     }
-
     fun deleteSelectedSessions() {
         val selectedIds = _galleryState.value.selectedSessions
         val updatedSessions = _galleryState.value.sessions.filter { !selectedIds.contains(it.id) }

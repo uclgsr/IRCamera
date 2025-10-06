@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.settings.ui
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -30,39 +29,30 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import java.util.*
-
 class ClauseViewModel : AppBaseViewModel() {
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
-
     private val _currentYear = mutableStateOf(Calendar.getInstance().get(Calendar.YEAR))
     val currentYear: State<Int> = _currentYear
-
     private val _agreementAccepted = mutableStateOf(false)
     val agreementAccepted: State<Boolean> = _agreementAccepted
-
     fun setAgreementAccepted(accepted: Boolean) {
         _agreementAccepted.value = accepted
     }
-
     suspend fun confirmInitApp(context: android.content.Context): Boolean {
         return try {
             _isLoading.value = true
-
             // Simulate initialization process
             delay(2000)
-
             // Initialize app components
             if (BaseApplication.instance.isDomestic()) {
                 // SharedManager.setAppName(context.getString(R.string.app_name))
                 // SharedManager.setVersionName(UnifiedVersionUtils.getVersion())
-
                 // Set network status
                 val networkStatus =
                     if (NetworkUtils.isNetworkAvailable()) "Connected" else "Disconnected"
                 // SharedManager.setNetworkStatus(networkStatus)
             }
-
             _isLoading.value = false
             true
         } catch (e: Exception) {
@@ -71,13 +61,9 @@ class ClauseViewModel : AppBaseViewModel() {
         }
     }
 }
-
 class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
-
     private val clauseVM: ClauseViewModel by viewModels()
-
     override fun createViewModel(): ClauseViewModel = clauseVM
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ClauseViewModel) {
@@ -87,7 +73,6 @@ class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
             val isLoading by viewModel.isLoading
             val currentYear by viewModel.currentYear
             val agreementAccepted by viewModel.agreementAccepted
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -97,7 +82,6 @@ class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
                     title = stringResource(R.string.terms_and_conditions),
                     onBackClick = { finish() }
                 )
-
                 Box(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -142,7 +126,6 @@ class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
                                 )
                             }
                         }
-
                         // Terms and conditions content
                         Card(
                             modifier = Modifier
@@ -162,7 +145,6 @@ class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
                                     color = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.padding(bottom = 16.dp)
                                 )
-
                                 Text(
                                     text = buildTermsContent(),
                                     style = MaterialTheme.typography.bodyMedium,
@@ -171,7 +153,6 @@ class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
                                 )
                             }
                         }
-
                         // Agreement checkbox
                         Card(
                             modifier = Modifier
@@ -202,7 +183,6 @@ class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
                                 )
                             }
                         }
-
                         // Action buttons
                         Row(
                             modifier = Modifier
@@ -217,7 +197,6 @@ class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
                             ) {
                                 Text("Disagree & Exit")
                             }
-
                             Button(
                                 onClick = {
                                     viewModel.viewModelScope.launch {
@@ -243,7 +222,6 @@ class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
                                 }
                             }
                         }
-
                         // Copyright section
                         Card(
                             modifier = Modifier.fillMaxWidth(),
@@ -270,7 +248,6 @@ class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
                             }
                         }
                     }
-
                     // Loading overlay
                     if (isLoading) {
                         Box(
@@ -305,41 +282,31 @@ class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
             }
         }
     }
-
     private fun buildTermsContent(): String {
         return """
             Welcome to the IRCamera application. By using this application, you agree to comply with and be bound by the following terms and conditions.
-
             1. ACCEPTANCE OF TERMS
             By accessing and using this application, you accept and agree to be bound by the terms and provision of this agreement.
-
             2. DATA COLLECTION AND PRIVACY
             This application collects thermal imaging data, GSR sensor data, and other biometric information for research purposes. All data collection is performed with your explicit consent and in accordance with applicable privacy laws.
-
             3. PERMITTED USE
             • Use the application only for legitimate research and educational purposes
             • Obtain appropriate consent from research participants
             • Comply with all applicable laws and regulations
             • Properly secure and protect collected data
-
             4. PROHIBITED ACTIVITIES
             • Using the application for unlawful purposes
             • Attempting to reverse engineer or modify the application
             • Sharing collected data without proper authorization
             • Violating privacy rights of individuals
-
             5. DATA SECURITY
             We implement appropriate security measures to protect your information, including encryption and access controls. However, no system is completely secure, and you acknowledge the inherent risks.
-
             6. INTELLECTUAL PROPERTY
             The application and its content are protected by copyright, trademark, and other intellectual property laws. All rights not expressly granted are reserved.
-
             7. LIMITATION OF LIABILITY
             The application is provided "as is" without warranties. We shall not be liable for any damages arising from your use of the application.
-
             8. MODIFICATIONS
             We reserve the right to modify these terms at any time. Continued use of the application constitutes acceptance of modified terms.
-
             By clicking "Agree & Continue", you acknowledge that you have read, understood, and agree to these terms and conditions.
         """.trimIndent()
     }

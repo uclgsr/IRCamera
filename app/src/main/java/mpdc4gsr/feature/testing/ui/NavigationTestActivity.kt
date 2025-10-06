@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.testing.ui
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,17 +18,9 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.navigation.UnifiedNavHost
 import mpdc4gsr.core.ui.navigation.UnifiedRoute
 
-/**
- * Navigation Test Activity
- *
- * This activity provides a test interface for all navigation routes to verify
- * that the navigation system works correctly after the updates.
- */
 class NavigationTestActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             LibUnifiedTheme {
                 NavigationTestScreen()
@@ -37,13 +28,11 @@ class NavigationTestActivity : ComponentActivity() {
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationTestScreen() {
     val navController = rememberNavController()
     var showRouteList by remember { mutableStateOf(true) }
-
     if (showRouteList) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -58,7 +47,6 @@ fun NavigationTestScreen() {
                     }
                 }
             )
-
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -78,7 +66,6 @@ fun NavigationTestScreen() {
                     "Settings" to UnifiedRoute.Settings.route,
                     "About" to UnifiedRoute.About.route
                 )
-
                 items(routes) { (name, route) ->
                     Card(
                         modifier = Modifier.fillMaxWidth(),

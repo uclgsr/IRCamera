@@ -1,10 +1,7 @@
 @file:Suppress("DEPRECATION")
-
 package com.mpdc4gsr.module.thermalunified.video.media
-
 import android.graphics.Bitmap
 import android.media.MediaCodecInfo.CodecCapabilities.*
-
 object EncodeYuvTools {
     fun getNV12(
         inputWidth: Int,
@@ -23,7 +20,6 @@ object EncodeYuvTools {
                     inputWidth,
                     inputHeight,
                 )
-
             @Suppress("DEPRECATION") COLOR_FormatYUV420Planar ->
                 encodeYUV420P(
                     yuv,
@@ -31,7 +27,6 @@ object EncodeYuvTools {
                     inputWidth,
                     inputHeight,
                 )
-
             @Suppress("DEPRECATION") COLOR_FormatYUV420PackedSemiPlanar ->
                 encodeYUV420PSP(
                     yuv,
@@ -39,7 +34,6 @@ object EncodeYuvTools {
                     inputWidth,
                     inputHeight,
                 )
-
             @Suppress("DEPRECATION") COLOR_FormatYUV420PackedPlanar ->
                 encodeYUV420PP(
                     yuv,
@@ -47,7 +41,6 @@ object EncodeYuvTools {
                     inputWidth,
                     inputHeight,
                 )
-
             else ->
                 encodeYUV420SP(
                     yuv,
@@ -58,7 +51,6 @@ object EncodeYuvTools {
         }
         return yuv
     }
-
     private fun encodeYUV420SP(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -71,7 +63,6 @@ object EncodeYuvTools {
         var index = 0
         for (j in 0 until height) {
             for (i in 0 until width) {
-
                 val r = argb[index] and 0xff0000 shr 16
                 val g = argb[index] and 0xff00 shr 8
                 val b = argb[index] and 0xff shr 0
@@ -114,7 +105,6 @@ object EncodeYuvTools {
             }
         }
     }
-
     private fun encodeYUV420P(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -128,7 +118,6 @@ object EncodeYuvTools {
         var index = 0
         for (j in 0 until height) {
             for (i in 0 until width) {
-
                 val r = argb[index] and 0xff0000 shr 16
                 val g = argb[index] and 0xff00 shr 8
                 val b = argb[index] and 0xff shr 0
@@ -171,7 +160,6 @@ object EncodeYuvTools {
             }
         }
     }
-
     private fun encodeYUV420PSP(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -182,7 +170,6 @@ object EncodeYuvTools {
         var index = 0
         for (j in 0 until height) {
             for (i in 0 until width) {
-
                 val r = argb[index] and 0xff0000 shr 16
                 val g = argb[index] and 0xff00 shr 8
                 val b = argb[index] and 0xff shr 0
@@ -228,7 +215,6 @@ object EncodeYuvTools {
             }
         }
     }
-
     private fun encodeYUV420PP(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -240,7 +226,6 @@ object EncodeYuvTools {
         var index = 0
         for (j in 0 until height) {
             for (i in 0 until width) {
-
                 val r = argb[index] and 0xff0000 shr 16
                 val g = argb[index] and 0xff00 shr 8
                 val b = argb[index] and 0xff shr 0

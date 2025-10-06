@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.socket
-
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -7,7 +6,6 @@ import okhttp3.*
 import okio.ByteString
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
-
 class WsManager(
     private val wsUrl: String,
     private val okHttpClient: OkHttpClient,
@@ -16,15 +14,12 @@ class WsManager(
     companion object {
         private const val NORMAL_CLOSE_CODE = 1000
         private const val ABNORMAL_CLOSE_CODE = 1001
-
         private const val NORMAL_CLOSE_TIPS = "APP call close() and return true"
         private const val ABNORMAL_CLOSE_TIPS = "APP call close() and return false"
     }
-
     private var mWebSocket: WebSocket? = null
     private var status: State = State.DISCONNECTED
     private var heartBeatTimer: HeartBeatTimer? = null
-
     private val mWebSocketListener: WebSocketListener =
         object : WebSocketListener() {
             @Override
@@ -34,7 +29,6 @@ class WsManager(
             ) {
                 mWebSocket = webSocket
                 status = State.CONNECTED
-
                 heartBeatTimer?.cancel()
                 heartBeatTimer = HeartBeatTimer(this@WsManager)
                 heartBeatTimer?.timeoutListener = {
@@ -43,12 +37,10 @@ class WsManager(
                     }
                 }
                 heartBeatTimer?.start()
-
                 statusListener.runMain {
                     it.onOpen(webSocket, response)
                 }
             }
-
             @Override
             override fun onMessage(
                 webSocket: WebSocket,
@@ -59,7 +51,6 @@ class WsManager(
                     it.onMessage(webSocket, bytes)
                 }
             }
-
             @Override
             override fun onMessage(
                 webSocket: WebSocket,
@@ -70,7 +61,6 @@ class WsManager(
                     it.onMessage(webSocket, text)
                 }
             }
-
             @Override
             override fun onClosing(
                 webSocket: WebSocket,
@@ -82,7 +72,6 @@ class WsManager(
                     it.onClosing(webSocket, code, reason)
                 }
             }
-
             @Override
             override fun onClosed(
                 webSocket: WebSocket,
@@ -90,15 +79,12 @@ class WsManager(
                 reason: String,
             ) {
                 status = State.DISCONNECTED
-
                 heartBeatTimer?.cancel()
                 heartBeatTimer = null
-
                 statusListener.runMain {
                     it.onClosed(webSocket, code, reason)
                 }
             }
-
             @Override
             override fun onFailure(
                 webSocket: WebSocket,
@@ -111,11 +97,8 @@ class WsManager(
                 }
             }
         }
-
     fun isConnect(): Boolean = status == State.CONNECTING || status == State.CONNECTED
-
     private var mLock = ReentrantLock()
-
     @Synchronized
     fun startConnect() {
         if (status == State.CONNECTING || status == State.CONNECTED) {
@@ -126,7 +109,6 @@ class WsManager(
             return
         }
         status = State.CONNECTING
-
         okHttpClient.dispatcher.cancelAll()
         val mRequest: Request =
             Request.Builder()
@@ -142,16 +124,13 @@ class WsManager(
         } catch (_: InterruptedException) {
         }
     }
-
     fun stopConnect() {
         heartBeatTimer?.cancel()
         heartBeatTimer = null
-
         if (status == State.DISCONNECTED) {
             return
         }
         status = State.DISCONNECTED
-
         okHttpClient.dispatcher.cancelAll()
         if (mWebSocket != null) {
             val isClosed = mWebSocket!!.close(NORMAL_CLOSE_CODE, NORMAL_CLOSE_TIPS)
@@ -166,15 +145,12 @@ class WsManager(
             }
         }
     }
-
     fun sendMessage(msg: String?): Boolean {
         return send(msg)
     }
-
     fun sendMessage(byteString: ByteString?): Boolean {
         return send(byteString)
     }
-
     private fun send(msg: Any?): Boolean {
         var isSend = false
         if (mWebSocket != null && status == State.CONNECTED) {
@@ -186,9 +162,7 @@ class WsManager(
         }
         return isSend
     }
-
     private val wsMainHandler = Handler(Looper.getMainLooper())
-
     private fun IWebSocketListener?.runMain(block: (IWebSocketListener) -> Unit) {
         if (this != null) {
             if (Looper.myLooper() != Looper.getMainLooper()) {
@@ -200,13 +174,10 @@ class WsManager(
             }
         }
     }
-
     private class HeartBeatTimer(val wsManager: WsManager) : Timer() {
         var timeoutListener: (() -> Unit)? = null
-
         @Volatile
         var lastHeartBeatTime: Long = 0
-
         fun start() {
             schedule(
                 object : TimerTask() {
@@ -241,40 +212,31 @@ class WsManager(
             )
         }
     }
-
     abstract class IWebSocketListener : WebSocketListener() {
-
         abstract fun onHeartBeat(): String?
-
         abstract fun onHeartBeatTimeout()
     }
-
     enum class State {
         DISCONNECTED,
         CONNECTING,
         CONNECTED,
     }
-
     class Builder {
         private var wsUrl: String? = null
         private var okHttpClient: OkHttpClient? = null
         private var statusListener: IWebSocketListener? = null
-
         fun wsUrl(url: String?): Builder {
             wsUrl = url
             return this
         }
-
         fun client(client: OkHttpClient?): Builder {
             okHttpClient = client
             return this
         }
-
         fun setWsStatusListener(wsStatusListener: IWebSocketListener?): Builder {
             statusListener = wsStatusListener
             return this
         }
-
         fun build(): WsManager = WsManager(wsUrl!!, okHttpClient!!, statusListener!!)
     }
 }

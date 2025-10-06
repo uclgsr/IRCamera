@@ -1,5 +1,4 @@
 package mpdc4gsr.core.data
-
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -19,7 +18,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
-
 class UnifiedSessionManager(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
@@ -29,59 +27,44 @@ class UnifiedSessionManager(
 ) {
     companion object {
         private const val TAG = "UnifiedSessionManager"
-
         private const val MAX_SESSION_DURATION_MS = 3600000L
         private const val SESSION_HEARTBEAT_INTERVAL_MS = 10000L
         private const val QUALITY_CHECK_INTERVAL_MS = 5000L
-
         private const val MIN_DATA_QUALITY_SCORE = 0.7
         private const val MAX_SENSOR_LAG_MS = 1000
         private const val MIN_NETWORK_QUALITY = 0.6
-
         // Timeout constants for sensor operations
         private const val SENSOR_INIT_TIMEOUT_MS = 5000L
         private const val SENSOR_START_TIMEOUT_MS = 10000L
         private const val SENSOR_STOP_TIMEOUT_MS = 15000L
     }
-
     private val _currentSession = MutableStateFlow<SessionInfo?>(null)
     val currentSession: StateFlow<SessionInfo?> = _currentSession.asStateFlow()
-
     private val _sessionStatus = MutableStateFlow(SessionStatus.IDLE)
     val sessionStatus: StateFlow<SessionStatus> = _sessionStatus.asStateFlow()
-
     private val _sessionQuality = MutableStateFlow(SessionQuality())
     val sessionQuality: StateFlow<SessionQuality> = _sessionQuality.asStateFlow()
-
     private val isSessionActive = AtomicBoolean(false)
     private val sessionStartTime = AtomicLong(0)
-
     private var sessionJob: Job? = null
     private var qualityMonitoringJob: Job? = null
     private var heartbeatJob: Job? = null
-
     private val structuredLogger = StructuredLogger.getInstance(context)
-
     suspend fun createSession(
         sessionConfig: SessionConfig
     ): SessionInfo? = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Creating new session: ${sessionConfig.sessionName}")
-
         try {
-
             if (!validateSessionConfig(sessionConfig)) {
                 AppLogger.e(TAG, "Invalid session configuration")
                 return@withContext null
             }
-
             if (isSessionActive.get()) {
                 AppLogger.w(TAG, "Cannot create session - another session is active")
                 return@withContext null
             }
-
             val sessionId = generateSessionId(sessionConfig.sessionName)
             val sessionDir = createSessionDirectory(sessionId)
-
             val sessionInfo = SessionInfo(
                 sessionId = sessionId,
                 sessionName = sessionConfig.sessionName,
@@ -93,10 +76,8 @@ class UnifiedSessionManager(
                 createdAt = System.currentTimeMillis(),
                 metadata = sessionConfig.metadata
             )
-
             _currentSession.value = sessionInfo
             _sessionStatus.value = SessionStatus.CREATED
-
             structuredLogger.logSessionEvent(
                 "session_created",
                 sessionId,
@@ -107,56 +88,44 @@ class UnifiedSessionManager(
                     "session_type" to sessionConfig.sessionType.name
                 )
             )
-
             AppLogger.i(TAG, "Session created successfully: $sessionId")
             return@withContext sessionInfo
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to create session", e)
             _sessionStatus.value = SessionStatus.ERROR
             return@withContext null
         }
     }
-
     suspend fun startSession(): Boolean = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Starting recording session")
-
         val session = _currentSession.value
         if (session == null) {
             AppLogger.e(TAG, "No session to start")
             return@withContext false
         }
-
         if (isSessionActive.get()) {
             AppLogger.w(TAG, "Session already active")
             return@withContext true
         }
-
         try {
             _sessionStatus.value = SessionStatus.STARTING
-
             val initializationResults = initializeSensors(session.enabledSensors)
             if (initializationResults.any { !it.value }) {
                 AppLogger.e(TAG, "Sensor initialization failed")
                 _sessionStatus.value = SessionStatus.ERROR
                 return@withContext false
             }
-
             val recordingStarted = startSensorRecording(session)
             if (!recordingStarted) {
                 AppLogger.e(TAG, "Failed to start sensor recording")
                 _sessionStatus.value = SessionStatus.ERROR
                 return@withContext false
             }
-
             isSessionActive.set(true)
             sessionStartTime.set(System.currentTimeMillis())
             _sessionStatus.value = SessionStatus.RECORDING
-
             startSessionMonitoring(session)
-
             notifySessionStart(session)
-
             structuredLogger.logSessionEvent(
                 "session_started",
                 session.sessionId,
@@ -165,45 +134,33 @@ class UnifiedSessionManager(
                     "session_directory" to session.sessionDirectory
                 )
             )
-
             AppLogger.i(TAG, "Session started successfully: ${session.sessionId}")
             return@withContext true
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to start session", e)
             _sessionStatus.value = SessionStatus.ERROR
             return@withContext false
         }
     }
-
     suspend fun stopSession(): Boolean = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Stopping recording session")
-
         val session = _currentSession.value
         if (session == null || !isSessionActive.get()) {
             AppLogger.w(TAG, "No active session to stop")
             return@withContext true
         }
-
         try {
             _sessionStatus.value = SessionStatus.STOPPING
-
             sessionJob?.cancel()
             qualityMonitoringJob?.cancel()
             heartbeatJob?.cancel()
-
             stopSensorRecording()
-
             isSessionActive.set(false)
             val sessionDuration = System.currentTimeMillis() - sessionStartTime.get()
-
             val enhancedSessionSummary =
                 generateComprehensiveSessionSummary(session, sessionDuration)
-
             writeComprehensiveSessionMetadata(session, enhancedSessionSummary)
-
             notifySessionStop(session, enhancedSessionSummary)
-
             structuredLogger.logSessionEvent(
                 "session_stopped_comprehensive",
                 session.sessionId,
@@ -214,19 +171,15 @@ class UnifiedSessionManager(
                     "metadata_written" to true
                 )
             )
-
             _sessionStatus.value = SessionStatus.COMPLETED
-
             AppLogger.i(TAG, "Session stopped successfully: ${session.sessionId}")
             return@withContext true
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to stop session", e)
             _sessionStatus.value = SessionStatus.ERROR
             return@withContext false
         }
     }
-
     suspend fun addSyncMarker(
         markerType: String,
         markerData: Map<String, Any> = emptyMap()
@@ -236,24 +189,18 @@ class UnifiedSessionManager(
             AppLogger.w(TAG, "No active session for sync marker")
             return false
         }
-
         try {
             val timestamp = System.nanoTime()
             val markerId = "sync_${System.currentTimeMillis()}"
-
             gsrRecorder.addSyncMarker(markerType, timestamp)
-
             recordingController.addSyncMarker(markerId, timestamp)
-
             val markerMessage = JSONObject().apply {
                 put("marker_id", markerId)
                 put("marker_type", markerType)
                 put("timestamp", timestamp)
                 put("data", JSONObject(markerData))
             }
-
             networkController.broadcastMessage("sync_marker", markerMessage)
-
             structuredLogger.logSessionEvent(
                 "sync_marker_added",
                 session.sessionId,
@@ -264,20 +211,16 @@ class UnifiedSessionManager(
                     "marker_data" to markerData
                 )
             )
-
             AppLogger.i(TAG, "Added sync marker: $markerType ($markerId)")
             return true
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to add sync marker", e)
             return false
         }
     }
-
     fun getSessionStatistics(): SessionStatistics {
         val session = _currentSession.value
         val quality = _sessionQuality.value
-
         return SessionStatistics(
             sessionId = session?.sessionId,
             isActive = isSessionActive.get(),
@@ -295,10 +238,8 @@ class UnifiedSessionManager(
             errors = quality.errorCount
         )
     }
-
     suspend fun handleRemoteSessionControl(controlType: String, parameters: JSONObject): Boolean {
         AppLogger.i(TAG, "Handling remote session control: $controlType")
-
         return try {
             when (controlType) {
                 "start_session" -> {
@@ -308,18 +249,15 @@ class UnifiedSessionManager(
                         startSession()
                     } else false
                 }
-
                 "stop_session" -> {
                     stopSession()
                 }
-
                 "add_sync_marker" -> {
                     val markerType = parameters.getString("marker_type")
                     val markerData =
                         parameters.optJSONObject("data")?.let { jsonToMap(it) } ?: emptyMap()
                     addSyncMarker(markerType, markerData)
                 }
-
                 else -> {
                     AppLogger.w(TAG, "Unknown remote control type: $controlType")
                     false
@@ -330,54 +268,42 @@ class UnifiedSessionManager(
             false
         }
     }
-
     suspend fun cleanup(): Boolean = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Cleaning up session manager")
-
         try {
-
             if (isSessionActive.get()) {
                 stopSession()
             }
-
             sessionJob?.cancel()
             qualityMonitoringJob?.cancel()
             heartbeatJob?.cancel()
-
             _currentSession.value = null
             _sessionStatus.value = SessionStatus.IDLE
-
             AppLogger.i(TAG, "Session manager cleanup completed")
             return@withContext true
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error during cleanup", e)
             return@withContext false
         }
     }
-
     private fun validateSessionConfig(config: SessionConfig): Boolean {
         return config.sessionName.isNotBlank() &&
                 config.enabledSensors.isNotEmpty() &&
                 config.participantId.isNotBlank()
     }
-
     private fun generateSessionId(sessionName: String): String {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val cleanName = sessionName.replace(Regex("[^a-zA-Z0-9_]"), "_")
         return "${cleanName}_${timestamp}"
     }
-
     private fun createSessionDirectory(sessionId: String): File {
         val baseDir = File(context.getExternalFilesDir(null), "sessions")
         val sessionDir = File(baseDir, sessionId)
         sessionDir.mkdirs()
         return sessionDir
     }
-
     private suspend fun initializeSensors(enabledSensors: List<String>): Map<String, Boolean> {
         val results = mutableMapOf<String, Boolean>()
-
         for (sensor in enabledSensors) {
             val initialized = when (sensor.lowercase()) {
                 "gsr" -> gsrRecorder.initialize()
@@ -391,39 +317,25 @@ class UnifiedSessionManager(
             results[sensor] = initialized
             AppLogger.d(TAG, "Sensor $sensor initialization: ${if (initialized) "SUCCESS" else "FAILED"}")
         }
-
         return results
     }
-
     private suspend fun startSensorRecording(session: SessionInfo): Boolean {
         AppLogger.i(TAG, "Starting synchronized sensor recording for session: ${session.sessionId}")
-
         return executeSynchronizedSensorStartWithErrorIsolation(session)
     }
 
-    /**
-     * Execute synchronized sensor start with precise timing coordination and error isolation
-     * Implements TODO requirement: "One failing sensor should not derail the entire session"
-     * and "graceful degradation if individual sensors fail"
-     */
     private suspend fun executeSynchronizedSensorStartWithErrorIsolation(session: SessionInfo): Boolean {
         AppLogger.i(TAG, "Starting sensors with error isolation - graceful degradation enabled")
-
         val startTime = System.nanoTime()
         val sensorResults = mutableMapOf<String, SensorStartResult>()
-
         try {
-
             val preparationResults = prepareSensorsWithIsolation(session)
-
             val barrierTime = startTime + 2_000_000_000L
-
             AppLogger.i(TAG, "Sensor preparation complete - starting barrier synchronization")
             Log.i(
                 TAG,
                 "Barrier time set: $barrierTime ns (${(barrierTime - startTime) / 1_000_000} ms from now)"
             )
-
             val startJobs = coroutineScope {
                 preparationResults.map { (sensorType, prepared) ->
                     async {
@@ -436,18 +348,14 @@ class UnifiedSessionManager(
                     }
                 }
             }
-
             val results = startJobs.awaitAll()
             results.forEach { result ->
                 sensorResults[result.sensorType] = result
             }
-
             val successCount = sensorResults.values.count { it.success }
             val totalSensors = sensorResults.size
             val failedSensors = sensorResults.values.filter { !it.success }
-
             AppLogger.i(TAG, "Sensor start results: $successCount/$totalSensors successful")
-
             sensorResults.forEach { (sensorType, result) ->
                 if (result.success) {
                     Log.i(
@@ -459,48 +367,35 @@ class UnifiedSessionManager(
                     AppLogger.w(TAG, "   Other sensors will continue recording (graceful degradation)")
                 }
             }
-
             val canContinue = evaluateSessionViabilityWithFailures(sensorResults)
-
             if (canContinue) {
                 if (failedSensors.isNotEmpty()) {
                     Log.w(
                         TAG,
                         " Session starting with ${failedSensors.size} failed sensors (graceful degradation)"
                     )
-
                     emitSensorFailureNotification(failedSensors)
                 }
-
                 recordSensorStartResults(session, sensorResults)
-
                 Log.i(
                     TAG,
                     " Multi-sensor session started with error isolation - $successCount sensors active"
                 )
                 return true
-
             } else {
                 AppLogger.e(TAG, " Too many sensor failures - session cannot continue")
                 AppLogger.e(TAG, "Failed sensors: ${failedSensors.map { it.sensorType }}")
-
                 cleanupPartiallyStartedSensors(sensorResults)
-
                 return false
             }
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Critical error in synchronized sensor start with isolation", e)
-
             emergencyStopAllSensors()
-
             return false
         }
     }
-
     private suspend fun prepareSensorsWithIsolation(session: SessionInfo): Map<String, Boolean> {
         val preparationResults = mutableMapOf<String, Boolean>()
-
         val preparationJobs = coroutineScope {
             listOf(
                 async { prepareSensorIndependently("GSR", session) },
@@ -509,16 +404,13 @@ class UnifiedSessionManager(
                 async { prepareSensorIndependently("Audio", session) }
             )
         }
-
         val results = preparationJobs.awaitAll()
         results.forEach { (sensorType, prepared) ->
             preparationResults[sensorType] = prepared
             AppLogger.d(TAG, "Sensor preparation - $sensorType: ${if (prepared) "Ready" else "Failed"}")
         }
-
         return preparationResults
     }
-
     private suspend fun prepareSensorIndependently(
         sensorType: String,
         session: SessionInfo
@@ -527,11 +419,9 @@ class UnifiedSessionManager(
             withTimeout(SENSOR_INIT_TIMEOUT_MS) {
                 when (sensorType) {
                     "GSR" -> {
-
                         gsrRecorder.initialize()
                         sensorType to true
                     }
-
                     "Thermal" -> {
                         // Use recording controller's generic sensor preparation
                         val success =
@@ -542,7 +432,6 @@ class UnifiedSessionManager(
                         )
                         sensorType to success
                     }
-
                     "RGB" -> {
                         // Use recording controller's generic sensor preparation
                         val success = recordingController.testSensorConnections()["rgb"] ?: false
@@ -552,7 +441,6 @@ class UnifiedSessionManager(
                         )
                         sensorType to success
                     }
-
                     "Audio" -> {
                         // Use recording controller's generic sensor preparation
                         val success = recordingController.testSensorConnections()["audio"] ?: false
@@ -562,7 +450,6 @@ class UnifiedSessionManager(
                         )
                         sensorType to success
                     }
-
                     else -> sensorType to false
                 }
             }
@@ -571,7 +458,6 @@ class UnifiedSessionManager(
             sensorType to false
         }
     }
-
     private suspend fun startIndividualSensorWithIsolation(
         sensorType: String,
         session: SessionInfo,
@@ -587,17 +473,13 @@ class UnifiedSessionManager(
                     errorMessage = "Sensor preparation failed"
                 )
             }
-
             val currentTime = System.nanoTime()
             val waitTime = barrierTime - currentTime
-
             if (waitTime > 0) {
                 delay(waitTime / 1_000_000L)
             }
-
             val actualStartTime = System.nanoTime()
             val jitterMs = Math.abs(actualStartTime - barrierTime) / 1_000_000L
-
             val startSuccess = withTimeout(SENSOR_START_TIMEOUT_MS) {
                 when (sensorType) {
                     "GSR" -> gsrRecorder.startRecording(session.sessionDirectory)
@@ -610,7 +492,6 @@ class UnifiedSessionManager(
                             false
                         }
                     }
-
                     "RGB" -> {
                         // Start RGB recording through recording controller
                         try {
@@ -620,7 +501,6 @@ class UnifiedSessionManager(
                             false
                         }
                     }
-
                     "Audio" -> {
                         // Start audio recording through recording controller
                         try {
@@ -630,18 +510,15 @@ class UnifiedSessionManager(
                             false
                         }
                     }
-
                     else -> false
                 }
             }
-
             SensorStartResult(
                 sensorType = sensorType,
                 success = startSuccess,
                 startJitterMs = jitterMs,
                 errorMessage = if (startSuccess) null else "Start command failed"
             )
-
         } catch (e: Exception) {
             AppLogger.w(TAG, "Isolated sensor start failure for $sensorType: ${e.message}")
             SensorStartResult(
@@ -652,14 +529,11 @@ class UnifiedSessionManager(
             )
         }
     }
-
     private fun evaluateSessionViabilityWithFailures(sensorResults: Map<String, SensorStartResult>): Boolean {
         val successCount = sensorResults.values.count { it.success }
         val totalSensors = sensorResults.size
-
         return successCount >= 1 && (successCount >= totalSensors * 0.5 || successCount >= 2)
     }
-
     private fun emitSensorFailureNotification(failedSensors: List<SensorStartResult>) {
         lifecycleOwner.lifecycleScope.launch {
             failedSensors.forEach { failure ->
@@ -667,11 +541,9 @@ class UnifiedSessionManager(
                     TAG,
                     "Emitting sensor failure notification: ${failure.sensorType} - ${failure.errorMessage}"
                 )
-
             }
         }
     }
-
     private fun recordSensorStartResults(
         session: SessionInfo,
         sensorResults: Map<String, SensorStartResult>
@@ -690,20 +562,15 @@ class UnifiedSessionManager(
                     }
                 })
             }
-
             val metadataFile = File(session.sessionDirectory, "sensor_start_results.json")
             metadataFile.writeText(resultsJson.toString(2))
-
             AppLogger.i(TAG, "Sensor start results recorded in session metadata")
-
         } catch (e: Exception) {
             AppLogger.w(TAG, "Failed to record sensor start results", e)
         }
     }
-
     private suspend fun cleanupPartiallyStartedSensors(sensorResults: Map<String, SensorStartResult>) {
         AppLogger.i(TAG, "Cleaning up partially started sensors")
-
         sensorResults.filter { it.value.success }.forEach { (sensorType, _) ->
             try {
                 when (sensorType) {
@@ -717,7 +584,6 @@ class UnifiedSessionManager(
                             AppLogger.e(TAG, "Failed to stop thermal recording", e)
                         }
                     }
-
                     "RGB" -> {
                         // Stop RGB recording through recording controller
                         try {
@@ -727,7 +593,6 @@ class UnifiedSessionManager(
                             AppLogger.e(TAG, "Failed to stop RGB recording", e)
                         }
                     }
-
                     "Audio" -> {
                         // Stop audio recording through recording controller
                         try {
@@ -744,65 +609,50 @@ class UnifiedSessionManager(
             }
         }
     }
-
     private suspend fun emergencyStopAllSensors() {
         AppLogger.w(TAG, "Executing emergency stop for all sensors")
-
         try {
             gsrRecorder.stopRecording()
         } catch (e: Exception) {
             AppLogger.w(TAG, "Error in emergency GSR stop", e)
         }
-
         try {
             recordingController.stopRecording()
         } catch (e: Exception) {
             AppLogger.w(TAG, "Error in emergency recording controller stop", e)
         }
     }
-
     private data class SensorStartResult(
         val sensorType: String,
         val success: Boolean,
         val startJitterMs: Long,
         val errorMessage: String?
     )
-
     private suspend fun executeSynchronizedSensorStart(session: SessionInfo): Boolean =
         withContext(Dispatchers.IO) {
             val enabledSensors = session.enabledSensors
             val startTasks = mutableListOf<Deferred<Boolean>>()
             val sensorStartTime = System.nanoTime() + 2_000_000_000L
-
             AppLogger.i(TAG, "Coordinating synchronized start for ${enabledSensors.size} sensors")
             Log.d(
                 TAG,
                 "Target start time: ${sensorStartTime}ns (${(sensorStartTime - System.nanoTime()) / 1_000_000}ms from now)"
             )
-
             try {
-
                 val preparationTasks = enabledSensors.map { sensor ->
                     async {
                         val sensorName = sensor.lowercase()
                         AppLogger.d(TAG, "Preparing sensor: $sensorName")
-
                         when (sensorName) {
                             "gsr" -> prepareSensor("GSR", sensorName) {
-
                                 true
                             }
-
                             "thermal" -> prepareSensor("Thermal", sensorName) {
-
                                 true
                             }
-
                             "rgb" -> prepareSensor("RGB", sensorName) {
-
                                 true
                             }
-
                             else -> {
                                 AppLogger.w(TAG, "Unknown sensor type: $sensor")
                                 false
@@ -810,33 +660,26 @@ class UnifiedSessionManager(
                         }
                     }
                 }
-
                 val preparationResults = preparationTasks.awaitAll()
                 val allPrepared = preparationResults.all { it }
-
                 if (!allPrepared) {
                     AppLogger.e(TAG, "Sensor preparation failed - aborting synchronized start")
                     return@withContext false
                 }
-
                 AppLogger.i(TAG, "All sensors prepared successfully - proceeding with synchronized start")
-
                 enabledSensors.forEach { sensor ->
                     val task = async {
                         executeTimedSensorStart(sensor.lowercase(), session, sensorStartTime)
                     }
                     startTasks.add(task)
                 }
-
                 AppLogger.d(TAG, "Executing synchronization barrier...")
                 val results = startTasks.awaitAll()
                 val allStarted = results.all { it }
-
                 if (allStarted) {
                     val actualJitter = measureStartJitter()
                     AppLogger.i(TAG, "Synchronized sensor start completed successfully")
                     AppLogger.d(TAG, "Start jitter: ${actualJitter}ms (target: <${MAX_SENSOR_LAG_MS}ms)")
-
                     recordSyncEvent(
                         "synchronized_start", mapOf(
                             "sensors" to (enabledSensors ?: emptyList<String>()),
@@ -847,7 +690,6 @@ class UnifiedSessionManager(
                     )
                 } else {
                     AppLogger.e(TAG, "Synchronized sensor start failed - some sensors did not start")
-
                     recordSyncEvent(
                         "synchronized_start_failed", mapOf(
                             "sensors" to (enabledSensors ?: emptyList<String>()),
@@ -856,12 +698,9 @@ class UnifiedSessionManager(
                         )
                     )
                 }
-
                 allStarted
-
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Error during synchronized sensor start", e)
-
                 recordSyncEvent(
                     "synchronized_start_error", mapOf(
                         "sensors" to enabledSensors,
@@ -869,11 +708,9 @@ class UnifiedSessionManager(
                         "success" to false
                     )
                 )
-
                 false
             }
         }
-
     private suspend fun prepareSensor(
         displayName: String,
         sensorType: String,
@@ -883,63 +720,49 @@ class UnifiedSessionManager(
             val startTime = System.currentTimeMillis()
             val result = prepareAction()
             val duration = System.currentTimeMillis() - startTime
-
             Log.d(
                 TAG,
                 "$displayName sensor preparation: ${if (result) "SUCCESS" else "FAILED"} (${duration}ms)"
             )
             result
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error preparing $displayName sensor", e)
             false
         }
     }
-
     private suspend fun executeTimedSensorStart(
         sensorName: String,
         session: SessionInfo,
         targetStartTime: Long
     ): Boolean {
         return try {
-
             val currentTime = System.nanoTime()
             val waitTime = targetStartTime - currentTime
-
             if (waitTime > 0) {
                 delay(waitTime / 1_000_000)
             }
-
             val actualStartTime = System.nanoTime()
             val jitter = (actualStartTime - targetStartTime) / 1_000_000
-
             AppLogger.d(TAG, "Starting $sensorName sensor (jitter: ${jitter}ms)")
-
             val started = when (sensorName) {
                 "gsr" -> gsrRecorder.startRecording(session.sessionDirectory)
                 "thermal", "rgb" -> recordingController.startRecording(session.sessionDirectory)
                 else -> false
             }
-
             if (started) {
                 AppLogger.i(TAG, "$sensorName sensor started successfully (jitter: ${jitter}ms)")
             } else {
                 AppLogger.e(TAG, "$sensorName sensor failed to start")
             }
-
             started
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error starting $sensorName sensor", e)
             false
         }
     }
-
     private suspend fun measureStartJitter(): Long {
-
         return kotlin.random.Random.nextLong(5, 50)
     }
-
     private fun recordSyncEvent(eventType: String, metadata: Map<String, Any>) {
         try {
             val syncEvent = mapOf(
@@ -951,33 +774,22 @@ class UnifiedSessionManager(
                 ).format(Date()),
                 "metadata" to metadata
             )
-
             AppLogger.d(TAG, "Sync event recorded: $eventType")
-
         } catch (e: Exception) {
             AppLogger.w(TAG, "Failed to record sync event", e)
         }
     }
-
     private suspend fun stopSensorRecording() {
         try {
-
             stopSensorRecordingWithIsolation()
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error stopping sensor recording", e)
         }
     }
 
-    /**
-     * Stop sensor recording with enhanced error isolation and cleanup
-     * Implements TODO requirement: "Verify that stopping a session cleanly stops all sensor recordings
-     * and closes files" and "Extend this by aggregating a final session summary"
-     */
     private suspend fun stopSensorRecordingWithIsolation() {
         AppLogger.i(TAG, "Stopping sensors with error isolation - graceful degradation enabled")
-
         val stopResults = mutableMapOf<String, SensorStopResult>()
-
         val stopJobs = coroutineScope {
             listOf(
                 async { stopIndividualSensorWithIsolation("GSR") },
@@ -986,17 +798,13 @@ class UnifiedSessionManager(
                 async { stopIndividualSensorWithIsolation("Audio") }
             )
         }
-
         val results = stopJobs.awaitAll()
         results.forEach { result ->
             stopResults[result.sensorType] = result
         }
-
         val successCount = stopResults.values.count { it.success }
         val totalSensors = stopResults.size
-
         AppLogger.i(TAG, "Sensor stop results: $successCount/$totalSensors successful")
-
         stopResults.forEach { (sensorType, result) ->
             if (result.success) {
                 Log.i(
@@ -1008,15 +816,12 @@ class UnifiedSessionManager(
                 AppLogger.w(TAG, "   Files may still be accessible (graceful degradation)")
             }
         }
-
         flushAndCloseAllSensorFiles(stopResults)
     }
-
     private suspend fun stopIndividualSensorWithIsolation(sensorType: String): SensorStopResult {
         return try {
             withTimeout(SENSOR_STOP_TIMEOUT_MS) {
                 val stopTime = System.currentTimeMillis()
-
                 val (stopSuccess, sampleCount, fileSize) = when (sensorType) {
                     "GSR" -> {
                         val success = gsrRecorder.stopRecording()
@@ -1024,13 +829,11 @@ class UnifiedSessionManager(
                         val size = gsrRecorder.getOutputFileSize()
                         Triple(success, samples, size)
                     }
-
                     "Thermal" -> {
                         // Get thermal metrics from recording controller's sensor registry
                         try {
                             val connectionResults = recordingController.testSensorConnections()
                             val success = connectionResults["thermal"] ?: false
-
                             // Use approximate values based on typical thermal camera metrics
                             val samples = if (success) {
                                 val sessionDuration =
@@ -1038,20 +841,17 @@ class UnifiedSessionManager(
                                 (sessionDuration / 1000) * 30 // ~30 FPS thermal camera
                             } else 0L
                             val size = samples * 100 // ~100 bytes per thermal frame
-
                             Triple(success, samples, size)
                         } catch (e: Exception) {
                             AppLogger.w(TAG, "Failed to get thermal metrics", e)
                             Triple(false, 0L, 0L)
                         }
                     }
-
                     "RGB" -> {
                         // Get RGB metrics from recording controller's sensor registry
                         try {
                             val connectionResults = recordingController.testSensorConnections()
                             val success = connectionResults["rgb"] ?: false
-
                             // Use approximate values based on typical RGB camera metrics
                             val samples = if (success) {
                                 val sessionDuration =
@@ -1059,20 +859,17 @@ class UnifiedSessionManager(
                                 (sessionDuration / 1000) * 30 // ~30 FPS RGB camera
                             } else 0L
                             val size = samples * 1024 // ~1KB per RGB frame metadata
-
                             Triple(success, samples, size)
                         } catch (e: Exception) {
                             AppLogger.w(TAG, "Failed to get RGB metrics", e)
                             Triple(false, 0L, 0L)
                         }
                     }
-
                     "Audio" -> {
                         // Get audio metrics from recording controller's sensor registry
                         try {
                             val connectionResults = recordingController.testSensorConnections()
                             val success = connectionResults["audio"] ?: false
-
                             // Use approximate values based on typical audio metrics
                             val samples = if (success) {
                                 val sessionDuration =
@@ -1080,17 +877,14 @@ class UnifiedSessionManager(
                                 (sessionDuration / 1000) * 44100 // 44.1kHz sample rate
                             } else 0L
                             val size = samples * 2 // 16-bit audio = 2 bytes per sample
-
                             Triple(success, samples, size)
                         } catch (e: Exception) {
                             AppLogger.w(TAG, "Failed to get audio metrics", e)
                             Triple(false, 0L, 0L)
                         }
                     }
-
                     else -> Triple(false, 0L, 0L)
                 }
-
                 SensorStopResult(
                     sensorType = sensorType,
                     success = stopSuccess,
@@ -1100,7 +894,6 @@ class UnifiedSessionManager(
                     errorMessage = if (stopSuccess) null else "Stop command failed"
                 )
             }
-
         } catch (e: Exception) {
             AppLogger.w(TAG, "Isolated sensor stop failure for $sensorType: ${e.message}")
             SensorStopResult(
@@ -1113,12 +906,9 @@ class UnifiedSessionManager(
             )
         }
     }
-
     private suspend fun flushAndCloseAllSensorFiles(stopResults: Map<String, SensorStopResult>) {
         AppLogger.i(TAG, "Flushing and closing all sensor files")
-
         try {
-
             stopResults.keys.forEach { sensorType ->
                 try {
                     when (sensorType) {
@@ -1133,7 +923,6 @@ class UnifiedSessionManager(
                                 AppLogger.w(TAG, "Failed to flush thermal files", e)
                             }
                         }
-
                         "RGB" -> {
                             // Flush RGB files through recording controller
                             try {
@@ -1144,7 +933,6 @@ class UnifiedSessionManager(
                                 AppLogger.w(TAG, "Failed to flush RGB files", e)
                             }
                         }
-
                         "Audio" -> {
                             // Flush audio files through recording controller
                             try {
@@ -1161,32 +949,20 @@ class UnifiedSessionManager(
                     AppLogger.w(TAG, "Error flushing $sensorType files", e)
                 }
             }
-
             delay(1000)
-
             AppLogger.i(TAG, "All sensor files flushed and closed")
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error in file flush and close operations", e)
         }
     }
 
-    /**
-     * Generate comprehensive session summary with all sensor statistics
-     * Implements TODO requirement: "aggregating a final session summary (e.g. total samples, durations)
-     * in the metadata.json"
-     */
     private fun generateComprehensiveSessionSummary(
         session: SessionInfo,
         sessionDuration: Long
     ): ComprehensiveSessionSummary {
-
         AppLogger.i(TAG, "Generating comprehensive session summary")
-
         try {
-
             val sensorStatistics = mutableMapOf<String, SensorStatistics>()
-
             sensorStatistics["GSR"] = SensorStatistics(
                 sensorType = "GSR",
                 totalSamples = try {
@@ -1221,7 +997,6 @@ class UnifiedSessionManager(
                 },
                 isActive = gsrRecorder.isRecording
             )
-
             sensorStatistics["Thermal"] = SensorStatistics(
                 sensorType = "Thermal",
                 totalSamples = 0L,
@@ -1232,7 +1007,6 @@ class UnifiedSessionManager(
                 errors = 0L,
                 isActive = false
             )
-
             sensorStatistics["RGB"] = SensorStatistics(
                 sensorType = "RGB",
                 totalSamples = 0L,
@@ -1243,7 +1017,6 @@ class UnifiedSessionManager(
                 errors = 0L,
                 isActive = false
             )
-
             sensorStatistics["Audio"] = SensorStatistics(
                 sensorType = "Audio",
                 totalSamples = 0L,
@@ -1254,13 +1027,11 @@ class UnifiedSessionManager(
                 errors = 0L,
                 isActive = false
             )
-
             val totalSamples = sensorStatistics.values.sumOf { it.totalSamples }
             val totalErrors = sensorStatistics.values.sumOf { it.errors }
             val totalFileSize = sensorStatistics.values.sumOf { it.fileSize }
             val averageQuality = sensorStatistics.values.map { it.averageQuality }.average()
             val activeSensors = sensorStatistics.values.count { it.isActive }
-
             // Network and sync statistics - placeholder implementations
             val networkStats = try {
                 networkController.getNetworkStatistics()
@@ -1276,7 +1047,6 @@ class UnifiedSessionManager(
             } catch (e: Exception) {
                 0.0
             }
-
             return ComprehensiveSessionSummary(
                 sessionId = session.sessionId,
                 sessionName = session.sessionName,
@@ -1307,10 +1077,8 @@ class UnifiedSessionManager(
                 ),
                 dataIntegrityChecks = performDataIntegrityChecks(session, sensorStatistics)
             )
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error generating comprehensive session summary", e)
-
             return ComprehensiveSessionSummary(
                 sessionId = session.sessionId,
                 sessionName = session.sessionName,
@@ -1330,56 +1098,44 @@ class UnifiedSessionManager(
             )
         }
     }
-
     private suspend fun writeComprehensiveSessionMetadata(
         session: SessionInfo,
         summary: ComprehensiveSessionSummary
     ) {
         try {
             val sessionDir = File(session.sessionDirectory)
-
             val summaryFile = File(sessionDir, "session_summary_comprehensive.json")
             val gson = com.google.gson.GsonBuilder().setPrettyPrinting().create()
             summaryFile.writeText(gson.toJson(summary))
-
             val reportFile = File(sessionDir, "session_report.txt")
             reportFile.writeText(generateHumanReadableSessionReport(summary))
-
             val csvFile = File(sessionDir, "session_statistics.csv")
             csvFile.writeText(generateSessionStatisticsCSV(summary))
-
             AppLogger.i(TAG, "Comprehensive session metadata written:")
             AppLogger.i(TAG, "  JSON summary: ${summaryFile.name}")
             AppLogger.i(TAG, "  Text report: ${reportFile.name}")
             AppLogger.i(TAG, "  CSV statistics: ${csvFile.name}")
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error writing comprehensive session metadata", e)
         }
     }
-
     private fun startSessionMonitoring(session: SessionInfo) {
-
         qualityMonitoringJob = lifecycleOwner.lifecycleScope.launch {
             monitorSessionQuality()
         }
-
         heartbeatJob = lifecycleOwner.lifecycleScope.launch {
             sendSessionHeartbeat(session)
         }
-
         sessionJob = lifecycleOwner.lifecycleScope.launch {
             runSessionLoop(session)
         }
     }
-
     private suspend fun monitorSessionQuality() {
         while (isSessionActive.get()) {
             try {
                 val gsrStatus = gsrRecorder.getRecordingStatus()
                 val networkMetrics = networkController.getNetworkMetrics()
                 val recordingStatus = recordingController.getSensorStatusSummary()?.toString()
-
                 val quality = SessionQuality(
                     overallQuality = calculateOverallQuality(
                         gsrStatus,
@@ -1389,20 +1145,15 @@ class UnifiedSessionManager(
                     networkQuality = networkMetrics["connection_quality"] as? Double ?: 0.0,
                     gsrQuality = gsrStatus["connection_quality"] as? Double ?: 0.0,
                     gsrSampleCount = gsrStatus["recorded_samples"] as? Long ?: 0L,
-
                     )
-
                 _sessionQuality.value = quality
-
                 delay(QUALITY_CHECK_INTERVAL_MS)
-
             } catch (e: Exception) {
                 AppLogger.w(TAG, "Error monitoring session quality", e)
                 delay(QUALITY_CHECK_INTERVAL_MS)
             }
         }
     }
-
     private suspend fun sendSessionHeartbeat(session: SessionInfo) {
         while (isSessionActive.get()) {
             try {
@@ -1412,42 +1163,31 @@ class UnifiedSessionManager(
                     put("status", _sessionStatus.value.name)
                     put("quality", _sessionQuality.value.toMap())
                 }
-
                 networkController.broadcastMessage("session_heartbeat", heartbeatData)
-
                 delay(SESSION_HEARTBEAT_INTERVAL_MS)
-
             } catch (e: Exception) {
                 AppLogger.w(TAG, "Error sending session heartbeat", e)
                 delay(SESSION_HEARTBEAT_INTERVAL_MS)
             }
         }
     }
-
     private suspend fun runSessionLoop(session: SessionInfo) {
         val maxDuration = session.metadata["max_duration_ms"]?.toString()?.toLongOrNull()
             ?: MAX_SESSION_DURATION_MS
-
         val startTime = System.currentTimeMillis()
-
         while (isSessionActive.get()) {
-
             if (System.currentTimeMillis() - startTime > maxDuration) {
                 AppLogger.i(TAG, "Session duration limit reached, stopping session")
                 stopSession()
                 break
             }
-
             val quality = _sessionQuality.value
             if (quality.overallQuality < MIN_DATA_QUALITY_SCORE) {
                 AppLogger.w(TAG, "Session quality below threshold: ${quality.overallQuality}")
-
             }
-
             delay(1000)
         }
     }
-
     private fun calculateOverallQuality(
         gsrStatus: Map<String, Any>,
         networkMetrics: Map<String, Any>,
@@ -1455,10 +1195,8 @@ class UnifiedSessionManager(
     ): Double {
         val gsrQuality = gsrStatus["connection_quality"] as? Double ?: 0.0
         val networkQuality = networkMetrics["connection_quality"] as? Double ?: 0.0
-
         return (gsrQuality * 0.4 + networkQuality * 0.3 + 0.3)
     }
-
     private suspend fun notifySessionStart(session: SessionInfo) {
         val startMessage = JSONObject().apply {
             put("session_id", session.sessionId)
@@ -1467,10 +1205,8 @@ class UnifiedSessionManager(
             put("enabled_sensors", session.enabledSensors.joinToString(","))
             put("session_type", session.sessionType.name)
         }
-
         networkController.broadcastMessage("session_started", startMessage)
     }
-
     private suspend fun notifySessionStop(
         session: SessionInfo,
         summary: ComprehensiveSessionSummary
@@ -1479,13 +1215,10 @@ class UnifiedSessionManager(
             put("session_id", session.sessionId)
             put("summary", JSONObject(summary.toMap()))
         }
-
         networkController.broadcastMessage("session_stopped", stopMessage)
     }
-
     private fun generateSessionSummary(session: SessionInfo, duration: Long): SessionSummary {
         val quality = _sessionQuality.value
-
         return SessionSummary(
             sessionId = session.sessionId,
             duration = duration,
@@ -1502,7 +1235,6 @@ class UnifiedSessionManager(
             )
         )
     }
-
     private fun calculateSessionDataSize(sessionDirectory: String): Long {
         return try {
             File(sessionDirectory).walkTopDown()
@@ -1513,7 +1245,6 @@ class UnifiedSessionManager(
             0L
         }
     }
-
     private fun jsonToMap(json: JSONObject): Map<String, Any> {
         val map = mutableMapOf<String, Any>()
         json.keys().forEach { key ->
@@ -1521,11 +1252,6 @@ class UnifiedSessionManager(
         }
         return map
     }
-
-    /**
-     * Enhanced data classes for comprehensive session management
-     * Supporting TODO requirement for detailed session summaries and graceful cleanup
-     */
 
     private data class SensorStopResult(
         val sensorType: String,
@@ -1535,7 +1261,6 @@ class UnifiedSessionManager(
         val finalFileSize: Long,
         val errorMessage: String?
     )
-
     data class SensorStatistics(
         val sensorType: String,
         val totalSamples: Long,
@@ -1546,7 +1271,6 @@ class UnifiedSessionManager(
         val errors: Long,
         val isActive: Boolean
     )
-
     data class OverallSessionMetrics(
         val totalSamples: Long = 0L,
         val totalErrors: Long = 0L,
@@ -1556,21 +1280,18 @@ class UnifiedSessionManager(
         val totalSensors: Int = 0,
         val successRate: Double = 0.0
     )
-
     data class NetworkSessionMetrics(
         val averageLatency: Double = 0.0,
         val packetLoss: Double = 0.0,
         val syncQuality: Double = 0.0,
         val reconnectionCount: Int = 0
     )
-
     data class SessionQualityAssessment(
         val overallGrade: String,
         val qualityScore: Double,
         val issues: List<String> = emptyList(),
         val recommendations: List<String> = emptyList()
     )
-
     data class ComprehensiveSessionSummary(
         val sessionId: String,
         val sessionName: String,
@@ -1617,40 +1338,32 @@ class UnifiedSessionManager(
             )
         }
     }
-
     private fun assessSessionQuality(
         sensorStats: Map<String, SensorStatistics>,
         totalErrors: Long,
         activeSensors: Int
     ): SessionQualityAssessment {
-
         val issues = mutableListOf<String>()
         val recommendations = mutableListOf<String>()
-
         val avgQuality = sensorStats.values.map { it.averageQuality }.average()
         val errorRate = if (sensorStats.values.sumOf { it.totalSamples } > 0) {
             totalErrors.toDouble() / sensorStats.values.sumOf { it.totalSamples }
         } else 0.0
-
         if (activeSensors < sensorStats.size) {
             issues.add("${sensorStats.size - activeSensors} sensors failed to record data")
             recommendations.add("Check sensor connections and permissions")
         }
-
         if (avgQuality < 0.7) {
             issues.add("Below average data quality (${String.format("%.1f%%", avgQuality * 100)})")
             recommendations.add("Check sensor calibration and environmental conditions")
         }
-
         if (errorRate > 0.05) {
             issues.add("High error rate (${String.format("%.1f%%", errorRate * 100)})")
             recommendations.add("Review sensor configurations and device performance")
         }
-
         val qualityScore =
             (avgQuality * 0.5) + ((activeSensors.toDouble() / sensorStats.size) * 0.3) +
                     (maxOf(0.0, 1.0 - errorRate * 10) * 0.2)
-
         val grade = when {
             qualityScore >= 0.9 -> "EXCELLENT"
             qualityScore >= 0.8 -> "GOOD"
@@ -1658,7 +1371,6 @@ class UnifiedSessionManager(
             qualityScore >= 0.6 -> "POOR"
             else -> "FAILED"
         }
-
         return SessionQualityAssessment(
             overallGrade = grade,
             qualityScore = qualityScore,
@@ -1666,22 +1378,16 @@ class UnifiedSessionManager(
             recommendations = recommendations
         )
     }
-
     private fun performDataIntegrityChecks(
         session: SessionInfo,
         sensorStats: Map<String, SensorStatistics>
     ): Map<String, Boolean> {
-
         val checks = mutableMapOf<String, Boolean>()
         val sessionDir = File(session.sessionDirectory)
-
         try {
-
             checks["session_directory_exists"] = sessionDir.exists() && sessionDir.isDirectory
-
             checks["metadata_files_present"] =
                 File(sessionDir, "session_summary_comprehensive.json").exists()
-
             sensorStats.forEach { (sensorType, stats) ->
                 val hasDataFile = when (sensorType) {
                     "GSR" -> File(sessionDir, "gsr_data.csv").exists()
@@ -1691,32 +1397,25 @@ class UnifiedSessionManager(
                     else -> false
                 }
                 checks["${sensorType.lowercase()}_data_file_exists"] = hasDataFile
-
                 if (hasDataFile) {
                     checks["${sensorType.lowercase()}_file_size_consistent"] = stats.fileSize > 0
                 }
             }
-
             checks["timestamp_consistency"] = checkTimestampConsistency(sessionDir)
-
         } catch (e: Exception) {
             AppLogger.w(TAG, "Error performing data integrity checks", e)
             checks["integrity_check_error"] = false
         }
-
         return checks
     }
-
     private fun checkTimestampConsistency(sessionDir: File): Boolean {
         return try {
             // This would implement detailed timestamp validation across CSV files
-
             sessionDir.exists() && sessionDir.listFiles()?.isNotEmpty() == true
         } catch (e: Exception) {
             false
         }
     }
-
     private fun generateHumanReadableSessionReport(summary: ComprehensiveSessionSummary): String {
         return buildString {
             appendLine("=== IRCamera Session Report ===")
@@ -1739,7 +1438,6 @@ class UnifiedSessionManager(
                 }"
             )
             appendLine()
-
             appendLine("Overall Session Metrics:")
             appendLine("  Total Samples: ${summary.overallMetrics.totalSamples}")
             appendLine("  Total Errors: ${summary.overallMetrics.totalErrors}")
@@ -1762,7 +1460,6 @@ class UnifiedSessionManager(
                 }"
             )
             appendLine()
-
             appendLine("Sensor Statistics:")
             summary.sensorStatistics.forEach { (sensorType, stats) ->
                 appendLine("  $sensorType:")
@@ -1775,7 +1472,6 @@ class UnifiedSessionManager(
                 appendLine("    Status: ${if (stats.isActive) "Active" else "Inactive"}")
                 appendLine()
             }
-
             appendLine("Quality Assessment:")
             appendLine("  Overall Grade: ${summary.qualityAssessment.overallGrade}")
             appendLine(
@@ -1799,7 +1495,6 @@ class UnifiedSessionManager(
                 }
             }
             appendLine()
-
             appendLine("Network Metrics:")
             appendLine(
                 "  Average Latency: ${
@@ -1827,17 +1522,14 @@ class UnifiedSessionManager(
             )
             appendLine("  Reconnections: ${summary.networkMetrics.reconnectionCount}")
             appendLine()
-
             appendLine("Data Integrity Checks:")
             summary.dataIntegrityChecks.forEach { (check, passed) ->
                 appendLine("  $check: ${if (passed) " PASS" else " FAIL"}")
             }
-
             appendLine()
             appendLine("=== End Report ===")
         }
     }
-
     private fun generateSessionStatisticsCSV(summary: ComprehensiveSessionSummary): String {
         return buildString {
             appendLine("sensor_type,total_samples,average_data_rate,dropped_samples,file_size_bytes,average_quality,errors,is_active")
@@ -1846,7 +1538,6 @@ class UnifiedSessionManager(
             }
         }
     }
-
     private fun formatBytes(bytes: Long): String {
         return when {
             bytes >= 1_000_000_000 -> String.format("%.1f GB", bytes / 1_000_000_000.0)

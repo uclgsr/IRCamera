@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.view
-
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
@@ -16,7 +15,6 @@ import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.module.thermalunified.R as ThermalR
-
 class ChartTrendView : LineChart {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -27,7 +25,6 @@ class ChartTrendView : LineChart {
     ) {
         val textColor: Int = ContextCompat.getColor(context, LibR.color.chart_text)
         val axisChartColors: Int = ContextCompat.getColor(context, LibR.color.chart_axis)
-
         this.isDragEnabled = false
         this.isScaleYEnabled = false
         this.isScaleXEnabled = false
@@ -44,18 +41,14 @@ class ChartTrendView : LineChart {
             8.dpToPx(context).toFloat(),
             4.dpToPx(context).toFloat(),
         )
-
         setNoDataText(context.getString(ThermalR.string.lms_http_code998))
         setNoDataTextColor(ContextCompat.getColor(context, LibR.color.chart_text))
-
         val mv = MyMarkerView(context, R.layout.marker_lay)
         mv.chartView = this
         marker = mv
-
         legend.form = Legend.LegendForm.CIRCLE
         legend.textColor = textColor
         legend.isEnabled = false
-
         val xAxis = this.xAxis
         xAxis.textColor = textColor
         xAxis.setDrawGridLines(false)
@@ -82,7 +75,6 @@ class ChartTrendView : LineChart {
                     return ""
                 }
             }
-
         val leftAxis = this.axisLeft
         leftAxis.textColor = textColor
         leftAxis.axisLineColor = 0x00000000
@@ -97,10 +89,8 @@ class ChartTrendView : LineChart {
         leftAxis.textSize = 11f
         leftAxis.axisMinimum = 0f
         leftAxis.axisMaximum = 50f
-
         data = LineData()
     }
-
     fun setToEmpty() {
         axisLeft.valueFormatter =
             object : ValueFormatter() {
@@ -109,13 +99,11 @@ class ChartTrendView : LineChart {
         data = LineData()
         invalidate()
     }
-
     fun refresh(tempList: List<Float>) {
         if (tempList.isEmpty()) {
             setToEmpty()
             return
         }
-
         xAxis.axisMinimum = 0f
         xAxis.axisMaximum = (tempList.size - 1).toFloat()
         xAxis.setLabelCount(3, true)
@@ -131,7 +119,6 @@ class ChartTrendView : LineChart {
                     return ""
                 }
             }
-
         var max = tempList.first()
         var min = tempList.first()
         val entryList: ArrayList<Entry> = ArrayList(tempList.size)
@@ -150,7 +137,6 @@ class ChartTrendView : LineChart {
                 override fun getFormattedValue(value: Float): String =
                     "${String.format("%.1f", value)}${UnitTools.showUnit()}"
             }
-
         val lineDataSet = LineDataSet(entryList, "point temp")
         lineDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
         lineDataSet.color = 0xffffffff.toInt()
@@ -162,7 +148,6 @@ class ChartTrendView : LineChart {
         lineDataSet.fillAlpha = 200
         lineDataSet.valueTextSize = 10f
         lineDataSet.setDrawValues(false)
-
         data = LineData(lineDataSet)
         invalidate()
     }

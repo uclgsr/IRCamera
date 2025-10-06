@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.compose
-
 import androidx.compose.animation.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -23,7 +22,6 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-
 @Composable
 fun TrendViewCompose(
     temperatureData: List<Float>,
@@ -43,7 +41,6 @@ fun TrendViewCompose(
                 onExpandToggle = onExpandToggle,
                 dataCount = temperatureData.size
             )
-
             // Chart content - expandable
             AnimatedVisibility(
                 visible = isExpanded,
@@ -61,7 +58,6 @@ fun TrendViewCompose(
         }
     }
 }
-
 @Composable
 private fun TrendHeader(
     isExpanded: Boolean,
@@ -88,7 +84,6 @@ private fun TrendHeader(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-
         Icon(
             imageVector = if (isExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
             contentDescription = if (isExpanded) "Collapse" else "Expand",
@@ -96,14 +91,12 @@ private fun TrendHeader(
         )
     }
 }
-
 @Composable
 private fun TrendChart(
     temperatureData: List<Float>,
     modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
-
     if (temperatureData.isEmpty()) {
         Box(
             modifier = modifier,
@@ -127,31 +120,24 @@ private fun TrendChart(
         }
         return
     }
-
     Canvas(modifier = modifier) {
         drawTrendChart(temperatureData)
     }
 }
-
 private fun DrawScope.drawTrendChart(temperatureData: List<Float>) {
     if (temperatureData.size < 2) return
-
     val minTemp = temperatureData.minOrNull() ?: 0f
     val maxTemp = temperatureData.maxOrNull() ?: 100f
     val tempRange = maxTemp - minTemp
-
     if (tempRange == 0f) return
-
     val width = size.width
     val height = size.height
     val padding = 20.dp.toPx()
     val chartWidth = width - 2 * padding
     val chartHeight = height - 2 * padding
-
     // Draw grid lines
     val gridColor = Color.Gray.copy(alpha = 0.3f)
     val gridLineCount = 5
-
     for (i in 0..gridLineCount) {
         val y = padding + (chartHeight * i / gridLineCount)
         drawLine(
@@ -161,22 +147,18 @@ private fun DrawScope.drawTrendChart(temperatureData: List<Float>) {
             strokeWidth = 1.dp.toPx()
         )
     }
-
     // Draw temperature line
     val path = Path()
     var isFirstPoint = true
-
     temperatureData.forEachIndexed { index, temp ->
         val x = padding + (chartWidth * index / (temperatureData.size - 1))
         val y = padding + chartHeight - ((temp - minTemp) / tempRange * chartHeight)
-
         if (isFirstPoint) {
             path.moveTo(x, y)
             isFirstPoint = false
         } else {
             path.lineTo(x, y)
         }
-
         // Draw data points
         drawCircle(
             color = Color(0xFF2196F3),
@@ -184,21 +166,18 @@ private fun DrawScope.drawTrendChart(temperatureData: List<Float>) {
             center = Offset(x, y)
         )
     }
-
     // Draw the trend line
     drawPath(
         path = path,
         color = Color(0xFF2196F3),
         style = Stroke(width = 2.dp.toPx())
     )
-
     // Draw temperature labels
     val textPaint = android.graphics.Paint().apply {
         textSize = 12.dp.toPx()
         color = android.graphics.Color.GRAY
         isAntiAlias = true
     }
-
     // Max temp label
     drawContext.canvas.nativeCanvas.drawText(
         "${maxTemp.toInt()}°",
@@ -206,7 +185,6 @@ private fun DrawScope.drawTrendChart(temperatureData: List<Float>) {
         padding,
         textPaint
     )
-
     // Min temp label
     drawContext.canvas.nativeCanvas.drawText(
         "${minTemp.toInt()}°",
@@ -215,7 +193,6 @@ private fun DrawScope.drawTrendChart(temperatureData: List<Float>) {
         textPaint
     )
 }
-
 @Composable
 fun TrendViewStatefulCompose(
     temperatureData: List<Float>,
@@ -223,7 +200,6 @@ fun TrendViewStatefulCompose(
     modifier: Modifier = Modifier
 ) {
     var isExpanded by remember { mutableStateOf(initiallyExpanded) }
-
     TrendViewCompose(
         temperatureData = temperatureData,
         isExpanded = isExpanded,
@@ -231,7 +207,6 @@ fun TrendViewStatefulCompose(
         modifier = modifier
     )
 }
-
 @Composable
 fun TrendViewComposePreview() {
     Column(
@@ -243,12 +218,10 @@ fun TrendViewComposePreview() {
     ) {
         // Sample temperature data
         val sampleData = listOf(20f, 22f, 25f, 23f, 28f, 30f, 27f, 26f, 29f, 31f)
-
         TrendViewStatefulCompose(
             temperatureData = sampleData,
             initiallyExpanded = false
         )
-
         TrendViewStatefulCompose(
             temperatureData = emptyList(),
             initiallyExpanded = true

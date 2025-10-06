@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.report.activity
-
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -38,16 +37,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-
 class ReportCreateComposeActivity : ComponentActivity() {
-
     private lateinit var viewModel: ReportCreateViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         viewModel = ViewModelProvider(this)[ReportCreateViewModel::class.java]
-
         setContent {
             LibUnifiedTheme {
                 ReportCreateScreen(
@@ -65,7 +59,6 @@ class ReportCreateComposeActivity : ComponentActivity() {
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportCreateScreen(
@@ -74,7 +67,6 @@ fun ReportCreateScreen(
     onReportCreated: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -124,26 +116,22 @@ fun ReportCreateScreen(
                 progress = { (uiState.currentStep + 1).toFloat() / uiState.totalSteps },
                 modifier = Modifier.fillMaxWidth()
             )
-
             // Step content
             when (uiState.currentStep) {
                 0 -> ReportBasicInfoStep(
                     reportInfo = uiState.reportInfo,
                     onUpdateInfo = { viewModel.updateReportInfo(it) }
                 )
-
                 1 -> ThermalDataStep(
                     thermalData = uiState.thermalData,
                     onUpdateData = { viewModel.updateThermalData(it) },
                     onAddImage = { viewModel.addThermalImage(it) },
                     onRemoveImage = { viewModel.removeThermalImage(it) }
                 )
-
                 2 -> AnalysisResultsStep(
                     analysisResults = uiState.analysisResults,
                     onUpdateResults = { viewModel.updateAnalysisResults(it) }
                 )
-
                 3 -> ReportPreviewStep(
                     reportPreview = uiState.reportPreview,
                     onUpdateSettings = { viewModel.updateReportSettings(it) }
@@ -152,7 +140,6 @@ fun ReportCreateScreen(
         }
     }
 }
-
 @Composable
 fun ReportBasicInfoStep(
     reportInfo: ReportBasicInfo,
@@ -171,14 +158,12 @@ fun ReportBasicInfoStep(
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
-
         OutlinedTextField(
             value = reportInfo.title,
             onValueChange = { onUpdateInfo(reportInfo.copy(title = it)) },
             label = { Text("Report Title") },
             modifier = Modifier.fillMaxWidth()
         )
-
         OutlinedTextField(
             value = reportInfo.description,
             onValueChange = { onUpdateInfo(reportInfo.copy(description = it)) },
@@ -186,7 +171,6 @@ fun ReportBasicInfoStep(
             minLines = 3,
             modifier = Modifier.fillMaxWidth()
         )
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -197,7 +181,6 @@ fun ReportBasicInfoStep(
                 label = { Text("Inspector Name") },
                 modifier = Modifier.weight(1f)
             )
-
             OutlinedTextField(
                 value = reportInfo.location,
                 onValueChange = { onUpdateInfo(reportInfo.copy(location = it)) },
@@ -205,21 +188,18 @@ fun ReportBasicInfoStep(
                 modifier = Modifier.weight(1f)
             )
         }
-
         OutlinedTextField(
             value = reportInfo.equipment,
             onValueChange = { onUpdateInfo(reportInfo.copy(equipment = it)) },
             label = { Text("Equipment Used") },
             modifier = Modifier.fillMaxWidth()
         )
-
         // Report type selection
         Text(
             text = "Report Type",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Medium
         )
-
         Column {
             ReportType.values().forEach { type ->
                 Row(
@@ -236,14 +216,12 @@ fun ReportBasicInfoStep(
                 }
             }
         }
-
         // Environmental conditions
         Text(
             text = "Environmental Conditions",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Medium
         )
-
         Card {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -259,7 +237,6 @@ fun ReportBasicInfoStep(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.weight(1f)
                     )
-
                     OutlinedTextField(
                         value = reportInfo.humidity,
                         onValueChange = { onUpdateInfo(reportInfo.copy(humidity = it)) },
@@ -268,7 +245,6 @@ fun ReportBasicInfoStep(
                         modifier = Modifier.weight(1f)
                     )
                 }
-
                 OutlinedTextField(
                     value = reportInfo.windSpeed,
                     onValueChange = { onUpdateInfo(reportInfo.copy(windSpeed = it)) },
@@ -280,7 +256,6 @@ fun ReportBasicInfoStep(
         }
     }
 }
-
 @Composable
 fun ThermalDataStep(
     thermalData: ThermalDataInfo,
@@ -300,7 +275,6 @@ fun ThermalDataStep(
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
-
         // Temperature measurements
         Card {
             Column(
@@ -312,7 +286,6 @@ fun ThermalDataStep(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -327,7 +300,6 @@ fun ThermalDataStep(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.weight(1f)
                     )
-
                     OutlinedTextField(
                         value = thermalData.minTemp.toString(),
                         onValueChange = {
@@ -339,7 +311,6 @@ fun ThermalDataStep(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.weight(1f)
                     )
-
                     OutlinedTextField(
                         value = thermalData.avgTemp.toString(),
                         onValueChange = {
@@ -352,14 +323,12 @@ fun ThermalDataStep(
                         modifier = Modifier.weight(1f)
                     )
                 }
-
                 // Temperature distribution chart
                 Text(
                     text = "Temperature Distribution",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium
                 )
-
                 Card {
                     Canvas(
                         modifier = Modifier
@@ -372,14 +341,12 @@ fun ThermalDataStep(
                 }
             }
         }
-
         // Thermal images section
         ThermalImagesSection(
             images = thermalData.images,
             onAddImage = onAddImage,
             onRemoveImage = onRemoveImage
         )
-
         // Analysis parameters
         Card {
             Column(
@@ -391,7 +358,6 @@ fun ThermalDataStep(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -406,7 +372,6 @@ fun ThermalDataStep(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.weight(1f)
                     )
-
                     OutlinedTextField(
                         value = thermalData.distance.toString(),
                         onValueChange = {
@@ -423,7 +388,6 @@ fun ThermalDataStep(
         }
     }
 }
-
 @Composable
 fun ThermalImagesSection(
     images: List<Uri>,
@@ -446,7 +410,6 @@ fun ThermalImagesSection(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
-
                 Button(
                     onClick = {
                         val mockUri = Uri.parse("content://media/external/images/media/${System.currentTimeMillis()}")
@@ -458,7 +421,6 @@ fun ThermalImagesSection(
                     Text("Add Image")
                 }
             }
-
             if (images.isEmpty()) {
                 Text(
                     text = "No thermal images added yet",
@@ -483,7 +445,6 @@ fun ThermalImagesSection(
         }
     }
 }
-
 @Composable
 fun ThermalImageItem(
     imageUri: Uri,
@@ -518,7 +479,6 @@ fun ThermalImageItem(
                     )
                 }
             }
-
             IconButton(onClick = onRemove) {
                 Icon(
                     Icons.Default.Delete,
@@ -529,7 +489,6 @@ fun ThermalImageItem(
         }
     }
 }
-
 @Composable
 fun AnalysisResultsStep(
     analysisResults: AnalysisResults,
@@ -548,7 +507,6 @@ fun AnalysisResultsStep(
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
-
         OutlinedTextField(
             value = analysisResults.findings,
             onValueChange = { onUpdateResults(analysisResults.copy(findings = it)) },
@@ -556,7 +514,6 @@ fun AnalysisResultsStep(
             minLines = 4,
             modifier = Modifier.fillMaxWidth()
         )
-
         OutlinedTextField(
             value = analysisResults.recommendations,
             onValueChange = { onUpdateResults(analysisResults.copy(recommendations = it)) },
@@ -564,7 +521,6 @@ fun AnalysisResultsStep(
             minLines = 3,
             modifier = Modifier.fillMaxWidth()
         )
-
         OutlinedTextField(
             value = analysisResults.conclusions,
             onValueChange = { onUpdateResults(analysisResults.copy(conclusions = it)) },
@@ -572,14 +528,12 @@ fun AnalysisResultsStep(
             minLines = 3,
             modifier = Modifier.fillMaxWidth()
         )
-
         // Severity assessment
         Text(
             text = "Issue Severity",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Medium
         )
-
         Column {
             IssueSeverity.values().forEach { severity ->
                 Row(
@@ -599,7 +553,6 @@ fun AnalysisResultsStep(
         }
     }
 }
-
 @Composable
 fun ReportPreviewStep(
     reportPreview: ReportPreview,
@@ -617,7 +570,6 @@ fun ReportPreviewStep(
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
-
         // Report settings
         Card {
             Column(
@@ -629,7 +581,6 @@ fun ReportPreviewStep(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -641,7 +592,6 @@ fun ReportPreviewStep(
                     )
                     Text("Include thermal images")
                 }
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -653,7 +603,6 @@ fun ReportPreviewStep(
                     )
                     Text("Include temperature charts")
                 }
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -667,7 +616,6 @@ fun ReportPreviewStep(
                 }
             }
         }
-
         // Report summary
         Card {
             Column(
@@ -679,7 +627,6 @@ fun ReportPreviewStep(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
-
                 ReportSummaryItem("Title", reportPreview.title)
                 ReportSummaryItem("Inspector", reportPreview.inspector)
                 ReportSummaryItem("Location", reportPreview.location)
@@ -693,7 +640,6 @@ fun ReportPreviewStep(
         }
     }
 }
-
 @Composable
 private fun ReportSummaryItem(
     label: String,
@@ -715,7 +661,6 @@ private fun ReportSummaryItem(
         )
     }
 }
-
 @Composable
 fun ReportNavigationBar(
     currentStep: Int,
@@ -746,13 +691,11 @@ fun ReportNavigationBar(
             } else {
                 Spacer(modifier = Modifier.width(1.dp))
             }
-
             Text(
                 text = "Step ${currentStep + 1} of $totalSteps",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
             Button(
                 onClick = onNext,
                 enabled = canProceed && !isCreating
@@ -773,20 +716,16 @@ fun ReportNavigationBar(
         }
     }
 }
-
 fun DrawScope.drawTemperatureDistribution(distribution: List<Float>) {
     if (distribution.isEmpty()) return
-
     val width = size.width
     val height = size.height
     val barWidth = width / distribution.size
     val maxValue = distribution.maxOrNull() ?: 1f
-
     distribution.forEachIndexed { index, value ->
         val barHeight = (value / maxValue) * height
         val x = index * barWidth
         val y = height - barHeight
-
         drawRect(
             color = Color(0xFF2196F3),
             topLeft = androidx.compose.ui.geometry.Offset(x, y),
@@ -794,80 +733,66 @@ fun DrawScope.drawTemperatureDistribution(distribution: List<Float>) {
         )
     }
 }
-
 class ReportCreateViewModel : ViewModel() {
-
     private val _uiState = MutableStateFlow(ReportCreateUiState())
     val uiState: StateFlow<ReportCreateUiState> = _uiState.asStateFlow()
-
     fun nextStep() {
         val currentStep = _uiState.value.currentStep
         if (currentStep < _uiState.value.totalSteps - 1) {
             _uiState.value = _uiState.value.copy(currentStep = currentStep + 1)
         }
     }
-
     fun previousStep() {
         val currentStep = _uiState.value.currentStep
         if (currentStep > 0) {
             _uiState.value = _uiState.value.copy(currentStep = currentStep - 1)
         }
     }
-
     fun updateReportInfo(info: ReportBasicInfo) {
         _uiState.value = _uiState.value.copy(
             reportInfo = info,
             canProceedToNext = info.title.isNotBlank() && info.inspector.isNotBlank()
         )
     }
-
     fun updateThermalData(data: ThermalDataInfo) {
         _uiState.value = _uiState.value.copy(
             thermalData = data,
             canProceedToNext = data.images.isNotEmpty()
         )
     }
-
     fun addThermalImage(uri: Uri) {
         val currentImages = _uiState.value.thermalData.images
         _uiState.value = _uiState.value.copy(
             thermalData = _uiState.value.thermalData.copy(images = currentImages + uri)
         )
     }
-
     fun removeThermalImage(uri: Uri) {
         val currentImages = _uiState.value.thermalData.images
         _uiState.value = _uiState.value.copy(
             thermalData = _uiState.value.thermalData.copy(images = currentImages - uri)
         )
     }
-
     fun updateAnalysisResults(results: AnalysisResults) {
         _uiState.value = _uiState.value.copy(
             analysisResults = results,
             canProceedToNext = results.findings.isNotBlank()
         )
     }
-
     fun updateReportSettings(settings: ReportSettings) {
         _uiState.value = _uiState.value.copy(
             reportPreview = _uiState.value.reportPreview.copy(settings = settings)
         )
     }
-
     fun createReport(onComplete: (String) -> Unit) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isCreatingReport = true)
-
             // Simulate report creation
             kotlinx.coroutines.delay(2000)
-
             val reportId = "TR_${System.currentTimeMillis()}"
             onComplete(reportId)
         }
     }
 }
-
 data class ReportCreateUiState(
     val currentStep: Int = 0,
     val totalSteps: Int = 4,
@@ -878,7 +803,6 @@ data class ReportCreateUiState(
     val analysisResults: AnalysisResults = AnalysisResults(),
     val reportPreview: ReportPreview = ReportPreview()
 )
-
 data class ReportBasicInfo(
     val title: String = "",
     val description: String = "",
@@ -890,7 +814,6 @@ data class ReportBasicInfo(
     val humidity: String = "",
     val windSpeed: String = ""
 )
-
 data class ThermalDataInfo(
     val maxTemp: Float = 0f,
     val minTemp: Float = 0f,
@@ -900,14 +823,12 @@ data class ThermalDataInfo(
     val images: List<Uri> = emptyList(),
     val temperatureDistribution: List<Float> = listOf(12f, 15f, 22f, 18f, 25f, 30f, 28f, 20f)
 )
-
 data class AnalysisResults(
     val findings: String = "",
     val recommendations: String = "",
     val conclusions: String = "",
     val severity: IssueSeverity = IssueSeverity.LOW
 )
-
 data class ReportPreview(
     val title: String = "Thermal Inspection Report",
     val inspector: String = "",
@@ -917,20 +838,17 @@ data class ReportPreview(
     val severity: String = "",
     val settings: ReportSettings = ReportSettings()
 )
-
 data class ReportSettings(
     val includeThermalImages: Boolean = true,
     val includeCharts: Boolean = true,
     val includeRawData: Boolean = false
 )
-
 enum class ReportType(val displayName: String) {
     INSPECTION("Thermal Inspection"),
     MAINTENANCE("Maintenance Report"),
     COMPLIANCE("Compliance Check"),
     RESEARCH("Research Analysis")
 }
-
 enum class IssueSeverity(val displayName: String, val color: Color) {
     LOW("Low", Color(0xFF4CAF50)),
     MEDIUM("Medium", Color(0xFFFF9800)),

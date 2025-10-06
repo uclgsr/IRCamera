@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.user.compose
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,7 +20,6 @@ import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
 import com.mpdc4gsr.libunified.R as RCore
-
 @Composable
 fun MoreComposeFragment(
     viewModel: MoreComposeFragmentViewModel,
@@ -30,12 +28,10 @@ fun MoreComposeFragment(
 ) {
     val context = LocalContext.current
     val deviceSettings by viewModel.deviceSettings.collectAsState()
-
     // Initialize ViewModel with device type
     LaunchedEffect(isTC007) {
         viewModel.initialize(isTC007)
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -62,7 +58,6 @@ fun MoreComposeFragment(
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-
                 // Save Setting Switch
                 Row(
                     modifier = Modifier
@@ -86,7 +81,6 @@ fun MoreComposeFragment(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                         )
                     }
-
                     Switch(
                         checked = deviceSettings.isSaveSettingEnabled,
                         onCheckedChange = { viewModel.updateSaveSetting(it) }
@@ -94,7 +88,6 @@ fun MoreComposeFragment(
                 }
             }
         }
-
         // Settings Options
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -115,7 +108,6 @@ fun MoreComposeFragment(
                         // Model settings navigation
                     }
                 )
-
                 ListItemComponent(
                     leftText = "Correction Settings",
                     leftIcon = Icons.Default.Tune,
@@ -124,7 +116,6 @@ fun MoreComposeFragment(
                         // Correction settings navigation
                     }
                 )
-
                 ListItemComponent(
                     leftText = "Dual Mode",
                     leftIcon = Icons.Default.Apps,
@@ -133,7 +124,6 @@ fun MoreComposeFragment(
                         // Dual mode navigation
                     }
                 )
-
                 ListItemComponent(
                     leftText = stringResource(RCore.string.setting_unit),
                     leftIcon = Icons.Default.Speed,
@@ -144,7 +134,6 @@ fun MoreComposeFragment(
                             .navigation(context)
                     }
                 )
-
                 ListItemComponent(
                     leftText = stringResource(RCore.string.setting_version),
                     leftIcon = Icons.Default.Info,
@@ -156,7 +145,6 @@ fun MoreComposeFragment(
                             .navigation(context)
                     }
                 )
-
                 ListItemComponent(
                     leftText = "Device Information",
                     leftIcon = Icons.Default.Devices,
@@ -167,7 +155,6 @@ fun MoreComposeFragment(
                             .navigation(context)
                     }
                 )
-
                 ListItemComponent(
                     leftText = "Factory Reset",
                     leftIcon = Icons.Default.Refresh,

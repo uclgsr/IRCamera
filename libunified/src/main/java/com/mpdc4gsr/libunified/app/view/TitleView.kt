@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.view
-
 import android.app.Activity
 import android.content.Context
 import android.content.res.ColorStateList
@@ -14,38 +13,25 @@ import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import com.mpdc4gsr.libunified.compat.dpToPx
 import com.mpdc4gsr.libunified.R
-
 open class TitleView : ViewGroup {
     companion object {
-
         private const val ICON_SIZE = 48f
     }
-
     private val isTitleCenter: Boolean
-
     private val actionBarSize: Int
-
     protected var tvLeft: MyTextView? = null
-
     protected var tvRight1: MyTextView? = null
-
     protected var tvRight2: MyTextView? = null
-
     protected var tvRight3: MyTextView? = null
-
     protected var tvTitle: MyTextView? = null
-
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
         defStyleAttr,
         0
     )
-
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -60,16 +46,12 @@ open class TitleView : ViewGroup {
         val typedArray = context.obtainStyledAttributes(intArrayOf(android.R.attr.actionBarSize))
         actionBarSize = typedArray.getDimensionPixelSize(0, 0)
         typedArray.recycle()
-
         initView()
-
         tvTitle?.setPadding(0)
         tvTitle?.isVisible = true
         tvTitle?.maxLines = 2
         tvTitle?.ellipsize = TextUtils.TruncateAt.END
-
         val a = context.obtainStyledAttributes(attrs, R.styleable.TitleView, defStyleAttr, 0)
-
         tvLeft?.text = a.getText(R.styleable.TitleView_leftText)
         tvLeft?.setOnlyDrawableStart(a.getDrawable(R.styleable.TitleView_leftDrawable))
         tvLeft?.isVisible = tvLeft?.text?.isNotEmpty() == true || tvLeft!!.hasAnyDrawable()
@@ -86,7 +68,6 @@ open class TitleView : ViewGroup {
                 }
             }
         }
-
         tvRight1?.text = a.getText(R.styleable.TitleView_rightText)
         tvRight1?.setOnlyDrawableStart(a.getDrawable(R.styleable.TitleView_rightDrawable))
         tvRight1?.isVisible = tvRight1?.text?.isNotEmpty() == true || tvRight1!!.hasAnyDrawable()
@@ -94,19 +75,16 @@ open class TitleView : ViewGroup {
         if (rightColor != null) {
             tvRight1?.setTextColor(rightColor)
         }
-
         tvRight2?.setOnlyDrawableStart(a.getDrawable(R.styleable.TitleView_right2Drawable))
         tvRight2?.isVisible = tvRight2!!.hasAnyDrawable()
         tvRight3?.setOnlyDrawableStart(a.getDrawable(R.styleable.TitleView_right3Drawable))
         tvRight3?.isVisible = tvRight3!!.hasAnyDrawable()
-
         isTitleCenter = a.getBoolean(R.styleable.TitleView_isTitleCenter, false)
         tvTitle?.text = a.getText(R.styleable.TitleView_titleText)
         tvTitle?.gravity =
             if (isTitleCenter) Gravity.CENTER else (Gravity.CENTER_VERTICAL or Gravity.START)
         a.recycle()
     }
-
     open fun initView() {
         tvLeft = addTextView(context)
         tvRight1 = addTextView(context)
@@ -114,7 +92,6 @@ open class TitleView : ViewGroup {
         tvRight3 = addTextView(context)
         tvTitle = addTextView(context)
     }
-
     fun addTextView(
         context: Context,
         padding: Float,
@@ -130,16 +107,13 @@ open class TitleView : ViewGroup {
         addView(textView)
         return textView
     }
-
     fun addTextView(context: Context): MyTextView {
         return addTextView(context, 12f, 24f)
     }
-
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
     ) {
-
         var maxHeight = actionBarSize.coerceAtLeast(ICON_SIZE.dpToPx(context).toInt())
         for (i in 0 until childCount) {
             val childView: View = getChildAt(i)
@@ -148,9 +122,7 @@ open class TitleView : ViewGroup {
                 maxHeight = maxHeight.coerceAtLeast(childView.measuredHeight)
             }
         }
-
         setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), maxHeight)
-
         for (i in 0 until childCount) {
             val childView: View = getChildAt(i)
             if (childView != tvTitle && childView.visibility != View.GONE) {
@@ -162,7 +134,6 @@ open class TitleView : ViewGroup {
                 )
             }
         }
-
         if (isTitleCenter) {
             val leftSize: Int =
                 if (tvLeft?.isVisible == true) tvLeft?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context).toInt()
@@ -200,7 +171,6 @@ open class TitleView : ViewGroup {
             tvTitle?.measure(widthSpec, MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY))
         }
     }
-
     override fun onLayout(
         changed: Boolean,
         l: Int,
@@ -222,17 +192,14 @@ open class TitleView : ViewGroup {
                     measuredWidth,
                     measuredHeight
                 )
-
                 tvRight2 -> {
                     val right = measuredWidth - tvRight1!!.measuredWidth
                     child.layout(right - tvRight2!!.measuredWidth, 0, right, measuredHeight)
                 }
-
                 tvRight3 -> {
                     val right = measuredWidth - tvRight1!!.measuredWidth - tvRight2!!.measuredWidth
                     child.layout(right - tvRight3!!.measuredWidth, 0, right, measuredHeight)
                 }
-
                 tvTitle -> {
                     if (isTitleCenter) {
                         val margin = (measuredWidth - childWidth) / 2
@@ -247,19 +214,16 @@ open class TitleView : ViewGroup {
             }
         }
     }
-
     fun setTitleText(
         @StringRes resId: Int,
     ) {
         tvTitle?.setText(resId)
         tvTitle?.invalidate()
     }
-
     fun setTitleText(title: CharSequence?) {
         tvTitle?.text = title
         tvTitle?.invalidate()
     }
-
     var isLeftVisible: Boolean
         get() = tvLeft!!.isVisible
         set(value) {
@@ -268,7 +232,6 @@ open class TitleView : ViewGroup {
                 requestLayout()
             }
         }
-
     fun setLeftDrawable(
         @DrawableRes resId: Int,
     ) {
@@ -276,7 +239,6 @@ open class TitleView : ViewGroup {
         tvLeft?.setCompoundDrawablesWithIntrinsicBounds(resId, 0, 0, 0)
         requestLayout()
     }
-
     fun setLeftText(
         @StringRes resId: Int,
     ) {
@@ -284,17 +246,14 @@ open class TitleView : ViewGroup {
         tvLeft?.isVisible = true
         requestLayout()
     }
-
     fun setLeftText(text: CharSequence?) {
         tvLeft?.text = text
         tvLeft?.isVisible = text?.isNotEmpty() == true || tvLeft!!.hasAnyDrawable()
         requestLayout()
     }
-
     fun setLeftClickListener(leftClickListener: OnClickListener?) {
         tvLeft?.setOnClickListener(leftClickListener)
     }
-
     var isRightVisible: Boolean
         get() = tvRight1!!.isVisible
         set(value) {
@@ -303,7 +262,6 @@ open class TitleView : ViewGroup {
                 requestLayout()
             }
         }
-
     fun setRightDrawable(
         @DrawableRes resId: Int,
     ) {
@@ -311,7 +269,6 @@ open class TitleView : ViewGroup {
         tvRight1?.setCompoundDrawablesWithIntrinsicBounds(resId, 0, 0, 0)
         requestLayout()
     }
-
     fun setRightText(
         @StringRes resId: Int,
     ) {
@@ -319,17 +276,14 @@ open class TitleView : ViewGroup {
         tvRight1?.isVisible = true
         requestLayout()
     }
-
     fun setRightText(text: CharSequence?) {
         tvRight1?.text = text
         tvRight1?.isVisible = text?.isNotEmpty() == true || tvRight1!!.hasAnyDrawable()
         requestLayout()
     }
-
     fun setRightClickListener(rightClickListener: OnClickListener?) {
         tvRight1?.setOnClickListener(rightClickListener)
     }
-
     fun setRight2Drawable(
         @DrawableRes resId: Int,
     ) {
@@ -337,11 +291,9 @@ open class TitleView : ViewGroup {
         tvRight2?.setCompoundDrawablesWithIntrinsicBounds(resId, 0, 0, 0)
         requestLayout()
     }
-
     fun setRight2ClickListener(right2ClickListener: OnClickListener?) {
         tvRight2?.setOnClickListener(right2ClickListener)
     }
-
     fun setRight3Drawable(
         @DrawableRes resId: Int,
     ) {
@@ -349,7 +301,6 @@ open class TitleView : ViewGroup {
         tvRight3?.setCompoundDrawablesWithIntrinsicBounds(resId, 0, 0, 0)
         requestLayout()
     }
-
     fun setRight3ClickListener(right3ClickListener: OnClickListener?) {
         tvRight3?.setOnClickListener(right3ClickListener)
     }

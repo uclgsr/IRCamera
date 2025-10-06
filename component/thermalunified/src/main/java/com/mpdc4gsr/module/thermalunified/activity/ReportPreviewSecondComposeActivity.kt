@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,13 +19,10 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-
 class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSecondViewModel>() {
-
     override fun createViewModel(): ReportPreviewSecondViewModel {
         return ReportPreviewSecondViewModel()
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ReportPreviewSecondViewModel) {
@@ -85,7 +81,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
             }
         }
     }
-
     @Composable
     private fun ReportPreviewSecondContent(
         viewModel: ReportPreviewSecondViewModel,
@@ -102,10 +97,8 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                 ReportSection("Appendix", "Supporting data and references", false)
             )
         }
-
         var selectedSection by remember { mutableStateOf<String?>(null) }
         var previewMode by remember { mutableStateOf("Full") }
-
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -126,7 +119,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -145,7 +137,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     }
                 }
             }
-
             // Section navigation
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -161,7 +152,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                         color = Color(0xFF1976D2)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-
                     LazyColumn(
                         modifier = Modifier.height(200.dp),
                         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -176,7 +166,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     }
                 }
             }
-
             // Report preview area
             Card(
                 modifier = Modifier
@@ -201,10 +190,9 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF1976D2)
                         )
-
                         if (selectedSection != null) {
                             IconButton(
-                                onClick = { /* Open section editor */ }
+                                onClick = {  }
                             ) {
                                 Icon(
                                     Icons.Default.Edit,
@@ -214,12 +202,10 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                             }
                         }
                     }
-
                     HorizontalDivider(
                         modifier = Modifier.padding(vertical = 8.dp),
                         color = Color(0xFFE0E0E0)
                     )
-
                     // Preview content
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -233,7 +219,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     }
                 }
             }
-
             // Action buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -257,7 +242,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Edit")
                 }
-
                 Button(
                     onClick = {
                         // TODO: Finalize and export report
@@ -279,7 +263,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
             }
         }
     }
-
     @Composable
     private fun NavigationItem(
         section: ReportSection,
@@ -315,7 +298,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                         color = if (isSelected) Color.White.copy(alpha = 0.8f) else Color(0xFF666666)
                     )
                 }
-
                 if (section.hasContent) {
                     Text(
                         "",
@@ -326,7 +308,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
             }
         }
     }
-
     @Composable
     private fun PreviewContent(
         section: String?,
@@ -348,7 +329,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     color = Color(0xFF666666)
                 )
             }
-
             "Header" -> {
                 Text(
                     "Report Header Section",
@@ -360,7 +340,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-
             "Thermal Analysis" -> {
                 Text(
                     "Thermal Analysis Results",
@@ -372,7 +351,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-
             else -> {
                 Text(
                     "$section Content",
@@ -387,11 +365,9 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
         }
     }
 }
-
 data class ReportSection(
     val title: String,
     val description: String,
     val hasContent: Boolean
 )
-
 class ReportPreviewSecondViewModel : BaseViewModel()

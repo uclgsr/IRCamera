@@ -1,42 +1,28 @@
 package com.mpdc4gsr.libunified.app.db.entity
-
 import androidx.room.*
 import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.R
-
 open class DirBase {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
-
     @ColumnInfo(index = true)
     open var parentId: Long = 0
-
     @ColumnInfo
     var position: Int = 0
-
     @ColumnInfo
     var dirName: String = ""
-
     @ColumnInfo
     var goodCount: Int = 0
-
     @ColumnInfo
     var warnCount: Int = 0
-
     @ColumnInfo
     var dangerCount: Int = 0
-
     override fun equals(other: Any?): Boolean = other is DirBase && other.id == id
-
     override fun hashCode(): Int = id.toInt()
-
     fun getGoodCountStr(): String = if (goodCount > 99) "99+" else goodCount.toString()
-
     fun getWarnCountStr(): String = if (warnCount > 99) "99+" else warnCount.toString()
-
     fun getDangerCountStr(): String = if (dangerCount > 99) "99+" else dangerCount.toString()
 }
-
 @Entity(
     foreignKeys = [
         ForeignKey(
@@ -55,22 +41,16 @@ class DirDetect() : DirBase() {
         this.position = position
         this.dirName = dirName
     }
-
     @ColumnInfo(index = true)
     override var parentId: Long = 0
-
     @Ignore
     var hasSelect = false
-
     @Ignore
     var isExpand: Boolean = false
-
     @Ignore
     var houseDetect = HouseDetect()
-
     @Ignore
     var itemList: ArrayList<ItemDetect> = ArrayList()
-
     fun copyOne(): DirDetect {
         val newDirDetect = DirDetect()
         newDirDetect.id = 0
@@ -90,7 +70,6 @@ class DirDetect() : DirBase() {
         newDirDetect.itemList = newItemList
         return newDirDetect
     }
-
     fun toDirReport(): DirReport {
         val dirReport = DirReport()
         dirReport.id = 0
@@ -100,7 +79,6 @@ class DirDetect() : DirBase() {
         dirReport.goodCount = goodCount
         dirReport.warnCount = warnCount
         dirReport.dangerCount = dangerCount
-
         val newItemList: ArrayList<ItemReport> = ArrayList(itemList.size)
         for (itemDetect in itemList) {
             if (itemDetect.state > 0 || itemDetect.inputText.isNotEmpty() || itemDetect.image1.isNotEmpty()) {
@@ -110,9 +88,7 @@ class DirDetect() : DirBase() {
         dirReport.itemList = newItemList
         return dirReport
     }
-
     companion object {
-
         fun buildDefaultDirList(parentId: Long): ArrayList<DirDetect> =
             arrayListOf(
                 DirDetect(parentId, 0, ContextProvider.getContext().getString(R.string.detect_dir1_root)),
@@ -129,7 +105,6 @@ class DirDetect() : DirBase() {
             )
     }
 }
-
 @Entity(
     foreignKeys = [
         ForeignKey(
@@ -142,10 +117,8 @@ class DirDetect() : DirBase() {
     ],
 )
 class DirReport : DirBase() {
-
     @ColumnInfo(index = true)
     override var parentId: Long = 0
-
     @Ignore
     var itemList: ArrayList<ItemReport> = ArrayList()
 }

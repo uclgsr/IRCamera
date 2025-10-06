@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.network.ui
-
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -38,7 +37,6 @@ import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.network.data.NetworkSettings
-
 enum class ConnectionType(
     val displayName: String,
     val description: String,
@@ -49,7 +47,6 @@ enum class ConnectionType(
     ETHERNET("Wired Connection", "Connect devices via Ethernet cable", Icons.Default.Cable),
     HOTSPOT("Mobile Hotspot", "Create hotspot for device connection", Icons.Default.WifiTethering)
 }
-
 data class NetworkDevice(
     val name: String,
     val address: String,
@@ -57,36 +54,27 @@ data class NetworkDevice(
     val isConnected: Boolean = false,
     val signalStrength: Int = 0
 )
-
 class NetworkConfigViewModel : AppBaseViewModel() {
     private val _selectedConnectionType = mutableStateOf<ConnectionType?>(null)
     val selectedConnectionType: State<ConnectionType?> = _selectedConnectionType
-
     private val _availableDevices = mutableStateOf<List<NetworkDevice>>(emptyList())
     val availableDevices: State<List<NetworkDevice>> = _availableDevices
-
     private val _isScanning = mutableStateOf(false)
     val isScanning: State<Boolean> = _isScanning
-
     private val _connectedDevice = mutableStateOf<NetworkDevice?>(null)
     val connectedDevice: State<NetworkDevice?> = _connectedDevice
-
     private val _connectionStatus = mutableStateOf("Disconnected")
     val connectionStatus: State<String> = _connectionStatus
-
     fun selectConnectionType(type: ConnectionType) {
         _selectedConnectionType.value = type
         startDeviceDiscovery()
     }
-
     private fun startDeviceDiscovery() {
         launchWithErrorHandling {
             _isScanning.value = true
             _availableDevices.value = emptyList()
-
             // Simulate device discovery
             delay(1000)
-
             val mockDevices = when (_selectedConnectionType.value) {
                 ConnectionType.WIFI -> listOf(
                     NetworkDevice(
@@ -108,7 +96,6 @@ class NetworkConfigViewModel : AppBaseViewModel() {
                         signalStrength = 91
                     )
                 )
-
                 ConnectionType.BLUETOOTH -> listOf(
                     NetworkDevice(
                         "TC001-BT",
@@ -129,7 +116,6 @@ class NetworkConfigViewModel : AppBaseViewModel() {
                         signalStrength = 82
                     )
                 )
-
                 ConnectionType.ETHERNET -> listOf(
                     NetworkDevice(
                         "Wired-TC001",
@@ -144,7 +130,6 @@ class NetworkConfigViewModel : AppBaseViewModel() {
                         signalStrength = 100
                     )
                 )
-
                 ConnectionType.HOTSPOT -> listOf(
                     NetworkDevice(
                         "Mobile-TC001",
@@ -159,25 +144,20 @@ class NetworkConfigViewModel : AppBaseViewModel() {
                         signalStrength = 75
                     )
                 )
-
                 null -> emptyList()
             }
-
             delay(2000) // Simulate scanning time
             _availableDevices.value = mockDevices
             _isScanning.value = false
         }
     }
-
     fun connectToDevice(device: NetworkDevice) {
         launchWithErrorHandling {
             _connectionStatus.value = "Connecting..."
             delay(3000) // Simulate connection time
-
             // Simulate connection success
             _connectedDevice.value = device.copy(isConnected = true)
             _connectionStatus.value = "Connected to ${device.name}"
-
             // Update the device list to show connected status
             _availableDevices.value = _availableDevices.value.map {
                 if (it.address == device.address) it.copy(isConnected = true) else it.copy(
@@ -186,20 +166,16 @@ class NetworkConfigViewModel : AppBaseViewModel() {
             }
         }
     }
-
     fun disconnectDevice() {
         _connectedDevice.value = null
         _connectionStatus.value = "Disconnected"
         _availableDevices.value = _availableDevices.value.map { it.copy(isConnected = false) }
     }
 }
-
 class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>() {
-
     private lateinit var networkSettings: NetworkSettings
     private lateinit var permissionManager: PermissionManager
     private var bluetoothAdapter: BluetoothAdapter? = null
-
     private val bluetoothEnableResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -207,19 +183,15 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
             // Bluetooth enabled
         }
     }
-
     override fun createViewModel(): NetworkConfigViewModel =
         viewModels<NetworkConfigViewModel>().value
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         networkSettings = NetworkSettings(this)
         permissionManager = PermissionManager(this, PermissionController(this))
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         bluetoothAdapter = bluetoothManager?.adapter
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: NetworkConfigViewModel) {
@@ -230,7 +202,6 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
             val isScanning by viewModel.isScanning
             val connectedDevice by viewModel.connectedDevice
             val connectionStatus by viewModel.connectionStatus
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -240,7 +211,6 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
                     title = "Network Configuration",
                     onBackClick = { finish() }
                 )
-
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -295,7 +265,6 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
                             }
                         }
                     }
-
                     // Connection type selection
                     if (selectedConnectionType == null) {
                         Text(
@@ -304,7 +273,6 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 16.dp)
                         )
-
                         LazyColumn(
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
@@ -344,7 +312,6 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
                                 }
                             }
                         }
-
                         if (isScanning) {
                             Card(
                                 modifier = Modifier.fillMaxWidth(),
@@ -421,7 +388,6 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
         }
     }
 }
-
 @Composable
 private fun ConnectionTypeCard(
     connectionType: ConnectionType,
@@ -458,9 +424,7 @@ private fun ConnectionTypeCard(
                     tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = connectionType.displayName,
@@ -474,7 +438,6 @@ private fun ConnectionTypeCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                 contentDescription = null,
@@ -484,7 +447,6 @@ private fun ConnectionTypeCard(
         }
     }
 }
-
 @Composable
 private fun DeviceCard(
     device: NetworkDevice,
@@ -518,9 +480,7 @@ private fun DeviceCard(
                 else
                     MaterialTheme.colorScheme.onSurface
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = device.name,
@@ -540,7 +500,6 @@ private fun DeviceCard(
                     )
                 }
             }
-
             if (device.isConnected) {
                 Surface(
                     shape = RoundedCornerShape(16.dp),

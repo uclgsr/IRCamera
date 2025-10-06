@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.compose
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,7 +19,6 @@ import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.module.thermalunified.R
-
 @Composable
 fun IRConfigInputDialogCompose(
     type: IRConfigInputType,
@@ -32,7 +30,6 @@ fun IRConfigInputDialogCompose(
     val context = LocalContext.current
     var inputText by remember { mutableStateOf(initialValue?.toString() ?: "") }
     val focusRequester = remember { FocusRequester() }
-
     val dialogData = remember(type, isTC007) {
         when (type) {
             IRConfigInputType.TEMP -> IRConfigDialogData(
@@ -47,14 +44,12 @@ fun IRConfigInputDialogCompose(
                     )
                 }
             )
-
             IRConfigInputType.DIS -> IRConfigDialogData(
                 title = "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)",
                 unit = "m",
                 showUnit = true,
                 validator = { value -> value in 0.2f..(if (isTC007) 4f else 5f) }
             )
-
             IRConfigInputType.EM -> IRConfigDialogData(
                 title = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)",
                 unit = "",
@@ -63,11 +58,9 @@ fun IRConfigInputDialogCompose(
             )
         }
     }
-
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -92,7 +85,6 @@ fun IRConfigInputDialogCompose(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
                 // Input field with unit
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -121,7 +113,6 @@ fun IRConfigInputDialogCompose(
                         ),
                         singleLine = true
                     )
-
                     if (dialogData.showUnit) {
                         Text(
                             text = dialogData.unit,
@@ -130,9 +121,7 @@ fun IRConfigInputDialogCompose(
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(24.dp))
-
                 // Action buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -144,7 +133,6 @@ fun IRConfigInputDialogCompose(
                     ) {
                         Text(stringResource(android.R.string.cancel))
                     }
-
                     Button(
                         onClick = {
                             handleConfirm(
@@ -164,7 +152,6 @@ fun IRConfigInputDialogCompose(
         }
     }
 }
-
 private fun handleConfirm(
     inputText: String,
     validator: (Float) -> Boolean,
@@ -184,11 +171,9 @@ private fun handleConfirm(
         TToast.shortToast(context, R.string.tip_input_format)
     }
 }
-
 enum class IRConfigInputType {
     TEMP, DIS, EM
 }
-
 private data class IRConfigDialogData(
     val title: String,
     val unit: String,

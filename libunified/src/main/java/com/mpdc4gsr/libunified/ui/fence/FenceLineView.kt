@@ -1,9 +1,7 @@
 package com.mpdc4gsr.libunified.ui.fence
-
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-
 class FenceLineView : View {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -12,13 +10,10 @@ class FenceLineView : View {
         attrs,
         defStyleAttr
     )
-
     var listener: CallBack? = null
-
     fun clear() {
         // Clear fence line view state
     }
-
     interface CallBack {
         fun callback(startPoint: IntArray, endPoint: IntArray, srcRect: IntArray)
     }

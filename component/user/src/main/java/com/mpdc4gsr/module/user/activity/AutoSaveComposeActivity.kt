@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.user.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,18 +16,14 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.AutoSaveViewModel
 import com.mpdc4gsr.libunified.R as RCore
-
 class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
-
     override fun createViewModel(): AutoSaveViewModel {
         return viewModels<AutoSaveViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: AutoSaveViewModel) {
         val isAutoSaveEnabled by viewModel.isAutoSaveEnabled.collectAsState()
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -72,7 +67,6 @@ class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-
                         // Switch Item
                         Card(
                             modifier = Modifier.fillMaxWidth(),
@@ -105,7 +99,6 @@ class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
                                         )
                                     )
                                 }
-
                                 Switch(
                                     checked = isAutoSaveEnabled,
                                     onCheckedChange = { viewModel.updateAutoSaveState(it) }

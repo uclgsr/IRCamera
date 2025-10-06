@@ -26,7 +26,6 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <!-- Granular media permissions for Android 13+ -->
     <uses-permission
         android:name="android.permission.READ_MEDIA_VIDEO"
         tools:targetApi="33" />
@@ -54,13 +53,13 @@
         android:required="true" />
     <uses-feature
         android:name="android.hardware.bluetooth"
-        android:required="false" />
+        android:required="true" />
     <uses-feature
         android:name="android.hardware.bluetooth_le"
-        android:required="false" />
+        android:required="true" />
     <uses-feature
         android:name="android.hardware.usb.host"
-        android:required="false" />
+        android:required="true" />
 
     <application
         android:name="mpdc4gsr.core.App"
@@ -78,7 +77,7 @@
         <activity
             android:name="mpdc4gsr.feature.settings.ui.SettingsComposeActivity"
             android:exported="false"
-            android:label="Settings (Compose)"
+            android:label="Settings"
             android:theme="@style/AppTheme" />
 
         <!-- USB Receiver -->
@@ -132,19 +131,19 @@
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.GSRPlotComposeActivity"
             android:exported="false"
-            android:label="GSR Data Analysis (Compose)"
+            android:label="GSR Data Analysis"
             android:theme="@style/AppTheme" />
 
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.GSRDataViewComposeActivity"
             android:exported="false"
-            android:label="GSR Data Viewer (Compose)"
+            android:label="GSR Data Viewer"
             android:theme="@style/AppTheme" />
 
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.GSRVideoPlayerComposeActivity"
             android:exported="false"
-            android:label="GSR Video Player (Compose)"
+            android:label="GSR Video Player"
             android:theme="@style/AppTheme" />
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.SessionExportComposeActivity"
@@ -166,40 +165,33 @@
             android:exported="false"
             android:label="Enhanced Permission System Test" />
 
-        <!-- Duplicate network & device management activities removed - already declared above -->
-
-        <!-- Duplicate GSR activities section removed - activities already declared above -->
-
-        <!-- Duplicate entries removed - these activities are already declared above -->
-
         <activity
             android:name="mpdc4gsr.camera.integration.DualModeCameraComposeActivity"
             android:exported="false"
-            android:label="Dual Mode Camera (Compose)"
+            android:label="Dual Mode Camera"
             android:theme="@style/AppTheme" />
 
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.GSRDeviceManagementComposeActivity"
             android:exported="false"
-            android:label="GSR Device Management (Compose)"
+            android:label="GSR Device Management"
             android:theme="@style/AppTheme" />
 
-        <!-- Note: Thermal Camera Module Compose Activities are declared in component/thermalunified/src/main/AndroidManifest.xml -->
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.GSRRawImageViewComposeActivity"
             android:exported="false"
-            android:label="GSR Raw Image Viewer (Compose)" />
-        <!-- Note: GSRGalleryComposeActivity not implemented yet -->
+            android:label="GSR Raw Image Viewer" />
+
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.ShimmerConfigComposeActivity"
             android:exported="false"
-            android:label="Shimmer Configuration (Compose)" />
+            android:label="Shimmer Configuration" />
 
         <!-- Main Launcher Activity -->
         <activity
             android:name="mpdc4gsr.feature.main.ui.MainComposeActivity"
             android:exported="true"
-            android:label="IR Camera - Compose UI"
+            android:label="MPDC4GSR"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -232,23 +224,23 @@
         <activity
             android:name="mpdc4gsr.compose.testing.GSRBenchTestComposeActivity"
             android:exported="false"
-            android:label="GSR Benchmark Test (Compose)" />
+            android:label="GSR Benchmark Test" />
         <activity
             android:name="mpdc4gsr.compose.testing.GSRDataIntegrityTestComposeActivity"
             android:exported="false"
-            android:label="GSR Data Integrity Test (Compose)" />
+            android:label="GSR Data Integrity Test" />
         <activity
             android:name="mpdc4gsr.compose.testing.GSRReconnectionTestComposeActivity"
             android:exported="false"
-            android:label="GSR Reconnection Test (Compose)" />
+            android:label="GSR Reconnection Test" />
         <activity
             android:name="mpdc4gsr.compose.testing.ParallelRecordingTestComposeActivity"
             android:exported="false"
-            android:label="Parallel Recording Test (Compose)" />
+            android:label="Parallel Recording Test" />
         <activity
             android:name="mpdc4gsr.compose.testing.SessionLifecycleTestComposeActivity"
             android:exported="false"
-            android:label="Session Lifecycle Test (Compose)" />
+            android:label="Session Lifecycle Test" />
 
         <!-- Camera Activities -->
         <activity
@@ -259,16 +251,16 @@
         <activity
             android:name="mpdc4gsr.feature.camera.ui.DualModeCameraActivityCompose"
             android:exported="false"
-            android:label="Dual Mode Camera (Compose)" />
+            android:label="Dual Mode Camera" />
 
         <activity
             android:name="mpdc4gsr.compose.testing.RawCaptureTestComposeActivity"
             android:exported="false"
-            android:label="Raw Capture Test (Compose)" />
+            android:label="Raw Capture Test" />
         <activity
             android:name="mpdc4gsr.compose.testing.RgbCameraTestComposeActivity"
             android:exported="false"
-            android:label="RGB Camera Test (Compose)" />
+            android:label="RGB Camera Test" />
 
         <!-- Session and Synchronization Activities -->
         <activity
@@ -279,7 +271,7 @@
         <activity
             android:name="mpdc4gsr.compose.testing.CrossModalSyncTestComposeActivity"
             android:exported="false"
-            android:label="Cross Modal Sync Test (Compose)" />
+            android:label="Cross Modal Sync Test" />
         <activity
             android:name="mpdc4gsr.sensors.gsr.SynchronizationTestActivity"
             android:exported="false"
@@ -287,19 +279,19 @@
         <activity
             android:name="mpdc4gsr.compose.testing.TimeSynchronizationTestComposeActivity"
             android:exported="false"
-            android:label="Time Synchronization Test (Compose)" />
+            android:label="Time Synchronization Test" />
 
         <!-- BLE and Permission Activities - Migrated to Compose -->
         <activity
             android:name="mpdc4gsr.compose.testing.BLEIntegrationTestComposeActivity"
             android:exported="false"
-            android:label="BLE Integration Test (Compose)" />
+            android:label="BLE Integration Test" />
 
         <!-- Jetpack Compose Activities -->
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.SensorDashboardComposeActivity"
             android:exported="false"
-            android:label="Sensor Dashboard (Compose)"
+            android:label="Sensor Dashboard"
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 

@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.compose.dialogs
-
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -19,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-
 @Composable
 fun TipDialog(
     title: String = "",
@@ -37,7 +35,6 @@ fun TipDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.72f else 0.5f
-
     @Suppress("UNCHECKED_CAST")
     Dialog(
         onDismissRequest = (if (cancelable) onDismiss else {
@@ -73,7 +70,6 @@ fun TipDialog(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 Text(
                     text = message,
                     fontSize = 14.sp,
@@ -81,7 +77,6 @@ fun TipDialog(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 if (showRestartTips) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
@@ -92,9 +87,7 @@ fun TipDialog(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-
                 Spacer(modifier = Modifier.height(20.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -114,7 +107,6 @@ fun TipDialog(
                             )
                         }
                     }
-
                     Button(
                         onClick = {
                             onPositive()
@@ -136,7 +128,6 @@ fun TipDialog(
         }
     }
 }
-
 @Composable
 fun MessageDialog(
     @DrawableRes iconRes: Int? = null,
@@ -146,7 +137,6 @@ fun MessageDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.7f else 0.45f
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -178,7 +168,6 @@ fun MessageDialog(
                             modifier = Modifier.size(64.dp)
                         )
                     }
-
                     Text(
                         text = message,
                         fontSize = 16.sp,
@@ -187,7 +176,6 @@ fun MessageDialog(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-
                 IconButton(
                     onClick = onDismiss,
                     modifier = Modifier
@@ -204,7 +192,6 @@ fun MessageDialog(
         }
     }
 }
-
 @Composable
 fun EmissivityDialog(
     title: String = "Emissivity Settings",
@@ -219,7 +206,6 @@ fun EmissivityDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.8f else 0.5f
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -249,7 +235,6 @@ fun EmissivityDialog(
                     color = Color.Black,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
                 Text(
                     text = String.format("%.2f", sliderValue),
                     fontSize = 32.sp,
@@ -257,7 +242,6 @@ fun EmissivityDialog(
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(vertical = 16.dp)
                 )
-
                 Slider(
                     value = sliderValue,
                     onValueChange = {
@@ -269,7 +253,6 @@ fun EmissivityDialog(
                         .fillMaxWidth()
                         .padding(vertical = 16.dp)
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -285,9 +268,7 @@ fun EmissivityDialog(
                         color = Color.Gray
                     )
                 }
-
                 Spacer(modifier = Modifier.height(20.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -299,7 +280,6 @@ fun EmissivityDialog(
                     ) {
                         Text(text = "Cancel", fontSize = 16.sp)
                     }
-
                     Button(
                         onClick = {
                             onConfirm(sliderValue)

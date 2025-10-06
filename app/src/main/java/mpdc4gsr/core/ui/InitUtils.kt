@@ -1,5 +1,4 @@
 package mpdc4gsr.core.ui
-
 import android.content.IntentFilter
 import com.csl.irCamera.BuildConfig
 import com.elvishew.xlog.XLog
@@ -9,16 +8,8 @@ import com.mpdc4gsr.libunified.app.lms.LMS
 import com.mpdc4gsr.libunified.app.lms.utils.ConstantUtils
 import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtils
 
-/**
- * Application initialization utility functions
- * Provides centralized initialization for various app components
- */
 object InitUtils {
 
-    /**
-     * Initialize receiver for device broadcast events
-     * Registers dynamically to ensure compatibility with all Android versions
-     */
     fun initReceiver() {
         try {
             val context = BaseApplication.instance
@@ -37,9 +28,6 @@ object InitUtils {
         }
     }
 
-    /**
-     * Initialize logging system
-     */
     fun initLog() {
         try {
             if (BuildConfig.DEBUG) {
@@ -51,14 +39,10 @@ object InitUtils {
         }
     }
 
-    /**
-     * Initialize LMS (License Management System)
-     */
     fun initLms() {
         try {
             val context = BaseApplication.instance
             val locale = LanguageUtils.getCurrentLanguage()
-
             LMS.getInstance().init(context).apply {
                 productType = "TC001"
                 setLoginType(ConstantUtils.LOGIN_TC001_TYPE)
@@ -67,16 +51,12 @@ object InitUtils {
                 setPrivacyPolicy("")
                 setServicesAgreement("")
             }
-
             XLog.i("InitUtils: LMS initialized")
         } catch (e: Exception) {
             XLog.e("InitUtils: Failed to initialize LMS: ${e.message}")
         }
     }
 
-    /**
-     * Initialize UM (User Management) - placeholder for future implementation
-     */
     fun initUM() {
         try {
             // UM initialization would go here if needed
@@ -87,9 +67,6 @@ object InitUtils {
         }
     }
 
-    /**
-     * Initialize JPush (Push notification service) - placeholder for future implementation
-     */
     fun initJPush() {
         try {
             // JPush initialization would go here if needed
@@ -100,9 +77,6 @@ object InitUtils {
         }
     }
 
-    /**
-     * Initialize XUtils - Utility library initialization
-     */
     fun initXutils() {
         try {
             // XUtils initialization if needed
@@ -112,9 +86,6 @@ object InitUtils {
         }
     }
 
-    /**
-     * Set WeChat App ID - placeholder for WeChat integration
-     */
     fun setWxAppId(appId: String) {
         try {
             // WeChat App ID configuration
@@ -124,9 +95,6 @@ object InitUtils {
         }
     }
 
-    /**
-     * Set Bugly App ID - placeholder for crash reporting
-     */
     fun setBuglyAppId(appId: String) {
         try {
             // Bugly crash reporting configuration
@@ -136,9 +104,6 @@ object InitUtils {
         }
     }
 
-    /**
-     * Set App Key - placeholder for service configuration
-     */
     fun setAppKey(appKey: String) {
         try {
             // App key configuration
@@ -148,9 +113,6 @@ object InitUtils {
         }
     }
 
-    /**
-     * Set App Secret - placeholder for service configuration
-     */
     fun setAppSecret(appSecret: String) {
         try {
             // App secret configuration
@@ -160,9 +122,6 @@ object InitUtils {
         }
     }
 
-    /**
-     * Set Auth Secret - placeholder for authentication configuration
-     */
     fun setAuthSecret(authSecret: String) {
         try {
             // Auth secret configuration

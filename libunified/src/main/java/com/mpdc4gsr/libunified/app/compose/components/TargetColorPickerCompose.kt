@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.compose.components
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,13 +18,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
-
 data class TargetColor(
     val drawableRes: Int,
     val code: Int,
     val name: String = ""
 )
-
 @Composable
 fun TargetColorPicker(
     selectedColor: Int,
@@ -41,11 +38,9 @@ fun TargetColorPicker(
             TargetColor(R.drawable.bg_target_color_white, ObserveBean.TYPE_TARGET_COLOR_WHITE, "White")
         )
     }
-
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
     val itemWidth = screenWidthDp / 5 * 0.78f
-
     LazyRow(
         modifier = modifier
             .fillMaxWidth()
@@ -63,7 +58,6 @@ fun TargetColorPicker(
         }
     }
 }
-
 @Composable
 private fun TargetColorItem(
     targetColor: TargetColor,
@@ -74,7 +68,6 @@ private fun TargetColorItem(
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
     val imageSize = (screenWidthDp * 30 / 375).coerceAtLeast(24.dp)
-
     Box(
         modifier = Modifier
             .width(itemWidth)
@@ -97,7 +90,6 @@ private fun TargetColorItem(
                         .size(imageSize)
                         .padding(4.dp)
                 )
-
                 if (isSelected) {
                     Image(
                         painter = painterResource(id = R.drawable.bg_target_color_stroke),
@@ -106,7 +98,6 @@ private fun TargetColorItem(
                     )
                 }
             }
-
             if (isSelected) {
                 Box(
                     modifier = Modifier

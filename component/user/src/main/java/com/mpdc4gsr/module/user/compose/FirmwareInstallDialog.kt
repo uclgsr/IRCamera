@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.user.compose
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -11,7 +10,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-
 @Composable
 fun FirmwareInstallDialog(
     isVisible: Boolean,
@@ -47,9 +45,7 @@ fun FirmwareInstallDialog(
                         color = MaterialTheme.colorScheme.primary,
                         strokeWidth = 3.dp
                     )
-
                     Spacer(modifier = Modifier.height(12.dp))
-
                     Text(
                         text = message,
                         style = MaterialTheme.typography.bodySmall,

@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.adapter
-
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.libunified.R as LibUiR
-
 class MenuTabAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: OnItemClickListener? = null
@@ -18,23 +16,19 @@ class MenuTabAdapter(val context: Context) :
     private var datas = arrayListOf<Int>()
     private var dataStrList = arrayListOf<String>()
     private var selected = -1
-
     companion object {
         private const val TYPE_ITEM = 300
         private const val TYPE_ITEM_MORE = 301
     }
-
     fun selected(index: Int) {
         selected = index
         notifyDataSetChanged()
     }
-
     private val firstMenus =
         arrayListOf<Int>(
             LibUiR.drawable.ic_menu_thermal7001_svg,
             LibUiR.drawable.ic_menu_thermal7002_svg,
         )
-
     private val secondMenus =
         arrayListOf<Int>(
             LibUiR.drawable.ic_menu_thermal6001,
@@ -44,7 +38,6 @@ class MenuTabAdapter(val context: Context) :
             LibUiR.drawable.ic_menu_thermal7003,
             LibUiR.drawable.ic_menu_thermal7004,
         )
-
     private val secondMenusStr =
         arrayListOf(
             "[ph]",
@@ -54,7 +47,6 @@ class MenuTabAdapter(val context: Context) :
             "[ph][ph]",
             "[ph][ph]",
         )
-
     private val fourthMenusStr =
         arrayListOf(
             "[ph][ph]",
@@ -62,7 +54,6 @@ class MenuTabAdapter(val context: Context) :
             "[ph][ph][ph]",
             "[ph][ph]",
         )
-
     private val thirdMenus =
         arrayListOf<Int>(
             LibUiR.drawable.ic_menu_thermal5003,
@@ -76,7 +67,6 @@ class MenuTabAdapter(val context: Context) :
             LibUiR.drawable.ic_menu_thermal5003_selected_svg,
             LibUiR.drawable.ic_menu_thermal6003_svg,
         )
-
     private val fourthMenus =
         arrayListOf<Int>(
             LibUiR.drawable.ic_menu_thermal7001_svg,
@@ -84,7 +74,6 @@ class MenuTabAdapter(val context: Context) :
             LibUiR.drawable.ic_menu_thermal7003_svg,
             LibUiR.drawable.ic_menu_thermal7004_svg,
         )
-
     fun initType(type: Int) {
         this.type = type
         datas =
@@ -103,7 +92,6 @@ class MenuTabAdapter(val context: Context) :
             }
         notifyDataSetChanged()
     }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -120,7 +108,6 @@ class MenuTabAdapter(val context: Context) :
             ItemMoreView(view)
         }
     }
-
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
@@ -149,11 +136,9 @@ class MenuTabAdapter(val context: Context) :
             }
         }
     }
-
     override fun getItemCount(): Int {
         return datas.size
     }
-
     override fun getItemViewType(position: Int): Int {
         return if (type == 3) {
             TYPE_ITEM_MORE
@@ -161,15 +146,12 @@ class MenuTabAdapter(val context: Context) :
             TYPE_ITEM
         }
     }
-
     open class BaseItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         lateinit var lay: View
         lateinit var img: ImageView
     }
-
     inner class ItemView(itemView: View) : BaseItemView(itemView) {
         var name: TextView
-
         init {
             lay =
                 itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_menu_tab_lay)
@@ -177,7 +159,6 @@ class MenuTabAdapter(val context: Context) :
             name = itemView.findViewById<TextView>(R.id.item_menu_tab_text)
         }
     }
-
     inner class ItemMoreView(itemView: View) : BaseItemView(itemView) {
         init {
             lay =
@@ -185,7 +166,6 @@ class MenuTabAdapter(val context: Context) :
             img = itemView.findViewById<ImageView>(R.id.item_menu_tab_more_img)
         }
     }
-
     interface OnItemClickListener {
         fun onClick(index: Int)
     }

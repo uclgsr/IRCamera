@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.compose
-
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -20,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.module.thermalunified.R
-
 @Composable
 fun ConfigGuideDialogCompose(
     isTC007: Boolean,
@@ -29,7 +27,6 @@ fun ConfigGuideDialogCompose(
     onComplete: () -> Unit = {}
 ) {
     var currentStep by remember(initialStep) { mutableIntStateOf(initialStep) }
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -64,7 +61,6 @@ fun ConfigGuideDialogCompose(
                         isTC007 = isTC007,
                         onNext = { currentStep = 2 }
                     )
-
                     2 -> ConfigStep2Content(
                         isTC007 = isTC007,
                         onComplete = {
@@ -77,14 +73,12 @@ fun ConfigGuideDialogCompose(
         }
     }
 }
-
 @Composable
 private fun ConfigStep1Content(
     isTC007: Boolean,
     onNext: () -> Unit
 ) {
     val context = LocalContext.current
-
     Card(
         modifier = Modifier
             .fillMaxWidth(0.9f)
@@ -102,33 +96,25 @@ private fun ConfigStep1Content(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             Text(
                 text = "Step 1: Basic Parameters",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.primary
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Configuration parameters
             ConfigParameterCard(
                 title = "${context.getString(R.string.thermal_config_environment)} (-10~${if (isTC007) 50 else 55}°C)",
                 description = "Set the ambient temperature for accurate thermal measurements"
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             ConfigParameterCard(
                 title = "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)",
                 description = "Configure the distance to target for proper calibration"
             )
-
             Spacer(modifier = Modifier.height(24.dp))
-
             Button(
                 onClick = onNext,
                 modifier = Modifier.fillMaxWidth()
@@ -138,14 +124,12 @@ private fun ConfigStep1Content(
         }
     }
 }
-
 @Composable
 private fun ConfigStep2Content(
     isTC007: Boolean,
     onComplete: () -> Unit
 ) {
     val context = LocalContext.current
-
     Card(
         modifier = Modifier
             .fillMaxWidth(0.9f)
@@ -164,25 +148,19 @@ private fun ConfigStep2Content(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             ConfigParameterCard(
                 title = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)",
                 description = "Select appropriate emissivity value for your target material"
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Emissivity presets
             Text(
                 text = "Common Materials",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             LazyColumn(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -191,9 +169,7 @@ private fun ConfigStep2Content(
                     EmissivityPresetCard(preset = preset)
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             Button(
                 onClick = onComplete,
                 modifier = Modifier.fillMaxWidth()
@@ -203,7 +179,6 @@ private fun ConfigStep2Content(
         }
     }
 }
-
 @Composable
 private fun ConfigParameterCard(
     title: String,
@@ -224,9 +199,7 @@ private fun ConfigParameterCard(
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold
             )
-
             Spacer(modifier = Modifier.height(4.dp))
-
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodySmall,
@@ -235,7 +208,6 @@ private fun ConfigParameterCard(
         }
     }
 }
-
 @Composable
 private fun EmissivityPresetCard(
     preset: EmissivityPreset,
@@ -263,7 +235,6 @@ private fun EmissivityPresetCard(
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium
                 )
-
                 if (preset.description.isNotEmpty()) {
                     Text(
                         text = preset.description,
@@ -272,7 +243,6 @@ private fun EmissivityPresetCard(
                     )
                 }
             }
-
             Text(
                 text = preset.emissivity.toString(),
                 style = MaterialTheme.typography.bodyMedium,
@@ -282,7 +252,6 @@ private fun EmissivityPresetCard(
         }
     }
 }
-
 private fun getEmissivityPresets(isTC007: Boolean): List<EmissivityPreset> {
     return listOf(
         EmissivityPreset("Human Skin", 0.98f, "Human body temperature measurement"),
@@ -299,17 +268,14 @@ private fun getEmissivityPresets(isTC007: Boolean): List<EmissivityPreset> {
         it.emissivity >= (if (isTC007) 0.1f else 0.01f) && it.emissivity <= 1.0f
     }
 }
-
 data class EmissivityPreset(
     val material: String,
     val emissivity: Float,
     val description: String = ""
 )
-
 @Composable
 fun ConfigGuideDialogComposePreview() {
     var showDialog by remember { mutableStateOf(true) }
-
     if (showDialog) {
         ConfigGuideDialogCompose(
             isTC007 = false,

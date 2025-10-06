@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.camera.ui
-
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -31,19 +30,8 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.feature.camera.presentation.DualModeCameraViewModel
 import mpdc4gsr.feature.main.ui.MainComposeActivity
 
-/**
- * Dual Mode Camera Activity - Compose Implementation
- *
- * Modern Compose implementation of dual-mode camera functionality:
- * - Uses existing DualModeCameraViewModel for business logic
- * - Maintains compatibility with existing navigation patterns
- * - Follows MVVM architecture with Compose UI
- * - Preserves all camera permissions and recording functionality
- */
 class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewModel>() {
-
     private val cameraVM: DualModeCameraViewModel by viewModels()
-
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -53,35 +41,27 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
             cameraVM.onPermissionDenied()
         }
     }
-
     override fun createViewModel(): DualModeCameraViewModel {
         return cameraVM
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val initialMode = intent.getStringExtra("INITIAL_MODE") ?: "VIDEO_4K"
         val enableSamsungOptimizations =
             intent.getBooleanExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)
-
         cameraVM.initialize(initialMode, enableSamsungOptimizations)
-
         checkCameraPermission()
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: DualModeCameraViewModel) {
         val context = LocalContext.current
-
         // Collect state
         val permissionState by viewModel.permissionState.collectAsState()
         val cameraState by viewModel.cameraState.collectAsState()
         val cameraMode by viewModel.cameraMode.collectAsState()
         val recordingState by viewModel.recordingState.collectAsState()
         val cameraScreenState by viewModel.cameraScreenState.collectAsState()
-
         // Handle events
         LaunchedEffect(viewModel) {
             viewModel.events.collect { event ->
@@ -89,42 +69,33 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                     is DualModeCameraViewModel.CameraEvent.ShowError -> {
                         Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                     }
-
                     is DualModeCameraViewModel.CameraEvent.ShowSuccess -> {
                         Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                     }
-
                     is DualModeCameraViewModel.CameraEvent.RequestPermission -> {
                         // Handle permission request
                     }
-
                     is DualModeCameraViewModel.CameraEvent.RecordingStarted -> {
                         Toast.makeText(context, "Recording started: ${event.fileName}", Toast.LENGTH_SHORT).show()
                     }
-
                     is DualModeCameraViewModel.CameraEvent.RecordingStopped -> {
                         Toast.makeText(context, "Recording stopped: ${event.duration}s", Toast.LENGTH_SHORT).show()
                     }
-
                     is DualModeCameraViewModel.CameraEvent.ModeChanged -> {
                         Toast.makeText(context, "Mode changed to ${event.newMode}", Toast.LENGTH_SHORT).show()
                     }
-
                     DualModeCameraViewModel.CameraEvent.NavigateToGallery -> {
                         // Navigate to gallery
                     }
-
                     // is DualModeCameraViewModel.CameraEvent.NavigateToSettings -> {
                     //     context.startActivity(Intent(context, SettingsComposeActivity::class.java))
                     // }
-
                     // is DualModeCameraViewModel.CameraEvent.NavigateBack -> {
                     //     finish()
                     // }
                 }
             }
         }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -170,7 +141,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             viewModel.switchCameraMode(mode)
                         }
                     )
-
                     // Camera Preview Card
                     CameraPreviewCard(
                         cameraState = cameraState,
@@ -186,14 +156,12 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             }
                         }
                     )
-
                     // Recording Controls Card
                     RecordingControlsCard(
                         recordingState = recordingState,
                         onStartRecording = { viewModel.startRecording() },
                         onStopRecording = { viewModel.stopRecording() }
                     )
-
                     // Camera Status Card
                     CameraStatusCard(
                         cameraState = cameraState,
@@ -203,7 +171,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
             }
         }
     }
-
     @Composable
     private fun CameraModeCard(
         selectedMode: DualModeCameraViewModel.CameraMode,
@@ -222,7 +189,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -239,7 +205,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
             }
         }
     }
-
     @Composable
     private fun CameraPreviewCard(
         cameraState: DualModeCameraViewModel.CameraState,
@@ -260,7 +225,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                 when (permissionState) {
                     DualModeCameraViewModel.PermissionState.GRANTED -> {
                         var previewView: PreviewView? by remember { mutableStateOf(null) }
-
                         AndroidView(
                             factory = { context ->
                                 PreviewView(context).also {
@@ -270,7 +234,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             },
                             modifier = Modifier.fillMaxSize()
                         )
-
                         if (cameraScreenState.showProgress) {
                             Box(
                                 modifier = Modifier
@@ -282,7 +245,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             }
                         }
                     }
-
                     DualModeCameraViewModel.PermissionState.DENIED -> {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -304,7 +266,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             }
                         }
                     }
-
                     else -> {
                         CircularProgressIndicator()
                     }
@@ -312,7 +273,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
             }
         }
     }
-
     @Composable
     private fun RecordingControlsCard(
         recordingState: DualModeCameraViewModel.RecordingState,
@@ -332,7 +292,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -360,7 +319,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                         }
                     }
                 }
-
                 if (recordingState.isRecording) {
                     LinearProgressIndicator(
                         modifier = Modifier.fillMaxWidth()
@@ -374,7 +332,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
             }
         }
     }
-
     @Composable
     private fun CameraStatusCard(
         cameraState: DualModeCameraViewModel.CameraState,
@@ -393,7 +350,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -407,7 +363,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             MaterialTheme.colorScheme.error
                     )
                 }
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -421,7 +376,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             MaterialTheme.colorScheme.error
                     )
                 }
-
                 if (cameraScreenState.displayMessage.isNotEmpty()) {
                     Text(
                         text = cameraScreenState.displayMessage,
@@ -432,7 +386,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
             }
         }
     }
-
     @Composable
     private fun BottomNavigationBar() {
         val context = LocalContext.current
@@ -460,7 +413,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
             )
         }
     }
-
     private fun checkCameraPermission() {
         when {
             ContextCompat.checkSelfPermission(
@@ -469,14 +421,12 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
             ) == PackageManager.PERMISSION_GRANTED -> {
                 cameraVM.onPermissionGranted()
             }
-
             else -> {
                 cameraVM.requestPermission()
                 requestPermissionLauncher.launch(Manifest.permission.CAMERA)
             }
         }
     }
-
     private fun navigateToMainActivity(pageIndex: Int) {
         val intent = Intent(this, MainComposeActivity::class.java).apply {
             putExtra("page", pageIndex)
@@ -484,7 +434,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
         startActivity(intent)
         finish()
     }
-
     override fun onDestroy() {
         super.onDestroy()
     }

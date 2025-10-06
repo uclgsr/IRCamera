@@ -1,10 +1,8 @@
 package com.mpdc4gsr.libunified.app.bean
-
 import android.os.Parcelable
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import kotlinx.parcelize.Parcelize
-
 @Parcelize
 data class CustomPseudoBean(
     var selectIndex: Int = 0,
@@ -21,7 +19,6 @@ data class CustomPseudoBean(
     var customRecommendIndex: Int = 0,
     var isUseGray: Boolean = true,
 ) : Parcelable {
-
     companion object {
         fun loadFromShared(isTC007: Boolean = false): CustomPseudoBean {
             // TC007 functionality removed - always use default
@@ -36,13 +33,11 @@ data class CustomPseudoBean(
                 CustomPseudoBean()
             }
         }
-
         fun toCustomPseudoBean(byteArray: ByteArray): CustomPseudoBean {
             // Stub implementation - return default bean
             return CustomPseudoBean()
         }
     }
-
     fun saveToShared(isTC007: Boolean = false) {
         // TC007 functionality removed - only save for non-TC007 devices
         if (!isTC007) {
@@ -50,40 +45,31 @@ data class CustomPseudoBean(
         }
         // TC007 save functionality disabled
     }
-
     fun getColorList(isTC007: Boolean = false): IntArray? {
         // Return null to indicate no custom colors (use defaults)
         return if (isUseCustomPseudo) null else null
     }
-
     fun getPlaceList(): FloatArray? {
         // Return null to indicate no custom places (use defaults)
         return if (isUseCustomPseudo) null else null
     }
-
     fun getCustomColors(): IntArray {
         return colors ?: intArrayOf(customMinColor, customMiddleColor, customMaxColor)
     }
-
     fun getCustomZAltitudes(): IntArray {
         return zAltitudes ?: intArrayOf(0, 50, 100)
     }
-
     fun getCustomPlaces(): FloatArray {
         return places ?: floatArrayOf(0f, 0.5f, 1f)
     }
-
     fun toByteArray(): ByteArray {
         // Return minimal byte array
         return ByteArray(92)
     }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as CustomPseudoBean
-
         if (selectIndex != other.selectIndex) return false
         if (colors != null) {
             if (other.colors == null) return false
@@ -106,10 +92,8 @@ data class CustomPseudoBean(
         if (customMaxColor != other.customMaxColor) return false
         if (customRecommendIndex != other.customRecommendIndex) return false
         if (isUseGray != other.isUseGray) return false
-
         return true
     }
-
     override fun hashCode(): Int {
         var result = selectIndex
         result = 31 * result + (colors?.contentHashCode() ?: 0)

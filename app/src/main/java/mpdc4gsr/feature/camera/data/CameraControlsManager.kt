@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.camera.data
-
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -8,23 +7,13 @@ import androidx.camera.core.FocusMeteringAction
 import androidx.camera.view.PreviewView
 import mpdc4gsr.core.data.ErrorType
 
-/**
- * Manages manual camera controls including exposure and focus
- * Extracted from RgbCameraRecorder to reduce class complexity
- */
 class CameraControlsManager(
     private val onError: ((ErrorType, String) -> Unit)?
 ) {
-
     companion object {
         private const val TAG = "CameraControlsManager"
     }
-
-    /**
-     * Set manual exposure mode
-     * @param camera Current camera instance
-     * @param enabled true for manual, false for auto
-     */
+    
     fun setManualExposureMode(camera: Camera?, enabled: Boolean) {
         try {
             camera?.cameraControl?.let { cameraControl ->
@@ -48,12 +37,7 @@ class CameraControlsManager(
             onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to set exposure mode: ${e.message}")
         }
     }
-
-    /**
-     * Set exposure compensation
-     * @param camera Current camera instance
-     * @param evValue exposure value in EV units (-2.0 to +2.0)
-     */
+    
     fun setExposureCompensation(camera: Camera?, evValue: Float) {
         try {
             camera?.cameraControl?.let { cameraControl ->
@@ -63,12 +47,10 @@ class CameraControlsManager(
                 val characteristics = camera2Info.getCameraCharacteristic(
                     android.hardware.camera2.CameraCharacteristics.CONTROL_AE_COMPENSATION_RANGE
                 )
-
                 characteristics?.let { range ->
                     val step = camera2Info.getCameraCharacteristic(
                         android.hardware.camera2.CameraCharacteristics.CONTROL_AE_COMPENSATION_STEP
                     )?.toFloat() ?: 1.0f
-
                     val index = (evValue / step).toInt().coerceIn(range.lower, range.upper)
                     cameraControl.setExposureCompensationIndex(index)
                     AppLogger.i(TAG, "Exposure compensation set to ${evValue}EV (index: $index)")
@@ -93,12 +75,7 @@ class CameraControlsManager(
             )
         }
     }
-
-    /**
-     * Lock or unlock auto exposure
-     * @param camera Current camera instance
-     * @param locked true to lock, false to unlock
-     */
+    
     fun setAutoExposureLock(camera: Camera?, locked: Boolean) {
         try {
             camera?.cameraControl?.let { cameraControl ->
@@ -115,12 +92,7 @@ class CameraControlsManager(
             onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to set AE lock: ${e.message}")
         }
     }
-
-    /**
-     * Set manual focus mode
-     * @param camera Current camera instance
-     * @param enabled true for manual, false for auto
-     */
+    
     fun setManualFocusMode(camera: Camera?, enabled: Boolean) {
         try {
             camera?.cameraControl?.let { cameraControl ->
@@ -143,17 +115,11 @@ class CameraControlsManager(
             onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to set focus mode: ${e.message}")
         }
     }
-
-    /**
-     * Set focus distance using Camera2 interop
-     * @param camera Current camera instance
-     * @param distance 0.0f = infinity, 1.0f = macro/close focus
-     */
+    
     fun setFocusDistance(camera: Camera?, distance: Float) {
         try {
             camera?.let { cam ->
                 val clampedDistance = distance.coerceIn(0.0f, 1.0f)
-
                 try {
                     // Use Camera2 interop for direct lens focus distance control
                     val camera2Info =
@@ -161,13 +127,11 @@ class CameraControlsManager(
                     val characteristics = camera2Info.getCameraCharacteristic(
                         android.hardware.camera2.CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE
                     )
-
                     characteristics?.let { minFocusDistance ->
                         if (minFocusDistance > 0) {
                             // Calculate actual focus distance from normalized value
                             // 0.0f = infinity (focus distance = 0), 1.0f = macro (focus distance = minFocusDistance)
                             val actualFocusDistance = clampedDistance * minFocusDistance
-
                             // Use Camera2 interop to set focus distance
                             val camera2Control =
                                 androidx.camera.camera2.interop.Camera2CameraControl.from(cam.cameraControl)
@@ -182,15 +146,12 @@ class CameraControlsManager(
                                         actualFocusDistance
                                     )
                                     .build()
-
                             camera2Control.addCaptureRequestOptions(captureRequestOptions)
-
                             val focusDistanceText = if (clampedDistance < 0.1f) {
                                 "Infinity"
                             } else {
                                 String.format("%.2fm", 1.0f / actualFocusDistance)
                             }
-
                             Log.i(
                                 TAG,
                                 "Manual focus distance set to: $focusDistanceText (normalized: $clampedDistance, actual: $actualFocusDistance)"
@@ -215,7 +176,6 @@ class CameraControlsManager(
                     cam.cameraControl.cancelFocusAndMetering()
                     AppLogger.i(TAG, "Focus distance set to: $clampedDistance (fallback mode)")
                 }
-
             } ?: run {
                 onError?.invoke(
                     ErrorType.HARDWARE_UNAVAILABLE,
@@ -230,12 +190,7 @@ class CameraControlsManager(
             )
         }
     }
-
-    /**
-     * Lock or unlock autofocus
-     * @param camera Current camera instance
-     * @param locked true to lock, false to unlock
-     */
+    
     fun setAutoFocusLock(camera: Camera?, locked: Boolean) {
         try {
             camera?.cameraControl?.let { cameraControl ->
@@ -257,25 +212,16 @@ class CameraControlsManager(
             onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to set AF lock: ${e.message}")
         }
     }
-
-    /**
-     * Trigger tap-to-focus at specified coordinates
-     * @param camera Current camera instance
-     * @param previewView Preview view for coordinate mapping
-     * @param x normalized x coordinate (0.0-1.0)
-     * @param y normalized y coordinate (0.0-1.0)
-     */
+    
     fun triggerTapToFocus(camera: Camera?, previewView: PreviewView?, x: Float, y: Float) {
         try {
             camera?.cameraControl?.let { cameraControl ->
                 previewView?.let { preview ->
                     val factory = preview.meteringPointFactory
                     val point = factory.createPoint(x * preview.width, y * preview.height)
-
                     val action = FocusMeteringAction.Builder(point)
                         .disableAutoCancel()
                         .build()
-
                     cameraControl.startFocusAndMetering(action)
                     AppLogger.i(TAG, "Tap-to-focus triggered at ($x, $y)")
                 } ?: run {

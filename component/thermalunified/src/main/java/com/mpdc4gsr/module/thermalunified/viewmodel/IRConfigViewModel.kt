@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
-
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
@@ -8,16 +7,13 @@ import com.mpdc4gsr.module.thermalunified.bean.ModelBean
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
 class IRConfigViewModel : BaseViewModel() {
     val configLiveData = SingleLiveEvent<ModelBean>()
-
     fun getConfig(isTC007: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             configLiveData.postValue(ConfigRepository.read(isTC007))
         }
     }
-
     fun updateDefaultEnvironment(
         isTC007: Boolean,
         environment: Float,
@@ -29,7 +25,6 @@ class IRConfigViewModel : BaseViewModel() {
             configLiveData.postValue(modelBean)
         }
     }
-
     fun updateDefaultDistance(
         isTC007: Boolean,
         distance: Float,
@@ -41,7 +36,6 @@ class IRConfigViewModel : BaseViewModel() {
             configLiveData.postValue(modelBean)
         }
     }
-
     fun updateDefaultRadiation(
         isTC007: Boolean,
         radiation: Float,
@@ -53,24 +47,19 @@ class IRConfigViewModel : BaseViewModel() {
             configLiveData.postValue(modelBean)
         }
     }
-
     fun addConfig(isTC007: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             val modelBean = configLiveData.value ?: ConfigRepository.read(isTC007)
-
             var index = 0
             modelBean.myselfModel.forEach {
                 index = index.coerceAtLeast(it.id)
             }
             index++
-
             modelBean.myselfModel.add(DataBean(id = index, name = index.toString()))
-
             ConfigRepository.update(isTC007, modelBean)
             configLiveData.postValue(modelBean)
         }
     }
-
     fun checkConfig(
         isTC007: Boolean,
         id: Int,
@@ -85,7 +74,6 @@ class IRConfigViewModel : BaseViewModel() {
             configLiveData.postValue(modelBean)
         }
     }
-
     fun deleteConfig(
         isTC007: Boolean,
         id: Int,
@@ -104,7 +92,6 @@ class IRConfigViewModel : BaseViewModel() {
                     break
                 }
             }
-
             if (removeAt < modelBean.myselfModel.size) {
                 for (i in removeAt until modelBean.myselfModel.size) {
                     val dataBean = modelBean.myselfModel[i]
@@ -112,12 +99,10 @@ class IRConfigViewModel : BaseViewModel() {
                     dataBean.name = dataBean.id.toString()
                 }
             }
-
             ConfigRepository.update(isTC007, modelBean)
             configLiveData.postValue(modelBean)
         }
     }
-
     fun updateCustom(
         isTC007: Boolean,
         dataBean: DataBean,

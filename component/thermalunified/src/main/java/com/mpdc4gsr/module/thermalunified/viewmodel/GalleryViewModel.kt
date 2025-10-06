@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
-
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.config.FileConfig
@@ -11,15 +10,11 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-
 class GalleryViewModel : BaseViewModel() {
-
     companion object {
         private const val TAG = "GalleryViewModel"
     }
-
     val galleryLiveData = SingleLiveEvent<ArrayList<String>>()
-
     // Data class for media items
     data class MediaItem(
         val id: String,
@@ -30,33 +25,24 @@ class GalleryViewModel : BaseViewModel() {
         val dateModified: Long,
         val isVideo: Boolean = false
     )
-
     // State flows for Compose
     private val _mediaItems = MutableStateFlow<List<MediaItem>>(emptyList())
     val mediaItems: StateFlow<List<MediaItem>> = _mediaItems.asStateFlow()
-
     private val _galleryItems = MutableStateFlow<List<MediaItem>>(emptyList())
     val galleryItems: StateFlow<List<MediaItem>> = _galleryItems.asStateFlow()
-
     private val _videoItems = MutableStateFlow<List<MediaItem>>(emptyList())
     val videoItems: StateFlow<List<MediaItem>> = _videoItems.asStateFlow()
-
     private val _isGridView = MutableStateFlow(true)
     val isGridView: StateFlow<Boolean> = _isGridView.asStateFlow()
-
     private val _selectedItems = MutableStateFlow<Set<String>>(emptySet())
     val selectedItems: StateFlow<Set<String>> = _selectedItems.asStateFlow()
-
     private val _isSelectionMode = MutableStateFlow(false)
     val isSelectionMode: StateFlow<Boolean> = _isSelectionMode.asStateFlow()
-
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
     init {
         loadMediaItems()
     }
-
     // Load media items and update different flows
     private fun loadMediaItems() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -75,12 +61,10 @@ class GalleryViewModel : BaseViewModel() {
             }
         }
     }
-
     // View mode toggle
     fun toggleViewMode() {
         _isGridView.value = !_isGridView.value
     }
-
     // Selection mode methods
     fun enterSelectionMode(item: MediaItem? = null) {
         _isSelectionMode.value = true
@@ -88,17 +72,14 @@ class GalleryViewModel : BaseViewModel() {
             _selectedItems.value = setOf(it.id)
         }
     }
-
     fun exitSelectionMode() {
         _isSelectionMode.value = false
         _selectedItems.value = emptySet()
     }
-
     fun clearSelection() {
         _selectedItems.value = emptySet()
         _isSelectionMode.value = false
     }
-
     fun toggleItemSelection(item: MediaItem) {
         val currentSelected = _selectedItems.value.toMutableSet()
         if (currentSelected.contains(item.id)) {
@@ -107,18 +88,15 @@ class GalleryViewModel : BaseViewModel() {
             currentSelected.add(item.id)
         }
         _selectedItems.value = currentSelected
-
         // Exit selection mode if no items selected
         if (currentSelected.isEmpty()) {
             _isSelectionMode.value = false
         }
     }
-
     // File operations
     fun deleteSelectedItems() {
         val selectedIds = _selectedItems.value
         val itemsToDelete = _mediaItems.value.filter { selectedIds.contains(it.id) }
-
         viewModelScope.launch(Dispatchers.IO) {
             itemsToDelete.forEach { item ->
                 try {
@@ -127,39 +105,32 @@ class GalleryViewModel : BaseViewModel() {
                     Log.e(TAG, "Error deleting file: ${item.path}", e)
                 }
             }
-
             withContext(Dispatchers.Main) {
                 exitSelectionMode()
                 loadMediaItems() // Refresh the list
             }
         }
     }
-
     fun shareSelectedItems() {
         val selectedIds = _selectedItems.value
         val itemsToShare = _mediaItems.value.filter { selectedIds.contains(it.id) }
-
         if (itemsToShare.isNotEmpty()) {
             // Implementation would depend on context being available
             // For now, just log the action
             Log.d(TAG, "Sharing ${itemsToShare.size} items")
         }
     }
-
     fun openMediaItem(item: MediaItem) {
         // Implementation for opening media item
         Log.d(TAG, "Opening media item: ${item.name}")
     }
-
     // Refresh methods
     fun refreshGallery() {
         loadMediaItems()
     }
-
     fun refreshVideoGallery() {
         loadMediaItems()
     }
-
     // Legacy methods for backward compatibility
     fun getData() {
         viewModelScope.launch {
@@ -172,7 +143,6 @@ class GalleryViewModel : BaseViewModel() {
             }
         }
     }
-
     fun getVideoData() {
         viewModelScope.launch {
             getVideoList().collect { it ->
@@ -184,10 +154,8 @@ class GalleryViewModel : BaseViewModel() {
             }
         }
     }
-
     private fun getMediaItemsList(): List<MediaItem> {
         val items = mutableListOf<MediaItem>()
-
         // Load pictures
         val picturePath = ContextProvider.getContext()
             .getExternalFilesDir("Pictures")!!.absolutePath + File.separator + "thermal"
@@ -209,7 +177,6 @@ class GalleryViewModel : BaseViewModel() {
                 }
             }
         }
-
         // Load videos
         val videoPath = FileConfig.lineGalleryDir
         val videoDir = File(videoPath)
@@ -230,10 +197,8 @@ class GalleryViewModel : BaseViewModel() {
                 }
             }
         }
-
         return items.sortedByDescending { it.dateModified }
     }
-
     private fun getGalleryList(): Flow<ArrayList<String>> {
         val flow =
             flow {
@@ -255,7 +220,6 @@ class GalleryViewModel : BaseViewModel() {
             }
         return flow
     }
-
     private fun getVideoList(): Flow<ArrayList<String>> {
         val flow =
             flow {

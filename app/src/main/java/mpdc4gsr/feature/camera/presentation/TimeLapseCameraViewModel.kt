@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.camera.presentation
-
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,9 +7,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 
-/**
- * Time-lapse capture mode
- */
 enum class TimeLapseMode(val displayName: String) {
     MANUAL("Manual Interval"),
     AUTO("Auto Optimize"),
@@ -19,18 +15,12 @@ enum class TimeLapseMode(val displayName: String) {
     PRESET_SLOW("Slow (10s)")
 }
 
-/**
- * ViewModel for Time-Lapse Camera Screen
- * Manages time-lapse recording with configurable intervals
- */
 class TimeLapseCameraViewModel(
     @Suppress("UNUSED_PARAMETER") context: Context
 ) : AppBaseViewModel() {
-
     companion object {
         private const val DEFAULT_PLAYBACK_FPS = 30
     }
-
     data class TimeLapseState(
         val isRecording: Boolean = false,
         val capturedFrames: Int = 0,
@@ -43,10 +33,8 @@ class TimeLapseCameraViewModel(
         val resolution: String = "1920×1080",
         val quality: Int = 90
     )
-
     private val _timeLapseState = MutableStateFlow(TimeLapseState())
     val timeLapseState: StateFlow<TimeLapseState> = _timeLapseState.asStateFlow()
-
     fun startTimeLapse() {
         launchWithErrorHandling {
             _timeLapseState.value = _timeLapseState.value.copy(
@@ -57,7 +45,6 @@ class TimeLapseCameraViewModel(
             )
         }
     }
-
     fun stopTimeLapse() {
         launchWithErrorHandling {
             _timeLapseState.value = _timeLapseState.value.copy(
@@ -65,13 +52,11 @@ class TimeLapseCameraViewModel(
             )
         }
     }
-
     fun updateInterval(seconds: Int) {
         _timeLapseState.value = _timeLapseState.value.copy(
             intervalSeconds = seconds.coerceIn(1, 60)
         )
     }
-
     fun setMode(mode: TimeLapseMode) {
         val interval = when (mode) {
             TimeLapseMode.PRESET_FAST -> 1
@@ -84,7 +69,6 @@ class TimeLapseCameraViewModel(
             intervalSeconds = interval
         )
     }
-
     fun captureFrame() {
         launchWithErrorHandling {
             val current = _timeLapseState.value
@@ -97,9 +81,6 @@ class TimeLapseCameraViewModel(
     }
 }
 
-/**
- * Factory for creating TimeLapseCameraViewModel
- */
 class TimeLapseCameraViewModelFactory(
     private val context: Context
 ) : androidx.lifecycle.ViewModelProvider.Factory {

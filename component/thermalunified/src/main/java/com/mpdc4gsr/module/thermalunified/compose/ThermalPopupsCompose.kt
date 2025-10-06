@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.compose
-
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -27,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import kotlin.math.roundToInt
-
 @Composable
 fun SeekBarPopupCompose(
     visible: Boolean,
@@ -80,7 +78,6 @@ fun SeekBarPopupCompose(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
-
                     // Progress value display
                     Text(
                         text = "${progress.roundToInt()}%",
@@ -88,9 +85,7 @@ fun SeekBarPopupCompose(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     )
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     // Modern Slider
                     Slider(
                         value = progress,
@@ -112,9 +107,7 @@ fun SeekBarPopupCompose(
                             inactiveTrackColor = MaterialTheme.colorScheme.primaryContainer
                         )
                     )
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     // Action buttons
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -126,9 +119,7 @@ fun SeekBarPopupCompose(
                         ) {
                             Text("Cancel")
                         }
-
                         Spacer(modifier = Modifier.width(12.dp))
-
                         Button(
                             onClick = {
                                 onProgressChange(progress)
@@ -144,7 +135,6 @@ fun SeekBarPopupCompose(
         }
     }
 }
-
 @Composable
 fun OptionPickPopupCompose(
     visible: Boolean,
@@ -202,7 +192,6 @@ fun OptionPickPopupCompose(
         }
     }
 }
-
 @Composable
 private fun OptionItemCompose(
     text: String,
@@ -214,7 +203,6 @@ private fun OptionItemCompose(
         targetValue = if (isSelected) 1f else 0f,
         animationSpec = tween(200), label = "background"
     )
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -240,7 +228,6 @@ private fun OptionItemCompose(
             )
             Spacer(modifier = Modifier.width(12.dp))
         }
-
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium,
@@ -248,7 +235,6 @@ private fun OptionItemCompose(
             else MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1f)
         )
-
         if (isSelected) {
             Icon(
                 imageVector = Icons.Default.Check,
@@ -259,7 +245,6 @@ private fun OptionItemCompose(
         }
     }
 }
-
 @Composable
 fun GalleryChangePopupCompose(
     visible: Boolean,
@@ -318,9 +303,7 @@ fun GalleryChangePopupCompose(
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     // Gallery options
                     LazyColumn(
                         modifier = Modifier.heightIn(max = 240.dp)
@@ -341,7 +324,6 @@ fun GalleryChangePopupCompose(
         }
     }
 }
-
 @Composable
 private fun GalleryOptionItemCompose(
     galleryName: String,
@@ -352,7 +334,6 @@ private fun GalleryOptionItemCompose(
         targetValue = if (isSelected) 1f else 0f,
         animationSpec = tween(200), label = "gallery_background"
     )
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -375,9 +356,7 @@ private fun GalleryOptionItemCompose(
             tint = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
             else MaterialTheme.colorScheme.onSurfaceVariant
         )
-
         Spacer(modifier = Modifier.width(12.dp))
-
         Text(
             text = galleryName,
             style = MaterialTheme.typography.bodyMedium,
@@ -385,7 +364,6 @@ private fun GalleryOptionItemCompose(
             else MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1f)
         )
-
         if (isSelected) {
             Icon(
                 imageVector = Icons.Default.CheckCircle,
@@ -396,7 +374,6 @@ private fun GalleryOptionItemCompose(
         }
     }
 }
-
 // Preview functions
 @Preview(showBackground = true)
 @Composable
@@ -411,7 +388,6 @@ private fun SeekBarPopupPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun OptionPickPopupPreview() {
@@ -426,7 +402,6 @@ private fun OptionPickPopupPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun GalleryChangePopupPreview() {

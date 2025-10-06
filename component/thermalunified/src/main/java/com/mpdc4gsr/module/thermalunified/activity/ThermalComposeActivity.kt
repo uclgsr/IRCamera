@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,20 +24,16 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.fragment.ThermalComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
-
 class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
         var selectedTabIndex by remember { mutableIntStateOf(0) }
         var selectedToolIndex by remember { mutableIntStateOf(-1) }
         var showToolbar by remember { mutableStateOf(false) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -78,7 +73,6 @@ class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             .fillMaxWidth()
                             .weight(1f)
                     )
-
                     // Tool selection menu (shown when tab is selected)
                     if (showToolbar) {
                         ThermalToolsMenu(
@@ -93,7 +87,6 @@ class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 .padding(horizontal = 16.dp, vertical = 8.dp)
                         )
                     }
-
                     // Main navigation tabs
                     ThermalNavigationTabs(
                         selectedIndex = selectedTabIndex,
@@ -111,7 +104,6 @@ class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
-
 @Composable
 private fun ThermalCameraView(
     modifier: Modifier = Modifier
@@ -127,7 +119,6 @@ private fun ThermalCameraView(
         modifier = modifier
     )
 }
-
 @Composable
 private fun ThermalNavigationTabs(
     selectedIndex: Int,
@@ -135,7 +126,6 @@ private fun ThermalNavigationTabs(
     modifier: Modifier = Modifier
 ) {
     val tabs = getThermalTabs()
-
     LazyRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -150,7 +140,6 @@ private fun ThermalNavigationTabs(
         }
     }
 }
-
 @Composable
 private fun ThermalTabButton(
     tab: ThermalComposeTab,
@@ -183,7 +172,6 @@ private fun ThermalTabButton(
         }
     }
 }
-
 @Composable
 private fun ThermalToolsMenu(
     selectedTabIndex: Int,
@@ -192,7 +180,6 @@ private fun ThermalToolsMenu(
     modifier: Modifier = Modifier
 ) {
     val tools = getThermalTools(selectedTabIndex)
-
     if (tools.isNotEmpty()) {
         Card(
             modifier = modifier,
@@ -216,7 +203,6 @@ private fun ThermalToolsMenu(
         }
     }
 }
-
 @Composable
 private fun ThermalToolButton(
     tool: ThermalTool,
@@ -251,19 +237,16 @@ private fun ThermalToolButton(
         }
     }
 }
-
 // Data classes and helper functions
 internal data class ThermalComposeTab(
     val title: String,
     val icon: ImageVector
 )
-
 data class ThermalTool(
     val name: String,
     val icon: ImageVector,
     val actionCode: Int
 )
-
 private fun getThermalTabs(): List<ThermalComposeTab> {
     return listOf(
         ThermalComposeTab("Camera", Icons.Default.CameraAlt),
@@ -273,7 +256,6 @@ private fun getThermalTabs(): List<ThermalComposeTab> {
         ThermalComposeTab("Settings", Icons.Default.Settings)
     )
 }
-
 private fun getThermalTools(tabIndex: Int): List<ThermalTool> {
     return when (tabIndex) {
         1 -> listOf( // Measure tools
@@ -282,26 +264,22 @@ private fun getThermalTools(tabIndex: Int): List<ThermalTool> {
             ThermalTool("Rectangle", Icons.Default.CropFree, 1003),
             ThermalTool("Circle", Icons.Default.RadioButtonUnchecked, 1004)
         )
-
         2 -> listOf( // Analysis tools
             ThermalTool("Histogram", Icons.Default.BarChart, 2001),
             ThermalTool("Profile", Icons.AutoMirrored.Filled.ShowChart, 2002),
             ThermalTool("Report", Icons.Default.Description, 2003)
         )
-
         3 -> listOf( // Palette tools
             ThermalTool("Iron", Icons.Default.Palette, 3001),
             ThermalTool("Rainbow", Icons.Default.ColorLens, 3002),
             ThermalTool("Gray", Icons.Default.InvertColors, 3003),
             ThermalTool("Hot", Icons.Default.LocalFireDepartment, 3004)
         )
-
         4 -> listOf( // Settings tools
             ThermalTool("Emissivity", Icons.Default.Tune, 4001),
             ThermalTool("Temperature", Icons.Default.Thermostat, 4002),
             ThermalTool("Distance", Icons.Outlined.Straighten, 4003)
         )
-
         else -> emptyList()
     }
 }

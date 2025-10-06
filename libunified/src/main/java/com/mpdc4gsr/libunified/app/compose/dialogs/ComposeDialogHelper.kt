@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.compose.dialogs
-
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -9,16 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-
 class ComposeDialogWrapper(
     context: Context,
     private val content: @Composable () -> Unit
 ) : Dialog(context) {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-
         val composeView = ComposeView(context).apply {
             setContent {
                 LibUnifiedTheme {
@@ -26,7 +22,6 @@ class ComposeDialogWrapper(
                 }
             }
         }
-
         setContentView(composeView)
         window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -35,11 +30,9 @@ class ComposeDialogWrapper(
         window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 }
-
 class LoadingDialogState(private val context: Context) {
     private var dialog: Dialog? = null
     private val messageState = mutableStateOf("")
-
     fun show(message: String = "") {
         dismiss()
         messageState.value = message
@@ -54,17 +47,14 @@ class LoadingDialogState(private val context: Context) {
             show()
         }
     }
-
     fun dismiss() {
         dialog?.dismiss()
         dialog = null
     }
-
     fun setMessage(message: String) {
         messageState.value = message
     }
 }
-
 class ConfirmDialogState(private val context: Context) {
     fun show(
         title: String,
@@ -96,12 +86,10 @@ class ConfirmDialogState(private val context: Context) {
         dialog.show()
     }
 }
-
 class ProgressDialogState(private val context: Context) {
     private var dialog: Dialog? = null
     private val messageState = mutableStateOf("")
     private val progressState = mutableStateOf(-1f)
-
     fun show(message: String = "", progress: Float = -1f, cancelable: Boolean = true) {
         dismiss()
         messageState.value = message
@@ -119,21 +107,17 @@ class ProgressDialogState(private val context: Context) {
             show()
         }
     }
-
     fun updateProgress(progress: Float) {
         progressState.value = progress
     }
-
     fun updateMessage(message: String) {
         messageState.value = message
     }
-
     fun dismiss() {
         dialog?.dismiss()
         dialog = null
     }
 }
-
 class MessageDialogState(private val context: Context) {
     fun showLongText(
         title: String,
@@ -151,7 +135,6 @@ class MessageDialogState(private val context: Context) {
         }
         dialog.show()
     }
-
     fun showNotification(
         message: String,
         showCheckbox: Boolean = true,
@@ -173,7 +156,6 @@ class MessageDialogState(private val context: Context) {
         dialog.show()
     }
 }
-
 class FirmwareDialogState(private val context: Context) {
     fun show(
         title: String,
@@ -208,7 +190,6 @@ class FirmwareDialogState(private val context: Context) {
         dialog.show()
     }
 }
-
 class TipDialogState(private val context: Context) {
     fun show(
         title: String = "",
@@ -240,7 +221,6 @@ class TipDialogState(private val context: Context) {
         dialog.show()
     }
 }
-
 class SimpleMessageDialogState(private val context: Context) {
     fun show(
         iconRes: Int? = null,
@@ -257,7 +237,6 @@ class SimpleMessageDialogState(private val context: Context) {
         dialog.show()
     }
 }
-
 class EmissivityDialogState(private val context: Context) {
     fun show(
         title: String = "Emissivity Settings",

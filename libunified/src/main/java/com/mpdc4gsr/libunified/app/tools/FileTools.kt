@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.tools
-
 import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
@@ -7,14 +6,12 @@ import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import com.mpdc4gsr.libunified.compat.ContextProvider
 import java.io.File
-
 object FileTools {
     fun getFileSize(path: String): String {
         var str = ""
         try {
             val file = File(path)
             var len = file.length()
-
             if (len < 1024) {
                 str = "${len}Byte"
             } else if (len < 1024 * 1024) {
@@ -27,13 +24,11 @@ object FileTools {
         }
         return str
     }
-
     fun getUri(file: File): Uri {
         val context = ContextProvider.getContext()
         val authority = "${context.packageName}.fileprovider"
         return FileProvider.getUriForFile(context, authority, file)
     }
-
     fun getImagePathFromURI(path: String): Uri? {
         val cr: ContentResolver = ContextProvider.getContext().contentResolver
         val buffer = StringBuffer()

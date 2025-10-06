@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.utils
-
 object Constants {
     const val PRODUCT_TYPE_NAME = "product_type"
     const val PRODUCT_TS001_NAME = "TS001"
@@ -16,7 +15,5 @@ object Constants {
     const val IR_TCPLUS_MODE = 5 // 
     const val IR_TC007_MODE = 6 // TC007
     const val IR_TEMPERATURE_LITE = 7 // lite
-
     const val IS_REPORT_FIRST = "IS_REPORT_FIRST"
-
 }

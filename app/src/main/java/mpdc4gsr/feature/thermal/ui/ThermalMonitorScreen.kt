@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.thermal.ui
-
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -53,16 +52,8 @@ import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel
 import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModelFactory
-
 private const val CAMERA_RESCAN_DELAY_MS = 500L
 
-/**
- * ThermalMonitorScreen composable - replaces MonitorThermalFragment layout
- * Main screen for thermal camera preview with overlays and controls
- * Full-screen design following Material Design 3 and Jetpack Compose best practices
- *
- * Now fully integrated with ThermalCameraViewModel for live thermal preview
- */
 @Composable
 fun ThermalMonitorScreen(
     viewModel: ThermalCameraViewModel = viewModel(
@@ -77,16 +68,13 @@ fun ThermalMonitorScreen(
 ) {
     // Collect UI state from ViewModel
     val uiState by viewModel.uiState.collectAsState()
-
     var showControls by remember { mutableStateOf(true) }
     var showAdvancedControls by remember { mutableStateOf(false) }
-
     // Trigger immediate rescan when screen appears to catch already-connected devices
     LaunchedEffect(Unit) {
         kotlinx.coroutines.delay(CAMERA_RESCAN_DELAY_MS)
         viewModel.rescanForThermalCamera()
     }
-
     // Update recording duration periodically
     LaunchedEffect(uiState.isRecording) {
         if (uiState.isRecording) {
@@ -96,7 +84,6 @@ fun ThermalMonitorScreen(
             }
         }
     }
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -108,7 +95,6 @@ fun ThermalMonitorScreen(
             bitmap = uiState.previewBitmap,
             modifier = Modifier.fillMaxSize()
         )
-
         // Temperature overlay always visible on preview
         TemperatureOverlay(
             currentTemp = uiState.currentTemperature ?: uiState.centerTemperature,
@@ -117,7 +103,6 @@ fun ThermalMonitorScreen(
             avgTemp = uiState.avgTemperature,
             modifier = Modifier.fillMaxSize()
         )
-
         // Top overlay with back button and status
         AnimatedVisibility(
             visible = showControls,
@@ -133,7 +118,6 @@ fun ThermalMonitorScreen(
                 onSettingsClick = onSettingsClick
             )
         }
-
         // Bottom overlay with recording controls
         AnimatedVisibility(
             visible = showControls,
@@ -151,7 +135,6 @@ fun ThermalMonitorScreen(
                 onAdvancedClick = { showAdvancedControls = !showAdvancedControls }
             )
         }
-
         // Toggle controls visibility with tap
         Box(
             modifier = Modifier
@@ -163,7 +146,6 @@ fun ThermalMonitorScreen(
                     showControls = !showControls
                 }
         )
-
         // Advanced controls overlay
         if (showAdvancedControls) {
             AdvancedControlsPanel(
@@ -173,9 +155,6 @@ fun ThermalMonitorScreen(
     }
 }
 
-/**
- * Full-screen thermal camera top bar with minimal design
- */
 @Composable
 private fun ThermalTopBar(
     isConnected: Boolean,
@@ -205,7 +184,6 @@ private fun ThermalTopBar(
                     tint = Color.White
                 )
             }
-
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -235,7 +213,6 @@ private fun ThermalTopBar(
                         }
                     }
                 }
-
                 Surface(
                     color = if (isConnected) Color(0xFF2E7D32) else Color(0xFFD32F2F),
                     shape = RoundedCornerShape(4.dp)
@@ -252,7 +229,6 @@ private fun ThermalTopBar(
                     )
                 }
             }
-
             IconButton(
                 onClick = onSettingsClick
             ) {
@@ -266,9 +242,6 @@ private fun ThermalTopBar(
     }
 }
 
-/**
- * Full-screen thermal camera bottom controls with Material Design 3
- */
 @Composable
 private fun ThermalBottomControls(
     isRecording: Boolean,
@@ -307,7 +280,6 @@ private fun ThermalBottomControls(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Settings")
                 }
-
                 // Record button - larger, centered
                 FilledIconButton(
                     onClick = onRecordClick,
@@ -325,7 +297,6 @@ private fun ThermalBottomControls(
                         modifier = Modifier.size(36.dp)
                     )
                 }
-
                 // Spacer for symmetry with settings button width
                 Spacer(modifier = Modifier.width(120.dp))
             }
@@ -333,9 +304,6 @@ private fun ThermalBottomControls(
     }
 }
 
-/**
- * Thermal camera preview component - displays actual thermal bitmap from ThermalCameraRecorder
- */
 @Composable
 private fun ThermalCameraPreview(
     bitmap: android.graphics.Bitmap?,
@@ -364,10 +332,6 @@ private fun ThermalCameraPreview(
     }
 }
 
-/**
- * Temperature overlay component
- * Replaces TemperatureView functionality for displaying measurement data
- */
 @Composable
 private fun TemperatureOverlay(
     currentTemp: Float,
@@ -391,7 +355,6 @@ private fun TemperatureOverlay(
                 modifier = Modifier.padding(12.dp)
             )
         }
-
         // Max temperature (top-right)
         Surface(
             modifier = Modifier
@@ -418,7 +381,6 @@ private fun TemperatureOverlay(
                 )
             }
         }
-
         // Min temperature (bottom-left)
         Surface(
             modifier = Modifier
@@ -448,9 +410,6 @@ private fun TemperatureOverlay(
     }
 }
 
-/**
- * Status panel showing connection and sensor status
- */
 @Composable
 private fun StatusPanel(
     isConnected: Boolean,
@@ -468,13 +427,11 @@ private fun StatusPanel(
             isActive = isConnected,
             color = if (isConnected) Color.Green else Color.Gray
         )
-
         StatusIndicator(
             label = "Recording",
             isActive = false, // Will be connected to actual recording state
             color = Color.Red
         )
-
         StatusIndicator(
             label = "Storage",
             isActive = true,
@@ -483,9 +440,6 @@ private fun StatusPanel(
     }
 }
 
-/**
- * Individual status indicator
- */
 @Composable
 private fun StatusIndicator(
     label: String,
@@ -512,9 +466,6 @@ private fun StatusIndicator(
     }
 }
 
-/**
- * Control panel with recording and advanced controls
- */
 @Composable
 private fun ControlPanel(
     isRecording: Boolean,
@@ -537,7 +488,6 @@ private fun ControlPanel(
                 tint = Color.White
             )
         }
-
         // Advanced controls button
         Button(
             onClick = onAdvancedClick,
@@ -553,9 +503,6 @@ private fun ControlPanel(
     }
 }
 
-/**
- * Advanced controls panel overlay
- */
 @Composable
 private fun AdvancedControlsPanel(
     onDismiss: () -> Unit,
@@ -580,9 +527,7 @@ private fun AdvancedControlsPanel(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Sample controls - will be replaced with actual thermal camera controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -594,7 +539,6 @@ private fun AdvancedControlsPanel(
                     onCheckedChange = { }
                 )
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -605,9 +549,7 @@ private fun AdvancedControlsPanel(
                     onCheckedChange = { }
                 )
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             Button(
                 onClick = onDismiss,
                 modifier = Modifier.align(Alignment.End)
@@ -617,7 +559,6 @@ private fun AdvancedControlsPanel(
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun ThermalMonitorScreenPreview() {

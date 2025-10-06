@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.user.activity
-
 import android.content.ClipData
 import android.content.ClipboardManager
 import androidx.activity.viewModels
@@ -24,13 +23,10 @@ import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.module.user.viewmodel.DeviceDetailsViewModel
 import com.mpdc4gsr.libunified.R as RCore
-
 class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>() {
-
     override fun createViewModel(): DeviceDetailsViewModel {
         return viewModels<DeviceDetailsViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: DeviceDetailsViewModel) {
@@ -38,15 +34,12 @@ class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>
         val serialNumber by viewModel.serialNumber.collectAsState()
         val deviceModel by viewModel.deviceModel.collectAsState()
         val isLoading by viewModel.isLoading.collectAsState()
-
         // Get isTC007 from intent extras
         val isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
-
         // Load device details on start
         LaunchedEffect(Unit) {
             viewModel.loadDeviceDetails(isTC007)
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -98,7 +91,6 @@ class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.primary
                             )
-
                             // Serial Number Row
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -117,12 +109,10 @@ class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
-
                             HorizontalDivider(
                                 thickness = 0.5.dp,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
                             )
-
                             // Device Model Row
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -141,12 +131,10 @@ class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
-
                             HorizontalDivider(
                                 thickness = 0.5.dp,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
                             )
-
                             // Copy Button
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -158,7 +146,6 @@ class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
-
                                 IconButton(
                                     onClick = {
                                         val copyText = viewModel.getCopyText()

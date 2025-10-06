@@ -1,5 +1,4 @@
 package mpdc4gsr.core.ui.components
-
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,10 +20,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import mpdc4gsr.feature.network.data.SensorStatusSummary
 
-/**
- * Compose replacement for RecordingStatusIndicator
- * Modern recording status display with animated indicator
- */
 @Composable
 fun RecordingStatusIndicator(
     isRecording: Boolean,
@@ -39,9 +34,7 @@ fun RecordingStatusIndicator(
     ) {
         // Status Icon with animation
         RecordingStatusIcon(isRecording)
-
         Spacer(modifier = Modifier.height(4.dp))
-
         // Status Text
         Text(
             text = if (isRecording) "[REC]" else "[STOP]",
@@ -49,12 +42,10 @@ fun RecordingStatusIndicator(
             color = if (isRecording) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant,
             fontWeight = FontWeight.Bold
         )
-
         // Duration
         if (isRecording && startTime > 0) {
             RecordingDuration(startTime)
         }
-
         // Sensors
         if (activeSensors.isNotEmpty()) {
             Text(
@@ -66,7 +57,6 @@ fun RecordingStatusIndicator(
         }
     }
 }
-
 @Composable
 private fun RecordingStatusIcon(isRecording: Boolean) {
     val infiniteTransition = rememberInfiniteTransition(label = "recording")
@@ -79,7 +69,6 @@ private fun RecordingStatusIcon(isRecording: Boolean) {
         ),
         label = "alpha"
     )
-
     Box(
         modifier = Modifier
             .size(32.dp)
@@ -97,21 +86,17 @@ private fun RecordingStatusIcon(isRecording: Boolean) {
         )
     }
 }
-
 @Composable
 private fun RecordingDuration(startTime: Long) {
     var duration by remember { mutableLongStateOf(0L) }
-
     LaunchedEffect(startTime) {
         while (true) {
             duration = (System.currentTimeMillis() - startTime) / 1000
             delay(1000)
         }
     }
-
     val minutes = duration / 60
     val seconds = duration % 60
-
     Text(
         text = String.format("%02d:%02d", minutes, seconds),
         style = MaterialTheme.typography.labelMedium,
@@ -119,9 +104,6 @@ private fun RecordingDuration(startTime: Long) {
     )
 }
 
-/**
- * Advanced recording status with sensor details
- */
 @Composable
 fun RecordingStatusWithSensorSummary(
     summary: SensorStatusSummary,
@@ -148,9 +130,7 @@ fun RecordingStatusWithSensorSummary(
                 modifier = Modifier.size(16.dp)
             )
         }
-
         Spacer(modifier = Modifier.height(4.dp))
-
         // Status Text
         Text(
             text = if (summary.isSessionActive) {
@@ -167,11 +147,9 @@ fun RecordingStatusWithSensorSummary(
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
-
         // Sensor Status
         if (summary.sensors.isNotEmpty()) {
             Spacer(modifier = Modifier.height(4.dp))
-
             val sensorDisplay = summary.sensors.map { sensorStatus ->
                 val icon = when {
                     sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "[CAM]"
@@ -179,16 +157,13 @@ fun RecordingStatusWithSensorSummary(
                     sensorStatus.sensorType.contains("GSR", ignoreCase = true) -> "[GSR]"
                     else -> "[SEN]"
                 }
-
                 val statusIcon = when {
                     sensorStatus.isRecording -> "[OK]"
                     sensorStatus.isInitialized -> "[RDY]"
                     else -> "[ERR]"
                 }
-
                 "$icon$statusIcon"
             }.joinToString(" ")
-
             Text(
                 text = if (summary.isSessionActive) sensorDisplay else "$sensorDisplay ready",
                 style = MaterialTheme.typography.labelSmall,
@@ -206,9 +181,6 @@ fun RecordingStatusWithSensorSummary(
     }
 }
 
-/**
- * Compact recording status badge
- */
 @Composable
 fun RecordingStatusBadge(
     isRecording: Boolean,

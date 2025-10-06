@@ -1,18 +1,14 @@
 package com.mpdc4gsr.module.thermalunified.adapter
-
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
 import com.mpdc4gsr.libunified.ui.listener.SingleClickListener
 import com.mpdc4gsr.libunified.ui.widget.CountDownView
 import com.mpdc4gsr.module.thermalunified.R
-
 class CameraItemAdapter(
     data: MutableList<CameraItemBean>? = null
 ) : BaseQuickAdapter<CameraItemBean, BaseViewHolder>(R.layout.item_camera, data) {
-
     var listener: ((index: Int, item: CameraItemBean) -> Unit)? = null
-
     override fun convert(holder: BaseViewHolder, item: CameraItemBean) {
         holder.setVisible(R.id.img, true)
         holder.setGone(R.id.count_down_view, true)
@@ -35,32 +31,27 @@ class CameraItemAdapter(
                     countDownView.setCountdownTime(item.time)
                 }
             }
-
             CameraItemBean.TYPE_ZDKM -> {
                 holder.setImageResource(
                     R.id.img, if (item.isSel) R.drawable.svg_camera_auto_select_yes
                     else R.drawable.svg_camera_auto_select_not
                 )
             }
-
             CameraItemBean.TYPE_SDKM -> {
                 holder.setImageResource(
                     R.id.img, if (item.isSel) R.drawable.svg_camera_shutter_select_yes
                     else R.drawable.svg_camera_shutter_select_not
                 )
             }
-
             CameraItemBean.TYPE_AUDIO -> {
                 holder.setImageResource(
                     R.id.img, if (item.isSel) R.drawable.svg_camera_audio_select_yes
                     else R.drawable.svg_camera_audio_select_not
                 )
             }
-
             else -> {
                 holder.setImageResource(R.id.img, R.drawable.svg_camera_setting)
             }
         }
     }
-
 }

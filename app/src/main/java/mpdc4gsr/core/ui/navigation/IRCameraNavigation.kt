@@ -1,5 +1,4 @@
 package mpdc4gsr.core.ui.navigation
-
 import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,41 +20,27 @@ import mpdc4gsr.feature.settings.ui.SettingsComposeActivity
 import mpdc4gsr.feature.main.ui.MainComposeActivity
 import mpdc4gsr.feature.settings.ui.AboutScreen
 
-/**
- * Task E: Complete Navigation Integration
- *
- * Unified navigation system that bridges Compose and Fragment navigation:
- * - Seamless transitions between Compose and Fragment screens
- * - Deep linking support
- * - State preservation
- * - Backward compatibility with existing navigation
- */
 sealed class IRCameraScreen(val route: String) {
     object Main : IRCameraScreen("main")
     object MainCompose : IRCameraScreen("main_compose")
     object MainFragment : IRCameraScreen("main_fragment")
     object MainFragmentCompose : IRCameraScreen("main_fragment_compose")
-
     object ThermalCamera : IRCameraScreen("thermal_camera")
     object ThermalCameraCompose : IRCameraScreen("thermal_camera_compose")
     object ThermalFragment : IRCameraScreen("thermal_fragment")
     object ThermalFragmentCompose : IRCameraScreen("thermal_fragment_compose")
-
     object SensorDashboard : IRCameraScreen("sensor_dashboard")
     object SensorDashboardCompose : IRCameraScreen("sensor_dashboard_compose")
     object SensorDashboardFragment : IRCameraScreen("sensor_dashboard_fragment")
     object SensorDashboardFragmentCompose : IRCameraScreen("sensor_dashboard_fragment_compose")
-
     object Gallery : IRCameraScreen("gallery")
     object GalleryFragment : IRCameraScreen("gallery_fragment")
     object GalleryFragmentCompose : IRCameraScreen("gallery_fragment_compose")
-
     // Priority 3: Specialized Thermal Fragments
     object IRCorrectionFragment : IRCameraScreen("ir_correction_fragment")
     object IRCorrectionFragmentCompose : IRCameraScreen("ir_correction_fragment_compose")
     object MonitorThermalFragment : IRCameraScreen("monitor_thermal_fragment")
     object MonitorThermalFragmentCompose : IRCameraScreen("monitor_thermal_fragment_compose")
-
     // Priority 4: Additional Gallery and Lite Fragments
     object IRGalleryTabFragmentCompose : IRCameraScreen("ir_gallery_tab_fragment_compose")
     object GalleryPictureFragment : IRCameraScreen("gallery_picture_fragment")
@@ -64,7 +49,6 @@ sealed class IRCameraScreen(val route: String) {
     object IRPlushFragmentCompose : IRCameraScreen("ir_plush_fragment_compose")
     object IRMonitorLiteFragment : IRCameraScreen("ir_monitor_lite_fragment")
     object IRMonitorLiteFragmentCompose : IRCameraScreen("ir_monitor_lite_fragment_compose")
-
     // Priority 5: Final Specialized Fragments
     object GalleryVideoFragment : IRCameraScreen("gallery_video_fragment")
     object GalleryVideoFragmentCompose : IRCameraScreen("gallery_video_fragment_compose")
@@ -75,24 +59,20 @@ sealed class IRCameraScreen(val route: String) {
     object IRMonitorHistoryFragmentCompose : IRCameraScreen("ir_monitor_history_fragment_compose")
     object IRMonitorThermalFragment : IRCameraScreen("ir_monitor_thermal_fragment")
     object IRMonitorThermalFragmentCompose : IRCameraScreen("ir_monitor_thermal_fragment_compose")
-
     object Settings : IRCameraScreen("settings")
     object SettingsCompose : IRCameraScreen("settings_compose")
     object About : IRCameraScreen("about")
 }
-
 @Composable
 fun IRCameraNavHost(
     navController: NavHostController = rememberNavController(),
     startDestination: String = IRCameraScreen.Main.route
 ) {
     val context = LocalContext.current
-
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-
         // Main dashboard screens
         composable(IRCameraScreen.Main.route) {
             // Launch main activity
@@ -101,7 +81,6 @@ fun IRCameraNavHost(
             }
             LoadingScreen()
         }
-
         composable(IRCameraScreen.MainCompose.route) {
             // Launch MainComposeActivity
             LaunchedEffect(Unit) {
@@ -109,7 +88,6 @@ fun IRCameraNavHost(
             }
             LoadingScreen()
         }
-
         // Thermal camera screens
         composable(IRCameraScreen.ThermalCamera.route) {
             // Could embed existing thermal fragment using FragmentContainer
@@ -117,7 +95,6 @@ fun IRCameraNavHost(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-
         composable(IRCameraScreen.ThermalCameraCompose.route) {
             // Try to launch thermal activity or show placeholder
             LaunchedEffect(Unit) {
@@ -135,7 +112,6 @@ fun IRCameraNavHost(
             }
             LoadingScreen()
         }
-
         // Sensor dashboard screens
         composable(IRCameraScreen.SensorDashboard.route) {
             // Could embed existing sensor dashboard fragment
@@ -143,7 +119,6 @@ fun IRCameraNavHost(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-
         composable(IRCameraScreen.SensorDashboardCompose.route) {
             LaunchedEffect(Unit) {
                 try {
@@ -154,7 +129,6 @@ fun IRCameraNavHost(
             }
             LoadingScreen()
         }
-
         // Settings screens
         composable(IRCameraScreen.Settings.route) {
             // Could embed existing settings fragment
@@ -162,7 +136,6 @@ fun IRCameraNavHost(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-
         composable(IRCameraScreen.SettingsCompose.route) {
             LaunchedEffect(Unit) {
                 try {
@@ -173,7 +146,6 @@ fun IRCameraNavHost(
             }
             LoadingScreen()
         }
-
         // About screen
         composable(IRCameraScreen.About.route) {
             AboutScreen(
@@ -182,7 +154,6 @@ fun IRCameraNavHost(
         }
     }
 }
-
 @Composable
 private fun LoadingScreen() {
     Box(
@@ -192,7 +163,6 @@ private fun LoadingScreen() {
         CircularProgressIndicator()
     }
 }
-
 @Composable
 private fun ThermalCameraFragmentScreen(onNavigateBack: () -> Unit) {
     // This would embed the existing ThermalFragment using FragmentContainer
@@ -219,7 +189,6 @@ private fun ThermalCameraFragmentScreen(onNavigateBack: () -> Unit) {
         }
     }
 }
-
 @Composable
 private fun SensorDashboardFragmentScreen(onNavigateBack: () -> Unit) {
     // This would embed the existing SensorDashboardFragment using FragmentContainer
@@ -245,7 +214,6 @@ private fun SensorDashboardFragmentScreen(onNavigateBack: () -> Unit) {
         }
     }
 }
-
 @Composable
 private fun SettingsFragmentScreen(onNavigateBack: () -> Unit) {
     // This would embed existing settings fragments

@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,13 +18,10 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-
 class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewModel>() {
-
     override fun createViewModel(): IRThermalNightViewModel {
         return IRThermalNightViewModel()
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRThermalNightViewModel) {
@@ -64,7 +60,6 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                             IconButton(onClick = { showSettings = true }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
                             }
-
                             if (showSettings) {
                                 AlertDialog(
                                     onDismissRequest = { showSettings = false },
@@ -99,7 +94,6 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
             }
         }
     }
-
     @Composable
     private fun IRThermalNightContent(
         viewModel: IRThermalNightViewModel,
@@ -109,7 +103,6 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
         var nightMode by remember { mutableStateOf("Enhanced") }
         var sensitivity by remember { mutableStateOf(75f) }
         var currentTemp by remember { mutableStateOf(22.5f) }
-
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -151,7 +144,6 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                     }
                 }
             }
-
             // Thermal camera view
             Card(
                 modifier = Modifier
@@ -188,7 +180,6 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                             fontWeight = FontWeight.Bold
                         )
                     }
-
                     // Recording indicator
                     if (isRecording) {
                         Card(
@@ -211,7 +202,6 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                     }
                 }
             }
-
             // Night controls
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -228,7 +218,6 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-
                     // Night mode selection
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -251,7 +240,6 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                             )
                         }
                     }
-
                     // Sensitivity control
                     Column {
                         Text(
@@ -272,14 +260,13 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                     }
                 }
             }
-
             // Action buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Capture thermal night image */ },
+                    onClick = {  },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF58A6FF)
@@ -292,7 +279,6 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Capture")
                 }
-
                 Button(
                     onClick = { isRecording = !isRecording },
                     modifier = Modifier.weight(1f),
@@ -311,5 +297,4 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
         }
     }
 }
-
 class IRThermalNightViewModel : BaseViewModel()

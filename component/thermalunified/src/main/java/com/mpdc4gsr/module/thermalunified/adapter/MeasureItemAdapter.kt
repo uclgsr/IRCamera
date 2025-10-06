@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.adapter
-
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -11,17 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.bean.TargetColorBean
 import com.mpdc4gsr.module.thermalunified.R
-
 class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
     private var selected = -1
-
     fun selected(index: Int) {
         selected = index
         notifyDataSetChanged()
     }
-
     private val secondBean =
         arrayListOf(
             TargetColorBean(R.drawable.ic_info_svg, "1.8m", ObserveBean.TYPE_MEASURE_PERSON),
@@ -29,7 +25,6 @@ class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
             TargetColorBean(R.drawable.ic_info_svg, "0.5m", ObserveBean.TYPE_MEASURE_DOG),
             TargetColorBean(R.drawable.ic_info_svg, "0.2m", ObserveBean.TYPE_MEASURE_BIRD),
         )
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -38,7 +33,6 @@ class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
             LayoutInflater.from(parent.context).inflate(R.layout.itme_target_mode, parent, false)
         return ItemView(view)
     }
-
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
@@ -56,19 +50,15 @@ class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
             holder.name.isSelected = bean.code == selected
             holder.name.setTextColor(
                 ContextCompat.getColor(context, R.color.white),
-
                 )
         }
     }
-
     override fun getItemCount(): Int {
         return secondBean.size
     }
-
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val lay: View = itemView.findViewById(R.id.item_menu_tab_lay)
         val img: ImageView = itemView.findViewById(R.id.item_menu_tab_img)
         val name: TextView = itemView.findViewById(R.id.item_menu_tab_text)
-
     }
 }

@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.camera.ui
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -10,10 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
-/**
- * Compose replacement for CameraSettingsView
- * Modern camera controls with Material 3 design
- */
 @Composable
 fun CameraSettingsPanel(
     isAutoExposure: Boolean = true,
@@ -47,7 +42,6 @@ fun CameraSettingsPanel(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-
         // Exposure Controls
         CameraSettingsSection(title = "Exposure") {
             SwitchSettingItem(
@@ -56,7 +50,6 @@ fun CameraSettingsPanel(
                 onCheckedChange = onExposureModeToggle,
                 icon = Icons.Default.WbSunny
             )
-
             SliderSettingItem(
                 label = "Exposure Compensation",
                 value = exposureCompensation,
@@ -64,7 +57,6 @@ fun CameraSettingsPanel(
                 valueRange = -2f..2f,
                 enabled = !isAutoExposure
             )
-
             SwitchSettingItem(
                 label = "AE Lock",
                 checked = isAeLocked,
@@ -72,7 +64,6 @@ fun CameraSettingsPanel(
                 icon = Icons.Default.Lock
             )
         }
-
         // Focus Controls
         CameraSettingsSection(title = "Focus") {
             SwitchSettingItem(
@@ -81,7 +72,6 @@ fun CameraSettingsPanel(
                 onCheckedChange = onFocusModeToggle,
                 icon = Icons.Default.CenterFocusStrong
             )
-
             SliderSettingItem(
                 label = "Focus Distance",
                 value = focusDistance,
@@ -89,7 +79,6 @@ fun CameraSettingsPanel(
                 valueRange = 0f..1f,
                 enabled = !isAutoFocus
             )
-
             SwitchSettingItem(
                 label = "AF Lock",
                 checked = isAfLocked,
@@ -97,7 +86,6 @@ fun CameraSettingsPanel(
                 icon = Icons.Default.Lock
             )
         }
-
         // Basic Controls
         CameraSettingsSection(title = "Controls") {
             Row(
@@ -112,7 +100,6 @@ fun CameraSettingsPanel(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Flip")
                 }
-
                 FilledTonalButton(
                     onClick = { onFlashToggle(!isFlashEnabled) },
                     modifier = Modifier.weight(1f)
@@ -125,7 +112,6 @@ fun CameraSettingsPanel(
                     Text("Flash")
                 }
             }
-
             SwitchSettingItem(
                 label = "Stage 3 Processing",
                 checked = isStage3ProcessingEnabled,
@@ -135,7 +121,6 @@ fun CameraSettingsPanel(
         }
     }
 }
-
 @Composable
 private fun CameraSettingsSection(
     title: String,
@@ -162,7 +147,6 @@ private fun CameraSettingsSection(
         }
     }
 }
-
 @Composable
 private fun SwitchSettingItem(
     label: String,
@@ -198,7 +182,6 @@ private fun SwitchSettingItem(
         )
     }
 }
-
 @Composable
 private fun SliderSettingItem(
     label: String,

@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.compose.components
-
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -16,7 +15,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 @Composable
 fun SettingItem(
     text: String,
@@ -51,7 +49,6 @@ fun SettingItem(
                                 tint = Color.Gray
                             )
                         }
-
                         iconRes != null -> {
                             Image(
                                 painter = painterResource(id = iconRes),
@@ -61,7 +58,6 @@ fun SettingItem(
                         }
                     }
                 }
-
                 Text(
                     text = text,
                     fontSize = 16.sp,
@@ -69,7 +65,6 @@ fun SettingItem(
                     fontWeight = FontWeight.Normal
                 )
             }
-
             if (showMoreArrow) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -79,7 +74,6 @@ fun SettingItem(
                 )
             }
         }
-
         if (showLine) {
             HorizontalDivider(
                 color = Color.LightGray,
@@ -89,7 +83,6 @@ fun SettingItem(
         }
     }
 }
-
 @Composable
 fun SettingsSection(
     title: String? = null,
@@ -105,7 +98,6 @@ fun SettingsSection(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
-
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -129,7 +121,6 @@ fun SettingsSection(
         }
     }
 }
-
 data class SettingItemData(
     val text: String,
     @DrawableRes val iconRes: Int? = null,

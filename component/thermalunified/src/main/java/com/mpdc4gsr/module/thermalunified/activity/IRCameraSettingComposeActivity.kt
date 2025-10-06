@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,13 +23,10 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
-
 class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -40,7 +36,6 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var imageCorrection by remember { mutableStateOf(true) }
         var temperatureUnit by remember { mutableStateOf("Celsius") }
         var resolution by remember { mutableStateOf("384x288") }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -88,7 +83,6 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 options = listOf("Iron", "Rainbow", "Grayscale", "Hot", "Cool"),
                                 onValueChange = { selectedPalette = it }
                             )
-
                             SettingsSliderItem(
                                 title = "Frame Rate",
                                 value = frameRate,
@@ -96,7 +90,6 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 unit = "fps",
                                 onValueChange = { frameRate = it.toInt() }
                             )
-
                             SettingsDropdownItem(
                                 title = "Resolution",
                                 selectedValue = resolution,
@@ -105,7 +98,6 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
                     }
-
                     // Camera Features
                     item {
                         SettingsCategoryCard(
@@ -118,7 +110,6 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 checked = autoShutter,
                                 onCheckedChange = { autoShutter = it }
                             )
-
                             SettingsSwitchItem(
                                 title = "Image Correction",
                                 description = "Automatic image enhancement",
@@ -127,7 +118,6 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
                     }
-
                     // Temperature Settings
                     item {
                         SettingsCategoryCard(
@@ -142,7 +132,6 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
                     }
-
                     // Advanced Settings
                     item {
                         SettingsCategoryCard(
@@ -161,7 +150,6 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     ).show()
                                 }
                             )
-
                             AdvancedSettingItem(
                                 title = "Firmware Update",
                                 description = "Check for camera firmware updates",
@@ -174,7 +162,6 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     ).show()
                                 }
                             )
-
                             AdvancedSettingItem(
                                 title = "Factory Reset",
                                 description = "Reset camera to default settings",
@@ -189,7 +176,6 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
                     }
-
                     // Save/Reset buttons
                     item {
                         SaveResetButtons(
@@ -222,7 +208,6 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
-
 @Composable
 private fun SettingsCategoryCard(
     title: String,
@@ -257,14 +242,11 @@ private fun SettingsCategoryCard(
                     fontWeight = FontWeight.Bold
                 )
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             content()
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsDropdownItem(
@@ -274,7 +256,6 @@ private fun SettingsDropdownItem(
     onValueChange: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-
     Column {
         Text(
             title,
@@ -282,9 +263,7 @@ private fun SettingsDropdownItem(
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
@@ -306,7 +285,6 @@ private fun SettingsDropdownItem(
                     .fillMaxWidth()
                     .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true)
             )
-
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
@@ -322,11 +300,9 @@ private fun SettingsDropdownItem(
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
-
 @Composable
 private fun SettingsSliderItem(
     title: String,
@@ -354,9 +330,7 @@ private fun SettingsSliderItem(
                 fontWeight = FontWeight.Bold
             )
         }
-
         Spacer(modifier = Modifier.height(8.dp))
-
         Slider(
             value = value.toFloat(),
             onValueChange = onValueChange,
@@ -367,11 +341,9 @@ private fun SettingsSliderItem(
                 inactiveTrackColor = Color(0xFF7D8590)
             )
         )
-
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
-
 @Composable
 private fun SettingsSwitchItem(
     title: String,
@@ -397,7 +369,6 @@ private fun SettingsSwitchItem(
                 fontSize = 12.sp
             )
         }
-
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
@@ -409,10 +380,8 @@ private fun SettingsSwitchItem(
             )
         )
     }
-
     Spacer(modifier = Modifier.height(16.dp))
 }
-
 @Composable
 private fun AdvancedSettingItem(
     title: String,
@@ -448,7 +417,6 @@ private fun AdvancedSettingItem(
                     fontSize = 12.sp
                 )
             }
-
             Icon(
                 Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Navigate",
@@ -457,10 +425,8 @@ private fun AdvancedSettingItem(
             )
         }
     }
-
     Spacer(modifier = Modifier.height(8.dp))
 }
-
 @Composable
 private fun SaveResetButtons(
     onSave: () -> Unit,
@@ -480,7 +446,6 @@ private fun SaveResetButtons(
         ) {
             Text("Reset", fontWeight = FontWeight.Bold)
         }
-
         Button(
             onClick = onSave,
             modifier = Modifier.weight(1f),

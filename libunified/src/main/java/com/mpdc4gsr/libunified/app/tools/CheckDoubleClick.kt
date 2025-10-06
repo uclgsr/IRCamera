@@ -1,13 +1,10 @@
 package com.mpdc4gsr.libunified.app.tools
-
 object CheckDoubleClick {
     private val records: MutableMap<String, Long> = HashMap()
-
     fun isFastDoubleClick(): Boolean {
         if (records.size > 1000) {
             records.clear()
         }
-
         val ste = Throwable().stackTrace[1]
         val key = ste.fileName + ste.lineNumber
         var lastClickTime = records[key]

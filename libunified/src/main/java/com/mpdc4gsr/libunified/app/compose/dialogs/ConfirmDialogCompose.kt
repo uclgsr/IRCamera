@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.compose.dialogs
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -14,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-
 @Composable
 fun ConfirmDialog(
     title: String,
@@ -32,7 +30,6 @@ fun ConfirmDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.8f else 0.4f
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -63,7 +60,6 @@ fun ConfirmDialog(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 if (message.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
@@ -74,7 +70,6 @@ fun ConfirmDialog(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-
                 if (showCheckbox) {
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
@@ -93,9 +88,7 @@ fun ConfirmDialog(
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(20.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -112,7 +105,6 @@ fun ConfirmDialog(
                             )
                         }
                     }
-
                     Button(
                         onClick = { onConfirm(isChecked) },
                         modifier = Modifier.weight(1f),

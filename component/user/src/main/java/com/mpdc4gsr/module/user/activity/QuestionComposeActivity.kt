@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.user.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,26 +21,20 @@ import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.model.QuestionData
 import com.mpdc4gsr.module.user.viewmodel.QuestionViewModel
-
 class QuestionComposeActivity : BaseComposeActivity<QuestionViewModel>() {
-
     override fun createViewModel(): QuestionViewModel {
         return viewModels<QuestionViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: QuestionViewModel) {
         val questions by viewModel.questions.collectAsState()
-
         // Get isTS001 from intent extras
         val isTS001 = intent.getBooleanExtra("isTS001", false)
-
         // Load questions on start
         LaunchedEffect(Unit) {
             viewModel.loadQuestions(isTS001)
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -82,7 +75,6 @@ class QuestionComposeActivity : BaseComposeActivity<QuestionViewModel>() {
         }
     }
 }
-
 @Composable
 private fun QuestionItem(
     question: QuestionData,
@@ -112,7 +104,6 @@ private fun QuestionItem(
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f)
             )
-
             Icon(
                 Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = "View Answer",

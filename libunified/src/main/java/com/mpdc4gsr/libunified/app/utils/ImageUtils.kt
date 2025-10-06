@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.utils
-
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
@@ -13,9 +12,7 @@ import com.mpdc4gsr.libunified.compat.ContextProvider
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
-
 object ImageUtils {
-
     fun saveToCache(context: Context, bitmap: Bitmap): String {
         val cacheFile = context.externalCacheDir ?: context.cacheDir
         val file = File(cacheFile, "Report_${System.currentTimeMillis()}.jpg")
@@ -25,11 +22,9 @@ object ImageUtils {
         }
         return file.absolutePath
     }
-
     fun save(bitmap: Bitmap, isTC007: Boolean = false): String {
         val dicName = if (isTC007) "TC007" else CommUtils.getAppName()
         val fileName = "${dicName}_${System.currentTimeMillis()}.jpg"
-
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val values = ContentValues().apply {
@@ -64,10 +59,8 @@ object ImageUtils {
         } catch (e: Exception) {
             XLog.e("Failed to save image: ${e.message}")
         }
-
         return fileName.removeSuffix(".jpg")
     }
-
     fun saveImageToApp(bitmap: Bitmap): String {
         val saveFile = File(ContextProvider.getContext().cacheDir, "PinP_${System.currentTimeMillis()}.jpg")
         FileOutputStream(saveFile).use { fos ->
@@ -76,7 +69,6 @@ object ImageUtils {
         }
         return saveFile.absolutePath
     }
-
     fun saveLiteFrame(bs: ByteArray, capital: ByteArray, nuct: ByteArray, name: String) {
         try {
             val dir = lineIrGalleryDir
@@ -89,7 +81,6 @@ object ImageUtils {
             XLog.e(": ${e.message}")
         }
     }
-
     fun saveFrame(bs: ByteArray, capital: ByteArray, name: String) {
         try {
             val dir = lineIrGalleryDir
@@ -102,7 +93,6 @@ object ImageUtils {
             XLog.e(": ${e.message}")
         }
     }
-
     fun saveOneFrameAGRB(bs: ByteArray, name: String) {
         try {
             val dir = lineIrGalleryDir

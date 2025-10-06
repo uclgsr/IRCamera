@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.user.compose
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -9,7 +8,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-
 @Composable
 fun ListItemComponent(
     leftText: String,
@@ -46,7 +44,6 @@ fun ListItemComponent(
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                         }
-
                         leftIconRes != null -> {
                             Icon(
                                 painter = painterResource(id = leftIconRes),
@@ -57,7 +54,6 @@ fun ListItemComponent(
                             Spacer(modifier = Modifier.width(12.dp))
                         }
                     }
-
                     // Left text
                     Text(
                         text = leftText,
@@ -66,7 +62,6 @@ fun ListItemComponent(
                         fontWeight = FontWeight.Medium
                     )
                 }
-
                 // Right text
                 rightText?.let {
                     Text(
@@ -77,7 +72,6 @@ fun ListItemComponent(
                 }
             }
         }
-
         if (onClick != null) {
             Card(
                 onClick = onClick,
@@ -97,7 +91,6 @@ fun ListItemComponent(
                 content()
             }
         }
-
         // Line separator
         if (showLine) {
             HorizontalDivider(

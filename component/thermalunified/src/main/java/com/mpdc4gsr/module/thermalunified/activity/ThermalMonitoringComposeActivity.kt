@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -24,26 +23,21 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-
 class ThermalMonitoringComposeActivity : BaseComposeActivity<BaseViewModel>() {
-
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, ThermalMonitoringComposeActivity::class.java))
         }
     }
-
     override fun createViewModel(): BaseViewModel {
         return viewModels<BaseViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: BaseViewModel) {
         var selectedTab by remember { mutableStateOf(0) }
         var isMonitoring by remember { mutableStateOf(false) }
         var showAlertDialog by remember { mutableStateOf(false) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -97,7 +91,6 @@ class ThermalMonitoringComposeActivity : BaseComposeActivity<BaseViewModel>() {
                 )
             }
         }
-
         if (showAlertDialog) {
             AlertConfigurationDialog(
                 onDismiss = { showAlertDialog = false },
@@ -109,7 +102,6 @@ class ThermalMonitoringComposeActivity : BaseComposeActivity<BaseViewModel>() {
         }
     }
 }
-
 @Composable
 private fun MonitoringContent(
     selectedTab: Int,
@@ -121,13 +113,11 @@ private fun MonitoringContent(
             isMonitoring = isMonitoring,
             modifier = modifier
         )
-
         1 -> ThermalAnalyticsTab(modifier = modifier)
         2 -> AlertsHistoryTab(modifier = modifier)
         3 -> MonitoringSettingsTab(modifier = modifier)
     }
 }
-
 @Composable
 private fun RealTimeMonitoringTab(
     isMonitoring: Boolean,
@@ -144,7 +134,6 @@ private fun RealTimeMonitoringTab(
             isMonitoring = isMonitoring,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         // Temperature zones
         Text(
             text = "Temperature Zones",
@@ -152,7 +141,6 @@ private fun RealTimeMonitoringTab(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 12.dp)
         )
-
         val temperatureZones = getMockTemperatureZones()
         temperatureZones.forEach { zone ->
             TemperatureZoneCard(
@@ -160,7 +148,6 @@ private fun RealTimeMonitoringTab(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
-
         // Recent alerts
         Text(
             text = "Recent Alerts",
@@ -168,7 +155,6 @@ private fun RealTimeMonitoringTab(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
         )
-
         val recentAlerts = getMockAlerts()
         if (recentAlerts.isEmpty()) {
             Card(
@@ -194,7 +180,6 @@ private fun RealTimeMonitoringTab(
         }
     }
 }
-
 @Composable
 private fun MonitoringStatusCard(
     isMonitoring: Boolean,
@@ -229,7 +214,6 @@ private fun MonitoringStatusCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             if (isMonitoring) {
                 Box(
                     modifier = Modifier
@@ -241,7 +225,6 @@ private fun MonitoringStatusCard(
         }
     }
 }
-
 @Composable
 private fun TemperatureZoneCard(
     zone: TemperatureZone,
@@ -269,9 +252,7 @@ private fun TemperatureZoneCard(
                     .clip(CircleShape)
                     .background(getZoneStatusColor(zone.status))
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = zone.name,
@@ -284,7 +265,6 @@ private fun TemperatureZoneCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             Column(
                 horizontalAlignment = Alignment.End
             ) {
@@ -304,7 +284,6 @@ private fun TemperatureZoneCard(
         }
     }
 }
-
 @Composable
 private fun AlertCard(
     alert: ThermalAlert,
@@ -338,9 +317,7 @@ private fun AlertCard(
                 },
                 modifier = Modifier.size(24.dp)
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = alert.message,
@@ -356,7 +333,6 @@ private fun AlertCard(
         }
     }
 }
-
 @Composable
 private fun ThermalAnalyticsTab(
     modifier: Modifier = Modifier
@@ -386,7 +362,6 @@ private fun ThermalAnalyticsTab(
         )
     }
 }
-
 @Composable
 private fun AlertsHistoryTab(
     modifier: Modifier = Modifier
@@ -402,7 +377,6 @@ private fun AlertsHistoryTab(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -413,7 +387,6 @@ private fun AlertsHistoryTab(
         }
     }
 }
-
 @Composable
 private fun MonitoringSettingsTab(
     modifier: Modifier = Modifier
@@ -443,7 +416,6 @@ private fun MonitoringSettingsTab(
         )
     }
 }
-
 @Composable
 private fun MonitoringNavigationBar(
     selectedTab: Int,
@@ -457,7 +429,6 @@ private fun MonitoringNavigationBar(
             "Alerts" to Icons.Default.Notifications,
             "Settings" to Icons.Default.Settings
         )
-
         tabs.forEachIndexed { index, (label, icon) ->
             NavigationBarItem(
                 selected = selectedTab == index,
@@ -468,7 +439,6 @@ private fun MonitoringNavigationBar(
         }
     }
 }
-
 @Composable
 private fun AlertConfigurationDialog(
     onDismiss: () -> Unit,
@@ -477,7 +447,6 @@ private fun AlertConfigurationDialog(
     var highTempThreshold by remember { mutableStateOf(80f) }
     var lowTempThreshold by remember { mutableStateOf(0f) }
     var enableNotifications by remember { mutableStateOf(true) }
-
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Alert Configuration") },
@@ -495,9 +464,7 @@ private fun AlertConfigurationDialog(
                     onValueChange = { highTempThreshold = it },
                     valueRange = 30f..150f
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Text(
                     text = "Low Temperature Alert: ${lowTempThreshold.toInt()}°C",
                     style = MaterialTheme.typography.labelMedium,
@@ -508,9 +475,7 @@ private fun AlertConfigurationDialog(
                     onValueChange = { lowTempThreshold = it },
                     valueRange = -20f..30f
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -548,41 +513,35 @@ private fun AlertConfigurationDialog(
         }
     )
 }
-
 private fun getZoneStatusColor(status: String) = when (status) {
     "normal" -> Color(0xFF4CAF50)
     "warning" -> Color(0xFFFF9800)
     "critical" -> Color(0xFFE53E3E)
     else -> Color(0xFF9E9E9E)
 }
-
 private fun getTemperatureColor(current: Float, threshold: Float) = when {
     current > threshold * 1.1f -> Color(0xFFE53E3E)
     current > threshold * 0.9f -> Color(0xFFFF9800)
     else -> Color(0xFF4CAF50)
 }
-
 data class TemperatureZone(
     val name: String,
     val currentTemp: Float,
     val threshold: Float,
     val status: String
 )
-
 data class ThermalAlert(
     val message: String,
     val zone: String,
     val timestamp: String,
     val severity: String
 )
-
 private fun getMockTemperatureZones() = listOf(
     TemperatureZone("Zone A - Engine Bay", 76.5f, 80.0f, "warning"),
     TemperatureZone("Zone B - Electronics", 42.3f, 60.0f, "normal"),
     TemperatureZone("Zone C - Exhaust", 95.2f, 90.0f, "critical"),
     TemperatureZone("Zone D - Ambient", 24.8f, 40.0f, "normal")
 )
-
 private fun getMockAlerts() = listOf(
     ThermalAlert("Temperature exceeded threshold", "Zone C - Exhaust", "2 min ago", "high"),
     ThermalAlert("Warning temperature detected", "Zone A - Engine Bay", "5 min ago", "medium"),

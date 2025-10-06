@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.compose.components
-
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,7 +19,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 data class MenuTabItem(
     @DrawableRes val iconRes: Int? = null,
     val icon: ImageVector? = null,
@@ -33,7 +31,6 @@ data class MenuTabItem(
         }
     }
 }
-
 @Composable
 fun MenuTabBar(
     items: List<MenuTabItem>,
@@ -62,7 +59,6 @@ fun MenuTabBar(
         }
     }
 }
-
 @Composable
 private fun MenuTabItem(
     @DrawableRes iconRes: Int? = null,
@@ -97,7 +93,6 @@ private fun MenuTabItem(
                         tint = if (isSelected) Color.White else Color.Gray
                     )
                 }
-
                 iconRes != null -> {
                     Image(
                         painter = painterResource(id = iconRes),
@@ -112,7 +107,6 @@ private fun MenuTabItem(
                 }
             }
         }
-
         if (showLabel && label.isNotEmpty()) {
             Text(
                 text = label,
@@ -123,7 +117,6 @@ private fun MenuTabItem(
         }
     }
 }
-
 @Composable
 fun MenuFirstTab(
     selectedIndex: Int,
@@ -132,7 +125,6 @@ fun MenuFirstTab(
     modifier: Modifier = Modifier
 ) {
     var currentSelected by remember(selectedIndex) { mutableStateOf(selectedIndex) }
-
     val menuItems = remember(isObserveMode) {
         if (isObserveMode) {
             listOf(
@@ -166,7 +158,6 @@ fun MenuFirstTab(
             )
         }
     }
-
     MenuTabBar(
         items = menuItems,
         selectedIndex = currentSelected,
@@ -178,7 +169,6 @@ fun MenuFirstTab(
         showLabels = false
     )
 }
-
 @Composable
 fun MenuSecondTab(
     selectedIndex: Int,

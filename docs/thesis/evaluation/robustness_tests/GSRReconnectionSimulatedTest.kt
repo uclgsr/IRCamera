@@ -1,5 +1,4 @@
 package thesis_evaluation.robustness_tests
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,23 +24,19 @@ import mpdc4gsr.feature.network.data.RecordingController
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-
 class GSRReconnectionSimulatedTest : ComponentActivity() {
-
     companion object {
         private const val TAG = "GSRReconnectionSimulatedTest"
         private const val TEST_DURATION_SECONDS = 60
         private const val DISCONNECT_AT_SECONDS = 20
         private const val RECONNECT_AT_SECONDS = 40
     }
-
     data class TestEvent(
         val timestamp: Long,
         val eventType: String,
         val description: String,
         val connectionState: String
     )
-
     data class TestMetrics(
         val totalTestDuration: Long = 0,
         val disconnectDuration: Long = 0,
@@ -50,23 +45,18 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
         val eventsLogged: Int = 0,
         val testPassed: Boolean = false
     )
-
     private var gsrRecorder: GSRSensorRecorder? = null
     private var recordingController: RecordingController? = null
     private var testOutputFile: File? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initializeTestComponents()
-
         setContent {
             LibUnifiedTheme {
                 GSRReconnectionSimulatedTestScreen()
             }
         }
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun GSRReconnectionSimulatedTestScreen() {
@@ -76,7 +66,6 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
         var testEvents by remember { mutableStateOf(listOf<TestEvent>()) }
         var testMetrics by remember { mutableStateOf(TestMetrics()) }
         var testStatus by remember { mutableStateOf("Ready to start test") }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -114,9 +103,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -140,9 +127,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 if (testMetrics.eventsLogged > 0) {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -168,10 +153,8 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                             )
                         }
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 if (testEvents.isNotEmpty()) {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -190,10 +173,8 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                             }
                         }
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 Button(
                     onClick = {
                         if (!isTestRunning) {
@@ -225,7 +206,6 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(if (isTestRunning) "Test Running..." else "Start Test")
                 }
-
                 if (testOutputFile != null) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
@@ -237,7 +217,6 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             }
         }
     }
-
     @Composable
     private fun MetricRow(
         label: String,
@@ -259,7 +238,6 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             )
         }
     }
-
     @Composable
     private fun EventLogItem(event: TestEvent) {
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
@@ -289,22 +267,18 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             )
         }
     }
-
     private fun initializeTestComponents() {
         try {
             recordingController = RecordingController(this, this)
             gsrRecorder = GSRSensorRecorder(this, recordingController = recordingController!!)
-
             val outputDir = File(getExternalFilesDir(null), "thesis_evaluation")
             outputDir.mkdirs()
             testOutputFile = File(outputDir, "gsr_reconnection_simulated_${System.currentTimeMillis()}.log")
-
             AppLogger.i(TAG, "Test components initialized successfully")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize test components", e)
         }
     }
-
     private suspend fun runTest(
         onProgress: (Float, Int, String) -> Unit,
         onEvent: (TestEvent) -> Unit,
@@ -315,16 +289,12 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
         var disconnectTime = 0L
         var reconnectTime = 0L
         var reconnectionAttempts = 0
-
         logTestEvent("TEST_START", "GSR reconnection test started", "INITIALIZING", onEvent)
         AppLogger.i(TAG, "Starting GSR reconnection simulated test")
-
         for (second in 0..TEST_DURATION_SECONDS) {
             delay(1000)
-
             val progress = second.toFloat() / TEST_DURATION_SECONDS
             var status = "Test running: ${second}s / ${TEST_DURATION_SECONDS}s"
-
             when (second) {
                 DISCONNECT_AT_SECONDS -> {
                     status = "Simulating GSR disconnection..."
@@ -338,7 +308,6 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                     )
                     AppLogger.w(TAG, "GSR disconnected at $second seconds")
                 }
-
                 in (DISCONNECT_AT_SECONDS + 1)..RECONNECT_AT_SECONDS -> {
                     status = "GSR disconnected - attempting reconnection..."
                     if (second % 5 == 0) {
@@ -352,7 +321,6 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                         AppLogger.i(TAG, "Reconnection attempt $reconnectionAttempts")
                     }
                 }
-
                 RECONNECT_AT_SECONDS -> {
                     status = "GSR reconnected successfully"
                     reconnectTime = System.currentTimeMillis()
@@ -366,9 +334,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                     AppLogger.i(TAG, "GSR reconnected at $second seconds")
                 }
             }
-
             onProgress(progress, second, status)
-
             val dataGapDuration = if (reconnectTime > 0) reconnectTime - disconnectTime else 0
             onMetrics(
                 TestMetrics(
@@ -381,17 +347,14 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                 )
             )
         }
-
         val testEndTime = System.currentTimeMillis()
         val totalDuration = (testEndTime - testStartTime) / 1000
-
         logTestEvent(
             "TEST_COMPLETE",
             "Test completed successfully. Total duration: ${totalDuration}s",
             "COMPLETED",
             onEvent
         )
-
         onMetrics(
             TestMetrics(
                 totalTestDuration = TEST_DURATION_SECONDS.toLong(),
@@ -402,7 +365,6 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                 testPassed = true
             )
         )
-
         writeTestReport(
             testStartTime,
             testEndTime,
@@ -410,11 +372,9 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             reconnectTime,
             reconnectionAttempts
         )
-
         AppLogger.i(TAG, "Test completed successfully")
         onComplete()
     }
-
     private fun logTestEvent(
         eventType: String,
         description: String,
@@ -428,20 +388,16 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             connectionState = connectionState
         )
         onEvent(event)
-
         testOutputFile?.appendText(
             "${formatTimestamp(event.timestamp)} | $eventType | $connectionState | $description\n"
         )
     }
-
     private fun simulateDisconnection() {
         AppLogger.w(TAG, "Simulating GSR disconnection")
     }
-
     private fun simulateReconnection() {
         AppLogger.i(TAG, "Simulating GSR reconnection")
     }
-
     private fun writeTestReport(
         testStartTime: Long,
         testEndTime: Long,
@@ -459,13 +415,11 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             testOutputFile?.appendText("Data Gap: ${reconnectTime - disconnectTime}ms\n")
             testOutputFile?.appendText("Reconnection Attempts: $reconnectionAttempts\n")
             testOutputFile?.appendText("Result: PASSED\n")
-
             AppLogger.i(TAG, "Test report written to ${testOutputFile?.absolutePath}")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to write test report", e)
         }
     }
-
     private fun formatTimestamp(timestamp: Long): String {
         return SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault()).format(Date(timestamp))
     }

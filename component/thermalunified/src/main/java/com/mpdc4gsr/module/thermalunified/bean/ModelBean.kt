@@ -1,10 +1,8 @@
 package com.mpdc4gsr.module.thermalunified.bean
-
 data class ModelBean(
     var defaultModel: DataBean,
     var myselfModel: ArrayList<DataBean> = arrayListOf(),
 )
-
 data class DataBean(
     var id: Int = 1,
     var name: String = "1",

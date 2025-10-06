@@ -1,5 +1,4 @@
 package com.mpdc4gsr.libunified.app.view
-
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -8,12 +7,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
-
 class ColorSelectView : View {
     companion object {
-
         private const val DEFAULT_STROKE_WIDTH = 3
-
         private val ROW_COLOR_1 =
             intArrayOf(
                 0xFFFEFFFE.toInt(),
@@ -164,7 +160,6 @@ class ColorSelectView : View {
                 0xFFF6FADB.toInt(),
                 0xFFDEEED4.toInt()
             )
-
         private val COLOR =
             arrayOf(
                 ROW_COLOR_1,
@@ -178,7 +173,6 @@ class ColorSelectView : View {
                 ROW_COLOR_9,
                 ROW_COLOR_10
             )
-
         private fun getRowFromColor(
             @ColorInt color: Int,
         ): Int =
@@ -195,7 +189,6 @@ class ColorSelectView : View {
                 0xFFCBF0FF.toInt(), 0xFFD2E2FE.toInt(), 0xFFD8C9FE.toInt(), 0xFFEFCAFE.toInt(), 0xFFF9D3E0.toInt(), 0xFFFFDAD8.toInt(), 0xFFFFE2D6.toInt(), 0xFFFEECD4.toInt(), 0xFFFEF1D5.toInt(), 0xFFFDFBDD.toInt(), 0xFFF6FADB.toInt(), 0xFFDEEED4.toInt() -> 9
                 else -> -1
             }
-
         private fun getColumnFromColor(
             @ColorInt color: Int,
         ): Int =
@@ -215,21 +208,17 @@ class ColorSelectView : View {
                 else -> -1
             }
     }
-
     var isNeedStroke: Boolean = false
         set(value) {
             invalidate()
             field = value
         }
-
     var onSelectListener: ((color: Int) -> Unit)? = null
-
     fun reset() {
         currentRow = -1
         currentColumn = -1
         invalidate()
     }
-
     fun selectColor(
         @ColorInt color: Int,
     ) {
@@ -237,30 +226,23 @@ class ColorSelectView : View {
         currentColumn = getColumnFromColor(color)
         invalidate()
     }
-
     private var currentRow: Int = -1
     private var currentColumn: Int = -1
-
     private val widthPixels: Int
     private val density: Float
     private val strokeWidth: Int
-
     private val path = Path()
     private val itemPaint = Paint()
     private val itemSelectPaint = Paint()
     private val strokePaint = Paint()
-
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
         defStyleAttr,
         0
     )
-
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -275,21 +257,17 @@ class ColorSelectView : View {
         widthPixels = context.resources.displayMetrics.widthPixels
         density = context.resources.displayMetrics.density
         strokeWidth = dp2px(DEFAULT_STROKE_WIDTH.toFloat())
-
         itemPaint.isAntiAlias = true
         itemPaint.style = Paint.Style.FILL
-
         itemSelectPaint.isAntiAlias = true
         itemSelectPaint.style = Paint.Style.STROKE
         itemSelectPaint.color = 0xffffffff.toInt()
         itemSelectPaint.strokeWidth = strokeWidth.toFloat()
-
         strokePaint.isAntiAlias = true
         strokePaint.style = Paint.Style.STROKE
         strokePaint.color = 0xff999999.toInt()
         strokePaint.strokeWidth = strokeWidth / 2f
     }
-
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
@@ -298,11 +276,9 @@ class ColorSelectView : View {
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
-
         val itemSize =
             ((if (widthMode == MeasureSpec.UNSPECIFIED) widthPixels else widthSize - strokeWidth) / 12f).toInt()
         val width = itemSize * 12 + strokeWidth
-
         val wantHeight = itemSize * 10 + strokeWidth
         val height =
             when (heightMode) {
@@ -313,13 +289,11 @@ class ColorSelectView : View {
             }
         setMeasuredDimension(width, height)
     }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val itemSize = (measuredWidth - strokeWidth) / 12f
         val connerSize = itemSize * 8f / 26f
         val margin = strokeWidth / 2f
-
         if (isNeedStroke) {
             path.rewind()
             path.moveTo(margin, margin + connerSize)
@@ -338,7 +312,6 @@ class ColorSelectView : View {
             path.close()
             canvas.drawPath(path, strokePaint)
         }
-
         for (row in 0 until 10) {
             for (column in 0 until 12) {
                 itemPaint.color = COLOR[row][column]
@@ -400,7 +373,6 @@ class ColorSelectView : View {
                 }
             }
         }
-
         if (currentRow >= 0 && currentColumn >= 0) {
             val left = margin + itemSize * currentColumn
             val top = margin + itemSize * currentRow
@@ -439,42 +411,35 @@ class ColorSelectView : View {
             canvas?.drawPath(path, itemSelectPaint)
         }
     }
-
     private var downRow = 0
     private var downColumn = 0
-
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event == null) {
             return false
         }
         val x = event.x.toInt() - strokeWidth / 2
         val y = event.y.toInt() - strokeWidth / 2
-
         val itemSize = (measuredWidth - strokeWidth) / 12
         val column =
             (x / itemSize + (if (x % itemSize > 0) 1 else 0) - 1).coerceAtMost(11).coerceAtLeast(0)
         val row =
             (y / itemSize + (if (y % itemSize > 0) 1 else 0) - 1).coerceAtMost(9).coerceAtLeast(0)
-
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 downRow = row
                 downColumn = column
             }
-
             MotionEvent.ACTION_UP -> {
                 if (row == downRow && column == downColumn) {
                     currentRow = row
                     currentColumn = column
                     invalidate()
-
                     onSelectListener?.invoke(COLOR[row][column])
                 }
             }
         }
         return true
     }
-
     private fun dp2px(dpValue: Float): Int {
         return (dpValue * density + 0.5f).toInt()
     }

@@ -1,7 +1,5 @@
 package mpdc4gsr.feature.thermal.data
-
 import androidx.compose.ui.graphics.Color
-
 enum class ThermalPalette(
     val displayName: String,
     val colors: List<Color>
@@ -15,13 +13,11 @@ enum class ThermalPalette(
     LAVA("Lava", listOf(Color.Black, Color.Red, Color(0xFFFF4500), Color(0xFFFFA500))),
     CONTRAST("Contrast", listOf(Color.Black, Color.White))
 }
-
 enum class TemperatureUnit(val displayName: String, val symbol: String) {
     CELSIUS("Celsius", "C"),
     FAHRENHEIT("Fahrenheit", "F"),
     KELVIN("Kelvin", "K")
 }
-
 enum class MeasurementMode(val displayName: String) {
     SPOT("Spot Measurement"),
     AREA("Area Measurement"),

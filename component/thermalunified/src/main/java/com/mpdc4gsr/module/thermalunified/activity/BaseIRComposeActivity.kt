@@ -1,5 +1,4 @@
 package com.mpdc4gsr.module.thermalunified.activity
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,20 +17,16 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
-
 class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
         var connectionStatus by remember { mutableStateOf("Disconnected") }
         var cameraReady by remember { mutableStateOf(false) }
         var thermalMode by remember { mutableIntStateOf(1) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -87,7 +82,6 @@ class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         cameraReady = cameraReady,
                         modifier = Modifier.fillMaxWidth()
                     )
-
                     // Main thermal view
                     Box(
                         modifier = Modifier
@@ -98,7 +92,6 @@ class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         ThermalCameraSurface(
                             modifier = Modifier.fillMaxSize()
                         )
-
                         // Control overlay
                         ThermalControlOverlay(
                             thermalMode = thermalMode,
@@ -111,7 +104,6 @@ class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             }
         }
-
         // Initialize camera connection
         LaunchedEffect(Unit) {
             kotlinx.coroutines.delay(2000L)
@@ -120,7 +112,6 @@ class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
-
 @Composable
 private fun ThermalStatusBar(
     connectionStatus: String,
@@ -159,7 +150,6 @@ private fun ThermalStatusBar(
                     fontWeight = FontWeight.Medium
                 )
             }
-
             // Camera info
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -172,7 +162,6 @@ private fun ThermalStatusBar(
         }
     }
 }
-
 @Composable
 private fun StatusItem(
     label: String,
@@ -194,7 +183,6 @@ private fun StatusItem(
         )
     }
 }
-
 @Composable
 private fun ThermalCameraSurface(
     modifier: Modifier = Modifier
@@ -235,7 +223,6 @@ private fun ThermalCameraSurface(
         }
     }
 }
-
 @Composable
 private fun ThermalControlOverlay(
     thermalMode: Int,
@@ -260,20 +247,17 @@ private fun ThermalControlOverlay(
                 selectedMode = thermalMode,
                 onModeSelected = onModeChange
             )
-
             // Quick actions
             QuickActionButtons()
         }
     }
 }
-
 @Composable
 private fun ThermalModeSelector(
     selectedMode: Int,
     onModeSelected: (Int) -> Unit
 ) {
     val modes = getThermalModes()
-
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -283,7 +267,6 @@ private fun ThermalModeSelector(
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -304,7 +287,6 @@ private fun ThermalModeSelector(
         }
     }
 }
-
 @Composable
 private fun QuickActionButtons() {
     Row(
@@ -325,7 +307,6 @@ private fun QuickActionButtons() {
             },
             modifier = Modifier.weight(1f)
         )
-
         QuickActionButton(
             icon = Icons.Default.Videocam,
             text = "Record",
@@ -339,7 +320,6 @@ private fun QuickActionButtons() {
             },
             modifier = Modifier.weight(1f)
         )
-
         QuickActionButton(
             icon = Icons.Default.Palette,
             text = "Palette",
@@ -353,7 +333,6 @@ private fun QuickActionButtons() {
             },
             modifier = Modifier.weight(1f)
         )
-
         QuickActionButton(
             icon = Icons.Default.Tune,
             text = "Adjust",
@@ -369,7 +348,6 @@ private fun QuickActionButtons() {
         )
     }
 }
-
 @Composable
 private fun QuickActionButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -401,7 +379,6 @@ private fun QuickActionButton(
         }
     }
 }
-
 private fun getThermalModes(): List<String> {
     return listOf("Standard", "High Gain", "Low Gain", "Manual")
 }

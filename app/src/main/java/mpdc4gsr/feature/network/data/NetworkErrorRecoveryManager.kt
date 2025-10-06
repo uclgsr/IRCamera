@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.network.data
-
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -11,7 +10,6 @@ import kotlinx.coroutines.SupervisorJob
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
-
 class NetworkErrorRecoveryManager(
     private val context: Context,
     private val networkClient: NetworkClient,
@@ -26,78 +24,60 @@ class NetworkErrorRecoveryManager(
         private const val RAPID_FAILURE_THRESHOLD = 3
         private const val RAPID_FAILURE_WINDOW_MS = 60000L
     }
-
     private val recoveryJob = SupervisorJob()
     private val recoveryScope = CoroutineScope(Dispatchers.IO + recoveryJob)
-
     private val isRecoveryActive = AtomicBoolean(false)
     private val reconnectionAttempts = AtomicInteger(0)
     private val rapidFailureCount = AtomicInteger(0)
     private var lastFailureTime = 0L
     private var lastKnownGoodController: NetworkClient.ControllerInfo? = null
     private var healthCheckJob: Job? = null
-
     private val totalBytesTransferred = AtomicLong(0)
     private val latencySum = AtomicLong(0)
     private val latencyCount = AtomicLong(0)
     private var transferStartTime = System.currentTimeMillis()
-
     interface RecoveryEventListener {
         fun onRecoveryStarted(reason: String)
-
         fun onRecoveryAttempt(
             attempt: Int,
             maxAttempts: Int,
         )
-
         fun onRecoverySuccess(controller: NetworkClient.ControllerInfo)
-
         fun onRecoveryFailed(reason: String)
-
         fun onConnectionHealthChanged(isHealthy: Boolean)
-
         fun onRapidFailureDetected(failureCount: Int)
     }
-
     private var eventListener: RecoveryEventListener? = null
-
     fun setEventListener(listener: RecoveryEventListener?) {
         eventListener = listener
     }
-
     fun enableAutoRecovery() {
         if (isRecoveryActive.get()) {
             AppLogger.w(TAG, "Auto recovery already enabled")
             return
         }
-
         isRecoveryActive.set(true)
         AppLogger.i(TAG, "Network error recovery enabled")
     }
-
     fun disableAutoRecovery() {
         if (!isRecoveryActive.get()) {
             AppLogger.w(TAG, "Auto recovery not active")
             return
         }
-
         isRecoveryActive.set(false)
         AppLogger.i(TAG, "Network error recovery disabled")
     }
-
     fun recordSuccessfulConnection(controller: NetworkClient.ControllerInfo) {
         lastKnownGoodController = controller
         reconnectionAttempts.set(0)
         rapidFailureCount.set(0)
         AppLogger.i(TAG, "Recorded successful connection: ${controller.deviceName}")
     }
-
     fun handleNetworkError(
         operation: String,
         error: String,
     ) {
         AppLogger.w(TAG, "Network error in $operation: $error")
-
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastFailureTime < RAPID_FAILURE_WINDOW_MS) {
             rapidFailureCount.incrementAndGet()
@@ -105,21 +85,17 @@ class NetworkErrorRecoveryManager(
             rapidFailureCount.set(1)
         }
         lastFailureTime = currentTime
-
         if (rapidFailureCount.get() >= RAPID_FAILURE_THRESHOLD) {
             eventListener?.onRapidFailureDetected(rapidFailureCount.get())
         }
     }
-
     fun recordDataTransfer(bytes: Long) {
         totalBytesTransferred.addAndGet(bytes)
     }
-
     fun recordLatency(latencyMs: Long) {
         latencySum.addAndGet(latencyMs)
         latencyCount.incrementAndGet()
     }
-
     fun getAverageLatency(): Long {
         val count = latencyCount.get()
         return if (count > 0) {
@@ -128,7 +104,6 @@ class NetworkErrorRecoveryManager(
             0L
         }
     }
-
     fun getThroughputKBps(): Double {
         val elapsedTimeMs = System.currentTimeMillis() - transferStartTime
         return if (elapsedTimeMs > 0) {
@@ -137,7 +112,6 @@ class NetworkErrorRecoveryManager(
             0.0
         }
     }
-
     fun cleanup() {
         isRecoveryActive.set(false)
         healthCheckJob?.cancel()

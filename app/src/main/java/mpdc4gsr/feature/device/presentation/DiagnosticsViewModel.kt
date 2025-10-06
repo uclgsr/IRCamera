@@ -1,5 +1,4 @@
 package mpdc4gsr.feature.device.presentation
-
 import android.app.Application
 import android.bluetooth.BluetoothManager
 import android.content.Context
@@ -17,56 +16,42 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Diagnostics ViewModel - MVVM Integration
- * Provides real-time system diagnostics and sensor status monitoring
- */
 class DiagnosticsViewModel(context: Context) : BaseViewModel() {
-
     private val context: Context = context.applicationContext
-
     private val _systemStatus = MutableStateFlow(SystemStatus())
     val systemStatus: StateFlow<SystemStatus> = _systemStatus.asStateFlow()
-
     private val _sensorStatus = MutableStateFlow(SensorStatus())
     val sensorStatus: StateFlow<SensorStatus> = _sensorStatus.asStateFlow()
-
     data class SystemStatus(
         val systemHealth: String = "Checking...",
         val battery: String = "Checking...",
         val temperature: String = "Checking...",
         val memoryUsage: String = "Checking..."
     )
-
     data class SensorStatus(
         val gsrSensor: String = "Checking...",
         val thermalCamera: String = "Checking...",
         val rgbCamera: String = "Checking..."
     )
-
     companion object {
         private const val TC001_VENDOR_ID = 0x0BDA
         private const val TC001_PRODUCT_ID = 0x5830
         private const val TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss"
     }
-
     init {
         updateSystemStatus()
         updateSensorStatus()
     }
-
     fun initialize() {
         updateSystemStatus()
         updateSensorStatus()
     }
-
     private fun updateSystemStatus() {
         viewModelScope.launch {
             try {
                 val batteryStatus = getBatteryLevel()
                 val memoryInfo = getMemoryInfo()
                 val temperature = getDeviceTemperature()
-
                 _systemStatus.value = SystemStatus(
                     systemHealth = "Good",
                     battery = batteryStatus,
@@ -83,13 +68,11 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             }
         }
     }
-
     private fun updateSensorStatus() {
         viewModelScope.launch {
             val gsrStatus = checkGSRSensorStatus()
             val thermalStatus = checkThermalCameraStatus()
             val rgbStatus = checkRGBCameraStatus()
-
             _sensorStatus.value = SensorStatus(
                 gsrSensor = gsrStatus,
                 thermalCamera = thermalStatus,
@@ -97,7 +80,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             )
         }
     }
-
     private suspend fun checkGSRSensorStatus(): String {
         return try {
             val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
@@ -113,7 +95,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             "Error: ${e.message}"
         }
     }
-
     private suspend fun checkThermalCameraStatus(): String {
         return try {
             val usbManager = context.getSystemService(Context.USB_SERVICE) as? android.hardware.usb.UsbManager
@@ -134,7 +115,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             "Error: ${e.message}"
         }
     }
-
     private suspend fun checkRGBCameraStatus(): String {
         return try {
             val cameraManager =
@@ -153,7 +133,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             "Error: ${e.message}"
         }
     }
-
     private fun getBatteryLevel(): String {
         return try {
             val batteryStatus = context.registerReceiver(
@@ -162,7 +141,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             )
             val level = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
             val scale = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
-
             if (level >= 0 && scale > 0) {
                 val batteryPct = level * 100 / scale
                 "$batteryPct%"
@@ -173,7 +151,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             "Error"
         }
     }
-
     private fun getMemoryInfo(): String {
         return try {
             val runtime = Runtime.getRuntime()
@@ -184,7 +161,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             "Error"
         }
     }
-
     private fun getDeviceTemperature(): String {
         return try {
             val tempFile = File("/sys/class/thermal/thermal_zone0/temp")
@@ -202,20 +178,17 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             "N/A"
         }
     }
-
     fun runFullDiagnostics() {
         viewModelScope.launch {
             updateSystemStatus()
             updateSensorStatus()
         }
     }
-
     fun testAllSensors() {
         viewModelScope.launch {
             updateSensorStatus()
         }
     }
-
     fun exportDiagnosticLogs() {
         viewModelScope.launch {
             try {
@@ -246,7 +219,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             }
         }
     }
-
     private fun getCurrentTimestamp(): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             java.time.format.DateTimeFormatter.ofPattern(TIMESTAMP_FORMAT, Locale.US)
