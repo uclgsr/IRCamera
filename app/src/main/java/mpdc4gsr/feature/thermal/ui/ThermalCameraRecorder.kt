@@ -508,6 +508,7 @@ class ThermalCameraRecorder(
                 )
                 isSimulationMode = true
                 delay(INITIALIZATION_RETRY_DELAY_MS)
+                emitError(
                     ErrorType.DEVICE_ERROR,
                     "No thermal camera detected - using simulation mode"
                 )
