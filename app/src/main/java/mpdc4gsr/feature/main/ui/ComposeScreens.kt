@@ -12,15 +12,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.mpdc4gsr.libunified.app.compose.theme.Spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainDashboardScreen(navController: NavController) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(Spacing.normal),
+        verticalArrangement = Arrangement.spacedBy(Spacing.normal)
     ) {
         item {
             Text(
@@ -49,15 +49,14 @@ fun ThermalCameraScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(Spacing.normal),
+        verticalArrangement = Arrangement.spacedBy(Spacing.normal)
     ) {
         Text(
             text = "Thermal Camera",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        // Thermal camera preview would go here
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -70,7 +69,6 @@ fun ThermalCameraScreen(navController: NavController) {
                 Text("Thermal Camera View")
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
         ThermalControlsPanel()
     }
 }
@@ -90,10 +88,9 @@ fun GSRSensorScreen(navController: NavController) {
 @Composable
 private fun GSRSensorScreenDeprecated(navController: NavController) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(Spacing.normal),
+        verticalArrangement = Arrangement.spacedBy(Spacing.normal)
     ) {
         item {
             Text(
@@ -120,10 +117,9 @@ private fun GSRSensorScreenDeprecated(navController: NavController) {
 @Composable
 fun SensorDashboardScreen(navController: NavController) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(Spacing.normal),
+        verticalArrangement = Arrangement.spacedBy(Spacing.normal)
     ) {
         item {
             Text(
@@ -150,10 +146,9 @@ fun SensorDashboardScreen(navController: NavController) {
 @Composable
 fun SettingsScreen(navController: NavController) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(Spacing.normal),
+        verticalArrangement = Arrangement.spacedBy(Spacing.normal)
     ) {
         item {
             Text(
@@ -190,14 +185,14 @@ fun ConnectionStatusCard() {
         )
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
         ) {
             Text(
                 text = "Connection Status",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -218,9 +213,10 @@ fun ConnectionStatusItem(name: String, connected: Boolean) {
         Icon(
             imageVector = if (connected) Icons.Default.CheckCircle else Icons.Default.Error,
             contentDescription = if (connected) "$name Connected" else "$name Disconnected",
-            tint = if (connected) Color.Green else Color.Red
+            tint = if (connected) Color.Green else Color.Red,
+            modifier = Modifier.size(Spacing.large)
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(Spacing.extraSmall))
         Text(
             text = name,
             style = MaterialTheme.typography.bodySmall
@@ -239,47 +235,52 @@ fun QuickActionsCard(navController: NavController) {
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
         ) {
             Text(
                 text = "Quick Actions",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small)
             ) {
                 Button(
                     onClick = { navController.navigate("thermal") },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = Spacing.touchTarget)
                 ) {
                     Icon(Icons.Default.Camera, contentDescription = "Thermal Camera")
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(Spacing.extraSmall))
                     Text("Thermal")
                 }
                 Button(
                     onClick = { navController.navigate("gsr") },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = Spacing.touchTarget)
                 ) {
                     Icon(Icons.Default.Sensors, contentDescription = "GSR Sensor")
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(Spacing.extraSmall))
                     Text("GSR")
                 }
                 OutlinedButton(
                     onClick = {
-                        // TODO: Start recording functionality
                         android.widget.Toast.makeText(
                             navController.context,
                             "Start recording",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = Spacing.touchTarget)
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = "Start Recording")
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(Spacing.extraSmall))
                     Text("Record")
                 }
             }
@@ -294,14 +295,14 @@ fun RecentSessionsCard() {
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
         ) {
             Text(
                 text = "Recent Sessions",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            Spacer(modifier = Modifier.height(12.dp))
             val sessions = listOf(
                 "Session 2024-01-15 14:30",
                 "Session 2024-01-15 10:15",
@@ -311,7 +312,7 @@ fun RecentSessionsCard() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp),
+                        .padding(vertical = Spacing.extraSmall),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -344,14 +345,14 @@ fun SystemHealthCard() {
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
         ) {
             Text(
                 text = "System Health",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -391,61 +392,64 @@ fun ThermalControlsPanel() {
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
         ) {
             Text(
                 text = "Thermal Controls",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small)
             ) {
                 Button(
                     onClick = {
-                        // TODO: Capture thermal image
                         android.widget.Toast.makeText(
                             context,
                             "Capture thermal image",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = Spacing.touchTarget)
                 ) {
                     Icon(Icons.Default.PhotoCamera, contentDescription = "Capture Image")
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(Spacing.extraSmall))
                     Text("Capture")
                 }
                 Button(
                     onClick = {
-                        // TODO: Start thermal recording
                         android.widget.Toast.makeText(
                             context,
                             "Start thermal recording",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = Spacing.touchTarget)
                 ) {
                     Icon(Icons.Default.Videocam, contentDescription = "Record Video")
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(Spacing.extraSmall))
                     Text("Record")
                 }
                 OutlinedButton(
                     onClick = {
-                        // TODO: Open thermal settings
                         android.widget.Toast.makeText(
                             context,
                             "Open thermal settings",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = Spacing.touchTarget)
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = "Settings")
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(Spacing.extraSmall))
                     Text("Settings")
                 }
             }
@@ -462,7 +466,8 @@ fun GSRConnectionCard() {
         )
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.small)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -477,10 +482,10 @@ fun GSRConnectionCard() {
                 Icon(
                     Icons.Default.CheckCircle,
                     contentDescription = "Connected",
-                    tint = Color.Green
+                    tint = Color.Green,
+                    modifier = Modifier.size(Spacing.large)
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Shimmer3 GSR - Device ID: SH001",
                 style = MaterialTheme.typography.bodyMedium,
@@ -518,7 +523,6 @@ fun GSRDataVisualizationCard() {
             ) {
                 Text("GSR Waveform Visualization")
             }
-            Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -545,61 +549,64 @@ fun GSRRecordingControlsCard() {
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
         ) {
             Text(
                 text = "Recording Controls",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small)
             ) {
                 Button(
                     onClick = {
-                        // TODO: Start GSR recording
                         android.widget.Toast.makeText(
                             context,
                             "Start GSR recording",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = Spacing.touchTarget)
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = "Start GSR Recording")
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(Spacing.extraSmall))
                     Text("Start")
                 }
                 OutlinedButton(
                     onClick = {
-                        // TODO: Stop GSR recording
                         android.widget.Toast.makeText(
                             context,
                             "Stop GSR recording",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = Spacing.touchTarget)
                 ) {
                     Icon(Icons.Default.Stop, contentDescription = "Stop GSR Recording")
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(Spacing.extraSmall))
                     Text("Stop")
                 }
                 OutlinedButton(
                     onClick = {
-                        // TODO: Pause GSR recording
                         android.widget.Toast.makeText(
                             context,
                             "Pause GSR recording",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = Spacing.touchTarget)
                 ) {
                     Icon(Icons.Default.Pause, contentDescription = "Pause GSR Recording")
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(Spacing.extraSmall))
                     Text("Pause")
                 }
             }
@@ -614,14 +621,14 @@ fun GSRCalibrationCard() {
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
         ) {
             Text(
                 text = "Sensor Calibration",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -633,18 +640,17 @@ fun GSRCalibrationCard() {
                 )
                 Button(
                     onClick = {
-                        // TODO: Start GSR calibration
                         android.widget.Toast.makeText(
                             context,
                             "Start GSR calibration",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
-                    }
+                    },
+                    modifier = Modifier.heightIn(min = Spacing.touchTarget)
                 ) {
                     Text("Calibrate")
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
             LinearProgressIndicator(
                 progress = { 0.85f },
                 modifier = Modifier.fillMaxWidth()
@@ -775,14 +781,14 @@ fun NetworkSettingsCard() {
 fun AboutCard() {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.small)
         ) {
             Text(
                 text = "About IRCamera",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Version 2.0.0\nBuild 2024.01.15",
                 style = MaterialTheme.typography.bodyMedium,
