@@ -29,6 +29,7 @@ fun ProfileScreen(
     onNavigateToResearchTemplates: (() -> Unit)? = null,
     onNavigateToPreferences: (() -> Unit)? = null,
     onExportData: (() -> Unit)? = null,
+    onNavigateToEditProfile: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -124,15 +125,9 @@ private fun UserProfileCard(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Edit profile button
-            val context = androidx.compose.ui.platform.LocalContext.current
             Button(
                 onClick = {
-                    // TODO: Navigate to profile edit screen
-                    android.widget.Toast.makeText(
-                        context,
-                        "Edit profile feature coming soon",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
+                    onNavigateToEditProfile?.invoke()
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {

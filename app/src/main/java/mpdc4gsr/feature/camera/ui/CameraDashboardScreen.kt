@@ -32,6 +32,7 @@ fun CameraDashboardScreen(
     onNavigateToSettings: () -> Unit,
     onNavigateToSingleCamera: (() -> Unit)? = null,
     onNavigateToGallery: (() -> Unit)? = null,
+    onNavigateToTimeLapse: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     LibUnifiedTheme {
@@ -61,6 +62,7 @@ fun CameraDashboardScreen(
                 onNavigateToDualMode = onNavigateToDualMode,
                 onNavigateToSingleCamera = onNavigateToSingleCamera,
                 onNavigateToGallery = onNavigateToGallery,
+                onNavigateToTimeLapse = onNavigateToTimeLapse,
                 modifier = Modifier.padding(paddingValues)
             )
         }
@@ -72,6 +74,7 @@ private fun CameraDashboardContent(
     onNavigateToDualMode: () -> Unit,
     onNavigateToSingleCamera: (() -> Unit)? = null,
     onNavigateToGallery: (() -> Unit)? = null,
+    onNavigateToTimeLapse: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -240,19 +243,13 @@ private fun CameraModesCard(
             )
 
             // Time-lapse Mode
-            val context = androidx.compose.ui.platform.LocalContext.current
             CameraModeItem(
                 title = "Time-lapse Mode",
                 description = "Automated interval capture",
                 icon = Icons.Default.Timer,
                 isActive = false,
                 onClick = {
-                    // TODO: Navigate to time-lapse camera activity
-                    android.widget.Toast.makeText(
-                        context,
-                        "Time-lapse mode coming soon",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
+                    onNavigateToTimeLapse?.invoke()
                 }
             )
         }

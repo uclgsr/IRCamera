@@ -16,6 +16,7 @@ import mpdc4gsr.feature.camera.ui.CameraDashboardScreen
 import mpdc4gsr.feature.camera.ui.CameraSettingsScreen
 import mpdc4gsr.feature.camera.ui.DualModeCameraScreen
 import mpdc4gsr.feature.camera.ui.RGBCameraScreen
+import mpdc4gsr.feature.camera.ui.TimeLapseCameraScreen
 import mpdc4gsr.feature.gsr.ui.GSRDataViewScreen
 import mpdc4gsr.feature.gsr.ui.GSRPlotScreen
 import mpdc4gsr.feature.gsr.ui.GSRSettingsScreen
@@ -26,6 +27,7 @@ import mpdc4gsr.feature.main.ui.MainScreen
 import mpdc4gsr.feature.main.ui.UnifiedSensorDashboard
 import mpdc4gsr.feature.network.ui.DevicePairingScreen
 import mpdc4gsr.feature.settings.ui.AboutScreen
+import mpdc4gsr.feature.settings.ui.ProfileEditScreen
 import mpdc4gsr.feature.settings.ui.SettingsScreen
 import mpdc4gsr.feature.testing.ui.TestResultsScreen
 import mpdc4gsr.feature.thermal.ui.ThermalCameraScreen
@@ -68,6 +70,7 @@ sealed class UnifiedRoute(val route: String, val displayName: String = "") {
     object DualModeCamera : UnifiedRoute("dual_mode_camera", "Thermal + RGB Camera")
     object RGBCamera : UnifiedRoute("rgb_camera", "RGB Camera")
     object CameraSettings : UnifiedRoute("camera_settings", "Camera Settings")
+    object TimeLapseCamera : UnifiedRoute("timelapse_camera", "Time-Lapse Camera")
 
     // Network Routes
     object DevicePairing : UnifiedRoute("device_pairing", "Device Pairing")
@@ -83,6 +86,7 @@ sealed class UnifiedRoute(val route: String, val displayName: String = "") {
     object Settings : UnifiedRoute("settings", "Settings")
     object About : UnifiedRoute("about", "About")
     object Profile : UnifiedRoute("profile", "Profile")
+    object ProfileEdit : UnifiedRoute("profile_edit", "Edit Profile")
     object NetworkConfig : UnifiedRoute("network_config", "Network")
 
     // Development and Demo Routes
@@ -196,7 +200,8 @@ fun UnifiedNavHost(
                 onNavigateToDualMode = { navController.navigate(UnifiedRoute.DualModeCamera.route) },
                 onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) },
                 onNavigateToSingleCamera = { navController.navigate(UnifiedRoute.RGBCamera.route) },
-                onNavigateToGallery = { navController.navigate(UnifiedRoute.ThermalGallery.route) }
+                onNavigateToGallery = { navController.navigate(UnifiedRoute.ThermalGallery.route) },
+                onNavigateToTimeLapse = { navController.navigate(UnifiedRoute.TimeLapseCamera.route) }
             )
         }
 
@@ -205,6 +210,14 @@ fun UnifiedNavHost(
                 onBackClick = { navController.popBackStack() },
                 onSettingsClick = { navController.navigate(UnifiedRoute.CameraSettings.route) },
                 onCapturePhoto = { /* Photo capture handled by screen */ }
+            )
+        }
+
+        composable(UnifiedRoute.TimeLapseCamera.route) {
+            NavigationPerformanceHelper.TrackNavigation("TimeLapseCamera")
+
+            TimeLapseCameraScreen(
+                onBackClick = { navController.popBackStack() }
             )
         }
 
@@ -346,7 +359,20 @@ fun UnifiedNavHost(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToResearchTemplates = { navController.navigate(UnifiedRoute.ResearchTemplates.route) },
                 onNavigateToPreferences = { navController.navigate(UnifiedRoute.Settings.route) },
-                onExportData = { navController.navigate(UnifiedRoute.GSRDataView.route) }
+                onExportData = { navController.navigate(UnifiedRoute.GSRDataView.route) },
+                onNavigateToEditProfile = { navController.navigate(UnifiedRoute.ProfileEdit.route) }
+            )
+        }
+
+        composable(UnifiedRoute.ProfileEdit.route) {
+            NavigationPerformanceHelper.TrackNavigation("ProfileEdit")
+
+            ProfileEditScreen(
+                onBackClick = { navController.popBackStack() },
+                onSave = { profileData ->
+                    // Profile data saved - navigate back
+                    navController.popBackStack()
+                }
             )
         }
 
