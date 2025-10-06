@@ -24,11 +24,6 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.settings.presentation.ProfileData
 import mpdc4gsr.feature.settings.presentation.ProfileEditViewModel
 
-/**
- * Profile Edit Screen - Interface for editing user profile information
- * Allows users to update personal details, research information, and preferences
- * Now uses ViewModel for configuration change resilience
- */
 @Composable
 fun ProfileEditScreen(
     onBackClick: (() -> Unit)? = null,
@@ -39,7 +34,6 @@ fun ProfileEditScreen(
     val profileData by viewModel.profileData.collectAsState()
     val isSaving by viewModel.isSaving.collectAsState()
     var showSaveDialog by remember { mutableStateOf(false) }
-
     IRCameraTheme {
         Scaffold(
             topBar = {
@@ -92,7 +86,6 @@ fun ProfileEditScreen(
                         }
                     }
                 }
-
                 // Basic Information
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -107,7 +100,6 @@ fun ProfileEditScreen(
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
-
                         OutlinedTextField(
                             value = profileData.userName,
                             onValueChange = viewModel::updateUserName,
@@ -117,7 +109,6 @@ fun ProfileEditScreen(
                             },
                             modifier = Modifier.fillMaxWidth()
                         )
-
                         OutlinedTextField(
                             value = profileData.userId,
                             onValueChange = viewModel::updateUserId,
@@ -128,7 +119,6 @@ fun ProfileEditScreen(
                             modifier = Modifier.fillMaxWidth(),
                             enabled = false
                         )
-
                         OutlinedTextField(
                             value = profileData.email,
                             onValueChange = viewModel::updateEmail,
@@ -140,7 +130,6 @@ fun ProfileEditScreen(
                         )
                     }
                 }
-
                 // Research Information
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -155,7 +144,6 @@ fun ProfileEditScreen(
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
-
                         OutlinedTextField(
                             value = profileData.institution,
                             onValueChange = viewModel::updateInstitution,
@@ -165,7 +153,6 @@ fun ProfileEditScreen(
                             },
                             modifier = Modifier.fillMaxWidth()
                         )
-
                         OutlinedTextField(
                             value = profileData.researchArea,
                             onValueChange = viewModel::updateResearchArea,
@@ -175,7 +162,6 @@ fun ProfileEditScreen(
                             },
                             modifier = Modifier.fillMaxWidth()
                         )
-
                         OutlinedTextField(
                             value = profileData.bio,
                             onValueChange = viewModel::updateBio,
@@ -189,7 +175,6 @@ fun ProfileEditScreen(
                         )
                     }
                 }
-
                 // Privacy Settings
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -204,7 +189,6 @@ fun ProfileEditScreen(
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
-
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -216,7 +200,6 @@ fun ProfileEditScreen(
                                 onCheckedChange = viewModel::updateProfileVisibility
                             )
                         }
-
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -230,7 +213,6 @@ fun ProfileEditScreen(
                         }
                     }
                 }
-
                 // Action Buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -242,7 +224,6 @@ fun ProfileEditScreen(
                     ) {
                         Text("Cancel")
                     }
-
                     Button(
                         onClick = {
                             viewModel.saveProfile {
@@ -267,7 +248,6 @@ fun ProfileEditScreen(
                 }
             }
         }
-
         // Save Confirmation Dialog
         if (showSaveDialog) {
             AlertDialog(

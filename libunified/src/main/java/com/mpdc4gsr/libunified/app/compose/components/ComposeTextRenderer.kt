@@ -25,7 +25,6 @@ fun ComposeLegendTextDemo(
         fontSize = 12.sp,
         color = MaterialTheme.colorScheme.onSurface
     )
-
     Canvas(
         modifier = modifier.size(200.dp, 100.dp)
     ) {
@@ -45,16 +44,13 @@ private fun DrawScope.drawComposeLegendText(
         "Data Points",
         "Threshold"
     )
-
     legendItems.forEachIndexed { index, text ->
         val textLayoutResult = textMeasurer.measure(
             text = text,
             style = textStyle
         )
-
         val x = 20f
         val y = 20f + (index * 25f)
-
         // Using Compose's drawText instead of Canvas.drawText with Paint
         drawText(
             textLayoutResult = textLayoutResult,

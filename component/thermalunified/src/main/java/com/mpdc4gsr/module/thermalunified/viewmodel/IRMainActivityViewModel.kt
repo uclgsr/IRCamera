@@ -10,7 +10,6 @@ import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import kotlinx.coroutines.launch
 
 class IRMainActivityViewModel : BaseViewModel() {
-
     // Device state management
     data class DeviceState(
         val isTC007: Boolean = false,
@@ -42,18 +41,13 @@ class IRMainActivityViewModel : BaseViewModel() {
 
     private val _deviceState = MutableLiveData<DeviceState>()
     val deviceState = _deviceState
-
     private val _fragmentCommunication = MutableLiveData<FragmentCommunicationState>()
     val fragmentCommunication = _fragmentCommunication
-
     private val _navigationEvent = MutableLiveData<NavigationEvent>()
     val navigationEvent = _navigationEvent
-
     private val _viewPagerState = MutableLiveData<ViewPagerState>()
     val viewPagerState = _viewPagerState
-
     private var currentDeviceType = false // false = not TC007, true = TC007
-
     fun setDeviceType(isTC007: Boolean) {
         currentDeviceType = isTC007
         refreshDeviceState()
@@ -84,7 +78,6 @@ class IRMainActivityViewModel : BaseViewModel() {
                     shouldAutoOpen = isConnected && SharedManager.isConnectAutoOpen
                 )
             }
-
             _deviceState.value = deviceState
         }
     }
@@ -128,14 +121,12 @@ class IRMainActivityViewModel : BaseViewModel() {
     fun handleGuideDialog(onGuideShow: (Int, Int) -> Unit) {
         val currentStep = SharedManager.homeGuideStep
         if (currentStep == 0) return
-
         val navigationTarget = when (currentStep) {
             1 -> 0
             2 -> 4
             3 -> 2
             else -> 2
         }
-
         onGuideShow(currentStep, navigationTarget)
     }
 

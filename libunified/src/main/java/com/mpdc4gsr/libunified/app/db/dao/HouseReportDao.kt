@@ -7,14 +7,12 @@ import com.mpdc4gsr.libunified.app.db.entity.ItemReport
 
 @Dao
 abstract class HouseReportDao {
-
     @Transaction
     open fun insert(houseReport: HouseReport): Long {
         houseReport.id = insertReport(houseReport)
         for (dir in houseReport.dirList) {
             dir.parentId = houseReport.id
             dir.id = insertDir(dir)
-
             for (item in dir.itemList) {
                 item.parentId = dir.id
                 item.id = insertItem(item)

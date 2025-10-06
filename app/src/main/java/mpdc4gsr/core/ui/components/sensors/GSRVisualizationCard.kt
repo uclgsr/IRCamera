@@ -44,9 +44,7 @@ fun GSRVisualizationCard(
                 batteryLevel = gsrData.batteryLevel,
                 sampleRate = gsrData.sampleRate
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Real-time data chart
             GSRDataChart(
                 recentReadings = gsrData.recentReadings,
@@ -55,9 +53,7 @@ fun GSRVisualizationCard(
                     .fillMaxWidth()
                     .height(120.dp)
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Current reading and statistics
             GSRStatistics(
                 currentValue = gsrData.currentValue,
@@ -65,9 +61,7 @@ fun GSRVisualizationCard(
                 minValue = gsrData.minValue,
                 maxValue = gsrData.maxValue
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Data export controls
             GSRDataControls(
                 onExportData = onExportData,
@@ -101,7 +95,6 @@ private fun GSRSensorHeader(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
         }
-
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -112,9 +105,7 @@ private fun GSRSensorHeader(
                 tint = if (connectionState.isConnected) Color.Green else Color.Red,
                 modifier = Modifier.size(20.dp)
             )
-
             Spacer(modifier = Modifier.width(8.dp))
-
             // Battery level
             val batteryIcon = when {
                 batteryLevel > 80 -> Icons.Default.BatteryFull
@@ -126,7 +117,6 @@ private fun GSRSensorHeader(
                 batteryLevel > 20 -> Color.Yellow
                 else -> Color.Red
             }
-
             Icon(
                 batteryIcon,
                 contentDescription = null,
@@ -164,7 +154,6 @@ private fun GSRDataChart(
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-
             // Chart visualization
             Canvas(
                 modifier = Modifier
@@ -174,30 +163,25 @@ private fun GSRDataChart(
                 val width = size.width
                 val height = size.height
                 val strokeWidth = 3.dp.toPx()
-
                 if (recentReadings.isNotEmpty()) {
                     val maxValue = recentReadings.maxOrNull() ?: 1f
                     val minValue = recentReadings.minOrNull() ?: 0f
                     val range = maxValue - minValue
-
                     val path = Path()
                     recentReadings.forEachIndexed { index, value ->
                         val x = (index.toFloat() / (recentReadings.size - 1)) * width
                         val y = height - ((value - minValue) / range) * height
-
                         if (index == 0) {
                             path.moveTo(x, y)
                         } else {
                             path.lineTo(x, y)
                         }
                     }
-
                     drawPath(
                         path = path,
                         color = Color(0xFF4ECDC4), // Teal color for GSR data
                         style = Stroke(width = strokeWidth)
                     )
-
                     // Current value indicator
                     val currentX = width
                     val currentY = height - ((currentValue - minValue) / range) * height
@@ -236,7 +220,6 @@ private fun GSRStatistics(
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -288,9 +271,7 @@ private fun GSRDataControls(
         ) {
             Text("Export Data")
         }
-
         Spacer(modifier = Modifier.width(8.dp))
-
         OutlinedButton(
             onClick = onResetStatistics,
             modifier = Modifier.weight(1f)

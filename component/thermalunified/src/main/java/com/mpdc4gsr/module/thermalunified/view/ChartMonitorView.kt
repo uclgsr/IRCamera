@@ -47,7 +47,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
     private val textColor by lazy { ContextCompat.getColor(context, LibR.color.chart_text) }
     private val axisChartColors by lazy { ContextCompat.getColor(context, LibR.color.chart_axis) }
     private val axisLine by lazy { ContextCompat.getColor(context, LibR.color.circle_white) }
-
     private fun initChart() {
         synchronized(this) {
             this.setTouchEnabled(true)
@@ -79,7 +78,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             l.form = Legend.LegendForm.CIRCLE
             l.textColor = textColor
             l.isEnabled = false
-
             val xAxis = this.xAxis
             xAxis.textColor = textColor
             xAxis.setDrawGridLines(false)
@@ -91,7 +89,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             xAxis.granularity = 1f
             xAxis.isGranularityEnabled = true
             xAxis.textSize = 8f
-
             val leftAxis = this.axisLeft
             leftAxis.textColor = textColor
             leftAxis.axisLineColor = 0x00000000
@@ -101,13 +98,11 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             leftAxis.setLabelCount(6, true)
             leftAxis.valueFormatter = YValueFormatter()
             leftAxis.textSize = 8f
-
             this.axisRight.isEnabled = false
         }
     }
 
     private var startTime = 0L
-
     fun addPointToChart(
         bean: ThermalEntity,
         timeType: Int = 1,
@@ -146,7 +141,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                     }
 
                     2 -> {
-
                         if (volDataSet == null) {
                             volDataSet = createSet(0, "line max temp")
                             lineData.addDataSet(volDataSet)
@@ -155,7 +149,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         val entity = Entry(x, bean.thermalMax)
                         entity.data = bean
                         volDataSet.addEntry(entity)
-
                         var secondDataSet = lineData.getDataSetByIndex(1)
                         if (secondDataSet == null) {
                             secondDataSet = createSet(1, "line min temp")
@@ -167,7 +160,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                     }
 
                     else -> {
-
                         if (volDataSet == null) {
                             volDataSet = createSet(0, "fence max temp")
                             lineData.addDataSet(volDataSet)
@@ -175,7 +167,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         val entity = Entry(x, bean.thermalMax)
                         entity.data = bean
                         volDataSet.addEntry(entity)
-
                         var secondDataSet = lineData.getDataSetByIndex(1)
                         if (secondDataSet == null) {
                             secondDataSet = createSet(1, "fence min temp")
@@ -186,13 +177,11 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         secondDataSet.addEntry(secondEntity)
                     }
                 }
-
                 lineData.notifyDataChanged()
                 notifyDataSetChanged()
                 setVisibleXRangeMinimum(ChartTools.getMinimum(type = timeType) / 2)
                 setVisibleXRangeMaximum(ChartTools.getMaximum(type = timeType))
                 ChartTools.setX(this, timeType)
-
                 if ((highestVisibleX + ChartTools.getMinimum(timeType) / 2f) > xChartMax) {
                     moveViewToX(xChartMax)
                 }
@@ -281,7 +270,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
         scaleX: Float,
         scaleY: Float,
     ) {
-
         highlightValue(null)
     }
 

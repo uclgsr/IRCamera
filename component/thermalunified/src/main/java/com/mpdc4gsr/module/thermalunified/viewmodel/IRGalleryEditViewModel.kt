@@ -11,7 +11,6 @@ import java.io.File
 
 class IRGalleryEditViewModel : BaseViewModel() {
     val resultLiveData = SingleLiveEvent<FrameBean>()
-
     fun initData(path: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val file = File(path)
@@ -40,12 +39,9 @@ class IRGalleryEditViewModel : BaseViewModel() {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
-
             other as FrameBean
-
             if (!capital.contentEquals(other.capital)) return false
             if (!frame.contentEquals(other.frame)) return false
-
             return true
         }
 

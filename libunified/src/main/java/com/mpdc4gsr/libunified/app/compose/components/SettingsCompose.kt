@@ -61,7 +61,6 @@ fun SettingItem(
                         }
                     }
                 }
-
                 Text(
                     text = text,
                     fontSize = 16.sp,
@@ -69,7 +68,6 @@ fun SettingItem(
                     fontWeight = FontWeight.Normal
                 )
             }
-
             if (showMoreArrow) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -79,7 +77,6 @@ fun SettingItem(
                 )
             }
         }
-
         if (showLine) {
             HorizontalDivider(
                 color = Color.LightGray,
@@ -105,7 +102,6 @@ fun SettingsSection(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
-
         Card(
             modifier = Modifier
                 .fillMaxWidth()

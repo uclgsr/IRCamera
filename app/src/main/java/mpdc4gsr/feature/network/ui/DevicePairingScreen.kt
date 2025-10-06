@@ -42,7 +42,6 @@ fun DevicePairingScreen(
 ) {
     var isScanning by remember { mutableStateOf(false) }
     var devices by remember { mutableStateOf(getSampleDevices()) }
-
     IRCameraTheme {
         Column(
             modifier = Modifier
@@ -71,7 +70,6 @@ fun DevicePairingScreen(
                     }
                 )
             }
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -103,7 +101,6 @@ fun DevicePairingScreen(
                         }
                     }
                 }
-
                 // Instructions
                 Card(
                     modifier = Modifier
@@ -129,7 +126,6 @@ fun DevicePairingScreen(
                         )
                     }
                 }
-
                 // Device List
                 Text(
                     text = "Available Devices",
@@ -138,7 +134,6 @@ fun DevicePairingScreen(
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -184,9 +179,7 @@ fun DevicePairingItem(
                 },
                 modifier = Modifier.size(32.dp)
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             // Device Info
             Column(
                 modifier = Modifier.weight(1f)
@@ -197,7 +190,6 @@ fun DevicePairingItem(
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -206,7 +198,6 @@ fun DevicePairingItem(
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                     )
-
                     if (device.signalStrength > 0) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(
@@ -221,7 +212,6 @@ fun DevicePairingItem(
                             modifier = Modifier.size(16.dp)
                         )
                     }
-
                     device.batteryLevel?.let { battery ->
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(
@@ -243,7 +233,6 @@ fun DevicePairingItem(
                     }
                 }
             }
-
             // Pair Button
             when {
                 device.isConnected == true -> {

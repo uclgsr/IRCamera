@@ -14,7 +14,6 @@ object FileTools {
         try {
             val file = File(path)
             var len = file.length()
-
             if (len < 1024) {
                 str = "${len}Byte"
             } else if (len < 1024 * 1024) {

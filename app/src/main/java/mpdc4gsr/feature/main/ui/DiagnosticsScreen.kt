@@ -24,10 +24,6 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.device.presentation.DiagnosticsViewModel
 import mpdc4gsr.feature.device.presentation.DiagnosticsViewModelFactory
 
-/**
- * Diagnostics Screen - System diagnostics and troubleshooting
- * Integrated with DiagnosticsViewModel for real-time system monitoring
- */
 @Composable
 fun DiagnosticsScreen(
     onBackClick: (() -> Unit)? = null,
@@ -41,11 +37,9 @@ fun DiagnosticsScreen(
     val context = LocalContext.current
     val systemStatus by viewModel.systemStatus.collectAsState()
     val sensorStatus by viewModel.sensorStatus.collectAsState()
-
     LaunchedEffect(Unit) {
         viewModel.initialize()
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -56,7 +50,6 @@ fun DiagnosticsScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -89,7 +82,6 @@ fun DiagnosticsScreen(
                     value = systemStatus.memoryUsage
                 )
             }
-
             // Sensor Status
             SettingsCard(
                 title = "Sensor Status",
@@ -110,7 +102,6 @@ fun DiagnosticsScreen(
                     value = sensorStatus.rgbCamera
                 )
             }
-
             // Diagnostic Tools
             SettingsCard(
                 title = "Diagnostic Tools",

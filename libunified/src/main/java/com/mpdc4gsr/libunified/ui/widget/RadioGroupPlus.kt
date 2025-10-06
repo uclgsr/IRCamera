@@ -12,7 +12,6 @@ import android.widget.RadioGroup
 import androidx.annotation.IdRes
 
 class RadioGroupPlus : LinearLayout {
-
     // holds the checked id; the selection is empty by default
     @get:IdRes
     var checkedRadioButtonId = -1
@@ -50,7 +49,6 @@ class RadioGroupPlus : LinearLayout {
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-
         // checks the appropriate radio button as requested in the XML file
         if (checkedRadioButtonId != -1) {
             mProtectFromCheckedChange = true
@@ -131,15 +129,10 @@ class RadioGroupPlus : LinearLayout {
     }
 
     class LayoutParams : LinearLayout.LayoutParams {
-
         constructor(c: Context?, attrs: AttributeSet?) : super(c, attrs) {}
-
         constructor(w: Int, h: Int) : super(w, h) {}
-
         constructor(w: Int, h: Int, initWeight: Float) : super(w, h, initWeight) {}
-
         constructor(p: ViewGroup.LayoutParams?) : super(p) {}
-
         constructor(source: MarginLayoutParams?) : super(source) {}
 
         override fun setBaseAttributes(
@@ -160,7 +153,6 @@ class RadioGroupPlus : LinearLayout {
     }
 
     interface OnCheckedChangeListener {
-
         fun onCheckedChanged(group: RadioGroupPlus, @IdRes checkedId: Int)
     }
 

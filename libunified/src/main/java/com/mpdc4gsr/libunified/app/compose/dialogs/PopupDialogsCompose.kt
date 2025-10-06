@@ -37,7 +37,6 @@ fun EmissivityTipPopup(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.85f else 0.55f
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -68,7 +67,6 @@ fun EmissivityTipPopup(
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
                 }
-
                 if (materialText.isNotEmpty()) {
                     Card(
                         modifier = Modifier
@@ -89,7 +87,6 @@ fun EmissivityTipPopup(
                         )
                     }
                 }
-
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -100,22 +97,17 @@ fun EmissivityTipPopup(
                         label = "$environmentLabel:",
                         value = String.format("%.1f°C", environmentTemp)
                     )
-
                     Spacer(modifier = Modifier.height(12.dp))
-
                     EmissivityInfoRow(
                         label = "$distanceLabel:",
                         value = String.format("%.1fm", distance)
                     )
-
                     Spacer(modifier = Modifier.height(12.dp))
-
                     EmissivityInfoRow(
                         label = "$emissivityLabel:",
                         value = String.format("%.2f", emissivity)
                     )
                 }
-
                 if (showCheckbox) {
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
@@ -133,9 +125,7 @@ fun EmissivityTipPopup(
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(20.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -150,7 +140,6 @@ fun EmissivityTipPopup(
                     ) {
                         Text(text = "Cancel", fontSize = 16.sp)
                     }
-
                     Button(
                         onClick = {
                             onConfirm(isChecked)

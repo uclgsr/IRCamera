@@ -16,17 +16,10 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Calibration ViewModel - MVVM Integration
- * Manages system calibration settings and calibration procedures
- */
 class CalibrationViewModel : AppBaseViewModel() {
-
     private lateinit var prefs: SharedPreferences
-
     private val _calibrationSettings = MutableStateFlow(CalibrationSettings())
     val calibrationSettings: StateFlow<CalibrationSettings> = _calibrationSettings.asStateFlow()
-
     private val _calibrationInfo = MutableStateFlow(CalibrationInfo())
     val calibrationInfo: StateFlow<CalibrationInfo> = _calibrationInfo.asStateFlow()
 
@@ -80,13 +73,10 @@ class CalibrationViewModel : AppBaseViewModel() {
         viewModelScope.launch {
             try {
                 AppLogger.d(TAG, "Starting thermal camera calibration")
-
                 val timestamp = getCurrentTimestamp()
                 prefs.edit().putString(KEY_THERMAL_LAST_CALIB, timestamp).apply()
-
                 AppLogger.i(TAG, "Thermal calibration completed at: $timestamp")
                 AppLogger.w(TAG, "Note: Full calibration requires Topdon SDK LibIRTemp integration")
-
                 loadCalibrationInfo()
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Error during thermal calibration", e)
@@ -98,13 +88,10 @@ class CalibrationViewModel : AppBaseViewModel() {
         viewModelScope.launch {
             try {
                 AppLogger.d(TAG, "Starting GSR sensor calibration")
-
                 val timestamp = getCurrentTimestamp()
                 prefs.edit().putString(KEY_GSR_LAST_CALIB, timestamp).apply()
-
                 AppLogger.i(TAG, "GSR calibration completed at: $timestamp")
                 AppLogger.w(TAG, "Note: Full calibration requires Shimmer3 SDK calibration commands")
-
                 loadCalibrationInfo()
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Error during GSR calibration", e)
@@ -116,13 +103,10 @@ class CalibrationViewModel : AppBaseViewModel() {
         viewModelScope.launch {
             try {
                 AppLogger.d(TAG, "Starting camera alignment procedure")
-
                 val timestamp = getCurrentTimestamp()
                 prefs.edit().putString(KEY_CAMERA_LAST_ALIGN, timestamp).apply()
-
                 AppLogger.i(TAG, "Camera alignment completed at: $timestamp")
                 AppLogger.w(TAG, "Note: Full alignment requires multi-camera spatial calibration")
-
                 loadCalibrationInfo()
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Error during camera alignment", e)

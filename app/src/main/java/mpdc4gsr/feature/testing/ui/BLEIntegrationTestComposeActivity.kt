@@ -27,13 +27,7 @@ import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.feature.testing.presentation.BLEIntegrationTestViewModel
 import kotlin.io.path.createTempDirectory
 
-/**
- * Compose version of BLE Integration Test Activity
- * Tests BLE functionality in a modern Compose UI
- * Migrated to BaseComposeActivity for consistency
- */
 class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTestViewModel>() {
-
 
     companion object {
         private const val TAG = "BLEIntegrationTestCompose"
@@ -42,14 +36,12 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
     private lateinit var permissionController: PermissionController
     private var gsrRecorder: UnifiedGSRRecorder? = null
     private var deviceManager: ShimmerDeviceManager? = null
-
     override fun createViewModel(): BLEIntegrationTestViewModel {
         return viewModels<BLEIntegrationTestViewModel>().value
     }
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
-
         // Initialize components
         permissionController = PermissionController(this)
         initializeRecorder()
@@ -58,7 +50,6 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
     @Composable
     override fun Content(viewModel: BLEIntegrationTestViewModel) {
         val logMessages = remember { mutableStateListOf<String>() }
-
         LibUnifiedTheme {
             BLEIntegrationTestScreen(
                 onRunTest = { testType -> runTest(testType) },
@@ -82,7 +73,6 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
     ) {
         var testResults by remember { mutableStateOf(listOf<TestCase>()) }
         var isTestRunning by remember { mutableStateOf(false) }
-
         // Initialize test cases
         LaunchedEffect(Unit) {
             testResults = listOf(
@@ -113,7 +103,6 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
                 )
             )
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -150,9 +139,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
                     passedTests = testResults.count { it.status == TestStatus.PASSED },
                     failedTests = testResults.count { it.status == TestStatus.FAILED }
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Run All Tests Button
                 Button(
                     onClick = {
@@ -176,9 +163,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
                         Text("Run All Tests")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Individual Test Cases
                 testResults.forEach { testCase ->
                     TestResultCard(
@@ -187,10 +172,8 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                 }
-
                 if (logMessages.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -199,7 +182,6 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
                                 fontWeight = FontWeight.Medium
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-
                             logMessages.forEach { message ->
                                 Text(
                                     text = message,
@@ -227,7 +209,6 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
 
     private suspend fun runAllTests() {
         AppLogger.i(TAG, "Starting comprehensive BLE integration tests")
-
         // Run each test sequentially
         runPermissionsTest()
         delay(1000)
@@ -238,7 +219,6 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
         runStreamingTest()
         delay(1000)
         runReconnectionTest()
-
         AppLogger.i(TAG, "BLE integration tests completed")
     }
 

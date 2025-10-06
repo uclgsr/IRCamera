@@ -21,10 +21,6 @@ import mpdc4gsr.core.ui.components.NavigationBreadcrumb
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * Settings Screen - Application configuration and preferences
- * Replaces various settings activities with unified Compose implementation
- */
 @Composable
 fun SettingsScreen(
     onBackClick: (() -> Unit)? = null,
@@ -52,12 +48,10 @@ fun SettingsScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         NavigationBreadcrumb(
             currentScreen = "Settings",
             previousScreen = "Home"
         )
-
         // Settings content
         Column(
             modifier = Modifier
@@ -89,7 +83,6 @@ fun SettingsScreen(
                     onClick = { onNavigateToCameraSettings?.invoke() }
                 )
             }
-
             // Recording Settings Section
             SettingsSection(
                 title = "Recording & Data"
@@ -113,7 +106,6 @@ fun SettingsScreen(
                     onClick = { onNavigateToSyncSettings?.invoke() }
                 )
             }
-
             // Application Settings Section
             SettingsSection(
                 title = "Application"
@@ -121,7 +113,6 @@ fun SettingsScreen(
                 var darkMode by remember { mutableStateOf(true) }
                 var notifications by remember { mutableStateOf(true) }
                 var autoConnect by remember { mutableStateOf(false) }
-
                 SettingsSwitchItem(
                     icon = Icons.Default.DarkMode,
                     title = "Dark Mode",
@@ -144,7 +135,6 @@ fun SettingsScreen(
                     onCheckedChange = { autoConnect = it }
                 )
             }
-
             // Advanced Settings Section
             SettingsSection(
                 title = "Advanced"
@@ -168,7 +158,6 @@ fun SettingsScreen(
                     onClick = { onNavigateToDiagnostics?.invoke() }
                 )
             }
-
             // About Section
             SettingsSection(
                 title = "About"
@@ -196,9 +185,6 @@ fun SettingsScreen(
     }
 }
 
-/**
- * Settings section with title and content
- */
 @Composable
 private fun SettingsSection(
     title: String,
@@ -215,7 +201,6 @@ private fun SettingsSection(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -229,9 +214,6 @@ private fun SettingsSection(
     }
 }
 
-/**
- * Settings item with click action
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsItem(
@@ -258,9 +240,7 @@ private fun SettingsItem(
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(24.dp)
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -276,7 +256,6 @@ private fun SettingsItem(
                     fontSize = 14.sp
                 )
             }
-
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = null,
@@ -287,9 +266,6 @@ private fun SettingsItem(
     }
 }
 
-/**
- * Settings item with switch toggle
- */
 @Composable
 private fun SettingsSwitchItem(
     icon: ImageVector,
@@ -311,9 +287,7 @@ private fun SettingsSwitchItem(
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(24.dp)
         )
-
         Spacer(modifier = Modifier.width(16.dp))
-
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -329,7 +303,6 @@ private fun SettingsSwitchItem(
                 fontSize = 14.sp
             )
         }
-
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,

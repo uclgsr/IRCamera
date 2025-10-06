@@ -15,7 +15,6 @@ import com.mpdc4gsr.libunified.R
 object ToastTools {
     var mPublicToast: Toast? = null
     private val mainHandler = Handler(Looper.getMainLooper())
-
     fun showShort(
         @StringRes textStr: Int,
     ) {
@@ -38,11 +37,9 @@ object ToastTools {
             text.text = textStr
             val screenHeight = context.resources.displayMetrics.heightPixels
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-
                 mPublicToast = Toast.makeText(context, textStr, duration)
                 mPublicToast?.setGravity(Gravity.BOTTOM, 0, screenHeight / 8)
             } else {
-
                 if (mPublicToast == null) {
                     mPublicToast = Toast(context)
                 }

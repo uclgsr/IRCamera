@@ -14,7 +14,6 @@ class RoleBasedAccessControl(
 ) {
     companion object {
         const val TAG = "RBAC"
-
         const val PERM_VIEW_STATUS = "view_status"
         const val PERM_VIEW_SESSIONS = "view_sessions"
         const val PERM_DOWNLOAD_DATA = "download_data"
@@ -31,7 +30,6 @@ class RoleBasedAccessControl(
 
     enum class Role(val level: Int, val displayName: String, val permissions: Set<String>) {
         GUEST(0, "Guest", setOf(PERM_VIEW_STATUS)),
-
         OBSERVER(
             1,
             "Observer",
@@ -41,7 +39,6 @@ class RoleBasedAccessControl(
                 PERM_DOWNLOAD_DATA,
             ),
         ),
-
         OPERATOR(
             2,
             "Operator",
@@ -53,7 +50,6 @@ class RoleBasedAccessControl(
                 PERM_STOP_RECORDING,
             ),
         ),
-
         RESEARCHER(
             3,
             "Researcher",
@@ -67,7 +63,6 @@ class RoleBasedAccessControl(
                 PERM_EXPORT_DATA,
             ),
         ),
-
         ADMINISTRATOR(4, "Administrator", setOf(PERM_ALL)),
         ;
 
@@ -91,7 +86,6 @@ class RoleBasedAccessControl(
                 "guest" to Role.GUEST,
             ),
         ),
-
         ANDROID_PHONE(
             mapOf(
                 "owner" to Role.ADMINISTRATOR,
@@ -99,19 +93,16 @@ class RoleBasedAccessControl(
                 "guest" to Role.OBSERVER,
             ),
         ),
-
         THERMAL_CAMERA(
             mapOf(
                 "default" to Role.OBSERVER,
             ),
         ),
-
         SHIMMER_SENSOR(
             mapOf(
                 "default" to Role.OBSERVER,
             ),
         ),
-
         UNKNOWN(
             mapOf(
                 "default" to Role.GUEST,
@@ -123,7 +114,6 @@ class RoleBasedAccessControl(
     private val sessionPermissions = ConcurrentHashMap<String, Set<String>>()
     private val temporaryPermissions =
         ConcurrentHashMap<String, Pair<Set<String>, Long>>()
-
     private val accessAttempts = mutableListOf<AccessAttempt>()
 
     data class AccessAttempt(
@@ -138,11 +128,8 @@ class RoleBasedAccessControl(
     fun initialize(): Boolean {
         return try {
             AppLogger.i(TAG, "Initializing Role-Based Access Control")
-
             loadRoleAssignments()
-
             initializeDefaultMappings()
-
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 TAG,
@@ -153,7 +140,6 @@ class RoleBasedAccessControl(
                     "assigned_roles_count" to deviceRoles.size,
                 ),
             )
-
             true
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize RBAC", e)
@@ -177,7 +163,6 @@ class RoleBasedAccessControl(
         return try {
             val previousRole = deviceRoles[deviceId]
             deviceRoles[deviceId] = role
-
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 TAG,
@@ -189,9 +174,7 @@ class RoleBasedAccessControl(
                     "reason" to reason,
                 ),
             )
-
             saveRoleAssignments()
-
             true
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to assign role to device $deviceId", e)
@@ -204,15 +187,11 @@ class RoleBasedAccessControl(
         deviceType: DeviceType,
         authContext: Map<String, Any>,
     ): Role {
-
         deviceRoles[deviceId]?.let { return it }
-
         val authLevel = authContext["auth_level"] as? Int ?: 0
         val userType = authContext["user_type"] as? String ?: "default"
-
         val mappedRole =
             deviceType.roleMappings[userType] ?: deviceType.roleMappings["default"] ?: Role.GUEST
-
         val adjustedRole =
             when (authLevel) {
                 AdvancedAuthenticationManager.AUTH_LEVEL_NONE -> Role.GUEST
@@ -226,9 +205,7 @@ class RoleBasedAccessControl(
                 AdvancedAuthenticationManager.AUTH_LEVEL_BIOMETRIC -> mappedRole
                 else -> Role.GUEST
             }
-
         assignRole(deviceId, adjustedRole, "auto_determined")
-
         return adjustedRole
     }
 
@@ -237,21 +214,15 @@ class RoleBasedAccessControl(
         permission: String,
     ): Boolean {
         val role = deviceRoles[deviceId] ?: Role.GUEST
-
         val hasRolePermission = role.hasPermission(permission)
-
         val temporaryPerms = temporaryPermissions[deviceId]
         val hasTemporaryPermission =
             temporaryPerms?.let { (permissions, expiry) ->
                 System.currentTimeMillis() < expiry && permissions.contains(permission)
             } ?: false
-
         val hasSessionPermission = sessionPermissions[deviceId]?.contains(permission) ?: false
-
         val granted = hasRolePermission || hasTemporaryPermission || hasSessionPermission
-
         logAccessAttempt(deviceId, permission, granted, role)
-
         return granted
     }
 
@@ -269,7 +240,6 @@ class RoleBasedAccessControl(
     ) {
         val expiryTime = System.currentTimeMillis() + durationMs
         temporaryPermissions[deviceId] = Pair(permissions, expiryTime)
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
@@ -287,7 +257,6 @@ class RoleBasedAccessControl(
         permissions: Set<String>,
     ) {
         sessionPermissions[deviceId] = permissions
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
@@ -302,7 +271,6 @@ class RoleBasedAccessControl(
     fun revokePermissions(deviceId: String) {
         temporaryPermissions.remove(deviceId)
         sessionPermissions.remove(deviceId)
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
@@ -321,14 +289,11 @@ class RoleBasedAccessControl(
             } else {
                 role.permissions
             }
-
         val temporaryPerms =
             temporaryPermissions[deviceId]?.let { (permissions, expiry) ->
                 if (System.currentTimeMillis() < expiry) permissions else emptySet()
             } ?: emptySet()
-
         val sessionPerms = sessionPermissions[deviceId] ?: emptySet()
-
         return rolePermissions + temporaryPerms + sessionPerms
     }
 
@@ -363,15 +328,12 @@ class RoleBasedAccessControl(
                 role = role,
                 reason = if (granted) "permission_granted" else "permission_denied",
             )
-
         synchronized(accessAttempts) {
             accessAttempts.add(attempt)
-
             if (accessAttempts.size > 1000) {
                 accessAttempts.removeAt(0)
             }
         }
-
         if (!granted) {
             logger.log(
                 StructuredLogger.LogLevel.WARNING,
@@ -399,7 +361,6 @@ class RoleBasedAccessControl(
 
     fun getSecurityViolations(timeWindowMs: Long = 24 * 60 * 60 * 1000L): List<AccessAttempt> {
         val cutoffTime = System.currentTimeMillis() - timeWindowMs
-
         synchronized(accessAttempts) {
             return accessAttempts
                 .filter { !it.granted && it.timestamp > cutoffTime }
@@ -412,11 +373,9 @@ class RoleBasedAccessControl(
             temporaryPermissions.filterValues { (_, expiry) ->
                 currentTime >= expiry
             }.keys
-
         expiredDevices.forEach { deviceId ->
             temporaryPermissions.remove(deviceId)
         }
-
         if (expiredDevices.isNotEmpty()) {
             logger.log(
                 StructuredLogger.LogLevel.DEBUG,
@@ -430,17 +389,14 @@ class RoleBasedAccessControl(
     }
 
     private fun loadRoleAssignments() {
-
         AppLogger.i(TAG, "Role assignments loaded (placeholder implementation)")
     }
 
     private fun saveRoleAssignments() {
-
         AppLogger.d(TAG, "Role assignments saved (placeholder implementation)")
     }
 
     private fun initializeDefaultMappings() {
-
         AppLogger.i(TAG, "Default device type mappings initialized")
     }
 
@@ -454,7 +410,6 @@ class RoleBasedAccessControl(
 
     fun getDiagnostics(): JSONObject {
         cleanupExpiredPermissions()
-
         return JSONObject().apply {
             put("assigned_roles_count", deviceRoles.size)
             put("temporary_permissions_count", temporaryPermissions.size)

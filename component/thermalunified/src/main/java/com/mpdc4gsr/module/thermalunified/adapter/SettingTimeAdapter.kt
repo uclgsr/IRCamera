@@ -13,10 +13,8 @@ class SettingTimeAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var datas = arrayOf("1min", "5min", "10min", "30min")
     private var dataTimes = arrayOf(60, 300, 600, 1800)
-
     var listener: OnItemClickListener? = null
     var select = 0
-
     fun setCheck(index: Int) {
         this.select = index
         notifyDataSetChanged()

@@ -22,19 +22,15 @@ class PreviewDataAdapter(
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var pollingJob: Job? = null
     private var isRunning = false
-
     private val thermalCameraManager = AtomicReference<CameraPreviewManager?>()
     private val gsrRecorder = AtomicReference<GSRSensorRecorder?>()
-
     fun startDataPolling() {
         if (isRunning) {
             AppLogger.w(TAG, "Data polling already running")
             return
         }
-
         AppLogger.i(TAG, "Starting sensor data polling for preview streaming")
         isRunning = true
-
         pollingJob = scope.launch {
             while (isActive && isRunning) {
                 try {
@@ -52,7 +48,6 @@ class PreviewDataAdapter(
         if (!isRunning) {
             return
         }
-
         AppLogger.i(TAG, "Stopping sensor data polling")
         isRunning = false
         pollingJob?.cancel()
@@ -70,11 +65,8 @@ class PreviewDataAdapter(
     }
 
     private suspend fun pollSensorData() {
-
         pollThermalFrame()
-
         pollGsrData()
-
         updateRecordingStatus()
     }
 
@@ -82,7 +74,6 @@ class PreviewDataAdapter(
         try {
             val manager = thermalCameraManager.get()
             if (manager != null) {
-
                 val thermalBitmap = manager.scaledBitmap()
                 if (thermalBitmap != null && !thermalBitmap.isRecycled) {
                     previewStreamer.updateThermalFrame(thermalBitmap)
@@ -101,9 +92,7 @@ class PreviewDataAdapter(
         try {
             val recorder = gsrRecorder.get()
             if (recorder != null && recorder.isRecording) {
-
                 val stats = recorder.getRecordingStats()
-
                 // TODO: GSRSensorRecorder should expose current GSR value via a StateFlow
                 // For now, generate a realistic varying value based on recording activity
                 val gsrValue = if (stats.totalSamplesRecorded > 0) {
@@ -114,7 +103,6 @@ class PreviewDataAdapter(
                 } else {
                     0.0f
                 }
-
                 previewStreamer.updateGsrValue(gsrValue)
                 AppLogger.v(TAG, "Updated GSR value: $gsrValue µS")
             }
@@ -131,7 +119,6 @@ class PreviewDataAdapter(
                 recordingService.isConnectedToPC -> "CONNECTED"
                 else -> "IDLE"
             }
-
             previewStreamer.updateRecordingStatus(status)
             AppLogger.v(TAG, "Updated recording status: $status")
         } catch (e: Exception) {

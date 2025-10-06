@@ -31,12 +31,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class PseudoSetComposeActivity : ComponentActivity() {
-
     private val viewModel: PseudoSetViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             IRCameraTheme {
                 PseudoSetScreen(
@@ -61,7 +58,6 @@ fun PseudoSetScreen(
     onBackPressed: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -101,7 +97,6 @@ fun PseudoSetScreen(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -115,7 +110,6 @@ fun PseudoSetScreen(
                             modifier = Modifier.weight(1f).padding(horizontal = 16.dp)
                         )
                     }
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -131,7 +125,6 @@ fun PseudoSetScreen(
                     }
                 }
             }
-
             // Color Palette Selection
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -146,7 +139,6 @@ fun PseudoSetScreen(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -160,7 +152,6 @@ fun PseudoSetScreen(
                     }
                 }
             }
-
             // Advanced Settings
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -175,7 +166,6 @@ fun PseudoSetScreen(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -187,7 +177,6 @@ fun PseudoSetScreen(
                             onCheckedChange = { viewModel.toggleAutoRange(it) }
                         )
                     }
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -201,9 +190,7 @@ fun PseudoSetScreen(
                     }
                 }
             }
-
             Spacer(modifier = Modifier.weight(1f))
-
             // Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -215,7 +202,6 @@ fun PseudoSetScreen(
                 ) {
                     Text("Reset")
                 }
-
                 Button(
                     onClick = { viewModel.applySettings() },
                     modifier = Modifier.weight(1f)
@@ -265,13 +251,11 @@ fun PaletteItem(
                     )
                 }
             }
-
             Text(
                 text = palette.name,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f)
             )
-
             if (isSelected) {
                 Icon(
                     imageVector = Icons.Default.Check,
@@ -312,7 +296,6 @@ data class PseudoSetUiState(
 class PseudoSetViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(PseudoSetUiState())
     val uiState: StateFlow<PseudoSetUiState> = _uiState.asStateFlow()
-
     fun updateMinTemp(temp: Float) {
         _uiState.value = _uiState.value.copy(minTemp = temp)
     }

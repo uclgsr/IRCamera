@@ -26,9 +26,7 @@ import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRConfigViewModel
 
 class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
-
     private var isTC007 = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
         super.onCreate(savedInstanceState)
@@ -46,7 +44,6 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
         var distance by remember { mutableFloatStateOf(1.0f) }
         var emissivity by remember { mutableFloatStateOf(0.95f) }
         var selectedMaterial by remember { mutableStateOf<MaterialPreset?>(null) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -89,7 +86,6 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             onSelectionChange = { useDefaultModel = it }
                         )
                     }
-
                     // Environment Temperature
                     item {
                         ConfigurationCard(
@@ -107,8 +103,7 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             }
                         )
                     }
-
-                    // Distance Configuration  
+                    // Distance Configuration
                     item {
                         ConfigurationCard(
                             title = "Measurement Distance",
@@ -125,7 +120,6 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             }
                         )
                     }
-
                     // Emissivity Configuration
                     item {
                         ConfigurationCard(
@@ -143,7 +137,6 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             }
                         )
                     }
-
                     // Material Presets Section
                     item {
                         Text(
@@ -154,7 +147,6 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             modifier = Modifier.padding(vertical = 8.dp)
                         )
                     }
-
                     items(getMaterialPresets()) { material ->
                         MaterialPresetCard(
                             material = material,
@@ -206,7 +198,6 @@ private fun DefaultModelCard(
                     fontSize = 14.sp
                 )
             }
-
             RadioButton(
                 selected = isSelected,
                 onClick = { onSelectionChange(!isSelected) },
@@ -253,7 +244,6 @@ private fun ConfigurationCard(
                     tint = Color(0xFFFF6B35),
                     modifier = Modifier.size(24.dp)
                 )
-
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         title,
@@ -268,7 +258,6 @@ private fun ConfigurationCard(
                     )
                 }
             }
-
             Text(
                 value,
                 color = Color(0xFFFF6B35),
@@ -314,7 +303,6 @@ private fun MaterialPresetCard(
                     tint = if (isSelected) Color(0xFFFF6B35) else Color(0xFF7D8590),
                     modifier = Modifier.size(24.dp)
                 )
-
                 Column {
                     Text(
                         material.name,
@@ -329,7 +317,6 @@ private fun MaterialPresetCard(
                     )
                 }
             }
-
             if (isSelected) {
                 Icon(
                     Icons.Default.Check,

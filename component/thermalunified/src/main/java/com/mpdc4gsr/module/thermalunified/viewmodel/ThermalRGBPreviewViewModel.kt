@@ -8,7 +8,6 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.*
 
 class ThermalRGBPreviewViewModel : BaseViewModel() {
-
     data class RGBPreviewState(
         val isInitialized: Boolean = false,
         val isStreaming: Boolean = false,
@@ -45,7 +44,6 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
     // StateFlow for RGB preview state management
     private val _rgbPreviewState = MutableStateFlow(RGBPreviewState())
     val rgbPreviewState: StateFlow<RGBPreviewState> = _rgbPreviewState.asStateFlow()
-
     private val _thermalOverlayState = MutableStateFlow(ThermalOverlayState())
     val thermalOverlayState: StateFlow<ThermalOverlayState> = _thermalOverlayState.asStateFlow()
 
@@ -216,7 +214,6 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
         launchWithErrorHandling {
             val rgbFrame = _rgbPreviewState.value.currentFrame
             val thermalFrame = _thermalOverlayState.value.thermalBitmap
-
             if (rgbFrame != null && thermalFrame != null) {
                 // In a real implementation, this would combine the frames
                 // For now, we'll just use the thermal frame as the synced frame

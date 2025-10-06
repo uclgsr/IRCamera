@@ -5,7 +5,6 @@ import java.math.RoundingMode
 import java.util.*
 
 object NumberTools {
-
     fun to01(float: Float): String {
         return String.format(Locale.ENGLISH, "%.1f", float)
     }

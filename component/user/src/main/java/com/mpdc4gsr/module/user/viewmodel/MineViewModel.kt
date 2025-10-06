@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class MineViewModel : BaseViewModel() {
-
     data class UserInfo(
         val name: String = "User",
         val email: String = "user@example.com",
@@ -33,10 +32,8 @@ class MineViewModel : BaseViewModel() {
 
     private val _userInfo = MutableStateFlow(UserInfo())
     val userInfo: StateFlow<UserInfo> = _userInfo.asStateFlow()
-
     private val _deviceInfo = MutableStateFlow(DeviceInfo())
     val deviceInfo: StateFlow<DeviceInfo> = _deviceInfo.asStateFlow()
-
     private val _appInfo = MutableStateFlow(AppInfo())
     val appInfo: StateFlow<AppInfo> = _appInfo.asStateFlow()
 

@@ -16,7 +16,6 @@ import java.io.File
 import java.util.*
 
 class IRMonitorHistoryViewModel : BaseViewModel() {
-
     // Data classes for history management
     data class HistoryItem(
         val id: String,
@@ -51,16 +50,12 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
     // StateFlow properties expected by the Compose fragment
     private val _historyItems = MutableStateFlow<List<HistoryItem>>(emptyList())
     val historyItems: StateFlow<List<HistoryItem>> = _historyItems.asStateFlow()
-
     private val _selectedFilter = MutableStateFlow(HistoryFilter.ALL)
     val selectedFilter: StateFlow<HistoryFilter> = _selectedFilter.asStateFlow()
-
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
     private val _selectedItems = MutableStateFlow<Set<String>>(emptySet())
     val selectedItems: StateFlow<Set<String>> = _selectedItems.asStateFlow()
-
     private val _isSelectionMode = MutableStateFlow(false)
     val isSelectionMode: StateFlow<Boolean> = _isSelectionMode.asStateFlow()
 
@@ -93,13 +88,10 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
                 _historyUiEvents.emit(HistoryUiEvent.ShowMessage("No items selected for export"))
                 return@launchWithErrorHandling
             }
-
             // Create export data from selected items
             val exportData = historyItems.value.filter { selectedList.contains(it.id) }
-
             // Emit export event with data
             _historyUiEvents.emit(HistoryUiEvent.ExportData(exportData))
-
             // Show success message and clear selection
             _historyUiEvents.emit(HistoryUiEvent.ShowMessage("Exported ${exportData.size} items"))
             clearSelection()
@@ -121,7 +113,6 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
                         }
                     }
                 }
-
                 // Refresh the data after deletion
                 refreshHistory()
                 clearSelection()
@@ -136,21 +127,17 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
                 val historyItems = withContext(Dispatchers.IO) {
                     val recordList: List<ThermalDao.Record> =
                         AppDatabase.getInstance().thermalDao().queryRecordList()
-
                     // Convert database records to HistoryItem objects
                     recordList.mapIndexed { index, record ->
                         // Query additional details for temperature statistics
                         val detailList = AppDatabase.getInstance().thermalDao().queryDetail(record.startTime)
-
                         // Calculate temperature statistics from detail data
                         val temperatures = detailList.map { it.thermal }
                         val maxTemperatures = detailList.map { it.thermalMax }
                         val minTemperatures = detailList.map { it.thermalMin }
-
                         val avgTemp = if (temperatures.isNotEmpty()) temperatures.average().toFloat() else 0f
                         val maxTemp = maxTemperatures.maxOrNull() ?: 0f
                         val minTemp = minTemperatures.minOrNull() ?: 0f
-
                         HistoryItem(
                             id = record.startTime.toString(),
                             sessionName = "Session ${index + 1}",
@@ -170,7 +157,6 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
                         )
                     }
                 }
-
                 // Update the data on main thread
                 allHistoryItems = historyItems
                 applyFilter()
@@ -188,7 +174,6 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
             currentSelected.add(id)
         }
         _selectedItems.value = currentSelected
-
         // Exit selection mode if no items are selected
         if (currentSelected.isEmpty()) {
             _isSelectionMode.value = false
@@ -225,11 +210,9 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }.timeInMillis
-
         val tomorrow = calendar.apply {
             add(Calendar.DAY_OF_MONTH, 1)
         }.timeInMillis
-
         return allHistoryItems.filter { it.startTime in today until tomorrow }
     }
 
@@ -241,10 +224,8 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         val weekStart = calendar.timeInMillis
-
         calendar.add(Calendar.WEEK_OF_YEAR, 1)
         val weekEnd = calendar.timeInMillis
-
         return allHistoryItems.filter { it.startTime in weekStart until weekEnd }
     }
 
@@ -256,42 +237,23 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         val monthStart = calendar.timeInMillis
-
         calendar.add(Calendar.MONTH, 1)
         val monthEnd = calendar.timeInMillis
-
         return allHistoryItems.filter { it.startTime in monthStart until monthEnd }
     }
 
-    /**
-     * Searches for a thermal image file by checking multiple directories and filename patterns.
-     *
-     * Search order:
-     * 1. Directories are checked in the following order:
-     *    - FileConfig.gallerySourDir
-     *    - FileConfig.lineIrGalleryDir
-     *    - FileConfig.tc007IrGalleryDir
-     * 2. For each directory, filenames are checked in this order:
-     *    - If thermalId is provided: "<thermalId>.jpg"
-     *    - "<startTime>.jpg"
-     *    - "<startTime>.png"
-     *
-     * The first matching file found is returned. If no file is found, returns an empty string.
-     */
     private fun findThermalImagePath(startTime: Long, thermalId: String?): String {
         val possibleDirs = sequenceOf(
             FileConfig.gallerySourDir,
             FileConfig.lineIrGalleryDir,
             FileConfig.tc007IrGalleryDir
         )
-
         val possibleNames = sequenceOf(
             thermalId?.let { "$it.jpg" },
             thermalId?.let { "$it.png" },
             "${startTime}.jpg",
             "${startTime}.png"
         ).filterNotNull()
-
         return possibleDirs.flatMap { dir ->
             possibleNames.map { name -> File(dir, name) }
         }.firstOrNull { it.exists() }?.absolutePath ?: ""

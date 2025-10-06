@@ -6,7 +6,6 @@ import android.graphics.Paint
 import android.graphics.RectF
 
 object UnifiedFinalUtils {
-
     // Convert byte array to various numeric types with endianness support
     fun bytesToShort(bytes: ByteArray, offset: Int = 0, littleEndian: Boolean = true): Short {
         if (offset + 1 >= bytes.size) return 0
@@ -89,67 +88,55 @@ object UnifiedFinalUtils {
             textSize = config.textSize
             strokeWidth = config.lineWidth
         }
-
         // Draw grid if enabled
         if (config.showGrid) {
             paint.color = 0x40FFFFFF
             paint.style = Paint.Style.STROKE
-
             val gridSpacing = minOf(bounds.width() / 10, bounds.height() / 10)
             var x = bounds.left
             while (x <= bounds.right) {
                 canvas.drawLine(x, bounds.top, x, bounds.bottom, paint)
                 x += gridSpacing
             }
-
             var y = bounds.top
             while (y <= bounds.bottom) {
                 canvas.drawLine(bounds.left, y, bounds.right, y, paint)
                 y += gridSpacing
             }
         }
-
         // Draw temperature scale if enabled
         if (config.showScale) {
             paint.color = 0xFFFFFFFF.toInt()
             paint.style = Paint.Style.FILL
-
             val scaleWidth = 20f
             val scaleHeight = bounds.height() * 0.8f
             val scaleLeft = bounds.right - scaleWidth - 10f
             val scaleTop = bounds.top + (bounds.height() - scaleHeight) / 2
-
             // Draw scale background
             paint.color = 0x80000000.toInt()
             canvas.drawRect(
                 scaleLeft - 5f, scaleTop - 5f,
                 scaleLeft + scaleWidth + 25f, scaleTop + scaleHeight + 5f, paint
             )
-
             // Draw temperature scale
             val steps = 10
             for (i in 0..steps) {
                 val y = scaleTop + (scaleHeight * i / steps)
                 val temp = config.maxTemp - (config.maxTemp - config.minTemp) * i / steps
-
                 paint.color =
                     getTemperatureColor(temp, config.minTemp, config.maxTemp, config.colorPalette)
                 canvas.drawRect(scaleLeft, y - 2f, scaleLeft + scaleWidth, y + 2f, paint)
-
                 paint.color = 0xFFFFFFFF.toInt()
                 canvas.drawText("${temp.toInt()}°", scaleLeft + scaleWidth + 5f, y + 4f, paint)
             }
         }
-
         // Draw crosshair if enabled
         if (config.showCrosshair) {
             paint.color = 0xFFFF0000.toInt()
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = 1f
-
             val centerX = bounds.centerX()
             val centerY = bounds.centerY()
-
             canvas.drawLine(centerX - 10f, centerY, centerX + 10f, centerY, paint)
             canvas.drawLine(centerX, centerY - 10f, centerX, centerY + 10f, paint)
         }
@@ -162,7 +149,6 @@ object UnifiedFinalUtils {
         palette: String
     ): Int {
         val normalized = ((temp - minTemp) / (maxTemp - minTemp)).coerceIn(0f, 1f)
-
         return when (palette.uppercase()) {
             "RAINBOW" -> {
                 val hue = (1f - normalized) * 240f // Blue to Red
@@ -222,7 +208,6 @@ object UnifiedFinalUtils {
         val startTime = System.currentTimeMillis()
         val errors = mutableListOf<String>()
         val warnings = mutableListOf<String>()
-
         try {
             // Initialize storage directories
             if (config.initializeStorage) {
@@ -231,11 +216,9 @@ object UnifiedFinalUtils {
                     errors.add("Failed to initialize storage directories")
                 }
             }
-
             // Initialize preferences
             val defaultPrefs = UnifiedPreferencesUtils.getDefaultPreferences()
             UnifiedPreferencesUtils.initializePreferences(context, defaultPrefs)
-
             // Initialize networking if enabled
             if (config.initializeNetworking) {
                 try {
@@ -245,7 +228,6 @@ object UnifiedFinalUtils {
                     warnings.add("Network initialization warning: ${e.message}")
                 }
             }
-
             // Initialize sensors if enabled
             if (config.initializeSensors) {
                 try {
@@ -255,7 +237,6 @@ object UnifiedFinalUtils {
                     warnings.add("Sensor initialization warning: ${e.message}")
                 }
             }
-
             // Initialize camera if enabled
             if (config.initializeCamera) {
                 try {
@@ -265,16 +246,13 @@ object UnifiedFinalUtils {
                     warnings.add("Camera initialization warning: ${e.message}")
                 }
             }
-
             val endTime = System.currentTimeMillis()
-
             return InitializationResult(
                 success = errors.isEmpty(),
                 errors = errors,
                 warnings = warnings,
                 initializationTimeMs = endTime - startTime
             )
-
         } catch (e: Exception) {
             errors.add("Critical initialization error: ${e.message}")
             return InitializationResult(

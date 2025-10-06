@@ -14,7 +14,6 @@ class DeviceBroadcastReceiver : BroadcastReceiver() {
     private val TAG = this.javaClass.simpleName
 
     companion object {
-
         const val ACTION_USB_PERMISSION = "com.mpdc4gsr.topInfrared.USB_PERMISSION"
     }
 
@@ -31,7 +30,6 @@ class DeviceBroadcastReceiver : BroadcastReceiver() {
             ACTION_USB_PERMISSION -> XLog.v("$TAG ACTION_USB_PERMISSION")
             else -> XLog.v("$TAG ${intent.action}")
         }
-
         if (intent.action == ACTION_USB_PERMISSION) {
             DeviceTools.isConnect(isSendConnectEvent = true, isAutoRequest = false)
         } else {

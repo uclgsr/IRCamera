@@ -27,7 +27,6 @@ fun GSRPlotScreen(
                 }
             }
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()

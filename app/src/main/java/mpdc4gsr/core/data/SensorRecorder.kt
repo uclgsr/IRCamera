@@ -3,19 +3,12 @@ package mpdc4gsr.core.data
 import kotlinx.coroutines.flow.Flow
 
 interface SensorRecorder {
-
     val sensorId: String
-
     val sensorType: String
-
     val isRecording: Boolean
-
     val samplingRate: Double
-
     suspend fun initialize(): Boolean
-
     suspend fun startRecording(sessionDirectory: String): Boolean
-
     suspend fun startRecording(
         sessionDirectory: String,
         sessionMetadata: SessionMetadata
@@ -25,7 +18,6 @@ interface SensorRecorder {
     }
 
     suspend fun stopRecording(): Boolean
-
     suspend fun addSyncMarker(
         markerType: String,
         timestampNs: Long,
@@ -33,11 +25,8 @@ interface SensorRecorder {
     )
 
     suspend fun cleanup()
-
     fun getStatusFlow(): Flow<RecordingStatus>
-
     fun getErrorFlow(): Flow<SensorError>
-
     fun getRecordingStats(): RecordingStats
 }
 

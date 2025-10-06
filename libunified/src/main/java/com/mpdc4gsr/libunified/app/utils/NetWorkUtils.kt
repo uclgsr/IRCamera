@@ -14,7 +14,6 @@ import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
 
 object NetWorkUtils {
-
     private var mNetworkCallback: ConnectivityManager.NetworkCallback? = null
     private var netWorkListener: ((network: Network?) -> Unit)? = null
     val connectivityManager by lazy {
@@ -49,7 +48,6 @@ object NetWorkUtils {
             val request = NetworkRequest.Builder()
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .build()
-
             mNetworkCallback = object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     super.onAvailable(network)
@@ -61,7 +59,6 @@ object NetWorkUtils {
                     netWorkListener?.invoke(null)
                 }
             }
-
             connectivityManager.requestNetwork(request, mNetworkCallback!!)
         } else {
             // Android 10+ approach
@@ -69,12 +66,10 @@ object NetWorkUtils {
                 .setSsid(ssid)
                 .setWpa2Passphrase(password)
                 .build()
-
             val request = NetworkRequest.Builder()
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .setNetworkSpecifier(wifiNetworkSpecifier)
                 .build()
-
             mNetworkCallback = object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     super.onAvailable(network)
@@ -86,7 +81,6 @@ object NetWorkUtils {
                     netWorkListener?.invoke(null)
                 }
             }
-
             connectivityManager.requestNetwork(request, mNetworkCallback!!)
         }
     }

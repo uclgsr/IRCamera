@@ -47,11 +47,8 @@ open class HouseBase {
 
     @ColumnInfo
     var updateTime: Long = 0
-
     override fun equals(other: Any?): Boolean = other is HouseBase && other.id == id
-
     override fun hashCode(): Int = id.toInt()
-
     fun getSpaceUnitStr(): String =
         when (houseSpaceUnit) {
             0 -> "ac"
@@ -83,10 +80,8 @@ open class HouseBase {
 
 @Entity
 class HouseDetect : HouseBase() {
-
     @Ignore
     var dirList: ArrayList<DirDetect> = ArrayList()
-
     fun copyOne(): HouseDetect {
         val newDetect = HouseDetect()
         newDetect.id = 0
@@ -120,7 +115,6 @@ class HouseDetect : HouseBase() {
         houseReport.detectTime = detectTime
         houseReport.createTime = createTime
         houseReport.updateTime = updateTime
-
         val newDirList: ArrayList<DirReport> = ArrayList(dirList.size)
         for (dirDetect in dirList) {
             if (dirDetect.itemList.isNotEmpty()) {
@@ -137,7 +131,6 @@ class HouseDetect : HouseBase() {
 
 @Entity
 class HouseReport : HouseBase() {
-
     @ColumnInfo
     var inspectorWhitePath: String = ""
 

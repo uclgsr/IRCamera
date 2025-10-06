@@ -83,9 +83,7 @@ fun SensorSelectionDialog(
                     selectedCount = selectedSensors.size,
                     totalCount = availableSensors.count { it.isAvailable }
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Sensor list
                 LazyColumn(
                     modifier = Modifier
@@ -108,9 +106,7 @@ fun SensorSelectionDialog(
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(20.dp))
-
                 // Action buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -125,7 +121,6 @@ fun SensorSelectionDialog(
                     ) {
                         Text("Cancel")
                     }
-
                     Button(
                         onClick = onDismiss,
                         modifier = Modifier.weight(1f),
@@ -134,7 +129,6 @@ fun SensorSelectionDialog(
                         Text("Confirm (${selectedSensors.size})")
                     }
                 }
-
                 // Battery impact warning
                 if (selectedSensors.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(12.dp))
@@ -166,7 +160,6 @@ private fun SensorSelectionHeader(
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
-
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = MaterialTheme.colorScheme.primaryContainer
@@ -179,9 +172,7 @@ private fun SensorSelectionHeader(
                 )
             }
         }
-
         Spacer(modifier = Modifier.height(4.dp))
-
         Text(
             text = subtitle,
             style = MaterialTheme.typography.bodyMedium,
@@ -197,7 +188,6 @@ private fun SensorSelectionItem(
     onSelectionChanged: (Boolean) -> Unit
 ) {
     val sensor = sensorAvailability.sensorType
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -244,9 +234,7 @@ private fun SensorSelectionItem(
                     else -> MaterialTheme.colorScheme.onSurface
                 }
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             // Sensor information
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -264,7 +252,6 @@ private fun SensorSelectionItem(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 // Availability status or data rate
                 if (sensorAvailability.isAvailable) {
                     Row(
@@ -300,7 +287,6 @@ private fun SensorSelectionItem(
                     )
                 }
             }
-
             // Selection indicator
             if (sensorAvailability.isAvailable) {
                 Checkbox(
@@ -330,7 +316,6 @@ private fun BatteryImpactWarning(
     val highImpactSensors = selectedSensors.filter { sensorType ->
         availableSensors.find { it.sensorType == sensorType }?.batteryImpact == "High"
     }
-
     if (highImpactSensors.isNotEmpty()) {
         Card(
             colors = CardDefaults.cardColors(
@@ -452,7 +437,6 @@ fun SensorSelectionDemo() {
     var showDialog by remember { mutableStateOf(false) }
     var selectedSensors by remember { mutableStateOf<Set<SensorType>>(emptySet()) }
     val availableSensors = remember { getSampleSensorAvailability() }
-
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
@@ -461,7 +445,6 @@ fun SensorSelectionDemo() {
         ) {
             Text("Select Sensors (${selectedSensors.size})")
         }
-
         if (selectedSensors.isNotEmpty()) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
@@ -470,7 +453,6 @@ fun SensorSelectionDemo() {
             )
         }
     }
-
     if (showDialog) {
         SensorSelectionDialog(
             availableSensors = availableSensors,

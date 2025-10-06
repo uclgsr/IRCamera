@@ -30,19 +30,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.AppBaseViewModel
 
-/**
- * ResearchTemplateComposeActivity - Modern Research Template Selection with Compose
- *
- * Advanced research template management interface featuring:
- * - Interactive template gallery with category filtering
- * - Template preview with detailed parameter display
- * - Custom template creation wizard
- * - Template sharing and import/export functionality
- * - Research protocol validation and guidance
- * - Template version management and history
- */
 class ResearchTemplateComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
-
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, ResearchTemplateComposeActivity::class.java))
@@ -60,7 +48,6 @@ class ResearchTemplateComposeActivity : BaseComposeActivity<AppBaseViewModel>() 
         var selectedCategory by remember { mutableStateOf<ResearchTemplate.TemplateCategory?>(null) }
         var showTemplateDetails by remember { mutableStateOf(false) }
         var showCreateDialog by remember { mutableStateOf(false) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -127,7 +114,6 @@ class ResearchTemplateComposeActivity : BaseComposeActivity<AppBaseViewModel>() 
                 )
             }
         }
-
         if (showTemplateDetails && selectedTemplate != null) {
             TemplateDetailsDialog(
                 template = selectedTemplate!!,
@@ -138,7 +124,6 @@ class ResearchTemplateComposeActivity : BaseComposeActivity<AppBaseViewModel>() 
                 }
             )
         }
-
         if (showCreateDialog) {
             CreateTemplateDialog(
                 onDismiss = { showCreateDialog = false },
@@ -174,7 +159,6 @@ private fun ResearchTemplateContent(
             onCategoryChange = onCategoryChange,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         // Template Grid
         val templates = ResearchTemplate.PREDEFINED_TEMPLATES
         val filteredTemplates = if (selectedCategory == null) {
@@ -182,7 +166,6 @@ private fun ResearchTemplateContent(
         } else {
             templates.filter { it.category == selectedCategory }
         }
-
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -206,7 +189,6 @@ private fun CategoryFilterRow(
     modifier: Modifier = Modifier
 ) {
     val categories = listOf(null) + ResearchTemplate.TemplateCategory.values().toList()
-
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
@@ -214,7 +196,6 @@ private fun CategoryFilterRow(
         categories.forEach { category ->
             val displayName = category?.name?.replace("_", " ")?.lowercase()
                 ?.replaceFirstChar { it.uppercase() } ?: "All"
-
             FilterChip(
                 selected = selectedCategory == category,
                 onClick = { onCategoryChange(category) },
@@ -263,7 +244,6 @@ private fun TemplateCard(
                     modifier = Modifier.size(32.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
-
                 Surface(
                     shape = RoundedCornerShape(12.dp),
                     color = getCategoryColor(template.category),
@@ -277,9 +257,7 @@ private fun TemplateCard(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(12.dp))
-
             // Template name and description
             Text(
                 text = template.name,
@@ -288,7 +266,6 @@ private fun TemplateCard(
                 maxLines = 2,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
-
             Text(
                 text = template.description,
                 style = MaterialTheme.typography.bodySmall,
@@ -296,7 +273,6 @@ private fun TemplateCard(
                 maxLines = 3,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-
             // Template details
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -314,7 +290,6 @@ private fun TemplateCard(
                         fontWeight = FontWeight.Medium
                     )
                 }
-
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = "Sensors",
@@ -355,14 +330,12 @@ private fun TemplateDetailsDialog(
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
                 Text(
                     text = "Configuration",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
-
                 Card(
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -378,7 +351,6 @@ private fun TemplateDetailsDialog(
                             Text("Duration:", style = MaterialTheme.typography.bodySmall)
                             Text("${template.duration} minutes", style = MaterialTheme.typography.bodySmall)
                         }
-
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -386,7 +358,6 @@ private fun TemplateDetailsDialog(
                             Text("Sensors:", style = MaterialTheme.typography.bodySmall)
                             Text(template.sensors.joinToString(", "), style = MaterialTheme.typography.bodySmall)
                         }
-
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -426,7 +397,6 @@ private fun CreateTemplateDialog(
     var templateDescription by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("Custom") }
     val keyboardController = LocalSoftwareKeyboardController.current
-
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Create New Template") },
@@ -447,7 +417,6 @@ private fun CreateTemplateDialog(
                         }
                     )
                 )
-
                 OutlinedTextField(
                     value = templateDescription,
                     onValueChange = { templateDescription = it },

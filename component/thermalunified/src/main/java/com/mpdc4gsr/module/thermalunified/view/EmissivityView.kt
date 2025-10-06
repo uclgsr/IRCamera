@@ -13,26 +13,19 @@ import com.mpdc4gsr.module.thermalunified.compat.spToPx
 
 class EmissivityView : View {
     companion object {
-
         private const val DEFAULT_STROKE_WIDTH: Float = 0.5f
     }
 
     var isAlignTop = false
-
     var drawTopLine = false
-
     private val textList: ArrayList<CharSequence> = ArrayList(3)
-
     private val layoutList: ArrayList<StaticLayout> = ArrayList(3)
-
     private var strokeWidth: Float = 0f
     private val linePaint = Paint()
     private val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
@@ -60,10 +53,8 @@ class EmissivityView : View {
     fun refreshText(newList: List<String>) {
         textList.clear()
         textList.addAll(newList)
-
         textPaint.color = if (textList.size == 1) 0xffffffff.toInt() else 0xccffffff.toInt()
         textPaint.textSize = (if (textList.size == 1) 12f else 11f).spToPx(context)
-
         requestLayout()
     }
 
@@ -75,7 +66,6 @@ class EmissivityView : View {
         val firstWidth: Int = (widthSize * 135 / 335f).toInt()
         val elseWidth: Int = (widthSize - firstWidth) / 2
         val contentWidth: Int = firstWidth + elseWidth * 2
-
         layoutList.clear()
         for (i in textList.indices) {
             val textWidth: Int =
@@ -96,7 +86,6 @@ class EmissivityView : View {
                     .build(),
             )
         }
-
         var maxHeight = 0
         for (layout in layoutList) {
             maxHeight = maxHeight.coerceAtLeast(layout.height)
@@ -105,14 +94,12 @@ class EmissivityView : View {
             maxHeight = textPaint.fontMetricsInt.bottom - textPaint.fontMetricsInt.top
         }
         maxHeight += 12.dpToPx(context)
-
         setMeasuredDimension(contentWidth + paddingStart + paddingEnd, maxHeight)
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.translate(paddingStart.toFloat(), 0f)
-
         val contentWidth = (width - paddingStart - paddingEnd).toFloat()
         if (drawTopLine) {
             canvas.drawLine(0f, strokeWidth / 2, contentWidth, strokeWidth / 2, linePaint)
@@ -125,7 +112,6 @@ class EmissivityView : View {
             linePaint
         )
         canvas.drawLine(strokeWidth / 2, 0f, strokeWidth / 2, height.toFloat(), linePaint)
-
         val padding = 12f.dpToPx(context)
         for (layout in layoutList) {
             canvas.save()
@@ -135,7 +121,6 @@ class EmissivityView : View {
             )
             layout.draw(canvas)
             canvas.restore()
-
             val itemWidth = padding + layout.width.toFloat() + padding
             canvas.drawLine(
                 itemWidth - strokeWidth / 2,

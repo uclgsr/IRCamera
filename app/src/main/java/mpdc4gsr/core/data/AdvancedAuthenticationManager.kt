@@ -21,18 +21,15 @@ import javax.crypto.spec.SecretKeySpec
 class AdvancedAuthenticationManager(private val context: Context) {
     companion object {
         private const val TAG = "AdvancedAuth"
-
         const val AUTH_LEVEL_NONE = 0
         const val AUTH_LEVEL_BASIC = 1
         const val AUTH_LEVEL_CERTIFICATE = 2
         const val AUTH_LEVEL_TOKEN = 3
         const val AUTH_LEVEL_BIOMETRIC = 4
-
         private const val TOKEN_VALIDITY_MS = 24 * 60 * 60 * 1000L
         private const val CERTIFICATE_ROTATION_DAYS = 30
         private const val MAX_AUTH_ATTEMPTS = 5
         private const val LOCKOUT_DURATION_MS = 15 * 60 * 1000L
-
         private const val KEYSTORE_ALIAS_DEVICE = "ircamera_device_key"
         private const val KEYSTORE_ALIAS_SESSION = "ircamera_session_key"
         private const val KEYSTORE_ALIAS_HMAC = "ircamera_hmac_key"
@@ -43,16 +40,12 @@ class AdvancedAuthenticationManager(private val context: Context) {
     private var authenticatedRole: DeviceRole = DeviceRole.GUEST
     private var sessionToken: String? = null
     private var sessionExpiry: Long = 0L
-
     private val failedAttempts = ConcurrentHashMap<String, Int>()
     private val lockoutExpiry = ConcurrentHashMap<String, Long>()
-
     private val logger = StructuredLogger.getInstance(context)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
     private var certificateManager: CertificateManager? = null
     private var roleManager: RoleBasedAccessControl? = null
-
     private var securityMonitor: SecurityMonitor? = null
 
     enum class DeviceRole(val level: Int, val permissions: Set<String>) {
@@ -106,14 +99,12 @@ class AdvancedAuthenticationManager(private val context: Context) {
 
     interface AuthenticationListener {
         fun onAuthenticationSuccess(context: AuthenticationContext)
-
         fun onAuthenticationFailure(
             reason: AuthenticationResult,
             attemptsRemaining: Int,
         )
 
         fun onSessionExpired()
-
         fun onSecurityAlert(
             alertType: String,
             details: Map<String, Any>,
@@ -126,29 +117,23 @@ class AdvancedAuthenticationManager(private val context: Context) {
     }
 
     private var authListener: AuthenticationListener? = null
-
     fun initialize(): Boolean {
         return try {
             AppLogger.i(TAG, "Initializing advanced authentication system")
-
             certificateManager =
                 CertificateManager(context).apply {
                     initialize()
                 }
-
             roleManager =
                 RoleBasedAccessControl(context, logger).apply {
                     initialize()
                 }
-
             securityMonitor =
                 SecurityMonitor(context, logger).apply {
                     initialize()
                     startMonitoring()
                 }
-
             initializeKeystore()
-
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 TAG,
@@ -160,7 +145,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
                     "keystore_initialized" to true,
                 ),
             )
-
             true
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize advanced authentication", e)
@@ -185,11 +169,9 @@ class AdvancedAuthenticationManager(private val context: Context) {
         authLevel: Int,
         credentials: Map<String, Any>,
     ): AuthenticationResult {
-
         if (isDeviceLocked(deviceId)) {
             return AuthenticationResult.ACCOUNT_LOCKED
         }
-
         try {
             val result =
                 when (authLevel) {
@@ -199,13 +181,11 @@ class AdvancedAuthenticationManager(private val context: Context) {
                     AUTH_LEVEL_BIOMETRIC -> authenticateBiometric(deviceId, credentials)
                     else -> AuthenticationResult.INVALID_CREDENTIALS
                 }
-
             if (result == AuthenticationResult.SUCCESS) {
                 onAuthenticationSuccess(deviceId, authLevel, credentials)
             } else {
                 onAuthenticationFailure(deviceId, result)
             }
-
             return result
         } catch (e: Exception) {
             AppLogger.e(TAG, "Authentication error for device $deviceId", e)
@@ -229,16 +209,13 @@ class AdvancedAuthenticationManager(private val context: Context) {
     ): AuthenticationResult {
         val username = credentials["username"] as? String
         val password = credentials["password"] as? String
-
         if (username == "admin" && password == "admin") {
             return AuthenticationResult.SUCCESS
         }
-
         val enhancedCredentials = getEnhancedBasicCredentials()
         if (enhancedCredentials.containsKey(username) && enhancedCredentials[username] == password) {
             return AuthenticationResult.SUCCESS
         }
-
         return AuthenticationResult.INVALID_CREDENTIALS
     }
 
@@ -249,11 +226,9 @@ class AdvancedAuthenticationManager(private val context: Context) {
         val certificate = credentials["certificate"] as? ByteArray
         val signature = credentials["signature"] as? ByteArray
         val challenge = credentials["challenge"] as? String
-
         if (certificate == null || signature == null || challenge == null) {
             return AuthenticationResult.CERTIFICATE_INVALID
         }
-
         // Validate certificate using CertificateManager
         return withContext(Dispatchers.IO) {
             try {
@@ -261,30 +236,25 @@ class AdvancedAuthenticationManager(private val context: Context) {
                     AppLogger.w(TAG, "Certificate manager not initialized")
                     return@withContext AuthenticationResult.HARDWARE_UNAVAILABLE
                 }
-
                 // Parse certificate from byte array
                 val certificateFactory = java.security.cert.CertificateFactory.getInstance("X.509")
                 val x509Certificate = certificateFactory.generateCertificate(
                     java.io.ByteArrayInputStream(certificate)
                 ) as? java.security.cert.X509Certificate
-
                 if (x509Certificate == null) {
                     AppLogger.w(TAG, "Failed to parse certificate")
                     return@withContext AuthenticationResult.CERTIFICATE_INVALID
                 }
-
                 // Validate the certificate using the certificate manager
                 val isValid = certificateManager!!.validateDeviceCertificate(x509Certificate)
                 if (!isValid) {
                     AppLogger.w(TAG, "Certificate validation failed for device: $deviceId")
                     return@withContext AuthenticationResult.CERTIFICATE_INVALID
                 }
-
                 // TODO: Validate signature and challenge when cryptographic signature verification is implemented
                 // For now, we accept valid certificates as sufficient authentication
                 AppLogger.i(TAG, "Certificate authentication successful for device: $deviceId")
                 AuthenticationResult.SUCCESS
-
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Certificate authentication error for device $deviceId", e)
                 AuthenticationResult.CERTIFICATE_INVALID
@@ -299,19 +269,15 @@ class AdvancedAuthenticationManager(private val context: Context) {
         val token = credentials["token"] as? String
         val timestamp = credentials["timestamp"] as? Long
         val hmac = credentials["hmac"] as? String
-
         if (token == null || timestamp == null || hmac == null) {
             return AuthenticationResult.INVALID_CREDENTIALS
         }
-
         if (System.currentTimeMillis() - timestamp > TOKEN_VALIDITY_MS) {
             return AuthenticationResult.TOKEN_EXPIRED
         }
-
         if (!verifyHmac(deviceId, token, timestamp, hmac)) {
             return AuthenticationResult.INVALID_CREDENTIALS
         }
-
         return AuthenticationResult.SUCCESS
     }
 
@@ -319,14 +285,11 @@ class AdvancedAuthenticationManager(private val context: Context) {
         deviceId: String,
         credentials: Map<String, Any>,
     ): AuthenticationResult {
-
         val hardwareKey = credentials["hardware_key"] as? ByteArray
         val biometricSignature = credentials["biometric_signature"] as? ByteArray
-
         if (hardwareKey == null || biometricSignature == null) {
             return AuthenticationResult.HARDWARE_UNAVAILABLE
         }
-
         return if (verifyHardwareKey(deviceId, hardwareKey, biometricSignature)) {
             AuthenticationResult.SUCCESS
         } else {
@@ -339,21 +302,16 @@ class AdvancedAuthenticationManager(private val context: Context) {
         authLevel: Int,
         credentials: Map<String, Any>,
     ) {
-
         failedAttempts.remove(deviceId)
         lockoutExpiry.remove(deviceId)
-
         val role = determineDeviceRole(deviceId, authLevel, credentials)
-
         val sessionToken = generateSessionToken(deviceId, role)
         val sessionExpiry = System.currentTimeMillis() + TOKEN_VALIDITY_MS
-
         currentAuthLevel.set(true)
         authenticatedDeviceId = deviceId
         authenticatedRole = role
         this.sessionToken = sessionToken
         this.sessionExpiry = sessionExpiry
-
         val context =
             AuthenticationContext(
                 deviceId = deviceId,
@@ -363,7 +321,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
                 expiryTime = sessionExpiry,
                 capabilities = role.permissions,
             )
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
@@ -375,9 +332,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
                 "session_duration_hours" to (TOKEN_VALIDITY_MS / (60 * 60 * 1000L)),
             ),
         )
-
         authListener?.onAuthenticationSuccess(context)
-
         startSessionMonitoring(deviceId, sessionExpiry)
     }
 
@@ -385,13 +340,10 @@ class AdvancedAuthenticationManager(private val context: Context) {
         deviceId: String,
         result: AuthenticationResult,
     ) {
-
         val attempts = failedAttempts.getOrDefault(deviceId, 0) + 1
         failedAttempts[deviceId] = attempts
-
         if (attempts >= MAX_AUTH_ATTEMPTS) {
             lockoutExpiry[deviceId] = System.currentTimeMillis() + LOCKOUT_DURATION_MS
-
             securityMonitor?.reportSecurityEvent(
                 "account_locked",
                 mapOf(
@@ -401,9 +353,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
                 ),
             )
         }
-
         val attemptsRemaining = maxOf(0, MAX_AUTH_ATTEMPTS - attempts)
-
         logger.log(
             StructuredLogger.LogLevel.WARNING,
             TAG,
@@ -415,7 +365,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
                 "attempts_remaining" to attemptsRemaining,
             ),
         )
-
         authListener?.onAuthenticationFailure(result, attemptsRemaining)
     }
 
@@ -424,7 +373,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
         if (System.currentTimeMillis() < lockoutTime) {
             return true
         } else {
-
             lockoutExpiry.remove(deviceId)
             failedAttempts.remove(deviceId)
             return false
@@ -436,9 +384,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         authLevel: Int,
         credentials: Map<String, Any>,
     ): DeviceRole {
-
         val deviceType = credentials["device_type"] as? String
-
         return when (authLevel) {
             AUTH_LEVEL_BASIC -> DeviceRole.OBSERVER
             AUTH_LEVEL_CERTIFICATE ->
@@ -462,10 +408,8 @@ class AdvancedAuthenticationManager(private val context: Context) {
         val random = SecureRandom()
         val tokenBytes = ByteArray(32)
         random.nextBytes(tokenBytes)
-
         val timestamp = System.currentTimeMillis()
         val payload = "$deviceId:${role.name}:$timestamp"
-
         return android.util.Base64.encodeToString(
             (payload + ":" + tokenBytes.joinToString("")).toByteArray(),
             android.util.Base64.NO_WRAP,
@@ -482,11 +426,9 @@ class AdvancedAuthenticationManager(private val context: Context) {
             val keySpec = SecretKeySpec(getHmacKey(deviceId), "HmacSHA256")
             val mac = Mac.getInstance("HmacSHA256")
             mac.init(keySpec)
-
             val data = "$deviceId:$token:$timestamp".toByteArray()
             val calculatedHmac =
                 android.util.Base64.encodeToString(mac.doFinal(data), android.util.Base64.NO_WRAP)
-
             calculatedHmac == providedHmac
         } catch (e: Exception) {
             AppLogger.e(TAG, "HMAC verification failed", e)
@@ -502,16 +444,13 @@ class AdvancedAuthenticationManager(private val context: Context) {
         return try {
             val keyStore = KeyStore.getInstance("AndroidKeyStore")
             keyStore.load(null)
-
             if (!keyStore.containsAlias(KEYSTORE_ALIAS_DEVICE)) {
                 return false
             }
-
             val publicKey = keyStore.getCertificate(KEYSTORE_ALIAS_DEVICE).publicKey
             val signature_verifier = java.security.Signature.getInstance("SHA256withRSA")
             signature_verifier.initVerify(publicKey)
             signature_verifier.update(hardwareKey)
-
             signature_verifier.verify(signature)
         } catch (e: Exception) {
             AppLogger.e(TAG, "Hardware key verification failed", e)
@@ -531,14 +470,11 @@ class AdvancedAuthenticationManager(private val context: Context) {
         return try {
             val keyStore = KeyStore.getInstance("AndroidKeyStore")
             keyStore.load(null)
-
             if (!keyStore.containsAlias(KEYSTORE_ALIAS_HMAC)) {
                 generateHmacKey()
             }
-
             "$deviceId:hmac_key_2024".toByteArray()
         } catch (e: Exception) {
-
             "default_hmac_key_$deviceId".toByteArray()
         }
     }
@@ -548,7 +484,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
             generateDeviceKey()
             generateSessionKey()
             generateHmacKey()
-
             AppLogger.i(TAG, "Android Keystore initialized successfully")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize keystore", e)
@@ -567,7 +502,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
                 .setUserAuthenticationRequired(false)
                 .build()
-
         keyGenerator.init(keyGenParameterSpec)
         keyGenerator.generateKey()
     }
@@ -584,7 +518,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
                 .setUserAuthenticationRequired(false)
                 .build()
-
         keyGenerator.init(keyGenParameterSpec)
         keyGenerator.generateKey()
     }
@@ -598,7 +531,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
             )
                 .setUserAuthenticationRequired(false)
                 .build()
-
         keyGenerator.init(keyGenParameterSpec)
         keyGenerator.generateKey()
     }
@@ -610,10 +542,8 @@ class AdvancedAuthenticationManager(private val context: Context) {
         scope.launch {
             while (System.currentTimeMillis() < expiryTime && currentAuthLevel.get()) {
                 delay(60000)
-
                 securityMonitor?.checkSessionActivity(deviceId)
             }
-
             if (currentAuthLevel.get()) {
                 logout()
                 authListener?.onSessionExpired()
@@ -627,7 +557,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
         authenticatedRole = DeviceRole.GUEST
         sessionToken = null
         sessionExpiry = 0L
-
         logger.log(StructuredLogger.LogLevel.INFO, TAG, "logout", emptyMap())
     }
 
@@ -636,7 +565,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
 
     fun getCurrentContext(): AuthenticationContext? {
         if (!isAuthenticated()) return null
-
         return AuthenticationContext(
             deviceId = authenticatedDeviceId ?: return null,
             authLevel =
@@ -656,7 +584,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
 
     fun hasPermission(permission: String): Boolean {
         if (!isAuthenticated()) return false
-
         return authenticatedRole.permissions.contains("*") ||
                 authenticatedRole.permissions.contains(permission)
     }
@@ -684,7 +611,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
         roleManager = null
         securityMonitor = null
         authListener = null
-
         AppLogger.i(TAG, "Advanced authentication manager shutdown complete")
     }
 }

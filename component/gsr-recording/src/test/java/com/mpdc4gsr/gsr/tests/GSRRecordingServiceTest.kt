@@ -26,7 +26,6 @@ class GSRRecordingServiceTest {
 
     @Test
     fun testServiceCreation() {
-
         val serviceClass = EnhancedRecordingService::class.java
         assertNotNull("Service class should be accessible", serviceClass)
         assertEquals(
@@ -38,20 +37,17 @@ class GSRRecordingServiceTest {
 
     @Test
     fun testServiceBinder() {
-
         try {
             val binderClass =
                 Class.forName("com.mpdc4gsr.gsr.service.EnhancedRecordingService\$EnhancedRecordingBinder")
             assertNotNull("EnhancedRecordingBinder class should exist", binderClass)
         } catch (e: ClassNotFoundException) {
-
             assertTrue("Service structure test completed", true)
         }
     }
 
     @Test
     fun testServiceLifecycle() {
-
         val intent = Intent(context, EnhancedRecordingService::class.java)
         assertNotNull("Service intent should be created", intent)
         assertEquals(
@@ -63,13 +59,11 @@ class GSRRecordingServiceTest {
 
     @Test
     fun testStartRecordingIntent() {
-
         val intent = Intent(context, EnhancedRecordingService::class.java)
         intent.action = "action_start_recording"
         intent.putExtra("extra_session_id", "test_session_123")
         intent.putExtra("extra_participant_id", "participant_001")
         intent.putExtra("extra_study_name", "test_study")
-
         assertNotNull("Start recording intent should be created", intent)
         assertEquals("Action should be set", "action_start_recording", intent.action)
         assertEquals(
@@ -81,22 +75,18 @@ class GSRRecordingServiceTest {
 
     @Test
     fun testStopRecordingIntent() {
-
         val intent = Intent(context, EnhancedRecordingService::class.java)
         intent.action = "action_stop_recording"
-
         assertNotNull("Stop recording intent should be created", intent)
         assertEquals("Action should be set", "action_stop_recording", intent.action)
     }
 
     @Test
     fun testPCConnectionIntent() {
-
         val intent = Intent(context, EnhancedRecordingService::class.java)
         intent.action = "action_connect_pc"
         intent.putExtra("extra_pc_ip", "192.168.1.100")
         intent.putExtra("extra_pc_port", 8080)
-
         assertNotNull("PC connection intent should be created", intent)
         assertEquals("Action should be set", "action_connect_pc", intent.action)
         assertEquals("PC IP should be set", "192.168.1.100", intent.getStringExtra("extra_pc_ip"))
@@ -105,36 +95,29 @@ class GSRRecordingServiceTest {
 
     @Test
     fun testDiscoveryIntent() {
-
         val intent = Intent(context, EnhancedRecordingService::class.java)
         intent.action = "action_start_discovery"
-
         assertNotNull("Discovery intent should be created", intent)
         assertEquals("Action should be set", "action_start_discovery", intent.action)
     }
 
     @Test
     fun testServiceState() {
-
         try {
             val serviceClass = EnhancedRecordingService::class.java
             assertNotNull("Service class should be accessible", serviceClass)
-
             val methods = serviceClass.declaredMethods
             assertTrue("Service should have methods", methods.isNotEmpty())
         } catch (e: Exception) {
-
             assertTrue("Service state test attempted", true)
         }
     }
 
     @Test
     fun testNotificationChannelCreation() {
-
         val channelId = "gsr_recording_channel"
         assertNotNull("Channel ID should be defined", channelId)
         assertTrue("Channel ID should not be empty", channelId.isNotEmpty())
-
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE)
         assertNotNull("NotificationManager should be available", notificationManager)
     }

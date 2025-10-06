@@ -26,7 +26,6 @@ fun HomeGuideDialogCompose(
     onDismiss: () -> Unit
 ) {
     var currentStep by remember(initialStep) { mutableIntStateOf(initialStep) }
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -124,13 +123,11 @@ private fun GuideStep1Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
-
         Text(
             text = "Welcome to the thermal camera guide. This will help you get started with thermal imaging.",
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center
         )
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -141,7 +138,6 @@ private fun GuideStep1Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
             ) {
                 Text("Skin Detection")
             }
-
             Button(
                 onClick = onNext,
                 modifier = Modifier.weight(1f)
@@ -164,13 +160,11 @@ private fun GuideStep2Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
-
         Text(
             text = "Position the camera properly and adjust the focus for optimal thermal imaging results.",
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center
         )
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -181,7 +175,6 @@ private fun GuideStep2Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
             ) {
                 Text("Skin Detection")
             }
-
             Button(
                 onClick = onNext,
                 modifier = Modifier.weight(1f)
@@ -204,13 +197,11 @@ private fun GuideStep3Content(onNext: () -> Unit) {
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
-
         Text(
             text = "You're all set! Start using the thermal camera to capture and analyze thermal images.",
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center
         )
-
         Button(
             onClick = deferAction { onNext() },
             modifier = Modifier.fillMaxWidth()
@@ -223,7 +214,6 @@ private fun GuideStep3Content(onNext: () -> Unit) {
 @Composable
 fun HomeGuideDialogComposePreview() {
     var showDialog by remember { mutableStateOf(true) }
-
     if (showDialog) {
         HomeGuideDialogCompose(
             initialStep = 1,

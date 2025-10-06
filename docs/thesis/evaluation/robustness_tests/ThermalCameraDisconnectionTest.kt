@@ -27,7 +27,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ThermalCameraDisconnectionTest : ComponentActivity() {
-
     companion object {
         private const val TAG = "ThermalCameraDisconnectionTest"
     }
@@ -53,12 +52,9 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
     private var thermalRecorder: ThermalCameraRecorder? = null
     private var recordingController: RecordingController? = null
     private var testOutputFile: File? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initializeTestComponents()
-
         setContent {
             LibUnifiedTheme {
                 ThermalCameraDisconnectionTestScreen()
@@ -76,7 +72,6 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
         var elapsedTime by remember { mutableStateOf(0L) }
         var thermalConnected by remember { mutableStateOf(false) }
         var inSimulationMode by remember { mutableStateOf(false) }
-
         LaunchedEffect(isRecording) {
             if (isRecording) {
                 while (isRecording) {
@@ -85,7 +80,6 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                 }
             }
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -124,9 +118,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -150,9 +142,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -209,9 +199,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 if (testMetrics.recordingStartTime > 0) {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -242,10 +230,8 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                             }
                         }
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 if (disconnectionEvents.isNotEmpty()) {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -264,10 +250,8 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                             }
                         }
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -301,7 +285,6 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Start Recording")
                     }
-
                     Button(
                         onClick = {
                             lifecycleScope.launch {
@@ -327,7 +310,6 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                         Text("Stop Recording")
                     }
                 }
-
                 if (testOutputFile != null) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
@@ -419,11 +401,9 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
         try {
             recordingController = RecordingController(this, this)
             thermalRecorder = ThermalCameraRecorder(this, recordingController!!)
-
             val outputDir = File(getExternalFilesDir(null), "thesis_evaluation")
             outputDir.mkdirs()
             testOutputFile = File(outputDir, "thermal_disconnect_${System.currentTimeMillis()}.log")
-
             AppLogger.i(TAG, "Test components initialized successfully")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize test components", e)
@@ -445,13 +425,10 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
             onEvent
         )
         AppLogger.i(TAG, "Thermal camera disconnection test recording started")
-
         val startTime = System.currentTimeMillis()
         onMetrics(TestMetrics(recordingStartTime = startTime))
-
         onStateChange("Recording - monitoring thermal camera")
         onThermalStateChange(true, false)
-
         monitorThermalCamera(onStateChange, onThermalStateChange, onEvent, onMetrics)
     }
 
@@ -463,20 +440,15 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
     ) {
         var disconnectDetected = false
         var frameCount = 0
-
         while (true) {
             delay(1000)
             frameCount++
-
             val thermalState = checkThermalCameraState()
-
             if (thermalState == ThermalState.DISCONNECTED && !disconnectDetected) {
                 disconnectDetected = true
                 val disconnectTime = System.currentTimeMillis()
-
                 onStateChange("Thermal camera disconnected - handling gracefully")
                 onThermalStateChange(false, false)
-
                 logEvent(
                     "THERMAL_DISCONNECTED",
                     "USB thermal camera physically disconnected",
@@ -485,7 +457,6 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                     onEvent
                 )
                 AppLogger.w(TAG, "Thermal camera disconnection detected")
-
                 onMetrics(
                     TestMetrics(
                         disconnectTime = disconnectTime,
@@ -495,12 +466,9 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                         otherSensorsContinued = true
                     )
                 )
-
                 delay(2000)
-
                 onStateChange("Continuing in simulation mode")
                 onThermalStateChange(false, true)
-
                 logEvent(
                     "SIMULATION_MODE",
                     "Switched to thermal simulation mode - other sensors continue",
@@ -509,7 +477,6 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                     onEvent
                 )
                 AppLogger.i(TAG, "Thermal recording continues in simulation mode")
-
             } else if (thermalState == ThermalState.SIMULATION && disconnectDetected) {
                 frameCount++
                 onMetrics(
@@ -537,7 +504,6 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
             onEvent
         )
         AppLogger.i(TAG, "Thermal camera disconnection test recording stopped")
-
         delay(500)
         onStateChange("Test complete - system did not crash")
     }
@@ -574,7 +540,6 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
             systemState = systemState
         )
         onEvent(event)
-
         testOutputFile?.appendText(
             "${formatTimestamp(event.timestamp)} | $eventType | Thermal: $thermalState | System: $systemState | $description\n"
         )

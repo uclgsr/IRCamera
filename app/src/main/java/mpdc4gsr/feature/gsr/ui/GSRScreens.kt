@@ -11,11 +11,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
-/**
- * Placeholder screens for GSR navigation integration
- * These integrate with the new Compose activities via navigation
- */
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRSettingsScreenPlaceholder(
@@ -82,7 +77,6 @@ fun SessionDetailScreen(
                     )
                     Text("Session ID: $sessionId")
                     Text("Use SessionDetailComposeActivity for full functionality")
-
                     Button(onClick = onNavigateToGSRPlot) {
                         Text("View Plot")
                     }

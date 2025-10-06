@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 
 class TipGuideDialog : DialogFragment() {
-
     var closeEvent: ((Boolean) -> Unit)? = null
 
     companion object {
@@ -30,7 +29,6 @@ class TipGuideDialog : DialogFragment() {
 }
 
 class TipPreviewDialog : DialogFragment() {
-
     var closeEvent: ((Boolean) -> Unit)? = null
 
     companion object {
@@ -58,7 +56,6 @@ class TipObserveDialog {
         private var title: String = "Tip"
         private var message: String = ""
         private var cancelListener: ((Boolean) -> Unit)? = null
-
         fun setTitle(resId: Int): Builder {
             this.title = context.getString(resId)
             return this
@@ -86,7 +83,6 @@ class TipObserveDialog {
     private var title: String = ""
     private var message: String = ""
     private var cancelListener: ((Boolean) -> Unit)? = null
-
     fun show() {
         val dialog = AlertDialog.Builder(context)
             .setTitle(title)
@@ -98,7 +94,6 @@ class TipObserveDialog {
                 cancelListener?.invoke(true)
             }
             .create()
-
         dialog.show()
     }
 }
@@ -109,7 +104,6 @@ class TipDialog {
         private var message: String = ""
         private var positiveListener: (() -> Unit)? = null
         private var negativeListener: (() -> Unit)? = null
-
         fun setTitle(resId: Int): Builder {
             this.title = context.getString(resId)
             return this
@@ -144,7 +138,6 @@ class TipDialog {
     private var message: String = ""
     private var positiveListener: (() -> Unit)? = null
     private var negativeListener: (() -> Unit)? = null
-
     fun show() {
         val builder = AlertDialog.Builder(context)
             .setTitle(title)
@@ -152,13 +145,11 @@ class TipDialog {
             .setPositiveButton("Yes") { _, _ ->
                 positiveListener?.invoke()
             }
-
         negativeListener?.let {
             builder.setNegativeButton("No") { _, _ ->
                 it.invoke()
             }
         }
-
         builder.create().show()
     }
 }
@@ -166,7 +157,6 @@ class TipDialog {
 class TempAlarmSetDialog {
     class Builder(private val context: Context) {
         private var numText: String = ""
-
         fun setNum(num: String): Builder {
             numText = num
             return this
@@ -180,7 +170,6 @@ class TempAlarmSetDialog {
 
     private lateinit var context: Context
     private var numText: String = ""
-
     fun show() {
         AlertDialog.Builder(context)
             .setTitle("Temperature Alarm")

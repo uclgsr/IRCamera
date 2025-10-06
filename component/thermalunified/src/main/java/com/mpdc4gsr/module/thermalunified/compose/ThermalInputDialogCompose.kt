@@ -38,11 +38,9 @@ fun ThermalInputDialogCompose(
     var minTempInput by remember { mutableStateOf(minTemp.toString()) }
     val maxTempFocusRequester = remember { FocusRequester() }
     val minTempFocusRequester = remember { FocusRequester() }
-
     LaunchedEffect(Unit) {
         maxTempFocusRequester.requestFocus()
     }
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -68,9 +66,7 @@ fun ThermalInputDialogCompose(
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 // Message
                 if (message.isNotEmpty()) {
                     Text(
@@ -79,10 +75,8 @@ fun ThermalInputDialogCompose(
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 // Temperature Range Inputs
                 Column {
                     // Max Temperature
@@ -95,9 +89,7 @@ fun ThermalInputDialogCompose(
                                 .size(20.dp)
                                 .background(maxColor, RoundedCornerShape(4.dp))
                         )
-
                         Spacer(modifier = Modifier.width(12.dp))
-
                         OutlinedTextField(
                             value = maxTempInput,
                             onValueChange = { maxTempInput = it },
@@ -116,9 +108,7 @@ fun ThermalInputDialogCompose(
                             suffix = { Text("°C") }
                         )
                     }
-
                     Spacer(modifier = Modifier.height(12.dp))
-
                     // Min Temperature
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -129,9 +119,7 @@ fun ThermalInputDialogCompose(
                                 .size(20.dp)
                                 .background(minColor, RoundedCornerShape(4.dp))
                         )
-
                         Spacer(modifier = Modifier.width(12.dp))
-
                         OutlinedTextField(
                             value = minTempInput,
                             onValueChange = { minTempInput = it },
@@ -160,9 +148,7 @@ fun ThermalInputDialogCompose(
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(24.dp))
-
                 // Action buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -177,7 +163,6 @@ fun ThermalInputDialogCompose(
                     ) {
                         Text(negativeButtonText)
                     }
-
                     Button(
                         onClick = {
                             handleConfirm(
@@ -210,7 +195,6 @@ private fun handleConfirm(
     try {
         val maxTemp = maxTempInput.toFloat()
         val minTemp = minTempInput.toFloat()
-
         if (maxTemp > minTemp) {
             onConfirm(
                 maxTemp,
@@ -235,7 +219,6 @@ class ThermalInputDialogComposeBuilder {
     private var negativeButtonText: String = "Cancel"
     private var onConfirm: ((Float, Float, Int, Int) -> Unit)? = null
     private var onCancel: (() -> Unit)? = null
-
     fun setMessage(message: String): ThermalInputDialogComposeBuilder {
         this.message = message
         return this
@@ -289,7 +272,6 @@ class ThermalInputDialogComposeBuilder {
 @Composable
 fun ThermalInputDialogComposePreview() {
     var showDialog by remember { mutableStateOf(true) }
-
     if (showDialog) {
         ThermalInputDialogCompose(
             message = "Configure thermal parameters for optimal imaging",

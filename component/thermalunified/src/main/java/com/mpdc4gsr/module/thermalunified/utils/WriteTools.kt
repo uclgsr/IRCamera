@@ -15,7 +15,6 @@ object WriteTools {
         val mediaId = queryId(uri)
         val resolver = ContextProvider.getContext().contentResolver
         val selection = "${MediaStore.Images.Media._ID} = ?"
-
         val selectionArgs = arrayOf(mediaId.toString())
         val result = resolver.delete(uri, selection, selectionArgs)
         XLog.w("[ph][ph][ph][ph][ph][ph]: $result")

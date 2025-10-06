@@ -13,7 +13,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class ErrorHandlingTest {
-
     @Before
     fun setup() {
         mockkStatic(Log::class)
@@ -35,7 +34,6 @@ class ErrorHandlingTest {
             ErrorHandler.runSafely("TEST", "test operation") {
                 42
             }
-
         assertTrue(result.isSuccess)
         assertEquals(42, result.getOrNull())
         verify(exactly = 0) { AppLogger.e(any(), any(), any(), any()) }
@@ -44,12 +42,10 @@ class ErrorHandlingTest {
     @Test
     fun testRunSafelyFailureCase() {
         val exception = RuntimeException("Test error")
-
         val result =
             ErrorHandler.runSafely("TEST", "test operation") {
                 throw exception
             }
-
         assertTrue(result.isFailure)
         assertEquals(exception, result.exceptionOrNull())
         verify(exactly = 1) {
@@ -67,7 +63,6 @@ class ErrorHandlingTest {
             ) {
                 42
             }
-
         assertEquals(42, result)
         verify(exactly = 0) { AppLogger.e(any(), any(), any(), any()) }
     }
@@ -75,7 +70,6 @@ class ErrorHandlingTest {
     @Test
     fun testRunSafelyWithDefaultFailure() {
         val exception = RuntimeException("Test error")
-
         val result =
             ErrorHandler.runSafelyWithDefault(
                 "TEST",
@@ -84,7 +78,6 @@ class ErrorHandlingTest {
             ) {
                 throw exception
             }
-
         assertEquals(0, result)
         verify(exactly = 1) {
             AppLogger.e(
@@ -98,11 +91,9 @@ class ErrorHandlingTest {
     @Test
     fun testRunSafelyIgnoreResultSuccess() {
         var executed = false
-
         ErrorHandler.runSafelyIgnoreResult("TEST", "test operation") {
             executed = true
         }
-
         assertTrue(executed)
         verify(exactly = 0) { AppLogger.e(any(), any(), any(), any()) }
     }
@@ -110,11 +101,9 @@ class ErrorHandlingTest {
     @Test
     fun testRunSafelyIgnoreResultFailure() {
         val exception = RuntimeException("Test error")
-
         ErrorHandler.runSafelyIgnoreResult("TEST", "test operation") {
             throw exception
         }
-
         verify(exactly = 1) {
             AppLogger.e("TEST", "Failed to test operation: Test error", exception)
         }
@@ -127,7 +116,6 @@ class ErrorHandlingTest {
                 ErrorHandler.runSafelySuspend("TEST", "test operation") {
                     42
                 }
-
             assertTrue(result.isSuccess)
             assertEquals(42, result.getOrNull())
             verify(exactly = 0) { AppLogger.e(any(), any(), any(), any()) }
@@ -137,12 +125,10 @@ class ErrorHandlingTest {
     fun testRunSafelySuspendFailure() =
         runBlocking {
             val exception = RuntimeException("Test error")
-
             val result =
                 ErrorHandler.runSafelySuspend("TEST", "test operation") {
                     throw exception
                 }
-
             assertTrue(result.isFailure)
             assertEquals(exception, result.exceptionOrNull())
             verify(exactly = 1) {
@@ -161,7 +147,6 @@ class ErrorHandlingTest {
                 ) {
                     42
                 }
-
             assertEquals(42, result)
             verify(exactly = 0) { AppLogger.e(any(), any(), any(), any()) }
         }
@@ -170,7 +155,6 @@ class ErrorHandlingTest {
     fun testRunSafelySuspendWithDefaultFailure() =
         runBlocking {
             val exception = RuntimeException("Test error")
-
             val result =
                 ErrorHandler.runSafelySuspendWithDefault(
                     "TEST",
@@ -179,7 +163,6 @@ class ErrorHandlingTest {
                 ) {
                     throw exception
                 }
-
             assertEquals(0, result)
             verify(exactly = 1) {
                 AppLogger.e(

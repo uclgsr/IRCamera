@@ -8,7 +8,6 @@ import java.io.File
 import java.io.FileOutputStream
 
 object UnifiedFileUtils {
-
     fun isFileExist(filePath: String): Boolean {
         if (UnifiedStringUtils.isBlank(filePath)) {
             return false
@@ -105,10 +104,8 @@ object UnifiedFileUtils {
         return try {
             val sourceFile = File(sourcePath)
             val destFile = File(destPath)
-
             // Create parent directories if they don't exist
             destFile.parentFile?.mkdirs()
-
             sourceFile.copyTo(destFile, overwrite = true)
             true
         } catch (e: Exception) {
@@ -133,7 +130,6 @@ object UnifiedFileUtils {
         return try {
             val file = File(filePath)
             file.parentFile?.mkdirs()
-
             FileOutputStream(file).use { fos ->
                 bitmap.compress(format, quality, fos)
             }

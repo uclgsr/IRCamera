@@ -12,13 +12,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
-/**
- * Test suite for GSR sensor reconnection logic
- * Validates automatic reconnection behavior when device disconnects
- */
 @OptIn(ExperimentalCoroutinesApi::class)
 class GSRSensorReconnectionTest {
-
     private lateinit var mockApplication: Application
 
     @Before
@@ -30,7 +25,6 @@ class GSRSensorReconnectionTest {
     @Test
     fun `GSRSensorState should have default values for reconnection fields`() {
         val state = GSRSensorViewModel.GSRSensorState()
-
         assertFalse("isReconnecting should be false by default", state.isReconnecting)
         assertEquals("reconnectionAttempt should be 0 by default", 0, state.reconnectionAttempt)
         assertEquals("connectionStatus should be Disconnected by default", "Disconnected", state.connectionStatus)
@@ -42,7 +36,6 @@ class GSRSensorReconnectionTest {
             isReconnecting = true,
             reconnectionAttempt = 2
         )
-
         assertTrue("isReconnecting should be true", state.isReconnecting)
         assertEquals("reconnectionAttempt should be 2", 2, state.reconnectionAttempt)
     }
@@ -60,7 +53,6 @@ class GSRSensorReconnectionTest {
             reconnectionAttempt = 1,
             connectionStatus = "Reconnecting (attempt 1/3)..."
         )
-
         assertEquals("Initial status should be Disconnected", "Disconnected", initialState.connectionStatus)
         assertEquals("Connected status should update", "Connected", connectedState.connectionStatus)
         assertTrue("Should be in reconnecting state", reconnectingState.isReconnecting)
@@ -73,7 +65,6 @@ class GSRSensorReconnectionTest {
         val baseDelay = 2000L
         // True exponential backoff: baseDelay * 2^(attempt-1)
         val expectedDelays = listOf(2000L, 4000L, 8000L)
-
         for (attempt in 1..maxAttempts) {
             val calculatedDelay = baseDelay * (1L shl (attempt - 1))
             assertEquals(
@@ -87,7 +78,6 @@ class GSRSensorReconnectionTest {
     @Test
     fun `ReconnectionConfig should have default values`() {
         val config = GSRSensorViewModel.ReconnectionConfig()
-
         assertEquals("Default max attempts should be 3", 3, config.maxAttempts)
         assertEquals("Default base delay should be 2000ms", 2000L, config.baseDelayMs)
         assertTrue("Reconnection should be enabled by default", config.enabled)
@@ -100,7 +90,6 @@ class GSRSensorReconnectionTest {
             baseDelayMs = 3000L,
             enabled = false
         )
-
         assertEquals("Max attempts should be customizable", 5, config.maxAttempts)
         assertEquals("Base delay should be customizable", 3000L, config.baseDelayMs)
         assertFalse("Reconnection should be disableable", config.enabled)
@@ -115,7 +104,6 @@ class GSRSensorReconnectionTest {
             connectionStatus = "Connection Lost",
             error = "Failed to reconnect after 3 attempts"
         )
-
         assertFalse("Should not be connected", failedState.isConnected)
         assertFalse("Should not be reconnecting", failedState.isReconnecting)
         assertEquals("Should show Connection Lost status", "Connection Lost", failedState.connectionStatus)
@@ -134,7 +122,6 @@ class GSRSensorReconnectionTest {
             connectionStatus = "Reconnected",
             error = null
         )
-
         assertTrue("Should be connected", reconnectedState.isConnected)
         assertFalse("Should not be reconnecting", reconnectedState.isReconnecting)
         assertEquals("Reconnection attempt should be reset", 0, reconnectedState.reconnectionAttempt)
@@ -152,7 +139,6 @@ class GSRSensorReconnectionTest {
             "Reconnecting (attempt 1/3)...",
             "Connection Lost"
         )
-
         states.forEach { status ->
             val state = GSRSensorViewModel.GSRSensorState(connectionStatus = status)
             assertEquals("Status should match", status, state.connectionStatus)
@@ -166,7 +152,6 @@ class GSRSensorReconnectionTest {
             reconnectionAttempt = 2,
             maxReconnectionAttempts = 5
         )
-
         assertTrue("Should be reconnecting", state.isReconnecting)
         assertEquals("Current attempt should be 2", 2, state.reconnectionAttempt)
         assertEquals("Max attempts should be 5", 5, state.maxReconnectionAttempts)

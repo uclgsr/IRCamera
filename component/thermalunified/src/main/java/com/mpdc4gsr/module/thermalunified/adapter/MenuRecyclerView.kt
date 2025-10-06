@@ -8,9 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class MenuRecyclerView : RecyclerView {
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,

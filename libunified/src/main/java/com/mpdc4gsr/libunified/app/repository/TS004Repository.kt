@@ -18,7 +18,6 @@ import java.util.*
 
 object TS004Repository {
     private const val BASE_URL = "http://192.168.40.1:8080"
-
     private fun calculateMD5(file: File): String {
         val md = MessageDigest.getInstance("MD5")
         FileInputStream(file).use { fis ->
@@ -37,7 +36,6 @@ object TS004Repository {
             field = value
             HttpClient.network = value
         }
-
     private val okHttpClient: OkHttpClient
         get() {
             return HttpClient.createClient().newBuilder()
@@ -98,7 +96,6 @@ object TS004Repository {
         try {
             inputStream = responseBody.byteStream()
             fileOutputString = FileOutputStream(file)
-
             val buffer = ByteArray(4096)
             var readLength = inputStream.read(buffer)
             while (readLength != -1) {
@@ -106,7 +103,6 @@ object TS004Repository {
                 readLength = inputStream.read(buffer)
             }
             fileOutputString.flush()
-
             return@withContext true
         } catch (_: Exception) {
             return@withContext false
@@ -188,7 +184,6 @@ object TS004Repository {
             if (fileCount < 1) {
                 return@withContext ArrayList()
             }
-
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["pageNum"] = 1
             paramMap["pageCount"] = fileCount
@@ -219,7 +214,6 @@ object TS004Repository {
             val idArray: Array<IdData> = Array(ids.size) {
                 IdData(ids[it])
             }
-
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["filelist"] = idArray
             post<TS004Response<Boolean>>("/api/v1/system/deleteFile", paramMap).isSuccess()
@@ -235,22 +229,18 @@ object TS004Repository {
             if (!isStartSuccess) {
                 return@withContext false
             }
-
             val isSendStartSuccess = sendUpgradeFileStart(file)
             if (!isSendStartSuccess) {
                 return@withContext false
             }
-
             val isSendFileSuccess = sendUpgradeFile(file)
             if (!isSendFileSuccess) {
                 return@withContext false
             }
-
             val isEndSuccess = sendUpgradeFileEnd(file)
             if (!isEndSuccess) {
                 return@withContext false
             }
-
             var status = post<TS004Response<UpgradeStatus>>(
                 "/api/v1/system/getUpgradeStatus",
                 emptyMap<String, Any>()
@@ -262,7 +252,6 @@ object TS004Repository {
                     emptyMap<String, Any>()
                 ).data?.status
             }
-
             status == 4
         } catch (_: Exception) {
             false
@@ -285,10 +274,8 @@ object TS004Repository {
         var fileInputStream: FileInputStream? = null
         try {
             fileInputStream = FileInputStream(file)
-
             var hasReadCount = 0
             var byteArray = ByteArray(1024 * 1024 * 5)
-
             var readCount = fileInputStream.read(byteArray)
             while (readCount != -1) {
                 hasReadCount += readCount
@@ -300,13 +287,11 @@ object TS004Repository {
                 readCount =
                     fileInputStream.read(byteArray, hasReadCount, byteArray.size - hasReadCount)
             }
-
             if (hasReadCount > 0) {
                 val lastArray = ByteArray(hasReadCount)
                 System.arraycopy(byteArray, 0, lastArray, 0, hasReadCount)
                 postOctet("/api/v1/system/sendUpgradeFileData", lastArray)
             }
-
             true
         } catch (_: Exception) {
             false

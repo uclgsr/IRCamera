@@ -9,9 +9,6 @@ import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/**
- * Thread-safe network connection settings and persistence manager
- */
 class NetworkSettings(private val context: Context) {
     companion object {
         private const val TAG = "NetworkSettings"
@@ -50,20 +47,16 @@ class NetworkSettings(private val context: Context) {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     // Thread-safe property accessors with background thread operations for complex tasks
-
     // Wi-Fi TCP Settings
     var isWifiEnabled: Boolean
         get() = prefs.getBoolean(KEY_WIFI_ENABLED, true)
         set(value) = prefs.edit().putBoolean(KEY_WIFI_ENABLED, value).apply()
-
     var pcIpAddress: String
         get() = prefs.getString(KEY_PC_IP_ADDRESS, DEFAULT_PC_IP) ?: DEFAULT_PC_IP
         set(value) = prefs.edit().putString(KEY_PC_IP_ADDRESS, value).apply()
-
     var pcPort: Int
         get() = prefs.getInt(KEY_PC_PORT, DEFAULT_PC_PORT)
         set(value) = prefs.edit().putInt(KEY_PC_PORT, value).apply()
-
     var autoConnectWifi: Boolean
         get() = prefs.getBoolean(KEY_AUTO_CONNECT_WIFI, false)
         set(value) = prefs.edit().putBoolean(KEY_AUTO_CONNECT_WIFI, value).apply()
@@ -72,15 +65,12 @@ class NetworkSettings(private val context: Context) {
     var isBluetoothEnabled: Boolean
         get() = prefs.getBoolean(KEY_BLUETOOTH_ENABLED, true)
         set(value) = prefs.edit().putBoolean(KEY_BLUETOOTH_ENABLED, value).apply()
-
     var bluetoothDeviceAddress: String?
         get() = prefs.getString(KEY_BLUETOOTH_DEVICE_ADDRESS, null)
         set(value) = prefs.edit().putString(KEY_BLUETOOTH_DEVICE_ADDRESS, value).apply()
-
     var bluetoothDeviceName: String?
         get() = prefs.getString(KEY_BLUETOOTH_DEVICE_NAME, null)
         set(value) = prefs.edit().putString(KEY_BLUETOOTH_DEVICE_NAME, value).apply()
-
     var autoConnectBluetooth: Boolean
         get() = prefs.getBoolean(KEY_AUTO_CONNECT_BLUETOOTH, false)
         set(value) = prefs.edit().putBoolean(KEY_AUTO_CONNECT_BLUETOOTH, value).apply()
@@ -93,15 +83,12 @@ class NetworkSettings(private val context: Context) {
             return ConnectionType.values().getOrNull(ordinal) ?: ConnectionType.WIFI_TCP
         }
         set(value) = prefs.edit().putInt(KEY_PREFERRED_CONNECTION_TYPE, value.ordinal).apply()
-
     var autoReconnect: Boolean
         get() = prefs.getBoolean(KEY_AUTO_RECONNECT, true)
         set(value) = prefs.edit().putBoolean(KEY_AUTO_RECONNECT, value).apply()
-
     var reconnectAttempts: Int
         get() = prefs.getInt(KEY_RECONNECT_ATTEMPTS, DEFAULT_RECONNECT_ATTEMPTS)
         set(value) = prefs.edit().putInt(KEY_RECONNECT_ATTEMPTS, value).apply()
-
     var connectionTimeout: Long
         get() = prefs.getLong(KEY_CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT)
         set(value) = prefs.edit().putLong(KEY_CONNECTION_TIMEOUT, value).apply()
@@ -111,7 +98,7 @@ class NetworkSettings(private val context: Context) {
         get() = prefs.getLong("keep_alive_interval", 30000L)
         set(value) = prefs.edit().putLong("keep_alive_interval", value).apply()
 
-    // Message timeout in milliseconds  
+    // Message timeout in milliseconds
     var messageTimeout: Long
         get() = prefs.getLong("message_timeout", 10000L)
         set(value) = prefs.edit().putLong("message_timeout", value).apply()
@@ -121,9 +108,6 @@ class NetworkSettings(private val context: Context) {
         get() = prefs.getBoolean("bandwidth_monitoring_enabled", true)
         set(value) = prefs.edit().putBoolean("bandwidth_monitoring_enabled", value).apply()
 
-    /**
-     * Save Bluetooth device configuration - thread-safe
-     */
     suspend fun saveBluetoothDevice(device: BluetoothDevice) = withContext(Dispatchers.IO) {
         try {
             val editor = prefs.edit()
@@ -144,9 +128,6 @@ class NetworkSettings(private val context: Context) {
         }
     }
 
-    /**
-     * Get saved Bluetooth device info - thread-safe
-     */
     suspend fun getSavedBluetoothDeviceInfo(): Pair<String?, String?> =
         withContext(Dispatchers.IO) {
             try {
@@ -159,9 +140,6 @@ class NetworkSettings(private val context: Context) {
             }
         }
 
-    /**
-     * Clear all saved settings - thread-safe
-     */
     suspend fun clearSettings() = withContext(Dispatchers.IO) {
         try {
             prefs.edit().clear().apply()
@@ -171,9 +149,6 @@ class NetworkSettings(private val context: Context) {
         }
     }
 
-    /**
-     * Get connection summary for display
-     */
     fun getConnectionSummary(): String {
         return when (preferredConnectionType) {
             ConnectionType.WIFI_TCP -> "Wi-Fi: $pcIpAddress:$pcPort"
@@ -184,9 +159,6 @@ class NetworkSettings(private val context: Context) {
         }
     }
 
-    /**
-     * Check if connection settings are configured
-     */
     fun isConfigured(): Boolean {
         return when (preferredConnectionType) {
             ConnectionType.WIFI_TCP -> pcIpAddress.isNotEmpty() && pcPort > 0

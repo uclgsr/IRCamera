@@ -50,7 +50,6 @@ class ZeroconfServiceDiscoveryTest {
         var serviceLost = false
         var serviceRegistered = false
         var discoveryError = false
-
         val listener =
             object : ZeroconfDiscoveryService.ServiceDiscoveryListener {
                 override fun onServiceDiscovered(serviceInfo: NetworkClient.ControllerInfo) {
@@ -72,18 +71,14 @@ class ZeroconfServiceDiscoveryTest {
                     discoveryError = true
                 }
             }
-
         discoveryService.setServiceListener(listener)
-
         assertTrue("Setting service listener should succeed", true)
-
         discoveryService.setServiceListener(null)
         assertTrue("Removing service listener should succeed", true)
     }
 
     @Test
     fun testGetDiscoveredServices() {
-
         val initialServices = discoveryService.getDiscoveredControllers()
         assertNotNull("Discovered services should not be null", initialServices)
         assertTrue("Initial services should be empty", initialServices.isEmpty())
@@ -91,10 +86,8 @@ class ZeroconfServiceDiscoveryTest {
 
     @Test
     fun testServiceNameGeneration() {
-
         val deviceName1 = "Device One"
         val deviceName2 = "Device Two"
-
         assertTrue(
             "Different device names should be handled",
             deviceName1 != deviceName2,
@@ -103,53 +96,40 @@ class ZeroconfServiceDiscoveryTest {
 
     @Test
     fun testCleanupResources() {
-
         discoveryService.cleanup()
-
         assertTrue("Cleanup should complete without errors", true)
     }
 
     @Test
     fun testServiceListenerInterface() {
-
         val listener =
             object : ZeroconfDiscoveryService.ServiceDiscoveryListener {
                 override fun onServiceDiscovered(serviceInfo: NetworkClient.ControllerInfo) {
-
                 }
 
                 override fun onServiceLost(serviceName: String) {
-
                 }
 
                 override fun onServiceRegistered(serviceName: String) {
-
                 }
 
                 override fun onDiscoveryError(
                     errorCode: Int,
                     message: String,
                 ) {
-
                 }
             }
-
         assertNotNull("Service listener should be created", listener)
-
         discoveryService.setServiceListener(listener)
         discoveryService.setServiceListener(null)
-
         assertTrue("Service listener interface test should pass", true)
     }
 
     @Test
     fun testContextDependency() {
-
         val testContext = ApplicationProvider.getApplicationContext<Context>()
         val testService = ZeroconfDiscoveryService(testContext)
-
         assertNotNull("Service with context should be created", testService)
-
         val controllers = testService.getDiscoveredControllers()
         assertNotNull("Controllers list should not be null", controllers)
         assertTrue("Controllers list should be empty initially", controllers.isEmpty())
@@ -157,7 +137,6 @@ class ZeroconfServiceDiscoveryTest {
 
     @Test
     fun testNetworkClientControllerInfo() {
-
         val controllerInfo =
             NetworkClient.ControllerInfo(
                 ipAddress = "192.168.1.100",
@@ -165,7 +144,6 @@ class ZeroconfServiceDiscoveryTest {
                 deviceName = "Test Controller",
                 capabilities = listOf("VIDEO", "GSR"),
             )
-
         assertEquals("IP address should match", "192.168.1.100", controllerInfo.ipAddress)
         assertEquals("Port should match", 8080, controllerInfo.port)
         assertEquals("Device name should match", "Test Controller", controllerInfo.deviceName)

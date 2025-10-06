@@ -17,17 +17,10 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Diagnostics ViewModel - MVVM Integration
- * Provides real-time system diagnostics and sensor status monitoring
- */
 class DiagnosticsViewModel(context: Context) : BaseViewModel() {
-
     private val context: Context = context.applicationContext
-
     private val _systemStatus = MutableStateFlow(SystemStatus())
     val systemStatus: StateFlow<SystemStatus> = _systemStatus.asStateFlow()
-
     private val _sensorStatus = MutableStateFlow(SensorStatus())
     val sensorStatus: StateFlow<SensorStatus> = _sensorStatus.asStateFlow()
 
@@ -66,7 +59,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
                 val batteryStatus = getBatteryLevel()
                 val memoryInfo = getMemoryInfo()
                 val temperature = getDeviceTemperature()
-
                 _systemStatus.value = SystemStatus(
                     systemHealth = "Good",
                     battery = batteryStatus,
@@ -89,7 +81,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             val gsrStatus = checkGSRSensorStatus()
             val thermalStatus = checkThermalCameraStatus()
             val rgbStatus = checkRGBCameraStatus()
-
             _sensorStatus.value = SensorStatus(
                 gsrSensor = gsrStatus,
                 thermalCamera = thermalStatus,
@@ -162,7 +153,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             )
             val level = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
             val scale = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
-
             if (level >= 0 && scale > 0) {
                 val batteryPct = level * 100 / scale
                 "$batteryPct%"

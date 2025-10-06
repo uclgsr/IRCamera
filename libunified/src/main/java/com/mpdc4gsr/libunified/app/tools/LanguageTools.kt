@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.tools
 import android.content.Context
 
 object LanguageTools {
-
     fun showLanguage(context: Context): String {
         return "English"
     }

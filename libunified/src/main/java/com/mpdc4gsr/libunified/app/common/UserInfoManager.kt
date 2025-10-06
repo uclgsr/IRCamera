@@ -6,7 +6,6 @@ class UserInfoManager {
     companion object {
         @Volatile
         var manager: UserInfoManager? = null
-
         fun getInstance(): UserInfoManager {
             if (manager == null) {
                 synchronized(UserInfoManager::class) {
@@ -22,7 +21,6 @@ class UserInfoManager {
     fun isLogin(): Boolean {
         val token = SharedManager.getToken()
         return if (TextUtils.equals("-1", token)) {
-
             false
         } else {
             !TextUtils.isEmpty(token)

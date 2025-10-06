@@ -56,10 +56,8 @@ enum class IRDeviceType(
 class DeviceTypeViewModel : AppBaseViewModel() {
     private val _selectedDevice = mutableStateOf<IRDeviceType?>(null)
     val selectedDevice: State<IRDeviceType?> = _selectedDevice
-
     private val _availableDevices = mutableStateOf(IRDeviceType.values().toList())
     val availableDevices: State<List<IRDeviceType>> = _availableDevices
-
     fun selectDevice(device: IRDeviceType) {
         _selectedDevice.value = device
     }
@@ -73,9 +71,7 @@ class DeviceTypeViewModel : AppBaseViewModel() {
 }
 
 class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
-
     private val deviceTypeVM: DeviceTypeViewModel by viewModels()
-
     override fun createViewModel(): DeviceTypeViewModel = deviceTypeVM
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -85,7 +81,6 @@ class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
             val context = LocalContext.current
             val selectedDevice by viewModel.selectedDevice
             val devices = viewModel.getDeviceList()
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -95,7 +90,6 @@ class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
                     title = stringResource(R.string.device_type_selection),
                     onBackClick = { finish() }
                 )
-
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -137,7 +131,6 @@ class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
                             )
                         }
                     }
-
                     // Device list
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -168,9 +161,7 @@ class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
                             )
                         }
                     }
-
                     Spacer(modifier = Modifier.height(24.dp))
-
                     // Information section
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -261,9 +252,7 @@ private fun DeviceTypeCard(
                         MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
-
             Spacer(modifier = Modifier.width(16.dp))
-
             // Device info
             Column(
                 modifier = Modifier.weight(1f)
@@ -287,7 +276,6 @@ private fun DeviceTypeCard(
                         MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             // Selection indicator
             if (isSelected) {
                 Icon(

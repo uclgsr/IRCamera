@@ -4,11 +4,7 @@ import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 
-/**
- * Configurable logging for network components with debug/release level support
- */
 object NetworkLogger {
-
     enum class LogLevel {
         VERBOSE, DEBUG, INFO, WARN, ERROR, NONE
     }
@@ -16,25 +12,16 @@ object NetworkLogger {
     private var currentLogLevel = LogLevel.DEBUG
     private var enableFileLogging = false
 
-    /**
-     * Set the current log level
-     */
     fun setLogLevel(level: LogLevel) {
         currentLogLevel = level
         AppLogger.i("NetworkLogger", "Log level set to: $level")
     }
 
-    /**
-     * Enable or disable file logging
-     */
     fun setFileLogging(enabled: Boolean) {
         enableFileLogging = enabled
         AppLogger.i("NetworkLogger", "File logging ${if (enabled) "enabled" else "disabled"}")
     }
 
-    /**
-     * Log verbose message
-     */
     fun v(tag: String, message: String, throwable: Throwable? = null) {
         if (shouldLog(LogLevel.VERBOSE)) {
             if (throwable != null) {
@@ -45,9 +32,6 @@ object NetworkLogger {
         }
     }
 
-    /**
-     * Log debug message
-     */
     fun d(tag: String, message: String, throwable: Throwable? = null) {
         if (shouldLog(LogLevel.DEBUG)) {
             if (throwable != null) {
@@ -58,9 +42,6 @@ object NetworkLogger {
         }
     }
 
-    /**
-     * Log info message
-     */
     fun i(tag: String, message: String, throwable: Throwable? = null) {
         if (shouldLog(LogLevel.INFO)) {
             if (throwable != null) {
@@ -71,9 +52,6 @@ object NetworkLogger {
         }
     }
 
-    /**
-     * Log warning message
-     */
     fun w(tag: String, message: String, throwable: Throwable? = null) {
         if (shouldLog(LogLevel.WARN)) {
             if (throwable != null) {
@@ -84,9 +62,6 @@ object NetworkLogger {
         }
     }
 
-    /**
-     * Log error message
-     */
     fun e(tag: String, message: String, throwable: Throwable? = null) {
         if (shouldLog(LogLevel.ERROR)) {
             if (throwable != null) {
@@ -101,17 +76,11 @@ object NetworkLogger {
         return level.ordinal >= currentLogLevel.ordinal
     }
 
-    /**
-     * Configure logging for debug builds
-     */
     fun configureForDebug() {
         setLogLevel(LogLevel.DEBUG)
         setFileLogging(true)
     }
 
-    /**
-     * Configure logging for release builds
-     */
     fun configureForRelease() {
         setLogLevel(LogLevel.WARN)
         setFileLogging(false)

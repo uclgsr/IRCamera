@@ -112,7 +112,6 @@ private fun MenuTabItem(
                 }
             }
         }
-
         if (showLabel && label.isNotEmpty()) {
             Text(
                 text = label,
@@ -132,7 +131,6 @@ fun MenuFirstTab(
     modifier: Modifier = Modifier
 ) {
     var currentSelected by remember(selectedIndex) { mutableStateOf(selectedIndex) }
-
     val menuItems = remember(isObserveMode) {
         if (isObserveMode) {
             listOf(
@@ -166,7 +164,6 @@ fun MenuFirstTab(
             )
         }
     }
-
     MenuTabBar(
         items = menuItems,
         selectedIndex = currentSelected,

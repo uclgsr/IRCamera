@@ -32,10 +32,6 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.settings.presentation.NetworkSettingsViewModel
 import mpdc4gsr.feature.settings.presentation.NetworkSettingsViewModelFactory
 
-/**
- * Network Settings Screen - Device pairing and network configuration
- * Integrated with NetworkSettingsViewModel and ShimmerDeviceManager
- */
 @Composable
 fun NetworkSettingsScreen(
     onBackClick: (() -> Unit)? = null,
@@ -50,11 +46,9 @@ fun NetworkSettingsScreen(
     val settings by viewModel.networkSettings.collectAsState()
     val networkInfo by viewModel.networkInfo.collectAsState()
     val pairedDevices by viewModel.pairedDevices.collectAsState()
-
     LaunchedEffect(Unit) {
         viewModel.initialize()
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -65,7 +59,6 @@ fun NetworkSettingsScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -95,7 +88,6 @@ fun NetworkSettingsScreen(
                     value = networkInfo.ipAddress
                 )
             }
-
             // Bluetooth Settings
             SettingsCard(
                 title = "Bluetooth",
@@ -115,7 +107,6 @@ fun NetworkSettingsScreen(
                     onCheckedChange = { viewModel.updateAutoConnect(it) }
                 )
             }
-
             // Paired Devices
             SettingsCard(
                 title = "Paired Devices",

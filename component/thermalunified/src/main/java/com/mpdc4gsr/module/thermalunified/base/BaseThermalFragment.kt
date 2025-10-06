@@ -11,13 +11,11 @@ open class BaseThermalFragment : BaseFragment() {
     val REQUEST_CODE_FROM_UPGRADE = 1001
     val SRC_WIDTH = 192
     val SRC_HEIGHT = 256
-
     var paletteIndex = 0
     var irSurfaceViewLayoutParams: ConstraintLayout.LayoutParams? = null
     var displayViewLayoutParams: FrameLayout.LayoutParams? = null
     var fenceLayoutParams: FrameLayout.LayoutParams? = null
     var cameraLayoutParams: FrameLayout.LayoutParams? = null
-
     var mCenter = 0f
     var mMaxTemp = 0f
     var mMinTemp = 0f
@@ -25,7 +23,6 @@ open class BaseThermalFragment : BaseFragment() {
     var minImg: ImageView? = null
     var maxIndex = 0
     var minIndex = 0
-
     var mCenterTextView: TextView? = null
     var mMaxTextView: TextView? = null
     var mMinTextView: TextView? = null
@@ -42,13 +39,11 @@ open class BaseThermalFragment : BaseFragment() {
     var mFenceLayout: FrameLayout? = null
     var mCameraLayout: FrameLayout? = null
     var mExpertLayout: LinearLayout? = null
-
     var isDispLayTemp = false
     var timerJob: Job? = null
     val EXPERT_MODE_HIT_COUNT = 5
     val EXPERT_MODE_HIT_DURATION = (2 * 1000).toLong()
     var EXPERT_HITS = LongArray(EXPERT_MODE_HIT_COUNT)
-
     var rawWidth = 0
     var rawHeight = 0
     var highCrossWidth = 40
@@ -56,13 +51,10 @@ open class BaseThermalFragment : BaseFragment() {
     var rotateType = 0
     var irSurfaceViewWidth = 0
     var irSurfaceViewHeight = 0
-
     var width = 0
     var height = 0
     var mIsIrVideoStart = false
-
     override fun initContentView() = 0
-
     override fun initView() {
     }
 

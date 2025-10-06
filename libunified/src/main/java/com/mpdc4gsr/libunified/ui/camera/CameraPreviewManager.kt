@@ -8,13 +8,11 @@ import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.common.RotateDegree
 
 class CameraPreviewManager private constructor() {
-
     private val TAG = "CameraPreviewManager"
 
     companion object {
         @Volatile
         private var INSTANCE: CameraPreviewManager? = null
-
         fun getInstance(): CameraPreviewManager {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: CameraPreviewManager().also { INSTANCE = it }
@@ -36,13 +34,11 @@ class CameraPreviewManager private constructor() {
             imageRotate = value.getValue()
             XLog.d(TAG, "Image rotate degree set to: $value")
         }
-
     var alarmBean: AlarmBean? = null
         set(value) {
             field = value
             XLog.d(TAG, "Alarm bean updated")
         }
-
     private var cameraView: CameraView? = null
     private var handler: Handler? = null
     private var tempDataChangeCallback: ((Any) -> Unit)? = null
@@ -59,7 +55,6 @@ class CameraPreviewManager private constructor() {
     private var minLimit: Float = 0f
     private var maxLimit: Float = 100f
     private var pseudocolorMode: Int = 0
-
     fun init(cameraView: CameraView, handler: Handler) {
         this.cameraView = cameraView
         this.handler = handler
@@ -168,7 +163,6 @@ class CameraPreviewManager private constructor() {
     }
 
     fun getImageRotation(): Int = imageRotate
-
     fun setTemperatureLimits(min: Float, max: Float) {
         setLimit(min, max)
     }
@@ -178,7 +172,6 @@ class CameraPreviewManager private constructor() {
 
     // Pseudocolor controls
     fun getPseudocolorMode(): Int = pseudocolorMode
-
     fun applyPseudocolor(bitmap: Bitmap): Bitmap {
         // Placeholder for pseudocolor processing
         // In real implementation, this would apply thermal color mapping

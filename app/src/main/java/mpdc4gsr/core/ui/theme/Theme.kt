@@ -40,7 +40,6 @@ private val DarkColorScheme = darkColorScheme(
     inversePrimary = Color(0xFF415FDF),
     scrim = Color(0xFF000000)
 )
-
 private val LightColorScheme = lightColorScheme(
     primary = Color(0xFF415FDF),
     onPrimary = Color.White,
@@ -72,18 +71,15 @@ private val LightColorScheme = lightColorScheme(
 fun IRCameraTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false, // Disabled for consistent thermal imaging theme
-
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-
         content = content
     )
 }

@@ -26,10 +26,8 @@ class ModeManager {
     private var currentMode = CameraMode.PREVIEW_ONLY
     private var currentState = State.IDLE
     private var deviceCaps: DeviceCaps? = null
-
     var onModeChanged: ((CameraMode, State) -> Unit)? = null
     var onError: ((String) -> Unit)? = null
-
     fun initialize(caps: DeviceCaps) {
         deviceCaps = caps
         AppLogger.i(TAG, "Mode manager initialized with device capabilities")
@@ -40,26 +38,21 @@ class ModeManager {
             AppLogger.w(TAG, "Mode switch already in progress")
             return false
         }
-
         if (currentMode == targetMode) {
             AppLogger.i(TAG, "Already in target mode: $targetMode")
             return true
         }
-
         if (!isModeSupported(targetMode)) {
             val error = "Mode $targetMode not supported on this device"
             AppLogger.e(TAG, error)
             onError?.invoke(error)
             return false
         }
-
         currentState = State.SWITCHING
         val previousMode = currentMode
         currentMode = targetMode
-
         AppLogger.i(TAG, "Mode switch: $previousMode -> $targetMode")
         onModeChanged?.invoke(currentMode, currentState)
-
         return true
     }
 
@@ -68,14 +61,12 @@ class ModeManager {
             AppLogger.w(TAG, "No mode switch in progress to confirm")
             return
         }
-
         currentState =
             when (currentMode) {
                 CameraMode.RAW_50MP -> State.RAW_ACTIVE
                 CameraMode.VIDEO_4K -> State.VIDEO_ACTIVE
                 CameraMode.PREVIEW_ONLY -> State.PREVIEW_ACTIVE
             }
-
         AppLogger.i(TAG, "Mode switch confirmed: $currentMode active")
         onModeChanged?.invoke(currentMode, currentState)
     }
@@ -85,20 +76,15 @@ class ModeManager {
             AppLogger.w(TAG, "No mode switch in progress to fail")
             return
         }
-
         AppLogger.e(TAG, "Mode switch failed: $error")
-
         currentState = State.IDLE
         onError?.invoke("Mode switch failed: $error")
     }
 
     fun getCurrentMode(): CameraMode = currentMode
-
     fun getCurrentState(): State = currentState
-
     fun isModeSupported(mode: CameraMode): Boolean {
         val caps = deviceCaps ?: return false
-
         return when (mode) {
             CameraMode.RAW_50MP -> caps.supportsRaw && caps.rawSize.width > 0
             CameraMode.VIDEO_4K -> true
@@ -108,23 +94,19 @@ class ModeManager {
 
     fun getAvailableModes(): List<CameraMode> {
         val modes = mutableListOf(CameraMode.PREVIEW_ONLY, CameraMode.VIDEO_4K)
-
         if (isModeSupported(CameraMode.RAW_50MP)) {
             modes.add(CameraMode.RAW_50MP)
         }
-
         return modes
     }
 
     fun isSwitching(): Boolean = currentState == State.SWITCHING
-
     fun canSwitchMode(): Boolean {
         return currentState != State.SWITCHING
     }
 
     fun getRecommendedFrameRate(): Int {
         val caps = deviceCaps ?: return 30
-
         return when (currentMode) {
             CameraMode.RAW_50MP -> 15
             CameraMode.VIDEO_4K -> if (caps.supports4k60) 60 else 30

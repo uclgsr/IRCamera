@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets
 class OKLogInterceptor(val isTC007: Boolean) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-
         if (BuildConfig.DEBUG) {
             XLog.tag("RetrofitLog").i("--> ${request.method} ${request.url}")
             val requestBody = request.body
@@ -21,7 +20,6 @@ class OKLogInterceptor(val isTC007: Boolean) : Interceptor {
                 XLog.tag("RetrofitLog").v("[ph][ph]：${buffer.readString(StandardCharsets.UTF_8)}")
             }
         }
-
         val response: Response
         try {
             response = chain.proceed(request)
@@ -31,7 +29,6 @@ class OKLogInterceptor(val isTC007: Boolean) : Interceptor {
             }
             throw e
         }
-
         if (BuildConfig.DEBUG) {
             XLog.tag(
                 "RetrofitLog",
@@ -59,7 +56,6 @@ class OKLogInterceptor(val isTC007: Boolean) : Interceptor {
                 }
             }
         }
-
         return response
     }
 }
