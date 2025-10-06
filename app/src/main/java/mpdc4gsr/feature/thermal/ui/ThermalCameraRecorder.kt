@@ -507,7 +507,7 @@ class ThermalCameraRecorder(
                     "No thermal cameras found, enabling simulation mode - USB receiver will detect hot-plug events"
                 )
                 isSimulationMode = true
-                emitError(
+                delay(INITIALIZATION_RETRY_DELAY_MS)
                     ErrorType.DEVICE_ERROR,
                     "No thermal camera detected - using simulation mode"
                 )
