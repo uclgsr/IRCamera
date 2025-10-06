@@ -360,6 +360,18 @@ class GSRSettingsViewModel : AppBaseViewModel() {
         }
     }
 
+    fun startCalibration() {
+        launchWithErrorHandling {
+            // Trigger GSR sensor calibration process
+            // This will initiate the calibration workflow which typically involves:
+            // 1. Setting baseline readings
+            // 2. Adjusting sensor parameters
+            // 3. Saving calibration data
+            gsrSensorRecorder?.startCalibration()
+            _settingsEvents.emit(SettingsEvent.ShowToast("GSR calibration started"))
+        }
+    }
+
     private fun enableDeviceManagement() {
         // Enable device-related UI
     }

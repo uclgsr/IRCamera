@@ -27,6 +27,7 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 fun ProfileScreen(
     onBackClick: (() -> Unit)? = null,
     onNavigateToResearchTemplates: (() -> Unit)? = null,
+    onNavigateToPreferences: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -312,12 +313,7 @@ private fun QuickActionsCard(
                     icon = Icons.Default.Settings,
                     label = "Preferences",
                     onClick = {
-                        // TODO: Navigate to preferences screen
-                        android.widget.Toast.makeText(
-                            context,
-                            "Opening preferences...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        onNavigateToPreferences?.invoke()
                     }
                 )
             }

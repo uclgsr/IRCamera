@@ -172,10 +172,10 @@ fun GSRSettingsScreen(
             ) {
                 Button(
                     onClick = {
-                        // TODO: Start GSR calibration process
+                        viewModel.startCalibration()
                         android.widget.Toast.makeText(
                             context,
-                            "Starting calibration...",
+                            "Starting GSR calibration...",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
                     },
@@ -187,10 +187,10 @@ fun GSRSettingsScreen(
                 }
                 Button(
                     onClick = {
-                        // TODO: Reset GSR settings to defaults
+                        viewModel.resetToDefaults()
                         android.widget.Toast.makeText(
                             context,
-                            "Resetting to defaults...",
+                            "Settings reset to defaults",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
                     },

@@ -343,7 +343,8 @@ fun UnifiedNavHost(
 
             mpdc4gsr.feature.settings.ui.ProfileScreen(
                 onBackClick = { navController.popBackStack() },
-                onNavigateToResearchTemplates = { navController.navigate(UnifiedRoute.ResearchTemplates.route) }
+                onNavigateToResearchTemplates = { navController.navigate(UnifiedRoute.ResearchTemplates.route) },
+                onNavigateToPreferences = { navController.navigate(UnifiedRoute.Settings.route) }
             )
         }
 
