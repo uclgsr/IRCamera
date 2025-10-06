@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.libunified.app.compose.theme.Spacing
 
 @Composable
 fun ConfigGuideDialogCompose(
@@ -87,12 +88,13 @@ private fun ConfigStep1Content(
         modifier = Modifier
             .fillMaxWidth(0.9f)
             .wrapContentHeight(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        shape = RoundedCornerShape(16.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.small),
+        shape = RoundedCornerShape(Spacing.normal)
     ) {
         Column(
-            modifier = Modifier.padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.padding(Spacing.large),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(Spacing.normal)
         ) {
             Text(
                 text = "Thermal Configuration Guide",
@@ -100,28 +102,26 @@ private fun ConfigStep1Content(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "Step 1: Basic Parameters",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.primary
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            // Configuration parameters
             ConfigParameterCard(
                 title = "${context.getString(R.string.thermal_config_environment)} (-10~${if (isTC007) 50 else 55}°C)",
                 description = "Set the ambient temperature for accurate thermal measurements"
             )
-            Spacer(modifier = Modifier.height(12.dp))
             ConfigParameterCard(
                 title = "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)",
                 description = "Configure the distance to target for proper calibration"
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Spacing.small))
             Button(
                 onClick = onNext,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = Spacing.touchTarget)
             ) {
                 Text("Next")
             }
@@ -139,11 +139,12 @@ private fun ConfigStep2Content(
         modifier = Modifier
             .fillMaxWidth(0.9f)
             .fillMaxHeight(0.8f),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        shape = RoundedCornerShape(16.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.small),
+        shape = RoundedCornerShape(Spacing.normal)
     ) {
         Column(
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(Spacing.large),
+            verticalArrangement = Arrangement.spacedBy(Spacing.normal)
         ) {
             Text(
                 text = "Step 2: Emissivity Settings",
@@ -153,31 +154,28 @@ private fun ConfigStep2Content(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(16.dp))
             ConfigParameterCard(
                 title = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)",
                 description = "Select appropriate emissivity value for your target material"
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            // Emissivity presets
             Text(
                 text = "Common Materials",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(8.dp))
             LazyColumn(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(Spacing.small)
             ) {
                 items(getEmissivityPresets(isTC007)) { preset ->
                     EmissivityPresetCard(preset = preset)
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = onComplete,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = Spacing.touchTarget)
             ) {
                 Text("I Know")
             }
@@ -198,14 +196,14 @@ private fun ConfigParameterCard(
         )
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(Spacing.normal),
+            verticalArrangement = Arrangement.spacedBy(Spacing.extraSmall)
         ) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold
             )
-            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodySmall,
@@ -225,17 +223,18 @@ private fun EmissivityPresetCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(Spacing.medium),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(Spacing.extraSmall)
             ) {
                 Text(
                     text = preset.material,
