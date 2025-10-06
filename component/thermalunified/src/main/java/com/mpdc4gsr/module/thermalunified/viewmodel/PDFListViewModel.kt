@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -57,8 +58,8 @@ class PDFListViewModel : BaseViewModel() {
 
     fun enterSelectionMode(itemPath: String? = null) {
         _isSelectionMode.update { true }
-        itemPath?.let {
-            _selectedItems.update { setOf(it) }
+        itemPath?.let { path ->
+            _selectedItems.update { setOf(path) }
         }
     }
 
@@ -73,14 +74,16 @@ class PDFListViewModel : BaseViewModel() {
     }
 
     fun toggleItemSelection(itemPath: String) {
-        val currentSelected = _selectedItems.value.toMutableSet()
-        if (currentSelected.contains(itemPath)) {
-            currentSelected.remove(itemPath)
-        } else {
-            currentSelected.add(itemPath)
+        _selectedItems.update { currentSet ->
+            val mutableSet = currentSet.toMutableSet()
+            if (mutableSet.contains(itemPath)) {
+                mutableSet.remove(itemPath)
+            } else {
+                mutableSet.add(itemPath)
+            }
+            mutableSet
         }
-        _selectedItems.update { currentSelected }
-        if (currentSelected.isEmpty()) {
+        if (_selectedItems.value.isEmpty()) {
             _isSelectionMode.update { false }
         }
     }
