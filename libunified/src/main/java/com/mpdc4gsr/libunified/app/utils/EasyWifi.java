@@ -1,6 +1,8 @@
 package com.mpdc4gsr.libunified.app.utils;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -9,6 +11,8 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiNetworkSpecifier;
 import android.util.Log;
+
+import androidx.core.content.ContextCompat;
 
 import com.mpdc4gsr.libunified.app.BaseApplication;
 
@@ -101,6 +105,10 @@ public class EasyWifi {
     }
 
     private WifiConfiguration isExist(String str) {
+        if (ContextCompat.checkSelfPermission(BaseApplication.instance, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
+            Log.w(this.TAG, "isExist: Missing ACCESS_WIFI_STATE permission");
+            return null;
+        }
         for (WifiConfiguration wifiConfiguration : this.wifiManager.getConfiguredNetworks()) {
             if (wifiConfiguration.SSID.equals("\"" + str + "\"")) {
                 return wifiConfiguration;
