@@ -41,6 +41,10 @@ data class RecordingSessionInfo(
     val gsrSamples: Int = 0
 )
 
+private const val DEFAULT_PLAYBACK_FPS = 30
+private const val THERMAL_FPS = 9
+private const val GSR_SAMPLING_RATE_HZ = 128
+
 data class SensorInfo(
     val name: String,
     val status: SensorConnectionStatus,
@@ -141,9 +145,9 @@ class FaultTolerantRecordingViewModel : AppBaseViewModel() {
             while (_recordingState.value == RecordingState.RECORDING) {
                 delay(1000)
                 seconds++
-                frameCount += 30 // 30 FPS for RGB
-                thermalFrames += 9 // 9 FPS for thermal
-                gsrSamples += 128 // 128 Hz for GSR
+                frameCount += DEFAULT_PLAYBACK_FPS
+                thermalFrames += THERMAL_FPS
+                gsrSamples += GSR_SAMPLING_RATE_HZ
 
                 val hours = seconds / 3600
                 val minutes = (seconds % 3600) / 60

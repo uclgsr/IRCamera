@@ -26,10 +26,10 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 @Composable
 fun ProfileScreen(
     onBackClick: (() -> Unit)? = null,
-    onNavigateToResearchTemplates: (() -> Unit)? = null,
-    onNavigateToPreferences: (() -> Unit)? = null,
-    onExportData: (() -> Unit)? = null,
     onNavigateToEditProfile: (() -> Unit)? = null,
+    onNavigateToResearchTemplates: (() -> Unit)? = null,
+    onExportData: (() -> Unit)? = null,
+    onNavigateToPreferences: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -132,9 +132,16 @@ private fun UserProfileCard(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Edit profile button
+            val context = androidx.compose.ui.platform.LocalContext.current
             Button(
                 onClick = {
-                    onNavigateToEditProfile?.invoke()
+                    onNavigateToEditProfile?.invoke() ?: run {
+                        android.widget.Toast.makeText(
+                            context,
+                            "Edit profile feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
@@ -300,21 +307,39 @@ private fun QuickActionsCard(
                     icon = Icons.Default.Science,
                     label = "Research Templates",
                     onClick = {
-                        onNavigateToResearchTemplates?.invoke()
+                        onNavigateToResearchTemplates?.invoke() ?: run {
+                            android.widget.Toast.makeText(
+                                context,
+                                "Opening research templates...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 )
                 QuickActionButton(
                     icon = Icons.Default.CloudUpload,
                     label = "Export Data",
                     onClick = {
-                        onExportData?.invoke()
+                        onExportData?.invoke() ?: run {
+                            android.widget.Toast.makeText(
+                                context,
+                                "Exporting data...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 )
                 QuickActionButton(
                     icon = Icons.Default.Settings,
                     label = "Preferences",
                     onClick = {
-                        onNavigateToPreferences?.invoke()
+                        onNavigateToPreferences?.invoke() ?: run {
+                            android.widget.Toast.makeText(
+                                context,
+                                "Opening preferences...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 )
             }

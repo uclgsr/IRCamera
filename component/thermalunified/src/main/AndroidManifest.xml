@@ -32,10 +32,10 @@
             android:name=".report.activity.ReportCreateComposeActivity"
             android:screenOrientation="userPortrait" />
         <activity
-            android:name=".report.activity.ReportPreviewComposeActivity"
+            android:name=".activity.ReportPreviewComposeActivity"
             android:screenOrientation="userPortrait" />
         <activity
-            android:name=".report.activity.ReportPreviewSecondComposeActivity"
+            android:name=".activity.ReportPreviewSecondComposeActivity"
             android:screenOrientation="userPortrait" />
 
         <activity
