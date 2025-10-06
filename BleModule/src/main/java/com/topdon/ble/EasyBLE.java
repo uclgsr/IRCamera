@@ -510,7 +510,14 @@ public class EasyBLE {
     public int getBondState(String address) {
         checkStatus();
         try {
-            return bluetoothAdapter.getRemoteDevice(address).getBondState();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (application != null && ContextCompat.checkSelfPermission(application, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                    return bluetoothAdapter.getRemoteDevice(address).getBondState();
+                }
+                return BluetoothDevice.BOND_NONE;
+            } else {
+                return bluetoothAdapter.getRemoteDevice(address).getBondState();
+            }
         } catch (Exception e) {
             return BluetoothDevice.BOND_NONE;
         }

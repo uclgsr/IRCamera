@@ -1,13 +1,18 @@
 package com.topdon.ble;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.topdon.ble.callback.ScanListener;
 import com.topdon.ble.util.Logger;
@@ -55,7 +60,20 @@ class LeScanner extends AbstractScanner {
         } else {
             settings = configuration.scanSettings;
         }
-        bleScanner.startScan(configuration.filters, settings, scanCallback);
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                Context context = getEasyBle().getContext();
+                if (context != null && ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+                    bleScanner.startScan(configuration.filters, settings, scanCallback);
+                } else {
+                    logger.log(Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing BLUETOOTH_SCAN permission for LE scan");
+                }
+            } else {
+                bleScanner.startScan(configuration.filters, settings, scanCallback);
+            }
+        } catch (SecurityException e) {
+            logger.log(Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permission to start LE scan: " + e.getMessage());
+        }
     }
 
     @Override
