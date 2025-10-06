@@ -8,6 +8,15 @@ This document provides guidelines for naming classes, files, and variables relat
 - **GSR** = Measurement type (Galvanic Skin Response)
 - **Shimmer GSR** = Shimmer device measuring GSR
 
+## ⚠️ Common Terminology Issue
+**INCORRECT**: "GSR sensor" - GSR is the measurement, not the sensor!
+**CORRECT**: 
+- "Shimmer sensor" or "Shimmer device" - when referring to hardware
+- "GSR measurement" or "GSR reading" - when referring to data
+- "Shimmer GSR sensor" or "Shimmer (GSR)" - when context needs both
+
+Note: While "GSR sensor" appears in some code comments and logs for brevity, it's technically a shorthand for "Shimmer sensor measuring GSR". New code should use more precise terminology.
+
 ## Naming Guidelines
 
 ### Device-Level Code (Hardware Interface)

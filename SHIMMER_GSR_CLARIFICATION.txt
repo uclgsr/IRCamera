@@ -55,6 +55,24 @@ The codebase has multiple recorder implementations for historical and architectu
 
 These serve different use cases and integration points in the application.
 
+### Common Terminology Issue: "GSR Sensor"
+
+You may encounter references to "GSR sensor" in code comments, logs, and UI strings. While technically imprecise (GSR is the measurement, not the sensor), this shorthand is sometimes used for brevity.
+
+**Why it's confusing:**
+- "GSR sensor" implies GSR is the device, when it's actually the measurement type
+- This historically led to treating Shimmer and GSR as different entities
+
+**What it actually means:**
+- "GSR sensor" = shorthand for "Shimmer sensor configured to measure GSR"
+
+**Best practice for new code:**
+- Use "Shimmer device" or "Shimmer sensor" for hardware references
+- Use "GSR reading" or "GSR measurement" for data references  
+- Use "Shimmer (GSR)" when you need to specify both
+
+Some "GSR sensor" references remain in the codebase for brevity and backward compatibility, but the architecture properly separates device management (Shimmer) from data handling (GSR).
+
 ### References
 - Shimmer Research official documentation: https://www.shimmersensing.com/
 - Shimmer Android SDK: https://github.com/ShimmerEngineering/Shimmer-Java-Android-API
