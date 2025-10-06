@@ -366,16 +366,10 @@ public class EasyBLE {
                 int connectDelay = 0;
                 if (bondController != null && bondController.accept(device)) {
                     BluetoothDevice remoteDevice = bluetoothAdapter.getRemoteDevice(device.getAddress());
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        if (application != null && ContextCompat.checkSelfPermission(application, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-                            if (remoteDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
-                                connectDelay = createBond(device.getAddress()) ? 1500 : 0;
-                            }
-                        }
-                    } else {
-                        if (remoteDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
-                            connectDelay = createBond(device.getAddress()) ? 1500 : 0;
-                        }
+                    boolean hasPermission = Build.VERSION.SDK_INT < Build.VERSION_CODES.S || 
+                        (application != null && ContextCompat.checkSelfPermission(application, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED);
+                    if (hasPermission && remoteDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
+                        connectDelay = createBond(device.getAddress()) ? 1500 : 0;
                     }
                 }
                 connection = new ConnectionImpl(this, bluetoothAdapter, device, configuration, connectDelay, observer);
@@ -510,14 +504,11 @@ public class EasyBLE {
     public int getBondState(String address) {
         checkStatus();
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (application != null && ContextCompat.checkSelfPermission(application, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-                    return bluetoothAdapter.getRemoteDevice(address).getBondState();
-                }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && 
+                (application == null || ContextCompat.checkSelfPermission(application, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED)) {
                 return BluetoothDevice.BOND_NONE;
-            } else {
-                return bluetoothAdapter.getRemoteDevice(address).getBondState();
             }
+            return bluetoothAdapter.getRemoteDevice(address).getBondState();
         } catch (Exception e) {
             return BluetoothDevice.BOND_NONE;
         }

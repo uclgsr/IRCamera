@@ -60,17 +60,17 @@ class LeScanner extends AbstractScanner {
         } else {
             settings = configuration.scanSettings;
         }
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                Context context = getEasyBle().getContext();
-                if (context != null && ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
-                    bleScanner.startScan(configuration.filters, settings, scanCallback);
-                } else {
-                    logger.log(Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing BLUETOOTH_SCAN permission for LE scan");
-                }
-            } else {
-                bleScanner.startScan(configuration.filters, settings, scanCallback);
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Context context = getEasyBle().getContext();
+            if (context == null || ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                logger.log(Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing BLUETOOTH_SCAN permission for LE scan");
+                return;
             }
+        }
+        
+        try {
+            bleScanner.startScan(configuration.filters, settings, scanCallback);
         } catch (SecurityException e) {
             logger.log(Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permission to start LE scan: " + e.getMessage());
         }
