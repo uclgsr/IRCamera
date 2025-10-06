@@ -400,6 +400,12 @@ fun UnifiedNavHost(
             )
         }
 
+        composable(UnifiedRoute.NetworkConfig.route) {
+            mpdc4gsr.feature.network.ui.NetworkSettingsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
         composable("diagnostics") {
             mpdc4gsr.feature.main.ui.DiagnosticsScreen(
                 onBackClick = { navController.popBackStack() }
