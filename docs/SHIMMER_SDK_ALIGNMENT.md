@@ -3,8 +3,9 @@
 ## SDK Version Information
 
 The project integrates with the official Shimmer SDK:
+
 - **shimmerdriver**: 0.11.5_beta.jar
-- **shimmerbluetoothmanager**: 0.11.5_beta.jar  
+- **shimmerbluetoothmanager**: 0.11.5_beta.jar
 - **shimmerdriverpc**: 0.11.5_beta.jar
 - **shimmerandroidinstrumentdriver**: 3.2.4_beta.aar
 
@@ -12,26 +13,26 @@ The project integrates with the official Shimmer SDK:
 
 The Shimmer Android SDK uses a Handler-based message passing architecture. Message types are identified by `msg.what`:
 
-| Constant | Value | Description |
-|----------|-------|-------------|
-| MESSAGE_STATE_CHANGE | 0 | Connection state changed (connecting, connected, disconnected) |
-| MESSAGE_READ | 2 | Data packet received with ObjectCluster |
-| MESSAGE_ACK_RECEIVED | 4 | Acknowledgment received from device |
-| MESSAGE_DEVICE_NAME | 5 | Device name information received |
-| MESSAGE_STOP_STREAMING_COMPLETE | 9 | Streaming stopped successfully |
-| MESSAGE_PACKET_LOSS_DETECTED | 11 | Data packet loss detected |
-| MESSAGE_TOAST | 999 | Toast notification message |
+| Constant                        | Value | Description                                                    |
+|---------------------------------|-------|----------------------------------------------------------------|
+| MESSAGE_STATE_CHANGE            | 0     | Connection state changed (connecting, connected, disconnected) |
+| MESSAGE_READ                    | 2     | Data packet received with ObjectCluster                        |
+| MESSAGE_ACK_RECEIVED            | 4     | Acknowledgment received from device                            |
+| MESSAGE_DEVICE_NAME             | 5     | Device name information received                               |
+| MESSAGE_STOP_STREAMING_COMPLETE | 9     | Streaming stopped successfully                                 |
+| MESSAGE_PACKET_LOSS_DETECTED    | 11    | Data packet loss detected                                      |
+| MESSAGE_TOAST                   | 999   | Toast notification message                                     |
 
 ### State Values
 
 Connection states are passed in `msg.arg1` for MESSAGE_STATE_CHANGE:
 
-| State | Value | Description |
-|-------|-------|-------------|
-| STATE_NONE | 0 | Device disconnected |
-| STATE_CONNECTING | 1 | Connection in progress |
-| STATE_CONNECTED | 2 | Device connected |
-| STATE_STREAMING | 3 | Device streaming data |
+| State            | Value | Description            |
+|------------------|-------|------------------------|
+| STATE_NONE       | 0     | Device disconnected    |
+| STATE_CONNECTING | 1     | Connection in progress |
+| STATE_CONNECTED  | 2     | Device connected       |
+| STATE_STREAMING  | 3     | Device streaming data  |
 
 ## ObjectCluster Data Extraction
 
@@ -43,15 +44,15 @@ objectCluster.getFormatClusterValue(sensorName: String, format: String)
 
 ### Sensor Names and Formats
 
-| Sensor | Name String | Format | Description |
-|--------|-------------|--------|-------------|
-| GSR Raw | "GSR" | "RAW" | Raw ADC value (0-4095) |
-| GSR Calibrated | "GSR Conductance" | "CAL" | Conductance in microsiemens |
-| PPG | "PPG_A13" | "CAL" | Photoplethysmogram value |
-| Timestamp | "Timestamp" | "CAL" | Device timestamp |
-| Accelerometer X | "Accelerometer X" | "CAL" | X-axis acceleration (m/s²) |
-| Accelerometer Y | "Accelerometer Y" | "CAL" | Y-axis acceleration (m/s²) |
-| Accelerometer Z | "Accelerometer Z" | "CAL" | Z-axis acceleration (m/s²) |
+| Sensor          | Name String       | Format | Description                 |
+|-----------------|-------------------|--------|-----------------------------|
+| GSR Raw         | "GSR"             | "RAW"  | Raw ADC value (0-4095)      |
+| GSR Calibrated  | "GSR Conductance" | "CAL"  | Conductance in microsiemens |
+| PPG             | "PPG_A13"         | "CAL"  | Photoplethysmogram value    |
+| Timestamp       | "Timestamp"       | "CAL"  | Device timestamp            |
+| Accelerometer X | "Accelerometer X" | "CAL"  | X-axis acceleration (m/s²)  |
+| Accelerometer Y | "Accelerometer Y" | "CAL"  | Y-axis acceleration (m/s²)  |
+| Accelerometer Z | "Accelerometer Z" | "CAL"  | Z-axis acceleration (m/s²)  |
 
 ### Example Usage
 
@@ -73,6 +74,7 @@ val timestamp = objectCluster.getFormatClusterValue("Timestamp", "CAL")?.toLong(
 ```kotlin
 shimmer.setSamplingRateShimmer(rate: Double)
 ```
+
 Valid range: 1.0 - 512.0 Hz  
 Recommended for GSR: 128.0 Hz
 
@@ -82,13 +84,13 @@ Recommended for GSR: 128.0 Hz
 shimmer.writeGSRRange(range: Int)
 ```
 
-| Range Value | Description |
-|-------------|-------------|
-| 0 | Auto range (recommended) |
-| 1 | 10kΩ - 56kΩ |
-| 2 | 56kΩ - 220kΩ |
-| 3 | 220kΩ - 680kΩ |
-| 4 | 680kΩ - 4.7MΩ |
+| Range Value | Description              |
+|-------------|--------------------------|
+| 0           | Auto range (recommended) |
+| 1           | 10kΩ - 56kΩ              |
+| 2           | 56kΩ - 220kΩ             |
+| 3           | 220kΩ - 680kΩ            |
+| 4           | 680kΩ - 4.7MΩ            |
 
 ### Enabling Sensors
 
@@ -136,34 +138,34 @@ G = 1,000,000 / R (microsiemens)
 ### Core Integration Files
 
 1. **ShimmerDeviceManager.kt**
-   - Location: `app/src/main/java/mpdc4gsr/core/data/`
-   - Purpose: BLE device discovery and connection management
-   - Key Features: Multi-device support, reconnection logic
+    - Location: `app/src/main/java/mpdc4gsr/core/data/`
+    - Purpose: BLE device discovery and connection management
+    - Key Features: Multi-device support, reconnection logic
 
 2. **Shimmer3GSRRecorder.kt**
-   - Location: `app/src/main/java/mpdc4gsr/core/data/`
-   - Purpose: Main GSR recording orchestration
-   - Key Features: Session management, CSV output, data quality monitoring
+    - Location: `app/src/main/java/mpdc4gsr/core/data/`
+    - Purpose: Main GSR recording orchestration
+    - Key Features: Session management, CSV output, data quality monitoring
 
 3. **GSRSensorRecorder.kt**
-   - Location: `app/src/main/java/mpdc4gsr/feature/gsr/data/`
-   - Purpose: Sensor-level data recording and processing
-   - Key Features: ObjectCluster extraction, network streaming
+    - Location: `app/src/main/java/mpdc4gsr/feature/gsr/data/`
+    - Purpose: Sensor-level data recording and processing
+    - Key Features: ObjectCluster extraction, network streaming
 
 4. **RealShimmerDeviceFactory.kt**
-   - Location: `app/src/main/java/mpdc4gsr/feature/gsr/data/`
-   - Purpose: Shimmer device wrapper and data handler
-   - Key Features: Handler setup, state management, data callbacks
+    - Location: `app/src/main/java/mpdc4gsr/feature/gsr/data/`
+    - Purpose: Shimmer device wrapper and data handler
+    - Key Features: Handler setup, state management, data callbacks
 
 5. **ShimmerApiBridge.kt**
-   - Location: `component/gsr-recording/src/main/java/com/mpdc4gsr/gsr/service/`
-   - Purpose: GSR calculation bridge
-   - Key Features: Raw to calibrated conversion, fallback processing
+    - Location: `component/gsr-recording/src/main/java/com/mpdc4gsr/gsr/service/`
+    - Purpose: GSR calculation bridge
+    - Key Features: Raw to calibrated conversion, fallback processing
 
 6. **GSRCalculationUtils.kt**
-   - Location: `app/src/main/java/mpdc4gsr/feature/gsr/data/`
-   - Purpose: GSR calculation utilities
-   - Key Features: Signal quality assessment, validation
+    - Location: `app/src/main/java/mpdc4gsr/feature/gsr/data/`
+    - Purpose: GSR calculation utilities
+    - Key Features: Signal quality assessment, validation
 
 ## Best Practices
 
@@ -217,40 +219,40 @@ if (gsrRaw in 1..4095 && gsrConductance > 0) {
 ## References
 
 1. **Official Shimmer Documentation**:
-   - [Shimmer Sensing](https://www.shimmersensing.com/)
-   - [ConsensysPRO User Guide](https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf)
+    - [Shimmer Sensing](https://www.shimmersensing.com/)
+    - [ConsensysPRO User Guide](https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf)
 
 2. **Source Repositories**:
-   - [Shimmer-Java-Android-API](https://github.com/ShimmerEngineering/Shimmer-Java-Android-API)
-   - [ShimmerAndroidAPI](https://github.com/ShimmerEngineering/ShimmerAndroidAPI)
+    - [Shimmer-Java-Android-API](https://github.com/ShimmerEngineering/Shimmer-Java-Android-API)
+    - [ShimmerAndroidAPI](https://github.com/ShimmerEngineering/ShimmerAndroidAPI)
 
 3. **SDK Integration**:
-   - SDK JARs located in: `app/libs/`
-   - Android AAR located in: `app/libs/`
+    - SDK JARs located in: `app/libs/`
+    - Android AAR located in: `app/libs/`
 
 ## Troubleshooting
 
 ### Common Issues
 
 1. **ObjectCluster returns null**
-   - Ensure sensor is enabled via `writeEnabledSensors()`
-   - Check device is streaming with `isStreaming()` 
-   - Verify sensor name and format strings
+    - Ensure sensor is enabled via `writeEnabledSensors()`
+    - Check device is streaming with `isStreaming()`
+    - Verify sensor name and format strings
 
 2. **Connection fails**
-   - Check Bluetooth permissions granted
-   - Verify device is paired and in range
-   - Ensure device not connected to another app
+    - Check Bluetooth permissions granted
+    - Verify device is paired and in range
+    - Ensure device not connected to another app
 
 3. **Invalid GSR values**
-   - Check raw ADC value is in range 1-4095
-   - Verify GSR range setting matches hardware
-   - Ensure proper sensor placement on skin
+    - Check raw ADC value is in range 1-4095
+    - Verify GSR range setting matches hardware
+    - Ensure proper sensor placement on skin
 
 4. **Packet loss detected**
-   - Reduce distance between device and phone
-   - Lower sampling rate if needed
-   - Check for Bluetooth interference
+    - Reduce distance between device and phone
+    - Lower sampling rate if needed
+    - Check for Bluetooth interference
 
 ## Maintenance Notes
 

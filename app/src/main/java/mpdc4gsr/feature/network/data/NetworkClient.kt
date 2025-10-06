@@ -333,11 +333,11 @@ class NetworkClient(private val context: Context) {
                     val sslContext = certificateManager.createSSLContext()
                     if (sslContext != null) {
                         TrafficStats.setThreadStatsTag(Process.myTid())
-                        
+
                         val sslSocketFactory = sslContext.socketFactory
                         sslSocket = sslSocketFactory.createSocket(ipAddress, port) as SSLSocket
                         sslSocket?.soTimeout = CONNECTION_TIMEOUT.toInt()
-                        
+
                         sslSocket?.let { TrafficStats.tagSocket(it as Socket) }
 
                         sslSocket?.startHandshake()
@@ -407,11 +407,11 @@ class NetworkClient(private val context: Context) {
     ): Boolean {
         return try {
             TrafficStats.setThreadStatsTag(Process.myTid())
-            
+
             val newSocket = Socket()
             newSocket.connect(InetSocketAddress(ipAddress, port), CONNECTION_TIMEOUT.toInt())
             newSocket.soTimeout = CONNECTION_TIMEOUT.toInt()
-            
+
             TrafficStats.tagSocket(newSocket)
             socket = newSocket
 
@@ -459,12 +459,12 @@ class NetworkClient(private val context: Context) {
         try {
             socket?.let { TrafficStats.untagSocket(it) }
             sslSocket?.let { TrafficStats.untagSocket(it) }
-            
+
             outputStream?.close()
             inputStream?.close()
             sslSocket?.close()
             socket?.close()
-            
+
             TrafficStats.clearThreadStatsTag()
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error during disconnect", e)
@@ -823,7 +823,7 @@ class NetworkClient(private val context: Context) {
         withContext(Dispatchers.IO) {
             try {
                 TrafficStats.setThreadStatsTag(Process.myTid())
-                
+
                 Socket().use { socket ->
                     TrafficStats.tagSocket(socket)
                     socket.connect(InetSocketAddress(host, PC_CONTROLLER_PORT), QUERY_TIMEOUT)

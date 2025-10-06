@@ -54,7 +54,7 @@ class TcpClient(
             AppLogger.i(TAG, "Connecting to PC server at $serverHost:$serverPort")
             _connectionState.value = CommandConnection.ConnectionState.CONNECTING
             connectionCallback?.invoke(CommandConnection.ConnectionState.CONNECTING)
-            
+
             TrafficStats.setThreadStatsTag(Process.myTid())
 
             socket = Socket().apply {

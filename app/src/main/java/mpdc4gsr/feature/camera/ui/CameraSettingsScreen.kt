@@ -40,7 +40,7 @@ fun CameraSettingsScreen(
     val (supports4K, supportsRAW, supports60fps) = remember {
         configManager.detectDeviceCapabilities()
     }
-    
+
     val availableResolutions = remember {
         buildList {
             if (supports4K) {
@@ -51,9 +51,9 @@ fun CameraSettingsScreen(
             add("640x480")
         }
     }
-    
+
     val maxFrameRate = if (supports60fps) 60f else 30f
-    
+
     var resolution by remember { mutableStateOf(availableResolutions.first()) }
     var frameRate by remember { mutableIntStateOf(30) }
     var autoFocus by remember { mutableStateOf(true) }
@@ -106,7 +106,7 @@ fun CameraSettingsScreen(
                     enabled = false
                 )
             }
-            
+
             // Video Settings
             SettingsCard(
                 title = "Video Settings",

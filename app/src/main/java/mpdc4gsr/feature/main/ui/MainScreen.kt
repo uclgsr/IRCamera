@@ -233,14 +233,14 @@ private fun SensorDashboardTab(
                     .padding(20.dp)
             ) {
                 Text(
-                    text = "Welcome to IR Camera",
+                    text = "MPDC4GSR",
                     color = Color.White,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Multi-modal sensor platform for thermal imaging, GSR monitoring, and RGB camera recording",
+                    text = "Multi-sensor data collection platform for GSR",
                     color = Color.Gray,
                     fontSize = 14.sp,
                     lineHeight = 20.sp

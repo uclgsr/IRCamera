@@ -85,7 +85,7 @@ class GSRSensorRecorder(
                 ) == PackageManager.PERMISSION_GRANTED
             }
         }
-        
+
         fun hasBluetoothConnectPermission(context: Context): Boolean {
             return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
                 ContextCompat.checkSelfPermission(
@@ -1111,20 +1111,27 @@ class GSRSensorRecorder(
     private fun observeGSRSettingsChanges() {
         recordingScope.launch {
             gsrSettingsRepository?.gsrSettings?.collectLatest { settings ->
-                AppLogger.i(TAG, "GSR settings changed - samplingRate: ${settings.samplingRate}Hz, filtering: ${settings.enableFiltering}, bufferSize: ${settings.bufferSize}")
-                
-                val newSamplingRate = settings.samplingRate.toDouble().coerceIn(SHIMMER_MIN_SAMPLING_RATE, SHIMMER_MAX_SAMPLING_RATE)
-                
+                AppLogger.i(
+                    TAG,
+                    "GSR settings changed - samplingRate: ${settings.samplingRate}Hz, filtering: ${settings.enableFiltering}, bufferSize: ${settings.bufferSize}"
+                )
+
+                val newSamplingRate =
+                    settings.samplingRate.toDouble().coerceIn(SHIMMER_MIN_SAMPLING_RATE, SHIMMER_MAX_SAMPLING_RATE)
+
                 if (newSamplingRate != effectiveSamplingRate) {
                     effectiveSamplingRate = newSamplingRate
                     _samplingRate = effectiveSamplingRate
-                    
+
                     AppLogger.i(TAG, "Sampling rate updated to ${effectiveSamplingRate}Hz")
-                    
+
                     // Note: Shimmer device needs to be reconfigured for sampling rate changes
                     // Log a warning if recording is active as changes won't apply until restart
                     if (_isRecording.get()) {
-                        AppLogger.w(TAG, "GSR settings changed during active recording - changes will apply on next recording session")
+                        AppLogger.w(
+                            TAG,
+                            "GSR settings changed during active recording - changes will apply on next recording session"
+                        )
                     } else if (isShimmerConnected) {
                         AppLogger.i(TAG, "GSR settings changed - device reconfiguration may be needed")
                     }
@@ -1344,32 +1351,35 @@ class GSRSensorRecorder(
                             if (hasBluetoothConnectPermission(context)) {
                                 val pairedDevices = bluetoothAdapter.bondedDevices
                                 pairedDevices?.forEach { btDevice ->
-                                val deviceName = btDevice.name ?: "Unknown"
-                                val deviceAddress = btDevice.address
+                                    val deviceName = btDevice.name ?: "Unknown"
+                                    val deviceAddress = btDevice.address
 
-                                // Check if this is a Shimmer GSR device
-                                if (isShimmerGSRDevice(deviceName, deviceAddress)) {
-                                    val isAlreadyConnected = connectedDevices.any { shimmer ->
-                                        try {
-                                            shimmer.getMacId() == deviceAddress
-                                        } catch (e: Exception) {
-                                            false
+                                    // Check if this is a Shimmer GSR device
+                                    if (isShimmerGSRDevice(deviceName, deviceAddress)) {
+                                        val isAlreadyConnected = connectedDevices.any { shimmer ->
+                                            try {
+                                                shimmer.getMacId() == deviceAddress
+                                            } catch (e: Exception) {
+                                                false
+                                            }
                                         }
-                                    }
-                                    if (!isAlreadyConnected) {
-                                        val deviceEntry = "$deviceName ($deviceAddress) - Available"
-                                        if (!deviceList.contains(deviceEntry)) {
-                                            deviceList.add(deviceEntry)
+                                        if (!isAlreadyConnected) {
+                                            val deviceEntry = "$deviceName ($deviceAddress) - Available"
+                                            if (!deviceList.contains(deviceEntry)) {
+                                                deviceList.add(deviceEntry)
+                                            }
+                                            Log.d(
+                                                TAG,
+                                                "Found paired Shimmer GSR device: $deviceName at $deviceAddress"
+                                            )
                                         }
-                                        Log.d(
-                                            TAG,
-                                            "Found paired Shimmer GSR device: $deviceName at $deviceAddress"
-                                        )
                                     }
                                 }
-                            }
                             } else {
-                                AppLogger.w(TAG, "Bluetooth CONNECT permission not granted - cannot access bonded devices")
+                                AppLogger.w(
+                                    TAG,
+                                    "Bluetooth CONNECT permission not granted - cannot access bonded devices"
+                                )
                             }
                         }
                     } catch (e: Exception) {
@@ -1905,12 +1915,12 @@ class GSRSensorRecorder(
                     val bluetoothManager =
                         context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
                     val bluetoothAdapter = bluetoothManager?.adapter
-                    
+
                     if (!hasBluetoothConnectPermission(context)) {
                         AppLogger.w(TAG, "Bluetooth CONNECT permission not granted - cannot check bonded devices")
                         return@withContext false
                     }
-                    
+
                     val bondedDevices = bluetoothAdapter?.bondedDevices
                     val isAlreadyBonded =
                         bondedDevices?.any { it.address == deviceAddress } ?: false
@@ -1958,12 +1968,12 @@ class GSRSensorRecorder(
                 val bluetoothManager =
                     context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
                 val bluetoothAdapter = bluetoothManager?.adapter
-                
+
                 if (!hasBluetoothConnectPermission(context)) {
                     AppLogger.w(TAG, "Bluetooth CONNECT permission not granted - cannot list bonded devices")
                     return@withContext deviceList
                 }
-                
+
                 val bondedDevices = bluetoothAdapter?.bondedDevices
 
                 bondedDevices?.forEach { device ->

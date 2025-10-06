@@ -45,7 +45,7 @@ class CameraController(private val context: Context) {
         var lockAcquired = false
         try {
             val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-            
+
             val cameraIdList = try {
                 manager.cameraIdList
             } catch (e: CameraAccessException) {
@@ -53,13 +53,13 @@ class CameraController(private val context: Context) {
                 onCameraError?.invoke("Camera service unavailable: ${e.message}")
                 return
             }
-            
+
             if (cameraIdList.isEmpty()) {
                 AppLogger.e(TAG, "No cameras available on device")
                 onCameraError?.invoke("No cameras found on this device")
                 return
             }
-            
+
             if (!cameraIdList.contains(cameraId)) {
                 AppLogger.e(TAG, "Camera $cameraId not found. Available cameras: ${cameraIdList.joinToString()}")
                 onCameraError?.invoke("Camera $cameraId not available. Available: ${cameraIdList.joinToString()}")

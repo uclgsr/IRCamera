@@ -37,7 +37,7 @@ fun RecordingSettingsScreen(
 ) {
     val context = LocalContext.current
     val settings by viewModel.recordingSettings.collectAsState()
-    
+
     val configManager = remember { CameraConfigurationManager() }
     val (_, _, supports60fps) = remember {
         configManager.detectDeviceCapabilities()

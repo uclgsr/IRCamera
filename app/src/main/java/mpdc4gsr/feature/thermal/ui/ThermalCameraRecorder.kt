@@ -575,18 +575,18 @@ class ThermalCameraRecorder(
 
     /**
      * Initialize IRUVCTC with automatic USB permission handling.
-     * 
+     *
      * This method is called during initial app startup and sets up the USBMonitor framework
      * to automatically detect and handle thermal camera devices. It follows the reference
      * implementation pattern from github.com/CoderCaiSL/IRCamera.
-     * 
+     *
      * CONSOLIDATION NOTE:
      * This method works in conjunction with initializeRealThermalCamera(device).
      * Both methods use the same underlying IRUVCTC initialization logic but are called
      * in different scenarios:
      * - This method: Initial setup, lets USBMonitor auto-detect devices
      * - initializeRealThermalCamera: Manual rescan/recovery when device is already known
-     * 
+     *
      * Both methods check if IRUVCTC is already initialized to prevent duplicate instances
      * and conflicts from calling registerUSB() multiple times.
      */
@@ -594,16 +594,19 @@ class ThermalCameraRecorder(
         withContext(Dispatchers.IO) {
             try {
                 AppLogger.i(TAG, "Initializing IRUVCTC with automatic USB permission handling")
-                
+
                 // Check if already initialized to prevent duplicate instances
                 if (iruvctc != null) {
                     AppLogger.w(TAG, "IRUVCTC already initialized, skipping initialization")
                     return@withContext true
                 }
-                
+
                 AppLogger.d(TAG, "Following reference implementation pattern from github.com/CoderCaiSL/IRCamera")
                 AppLogger.d(TAG, "Flow: Create IRUVCTC -> registerUSB -> USBMonitor auto-detects devices")
-                AppLogger.d(TAG, "USBMonitor will: 1 onAttach -> requestPermission, 2 onGranted, 3 onConnect -> open camera")
+                AppLogger.d(
+                    TAG,
+                    "USBMonitor will: 1 onAttach -> requestPermission, 2 onGranted, 3 onConnect -> open camera"
+                )
 
                 val connectCallback = object : com.energy.iruvc.uvc.ConnectCallback {
                     override fun onCameraOpened(uvcCamera: UVCCamera?) {
@@ -705,7 +708,7 @@ class ThermalCameraRecorder(
                     override fun onCancel() {
                         AppLogger.w(TAG, "USB permission cancelled by user")
                         hasUsbPermission = false
-                        
+
                         recordingScope.launch {
                             emitError(
                                 ErrorType.PERMISSION_DENIED,
@@ -1008,10 +1011,17 @@ class ThermalCameraRecorder(
                 // but is called when we have a specific device already detected
                 Log.i(
                     TAG,
-                    "Initializing real thermal camera with USB device: ${device.productName} (VID=${device.vendorId.toString(16)}, PID=${device.productId.toString(16)})"
+                    "Initializing real thermal camera with USB device: ${device.productName} (VID=${
+                        device.vendorId.toString(
+                            16
+                        )
+                    }, PID=${device.productId.toString(16)})"
                 )
-                
-                AppLogger.d(TAG, "USB device info - Vendor: ${device.manufacturerName}, Product: ${device.productName}, Serial: ${device.serialNumber}")
+
+                AppLogger.d(
+                    TAG,
+                    "USB device info - Vendor: ${device.manufacturerName}, Product: ${device.productName}, Serial: ${device.serialNumber}"
+                )
 
                 // Check if IRUVCTC is already initialized to avoid creating duplicate instances
                 // This prevents conflicts from calling both initialization methods
@@ -1150,7 +1160,7 @@ class ThermalCameraRecorder(
 
                 AppLogger.d(TAG, "Creating IRUVCTC instance with ${IR_CAMERA_WIDTH}x${IR_CAMERA_HEIGHT} resolution")
                 val syncBitmap = com.energy.iruvc.utils.SynchronizedBitmap()
-                
+
                 try {
                     iruvctc = IRUVCTC(
                         IR_CAMERA_WIDTH,
@@ -3138,7 +3148,7 @@ class ThermalCameraRecorder(
         return withContext(Dispatchers.IO) {
             try {
                 AppLogger.i(TAG, "Manually rescanning for thermal camera devices")
-                
+
                 // If IRUVCTC is already initialized and connected, no need to rescan
                 if (iruvctc != null && isIRCameraConnected) {
                     AppLogger.i(TAG, "Thermal camera already initialized and connected, skipping rescan")
@@ -3146,16 +3156,16 @@ class ThermalCameraRecorder(
                     emitStatus()
                     return@withContext true
                 }
-                
+
                 val manager = usbManager
                 if (manager == null) {
                     AppLogger.w(TAG, "USB manager not available for rescan")
                     return@withContext false
                 }
-                
+
                 val deviceList = manager.deviceList
                 AppLogger.i(TAG, "Found ${deviceList.size} USB devices during rescan")
-                
+
                 for (device in deviceList.values) {
                     Log.d(
                         TAG,
@@ -3163,20 +3173,20 @@ class ThermalCameraRecorder(
                             device.productId.toString(16)
                         }, Name=${device.productName}"
                     )
-                    
+
                     if (device.isTcTsDevice()) {
                         Log.i(
                             TAG,
                             "Found thermal camera during rescan: ${device.productName}"
                         )
-                        
+
                         // Update device reference immediately so status reflects the device
                         thermalCameraDevice = device
-                        
+
                         if (manager.hasPermission(device)) {
                             AppLogger.i(TAG, "Thermal camera has permission, initializing")
                             hasUsbPermission = true
-                            
+
                             // This will check if already initialized and skip if so
                             val success = initializeRealThermalCamera(device)
                             if (success) {
@@ -3194,10 +3204,10 @@ class ThermalCameraRecorder(
                         }
                     }
                 }
-                
+
                 AppLogger.w(TAG, "No thermal camera devices found during rescan")
                 return@withContext false
-                
+
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Error during thermal camera rescan", e)
                 return@withContext false
@@ -3228,8 +3238,11 @@ class ThermalCameraRecorder(
         if (newEmissivity in 0.1..1.0) {
             emissivity = newEmissivity
             AppLogger.i(TAG, "Updated emissivity to $emissivity")
-            
-            AppLogger.d(TAG, "Emissivity parameter stored; IrcamEngine setEmissivity method not available in current SDK version")
+
+            AppLogger.d(
+                TAG,
+                "Emissivity parameter stored; IrcamEngine setEmissivity method not available in current SDK version"
+            )
         } else {
             AppLogger.w(TAG, "Invalid emissivity value: $newEmissivity (must be between 0.1 and 1.0)")
         }
@@ -3239,8 +3252,11 @@ class ThermalCameraRecorder(
         if (newTemp in -50.0..100.0) {
             ambientTemperature = newTemp
             AppLogger.i(TAG, "Updated ambient temperature to $ambientTemperature")
-            
-            AppLogger.d(TAG, "Ambient temperature parameter stored; IrcamEngine setAmbientTemperature method not available in current SDK version")
+
+            AppLogger.d(
+                TAG,
+                "Ambient temperature parameter stored; IrcamEngine setAmbientTemperature method not available in current SDK version"
+            )
         } else {
             AppLogger.w(TAG, "Invalid ambient temperature: $newTemp (must be between -50 and 100)")
         }

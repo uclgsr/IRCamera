@@ -195,9 +195,9 @@ class Shimmer3GSRRecorder(
 
         try {
             shimmer.setSamplingRateShimmer(DEFAULT_SAMPLING_RATE)
-            
+
             shimmer.writeGSRRange(GSR_RANGE_AUTO)
-            
+
             shimmer.writeEnabledSensors(Shimmer.SENSOR_GSR.toLong())
 
             AppLogger.d(TAG, "Configured sampling rate: ${DEFAULT_SAMPLING_RATE}Hz")

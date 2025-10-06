@@ -55,7 +55,7 @@ class NetworkServer(
                 }
 
                 AppLogger.i(TAG, "Starting TCP server on port $port")
-                
+
                 TrafficStats.setThreadStatsTag(Process.myTid())
 
                 serverSocket = ServerSocket().apply {
@@ -102,7 +102,7 @@ class NetworkServer(
                 clientSocket?.close()
 
                 serverSocket?.close()
-                
+
                 TrafficStats.clearThreadStatsTag()
 
                 outputWriter = null

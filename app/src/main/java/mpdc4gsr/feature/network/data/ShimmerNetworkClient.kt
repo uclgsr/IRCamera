@@ -46,7 +46,7 @@ class ShimmerNetworkClient(
             }
 
             AppLogger.i(TAG, "Connecting to PC Controller at $serverHost:$serverPort")
-            
+
             TrafficStats.setThreadStatsTag(Process.myTid())
 
             socket = Socket()
@@ -54,7 +54,7 @@ class ShimmerNetworkClient(
                 java.net.InetSocketAddress(serverHost, serverPort),
                 CONNECTION_TIMEOUT_MS
             )
-            
+
             socket?.let { TrafficStats.tagSocket(it) }
 
             outputStream = PrintWriter(socket?.getOutputStream()!!, true)

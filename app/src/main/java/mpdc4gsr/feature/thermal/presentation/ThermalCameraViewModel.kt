@@ -135,14 +135,14 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
             try {
                 AppLogger.i(TAG, "Triggering thermal camera rescan from ViewModel")
                 val found = thermalRecorder?.rescanForThermalCamera() ?: false
-                
+
                 val status = thermalRecorder?.getThermalSystemStatus()
                 _uiState.value = _uiState.value.copy(
                     isConnected = status?.isConnected ?: false,
                     isSimulationMode = status?.isSimulationMode ?: false,
                     errorMessage = if (found) null else status?.statusMessage
                 )
-                
+
                 if (found) {
                     AppLogger.i(TAG, "Thermal camera found during rescan")
                 } else {
