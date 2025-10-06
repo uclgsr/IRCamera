@@ -79,6 +79,12 @@ fun ThermalMonitorScreen(
     var showControls by remember { mutableStateOf(true) }
     var showAdvancedControls by remember { mutableStateOf(false) }
 
+    // Trigger immediate rescan when screen appears to catch already-connected devices
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(CAMERA_RESCAN_DELAY_MS)
+        viewModel.rescanForThermalCamera()
+    }
+
     // Update recording duration periodically
     LaunchedEffect(uiState.isRecording) {
         if (uiState.isRecording) {

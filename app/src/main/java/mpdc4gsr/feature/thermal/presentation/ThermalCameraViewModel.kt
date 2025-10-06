@@ -130,6 +130,33 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
         }
     }
 
+    fun rescanForThermalCamera() {
+        viewModelScope.launch(exceptionHandler) {
+            try {
+                AppLogger.i(TAG, "Triggering thermal camera rescan from ViewModel")
+                val found = thermalRecorder?.rescanForThermalCamera() ?: false
+                
+                val status = thermalRecorder?.getThermalSystemStatus()
+                _uiState.value = _uiState.value.copy(
+                    isConnected = status?.isConnected ?: false,
+                    isSimulationMode = status?.isSimulationMode ?: false,
+                    errorMessage = if (found) null else status?.statusMessage
+                )
+                
+                if (found) {
+                    AppLogger.i(TAG, "Thermal camera found during rescan")
+                } else {
+                    AppLogger.w(TAG, "Rescan did not initialize camera: ${status?.statusMessage}")
+                }
+            } catch (e: Exception) {
+                AppLogger.e(TAG, "Error during thermal camera rescan", e)
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = "Rescan error: ${e.message}"
+                )
+            }
+        }
+    }
+
     fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata) {
         viewModelScope.launch(exceptionHandler) {
             try {
