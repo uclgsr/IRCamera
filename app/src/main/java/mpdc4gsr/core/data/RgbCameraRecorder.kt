@@ -24,6 +24,7 @@ import mpdc4gsr.feature.camera.data.CameraConfigurationManager
 import mpdc4gsr.feature.camera.data.CameraControlsManager
 import mpdc4gsr.feature.camera.data.CameraPerformanceManager
 import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
+import RecordingSettingsRepository
 import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.ExecutorService
@@ -119,7 +120,7 @@ class RgbCameraRecorder(
     private var deviceSupportsRAW = false
     private var actualFrameRateAchieved = 0.0
 
-    private var recordingSettings: mpdc4gsr.feature.settings.data.RecordingSettingsRepository.RecordingSettings? = null
+    private var recordingSettings: RecordingSettingsRepository.RecordingSettings? = null
 
     private var cameraProvider: ProcessCameraProvider? = null
     private var preview: Preview? = null
@@ -186,7 +187,7 @@ class RgbCameraRecorder(
     override suspend fun initialize(): Boolean = withContext(Dispatchers.Main) {
         try {
             recordingSettings =
-                mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context).getSettings()
+                RecordingSettingsRepository.getInstance(context).getSettings()
             Log.d(
                 TAG,
                 "Recording settings loaded: quality=${recordingSettings?.recordingQuality}, fps=${recordingSettings?.videoFrameRate}, audio=${recordingSettings?.audioEnabled}"
@@ -596,7 +597,7 @@ class RgbCameraRecorder(
             val supports60fps = checkDevice60fpsSupport()
 
             val qualityConfig = recordingSettings?.let { settings ->
-                mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context)
+                RecordingSettingsRepository.getInstance(context)
                     .getQualityConfig(settings.recordingQuality)
             }
 
@@ -1994,7 +1995,7 @@ class RgbCameraRecorder(
 
     private fun observeRecordingSettingsChanges() {
         recordingScope.launch {
-            mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context)
+            RecordingSettingsRepository.getInstance(context)
                 .settings.collectLatest { settings ->
                     AppLogger.i(TAG, "Recording settings changed - quality: ${settings.recordingQuality}, fps: ${settings.videoFrameRate}, audio: ${settings.audioEnabled}")
                     recordingSettings = settings
@@ -2163,17 +2164,26 @@ class RgbCameraRecorder(
     fun hasCameraPermission(): Boolean {
         val hasCamera = context.checkSelfPermission(android.Manifest.permission.CAMERA) ==
                 android.content.pm.PackageManager.PERMISSION_GRANTED
-        val hasAudio = context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) ==
-                android.content.pm.PackageManager.PERMISSION_GRANTED
         
         if (!hasCamera) {
             AppLogger.w(TAG, "Camera permission not granted")
+            return false
         }
+        
+        val audioEnabled = recordingSettings?.audioEnabled ?: true
+        if (!audioEnabled) {
+            AppLogger.d(TAG, "Audio recording disabled in settings, skipping audio permission check")
+            return true
+        }
+        
+        val hasAudio = context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) ==
+                android.content.pm.PackageManager.PERMISSION_GRANTED
+        
         if (!hasAudio) {
             AppLogger.w(TAG, "Audio recording permission not granted")
         }
         
-        return hasCamera && hasAudio
+        return hasAudio
     }
     
     fun hasStoragePermission(): Boolean {

@@ -3230,11 +3230,12 @@ class ThermalCameraRecorder(
             
             ircamEngine?.let { engine ->
                 try {
-                    AppLogger.d(TAG, "Applying emissivity to IrcamEngine")
+                    engine.setEmissivity(emissivity.toFloat())
+                    AppLogger.d(TAG, "Applied emissivity $emissivity to IrcamEngine")
                 } catch (e: Exception) {
-                    AppLogger.w(TAG, "Failed to apply emissivity to engine", e)
+                    AppLogger.w(TAG, "Failed to apply emissivity to engine: ${e.message}", e)
                 }
-            }
+            } ?: AppLogger.d(TAG, "IrcamEngine not initialized, emissivity will be applied when camera connects")
         } else {
             AppLogger.w(TAG, "Invalid emissivity value: $newEmissivity (must be between 0.1 and 1.0)")
         }
@@ -3247,11 +3248,12 @@ class ThermalCameraRecorder(
             
             ircamEngine?.let { engine ->
                 try {
-                    AppLogger.d(TAG, "Applying ambient temperature to IrcamEngine")
+                    engine.setAmbientTemperature(ambientTemperature.toFloat())
+                    AppLogger.d(TAG, "Applied ambient temperature $ambientTemperature to IrcamEngine")
                 } catch (e: Exception) {
-                    AppLogger.w(TAG, "Failed to apply ambient temperature to engine", e)
+                    AppLogger.w(TAG, "Failed to apply ambient temperature to engine: ${e.message}", e)
                 }
-            }
+            } ?: AppLogger.d(TAG, "IrcamEngine not initialized, ambient temperature will be applied when camera connects")
         } else {
             AppLogger.w(TAG, "Invalid ambient temperature: $newTemp (must be between -50 and 100)")
         }
