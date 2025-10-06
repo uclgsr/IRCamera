@@ -1,0 +1,104 @@
+# Shimmer/GSR Consolidation Summary
+
+## Problem Statement
+The repository was treating Shimmer and GSR as different entities when they are actually the same sensor:
+- **Shimmer** (Shimmer3) is the DEVICE name
+- **GSR** (Galvanic Skin Response) is what it MEASURES
+- They are not two different sensors but one device measuring GSR
+
+## Changes Made
+
+### 1. C++ Native Backend Consolidation
+
+#### Files Removed:
+- `pc-controller/native_backend/include/shimmer.h` (duplicate of enhanced_shimmer.h)
+- `pc-controller/native_backend/include/enhanced_shimmer.h` (renamed to shimmer.h)
+- `pc-controller/legacy_implementation/native_backend/include/native_shimmer.hpp` (unused)
+- `pc-controller/legacy_implementation/native_backend/src/native_backend.cpp` (unused)
+- `pc-controller/legacy_implementation/native_backend/src/pybind_module.cpp` (unused)
+
+#### Files Updated:
+- `pc-controller/native_backend/src/shimmer.cpp` - Updated include from "enhanced_shimmer.h" to "shimmer.h"
+- `pc-controller/native_backend/src/pybind_module.cpp` - Updated include from "enhanced_shimmer.h" to "shimmer.h"
+
+#### Result:
+- Main backend: Single header `shimmer.h` with implementation in `shimmer.cpp`
+- Legacy backend: Single header `native_shimmer.h` with implementation in `native_shimmer.cpp`
+- Both backends compile successfully
+- No broken references
+
+### 2. Documentation Added
+
+#### SHIMMER_GSR_CLARIFICATION.txt
+Explains the relationship between Shimmer and GSR:
+- Shimmer = device/hardware
+- GSR = measurement type
+- Shimmer GSR = Shimmer device measuring GSR
+
+#### NAMING_CONVENTIONS.txt
+Provides guidelines for developers on when to use each term:
+- Use "Shimmer" for device-level code (connections, management)
+- Use "GSR" for data-level code (measurements, analysis)
+- Use "ShimmerGSR" for combined contexts
+
+### 3. Architecture Analysis
+
+#### Kotlin/Android Recorder Classes
+The codebase has multiple recorder implementations that appear duplicated but actually serve different purposes:
+
+1. **Shimmer3GSRRecorder.kt** (701 lines)
+   - Direct integration with Shimmer Android SDK
+   - Used in: ComprehensiveRecordingController
+   - Purpose: Official SDK implementation
+
+2. **UnifiedGSRRecorder.kt** (687 lines)
+   - Simplified unified interface
+   - Used in: BLEIntegrationTestComposeActivity, GSRSensorViewModel
+   - Purpose: Simplified API for testing and basic usage
+
+3. **GSRSensorRecorder.kt** (1827 lines)
+   - Enhanced version with network integration
+   - Used in: HardwareValidationController, RecordingController, multiple test activities
+   - Purpose: Production use with network streaming and recording controller
+
+These are NOT duplicates - they represent different layers of abstraction and different use cases.
+
+#### Component Module
+The `component/gsr-recording` module has its own implementations:
+- `GSRRecorder.kt` - Wraps ShimmerGSRRecorder
+- `ShimmerGSRRecorder.kt` - Standalone implementation
+
+These serve as a reusable component library and are architecturally separate from the app module.
+
+### 4. Python Files
+Python files in `pc-controller/legacy_implementation/src/ircamera_pc/core/` are appropriately named:
+- `gsr_analytics.py` - Analyzes GSR data (correct, focuses on the measurement)
+- `gsr_ingestor.py` - Ingests GSR data (correct, focuses on the data)
+- `gsr_receiver.py` - Receives GSR data (correct, focuses on the data)
+
+These are NOT duplicates but serve different purposes in the data pipeline.
+
+## Verification
+
+### Build Status
+- ✅ Gradle project structure valid
+- ✅ C++ code compiles successfully (shimmer.cpp, native_shimmer.cpp)
+- ✅ No broken include references
+- ✅ No references to removed files
+
+### What Was NOT Changed
+- Kotlin/Android recorder classes (all actively used, serve different purposes)
+- Python GSR processing files (not duplicates, different pipeline stages)
+- Component module (separate library, architecturally appropriate)
+
+## Conclusion
+
+The consolidation focused on removing actual duplicate files (identical C++ headers, unused legacy files) while preserving the intentional architecture where multiple implementations serve different purposes. The key improvement is the addition of clear documentation explaining the Shimmer/GSR relationship to prevent future confusion.
+
+The codebase is now cleaner with:
+- Single canonical C++ header per backend
+- Clear documentation of naming conventions
+- No duplicate or unused files
+- Verified compilation
+
+Future developers can refer to SHIMMER_GSR_CLARIFICATION.txt and NAMING_CONVENTIONS.txt to understand the proper use of these terms.
