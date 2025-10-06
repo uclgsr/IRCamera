@@ -338,7 +338,7 @@ class NetworkClient(private val context: Context) {
                         sslSocket = sslSocketFactory.createSocket(ipAddress, port) as SSLSocket
                         sslSocket?.soTimeout = CONNECTION_TIMEOUT.toInt()
                         
-                        TrafficStats.tagSocket(sslSocket)
+                        sslSocket?.let { TrafficStats.tagSocket(it) }
 
                         sslSocket?.startHandshake()
 
@@ -412,7 +412,7 @@ class NetworkClient(private val context: Context) {
             socket?.connect(InetSocketAddress(ipAddress, port), CONNECTION_TIMEOUT.toInt())
             socket?.soTimeout = CONNECTION_TIMEOUT.toInt()
             
-            TrafficStats.tagSocket(socket)
+            socket?.let { TrafficStats.tagSocket(it) }
 
             outputStream = DataOutputStream(socket?.getOutputStream())
             inputStream = DataInputStream(socket?.getInputStream())
@@ -841,7 +841,7 @@ class NetworkClient(private val context: Context) {
                             output.flush()
 
                             val responseLength = input.readInt()
-                            if (responseLength < 0 || responseLength > MAX_MESSAGE_SIZE) {
+                            if (responseLength < 0 || responseLength > MAX_MESSAGE_SIZE) { // Max 1MB response
                                 AppLogger.w(TAG, "Invalid response length: $responseLength bytes from $host")
                                 return@withContext null
                             }

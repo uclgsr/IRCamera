@@ -160,10 +160,10 @@ class PcServerDiscovery(private val context: Context) {
             }
 
             socket.close()
-            android.net.TrafficStats.clearThreadStatsTag()
 
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error in broadcast discovery", e)
+        } finally {
             android.net.TrafficStats.clearThreadStatsTag()
         }
 
