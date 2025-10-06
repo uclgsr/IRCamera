@@ -38,9 +38,11 @@ abstract class AbstractScanner implements Scanner {
     private final List<ScanListener> scanListeners = new CopyOnWriteArrayList<>();
     private final SparseArray<BluetoothProfile> proxyBluetoothProfiles = new SparseArray<>();
     private final DeviceCreator deviceCreator;
+    private final EasyBLE easyBle;
     private boolean isScanning;
 
     AbstractScanner(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter) {
+        this.easyBle = easyBle;
         this.bluetoothAdapter = bluetoothAdapter;
         this.configuration = easyBle.scanConfiguration;
         mainHandler = new Handler(Looper.getMainLooper());
@@ -173,6 +175,12 @@ abstract class AbstractScanner implements Scanner {
     }
 
     void parseScanResult(BluetoothDevice device, boolean isConnectedBySys, ScanResult result, int rssi, byte[] scanRecord) {
+        Context context = easyBle.getContext();
+        if (context != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        }
         if ((configuration.onlyAcceptBleDevice && device.getType() != BluetoothDevice.DEVICE_TYPE_LE) ||
                 !device.getAddress().matches("^[0-9A-F]{2}(:[0-9A-F]{2}){5}$")) {
             return;
