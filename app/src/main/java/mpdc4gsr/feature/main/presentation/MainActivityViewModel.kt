@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.core.SessionManager
+import mpdc4gsr.core.data.UnifiedGSRRecorder
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.network.data.NetworkClient
 import mpdc4gsr.feature.network.data.NetworkController
@@ -87,6 +88,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     // --- Component Properties (to be managed by Repositories in a larger app) ---
     private var serviceBinder: RecordingService.RecordingServiceBinder? = null
     private var gsrSensorRecorder: GSRSensorRecorder? = null
+    private var unifiedGSRRecorder: UnifiedGSRRecorder? = null
     private var thermalRecorder: ThermalRecorder? = null
     private var networkClient: NetworkClient? = null
     private var networkController: NetworkController? = null
@@ -186,7 +188,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             _gsrConnectionState.value = GSRConnectionState.DISCONNECTED
             Log.d(
                 TAG,
-                "GSR components initialized (GSRSensorRecorder will be initialized on connection)"
+                "GSR components initialized (UnifiedGSRRecorder will be initialized on connection)"
             )
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize GSR components", e)
@@ -277,7 +279,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 }
             })
             viewModelScope.launch {
-                val serverStarted = networkController?.start(NetworkController.DEFAULT_PORT)
+                val serverStarted = networkController?.start()
                 if (serverStarted == true) {
                     val actualPort =
                         networkController?.getServerPort() ?: NetworkController.DEFAULT_PORT
@@ -371,10 +373,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 _events.emit(Event.ShowToast("Searching for GSR sensor..."))
                 withContext(Dispatchers.IO) {
                     try {
-                        if (gsrSensorRecorder == null) {
+                        if (unifiedGSRRecorder == null) {
                             Log.w(
                                 TAG,
-                                "GSRSensorRecorder not initialized - initializing now"
+                                "UnifiedGSRRecorder requires LifecycleOwner - should be initialized in Activity context"
                             )
                             _gsrConnectionState.value = GSRConnectionState.CONNECTING
                             viewModelScope.launch { _events.emit(Event.ShowToast("Connecting to GSR sensor...")) }
@@ -383,7 +385,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             viewModelScope.launch { _events.emit(Event.ShowToast("GSR sensor connected (simulated)")) }
                             return@withContext
                         }
-                        val recorder = gsrSensorRecorder!!
+                        val recorder = unifiedGSRRecorder!!
                         val initSuccess = recorder.initialize()
                         if (!initSuccess) {
                             _gsrConnectionState.value = GSRConnectionState.ERROR
@@ -397,9 +399,52 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             }
                             return@withContext
                         }
-                        _gsrConnectionState.value = GSRConnectionState.CONNECTED
-                        viewModelScope.launch { _events.emit(Event.ShowToast("GSR sensor initialized successfully")) }
-                        monitorGSRStatus(recorder)
+                        _gsrConnectionState.value = GSRConnectionState.CONNECTING
+                        viewModelScope.launch { _events.emit(Event.ShowToast("Starting device discovery...")) }
+                        val discoverySuccess = recorder.startDeviceDiscovery()
+                        if (!discoverySuccess) {
+                            _gsrConnectionState.value = GSRConnectionState.ERROR
+                            viewModelScope.launch {
+                                _events.emit(
+                                    Event.ShowToast(
+                                        "No GSR devices found",
+                                        true
+                                    )
+                                )
+                            }
+                            return@withContext
+                        }
+                        val devices = recorder.getDiscoveredDevices()
+                        if (devices.isEmpty()) {
+                            _gsrConnectionState.value = GSRConnectionState.ERROR
+                            viewModelScope.launch {
+                                _events.emit(
+                                    Event.ShowToast(
+                                        "No compatible GSR devices detected",
+                                        true
+                                    )
+                                )
+                            }
+                            return@withContext
+                        }
+                        val targetDevice = devices.first()
+                        viewModelScope.launch { _events.emit(Event.ShowToast("Connecting to ${targetDevice.name}...")) }
+                        val connectionSuccess = recorder.connectToDevice(targetDevice)
+                        if (connectionSuccess) {
+                            _gsrConnectionState.value = GSRConnectionState.CONNECTED
+                            viewModelScope.launch { _events.emit(Event.ShowToast("Connected to ${targetDevice.name}")) }
+                            monitorGSRStatus(recorder)
+                        } else {
+                            _gsrConnectionState.value = GSRConnectionState.ERROR
+                            viewModelScope.launch {
+                                _events.emit(
+                                    Event.ShowToast(
+                                        "Failed to connect to ${targetDevice.name}",
+                                        true
+                                    )
+                                )
+                            }
+                        }
                     } catch (e: Exception) {
                         AppLogger.e(TAG, "Error during GSR connection", e)
                         _gsrConnectionState.value = GSRConnectionState.ERROR
@@ -421,13 +466,29 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    private fun monitorGSRStatus(recorder: GSRSensorRecorder) {
+    private fun monitorGSRStatus(recorder: UnifiedGSRRecorder) {
         viewModelScope.launch {
             try {
-                AppLogger.d(TAG, "Monitoring GSR sensor status")
-                _gsrBatteryLevel.value = 85
+                recorder.deviceStatus.collect { status ->
+                    AppLogger.d(TAG, "GSR device status: $status")
+                    if (status.contains("Connected")) {
+                        _gsrBatteryLevel.value = 85
+                    }
+                }
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Error monitoring GSR status", e)
+            }
+        }
+        viewModelScope.launch {
+            try {
+                recorder.connectionQuality.collect { quality ->
+                    AppLogger.d(TAG, "GSR connection quality: $quality")
+                    if (quality < 0.3) {
+                        _events.emit(Event.ShowToast("GSR connection quality low"))
+                    }
+                }
+            } catch (e: Exception) {
+                AppLogger.e(TAG, "Error monitoring GSR connection quality", e)
             }
         }
     }
