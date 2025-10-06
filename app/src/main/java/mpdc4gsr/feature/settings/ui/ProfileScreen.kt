@@ -26,6 +26,7 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 @Composable
 fun ProfileScreen(
     onBackClick: (() -> Unit)? = null,
+    onNavigateToResearchTemplates: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -292,12 +293,7 @@ private fun QuickActionsCard(
                     icon = Icons.Default.Science,
                     label = "Research Templates",
                     onClick = {
-                        // TODO: Navigate to research templates screen
-                        android.widget.Toast.makeText(
-                            context,
-                            "Opening research templates...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        onNavigateToResearchTemplates?.invoke()
                     }
                 )
                 QuickActionButton(

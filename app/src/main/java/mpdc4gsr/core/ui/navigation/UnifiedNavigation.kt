@@ -19,6 +19,7 @@ import mpdc4gsr.feature.camera.ui.RGBCameraScreen
 import mpdc4gsr.feature.gsr.ui.GSRDataViewScreen
 import mpdc4gsr.feature.gsr.ui.GSRPlotScreen
 import mpdc4gsr.feature.gsr.ui.GSRSettingsScreen
+import mpdc4gsr.feature.gsr.ui.ResearchTemplateScreen
 import mpdc4gsr.feature.gsr.ui.SessionDetailScreen
 import mpdc4gsr.feature.main.ui.ComponentShowcaseScreen
 import mpdc4gsr.feature.main.ui.MainScreen
@@ -59,6 +60,8 @@ sealed class UnifiedRoute(val route: String, val displayName: String = "") {
     object GSRSessionDetail : UnifiedRoute("gsr_session_detail/{sessionId}", "Session Details") {
         fun createRoute(sessionId: String) = "gsr_session_detail/$sessionId"
     }
+
+    object ResearchTemplates : UnifiedRoute("research_templates", "Research Templates")
 
     // Camera Integration Routes
     object CameraDashboard : UnifiedRoute("camera_dashboard", "Camera Hub")
@@ -174,6 +177,14 @@ fun UnifiedNavHost(
 
             GSRDataViewScreen(
                 filePath = "",
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(UnifiedRoute.ResearchTemplates.route) {
+            NavigationPerformanceHelper.TrackNavigation("ResearchTemplates")
+
+            ResearchTemplateScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
@@ -331,7 +342,8 @@ fun UnifiedNavHost(
             NavigationPerformanceHelper.TrackNavigation("Profile")
 
             mpdc4gsr.feature.settings.ui.ProfileScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                onNavigateToResearchTemplates = { navController.navigate(UnifiedRoute.ResearchTemplates.route) }
             )
         }
 
