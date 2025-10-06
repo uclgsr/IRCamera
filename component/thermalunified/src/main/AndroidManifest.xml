@@ -46,7 +46,6 @@
 
         <!-- Activities from thermal-lite module - Migrated to Compose -->
         <activity android:name=".activity.IRMonitorChartComposeActivity" />
-        <activity android:name=".lite.activity.IRCorrectionLiteFourComposeActivity" />
         <activity
             android:name=".lite.activity.ImagePickIRLiteComposeActivity"
             android:screenOrientation="portrait" />

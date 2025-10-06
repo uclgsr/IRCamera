@@ -84,6 +84,17 @@ class GSRSensorRecorder(
                 ) == PackageManager.PERMISSION_GRANTED
             }
         }
+        
+        fun hasBluetoothConnectPermission(context: Context): Boolean {
+            return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    android.Manifest.permission.BLUETOOTH_CONNECT
+                ) == PackageManager.PERMISSION_GRANTED
+            } else {
+                true
+            }
+        }
 
         fun getMissingPermissions(context: Context): List<String> {
             val missing = mutableListOf<String>()
@@ -1301,8 +1312,9 @@ class GSRSensorRecorder(
                             context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
                         val bluetoothAdapter = bluetoothManager?.adapter
                         if (bluetoothAdapter?.isEnabled == true) {
-                            val pairedDevices = bluetoothAdapter.bondedDevices
-                            pairedDevices?.forEach { btDevice ->
+                            if (hasBluetoothConnectPermission(context)) {
+                                val pairedDevices = bluetoothAdapter.bondedDevices
+                                pairedDevices?.forEach { btDevice ->
                                 val deviceName = btDevice.name ?: "Unknown"
                                 val deviceAddress = btDevice.address
 
@@ -1326,6 +1338,9 @@ class GSRSensorRecorder(
                                         )
                                     }
                                 }
+                            }
+                            } else {
+                                AppLogger.w(TAG, "Bluetooth CONNECT permission not granted - cannot access bonded devices")
                             }
                         }
                     } catch (e: Exception) {
@@ -1861,6 +1876,12 @@ class GSRSensorRecorder(
                     val bluetoothManager =
                         context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
                     val bluetoothAdapter = bluetoothManager?.adapter
+                    
+                    if (!hasBluetoothConnectPermission(context)) {
+                        AppLogger.w(TAG, "Bluetooth CONNECT permission not granted - cannot check bonded devices")
+                        return@withContext false
+                    }
+                    
                     val bondedDevices = bluetoothAdapter?.bondedDevices
                     val isAlreadyBonded =
                         bondedDevices?.any { it.address == deviceAddress } ?: false
@@ -1908,6 +1929,12 @@ class GSRSensorRecorder(
                 val bluetoothManager =
                     context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
                 val bluetoothAdapter = bluetoothManager?.adapter
+                
+                if (!hasBluetoothConnectPermission(context)) {
+                    AppLogger.w(TAG, "Bluetooth CONNECT permission not granted - cannot list bonded devices")
+                    return@withContext deviceList
+                }
+                
                 val bondedDevices = bluetoothAdapter?.bondedDevices
 
                 bondedDevices?.forEach { device ->
