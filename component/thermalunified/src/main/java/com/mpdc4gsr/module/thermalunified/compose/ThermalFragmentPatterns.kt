@@ -15,6 +15,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -130,19 +131,11 @@ private fun ThermalCameraControls(
             )
         }
 
-        // Settings button
-        val context = androidx.compose.ui.platform.LocalContext.current
+        // Settings button (disabled)
         FloatingActionButton(
-            onClick = {
-                // TODO: Implement thermal camera settings navigation
-                // Should open settings screen for temperature range, palette, etc.
-                android.widget.Toast.makeText(
-                    context,
-                    "Opening thermal camera settings...",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            },
-            containerColor = MaterialTheme.colorScheme.tertiary
+            onClick = {},
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            modifier = Modifier.alpha(0.5f)
         ) {
             Icon(
                 imageVector = Icons.Default.Settings,

@@ -376,11 +376,9 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                 text = {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         TextButton(
-                            onClick = {
-                                showMoreOptionsDialog = false
-                                android.widget.Toast.makeText(context, "Opening color palette", android.widget.Toast.LENGTH_SHORT).show()
-                            },
-                            modifier = Modifier.fillMaxWidth()
+                            onClick = { showMoreOptionsDialog = false },
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = false
                         ) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -393,11 +391,9 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                             }
                         }
                         TextButton(
-                            onClick = {
-                                showMoreOptionsDialog = false
-                                android.widget.Toast.makeText(context, "Opening measurement tools", android.widget.Toast.LENGTH_SHORT).show()
-                            },
-                            modifier = Modifier.fillMaxWidth()
+                            onClick = { showMoreOptionsDialog = false },
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = false
                         ) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -410,11 +406,9 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                             }
                         }
                         TextButton(
-                            onClick = {
-                                showMoreOptionsDialog = false
-                                android.widget.Toast.makeText(context, "Opening advanced settings", android.widget.Toast.LENGTH_SHORT).show()
-                            },
-                            modifier = Modifier.fillMaxWidth()
+                            onClick = { showMoreOptionsDialog = false },
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = false
                         ) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
