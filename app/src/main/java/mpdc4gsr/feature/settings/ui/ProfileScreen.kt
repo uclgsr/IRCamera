@@ -132,10 +132,10 @@ private fun UserProfileCard(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Edit profile button
+            val context = androidx.compose.ui.platform.LocalContext.current
             Button(
                 onClick = {
                     onNavigateToEditProfile?.invoke() ?: run {
-                        val context = androidx.compose.ui.platform.LocalContext.current
                         android.widget.Toast.makeText(
                             context,
                             "Edit profile feature coming soon",
@@ -430,7 +430,7 @@ private fun ActivityItem(
     ) {
         Icon(
             imageVector = activity.icon,
-            contentDescription = activity.title,
+            contentDescription = activity.description,
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(20.dp)
         )
