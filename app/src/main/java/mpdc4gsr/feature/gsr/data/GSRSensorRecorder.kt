@@ -982,7 +982,10 @@ class GSRSensorRecorder(
 
     private fun extractCalibratedGSRValue(objectCluster: ObjectCluster): Double {
         return try {
-            val gsrCalibratedData = objectCluster.getFormatClusterValue("GSR", "CAL")
+            val gsrCalibratedData = objectCluster.getFormatClusterValue(
+                com.shimmerresearch.driver.Configuration.Shimmer3.ObjectClusterSensorName.GSR_CONDUCTANCE,
+                com.shimmerresearch.driver.Configuration.Shimmer3.CHANNEL_TYPE.CAL.toString()
+            )
             gsrCalibratedData?.toDouble() ?: 0.0
         } catch (e: Exception) {
             AppLogger.w(TAG, "Could not extract calibrated GSR value: ${e.message}")
@@ -992,7 +995,10 @@ class GSRSensorRecorder(
 
     private fun extractRawGSRValue(objectCluster: ObjectCluster): Int {
         return try {
-            val gsrRawData = objectCluster.getFormatClusterValue("GSR", "RAW")
+            val gsrRawData = objectCluster.getFormatClusterValue(
+                com.shimmerresearch.driver.Configuration.Shimmer3.ObjectClusterSensorName.GSR,
+                com.shimmerresearch.driver.Configuration.Shimmer3.CHANNEL_TYPE.UNCAL.toString()
+            )
             gsrRawData?.toInt() ?: 0
         } catch (e: Exception) {
             AppLogger.w(TAG, "Could not extract raw GSR value: ${e.message}")
@@ -1002,7 +1008,10 @@ class GSRSensorRecorder(
 
     private fun extractPPGValue(objectCluster: ObjectCluster): Int {
         return try {
-            val ppgData = objectCluster.getFormatClusterValue("PPG_A13", "CAL")
+            val ppgData = objectCluster.getFormatClusterValue(
+                com.shimmerresearch.driver.Configuration.Shimmer3.ObjectClusterSensorName.PPG_A13,
+                com.shimmerresearch.driver.Configuration.Shimmer3.CHANNEL_TYPE.CAL.toString()
+            )
             ppgData?.toInt() ?: 0
         } catch (e: Exception) {
             0
@@ -1011,12 +1020,18 @@ class GSRSensorRecorder(
 
     private fun extractAccelerometerData(objectCluster: ObjectCluster): Triple<Double, Double, Double> {
         return try {
-            val accelX =
-                objectCluster.getFormatClusterValue("Accelerometer X", "CAL")?.toDouble() ?: 0.0
-            val accelY =
-                objectCluster.getFormatClusterValue("Accelerometer Y", "CAL")?.toDouble() ?: 0.0
-            val accelZ =
-                objectCluster.getFormatClusterValue("Accelerometer Z", "CAL")?.toDouble() ?: 0.0
+            val accelX = objectCluster.getFormatClusterValue(
+                com.shimmerresearch.driver.Configuration.Shimmer3.ObjectClusterSensorName.ACCEL_LN_X,
+                com.shimmerresearch.driver.Configuration.Shimmer3.CHANNEL_TYPE.CAL.toString()
+            )?.toDouble() ?: 0.0
+            val accelY = objectCluster.getFormatClusterValue(
+                com.shimmerresearch.driver.Configuration.Shimmer3.ObjectClusterSensorName.ACCEL_LN_Y,
+                com.shimmerresearch.driver.Configuration.Shimmer3.CHANNEL_TYPE.CAL.toString()
+            )?.toDouble() ?: 0.0
+            val accelZ = objectCluster.getFormatClusterValue(
+                com.shimmerresearch.driver.Configuration.Shimmer3.ObjectClusterSensorName.ACCEL_LN_Z,
+                com.shimmerresearch.driver.Configuration.Shimmer3.CHANNEL_TYPE.CAL.toString()
+            )?.toDouble() ?: 0.0
             Triple(accelX, accelY, accelZ)
         } catch (e: Exception) {
             Triple(0.0, 0.0, 0.0)
@@ -1686,14 +1701,20 @@ class GSRSensorRecorder(
 
             val timestampRecord = TimestampManager.createTimestampRecord()
 
-            val deviceTimestamp =
-                (objectCluster.getFormatClusterValue("Timestamp", "CAL") as? Number)?.toLong() ?: 0L
+            val deviceTimestamp = (objectCluster.getFormatClusterValue(
+                com.shimmerresearch.driver.Configuration.Shimmer3.ObjectClusterSensorName.TIMESTAMP,
+                com.shimmerresearch.driver.Configuration.Shimmer3.CHANNEL_TYPE.CAL.toString()
+            ) as? Number)?.toLong() ?: 0L
 
-            val gsrValue =
-                (objectCluster.getFormatClusterValue("GSR", "CAL") as? Number)?.toDouble() ?: 0.0
+            val gsrValue = (objectCluster.getFormatClusterValue(
+                com.shimmerresearch.driver.Configuration.Shimmer3.ObjectClusterSensorName.GSR_CONDUCTANCE,
+                com.shimmerresearch.driver.Configuration.Shimmer3.CHANNEL_TYPE.CAL.toString()
+            ) as? Number)?.toDouble() ?: 0.0
 
-            val ppgValue =
-                (objectCluster.getFormatClusterValue("PPG", "CAL") as? Number)?.toDouble() ?: 0.0
+            val ppgValue = (objectCluster.getFormatClusterValue(
+                com.shimmerresearch.driver.Configuration.Shimmer3.ObjectClusterSensorName.PPG_A13,
+                com.shimmerresearch.driver.Configuration.Shimmer3.CHANNEL_TYPE.CAL.toString()
+            ) as? Number)?.toDouble() ?: 0.0
 
             val gsrSample = GSRSample(
                 timestamp = timestampRecord.systemNanos,

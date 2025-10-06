@@ -66,8 +66,11 @@ class RealShimmerDevice(
                 shimmerHandler = object : Handler(Looper.getMainLooper()) {
                     override fun handleMessage(msg: android.os.Message) {
                         when (msg.what) {
-                            1 -> handleStateChange(msg) // MSG_IDENTIFIER_STATE_CHANGE
-                            2 -> handleDataPacket(msg)  // MSG_IDENTIFIER_DATA_PACKET
+                            Shimmer.MESSAGE_STATE_CHANGE -> handleStateChange(msg)
+                            Shimmer.MESSAGE_READ -> handleDataPacket(msg)
+                            Shimmer.MESSAGE_ACK_RECEIVED -> AppLogger.d(TAG, "ACK received from Shimmer")
+                            Shimmer.MESSAGE_DEVICE_NAME -> AppLogger.d(TAG, "Device name received")
+                            Shimmer.MESSAGE_TOAST -> AppLogger.d(TAG, "Toast message from Shimmer")
                             else -> AppLogger.d(TAG, "Unknown message type: ${msg.what}")
                         }
                     }
@@ -177,25 +180,22 @@ class RealShimmerDevice(
      */
     private fun handleStateChange(msg: android.os.Message) {
         try {
-            AppLogger.d(TAG, "Shimmer state change message received")
-
-            // Use simplified approach for state handling
-            val state = msg.what
+            val state = msg.arg1
             AppLogger.d(TAG, "Shimmer state change: state=$state")
 
             when (state) {
-                2 -> { // STATE_CONNECTED
+                Shimmer.STATE_CONNECTED -> {
                     AppLogger.i(TAG, "Shimmer device connected")
                     isConnected = true
                     connectionCallback?.invoke("CONNECTED")
                 }
 
-                1 -> { // STATE_CONNECTING
+                Shimmer.STATE_CONNECTING -> {
                     AppLogger.i(TAG, "Shimmer device connecting")
                     connectionCallback?.invoke("CONNECTING")
                 }
 
-                0 -> { // STATE_NONE
+                Shimmer.STATE_NONE -> {
                     AppLogger.i(TAG, "Shimmer device disconnected")
                     isConnected = false
                     connectionCallback?.invoke("DISCONNECTED")
@@ -297,51 +297,15 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
         private const val TAG = "RealShimmerDataCluster"
 
         // Shimmer sensor constants
-        /**
-         * Name of the GSR (Galvanic Skin Response) sensor channel as defined in the Shimmer SDK.
-         * Used to retrieve raw GSR values from ObjectCluster.
-         * See: https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf (Section: Data Structure)
-         */
-        private const val GSR_SENSOR_NAME = "GSR"
 
-        /**
-         * Name of the GSR Conductance channel as defined in the Shimmer SDK.
-         * Used to retrieve calibrated GSR conductance values from ObjectCluster.
-         * See: https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf (Section: Data Structure)
-         */
-        private const val GSR_CONDUCTANCE_NAME = "GSR Conductance"
-
-        /**
-         * Name of the PPG (Photoplethysmogram) sensor channel as defined in the Shimmer SDK.
-         * Used to retrieve raw PPG values from ObjectCluster.
-         * See: https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf (Section: Data Structure)
-         */
-        private const val PPG_SENSOR_NAME = "PPG"
-
-        /**
-         * Name of the timestamp channel as defined in the Shimmer SDK.
-         * Used to retrieve the calibrated timestamp value from ObjectCluster.
-         * See: https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf (Section: Data Structure)
-         */
-        private const val TIMESTAMP_NAME = "Timestamp"
-
-        // Format constants for ObjectCluster data retrieval
-        /**
-         * Raw data format string used with getFormatClusterValue() to retrieve unprocessed sensor values.
-         * This format provides the direct ADC readings from the sensor hardware.
-         */
-        private const val FORMAT_RAW = "RAW"
-
-        /**
-         * Calibrated data format string used with getFormatClusterValue() to retrieve processed sensor values.
-         * This format provides sensor readings converted to physical units (e.g., microsiemens for GSR).
-         */
-        private const val FORMAT_CALIBRATED = "CAL"
     }
 
     override fun getGSRRawValue(): Double {
         return try {
-            objectCluster.getFormatClusterValue(GSR_SENSOR_NAME, FORMAT_RAW) ?: 0.0
+            objectCluster.getFormatClusterValue(
+                com.shimmerresearch.driver.Configuration.Shimmer3.ObjectClusterSensorName.GSR,
+                com.shimmerresearch.driver.Configuration.Shimmer3.CHANNEL_TYPE.UNCAL.toString()
+            ) ?: 0.0
         } catch (e: Exception) {
             AppLogger.w(TAG, "Failed to get GSR raw value", e)
             0.0
@@ -350,7 +314,10 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
 
     override fun getGSRCalibratedValue(): Double {
         return try {
-            objectCluster.getFormatClusterValue(GSR_CONDUCTANCE_NAME, FORMAT_CALIBRATED) ?: 0.0
+            objectCluster.getFormatClusterValue(
+                com.shimmerresearch.driver.Configuration.Shimmer3.ObjectClusterSensorName.GSR_CONDUCTANCE,
+                com.shimmerresearch.driver.Configuration.Shimmer3.CHANNEL_TYPE.CAL.toString()
+            ) ?: 0.0
         } catch (e: Exception) {
             AppLogger.w(TAG, "Failed to get GSR calibrated value", e)
             0.0
@@ -359,7 +326,10 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
 
     override fun getPPGValue(): Double {
         return try {
-            objectCluster.getFormatClusterValue(PPG_SENSOR_NAME, FORMAT_RAW) ?: 0.0
+            objectCluster.getFormatClusterValue(
+                com.shimmerresearch.driver.Configuration.Shimmer3.ObjectClusterSensorName.PPG_A13,
+                com.shimmerresearch.driver.Configuration.Shimmer3.CHANNEL_TYPE.CAL.toString()
+            ) ?: 0.0
         } catch (e: Exception) {
             AppLogger.w(TAG, "Failed to get PPG value", e)
             0.0
@@ -368,8 +338,10 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
 
     override fun getTimestamp(): Long {
         return try {
-            objectCluster.getFormatClusterValue(TIMESTAMP_NAME, FORMAT_CALIBRATED)?.toLong()
-                ?: System.currentTimeMillis()
+            objectCluster.getFormatClusterValue(
+                com.shimmerresearch.driver.Configuration.Shimmer3.ObjectClusterSensorName.TIMESTAMP,
+                com.shimmerresearch.driver.Configuration.Shimmer3.CHANNEL_TYPE.CAL.toString()
+            )?.toLong() ?: System.currentTimeMillis()
         } catch (e: Exception) {
             AppLogger.w(TAG, "Failed to get timestamp", e)
             System.currentTimeMillis()
