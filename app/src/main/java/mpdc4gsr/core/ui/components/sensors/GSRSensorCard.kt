@@ -31,6 +31,7 @@ fun GSRSensorCard(
     onStateChange: (SensorState) -> Unit,
     onClick: () -> Unit,
     onAction: (GSRAction) -> Unit,
+    onSettingsClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     // TODO: Replace with real GSR data from GSRSensorRecorder via ViewModel
@@ -173,7 +174,7 @@ fun GSRSensorCard(
                             Text("Stop")
                         }
                         IconButton(
-                            onClick = { onAction(GSRAction.ConfigureDevice("shimmer3")) }
+                            onClick = { onSettingsClick?.invoke() }
                         ) {
                             Icon(
                                 Icons.Default.Settings,
@@ -320,7 +321,8 @@ private fun GSRSensorCardPreview() {
             state = SensorState.Streaming,
             onStateChange = {},
             onClick = {},
-            onAction = {}
+            onAction = {},
+            onSettingsClick = {}
         )
     }
 }

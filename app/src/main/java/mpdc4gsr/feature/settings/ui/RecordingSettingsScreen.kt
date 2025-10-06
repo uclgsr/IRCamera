@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -21,6 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.feature.camera.data.CameraConfigurationManager
 import mpdc4gsr.feature.settings.presentation.RecordingSettingsViewModel
 
 /**
@@ -35,6 +37,12 @@ fun RecordingSettingsScreen(
 ) {
     val context = LocalContext.current
     val settings by viewModel.recordingSettings.collectAsState()
+    
+    val configManager = remember { CameraConfigurationManager() }
+    val (_, _, supports60fps) = remember {
+        configManager.detectDeviceCapabilities()
+    }
+    val maxFrameRate = if (supports60fps) 60f else 30f
 
     LaunchedEffect(Unit) {
         viewModel.initialize(context)
@@ -84,7 +92,7 @@ fun RecordingSettingsScreen(
                 SettingsSlider(
                     label = "Video Frame Rate",
                     value = settings.videoFrameRate.toFloat(),
-                    valueRange = 15f..60f,
+                    valueRange = 15f..maxFrameRate,
                     onValueChange = { viewModel.updateVideoFrameRate(it.toInt()) },
                     unit = " fps"
                 )

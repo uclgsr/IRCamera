@@ -242,7 +242,7 @@ class FrameTool {
         val dstImageRes = getDstImageRes(rotate)
         var scrBitmap: Bitmap? = null
         if (isAmplify) {
-            SupHelp.getInstance().initA4KCPP()
+            val initResult: Any? = SupHelp.getInstance().initA4KCPP()
             if (SupHelp.getInstance().loadOpenclSuccess) {
                 OpencvTools.supImage(
                     dstArgbBytes,

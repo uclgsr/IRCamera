@@ -411,15 +411,9 @@ private fun RecordingControlsCard(
                     }
                 }
 
-                val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
                     onClick = {
-                        // TODO: Take photo
-                        android.widget.Toast.makeText(
-                            context,
-                            "Photo captured",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        onNavigateToSingleCamera?.invoke()
                     },
                     modifier = Modifier.weight(1f)
                 ) {

@@ -132,7 +132,6 @@ private fun UserProfileCard(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Edit profile button
-            val context = androidx.compose.ui.platform.LocalContext.current
             Button(
                 onClick = {
                     onNavigateToEditProfile?.invoke() ?: run {
