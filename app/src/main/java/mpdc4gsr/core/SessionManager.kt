@@ -438,7 +438,7 @@ class SessionManager(
     }
 
     private fun generateSessionId(): String {
-        return "session_${System.currentTimeMillis()}_${UUID.randomUUID().toString().take(8)}"
+        return "session_${System.currentTimeMillis()}_${UUID.randomUUID().toString().replace("-", "")}"
     }
 
     private fun updateSessionState(newState: SessionState? = null) {
