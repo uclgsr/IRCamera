@@ -27,11 +27,10 @@ fun ConnectScreen(
 ) {
     val context = LocalContext.current
 
-    // Sample device types - will be replaced with actual device data
     val deviceTypes = remember {
         listOf(
-            ConnectedDevice("TC001", "TOPDON TC001 Thermal Camera", true),
-            ConnectedDevice("TC007", "TOPDON TC007 Thermal Camera", false)
+            ConnectedDevice("TC001", "TOPDON TC001 Thermal Camera", null),
+            ConnectedDevice("TC007", "TOPDON TC007 Thermal Camera", null)
         )
     }
 
@@ -112,8 +111,16 @@ private fun DeviceItem(
                     fontSize = 16.sp
                 )
                 Text(
-                    text = if (device.isConnected) "Connected" else "Not connected",
-                    color = if (device.isConnected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = when (device.isConnected) {
+                        true -> "Connected"
+                        false -> "Not connected"
+                        null -> "N/A"
+                    },
+                    color = when (device.isConnected) {
+                        true -> MaterialTheme.colorScheme.tertiary
+                        false -> MaterialTheme.colorScheme.onSurfaceVariant
+                        null -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    },
                     fontSize = 12.sp,
                     modifier = Modifier.padding(top = 4.dp)
                 )
@@ -123,7 +130,11 @@ private fun DeviceItem(
             Surface(
                 modifier = Modifier.size(12.dp),
                 shape = androidx.compose.foundation.shape.CircleShape,
-                color = if (device.isConnected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline
+                color = when (device.isConnected) {
+                    true -> MaterialTheme.colorScheme.tertiary
+                    false -> MaterialTheme.colorScheme.outline
+                    null -> MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)
+                }
             ) {}
         }
     }
@@ -136,7 +147,7 @@ private fun DeviceItem(
 data class ConnectedDevice(
     val id: String,
     val name: String,
-    val isConnected: Boolean
+    val isConnected: Boolean?
 )
 
 @Preview(showBackground = true)
