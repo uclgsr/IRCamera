@@ -391,10 +391,10 @@ private fun ConnectionStatusCard(
                     },
                     contentDescription = "Connection Status",
                     tint = when (connectionState) {
-                        CommandConnection.ConnectionState.CONNECTED -> Color.Green
-                        CommandConnection.ConnectionState.CONNECTING -> Color(0xFFFFA500)
-                        CommandConnection.ConnectionState.ERROR -> Color.Red
-                        else -> Color.Gray
+                        CommandConnection.ConnectionState.CONNECTED -> MaterialTheme.colorScheme.tertiary
+                        CommandConnection.ConnectionState.CONNECTING -> MaterialTheme.colorScheme.secondary
+                        CommandConnection.ConnectionState.ERROR -> MaterialTheme.colorScheme.error
+                        else -> MaterialTheme.colorScheme.outline
                     }
                 )
 
