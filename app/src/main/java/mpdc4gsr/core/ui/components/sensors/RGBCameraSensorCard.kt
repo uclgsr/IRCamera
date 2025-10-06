@@ -30,6 +30,7 @@ fun RGBCameraSensorCard(
     onStateChange: (SensorState) -> Unit,
     onClick: () -> Unit,
     onAction: (CameraAction) -> Unit,
+    onSettingsClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -161,7 +162,7 @@ fun RGBCameraSensorCard(
                         }
                         Button(
                             onClick = {
-                                onAction(CameraAction.SetResolution(1920, 1080))
+                                onSettingsClick?.invoke()
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
                         ) {
@@ -427,7 +428,8 @@ private fun RGBCameraSensorCardPreview() {
             state = SensorState.Streaming,
             onStateChange = {},
             onClick = {},
-            onAction = {}
+            onAction = {},
+            onSettingsClick = {}
         )
     }
 }

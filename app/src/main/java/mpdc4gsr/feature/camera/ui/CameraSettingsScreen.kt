@@ -1,5 +1,6 @@
 package mpdc4gsr.feature.camera.ui
 
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,10 +11,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.GridOn
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.components.TitleBar
@@ -22,6 +25,7 @@ import mpdc4gsr.core.ui.components.settings.SettingsDropdown
 import mpdc4gsr.core.ui.components.settings.SettingsSlider
 import mpdc4gsr.core.ui.components.settings.SettingsToggle
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.feature.camera.data.CameraConfigurationManager
 
 /**
  * Camera Settings Screen - Configure RGB camera parameters
@@ -31,7 +35,26 @@ fun CameraSettingsScreen(
     onBackClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
-    var resolution by remember { mutableStateOf("1920x1080") }
+    val context = LocalContext.current
+    val configManager = remember { CameraConfigurationManager() }
+    val (supports4K, supportsRAW, supports60fps) = remember {
+        configManager.detectDeviceCapabilities()
+    }
+    
+    val availableResolutions = remember {
+        buildList {
+            if (supports4K) {
+                add("3840x2160")
+            }
+            add("1920x1080")
+            add("1280x720")
+            add("640x480")
+        }
+    }
+    
+    val maxFrameRate = if (supports60fps) 60f else 30f
+    
+    var resolution by remember { mutableStateOf(availableResolutions.first()) }
     var frameRate by remember { mutableIntStateOf(30) }
     var autoFocus by remember { mutableStateOf(true) }
     var autoExposure by remember { mutableStateOf(true) }
@@ -56,6 +79,34 @@ fun CameraSettingsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // Device Capabilities
+            SettingsCard(
+                title = "Device Capabilities",
+                icon = Icons.Default.Info
+            ) {
+                SettingsToggle(
+                    label = "4K Video Support",
+                    description = "Device supports 4K video recording",
+                    checked = supports4K,
+                    onCheckedChange = {},
+                    enabled = false
+                )
+                SettingsToggle(
+                    label = "60fps Support",
+                    description = "Device supports 60fps video recording",
+                    checked = supports60fps,
+                    onCheckedChange = {},
+                    enabled = false
+                )
+                SettingsToggle(
+                    label = "RAW Image Support",
+                    description = "Device supports RAW image capture",
+                    checked = supportsRAW,
+                    onCheckedChange = {},
+                    enabled = false
+                )
+            }
+            
             // Video Settings
             SettingsCard(
                 title = "Video Settings",
@@ -63,14 +114,14 @@ fun CameraSettingsScreen(
             ) {
                 SettingsDropdown(
                     label = "Resolution",
-                    options = listOf("1920x1080", "1280x720", "640x480"),
+                    options = availableResolutions,
                     value = resolution,
                     onValueChange = { resolution = it }
                 )
                 SettingsSlider(
                     label = "Frame Rate",
                     value = frameRate.toFloat(),
-                    valueRange = 15f..60f,
+                    valueRange = 15f..maxFrameRate,
                     onValueChange = { frameRate = it.toInt() },
                     unit = " fps"
                 )
