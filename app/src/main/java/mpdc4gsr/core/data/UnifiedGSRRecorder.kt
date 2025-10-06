@@ -112,8 +112,20 @@ class UnifiedGSRRecorder(
         AppLogger.i(TAG, "Initializing Unified GSR Recorder with Shimmer3 GSR+ integration")
         try {
             if (!hasRequiredPermissions(context)) {
-                AppLogger.e(TAG, "Missing required BLE permissions for GSR recording")
-                _deviceStatus.value = "Missing Permissions"
+                val missingPermissions = mutableListOf<String>()
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                    missingPermissions.add("BLUETOOTH_SCAN")
+                }
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    missingPermissions.add("BLUETOOTH_CONNECT")
+                }
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    missingPermissions.add("ACCESS_FINE_LOCATION")
+                }
+                
+                AppLogger.e(TAG, "Missing required BLE permissions for GSR recording: ${missingPermissions.joinToString()}")
+                AppLogger.w(TAG, "Grant these permissions before initializing GSR recorder")
+                _deviceStatus.value = "Missing Permissions: ${missingPermissions.joinToString()}"
                 return@withContext false
             }
             bluetoothManager =
