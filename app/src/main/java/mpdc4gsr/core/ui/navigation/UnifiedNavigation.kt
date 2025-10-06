@@ -15,15 +15,19 @@ import mpdc4gsr.core.ui.model.SensorType
 import mpdc4gsr.feature.camera.ui.CameraDashboardScreen
 import mpdc4gsr.feature.camera.ui.CameraSettingsScreen
 import mpdc4gsr.feature.camera.ui.DualModeCameraScreen
+import mpdc4gsr.feature.camera.ui.RGBCameraScreen
+import mpdc4gsr.feature.camera.ui.TimeLapseCameraScreen
 import mpdc4gsr.feature.gsr.ui.GSRDataViewScreen
 import mpdc4gsr.feature.gsr.ui.GSRPlotScreen
 import mpdc4gsr.feature.gsr.ui.GSRSettingsScreen
+import mpdc4gsr.feature.gsr.ui.ResearchTemplateScreen
 import mpdc4gsr.feature.gsr.ui.SessionDetailScreen
 import mpdc4gsr.feature.main.ui.ComponentShowcaseScreen
 import mpdc4gsr.feature.main.ui.MainScreen
 import mpdc4gsr.feature.main.ui.UnifiedSensorDashboard
 import mpdc4gsr.feature.network.ui.DevicePairingScreen
 import mpdc4gsr.feature.settings.ui.AboutScreen
+import mpdc4gsr.feature.settings.ui.ProfileEditScreen
 import mpdc4gsr.feature.settings.ui.SettingsScreen
 import mpdc4gsr.feature.testing.ui.TestResultsScreen
 import mpdc4gsr.feature.thermal.ui.ThermalCameraScreen
@@ -59,10 +63,14 @@ sealed class UnifiedRoute(val route: String, val displayName: String = "") {
         fun createRoute(sessionId: String) = "gsr_session_detail/$sessionId"
     }
 
+    object ResearchTemplates : UnifiedRoute("research_templates", "Research Templates")
+
     // Camera Integration Routes
     object CameraDashboard : UnifiedRoute("camera_dashboard", "Camera Hub")
     object DualModeCamera : UnifiedRoute("dual_mode_camera", "Thermal + RGB Camera")
+    object RGBCamera : UnifiedRoute("rgb_camera", "RGB Camera")
     object CameraSettings : UnifiedRoute("camera_settings", "Camera Settings")
+    object TimeLapseCamera : UnifiedRoute("timelapse_camera", "Time-Lapse Camera")
 
     // Network Routes
     object DevicePairing : UnifiedRoute("device_pairing", "Device Pairing")
@@ -76,8 +84,17 @@ sealed class UnifiedRoute(val route: String, val displayName: String = "") {
 
     // System Routes
     object Settings : UnifiedRoute("settings", "Settings")
+    object RecordingSettings : UnifiedRoute("recording_settings", "Recording Settings")
+    object StorageSettings : UnifiedRoute("storage_settings", "Storage Settings")
+    object SyncSettings : UnifiedRoute("sync_settings", "Sync Settings")
+    object Calibration : UnifiedRoute("calibration", "Calibration")
+    object Diagnostics : UnifiedRoute("diagnostics", "Diagnostics")
+    object AppInfo : UnifiedRoute("app_info", "App Info")
+    object PrivacyPolicy : UnifiedRoute("privacy_policy", "Privacy Policy")
+    object Help : UnifiedRoute("help", "Help")
     object About : UnifiedRoute("about", "About")
     object Profile : UnifiedRoute("profile", "Profile")
+    object ProfileEdit : UnifiedRoute("profile_edit", "Edit Profile")
     object NetworkConfig : UnifiedRoute("network_config", "Network")
 
     // Development and Demo Routes
@@ -124,7 +141,10 @@ fun UnifiedNavHost(
                         SensorType.ThermalIR -> navController.navigate(UnifiedRoute.ThermalCamera.route)
                         SensorType.RGBCamera -> navController.navigate(UnifiedRoute.CameraDashboard.route)
                     }
-                }
+                },
+                onCameraSettingsClick = { navController.navigate(UnifiedRoute.CameraSettings.route) },
+                onGSRSettingsClick = { navController.navigate(UnifiedRoute.GSRSettings.route) },
+                onThermalSettingsClick = { navController.navigate(UnifiedRoute.ThermalSettings.route) }
             )
         }
 
@@ -173,12 +193,39 @@ fun UnifiedNavHost(
             )
         }
 
+        composable(UnifiedRoute.ResearchTemplates.route) {
+            NavigationPerformanceHelper.TrackNavigation("ResearchTemplates")
+
+            ResearchTemplateScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
         // Camera Integration Routes
         composable(UnifiedRoute.CameraDashboard.route) {
             CameraDashboardScreen(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToDualMode = { navController.navigate(UnifiedRoute.DualModeCamera.route) },
-                onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) }
+                onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) },
+                onNavigateToSingleCamera = { navController.navigate(UnifiedRoute.RGBCamera.route) },
+                onNavigateToGallery = { navController.navigate(UnifiedRoute.ThermalGallery.route) },
+                onNavigateToTimeLapse = { navController.navigate(UnifiedRoute.TimeLapseCamera.route) }
+            )
+        }
+
+        composable(UnifiedRoute.RGBCamera.route) {
+            RGBCameraScreen(
+                onBackClick = { navController.popBackStack() },
+                onSettingsClick = { navController.navigate(UnifiedRoute.CameraSettings.route) },
+                onCapturePhoto = { /* Photo capture handled by screen */ }
+            )
+        }
+
+        composable(UnifiedRoute.TimeLapseCamera.route) {
+            NavigationPerformanceHelper.TrackNavigation("TimeLapseCamera")
+
+            TimeLapseCameraScreen(
+                onBackClick = { navController.popBackStack() }
             )
         }
 
@@ -289,7 +336,19 @@ fun UnifiedNavHost(
             NavigationPerformanceHelper.TrackNavigation("Settings")
 
             SettingsScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                onNavigateToGSRSettings = { navController.navigate(UnifiedRoute.GSRSettings.route) },
+                onNavigateToThermalSettings = { navController.navigate(UnifiedRoute.ThermalSettings.route) },
+                onNavigateToCameraSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) },
+                onNavigateToRecordingSettings = { navController.navigate(UnifiedRoute.RecordingSettings.route) },
+                onNavigateToStorageSettings = { navController.navigate(UnifiedRoute.StorageSettings.route) },
+                onNavigateToSyncSettings = { navController.navigate(UnifiedRoute.SyncSettings.route) },
+                onNavigateToCalibration = { navController.navigate(UnifiedRoute.Calibration.route) },
+                onNavigateToNetworkSettings = { navController.navigate(UnifiedRoute.NetworkConfig.route) },
+                onNavigateToDiagnostics = { navController.navigate(UnifiedRoute.Diagnostics.route) },
+                onNavigateToAppInfo = { navController.navigate(UnifiedRoute.AppInfo.route) },
+                onNavigateToPrivacyPolicy = { navController.navigate(UnifiedRoute.PrivacyPolicy.route) },
+                onNavigateToHelp = { navController.navigate(UnifiedRoute.Help.route) }
             )
         }
 
@@ -305,7 +364,23 @@ fun UnifiedNavHost(
             NavigationPerformanceHelper.TrackNavigation("Profile")
 
             mpdc4gsr.feature.settings.ui.ProfileScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                onNavigateToResearchTemplates = { navController.navigate(UnifiedRoute.ResearchTemplates.route) },
+                onNavigateToPreferences = { navController.navigate(UnifiedRoute.Settings.route) },
+                onExportData = { navController.navigate(UnifiedRoute.GSRDataView.route) },
+                onNavigateToEditProfile = { navController.navigate(UnifiedRoute.ProfileEdit.route) }
+            )
+        }
+
+        composable(UnifiedRoute.ProfileEdit.route) {
+            NavigationPerformanceHelper.TrackNavigation("ProfileEdit")
+
+            ProfileEditScreen(
+                onBackClick = { navController.popBackStack() },
+                onSave = { profileData ->
+                    // Profile data saved - navigate back
+                    navController.popBackStack()
+                }
             )
         }
 
@@ -357,6 +432,61 @@ fun UnifiedNavHost(
         composable("device_pairing_screen") {
             DevicePairingScreen(
                 onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        // Additional Settings Routes
+        composable(UnifiedRoute.RecordingSettings.route) {
+            mpdc4gsr.feature.settings.ui.RecordingSettingsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(UnifiedRoute.StorageSettings.route) {
+            mpdc4gsr.feature.settings.ui.StorageSettingsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(UnifiedRoute.SyncSettings.route) {
+            mpdc4gsr.feature.settings.ui.SyncSettingsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(UnifiedRoute.Calibration.route) {
+            mpdc4gsr.feature.thermal.ui.CalibrationScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(UnifiedRoute.NetworkConfig.route) {
+            mpdc4gsr.feature.network.ui.NetworkSettingsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(UnifiedRoute.Diagnostics.route) {
+            mpdc4gsr.feature.main.ui.DiagnosticsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(UnifiedRoute.AppInfo.route) {
+            mpdc4gsr.feature.settings.ui.AppInfoScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(UnifiedRoute.PrivacyPolicy.route) {
+            mpdc4gsr.feature.settings.ui.PrivacyPolicyScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(UnifiedRoute.Help.route) {
+            mpdc4gsr.feature.settings.ui.HelpScreen(
+                onBackClick = { navController.popBackStack() }
             )
         }
     }

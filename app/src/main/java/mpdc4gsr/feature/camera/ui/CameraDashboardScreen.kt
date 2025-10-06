@@ -30,6 +30,9 @@ fun CameraDashboardScreen(
     onBackClick: () -> Unit,
     onNavigateToDualMode: () -> Unit,
     onNavigateToSettings: () -> Unit,
+    onNavigateToSingleCamera: (() -> Unit)? = null,
+    onNavigateToGallery: (() -> Unit)? = null,
+    onNavigateToTimeLapse: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     LibUnifiedTheme {
@@ -57,6 +60,9 @@ fun CameraDashboardScreen(
         ) { paddingValues ->
             CameraDashboardContent(
                 onNavigateToDualMode = onNavigateToDualMode,
+                onNavigateToSingleCamera = onNavigateToSingleCamera,
+                onNavigateToGallery = onNavigateToGallery,
+                onNavigateToTimeLapse = onNavigateToTimeLapse,
                 modifier = Modifier.padding(paddingValues)
             )
         }
@@ -66,6 +72,9 @@ fun CameraDashboardScreen(
 @Composable
 private fun CameraDashboardContent(
     onNavigateToDualMode: () -> Unit,
+    onNavigateToSingleCamera: (() -> Unit)? = null,
+    onNavigateToGallery: (() -> Unit)? = null,
+    onNavigateToTimeLapse: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -80,17 +89,24 @@ private fun CameraDashboardContent(
 
         // Camera Modes Card
         CameraModesCard(
-            onNavigateToDualMode = onNavigateToDualMode
+            onNavigateToDualMode = onNavigateToDualMode,
+            onNavigateToSingleCamera = onNavigateToSingleCamera,
+            onNavigateToTimeLapse = onNavigateToTimeLapse
         )
 
         // Recording Controls Card
-        RecordingControlsCard()
+        RecordingControlsCard(
+            onNavigateToSingleCamera = onNavigateToSingleCamera
+        )
 
         // Camera Settings Card
         CameraSettingsCard()
 
         // Preview and Gallery Card
-        PreviewGalleryCard()
+        PreviewGalleryCard(
+            onNavigateToSingleCamera = onNavigateToSingleCamera,
+            onNavigateToGallery = onNavigateToGallery
+        )
     }
 }
 
@@ -195,7 +211,9 @@ private fun CameraInfoRow(
 
 @Composable
 private fun CameraModesCard(
-    onNavigateToDualMode: () -> Unit
+    onNavigateToDualMode: () -> Unit,
+    onNavigateToSingleCamera: (() -> Unit)? = null,
+    onNavigateToTimeLapse: (() -> Unit)? = null
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -220,8 +238,7 @@ private fun CameraModesCard(
                 icon = Icons.Default.Camera,
                 isActive = false,
                 onClick = {
-                    // TODO: Navigate to single camera activity
-                    // For now, show a toast as placeholder
+                    onNavigateToSingleCamera?.invoke()
                 }
             )
 
@@ -235,19 +252,13 @@ private fun CameraModesCard(
             )
 
             // Time-lapse Mode
-            val context = androidx.compose.ui.platform.LocalContext.current
             CameraModeItem(
                 title = "Time-lapse Mode",
                 description = "Automated interval capture",
                 icon = Icons.Default.Timer,
                 isActive = false,
                 onClick = {
-                    // TODO: Navigate to time-lapse camera activity
-                    android.widget.Toast.makeText(
-                        context,
-                        "Time-lapse mode coming soon",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
+                    onNavigateToTimeLapse?.invoke()
                 }
             )
         }
@@ -309,7 +320,9 @@ private fun CameraModeItem(
 }
 
 @Composable
-private fun RecordingControlsCard() {
+private fun RecordingControlsCard(
+    onNavigateToSingleCamera: (() -> Unit)? = null
+) {
     var isRecording by remember { mutableStateOf(false) }
 
     Card(
@@ -385,15 +398,9 @@ private fun RecordingControlsCard() {
                     }
                 }
 
-                val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
                     onClick = {
-                        // TODO: Take photo
-                        android.widget.Toast.makeText(
-                            context,
-                            "Photo captured",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        onNavigateToSingleCamera?.invoke()
                     },
                     modifier = Modifier.weight(1f)
                 ) {
@@ -481,7 +488,10 @@ private fun SettingRow(
 }
 
 @Composable
-private fun PreviewGalleryCard() {
+private fun PreviewGalleryCard(
+    onNavigateToSingleCamera: (() -> Unit)? = null,
+    onNavigateToGallery: (() -> Unit)? = null
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -505,12 +515,7 @@ private fun PreviewGalleryCard() {
             ) {
                 OutlinedButton(
                     onClick = {
-                        // TODO: Open camera preview
-                        android.widget.Toast.makeText(
-                            context,
-                            "Preview feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        onNavigateToSingleCamera?.invoke()
                     },
                     modifier = Modifier.weight(1f)
                 ) {
@@ -521,12 +526,7 @@ private fun PreviewGalleryCard() {
 
                 OutlinedButton(
                     onClick = {
-                        // TODO: Open gallery
-                        android.widget.Toast.makeText(
-                            context,
-                            "Gallery feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        onNavigateToGallery?.invoke()
                     },
                     modifier = Modifier.weight(1f)
                 ) {

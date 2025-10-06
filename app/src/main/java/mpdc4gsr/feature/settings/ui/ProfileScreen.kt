@@ -26,6 +26,10 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 @Composable
 fun ProfileScreen(
     onBackClick: (() -> Unit)? = null,
+    onNavigateToResearchTemplates: (() -> Unit)? = null,
+    onNavigateToPreferences: (() -> Unit)? = null,
+    onExportData: (() -> Unit)? = null,
+    onNavigateToEditProfile: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -49,7 +53,9 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // User profile card
-            UserProfileCard()
+            UserProfileCard(
+                onNavigateToEditProfile = onNavigateToEditProfile
+            )
 
             // Research statistics
             ResearchStatsCard()
@@ -58,7 +64,11 @@ fun ProfileScreen(
             RecentActivitiesCard()
 
             // Quick actions
-            QuickActionsCard()
+            QuickActionsCard(
+                onNavigateToResearchTemplates = onNavigateToResearchTemplates,
+                onExportData = onExportData,
+                onNavigateToPreferences = onNavigateToPreferences
+            )
         }
     }
 }
@@ -68,6 +78,7 @@ fun ProfileScreen(
  */
 @Composable
 private fun UserProfileCard(
+    onNavigateToEditProfile: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -121,15 +132,9 @@ private fun UserProfileCard(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Edit profile button
-            val context = androidx.compose.ui.platform.LocalContext.current
             Button(
                 onClick = {
-                    // TODO: Navigate to profile edit screen
-                    android.widget.Toast.makeText(
-                        context,
-                        "Edit profile feature coming soon",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
+                    onNavigateToEditProfile?.invoke()
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
@@ -263,6 +268,9 @@ private fun RecentActivitiesCard(
  */
 @Composable
 private fun QuickActionsCard(
+    onNavigateToResearchTemplates: (() -> Unit)? = null,
+    onExportData: (() -> Unit)? = null,
+    onNavigateToPreferences: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -292,36 +300,21 @@ private fun QuickActionsCard(
                     icon = Icons.Default.Science,
                     label = "Research Templates",
                     onClick = {
-                        // TODO: Navigate to research templates screen
-                        android.widget.Toast.makeText(
-                            context,
-                            "Opening research templates...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        onNavigateToResearchTemplates?.invoke()
                     }
                 )
                 QuickActionButton(
                     icon = Icons.Default.CloudUpload,
                     label = "Export Data",
                     onClick = {
-                        // TODO: Export user data
-                        android.widget.Toast.makeText(
-                            context,
-                            "Exporting data...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        onExportData?.invoke()
                     }
                 )
                 QuickActionButton(
                     icon = Icons.Default.Settings,
                     label = "Preferences",
                     onClick = {
-                        // TODO: Navigate to preferences screen
-                        android.widget.Toast.makeText(
-                            context,
-                            "Opening preferences...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        onNavigateToPreferences?.invoke()
                     }
                 )
             }

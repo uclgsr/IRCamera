@@ -29,6 +29,7 @@ fun ThermalSensorCard(
     onStateChange: (SensorState) -> Unit,
     onClick: () -> Unit,
     onAction: (ThermalAction) -> Unit,
+    onSettingsClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     // TODO: Replace with real thermal data from ThermalRecorder via ViewModel
@@ -189,8 +190,7 @@ fun ThermalSensorCard(
                         }
                         IconButton(
                             onClick = {
-                                // TODO: Navigate to thermal settings
-                                onAction(ThermalAction.OpenSettings)
+                                onSettingsClick?.invoke()
                             }
                         ) {
                             Icon(
@@ -401,7 +401,8 @@ private fun ThermalSensorCardPreview() {
             state = SensorState.Streaming,
             onStateChange = {},
             onClick = {},
-            onAction = {}
+            onAction = {},
+            onSettingsClick = {}
         )
     }
 }
