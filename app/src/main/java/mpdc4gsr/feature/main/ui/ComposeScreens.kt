@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import mpdc4gsr.core.ui.theme.Spacing
+import com.mpdc4gsr.libunified.app.compose.theme.Spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
