@@ -7,6 +7,8 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 import com.mpdc4gsr.libunified.ui.charts.LineChart
@@ -130,7 +132,12 @@ class ChartLogView : LineChart {
         type: Int = 1,
     ) {
         synchronized(this) {
-            viewScope.launch(Dispatchers.IO) {
+            val lifecycleOwner = findViewTreeLifecycleOwner()
+            if (lifecycleOwner == null) {
+                Log.e("ChartLogView", "No lifecycle owner found, cannot initialize chart")
+                return
+            }
+            lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 try {
                     clearEntity(data.size == 0)
                 } catch (e: Exception) {

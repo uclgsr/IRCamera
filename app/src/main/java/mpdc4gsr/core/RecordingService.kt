@@ -222,11 +222,21 @@ class RecordingService : Service(), CoroutineScope {
 
     inner class RecordingServiceBinder : Binder() {
         fun getService(): RecordingService = this@RecordingService
-        fun getRecordingController(): ComprehensiveRecordingController = recordingController
-        fun getNetworkServer(): NetworkServer = networkServer
-        fun getPreviewStreamer(): PreviewStreamer = previewStreamer
-        fun getPreviewDataAdapter(): PreviewDataAdapter = previewDataAdapter
+        
+        fun getRecordingController(): ComprehensiveRecordingController? = 
+            if (::recordingController.isInitialized) recordingController else null
+            
+        fun getNetworkServer(): NetworkServer? = 
+            if (::networkServer.isInitialized) networkServer else null
+            
+        fun getPreviewStreamer(): PreviewStreamer? = 
+            if (::previewStreamer.isInitialized) previewStreamer else null
+            
+        fun getPreviewDataAdapter(): PreviewDataAdapter? = 
+            if (::previewDataAdapter.isInitialized) previewDataAdapter else null
+            
         fun isConnectedToPC(): Boolean = this@RecordingService.isConnectedToPC
+        
         fun getServerStatus(): String {
             return if (isServerRunning.get()) {
                 "Running on port $actualServerPort (${activeConnections.size} clients)"
@@ -242,7 +252,9 @@ class RecordingService : Service(), CoroutineScope {
         }
 
         fun getNetworkClient(): NetworkClient? = if (isNetworkInitialized) networkClient else null
-        fun getNetworkManager(): NetworkManager = networkManager
+        
+        fun getNetworkManager(): NetworkManager? = 
+            if (::networkManager.isInitialized) networkManager else null
     }
 
     override fun onCreate() {
@@ -296,8 +308,11 @@ class RecordingService : Service(), CoroutineScope {
                         AppLogger.w(TAG, "Failed to send SYNC_INIT message to PC (no connection?)")
                     }
                     sent
-                } catch (e: Exception) {
-                    AppLogger.e(TAG, "Manual sync trigger failed", e)
+                } catch (e: java.io.IOException) {
+                    AppLogger.e(TAG, "Network I/O error during manual sync trigger", e)
+                    false
+                } catch (e: IllegalStateException) {
+                    AppLogger.e(TAG, "Invalid state during manual sync trigger", e)
                     false
                 }
             }
@@ -540,10 +555,15 @@ class RecordingService : Service(), CoroutineScope {
                 networkManager.cleanup()
             }
 
-            launch {
-                recordingController.cleanup()
+            if (::recordingController.isInitialized) {
+                launch {
+                    recordingController.cleanup()
+                }
             }
-            crashSafeSupervisor.shutdown()
+            
+            if (::crashSafeSupervisor.isInitialized) {
+                crashSafeSupervisor.shutdown()
+            }
         } catch (e: Exception) {
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,

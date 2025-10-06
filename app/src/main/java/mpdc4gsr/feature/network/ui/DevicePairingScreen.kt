@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -84,7 +83,7 @@ fun DevicePairingScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 16.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFF1E3A8A))
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
                     ) {
                         Row(
                             modifier = Modifier.padding(16.dp),
@@ -92,13 +91,13 @@ fun DevicePairingScreen(
                         ) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(24.dp),
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 strokeWidth = 2.dp
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
                                 text = "Scanning for devices...",
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 fontSize = 14.sp
                             )
                         }
@@ -110,7 +109,7 @@ fun DevicePairingScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp)
@@ -119,13 +118,13 @@ fun DevicePairingScreen(
                             text = "Pairing Instructions",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "• Ensure devices are in pairing mode\n• Keep devices close to the phone\n• Thermal cameras: Connect via USB\n• GSR sensors: Enable Bluetooth",
                             fontSize = 14.sp,
-                            color = Color(0xFFCCFFFFFF),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             lineHeight = 20.sp
                         )
                     }
@@ -136,7 +135,7 @@ fun DevicePairingScreen(
                     text = "Available Devices",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
 
@@ -162,7 +161,7 @@ fun DevicePairingItem(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -178,10 +177,10 @@ fun DevicePairingItem(
                 },
                 contentDescription = null,
                 tint = when (device.type) {
-                    DeviceType.THERMAL_CAMERA -> Color(0xFFFF6B6B)
-                    DeviceType.GSR_SENSOR -> Color(0xFF4ECDC4)
-                    DeviceType.RGB_CAMERA -> Color.White
-                    DeviceType.BLUETOOTH_DEVICE -> Color(0xFF6B73FF)
+                    DeviceType.THERMAL_CAMERA -> MaterialTheme.colorScheme.error
+                    DeviceType.GSR_SENSOR -> MaterialTheme.colorScheme.tertiary
+                    DeviceType.RGB_CAMERA -> MaterialTheme.colorScheme.onSurfaceVariant
+                    DeviceType.BLUETOOTH_DEVICE -> MaterialTheme.colorScheme.primary
                 },
                 modifier = Modifier.size(32.dp)
             )
@@ -196,7 +195,7 @@ fun DevicePairingItem(
                     text = device.name,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Row(
@@ -205,7 +204,7 @@ fun DevicePairingItem(
                     Text(
                         text = device.id,
                         fontSize = 12.sp,
-                        color = Color(0xFFCCFFFFFF)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                     )
 
                     if (device.signalStrength > 0) {
@@ -218,7 +217,7 @@ fun DevicePairingItem(
                                 else -> Icons.Default.SignalCellularAlt
                             },
                             contentDescription = "Signal strength",
-                            tint = Color(0xFF4ECDC4),
+                            tint = MaterialTheme.colorScheme.tertiary,
                             modifier = Modifier.size(16.dp)
                         )
                     }
@@ -233,13 +232,13 @@ fun DevicePairingItem(
                                 else -> Icons.Default.Battery2Bar
                             },
                             contentDescription = "Battery level",
-                            tint = if (battery > 25) Color(0xFF4ECDC4) else Color(0xFFFF6B6B),
+                            tint = if (battery > 25) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error,
                             modifier = Modifier.size(16.dp)
                         )
                         Text(
                             text = "${battery}%",
                             fontSize = 12.sp,
-                            color = Color(0xFFCCFFFFFF)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                         )
                     }
                 }
@@ -251,7 +250,7 @@ fun DevicePairingItem(
                     Icon(
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = "Connected",
-                        tint = Color(0xFF4ECDC4),
+                        tint = MaterialTheme.colorScheme.tertiary,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -259,7 +258,7 @@ fun DevicePairingItem(
                 device.isPairing -> {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
-                        color = Color(0xFF6B73FF),
+                        color = MaterialTheme.colorScheme.primary,
                         strokeWidth = 2.dp
                     )
                 }
@@ -268,7 +267,7 @@ fun DevicePairingItem(
                     OutlinedButton(
                         onClick = onPair,
                         colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = Color(0xFF6B73FF)
+                            contentColor = MaterialTheme.colorScheme.primary
                         )
                     ) {
                         Text("Pair")

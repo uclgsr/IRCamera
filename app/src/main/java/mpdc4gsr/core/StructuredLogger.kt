@@ -232,20 +232,17 @@ class StructuredLogger private constructor(private val context: Context) {
 
     private fun startPeriodicFlush() {
         logScope.launch {
-            while (true) {
+            while (isActive) {
                 delay(LOG_FLUSH_INTERVAL_MS)
                 flushLogs()
             }
         }
 
-        logExecutor.execute {
-            while (true) {
+        logScope.launch {
+            while (isActive) {
                 try {
                     processLogQueue()
-                    Thread.sleep(100)
-                } catch (e: InterruptedException) {
-                    Thread.currentThread().interrupt()
-                    break
+                    delay(100)
                 } catch (e: Exception) {
                     Log.e(TAG, "Error processing log queue", e)
                 }

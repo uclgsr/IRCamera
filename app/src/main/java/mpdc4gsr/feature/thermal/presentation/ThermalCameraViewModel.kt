@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,6 +31,11 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
 
     companion object {
         private const val TAG = "ThermalCameraViewModel"
+    }
+
+    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
+        AppLogger.e(TAG, "Coroutine exception in ThermalCameraViewModel", exception)
+        _uiState.update { it.copy(errorMessage = "Error: ${exception.message}") }
     }
 
     data class ThermalCameraUiState(
@@ -59,7 +65,7 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
     }
 
     private fun initializeThermalRecorder() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             try {
                 thermalRecorder = ThermalCameraRecorder(context, "thermal_preview_1")
 
@@ -115,7 +121,7 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
     }
 
     fun connectToDevice() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             val status = thermalRecorder?.getThermalSystemStatus()
             _uiState.value = _uiState.value.copy(
                 isConnected = status?.isConnected ?: false,
@@ -125,7 +131,7 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
     }
 
     fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             try {
                 val success = thermalRecorder?.startRecording(sessionDirectory, sessionMetadata) ?: false
                 if (success) {
@@ -150,7 +156,7 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
     }
 
     fun stopRecording() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             try {
                 thermalRecorder?.stopRecording()
                 _uiState.value = _uiState.value.copy(
@@ -175,7 +181,7 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
         super.onCleared()
         // Launch async cleanup in viewModelScope before it gets cancelled
         // This ensures proper cleanup without blocking the main thread
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(exceptionHandler + Dispatchers.IO) {
             try {
                 thermalRecorder?.cleanup()
                 AppLogger.i(TAG, "Thermal recorder cleanup completed")

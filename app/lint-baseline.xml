@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Lint Baseline for IRCamera
+    
+    This file captures the current state of lint warnings in the project.
+    It allows the team to gradually fix existing issues while preventing new ones.
+    
+    To update this baseline:
+    ./gradlew lintDebug
+    
+    The baseline will be automatically updated with current issues.
+    New issues not in the baseline will cause lint to fail.
+    
+    Note: This file is initially empty. Run lint to populate it with existing issues.
+-->
+<issues format="6" by="lint 8.7.2">
+    <!-- Baseline will be populated here by lint -->
+</issues>

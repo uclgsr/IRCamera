@@ -4,47 +4,84 @@
 # To run: ./gradlew detekt
 # To add to project: Add detekt plugin to build.gradle.kts
 
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+  weights:
+    complexity: 2
+    LongParameterList: 1
+    style: 1
+    comments: 1
+
 style:
-  # Flag excessive use of non-null assertion operator (!!)
   ForbiddenComment:
     active: false
   
-  # Detect multiple consecutive !! operators which are high-risk
   MaxLineLength:
     active: true
     maxLineLength: 120
     excludeCommentStatements: true
+    excludeImportStatements: true
+  
+  MagicNumber:
+    active: true
+    ignoreNumbers: ['-1', '0', '1', '2', '100', '1000']
+    ignoreHashCodeFunction: true
+    ignorePropertyDeclaration: true
+    ignoreLocalVariableDeclaration: false
+    ignoreConstantDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+  
+  UnusedImports:
+    active: true
 
 potential-bugs:
-  # Warn about lateinit usage without proper initialization
   LateinitUsage:
     active: true
     excludeAnnotatedProperties: ["Inject"]
     ignoreOnClassesPattern: ""
   
-  # Detect unsafe casts
   UnsafeCast:
     active: true
   
-  # Detect unreachable code
   UnreachableCode:
+    active: true
+  
+  ExplicitGarbageCollectionCall:
+    active: true
+  
+  HasPlatformType:
+    active: true
+  
+  IgnoredReturnValue:
     active: true
 
 complexity:
-  # Limit cyclomatic complexity
   ComplexMethod:
     active: true
     threshold: 15
   
-  # Limit nesting depth
   NestedBlockDepth:
     active: true
     threshold: 4
+  
+  LongMethod:
+    active: true
+    threshold: 60
+  
+  LongParameterList:
+    active: true
+    functionThreshold: 6
+    constructorThreshold: 7
+  
+  TooManyFunctions:
+    active: true
+    thresholdInFiles: 20
+    thresholdInClasses: 20
+    thresholdInInterfaces: 15
 
-# Custom rules for anti-patterns
 comments:
   active: true
-  # Require documentation for public APIs
   UndocumentedPublicClass:
     active: false
   UndocumentedPublicFunction:
