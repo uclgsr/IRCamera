@@ -194,13 +194,13 @@ class Shimmer3GSRRecorder(
         val shimmer = connectedShimmer ?: return@withContext
 
         try {
-
-            @Suppress("DEPRECATION")
+            shimmer.setSamplingRateShimmer(DEFAULT_SAMPLING_RATE)
+            
+            shimmer.writeGSRRange(GSR_RANGE_AUTO)
+            
             shimmer.writeEnabledSensors(Shimmer.SENSOR_GSR.toLong())
 
-            AppLogger.d(TAG, "Using default sampling rate: ${DEFAULT_SAMPLING_RATE}Hz")
-
-            shimmer.setGSRRange(GSR_RANGE_AUTO)
+            AppLogger.d(TAG, "Configured sampling rate: ${DEFAULT_SAMPLING_RATE}Hz")
 
             Log.i(
                 TAG,

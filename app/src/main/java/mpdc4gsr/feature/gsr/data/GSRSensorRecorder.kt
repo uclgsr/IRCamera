@@ -982,7 +982,7 @@ class GSRSensorRecorder(
 
     private fun extractCalibratedGSRValue(objectCluster: ObjectCluster): Double {
         return try {
-            val gsrCalibratedData = objectCluster.getFormatClusterValue("GSR", "CAL")
+            val gsrCalibratedData = objectCluster.getFormatClusterValue("GSR Conductance", "CAL")
             gsrCalibratedData?.toDouble() ?: 0.0
         } catch (e: Exception) {
             AppLogger.w(TAG, "Could not extract calibrated GSR value: ${e.message}")
@@ -1011,12 +1011,9 @@ class GSRSensorRecorder(
 
     private fun extractAccelerometerData(objectCluster: ObjectCluster): Triple<Double, Double, Double> {
         return try {
-            val accelX =
-                objectCluster.getFormatClusterValue("Accelerometer X", "CAL")?.toDouble() ?: 0.0
-            val accelY =
-                objectCluster.getFormatClusterValue("Accelerometer Y", "CAL")?.toDouble() ?: 0.0
-            val accelZ =
-                objectCluster.getFormatClusterValue("Accelerometer Z", "CAL")?.toDouble() ?: 0.0
+            val accelX = objectCluster.getFormatClusterValue("Accelerometer X", "CAL")?.toDouble() ?: 0.0
+            val accelY = objectCluster.getFormatClusterValue("Accelerometer Y", "CAL")?.toDouble() ?: 0.0
+            val accelZ = objectCluster.getFormatClusterValue("Accelerometer Z", "CAL")?.toDouble() ?: 0.0
             Triple(accelX, accelY, accelZ)
         } catch (e: Exception) {
             Triple(0.0, 0.0, 0.0)
@@ -1686,14 +1683,11 @@ class GSRSensorRecorder(
 
             val timestampRecord = TimestampManager.createTimestampRecord()
 
-            val deviceTimestamp =
-                (objectCluster.getFormatClusterValue("Timestamp", "CAL") as? Number)?.toLong() ?: 0L
+            val deviceTimestamp = (objectCluster.getFormatClusterValue("Timestamp", "CAL") as? Number)?.toLong() ?: 0L
 
-            val gsrValue =
-                (objectCluster.getFormatClusterValue("GSR", "CAL") as? Number)?.toDouble() ?: 0.0
+            val gsrValue = (objectCluster.getFormatClusterValue("GSR Conductance", "CAL") as? Number)?.toDouble() ?: 0.0
 
-            val ppgValue =
-                (objectCluster.getFormatClusterValue("PPG", "CAL") as? Number)?.toDouble() ?: 0.0
+            val ppgValue = (objectCluster.getFormatClusterValue("PPG_A13", "CAL") as? Number)?.toDouble() ?: 0.0
 
             val gsrSample = GSRSample(
                 timestamp = timestampRecord.systemNanos,
