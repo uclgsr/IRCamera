@@ -219,7 +219,7 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                         contentColor = Color(0xFFFF6B35)
                     )
                 ) {
-                    Icon(Icons.Default.Refresh, contentDescription = null)
+                    Icon(Icons.Default.Refresh, contentDescription = "Reset")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Reset")
                 }
@@ -231,7 +231,7 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                         containerColor = Color(0xFFFF6B35)
                     )
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = null)
+                    Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = "Apply and Next")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Apply & Next")
                 }

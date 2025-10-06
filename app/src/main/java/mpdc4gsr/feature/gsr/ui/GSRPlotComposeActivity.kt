@@ -751,7 +751,7 @@ private fun DataAnalysisToolsCard(context: android.content.Context) {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.FilterAlt, contentDescription = null)
+                    Icon(Icons.Default.FilterAlt, contentDescription = "Filter Data")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Filter")
                 }
@@ -767,7 +767,7 @@ private fun DataAnalysisToolsCard(context: android.content.Context) {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Tune, contentDescription = null)
+                    Icon(Icons.Default.Tune, contentDescription = "Smooth Data")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Smooth")
                 }
@@ -788,7 +788,7 @@ private fun DataAnalysisToolsCard(context: android.content.Context) {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = null)
+                    Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = "Detect Peaks")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Peaks")
                 }
@@ -804,7 +804,7 @@ private fun DataAnalysisToolsCard(context: android.content.Context) {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Analytics, contentDescription = null)
+                    Icon(Icons.Default.Analytics, contentDescription = "Analyze Trends")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Trends")
                 }
@@ -846,7 +846,7 @@ private fun ExportOptionsCard(context: android.content.Context) {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.TableChart, contentDescription = null)
+                    Icon(Icons.Default.TableChart, contentDescription = "Export CSV")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Export CSV")
                 }
@@ -862,7 +862,7 @@ private fun ExportOptionsCard(context: android.content.Context) {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Image, contentDescription = null)
+                    Icon(Icons.Default.Image, contentDescription = "Save Plot as Image")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Save Plot")
                 }

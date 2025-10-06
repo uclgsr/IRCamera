@@ -404,7 +404,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                 horizontalArrangement = Arrangement.Start,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(Icons.Default.Analytics, contentDescription = null)
+                                Icon(Icons.Default.Analytics, contentDescription = "Measurement Tools")
                                 Spacer(Modifier.width(8.dp))
                                 Text("Measurement Tools")
                             }
@@ -421,7 +421,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                 horizontalArrangement = Arrangement.Start,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(Icons.Default.Settings, contentDescription = null)
+                                Icon(Icons.Default.Settings, contentDescription = "Advanced Settings")
                                 Spacer(Modifier.width(8.dp))
                                 Text("Advanced Settings")
                             }

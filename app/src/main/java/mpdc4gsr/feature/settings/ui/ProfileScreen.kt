@@ -91,7 +91,7 @@ private fun UserProfileCard(
                 ) {
                     Icon(
                         Icons.Default.Person,
-                        contentDescription = null,
+                        contentDescription = "Profile Picture",
                         tint = Color.White,
                         modifier = Modifier.size(40.dp)
                     )
@@ -133,7 +133,7 @@ private fun UserProfileCard(
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Icon(Icons.Default.Edit, contentDescription = null)
+                Icon(Icons.Default.Edit, contentDescription = "Edit Profile")
                 Spacer(Modifier.width(8.dp))
                 Text("Edit Profile")
             }
@@ -412,7 +412,7 @@ private fun ActivityItem(
     ) {
         Icon(
             imageVector = activity.icon,
-            contentDescription = null,
+            contentDescription = activity.title,
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(20.dp)
         )
@@ -457,7 +457,7 @@ private fun QuickActionButton(
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
+                contentDescription = label,
                 tint = Color.White
             )
         }

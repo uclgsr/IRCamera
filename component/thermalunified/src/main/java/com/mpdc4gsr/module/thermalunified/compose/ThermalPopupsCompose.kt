@@ -233,7 +233,7 @@ private fun OptionItemCompose(
         if (icon != null) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
+                contentDescription = text,
                 modifier = Modifier.size(24.dp),
                 tint = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
                 else MaterialTheme.colorScheme.onSurface
@@ -306,7 +306,7 @@ fun GalleryChangePopupCompose(
                     ) {
                         Icon(
                             imageVector = Icons.Default.PhotoLibrary,
-                            contentDescription = null,
+                            contentDescription = "Select Gallery",
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(24.dp)
                         )
@@ -370,7 +370,7 @@ private fun GalleryOptionItemCompose(
     ) {
         Icon(
             imageVector = Icons.Default.Folder,
-            contentDescription = null,
+            contentDescription = name,
             modifier = Modifier.size(20.dp),
             tint = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
             else MaterialTheme.colorScheme.onSurfaceVariant

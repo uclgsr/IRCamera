@@ -246,7 +246,7 @@ private fun DualCameraPreviewCard(
                     ) {
                         Icon(
                             Icons.Default.Sync,
-                            contentDescription = null,
+                            contentDescription = "Synced",
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(16.dp)
                         )
@@ -306,7 +306,7 @@ private fun RGBPreviewArea(active: Boolean) {
             ) {
                 Icon(
                     Icons.Default.Videocam,
-                    contentDescription = null,
+                    contentDescription = "RGB Camera",
                     tint = Color.White,
                     modifier = Modifier.size(48.dp)
                 )
@@ -323,7 +323,7 @@ private fun RGBPreviewArea(active: Boolean) {
             ) {
                 Icon(
                     Icons.Default.VideocamOff,
-                    contentDescription = null,
+                    contentDescription = "RGB Camera Inactive",
                     tint = Color.White,
                     modifier = Modifier.size(48.dp)
                 )
@@ -356,7 +356,7 @@ private fun ThermalPreviewArea(active: Boolean) {
             ) {
                 Icon(
                     Icons.Default.Thermostat,
-                    contentDescription = null,
+                    contentDescription = "Thermal Camera",
                     tint = Color.White,
                     modifier = Modifier.size(48.dp)
                 )
@@ -378,7 +378,7 @@ private fun ThermalPreviewArea(active: Boolean) {
             ) {
                 Icon(
                     Icons.Default.DeviceThermostat,
-                    contentDescription = null,
+                    contentDescription = "Thermal Camera Inactive",
                     tint = Color.White,
                     modifier = Modifier.size(48.dp)
                 )
@@ -416,7 +416,7 @@ private fun DualViewPreviewArea(
             ) {
                 Icon(
                     if (rgbActive) Icons.Default.Videocam else Icons.Default.VideocamOff,
-                    contentDescription = null,
+                    contentDescription = if (rgbActive) "RGB Camera Active" else "RGB Camera Inactive",
                     tint = Color.White,
                     modifier = Modifier.size(24.dp)
                 )
@@ -443,7 +443,7 @@ private fun DualViewPreviewArea(
             ) {
                 Icon(
                     if (thermalActive) Icons.Default.Thermostat else Icons.Default.DeviceThermostat,
-                    contentDescription = null,
+                    contentDescription = if (thermalActive) "Thermal Camera Active" else "Thermal Camera Inactive",
                     tint = Color.White,
                     modifier = Modifier.size(24.dp)
                 )
@@ -479,7 +479,7 @@ private fun OverlayPreviewArea(
             ) {
                 Icon(
                     Icons.Default.Layers,
-                    contentDescription = null,
+                    contentDescription = "RGB and Thermal Overlay",
                     tint = Color.White,
                     modifier = Modifier.size(48.dp)
                 )
@@ -540,7 +540,7 @@ private fun CameraControlsCard(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(Icons.Default.Videocam, contentDescription = null)
+                    Icon(Icons.Default.Videocam, contentDescription = "RGB Camera")
                     Text("RGB Camera")
                 }
                 Switch(
@@ -557,7 +557,7 @@ private fun CameraControlsCard(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(Icons.Default.Thermostat, contentDescription = null)
+                    Icon(Icons.Default.Thermostat, contentDescription = "Thermal Camera")
                     Text("Thermal Camera")
                 }
                 Switch(
@@ -574,7 +574,7 @@ private fun CameraControlsCard(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(Icons.Default.Sync, contentDescription = null)
+                    Icon(Icons.Default.Sync, contentDescription = "Sync Cameras")
                     Text("Sync Cameras")
                 }
                 Switch(
@@ -598,7 +598,7 @@ private fun CameraControlsCard(
                             containerColor = MaterialTheme.colorScheme.error
                         )
                     ) {
-                        Icon(Icons.Default.Stop, contentDescription = null)
+                        Icon(Icons.Default.Stop, contentDescription = "Stop Recording")
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Stop Recording")
                     }
@@ -608,7 +608,7 @@ private fun CameraControlsCard(
                         modifier = Modifier.weight(1f),
                         enabled = rgbActive || thermalActive
                     ) {
-                        Icon(Icons.Default.FiberManualRecord, contentDescription = null)
+                        Icon(Icons.Default.FiberManualRecord, contentDescription = "Start Recording")
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Start Recording")
                     }
@@ -627,7 +627,7 @@ private fun CameraControlsCard(
                     modifier = Modifier.weight(1f),
                     enabled = rgbActive || thermalActive
                 ) {
-                    Icon(Icons.Default.CameraAlt, contentDescription = null)
+                    Icon(Icons.Default.CameraAlt, contentDescription = "Capture Snapshot")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Snapshot")
                 }
@@ -716,7 +716,7 @@ private fun CalibrationToolsCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.CenterFocusStrong, contentDescription = null)
+                    Icon(Icons.Default.CenterFocusStrong, contentDescription = "Align Cameras")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Align")
                 }
@@ -732,7 +732,7 @@ private fun CalibrationToolsCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Palette, contentDescription = null)
+                    Icon(Icons.Default.Palette, contentDescription = "Calibrate Colors")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Calibrate")
                 }

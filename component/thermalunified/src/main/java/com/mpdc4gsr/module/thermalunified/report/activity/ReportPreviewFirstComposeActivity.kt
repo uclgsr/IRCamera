@@ -68,7 +68,7 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                                 Text("Next", color = Color.White)
                                 Icon(
                                     Icons.Default.ChevronRight,
-                                    contentDescription = null,
+                                    contentDescription = "Next",
                                     tint = Color.White
                                 )
                             }
@@ -110,7 +110,7 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                             ) {
                                 Icon(
                                     Icons.Default.Description,
-                                    contentDescription = null,
+                                    contentDescription = "Report Preview",
                                     modifier = Modifier.size(64.dp),
                                     tint = Color.White.copy(alpha = 0.3f)
                                 )
@@ -284,7 +284,7 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
             ) {
                 Icon(
                     Icons.Default.Description,
-                    contentDescription = null,
+                    contentDescription = "Layout ${index + 1}",
                     tint = if (selected) Color.White else Color.White.copy(alpha = 0.5f)
                 )
                 Text(

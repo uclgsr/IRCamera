@@ -290,7 +290,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                         ) {
                             Icon(
                                 Icons.Default.Warning,
-                                contentDescription = null,
+                                contentDescription = "Permission Warning",
                                 tint = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.size(48.dp)
                             )
@@ -345,7 +345,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             ),
                             modifier = Modifier.weight(1f)
                         ) {
-                            Icon(Icons.Default.Stop, contentDescription = null)
+                            Icon(Icons.Default.Stop, contentDescription = "Stop Recording")
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Stop Recording")
                         }
@@ -354,7 +354,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             onClick = onStartRecording,
                             modifier = Modifier.weight(1f)
                         ) {
-                            Icon(Icons.Default.PlayArrow, contentDescription = null)
+                            Icon(Icons.Default.PlayArrow, contentDescription = "Start Recording")
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Start Recording")
                         }
@@ -438,13 +438,13 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
         val context = LocalContext.current
         NavigationBar {
             NavigationBarItem(
-                icon = { Icon(Icons.Default.Home, contentDescription = null) },
+                icon = { Icon(Icons.Default.Home, contentDescription = "Gallery") },
                 label = { Text("Gallery") },
                 selected = false,
                 onClick = { navigateToMainActivity(0) }
             )
             NavigationBarItem(
-                icon = { Icon(Icons.Default.CameraAlt, contentDescription = null) },
+                icon = { Icon(Icons.Default.CameraAlt, contentDescription = "Camera") },
                 label = { Text("Camera") },
                 selected = true,
                 onClick = {
@@ -453,7 +453,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                 }
             )
             NavigationBarItem(
-                icon = { Icon(Icons.Default.Person, contentDescription = null) },
+                icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
                 label = { Text("Profile") },
                 selected = false,
                 onClick = { navigateToMainActivity(2) }

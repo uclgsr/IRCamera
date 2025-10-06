@@ -23,7 +23,11 @@ import com.mpdc4gsr.module.thermalunified.chart.IRMyValueFormatter
 import com.mpdc4gsr.module.thermalunified.chart.YValueFormatter
 import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.utils.ChartTools
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.libunified.R as LibcoreR
@@ -31,6 +35,7 @@ import com.mpdc4gsr.module.thermalunified.R as ThermalR
 
 class ChartLogView : LineChart {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }
+    private var viewScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -42,9 +47,18 @@ class ChartLogView : LineChart {
         initChart()
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        // Recreate the scope if it was cancelled
+        if (!viewScope.isActive) {
+            viewScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+        }
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         mHandler.removeCallbacksAndMessages(null)
+        viewScope.cancel()
     }
 
     private val textColor by lazy { ContextCompat.getColor(context, LibcoreR.color.chart_text) }

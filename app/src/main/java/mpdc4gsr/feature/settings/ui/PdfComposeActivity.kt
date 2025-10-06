@@ -246,7 +246,7 @@ private fun ErrorContent(
             ) {
                 Icon(
                     imageVector = Icons.Default.Error,
-                    contentDescription = null,
+                    contentDescription = "Error",
                     modifier = Modifier.size(48.dp),
                     tint = MaterialTheme.colorScheme.onErrorContainer
                 )
@@ -274,7 +274,7 @@ private fun ErrorContent(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Refresh,
-                        contentDescription = null,
+                        contentDescription = "Retry",
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -309,7 +309,7 @@ private fun PdfContent(document: PdfDocument) {
             ) {
                 Icon(
                     imageVector = Icons.Default.PictureAsPdf,
-                    contentDescription = null,
+                    contentDescription = "PDF Document",
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -351,7 +351,7 @@ private fun PdfContent(document: PdfDocument) {
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.MenuBook,
-                            contentDescription = null,
+                            contentDescription = "PDF Viewer",
                             modifier = Modifier.size(48.dp),
                             tint = MaterialTheme.colorScheme.primary
                         )
@@ -387,7 +387,7 @@ private fun PdfContent(document: PdfDocument) {
                 ) {
                     Icon(
                         imageVector = Icons.Default.CloudDownload,
-                        contentDescription = null,
+                        contentDescription = "Download Manual",
                         modifier = Modifier.size(48.dp),
                         tint = MaterialTheme.colorScheme.primary
                     )
@@ -426,7 +426,7 @@ private fun PdfContent(document: PdfDocument) {
                 ) {
                     Icon(
                         imageVector = Icons.Default.Lightbulb,
-                        contentDescription = null,
+                        contentDescription = "Quick Tips",
                         tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier.size(20.dp)
                     )
