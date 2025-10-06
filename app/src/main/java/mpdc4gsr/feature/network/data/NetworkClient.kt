@@ -1,7 +1,9 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
+import android.net.TrafficStats
 import android.net.wifi.WifiManager
+import android.os.Process
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -330,9 +332,13 @@ class NetworkClient(private val context: Context) {
                 if (useSecure) {
                     val sslContext = certificateManager.createSSLContext()
                     if (sslContext != null) {
+                        TrafficStats.setThreadStatsTag(Process.myTid())
+                        
                         val sslSocketFactory = sslContext.socketFactory
                         sslSocket = sslSocketFactory.createSocket(ipAddress, port) as SSLSocket
                         sslSocket?.soTimeout = CONNECTION_TIMEOUT.toInt()
+                        
+                        TrafficStats.tagSocket(sslSocket)
 
                         sslSocket?.startHandshake()
 
@@ -400,10 +406,13 @@ class NetworkClient(private val context: Context) {
         port: Int,
     ): Boolean {
         return try {
-
+            TrafficStats.setThreadStatsTag(Process.myTid())
+            
             socket = Socket()
             socket?.connect(InetSocketAddress(ipAddress, port), CONNECTION_TIMEOUT.toInt())
             socket?.soTimeout = CONNECTION_TIMEOUT.toInt()
+            
+            TrafficStats.tagSocket(socket)
 
             outputStream = DataOutputStream(socket?.getOutputStream())
             inputStream = DataInputStream(socket?.getInputStream())
@@ -447,10 +456,15 @@ class NetworkClient(private val context: Context) {
         // errorRecoveryManager.disableAutoRecovery()
 
         try {
+            socket?.let { TrafficStats.untagSocket(it) }
+            sslSocket?.let { TrafficStats.untagSocket(it) }
+            
             outputStream?.close()
             inputStream?.close()
             sslSocket?.close()
             socket?.close()
+            
+            TrafficStats.clearThreadStatsTag()
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error during disconnect", e)
         } finally {
@@ -807,7 +821,10 @@ class NetworkClient(private val context: Context) {
     private suspend fun queryController(host: String): ControllerInfo? =
         withContext(Dispatchers.IO) {
             try {
+                TrafficStats.setThreadStatsTag(Process.myTid())
+                
                 Socket().use { socket ->
+                    TrafficStats.tagSocket(socket)
                     socket.connect(InetSocketAddress(host, PC_CONTROLLER_PORT), QUERY_TIMEOUT)
 
                     DataOutputStream(socket.getOutputStream()).use { output ->
@@ -824,7 +841,7 @@ class NetworkClient(private val context: Context) {
                             output.flush()
 
                             val responseLength = input.readInt()
-                            if (responseLength < 0 || responseLength > MAX_MESSAGE_SIZE) { // Max 1MB response
+                            if (responseLength < 0 || responseLength > MAX_MESSAGE_SIZE) {
                                 AppLogger.w(TAG, "Invalid response length: $responseLength bytes from $host")
                                 return@withContext null
                             }
@@ -853,6 +870,8 @@ class NetworkClient(private val context: Context) {
             } catch (e: Exception) {
                 AppLogger.d(TAG, "Controller query failed for $host: ${e.message}")
                 null
+            } finally {
+                TrafficStats.clearThreadStatsTag()
             }
         }
 
@@ -863,12 +882,16 @@ class NetworkClient(private val context: Context) {
     ): Boolean =
         withContext(Dispatchers.IO) {
             try {
+                TrafficStats.setThreadStatsTag(Process.myTid())
                 Socket().use { socket ->
+                    TrafficStats.tagSocket(socket)
                     socket.connect(InetSocketAddress(host, port), timeoutMs)
                     true
                 }
             } catch (e: Exception) {
                 false
+            } finally {
+                TrafficStats.clearThreadStatsTag()
             }
         }
 

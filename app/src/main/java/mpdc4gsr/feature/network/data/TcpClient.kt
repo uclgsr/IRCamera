@@ -1,5 +1,7 @@
 package mpdc4gsr.feature.network.data
 
+import android.net.TrafficStats
+import android.os.Process
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -52,6 +54,8 @@ class TcpClient(
             AppLogger.i(TAG, "Connecting to PC server at $serverHost:$serverPort")
             _connectionState.value = CommandConnection.ConnectionState.CONNECTING
             connectionCallback?.invoke(CommandConnection.ConnectionState.CONNECTING)
+            
+            TrafficStats.setThreadStatsTag(Process.myTid())
 
             socket = Socket().apply {
                 soTimeout = READ_TIMEOUT_MS
@@ -59,6 +63,7 @@ class TcpClient(
             }
 
             socket?.connect(InetSocketAddress(serverHost, serverPort), CONNECTION_TIMEOUT_MS)
+            socket?.let { TrafficStats.tagSocket(it) }
 
             val inputStream = socket?.getInputStream()
             val outputStream = socket?.getOutputStream()
@@ -139,10 +144,12 @@ class TcpClient(
 
         try {
             socket?.let { s ->
+                TrafficStats.untagSocket(s)
                 if (!s.isClosed) {
                     s.close()
                 }
             }
+            TrafficStats.clearThreadStatsTag()
         } catch (e: IOException) {
             AppLogger.w(TAG, "Error closing socket", e)
         }
