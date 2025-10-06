@@ -17,7 +17,6 @@ import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
 import mpdc4gsr.feature.thermal.domain.usecase.*
 
 class AppContainerExt(private val context: Context) {
-    // Shimmer SDK Integration
     private fun provideShimmerDeviceManager(lifecycleOwner: LifecycleOwner): ShimmerDeviceManager {
         return ShimmerDeviceManager(context, lifecycleOwner)
     }
@@ -30,7 +29,6 @@ class AppContainerExt(private val context: Context) {
         return ShimmerRepositoryImpl(provideShimmerDataSource(lifecycleOwner))
     }
 
-    // Shimmer Use Cases
     fun provideScanShimmerDevicesUseCase(lifecycleOwner: LifecycleOwner): ScanShimmerDevicesUseCase {
         return ScanShimmerDevicesUseCase(provideShimmerRepository(lifecycleOwner))
     }
@@ -47,7 +45,6 @@ class AppContainerExt(private val context: Context) {
         return StopGSRStreamingUseCase(provideShimmerRepository(lifecycleOwner))
     }
 
-    // Thermal SDK Integration
     private fun provideTopdonDataSource(): TopdonDataSource {
         return mpdc4gsr.feature.thermal.data.source.TopdonDataSourceImpl(context)
     }
@@ -56,7 +53,6 @@ class AppContainerExt(private val context: Context) {
         return ThermalRepositoryImpl(provideTopdonDataSource())
     }
 
-    // Thermal Use Cases
     fun provideConnectThermalCameraUseCase(): ConnectThermalCameraUseCase {
         return ConnectThermalCameraUseCase(provideThermalRepository())
     }
