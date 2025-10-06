@@ -1,0 +1,233 @@
+================================================================================
+            UNUSED CLASSES CATEGORIZED BY TYPE AND MODULE
+                          IRCamera Project
+================================================================================
+
+This document organizes the 395 unused classes by category and module
+to make it easier to review and prioritize cleanup efforts.
+
+For complete details, see UNUSED_CLASSES_REPORT.txt
+
+================================================================================
+CATEGORY 1: LEGACY CODE (High Priority for Removal)
+================================================================================
+These classes have "Old" suffix indicating they are outdated versions:
+
+- ImageThreadTCOld
+  libunified/src/main/java/com/mpdc4gsr/libunified/ir/thread/ImageThreadTCOld.java
+
+- TemperatureViewOld
+  libunified/src/main/java/com/mpdc4gsr/libunified/ir/view/TemperatureViewOld.java
+
+================================================================================
+CATEGORY 2: TEST CLASSES (Review for Removal)
+================================================================================
+Test classes with no references - may be unimplemented or outdated:
+
+From component/gsr-recording:
+- GSRDataModelsTest
+- GSRRecordingServiceTest
+- RecordingSessionManagerTest
+- RobolectricFrameworkTest
+- ShimmerFactoryResolverTest
+- ShimmerGSRRecorderTest
+- TimeUtilitiesTest
+- ZeroconfServiceDiscoveryTest
+
+From component/thermalunified:
+- BleConnectionViewModelTest
+- TC001CameraViewModelTest
+
+From app/src/test:
+- RecordingSessionManagerTest
+- RobolectricFrameworkTest
+- ShimmerGSRRecorderTest
+- TimeUtilitiesTest
+
+================================================================================
+CATEGORY 3: UI COMPONENTS (Medium Priority)
+================================================================================
+
+Compose UI Components:
+- ComposeTextRenderer
+- ComposeToast
+- MenuCompose
+- MenuViewsCompose
+- TargetColorPickerCompose
+- ComplexDialogsCompose
+- ComposeDialogHelper
+- ConfirmDialogCompose
+- FirmwareUpdateDialogCompose
+- LoadingDialogCompose
+- MessageDialogCompose
+
+Traditional Views:
+- ChartActivity
+- MyGLSurfaceView
+- CommLoadMoreView
+- ZoomableDraggableView
+- DragScaleView
+- DragViewUtils
+
+Wheel Pickers (libunified/ui/gzuliyujiang/wheelpicker):
+- EthnicPicker
+- AddressPicker
+- BirthdayPicker
+- CarNumberPicker
+- ConstellationPicker
+- DatePicker
+- DateTimePicker
+- LinkagePicker
+- NumberPicker
+- OptionPicker
+- PhoneCodePicker
+- TimePicker
+- (and more pickers...)
+
+================================================================================
+CATEGORY 4: UTILITY CLASSES (High Priority)
+================================================================================
+
+From BleModule:
+- AppHolder (com.topdon.commons.base.AppHolder)
+- DiagnoseEventBusBean
+- WeakReferenceHandler
+- UnicodeReader
+- PermissionsRequester
+- BleObserver
+- Inspector
+- UUIDManager
+
+From libunified:
+- AppUtils (com.mpdc4gsr.libunified.app.utils.AppUtils)
+- ColorTemplate
+- ObjectPool
+- ExcelUtils
+- AlarmHelp
+- PDFHelp
+- IrParam
+
+From app:
+- FileUtils
+- EncryptUtils
+- NetworkUtils
+- TimeUtils
+
+================================================================================
+CATEGORY 5: DATA MODELS & BEANS (Review Carefully)
+================================================================================
+
+From BleModule:
+- SaveBean
+- CheckableParcelable
+- AbstractTimer
+- UnitDBBean
+- DatabaseContext
+- MyEvent
+
+From libunified:
+- CameraIRConfig
+- HouseRepPreviewBean
+- NoBodyEntity
+- SaveSettingBean
+- ThermalBean
+- GSRModels
+
+Event Beans:
+- GalleryDelEvent
+- PDFEvent
+- ReportCreateEvent
+- TS004ResetEvent
+- VersionUpData
+
+================================================================================
+CATEGORY 6: NETWORK & SERVICE CLASSES (May be Future Features)
+================================================================================
+
+From component/gsr-recording:
+- FileTransferProtocol
+- MultiDeviceCoordination
+- QualityOfServiceManager
+- ErrorRecoveryManager
+- MultiModalRecordingService
+- ShimmerInterfaces
+
+From libunified:
+- NetworkModule
+- ApiService
+- RetrofitClient
+
+================================================================================
+CATEGORY 7: INTERFACES (Low Priority)
+================================================================================
+
+From BleModule:
+- Callback
+- Checkable
+- DrawableBuilder
+- IText
+- IWeight
+
+From component:
+- GuideInterface (type alias)
+- IrSurfaceView (type alias)
+
+================================================================================
+CATEGORY 8: HELPER & FACTORY CLASSES
+================================================================================
+
+- RequestBuilderFactory (BleModule)
+- ViewBindingAdapter (libunified)
+- CheckableItem (BleModule)
+
+================================================================================
+CATEGORY 9: CALLBACK CLASSES
+================================================================================
+
+- ReadDescriptorCallback (BleModule)
+- WriteDescriptorCallback (BleModule)
+- Various other callback implementations
+
+================================================================================
+MODULE BREAKDOWN
+================================================================================
+
+BleModule (18 unused classes):
+- Primarily utility classes, helpers, and event beans
+- Recommendation: Review and remove unused utilities
+
+component/ (137 unused classes):
+- Mix of test classes, UI components, and services
+- Recommendation: Remove test stubs, evaluate UI components
+
+libunified (156 unused classes):
+- Many wheel pickers and UI utilities
+- Recommendation: Remove unused pickers and dialogs
+
+app (84 unused classes):
+- Various utilities and components
+- Recommendation: Clean up utility classes
+
+================================================================================
+PRIORITIZED REMOVAL PLAN
+================================================================================
+
+PHASE 1 - Quick Wins (Low Risk):
+1. Remove "Old" suffix legacy classes
+2. Remove empty or stub test classes
+3. Remove unused utility classes with clear no-usage
+
+PHASE 2 - Medium Risk:
+4. Remove unused UI components (after manifest check)
+5. Remove unused data models
+6. Remove unused callbacks and interfaces
+
+PHASE 3 - Review Required:
+7. Evaluate network/service classes (may be planned features)
+8. Review base classes and abstractions
+9. Check wheel pickers usage in XML/resources
+
+================================================================================
+For complete list of all 395 classes with file paths, see:
+  UNUSED_CLASSES_REPORT.txt
+================================================================================
