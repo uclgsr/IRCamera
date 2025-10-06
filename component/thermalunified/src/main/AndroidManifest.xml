@@ -45,7 +45,6 @@
         <!-- Activities from thermal module -->
 
         <!-- Activities from thermal-lite module - Migrated to Compose -->
-        <activity android:name=".lite.activity.IRMonitorLiteComposeActivity" />
         <activity android:name=".activity.IRMonitorChartComposeActivity" />
         <activity android:name=".lite.activity.IRCorrectionLiteThreeComposeActivity" />
         <activity android:name=".lite.activity.IRCorrectionLiteFourComposeActivity" />
