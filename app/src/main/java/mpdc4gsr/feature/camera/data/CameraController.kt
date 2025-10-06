@@ -42,6 +42,7 @@ class CameraController(private val context: Context) {
     fun openCamera(cameraId: String = "0") {
         AppLogger.i(TAG, "Opening camera $cameraId")
 
+        var lockAcquired = false
         try {
             val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
             val characteristics = manager.getCameraCharacteristics(cameraId)
@@ -52,15 +53,28 @@ class CameraController(private val context: Context) {
             if (!cameraOpenCloseLock.tryAcquire(CAMERA_OPEN_TIMEOUT_MS, TimeUnit.MILLISECONDS)) {
                 throw RuntimeException("Time out waiting to lock camera opening.")
             }
+            lockAcquired = true
 
             manager.openCamera(cameraId, stateCallback, backgroundHandler)
             currentCameraId = cameraId
         } catch (e: CameraAccessException) {
+            if (lockAcquired) {
+                cameraOpenCloseLock.release()
+            }
             AppLogger.e(TAG, "Failed to open camera $cameraId", e)
             onCameraError?.invoke("Failed to open camera: ${e.message}")
         } catch (e: SecurityException) {
+            if (lockAcquired) {
+                cameraOpenCloseLock.release()
+            }
             AppLogger.e(TAG, "Camera permission not granted", e)
             onCameraError?.invoke("Camera permission required")
+        } catch (e: Exception) {
+            if (lockAcquired) {
+                cameraOpenCloseLock.release()
+            }
+            AppLogger.e(TAG, "Unexpected error opening camera $cameraId", e)
+            onCameraError?.invoke("Failed to open camera: ${e.message}")
         }
     }
 
