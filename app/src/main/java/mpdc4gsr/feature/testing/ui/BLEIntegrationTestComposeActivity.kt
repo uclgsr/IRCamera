@@ -21,7 +21,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.ShimmerDeviceManager
-import mpdc4gsr.core.data.UnifiedGSRRecorder
+import mpdc4gsr.core.data.Shimmer3GSRRecorder
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.feature.testing.presentation.BLEIntegrationTestViewModel
@@ -34,7 +34,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
     }
 
     private lateinit var permissionController: PermissionController
-    private var gsrRecorder: UnifiedGSRRecorder? = null
+    private var gsrRecorder: Shimmer3GSRRecorder? = null
     private var deviceManager: ShimmerDeviceManager? = null
     override fun createViewModel(): BLEIntegrationTestViewModel {
         return viewModels<BLEIntegrationTestViewModel>().value
@@ -199,7 +199,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
     private fun initializeRecorder() {
         try {
             // Initialize GSR recorder and device manager
-            gsrRecorder = UnifiedGSRRecorder(this, this)
+            gsrRecorder = Shimmer3GSRRecorder(this, this)
             deviceManager = ShimmerDeviceManager(this, this)
             AppLogger.d(TAG, "BLE components initialized successfully")
         } catch (e: Exception) {
