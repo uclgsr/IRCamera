@@ -10,22 +10,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class ReportPreviewViewModel : BaseViewModel() {
-
     private val _selectedLayout = MutableStateFlow(0)
     val selectedLayout: StateFlow<Int> = _selectedLayout.asStateFlow()
-
     private val _showImages = MutableStateFlow(true)
     val showImages: StateFlow<Boolean> = _showImages.asStateFlow()
-
     private val _showMetadata = MutableStateFlow(true)
     val showMetadata: StateFlow<Boolean> = _showMetadata.asStateFlow()
-
     private val _showWatermark = MutableStateFlow(false)
     val showWatermark: StateFlow<Boolean> = _showWatermark.asStateFlow()
-
     private val _previewGenerated = MutableStateFlow(false)
     val previewGenerated: StateFlow<Boolean> = _previewGenerated.asStateFlow()
-
     private val _previewData = MutableStateFlow<PreviewData?>(null)
     val previewData: StateFlow<PreviewData?> = _previewData.asStateFlow()
 
@@ -67,16 +61,13 @@ class ReportPreviewViewModel : BaseViewModel() {
             val currentShowImages = _showImages.value
             val currentShowMetadata = _showMetadata.value
             val currentShowWatermark = _showWatermark.value
-
             delay(500)
-
             val preview = PreviewData(
                 layoutIndex = currentLayout,
                 includeImages = currentShowImages,
                 includeMetadata = currentShowMetadata,
                 includeWatermark = currentShowWatermark
             )
-
             _previewData.value = preview
             _previewGenerated.value = true
         }

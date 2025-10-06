@@ -1,9 +1,7 @@
 package com.mpdc4gsr.libunified.app.utils
 
 object UnifiedHexUtils {
-
     private const val HEX_CHARS = "0123456789ABCDEF"
-
     fun binaryToHexString(bytes: ByteArray): String {
         val result = StringBuilder()
         for (b in bytes) {
@@ -69,7 +67,6 @@ object UnifiedHexUtils {
         val result = StringBuilder()
         for (i in bytes.indices step bytesPerLine) {
             result.append(String.format("%04X: ", i))
-
             // Hex representation
             for (j in 0 until bytesPerLine) {
                 if (i + j < bytes.size) {
@@ -78,9 +75,7 @@ object UnifiedHexUtils {
                     result.append("   ")
                 }
             }
-
             result.append(" | ")
-
             // ASCII representation
             for (j in 0 until bytesPerLine) {
                 if (i + j < bytes.size) {
@@ -90,7 +85,6 @@ object UnifiedHexUtils {
                     result.append(' ')
                 }
             }
-
             result.append("\n")
         }
         return result.toString()

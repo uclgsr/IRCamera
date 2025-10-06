@@ -41,11 +41,9 @@ fun TargetColorPicker(
             TargetColor(R.drawable.bg_target_color_white, ObserveBean.TYPE_TARGET_COLOR_WHITE, "White")
         )
     }
-
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
     val itemWidth = screenWidthDp / 5 * 0.78f
-
     LazyRow(
         modifier = modifier
             .fillMaxWidth()
@@ -74,7 +72,6 @@ private fun TargetColorItem(
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
     val imageSize = (screenWidthDp * 30 / 375).coerceAtLeast(24.dp)
-
     Box(
         modifier = Modifier
             .width(itemWidth)
@@ -97,7 +94,6 @@ private fun TargetColorItem(
                         .size(imageSize)
                         .padding(4.dp)
                 )
-
                 if (isSelected) {
                     Image(
                         painter = painterResource(id = R.drawable.bg_target_color_stroke),
@@ -106,7 +102,6 @@ private fun TargetColorItem(
                     )
                 }
             }
-
             if (isSelected) {
                 Box(
                     modifier = Modifier

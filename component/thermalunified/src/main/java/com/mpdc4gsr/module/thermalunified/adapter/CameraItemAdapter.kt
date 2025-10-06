@@ -10,9 +10,7 @@ import com.mpdc4gsr.module.thermalunified.R
 class CameraItemAdapter(
     data: MutableList<CameraItemBean>? = null
 ) : BaseQuickAdapter<CameraItemBean, BaseViewHolder>(R.layout.item_camera, data) {
-
     var listener: ((index: Int, item: CameraItemBean) -> Unit)? = null
-
     override fun convert(holder: BaseViewHolder, item: CameraItemBean) {
         holder.setVisible(R.id.img, true)
         holder.setGone(R.id.count_down_view, true)
@@ -62,5 +60,4 @@ class CameraItemAdapter(
             }
         }
     }
-
 }

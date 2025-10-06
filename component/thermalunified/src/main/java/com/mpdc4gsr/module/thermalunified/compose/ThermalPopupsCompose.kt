@@ -80,7 +80,6 @@ fun SeekBarPopupCompose(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
-
                     // Progress value display
                     Text(
                         text = "${progress.roundToInt()}%",
@@ -88,9 +87,7 @@ fun SeekBarPopupCompose(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     )
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     // Modern Slider
                     Slider(
                         value = progress,
@@ -112,9 +109,7 @@ fun SeekBarPopupCompose(
                             inactiveTrackColor = MaterialTheme.colorScheme.primaryContainer
                         )
                     )
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     // Action buttons
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -126,9 +121,7 @@ fun SeekBarPopupCompose(
                         ) {
                             Text("Cancel")
                         }
-
                         Spacer(modifier = Modifier.width(12.dp))
-
                         Button(
                             onClick = {
                                 onProgressChange(progress)
@@ -214,7 +207,6 @@ private fun OptionItemCompose(
         targetValue = if (isSelected) 1f else 0f,
         animationSpec = tween(200), label = "background"
     )
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -240,7 +232,6 @@ private fun OptionItemCompose(
             )
             Spacer(modifier = Modifier.width(12.dp))
         }
-
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium,
@@ -248,7 +239,6 @@ private fun OptionItemCompose(
             else MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1f)
         )
-
         if (isSelected) {
             Icon(
                 imageVector = Icons.Default.Check,
@@ -318,9 +308,7 @@ fun GalleryChangePopupCompose(
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     // Gallery options
                     LazyColumn(
                         modifier = Modifier.heightIn(max = 240.dp)
@@ -352,7 +340,6 @@ private fun GalleryOptionItemCompose(
         targetValue = if (isSelected) 1f else 0f,
         animationSpec = tween(200), label = "gallery_background"
     )
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -375,9 +362,7 @@ private fun GalleryOptionItemCompose(
             tint = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
             else MaterialTheme.colorScheme.onSurfaceVariant
         )
-
         Spacer(modifier = Modifier.width(12.dp))
-
         Text(
             text = galleryName,
             style = MaterialTheme.typography.bodyMedium,
@@ -385,7 +370,6 @@ private fun GalleryOptionItemCompose(
             else MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1f)
         )
-
         if (isSelected) {
             Icon(
                 imageVector = Icons.Default.CheckCircle,

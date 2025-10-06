@@ -9,7 +9,6 @@ import mpdc4gsr.core.RecordingService
 
 object PreviewIntegration {
     private const val TAG = "PreviewIntegration"
-
     fun updateRgbFrame(context: Context, rgbFrame: Bitmap) {
         try {
             val adapter = getPreviewDataAdapter(context)
@@ -55,7 +54,6 @@ object PreviewIntegration {
 
     fun getStreamingConfig(context: Context): Map<String, Any> {
         return try {
-
             emptyMap()
         } catch (e: Exception) {
             AppLogger.w(TAG, "Failed to get streaming configuration", e)
@@ -100,7 +98,6 @@ object PreviewIntegration {
     }
 
     private fun getRecordingService(context: Context): RecordingService? {
-
         AppLogger.d(TAG, "Note: RecordingService access needs proper implementation via service binding")
         return null
     }

@@ -55,7 +55,6 @@ fun DownloadProgressDialog(
                         color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center
                     )
-
                     // File size info
                     val sizeText =
                         "${stringResource(RCore.string.detail_len)}: ${formatFileSize(currentBytes)}/${
@@ -67,7 +66,6 @@ fun DownloadProgressDialog(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                         textAlign = TextAlign.Center
                     )
-
                     // Progress bar
                     val progress =
                         if (totalBytes > 0) (currentBytes.toFloat() / totalBytes.toFloat()) else 0f
@@ -82,9 +80,7 @@ fun DownloadProgressDialog(
                             color = MaterialTheme.colorScheme.primary,
                             trackColor = MaterialTheme.colorScheme.surfaceVariant,
                         )
-
                         Spacer(modifier = Modifier.height(8.dp))
-
                         Text(
                             text = "${(progress * 100).toInt()}%",
                             style = MaterialTheme.typography.bodyMedium,

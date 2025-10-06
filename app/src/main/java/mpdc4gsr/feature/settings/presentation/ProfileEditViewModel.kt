@@ -7,9 +7,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 
-/**
- * Profile data model
- */
 data class ProfileData(
     val userName: String = "Research Participant",
     val userId: String = "RP-2025-001",
@@ -22,18 +19,11 @@ data class ProfileData(
     val allowDataSharing: Boolean = false
 )
 
-/**
- * ViewModel for Profile Edit Screen
- * Manages profile data with configuration change resilience
- */
 class ProfileEditViewModel : AppBaseViewModel() {
-
     private val _profileData = MutableStateFlow(ProfileData())
     val profileData: StateFlow<ProfileData> = _profileData.asStateFlow()
-
     private val _isSaving = MutableStateFlow(false)
     val isSaving: StateFlow<Boolean> = _isSaving.asStateFlow()
-
     fun updateUserName(value: String) {
         _profileData.value = _profileData.value.copy(userName = value)
     }
@@ -66,10 +56,6 @@ class ProfileEditViewModel : AppBaseViewModel() {
         _profileData.value = _profileData.value.copy(allowDataSharing = enabled)
     }
 
-    /**
-     * Save profile data
-     * TODO: Implement persistence layer (SharedPreferences or Repository)
-     */
     fun saveProfile(onSuccess: () -> Unit) {
         viewModelScope.launch {
             _isSaving.value = true

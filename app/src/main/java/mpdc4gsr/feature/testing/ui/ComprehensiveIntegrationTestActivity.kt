@@ -18,20 +18,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.AppBaseViewModel
 
-/**
- * Comprehensive Integration Test Activity
- *
- * This activity validates that all implemented features work together:
- * - Navigation system functionality
- * - Compose screen implementations
- * - Thermal stub implementations
- * - GSR sensor integration
- * - Network device pairing
- * - Flash overlay functionality
- * - UI component rendering
- */
 class ComprehensiveIntegrationTestActivity : BaseComposeActivity<IntegrationTestViewModel>() {
-
     override fun createViewModel(): IntegrationTestViewModel = IntegrationTestViewModel()
 
     @Composable
@@ -43,7 +30,6 @@ class ComprehensiveIntegrationTestActivity : BaseComposeActivity<IntegrationTest
 }
 
 class IntegrationTestViewModel : AppBaseViewModel() {
-
     data class TestItem(
         val name: String,
         val description: String,
@@ -66,30 +52,25 @@ class IntegrationTestViewModel : AppBaseViewModel() {
         TestItem("UnifiedNavigation Routes", "All navigation routes functional", true, TestCategory.NAVIGATION),
         TestItem("IRCameraNavigation", "Fragment integration navigation", true, TestCategory.NAVIGATION),
         TestItem("NavigationManager", "Legacy navigation compatibility", true, TestCategory.NAVIGATION),
-
         // Compose Screens
         TestItem("ThermalGalleryScreen", "Enhanced thermal image display", true, TestCategory.COMPOSE_SCREENS),
         TestItem("CalibrateScreen", "Realistic camera preview simulation", true, TestCategory.COMPOSE_SCREENS),
         TestItem("AnnotateScreen", "Enhanced thermal annotation tools", true, TestCategory.COMPOSE_SCREENS),
         TestItem("AboutScreen", "Application information display", true, TestCategory.COMPOSE_SCREENS),
-
         // Thermal Stubs
         TestItem("ThermalInputDialog", "Functional thermal parameter input", true, TestCategory.THERMAL_STUBS),
         TestItem("RangeSeekBar", "Temperature range selection widget", true, TestCategory.THERMAL_STUBS),
         TestItem("CameraPreView", "Thermal camera preview component", true, TestCategory.THERMAL_STUBS),
         TestItem("TemperatureView", "Temperature visualization widget", true, TestCategory.THERMAL_STUBS),
         TestItem("TipDialogs", "User guidance dialog system", true, TestCategory.THERMAL_STUBS),
-
         // GSR Sensors
         TestItem("GSRQuickRecordingActivity", "Rapid GSR data collection", true, TestCategory.GSR_SENSORS),
         TestItem("GSRDeviceManagementActivity", "GSR device configuration", true, TestCategory.GSR_SENSORS),
         TestItem("UnifiedSessionManager", "Multi-sensor session management", true, TestCategory.GSR_SENSORS),
-
         // Network Integration
         TestItem("DevicePairingActivity", "Network device discovery and pairing", true, TestCategory.NETWORK),
         TestItem("Flash Overlay", "Sync flash visual feedback", true, TestCategory.NETWORK),
         TestItem("NetworkErrorRecovery", "Robust network error handling", true, TestCategory.NETWORK),
-
         // UI Components
         TestItem("BaseComposeActivity", "Shared Compose activity foundation", true, TestCategory.UI_COMPONENTS),
         TestItem("LibTheme", "Unified theming system", true, TestCategory.UI_COMPONENTS),
@@ -100,9 +81,7 @@ class IntegrationTestViewModel : AppBaseViewModel() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IntegrationTestScreen(viewModel: IntegrationTestViewModel) {
-
     var selectedCategory by remember { mutableStateOf<IntegrationTestViewModel.TestCategory?>(null) }
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -113,7 +92,6 @@ fun IntegrationTestScreen(viewModel: IntegrationTestViewModel) {
                 titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
-
         // Overall Status Summary
         Card(
             modifier = Modifier
@@ -132,11 +110,9 @@ fun IntegrationTestScreen(viewModel: IntegrationTestViewModel) {
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-
                 val implementedCount = viewModel.testItems.count { it.isImplemented }
                 val totalCount = viewModel.testItems.size
                 val completionPercentage = (implementedCount * 100) / totalCount
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -153,7 +129,6 @@ fun IntegrationTestScreen(viewModel: IntegrationTestViewModel) {
                 }
             }
         }
-
         // Category Filter
         LazyRow(
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -174,7 +149,6 @@ fun IntegrationTestScreen(viewModel: IntegrationTestViewModel) {
                 )
             }
         }
-
         // Test Items List
         LazyColumn(
             modifier = Modifier
@@ -187,7 +161,6 @@ fun IntegrationTestScreen(viewModel: IntegrationTestViewModel) {
             } else {
                 viewModel.testItems.filter { it.category == selectedCategory }
             }
-
             items(filteredItems) { item ->
                 TestItemCard(item = item)
             }

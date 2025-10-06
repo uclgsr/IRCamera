@@ -9,7 +9,6 @@ class BaseViewModelFactory(
     private val application: Application,
     private val repositories: Map<Class<*>, Any> = emptyMap()
 ) : ViewModelProvider.Factory {
-
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         return when {
@@ -38,12 +37,10 @@ class BaseViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     private fun <T : ViewModel> createWithRepositories(modelClass: Class<T>): T {
         val constructors = modelClass.declaredConstructors
-
         for (constructor in constructors) {
             val parameterTypes = constructor.parameterTypes
             val parameters = mutableListOf<Any>()
             var canCreate = true
-
             for (paramType in parameterTypes) {
                 when {
                     paramType == Application::class.java -> {
@@ -60,18 +57,15 @@ class BaseViewModelFactory(
                     }
                 }
             }
-
             if (canCreate) {
                 return constructor.newInstance(*parameters.toTypedArray()) as T
             }
         }
-
         throw IllegalArgumentException("Cannot create ViewModel ${modelClass.simpleName}")
     }
 
     class Builder(private val application: Application) {
         private val repositories = mutableMapOf<Class<*>, Any>()
-
         fun <T : Any> addRepository(repositoryClass: Class<T>, repository: T): Builder {
             repositories[repositoryClass] = repository
             return this

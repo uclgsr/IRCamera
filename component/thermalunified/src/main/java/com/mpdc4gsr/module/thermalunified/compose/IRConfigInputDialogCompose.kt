@@ -32,7 +32,6 @@ fun IRConfigInputDialogCompose(
     val context = LocalContext.current
     var inputText by remember { mutableStateOf(initialValue?.toString() ?: "") }
     val focusRequester = remember { FocusRequester() }
-
     val dialogData = remember(type, isTC007) {
         when (type) {
             IRConfigInputType.TEMP -> IRConfigDialogData(
@@ -63,11 +62,9 @@ fun IRConfigInputDialogCompose(
             )
         }
     }
-
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -92,7 +89,6 @@ fun IRConfigInputDialogCompose(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
                 // Input field with unit
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -121,7 +117,6 @@ fun IRConfigInputDialogCompose(
                         ),
                         singleLine = true
                     )
-
                     if (dialogData.showUnit) {
                         Text(
                             text = dialogData.unit,
@@ -130,9 +125,7 @@ fun IRConfigInputDialogCompose(
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(24.dp))
-
                 // Action buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -144,7 +137,6 @@ fun IRConfigInputDialogCompose(
                     ) {
                         Text(stringResource(android.R.string.cancel))
                     }
-
                     Button(
                         onClick = {
                             handleConfirm(

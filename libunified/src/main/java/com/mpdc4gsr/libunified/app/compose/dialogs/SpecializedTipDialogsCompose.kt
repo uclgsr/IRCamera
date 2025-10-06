@@ -32,7 +32,6 @@ fun ObserveDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.75f else 0.5f
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -64,7 +63,6 @@ fun ObserveDialog(
                             .padding(bottom = 16.dp)
                     )
                 }
-
                 Text(
                     text = title,
                     fontSize = 18.sp,
@@ -72,7 +70,6 @@ fun ObserveDialog(
                     color = Color.Black,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-
                 Text(
                     text = message,
                     fontSize = 14.sp,
@@ -80,9 +77,7 @@ fun ObserveDialog(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 Spacer(modifier = Modifier.height(20.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -97,7 +92,6 @@ fun ObserveDialog(
                     ) {
                         Text(text = cancelText, fontSize = 16.sp)
                     }
-
                     Button(
                         onClick = {
                             onConfirm()
@@ -126,7 +120,6 @@ fun ShutterDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.72f else 0.5f
-
     @Suppress("UNCHECKED_CAST")
     Dialog(
         onDismissRequest = (if (!isCalibrating) onDismiss else {
@@ -158,7 +151,6 @@ fun ShutterDialog(
                     color = Color.Black,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
                 if (isCalibrating) {
                     CircularProgressIndicator(
                         modifier = Modifier
@@ -167,7 +159,6 @@ fun ShutterDialog(
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
-
                 Text(
                     text = message,
                     fontSize = 14.sp,
@@ -175,10 +166,8 @@ fun ShutterDialog(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 if (!isCalibrating) {
                     Spacer(modifier = Modifier.height(20.dp))
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -193,7 +182,6 @@ fun ShutterDialog(
                         ) {
                             Text(text = "Cancel", fontSize = 16.sp)
                         }
-
                         Button(
                             onClick = {
                                 onConfirm()
@@ -224,7 +212,6 @@ fun OtgDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.75f else 0.5f
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -256,7 +243,6 @@ fun OtgDialog(
                             .padding(bottom = 16.dp)
                     )
                 }
-
                 Text(
                     text = title,
                     fontSize = 18.sp,
@@ -264,7 +250,6 @@ fun OtgDialog(
                     color = Color.Black,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-
                 Text(
                     text = message,
                     fontSize = 14.sp,
@@ -272,7 +257,6 @@ fun OtgDialog(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 if (showCheckbox) {
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
@@ -291,9 +275,7 @@ fun OtgDialog(
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(20.dp))
-
                 Button(
                     onClick = {
                         onConfirm(isChecked)
@@ -324,7 +306,6 @@ fun WaterMarkDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.75f else 0.5f
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -354,7 +335,6 @@ fun WaterMarkDialog(
                     color = Color.Black,
                     modifier = Modifier.padding(bottom = 20.dp)
                 )
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -375,7 +355,6 @@ fun WaterMarkDialog(
                         }
                     )
                 }
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -396,9 +375,7 @@ fun WaterMarkDialog(
                         }
                     )
                 }
-
                 Spacer(modifier = Modifier.height(20.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -410,7 +387,6 @@ fun WaterMarkDialog(
                     ) {
                         Text(text = "Cancel", fontSize = 16.sp)
                     }
-
                     Button(
                         onClick = {
                             onConfirm()
@@ -439,7 +415,6 @@ fun ChangeDeviceDialog(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.75f else 0.5f
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -469,7 +444,6 @@ fun ChangeDeviceDialog(
                     color = Color.Black,
                     modifier = Modifier.padding(bottom = 20.dp)
                 )
-
                 availableDevices.forEach { device ->
                     Row(
                         modifier = Modifier
@@ -489,9 +463,7 @@ fun ChangeDeviceDialog(
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(20.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -503,7 +475,6 @@ fun ChangeDeviceDialog(
                     ) {
                         Text(text = "Cancel", fontSize = 16.sp)
                     }
-
                     Button(
                         onClick = {
                             onDeviceSelected(selectedDevice)

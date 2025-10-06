@@ -30,7 +30,6 @@ class LinearCompassView : View {
     private val longLinePaint = Paint()
     private val positionPaint = Paint()
     private lateinit var canvas: Canvas
-
     private var lineColor: Int = Color.WHITE
     private var textColor: Int = Color.WHITE
     private var shortLineColor: Int = Color.WHITE
@@ -44,7 +43,6 @@ class LinearCompassView : View {
     private var positionSize = 0f
     private var markerSize = 0f
     private var backgroundColor = Color.BLACK
-
     private var lastDrawTime = 0L
     private var step = 1000 / 10
     private var scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -69,7 +67,6 @@ class LinearCompassView : View {
         longLineSize = 0.5f.spToPx(context).toFloat()
         positionSize = 11f.spToPx(context).toFloat()
         markerSize = 2f.spToPx(context).toFloat()
-
         val attributes =
             context.obtainStyledAttributes(attrs, R.styleable.LinearCompassView, 0, 0)
         lineColor = attributes.getColor(R.styleable.LinearCompassView_lineColor, Color.WHITE)
@@ -113,28 +110,23 @@ class LinearCompassView : View {
         paint.style = Paint.Style.FILL_AND_STROKE
         paint.strokeWidth = 1f
         paint.isAntiAlias = true
-
         textPaint.color = textColor
         textPaint.textSize = textSize
         textPaint.style = Paint.Style.FILL_AND_STROKE
         textPaint.isAntiAlias = true
         textPaint.strokeWidth = 1f
-
         markerPaint.color = centerAzimuthColor
         markerPaint.strokeWidth = markerSize
         markerPaint.style = Paint.Style.FILL_AND_STROKE
         markerPaint.isAntiAlias = true
-
         shortLinePaint.color = shortLineColor
         shortLinePaint.strokeWidth = shortLineSize
         shortLinePaint.style = Paint.Style.STROKE
         shortLinePaint.isAntiAlias = true
-
         longLinePaint.color = longLineColor
         longLinePaint.strokeWidth = longLineSize
         longLinePaint.style = Paint.Style.STROKE
         longLinePaint.isAntiAlias = true
-
         positionPaint.color = positionColor
         positionPaint.textSize = positionSize
         positionPaint.style = Paint.Style.FILL_AND_STROKE
@@ -143,20 +135,14 @@ class LinearCompassView : View {
     }
 
     private var showAzimuthArrow = true
-
     private var azimuth = 0f
     private var range = 180f
-
     private var text: String = ""
-
     private fun getRawMinimum() = azimuth - range / 2
-
     private fun getRawMaximum() = azimuth + range / 2
-
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
         this.canvas = canvas
-
         drawAzimuthArrow()
         drawCompassLine()
     }
@@ -180,11 +166,9 @@ class LinearCompassView : View {
     }
 
     private fun drawCompassLine() {
-
         drawCompass()
         val bottomHeight = height * 7 / 10f
         canvas.drawLine(0f, (bottomHeight - 1), width.toFloat(), bottomHeight, shortLinePaint)
-
         canvas.drawLine(
             width / 2f + markerSize / 2,
             height * (3 / 10f),
@@ -213,23 +197,18 @@ class LinearCompassView : View {
         getValuesBetween(getRawMinimum(), getRawMaximum(), 5f).map {
             it.toInt()
         }.toMutableList().forEach {
-
             val x = toPixel(it.toFloat())
-
             val lineHeight =
                 when {
                     it % 90 == 0 -> (3 / 10f) * height
                     it % 15 == 0 -> (4 / 10f) * height
                     else -> (5 / 10f) * height
                 }
-
             val bottomHeight = height * 7 / 10f
-
             when {
                 it % 90 == 0 -> canvas.drawLine(x, lineHeight, x, bottomHeight, longLinePaint)
                 else -> canvas.drawLine(x, lineHeight, x, bottomHeight, shortLinePaint)
             }
-
             if (it % 45 == 0) {
                 val coord = getPositionText(it)
                 canvas.drawText(

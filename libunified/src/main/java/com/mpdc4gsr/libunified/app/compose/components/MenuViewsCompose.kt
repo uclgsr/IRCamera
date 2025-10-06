@@ -52,7 +52,6 @@ fun MenuEditView(
             isSelected = selectedPosition == 0,
             onClick = { onMenuItemClick(0) }
         )
-
         // Menu 2
         MenuEditItem(
             iconRes = menu2Icon,
@@ -60,7 +59,6 @@ fun MenuEditView(
             isSelected = selectedPosition == 1,
             onClick = { onMenuItemClick(1) }
         )
-
         // Menu 3
         MenuEditItem(
             iconRes = menu3Icon,
@@ -68,7 +66,6 @@ fun MenuEditView(
             isSelected = selectedPosition == 2,
             onClick = { onMenuItemClick(2) }
         )
-
         // Menu 4 (Bar Toggle)
         MenuEditItem(
             iconRes = menu4Icon,
@@ -125,7 +122,6 @@ private fun MenuEditItem(
                 }
             }
         }
-
         Text(
             text = label,
             fontSize = 12.sp,
@@ -177,14 +173,12 @@ fun CameraMenuView(
                         .clickable { onModeSwitch(false) }
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
-
                 Box(
                     modifier = Modifier
                         .width(2.dp)
                         .height(20.dp)
                         .background(Color.Gray)
                 )
-
                 Text(
                     text = "Video",
                     fontSize = 16.sp,
@@ -196,7 +190,6 @@ fun CameraMenuView(
                 )
             }
         }
-
         // Camera controls
         Row(
             modifier = Modifier
@@ -234,7 +227,6 @@ fun CameraMenuView(
                     }
                 }
             }
-
             // Main action button (Photo or Video)
             Box(
                 modifier = Modifier
@@ -260,7 +252,6 @@ fun CameraMenuView(
                     )
                 }
             }
-
             // More button
             Box(
                 modifier = Modifier

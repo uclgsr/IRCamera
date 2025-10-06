@@ -23,10 +23,6 @@ import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.settings.presentation.SyncSettingsViewModel
 
-/**
- * Synchronization Settings Screen - Configure time sync and data alignment
- * Integrated with SyncSettingsViewModel for persistence
- */
 @Composable
 fun SyncSettingsScreen(
     onBackClick: (() -> Unit)? = null,
@@ -35,11 +31,9 @@ fun SyncSettingsScreen(
 ) {
     val context = LocalContext.current
     val settings by viewModel.syncSettings.collectAsState()
-
     LaunchedEffect(Unit) {
         viewModel.initialize(context)
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -50,7 +44,6 @@ fun SyncSettingsScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -69,18 +62,14 @@ fun SyncSettingsScreen(
                     checked = settings.ntpSync,
                     onCheckedChange = { viewModel.updateNtpSync(it) }
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 SettingsDropdown(
                     label = "Sync Method",
                     value = settings.syncMethod,
                     options = listOf("NTP", "GPS", "Manual", "Device Clock"),
                     onValueChange = { viewModel.updateSyncMethod(it) }
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 SettingsSlider(
                     label = "Sync Interval",
                     value = settings.syncInterval.toFloat(),
@@ -88,15 +77,12 @@ fun SyncSettingsScreen(
                     onValueChange = { viewModel.updateSyncInterval(it.toInt()) },
                     unit = " sec"
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 SettingsRow(
                     label = "Last Sync",
                     value = settings.lastSync
                 )
             }
-
             // Data Alignment Card
             SettingsCard(
                 title = "Data Alignment",
@@ -108,24 +94,19 @@ fun SyncSettingsScreen(
                     checked = settings.autoAlignment,
                     onCheckedChange = { viewModel.updateAutoAlignment(it) }
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 SettingsToggle(
                     label = "Timestamp Correction",
                     description = "Apply correction to align timestamps",
                     checked = settings.timestampCorrection,
                     onCheckedChange = { viewModel.updateTimestampCorrection(it) }
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 SettingsRow(
                     label = "Time Offset",
                     value = "+0.023 ms"
                 )
             }
-
             // Sensor Synchronization Card
             SettingsCard(
                 title = "Sensor Synchronization",

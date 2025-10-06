@@ -47,9 +47,7 @@ fun FirmwareInstallDialog(
                         color = MaterialTheme.colorScheme.primary,
                         strokeWidth = 3.dp
                     )
-
                     Spacer(modifier = Modifier.height(12.dp))
-
                     Text(
                         text = message,
                         style = MaterialTheme.typography.bodySmall,

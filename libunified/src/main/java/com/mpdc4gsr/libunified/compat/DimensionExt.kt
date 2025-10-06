@@ -4,18 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.util.TypedValue
 
-/**
- * Modern AndroidX replacement for utilcode SizeUtils
- * Provides context-aware, type-safe dimension conversions without external dependencies
- *
- * IMPORTANT: These utilities use context-aware patterns to ensure correct UI rendering
- * across different device configurations and themes.
- */
 
-/**
- * Context-based dimension conversions
- * These extensions require a Context parameter to ensure correct configuration
- */
 fun Int.dpToPx(context: Context): Int {
     return (this * context.resources.displayMetrics.density).toInt()
 }
@@ -48,11 +37,6 @@ fun Float.spToPx(context: Context): Float {
     )
 }
 
-/**
- * Legacy fallback using Resources.getSystem() - USE SPARINGLY
- * These are provided for backward compatibility but should be migrated to context-aware versions
- * @deprecated Use dpToPx(context) for context-aware conversion
- */
 @Deprecated(
     message = "Use dpToPx(context) for context-aware conversion",
     replaceWith = ReplaceWith("this.dpToPx(context)")
@@ -78,25 +62,17 @@ val Int.spLegacy: Int
         Resources.getSystem().displayMetrics
     ).toInt()
 
-/**
- * Context-aware screen dimensions helper
- */
 class ScreenDimensions(private val context: Context) {
     val screenWidthPx: Int
         get() = context.resources.displayMetrics.widthPixels
-
     val screenHeightPx: Int
         get() = context.resources.displayMetrics.heightPixels
-
     val screenDensity: Float
         get() = context.resources.displayMetrics.density
-
     val screenDensityDpi: Int
         get() = context.resources.displayMetrics.densityDpi
-
     val screenWidthDp: Int
         get() = screenWidthPx.pxToDp(context)
-
     val screenHeightDp: Int
         get() = screenHeightPx.pxToDp(context)
 }

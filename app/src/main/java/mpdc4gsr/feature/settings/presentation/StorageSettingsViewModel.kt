@@ -13,18 +13,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/**
- * Storage Settings ViewModel - MVVM Integration
- * Manages storage configuration and monitors available space
- */
 class StorageSettingsViewModel(context: Context) : BaseViewModel() {
-
     private val context: Context = context.applicationContext
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-
     private val _storageSettings = MutableStateFlow(StorageSettings())
     val storageSettings: StateFlow<StorageSettings> = _storageSettings.asStateFlow()
-
     private val _storageInfo = MutableStateFlow(StorageInfo())
     val storageInfo: StateFlow<StorageInfo> = _storageInfo.asStateFlow()
 
@@ -74,14 +67,6 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
         )
     }
 
-    /**
-     * Updates storage information based on the selected storage location.
-     * Calculates available, used, and total storage space using Android's StatFs API.
-     *
-     * - Internal Storage: Uses Environment.getDataDirectory()
-     * - SD Card: Uses Environment.getExternalStorageDirectory() if available
-     * - External USB: Falls back to internal storage (requires proper path detection)
-     */
     private fun updateStorageInfo() {
         viewModelScope.launch {
             try {
@@ -104,17 +89,14 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
 
                     else -> Environment.getDataDirectory()
                 }
-
                 val stat = StatFs(path.path)
                 val blockSize = stat.blockSizeLong
                 val availableBlocks = stat.availableBlocksLong
                 val totalBlocks = stat.blockCountLong
                 val usedBlocks = totalBlocks - availableBlocks
-
                 val available = (availableBlocks * blockSize) / (1024.0 * 1024 * 1024)
                 val used = (usedBlocks * blockSize) / (1024.0 * 1024 * 1024)
                 val total = (totalBlocks * blockSize) / (1024.0 * 1024 * 1024)
-
                 _storageInfo.value = StorageInfo(
                     availableSpace = "%.1f GB".format(available),
                     usedSpace = "%.1f GB".format(used),

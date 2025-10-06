@@ -25,19 +25,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.feature.gsr.presentation.MultiModalRecordingViewModel
 
-/**
- * MultiModalRecordingComposeActivity - Advanced Multi-Sensor Recording with Compose
- *
- * Comprehensive multi-modal recording interface featuring:
- * - Real-time sensor status monitoring (GSR, thermal, RGB camera)
- * - Synchronized recording controls with visual feedback
- * - Live data visualization during recording
- * - Session management and metadata collection
- * - Advanced recording templates and presets
- * - Performance monitoring and quality assurance
- */
 class MultiModalRecordingComposeActivity : BaseComposeActivity<MultiModalRecordingViewModel>() {
-
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, MultiModalRecordingComposeActivity::class.java))
@@ -69,7 +57,6 @@ class MultiModalRecordingComposeActivity : BaseComposeActivity<MultiModalRecordi
         var isRecording by remember { mutableStateOf(false) }
         var recordingDuration by remember { mutableStateOf(0L) }
         var selectedSensors by remember { mutableStateOf(setOf("gsr", "thermal", "rgb")) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -152,7 +139,6 @@ private fun MultiModalRecordingContent(
             duration = recordingDuration,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         // Sensor Selection Cards
         Text(
             text = "Active Sensors",
@@ -160,7 +146,6 @@ private fun MultiModalRecordingContent(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 12.dp)
         )
-
         SensorCard(
             title = "GSR Sensor",
             subtitle = "Shimmer3 GSR+ Device",
@@ -171,7 +156,6 @@ private fun MultiModalRecordingContent(
             statusText = "128 Hz",
             modifier = Modifier.padding(bottom = 8.dp)
         )
-
         SensorCard(
             title = "Thermal Camera",
             subtitle = "TOPDON TC001 Device",
@@ -182,7 +166,6 @@ private fun MultiModalRecordingContent(
             statusText = "25 FPS",
             modifier = Modifier.padding(bottom = 8.dp)
         )
-
         SensorCard(
             title = "RGB Camera",
             subtitle = "Device Camera",
@@ -193,7 +176,6 @@ private fun MultiModalRecordingContent(
             statusText = "30 FPS",
             modifier = Modifier.padding(bottom = 24.dp)
         )
-
         // Recording Controls
         RecordingControls(
             isRecording = isRecording,
@@ -201,7 +183,6 @@ private fun MultiModalRecordingContent(
             canRecord = selectedSensors.isNotEmpty(),
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         // Live Data Preview (if recording)
         if (isRecording) {
             LiveDataPreview(
@@ -247,7 +228,6 @@ private fun RecordingStatusCard(
                     color = if (isRecording) Color(0xFFE53E3E) else MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
-
             if (isRecording) {
                 Box(
                     modifier = Modifier
@@ -292,9 +272,7 @@ private fun SensorCard(
                 modifier = Modifier.size(32.dp),
                 tint = if (isEnabled) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
@@ -306,7 +284,6 @@ private fun SensorCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 // Connection status
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -328,7 +305,6 @@ private fun SensorCard(
                     )
                 }
             }
-
             Switch(
                 checked = isEnabled,
                 onCheckedChange = { onToggle() },
@@ -371,7 +347,6 @@ private fun RecordingControls(
                 fontWeight = FontWeight.Bold
             )
         }
-
         // Pause button (only show when recording)
         if (isRecording) {
             val context = androidx.compose.ui.platform.LocalContext.current
@@ -415,7 +390,6 @@ private fun LiveDataPreview(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-
             selectedSensors.forEach { sensor ->
                 when (sensor) {
                     "gsr" -> {

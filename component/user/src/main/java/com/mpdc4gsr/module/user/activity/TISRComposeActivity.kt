@@ -19,7 +19,6 @@ import com.mpdc4gsr.module.user.viewmodel.TISRViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
 class TISRComposeActivity : BaseComposeActivity<TISRViewModel>() {
-
     override fun createViewModel(): TISRViewModel {
         return viewModels<TISRViewModel>().value
     }
@@ -28,7 +27,6 @@ class TISRComposeActivity : BaseComposeActivity<TISRViewModel>() {
     @Composable
     override fun Content(viewModel: TISRViewModel) {
         val isTISREnabled by viewModel.isTISREnabled.collectAsState()
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -72,7 +70,6 @@ class TISRComposeActivity : BaseComposeActivity<TISRViewModel>() {
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-
                         // TISR Switch Item
                         Card(
                             modifier = Modifier.fillMaxWidth(),
@@ -98,16 +95,13 @@ class TISRComposeActivity : BaseComposeActivity<TISRViewModel>() {
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
-
                                 Switch(
                                     checked = isTISREnabled,
                                     onCheckedChange = { viewModel.updateTISRState(it) }
                                 )
                             }
                         }
-
                         Spacer(modifier = Modifier.height(8.dp))
-
                         // Info Text
                         Text(
                             text = stringResource(RCore.string.ts004_tisr_tips),

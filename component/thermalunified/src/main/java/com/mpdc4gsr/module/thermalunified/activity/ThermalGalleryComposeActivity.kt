@@ -26,7 +26,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 class ThermalGalleryComposeActivity : BaseComposeActivity<ThermalGalleryViewModel>() {
-
     override fun createViewModel(): ThermalGalleryViewModel {
         return ThermalGalleryViewModel()
     }
@@ -54,7 +53,6 @@ private fun ThermalGalleryScreen(
     var selectedFilter by remember { mutableStateOf(FilterType.ALL) }
     var showSearchDialog by remember { mutableStateOf(false) }
     var showMoreOptionsDialog by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -102,13 +100,11 @@ private fun ThermalGalleryScreen(
                 }
             }
         )
-
         // Filter Bar
         ThermalFilterBar(
             selectedFilter = selectedFilter,
             onFilterSelected = { selectedFilter = it }
         )
-
         // Gallery Content
         Box(
             modifier = Modifier
@@ -123,7 +119,6 @@ private fun ThermalGalleryScreen(
             }
         }
     }
-
     // Search Dialog
     if (showSearchDialog) {
         AlertDialog(
@@ -151,7 +146,6 @@ private fun ThermalGalleryScreen(
             }
         )
     }
-
     // More Options Dialog
     if (showMoreOptionsDialog) {
         AlertDialog(
@@ -286,9 +280,7 @@ private fun ThermalImageCard(image: GalleryThermalImage, onMoreClick: () -> Unit
                     modifier = Modifier.size(32.dp)
                 )
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             // Image info
             Text(
                 image.name,
@@ -344,9 +336,7 @@ private fun ThermalImageListItem(
                     modifier = Modifier.size(24.dp)
                 )
             }
-
             Spacer(modifier = Modifier.width(12.dp))
-
             // Image details
             Column(
                 modifier = Modifier.weight(1f)
@@ -368,7 +358,6 @@ private fun ThermalImageListItem(
                     fontSize = 10.sp
                 )
             }
-
             // Actions
             IconButton(onClick = onMoreClick) {
                 Icon(

@@ -57,19 +57,16 @@ fun FenceCompose(
 ) {
     val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
-
     var dragIndex by remember { mutableIntStateOf(-1) }
     val animatedAlpha by animateFloatAsState(
         targetValue = if (isActive) 1f else 0.6f,
         animationSpec = tween(300), label = "fence_alpha"
     )
-
     val fenceColor = when {
         currentTemp < temperatureRange.start -> Color.Blue
         currentTemp > temperatureRange.endInclusive -> Color.Red
         else -> Color.Green
     }
-
     Canvas(
         modifier = modifier
             .fillMaxSize()
@@ -101,27 +98,23 @@ fun FenceCompose(
                 }
                 close()
             }
-
             // Fill area
             drawPath(
                 path = path,
                 color = fenceColor.copy(alpha = 0.2f * animatedAlpha),
                 style = Fill
             )
-
             // Draw boundary
             drawPath(
                 path = path,
                 color = fenceColor.copy(alpha = animatedAlpha),
                 style = Stroke(width = 3.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f)))
             )
-
             // Draw control points
             bounds.forEachIndexed { index, point ->
                 val pointColor =
                     if (index == dragIndex) fenceColor.copy(alpha = 0.8f) else fenceColor.copy(alpha = 0.6f)
                 val pointSize = if (index == dragIndex) 12.dp.toPx() else 8.dp.toPx()
-
                 drawCircle(
                     color = pointColor,
                     radius = pointSize,
@@ -134,13 +127,11 @@ fun FenceCompose(
                     style = Stroke(width = 2.dp.toPx())
                 )
             }
-
             // Draw temperature info
             if (bounds.isNotEmpty()) {
                 val centerPoint = bounds.reduce { acc, point ->
                     Offset(acc.x + point.x, acc.y + point.y)
                 } / bounds.size.toFloat()
-
                 val tempText = "${currentTemp.roundToInt()}°C"
                 val textLayoutResult = textMeasurer.measure(
                     text = tempText,
@@ -150,7 +141,6 @@ fun FenceCompose(
                         color = Color.White
                     )
                 )
-
                 // Background for text
                 drawRoundRect(
                     color = fenceColor.copy(alpha = 0.8f * animatedAlpha),
@@ -164,7 +154,6 @@ fun FenceCompose(
                     ),
                     cornerRadius = androidx.compose.ui.geometry.CornerRadius(4.dp.toPx())
                 )
-
                 // Temperature text
                 drawText(
                     textLayoutResult = textLayoutResult,
@@ -196,7 +185,6 @@ fun ThermalToolCompose(
             ThermalToolType.MEASURE to Icons.Default.Straighten
         )
     }
-
     AnimatedVisibility(
         visible = isExpanded,
         enter = slideInVertically(
@@ -234,7 +222,6 @@ fun ThermalToolCompose(
             }
         }
     }
-
     // Tool toggle button
     FloatingActionButton(
         onClick = onExpandToggle,
@@ -260,12 +247,10 @@ private fun ThermalToolItemCompose(
         targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
         animationSpec = tween(200), label = "tool_background"
     )
-
     val iconColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
         animationSpec = tween(200), label = "tool_icon"
     )
-
     Box(
         modifier = Modifier
             .size(48.dp)
@@ -297,7 +282,6 @@ fun FenceToolCompose(
     val textMeasurer = rememberTextMeasurer()
     var isCreatingFence by remember { mutableStateOf(false) }
     var newFencePoints by remember { mutableStateOf<List<Offset>>(emptyList()) }
-
     Canvas(
         modifier = modifier
             .fillMaxSize()
@@ -327,7 +311,6 @@ fun FenceToolCompose(
                 ThermalFenceStatus.WARNING -> Color.Yellow
                 ThermalFenceStatus.ALARM -> Color.Red
             }
-
             drawFence(
                 bounds = fence.bounds,
                 color = fenceColor,
@@ -337,7 +320,6 @@ fun FenceToolCompose(
                 textMeasurer = textMeasurer
             )
         }
-
         // Draw fence being created
         if (isCreatingFence && newFencePoints.size >= 2) {
             drawFence(
@@ -351,7 +333,6 @@ fun FenceToolCompose(
             )
         }
     }
-
     // Fence creation controls
     Row(
         modifier = Modifier
@@ -378,7 +359,6 @@ fun FenceToolCompose(
             Spacer(modifier = Modifier.width(4.dp))
             Text(if (isCreatingFence) "Cancel" else "Add Fence")
         }
-
         if (isCreatingFence && newFencePoints.size >= 3) {
             Button(
                 onClick = {
@@ -403,7 +383,6 @@ fun FenceToolCompose(
                 Text("Create")
             }
         }
-
         selectedFenceId?.let {
             OutlinedButton(
                 onClick = { onFenceDeleted(it) },
@@ -434,7 +413,6 @@ private fun DrawScope.drawFence(
     alpha: Float = 1f
 ) {
     if (bounds.size < 2) return
-
     val path = Path().apply {
         moveTo(bounds.first().x, bounds.first().y)
         bounds.drop(1).forEach { point ->
@@ -442,14 +420,12 @@ private fun DrawScope.drawFence(
         }
         if (bounds.size > 2) close()
     }
-
     // Fill area
     drawPath(
         path = path,
         color = color.copy(alpha = 0.2f * alpha),
         style = Fill
     )
-
     // Draw boundary
     val strokeWidth = if (isSelected) 4.dp.toPx() else 2.dp.toPx()
     drawPath(
@@ -460,7 +436,6 @@ private fun DrawScope.drawFence(
             pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f))
         )
     )
-
     // Draw control points
     bounds.forEach { point ->
         val pointSize = if (isSelected) 10.dp.toPx() else 6.dp.toPx()
@@ -476,13 +451,11 @@ private fun DrawScope.drawFence(
             style = Stroke(width = 1.dp.toPx())
         )
     }
-
     // Draw label and temperature
     if (bounds.isNotEmpty()) {
         val centerPoint = bounds.reduce { acc, point ->
             Offset(acc.x + point.x, acc.y + point.y)
         } / bounds.size.toFloat()
-
         val infoText = "$label\n${temperature.roundToInt()}°C"
         val textLayoutResult = textMeasurer.measure(
             text = infoText,
@@ -493,7 +466,6 @@ private fun DrawScope.drawFence(
                 textAlign = TextAlign.Center
             )
         )
-
         // Background for text
         drawRoundRect(
             color = color.copy(alpha = 0.8f * alpha),
@@ -507,7 +479,6 @@ private fun DrawScope.drawFence(
             ),
             cornerRadius = androidx.compose.ui.geometry.CornerRadius(4.dp.toPx())
         )
-
         // Text
         drawText(
             textLayoutResult = textLayoutResult,

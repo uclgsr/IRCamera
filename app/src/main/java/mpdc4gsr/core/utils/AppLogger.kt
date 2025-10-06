@@ -4,7 +4,6 @@ import android.util.Log
 import mpdc4gsr.core.StructuredLogger
 
 object AppLogger {
-
     enum class LogLevel {
         VERBOSE,
         DEBUG,
@@ -16,7 +15,6 @@ object AppLogger {
     private var minLogLevel = LogLevel.DEBUG
     private var enableStructuredLogging = false
     private var structuredLogger: StructuredLogger? = null
-
     fun initialize(
         minLevel: LogLevel = LogLevel.DEBUG,
         enableStructured: Boolean = false,
@@ -59,7 +57,6 @@ object AppLogger {
         component: String? = null,
     ) {
         if (!shouldLog(level)) return
-
         when (level) {
             LogLevel.VERBOSE -> Log.v(tag, message, throwable)
             LogLevel.DEBUG -> Log.d(tag, message, throwable)
@@ -67,7 +64,6 @@ object AppLogger {
             LogLevel.WARN -> Log.w(tag, message, throwable)
             LogLevel.ERROR -> Log.e(tag, message, throwable)
         }
-
         if (level.ordinal >= LogLevel.INFO.ordinal) {
             logToStructured(level, component ?: tag, message, throwable)
         }
@@ -84,21 +80,18 @@ object AppLogger {
         throwable: Throwable?,
     ) {
         if (!enableStructuredLogging || structuredLogger == null) return
-
         val details = mutableMapOf<String, Any>("message" to message)
         throwable?.let {
             details["error"] = it.javaClass.simpleName
             details["error_message"] = it.message ?: "Unknown error"
             details["stack_trace"] = it.stackTraceToString()
         }
-
         val structuredLevel = when (level) {
             LogLevel.VERBOSE, LogLevel.DEBUG -> StructuredLogger.LogLevel.DEBUG
             LogLevel.INFO -> StructuredLogger.LogLevel.INFO
             LogLevel.WARN -> StructuredLogger.LogLevel.WARNING
             LogLevel.ERROR -> StructuredLogger.LogLevel.ERROR
         }
-
         structuredLogger?.log(structuredLevel, component, "log_message", details)
     }
 }

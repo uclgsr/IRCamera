@@ -17,24 +17,19 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
-
     protected abstract fun createViewModel(): VM
 
     @Composable
     protected abstract fun Content(viewModel: VM)
-
     protected open fun onDeviceConnected() {}
     protected open fun onDeviceDisconnected() {}
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContent {
             LibUnifiedTheme {
                 val viewModel = createViewModel()
                 Content(viewModel)
-
                 HandleConnectionEvents(viewModel)
             }
         }

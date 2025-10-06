@@ -4,15 +4,6 @@ import kotlin.math.max
 
 object GSRCalculationUtils {
 
-    /**
-     * Calculate GSR in microsiemens from raw ADC value.
-     *
-     * This method uses the standard Shimmer formula for converting a raw ADC value to GSR (microsiemens).
-     * It includes input validation and bounds checking.
-     *
-     * @param rawValue Raw ADC value from the GSR sensor.
-     * @return GSR value in microsiemens, or 0.0 if input is out of bounds or calculation fails.
-     */
     fun calculateGSRMicrosiemens(rawValue: Int): Double {
         if (rawValue < GSRConstants.GSR_UNCAL_LIMIT_LOW || rawValue > GSRConstants.GSR_UNCAL_LIMIT_HIGH) {
             return 0.0
@@ -32,9 +23,6 @@ object GSRCalculationUtils {
         }
     }
 
-    /**
-     * Calculate resistance from GSR conductance value
-     */
     fun calculateResistanceFromGSR(gsrMicrosiemens: Double): Double {
         return if (gsrMicrosiemens > 0) {
             GSRConstants.MICROSIEMENS_CONVERSION / gsrMicrosiemens
@@ -43,9 +31,6 @@ object GSRCalculationUtils {
         }
     }
 
-    /**
-     * Calculate signal quality score based on GSR values and thresholds
-     */
     fun calculateSignalQuality(gsrMicrosiemens: Double, rawValue: Int): Double {
         return when {
             rawValue !in GSRConstants.GSR_RAW_LOWER_BOUND..GSRConstants.GSR_RAW_UPPER_BOUND -> 0.2
@@ -56,9 +41,6 @@ object GSRCalculationUtils {
         }
     }
 
-    /**
-     * Enhanced quality score calculation based on GSR raw value.
-     */
     fun calculateQualityScore(gsrRaw: Int): Double {
         val baseQuality = when {
             gsrRaw <= 0 -> 0.0
@@ -66,7 +48,6 @@ object GSRCalculationUtils {
             gsrRaw > GSRConstants.GSR_RAW_UPPER_BOUND -> 0.4
             else -> 0.8
         }
-
         return max(0.0, baseQuality).coerceAtMost(1.0)
     }
 }

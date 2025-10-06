@@ -61,19 +61,14 @@ data class NetworkDevice(
 class NetworkConfigViewModel : AppBaseViewModel() {
     private val _selectedConnectionType = mutableStateOf<ConnectionType?>(null)
     val selectedConnectionType: State<ConnectionType?> = _selectedConnectionType
-
     private val _availableDevices = mutableStateOf<List<NetworkDevice>>(emptyList())
     val availableDevices: State<List<NetworkDevice>> = _availableDevices
-
     private val _isScanning = mutableStateOf(false)
     val isScanning: State<Boolean> = _isScanning
-
     private val _connectedDevice = mutableStateOf<NetworkDevice?>(null)
     val connectedDevice: State<NetworkDevice?> = _connectedDevice
-
     private val _connectionStatus = mutableStateOf("Disconnected")
     val connectionStatus: State<String> = _connectionStatus
-
     fun selectConnectionType(type: ConnectionType) {
         _selectedConnectionType.value = type
         startDeviceDiscovery()
@@ -83,10 +78,8 @@ class NetworkConfigViewModel : AppBaseViewModel() {
         launchWithErrorHandling {
             _isScanning.value = true
             _availableDevices.value = emptyList()
-
             // Simulate device discovery
             delay(1000)
-
             val mockDevices = when (_selectedConnectionType.value) {
                 ConnectionType.WIFI -> listOf(
                     NetworkDevice(
@@ -162,7 +155,6 @@ class NetworkConfigViewModel : AppBaseViewModel() {
 
                 null -> emptyList()
             }
-
             delay(2000) // Simulate scanning time
             _availableDevices.value = mockDevices
             _isScanning.value = false
@@ -173,11 +165,9 @@ class NetworkConfigViewModel : AppBaseViewModel() {
         launchWithErrorHandling {
             _connectionStatus.value = "Connecting..."
             delay(3000) // Simulate connection time
-
             // Simulate connection success
             _connectedDevice.value = device.copy(isConnected = true)
             _connectionStatus.value = "Connected to ${device.name}"
-
             // Update the device list to show connected status
             _availableDevices.value = _availableDevices.value.map {
                 if (it.address == device.address) it.copy(isConnected = true) else it.copy(
@@ -195,11 +185,9 @@ class NetworkConfigViewModel : AppBaseViewModel() {
 }
 
 class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>() {
-
     private lateinit var networkSettings: NetworkSettings
     private lateinit var permissionManager: PermissionManager
     private var bluetoothAdapter: BluetoothAdapter? = null
-
     private val bluetoothEnableResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -213,7 +201,6 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         networkSettings = NetworkSettings(this)
         permissionManager = PermissionManager(this, PermissionController(this))
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
@@ -230,7 +217,6 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
             val isScanning by viewModel.isScanning
             val connectedDevice by viewModel.connectedDevice
             val connectionStatus by viewModel.connectionStatus
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -240,7 +226,6 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
                     title = "Network Configuration",
                     onBackClick = { finish() }
                 )
-
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -295,7 +280,6 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
                             }
                         }
                     }
-
                     // Connection type selection
                     if (selectedConnectionType == null) {
                         Text(
@@ -304,7 +288,6 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 16.dp)
                         )
-
                         LazyColumn(
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
@@ -344,7 +327,6 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
                                 }
                             }
                         }
-
                         if (isScanning) {
                             Card(
                                 modifier = Modifier.fillMaxWidth(),
@@ -458,9 +440,7 @@ private fun ConnectionTypeCard(
                     tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = connectionType.displayName,
@@ -474,7 +454,6 @@ private fun ConnectionTypeCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                 contentDescription = null,
@@ -518,9 +497,7 @@ private fun DeviceCard(
                 else
                     MaterialTheme.colorScheme.onSurface
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = device.name,
@@ -540,7 +517,6 @@ private fun DeviceCard(
                     )
                 }
             }
-
             if (device.isConnected) {
                 Surface(
                     shape = RoundedCornerShape(16.dp),

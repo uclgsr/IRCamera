@@ -4,7 +4,6 @@ import android.content.Context
 import java.util.*
 
 object UnifiedStringUtils {
-
     fun randomUuid(): String {
         return UUID.randomUUID().toString().replace("-", "")
     }

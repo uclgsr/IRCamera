@@ -24,7 +24,6 @@ class VideoRecordMedia(
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private var encoder: Encoder = MP4Encoder()
     private var isRunning = false
-
     var width = 480
     var height = 640
 
@@ -32,7 +31,6 @@ class VideoRecordMedia(
         encoder.setFrameDelay(25)
         width = 480
         height = width * cameraView.height / cameraView.width
-
         if (height % 2 == 1) {
             height -= 1
         }
@@ -45,11 +43,9 @@ class VideoRecordMedia(
             exportedFile.delete()
         }
         encoder.setOutputFilePath(exportedFile.path)
-
         encoder.setOutputSize(width, height)
         encoder.startEncode()
         isRunning = true
-
         exportJob = coroutineScope.launch {
             while (isActive && isRunning) {
                 val bitmap = createBitmapFromView()
@@ -71,13 +67,11 @@ class VideoRecordMedia(
     }
 
     override fun updateAudioState(audioRecord: Boolean) {
-
     }
 
     private fun createBitmapFromView(): Bitmap {
         var cameraViewBitmap = cameraView.bitmap
         if (temperatureView.temperatureRegionMode != TemperatureView.REGION_MODE_CLEAN) {
-
             cameraViewBitmap =
                 BitmapUtils.mergeBitmap(
                     cameraViewBitmap,

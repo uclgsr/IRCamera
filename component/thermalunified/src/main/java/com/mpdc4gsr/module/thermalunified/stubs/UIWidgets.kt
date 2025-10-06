@@ -36,7 +36,6 @@ class RangeSeekBar @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
     // MERGED: Combined constants from both companion objects
     companion object {
         const val TEMP_MODE_MIN = -20
@@ -52,24 +51,20 @@ class RangeSeekBar @JvmOverloads constructor(
     var leftSeekBar: SeekBarIndicator = SeekBarIndicator()
     var rightSeekBar: SeekBarIndicator = SeekBarIndicator()
     var indicatorBackgroundColor: Int = Color.LTGRAY
-
     private var minValue = 0f
     private var maxValue = 100f
     private var leftValue = 20f
     private var rightValue = 80f
     private var isDragging = false
     private var isDraggingLeft = false
-
     private val trackPaint = Paint().apply {
         color = Color.GRAY
         isAntiAlias = true
     }
-
     private val thumbPaint = Paint().apply {
         color = Color.BLUE
         isAntiAlias = true
     }
-
     private val rightThumbPaint = Paint().apply {
         color = Color.RED
         isAntiAlias = true
@@ -121,11 +116,9 @@ class RangeSeekBar @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
         val trackHeight = 8f
         val thumbRadius = 20f
         val y = height / 2f
-
         // Draw track
         canvas.drawRoundRect(
             paddingStart.toFloat(),
@@ -136,13 +129,11 @@ class RangeSeekBar @JvmOverloads constructor(
             trackHeight / 2,
             trackPaint
         )
-
         // Calculate thumb positions
         val trackWidth = width - paddingStart - paddingEnd
         val leftThumbX = paddingStart + (leftValue - minValue) / (maxValue - minValue) * trackWidth
         val rightThumbX =
             paddingStart + (rightValue - minValue) / (maxValue - minValue) * trackWidth
-
         // Draw thumbs
         canvas.drawCircle(leftThumbX, y, thumbRadius, thumbPaint)
         canvas.drawCircle(rightThumbX, y, thumbRadius, rightThumbPaint)
@@ -154,12 +145,10 @@ class RangeSeekBar @JvmOverloads constructor(
         val leftThumbX = paddingStart + (leftValue - minValue) / (maxValue - minValue) * trackWidth
         val rightThumbX =
             paddingStart + (rightValue - minValue) / (maxValue - minValue) * trackWidth
-
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 val leftDistance = abs(event.x - leftThumbX)
                 val rightDistance = abs(event.x - rightThumbX)
-
                 isDraggingLeft = leftDistance < rightDistance
                 isDragging = true
                 onRangeChangedListener?.onStartTrackingTouch(this, isDraggingLeft)
@@ -170,13 +159,11 @@ class RangeSeekBar @JvmOverloads constructor(
                 if (isDragging) {
                     val ratio = ((event.x - paddingStart) / trackWidth).coerceIn(0f, 1f)
                     val newValue = minValue + ratio * (maxValue - minValue)
-
                     if (isDraggingLeft) {
                         leftValue = newValue.coerceIn(minValue, rightValue)
                     } else {
                         rightValue = newValue.coerceIn(leftValue, maxValue)
                     }
-
                     onRangeChangedListener?.onRangeChanged(
                         this,
                         leftValue,
@@ -218,11 +205,9 @@ class CameraPreView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
     var cameraPreViewCloseListener: (() -> Unit)? = null
     private var isOpen = false
     private var alphaValue = 1.0f
-
     fun getBitmap(): android.graphics.Bitmap? {
         return try {
             android.graphics.Bitmap.createBitmap(
@@ -257,7 +242,6 @@ class CameraPreView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
         if (isOpen) {
             val paint = Paint().apply {
                 color = Color.DKGRAY
@@ -273,12 +257,10 @@ class CameraView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
     var bitmap: android.graphics.Bitmap? = null
     var isOpenAmplify: Boolean = false
     private var showCross = false
     private var isStarted = false
-
     fun setShowCross(show: Boolean) {
         showCross = show
         invalidate()
@@ -340,13 +322,11 @@ class CameraView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
         bitmap?.let { bmp ->
             if (!bmp.isRecycled) {
                 canvas.drawBitmap(bmp, 0f, 0f, null)
             }
         }
-
         if (showCross) {
             val paint = Paint().apply {
                 color = Color.RED
@@ -365,7 +345,6 @@ class TemperatureView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
     var temperatureRegionMode: Int = 0
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
@@ -373,13 +352,10 @@ class TemperatureView @JvmOverloads constructor(
 
     var regionAndValueBitmap: android.graphics.Bitmap? = null
     var isShowFull: Boolean = false
-
     private var userHighTemp: Boolean = false
     private var userLowTemp: Boolean = false
-
     private var textSize = 12
     private var lineColor = Color.WHITE
-
     fun setIndicatorTextDecimalFormat(format: String) {
         // Store format
     }

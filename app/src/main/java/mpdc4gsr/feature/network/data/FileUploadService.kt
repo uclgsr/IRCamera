@@ -40,7 +40,6 @@ class FileUploadService(private val context: Context) {
 
     companion object {
         private const val TAG = "FileUploadService"
-
         private const val BYTES_PER_MB = 1024 * 1024
         private const val DEFAULT_CHUNK_SIZE = BYTES_PER_MB
         private const val MAX_CONCURRENT_UPLOADS = 3
@@ -56,11 +55,9 @@ class FileUploadService(private val context: Context) {
     private val concurrentUploads = AtomicLong(0)
     private val isActive = AtomicBoolean(false)
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
     private val chunkSize = DEFAULT_CHUNK_SIZE
     private val maxConcurrent = MAX_CONCURRENT_UPLOADS
     private val retryLimit = RETRY_LIMIT
-
     private var webSocketClient: WebSocketClient? = null
 
     data class UploadJob(
@@ -82,7 +79,6 @@ class FileUploadService(private val context: Context) {
     ) {
         val progressPercent: Float
             get() = if (fileSize > 0) (bytesUploaded.toFloat() / fileSize * 100f) else 0f
-
         val transferRate: Float
             get() {
                 val elapsed =
@@ -93,7 +89,6 @@ class FileUploadService(private val context: Context) {
                     } else {
                         0L
                     }
-
                 return if (elapsed > 0) bytesUploaded.toFloat() / (elapsed / 1000f) else 0f
             }
     }
@@ -101,7 +96,6 @@ class FileUploadService(private val context: Context) {
     fun initialize(webSocketClient: WebSocketClient) {
         this.webSocketClient = webSocketClient
         isActive.set(true)
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
@@ -113,7 +107,6 @@ class FileUploadService(private val context: Context) {
                     "retry_limit" to retryLimit,
                 ),
         )
-
         startUploadProcessor()
     }
 
@@ -128,11 +121,8 @@ class FileUploadService(private val context: Context) {
             if (!file.exists() || !file.canRead()) {
                 throw IllegalArgumentException("File does not exist or is not readable: $filePath")
             }
-
             val jobId = generateJobId(sessionId, deviceId, file.name)
-
             val checksum = calculateSHA256(file)
-
             val uploadJob =
                 UploadJob(
                     jobId = jobId,
@@ -145,7 +135,6 @@ class FileUploadService(private val context: Context) {
                     deviceId = deviceId,
                     status = UploadStatus.PENDING,
                 )
-
             val existingOffset = checkExistingUpload(uploadJob)
             if (existingOffset > 0) {
                 uploadJob.resumeOffset = existingOffset
@@ -162,10 +151,8 @@ class FileUploadService(private val context: Context) {
                         ),
                 )
             }
-
             activeUploads[jobId] = uploadJob
             uploadQueue.send(jobId)
-
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 TAG,
@@ -178,7 +165,6 @@ class FileUploadService(private val context: Context) {
                         "file_type" to fileType.name,
                     ),
             )
-
             return jobId
         } catch (e: Exception) {
             logger.log(
@@ -197,10 +183,8 @@ class FileUploadService(private val context: Context) {
 
     suspend fun cancelUpload(jobId: String): Boolean {
         val job = activeUploads[jobId] ?: return false
-
         job.status = UploadStatus.CANCELLED
         job.endTime = System.currentTimeMillis()
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
@@ -211,13 +195,11 @@ class FileUploadService(private val context: Context) {
                     "file_name" to job.fileName,
                 ),
         )
-
         return true
     }
 
     suspend fun pauseUpload(jobId: String): Boolean {
         val job = activeUploads[jobId] ?: return false
-
         if (job.status == UploadStatus.IN_PROGRESS) {
             job.status = UploadStatus.PAUSED
             logger.log(
@@ -233,17 +215,14 @@ class FileUploadService(private val context: Context) {
             )
             return true
         }
-
         return false
     }
 
     suspend fun resumeUpload(jobId: String): Boolean {
         val job = activeUploads[jobId] ?: return false
-
         if (job.status == UploadStatus.PAUSED) {
             job.status = UploadStatus.PENDING
             uploadQueue.send(jobId)
-
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 TAG,
@@ -257,7 +236,6 @@ class FileUploadService(private val context: Context) {
             )
             return true
         }
-
         return false
     }
 
@@ -285,21 +263,16 @@ class FileUploadService(private val context: Context) {
         serviceScope.launch {
             while (this@FileUploadService.isActive.get()) {
                 try {
-
                     val jobId = uploadQueue.receive()
-
                     if (concurrentUploads.get() >= maxConcurrent) {
-
                         uploadQueue.send(jobId)
                         delay(QUEUE_RETRY_DELAY_MS)
                         continue
                     }
-
                     val job = activeUploads[jobId]
                     if (job == null || job.status != UploadStatus.PENDING) {
                         continue
                     }
-
                     launch {
                         executeUpload(job)
                     }
@@ -318,11 +291,9 @@ class FileUploadService(private val context: Context) {
 
     private suspend fun executeUpload(job: UploadJob) {
         concurrentUploads.incrementAndGet()
-
         try {
             job.status = UploadStatus.IN_PROGRESS
             job.startTime = System.currentTimeMillis()
-
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 TAG,
@@ -335,23 +306,18 @@ class FileUploadService(private val context: Context) {
                         "resume_offset" to job.resumeOffset,
                     ),
             )
-
             val initResponse = initiateUpload(job)
             if (!initResponse) {
                 throw Exception("Failed to initiate upload with PC controller")
             }
-
             uploadFileChunks(job)
-
             val verifyResponse = verifyUploadCompletion(job)
             if (!verifyResponse) {
                 throw Exception("Upload verification failed")
             }
-
             job.status = UploadStatus.COMPLETED
             job.endTime = System.currentTimeMillis()
             job.bytesUploaded = job.fileSize
-
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 TAG,
@@ -373,7 +339,6 @@ class FileUploadService(private val context: Context) {
             job.endTime = System.currentTimeMillis()
             job.errorMessage = e.message
             job.retryCount++
-
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
@@ -386,12 +351,10 @@ class FileUploadService(private val context: Context) {
                         "retry_count" to job.retryCount,
                     ),
             )
-
             if (job.retryCount <= retryLimit) {
                 delay(5000L * job.retryCount)
                 job.status = UploadStatus.PENDING
                 uploadQueue.send(job.jobId)
-
                 logger.log(
                     StructuredLogger.LogLevel.INFO,
                     TAG,
@@ -424,7 +387,6 @@ class FileUploadService(private val context: Context) {
                     put("chunk_size", chunkSize)
                     put("resume_offset", job.resumeOffset)
                 }
-
             webSocketClient?.sendMessage(initMessage)
             true
         } catch (e: Exception) {
@@ -444,25 +406,18 @@ class FileUploadService(private val context: Context) {
 
     private suspend fun uploadFileChunks(job: UploadJob) {
         val file = File(job.filePath)
-
         FileInputStream(file).use { inputStream ->
-
             inputStream.skip(job.resumeOffset)
-
             val buffer = ByteArray(chunkSize)
             var offset = job.resumeOffset
             var chunkIndex = (offset / chunkSize).toInt()
-
             while (offset < job.fileSize && job.status == UploadStatus.IN_PROGRESS) {
                 val bytesToRead = minOf(chunkSize.toLong(), job.fileSize - offset).toInt()
                 val bytesRead = inputStream.read(buffer, 0, bytesToRead)
-
                 if (bytesRead <= 0) break
-
                 val chunkData = buffer.copyOf(bytesRead)
                 val encodedData =
                     android.util.Base64.encodeToString(chunkData, android.util.Base64.NO_WRAP)
-
                 val chunkMessage =
                     JSONObject().apply {
                         put("type", "upload_chunk")
@@ -473,14 +428,11 @@ class FileUploadService(private val context: Context) {
                         put("chunk_data", encodedData)
                         put("is_final_chunk", offset + bytesRead >= job.fileSize)
                     }
-
                 webSocketClient?.sendMessage(chunkMessage)
                     ?: throw Exception("WebSocket client not available")
-
                 offset += bytesRead
                 job.bytesUploaded = offset
                 chunkIndex++
-
                 delay(10)
             }
         }
@@ -495,7 +447,6 @@ class FileUploadService(private val context: Context) {
                     put("expected_size", job.fileSize)
                     put("expected_checksum", job.checksum)
                 }
-
             webSocketClient?.sendMessage(verifyMessage)
             true
         } catch (e: Exception) {
@@ -523,7 +474,6 @@ class FileUploadService(private val context: Context) {
                     put("session_id", job.sessionId)
                     put("device_id", job.deviceId)
                 }
-
             0L
         } catch (e: Exception) {
             logger.log(
@@ -542,16 +492,13 @@ class FileUploadService(private val context: Context) {
 
     private fun calculateSHA256(file: File): String {
         val digest = MessageDigest.getInstance("SHA-256")
-
         FileInputStream(file).use { inputStream ->
             val buffer = ByteArray(8192)
             var bytesRead: Int
-
             while (inputStream.read(buffer).also { bytesRead = it } != -1) {
                 digest.update(buffer, 0, bytesRead)
             }
         }
-
         return digest.digest().joinToString("") { "%02x".format(it) }
     }
 
@@ -567,15 +514,12 @@ class FileUploadService(private val context: Context) {
 
     fun shutdown() {
         isActive.set(false)
-
         activeUploads.values.forEach { job ->
             if (job.status == UploadStatus.IN_PROGRESS) {
                 job.status = UploadStatus.CANCELLED
             }
         }
-
         serviceScope.cancel()
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,

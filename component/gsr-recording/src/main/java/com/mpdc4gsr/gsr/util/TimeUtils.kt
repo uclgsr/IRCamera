@@ -2,18 +2,12 @@ package com.mpdc4gsr.gsr.util
 
 object TimeUtils {
     private const val TAG = "TimeUtils"
-
     private var pcTimeOffset: Long = 0L
-
     private var deviceGroundTruthBase: Long = System.currentTimeMillis()
-
     private var bootTimeReference: Long = 0L
-
     private var detectedProcessor: String = "Unknown"
     private var deviceModel: String = "Unknown"
-
     fun getUtcTimestamp(): Long {
-
         val currentDeviceTime = System.currentTimeMillis()
         val deviceOffset = currentDeviceTime - deviceGroundTruthBase
         return deviceGroundTruthBase + deviceOffset + pcTimeOffset
@@ -21,15 +15,12 @@ object TimeUtils {
 
     fun initializeGroundTruthTiming() {
         deviceGroundTruthBase = System.currentTimeMillis()
-
         detectSamsungS22Processor()
-
         try {
             bootTimeReference = System.nanoTime() / 1_000_000L
         } catch (e: Exception) {
             bootTimeReference = 0L
         }
-
         try {
             android.util.Log.d(
                 TAG,
@@ -44,7 +35,6 @@ object TimeUtils {
                 "Samsung S22 boot reference: $bootTimeReference ($detectedProcessor timer)"
             )
         } catch (e: Exception) {
-
         }
     }
 
@@ -59,9 +49,7 @@ object TimeUtils {
                 } else {
                     "unknown"
                 }
-
             when {
-
                 deviceModel.contains("SM-S901E", ignoreCase = true) -> {
                     detectedProcessor = "Exynos_2200"
                 }
@@ -102,7 +90,6 @@ object TimeUtils {
 
     fun setPcTimeOffset(offset: Long) {
         pcTimeOffset = offset
-
         try {
             android.util.Log.d(
                 TAG,
@@ -113,14 +100,11 @@ object TimeUtils {
                 "Samsung S22 ($detectedProcessor) maintains authoritative timing with ${offset}ms PC coordination"
             )
         } catch (e: Exception) {
-
         }
     }
 
     fun getPcTimeOffset(): Long = pcTimeOffset
-
     fun getGroundTruthBase(): Long = deviceGroundTruthBase
-
     fun systemToUtc(systemTime: Long): Long {
         val deviceOffset = systemTime - deviceGroundTruthBase
         return deviceGroundTruthBase + deviceOffset + pcTimeOffset
@@ -136,11 +120,9 @@ object TimeUtils {
 
     fun getHighPrecisionTimestamp(): Long {
         return try {
-
             val nanoOffset = (System.nanoTime() / 1_000_000L) - bootTimeReference
             deviceGroundTruthBase + nanoOffset + pcTimeOffset
         } catch (e: Exception) {
-
             getSynchronizedTimestamp()
         }
     }
@@ -150,7 +132,6 @@ object TimeUtils {
             java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", java.util.Locale.US)
                 .format(java.util.Date(timestamp))
         } catch (e: Exception) {
-
             timestamp.toString()
         }
     }
@@ -162,7 +143,6 @@ object TimeUtils {
                     .format(java.util.Date(getSynchronizedTimestamp()))
             "${prefix}_$timestamp"
         } catch (e: Exception) {
-
             "${prefix}_${getSynchronizedTimestamp()}"
         }
     }
@@ -185,7 +165,6 @@ object TimeUtils {
         return try {
             android.os.SystemClock.elapsedRealtimeNanos()
         } catch (e: Exception) {
-
             System.nanoTime()
         }
     }
@@ -201,7 +180,6 @@ object TimeUtils {
     fun createSessionTimingMetadata(sessionId: String): Map<String, Any> {
         val wallClockMs = getSynchronizedTimestamp()
         val monotonicNs = getMonotonicTimestampNs()
-
         return mapOf(
             "session_id" to sessionId,
             "wall_clock_start_ms" to wallClockMs,
@@ -226,7 +204,6 @@ object TimeUtils {
             } catch (e: Exception) {
                 -1.0
             }
-
         return mapOf(
             "ground_truth_active" to (deviceGroundTruthBase > 0),
             "timing_drift_ms" to (currentTime - syncTime + pcTimeOffset),
@@ -242,6 +219,5 @@ object TimeUtils {
     }
 
     fun getDetectedProcessor(): String = detectedProcessor
-
     fun getDeviceModel(): String = deviceModel
 }

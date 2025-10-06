@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.utils
 import kotlin.math.pow
 
 object UnifiedMathUtils {
-
     fun setDoubleAccuracy(num: Double, scale: Int): Double {
         val factor = 10.0.pow(scale)
         return (num * factor).toInt() / factor
@@ -14,11 +13,9 @@ object UnifiedMathUtils {
         if (total == 0f) {
             return FloatArray(values.size) { 0f }
         }
-
         val result = FloatArray(values.size)
         val scaleFactor = 10.0.pow(scale + 2).toInt()
         var sum = 0f
-
         for (i in values.indices) {
             if (i == values.size - 1) {
                 result[i] = 1f - sum
@@ -36,7 +33,6 @@ object UnifiedMathUtils {
             val j = if (bigEndian) 7 - i else i
             bytes[i] = (value shr (8 * j) and 0xff).toByte()
         }
-
         return if (len > 8) {
             bytes
         } else {
@@ -49,7 +45,6 @@ object UnifiedMathUtils {
     fun splitPackage(src: ByteArray, size: Int): List<ByteArray> {
         val result = mutableListOf<ByteArray>()
         var offset = 0
-
         while (offset < src.size) {
             val chunkSize = minOf(size, src.size - offset)
             val chunk = ByteArray(chunkSize)
@@ -57,7 +52,6 @@ object UnifiedMathUtils {
             result.add(chunk)
             offset += chunkSize
         }
-
         return result
     }
 
@@ -65,12 +59,10 @@ object UnifiedMathUtils {
         val totalSize = src.sumOf { it.size }
         val result = ByteArray(totalSize)
         var offset = 0
-
         for (array in src) {
             System.arraycopy(array, 0, result, offset, array.size)
             offset += array.size
         }
-
         return result
     }
 

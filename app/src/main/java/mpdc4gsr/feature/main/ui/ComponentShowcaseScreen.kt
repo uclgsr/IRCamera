@@ -15,15 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
-/**
- * Component Showcase Screen - UI Component Library
- *
- * Demonstrates all the modern Compose components created for the IRCamera app:
- * - Material 3 components with thermal imaging theme
- * - Custom cards and layouts
- * - Interactive controls and indicators
- * - Consistent styling patterns
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComponentShowcaseScreen(
@@ -68,19 +59,14 @@ private fun ComponentShowcaseContent(
     ) {
         // Typography showcase
         TypographyShowcase()
-
         // Color palette showcase
         ColorPaletteShowcase()
-
         // Interactive components
         InteractiveComponentsShowcase()
-
         // Status indicators
         StatusIndicatorsShowcase()
-
         // Card layouts
         CardLayoutsShowcase()
-
         // Navigation components
         NavigationComponentsShowcase()
     }
@@ -101,9 +87,7 @@ private fun TypographyShowcase() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             Text(
                 "Headline Large",
                 style = MaterialTheme.typography.headlineLarge
@@ -155,9 +139,7 @@ private fun ColorPaletteShowcase() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -166,7 +148,6 @@ private fun ColorPaletteShowcase() {
                 ColorSwatch("Secondary", MaterialTheme.colorScheme.secondary, Modifier.weight(1f))
                 ColorSwatch("Tertiary", MaterialTheme.colorScheme.tertiary, Modifier.weight(1f))
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -205,7 +186,6 @@ private fun InteractiveComponentsShowcase() {
     var sliderValue by remember { mutableFloatStateOf(0.5f) }
     var switchState by remember { mutableStateOf(true) }
     var selectedChip by remember { mutableStateOf("Option 1") }
-
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -219,9 +199,7 @@ private fun InteractiveComponentsShowcase() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             // Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -233,14 +211,12 @@ private fun InteractiveComponentsShowcase() {
                 ) {
                     Text("Button")
                 }
-
                 OutlinedButton(
                     onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("Outlined")
                 }
-
                 TextButton(
                     onClick = { },
                     modifier = Modifier.weight(1f)
@@ -248,7 +224,6 @@ private fun InteractiveComponentsShowcase() {
                     Text("Text")
                 }
             }
-
             // Slider
             Column {
                 Text("Slider: ${(sliderValue * 100).toInt()}%")
@@ -258,7 +233,6 @@ private fun InteractiveComponentsShowcase() {
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-
             // Switch
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -271,7 +245,6 @@ private fun InteractiveComponentsShowcase() {
                     onCheckedChange = { switchState = it }
                 )
             }
-
             // Filter Chips
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -303,9 +276,7 @@ private fun StatusIndicatorsShowcase() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             // Progress indicators
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -315,7 +286,6 @@ private fun StatusIndicatorsShowcase() {
                     progress = { 0.75f },
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 Text("Circular Progress")
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -327,7 +297,6 @@ private fun StatusIndicatorsShowcase() {
                     CircularProgressIndicator()
                 }
             }
-
             // Badges
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -342,7 +311,6 @@ private fun StatusIndicatorsShowcase() {
                     containerColor = MaterialTheme.colorScheme.tertiary
                 ) { Text("Warning") }
             }
-
             // Status icons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -395,9 +363,7 @@ private fun CardLayoutsShowcase() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             // Information card
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -417,7 +383,6 @@ private fun CardLayoutsShowcase() {
                         contentDescription = "Component Info",
                         tint = MaterialTheme.colorScheme.primary
                     )
-
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
@@ -434,7 +399,6 @@ private fun CardLayoutsShowcase() {
                     }
                 }
             }
-
             // Action card
             Card(
                 onClick = { },
@@ -452,7 +416,6 @@ private fun CardLayoutsShowcase() {
                         contentDescription = "Touch Interaction",
                         tint = MaterialTheme.colorScheme.primary
                     )
-
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
@@ -467,7 +430,6 @@ private fun CardLayoutsShowcase() {
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = "View Component",
@@ -494,14 +456,11 @@ private fun NavigationComponentsShowcase() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-
             HorizontalDivider()
-
             Text(
                 "The unified navigation system provides:",
                 style = MaterialTheme.typography.bodyMedium
             )
-
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -511,7 +470,6 @@ private fun NavigationComponentsShowcase() {
                 NavigationFeature("State preservation")
                 NavigationFeature("Back stack management")
             }
-
             Text(
                 "All navigation is handled through the UnifiedNavigation system, " +
                         "providing consistent behavior across the entire application.",

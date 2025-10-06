@@ -13,7 +13,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 class PDFListViewModel : BaseViewModel() {
-
     companion object {
         private const val TAG = "PDFListViewModel"
     }
@@ -31,13 +30,10 @@ class PDFListViewModel : BaseViewModel() {
     // State flows for Compose
     private val _pdfItems = MutableStateFlow<List<PDFItem>>(emptyList())
     val pdfItems: StateFlow<List<PDFItem>> = _pdfItems.asStateFlow()
-
     private val _selectedItems = MutableStateFlow<Set<String>>(emptySet())
     val selectedItems: StateFlow<Set<String>> = _selectedItems.asStateFlow()
-
     private val _isSelectionMode = MutableStateFlow(false)
     val isSelectionMode: StateFlow<Boolean> = _isSelectionMode.asStateFlow()
-
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
@@ -88,7 +84,6 @@ class PDFListViewModel : BaseViewModel() {
             currentSelected.add(itemPath)
         }
         _selectedItems.value = currentSelected
-
         // Exit selection mode if no items selected
         if (currentSelected.isEmpty()) {
             _isSelectionMode.value = false
@@ -99,7 +94,6 @@ class PDFListViewModel : BaseViewModel() {
     fun deleteSelectedItems() {
         val selectedPaths = _selectedItems.value
         val itemsToDelete = _pdfItems.value.filter { selectedPaths.contains(it.path) }
-
         viewModelScope.launch(Dispatchers.IO) {
             itemsToDelete.forEach { item ->
                 try {
@@ -108,7 +102,6 @@ class PDFListViewModel : BaseViewModel() {
                     Log.e(TAG, "Error deleting file: ${item.path}", e)
                 }
             }
-
             withContext(Dispatchers.Main) {
                 exitSelectionMode()
                 loadPDFItems() // Refresh the list
@@ -124,29 +117,23 @@ class PDFListViewModel : BaseViewModel() {
     private suspend fun getPDFItemsList(): List<PDFItem> {
         return try {
             val items = mutableListOf<PDFItem>()
-
             // Scan the PDF directory for PDF files
             val pdfDir = File(FileConfig.getPdfDir())
             Log.d(TAG, "Scanning PDF directory: ${pdfDir.absolutePath}")
-
             if (pdfDir.exists() && pdfDir.isDirectory) {
                 val pdfFiles = pdfDir.listFiles { file ->
                     file.isFile && file.name.lowercase().endsWith(".pdf")
                 }
-
                 Log.d(TAG, "Found ${pdfFiles?.size ?: 0} PDF files")
-
                 pdfFiles?.forEach { pdfFile ->
                     try {
                         // Determine if this is an analysis report based on filename patterns
                         val isAnalysisReport = pdfFile.name.contains("analysis", ignoreCase = true) ||
                                 pdfFile.name.contains("report", ignoreCase = true) ||
                                 pdfFile.name.contains("thermal", ignoreCase = true)
-
                         // For now, we'll use a default page count of 1
                         // In a production app, you would use a PDF library to get actual page count
                         val pageCount = 1
-
                         items.add(
                             PDFItem(
                                 path = pdfFile.absolutePath,
@@ -157,7 +144,6 @@ class PDFListViewModel : BaseViewModel() {
                                 isAnalysisReport = isAnalysisReport
                             )
                         )
-
                         Log.d(TAG, "Added PDF: ${pdfFile.name} (${pdfFile.length()} bytes)")
                     } catch (e: Exception) {
                         Log.w(TAG, "Error processing PDF file: ${pdfFile.name}", e)
@@ -166,7 +152,6 @@ class PDFListViewModel : BaseViewModel() {
             } else {
                 Log.w(TAG, "PDF directory does not exist or is not a directory: ${pdfDir.absolutePath}")
             }
-
             // Sort by date modified (newest first)
             val sortedItems = items.sortedByDescending { it.dateModified }
             Log.d(TAG, "Returning ${sortedItems.size} PDF items")

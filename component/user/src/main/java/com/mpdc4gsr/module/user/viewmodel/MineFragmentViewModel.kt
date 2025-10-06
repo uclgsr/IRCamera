@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class MineFragmentViewModel : BaseViewModel() {
-
     data class UserProfileState(
         val username: String = "Guest",
         val avatarUrl: String? = null,
@@ -16,7 +15,6 @@ class MineFragmentViewModel : BaseViewModel() {
 
     private val _userProfile = MutableStateFlow(UserProfileState())
     val userProfile: StateFlow<UserProfileState> = _userProfile.asStateFlow()
-
     private val _showWinterPoint = MutableStateFlow(false)
     val showWinterPoint: StateFlow<Boolean> = _showWinterPoint.asStateFlow()
 

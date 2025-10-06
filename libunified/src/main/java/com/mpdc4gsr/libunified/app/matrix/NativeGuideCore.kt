@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.matrix
 import android.graphics.Bitmap
 
 class NativeGuideCore {
-
     init {
         System.loadLibrary("guide_zm04c_matrix")
     }

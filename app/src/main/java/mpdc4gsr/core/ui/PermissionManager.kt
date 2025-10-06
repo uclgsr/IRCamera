@@ -15,18 +15,11 @@ class PermissionManager(
         private const val TAG = "PermissionManager"
     }
 
-    /**
-     * Requests all permissions defined as critical by the controller.
-     * This function suspends until the user responds and returns true if all were granted.
-     */
     suspend fun requestAllCriticalPermissions(): Boolean {
         AppLogger.i(TAG, "Requesting all critical permissions")
         return requestPermissionsWithController()
     }
 
-    /**
-     * Specifically requests camera and audio permissions.
-     */
     suspend fun requestCameraPermissions(): Boolean {
         if (permissionController.hasCameraPermissions()) {
             AppLogger.i(TAG, "Camera permissions already granted")
@@ -36,9 +29,6 @@ class PermissionManager(
         return requestPermissionsWithController()
     }
 
-    /**
-     * Specifically requests all necessary Bluetooth and Location permissions.
-     */
     suspend fun requestBluetoothPermissions(): Boolean {
         if (permissionController.canConnectToShimmer()) {
             AppLogger.i(TAG, "Bluetooth permissions already granted")
@@ -48,10 +38,6 @@ class PermissionManager(
         return requestPermissionsWithController()
     }
 
-    /**
-     * Bridges the callback-based `permissionController.ensureAll` method
-     * to a suspend function using a standard coroutine pattern.
-     */
     private suspend fun requestPermissionsWithController(): Boolean {
         return suspendCancellableCoroutine { continuation ->
             permissionController.ensureAll { isGranted, denied ->

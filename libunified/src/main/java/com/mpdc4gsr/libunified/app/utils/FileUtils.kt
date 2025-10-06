@@ -8,12 +8,10 @@ import java.io.IOException
 import java.text.DecimalFormat
 
 object FileUtils {
-
     const val SIZETYPE_B = 1    // Bdouble
     const val SIZETYPE_KB = 2   // KBdouble
     const val SIZETYPE_MB = 3   // MBdouble
     const val SIZETYPE_GB = 4   // GBdouble
-
     fun getFileOrFilesSize(filePath: String, sizeType: Int): Double {
         val file = File(filePath)
         var blockSize: Long = 0
@@ -80,13 +78,11 @@ object FileUtils {
         return try {
             val inputStream = FileInputStream(source)
             val outputStream = FileOutputStream(dest)
-
             val buffer = ByteArray(1024)
             var length: Int
             while (inputStream.read(buffer).also { length = it } > 0) {
                 outputStream.write(buffer, 0, length)
             }
-
             inputStream.close()
             outputStream.close()
             true
@@ -147,7 +143,6 @@ object FileUtils {
             if (parent != null && !parent.exists()) {
                 parent.mkdirs()
             }
-
             val outputStream = FileOutputStream(file)
             outputStream.write(data)
             outputStream.close()

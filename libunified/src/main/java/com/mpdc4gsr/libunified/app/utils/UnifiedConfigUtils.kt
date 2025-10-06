@@ -4,7 +4,6 @@ import android.content.Context
 import java.io.File
 
 object UnifiedConfigUtils {
-
     data class ConfigSection(
         val name: String,
         val properties: MutableMap<String, String> = mutableMapOf()
@@ -29,10 +28,8 @@ object UnifiedConfigUtils {
     fun parseIniContent(content: String): Map<String, ConfigSection> {
         val sections = mutableMapOf<String, ConfigSection>()
         var currentSection: ConfigSection? = null
-
         content.lines().forEach { line ->
             val trimmedLine = line.trim()
-
             when {
                 trimmedLine.isEmpty() || trimmedLine.startsWith("#") || trimmedLine.startsWith(";") -> {
                     // Skip empty lines and comments
@@ -56,7 +53,6 @@ object UnifiedConfigUtils {
                 }
             }
         }
-
         return sections
     }
 
@@ -102,7 +98,6 @@ object UnifiedConfigUtils {
         overlay: Map<String, ConfigSection>
     ): Map<String, ConfigSection> {
         val result = base.toMutableMap()
-
         overlay.forEach { (sectionName, overlaySection) ->
             val existingSection = result[sectionName]
             if (existingSection != null) {
@@ -113,7 +108,6 @@ object UnifiedConfigUtils {
                 result[sectionName] = overlaySection.copy()
             }
         }
-
         return result
     }
 
@@ -129,11 +123,9 @@ object UnifiedConfigUtils {
         rules: List<ConfigValidationRule>
     ): List<String> {
         val errors = mutableListOf<String>()
-
         rules.forEach { rule ->
             val section = config[rule.section]
             val value = section?.properties?.get(rule.key)
-
             when {
                 rule.required && value == null -> {
                     errors.add("Required configuration missing: [${rule.section}] ${rule.key}")
@@ -144,7 +136,6 @@ object UnifiedConfigUtils {
                 }
             }
         }
-
         return errors
     }
 
@@ -211,13 +202,11 @@ object UnifiedConfigUtils {
         environment: Environment = Environment.PRODUCTION
     ): Map<String, ConfigSection> {
         val baseConfig = createDefaultAppConfig()
-
         val envConfigFile = when (environment) {
             Environment.DEVELOPMENT -> "config-dev.ini"
             Environment.TESTING -> "config-test.ini"
             Environment.PRODUCTION -> "config-prod.ini"
         }
-
         val envConfig = readIniFromAssets(context, envConfigFile)
         return mergeSections(baseConfig, envConfig)
     }

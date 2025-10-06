@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import java.text.DecimalFormat
 
 class StorageSpaceViewModel : BaseViewModel() {
-
     companion object {
         private const val MOCK_TOTAL_SPACE = 32_000_000_000L
         private const val MOCK_USED_SPACE = 12_000_000_000L
@@ -28,7 +27,6 @@ class StorageSpaceViewModel : BaseViewModel() {
 
     private val _storageInfo = MutableStateFlow(StorageInfo())
     val storageInfo: StateFlow<StorageInfo> = _storageInfo.asStateFlow()
-
     fun loadStorageInfo() {
         launchWithErrorHandling {
             // Original TS004Repository functionality removed - use mock data

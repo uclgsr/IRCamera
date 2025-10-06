@@ -31,7 +31,6 @@ import java.io.File
 class ThermalFragmentViewModel(
     private val context: Context? = null
 ) : BaseViewModel() {
-
     // ThermalMonitoringUiState data class for Compose UI - holds monitoring-related state
     data class ThermalMonitoringUiState(
         val isMonitoring: Boolean = false,
@@ -89,7 +88,6 @@ class ThermalFragmentViewModel(
         private set
     var rawHeight: Int = 0
         private set
-
     private var iruvctc: IRUVCTC? = null
     private var syncBitmap: SynchronizedBitmap? = null
     private var ircmd: IRCMD? = null
@@ -139,20 +137,16 @@ class ThermalFragmentViewModel(
                 isProcessing = true,
                 processingProgress = 0f
             )
-
             try {
                 val processedBitmap = applyThermalProcessing(bitmap)
                 val temperatureData = extractTemperatureData(bitmap)
                 val analysis = performTemperatureAnalysis(temperatureData)
-
                 _thermalImageState.value = _thermalImageState.value.copy(
                     bitmap = processedBitmap,
                     isProcessing = false,
                     processingProgress = 1f
                 )
-
                 _temperatureAnalysis.value = analysis
-
                 ProcessedThermalResult(
                     processedBitmap = processedBitmap,
                     temperatureAnalysis = analysis,
@@ -163,7 +157,6 @@ class ThermalFragmentViewModel(
                     isProcessing = false,
                     processingProgress = 0f
                 )
-
                 ProcessedThermalResult(
                     processedBitmap = null,
                     temperatureAnalysis = TemperatureAnalysis(),
@@ -184,14 +177,11 @@ class ThermalFragmentViewModel(
     private fun extractTemperatureData(bitmap: Bitmap): FloatArray {
         val pixels = IntArray(bitmap.width * bitmap.height)
         bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
-
         return pixels.map { pixel: Int ->
             val red = (pixel shr 16) and 0xFF
             val green = (pixel shr 8) and 0xFF
             val blue = pixel and 0xFF
-
             val intensity = (red * 0.3f + green * 0.59f + blue * 0.11f) / 255f
-
             val minTemp = -20f
             val maxTemp = 120f
             minTemp + (intensity * (maxTemp - minTemp))
@@ -202,17 +192,14 @@ class ThermalFragmentViewModel(
         if (temperatureData.isEmpty()) {
             return TemperatureAnalysis()
         }
-
         val maxTemp = temperatureData.maxOrNull() ?: 0f
         val minTemp = temperatureData.minOrNull() ?: 0f
         val avgTemp = temperatureData.average().toFloat()
         val variance = calculateVariance(temperatureData, avgTemp)
         val stdDev = kotlin.math.sqrt(variance)
-
         val hotSpots = detectHotSpots(temperatureData)
         val coldSpots = detectColdSpots(temperatureData)
         val temperatureTrend = calculateTemperatureTrend(temperatureData)
-
         return TemperatureAnalysis(
             maxTemperature = maxTemp,
             minTemperature = minTemp,
@@ -233,35 +220,29 @@ class ThermalFragmentViewModel(
     private fun detectHotSpots(temperatureData: FloatArray): List<HotSpot> {
         val threshold = temperatureData.maxOrNull()?.let { it * 0.8f } ?: 0f
         val hotSpots = mutableListOf<HotSpot>()
-
         temperatureData.forEachIndexed { index, temp ->
             if (temp > threshold) {
                 hotSpots.add(HotSpot(index, temp))
             }
         }
-
         return hotSpots
     }
 
     private fun detectColdSpots(temperatureData: FloatArray): List<ColdSpot> {
         val threshold = temperatureData.minOrNull()?.let { it * 1.2f } ?: 0f
         val coldSpots = mutableListOf<ColdSpot>()
-
         temperatureData.forEachIndexed { index, temp ->
             if (temp < threshold) {
                 coldSpots.add(ColdSpot(index, temp))
             }
         }
-
         return coldSpots
     }
 
     private fun calculateTemperatureTrend(temperatureData: FloatArray): TemperatureTrend {
         if (temperatureData.size < 2) return TemperatureTrend.STABLE
-
         val firstHalf = temperatureData.take(temperatureData.size / 2).average()
         val secondHalf = temperatureData.takeLast(temperatureData.size / 2).average()
-
         return when {
             secondHalf > firstHalf * 1.05 -> TemperatureTrend.RISING
             secondHalf < firstHalf * 0.95 -> TemperatureTrend.FALLING
@@ -273,7 +254,6 @@ class ThermalFragmentViewModel(
         val validCount =
             temperatureData.count { it > -40f && it < 150f } // Reasonable temperature range
         val qualityPercentage = validCount.toFloat() / temperatureData.size
-
         return when {
             qualityPercentage >= 0.95f -> DataQuality.EXCELLENT
             qualityPercentage >= 0.85f -> DataQuality.GOOD
@@ -302,7 +282,6 @@ class ThermalFragmentViewModel(
     fun addFenceMeasurement(x: Int, y: Int, temperature: Float) {
         val currentMeasurements = _fenceState.value.measurements.toMutableList()
         currentMeasurements.add(FenceMeasurement(x, y, temperature))
-
         _fenceState.value = _fenceState.value.copy(
             measurements = currentMeasurements
         )
@@ -320,7 +299,6 @@ class ThermalFragmentViewModel(
     fun stopVideoRecording() {
         val recordingDuration = System.currentTimeMillis() -
                 (_videoRecordingState.value.recordingStartTime ?: 0L)
-
         _videoRecordingState.value = _videoRecordingState.value.copy(
             isRecording = false,
             recordingDuration = recordingDuration
@@ -330,7 +308,6 @@ class ThermalFragmentViewModel(
     // Public methods for UI interaction
     fun initializeThermalCamera(surfaceView: IrSurfaceView) {
         _connectionStatus.value = "Connecting"
-
         viewModelScope.launch {
             try {
                 if (context == null) {
@@ -338,13 +315,10 @@ class ThermalFragmentViewModel(
                     handleError(Exception("Context not provided"))
                     return@launch
                 }
-
                 withContext(Dispatchers.Main) {
                     surfaceView.holder.setFixedSize(256, 192)
                 }
-
                 syncBitmap = SynchronizedBitmap()
-
                 val connectCallback = object : ConnectCallback {
                     override fun onCameraOpened(camera: UVCCamera?) {
                         _connectionStatus.value = "Connected"
@@ -365,7 +339,6 @@ class ThermalFragmentViewModel(
                         }
                     }
                 }
-
                 val usbMonitorCallback = object : USBMonitorCallback {
                     override fun onAttach() {}
                     override fun onGranted() {}
@@ -374,7 +347,6 @@ class ThermalFragmentViewModel(
                     override fun onConnect() {}
                     override fun onDisconnect() {}
                 }
-
                 iruvctc = IRUVCTC(
                     256,
                     192,
@@ -384,7 +356,6 @@ class ThermalFragmentViewModel(
                     connectCallback,
                     usbMonitorCallback
                 )
-
                 iruvctc?.registerUSB()
                 rawWidth = 256
                 rawHeight = 192
@@ -400,10 +371,8 @@ class ThermalFragmentViewModel(
             try {
                 val timestamp = System.currentTimeMillis()
                 val fileName = "thermal_photo_$timestamp.jpg"
-
                 val thermalState = _thermalImageState.value
                 val tempAnalysis = _temperatureAnalysis.value
-
                 val metadata = mapOf(
                     "timestamp" to timestamp,
                     "centerTemp" to tempAnalysis.averageTemperature,
@@ -413,7 +382,6 @@ class ThermalFragmentViewModel(
                     "deviceConnected" to (ircmd != null),
                     "sdkInitialized" to (iruvctc != null)
                 )
-
                 _thermalProcessingAction.postValue(
                     ThermalProcessingAction.PhotoCaptured(fileName, metadata)
                 )
@@ -474,14 +442,12 @@ class ThermalFragmentViewModel(
         if (rawWidth == 0 || rawHeight == 0) {
             return Pair(0f, 0f)
         }
-
         val y = index / rawWidth
         val x = index - y * rawWidth
         val x1 = x * parentWidth / rawWidth
         val y1 = y * parentHeight / rawHeight
         val maxX = x1 - viewWidth / 2
         val maxY = y1 - viewHeight / 2
-
         return Pair(maxX.toFloat(), maxY.toFloat())
     }
 
@@ -541,11 +507,9 @@ class ThermalFragmentViewModel(
     data class HotSpot(val index: Int, val temperature: Float)
     data class ColdSpot(val index: Int, val temperature: Float)
     data class FenceMeasurement(val x: Int, val y: Int, val temperature: Float)
-
     enum class TemperatureTrend { RISING, FALLING, STABLE }
     enum class DataQuality { EXCELLENT, GOOD, FAIR, POOR }
     enum class FenceType { POINT, LINE, AREA }
-
     sealed class ThermalProcessingAction {
         object StartProcessing : ThermalProcessingAction()
         object ProcessingComplete : ThermalProcessingAction()
@@ -567,7 +531,6 @@ class ThermalFragmentViewModel(
 
     // Monitoring state
     private val _isMonitoring = MutableStateFlow(false)
-
     private fun syncUiState() {
         viewModelScope.launch {
             combine(
@@ -613,18 +576,15 @@ class ThermalFragmentViewModel(
         viewModelScope.launch {
             try {
                 val currentFence = _fenceState.value
-
                 val nextFenceType = when (currentFence.fenceType) {
                     FenceType.POINT -> FenceType.LINE
                     FenceType.LINE -> FenceType.AREA
                     FenceType.AREA -> FenceType.POINT
                     null -> FenceType.POINT
                 }
-
                 _fenceState.value = currentFence.copy(
                     fenceType = nextFenceType
                 )
-
                 _thermalProcessingAction.postValue(
                     ThermalProcessingAction.RegionConfigured(nextFenceType)
                 )

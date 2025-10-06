@@ -21,7 +21,6 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryTabViewModel
 import kotlinx.coroutines.launch
 
 class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>() {
-
     override fun createViewModel(): IRGalleryTabViewModel {
         return viewModels<IRGalleryTabViewModel>().value
     }
@@ -33,7 +32,6 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
         val currentDirType by viewModel.currentDirType.collectAsStateWithLifecycle()
         val canSwitchDir by viewModel.canSwitchDir.collectAsStateWithLifecycle()
         val hasBackIcon by viewModel.hasBackIcon.collectAsStateWithLifecycle()
-
         // Handle UI events from ViewModel
         LaunchedEffect(Unit) {
             viewModel.uiEvents.collect { event ->
@@ -46,12 +44,10 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
                 }
             }
         }
-
         // Tab configuration
         val tabTitles = listOf("Pictures", "Videos", "Reports")
         val pagerState = rememberPagerState(pageCount = { tabTitles.size })
         val coroutineScope = rememberCoroutineScope()
-
         LibUnifiedTheme {
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -67,7 +63,6 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
                     },
                     onBackClick = { viewModel.navigateBack() }
                 )
-
                 // Tab row
                 PrimaryScrollableTabRow(
                     selectedTabIndex = pagerState.currentPage,
@@ -91,7 +86,6 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
                         )
                     }
                 }
-
                 // Tab content
                 HorizontalPager(
                     state = pagerState,
@@ -138,7 +132,6 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
                         text = "Gallery",
                         fontWeight = FontWeight.Bold
                     )
-
                     if (canSwitchDir) {
                         DirectorySwitcher(
                             currentDirType = currentDirType,
@@ -171,7 +164,6 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
         onDirectoryChange: (DirType) -> Unit
     ) {
         var expanded by remember { mutableStateOf(false) }
-
         Box {
             FilterChip(
                 onClick = { expanded = true },
@@ -189,7 +181,6 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
                     )
                 }
             )
-
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }

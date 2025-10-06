@@ -45,7 +45,6 @@ class RecordingService : Service(), CoroutineScope {
         private const val TAG = "RecordingService"
         private const val NOTIFICATION_ID = 1001
         private const val CHANNEL_ID = "recording_service_channel"
-
         private const val SERVER_PORT =
             8081  // Use different port to avoid conflicts with NetworkController
         private const val SERVICE_TYPE = "_ircamera._tcp."
@@ -55,7 +54,6 @@ class RecordingService : Service(), CoroutineScope {
         private val FOREGROUND_SERVICE_TYPES
             get() = ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC or
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
-
         const val ACTION_START_RECORDING =
             "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_RECORDING"
         const val ACTION_STOP_RECORDING =
@@ -76,14 +74,12 @@ class RecordingService : Service(), CoroutineScope {
             "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.CONNECT_PC_BLUETOOTH"
         const val ACTION_START_DISCOVERY =
             "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_DISCOVERY"
-
         const val EXTRA_SESSION_DIRECTORY = "session_directory"
         const val EXTRA_MARKER_TYPE = "marker_type"
         const val EXTRA_TIMESTAMP_NS = "timestamp_ns"
         const val EXTRA_PC_IP = "pc_ip"
         const val EXTRA_PC_PORT = "pc_port"
         const val EXTRA_BLUETOOTH_DEVICE = "bluetooth_device"
-
         // Type aliases for compatibility
         typealias SessionManifest = mpdc4gsr.feature.network.data.SessionManifest
 
@@ -177,12 +173,10 @@ class RecordingService : Service(), CoroutineScope {
     }
 
     private val binder = RecordingServiceBinder()
-
     private lateinit var recordingController: ComprehensiveRecordingController
     private var permissionManager: PermissionManager? = null
     private var isInitialized = false
     private lateinit var crashRecoveryManager: CrashRecoveryManager
-
     private lateinit var networkClient: NetworkClient
     private lateinit var networkServer: NetworkServer
     private lateinit var networkManager: NetworkManager
@@ -192,22 +186,17 @@ class RecordingService : Service(), CoroutineScope {
     internal lateinit var previewDataAdapter: PreviewDataAdapter
     private var isNetworkInitialized = false
     internal var isConnectedToPC = false
-
     private var currentSessionDirectory: String? = null
     private var recordingStartTime: Long = 0
-
     private lateinit var notificationManager: NotificationManager
-
     private var serverSocket: ServerSocket? = null
     private var actualServerPort: Int = SERVER_PORT
     private var isServerRunning = AtomicBoolean(false)
     private var serverJob: Job? = null
     private val activeConnections = ConcurrentHashMap<String, ClientConnection>()
-
     private var nsdManager: NsdManager? = null
     private var nsdServiceInfo: NsdServiceInfo? = null
     private var isServiceRegistered = false
-
     private lateinit var structuredLogger: StructuredLogger
     private lateinit var crashSafeSupervisor: CrashSafeSupervisor
     private var timeSyncManager: TimeSyncManager? = null
@@ -222,7 +211,6 @@ class RecordingService : Service(), CoroutineScope {
 
     inner class RecordingServiceBinder : Binder() {
         fun getService(): RecordingService = this@RecordingService
-
         fun getRecordingController(): ComprehensiveRecordingController? =
             if (::recordingController.isInitialized) recordingController else null
 
@@ -236,7 +224,6 @@ class RecordingService : Service(), CoroutineScope {
             if (::previewDataAdapter.isInitialized) previewDataAdapter else null
 
         fun isConnectedToPC(): Boolean = this@RecordingService.isConnectedToPC
-
         fun getServerStatus(): String {
             return if (isServerRunning.get()) {
                 "Running on port $actualServerPort (${activeConnections.size} clients)"
@@ -246,13 +233,11 @@ class RecordingService : Service(), CoroutineScope {
         }
 
         fun getActualServerPort(): Int = actualServerPort
-
         fun getConnectedClients(): List<String> {
             return activeConnections.keys.toList()
         }
 
         fun getNetworkClient(): NetworkClient? = if (isNetworkInitialized) networkClient else null
-
         fun getNetworkManager(): NetworkManager? =
             if (::networkManager.isInitialized) networkManager else null
     }
@@ -260,12 +245,9 @@ class RecordingService : Service(), CoroutineScope {
     override fun onCreate() {
         super.onCreate()
         AppLogger.i(TAG, "RecordingService created")
-
         initializePhase0Baseline()
-
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel()
-
         // Call startForeground immediately to satisfy Android's foreground service requirements
         // This must be called within 5-10 seconds of startForegroundService()
         // Use ServiceCompat to include the FGS type for Android 14+
@@ -275,26 +257,20 @@ class RecordingService : Service(), CoroutineScope {
             .setSmallIcon(R.drawable.ic_info)
             .setOngoing(true)
             .build()
-
         startForegroundWithType(NOTIFICATION_ID, notification)
-
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
-
         // Initialize ComprehensiveRecordingController without PermissionManager for service context
         // PermissionManager requires ComponentActivity which is not available in service context
         // Note: Second parameter needs LifecycleOwner - passing null for service context
         recordingController = ComprehensiveRecordingController(this, null, null)
-
         // Initialize crash recovery manager for session orchestration
         crashRecoveryManager = CrashRecoveryManager(this)
-
         networkClient = NetworkClient(this)
         networkServer =
             NetworkServer(this, Protocol.DEFAULT_PORT)  // Use Protocol.DEFAULT_PORT (8080)
         networkManager = NetworkManager(this, recordingController)
         protocolHandler = ProtocolHandler(this, networkServer)
         protocolHandler.setTimeSyncManager(timeSyncManager)
-
         // Set up sync trigger callback for manual sync requests (if TimeSyncManager is available)
         timeSyncManager?.setSyncTriggerCallback(object : TimeSyncManager.SyncTriggerCallback {
             override suspend fun onManualSyncRequested(): Boolean {
@@ -317,11 +293,9 @@ class RecordingService : Service(), CoroutineScope {
                 }
             }
         })
-
         connectionManager = NetworkConnectionManager(this, networkServer, protocolHandler)
         previewStreamer = PreviewStreamer(networkServer)
         previewDataAdapter = PreviewDataAdapter(previewStreamer, this)
-
         crashSafeSupervisor.registerJob(
             id = "recording_service_init",
             name = "RecordingService Initialization",
@@ -331,16 +305,12 @@ class RecordingService : Service(), CoroutineScope {
             launch {
                 try {
                     AppLogger.i(TAG, "Initializing RecordingService with enhanced fault tolerance")
-
                     // Check for crashed sessions on startup using session orchestration crash recovery
                     checkForCrashedSessionsOnStartup()
-
                     val sensorsSuccess = recordingController.initializeSensors()
                     val networkSuccess = initializeNetworkClient()
-
                     isInitialized = sensorsSuccess
                     isNetworkInitialized = networkSuccess
-
                     if (sensorsSuccess) {
                         Log.i(
                             TAG,
@@ -358,11 +328,9 @@ class RecordingService : Service(), CoroutineScope {
                         )
                         setupStatusMonitoring()
                         setupNetworkServer()
-
                         if (FeatureFlags.MDNS_ENABLE) {
                             startServerSocket()
                         }
-
                         if (networkSuccess) {
                             AppLogger.i(TAG, "Network client initialized successfully")
                             startNetworkDiscovery()
@@ -402,7 +370,6 @@ class RecordingService : Service(), CoroutineScope {
             structuredLogger = StructuredLogger.getInstance(this)
             crashSafeSupervisor = CrashSafeSupervisor.getInstance(this)
             crashSafeSupervisor.initialize()
-
             // Initialize TimeSyncManager (optional due to compilation issues)
             timeSyncManager = try {
                 TimeSyncManager(this)
@@ -410,7 +377,6 @@ class RecordingService : Service(), CoroutineScope {
                 AppLogger.w(TAG, "Failed to initialize TimeSyncManager, continuing without sync", e)
                 null
             }
-
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
                 "RecordingService",
@@ -426,10 +392,6 @@ class RecordingService : Service(), CoroutineScope {
         }
     }
 
-    /**
-     * Helper method to call startForeground with appropriate FGS type for Android 14+
-     * Uses different types based on whether we're actively recording or just running server
-     */
     private fun startForegroundWithType(id: Int, notification: Notification, forRecording: Boolean = false) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             val serviceType = if (forRecording) {
@@ -449,7 +411,6 @@ class RecordingService : Service(), CoroutineScope {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-
         when (intent?.action) {
             ACTION_START_RECORDING -> {
                 val sessionDirectory = intent.getStringExtra(EXTRA_SESSION_DIRECTORY)
@@ -529,19 +490,15 @@ class RecordingService : Service(), CoroutineScope {
             if (isNetworkInitialized) {
                 networkClient.disconnect()
             }
-
             if (::previewStreamer.isInitialized) {
                 previewStreamer.cleanup()
             }
-
             if (::previewDataAdapter.isInitialized) {
                 previewDataAdapter.cleanup()
             }
-
             if (::connectionManager.isInitialized) {
                 connectionManager.cleanup()
             }
-
             // Cleanup TimeSyncManager
             timeSyncManager?.let { manager ->
                 try {
@@ -550,17 +507,14 @@ class RecordingService : Service(), CoroutineScope {
                     AppLogger.w(TAG, "TimeSyncManager cleanup failed", e)
                 }
             }
-
             if (::networkManager.isInitialized) {
                 networkManager.cleanup()
             }
-
             if (::recordingController.isInitialized) {
                 launch {
                     recordingController.cleanup()
                 }
             }
-
             if (::crashSafeSupervisor.isInitialized) {
                 crashSafeSupervisor.shutdown()
             }
@@ -603,23 +557,18 @@ class RecordingService : Service(), CoroutineScope {
             )
             return
         }
-
         launch {
             try {
                 val sessionDir = File(sessionDirectory)
                 if (!sessionDir.exists()) {
                     sessionDir.mkdirs()
                 }
-
                 currentSessionDirectory = sessionDirectory
                 recordingStartTime = System.nanoTime()
-
                 // Initialize TimeSyncManager for this session
                 timeSyncManager?.initializeSession(sessionDirectory)
-
                 // Enable periodic sync for long recording sessions
                 timeSyncManager?.setPeriodicSyncEnabled(true)
-
                 AppLogger.i(TAG, "Starting recording session: $sessionDirectory")
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
@@ -631,13 +580,11 @@ class RecordingService : Service(), CoroutineScope {
                             .map { it.sensorId }
                     )
                 )
-
                 startForegroundWithType(
                     NOTIFICATION_ID,
                     createRecordingNotification("Starting recording session..."),
                     forRecording = true
                 )
-
                 // Perform session start sync
                 launch {
                     try {
@@ -646,9 +593,7 @@ class RecordingService : Service(), CoroutineScope {
                         AppLogger.w(TAG, "Session start sync failed, continuing without sync", e)
                     }
                 }
-
                 val success = recordingController.startSession(sessionDirectory)
-
                 if (success) {
                     val activeSensors = recordingController.getActiveSensorCount()
                     val totalSensors = recordingController.getAvailableSensors().size
@@ -657,7 +602,6 @@ class RecordingService : Service(), CoroutineScope {
                         "Recording session started successfully with $activeSensors/$totalSensors sensors"
                     )
                     updateNotification("Recording: $activeSensors sensors active")
-
                     structuredLogger.log(
                         StructuredLogger.LogLevel.INFO,
                         "RecordingService",
@@ -697,14 +641,11 @@ class RecordingService : Service(), CoroutineScope {
             try {
                 updateNotification("Stopping recording session...")
                 AppLogger.i(TAG, "Stopping recording session")
-
                 val success = recordingController.stopSession()
-
                 if (success) {
                     val sessionDuration = if (recordingStartTime > 0) {
                         (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
                     } else 0.0
-
                     Log.i(
                         TAG,
                         "Recording session stopped successfully (duration: ${
@@ -717,7 +658,6 @@ class RecordingService : Service(), CoroutineScope {
                     updateNotification(
                         "Recording completed (${String.format("%.1f", sessionDuration)}s)"
                     )
-
                     structuredLogger.log(
                         StructuredLogger.LogLevel.INFO,
                         "RecordingService",
@@ -727,7 +667,6 @@ class RecordingService : Service(), CoroutineScope {
                             "session_directory" to (currentSessionDirectory ?: "unknown")
                         )
                     )
-
                     delay(2000)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         stopForeground(STOP_FOREGROUND_REMOVE)
@@ -744,17 +683,14 @@ class RecordingService : Service(), CoroutineScope {
                         "recording_session_stop_failed"
                     )
                 }
-
                 currentSessionDirectory = null
                 recordingStartTime = 0
-
                 // Finalize TimeSyncManager session
                 try {
                     timeSyncManager?.finalizeSession()
                 } catch (e: Exception) {
                     AppLogger.w(TAG, "TimeSyncManager finalize session failed", e)
                 }
-
                 if (!isServerRunning.get()) {
                     stopSelf()
                 }
@@ -789,20 +725,16 @@ class RecordingService : Service(), CoroutineScope {
             )
             return false
         }
-
         return try {
             val sessionDir = File(sessionDirectory)
             if (!sessionDir.exists()) {
                 sessionDir.mkdirs()
             }
-
             currentSessionDirectory = sessionDirectory
             recordingStartTime = System.nanoTime()
-
             // Initialize TimeSyncManager for this session
             timeSyncManager?.initializeSession(sessionDirectory)
             timeSyncManager?.setPeriodicSyncEnabled(true)
-
             AppLogger.i(TAG, "Starting recording session: $sessionDirectory (trigger: $triggerSource)")
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
@@ -815,25 +747,20 @@ class RecordingService : Service(), CoroutineScope {
                         .map { it.sensorId }
                 )
             )
-
             // Update notification for different trigger sources
             val notificationText = when (triggerSource) {
                 TriggerSource.REMOTE_PC -> "Starting recording session (PC Command)..."
                 TriggerSource.LOCAL_NOTIFICATION -> "Starting recording session (Notification)..."
                 else -> "Starting recording session..."
             }
-
             startForegroundWithType(NOTIFICATION_ID, createRecordingNotification(notificationText), forRecording = true)
-
             // Start session with enhanced orchestration
             val success = recordingController.startRecording(
                 sessionId = sessionDir.name,
                 triggerSource = triggerSource
             )
-
             if (success) {
                 AppLogger.i(TAG, "Recording session started successfully via $triggerSource")
-
                 // Update notification to show recording is active
                 val activeNotificationText = when (triggerSource) {
                     TriggerSource.REMOTE_PC -> "Recording (PC Command) - Tap to stop"
@@ -841,14 +768,12 @@ class RecordingService : Service(), CoroutineScope {
                     else -> "Recording - Tap to stop"
                 }
                 updateNotification(activeNotificationText)
-
                 // Mark session as active for crash recovery
                 crashRecoveryManager.markSessionActive(
                     sessionId = sessionDir.name,
                     sessionDirectory = sessionDirectory,
                     activeSensors = recordingController.getAvailableSensors().map { it.sensorId }
                 )
-
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
                     "RecordingService",
@@ -864,7 +789,6 @@ class RecordingService : Service(), CoroutineScope {
                 currentSessionDirectory = null
                 recordingStartTime = 0
             }
-
             success
         } catch (e: Exception) {
             AppLogger.e(TAG, "Exception starting recording session via $triggerSource", e)
@@ -888,14 +812,11 @@ class RecordingService : Service(), CoroutineScope {
         return try {
             updateNotification("Stopping recording session...")
             AppLogger.i(TAG, "Stopping recording session (trigger: $triggerSource)")
-
             val success = recordingController.stopRecording(triggerSource = triggerSource)
-
             if (success) {
                 val sessionDuration = if (recordingStartTime > 0) {
                     (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
                 } else 0.0
-
                 Log.i(
                     TAG,
                     "Recording session stopped successfully (duration: ${
@@ -905,7 +826,6 @@ class RecordingService : Service(), CoroutineScope {
                         )
                     }s, trigger: $triggerSource)"
                 )
-
                 val completedNotificationText = when (triggerSource) {
                     TriggerSource.REMOTE_PC -> "Recording completed via PC (${
                         String.format(
@@ -924,16 +844,13 @@ class RecordingService : Service(), CoroutineScope {
                     else -> "Recording completed (${String.format("%.1f", sessionDuration)}s)"
                 }
                 updateNotification(completedNotificationText)
-
                 // Generate and save session manifest
                 val manifest = recordingController.generateSessionManifest()
                 saveSessionManifest(manifest)
-
                 // Mark session as completed for crash recovery
                 currentSessionDirectory?.let { sessionDir ->
                     crashRecoveryManager.markSessionCompleted(File(sessionDir).name)
                 }
-
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
                     "RecordingService",
@@ -944,7 +861,6 @@ class RecordingService : Service(), CoroutineScope {
                         "trigger_source" to triggerSource.toString()
                     )
                 )
-
                 delay(2000)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     stopForeground(STOP_FOREGROUND_REMOVE)
@@ -962,21 +878,17 @@ class RecordingService : Service(), CoroutineScope {
                     mapOf("trigger_source" to triggerSource.toString())
                 )
             }
-
             currentSessionDirectory = null
             recordingStartTime = 0
-
             // Finalize TimeSyncManager session
             try {
                 timeSyncManager?.finalizeSession()
             } catch (e: Exception) {
                 AppLogger.w(TAG, "TimeSyncManager finalize session failed", e)
             }
-
             if (!isServerRunning.get()) {
                 stopSelf()
             }
-
             success
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error stopping recording session via $triggerSource", e)
@@ -1002,7 +914,6 @@ class RecordingService : Service(), CoroutineScope {
                 val gson = com.google.gson.GsonBuilder().setPrettyPrinting().create()
                 manifestFile.writeText(gson.toJson(manifest))
                 AppLogger.i(TAG, "Session manifest saved: ${manifestFile.absolutePath}")
-
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
                     "RecordingService",
@@ -1030,12 +941,10 @@ class RecordingService : Service(), CoroutineScope {
         try {
             AppLogger.i(TAG, "Checking for crashed sessions on service startup")
             val crashRecoveryResult = crashRecoveryManager.checkForCrashedSessions()
-
             if (crashRecoveryResult.hasCrashedSession) {
                 val recoveredSession = crashRecoveryResult.recoveredSession!!
                 AppLogger.w(TAG, "Found crashed session: ${recoveredSession.sessionId}")
                 AppLogger.i(TAG, "Crashed session analysis: ${recoveredSession.analysis.summary}")
-
                 structuredLogger.log(
                     StructuredLogger.LogLevel.WARNING,
                     "RecordingService",
@@ -1048,7 +957,6 @@ class RecordingService : Service(), CoroutineScope {
                         "partial_data_size" to recoveredSession.analysis.partialDataSize.toString()
                     )
                 )
-
                 // Perform recovery
                 val recoveryResult = crashRecoveryManager.recoverCrashedSession(recoveredSession)
                 if (recoveryResult.success) {
@@ -1057,7 +965,6 @@ class RecordingService : Service(), CoroutineScope {
                         "Successfully recovered crashed session: ${recoveredSession.sessionId}"
                     )
                     AppLogger.i(TAG, "Recovery actions performed: ${recoveryResult.recoveryActions.size}")
-
                     structuredLogger.log(
                         StructuredLogger.LogLevel.INFO,
                         "RecordingService",
@@ -1098,7 +1005,6 @@ class RecordingService : Service(), CoroutineScope {
             try {
                 recordingController.addSyncMarker(markerType, timestampNs)
                 AppLogger.i(TAG, "Sync marker added: $markerType")
-
                 if (recordingController.isRecording) {
                     val originalText = "Recording in progress"
                     updateNotification("Sync marker: $markerType")
@@ -1124,7 +1030,6 @@ class RecordingService : Service(), CoroutineScope {
                 }
             }
             .launchIn(this)
-
         recordingController.sensorStatusFlow
             .onEach { statusList ->
                 val activeSensors = statusList.count { it.isActive }
@@ -1133,7 +1038,6 @@ class RecordingService : Service(), CoroutineScope {
                     // Calculate storage based on samples (rough estimate)
                     (it.samplesRecorded * 0.001) // ~1KB per sample estimate
                 }
-
                 if (activeSensors > 0) {
                     val statusText = "Recording: $activeSensors sensors, " +
                             "${totalSamples} samples, " +
@@ -1142,7 +1046,6 @@ class RecordingService : Service(), CoroutineScope {
                 }
             }
             .launchIn(this)
-
         recordingController.errorFlow
             .onEach { error ->
                 error?.let {
@@ -1170,7 +1073,6 @@ class RecordingService : Service(), CoroutineScope {
             this, 0, stopIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("IRCamera Recording")
             .setContentText(contentText)
@@ -1188,7 +1090,6 @@ class RecordingService : Service(), CoroutineScope {
 
     private fun updateNotification(contentText: String) {
         try {
-
             if (isServiceForeground()) {
                 val notification = when {
                     recordingController.isRecording -> createRecordingNotification(contentText)
@@ -1203,9 +1104,7 @@ class RecordingService : Service(), CoroutineScope {
     }
 
     fun getRecordingController(): ComprehensiveRecordingController = recordingController
-
     fun isInitialized(): Boolean = isInitialized
-
     fun getCurrentSession(): SessionInfo? {
         return currentSessionDirectory?.let { directory ->
             SessionInfo(
@@ -1223,7 +1122,6 @@ class RecordingService : Service(), CoroutineScope {
             )
             return
         }
-
         crashSafeSupervisor.registerJob(
             id = "server_socket",
             name = "Server Socket",
@@ -1258,7 +1156,6 @@ class RecordingService : Service(), CoroutineScope {
         try {
             // Ensure any previous socket is fully released
             delay(100)
-
             // Find an available port starting from the preferred port
             actualServerPort = try {
                 if (NetworkUtils.isPortAvailable(SERVER_PORT)) {
@@ -1271,23 +1168,19 @@ class RecordingService : Service(), CoroutineScope {
                 AppLogger.e(TAG, "Could not find available port starting from $SERVER_PORT", e)
                 throw e
             }
-
             serverSocket = ServerSocket().apply {
                 reuseAddress = true
                 bind(InetSocketAddress(actualServerPort))
             }
             isServerRunning.set(true)
-
             structuredLogger.logServerEvent(
                 "server_socket_started",
                 mapOf("port" to actualServerPort, "preferred_port" to SERVER_PORT)
             )
-
             Log.i(
                 TAG,
                 "Server socket bound to port $actualServerPort${if (actualServerPort != SERVER_PORT) " (preferred port $SERVER_PORT was in use)" else ""}"
             )
-
             if (FeatureFlags.MDNS_ENABLE) {
                 registerNsdService()
             }
@@ -1364,7 +1257,6 @@ class RecordingService : Service(), CoroutineScope {
         isServerRunning.set(false)
         serverJob?.cancel()
         serverJob = null
-
         activeConnections.values.forEach { connection ->
             try {
                 connection.job.cancel()
@@ -1378,7 +1270,6 @@ class RecordingService : Service(), CoroutineScope {
             }
         }
         activeConnections.clear()
-
         try {
             serverSocket?.let { socket ->
                 if (!socket.isClosed) {
@@ -1443,7 +1334,6 @@ class RecordingService : Service(), CoroutineScope {
             clientSocket.soTimeout = 30000
             val inputStream = DataInputStream(clientSocket.getInputStream())
             val outputStream = DataOutputStream(clientSocket.getOutputStream())
-
             val clientJob = launch(Dispatchers.IO) {
                 try {
                     handleClientMessages(clientId, inputStream, outputStream)
@@ -1547,7 +1437,6 @@ class RecordingService : Service(), CoroutineScope {
     }
 
     fun getNetworkClient(): NetworkClient = networkClient
-
     private fun setupNetworkServer() {
         launch(Dispatchers.IO) {
             try {
@@ -1570,7 +1459,6 @@ class RecordingService : Service(), CoroutineScope {
                 }
             }
         }
-
         launch(Dispatchers.IO) {
             connectionManager.connectionState.collect { state ->
                 when (state) {
@@ -1619,13 +1507,11 @@ class RecordingService : Service(), CoroutineScope {
                 }
             }
         }
-
         launch(Dispatchers.IO) {
             networkServer.messageFlow.collect { message ->
                 handleProtocolMessage(message)
             }
         }
-
         // Set up protocol handler with command callbacks
         protocolHandler.setCommandHandler(object : ProtocolHandler.CommandHandler {
             override suspend fun onStartRecording(sessionId: String): ProtocolHandler.CommandResult {
@@ -1697,15 +1583,11 @@ class RecordingService : Service(), CoroutineScope {
                     val timeManager = mpdc4gsr.core.data.utils.TimeManager.getInstance(this@RecordingService)
                     val phoneTimestamp =
                         timeManager.getCurrentTimestampNs() / 1_000_000 // Convert to ms
-
                     AppLogger.d(TAG, "Time sync request: PC=$pcTimestamp, Phone=$phoneTimestamp")
-
                     // Calculate offset for immediate response (PC time - Phone time)
                     val offsetNs = (pcTimestamp - phoneTimestamp) * 1_000_000 // Convert to ns
-
                     // Update TimeManager with the calculated offset if needed
                     // Note: This is a simplified sync. For full sync, TimeManager.synchronizeWithPC should be used
-
                     ProtocolHandler.SyncResult(
                         success = true,
                         phoneTimestamp = phoneTimestamp,
@@ -1761,7 +1643,6 @@ class RecordingService : Service(), CoroutineScope {
     ) {
         val messageType = message.optString("message_type")
         val messageId = message.optString("msg_id", "unknown")
-
         structuredLogger.logProtocolMessage(
             "message_received", messageId, clientId,
             mapOf(
@@ -2138,7 +2019,6 @@ class RecordingService : Service(), CoroutineScope {
                     val previewWidth = message.optInt("preview_width", 320)
                     val previewHeight = message.optInt("preview_height", 240)
                     val jpegQuality = message.optInt("jpeg_quality", 70)
-
                     previewStreamer.configure(
                         frameInterval,
                         sensorInterval,
@@ -2172,7 +2052,6 @@ class RecordingService : Service(), CoroutineScope {
     }
 
     private fun isServiceForeground(): Boolean {
-
         return recordingController.isRecording || isServerRunning.get()
     }
 
@@ -2184,7 +2063,6 @@ class RecordingService : Service(), CoroutineScope {
             this, 1, stopIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("IRCamera Server")
             .setContentText(contentText)
@@ -2247,7 +2125,6 @@ class RecordingService : Service(), CoroutineScope {
 
     fun performSyncFlash(durationMs: Int) {
         // This is a placeholder for the actual flash logic.
-
         this.addSyncMarker("pc_sync_flash", System.nanoTime())
     }
 
@@ -2441,13 +2318,11 @@ class RecordingService : Service(), CoroutineScope {
     }
 
     // New client-side PC connection methods
-
     private fun connectToPCClient(ipAddress: String, port: Int) {
         launch {
             try {
                 AppLogger.i(TAG, "Connecting to PC server as client at $ipAddress:$port")
                 updateNotification("Connecting to PC server...")
-
                 val success = networkManager.connectWifi(ipAddress, port)
                 if (success) {
                     AppLogger.i(TAG, "Successfully connected to PC server as client")
@@ -2471,7 +2346,6 @@ class RecordingService : Service(), CoroutineScope {
             try {
                 AppLogger.i(TAG, "Connecting to PC via Bluetooth: ${bluetoothDevice.name}")
                 updateNotification("Connecting to PC via Bluetooth...")
-
                 val success = networkManager.connectBluetooth(bluetoothDevice)
                 if (success) {
                     AppLogger.i(TAG, "Successfully connected to PC via Bluetooth")
@@ -2495,10 +2369,8 @@ class RecordingService : Service(), CoroutineScope {
             try {
                 AppLogger.i(TAG, "Disconnecting from PC server")
                 updateNotification("Disconnecting from PC...")
-
                 networkManager.disconnect()
                 isConnectedToPC = false
-
                 AppLogger.i(TAG, "Disconnected from PC server")
                 updateNotification("Disconnected from PC server")
             } catch (e: Exception) {

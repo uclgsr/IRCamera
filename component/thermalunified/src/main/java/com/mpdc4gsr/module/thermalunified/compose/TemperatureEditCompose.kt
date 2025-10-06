@@ -39,12 +39,10 @@ fun TemperatureEditCompose(
     var isDrawing by remember { mutableStateOf(false) }
     var drawStart by remember { mutableStateOf<Offset?>(null) }
     var drawEnd by remember { mutableStateOf<Offset?>(null) }
-
     // Update measurements when prop changes
     LaunchedEffect(measurements) {
         currentMeasurements = measurements
     }
-
     Row(
         modifier = modifier.fillMaxSize()
     ) {
@@ -126,12 +124,10 @@ fun TemperatureEditCompose(
             ) {
                 // Draw thermal background pattern
                 drawThermalBackground()
-
                 // Draw existing measurements
                 currentMeasurements.forEach { measurement ->
                     drawMeasurement(measurement, isShowName)
                 }
-
                 // Draw current drawing operation
                 if (isDrawing && drawStart != null) {
                     when (mode) {
@@ -162,7 +158,6 @@ fun TemperatureEditCompose(
                     }
                 }
             }
-
             // Mode indicator
             TemperatureModeIndicator(
                 mode = mode,
@@ -171,7 +166,6 @@ fun TemperatureEditCompose(
                     .padding(8.dp)
             )
         }
-
         // Measurement panel
         MeasurementPanel(
             measurements = currentMeasurements,
@@ -239,16 +233,13 @@ private fun MeasurementPanel(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-
                 if (measurements.isNotEmpty()) {
                     TextButton(onClick = onClearAll) {
                         Text("Clear All")
                     }
                 }
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             if (measurements.isEmpty()) {
                 Box(
                     modifier = Modifier
@@ -315,9 +306,7 @@ private fun MeasurementCard(
                     fontWeight = FontWeight.SemiBold
                 )
             }
-
             Spacer(modifier = Modifier.height(4.dp))
-
             when (measurement) {
                 is TemperatureMeasurementResult.Point -> {
                     Text(
@@ -353,16 +342,13 @@ private fun DrawScope.drawThermalBackground() {
     val colors = listOf(
         Color.Blue, Color.Green, Color.Yellow, Color(0xFFFF6600), Color.Red
     )
-
     val cellSize = 20.dp.toPx()
     val cols = (size.width / cellSize).toInt()
     val rows = (size.height / cellSize).toInt()
-
     for (row in 0 until rows) {
         for (col in 0 until cols) {
             val colorIndex = ((row + col) % colors.size)
             val alpha = 0.1f + (kotlin.math.sin((row + col) * 0.5) * 0.1f).toFloat()
-
             drawRect(
                 color = colors[colorIndex].copy(alpha = alpha),
                 topLeft = Offset(col * cellSize, row * cellSize),
@@ -392,14 +378,12 @@ private fun DrawScope.drawMeasurement(
                 end = Offset(measurement.position.x, measurement.position.y + crossSize),
                 strokeWidth = 2.dp.toPx()
             )
-
             // Draw center circle
             drawCircle(
                 color = measurement.color,
                 radius = 4.dp.toPx(),
                 center = measurement.position
             )
-
             if (showName) {
                 // Temperature label would go here in a real implementation
             }
@@ -412,7 +396,6 @@ private fun DrawScope.drawMeasurement(
                 end = measurement.end,
                 strokeWidth = 3.dp.toPx()
             )
-
             // Draw endpoints
             drawCircle(
                 color = measurement.color,
@@ -445,7 +428,6 @@ private fun simulateTemperatureReading(position: Offset): Float {
         (position.x - centerX) * (position.x - centerX) +
                 (position.y - centerY) * (position.y - centerY)
     ).toFloat()
-
     return 25f + (100f - distance * 0.1f).coerceIn(15f, 45f)
 }
 
@@ -457,7 +439,6 @@ private fun simulateAreaTemperatureReading(rect: Rect): Float {
 }
 
 // Data classes and enums
-
 enum class TemperatureMode(
     val displayName: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector
@@ -508,7 +489,6 @@ sealed class TemperatureMeasurementResult(
 fun TemperatureEditComposePreview() {
     var mode by remember { mutableStateOf(TemperatureMode.POINT) }
     var measurements by remember { mutableStateOf(emptyList<TemperatureMeasurementResult>()) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -535,7 +515,6 @@ fun TemperatureEditComposePreview() {
                 )
             }
         }
-
         // Temperature edit interface
         TemperatureEditCompose(
             mode = mode,

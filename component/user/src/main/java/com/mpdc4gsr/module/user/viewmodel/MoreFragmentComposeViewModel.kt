@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class MoreComposeFragmentViewModel : BaseViewModel() {
-
     companion object {
         private const val DEFAULT_VERSION = "1.0.0"
         private const val DEFAULT_UPGRADE_AVAILABLE = false
@@ -23,7 +22,6 @@ class MoreComposeFragmentViewModel : BaseViewModel() {
 
     private val _deviceSettings = MutableStateFlow(DeviceSettingsState())
     val deviceSettings: StateFlow<DeviceSettingsState> = _deviceSettings.asStateFlow()
-
     fun initialize(isTC007: Boolean) {
         launchWithErrorHandling {
             val isSaveEnabled = if (isTC007) {
@@ -31,7 +29,6 @@ class MoreComposeFragmentViewModel : BaseViewModel() {
             } else {
                 SaveSettingUtils.isSaveSetting
             }
-
             _deviceSettings.value = DeviceSettingsState(
                 isTC007 = isTC007,
                 isSaveSettingEnabled = isSaveEnabled,
@@ -49,7 +46,6 @@ class MoreComposeFragmentViewModel : BaseViewModel() {
             } else {
                 SaveSettingUtils.isSaveSetting = enabled
             }
-
             _deviceSettings.value = currentState.copy(
                 isSaveSettingEnabled = enabled
             )

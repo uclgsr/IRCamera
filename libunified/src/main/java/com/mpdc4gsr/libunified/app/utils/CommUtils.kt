@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object CommUtils {
-
     fun getAppName(): String {
         var msg = ""
         val context = ContextProvider.getContext()
@@ -30,7 +29,6 @@ object CommUtils {
 
     // Additional compatibility methods
     private const val DATE_FORMAT_DEFAULT = "yyyy-MM-dd HH:mm:ss"
-
     fun getCurrentTimeString(): String {
         val formatter = SimpleDateFormat(DATE_FORMAT_DEFAULT, Locale.getDefault())
         return formatter.format(Date())

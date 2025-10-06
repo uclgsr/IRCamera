@@ -4,7 +4,6 @@ import java.util.*
 
 @OptIn(ExperimentalUnsignedTypes::class)
 object UnifiedByteUtils {
-
     fun ByteArray.toHexString(separator: String = " "): String =
         asUByteArray().joinToString(separator) {
             it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
@@ -19,7 +18,6 @@ object UnifiedByteUtils {
         ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
 
     fun UUID.getTag(): String = toString().substring(4, 8)
-
     fun ByteArray.bytesToInt(): Int {
         var total = 0
         val size = this.size

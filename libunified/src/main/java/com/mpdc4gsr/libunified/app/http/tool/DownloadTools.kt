@@ -36,7 +36,6 @@ object DownloadTools {
             try {
                 inputStream = responseBody.byteStream()
                 fileOutputString = FileOutputStream(file)
-
                 val totalCount = responseBody.contentLength()
                 val buffer = ByteArray(4096)
                 var hasReadCount = 0L
@@ -51,11 +50,9 @@ object DownloadTools {
                             listener.invoke(hasReadCount, totalCount)
                         }
                     }
-
                     readLength = inputStream.read(buffer)
                 }
                 fileOutputString.flush()
-
                 return@withContext true
             } catch (_: Exception) {
                 return@withContext false

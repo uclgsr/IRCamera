@@ -84,11 +84,9 @@ fun ReportIRInputCompose(
     modifier: Modifier = Modifier
 ) {
     var currentReport by remember { mutableStateOf(reportData) }
-
     LaunchedEffect(reportData) {
         currentReport = reportData
     }
-
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -109,7 +107,6 @@ fun ReportIRInputCompose(
                 }
             )
         }
-
         // Images section
         item {
             ReportImagesCompose(
@@ -118,7 +115,6 @@ fun ReportIRInputCompose(
                 onImageRemoved = onImageRemoved
             )
         }
-
         // Measurements section
         item {
             ReportMeasurementsCompose(
@@ -132,7 +128,6 @@ fun ReportIRInputCompose(
                 }
             )
         }
-
         // Metadata section
         item {
             ReportMetadataCompose(
@@ -169,9 +164,7 @@ private fun ReportHeaderCompose(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             OutlinedTextField(
                 value = report.description,
                 onValueChange = onDescriptionChanged,
@@ -180,9 +173,7 @@ private fun ReportHeaderCompose(
                 minLines = 3,
                 maxLines = 5
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -228,7 +219,6 @@ private fun ReportImagesCompose(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
-
                 IconButton(onClick = { onImageAdded("") }) {
                     Icon(
                         Icons.Default.Add,
@@ -237,7 +227,6 @@ private fun ReportImagesCompose(
                     )
                 }
             }
-
             if (images.isNotEmpty()) {
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
@@ -304,7 +293,6 @@ private fun ReportImageItem(
                 .clip(RoundedCornerShape(8.dp)),
             contentScale = ContentScale.Crop
         )
-
         IconButton(
             onClick = onRemoved,
             modifier = Modifier.align(Alignment.TopEnd)
@@ -344,9 +332,7 @@ private fun ReportMeasurementsCompose(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             measurements.forEach { measurement ->
                 MeasurementItemCompose(
                     measurement = measurement,
@@ -365,7 +351,6 @@ private fun MeasurementItemCompose(
     modifier: Modifier = Modifier
 ) {
     var value by remember { mutableStateOf(measurement.value) }
-
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -382,15 +367,12 @@ private fun MeasurementItemCompose(
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(20.dp)
         )
-
         Spacer(modifier = Modifier.width(8.dp))
-
         Text(
             text = measurement.name,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f)
         )
-
         if (measurement.isEditable) {
             OutlinedTextField(
                 value = value,
@@ -409,9 +391,7 @@ private fun MeasurementItemCompose(
                 fontWeight = FontWeight.Medium
             )
         }
-
         Spacer(modifier = Modifier.width(8.dp))
-
         Text(
             text = measurement.unit,
             style = MaterialTheme.typography.bodySmall,
@@ -427,11 +407,9 @@ private fun ReportMetadataCompose(
     modifier: Modifier = Modifier
 ) {
     var currentMetadata by remember { mutableStateOf(metadata) }
-
     LaunchedEffect(metadata) {
         currentMetadata = metadata
     }
-
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -447,7 +425,6 @@ private fun ReportMetadataCompose(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             OutlinedTextField(
                 value = currentMetadata.author,
                 onValueChange = { newAuthor ->
@@ -460,7 +437,6 @@ private fun ReportMetadataCompose(
                     Icon(Icons.Default.Person, contentDescription = "Author")
                 }
             )
-
             OutlinedTextField(
                 value = currentMetadata.location,
                 onValueChange = { newLocation ->
@@ -473,7 +449,6 @@ private fun ReportMetadataCompose(
                     Icon(Icons.Default.LocationOn, contentDescription = "Location")
                 }
             )
-
             OutlinedTextField(
                 value = currentMetadata.equipment,
                 onValueChange = { newEquipment ->
@@ -486,7 +461,6 @@ private fun ReportMetadataCompose(
                     Icon(Icons.Default.Build, contentDescription = "Equipment")
                 }
             )
-
             OutlinedTextField(
                 value = currentMetadata.conditions,
                 onValueChange = { newConditions ->
@@ -499,7 +473,6 @@ private fun ReportMetadataCompose(
                     Icon(Icons.Default.Cloud, contentDescription = "Conditions")
                 }
             )
-
             OutlinedTextField(
                 value = currentMetadata.notes,
                 onValueChange = { newNotes ->
@@ -545,16 +518,12 @@ fun ReportIRShowCompose(
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     Text(
                         text = reportData.description,
                         style = MaterialTheme.typography.bodyMedium
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -573,7 +542,6 @@ fun ReportIRShowCompose(
                 }
             }
         }
-
         // Images display
         item {
             if (reportData.images.isNotEmpty()) {
@@ -591,9 +559,7 @@ fun ReportIRShowCompose(
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Medium
                         )
-
                         Spacer(modifier = Modifier.height(12.dp))
-
                         LazyRow(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
@@ -615,7 +581,6 @@ fun ReportIRShowCompose(
                 }
             }
         }
-
         // Measurements display (read-only)
         item {
             Card(
@@ -632,9 +597,7 @@ fun ReportIRShowCompose(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Medium
                     )
-
                     Spacer(modifier = Modifier.height(12.dp))
-
                     reportData.measurements.forEach { measurement ->
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -652,15 +615,12 @@ fun ReportIRShowCompose(
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(20.dp)
                             )
-
                             Spacer(modifier = Modifier.width(8.dp))
-
                             Text(
                                 text = measurement.name,
                                 style = MaterialTheme.typography.bodyMedium,
                                 modifier = Modifier.weight(1f)
                             )
-
                             Text(
                                 text = "${measurement.value} ${measurement.unit}",
                                 style = MaterialTheme.typography.bodyMedium,
@@ -672,7 +632,6 @@ fun ReportIRShowCompose(
                 }
             }
         }
-
         // Metadata display (read-only)
         item {
             Card(
@@ -690,12 +649,10 @@ fun ReportIRShowCompose(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Medium
                     )
-
                     MetadataRow("Author", reportData.metadata.author, Icons.Default.Person)
                     MetadataRow("Location", reportData.metadata.location, Icons.Default.LocationOn)
                     MetadataRow("Equipment", reportData.metadata.equipment, Icons.Default.Build)
                     MetadataRow("Conditions", reportData.metadata.conditions, Icons.Default.Cloud)
-
                     if (reportData.metadata.notes.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(4.dp))
                         Row(
@@ -803,7 +760,6 @@ private fun ReportIRInputPreview() {
                 notes = "Regular inspection"
             )
         )
-
         ReportIRInputCompose(
             reportData = sampleReport,
             onReportUpdated = {},

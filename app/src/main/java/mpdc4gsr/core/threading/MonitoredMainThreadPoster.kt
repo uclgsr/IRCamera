@@ -7,19 +7,13 @@ import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 
 object MonitoredMainThreadPoster {
-
     private const val TAG = "MonitoredMainThread"
     private const val WARNING_THRESHOLD_MS = 100L
     private const val CRITICAL_THRESHOLD_MS = 1000L
-
     private val handler = Handler(Looper.getMainLooper())
-
     private val totalPosts = java.util.concurrent.atomic.AtomicLong(0L)
-
     private val slowPosts = java.util.concurrent.atomic.AtomicLong(0L)
-
     private val criticalPosts = java.util.concurrent.atomic.AtomicLong(0L)
-
     fun post(componentName: String, runnable: Runnable) {
         handler.post(MonitoredRunnable(componentName, runnable))
     }
@@ -61,7 +55,6 @@ object MonitoredMainThreadPoster {
         override fun run() {
             val startTime = System.nanoTime()
             totalPosts.incrementAndGet()
-
             try {
                 wrapped.run()
             } catch (e: Exception) {
@@ -69,7 +62,6 @@ object MonitoredMainThreadPoster {
                 throw e
             } finally {
                 val executionTime = (System.nanoTime() - startTime) / 1_000_000
-
                 when {
                     executionTime > CRITICAL_THRESHOLD_MS -> {
                         criticalPosts.incrementAndGet()
@@ -102,14 +94,12 @@ object MonitoredMainThreadPoster {
             get() = if (totalPosts > 0) {
                 (slowPosts.toFloat() / totalPosts.toFloat()) * 100f
             } else 0f
-
         val criticalPostRate: Float
             get() = if (totalPosts > 0) {
                 (criticalPosts.toFloat() / totalPosts.toFloat()) * 100f
             } else 0f
 
         fun hasAnrRisk(): Boolean = criticalPosts > 0
-
         fun needsOptimization(): Boolean = slowPostRate > 5f
     }
 }

@@ -44,13 +44,10 @@ import mpdc4gsr.feature.network.data.NetworkManager
 class NetworkClientTestViewModel : AppBaseViewModel() {
     private val _networkConnectionState = MutableStateFlow(CommandConnection.ConnectionState.DISCONNECTED)
     val networkConnectionState: StateFlow<CommandConnection.ConnectionState> = _networkConnectionState.asStateFlow()
-
     private val _ipAddress = MutableStateFlow("192.168.1.100")
     val ipAddress: StateFlow<String> = _ipAddress.asStateFlow()
-
     private val _port = MutableStateFlow("8080")
     val port: StateFlow<String> = _port.asStateFlow()
-
     private val _connectionInfo = MutableStateFlow("")
     val connectionInfo: StateFlow<String> = _connectionInfo.asStateFlow()
 
@@ -63,7 +60,6 @@ class NetworkClientTestViewModel : AppBaseViewModel() {
     }
 
     enum class NetworkTestType { CONNECTION, LATENCY, THROUGHPUT, RELIABILITY }
-
     data class NetworkConfiguration(
         val serverAddress: String = "192.168.1.100",
         val port: Int = 8080,
@@ -101,7 +97,6 @@ class NetworkClientTestViewModel : AppBaseViewModel() {
 
     private val _networkTestUiState = MutableStateFlow(NetworkTestUiState())
     val networkTestUiState: StateFlow<NetworkTestUiState> = _networkTestUiState.asStateFlow()
-
     fun updateConnectionState(state: CommandConnection.ConnectionState) {
         _networkConnectionState.value = state
     }
@@ -162,14 +157,7 @@ class NetworkClientTestViewModel : AppBaseViewModel() {
     }
 }
 
-/**
- * Compose version of NetworkClientTestActivity
- *
- * Test activity for demonstrating bidirectional command/control networking functionality.
- * Shows how Android app can connect as client to PC server via Wi-Fi or Bluetooth.
- */
 class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestViewModel>() {
-
     companion object {
         private const val TAG = "NetworkClientTestActivityCompose"
         private const val DEFAULT_PC_IP = "192.168.1.100"
@@ -180,7 +168,6 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
     private var recordingService: RecordingService? = null
     private var networkManager: NetworkManager? = null
     private var isBound = false
-
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             AppLogger.i(TAG, "Service connected")
@@ -188,7 +175,6 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
             recordingService = binder.getService()
             networkManager = binder.getNetworkManager()
             isBound = true
-
             observeConnectionState()
         }
 
@@ -207,7 +193,6 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // Bind to RecordingService
         val serviceIntent = Intent(this, RecordingService::class.java)
         bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
@@ -251,7 +236,6 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
                 else -> "Not connected"
             }
         } ?: "Service not available"
-
         testViewModel.updateConnectionInfo(info)
     }
 
@@ -288,9 +272,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
         val ipAddress by testViewModel.ipAddress.collectAsState()
         val port by testViewModel.port.collectAsState()
         val connectionInfo by viewModel.connectionInfo.collectAsState()
-
         val scrollState = rememberScrollState()
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -321,7 +303,6 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
                     connectionState = connectionState,
                     connectionInfo = connectionInfo
                 )
-
                 // Connection Configuration Card
                 ConnectionConfigCard(
                     ipAddress = ipAddress,
@@ -329,7 +310,6 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
                     onIpAddressChange = viewModel::updateIpAddress,
                     onPortChange = viewModel::updatePort
                 )
-
                 // Action Buttons Card
                 ActionButtonsCard(
                     connectionState = connectionState,
@@ -347,7 +327,6 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
                         }
                     }
                 )
-
                 // Test Information Card
                 TestInfoCard()
             }
@@ -397,7 +376,6 @@ private fun ConnectionStatusCard(
                         else -> MaterialTheme.colorScheme.outline
                     }
                 )
-
                 Text(
                     text = when (connectionState) {
                         CommandConnection.ConnectionState.CONNECTED -> "Connected"
@@ -409,7 +387,6 @@ private fun ConnectionStatusCard(
                     fontWeight = FontWeight.SemiBold
                 )
             }
-
             if (connectionInfo.isNotEmpty()) {
                 Text(
                     text = connectionInfo,
@@ -429,7 +406,6 @@ private fun ConnectionConfigCard(
     onPortChange: (String) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -442,7 +418,6 @@ private fun ConnectionConfigCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-
             OutlinedTextField(
                 value = ipAddress,
                 onValueChange = onIpAddressChange,
@@ -458,7 +433,6 @@ private fun ConnectionConfigCard(
                     }
                 )
             )
-
             OutlinedTextField(
                 value = port,
                 onValueChange = onPortChange,
@@ -501,7 +475,6 @@ private fun ActionButtonsCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -515,7 +488,6 @@ private fun ActionButtonsCard(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("WiFi")
                 }
-
                 Button(
                     onClick = onConnectBluetooth,
                     modifier = Modifier.weight(1f),
@@ -526,7 +498,6 @@ private fun ActionButtonsCard(
                     Text("Bluetooth")
                 }
             }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -540,7 +511,6 @@ private fun ActionButtonsCard(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Test Ping")
                 }
-
                 Button(
                     onClick = onDisconnect,
                     modifier = Modifier.weight(1f),
@@ -575,7 +545,6 @@ private fun TestInfoCard() {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-
             Text(
                 text = "This activity tests bidirectional network communication between the Android app and PC server. " +
                         "Use WiFi for high-speed data transfer or Bluetooth for reliable short-range communication.",

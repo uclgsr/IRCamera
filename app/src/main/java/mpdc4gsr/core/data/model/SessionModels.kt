@@ -20,13 +20,11 @@ data class SessionConfig(
                     enabledSensors.add(sensorsArray.getString(i))
                 }
             }
-
             val metadata = mutableMapOf<String, Any>()
             val metadataObj = json.optJSONObject("metadata")
             metadataObj?.keys()?.forEach { key ->
                 metadata[key] = metadataObj.get(key)
             }
-
             return SessionConfig(
                 sessionName = json.getString("session_name"),
                 studyName = json.optString("study_name", ""),
@@ -53,14 +51,12 @@ data class SessionInfo(
     val completedAt: Long? = null,
     val metadata: Map<String, Any> = emptyMap()
 ) {
-
     val duration: Long
         get() = when {
             completedAt != null && startedAt != null -> completedAt - startedAt
             startedAt != null -> System.currentTimeMillis() - startedAt
             else -> 0L
         }
-
     val isActive: Boolean
         get() = startedAt != null && completedAt == null
 
@@ -84,40 +80,26 @@ data class SessionInfo(
 }
 
 enum class SessionType {
-
     LOCAL,
-
     REMOTE,
-
     HYBRID,
-
     RESEARCH
 }
 
 enum class SessionStatus(val displayName: String) {
-
     IDLE("Idle"),
-
     CREATED("Created"),
-
     STARTING("Starting"),
-
     RECORDING("Recording"),
-
     PAUSED("Paused"),
-
     STOPPING("Stopping"),
-
     COMPLETED("Completed"),
-
     ERROR("Error");
 
     val isActive: Boolean
         get() = this == RECORDING || this == PAUSED
-
     val isTransitioning: Boolean
         get() = this == STARTING || this == STOPPING
-
     val isCompleted: Boolean
         get() = this == COMPLETED || this == ERROR
 }
@@ -135,7 +117,6 @@ data class SessionQuality(
     val errorCount: Long = 0L,
     val lastUpdated: Long = System.currentTimeMillis()
 ) {
-
     val qualityLevel: QualityLevel
         get() = when {
             overallQuality >= 0.9 -> QualityLevel.EXCELLENT
@@ -144,10 +125,8 @@ data class SessionQuality(
             overallQuality >= 0.3 -> QualityLevel.POOR
             else -> QualityLevel.CRITICAL
         }
-
     val totalSamples: Long
         get() = gsrSampleCount + thermalFrameCount + rgbFrameCount
-
     val isAcceptableQuality: Boolean
         get() = overallQuality >= 0.6 && errorCount < 10
 
@@ -193,15 +172,12 @@ data class SessionStatistics(
     val syncMarkers: Long,
     val errors: Long
 ) {
-
     val totalDataPoints: Long
         get() = gsrSamples + thermalFrames + rgbFrames + syncMarkers
-
     val averageSamplingRate: Double
         get() = if (duration > 0) {
             (totalDataPoints * 1000.0) / duration
         } else 0.0
-
     val qualityStatus: String
         get() = when {
             dataQuality >= 0.9 -> "Excellent"
@@ -236,7 +212,6 @@ data class SessionStatistics(
         val seconds = durationMs / 1000
         val minutes = seconds / 60
         val hours = minutes / 60
-
         return when {
             hours > 0 -> "${hours}h ${minutes % 60}m ${seconds % 60}s"
             minutes > 0 -> "${minutes}m ${seconds % 60}s"
@@ -255,10 +230,8 @@ data class SessionSummary(
     val dataSize: Long,
     val metadata: Map<String, Any> = emptyMap()
 ) {
-
     val dataSizeFormatted: String
         get() = formatBytes(dataSize)
-
     val successRate: Double
         get() = if (totalSamples > 0) {
             ((totalSamples - errorCount).toDouble() / totalSamples.toDouble()) * 100.0
@@ -283,7 +256,6 @@ data class SessionSummary(
         val kb = bytes / 1024.0
         val mb = kb / 1024.0
         val gb = mb / 1024.0
-
         return when {
             gb >= 1.0 -> String.format("%.2f GB", gb)
             mb >= 1.0 -> String.format("%.2f MB", mb)
@@ -299,13 +271,10 @@ data class SensorConfig(
     val samplingRate: Double? = null,
     val configuration: Map<String, Any> = emptyMap()
 ) {
-
     val isGSR: Boolean
         get() = sensorType.equals("gsr", ignoreCase = true)
-
     val isThermal: Boolean
         get() = sensorType.equals("thermal", ignoreCase = true)
-
     val isRGB: Boolean
         get() = sensorType.equals("rgb", ignoreCase = true)
 }

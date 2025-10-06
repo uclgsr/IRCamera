@@ -1,7 +1,6 @@
 package mpdc4gsr.core.utils
 
 object ErrorHandler {
-
     inline fun <T> runSafely(tag: String, operation: String, block: () -> T): Result<T> {
         return try {
             Result.success(block())

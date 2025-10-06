@@ -20,7 +20,6 @@ class MainFragmentViewModel {
             hasConnectTC007 = false
         )
     )
-
     val batteryInfo: MutableStateFlow<String?> = MutableStateFlow(null)
     val navigationEvents: MutableSharedFlow<String> = MutableSharedFlow()
 }

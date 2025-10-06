@@ -27,12 +27,10 @@ fun AboutScreen(
                 }
             }
         )
-
         NavigationBreadcrumb(
             currentScreen = "About",
             previousScreen = "Settings"
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()

@@ -8,49 +8,34 @@ import java.util.*
 
 data class SessionMetadata(
     val sessionId: String,
-
     val sessionStartTimestampMs: Long,
     val sessionEndTimestampMs: Long? = null,
-
     val sessionStartMonotonicNs: Long,
     val sessionEndMonotonicNs: Long? = null,
-
     val sessionStartIso: String,
     val sessionEndIso: String? = null,
-
     val deviceModel: String = android.os.Build.MODEL,
     val deviceManufacturer: String = android.os.Build.MANUFACTURER,
     val timingSource: String = "android_monotonic_realtime",
-
     val modalityFiles: MutableMap<String, String> = mutableMapOf(),
-
     val syncEvents: MutableList<SessionSyncEvent> = mutableListOf(),
-
     val sensorSummaries: MutableMap<String, SensorSummary> = mutableMapOf(),
-
     val stopResults: MutableMap<String, Boolean> = mutableMapOf(),
-
     val recordingDurationMs: Long? = null,
-
     // Enhanced metadata for TODO requirement: "Expand the metadata.json to include all relevant session info"
     val sessionName: String? = null,
     val studyName: String? = null,
     val participantId: String? = null,
     val userNotes: String? = null,
     val experimentalConditions: Map<String, Any> = emptyMap(),
-
     val deviceInfo: DeviceInfo = DeviceInfo(),
     val environmentalConditions: EnvironmentalConditions = EnvironmentalConditions(),
-
     val networkSyncInfo: NetworkSyncInfo = NetworkSyncInfo(),
-
     val softwareVersions: Map<String, String> = emptyMap(),
     val calibrationInfo: Map<String, CalibrationData> = emptyMap(),
-
     val qualityMetrics: QualityMetrics = QualityMetrics(),
     val dataIntegrityChecks: Map<String, Boolean> = emptyMap()
 ) {
-
     data class DeviceInfo(
         val model: String = android.os.Build.MODEL,
         val manufacturer: String = android.os.Build.MANUFACTURER,
@@ -73,7 +58,6 @@ data class SessionMetadata(
 
             private fun getPersistentDeviceId(): String {
                 return try {
-
                     "DEVICE-${android.os.Build.FINGERPRINT.hashCode().toString(16).uppercase()}"
                 } catch (e: Exception) {
                     "DEVICE-UNKNOWN"
@@ -142,13 +126,11 @@ data class SessionMetadata(
 
     companion object {
         private const val TAG = "SessionMetadata"
-
         fun createSessionStart(sessionId: String): SessionMetadata {
             val wallClockStartMs = System.currentTimeMillis()
             val monotonicStartNs = SystemClock.elapsedRealtimeNanos()
             val isoFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
             isoFormatter.timeZone = TimeZone.getTimeZone("UTC")
-
             return SessionMetadata(
                 sessionId = sessionId,
                 sessionStartTimestampMs = wallClockStartMs,
@@ -163,9 +145,7 @@ data class SessionMetadata(
         val monotonicEndNs = SystemClock.elapsedRealtimeNanos()
         val isoFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
         isoFormatter.timeZone = TimeZone.getTimeZone("UTC")
-
         val durationMs = (monotonicEndNs - sessionStartMonotonicNs) / 1_000_000L
-
         return this.copy(
             sessionEndTimestampMs = wallClockEndMs,
             sessionEndMonotonicNs = monotonicEndNs,
@@ -176,7 +156,6 @@ data class SessionMetadata(
 
     fun addModalityFile(modalityType: String, fileName: String, startOffsetMs: Long = 0) {
         modalityFiles[modalityType] = fileName
-
         syncEvents.add(
             SessionSyncEvent(
                 eventType = "${modalityType}_START",
@@ -195,7 +174,6 @@ data class SessionMetadata(
         val currentWallMs = System.currentTimeMillis()
         val currentMonotonicNs = SystemClock.elapsedRealtimeNanos()
         val offsetFromStartNs = currentMonotonicNs - sessionStartMonotonicNs
-
         syncEvents.add(
             SessionSyncEvent(
                 eventType = eventType,
@@ -245,13 +223,11 @@ data class SessionMetadata(
             startTimestampMs = sessionStartTimestampMs,
             relativeStartMs = 0L
         )
-
         summary.stopTimestampNs = stopMonotonicNs
         summary.stopTimestampMs = monotonicToWallClock(stopMonotonicNs)
         summary.relativeStopMs = relativeMillis(stopMonotonicNs)
         summary.status = if (success) "COMPLETED" else "FAILED"
         summary.metadata.putAll(metadata)
-
         stats?.let {
             summary.samplesRecorded = it.totalSamplesRecorded
             summary.averageDataRate = it.averageDataRate
@@ -259,11 +235,9 @@ data class SessionMetadata(
             summary.syncMarkers = it.syncMarkersCount
             summary.storageUsedMb = it.storageUsedMB
         }
-
         if (!success && errorMessage != null) {
             summary.errors.add(errorMessage)
         }
-
         sensorSummaries[sensorName] = summary
     }
 
@@ -289,38 +263,27 @@ data class SessionMetadata(
     fun saveToFile(sessionDirectory: File): File {
         val metadataFile = File(sessionDirectory, "session_metadata.json")
         val gson = GsonBuilder().setPrettyPrinting().create()
-
         try {
             metadataFile.writeText(gson.toJson(this))
             android.util.Log.i(TAG, "Session metadata saved: ${metadataFile.absolutePath}")
         } catch (e: Exception) {
             android.util.Log.e(TAG, "Failed to save session metadata", e)
         }
-
         return metadataFile
     }
-
-    /**
-     * Enhanced metadata export functionality for TODO requirement:
-     * "Unify contributions from each recorder (RGB, GSR, audio) into one metadata file at session end"
-     */
 
     fun exportToUnifiedMetadataFile(sessionDirectory: File): Boolean {
         return try {
             val metadataFile = File(sessionDirectory, "session_metadata_complete.json")
             val gson = GsonBuilder().setPrettyPrinting().create()
-
             val comprehensiveMetadata = buildComprehensiveMetadata()
             val jsonContent = gson.toJson(comprehensiveMetadata)
-
             metadataFile.writeText(jsonContent)
-
             android.util.Log.i(
                 TAG,
                 "Comprehensive session metadata exported to: ${metadataFile.absolutePath}"
             )
             true
-
         } catch (e: Exception) {
             android.util.Log.e(TAG, "Failed to export comprehensive session metadata", e)
             false
@@ -337,7 +300,6 @@ data class SessionMetadata(
                 "user_notes" to (userNotes ?: ""),
                 "experimental_conditions" to experimentalConditions
             ),
-
             "timing_information" to mapOf(
                 "session_start_utc_ms" to sessionStartTimestampMs,
                 "session_start_iso" to sessionStartIso,
@@ -348,13 +310,11 @@ data class SessionMetadata(
                 "recording_duration_ms" to recordingDurationMs,
                 "timing_source" to timingSource
             ),
-
             "device_information" to mapOf(
                 "primary_device" to deviceInfo,
                 "software_versions" to softwareVersions,
                 "environmental_conditions" to environmentalConditions
             ),
-
             "network_synchronization" to mapOf(
                 "pc_controller_sync" to networkSyncInfo,
                 "sync_events" to syncEvents.map { syncEvent ->
@@ -366,7 +326,6 @@ data class SessionMetadata(
                     )
                 }
             ),
-
             "sensor_summaries" to sensorSummaries.mapValues { (sensorId, summary) ->
                 mapOf(
                     "sensor_id" to summary.sensorId,
@@ -391,7 +350,6 @@ data class SessionMetadata(
                     "metadata" to summary.metadata
                 )
             },
-
             "calibration_data" to calibrationInfo.mapValues { (sensorType, calibration) ->
                 mapOf(
                     "sensor_type" to calibration.sensorType,
@@ -402,7 +360,6 @@ data class SessionMetadata(
                     "notes" to calibration.calibrationNotes
                 )
             },
-
             "data_files" to mapOf(
                 "modality_files" to modalityFiles,
                 "file_schema" to mapOf(
@@ -416,7 +373,6 @@ data class SessionMetadata(
                         .generateCsvHeader("audio", includeUnits = false)
                 )
             ),
-
             "quality_assurance" to mapOf(
                 "quality_metrics" to qualityMetrics,
                 "data_integrity_checks" to dataIntegrityChecks,
@@ -429,7 +385,6 @@ data class SessionMetadata(
                     "total_warnings" to qualityMetrics.warningCount
                 )
             ),
-
             "export_information" to mapOf(
                 "export_timestamp" to System.currentTimeMillis(),
                 "export_version" to "1.2.0",
@@ -447,7 +402,6 @@ data class SessionMetadata(
         warningCount: Int
     ): SessionMetadata {
         val overallScore = sensorQualityScores.values.average()
-
         val updatedQualityMetrics = qualityMetrics.copy(
             overallQualityScore = overallScore,
             sensorQualityScores = sensorQualityScores,
@@ -458,7 +412,6 @@ data class SessionMetadata(
             validationsPassed = sensorQualityScores.values.count { it >= 0.7 },
             validationsFailed = sensorQualityScores.values.count { it < 0.7 }
         )
-
         return this.copy(qualityMetrics = updatedQualityMetrics)
     }
 
@@ -482,7 +435,6 @@ data class SessionMetadata(
             syncAttempts = networkSyncInfo.syncAttempts + 1,
             lastSyncTime = System.currentTimeMillis()
         )
-
         return this.copy(networkSyncInfo = updatedNetworkSyncInfo)
     }
 
@@ -494,19 +446,16 @@ data class SessionMetadata(
             appendLine("Study: ${studyName ?: "No study specified"}")
             appendLine("Participant: ${participantId ?: "No participant ID"}")
             appendLine()
-
             appendLine("Timing Information:")
             appendLine("  Start: $sessionStartIso")
             appendLine("  End: ${sessionEndIso ?: "In progress"}")
             appendLine("  Duration: ${recordingDurationMs?.let { "${it / 1000.0}s" } ?: "Unknown"}")
             appendLine()
-
             appendLine("Device Information:")
             appendLine("  Device: ${deviceInfo.manufacturer} ${deviceInfo.model}")
             appendLine("  Android: ${deviceInfo.androidVersion} (API ${deviceInfo.apiLevel})")
             appendLine("  Serial: ${deviceInfo.serialNumber}")
             appendLine()
-
             appendLine("Sensor Summary:")
             sensorSummaries.forEach { (id, summary) ->
                 appendLine("  $id (${summary.sensorType}):")
@@ -515,7 +464,6 @@ data class SessionMetadata(
                 appendLine("    Errors: ${summary.errors.size}")
             }
             appendLine()
-
             appendLine("Quality Metrics:")
             appendLine(
                 "  Overall Score: ${
@@ -537,12 +485,10 @@ data class SessionMetadata(
             appendLine("  Errors: ${qualityMetrics.errorCount}")
             appendLine("  Warnings: ${qualityMetrics.warningCount}")
             appendLine()
-
             appendLine("Data Files:")
             modalityFiles.forEach { (modality, filename) ->
                 appendLine("  $modality: $filename")
             }
-
             appendLine("=== End Summary ===")
         }
     }

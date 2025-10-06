@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 
 class IRConfigViewModel : BaseViewModel() {
     val configLiveData = SingleLiveEvent<ModelBean>()
-
     fun getConfig(isTC007: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             configLiveData.postValue(ConfigRepository.read(isTC007))
@@ -57,15 +56,12 @@ class IRConfigViewModel : BaseViewModel() {
     fun addConfig(isTC007: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             val modelBean = configLiveData.value ?: ConfigRepository.read(isTC007)
-
             var index = 0
             modelBean.myselfModel.forEach {
                 index = index.coerceAtLeast(it.id)
             }
             index++
-
             modelBean.myselfModel.add(DataBean(id = index, name = index.toString()))
-
             ConfigRepository.update(isTC007, modelBean)
             configLiveData.postValue(modelBean)
         }
@@ -104,7 +100,6 @@ class IRConfigViewModel : BaseViewModel() {
                     break
                 }
             }
-
             if (removeAt < modelBean.myselfModel.size) {
                 for (i in removeAt until modelBean.myselfModel.size) {
                     val dataBean = modelBean.myselfModel[i]
@@ -112,7 +107,6 @@ class IRConfigViewModel : BaseViewModel() {
                     dataBean.name = dataBean.id.toString()
                 }
             }
-
             ConfigRepository.update(isTC007, modelBean)
             configLiveData.postValue(modelBean)
         }

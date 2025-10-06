@@ -21,9 +21,7 @@ import java.lang.ref.WeakReference
 
 class SpanBuilder : SpannableStringBuilder {
     constructor() : super()
-
     constructor(text: CharSequence) : super(text)
-
     constructor(text: CharSequence, start: Int, end: Int) : super(text, start, end)
 
     fun appendDrawable(
@@ -122,13 +120,11 @@ class SpanBuilder : SpannableStringBuilder {
         @Px val wantHeight: Int,
     ) : ReplacementSpan() {
         private var weakReference: WeakReference<Drawable>? = null
-
         fun getCachedDrawable(): Drawable {
             val weakDrawable = weakReference?.get()
             if (weakDrawable != null) {
                 return weakDrawable
             }
-
             val drawable: Drawable = ContextCompat.getDrawable(context, resourceId)!!
             drawable.setBounds(
                 0,
@@ -137,7 +133,6 @@ class SpanBuilder : SpannableStringBuilder {
                 wantHeight
             )
             weakReference = WeakReference(drawable)
-
             return drawable
         }
 

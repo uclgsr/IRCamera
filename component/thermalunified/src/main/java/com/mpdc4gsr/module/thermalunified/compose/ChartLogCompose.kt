@@ -37,7 +37,6 @@ fun ChartLogCompose(
     modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
-
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -52,9 +51,7 @@ fun ChartLogCompose(
                 chartType = chartType,
                 dataCount = thermalData.size
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Chart area
             if (thermalData.isEmpty()) {
                 EmptyChartState(
@@ -75,7 +72,6 @@ fun ChartLogCompose(
                         showGrid = showGrid
                     )
                 }
-
                 if (showLegend) {
                     Spacer(modifier = Modifier.height(8.dp))
                     ChartLegend(chartType = chartType)
@@ -108,7 +104,6 @@ private fun ChartHeader(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-
         Icon(
             imageVector = chartType.icon,
             contentDescription = chartType.displayName,
@@ -165,7 +160,6 @@ private fun ChartLegend(
             LegendItem("Min Temperature", Color(0xFF2196F3))
         )
     }
-
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -197,16 +191,13 @@ private fun DrawScope.drawThermalChart(
     showGrid: Boolean
 ) {
     if (data.isEmpty()) return
-
     val padding = 40.dp.toPx()
     val chartWidth = size.width - 2 * padding
     val chartHeight = size.height - 2 * padding
-
     // Calculate time and temperature ranges
     val minTime = data.minOfOrNull { it.timestamp } ?: 0L
     val maxTime = data.maxOfOrNull { it.timestamp } ?: 0L
     val timeRange = maxTime - minTime
-
     val allTemps = data.flatMap { entry ->
         when (chartType) {
             ThermalChartType.POINT -> listOf(entry.temperature)
@@ -217,9 +208,7 @@ private fun DrawScope.drawThermalChart(
     val minTemp = allTemps.minOrNull() ?: 0f
     val maxTemp = allTemps.maxOrNull() ?: 100f
     val tempRange = maxTemp - minTemp
-
     if (timeRange <= 0 || tempRange <= 0) return
-
     // Draw grid
     if (showGrid) {
         drawGrid(
@@ -233,7 +222,6 @@ private fun DrawScope.drawThermalChart(
             timeFormat = timeFormat
         )
     }
-
     // Draw data based on chart type
     when (chartType) {
         ThermalChartType.POINT -> {
@@ -294,7 +282,6 @@ private fun DrawScope.drawGrid(
         textSize = 10.sp.toPx()
         isAntiAlias = true
     }
-
     // Horizontal grid lines (temperature)
     val tempGridCount = 5
     for (i in 0..tempGridCount) {
@@ -305,7 +292,6 @@ private fun DrawScope.drawGrid(
             end = Offset(size.width - padding, y),
             strokeWidth = 1.dp.toPx()
         )
-
         // Temperature labels
         val temp = maxTemp - ((maxTemp - minTemp) * i / tempGridCount)
         drawContext.canvas.nativeCanvas.drawText(
@@ -315,7 +301,6 @@ private fun DrawScope.drawGrid(
             textPaint
         )
     }
-
     // Vertical grid lines (time)
     val timeGridCount = 4
     val dateFormat = SimpleDateFormat(
@@ -326,7 +311,6 @@ private fun DrawScope.drawGrid(
         },
         Locale.getDefault()
     )
-
     for (i in 0..timeGridCount) {
         val x = padding + (chartWidth * i / timeGridCount)
         drawLine(
@@ -335,7 +319,6 @@ private fun DrawScope.drawGrid(
             end = Offset(x, size.height - padding),
             strokeWidth = 0.5.dp.toPx()
         )
-
         // Time labels
         val time = minTime + ((maxTime - minTime) * i / timeGridCount)
         val timeLabel = dateFormat.format(Date(time))
@@ -361,18 +344,15 @@ private fun DrawScope.drawPointSeries(
 ) {
     val path = Path()
     var isFirst = true
-
     data.forEach { entry ->
         val x = padding + chartWidth * ((entry.timestamp - minTime).toFloat() / timeRange)
         val y = padding + chartHeight - (chartHeight * ((entry.temperature - minTemp) / tempRange))
-
         if (isFirst) {
             path.moveTo(x, y)
             isFirst = false
         } else {
             path.lineTo(x, y)
         }
-
         // Draw data points
         drawCircle(
             color = color,
@@ -380,7 +360,6 @@ private fun DrawScope.drawPointSeries(
             center = Offset(x, y)
         )
     }
-
     // Draw connecting line
     drawPath(
         path = path,
@@ -402,12 +381,10 @@ private fun DrawScope.drawLineSeries(
     val maxPath = Path()
     val minPath = Path()
     var isFirst = true
-
     data.forEach { entry ->
         val x = padding + chartWidth * ((entry.timestamp - minTime).toFloat() / timeRange)
         val maxY = padding + chartHeight - (chartHeight * ((entry.temperatureMax - minTemp) / tempRange))
         val minY = padding + chartHeight - (chartHeight * ((entry.temperatureMin - minTemp) / tempRange))
-
         if (isFirst) {
             maxPath.moveTo(x, maxY)
             minPath.moveTo(x, minY)
@@ -416,7 +393,6 @@ private fun DrawScope.drawLineSeries(
             maxPath.lineTo(x, maxY)
             minPath.lineTo(x, minY)
         }
-
         // Draw data points
         drawCircle(
             color = Color(0xFFFF5722),
@@ -429,7 +405,6 @@ private fun DrawScope.drawLineSeries(
             center = Offset(x, minY)
         )
     }
-
     // Draw lines
     drawPath(
         path = maxPath,
@@ -457,13 +432,11 @@ private fun DrawScope.drawAreaSeries(
     val centerPath = Path()
     val minPath = Path()
     var isFirst = true
-
     data.forEach { entry ->
         val x = padding + chartWidth * ((entry.timestamp - minTime).toFloat() / timeRange)
         val maxY = padding + chartHeight - (chartHeight * ((entry.temperatureMax - minTemp) / tempRange))
         val centerY = padding + chartHeight - (chartHeight * ((entry.temperatureCenter - minTemp) / tempRange))
         val minY = padding + chartHeight - (chartHeight * ((entry.temperatureMin - minTemp) / tempRange))
-
         if (isFirst) {
             maxPath.moveTo(x, maxY)
             centerPath.moveTo(x, centerY)
@@ -474,13 +447,11 @@ private fun DrawScope.drawAreaSeries(
             centerPath.lineTo(x, centerY)
             minPath.lineTo(x, minY)
         }
-
         // Draw data points
         drawCircle(color = Color(0xFFFF5722), radius = 2.dp.toPx(), center = Offset(x, maxY))
         drawCircle(color = Color(0xFF4CAF50), radius = 2.dp.toPx(), center = Offset(x, centerY))
         drawCircle(color = Color(0xFF2196F3), radius = 2.dp.toPx(), center = Offset(x, minY))
     }
-
     // Draw lines
     drawPath(path = maxPath, color = Color(0xFFFF5722), style = Stroke(width = 2.dp.toPx()))
     drawPath(path = centerPath, color = Color(0xFF4CAF50), style = Stroke(width = 2.dp.toPx()))
@@ -488,7 +459,6 @@ private fun DrawScope.drawAreaSeries(
 }
 
 // Data classes and enums
-
 data class ThermalDataEntry(
     val timestamp: Long,
     val temperature: Float,
@@ -530,9 +500,7 @@ fun ChartLogComposePreview() {
             )
         }
     }
-
     var selectedType by remember { mutableStateOf(ThermalChartType.POINT) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -552,14 +520,12 @@ fun ChartLogComposePreview() {
                 )
             }
         }
-
         ChartLogCompose(
             thermalData = sampleData,
             chartType = selectedType,
             timeFormat = TimeFormat.MINUTES,
             modifier = Modifier.fillMaxWidth()
         )
-
         // Empty state example
         ChartLogCompose(
             thermalData = emptyList(),

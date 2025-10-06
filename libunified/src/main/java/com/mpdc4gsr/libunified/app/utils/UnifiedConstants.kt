@@ -1,7 +1,6 @@
 package com.mpdc4gsr.libunified.app.utils
 
 object UnifiedConstants {
-
     // Product Configuration Constants
     object Product {
         const val TYPE_NAME = "product_type"

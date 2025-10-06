@@ -16,7 +16,6 @@ object ChartTools {
         if (point1 == point2) {
             return tempList
         }
-
         val pointList: ArrayList<Point> = ArrayList()
         if (point1.x == point2.x) {
             val startY = point1.y.coerceAtMost(point2.y)
@@ -49,9 +48,7 @@ object ChartTools {
                 }
             }
         }
-
         val width = if (rotate == 90 || rotate == 270) 192 else 256
-
         pointList.forEach {
             val index = (it.y * width + it.x) * 2
             val tempInt =
@@ -59,7 +56,6 @@ object ChartTools {
             val tempValue = tempInt / 64f - 273.15f
             tempList.add(tempValue)
         }
-
         return tempList
     }
 
@@ -112,7 +108,6 @@ object ChartTools {
                 val dataSet3 = chart.data.getDataSetByIndex(2)
                 maxVol = if (dataSet1.yMax > dataSet2.yMax) dataSet1.yMax else dataSet2.yMax
                 minVol = if (dataSet1.yMin < dataSet2.yMin) dataSet1.yMin else dataSet2.yMin
-
                 maxVol = if (dataSet3.yMax > maxVol) dataSet3.yMax else maxVol
                 minVol = if (dataSet3.yMin < minVol) dataSet3.yMin else minVol
             }
@@ -140,9 +135,7 @@ object ChartTools {
         chart: LineChart,
         type: Int,
     ) {
-
         val xLen = chart.xChartMax - chart.xChartMin
-
         chart.xAxis.setLabelCount(getLabCount(xLen.toInt()), xLen <= 3)
     }
 
@@ -151,7 +144,6 @@ object ChartTools {
             count <= 2 -> 1
             count in 3..4 -> 2
             count in 5..7 -> 3
-
             count >= 8 -> 4
             else -> count
         }

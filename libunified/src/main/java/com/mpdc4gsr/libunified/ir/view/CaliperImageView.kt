@@ -29,7 +29,6 @@ class CaliperImageView : AppCompatImageView {
     private var b: Int = 0
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         initView()
     }
@@ -102,9 +101,7 @@ class CaliperImageView : AppCompatImageView {
 
     private var downX = 0f
     private var downY = 0f
-
     private val downTime: Long = 0
-
     override fun onTouchEvent(event: MotionEvent): Boolean {
         super.onTouchEvent(event)
         if (this.isEnabled) {

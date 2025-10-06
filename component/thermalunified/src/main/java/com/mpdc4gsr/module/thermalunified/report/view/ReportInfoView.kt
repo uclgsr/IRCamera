@@ -11,7 +11,6 @@ import com.mpdc4gsr.module.thermalunified.report.bean.ReportConditionBean
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportInfoBean
 
 class ReportInfoView : LinearLayout {
-
     private lateinit var tvReportName: android.widget.TextView
     private lateinit var tvReportAuthor: android.widget.TextView
     private lateinit var groupReportPlace: androidx.constraintlayout.widget.Group
@@ -32,9 +31,7 @@ class ReportInfoView : LinearLayout {
     private lateinit var clTop: androidx.constraintlayout.widget.ConstraintLayout
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -67,13 +64,10 @@ class ReportInfoView : LinearLayout {
 
     fun refreshInfo(reportInfoBean: ReportInfoBean?) {
         tvReportName.text = reportInfoBean?.report_name
-
         tvReportAuthor.isVisible = reportInfoBean?.is_report_author == 1
         tvReportAuthor.text = reportInfoBean?.report_author
-
         groupReportPlace.isVisible = reportInfoBean?.is_report_place == 1
         tvReportPlace.text = reportInfoBean?.report_place
-
         tvReportDate.isVisible = reportInfoBean?.is_report_date == 1
         tvReportDate.text = reportInfoBean?.report_date
     }
@@ -83,22 +77,18 @@ class ReportInfoView : LinearLayout {
                 conditionBean?.is_ambient_temperature == 1 ||
                 conditionBean?.is_test_distance == 1 ||
                 conditionBean?.is_emissivity == 1
-
         groupAmbientTemperature.isVisible = conditionBean?.is_ambient_temperature == 1
         tvAmbientTemperature.text = conditionBean?.ambient_temperature
         viewLine1.isVisible = conditionBean?.is_ambient_temperature == 1 &&
                 (conditionBean.is_ambient_humidity == 1 || conditionBean.is_test_distance == 1 || conditionBean.is_emissivity == 1)
-
         groupAmbientHumidity.isVisible = conditionBean?.is_ambient_humidity == 1
         tvAmbientHumidity.text = conditionBean?.ambient_humidity
         viewLine2.isVisible =
             conditionBean?.is_ambient_humidity == 1 && (conditionBean.is_test_distance == 1 || conditionBean.is_emissivity == 1)
-
         groupTestDistance.isVisible = conditionBean?.is_test_distance == 1
         tvTestDistance.text = conditionBean?.test_distance
         viewLine3.isVisible =
             conditionBean?.is_test_distance == 1 && conditionBean.is_emissivity == 1
-
         groupEmissivity.isVisible = conditionBean?.is_emissivity == 1
         tvEmissivity.text = conditionBean?.emissivity
     }

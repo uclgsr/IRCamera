@@ -22,10 +22,6 @@ import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * Main Screen - Replaces MainActivity with Compose implementation
- * Primary entry point for the IR Camera application
- */
 @Composable
 fun MainScreen(
     onNavigateToSensors: () -> Unit = {},
@@ -36,7 +32,6 @@ fun MainScreen(
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -53,7 +48,6 @@ fun MainScreen(
                 onClick = onNavigateToSettings
             )
         }
-
         // Main content area
         Box(
             modifier = Modifier
@@ -69,7 +63,6 @@ fun MainScreen(
                 2 -> ProfileTab(onNavigateToProfile = onNavigateToProfile)
             }
         }
-
         // Bottom navigation
         NavigationBar(
             containerColor = Color(0xFF2A2A2A)
@@ -126,22 +119,6 @@ fun MainScreen(
     }
 }
 
-/**
- * Sensor Dashboard Tab - Main sensor interface
- *
- * OPTIMIZED: Improved recomposition handling and state management
- * - Uses remember for stable references to prevent unnecessary recomposition
- * - Memoized callbacks to avoid recreating lambdas on every recomposition
- * - Stable state holders to minimize composition scope
- *
- * TODO: State management should be hoisted to a MainViewModel
- * Current limitation: Sensor states are managed locally and hardcoded to Connected.
- * Future work should:
- * - Create MainViewModel to manage sensor states
- * - Connect to actual sensor hardware/services
- * - Make state lifecycle-aware and survive configuration changes
- * - Implement real business logic in onAction handlers
- */
 @Composable
 private fun SensorDashboardTab(
     onSensorClick: (mpdc4gsr.core.ui.model.SensorType) -> Unit = {},
@@ -151,7 +128,6 @@ private fun SensorDashboardTab(
     var gsrState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
     var thermalState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
     var rgbState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
-
     // Memoize action handlers to prevent recreating lambdas on every recomposition
     val gsrActionHandler = remember {
         { action: mpdc4gsr.core.ui.model.GSRAction ->
@@ -172,7 +148,6 @@ private fun SensorDashboardTab(
             }
         }
     }
-
     val thermalActionHandler = remember {
         { action: mpdc4gsr.core.ui.model.ThermalAction ->
             when (action) {
@@ -189,12 +164,10 @@ private fun SensorDashboardTab(
                     thermalState = mpdc4gsr.core.ui.model.SensorState.Connected
 
                 is mpdc4gsr.core.ui.model.ThermalAction.Calibrate -> {}
-
                 is mpdc4gsr.core.ui.model.ThermalAction.OpenSettings -> {}
             }
         }
     }
-
     val rgbActionHandler = remember {
         { action: mpdc4gsr.core.ui.model.CameraAction ->
             when (action) {
@@ -214,7 +187,6 @@ private fun SensorDashboardTab(
             }
         }
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -233,24 +205,22 @@ private fun SensorDashboardTab(
                     .padding(20.dp)
             ) {
                 Text(
-                    text = "Welcome to IR Camera",
+                    text = "MPDC4GSR",
                     color = Color.White,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Multi-modal sensor platform for thermal imaging, GSR monitoring, and RGB camera recording",
+                    text = "Multi-sensor data collection platform for GSR",
                     color = Color.Gray,
                     fontSize = 14.sp,
                     lineHeight = 20.sp
                 )
             }
         }
-
         // System status overview
         SystemStatusOverview()
-
         // Sensor cards for direct access
         // Using memoized handlers to prevent unnecessary recomposition
         mpdc4gsr.core.ui.components.sensors.GSRSensorCard(
@@ -259,14 +229,12 @@ private fun SensorDashboardTab(
             onClick = { onSensorClick(mpdc4gsr.core.ui.model.SensorType.GSR) },
             onAction = gsrActionHandler
         )
-
         mpdc4gsr.core.ui.components.sensors.ThermalSensorCard(
             state = thermalState,
             onStateChange = { thermalState = it },
             onClick = { onSensorClick(mpdc4gsr.core.ui.model.SensorType.ThermalIR) },
             onAction = thermalActionHandler
         )
-
         mpdc4gsr.core.ui.components.sensors.RGBCameraSensorCard(
             state = rgbState,
             onStateChange = { rgbState = it },
@@ -276,9 +244,6 @@ private fun SensorDashboardTab(
     }
 }
 
-/**
- * Gallery Tab - Image and video gallery
- */
 @Composable
 private fun GalleryTab(
     onNavigateToGallery: () -> Unit,
@@ -332,9 +297,6 @@ private fun GalleryTab(
     }
 }
 
-/**
- * Profile Tab - User profile and account
- */
 @Composable
 private fun ProfileTab(
     onNavigateToProfile: () -> Unit,
@@ -388,10 +350,6 @@ private fun ProfileTab(
     }
 }
 
-/**
- * System status overview component
- * OPTIMIZED: Uses remember for stable color references to prevent unnecessary recomposition
- */
 @Composable
 private fun SystemStatusOverview(
     modifier: Modifier = Modifier
@@ -399,7 +357,6 @@ private fun SystemStatusOverview(
     // Memoize colors to prevent recomposition when theme changes
     val connectedColor = Color.Green
     val primaryColor = MaterialTheme.colorScheme.primary
-
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -416,7 +373,6 @@ private fun SystemStatusOverview(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -429,9 +385,6 @@ private fun SystemStatusOverview(
     }
 }
 
-/**
- * Status item component
- */
 @Composable
 private fun StatusItem(
     label: String,
