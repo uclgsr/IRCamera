@@ -21,6 +21,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import mpdc4gsr.core.data.*
 import mpdc4gsr.feature.network.data.RecordingController
 import java.util.concurrent.atomic.AtomicBoolean
