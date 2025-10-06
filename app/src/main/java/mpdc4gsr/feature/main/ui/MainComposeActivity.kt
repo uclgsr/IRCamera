@@ -175,18 +175,18 @@ fun MainApp() {
         composable(MainNavRoutes.SETTINGS) {
             SettingsScreen(
                 onBackClick = { navController.popBackStack() },
-                onNavigateToGSRSettings = { navController.navigate("gsr_settings") },
-                onNavigateToThermalSettings = { navController.navigate("thermal_settings") },
-                onNavigateToCameraSettings = { navController.navigate("camera_settings") },
-                onNavigateToRecordingSettings = { navController.navigate("recording_settings") },
-                onNavigateToStorageSettings = { navController.navigate("storage_settings") },
-                onNavigateToSyncSettings = { navController.navigate("sync_settings") },
-                onNavigateToCalibration = { navController.navigate("calibration") },
-                onNavigateToNetworkSettings = { navController.navigate("network_settings") },
-                onNavigateToDiagnostics = { navController.navigate("diagnostics") },
-                onNavigateToAppInfo = { navController.navigate("app_info") },
-                onNavigateToPrivacyPolicy = { navController.navigate("privacy_policy") },
-                onNavigateToHelp = { navController.navigate("help") }
+                onNavigateToGSRSettings = { navController.navigate(MainNavRoutes.GSR_SETTINGS) },
+                onNavigateToThermalSettings = { navController.navigate(MainNavRoutes.THERMAL_SETTINGS) },
+                onNavigateToCameraSettings = { navController.navigate(MainNavRoutes.CAMERA_SETTINGS) },
+                onNavigateToRecordingSettings = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.RecordingSettings.route) },
+                onNavigateToStorageSettings = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.StorageSettings.route) },
+                onNavigateToSyncSettings = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.SyncSettings.route) },
+                onNavigateToCalibration = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.Calibration.route) },
+                onNavigateToNetworkSettings = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.NetworkSettings.route) },
+                onNavigateToDiagnostics = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.Diagnostics.route) },
+                onNavigateToAppInfo = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.AppInfo.route) },
+                onNavigateToPrivacyPolicy = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.PrivacyPolicy.route) },
+                onNavigateToHelp = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.Help.route) }
             )
         }
 

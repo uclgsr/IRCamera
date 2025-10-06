@@ -45,6 +45,22 @@ fun GSRSettingsScreen(
 
     LaunchedEffect(Unit) {
         viewModel.initialize(context)
+        viewModel.settingsEvents.collect { event ->
+            val message = when (event) {
+                is GSRSettingsViewModel.SettingsEvent.ShowToast -> event.message
+                is GSRSettingsViewModel.SettingsEvent.CalibrationStarted -> event.message
+                is GSRSettingsViewModel.SettingsEvent.CalibrationCompleted -> event.message
+                is GSRSettingsViewModel.SettingsEvent.ShowError -> event.message
+                else -> null
+            }
+            message?.let {
+                android.widget.Toast.makeText(
+                    context,
+                    it,
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     Column(
@@ -165,16 +181,12 @@ fun GSRSettingsScreen(
             }
 
             // Calibration
-            val context = androidx.compose.ui.platform.LocalContext.current
             SettingsCard(
                 title = "Calibration",
                 icon = Icons.Default.Tune
             ) {
                 Button(
-                    onClick = {
-                        viewModel.startCalibration()
-                        // Toast is shown by ViewModel via settingsEvents
-                    },
+                    onClick = { viewModel.startCalibration() },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = null)
@@ -182,10 +194,7 @@ fun GSRSettingsScreen(
                     Text("Start Calibration")
                 }
                 Button(
-                    onClick = {
-                        viewModel.resetToDefaults()
-                        // Toast is shown by ViewModel via settingsEvents
-                    },
+                    onClick = { viewModel.resetToDefaults() },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                 ) {

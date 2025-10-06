@@ -31,8 +31,8 @@ fun CameraDashboardScreen(
     onNavigateToDualMode: () -> Unit,
     onNavigateToSettings: () -> Unit,
     onNavigateToSingleCamera: (() -> Unit)? = null,
-    onNavigateToGallery: (() -> Unit)? = null,
     onNavigateToTimeLapse: (() -> Unit)? = null,
+    onNavigateToGallery: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     LibUnifiedTheme {
@@ -61,8 +61,8 @@ fun CameraDashboardScreen(
             CameraDashboardContent(
                 onNavigateToDualMode = onNavigateToDualMode,
                 onNavigateToSingleCamera = onNavigateToSingleCamera,
-                onNavigateToGallery = onNavigateToGallery,
                 onNavigateToTimeLapse = onNavigateToTimeLapse,
+                onNavigateToGallery = onNavigateToGallery,
                 modifier = Modifier.padding(paddingValues)
             )
         }
@@ -73,10 +73,19 @@ fun CameraDashboardScreen(
 private fun CameraDashboardContent(
     onNavigateToDualMode: () -> Unit,
     onNavigateToSingleCamera: (() -> Unit)? = null,
-    onNavigateToGallery: (() -> Unit)? = null,
     onNavigateToTimeLapse: (() -> Unit)? = null,
+    onNavigateToGallery: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val showToast: (String) -> Unit = { message ->
+        android.widget.Toast.makeText(
+            context,
+            message,
+            android.widget.Toast.LENGTH_SHORT
+        ).show()
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -91,7 +100,8 @@ private fun CameraDashboardContent(
         CameraModesCard(
             onNavigateToDualMode = onNavigateToDualMode,
             onNavigateToSingleCamera = onNavigateToSingleCamera,
-            onNavigateToTimeLapse = onNavigateToTimeLapse
+            onNavigateToTimeLapse = onNavigateToTimeLapse,
+            showToast = showToast
         )
 
         // Recording Controls Card
@@ -105,7 +115,8 @@ private fun CameraDashboardContent(
         // Preview and Gallery Card
         PreviewGalleryCard(
             onNavigateToSingleCamera = onNavigateToSingleCamera,
-            onNavigateToGallery = onNavigateToGallery
+            onNavigateToGallery = onNavigateToGallery,
+            showToast = showToast
         )
     }
 }
@@ -213,7 +224,8 @@ private fun CameraInfoRow(
 private fun CameraModesCard(
     onNavigateToDualMode: () -> Unit,
     onNavigateToSingleCamera: (() -> Unit)? = null,
-    onNavigateToTimeLapse: (() -> Unit)? = null
+    onNavigateToTimeLapse: (() -> Unit)? = null,
+    showToast: (String) -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -238,7 +250,7 @@ private fun CameraModesCard(
                 icon = Icons.Default.Camera,
                 isActive = false,
                 onClick = {
-                    onNavigateToSingleCamera?.invoke()
+                    onNavigateToSingleCamera?.invoke() ?: showToast("Single camera mode coming soon")
                 }
             )
 
@@ -258,7 +270,7 @@ private fun CameraModesCard(
                 icon = Icons.Default.Timer,
                 isActive = false,
                 onClick = {
-                    onNavigateToTimeLapse?.invoke()
+                    onNavigateToTimeLapse?.invoke() ?: showToast("Time-lapse mode coming soon")
                 }
             )
         }
@@ -490,7 +502,8 @@ private fun SettingRow(
 @Composable
 private fun PreviewGalleryCard(
     onNavigateToSingleCamera: (() -> Unit)? = null,
-    onNavigateToGallery: (() -> Unit)? = null
+    onNavigateToGallery: (() -> Unit)? = null,
+    showToast: (String) -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -508,14 +521,13 @@ private fun PreviewGalleryCard(
 
             HorizontalDivider()
 
-            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
                     onClick = {
-                        onNavigateToSingleCamera?.invoke()
+                        onNavigateToSingleCamera?.invoke() ?: showToast("Preview feature coming soon")
                     },
                     modifier = Modifier.weight(1f)
                 ) {
@@ -526,7 +538,7 @@ private fun PreviewGalleryCard(
 
                 OutlinedButton(
                     onClick = {
-                        onNavigateToGallery?.invoke()
+                        onNavigateToGallery?.invoke() ?: showToast("Gallery feature coming soon")
                     },
                     modifier = Modifier.weight(1f)
                 ) {
