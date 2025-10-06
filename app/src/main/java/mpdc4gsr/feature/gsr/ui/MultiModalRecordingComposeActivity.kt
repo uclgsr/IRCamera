@@ -151,7 +151,7 @@ private fun MultiModalRecordingContent(
             subtitle = "Shimmer3 GSR+ Device",
             icon = Icons.Default.MonitorHeart,
             isEnabled = selectedSensors.contains("gsr"),
-            isConnected = true, // Replace with actual connection status
+            isConnected = false,
             onToggle = { onSensorToggle("gsr") },
             statusText = "128 Hz",
             modifier = Modifier.padding(bottom = 8.dp)
@@ -161,7 +161,7 @@ private fun MultiModalRecordingContent(
             subtitle = "TOPDON TC001 Device",
             icon = Icons.Default.Thermostat,
             isEnabled = selectedSensors.contains("thermal"),
-            isConnected = true, // Replace with actual connection status
+            isConnected = false,
             onToggle = { onSensorToggle("thermal") },
             statusText = "25 FPS",
             modifier = Modifier.padding(bottom = 8.dp)
@@ -171,7 +171,7 @@ private fun MultiModalRecordingContent(
             subtitle = "Device Camera",
             icon = Icons.Default.CameraAlt,
             isEnabled = selectedSensors.contains("rgb"),
-            isConnected = true, // Replace with actual connection status
+            isConnected = false,
             onToggle = { onSensorToggle("rgb") },
             statusText = "30 FPS",
             modifier = Modifier.padding(bottom = 24.dp)

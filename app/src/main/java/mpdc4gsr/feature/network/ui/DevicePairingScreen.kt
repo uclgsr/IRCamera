@@ -21,7 +21,7 @@ data class PairableDevice(
     val id: String,
     val name: String,
     val type: DeviceType,
-    val isConnected: Boolean = false,
+    val isConnected: Boolean? = null,
     val isPairing: Boolean = false,
     val signalStrength: Int = 0, // 0-100
     val batteryLevel: Int? = null
@@ -235,7 +235,7 @@ fun DevicePairingItem(
             }
             // Pair Button
             when {
-                device.isConnected -> {
+                device.isConnected == true -> {
                     Icon(
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = "Connected",
@@ -249,6 +249,14 @@ fun DevicePairingItem(
                         modifier = Modifier.size(24.dp),
                         color = MaterialTheme.colorScheme.primary,
                         strokeWidth = 2.dp
+                    )
+                }
+
+                device.isConnected == null -> {
+                    Text(
+                        text = "N/A",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
                 }
 
@@ -272,27 +280,29 @@ private fun getSampleDevices() = listOf(
         id = "TC001-A5B2C1",
         name = "TOPDON TC001 Thermal Camera",
         type = DeviceType.THERMAL_CAMERA,
-        isConnected = true
+        isConnected = false
     ),
     PairableDevice(
         id = "SHIMMER-3D4E5F",
         name = "Shimmer3 GSR Sensor",
         type = DeviceType.GSR_SENSOR,
         signalStrength = 85,
-        batteryLevel = 67
+        batteryLevel = 67,
+        isConnected = false
     ),
     PairableDevice(
         id = "RGB-CAM-123",
         name = "Built-in RGB Camera",
         type = DeviceType.RGB_CAMERA,
-        isConnected = true
+        isConnected = false
     ),
     PairableDevice(
         id = "BT-DEV-456",
         name = "Research Device Alpha",
         type = DeviceType.BLUETOOTH_DEVICE,
         signalStrength = 45,
-        batteryLevel = 89
+        batteryLevel = 89,
+        isConnected = false
     )
 )
 

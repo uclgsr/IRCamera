@@ -474,7 +474,7 @@ data class GSRQuickRecordingUiState(
     val isRecording: Boolean = false,
     val recordingDuration: Long = 0,
     val samplesCollected: Int = 0,
-    val deviceStatus: String = "Connected",
+    val deviceStatus: String = "Disconnected",
     val signalQuality: Int = 95,
     val batteryLevel: Int? = 87,
     val currentGSRValue: Double = 0.0,

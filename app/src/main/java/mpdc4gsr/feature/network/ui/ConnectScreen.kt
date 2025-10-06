@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -22,11 +23,35 @@ fun ConnectScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    // Sample device types - will be replaced with actual device data
-    val deviceTypes = remember {
+
+    val deviceConnectionState = com.mpdc4gsr.libunified.app.event.DeviceEventManager.deviceConnectionState.collectAsState()
+    val socketConnectionState = com.mpdc4gsr.libunified.app.event.DeviceEventManager.socketConnectionState.collectAsState()
+
+    val deviceTypes = remember(deviceConnectionState.value, socketConnectionState.value) {
+        val tc001Status = try {
+            val hasUsbDevice = com.mpdc4gsr.libunified.app.tools.DeviceTools.findUsbDevice() != null
+            if (hasUsbDevice) {
+                deviceConnectionState.value?.isConnected ?: false
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+        
+        val tc007Status: Boolean? = null
+        
         listOf(
-            ConnectedDevice("TC001", "TOPDON TC001 Thermal Camera", true),
-            ConnectedDevice("TC007", "TOPDON TC007 Thermal Camera", false)
+            ConnectedDevice(
+                "TC001", 
+                "TOPDON TC001 Thermal Camera", 
+                tc001Status
+            ),
+            ConnectedDevice(
+                "TC007", 
+                "TOPDON TC007 Thermal Camera", 
+                tc007Status
+            )
         )
     }
     Column(
@@ -100,8 +125,16 @@ private fun DeviceItem(
                     fontSize = 16.sp
                 )
                 Text(
-                    text = if (device.isConnected) "Connected" else "Not connected",
-                    color = if (device.isConnected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = when (device.isConnected) {
+                        true -> "Connected"
+                        false -> "Not connected"
+                        null -> "N/A"
+                    },
+                    color = when (device.isConnected) {
+                        true -> MaterialTheme.colorScheme.tertiary
+                        false -> MaterialTheme.colorScheme.onSurfaceVariant
+                        null -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    },
                     fontSize = 12.sp,
                     modifier = Modifier.padding(top = 4.dp)
                 )
@@ -110,7 +143,11 @@ private fun DeviceItem(
             Surface(
                 modifier = Modifier.size(12.dp),
                 shape = androidx.compose.foundation.shape.CircleShape,
-                color = if (device.isConnected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline
+                color = when (device.isConnected) {
+                    true -> MaterialTheme.colorScheme.tertiary
+                    false -> MaterialTheme.colorScheme.outline
+                    null -> MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)
+                }
             ) {}
         }
     }
@@ -119,7 +156,7 @@ private fun DeviceItem(
 data class ConnectedDevice(
     val id: String,
     val name: String,
-    val isConnected: Boolean
+    val isConnected: Boolean?
 )
 
 @Preview(showBackground = true)
