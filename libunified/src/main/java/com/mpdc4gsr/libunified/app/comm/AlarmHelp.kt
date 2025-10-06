@@ -19,7 +19,6 @@ class AlarmHelp private constructor(val context: Context) {
     private var minTemp: Float = 0f
     private var isPause = false
     private var alarmBean: AlarmBean? = null
-
     fun updateData(alarmBean: AlarmBean) {
         this.alarmBean = alarmBean
         isTempAlarmRingtoneOpen = alarmBean?.isRingtoneOpen ?: false
@@ -94,7 +93,6 @@ class AlarmHelp private constructor(val context: Context) {
         tempLayout: TempLayout?,
     ) {
         if (isOpenHighTemp && isOpenLowTemp) {
-
             if (realMax > maxTemp && realMin < minTemp) {
                 tempLayout?.startAnimation(TempLayout.TYPE_A)
                 startMediaPlayer()
@@ -109,7 +107,6 @@ class AlarmHelp private constructor(val context: Context) {
                 stopPlayer()
             }
         } else if (isOpenHighTemp) {
-
             if (realMax > maxTemp) {
                 tempLayout?.startAnimation(TempLayout.TYPE_HOT)
                 startMediaPlayer()
@@ -118,7 +115,6 @@ class AlarmHelp private constructor(val context: Context) {
                 stopPlayer()
             }
         } else if (isOpenLowTemp) {
-
             if (realMin < minTemp) {
                 tempLayout?.startAnimation(TempLayout.TYPE_LT)
                 startMediaPlayer()

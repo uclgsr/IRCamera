@@ -1,8 +1,5 @@
 package mpdc4gsr.feature.network.data
 
-/**
- * Centralized constants for recording controllers to eliminate duplication
- */
 object RecordingConstants {
     // Storage estimation constants
     const val FALLBACK_AVAILABLE_SPACE_GB = 10.0

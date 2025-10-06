@@ -13,11 +13,9 @@ class ModernFirmwareViewModel(
     application: Application,
     private val firmwareRepository: FirmwareRepository = FirmwareRepository(application)
 ) : AndroidViewModel(application) {
-
     // State management
     private val _firmwareState = MutableStateFlow<FirmwareState>(FirmwareState.Idle)
     val firmwareState: StateFlow<FirmwareState> = _firmwareState.asStateFlow()
-
     private val _downloadState = MutableStateFlow<DownloadState>(DownloadState.Idle)
     val downloadState: StateFlow<DownloadState> = _downloadState.asStateFlow()
 
@@ -52,7 +50,6 @@ class ModernFirmwareViewModel(
     fun checkFirmwareUpdate(isTC007: Boolean, deviceInfo: FirmwareRepository.DeviceInfo) {
         viewModelScope.launch {
             _firmwareState.value = FirmwareState.Checking
-
             firmwareRepository.checkFirmwareUpdate(isTC007, deviceInfo).collect { result ->
                 when (result) {
                     is BaseRepository.Result.Loading -> {
@@ -84,7 +81,6 @@ class ModernFirmwareViewModel(
     fun downloadFirmwareUpdate(firmwareInfo: FirmwareRepository.FirmwareInfo, outputDir: File) {
         viewModelScope.launch {
             _downloadState.value = DownloadState.Downloading(0f)
-
             when (val result = firmwareRepository.downloadFirmware(firmwareInfo, outputDir)) {
                 is BaseRepository.Result.Success -> {
                     _downloadState.value = DownloadState.Completed(result.data)

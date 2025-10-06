@@ -6,7 +6,6 @@ class Resp<T> {
     var code: String = ""
     var msg: String = ""
     var data: T? = null
-
     fun isSuccess(): Boolean {
         return TextUtils.equals(code, "0")
     }

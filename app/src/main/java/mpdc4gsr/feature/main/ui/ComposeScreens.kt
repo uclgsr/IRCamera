@@ -13,11 +13,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
-/**
- * Modern Compose screens replacing traditional fragments
- * Each screen is a full Compose implementation with proper state management
- */
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainDashboardScreen(navController: NavController) {
@@ -34,19 +29,15 @@ fun MainDashboardScreen(navController: NavController) {
                 fontWeight = FontWeight.Bold
             )
         }
-
         item {
             ConnectionStatusCard()
         }
-
         item {
             QuickActionsCard(navController = navController)
         }
-
         item {
             RecentSessionsCard()
         }
-
         item {
             SystemHealthCard()
         }
@@ -65,9 +56,7 @@ fun ThermalCameraScreen(navController: NavController) {
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         // Thermal camera preview would go here
         Card(
             modifier = Modifier
@@ -81,9 +70,7 @@ fun ThermalCameraScreen(navController: NavController) {
                 Text("Thermal Camera View")
             }
         }
-
         Spacer(modifier = Modifier.height(16.dp))
-
         ThermalControlsPanel()
     }
 }
@@ -115,19 +102,15 @@ private fun GSRSensorScreenDeprecated(navController: NavController) {
                 fontWeight = FontWeight.Bold
             )
         }
-
         item {
             GSRConnectionCard()
         }
-
         item {
             GSRDataVisualizationCard()
         }
-
         item {
             GSRRecordingControlsCard()
         }
-
         item {
             GSRCalibrationCard()
         }
@@ -149,19 +132,15 @@ fun SensorDashboardScreen(navController: NavController) {
                 fontWeight = FontWeight.Bold
             )
         }
-
         item {
             AllSensorsStatusCard()
         }
-
         item {
             SensorMetricsCard()
         }
-
         item {
             DataSynchronizationCard()
         }
-
         item {
             AdvancedAnalyticsCard()
         }
@@ -183,23 +162,18 @@ fun SettingsScreen(navController: NavController) {
                 fontWeight = FontWeight.Bold
             )
         }
-
         item {
             GeneralSettingsCard()
         }
-
         item {
             ThermalCameraSettingsCard()
         }
-
         item {
             GSRSensorSettingsCard()
         }
-
         item {
             NetworkSettingsCard()
         }
-
         item {
             AboutCard()
         }
@@ -223,9 +197,7 @@ fun ConnectionStatusCard() {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -274,9 +246,7 @@ fun QuickActionsCard(navController: NavController) {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -289,7 +259,6 @@ fun QuickActionsCard(navController: NavController) {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Thermal")
                 }
-
                 Button(
                     onClick = { navController.navigate("gsr") },
                     modifier = Modifier.weight(1f)
@@ -298,7 +267,6 @@ fun QuickActionsCard(navController: NavController) {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("GSR")
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Start recording functionality
@@ -333,15 +301,12 @@ fun RecentSessionsCard() {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             val sessions = listOf(
                 "Session 2024-01-15 14:30",
                 "Session 2024-01-15 10:15",
                 "Session 2024-01-14 16:45"
             )
-
             sessions.forEach { session ->
                 Row(
                     modifier = Modifier
@@ -386,9 +351,7 @@ fun SystemHealthCard() {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -435,9 +398,7 @@ fun ThermalControlsPanel() {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -457,7 +418,6 @@ fun ThermalControlsPanel() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Capture")
                 }
-
                 Button(
                     onClick = {
                         // TODO: Start thermal recording
@@ -473,7 +433,6 @@ fun ThermalControlsPanel() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Record")
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Open thermal settings
@@ -515,22 +474,18 @@ fun GSRConnectionCard() {
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
-
                 Icon(
                     Icons.Default.CheckCircle,
                     contentDescription = "Connected",
                     tint = Color.Green
                 )
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = "Shimmer3 GSR - Device ID: SH001",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
             Text(
                 text = "Battery: 89% | Signal: Strong",
                 style = MaterialTheme.typography.bodySmall,
@@ -553,9 +508,7 @@ fun GSRDataVisualizationCard() {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             // Placeholder for GSR data visualization
             Box(
                 modifier = Modifier
@@ -565,9 +518,7 @@ fun GSRDataVisualizationCard() {
             ) {
                 Text("GSR Waveform Visualization")
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -601,9 +552,7 @@ fun GSRRecordingControlsCard() {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -623,7 +572,6 @@ fun GSRRecordingControlsCard() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Start")
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Stop GSR recording
@@ -639,7 +587,6 @@ fun GSRRecordingControlsCard() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Stop")
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Pause GSR recording
@@ -674,9 +621,7 @@ fun GSRCalibrationCard() {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -686,7 +631,6 @@ fun GSRCalibrationCard() {
                     text = "Last Calibration: 2024-01-15",
                     style = MaterialTheme.typography.bodyMedium
                 )
-
                 Button(
                     onClick = {
                         // TODO: Start GSR calibration
@@ -700,14 +644,11 @@ fun GSRCalibrationCard() {
                     Text("Calibrate")
                 }
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             LinearProgressIndicator(
                 progress = { 0.85f },
                 modifier = Modifier.fillMaxWidth()
             )
-
             Text(
                 text = "Calibration Quality: 85%",
                 style = MaterialTheme.typography.bodySmall,
@@ -841,9 +782,7 @@ fun AboutCard() {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = "Version 2.0.0\nBuild 2024.01.15",
                 style = MaterialTheme.typography.bodyMedium,

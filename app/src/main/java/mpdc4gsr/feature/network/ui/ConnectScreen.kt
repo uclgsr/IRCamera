@@ -15,10 +15,6 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * ConnectScreen composable - replaces activity_device_type.xml
- * Maintains the same layout structure and spacing as the reference implementation
- */
 @Composable
 fun ConnectScreen(
     onDeviceSelected: (ConnectedDevice) -> Unit = {},
@@ -26,7 +22,6 @@ fun ConnectScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-
     // Sample device types - will be replaced with actual device data
     val deviceTypes = remember {
         listOf(
@@ -34,7 +29,6 @@ fun ConnectScreen(
             ConnectedDevice("TC007", "TOPDON TC007 Thermal Camera", false)
         )
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -46,7 +40,6 @@ fun ConnectScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         // Tips text with matching margins and styling
         Text(
             text = "Select your thermal camera device to connect", // Match @string/tc_connect_tips 
@@ -59,7 +52,6 @@ fun ConnectScreen(
                     top = 30.dp // Match layout_marginTop
                 )
         )
-
         // Device list replacing RecyclerView
         LazyColumn(
             modifier = Modifier
@@ -77,10 +69,6 @@ fun ConnectScreen(
     }
 }
 
-/**
- * Individual device item component
- * Replaces item view from RecyclerView adapter
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DeviceItem(
@@ -118,7 +106,6 @@ private fun DeviceItem(
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }
-
             // Connection status indicator
             Surface(
                 modifier = Modifier.size(12.dp),
@@ -129,10 +116,6 @@ private fun DeviceItem(
     }
 }
 
-/**
- * Data class representing a connected device
- * Matches the structure expected by the thermal camera connection logic
- */
 data class ConnectedDevice(
     val id: String,
     val name: String,

@@ -35,10 +35,8 @@ import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
 import kotlinx.coroutines.launch
 
 class IRMainComposeActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             LibUnifiedTheme {
                 MainContent()
@@ -50,7 +48,6 @@ class IRMainComposeActivity : AppCompatActivity() {
     private fun MainContent() {
         val pagerState = rememberPagerState(pageCount = { 5 })
         val scope = rememberCoroutineScope()
-
         Scaffold(
             containerColor = Color(0xFF16131E)
         ) { paddingValues ->
@@ -75,7 +72,6 @@ class IRMainComposeActivity : AppCompatActivity() {
                         4 -> MoreTabContent()
                     }
                 }
-
                 // Bottom navigation (15% of screen)
                 ThermalBottomNavigation(
                     selectedPage = pagerState.currentPage,
@@ -97,7 +93,6 @@ class IRMainComposeActivity : AppCompatActivity() {
 private fun ThermalTabContent() {
     val context = LocalContext.current
     val activity = context as? IRMainComposeActivity
-
     // Embed existing thermal fragment using AndroidView with proper FragmentManager integration
     AndroidView(
         factory = { context ->
@@ -121,7 +116,6 @@ private fun ThermalTabContent() {
 private fun GalleryTabContent() {
     val context = LocalContext.current
     val activity = context as? IRMainComposeActivity
-
     // Embed existing gallery fragment using AndroidView with proper FragmentManager integration
     AndroidView(
         factory = { context ->
@@ -145,7 +139,6 @@ private fun GalleryTabContent() {
 private fun AbilityTabContent() {
     val context = LocalContext.current
     val activity = context as? IRMainComposeActivity
-
     // Embed existing ability fragment using AndroidView with proper FragmentManager integration
     AndroidView(
         factory = { context ->
@@ -163,14 +156,12 @@ private fun AbilityTabContent() {
         },
         modifier = Modifier.fillMaxSize()
     )
-
 }
 
 @Composable
 private fun PDFTabContent() {
     val context = LocalContext.current
     val activity = context as? IRMainComposeActivity
-
     // Embed existing PDF fragment using AndroidView with proper FragmentManager integration
     AndroidView(
         factory = { context ->
@@ -207,7 +198,6 @@ private fun ThermalBottomNavigation(
     modifier: Modifier = Modifier
 ) {
     val tabs = getThermalTabs()
-
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -264,7 +254,6 @@ private fun ThermalTabButton(
                 )
             }
         }
-
         Text(
             tab.title,
             color = if (isSelected) Color(0xFFFF6B35) else Color(0xFF7D8590),

@@ -7,7 +7,6 @@ import com.mpdc4gsr.libunified.app.db.entity.ItemDetect
 
 @Dao
 abstract class HouseDetectDao {
-
     @Transaction
     open fun insert(houseDetect: HouseDetect): Long {
         val id: Long = insertDetect(houseDetect)
@@ -131,17 +130,14 @@ abstract class HouseDetectDao {
         dirList: ArrayList<DirDetect>,
         position: Int,
     ): DirDetect {
-
         for (i in position + 1 until dirList.size) {
             val dir: DirDetect = dirList[i]
             dir.position += 1
             updateDir(dir)
         }
-
         val oldDir = dirList[position]
         val newDir = oldDir.copyOne()
         newDir.id = insertDir(newDir)
-
         for (item in newDir.itemList) {
             item.parentId = newDir.id
             item.id = insertItem(item)
@@ -155,18 +151,15 @@ abstract class HouseDetectDao {
         itemList: ArrayList<ItemDetect>,
         position: Int,
     ): ItemDetect {
-
         for (i in position + 1 until itemList.size) {
             val item: ItemDetect = itemList[i]
             item.position += 1
             updateItem(item)
         }
-
         val oldItem = itemList[position]
         val newItem =
             oldItem.copyOne(position = oldItem.position + 1, itemName = oldItem.copyName())
         newItem.id = insertItem(newItem)
-
         if (newItem.state > 0) {
             val dir = newItem.dirDetect
             when (newItem.state) {

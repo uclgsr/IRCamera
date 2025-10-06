@@ -22,23 +22,11 @@ import mpdc4gsr.core.ui.components.sensors.GSRData
 import mpdc4gsr.core.ui.components.sensors.GSRVisualizationCard
 import mpdc4gsr.feature.main.presentation.MainActivityViewModel
 
-/**
- * Enhanced Sensor Dashboard leveraging consolidated layout patterns from dev branch
- *
- * This version integrates with:
- * - activity_sensor_consolidated.xml patterns
- * - item_sensor_data_consolidated.xml layouts
- * - Enhanced multi-modal recording support
- * - Improved device management from consolidated patterns
- */
 class SensorDashboardComposeEnhanced : ComponentActivity() {
-
     private lateinit var dashboardViewModel: MainActivityViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dashboardViewModel = viewModels<MainActivityViewModel>().value
-
         setContent {
             LibUnifiedTheme {
                 Content(dashboardViewModel)
@@ -55,7 +43,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
         val gsrConnectionState by viewModel.gsrConnectionState.collectAsState()
         val gsrBatteryLevel by viewModel.gsrBatteryLevel.collectAsState()
         val sessionState by viewModel.sessionState.collectAsState()
-
         // Enhanced GSR data with consolidated layout integration
         val gsrData by remember {
             derivedStateOf {
@@ -69,7 +56,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                 )
             }
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -131,7 +117,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                     gsrSensorState = gsrSensorState,
                     sessionState = sessionState
                 )
-
                 // Enhanced GSR visualization with consolidated patterns
                 GSRVisualizationCard(
                     gsrData = gsrData,
@@ -157,7 +142,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         ).show()
                     }
                 )
-
                 // Device management section (consolidated layout pattern)
                 DeviceManagementSection(
                     thermalCameraState = thermalCameraState,
@@ -165,7 +149,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                     onDeviceConfig = { deviceType -> launchDeviceConfig(deviceType) },
                     onDeviceTest = { deviceType -> launchDeviceTest(deviceType) }
                 )
-
                 // Enhanced data export section
                 DataExportSection(
                     sessionState = sessionState,
@@ -194,7 +177,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         ).show()
                     }
                 )
-
                 // System status and diagnostics
                 SystemDiagnosticsSection(
                     thermalCameraState = thermalCameraState,
@@ -252,7 +234,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                         )
                     }
-
                     if (sessionState == MainActivityViewModel.SessionState.RECORDING) {
                         Card(
                             colors = CardDefaults.cardColors(
@@ -279,9 +260,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Sensor status grid
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -293,14 +272,12 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         icon = Icons.Default.Camera,
                         isActive = thermalCameraState.status == MainActivityViewModel.SensorStatus.STREAMING
                     )
-
                     SensorStatusIndicator(
                         title = "GSR",
                         status = gsrSensorState.status.name,
                         icon = Icons.Default.Sensors,
                         isActive = gsrSensorState.status == MainActivityViewModel.SensorStatus.STREAMING
                     )
-
                     SensorStatusIndicator(
                         title = "Session",
                         status = if (sessionState == MainActivityViewModel.SessionState.RECORDING) "Active" else "Idle",
@@ -367,7 +344,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-
                 // Enhanced device cards with consolidated layout patterns
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -382,7 +358,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         onTest = { onDeviceTest("thermal") },
                         modifier = Modifier.weight(1f)
                     )
-
                     DeviceCard(
                         title = "GSR Sensor",
                         subtitle = "Shimmer3",
@@ -438,9 +413,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
@@ -484,7 +457,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onTertiaryContainer,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-
                 if (sessionState == MainActivityViewModel.SessionState.RECORDING) {
                     Text(
                         text = "Recording in progress - data will be available after session ends",
@@ -493,7 +465,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -507,7 +478,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Export Session")
                     }
-
                     OutlinedButton(
                         onClick = onExportAllData,
                         modifier = Modifier.weight(1f)
@@ -517,9 +487,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         Text("Export All")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 OutlinedButton(
                     onClick = onManageSessions,
                     modifier = Modifier.fillMaxWidth()
@@ -555,7 +523,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onSecondaryContainer,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-
                 // System health indicators
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -573,7 +540,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                             modifier = Modifier.size(24.dp)
                         )
                     }
-
                     Column(horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
                         Text("GSR Status", style = MaterialTheme.typography.labelMedium)
                         Icon(
@@ -587,9 +553,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -602,7 +566,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Run Diagnostics")
                     }
-
                     OutlinedButton(
                         onClick = onViewLogs,
                         modifier = Modifier.weight(1f)

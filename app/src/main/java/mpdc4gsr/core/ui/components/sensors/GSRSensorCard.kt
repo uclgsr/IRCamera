@@ -38,7 +38,6 @@ fun GSRSensorCard(
     var gsrValue by remember { mutableFloatStateOf(2.45f) }
     var skinConductance by remember { mutableFloatStateOf(0.82f) }
     var isRecording by remember { mutableStateOf(false) }
-
     // Simulate GSR data updates when streaming
     LaunchedEffect(state) {
         if (state == SensorState.Streaming) {
@@ -49,7 +48,6 @@ fun GSRSensorCard(
             }
         }
     }
-
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
@@ -87,7 +85,6 @@ fun GSRSensorCard(
                         fontWeight = FontWeight.Bold
                     )
                 }
-
                 Surface(
                     color = getStatusColor(state).copy(alpha = 0.2f),
                     shape = RoundedCornerShape(16.dp)
@@ -100,7 +97,6 @@ fun GSRSensorCard(
                     )
                 }
             }
-
             // GSR data visualization
             if (state == SensorState.Streaming || state == SensorState.Connected) {
                 GSRDataVisualization(
@@ -109,7 +105,6 @@ fun GSRSensorCard(
                     isStreaming = state == SensorState.Streaming
                 )
             }
-
             // Sensor metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -131,7 +126,6 @@ fun GSRSensorCard(
                     color = Color.Yellow
                 )
             }
-
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -224,7 +218,6 @@ private fun GSRDataVisualization(
                     val width = size.width
                     val height = size.height
                     val centerY = height / 2
-
                     // Draw baseline
                     drawLine(
                         color = Color.Gray,
@@ -232,12 +225,10 @@ private fun GSRDataVisualization(
                         end = Offset(width, centerY),
                         strokeWidth = 1.dp.toPx()
                     )
-
                     // Draw GSR waveform
                     val path = Path()
                     val points = 100
                     val timeOffset = System.currentTimeMillis() / 100f
-
                     for (i in 0..points) {
                         val x = (i.toFloat() / points) * width
                         val freq1 = 0.1f // Slow breathing component
@@ -245,14 +236,12 @@ private fun GSRDataVisualization(
                         val y = centerY +
                                 (sin((i * freq1 + timeOffset) * 0.1f) * gsrValue * 5f) +
                                 (sin((i * freq2 + timeOffset) * 0.05f) * skinConductance * 10f)
-
                         if (i == 0) {
                             path.moveTo(x, y)
                         } else {
                             path.lineTo(x, y)
                         }
                     }
-
                     drawPath(
                         path = path,
                         color = Color.Cyan,

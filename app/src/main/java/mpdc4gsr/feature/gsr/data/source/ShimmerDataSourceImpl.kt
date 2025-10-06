@@ -9,16 +9,9 @@ import mpdc4gsr.core.data.ShimmerDeviceManager
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.GSRSample
 
-/**
- * Implementation of ShimmerDataSource that wraps ShimmerDeviceManager.
- *
- * This class adapts the existing ShimmerDeviceManager to conform to the
- * ShimmerDataSource interface, providing a clean abstraction over the Shimmer SDK.
- */
 class ShimmerDataSourceImpl(
     private val deviceManager: ShimmerDeviceManager
 ) : ShimmerDataSource {
-
     companion object {
         private const val TAG = "ShimmerDataSourceImpl"
         private const val DEFAULT_DEVICE_NAME = "Shimmer3"
@@ -27,7 +20,6 @@ class ShimmerDataSourceImpl(
     }
 
     private val scannedDevices = mutableMapOf<String, DeviceInfo>()
-
     override suspend fun scanForDevices(): Flow<List<DeviceInfo>> {
         deviceManager.initialize()
         deviceManager.startDeviceScanning()
@@ -37,7 +29,6 @@ class ShimmerDataSourceImpl(
     override suspend fun connect(deviceAddress: String): Result<Unit> {
         return try {
             AppLogger.d(TAG, "Connecting to device: $deviceAddress")
-
             val deviceInfo = scannedDevices[deviceAddress] ?: run {
                 AppLogger.w(TAG, "Device info not found in scan results, using defaults for: $deviceAddress")
                 DeviceInfo(
@@ -48,7 +39,6 @@ class ShimmerDataSourceImpl(
                     isGSRCapable = true
                 )
             }
-
             val success = deviceManager.connectToDevice(deviceInfo)
             if (success) {
                 AppLogger.i(TAG, "Successfully connected to device: $deviceAddress")
@@ -63,10 +53,6 @@ class ShimmerDataSourceImpl(
         }
     }
 
-    /**
-     * Cache device info from scan results for later connection.
-     * This should be called when scan results are received.
-     */
     fun cacheDeviceInfo(devices: List<DeviceInfo>) {
         devices.forEach { device ->
             scannedDevices[device.address] = device

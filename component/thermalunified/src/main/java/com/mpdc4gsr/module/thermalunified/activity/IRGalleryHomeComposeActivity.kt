@@ -28,7 +28,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 
 class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
@@ -43,7 +42,6 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var showSearchDialog by remember { mutableStateOf(false) }
         var showMoreOptionsDialog by remember { mutableStateOf(false) }
         var selectedItemForOptions by remember { mutableStateOf<GalleryItem?>(null) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -117,7 +115,6 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         onFilterChange = { filterBy = it },
                         modifier = Modifier.fillMaxWidth()
                     )
-
                     // Gallery grid/list
                     if (selectedView == "grid") {
                         GalleryGrid(
@@ -156,7 +153,6 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 }
             }
-
             // Search Dialog
             if (showSearchDialog) {
                 GallerySearchDialog(
@@ -167,7 +163,6 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 )
             }
-
             // More Options Dialog
             if (showMoreOptionsDialog && selectedItemForOptions != null) {
                 GalleryItemOptionsDialog(
@@ -227,7 +222,6 @@ private fun GalleryControls(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
                 )
-
                 val sortOptions = listOf("date", "name", "size", "temperature")
                 sortOptions.forEach { option ->
                     FilterChip(
@@ -243,7 +237,6 @@ private fun GalleryControls(
                     )
                 }
             }
-
             // Filter options
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -256,7 +249,6 @@ private fun GalleryControls(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
                 )
-
                 val filterOptions = listOf("all", "images", "videos", "recent")
                 filterOptions.forEach { option ->
                     FilterChip(
@@ -331,7 +323,6 @@ private fun GalleryGridItem(
                     tint = Color(0xFFFF6B35),
                     modifier = Modifier.size(32.dp)
                 )
-
                 // Temperature overlay
                 Box(
                     modifier = Modifier
@@ -351,7 +342,6 @@ private fun GalleryGridItem(
                     )
                 }
             }
-
             // Item info
             Column(
                 modifier = Modifier
@@ -440,7 +430,6 @@ private fun GalleryListItem(
                     modifier = Modifier.size(24.dp)
                 )
             }
-
             // Item details
             Column(
                 modifier = Modifier.weight(1f),
@@ -473,7 +462,6 @@ private fun GalleryListItem(
                     )
                 }
             }
-
             // Actions
             IconButton(
                 onClick = onMoreClick
@@ -504,7 +492,6 @@ private fun GallerySearchDialog(
     onSearch: (String) -> Unit
 ) {
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
-
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Search Gallery", color = Color.White) },
@@ -555,7 +542,6 @@ private fun GalleryItemOptionsDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("${item.name}", color = Color(0xFF7D8590), fontSize = 14.sp)
-
                 TextButton(
                     onClick = onShare,
                     modifier = Modifier.fillMaxWidth()
@@ -568,7 +554,6 @@ private fun GalleryItemOptionsDialog(
                         Text("Share", color = Color.White)
                     }
                 }
-
                 TextButton(
                     onClick = onExport,
                     modifier = Modifier.fillMaxWidth()
@@ -581,7 +566,6 @@ private fun GalleryItemOptionsDialog(
                         Text("Export", color = Color.White)
                     }
                 }
-
                 TextButton(
                     onClick = onDelete,
                     modifier = Modifier.fillMaxWidth()

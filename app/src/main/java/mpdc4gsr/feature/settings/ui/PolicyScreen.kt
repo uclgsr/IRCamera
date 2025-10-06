@@ -17,10 +17,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * Policy Screen - WebView-based policy and terms viewing
- * Replaces PolicyActivity with Compose implementation
- */
 @Composable
 fun PolicyScreen(
     policyType: PolicyType = PolicyType.PRIVACY,
@@ -29,19 +25,16 @@ fun PolicyScreen(
 ) {
     val context = LocalContext.current
     var isLoading by remember { mutableStateOf(true) }
-
     val title = when (policyType) {
         PolicyType.PRIVACY -> "Privacy Policy"
         PolicyType.TERMS -> "Terms of Service"
         PolicyType.ABOUT -> "About"
     }
-
     val url = when (policyType) {
         PolicyType.PRIVACY -> "file:///android_asset/privacy_policy.html"
         PolicyType.TERMS -> "file:///android_asset/terms_of_service.html"
         PolicyType.ABOUT -> "file:///android_asset/about.html"
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -52,7 +45,6 @@ fun PolicyScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         Box(modifier = Modifier.fillMaxSize()) {
             AndroidView(
                 factory = { context ->
@@ -70,7 +62,6 @@ fun PolicyScreen(
                 },
                 modifier = Modifier.fillMaxSize()
             )
-
             if (isLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),

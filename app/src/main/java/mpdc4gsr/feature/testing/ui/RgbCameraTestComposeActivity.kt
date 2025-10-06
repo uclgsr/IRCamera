@@ -39,13 +39,7 @@ import mpdc4gsr.feature.testing.presentation.RgbCameraTestViewModel
 import java.io.File
 import kotlin.system.measureTimeMillis
 
-/**
- * Compose version of RGB Camera Test Activity
- * Tests camera functionality, recording quality, and manual controls
- * Migrated to BaseComposeActivity for consistency
- */
 class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>() {
-
     companion object {
         private const val TAG = "RgbCameraTestCompose"
     }
@@ -54,7 +48,6 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
     private var permissionManager: PermissionManager? = null
     private var permissionController: PermissionController? = null
     private var isRecording = false
-
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -72,7 +65,6 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         permissionController = PermissionController(this)
         permissionManager = PermissionManager(this, permissionController!!)
         checkPermissions()
@@ -81,12 +73,10 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
     @Composable
     override fun Content(viewModel: RgbCameraTestViewModel) {
         val context = LocalContext.current
-
         LaunchedEffect(Unit) {
             viewModel.initializeTestCases()
             viewModel.initializeCameraRecorder(context, this@RgbCameraTestComposeActivity)
         }
-
         LibUnifiedTheme {
             RgbCameraTestScreen(viewModel)
         }
@@ -99,11 +89,9 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
         val isTestRunning by viewModel.isTestRunning.collectAsState()
         val cameraCapabilities by viewModel.cameraCapabilities.collectAsState()
         val recordingStatus by viewModel.recordingStatus.collectAsState()
-
         LaunchedEffect(Unit) {
             initializeCameraCapabilities()
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -153,7 +141,6 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
                                 fontWeight = FontWeight.Medium
                             )
                         }
-
                         if (cameraCapabilities.isNotEmpty()) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
@@ -163,9 +150,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Test Progress
                 TestProgressIndicator(
                     totalTests = testResults.size,
@@ -173,9 +158,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
                     passedTests = testResults.count { it.status == RgbCameraTestViewModel.TestStatus.PASSED },
                     failedTests = testResults.count { it.status == RgbCameraTestViewModel.TestStatus.FAILED }
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Camera Capabilities
                 if (cameraCapabilities.isNotEmpty()) {
                     TestMetricsDisplay(
@@ -184,7 +167,6 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 // Quick Test Actions
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -201,7 +183,6 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Run All")
                     }
-
                     OutlinedButton(
                         onClick = {
                             if (isRecording) {
@@ -220,9 +201,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
                         Text(if (isRecording) "Stop" else "Record")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Individual Test Cases
                 testResults.forEach { testCase ->
                     TestResultCard(
@@ -241,7 +220,6 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
-
         permissionLauncher.launch(requiredPermissions)
     }
 
@@ -258,7 +236,6 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
         try {
             // Simulate loading camera capabilities
             delay(1000)
-
             // This would be populated with real camera capabilities
             val capabilities = mapOf(
                 "Max Resolution" to "4K (3840x2160)",
@@ -268,7 +245,6 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
                 "RAW Support" to "DNG Format",
                 "Video Codecs" to "H.264, H.265"
             )
-
             AppLogger.d(TAG, "Camera capabilities loaded: $capabilities")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to load camera capabilities: ${e.message}")
@@ -277,25 +253,18 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
 
     private suspend fun runAllCameraTests() {
         AppLogger.i(TAG, "Starting comprehensive camera tests")
-
         try {
             runPermissionsTest()
             delay(1000)
-
             runCapabilityTest()
             delay(1000)
-
             run4KRecordingTest()
             delay(2000)
-
             runTapFocusTest()
             delay(1000)
-
             runManualControlsTest()
             delay(1000)
-
             runRawCaptureTest()
-
             AppLogger.i(TAG, "All camera tests completed")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Camera tests failed: ${e.message}")
@@ -458,7 +427,6 @@ private fun TestResultCard(
                     )
                 }
             }
-
             OutlinedButton(
                 onClick = onRunTest,
                 enabled = testCase.status != RgbCameraTestViewModel.TestStatus.RUNNING

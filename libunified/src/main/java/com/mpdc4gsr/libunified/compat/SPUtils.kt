@@ -3,16 +3,10 @@ package com.mpdc4gsr.libunified.compat
 import android.content.Context
 import android.content.SharedPreferences
 
-/**
- * AndroidX alternative to utilcode SPUtils
- * Provides a simple SharedPreferences wrapper without external dependencies
- */
 class SPUtils private constructor(private val prefs: SharedPreferences) {
-
     companion object {
         @Volatile
         private var defaultInstance: SPUtils? = null
-
         private val namedInstances = mutableMapOf<String, SPUtils>()
 
         @JvmStatic

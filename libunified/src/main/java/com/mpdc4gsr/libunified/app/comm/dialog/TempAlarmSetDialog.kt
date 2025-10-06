@@ -29,13 +29,9 @@ class TempAlarmSetDialog(
         set(value) {
             field = value.copy()
         }
-
     var onSaveListener: ((alarmBean: AlarmBean) -> Unit)? = null
-
     private var mediaPlayer: MediaPlayer? = null
-
     public var hideAlarmMark = false
-
     private lateinit var clRoot: ConstraintLayout
     private lateinit var clClose: ConstraintLayout
     private lateinit var tvSave: TextView
@@ -62,14 +58,12 @@ class TempAlarmSetDialog(
     private lateinit var clRingtoneSelect: ConstraintLayout
     private lateinit var tvAlarmRingtone: TextView
     private lateinit var tvAlarmMark: TextView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCancelable(false)
         setCanceledOnTouchOutside(false)
         setContentView(LayoutInflater.from(context).inflate(R.layout.dialog_temp_alarm_set, null))
         initView()
-
         window?.let {
             val layoutParams = it.attributes
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
@@ -84,7 +78,6 @@ class TempAlarmSetDialog(
     }
 
     private fun initView() {
-
         clRoot = findViewById(R.id.cl_root)
         clClose = findViewById(R.id.cl_close)
         tvSave = findViewById(R.id.tv_save)
@@ -111,7 +104,6 @@ class TempAlarmSetDialog(
         clRingtoneSelect = findViewById(R.id.cl_ringtone_select)
         tvAlarmRingtone = findViewById(R.id.tv_alarm_ringtone)
         tvAlarmMark = findViewById(R.id.tv_alarm_mark)
-
         clRoot.setOnClickListener { dismiss() }
         clClose.setOnClickListener { dismiss() }
         tvSave.setOnClickListener { save() }
@@ -124,7 +116,6 @@ class TempAlarmSetDialog(
         switchAlarmLow.setOnCheckedChangeListener(this)
         switchAlarmMark.setOnCheckedChangeListener(this)
         switchAlarmRingtone.setOnCheckedChangeListener(this)
-
         imgMarkHigh.setOnClickListener {
             showColorDialog(true)
         }
@@ -145,7 +136,6 @@ class TempAlarmSetDialog(
                 alarmBean.markType = AlarmBean.TYPE_ALARM_MARK_MATRIX
             }
         }
-
         tvAlarmHighUnit.text = UnitTools.showUnit()
         tvAlarmLowUnit.text = UnitTools.showUnit()
     }
@@ -166,7 +156,6 @@ class TempAlarmSetDialog(
         ivCheckMatrix.isSelected = alarmBean.markType == AlarmBean.TYPE_ALARM_MARK_MATRIX
         imgCAlarmHigh.load(ColorDrawable(alarmBean.highColor))
         imgCAlarmLow.load(ColorDrawable(alarmBean.lowColor))
-
         etAlarmHigh.isEnabled = switchAlarmHigh.isChecked
         etAlarmLow.isEnabled = switchAlarmLow.isChecked
         clAlarmMark.isVisible = isEdit || switchAlarmMark.isChecked
@@ -229,7 +218,6 @@ class TempAlarmSetDialog(
             ToastTools.showShort(R.string.tip_input_format)
             return
         }
-
         val inputHigh = if (etAlarmHigh.text.isNotEmpty()) etAlarmHigh.text.toString() else ""
         val inputLow = if (etAlarmLow.text.isNotEmpty()) etAlarmLow.text.toString() else ""
         var highValue: Float? = null
@@ -246,9 +234,7 @@ class TempAlarmSetDialog(
         alarmBean.isHighOpen = switchAlarmHigh.isChecked
         alarmBean.isLowOpen = switchAlarmLow.isChecked
         alarmBean.isRingtoneOpen = switchAlarmRingtone.isChecked
-
         onSaveListener?.invoke(alarmBean)
-
         dismiss()
     }
 
@@ -319,7 +305,6 @@ class TempAlarmSetDialog(
             return
         }
         alarmBean.ringtoneType = position
-
         ivRingtone1.isSelected = false
         ivRingtone2.isSelected = false
         ivRingtone3.isSelected = false

@@ -14,7 +14,6 @@ class FenceView : View {
     )
 
     var listener: CallBack? = null
-
     fun clear() {
         // Clear fence view state
     }

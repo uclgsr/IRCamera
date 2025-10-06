@@ -10,7 +10,6 @@ data class ImageTempBean(
     val lineList: ArrayList<TempBean>,
     val rectList: ArrayList<TempBean>,
 ) : Parcelable {
-
     @Parcelize
     data class TempBean(
         val max: String,

@@ -34,16 +34,6 @@ import mpdc4gsr.feature.thermal.ui.ThermalCameraScreen
 import mpdc4gsr.feature.thermal.ui.ThermalLoadingScreen
 import mpdc4gsr.feature.thermal.ui.ThermalSettingsScreen
 
-/**
- * Unified Navigation System - Phase 2 Implementation
- *
- * This comprehensive navigation system provides:
- * - Type-safe navigation with sealed class routes
- * - Smooth animations between screens
- * - Deep linking support
- * - Integration with both Compose and traditional activities
- * - Centralized navigation logic for maintainability
- */
 sealed class UnifiedRoute(val route: String, val displayName: String = "") {
     // Main Application Routes
     object Home : UnifiedRoute("home", "Home")
@@ -111,7 +101,6 @@ fun UnifiedNavHost(
     startDestination: String = UnifiedRoute.Home.route
 ) {
     val context = LocalContext.current
-
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -123,7 +112,6 @@ fun UnifiedNavHost(
         // Home and Dashboard
         composable(UnifiedRoute.Home.route) {
             NavigationPerformanceHelper.TrackNavigation(UnifiedRoute.Home.displayName)
-
             MainScreen(
                 onNavigateToSensors = { navController.navigate(UnifiedRoute.Dashboard.route) },
                 onNavigateToGallery = { navController.navigate(UnifiedRoute.ThermalGallery.route) },
@@ -131,10 +119,8 @@ fun UnifiedNavHost(
                 onNavigateToProfile = { navController.navigate(UnifiedRoute.Profile.route) }
             )
         }
-
         composable(UnifiedRoute.Dashboard.route) {
             NavigationPerformanceHelper.TrackNavigation("Dashboard")
-
             UnifiedSensorDashboard(
                 onBackClick = { navController.popBackStack() },
                 onSettingsClick = { navController.navigate(UnifiedRoute.GSRSettings.route) },
@@ -150,20 +136,16 @@ fun UnifiedNavHost(
                 onThermalSettingsClick = { navController.navigate(UnifiedRoute.ThermalSettings.route) }
             )
         }
-
         // GSR Sensor Routes
         composable(UnifiedRoute.GSRSettings.route) {
             NavigationPerformanceHelper.TrackNavigation("GSRSettings")
-
             GSRSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.GSRSessionDetail.route) { backStackEntry ->
             NavigationPerformanceHelper.TrackNavigation("GSRSessionDetail")
             val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
-
             SessionDetailScreen(
                 sessionId = sessionId,
                 onBackClick = { navController.popBackStack() },
@@ -176,34 +158,27 @@ fun UnifiedNavHost(
                 }
             )
         }
-
         composable(UnifiedRoute.GSRPlot.route) { backStackEntry ->
             NavigationPerformanceHelper.TrackNavigation("GSRPlot")
             val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
-
             GSRPlotScreen(
                 sessionId = sessionId,
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.GSRDataView.route) {
             NavigationPerformanceHelper.TrackNavigation("GSRDataView")
-
             GSRDataViewScreen(
                 filePath = "",
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.ResearchTemplates.route) {
             NavigationPerformanceHelper.TrackNavigation("ResearchTemplates")
-
             ResearchTemplateScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-
         // Camera Integration Routes
         composable(UnifiedRoute.CameraDashboard.route) {
             CameraDashboardScreen(
@@ -215,23 +190,19 @@ fun UnifiedNavHost(
                 onNavigateToTimeLapse = { navController.navigate(UnifiedRoute.TimeLapseCamera.route) }
             )
         }
-
         composable(UnifiedRoute.RGBCamera.route) {
             RGBCameraScreen(
                 onBackClick = { navController.popBackStack() },
                 onSettingsClick = { navController.navigate(UnifiedRoute.CameraSettings.route) },
-                onCapturePhoto = { /* Photo capture handled by screen */ }
+                onCapturePhoto = { }
             )
         }
-
         composable(UnifiedRoute.TimeLapseCamera.route) {
             NavigationPerformanceHelper.TrackNavigation("TimeLapseCamera")
-
             TimeLapseCameraScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.DualModeCamera.route) {
             LaunchedEffect(Unit) {
                 try {
@@ -241,7 +212,6 @@ fun UnifiedNavHost(
                     } catch (e: NoClassDefFoundError) {
                         null
                     }
-
                     if (activityClass != null) {
                         context.startActivity(Intent(context, activityClass))
                     } else {
@@ -254,13 +224,11 @@ fun UnifiedNavHost(
             }
             ThermalLoadingScreen("Loading Dual Mode Camera...")
         }
-
         composable(UnifiedRoute.CameraSettings.route) {
             CameraSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.DevicePairing.route) {
             LaunchedEffect(Unit) {
                 try {
@@ -276,7 +244,6 @@ fun UnifiedNavHost(
             }
             ThermalLoadingScreen("Loading Device Pairing...")
         }
-
         // Thermal Camera Routes - ThermalMain removed, use ThermalCamera instead
         composable(UnifiedRoute.ThermalGallery.route) {
             LaunchedEffect(Unit) {
@@ -287,7 +254,6 @@ fun UnifiedNavHost(
                     } catch (e: NoClassDefFoundError) {
                         null
                     }
-
                     if (activityClass != null) {
                         context.startActivity(Intent(context, activityClass))
                     }
@@ -297,7 +263,6 @@ fun UnifiedNavHost(
             }
             ThermalLoadingScreen("Loading Thermal Gallery...")
         }
-
         composable(UnifiedRoute.ThermalReport.route) {
             LaunchedEffect(Unit) {
                 try {
@@ -307,7 +272,6 @@ fun UnifiedNavHost(
                     } catch (e: NoClassDefFoundError) {
                         null
                     }
-
                     if (activityClass != null) {
                         context.startActivity(Intent(context, activityClass))
                     }
@@ -317,27 +281,22 @@ fun UnifiedNavHost(
             }
             ThermalLoadingScreen("Loading Thermal Reports...")
         }
-
         composable(UnifiedRoute.ThermalCamera.route) {
             NavigationPerformanceHelper.TrackNavigation("ThermalCamera")
-
             ThermalCameraScreen(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToSettings = { navController.navigate(UnifiedRoute.ThermalSettings.route) },
                 onNavigateToGallery = { navController.navigate(UnifiedRoute.ThermalGallery.route) }
             )
         }
-
         composable(UnifiedRoute.ThermalSettings.route) {
             ThermalSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         // Settings and System Routes
         composable(UnifiedRoute.Settings.route) {
             NavigationPerformanceHelper.TrackNavigation("Settings")
-
             SettingsScreen(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToGSRSettings = { navController.navigate(UnifiedRoute.GSRSettings.route) },
@@ -354,18 +313,14 @@ fun UnifiedNavHost(
                 onNavigateToHelp = { navController.navigate(UnifiedRoute.Help.route) }
             )
         }
-
         composable(UnifiedRoute.About.route) {
             NavigationPerformanceHelper.TrackNavigation("About")
-
             AboutScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.Profile.route) {
             NavigationPerformanceHelper.TrackNavigation("Profile")
-
             mpdc4gsr.feature.settings.ui.ProfileScreen(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToResearchTemplates = { navController.navigate(UnifiedRoute.ResearchTemplates.route) },
@@ -374,10 +329,8 @@ fun UnifiedNavHost(
                 onNavigateToEditProfile = { navController.navigate(UnifiedRoute.ProfileEdit.route) }
             )
         }
-
         composable(UnifiedRoute.ProfileEdit.route) {
             NavigationPerformanceHelper.TrackNavigation("ProfileEdit")
-
             ProfileEditScreen(
                 onBackClick = { navController.popBackStack() },
                 onSave = { profileData ->
@@ -386,23 +339,18 @@ fun UnifiedNavHost(
                 }
             )
         }
-
         composable(UnifiedRoute.ComponentShowcase.route) {
             NavigationPerformanceHelper.TrackNavigation("ComponentShowcase")
-
             ComponentShowcaseScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.TestingSuite.route) {
             NavigationPerformanceHelper.TrackNavigation("TestingSuite")
-
             TestResultsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         // Network & Device Management Routes
         composable(UnifiedRoute.PermissionRequest.route) {
             LaunchedEffect(Unit) {
@@ -413,7 +361,6 @@ fun UnifiedNavHost(
                     } catch (e: NoClassDefFoundError) {
                         null
                     }
-
                     if (activityClass != null) {
                         context.startActivity(Intent(context, activityClass))
                     }
@@ -423,7 +370,6 @@ fun UnifiedNavHost(
             }
             ThermalLoadingScreen("Loading Permission Manager...")
         }
-
         // Fallback routes for screens when activities fail to launch
         composable("dual_mode_camera_screen") {
             DualModeCameraScreen(
@@ -431,62 +377,52 @@ fun UnifiedNavHost(
                 onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) }
             )
         }
-
         composable("device_pairing_screen") {
             DevicePairingScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-
         // Additional Settings Routes
         composable(UnifiedRoute.RecordingSettings.route) {
             mpdc4gsr.feature.settings.ui.RecordingSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.StorageSettings.route) {
             mpdc4gsr.feature.settings.ui.StorageSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.SyncSettings.route) {
             mpdc4gsr.feature.settings.ui.SyncSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.Calibration.route) {
             mpdc4gsr.feature.thermal.ui.CalibrationScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.NetworkConfig.route) {
             mpdc4gsr.feature.network.ui.NetworkSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.Diagnostics.route) {
             mpdc4gsr.feature.main.ui.DiagnosticsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.AppInfo.route) {
             mpdc4gsr.feature.settings.ui.AppInfoScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.PrivacyPolicy.route) {
             mpdc4gsr.feature.settings.ui.PrivacyPolicyScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
         composable(UnifiedRoute.Help.route) {
             mpdc4gsr.feature.settings.ui.HelpScreen(
                 onBackClick = { navController.popBackStack() }
@@ -495,9 +431,6 @@ fun UnifiedNavHost(
     }
 }
 
-/**
- * Navigation Helper Functions
- */
 object NavigationHelper {
     fun navigateToGSRSettings(navController: NavHostController) {
         navController.navigate(UnifiedRoute.GSRSettings.route)

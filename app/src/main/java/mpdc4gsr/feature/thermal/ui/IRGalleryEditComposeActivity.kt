@@ -66,20 +66,15 @@ data class ImageEditState(
 class IRGalleryEditViewModel : AppBaseViewModel() {
     private val _editState = mutableStateOf(ImageEditState())
     val editState: State<ImageEditState> = _editState
-
     private val _isProcessing = mutableStateOf(false)
     val isProcessing: State<Boolean> = _isProcessing
-
     private val _statusMessage = mutableStateOf("Image editor ready")
     val statusMessage: State<String> = _statusMessage
-
     fun loadImage(imagePath: String) {
         viewModelScope.launch {
             _isProcessing.value = true
             _statusMessage.value = "Loading thermal image..."
-
             delay(2000) // Simulate image loading
-
             _editState.value = _editState.value.copy(isImageLoaded = true)
             _statusMessage.value = "Image loaded successfully"
             _isProcessing.value = false
@@ -120,9 +115,7 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
         viewModelScope.launch {
             _isProcessing.value = true
             _statusMessage.value = "Saving image..."
-
             delay(3000) // Simulate saving
-
             _editState.value = _editState.value.copy(hasUnsavedChanges = false)
             _statusMessage.value = "Image saved successfully"
             _isProcessing.value = false
@@ -133,9 +126,7 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
         viewModelScope.launch {
             _isProcessing.value = true
             _statusMessage.value = "Exporting image..."
-
             delay(2500) // Simulate export
-
             _statusMessage.value = "Image exported to gallery"
             _isProcessing.value = false
         }
@@ -143,14 +134,10 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
 }
 
 class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>() {
-
     private val viewModelInstance: IRGalleryEditViewModel by viewModels()
-
     override fun createViewModel(): IRGalleryEditViewModel = viewModelInstance
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val imagePath = intent?.getStringExtra("image_path") ?: "sample_thermal_image.jpg"
         viewModelInstance.loadImage(imagePath)
     }
@@ -163,7 +150,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
             val editState by viewModel.editState
             val isProcessing by viewModel.isProcessing
             val statusMessage by viewModel.statusMessage
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -184,7 +170,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                         }
                     }
                 )
-
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -217,7 +202,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                 )
                                 Spacer(modifier = Modifier.width(12.dp))
                             }
-
                             Text(
                                 text = statusMessage,
                                 style = MaterialTheme.typography.bodyMedium,
@@ -225,7 +209,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                             )
                         }
                     }
-
                     // Image preview area
                     Card(
                         modifier = Modifier
@@ -308,7 +291,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                             }
                         }
                     }
-
                     // Tool selection
                     if (editState.isImageLoaded) {
                         Text(
@@ -317,7 +299,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -333,7 +314,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                 )
                             }
                         }
-
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -349,7 +329,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                 )
                             }
                         }
-
                         // Thermal palette selection
                         Text(
                             text = "Thermal Palette",
@@ -357,7 +336,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -373,7 +351,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                 )
                             }
                         }
-
                         // Temperature range control
                         Card(
                             modifier = Modifier
@@ -389,12 +366,10 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                     fontWeight = FontWeight.SemiBold,
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )
-
                                 Text(
                                     text = "Min: ${editState.temperatureRange.first}°C",
                                     style = MaterialTheme.typography.bodySmall
                                 )
-
                                 Slider(
                                     value = editState.temperatureRange.first,
                                     onValueChange = { newMin ->
@@ -406,12 +381,10 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                     valueRange = -10f..50f,
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )
-
                                 Text(
                                     text = "Max: ${editState.temperatureRange.second}°C",
                                     style = MaterialTheme.typography.bodySmall
                                 )
-
                                 Slider(
                                     value = editState.temperatureRange.second,
                                     onValueChange = { newMax ->
@@ -424,7 +397,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                 )
                             }
                         }
-
                         // Action buttons
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -443,7 +415,6 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Save")
                             }
-
                             Button(
                                 onClick = { viewModel.exportImage() },
                                 modifier = Modifier.weight(1f),

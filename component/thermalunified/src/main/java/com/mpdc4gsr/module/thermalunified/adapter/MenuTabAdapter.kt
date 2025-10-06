@@ -34,7 +34,6 @@ class MenuTabAdapter(val context: Context) :
             LibUiR.drawable.ic_menu_thermal7001_svg,
             LibUiR.drawable.ic_menu_thermal7002_svg,
         )
-
     private val secondMenus =
         arrayListOf<Int>(
             LibUiR.drawable.ic_menu_thermal6001,
@@ -44,7 +43,6 @@ class MenuTabAdapter(val context: Context) :
             LibUiR.drawable.ic_menu_thermal7003,
             LibUiR.drawable.ic_menu_thermal7004,
         )
-
     private val secondMenusStr =
         arrayListOf(
             "[ph]",
@@ -54,7 +52,6 @@ class MenuTabAdapter(val context: Context) :
             "[ph][ph]",
             "[ph][ph]",
         )
-
     private val fourthMenusStr =
         arrayListOf(
             "[ph][ph]",
@@ -62,7 +59,6 @@ class MenuTabAdapter(val context: Context) :
             "[ph][ph][ph]",
             "[ph][ph]",
         )
-
     private val thirdMenus =
         arrayListOf<Int>(
             LibUiR.drawable.ic_menu_thermal5003,
@@ -76,7 +72,6 @@ class MenuTabAdapter(val context: Context) :
             LibUiR.drawable.ic_menu_thermal5003_selected_svg,
             LibUiR.drawable.ic_menu_thermal6003_svg,
         )
-
     private val fourthMenus =
         arrayListOf<Int>(
             LibUiR.drawable.ic_menu_thermal7001_svg,

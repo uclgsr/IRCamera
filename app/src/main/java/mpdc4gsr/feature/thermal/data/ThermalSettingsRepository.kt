@@ -8,9 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class ThermalSettingsRepository(context: Context) {
-
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-
     private val _thermalSettings = MutableStateFlow(loadSettings())
     val thermalSettings: StateFlow<ThermalSettings> = _thermalSettings.asStateFlow()
 
@@ -34,14 +32,12 @@ class ThermalSettingsRepository(context: Context) {
         private const val KEY_AUTO_SCALE = "thermal_auto_scale"
         private const val KEY_SHOW_CROSSHAIR = "thermal_show_crosshair"
         private const val KEY_TEMP_RANGE = "thermal_temp_range"
-
         private const val BITRATE_LOW = 800_000
         private const val BITRATE_MEDIUM = 1_500_000
         private const val BITRATE_HIGH = 2_000_000
 
         @Volatile
         private var instance: ThermalSettingsRepository? = null
-
         fun getInstance(context: Context): ThermalSettingsRepository {
             return instance ?: synchronized(this) {
                 instance ?: ThermalSettingsRepository(context.applicationContext).also {
@@ -111,13 +107,11 @@ class ThermalSettingsRepository(context: Context) {
     fun getThermalVideoConfig(): ThermalVideoConfig {
         val settings = getSettings()
         val frameRate = settings.frameRate.coerceIn(10, 30)
-
         val bitrate = when {
             frameRate <= 15 -> BITRATE_LOW
             frameRate <= 25 -> BITRATE_MEDIUM
             else -> BITRATE_HIGH
         }
-
         return ThermalVideoConfig(
             frameRate = frameRate,
             bitrate = bitrate

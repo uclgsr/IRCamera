@@ -25,19 +25,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.AppBaseViewModel
 
-/**
- * GSRDeviceManagementComposeActivity - Advanced GSR Device Management with Compose
- *
- * Comprehensive GSR device management interface featuring:
- * - Real-time GSR device discovery and connection monitoring
- * - Device health diagnostics with battery level and signal quality
- * - Bulk device operations and configuration management
- * - Device calibration wizard with step-by-step guidance
- * - Historical connection logs and performance analytics
- * - Advanced troubleshooting tools and device diagnostics
- */
 class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
-
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, GSRDeviceManagementComposeActivity::class.java))
@@ -56,7 +44,6 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
         var selectedDevice by remember { mutableStateOf<GSRDeviceInfo?>(null) }
         var showDeviceDetails by remember { mutableStateOf(false) }
         var showBulkActions by remember { mutableStateOf(false) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -108,7 +95,6 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                 )
             }
         }
-
         if (showDeviceDetails && selectedDevice != null) {
             DeviceDetailsDialog(
                 device = selectedDevice!!,
@@ -119,7 +105,6 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                 }
             )
         }
-
         if (showBulkActions) {
             BulkActionsDialog(
                 onDismiss = { showBulkActions = false },
@@ -153,7 +138,6 @@ private fun GSRDeviceManagementContent(
             isScanning = isScanning,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         // Connected Devices Section
         Text(
             text = "Connected Devices",
@@ -161,14 +145,12 @@ private fun GSRDeviceManagementContent(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 12.dp)
         )
-
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.weight(1f)
         ) {
             val connectedDevices = getMockGSRDevices().filter { it.status == "connected" }
             val availableDevices = getMockGSRDevices().filter { it.status != "connected" }
-
             items(connectedDevices) { device ->
                 GSRDeviceCard(
                     device = device,
@@ -191,7 +173,6 @@ private fun GSRDeviceManagementContent(
                     }
                 )
             }
-
             if (availableDevices.isNotEmpty()) {
                 item {
                     Text(
@@ -201,7 +182,6 @@ private fun GSRDeviceManagementContent(
                         modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
                     )
                 }
-
                 items(availableDevices) { device ->
                     GSRDeviceCard(
                         device = device,
@@ -255,7 +235,6 @@ private fun DeviceStatusOverview(
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
-
                 if (isScanning) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
@@ -263,9 +242,7 @@ private fun DeviceStatusOverview(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -355,7 +332,6 @@ private fun GSRDeviceCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
                 // Status indicator
                 Surface(
                     shape = RoundedCornerShape(12.dp),
@@ -370,9 +346,7 @@ private fun GSRDeviceCard(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(12.dp))
-
             // Device metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -394,9 +368,7 @@ private fun GSRDeviceCard(
                     icon = Icons.Default.Timeline
                 )
             }
-
             Spacer(modifier = Modifier.height(12.dp))
-
             // Device actions
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -413,7 +385,6 @@ private fun GSRDeviceCard(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Details")
                 }
-
                 if (device.status == "connected") {
                     Button(
                         onClick = onDisconnect,
@@ -500,7 +471,6 @@ private fun DeviceDetailsDialog(
                 DeviceDetailItem("Signal Strength", "${device.signalStrength} dBm")
                 DeviceDetailItem("Sampling Rate", "${device.samplingRate} Hz")
                 DeviceDetailItem("Last Seen", device.lastSeen)
-
                 if (device.status == "connected") {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
@@ -566,7 +536,6 @@ private fun BulkActionsDialog(
             Column {
                 Text("Select an action to perform on all devices:")
                 Spacer(modifier = Modifier.height(16.dp))
-
                 listOf(
                     "Disconnect All" to "disconnect_all",
                     "Update Firmware" to "update_firmware",

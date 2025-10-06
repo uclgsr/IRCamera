@@ -22,7 +22,6 @@ class ListItemView : LinearLayout {
     private var rightContent: String = ""
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         val ta: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.ListItemView)
         for (i in 0 until ta.indexCount) {

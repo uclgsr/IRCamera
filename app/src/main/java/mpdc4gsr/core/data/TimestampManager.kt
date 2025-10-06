@@ -9,11 +9,9 @@ import kotlin.system.measureNanoTime
 
 object TimestampManager {
     private const val TAG = "TimestampManager"
-
     private val bootTimeReference = AtomicLong(0L)
     private val clockOffset = AtomicLong(0L)
     private val sessionStartTime = AtomicLong(0L)
-
     private val sessionStartSystemMs = AtomicLong(0L)
     private val sessionStartMonotonicNs = AtomicLong(0L)
 
@@ -34,9 +32,6 @@ object TimestampManager {
         return SystemClock.elapsedRealtimeNanos()
     }
 
-    /**
-     * Formats a nanosecond timestamp to ISO 8601 string format
-     */
     private val iso8601Format by lazy {
         java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US).apply {
             timeZone = java.util.TimeZone.getTimeZone("UTC")
@@ -74,18 +69,15 @@ object TimestampManager {
         val sessionStart = getCurrentElapsedRealtimeMs()
         val systemStart = getCurrentSystemTimeMs()
         val monotonicStart = getCurrentTimestampNanos()
-
         sessionStartTime.set(sessionStart)
         sessionStartSystemMs.set(systemStart)
         sessionStartMonotonicNs.set(monotonicStart)
-
         val reference = SessionTimestampReference(
             sessionStartElapsedMs = sessionStart,
             sessionStartSystemMs = systemStart,
             sessionStartMonotonicNs = monotonicStart,
             bootTimeReferenceMs = bootTimeReference.get()
         )
-
         Log.i(
             TAG,
             "Session started with reference: system=${systemStart}ms, monotonic=${monotonicStart}ns"
@@ -103,28 +95,15 @@ object TimestampManager {
         return sessionDuration
     }
 
-    /**
-     * Set clock offset for PC time synchronization.
-     * This offset is applied to all synchronized timestamps.
-     * Called by TimeSyncManager when sync completes.
-     */
     fun setClockOffset(offsetMs: Long) {
         clockOffset.set(offsetMs)
         AppLogger.i(TAG, "Clock offset set to: $offsetMs ms")
     }
 
-    /**
-     * Get the current clock offset in milliseconds.
-     * This is the offset calculated from time sync protocol.
-     */
     fun getClockOffsetMs(): Long {
         return clockOffset.get()
     }
 
-    /**
-     * Get timestamp synchronized with PC clock.
-     * This applies the offset calculated from time sync protocol.
-     */
     fun getSynchronizedTimestampMs(): Long {
         return getDeviceTimestampMs() + clockOffset.get()
     }
@@ -136,7 +115,6 @@ object TimestampManager {
         val deviceMs = getDeviceTimestampMs()
         val sessionRelativeMs = getSessionRelativeTimestampMs()
         val synchronizedMs = getSynchronizedTimestampMs()
-
         return TimestampRecord(
             systemNanos = currentNanos,
             systemTimeMs = systemMs,
@@ -150,12 +128,10 @@ object TimestampManager {
     fun convertMonotonicToWallClock(monotonicNs: Long): Long {
         val sessionStartMono = sessionStartMonotonicNs.get()
         val sessionStartSys = sessionStartSystemMs.get()
-
         if (sessionStartMono == 0L) {
             AppLogger.w(TAG, "No session reference available for monotonic to wall-clock conversion")
             return getCurrentSystemTimeMs()
         }
-
         val offsetNs = monotonicNs - sessionStartMono
         val offsetMs = offsetNs / 1_000_000
         return sessionStartSys + offsetMs
@@ -202,7 +178,6 @@ data class TimestampRecord(
     val sessionRelativeMs: Long,
     val synchronizedTimestampMs: Long,
 ) {
-
     fun toCsvFormat(): String {
         return "$systemNanos,$systemTimeMs,$elapsedRealtimeMs,$deviceTimestampMs,$sessionRelativeMs,$synchronizedTimestampMs"
     }

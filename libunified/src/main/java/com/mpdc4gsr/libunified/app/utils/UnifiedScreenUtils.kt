@@ -9,7 +9,6 @@ import android.view.WindowManager
 import com.energy.iruvc.utils.CommonParams
 
 object UnifiedScreenUtils {
-
     fun getScreenWidth(context: Context): Int {
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val displayMetrics = DisplayMetrics()

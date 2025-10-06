@@ -19,17 +19,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlin.system.measureTimeMillis
 
-/**
- * Compose Testing Suite - Phase 4 Comprehensive Validation
- *
- * Complete testing and validation framework for the modernized Compose architecture:
- * - Automated navigation testing across all routes
- * - Performance regression testing
- * - Memory leak detection and validation
- * - Cross-module integration testing
- * - User flow validation with automated scenarios
- */
-
 data class TestResult(
     val testName: String,
     val passed: Boolean,
@@ -46,48 +35,35 @@ enum class TestSeverity {
 }
 
 class ComposeTestingSuite {
-
     companion object {
         private const val TAG = "ComposeTestingSuite"
     }
 
     private val testResults = mutableListOf<TestResult>()
 
-    /**
-     * Main testing orchestrator
-     */
     suspend fun runAllTests(): List<TestResult> {
         testResults.clear()
-
         AppLogger.i(TAG, "Starting comprehensive testing suite...")
-
         // Performance Tests
         runPerformanceTests()
-
         // Navigation Tests
         runNavigationTests()
-
         // Memory Tests
         runMemoryTests()
-
         // Integration Tests
         runIntegrationTests()
-
         // User Flow Tests
         runUserFlowTests()
-
         AppLogger.i(TAG, "Testing suite completed with ${testResults.size} tests")
         return testResults.toList()
     }
 
     private suspend fun runPerformanceTests() {
         AppLogger.d(TAG, "Running performance tests...")
-
         // Test navigation performance
         val navigationTime = measureTimeMillis {
             delay(50) // Simulate navigation
         }
-
         testResults.add(
             TestResult(
                 testName = "Navigation Performance",
@@ -97,7 +73,6 @@ class ComposeTestingSuite {
                 severity = if (navigationTime > 300) TestSeverity.WARNING else TestSeverity.INFO
             )
         )
-
         // Test data processing performance
         val dataProcessingTime = measureTimeMillis {
             // Simulate GSR data processing
@@ -106,7 +81,6 @@ class ComposeTestingSuite {
                 // Simulate processing
             }
         }
-
         testResults.add(
             TestResult(
                 testName = "GSR Data Processing Performance",
@@ -116,12 +90,10 @@ class ComposeTestingSuite {
                 severity = if (dataProcessingTime > 100) TestSeverity.WARNING else TestSeverity.INFO
             )
         )
-
         // Test thermal image processing
         val thermalProcessingTime = measureTimeMillis {
             delay(80) // Simulate thermal processing
         }
-
         testResults.add(
             TestResult(
                 testName = "Thermal Image Processing Performance",
@@ -135,7 +107,6 @@ class ComposeTestingSuite {
 
     private suspend fun runNavigationTests() {
         AppLogger.d(TAG, "Running navigation tests...")
-
         val routes = listOf(
             "gsr_settings",
             "gsr_plot/test_session",
@@ -145,12 +116,10 @@ class ComposeTestingSuite {
             "thermal_camera",
             "modernization_progress"
         )
-
         routes.forEach { route ->
             val testTime = measureTimeMillis {
                 delay(30) // Simulate navigation
             }
-
             testResults.add(
                 TestResult(
                     testName = "Navigation to $route",
@@ -165,16 +134,12 @@ class ComposeTestingSuite {
 
     private suspend fun runMemoryTests() {
         AppLogger.d(TAG, "Running memory tests...")
-
         val runtime = Runtime.getRuntime()
         val initialMemory = runtime.totalMemory() - runtime.freeMemory()
-
         // Simulate heavy operations
         delay(100)
-
         val finalMemory = runtime.totalMemory() - runtime.freeMemory()
         val memoryIncrease = (finalMemory - initialMemory) / 1024 / 1024 // MB
-
         testResults.add(
             TestResult(
                 testName = "Memory Usage Test",
@@ -184,10 +149,8 @@ class ComposeTestingSuite {
                 severity = if (memoryIncrease > 50) TestSeverity.ERROR else TestSeverity.INFO
             )
         )
-
         // Test for potential memory leaks
         val memoryRatio = finalMemory.toFloat() / runtime.maxMemory().toFloat()
-
         testResults.add(
             TestResult(
                 testName = "Memory Leak Detection",
@@ -206,7 +169,6 @@ class ComposeTestingSuite {
 
     private suspend fun runIntegrationTests() {
         AppLogger.d(TAG, "Running integration tests...")
-
         // Test BaseComposeActivity integration
         testResults.add(
             TestResult(
@@ -217,7 +179,6 @@ class ComposeTestingSuite {
                 severity = TestSeverity.INFO
             )
         )
-
         // Test LibUnifiedTheme consistency
         testResults.add(
             TestResult(
@@ -228,7 +189,6 @@ class ComposeTestingSuite {
                 severity = TestSeverity.INFO
             )
         )
-
         // Test cross-module navigation
         testResults.add(
             TestResult(
@@ -243,12 +203,10 @@ class ComposeTestingSuite {
 
     private suspend fun runUserFlowTests() {
         AppLogger.d(TAG, "Running user flow tests...")
-
         // Test complete GSR analysis workflow
         val gsrWorkflowTime = measureTimeMillis {
             delay(200) // Simulate complete workflow
         }
-
         testResults.add(
             TestResult(
                 testName = "GSR Analysis Workflow",
@@ -258,12 +216,10 @@ class ComposeTestingSuite {
                 severity = if (gsrWorkflowTime > 500) TestSeverity.WARNING else TestSeverity.INFO
             )
         )
-
         // Test camera integration workflow
         val cameraWorkflowTime = measureTimeMillis {
             delay(150) // Simulate camera workflow
         }
-
         testResults.add(
             TestResult(
                 testName = "Camera Integration Workflow",
@@ -273,12 +229,10 @@ class ComposeTestingSuite {
                 severity = if (cameraWorkflowTime > 400) TestSeverity.WARNING else TestSeverity.INFO
             )
         )
-
         // Test thermal analysis workflow
         val thermalWorkflowTime = measureTimeMillis {
             delay(180) // Simulate thermal workflow
         }
-
         testResults.add(
             TestResult(
                 testName = "Thermal Analysis Workflow",
@@ -291,9 +245,6 @@ class ComposeTestingSuite {
     }
 }
 
-/**
- * Composable UI for displaying test results
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TestResultsScreen(
@@ -302,7 +253,6 @@ fun TestResultsScreen(
 ) {
     var testResults by remember { mutableStateOf<List<TestResult>>(emptyList()) }
     var isRunning by remember { mutableStateOf(false) }
-
     LibUnifiedTheme {
         Scaffold(
             topBar = {
@@ -366,7 +316,6 @@ private fun TestResultsContent(
             testResults = testResults,
             isRunning = isRunning
         )
-
         // Test Results
         if (testResults.isNotEmpty()) {
             testResults.forEach { result ->
@@ -436,17 +385,14 @@ private fun TestSummaryCard(
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-
                 if (isRunning) {
                     CircularProgressIndicator(modifier = Modifier.size(24.dp))
                 }
             }
-
             if (testResults.isNotEmpty()) {
                 val passed = testResults.count { it.passed }
                 val failed = testResults.size - passed
                 val totalTime = testResults.sumOf { it.executionTimeMs }
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
@@ -456,7 +402,6 @@ private fun TestSummaryCard(
                     TestSummaryMetric("Failed", failed.toString())
                     TestSummaryMetric("Time", "${totalTime}ms")
                 }
-
                 LinearProgressIndicator(
                     progress = { if (testResults.isEmpty()) 0f else passed.toFloat() / testResults.size },
                     modifier = Modifier.fillMaxWidth(),
@@ -520,7 +465,6 @@ internal fun TestResultCard(
                 tint = if (result.passed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                 modifier = Modifier.size(24.dp)
             )
-
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -535,7 +479,6 @@ internal fun TestResultCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             Column(
                 horizontalAlignment = Alignment.End
             ) {

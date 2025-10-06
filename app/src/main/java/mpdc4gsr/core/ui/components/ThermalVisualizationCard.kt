@@ -45,7 +45,6 @@ fun ThermalVisualizationCard(
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-
                 // Recording indicator
                 if (isRecording) {
                     Row(
@@ -75,9 +74,7 @@ fun ThermalVisualizationCard(
                     }
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Temperature readings
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -99,9 +96,7 @@ fun ThermalVisualizationCard(
                     color = MaterialTheme.colorScheme.tertiary
                 )
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),

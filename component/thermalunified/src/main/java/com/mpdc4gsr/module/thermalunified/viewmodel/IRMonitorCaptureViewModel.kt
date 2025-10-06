@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class IRMonitorCaptureViewModel : BaseViewModel() {
-
     // Data classes matching the fragment requirements
     data class TemperatureData(
         val centerTemp: Float,
@@ -36,13 +35,10 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
     // StateFlow properties for UI state management
     private val _captureState = MutableStateFlow(CaptureState.INACTIVE)
     val captureState: StateFlow<CaptureState> = _captureState.asStateFlow()
-
     private val _temperatureData = MutableStateFlow<TemperatureData?>(null)
     val temperatureData: StateFlow<TemperatureData?> = _temperatureData.asStateFlow()
-
     private val _captureHistory = MutableStateFlow<List<CaptureData>>(emptyList())
     val captureHistory: StateFlow<List<CaptureData>> = _captureHistory.asStateFlow()
-
     private val _deviceConnectionState = MutableStateFlow(DeviceConnectionState.DISCONNECTED)
     val deviceConnectionState: StateFlow<DeviceConnectionState> = _deviceConnectionState.asStateFlow()
 
@@ -84,13 +80,10 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
 
     fun captureFrame() {
         if (_deviceConnectionState.value != DeviceConnectionState.CONNECTED) return
-
         viewModelScope.launch {
             _captureState.value = CaptureState.CAPTURING
-
             // Simulate capture delay
             delay(500)
-
             // Create capture data
             val currentTemp = _temperatureData.value?.centerTemp ?: 25.0f
             val capture = CaptureData(
@@ -99,12 +92,10 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
                 temperature = currentTemp,
                 imagePath = "/mock/path/capture_${captureIdCounter - 1}.jpg"
             )
-
             // Add to history
             val currentHistory = _captureHistory.value.toMutableList()
             currentHistory.add(0, capture) // Add to beginning
             _captureHistory.value = currentHistory
-
             // Return to previous state
             _captureState.value = if (continuousCapturingJob?.isActive == true) {
                 CaptureState.CONTINUOUS
@@ -116,7 +107,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
 
     fun toggleContinuousCapture() {
         if (_deviceConnectionState.value != DeviceConnectionState.CONNECTED) return
-
         viewModelScope.launch {
             if (_captureState.value == CaptureState.CONTINUOUS) {
                 stopContinuousCapture()
@@ -139,7 +129,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
             if (captures.isEmpty()) {
                 return@launch
             }
-
             // Create export data with capture information
             val exportData = captures.map { capture ->
                 mapOf(
@@ -149,7 +138,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
                     "imagePath" to capture.imagePath
                 )
             }
-
             // In a real implementation, this would write to a file or share the data
             // For now, we log the export action
             android.util.Log.d("IRMonitorCaptureVM", "Exporting ${captures.size} captures")
@@ -165,7 +153,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
     }
 
     // Private helper methods
-
     private fun initializeMockData() {
         // Initialize with mock temperature data
         _temperatureData.value = TemperatureData(
@@ -173,7 +160,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
             maxTemp = 28.5f,
             minTemp = 22.1f
         )
-
         _deviceConnectionState.value = DeviceConnectionState.DISCONNECTED
     }
 
@@ -193,7 +179,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
                     val baseTemp = 25.0f
                     val variation = (Random.nextFloat() - 0.5f) * 5.0f
                     val centerTemp = baseTemp + variation
-
                     _temperatureData.value = TemperatureData(
                         centerTemp = centerTemp,
                         maxTemp = centerTemp + (Random.nextFloat() * 3.0f),

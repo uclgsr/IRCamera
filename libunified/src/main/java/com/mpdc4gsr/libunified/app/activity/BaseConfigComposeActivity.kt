@@ -28,12 +28,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class BaseConfigComposeActivity : ComponentActivity() {
-
     private val viewModel: BaseConfigViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             IRCameraTheme {
                 BaseConfigScreen(
@@ -58,7 +55,6 @@ fun BaseConfigScreen(
     onBackPressed: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -100,7 +96,6 @@ fun BaseConfigScreen(
                     onItemChange = { key, value -> viewModel.updateSystemConfig(key, value) }
                 )
             }
-
             // Network Configuration
             item {
                 ConfigSection(
@@ -109,7 +104,6 @@ fun BaseConfigScreen(
                     onItemChange = { key, value -> viewModel.updateNetworkConfig(key, value) }
                 )
             }
-
             // Camera Configuration
             item {
                 ConfigSection(
@@ -118,7 +112,6 @@ fun BaseConfigScreen(
                     onItemChange = { key, value -> viewModel.updateCameraConfig(key, value) }
                 )
             }
-
             // Sensor Configuration
             item {
                 ConfigSection(
@@ -127,7 +120,6 @@ fun BaseConfigScreen(
                     onItemChange = { key, value -> viewModel.updateSensorConfig(key, value) }
                 )
             }
-
             // Action Buttons
             item {
                 Row(
@@ -140,14 +132,12 @@ fun BaseConfigScreen(
                     ) {
                         Text("Reset All")
                     }
-
                     OutlinedButton(
                         onClick = { viewModel.importConfig() },
                         modifier = Modifier.weight(1f)
                     ) {
                         Text("Import")
                     }
-
                     Button(
                         onClick = { viewModel.saveConfiguration() },
                         modifier = Modifier.weight(1f)
@@ -157,7 +147,6 @@ fun BaseConfigScreen(
                 }
             }
         }
-
         if (uiState.isLoading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -188,7 +177,6 @@ fun ConfigSection(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-
             items.forEach { item ->
                 ConfigItemRow(
                     item = item,
@@ -223,7 +211,6 @@ fun ConfigItemRow(
                 )
             }
         }
-
         when (item.type) {
             ConfigType.BOOLEAN -> {
                 Switch(
@@ -316,7 +303,6 @@ data class BaseConfigUiState(
 class BaseConfigViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(BaseConfigUiState())
     val uiState: StateFlow<BaseConfigUiState> = _uiState.asStateFlow()
-
     fun updateSystemConfig(key: String, value: Any) {
         updateConfigList("system", key, value)
     }

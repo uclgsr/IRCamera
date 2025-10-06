@@ -25,7 +25,6 @@ import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
 class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
-
     override fun createViewModel(): ThermalFragmentViewModel {
         return viewModels<ThermalFragmentViewModel>().value
     }
@@ -39,7 +38,6 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
             val isRecording by viewModel.isRecording.collectAsStateWithLifecycle()
             val connectionStatus by viewModel.connectionStatus.collectAsStateWithLifecycle()
             val processingMode by viewModel.processingMode.collectAsStateWithLifecycle()
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -51,7 +49,6 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
                     isRecording = isRecording,
                     processingMode = processingMode
                 )
-
                 // Main thermal camera view
                 Box(
                     modifier = Modifier
@@ -65,14 +62,12 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
                             viewModel.initializeThermalCamera(surfaceView)
                         }
                     )
-
                     // Temperature overlays
                     TemperatureOverlays(
                         temperatureData = temperatureData,
                         modifier = Modifier.align(Alignment.TopEnd)
                     )
                 }
-
                 // Control panel
                 ControlPanel(
                     isRecording = isRecording,
@@ -128,7 +123,6 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
                         }
                     )
                 }
-
                 Column(horizontalAlignment = Alignment.End) {
                     if (isRecording) {
                         Text(
@@ -181,14 +175,12 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
                     temperature = data.centerTemp,
                     isMain = true
                 )
-
                 // Max temperature
                 TemperatureCard(
                     label = "Max",
                     temperature = data.maxTemp,
                     color = Color.Red
                 )
-
                 // Min temperature
                 TemperatureCard(
                     label = "Min",
@@ -278,7 +270,6 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Capture")
                 }
-
                 // Recording toggle button
                 Button(
                     onClick = onToggleRecording,
@@ -293,7 +284,6 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(if (isRecording) "Stop" else "Record")
                 }
-
                 // Settings button
                 OutlinedButton(
                     onClick = onOpenSettings

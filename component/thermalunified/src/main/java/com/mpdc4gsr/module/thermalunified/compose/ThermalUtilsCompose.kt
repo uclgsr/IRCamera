@@ -42,7 +42,6 @@ fun TemperatureIndicator(
         UnifiedMathUtils.lerp(coldColor.alpha, hotColor.alpha, normalizedTemp)
     )
     val textColor = if (normalizedTemp > 0.5f) Color.White else Color.Black
-
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
@@ -90,9 +89,7 @@ fun ThermalGradientBar(
                     RoundedCornerShape(10.dp)
                 )
         )
-
         Spacer(modifier = Modifier.height(4.dp))
-
         // Temperature labels
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -123,13 +120,11 @@ fun ThermalStatusIndicator(
         ThermalStatusLevel.WARNING -> Color(0xFFFF9800) // Orange
         ThermalStatusLevel.CRITICAL -> Color.Red
     }
-
     val statusIcon = when (level) {
         ThermalStatusLevel.NORMAL -> Icons.Default.CheckCircle
         ThermalStatusLevel.WARNING -> Icons.Default.Warning
         ThermalStatusLevel.CRITICAL -> Icons.Default.Error
     }
-
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -141,14 +136,12 @@ fun ThermalStatusIndicator(
                 .clip(CircleShape)
                 .background(statusColor)
         )
-
         Icon(
             imageVector = statusIcon,
             contentDescription = message,
             tint = statusColor,
             modifier = Modifier.size(16.dp)
         )
-
         Text(
             text = message,
             style = MaterialTheme.typography.bodySmall,
@@ -194,7 +187,6 @@ fun MeasurementPoint(
                 },
                 fontWeight = FontWeight.Bold
             )
-
             Text(
                 text = "${temperature.roundToInt()}$unit",
                 style = MaterialTheme.typography.bodyMedium,
@@ -222,7 +214,6 @@ fun ThermalToolbar(
     ) {
         ThermalTool.entries.forEach { tool ->
             val isSelected = selectedTool == tool
-
             FilterChip(
                 selected = isSelected,
                 onClick = {
@@ -247,7 +238,6 @@ fun ThermalToolbar(
 }
 
 // Data classes and enums for the utilities
-
 enum class ThermalTool(
     val displayName: String,
     val icon: ImageVector
@@ -280,13 +270,11 @@ fun ThermalUtilsComposePreview() {
                 modifier = Modifier.weight(1f)
             )
         }
-
         // Gradient bar
         ThermalGradientBar(
             minTemp = 0f,
             maxTemp = 100f
         )
-
         // Status indicators
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             ThermalStatusIndicator(
@@ -302,7 +290,6 @@ fun ThermalUtilsComposePreview() {
                 message = "Critical Temperature"
             )
         }
-
         // Measurement points
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -319,7 +306,6 @@ fun ThermalUtilsComposePreview() {
                 modifier = Modifier.weight(1f)
             )
         }
-
         // Toolbar
         var selectedTool by remember { mutableStateOf<ThermalTool?>(null) }
         ThermalToolbar(

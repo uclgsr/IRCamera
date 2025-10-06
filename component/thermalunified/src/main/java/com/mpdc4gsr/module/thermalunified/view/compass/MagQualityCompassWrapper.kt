@@ -11,7 +11,6 @@ class MagQualityCompassWrapper(private val compass: ICompass, private val magnet
     AbstractSensor(), ICompass {
     override val bearing: Bearing
         get() = compass.bearing
-
     override var declination: Float
         get() = compass.declination
         set(value) {
@@ -19,10 +18,8 @@ class MagQualityCompassWrapper(private val compass: ICompass, private val magnet
         }
     override val hasValidReading: Boolean
         get() = compass.hasValidReading
-
     override val rawBearing: Float
         get() = compass.rawBearing
-
     override val quality: Quality
         get() = Quality.values()[min(magnetometer.quality.ordinal, compass.quality.ordinal)]
 

@@ -20,10 +20,6 @@ import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * GSR Video Player Screen - Video playback with GSR data overlay
- * Replaces GSRVideoPlayerActivity with Compose implementation
- */
 @Composable
 fun GSRVideoPlayerScreen(
     videoUri: String = "sample_video.mp4",
@@ -36,7 +32,6 @@ fun GSRVideoPlayerScreen(
     var currentPosition by remember { mutableStateOf(0) }
     var duration by remember { mutableStateOf(100) }
     var showGSROverlay by remember { mutableStateOf(true) }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -53,7 +48,6 @@ fun GSRVideoPlayerScreen(
                 onClick = { showGSROverlay = !showGSROverlay }
             )
         }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -80,14 +74,12 @@ fun GSRVideoPlayerScreen(
                         },
                         modifier = Modifier.fillMaxSize()
                     )
-
                     // GSR Data Overlay
                     if (showGSROverlay) {
                         GSRDataOverlay(
                             modifier = Modifier.align(Alignment.BottomEnd)
                         )
                     }
-
                     // Play/Pause Button
                     FloatingActionButton(
                         onClick = { isPlaying = !isPlaying },
@@ -102,7 +94,6 @@ fun GSRVideoPlayerScreen(
                     }
                 }
             }
-
             // Video Controls
             VideoControlsCard(
                 isPlaying = isPlaying,
@@ -111,10 +102,8 @@ fun GSRVideoPlayerScreen(
                 onPlayPause = { isPlaying = !isPlaying },
                 onSeek = { currentPosition = it }
             )
-
             // Session Information
             SessionDetailsCard(sessionId = sessionId)
-
             // GSR Metrics
             GSRMetricsCard()
         }
@@ -149,7 +138,6 @@ private fun GSRDataOverlay(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-
             // Mini GSR waveform
             Box(
                 modifier = Modifier
@@ -197,7 +185,6 @@ private fun VideoControlsCard(
                     inactiveTrackColor = Color.Gray
                 )
             )
-
             // Time indicators
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -214,9 +201,7 @@ private fun VideoControlsCard(
                     fontSize = 12.sp
                 )
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -236,7 +221,6 @@ private fun VideoControlsCard(
                         tint = Color.White
                     )
                 }
-
                 IconButton(onClick = onPlayPause) {
                     Icon(
                         imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
@@ -244,7 +228,6 @@ private fun VideoControlsCard(
                         tint = Color.White
                     )
                 }
-
                 IconButton(onClick = {
                     // TODO: Skip to next video
                     android.widget.Toast.makeText(
@@ -255,7 +238,6 @@ private fun VideoControlsCard(
                 }) {
                     Icon(Icons.Default.SkipNext, contentDescription = "Next", tint = Color.White)
                 }
-
                 IconButton(onClick = {
                     // TODO: Toggle fullscreen mode
                     android.widget.Toast.makeText(
@@ -291,7 +273,6 @@ private fun SessionDetailsCard(sessionId: String) {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-
             val details = listOf(
                 "Session ID" to sessionId,
                 "Recording Date" to "2024-01-15",
@@ -299,7 +280,6 @@ private fun SessionDetailsCard(sessionId: String) {
                 "Participant" to "P001",
                 "Condition" to "Stress Test"
             )
-
             details.forEach { (label, value) ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -330,7 +310,6 @@ private fun GSRMetricsCard() {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly

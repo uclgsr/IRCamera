@@ -13,21 +13,9 @@ import org.junit.runner.RunWith
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
-/**
- * Comprehensive test suite for Fragment-to-Compose migrations
- *
- * This test suite validates:
- * - UI component rendering
- * - State management integration
- * - User interaction handling
- * - Navigation functionality
- * - Accessibility compliance
- * - Performance characteristics
- */
 @Ignore("All tests disabled")
 @RunWith(AndroidJUnit4::class)
 class FragmentToComposeMigrationTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -46,11 +34,9 @@ class FragmentToComposeMigrationTest {
         whenever(mockMainFragmentViewModel.deviceState).thenReturn(MutableStateFlow(deviceState))
         whenever(mockMainFragmentViewModel.batteryInfo).thenReturn(MutableStateFlow(null))
         whenever(mockMainFragmentViewModel.navigationEvents).thenReturn(MutableSharedFlow())
-
         composeTestRule.setContent {
             MainFragmentCompose().Content(mockMainFragmentViewModel)
         }
-
         // Verify initial UI state
         composeTestRule.onNodeWithText("No Devices Found").assertExists()
         composeTestRule.onNodeWithText("Add a device to get started").assertExists()
@@ -70,11 +56,9 @@ class FragmentToComposeMigrationTest {
         whenever(mockMainFragmentViewModel.deviceState).thenReturn(MutableStateFlow(deviceState))
         whenever(mockMainFragmentViewModel.batteryInfo).thenReturn(MutableStateFlow(null))
         whenever(mockMainFragmentViewModel.navigationEvents).thenReturn(MutableSharedFlow())
-
         composeTestRule.setContent {
             MainFragmentCompose().Content(mockMainFragmentViewModel)
         }
-
         // Verify connected device state
         composeTestRule.onNodeWithText("Devices Connected").assertExists()
         composeTestRule.onNodeWithText("TC Line Device").assertExists()
@@ -86,13 +70,11 @@ class FragmentToComposeMigrationTest {
         composeTestRule.setContent {
             SensorDashboardFragmentCompose().Content()
         }
-
         // Verify dashboard components
         composeTestRule.onNodeWithText("Sensor Dashboard").assertExists()
         composeTestRule.onNodeWithText("All Sensors Connected & Ready").assertExists()
         composeTestRule.onNodeWithText("Start Recording").assertExists()
         composeTestRule.onNodeWithText("Sensors (4)").assertExists()
-
         // Verify individual sensors
         composeTestRule.onNodeWithText("TC001 Thermal Camera").assertExists()
         composeTestRule.onNodeWithText("RGB Camera").assertExists()
@@ -105,10 +87,8 @@ class FragmentToComposeMigrationTest {
         composeTestRule.setContent {
             SensorDashboardFragmentCompose().Content()
         }
-
         // Start recording
         composeTestRule.onNodeWithText("Start Recording").performClick()
-
         // Verify recording state changes
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("Stop Recording").assertExists()
@@ -126,15 +106,12 @@ class FragmentToComposeMigrationTest {
         whenever(mockMainFragmentViewModel.deviceState).thenReturn(MutableStateFlow(deviceState))
         whenever(mockMainFragmentViewModel.batteryInfo).thenReturn(MutableStateFlow(null))
         whenever(mockMainFragmentViewModel.navigationEvents).thenReturn(MutableSharedFlow())
-
         composeTestRule.setContent {
             MainFragmentCompose().Content(mockMainFragmentViewModel)
         }
-
         // Verify accessibility content descriptions
         composeTestRule.onNodeWithContentDescription("Add Device").assertExists()
         composeTestRule.onNodeWithContentDescription("GSR Recording").assertExists()
-
         // Test accessibility actions
         composeTestRule.onAllNodesWithContentDescription("Add Device")[0].assertHasClickAction()
         composeTestRule.onAllNodesWithContentDescription("GSR Recording")[0].assertHasClickAction()
@@ -152,11 +129,9 @@ class FragmentToComposeMigrationTest {
         whenever(mockMainFragmentViewModel.deviceState).thenReturn(MutableStateFlow(deviceState))
         whenever(mockMainFragmentViewModel.batteryInfo).thenReturn(MutableStateFlow(null))
         whenever(mockMainFragmentViewModel.navigationEvents).thenReturn(MutableSharedFlow())
-
         composeTestRule.setContent {
             MainFragmentCompose().Content(mockMainFragmentViewModel)
         }
-
         // Verify UI components are present
         composeTestRule.onNodeWithText("No Devices Found").assertExists()
     }

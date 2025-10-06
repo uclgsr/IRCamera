@@ -28,7 +28,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
 class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
-
     override fun createViewModel(): ThermalFragmentViewModel {
         return viewModels<ThermalFragmentViewModel>().value
     }
@@ -38,7 +37,6 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
     override fun Content(viewModel: ThermalFragmentViewModel) {
         val context = LocalContext.current
         val uiState by viewModel.thermalUiState.collectAsStateWithLifecycle()
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -85,7 +83,6 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
                     .fillMaxWidth()
                     .height(300.dp)
             )
-
             // Monitoring controls
             MonitoringControlsSection(
                 onStartMonitoring = { viewModel.startMonitoring() },
@@ -93,7 +90,6 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
                 onConfigureRegions = { viewModel.configureRegions() },
                 isMonitoring = uiState.isMonitoring
             )
-
             // Temperature data display
             TemperatureDataSection(
                 currentTemp = uiState.currentTemperature,
@@ -101,7 +97,6 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
                 maxTemp = uiState.maxTemperature,
                 avgTemp = uiState.averageTemperature
             )
-
             // Monitoring status and alerts
             MonitoringStatusSection(
                 isConnected = uiState.isDeviceConnected,
@@ -135,7 +130,6 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
                     },
                     modifier = Modifier.fillMaxSize()
                 )
-
                 // Overlay for camera integration status
                 if (true) { // Replace with actual camera status
                     Surface(
@@ -193,7 +187,6 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -216,7 +209,6 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(if (isMonitoring) "Stop" else "Start")
                     }
-
                     OutlinedButton(
                         onClick = onConfigureRegions,
                         modifier = Modifier.weight(1f)
@@ -248,7 +240,6 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
@@ -311,19 +302,16 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-
                 StatusRow(
                     "Device Connected",
                     isConnected,
                     if (isConnected) Color.Green else Color.Red
                 )
-
                 StatusRow(
                     "Recording",
                     isRecording,
                     if (isRecording) Color.Red else Color.Gray
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,

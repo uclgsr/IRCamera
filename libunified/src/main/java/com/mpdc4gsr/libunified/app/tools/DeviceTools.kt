@@ -18,7 +18,6 @@ import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import com.mpdc4gsr.libunified.app.utils.ByteUtils
 
 object DeviceTools {
-
     fun isConnect(
         isSendConnectEvent: Boolean = false,
         isAutoRequest: Boolean = true,

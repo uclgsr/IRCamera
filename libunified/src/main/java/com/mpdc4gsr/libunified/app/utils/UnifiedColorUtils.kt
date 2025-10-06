@@ -8,7 +8,6 @@ import com.energy.iruvc.utils.CommonParams
 import java.util.*
 
 object UnifiedColorUtils {
-
     fun getRed(@ColorInt color: Int): Int {
         return color shr 16 and 0xFF
     }

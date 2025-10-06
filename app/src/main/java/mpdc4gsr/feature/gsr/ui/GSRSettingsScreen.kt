@@ -28,10 +28,6 @@ import mpdc4gsr.core.ui.components.settings.SettingsToggle
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.gsr.presentation.GSRSettingsViewModel
 
-/**
- * GSR Settings Screen - Configure GSR sensor parameters and Shimmer3 device
- * Integrated with GSRSettingsViewModel and GSRSettingsRepository
- */
 @Composable
 fun GSRSettingsScreen(
     onBackClick: (() -> Unit)? = null,
@@ -42,7 +38,6 @@ fun GSRSettingsScreen(
     val uiState by viewModel.settingsUiState.collectAsState()
     val gsrSettings = uiState.gsrSettings
     val deviceSettings = uiState.deviceSettings
-
     LaunchedEffect(Unit) {
         viewModel.initialize(context)
         viewModel.settingsEvents.collect { event ->
@@ -62,7 +57,6 @@ fun GSRSettingsScreen(
             }
         }
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -73,7 +67,6 @@ fun GSRSettingsScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -111,7 +104,6 @@ fun GSRSettingsScreen(
                         )
                     }
                 )
-
                 if (deviceSettings.autoReconnect) {
                     Spacer(modifier = Modifier.height(8.dp))
                     SettingsSlider(
@@ -125,7 +117,6 @@ fun GSRSettingsScreen(
                         },
                         unit = " attempts"
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
                     SettingsSlider(
                         label = "Reconnection Delay",
@@ -140,7 +131,6 @@ fun GSRSettingsScreen(
                     )
                 }
             }
-
             // Data Collection
             SettingsCard(
                 title = "Data Collection",
@@ -179,7 +169,6 @@ fun GSRSettingsScreen(
                     }
                 )
             }
-
             // Calibration
             SettingsCard(
                 title = "Calibration",

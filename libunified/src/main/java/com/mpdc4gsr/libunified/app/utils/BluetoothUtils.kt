@@ -19,7 +19,6 @@ import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.tools.PermissionTools
 
 object BluetoothUtils {
-
     fun addBtStateListener(activity: ComponentActivity, listener: ((isEnable: Boolean) -> Unit)) {
         activity.lifecycle.addObserver(BtStateObserver(activity, listener))
     }
@@ -29,7 +28,6 @@ object BluetoothUtils {
         val listener: ((isEnable: Boolean) -> Unit)
     ) : DefaultLifecycleObserver {
         private val receiver = BtStateReceiver()
-
         override fun onCreate(owner: LifecycleOwner) {
             context.registerReceiver(receiver, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
         }
@@ -53,7 +51,6 @@ object BluetoothUtils {
     }
 
     private val scanCallback = MyScanCallback()
-
     fun setLeScanListener(isTS004: Boolean, listener: (name: String) -> Unit) {
         scanCallback.isTS004 = isTS004
         scanCallback.listener = listener
@@ -62,12 +59,10 @@ object BluetoothUtils {
     @SuppressLint("MissingPermission")
     fun startLeScan(context: Context): Boolean {
         XLog.i("startLeScan()")
-
         if (!PermissionTools.hasBtPermission(context)) {
             XLog.e("-!")
             return false
         }
-
         val btAdapter: BluetoothAdapter =
             (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
         val btLeScanner: BluetoothLeScanner? = btAdapter.bluetoothLeScanner
@@ -75,12 +70,10 @@ object BluetoothUtils {
             XLog.e("-")
             return false
         }
-
         val settings = ScanSettings.Builder()
             .setMatchMode(ScanSettings.MATCH_MODE_STICKY)
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
             .build()
-
         btLeScanner.startScan(null, settings, scanCallback)
         return true
     }
@@ -88,12 +81,10 @@ object BluetoothUtils {
     @SuppressLint("MissingPermission")
     fun stopLeScan(context: Context): Boolean {
         XLog.i("stopBtScan()")
-
         if (!PermissionTools.hasBtPermission(context)) {
             XLog.w("-!")
             return false
         }
-
         val btAdapter: BluetoothAdapter =
             (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
         val btLeScanner: BluetoothLeScanner? = btAdapter.bluetoothLeScanner
@@ -101,7 +92,6 @@ object BluetoothUtils {
             XLog.w("-")
             return false
         }
-
         btLeScanner.stopScan(scanCallback)
         return true
     }

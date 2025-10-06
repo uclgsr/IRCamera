@@ -50,10 +50,8 @@ data class HelpStep(
 class MoreHelpViewModel : AppBaseViewModel() {
     private val _connectionType = mutableStateOf(0)
     val connectionType: State<Int> = _connectionType
-
     private val _helpSteps = mutableStateOf<List<HelpStep>>(emptyList())
     val helpSteps: State<List<HelpStep>> = _helpSteps
-
     fun setConnectionType(type: Int) {
         _connectionType.value = type
         updateHelpSteps(type)
@@ -135,14 +133,10 @@ class MoreHelpViewModel : AppBaseViewModel() {
 }
 
 class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
-
     private lateinit var wifiManager: WifiManager
-
     override fun createViewModel(): MoreHelpViewModel = viewModels<MoreHelpViewModel>().value
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
         val connectionType = intent.getIntExtra(Constants.SETTING_CONNECTION_TYPE, 0)
         viewModels<MoreHelpViewModel>().value.setConnectionType(connectionType)
@@ -155,13 +149,11 @@ class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
             val context = LocalContext.current
             val connectionType by viewModel.connectionType
             val helpSteps by viewModel.helpSteps
-
             val title = if (connectionType == Constants.SETTING_CONNECTION) {
                 stringResource(R.string.connection_help)
             } else {
                 stringResource(R.string.disconnection_troubleshooting)
             }
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -171,7 +163,6 @@ class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
                     title = title,
                     onBackClick = { finish() }
                 )
-
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -220,7 +211,6 @@ class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
                             )
                         }
                     }
-
                     // Help steps
                     helpSteps.forEachIndexed { index, step ->
                         HelpStepCard(
@@ -235,14 +225,11 @@ class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
                                 }
                             }
                         )
-
                         if (index < helpSteps.size - 1) {
                             Spacer(modifier = Modifier.height(12.dp))
                         }
                     }
-
                     Spacer(modifier = Modifier.height(24.dp))
-
                     // Additional help section
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -374,9 +361,7 @@ private fun HelpStepCard(
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
-
             Spacer(modifier = Modifier.width(16.dp))
-
             // Step content
             Column(
                 modifier = Modifier.weight(1f)
@@ -393,7 +378,6 @@ private fun HelpStepCard(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 if (step.isActionable && step.action != null) {
                     Spacer(modifier = Modifier.height(12.dp))
                     OutlinedButton(

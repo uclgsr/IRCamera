@@ -11,12 +11,6 @@ import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.gsr.domain.usecase.*
 
-/**
- * Modern Shimmer Config ViewModel - Clean Architecture MVVM Implementation
- *
- * Uses use cases instead of direct repository/manager access for proper layer separation.
- * Manages Shimmer device configuration, scanning, and connections with reactive patterns.
- */
 class ShimmerConfigViewModel(
     private val scanDevicesUseCase: ScanShimmerDevicesUseCase,
     private val connectDeviceUseCase: ConnectShimmerDeviceUseCase,
@@ -24,7 +18,6 @@ class ShimmerConfigViewModel(
     private val getBatteryLevelUseCase: GetDeviceBatteryUseCase,
     private val checkConnectionUseCase: CheckDeviceConnectionUseCase
 ) : AppBaseViewModel() {
-
     companion object {
         private val REQUIRED_PERMISSIONS =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
@@ -49,7 +42,6 @@ class ShimmerConfigViewModel(
     // Device management StateFlows
     private val _discoveredDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())
     val discoveredDevices: StateFlow<List<DeviceInfo>> = _discoveredDevices.asStateFlow()
-
     private val _shimmerConnectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
     val shimmerConnectionState: StateFlow<ConnectionState> = _shimmerConnectionState.asStateFlow()
 
@@ -65,13 +57,9 @@ class ShimmerConfigViewModel(
     private val _configAction = MutableSharedFlow<ConfigAction>()
     val configAction: SharedFlow<ConfigAction> = _configAction.asSharedFlow()
 
-    /**
-     * Start scanning for Shimmer devices using use case
-     */
     fun startScan() {
         viewModelScope.launch {
             _shimmerUiState.update { it.copy(isScanning = true, error = null) }
-
             try {
                 scanDevicesUseCase().collect { devices ->
                     _discoveredDevices.value = devices
@@ -85,13 +73,9 @@ class ShimmerConfigViewModel(
         }
     }
 
-    /**
-     * Connect to a Shimmer device using use case
-     */
     fun connectDevice(deviceAddress: String) {
         viewModelScope.launch {
             _shimmerConnectionState.value = ConnectionState.Connecting
-
             val result = connectDeviceUseCase(deviceAddress)
             result.fold(
                 onSuccess = {
@@ -106,9 +90,6 @@ class ShimmerConfigViewModel(
         }
     }
 
-    /**
-     * Disconnect from Shimmer device using use case
-     */
     fun disconnectDevice(deviceAddress: String) {
         viewModelScope.launch {
             disconnectDeviceUseCase(deviceAddress)
@@ -117,9 +98,6 @@ class ShimmerConfigViewModel(
         }
     }
 
-    /**
-     * Get battery level for a device using use case
-     */
     fun getBatteryLevel(deviceAddress: String) {
         viewModelScope.launch {
             val batteryLevel = getBatteryLevelUseCase(deviceAddress)
@@ -131,47 +109,31 @@ class ShimmerConfigViewModel(
         }
     }
 
-    /**
-     * Check if device is connected using use case
-     */
     fun isDeviceConnected(deviceAddress: String): Boolean {
         return checkConnectionUseCase(deviceAddress)
     }
 
-    /**
-     * Check and update permission state
-     */
     fun checkPermissions(context: Context) {
         val missingPermissions = REQUIRED_PERMISSIONS.filter {
             ActivityCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
         }
-
         _permissionState.value = PermissionState(
             hasAllPermissions = missingPermissions.isEmpty(),
             missingPermissions = missingPermissions
         )
     }
 
-    /**
-     * Handle permission result
-     */
     fun onPermissionsGranted() {
         _permissionState.value = PermissionState(hasAllPermissions = true, missingPermissions = emptyList())
     }
 }
 
-/**
- * UI State for Shimmer Config screen
- */
 data class ShimmerConfigUiState(
     val isScanning: Boolean = false,
     val batteryLevel: Int? = null,
     val error: String? = null
 )
 
-/**
- * Connection state sealed class
- */
 sealed class ConnectionState {
     object Disconnected : ConnectionState()
     object Connecting : ConnectionState()
@@ -179,26 +141,17 @@ sealed class ConnectionState {
     data class Error(val message: String) : ConnectionState()
 }
 
-/**
- * Permission state data class
- */
 data class PermissionState(
     val hasAllPermissions: Boolean,
     val missingPermissions: List<String>
 )
 
-/**
- * Config events sealed class
- */
 sealed class ConfigEvent {
     data class DeviceConnected(val deviceAddress: String) : ConfigEvent()
     object DeviceDisconnected : ConfigEvent()
     data class Error(val message: String) : ConfigEvent()
 }
 
-/**
- * Config action sealed class
- */
 sealed class ConfigAction {
     object StartScan : ConfigAction()
     data class ConnectDevice(val deviceAddress: String) : ConfigAction()

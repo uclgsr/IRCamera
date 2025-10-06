@@ -208,9 +208,7 @@ private fun MeasureItemCard(
                     MaterialTheme.colorScheme.onSurface
                 }
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = item.title,
                 style = MaterialTheme.typography.titleSmall,
@@ -222,7 +220,6 @@ private fun MeasureItemCard(
                     MaterialTheme.colorScheme.onSurface
                 }
             )
-
             if (item.description.isNotEmpty()) {
                 Text(
                     text = item.description,
@@ -289,9 +286,7 @@ private fun GalleryAlbumCard(
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             // Album info
             Column(
                 modifier = Modifier.weight(1f)
@@ -303,7 +298,6 @@ private fun GalleryAlbumCard(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-
                 if (album.description.isNotEmpty()) {
                     Text(
                         text = album.description,
@@ -313,9 +307,7 @@ private fun GalleryAlbumCard(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-
                 Spacer(modifier = Modifier.height(4.dp))
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -333,7 +325,6 @@ private fun GalleryAlbumCard(
                     )
                 }
             }
-
             // Delete button
             IconButton(onClick = onDelete) {
                 Icon(
@@ -442,9 +433,7 @@ private fun SettingOptionCard(
                     MaterialTheme.colorScheme.onSurface
                 }
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -453,7 +442,6 @@ private fun SettingOptionCard(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
-
                 if (option.description.isNotEmpty()) {
                     Text(
                         text = option.description,
@@ -462,7 +450,6 @@ private fun SettingOptionCard(
                     )
                 }
             }
-
             if (option.type == SettingOptionType.CHECKBOX) {
                 Checkbox(
                     checked = isSelected,
@@ -479,7 +466,6 @@ private fun SettingOptionCard(
 }
 
 // Data classes for adapters
-
 data class CameraItem(
     val type: CameraItemType,
     val delayTime: Int = 0,
@@ -521,20 +507,17 @@ fun ThermalAdaptersPreview() {
         CameraItem(CameraItemType.FLASH, isSelected = false),
         CameraItem(CameraItemType.HDR, isSelected = false)
     )
-
     val sampleMeasureItems = listOf(
         MeasureItem("Person", "1.8m", Icons.Default.Person, 1001),
         MeasureItem("Animal", "1.0m", Icons.Default.Pets, 1002),
         MeasureItem("Object", "0.5m", Icons.Default.Category, 1003),
         MeasureItem("Small", "0.2m", Icons.Default.Circle, 1004)
     )
-
     val sampleTabs = listOf(
         MenuTab("Camera", Icons.Default.CameraAlt),
         MenuTab("Gallery", Icons.Default.PhotoLibrary),
         MenuTab("Settings", Icons.Default.Settings)
     )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -547,14 +530,12 @@ fun ThermalAdaptersPreview() {
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
-
         // Camera items
         Text("Camera Controls:", style = MaterialTheme.typography.titleMedium)
         CameraItemListCompose(
             items = sampleCameraItems,
             onItemClick = { index, item -> }
         )
-
         // Menu tabs
         Text("Menu Tabs:", style = MaterialTheme.typography.titleMedium)
         MenuTabBarCompose(
@@ -562,7 +543,6 @@ fun ThermalAdaptersPreview() {
             selectedIndex = 0,
             onTabSelected = { }
         )
-
         // Measure items
         Text("Measure Items:", style = MaterialTheme.typography.titleMedium)
         MeasureItemGridCompose(

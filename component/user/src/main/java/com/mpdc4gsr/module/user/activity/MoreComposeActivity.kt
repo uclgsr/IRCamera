@@ -25,7 +25,6 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.viewmodel.MoreViewModel
 
 class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
-
     override fun createViewModel(): MoreViewModel {
         return viewModels<MoreViewModel>().value
     }
@@ -35,12 +34,10 @@ class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
     override fun Content(viewModel: MoreViewModel) {
         val settingsItems by viewModel.settingsItems.collectAsState()
         val isUpgradeAvailable by viewModel.isUpgradeAvailable.collectAsState()
-
         // Check for updates on start
         LaunchedEffect(Unit) {
             viewModel.checkForUpdates()
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -161,9 +158,7 @@ private fun SettingsMenuItem(
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
                 )
-
                 Spacer(modifier = Modifier.width(16.dp))
-
                 Column {
                     Text(
                         text = item.title,
@@ -178,7 +173,6 @@ private fun SettingsMenuItem(
                     )
                 }
             }
-
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -194,7 +188,6 @@ private fun SettingsMenuItem(
                         )
                     }
                 }
-
                 Icon(
                     Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = "Navigate",

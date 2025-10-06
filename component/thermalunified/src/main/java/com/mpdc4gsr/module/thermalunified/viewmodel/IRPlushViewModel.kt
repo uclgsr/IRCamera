@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class IRPlushViewModel : BaseViewModel() {
-
     companion object {
         private const val CALIBRATION_DELAY_MS = 2000L
     }
@@ -39,7 +38,6 @@ class IRPlushViewModel : BaseViewModel() {
     // Recording state management
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
-
     fun toggleRecording() {
         _isRecording.value = !_isRecording.value
     }

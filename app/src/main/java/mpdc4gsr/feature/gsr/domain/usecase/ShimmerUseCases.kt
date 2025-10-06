@@ -5,11 +5,6 @@ import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.GSRSample
 import mpdc4gsr.feature.gsr.domain.repository.ShimmerRepository
 
-/**
- * Use case for scanning Shimmer devices
- *
- * Encapsulates business logic for device discovery.
- */
 class ScanShimmerDevicesUseCase(
     private val repository: ShimmerRepository
 ) {
@@ -18,11 +13,6 @@ class ScanShimmerDevicesUseCase(
     }
 }
 
-/**
- * Use case for connecting to a Shimmer device
- *
- * Handles connection logic and validation.
- */
 class ConnectShimmerDeviceUseCase(
     private val repository: ShimmerRepository
 ) {
@@ -34,9 +24,6 @@ class ConnectShimmerDeviceUseCase(
     }
 }
 
-/**
- * Use case for disconnecting from a Shimmer device
- */
 class DisconnectShimmerDeviceUseCase(
     private val repository: ShimmerRepository
 ) {
@@ -45,11 +32,6 @@ class DisconnectShimmerDeviceUseCase(
     }
 }
 
-/**
- * Use case for streaming GSR data from Shimmer device
- *
- * Handles data streaming and validation.
- */
 class StartGSRStreamingUseCase(
     private val repository: ShimmerRepository
 ) {
@@ -61,9 +43,6 @@ class StartGSRStreamingUseCase(
     }
 }
 
-/**
- * Use case for stopping GSR data streaming
- */
 class StopGSRStreamingUseCase(
     private val repository: ShimmerRepository
 ) {
@@ -72,9 +51,6 @@ class StopGSRStreamingUseCase(
     }
 }
 
-/**
- * Use case for checking device connection status
- */
 class CheckDeviceConnectionUseCase(
     private val repository: ShimmerRepository
 ) {
@@ -83,9 +59,6 @@ class CheckDeviceConnectionUseCase(
     }
 }
 
-/**
- * Use case for getting device battery level
- */
 class GetDeviceBatteryUseCase(
     private val repository: ShimmerRepository
 ) {

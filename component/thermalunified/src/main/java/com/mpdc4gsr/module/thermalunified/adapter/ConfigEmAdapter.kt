@@ -17,7 +17,6 @@ import com.mpdc4gsr.module.thermalunified.utils.IRConfigData
 
 class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapter.ViewHolder>() {
     private val dataList: ArrayList<IRConfigData> = IRConfigData.irConfigData(context)
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -38,7 +37,6 @@ class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapt
     }
 
     override fun getItemCount(): Int = dataList.size
-
     class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
         val tvEmName: TextView = rootView.findViewById(R.id.tv_em_name)
         val tvEmNum: TextView = rootView.findViewById(R.id.tv_em_num)

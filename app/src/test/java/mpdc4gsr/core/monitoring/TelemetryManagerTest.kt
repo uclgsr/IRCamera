@@ -8,16 +8,9 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Unit tests for TelemetryManager.
- *
- * Uses Robolectric for Android context.
- * Tests verify event tracking, error reporting, and metric logging.
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
 class TelemetryManagerTest {
-
     private lateinit var context: Context
 
     @Before
@@ -57,7 +50,6 @@ class TelemetryManagerTest {
             "param2" to 123,
             "param3" to true
         )
-
         TelemetryManager.trackEvent("test_event_with_params", params)
     }
 
@@ -138,13 +130,11 @@ class TelemetryManagerTest {
     @Test
     fun testTrackExecutionTime() {
         var executed = false
-
         val result = trackExecutionTime("test_operation") {
             Thread.sleep(50)
             executed = true
             "result"
         }
-
         assert(executed)
         assert(result == "result")
     }

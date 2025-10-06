@@ -8,9 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class RecordingSettingsRepository(context: Context) {
-
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-
     private val _settings = MutableStateFlow(loadSettings())
     val settings: StateFlow<RecordingSettings> = _settings.asStateFlow()
 
@@ -36,7 +34,6 @@ class RecordingSettingsRepository(context: Context) {
 
         @Volatile
         private var instance: RecordingSettingsRepository? = null
-
         fun getInstance(context: Context): RecordingSettingsRepository {
             return instance ?: synchronized(this) {
                 instance ?: RecordingSettingsRepository(context.applicationContext).also {

@@ -14,12 +14,10 @@ import com.mpdc4gsr.libunified.R
 class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
     private val tipsPercent: Float
     private val seekPercent: Float
-
     private val seekBar: SeekBar
     private val tvTips: TextView
     private val tvMin: TextView
     private val tvMax: TextView
-
     var progress: Int
         get() {
             return seekBar.progress
@@ -30,7 +28,6 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
                 tvTips.text = valueFormatListener?.invoke(value)
             }
         }
-
     var valueText: String
         get() {
             return tvTips.text.toString()
@@ -38,11 +35,8 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         set(value) {
             tvTips.text = value
         }
-
     var onProgressChangeListener: ((progress: Int, fromUser: Boolean) -> Unit)? = null
-
     var onStopTrackingTouch: ((progress: Int) -> Unit)? = null
-
     var valueFormatListener: ((progress: Int) -> CharSequence?)? = null
         set(value) {
             tvTips.text = value?.invoke(seekBar.progress)
@@ -50,9 +44,7 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         }
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
@@ -82,7 +74,6 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         seekBar.setPadding(thumbWidth / 2, 0, thumbWidth / 2, 0)
         seekBar.setOnSeekBarChangeListener(this)
         addView(seekBar, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-
         tvTips = TextView(context)
         tvTips.text = seekBar.progress.toString()
         tvTips.textSize = 12f
@@ -91,7 +82,6 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         tvTips.setTextColor(0xff16131e.toInt())
         tvTips.setBackgroundResource(R.drawable.ic_tips_seek_bar_tips_bg)
         addView(tvTips)
-
         val typedArray =
             context.obtainStyledAttributes(attrs, R.styleable.TipsSeekBar, defStyleAttr, 0)
         val minText = typedArray.getText(R.styleable.TipsSeekBar_minText)
@@ -99,13 +89,11 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         tipsPercent = typedArray.getFraction(R.styleable.TipsSeekBar_tipsPercent, 1, 1, 0f)
         seekPercent = typedArray.getFraction(R.styleable.TipsSeekBar_seekPercent, 1, 1, 0f)
         typedArray.recycle()
-
         tvMin = TextView(context)
         tvMin.text = minText
         tvMin.textSize = 14f
         tvMin.setTextColor(0xffffffff.toInt())
         addView(tvMin)
-
         tvMax = TextView(context)
         tvMax.text = maxText
         tvMax.textSize = 14f
@@ -120,7 +108,6 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
         val width =
             if (widthMode == MeasureSpec.UNSPECIFIED) context.resources.displayMetrics.widthPixels else widthSize
-
         for (i in 0 until childCount) {
             when (val child = getChildAt(i)) {
                 seekBar -> {
@@ -150,7 +137,6 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
                 }
             }
         }
-
         val height =
             tvTips.measuredHeight + 5f.dpToPx(context).toInt() + (seekBar.thumb?.intrinsicHeight
                 ?: seekBar.measuredHeight)
@@ -214,5 +200,4 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
     fun getFormattedValue(): String {
         return valueFormatListener?.invoke(progress)?.toString() ?: progress.toString()
     }
-
 }

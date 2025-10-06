@@ -1,9 +1,5 @@
 package mpdc4gsr.core.data
 
-/**
- * Data classes for recording session management and networking integration
- */
-
 data class SessionManifest(
     val sessionId: String,
     val startTimestamp: Long,

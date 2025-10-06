@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 
 class IRMonitorViewModel : BaseViewModel() {
     val recordListLD = MutableLiveData<List<ThermalDao.Record>>()
-
     fun queryRecordList() {
         viewModelScope.launch(Dispatchers.IO) {
             val recordList: List<ThermalDao.Record> =
@@ -21,7 +20,6 @@ class IRMonitorViewModel : BaseViewModel() {
     }
 
     val detailListLD = MutableLiveData<List<ThermalEntity>>()
-
     fun queryDetail(startTime: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             val detailList: List<ThermalEntity> =

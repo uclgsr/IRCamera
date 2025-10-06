@@ -22,7 +22,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ImageColorViewModel
 
 class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
-
     override fun createViewModel(): ImageColorViewModel {
         return viewModels<ImageColorViewModel>().value
     }
@@ -32,7 +31,6 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
     override fun Content(viewModel: ImageColorViewModel) {
         val timestamp by viewModel.timestamp.collectAsState()
         val showData by viewModel.showData.collectAsState()
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -94,7 +92,6 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                                 )
                             }
                         }
-
                         // Second image
                         Card(
                             modifier = Modifier
@@ -116,7 +113,6 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                             }
                         }
                     }
-
                     // Timestamp display
                     if (timestamp.isNotEmpty()) {
                         Text(
@@ -129,7 +125,6 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center
                         )
                     }
-
                     // ARGB image display
                     Card(
                         modifier = Modifier
@@ -151,7 +146,6 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                             )
                         }
                     }
-
                     // Control buttons
                     Row(
                         modifier = Modifier
@@ -168,9 +162,8 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                         ) {
                             Text(if (showData) "Hide Data" else "Show Data")
                         }
-
                         Button(
-                            onClick = { /* Process U4 thermal data */ },
+                            onClick = { },
                             modifier = Modifier.width(120.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.secondary

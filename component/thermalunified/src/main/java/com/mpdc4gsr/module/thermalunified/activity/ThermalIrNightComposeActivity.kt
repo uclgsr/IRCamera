@@ -20,7 +20,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalIrNightViewModel
 
 class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewModel>() {
-
     override fun createViewModel(): ThermalIrNightViewModel {
         return viewModels<ThermalIrNightViewModel>().value
     }
@@ -32,14 +31,12 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
         val nightModeEnabled by viewModel.nightModeEnabled.collectAsState()
         val showOverlay by viewModel.showOverlay.collectAsState()
         val isRecording by viewModel.isRecording.collectAsState()
-
         var showInfoDialog by remember { mutableStateOf(false) }
         var showPaletteDialog by remember { mutableStateOf(false) }
         var showSettingsDialog by remember { mutableStateOf(false) }
         var showRangeEditDialog by remember { mutableStateOf(false) }
         var showMoreOptions by remember { mutableStateOf(false) }
         var rangeLocked by remember { mutableStateOf(false) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -65,7 +62,6 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                         }
                                     }
                                 }
-
                                 TextButton(
                                     onClick = { viewModel.selectMode(1) },
                                     colors = ButtonDefaults.textButtonColors(
@@ -148,7 +144,6 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                 )
                             }
                         }
-
                         // Night mode specific overlays
                         if (nightModeEnabled && showOverlay) {
                             Column(
@@ -181,7 +176,6 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                 }
                             }
                         }
-
                         // Temperature controls
                         Column(
                             modifier = Modifier
@@ -216,7 +210,6 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                 }
                             }
                         }
-
                         // Recording status
                         if (isRecording) {
                             Card(
@@ -243,7 +236,6 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                             }
                         }
                     }
-
                     // Bottom menu optimized for night mode
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -275,9 +267,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                     Icon(Icons.Default.Settings, "Settings", tint = Color.White)
                                 }
                             }
-
                             HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
-
                             // Primary controls
                             Row(
                                 modifier = Modifier
@@ -313,7 +303,6 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                     }
                 }
             }
-
             // Info Dialog
             if (showInfoDialog) {
                 AlertDialog(
@@ -336,7 +325,6 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                     }
                 )
             }
-
             // Palette Dialog
             if (showPaletteDialog) {
                 AlertDialog(
@@ -358,7 +346,6 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                     }
                 )
             }
-
             // Settings Dialog (reuse from IRThermalNightComposeActivity)
             if (showSettingsDialog) {
                 AlertDialog(
@@ -385,7 +372,6 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                     }
                 )
             }
-
             // Range Edit Dialog
             if (showRangeEditDialog) {
                 AlertDialog(
@@ -414,7 +400,6 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                     }
                 )
             }
-
             // More Options Menu
             if (showMoreOptions) {
                 AlertDialog(

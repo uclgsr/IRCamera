@@ -17,7 +17,6 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.CountDownLatch
 
 object LmsRepository {
-
     suspend fun getVersionInfo(): CheckVersionJson? {
         var result: CheckVersionJson? = null
         val downLatch = CountDownLatch(1)

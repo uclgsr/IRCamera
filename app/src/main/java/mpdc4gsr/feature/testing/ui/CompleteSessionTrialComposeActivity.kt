@@ -28,12 +28,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Compose version of Complete Session Trial Activity
- * End-to-end session testing with 5-minute extended trials
- */
 class CompleteSessionTrialComposeActivity : ComponentActivity() {
-
     companion object {
         private const val TAG = "CompleteSessionTrialCompose"
         private const val EXTENDED_DURATION_SECONDS = 300 // 5 minutes as per plan
@@ -44,12 +39,9 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
     private var trialSessionDir: File? = null
     private var trialStartTime: Long = 0
     private var trialEndTime: Long = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initializeComponents()
-
         setContent {
             LibUnifiedTheme {
                 CompleteSessionTrialScreen()
@@ -67,7 +59,6 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
         var sessionPhase by remember { mutableStateOf("Ready") }
         var testMetrics by remember { mutableStateOf(mapOf<String, Any>()) }
         var trialLogs by remember { mutableStateOf(listOf<String>()) }
-
         // Initialize test cases
         LaunchedEffect(Unit) {
             testResults = listOf(
@@ -98,7 +89,6 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                 )
             )
         }
-
         // Timer for recording
         LaunchedEffect(isRecording) {
             if (isRecording) {
@@ -106,7 +96,6 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                     delay(1000)
                     elapsedTime += 1
                     sessionProgress = elapsedTime.toFloat() / EXTENDED_DURATION_SECONDS
-
                     // Update phase based on elapsed time
                     sessionPhase = when {
                         elapsedTime < 30 -> "Initialization"
@@ -119,7 +108,6 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
 
                         else -> "Finalizing"
                     }
-
                     // Log status every 10 seconds
                     if (elapsedTime % STATUS_UPDATE_INTERVAL == 0L) {
                         trialLogs = trialLogs + "${
@@ -127,7 +115,6 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                         }: Recording ${elapsedTime}s - All sensors active"
                     }
                 }
-
                 if (elapsedTime >= EXTENDED_DURATION_SECONDS) {
                     isRecording = false
                     sessionPhase = "Completed"
@@ -140,7 +127,6 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                 }
             }
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -198,7 +184,6 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                                     fontWeight = FontWeight.Medium
                                 )
                             }
-
                             if (isRecording) {
                                 Text(
                                     text = "${elapsedTime}s / ${EXTENDED_DURATION_SECONDS}s",
@@ -206,7 +191,6 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                                 )
                             }
                         }
-
                         if (isRecording) {
                             Spacer(modifier = Modifier.height(12.dp))
                             LinearProgressIndicator(
@@ -221,9 +205,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Test Parameters Card
                 Card {
                     Column(modifier = Modifier.padding(16.dp)) {
@@ -233,7 +215,6 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-
                         listOf(
                             "Duration" to "${EXTENDED_DURATION_SECONDS / 60} minutes (${EXTENDED_DURATION_SECONDS}s)",
                             "Sensors" to "RGB Camera, Thermal Camera, GSR Sensor",
@@ -258,9 +239,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Test Progress
                 TestProgressIndicator(
                     totalTests = testResults.size,
@@ -268,9 +247,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                     passedTests = testResults.count { it.status == TestStatus.PASSED },
                     failedTests = testResults.count { it.status == TestStatus.FAILED }
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Session Control Buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -290,7 +267,6 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Start Trial")
                     }
-
                     Button(
                         onClick = {
                             lifecycleScope.launch { stopCompleteSessionTrial() }
@@ -308,9 +284,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                         Text("Stop Trial")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -326,7 +300,6 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Verify Output")
                     }
-
                     OutlinedButton(
                         onClick = {
                             lifecycleScope.launch { generateCompleteReport() }
@@ -339,9 +312,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                         Text("Generate Report")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Individual Test Cases
                 testResults.forEach { testCase ->
                     TestResultCard(
@@ -350,11 +321,9 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                 }
-
                 // Trial Logs
                 if (trialLogs.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Row(
@@ -373,9 +342,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                                     Text("Clear")
                                 }
                             }
-
                             Spacer(modifier = Modifier.height(8.dp))
-
                             trialLogs.takeLast(10).forEach { log ->
                                 Text(
                                     text = log,
@@ -402,17 +369,14 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
     private suspend fun startCompleteSessionTrial() {
         AppLogger.i(TAG, "Starting complete session trial")
         trialStartTime = System.currentTimeMillis()
-
         try {
             // Initialize session directory
             val sessionName =
                 "trial_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())}"
             trialSessionDir = File(filesDir, "trials/$sessionName")
             trialSessionDir?.mkdirs()
-
             // Start recording with all sensors
             recordingController?.startRecording()
-
             AppLogger.d(TAG, "Complete session trial started successfully")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to start session trial: ${e.message}")
@@ -422,7 +386,6 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
     private suspend fun stopCompleteSessionTrial() {
         AppLogger.i(TAG, "Stopping complete session trial")
         trialEndTime = System.currentTimeMillis()
-
         try {
             recordingController?.stopRecording()
             AppLogger.d(TAG, "Complete session trial stopped successfully")

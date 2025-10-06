@@ -16,14 +16,12 @@ class UnifiedDataWriterUtils(
     private val flushIntervalMs: Long = 1000L,
     private val maxQueueSize: Int = 10000
 ) {
-
     private val dataQueue = LinkedBlockingQueue<String>(maxQueueSize)
     private val isRunning = AtomicBoolean(false)
     private val bytesWritten = AtomicLong(0)
     private val linesWritten = AtomicLong(0)
     private var writerJob: Job? = null
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
     fun start() {
         if (isRunning.compareAndSet(false, true)) {
             writerJob = scope.launch {
@@ -86,15 +84,12 @@ class UnifiedDataWriterUtils(
         try {
             outputFile.parentFile?.mkdirs()
             bufferedWriter = BufferedWriter(FileWriter(outputFile, true), bufferSize)
-
             var lastFlushTime = System.currentTimeMillis()
             val batch = mutableListOf<String>()
-
             while (isRunning.get() || dataQueue.isNotEmpty()) {
                 // Collect batch of data
                 batch.clear()
                 val startTime = System.currentTimeMillis()
-
                 // Collect data for up to flush interval or until batch is full
                 while (batch.size < 1000 && (System.currentTimeMillis() - startTime) < flushIntervalMs) {
                     val data = dataQueue.poll()
@@ -105,12 +100,10 @@ class UnifiedDataWriterUtils(
                         break
                     }
                 }
-
                 // Write batch
                 if (batch.isNotEmpty()) {
                     writeBatch(bufferedWriter, batch)
                 }
-
                 // Flush periodically
                 val currentTime = System.currentTimeMillis()
                 if (currentTime - lastFlushTime >= flushIntervalMs) {
@@ -118,7 +111,6 @@ class UnifiedDataWriterUtils(
                     lastFlushTime = currentTime
                 }
             }
-
         } catch (e: CancellationException) {
             Log.d(TAG, "Writer cancelled")
         } catch (e: Exception) {
@@ -162,7 +154,6 @@ class UnifiedDataWriterUtils(
     // Static utility methods for simple file operations
     companion object {
         private const val TAG = "UnifiedDataWriter"
-
         fun writeToFile(file: File, data: String, append: Boolean = false) {
             try {
                 file.parentFile?.mkdirs()
@@ -179,7 +170,6 @@ class UnifiedDataWriterUtils(
                     // Write header
                     writer.write(headers.joinToString(",") { "\"$it\"" })
                     writer.newLine()
-
                     // Write rows
                     for (row in rows) {
                         val csvLine = row.joinToString(",") { value ->

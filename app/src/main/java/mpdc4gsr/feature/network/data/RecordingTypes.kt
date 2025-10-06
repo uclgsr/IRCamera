@@ -1,9 +1,5 @@
 package mpdc4gsr.feature.network.data
 
-/**
- * Centralized recording types and enums to eliminate duplication across controllers
- */
-
 // Recording state enums
 enum class RecordingState {
     IDLE,

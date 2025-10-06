@@ -16,7 +16,6 @@ class WsManager(
     companion object {
         private const val NORMAL_CLOSE_CODE = 1000
         private const val ABNORMAL_CLOSE_CODE = 1001
-
         private const val NORMAL_CLOSE_TIPS = "APP call close() and return true"
         private const val ABNORMAL_CLOSE_TIPS = "APP call close() and return false"
     }
@@ -24,7 +23,6 @@ class WsManager(
     private var mWebSocket: WebSocket? = null
     private var status: State = State.DISCONNECTED
     private var heartBeatTimer: HeartBeatTimer? = null
-
     private val mWebSocketListener: WebSocketListener =
         object : WebSocketListener() {
             @Override
@@ -34,7 +32,6 @@ class WsManager(
             ) {
                 mWebSocket = webSocket
                 status = State.CONNECTED
-
                 heartBeatTimer?.cancel()
                 heartBeatTimer = HeartBeatTimer(this@WsManager)
                 heartBeatTimer?.timeoutListener = {
@@ -43,7 +40,6 @@ class WsManager(
                     }
                 }
                 heartBeatTimer?.start()
-
                 statusListener.runMain {
                     it.onOpen(webSocket, response)
                 }
@@ -90,10 +86,8 @@ class WsManager(
                 reason: String,
             ) {
                 status = State.DISCONNECTED
-
                 heartBeatTimer?.cancel()
                 heartBeatTimer = null
-
                 statusListener.runMain {
                     it.onClosed(webSocket, code, reason)
                 }
@@ -113,7 +107,6 @@ class WsManager(
         }
 
     fun isConnect(): Boolean = status == State.CONNECTING || status == State.CONNECTED
-
     private var mLock = ReentrantLock()
 
     @Synchronized
@@ -126,7 +119,6 @@ class WsManager(
             return
         }
         status = State.CONNECTING
-
         okHttpClient.dispatcher.cancelAll()
         val mRequest: Request =
             Request.Builder()
@@ -146,12 +138,10 @@ class WsManager(
     fun stopConnect() {
         heartBeatTimer?.cancel()
         heartBeatTimer = null
-
         if (status == State.DISCONNECTED) {
             return
         }
         status = State.DISCONNECTED
-
         okHttpClient.dispatcher.cancelAll()
         if (mWebSocket != null) {
             val isClosed = mWebSocket!!.close(NORMAL_CLOSE_CODE, NORMAL_CLOSE_TIPS)
@@ -188,7 +178,6 @@ class WsManager(
     }
 
     private val wsMainHandler = Handler(Looper.getMainLooper())
-
     private fun IWebSocketListener?.runMain(block: (IWebSocketListener) -> Unit) {
         if (this != null) {
             if (Looper.myLooper() != Looper.getMainLooper()) {
@@ -206,7 +195,6 @@ class WsManager(
 
         @Volatile
         var lastHeartBeatTime: Long = 0
-
         fun start() {
             schedule(
                 object : TimerTask() {
@@ -243,9 +231,7 @@ class WsManager(
     }
 
     abstract class IWebSocketListener : WebSocketListener() {
-
         abstract fun onHeartBeat(): String?
-
         abstract fun onHeartBeatTimeout()
     }
 
@@ -259,7 +245,6 @@ class WsManager(
         private var wsUrl: String? = null
         private var okHttpClient: OkHttpClient? = null
         private var statusListener: IWebSocketListener? = null
-
         fun wsUrl(url: String?): Builder {
             wsUrl = url
             return this

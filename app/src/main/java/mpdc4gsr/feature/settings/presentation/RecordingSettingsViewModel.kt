@@ -10,9 +10,7 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.settings.data.RecordingSettingsRepository
 
 class RecordingSettingsViewModel : AppBaseViewModel() {
-
     private lateinit var repository: RecordingSettingsRepository
-
     private val _recordingSettings = MutableStateFlow(RecordingSettings())
     val recordingSettings: StateFlow<RecordingSettings> = _recordingSettings.asStateFlow()
 
@@ -31,7 +29,6 @@ class RecordingSettingsViewModel : AppBaseViewModel() {
     fun initialize(context: Context) {
         repository = RecordingSettingsRepository.getInstance(context)
         loadSettings()
-
         viewModelScope.launch {
             repository.settings.collect { repoSettings ->
                 _recordingSettings.value = RecordingSettings(

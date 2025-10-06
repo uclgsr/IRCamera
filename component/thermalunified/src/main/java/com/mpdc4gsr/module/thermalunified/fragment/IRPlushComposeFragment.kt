@@ -24,7 +24,6 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel.*
 
 class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
-
     override fun createViewModel(): IRPlushViewModel {
         return viewModels<IRPlushViewModel>().value
     }
@@ -37,7 +36,6 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
         val temperatureData by viewModel.temperatureData.collectAsStateWithLifecycle()
         val processingMode by viewModel.processingMode.collectAsStateWithLifecycle()
         val isRecording by viewModel.isRecording.collectAsStateWithLifecycle()
-
         LibUnifiedTheme {
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -49,7 +47,6 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
                     isRecording = isRecording,
                     onToggleRecording = { viewModel.toggleRecording() }
                 )
-
                 // Main dual-view interface
                 Row(
                     modifier = Modifier
@@ -69,19 +66,16 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
                                 viewModel.initializeDualView(surfaceView)
                             }
                         )
-
                         // Temperature overlays
                         TemperatureOverlays(
                             temperatureData = temperatureData,
                             modifier = Modifier.align(Alignment.TopEnd)
                         )
-
                         // Plus features overlay
                         PlusFeatureOverlay(
                             modifier = Modifier.align(Alignment.BottomStart)
                         )
                     }
-
                     // Controls panel
                     IRPlusControlsPanel(
                         viewModel = viewModel,
@@ -152,7 +146,6 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
                         }
                     }
                 }
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -219,7 +212,6 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
                     },
                     modifier = Modifier.fillMaxSize()
                 )
-
                 // Temperature view overlay
                 AndroidView(
                     factory = { context ->
@@ -230,7 +222,6 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
                     },
                     modifier = Modifier.fillMaxSize()
                 )
-
                 // Processing status overlay
                 if (dualViewState == DualViewState.CALIBRATING) {
                     Box(
@@ -283,19 +274,16 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
                     temperature = "${data.irCenterTemp}°C",
                     isMain = true
                 )
-
                 TemperatureCard(
                     label = "IR Max",
                     temperature = "${data.irMaxTemp}°C",
                     color = Color.Red
                 )
-
                 TemperatureCard(
                     label = "IR Min",
                     temperature = "${data.irMinTemp}°C",
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 TemperatureCard(
                     label = "Ambient",
                     temperature = "${data.ambientTemp}°C",
@@ -400,30 +388,23 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-
                 // Processing mode selector
                 ProcessingModeSelector(
                     currentMode = processingMode,
                     onModeChange = onModeChange,
                     enabled = dualViewState == DualViewState.ACTIVE
                 )
-
                 HorizontalDivider()
-
                 // Calibration section
                 CalibrationSection(
                     onCalibrate = onCalibrate,
                     onReset = onResetSettings,
                     enabled = dualViewState != DualViewState.CALIBRATING
                 )
-
                 HorizontalDivider()
-
                 // Plus features
                 PlusFeaturesSection()
-
                 Spacer(modifier = Modifier.weight(1f))
-
                 // Action buttons
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -455,7 +436,6 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Medium
             )
-
             ProcessingMode.values().forEach { mode ->
                 FilterChip(
                     onClick = { if (enabled) onModeChange(mode) },
@@ -488,7 +468,6 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Medium
             )
-
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -501,7 +480,6 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Calibrate")
                 }
-
                 OutlinedButton(
                     onClick = onReset,
                     enabled = enabled,
@@ -525,14 +503,12 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Medium
             )
-
             val features = listOf(
                 "Dual-IR Processing" to true,
                 "Advanced Fusion" to true,
                 "Professional Analysis" to false,
                 "Enhanced Calibration" to true
             )
-
             features.forEach { (feature, enabled) ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -572,5 +548,4 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
         DualViewState.CALIBRATING -> Color(0xFFFFA500)
         DualViewState.ERROR -> Color.Red
     }
-
 }

@@ -13,7 +13,6 @@ import kotlin.math.pow
 import com.mpdc4gsr.libunified.R as UiR
 
 object IRImageUtils {
-
     fun showContrast(
         imageView: ImageView,
         @FloatRange(from = 0.0, to = 2.0) contrast: Double,
@@ -86,7 +85,6 @@ object IRImageUtils {
         val scale = 1.0
         val delta = 0.0
         val kernelSize = 3
-
         val srcMat = Utils.loadResource(
             com.mpdc4gsr.module.thermalunified.compat.ContextProvider.getContext(),
             UiR.drawable.ic_main_menu_battery

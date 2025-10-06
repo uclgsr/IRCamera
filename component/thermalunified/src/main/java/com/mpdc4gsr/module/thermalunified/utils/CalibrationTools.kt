@@ -7,13 +7,11 @@ import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.SynchronizedBitmap
 
 object CalibrationTools {
-
     fun sign(
         irCmd: IRCMD,
         singlePointTemp: Int,
     ): Boolean {
         var success = false
-
         if (irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD) == 0) {
             irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD)
             val result = irCmd.setTPDKtBtRecalPoint(
@@ -36,7 +34,6 @@ object CalibrationTools {
         pointTemp: Int,
     ): Boolean {
         var success = false
-
         if (irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD) == 0) {
             val result = irCmd.setTPDKtBtRecalPoint(
                 CommonParams.TPDKtBtRecalPointType.RECAL_2_POINT_FIRST,
@@ -58,7 +55,6 @@ object CalibrationTools {
         pointTemp: Int,
     ): Boolean {
         var success = false
-
         if (irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD) == 0) {
             val result = irCmd.setTPDKtBtRecalPoint(
                 CommonParams.TPDKtBtRecalPointType.RECAL_2_POINT_END,
@@ -141,7 +137,6 @@ object CalibrationTools {
         if (syncImage.type == 1) {
             irCmd?.tc1bShutterManual()
         } else {
-
             irCmd?.updateOOCOrB(CommonParams.UpdateOOCOrBType.B_UPDATE)
         }
     }

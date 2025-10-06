@@ -7,7 +7,6 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.launch
 
 class GalleryActivityViewModel : BaseViewModel() {
-
     // Permission state management
     data class PermissionState(
         val hasAllPermissions: Boolean,
@@ -23,10 +22,8 @@ class GalleryActivityViewModel : BaseViewModel() {
 
     private val _permissionState = MutableLiveData<PermissionState>()
     val permissionState = _permissionState
-
     private val _viewPagerState = MutableLiveData<ViewPagerState>()
     val viewPagerState = _viewPagerState
-
     fun initializePermissions(targetSdkVersion: Int) {
         viewModelScope.launch {
             val requiredPermissions = getRequiredPermissions(targetSdkVersion)

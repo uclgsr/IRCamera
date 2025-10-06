@@ -35,26 +35,17 @@ import java.io.File
 
 abstract class BaseActivity : AppCompatActivity() {
     val TAG = this.javaClass.simpleName
-
     protected abstract fun initContentView(): Int
-
     protected abstract fun initView()
-
     protected abstract fun initData()
-
     protected var savedInstanceState: Bundle? = null
-
     protected open fun isLockPortrait(): Boolean = true
-
     private val activityScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BaseApplication.instance.activitys.add(this)
         this.savedInstanceState = savedInstanceState
-
         observeDeviceEvents()
-
         if (isLockPortrait()) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
@@ -106,7 +97,6 @@ abstract class BaseActivity : AppCompatActivity() {
                 }
             }
         }
-
         activityScope.launch {
             DeviceEventManager.socketConnectionState.collectLatest { state ->
                 state?.let {
@@ -134,7 +124,6 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private val loadingDialogState by lazy { LoadingDialogState(this) }
-
     fun showLoadingDialog(
         @StringRes resId: Int = R.string.tip_loading,
     ) {
@@ -150,7 +139,6 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private val cameraDialogState by lazy { ProgressDialogState(this) }
-
     fun showCameraLoading() {
         try {
             if (!(isFinishing && isDestroyed)) {
@@ -191,7 +179,6 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         } else {
             if (UserInfoManager.getInstance().isLogin()) {
-
                 UserInfoManager.getInstance().logout()
             }
         }
@@ -199,7 +186,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected class TakePhotoResult : ActivityResultContract<File, File?>() {
         private lateinit var file: File
-
         override fun createIntent(
             context: Context,
             input: File,

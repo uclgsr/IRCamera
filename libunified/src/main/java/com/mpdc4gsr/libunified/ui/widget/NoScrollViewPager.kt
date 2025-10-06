@@ -6,13 +6,10 @@ import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
 
 class NoScrollViewPager : ViewPager {
-
     private var isCanScroll = false
 
     constructor(context: Context) : super(context)
-
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
@@ -27,5 +24,4 @@ class NoScrollViewPager : ViewPager {
         //
         super.setCurrentItem(item, false)
     }
-
 }

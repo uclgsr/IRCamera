@@ -12,12 +12,10 @@ import androidx.lifecycle.ViewModel
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
 abstract class BaseComposeFragment<VM : ViewModel> : Fragment() {
-
     abstract fun createViewModel(): VM
 
     @Composable
     abstract fun Content(viewModel: VM)
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -27,7 +25,6 @@ abstract class BaseComposeFragment<VM : ViewModel> : Fragment() {
             // Use ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
             // to ensure proper cleanup when fragment is destroyed
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-
             setContent {
                 LibUnifiedTheme {
                     Content(createViewModel())
@@ -48,9 +45,7 @@ abstract class BaseComposeFragment<VM : ViewModel> : Fragment() {
 }
 
 abstract class EnhancedBaseComposeFragment<VM : ViewModel> : BaseComposeFragment<VM>() {
-
     open val handlesBackPress: Boolean = false
-
     open fun onBackPressed(): Boolean {
         return false
     }
@@ -67,7 +62,6 @@ abstract class EnhancedBaseComposeFragment<VM : ViewModel> : BaseComposeFragment
 }
 
 abstract class BaseThermalComposeFragment<VM : ViewModel> : EnhancedBaseComposeFragment<VM>() {
-
     open fun onThermalFragmentCreated() {
         // Thermal-specific initialization
     }

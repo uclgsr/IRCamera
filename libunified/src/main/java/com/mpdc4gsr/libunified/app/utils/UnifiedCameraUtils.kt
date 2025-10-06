@@ -16,7 +16,6 @@ import com.energy.iruvc.utils.SynchronizedBitmap
 import java.util.concurrent.CopyOnWriteArrayList
 
 object UnifiedCameraUtils {
-
     private const val TAG = "UnifiedCameraUtils"
     private const val DEFAULT_CROSS_LENGTH = 20
     private const val TYPE_IR = 1
@@ -39,7 +38,6 @@ object UnifiedCameraUtils {
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0
     ) : TextureView(context, attrs, defStyleAttr) {
-
         private var _config = CameraConfig()
         val config: CameraConfig get() = _config
         private var bitmap: Bitmap? = null
@@ -114,7 +112,6 @@ object UnifiedCameraUtils {
             bitmap?.let { bmp ->
                 canvas.drawBitmap(bmp, 0f, 0f, paint)
             }
-
             if (_config.drawLine) {
                 drawCrosshair(canvas)
             }
@@ -124,7 +121,6 @@ object UnifiedCameraUtils {
             val centerX = width / 2f
             val centerY = height / 2f
             val crossLen = _config.crossLength.toFloat()
-
             canvas.drawLine(centerX - crossLen, centerY, centerX + crossLen, centerY, paint)
             canvas.drawLine(centerX, centerY - crossLen, centerX, centerY + crossLen, paint)
         }
@@ -142,7 +138,6 @@ object UnifiedCameraUtils {
         private val items: MutableList<CameraItem> = mutableListOf(),
         private val onItemClick: (CameraItem) -> Unit = {}
     ) : RecyclerView.Adapter<UnifiedCameraAdapter.CameraViewHolder>() {
-
         class CameraViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CameraViewHolder {
@@ -156,7 +151,6 @@ object UnifiedCameraUtils {
         }
 
         override fun getItemCount(): Int = items.size
-
         fun updateItems(newItems: List<CameraItem>) {
             items.clear()
             items.addAll(newItems)
@@ -165,10 +159,8 @@ object UnifiedCameraUtils {
     }
 
     class CameraMenuManager(private val context: Context) {
-
         private var popupWindow: PopupWindow? = null
         private val menuItems: MutableList<String> = mutableListOf()
-
         fun addMenuItem(item: String) {
             menuItems.add(item)
         }
@@ -184,11 +176,9 @@ object UnifiedCameraUtils {
     }
 
     object CameraNetworkIntegration {
-
         private val TAG = "CameraNetwork"
         private var isNetworkEnabled = false
         private val networkCallbacks: MutableList<(ByteArray) -> Unit> = CopyOnWriteArrayList()
-
         fun enableNetworking() {
             isNetworkEnabled = true
             Log.d(TAG, "Camera networking enabled")
@@ -221,10 +211,8 @@ object UnifiedCameraUtils {
     }
 
     class CameraPreviewManager {
-
         private var previewView: UnifiedCameraView? = null
         private var isPreviewRunning = false
-
         fun startPreview(cameraView: UnifiedCameraView) {
             previewView = cameraView
             isPreviewRunning = true
@@ -240,14 +228,12 @@ object UnifiedCameraUtils {
         }
 
         fun isRunning(): Boolean = isPreviewRunning
-
         fun updatePreviewFrame(bitmap: Bitmap) {
             previewView?.setBitmap(bitmap)
         }
     }
 
     object JpegUtils {
-
         fun compressBitmapToJpeg(bitmap: Bitmap, quality: Int = 85): ByteArray {
             val output = java.io.ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, quality, output)
@@ -272,7 +258,6 @@ object UnifiedCameraUtils {
     }
 
     fun isValidCameraType(type: Int): Boolean = type in listOf(TYPE_IR, TYPE_RGB, TYPE_THERMAL)
-
     fun createCameraView(
         context: Context,
         config: CameraConfig = CameraConfig()

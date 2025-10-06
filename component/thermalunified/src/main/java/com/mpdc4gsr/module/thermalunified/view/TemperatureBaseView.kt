@@ -21,12 +21,10 @@ import kotlin.math.*
 
 abstract class TemperatureBaseView : View {
     companion object {
-
         private const val DEFAULT_MAX_COUNT = 3
     }
 
     private val TOUCH_TOLERANCE by lazy { 8f.dpToPx(context).toInt() }
-
     private val DELETE_TOLERANCE by lazy {
         2f.dpToPx(context)
     }
@@ -68,14 +66,12 @@ abstract class TemperatureBaseView : View {
                 invalidate()
             }
         }
-
     var tempTextSize: Int
         get() = helper.textSize
         set(value) {
             helper.textSize = value
             invalidate()
         }
-
     var textColor: Int
         @ColorInt get() = helper.textColor
         set(
@@ -84,30 +80,19 @@ abstract class TemperatureBaseView : View {
             helper.textColor = value
             invalidate()
         }
-
     var onPointListener: ((pointList: List<Point>) -> Unit)? = null
-
     var onLineListener: ((lineList: List<Point>) -> Unit)? = null
-
     var onRectListener: ((rectList: List<Rect>) -> Unit)? = null
-
     var onTrendOperateListener: ((isAdd: Boolean) -> Unit)? = null
-
     protected val pointList = ArrayList<Point>()
-
     protected val lineList = ArrayList<Line>()
-
     protected val rectList = ArrayList<Rect>()
 
     @Volatile
     protected var trendLine: Line? = null
-
     protected fun getPointListSafe(): List<Point> = synchronized(this) { pointList }
-
     protected fun getLineListSafe(): List<Line> = synchronized(this) { lineList }
-
     protected fun getRectListSafe(): List<Rect> = synchronized(this) { rectList }
-
     private fun getSourcePointList(): List<Point> {
         val resultList = ArrayList<Point>(pointList.size)
         pointList.forEach {
@@ -140,7 +125,6 @@ abstract class TemperatureBaseView : View {
     }
 
     private val helper = TempDrawHelper()
-
     protected var xScale = 0f
     protected var yScale = 0f
     protected var imageWidth = 0
@@ -160,9 +144,7 @@ abstract class TemperatureBaseView : View {
     protected val maxCount: Int
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
@@ -206,7 +188,6 @@ abstract class TemperatureBaseView : View {
         canvas: Canvas,
         line: Line,
     ) {
-
         val startX: Int = ((line.start.x / xScale).toInt() * xScale).toInt()
         val startY: Int = ((line.start.y / yScale).toInt() * yScale).toInt()
         val stopX: Int = ((line.end.x / xScale).toInt() * xScale).toInt()
@@ -263,7 +244,6 @@ abstract class TemperatureBaseView : View {
         name: String,
         point: Point,
     ) {
-
         val x = ((point.x / xScale).toInt() * xScale).toInt()
         val y = ((point.y / yScale).toInt() * yScale).toInt()
         helper.drawPointName(canvas, name, width, height, x, y)
@@ -295,7 +275,6 @@ abstract class TemperatureBaseView : View {
 
     private var downX = 0
     private var downY = 0
-
     private var isAddAction = true
 
     @SuppressLint("ClickableViewAccessibility")
@@ -313,7 +292,6 @@ abstract class TemperatureBaseView : View {
     }
 
     protected var operatePoint: Point? = null
-
     private fun touchPoint(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -343,7 +321,6 @@ abstract class TemperatureBaseView : View {
                 val y: Int = event.y.correctPoint(height)
                 operatePoint?.x = x
                 operatePoint?.y = y
-
                 if (isAddAction || abs(x - downX) > DELETE_TOLERANCE || abs(y - downY) > DELETE_TOLERANCE) {
                     synchronized(this) {
                         pointList.add(operatePoint ?: Point())
@@ -351,7 +328,6 @@ abstract class TemperatureBaseView : View {
                 }
                 operatePoint = null
                 invalidate()
-
                 onPointListener?.invoke(getSourcePointList())
                 return true
             }
@@ -374,15 +350,12 @@ abstract class TemperatureBaseView : View {
     }
 
     protected var operateLine: Line? = null
-
     protected var operateTrend: Line? = null
 
     private enum class LineMoveType { ALL, START, END, }
 
     private var lineMoveType = LineMoveType.ALL
-
     private val downLine: Line = Line(Point(0, 0), Point(0, 0))
-
     private fun touchLine(
         event: MotionEvent,
         isTrend: Boolean,
@@ -488,7 +461,6 @@ abstract class TemperatureBaseView : View {
                 val line: Line =
                     (if (isTrend) operateTrend else operateLine) ?: Line(Point(), Point())
                 if ((line.start.x / xScale).toInt() != (line.end.x / xScale).toInt() || (line.start.y / yScale).toInt() != (line.end.y / yScale).toInt()) {
-
                     if (isAddAction || abs(x - downX) > DELETE_TOLERANCE || abs(y - downY) > DELETE_TOLERANCE) {
                         if (isTrend) {
                             trendLine = line
@@ -503,7 +475,6 @@ abstract class TemperatureBaseView : View {
                 operateTrend = null
                 operateLine = null
                 invalidate()
-
                 if (!isTrend) {
                     onLineListener?.invoke(getSourceLineList())
                 }
@@ -569,9 +540,7 @@ abstract class TemperatureBaseView : View {
     private enum class RectMoveCorner { LT, RT, RB, LB }
 
     private var rectMoveCorner = RectMoveCorner.LT
-
     private val downRect = Rect()
-
     private fun touchRect(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -752,7 +721,6 @@ abstract class TemperatureBaseView : View {
                 if ((rect.left / xScale).toInt() != (rect.right / xScale).toInt() &&
                     (rect.top / yScale).toInt() != (rect.bottom / yScale).toInt()
                 ) {
-
                     if (isAddAction || abs(x - downX) > DELETE_TOLERANCE || abs(y - downY) > DELETE_TOLERANCE) {
                         synchronized(this) {
                             rectList.add(rect)
@@ -761,7 +729,6 @@ abstract class TemperatureBaseView : View {
                 }
                 operateRect = null
                 invalidate()
-
                 onRectListener?.invoke(getSourceRectList())
                 return true
             }

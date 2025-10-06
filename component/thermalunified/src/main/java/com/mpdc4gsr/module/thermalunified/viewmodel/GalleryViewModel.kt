@@ -13,7 +13,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 class GalleryViewModel : BaseViewModel() {
-
     companion object {
         private const val TAG = "GalleryViewModel"
     }
@@ -34,22 +33,16 @@ class GalleryViewModel : BaseViewModel() {
     // State flows for Compose
     private val _mediaItems = MutableStateFlow<List<MediaItem>>(emptyList())
     val mediaItems: StateFlow<List<MediaItem>> = _mediaItems.asStateFlow()
-
     private val _galleryItems = MutableStateFlow<List<MediaItem>>(emptyList())
     val galleryItems: StateFlow<List<MediaItem>> = _galleryItems.asStateFlow()
-
     private val _videoItems = MutableStateFlow<List<MediaItem>>(emptyList())
     val videoItems: StateFlow<List<MediaItem>> = _videoItems.asStateFlow()
-
     private val _isGridView = MutableStateFlow(true)
     val isGridView: StateFlow<Boolean> = _isGridView.asStateFlow()
-
     private val _selectedItems = MutableStateFlow<Set<String>>(emptySet())
     val selectedItems: StateFlow<Set<String>> = _selectedItems.asStateFlow()
-
     private val _isSelectionMode = MutableStateFlow(false)
     val isSelectionMode: StateFlow<Boolean> = _isSelectionMode.asStateFlow()
-
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
@@ -107,7 +100,6 @@ class GalleryViewModel : BaseViewModel() {
             currentSelected.add(item.id)
         }
         _selectedItems.value = currentSelected
-
         // Exit selection mode if no items selected
         if (currentSelected.isEmpty()) {
             _isSelectionMode.value = false
@@ -118,7 +110,6 @@ class GalleryViewModel : BaseViewModel() {
     fun deleteSelectedItems() {
         val selectedIds = _selectedItems.value
         val itemsToDelete = _mediaItems.value.filter { selectedIds.contains(it.id) }
-
         viewModelScope.launch(Dispatchers.IO) {
             itemsToDelete.forEach { item ->
                 try {
@@ -127,7 +118,6 @@ class GalleryViewModel : BaseViewModel() {
                     Log.e(TAG, "Error deleting file: ${item.path}", e)
                 }
             }
-
             withContext(Dispatchers.Main) {
                 exitSelectionMode()
                 loadMediaItems() // Refresh the list
@@ -138,7 +128,6 @@ class GalleryViewModel : BaseViewModel() {
     fun shareSelectedItems() {
         val selectedIds = _selectedItems.value
         val itemsToShare = _mediaItems.value.filter { selectedIds.contains(it.id) }
-
         if (itemsToShare.isNotEmpty()) {
             // Implementation would depend on context being available
             // For now, just log the action
@@ -187,7 +176,6 @@ class GalleryViewModel : BaseViewModel() {
 
     private fun getMediaItemsList(): List<MediaItem> {
         val items = mutableListOf<MediaItem>()
-
         // Load pictures
         val picturePath = ContextProvider.getContext()
             .getExternalFilesDir("Pictures")!!.absolutePath + File.separator + "thermal"
@@ -209,7 +197,6 @@ class GalleryViewModel : BaseViewModel() {
                 }
             }
         }
-
         // Load videos
         val videoPath = FileConfig.lineGalleryDir
         val videoDir = File(videoPath)
@@ -230,7 +217,6 @@ class GalleryViewModel : BaseViewModel() {
                 }
             }
         }
-
         return items.sortedByDescending { it.dateModified }
     }
 

@@ -6,14 +6,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
-/**
- * Modern Sensor Data Repository demonstrating advanced MVVM patterns
- * Consolidates all sensor data operations with proper caching and error handling
- */
 class SensorDataRepository(
     private val context: Context
 ) : BaseRepository() {
-
     companion object {
         private const val DEVICE_STATUS_CACHE_KEY = "device_status"
         private const val DEVICE_STATUS_TTL = 30 * 1000L // 30 seconds for device status
@@ -74,41 +69,25 @@ class SensorDataRepository(
         GSR, THERMAL, PPG, ACCELEROMETER
     }
 
-    /**
-     * Get real-time GSR sensor data stream
-     * Note: This method needs to be connected to actual GSR hardware
-     */
     fun getGSRDataStream(deviceId: String): Flow<BaseRepository.Result<GSRSensorData>> = safeFlow {
         throw NotImplementedError("GSR data stream requires actual sensor connection. Simulation removed.")
     }
 
-    /**
-     * Get thermal sensor data stream
-     * Note: This method needs to be connected to actual thermal camera hardware
-     */
     fun getThermalDataStream(deviceId: String): Flow<BaseRepository.Result<ThermalSensorData>> =
         safeFlow {
             throw NotImplementedError("Thermal data stream requires actual sensor connection. Simulation removed.")
         }
 
-    /**
-     * Get device status with caching
-     */
     fun getDeviceStatus(deviceId: String): Flow<BaseRepository.Result<DeviceStatus>> = safeFlow {
         val cacheKey = "${DEVICE_STATUS_CACHE_KEY}_$deviceId"
-
         getCachedOrExecute(cacheKey, DEVICE_STATUS_TTL) {
             fetchDeviceStatus(deviceId)
         }
     }
 
-    /**
-     * Get combined sensor data from multiple sources
-     */
     fun getCombinedSensorData(deviceIds: List<String>): Flow<BaseRepository.Result<CombinedSensorData>> {
         val gsrStreams = deviceIds.map { getGSRDataStream(it) }
         val thermalStreams = deviceIds.map { getThermalDataStream(it) }
-
         return combine(gsrStreams + thermalStreams) { results ->
             val gsrData = results.take(deviceIds.size).mapNotNull { result ->
                 if (result is BaseRepository.Result.Success<*>) {
@@ -122,9 +101,7 @@ class SensorDataRepository(
                     (result.data as? ThermalSensorData)
                 } else null
             }
-
             BaseRepository.Result.Success(CombinedSensorData(gsrData, thermalData))
-
         }
     }
 
@@ -135,7 +112,6 @@ class SensorDataRepository(
         val timestamp: Long = System.currentTimeMillis()
         val hasData: Boolean = gsrData.isNotEmpty() || thermalData.isNotEmpty()
     }
-
 
     private suspend fun fetchDeviceStatus(deviceId: String): DeviceStatus {
         return DeviceStatus(

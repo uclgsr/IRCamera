@@ -60,7 +60,7 @@ class LeScanner extends AbstractScanner {
         } else {
             settings = configuration.scanSettings;
         }
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             Context context = getEasyBle().getContext();
             if (context == null || ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
@@ -68,7 +68,7 @@ class LeScanner extends AbstractScanner {
                 return;
             }
         }
-        
+
         try {
             bleScanner.startScan(configuration.filters, settings, scanCallback);
         } catch (SecurityException e) {
