@@ -253,7 +253,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                         contentColor = Color(0xFF1976D2)
                     )
                 ) {
-                    Icon(Icons.Default.Edit, contentDescription = null)
+                    Icon(Icons.Default.Edit, contentDescription = "Edit")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Edit")
                 }
@@ -272,7 +272,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                         containerColor = Color(0xFF1976D2)
                     )
                 ) {
-                    Icon(Icons.Default.Visibility, contentDescription = null)
+                    Icon(Icons.Default.Visibility, contentDescription = "Finalize")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Finalize")
                 }

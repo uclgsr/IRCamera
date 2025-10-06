@@ -367,7 +367,7 @@ fun TemplateItem(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Timer,
-                        contentDescription = null,
+                        contentDescription = "Duration",
                         tint = Color(0xFF4ECDC4),
                         modifier = Modifier.size(16.dp)
                     )
@@ -382,7 +382,7 @@ fun TemplateItem(
 
                     Icon(
                         imageVector = Icons.Default.Sensors,
-                        contentDescription = null,
+                        contentDescription = "Sensors",
                         tint = Color(0xFF4ECDC4),
                         modifier = Modifier.size(16.dp)
                     )
@@ -505,7 +505,7 @@ fun EmptyTemplatesState(
         Icon(
             imageVector = if (searchQuery.isBlank() && selectedCategory == null)
                 Icons.AutoMirrored.Filled.Assignment else Icons.Default.SearchOff,
-            contentDescription = null,
+            contentDescription = if (searchQuery.isBlank() && selectedCategory == null) "No Templates" else "No Search Results",
             tint = Color(0xFF6B73FF),
             modifier = Modifier.size(64.dp)
         )
@@ -542,7 +542,7 @@ fun EmptyTemplatesState(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = null,
+                    contentDescription = "Create Template",
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))

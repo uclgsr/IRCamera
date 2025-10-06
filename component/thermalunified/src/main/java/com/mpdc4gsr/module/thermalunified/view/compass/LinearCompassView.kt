@@ -16,7 +16,9 @@ import com.mpdc4gsr.module.thermalunified.utils.realX
 import com.mpdc4gsr.module.thermalunified.utils.realY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -45,7 +47,7 @@ class LinearCompassView : View {
 
     private var lastDrawTime = 0L
     private var step = 1000 / 10
-    private val scope = CoroutineScope(EmptyCoroutineContext)
+    private var scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     var curBitmap: Bitmap? = null
 
     constructor(context: Context) : this(context, null) {
@@ -260,6 +262,14 @@ class LinearCompassView : View {
             width.toFloat(),
             range,
         )
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        // Recreate the scope if it was cancelled
+        if (!scope.isActive) {
+            scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+        }
     }
 
     override fun onDetachedFromWindow() {

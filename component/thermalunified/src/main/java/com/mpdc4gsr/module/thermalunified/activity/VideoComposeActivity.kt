@@ -27,6 +27,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
@@ -61,17 +62,13 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var playbackSpeed by remember { mutableFloatStateOf(1.0f) }
         var pointAnalysisEnabled by remember { mutableStateOf(false) }
 
-        // Handle system UI changes for fullscreen using modern WindowInsetsController
         LaunchedEffect(isFullscreen) {
             val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
             windowInsetsController.apply {
                 if (isFullscreen) {
-                    // Hide system bars
                     hide(WindowInsetsCompat.Type.systemBars())
-                    // Set behavior for immersive mode
                     systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
                 } else {
-                    // Show system bars
                     show(WindowInsetsCompat.Type.systemBars())
                 }
             }
@@ -135,12 +132,13 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             duration = duration,
                             playbackSpeed = playbackSpeed,
                             isFullscreen = isFullscreen,
-                            scope = scope,
-                            snackbarHostState = snackbarHostState,
                             onPlayPause = { isPlaying = !isPlaying },
                             onSeek = { position -> currentPosition = position },
                             onSpeedChange = { speed -> playbackSpeed = speed },
-                            onFullscreenToggle = { isFullscreen = !isFullscreen },
+                            onToggleFullscreen = { isFullscreen = !isFullscreen },
+                            scope = scope,
+                            snackbarHostState = snackbarHostState,
+                            contentResolver = contentResolver,
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .fillMaxWidth()
@@ -201,12 +199,13 @@ private fun VideoControlsOverlay(
     duration: Long,
     playbackSpeed: Float,
     isFullscreen: Boolean,
-    scope: kotlinx.coroutines.CoroutineScope,
-    snackbarHostState: SnackbarHostState,
     onPlayPause: () -> Unit,
     onSeek: (Long) -> Unit,
     onSpeedChange: (Float) -> Unit,
-    onFullscreenToggle: () -> Unit,
+    onToggleFullscreen: () -> Unit,
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+    contentResolver: android.content.ContentResolver,
     modifier: Modifier = Modifier
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -343,9 +342,7 @@ private fun VideoControlsOverlay(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { 
-                        onFullscreenToggle()
-                    }) {
+                    IconButton(onClick = onToggleFullscreen) {
                         Icon(
                             if (isFullscreen) Icons.Default.FullscreenExit else Icons.Default.Fullscreen,
                             contentDescription = if (isFullscreen) "Exit Fullscreen" else "Fullscreen",

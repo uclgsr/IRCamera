@@ -175,7 +175,7 @@ private fun RecordingControls(
                 ) {
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
-                        contentDescription = null,
+                        contentDescription = "Start Recording",
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -209,7 +209,7 @@ private fun RecordingControls(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Stop,
-                        contentDescription = null,
+                        contentDescription = "Stop Recording",
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -225,7 +225,7 @@ private fun RecordingControls(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Warning,
-                        contentDescription = null,
+                        contentDescription = "Emergency Stop",
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -259,7 +259,7 @@ private fun RecordingControls(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Refresh,
-                        contentDescription = null,
+                        contentDescription = "Retry Recording",
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -336,7 +336,7 @@ private fun SessionDetails(session: RecordingSession) {
                 ) {
                     Icon(
                         imageVector = Icons.Default.Error,
-                        contentDescription = null,
+                        contentDescription = "Error",
                         tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier.size(16.dp)
                     )
@@ -363,7 +363,7 @@ private fun SessionDetailItem(
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = null,
+            contentDescription = label,
             modifier = Modifier.size(20.dp),
             tint = MaterialTheme.colorScheme.primary
         )
@@ -407,7 +407,7 @@ private fun TriggerSourceChip(triggerSource: TriggerSource) {
                     TriggerSource.REMOTE_MOBILE -> Icons.Default.PhoneAndroid
                     TriggerSource.SCHEDULED -> Icons.Default.Schedule
                 },
-                contentDescription = null,
+                contentDescription = text,
                 modifier = Modifier.size(12.dp),
                 tint = color
             )

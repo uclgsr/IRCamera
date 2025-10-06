@@ -288,7 +288,7 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                         brush = androidx.compose.ui.graphics.SolidColor(Color(0xFF58A6FF))
                     )
                 ) {
-                    Icon(Icons.Default.Camera, contentDescription = null)
+                    Icon(Icons.Default.Camera, contentDescription = "Capture")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Capture")
                 }
@@ -300,7 +300,7 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                         containerColor = if (isRecording) Color(0xFFDA3633) else Color(0xFF58A6FF)
                     )
                 ) {
-                    Icon(Icons.Default.VideoCall, contentDescription = null)
+                    Icon(Icons.Default.VideoCall, contentDescription = if (isRecording) "Stop Recording" else "Start Recording")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(if (isRecording) "Stop" else "Record")
                 }

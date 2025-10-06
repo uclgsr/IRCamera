@@ -185,7 +185,7 @@ private fun ThermalPreviewCard(
                 ) {
                     Icon(
                         Icons.Default.Thermostat,
-                        contentDescription = null,
+                        contentDescription = "Thermal Camera",
                         tint = Color.White,
                         modifier = Modifier.size(48.dp)
                     )
@@ -316,7 +316,7 @@ private fun TemperatureMeasurementsCard(
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Add, contentDescription = null)
+                    Icon(Icons.Default.Add, contentDescription = "Add Measurement")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Add")
                 }
@@ -332,7 +332,7 @@ private fun TemperatureMeasurementsCard(
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Clear, contentDescription = null)
+                    Icon(Icons.Default.Clear, contentDescription = "Clear Measurements")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Clear")
                 }
@@ -359,7 +359,7 @@ private fun MeasurementRow(
         ) {
             Icon(
                 icon,
-                contentDescription = null,
+                contentDescription = label,
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(20.dp)
             )
@@ -515,7 +515,7 @@ private fun ThermalCameraControlsCard(
                             containerColor = MaterialTheme.colorScheme.error
                         )
                     ) {
-                        Icon(Icons.Default.Stop, contentDescription = null)
+                        Icon(Icons.Default.Stop, contentDescription = "Stop Recording")
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Stop Recording")
                     }
@@ -524,7 +524,7 @@ private fun ThermalCameraControlsCard(
                         onClick = { onRecordingToggle(true) },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Icon(Icons.Default.FiberManualRecord, contentDescription = null)
+                        Icon(Icons.Default.FiberManualRecord, contentDescription = "Start Recording")
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Record")
                     }
@@ -542,7 +542,7 @@ private fun ThermalCameraControlsCard(
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.CameraAlt, contentDescription = null)
+                    Icon(Icons.Default.CameraAlt, contentDescription = "Capture Snapshot")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Snapshot")
                 }
@@ -585,7 +585,7 @@ private fun ThermalAnalysisToolsCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = null)
+                    Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = "Temperature Profile")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Profile")
                 }
@@ -601,7 +601,7 @@ private fun ThermalAnalysisToolsCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.BarChart, contentDescription = null)
+                    Icon(Icons.Default.BarChart, contentDescription = "Histogram Analysis")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Histogram")
                 }
@@ -622,7 +622,7 @@ private fun ThermalAnalysisToolsCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Compare, contentDescription = null)
+                    Icon(Icons.Default.Compare, contentDescription = "Compare Images")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Compare")
                 }
@@ -638,7 +638,7 @@ private fun ThermalAnalysisToolsCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Assessment, contentDescription = null)
+                    Icon(Icons.Default.Assessment, contentDescription = "Generate Report")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Report")
                 }
@@ -689,7 +689,7 @@ private fun ThermalCameraStatusCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Tune, contentDescription = null)
+                    Icon(Icons.Default.Tune, contentDescription = "Calibrate Camera")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Calibrate")
                 }
@@ -705,7 +705,7 @@ private fun ThermalCameraStatusCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.BugReport, contentDescription = null)
+                    Icon(Icons.Default.BugReport, contentDescription = "Run Diagnostic")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Diagnostic")
                 }
@@ -732,7 +732,7 @@ private fun StatusRow(
         ) {
             Icon(
                 icon,
-                contentDescription = null,
+                contentDescription = label,
                 tint = if (isHealthy) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                 modifier = Modifier.size(20.dp)
             )

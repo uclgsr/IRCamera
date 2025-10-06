@@ -452,7 +452,7 @@ fun HikSurfaceComposePreview() {
                     rotateAngle = (rotateAngle + 90) % 360
                 }
             ) {
-                Icon(Icons.AutoMirrored.Filled.RotateRight, contentDescription = null)
+                Icon(Icons.AutoMirrored.Filled.RotateRight, contentDescription = "Rotate")
                 Text("Rotate")
             }
 
@@ -461,7 +461,7 @@ fun HikSurfaceComposePreview() {
             ) {
                 Icon(
                     if (isAmplified) Icons.Default.ZoomOut else Icons.Default.ZoomIn,
-                    contentDescription = null
+                    contentDescription = if (isAmplified) "Zoom Out" else "Zoom In"
                 )
                 Text(if (isAmplified) "1x" else "2x")
             }
@@ -472,7 +472,7 @@ fun HikSurfaceComposePreview() {
                     containerColor = if (alarmActive) Color.Red else MaterialTheme.colorScheme.primary
                 )
             ) {
-                Icon(Icons.Default.Warning, contentDescription = null)
+                Icon(Icons.Default.Warning, contentDescription = "Alarm")
                 Text("Alarm")
             }
         }

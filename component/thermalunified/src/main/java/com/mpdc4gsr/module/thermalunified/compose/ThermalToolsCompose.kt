@@ -372,7 +372,7 @@ fun FenceToolCompose(
         ) {
             Icon(
                 imageVector = if (isCreatingFence) Icons.Default.Close else Icons.Default.Add,
-                contentDescription = null,
+                contentDescription = if (isCreatingFence) "Cancel" else "Add Fence",
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
@@ -396,7 +396,7 @@ fun FenceToolCompose(
             ) {
                 Icon(
                     imageVector = Icons.Default.Check,
-                    contentDescription = null,
+                    contentDescription = "Create Fence",
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
@@ -413,7 +413,7 @@ fun FenceToolCompose(
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = null,
+                    contentDescription = "Delete Fence",
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))

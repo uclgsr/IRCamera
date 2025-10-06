@@ -195,7 +195,8 @@ class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
                             Icon(
                                 imageVector = if (connectionType == Constants.SETTING_CONNECTION)
                                     Icons.AutoMirrored.Filled.Help else Icons.Default.BugReport,
-                                contentDescription = null,
+                                contentDescription = if (connectionType == Constants.SETTING_CONNECTION)
+                                    "Connection Help" else "Troubleshooting",
                                 modifier = Modifier.size(48.dp),
                                 tint = MaterialTheme.colorScheme.primary
                             )
@@ -257,7 +258,7 @@ class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
                             ) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ContactSupport,
-                                    contentDescription = null,
+                                    contentDescription = "Contact Support",
                                     tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(20.dp)
                                 )
@@ -368,7 +369,7 @@ private fun HelpStepCard(
                 Spacer(modifier = Modifier.height(8.dp))
                 Icon(
                     imageVector = step.icon,
-                    contentDescription = null,
+                    contentDescription = step.title,
                     modifier = Modifier.size(24.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -402,7 +403,7 @@ private fun HelpStepCard(
                         Text(step.actionText)
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                            contentDescription = null,
+                            contentDescription = "Open Link",
                             modifier = Modifier
                                 .size(16.dp)
                                 .padding(start = 4.dp)

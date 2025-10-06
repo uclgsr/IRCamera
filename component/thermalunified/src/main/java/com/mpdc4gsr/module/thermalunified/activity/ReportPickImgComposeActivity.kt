@@ -239,7 +239,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                         containerColor = Color(0xFFFF9800)
                     )
                 ) {
-                    Icon(Icons.Default.Star, contentDescription = null)
+                    Icon(Icons.Default.Star, contentDescription = "Auto Select")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Auto Select")
                 }
@@ -252,7 +252,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                     ),
                     enabled = selectedImages.isNotEmpty()
                 ) {
-                    Icon(Icons.Default.Check, contentDescription = null)
+                    Icon(Icons.Default.Check, contentDescription = "Add to Report")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Add to Report")
                 }
