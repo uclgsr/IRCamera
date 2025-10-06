@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.StorageSpaceViewModel
+import com.mpdc4gsr.libunified.app.compose.theme.Spacing
 import com.mpdc4gsr.libunified.R as RCore
 
 class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>() {
@@ -58,49 +59,44 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .padding(16.dp)
+                    .padding(Spacing.normal)
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(Spacing.normal)
             ) {
-                // Storage Overview Card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(Spacing.medium),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surface
                     ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
                 ) {
                     Column(
-                        modifier = Modifier.padding(20.dp)
+                        modifier = Modifier.padding(Spacing.normal),
+                        verticalArrangement = Arrangement.spacedBy(Spacing.medium)
                     ) {
                         Text(
                             text = stringResource(RCore.string.ts004_storage_space),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(bottom = 16.dp)
+                            color = MaterialTheme.colorScheme.primary
                         )
-                        // Usage Progress
                         Text(
                             text = "Storage Usage",
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.padding(bottom = 8.dp)
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         LinearProgressIndicator(
                             progress = { usagePercentage },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(8.dp),
+                                .height(Spacing.small),
                             color = MaterialTheme.colorScheme.primary,
                             trackColor = MaterialTheme.colorScheme.surfaceVariant,
                         )
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp),
+                            modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
@@ -116,24 +112,23 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
                         }
                     }
                 }
-                // Storage Breakdown
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(Spacing.medium),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surface
                     ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
                 ) {
                     Column(
-                        modifier = Modifier.padding(20.dp)
+                        modifier = Modifier.padding(Spacing.normal),
+                        verticalArrangement = Arrangement.spacedBy(Spacing.medium)
                     ) {
                         Text(
                             text = "Storage Breakdown",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(bottom = 16.dp)
+                            color = MaterialTheme.colorScheme.primary
                         )
                         StorageItem(
                             icon = Icons.Default.Add,
@@ -161,17 +156,16 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
                         )
                     }
                 }
-                // Format Storage Card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(Spacing.medium),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
                     ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
                 ) {
                     Column(
-                        modifier = Modifier.padding(20.dp)
+                        modifier = Modifier.padding(Spacing.normal)
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -191,21 +185,22 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
                                     text = "This will delete all data and free up space",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                                    modifier = Modifier.padding(top = 4.dp)
+                                    modifier = Modifier.padding(top = Spacing.extraSmall)
                                 )
                             }
                             Button(
                                 onClick = { viewModel.formatStorage() },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.error
-                                )
+                                ),
+                                modifier = Modifier.heightIn(min = Spacing.touchTarget)
                             ) {
                                 Icon(
                                     Icons.Default.Delete,
                                     contentDescription = null,
-                                    modifier = Modifier.size(18.dp)
+                                    modifier = Modifier.size(Spacing.large)
                                 )
-                                Spacer(modifier = Modifier.width(8.dp))
+                                Spacer(modifier = Modifier.width(Spacing.small))
                                 Text("Format")
                             }
                         }
@@ -227,20 +222,20 @@ private fun StorageItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = Spacing.small),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Spacing.medium)
         ) {
             Icon(
                 icon,
                 contentDescription = null,
                 tint = color,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(Spacing.large)
             )
-            Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyMedium,

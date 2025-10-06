@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.data.Shimmer3GSRRecorder
+import mpdc4gsr.core.data.UnifiedGSRRecorder
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
 import java.text.SimpleDateFormat
@@ -62,11 +62,11 @@ class GSRSensorViewModel(
     private var settingsRepository: GSRSettingsRepository? = null
 
     // Expose recorder for lifecycle management from UI layer
-    var gsrRecorder: Shimmer3GSRRecorder? = null
+    var gsrRecorder: UnifiedGSRRecorder? = null
         private set
 
     fun initializeRecorder(
-        context: android.content.Context,
+        context: Context,
         lifecycleOwner: androidx.lifecycle.LifecycleOwner,
         reconnectionConfig: ReconnectionConfig? = null
     ) {
@@ -86,10 +86,9 @@ class GSRSensorViewModel(
                         )
                     } ?: ReconnectionConfig()
                 this@GSRSensorViewModel.reconnectionConfig = configToUse
-                gsrRecorder = Shimmer3GSRRecorder(
+                gsrRecorder = UnifiedGSRRecorder(
                     context = context,
-                    lifecycleOwner = lifecycleOwner,
-                    samplingRateHz = 128
+                    lifecycleOwner = lifecycleOwner
                 )
                 val initialized = gsrRecorder?.initialize() ?: false
                 if (initialized) {
@@ -203,7 +202,7 @@ class GSRSensorViewModel(
                     sessionId = "gsr_${currentTimeMs}",
                     sessionStartTimestampMs = currentTimeMs,
                     sessionStartMonotonicNs = currentMonotonicNs,
-                    sessionStartIso = ISO_DATE_FORMAT.format(java.util.Date(currentTimeMs))
+                    sessionStartIso = ISO_DATE_FORMAT.format(Date(currentTimeMs))
                 )
                 gsrRecorder?.startRecording(sessionDir, metadata)
                 _sensorState.update { it.copy(isRecording = true, error = null) }
