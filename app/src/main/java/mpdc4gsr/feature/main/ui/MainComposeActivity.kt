@@ -172,18 +172,18 @@ fun MainApp() {
         composable(MainNavRoutes.SETTINGS) {
             SettingsScreen(
                 onBackClick = { navController.popBackStack() },
-                onNavigateToGSRSettings = { navController.navigate("gsr_settings") },
-                onNavigateToThermalSettings = { navController.navigate("thermal_settings") },
-                onNavigateToCameraSettings = { navController.navigate("camera_settings") },
-                onNavigateToRecordingSettings = { navController.navigate("recording_settings") },
-                onNavigateToStorageSettings = { navController.navigate("storage_settings") },
-                onNavigateToSyncSettings = { navController.navigate("sync_settings") },
-                onNavigateToCalibration = { navController.navigate("calibration") },
-                onNavigateToNetworkSettings = { navController.navigate("network_settings") },
-                onNavigateToDiagnostics = { navController.navigate("diagnostics") },
-                onNavigateToAppInfo = { navController.navigate("app_info") },
-                onNavigateToPrivacyPolicy = { navController.navigate("privacy_policy") },
-                onNavigateToHelp = { navController.navigate("help") }
+                onNavigateToGSRSettings = { navController.navigate(MainNavRoutes.GSR_SETTINGS) },
+                onNavigateToThermalSettings = { navController.navigate(MainNavRoutes.THERMAL_SETTINGS) },
+                onNavigateToCameraSettings = { navController.navigate(MainNavRoutes.CAMERA_SETTINGS) },
+                onNavigateToRecordingSettings = { navController.navigate(MainNavRoutes.RECORDING_SETTINGS) },
+                onNavigateToStorageSettings = { navController.navigate(MainNavRoutes.STORAGE_SETTINGS) },
+                onNavigateToSyncSettings = { navController.navigate(MainNavRoutes.SYNC_SETTINGS) },
+                onNavigateToCalibration = { navController.navigate(MainNavRoutes.CALIBRATION) },
+                onNavigateToNetworkSettings = { navController.navigate(MainNavRoutes.NETWORK_SETTINGS) },
+                onNavigateToDiagnostics = { navController.navigate(MainNavRoutes.DIAGNOSTICS) },
+                onNavigateToAppInfo = { navController.navigate(MainNavRoutes.APP_INFO) },
+                onNavigateToPrivacyPolicy = { navController.navigate(MainNavRoutes.PRIVACY_POLICY) },
+                onNavigateToHelp = { navController.navigate(MainNavRoutes.HELP) }
             )
         }
 

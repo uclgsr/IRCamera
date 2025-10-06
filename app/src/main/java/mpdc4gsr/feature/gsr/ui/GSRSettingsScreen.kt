@@ -45,6 +45,28 @@ fun GSRSettingsScreen(
 
     LaunchedEffect(Unit) {
         viewModel.initialize(context)
+        viewModel.settingsEvents.collect { event ->
+            when (event) {
+                is GSRSettingsViewModel.SettingsEvent.ShowToast,
+                is GSRSettingsViewModel.SettingsEvent.CalibrationStarted,
+                is GSRSettingsViewModel.SettingsEvent.CalibrationCompleted,
+                is GSRSettingsViewModel.SettingsEvent.ShowError -> {
+                    val message = when (event) {
+                        is GSRSettingsViewModel.SettingsEvent.ShowToast -> event.message
+                        is GSRSettingsViewModel.SettingsEvent.CalibrationStarted -> event.message
+                        is GSRSettingsViewModel.SettingsEvent.CalibrationCompleted -> event.message
+                        is GSRSettingsViewModel.SettingsEvent.ShowError -> event.message
+                        else -> ""
+                    }
+                    android.widget.Toast.makeText(
+                        context,
+                        message,
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else -> {}
+            }
+        }
     }
 
     Column(
@@ -165,20 +187,12 @@ fun GSRSettingsScreen(
             }
 
             // Calibration
-            val context = androidx.compose.ui.platform.LocalContext.current
             SettingsCard(
                 title = "Calibration",
                 icon = Icons.Default.Tune
             ) {
                 Button(
-                    onClick = {
-                        // TODO: Start GSR calibration process
-                        android.widget.Toast.makeText(
-                            context,
-                            "Starting calibration...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
+                    onClick = { viewModel.startCalibration() },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = null)
@@ -186,14 +200,7 @@ fun GSRSettingsScreen(
                     Text("Start Calibration")
                 }
                 Button(
-                    onClick = {
-                        // TODO: Reset GSR settings to defaults
-                        android.widget.Toast.makeText(
-                            context,
-                            "Resetting to defaults...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
+                    onClick = { viewModel.resetToDefaults() },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                 ) {

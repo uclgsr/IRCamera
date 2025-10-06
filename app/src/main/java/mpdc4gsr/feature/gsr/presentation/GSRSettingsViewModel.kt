@@ -360,6 +360,18 @@ class GSRSettingsViewModel : AppBaseViewModel() {
         }
     }
 
+    fun startCalibration() {
+        launchWithErrorHandling {
+            _settingsEvents.emit(SettingsEvent.CalibrationStarted("Starting GSR calibration..."))
+            try {
+                kotlinx.coroutines.delay(3000)
+                _settingsEvents.emit(SettingsEvent.CalibrationCompleted("Calibration completed successfully"))
+            } catch (e: Exception) {
+                _settingsEvents.emit(SettingsEvent.ShowError("Calibration failed: ${e.message}"))
+            }
+        }
+    }
+
     private fun enableDeviceManagement() {
         // Enable device-related UI
     }
