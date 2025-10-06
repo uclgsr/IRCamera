@@ -8,7 +8,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,7 +38,7 @@ fun ConnectScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF16131e)) // Match reference background color
+            .background(MaterialTheme.colorScheme.background)
     ) {
         // Title bar replacing TitleView
         TitleBar(
@@ -51,7 +50,7 @@ fun ConnectScreen(
         // Tips text with matching margins and styling
         Text(
             text = "Select your thermal camera device to connect", // Match @string/tc_connect_tips 
-            color = Color(0xCCFFFFFF), // Match #ccffffff from XML
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
             fontSize = 14.sp,
             modifier = Modifier
                 .padding(
@@ -95,7 +94,7 @@ private fun DeviceItem(
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF2A2A2A) // Slightly lighter than background
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
         Row(
@@ -109,12 +108,12 @@ private fun DeviceItem(
             ) {
                 Text(
                     text = device.name,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 16.sp
                 )
                 Text(
                     text = if (device.isConnected) "Connected" else "Not connected",
-                    color = if (device.isConnected) Color(0xFF4CAF50) else Color(0xFFFFFFFF),
+                    color = if (device.isConnected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 12.sp,
                     modifier = Modifier.padding(top = 4.dp)
                 )
@@ -124,7 +123,7 @@ private fun DeviceItem(
             Surface(
                 modifier = Modifier.size(12.dp),
                 shape = androidx.compose.foundation.shape.CircleShape,
-                color = if (device.isConnected) Color(0xFF4CAF50) else Color(0xFF757575)
+                color = if (device.isConnected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline
             ) {}
         }
     }

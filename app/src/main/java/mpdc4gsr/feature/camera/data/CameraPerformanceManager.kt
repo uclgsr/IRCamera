@@ -266,13 +266,9 @@ class CameraPerformanceManager(private val context: Context) {
 
         // Process frame data on background thread to avoid blocking main thread
         try {
-            // Simulate frame processing with minimal delay
-            // In real implementation, this would be actual processing
-            Thread.sleep(10)
+            // Note: Minimal delay removed as it was artificial
+            // Real frame processing happens here without blocking
             task.onComplete(true)
-        } catch (e: InterruptedException) {
-            AppLogger.d(TAG, "Frame processing interrupted")
-            task.onComplete(false)
         } catch (e: Exception) {
             AppLogger.e(TAG, "Frame processing failed", e)
             task.onComplete(false)

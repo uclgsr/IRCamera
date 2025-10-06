@@ -319,7 +319,7 @@ private fun DeviceCard(
                             Text(
                                 text = device.type,
                                 style = MaterialTheme.typography.labelSmall,
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onPrimary,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                             )
                         }
@@ -347,10 +347,10 @@ private fun DeviceCard(
                         .clip(CircleShape)
                         .background(
                             when (device.connectionStatus) {
-                                "connected" -> Color(0xFF4CAF50)
-                                "paired" -> Color(0xFF2196F3)
-                                "available" -> Color(0xFFFF9800)
-                                else -> Color(0xFF9E9E9E)
+                                "connected" -> MaterialTheme.colorScheme.primary
+                                "paired" -> MaterialTheme.colorScheme.tertiary
+                                "available" -> MaterialTheme.colorScheme.secondary
+                                else -> MaterialTheme.colorScheme.outline
                             }
                         )
                 )
@@ -506,17 +506,19 @@ private fun DevicePairingDialog(
     )
 }
 
+@Composable
 private fun getDeviceTypeColor(type: String) = when (type) {
-    "Thermal" -> Color(0xFFE53E3E)
-    "GSR" -> Color(0xFF4CAF50)
-    "Camera" -> Color(0xFF2196F3)
-    else -> Color(0xFF9E9E9E)
+    "Thermal" -> MaterialTheme.colorScheme.error
+    "GSR" -> MaterialTheme.colorScheme.primary
+    "Camera" -> MaterialTheme.colorScheme.tertiary
+    else -> MaterialTheme.colorScheme.outline
 }
 
+@Composable
 private fun getSignalStrengthColor(rssi: Int) = when {
-    rssi > -50 -> Color(0xFF4CAF50)
-    rssi > -60 -> Color(0xFFFF9800)
-    else -> Color(0xFFE53E3E)
+    rssi > -50 -> MaterialTheme.colorScheme.primary
+    rssi > -60 -> MaterialTheme.colorScheme.secondary
+    else -> MaterialTheme.colorScheme.error
 }
 
 data class BluetoothDeviceInfo(

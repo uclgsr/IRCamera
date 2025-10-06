@@ -60,6 +60,12 @@ class SimpleNetworkTestViewModel : AppBaseViewModel() {
     private val _port = mutableStateOf("8080")
     val port: State<String> = _port
 
+    private val _ipAddressError = mutableStateOf<String?>(null)
+    val ipAddressError: State<String?> = _ipAddressError
+
+    private val _portError = mutableStateOf<String?>(null)
+    val portError: State<String?> = _portError
+
     private val _statusMessage = mutableStateOf("Ready to connect to PC Remote Control")
     val statusMessage: State<String> = _statusMessage
 
@@ -113,10 +119,43 @@ class SimpleNetworkTestViewModel : AppBaseViewModel() {
 
     fun updateIpAddress(ip: String) {
         _ipAddress.value = ip
+        _ipAddressError.value = validateIpAddress(ip)
     }
 
     fun updatePort(portStr: String) {
         _port.value = portStr
+        _portError.value = validatePort(portStr)
+    }
+
+    private fun validateIpAddress(ip: String): String? {
+        if (ip.isBlank()) {
+            return "IP address cannot be empty"
+        }
+        val parts = ip.split(".")
+        if (parts.size != 4) {
+            return "Invalid IP address format"
+        }
+        for (part in parts) {
+            val num = part.toIntOrNull()
+            if (num == null || num < 0 || num > 255) {
+                return "Invalid IP address range"
+            }
+        }
+        return null
+    }
+
+    private fun validatePort(portStr: String): String? {
+        if (portStr.isBlank()) {
+            return "Port cannot be empty"
+        }
+        val port = portStr.toIntOrNull()
+        if (port == null) {
+            return "Port must be a number"
+        }
+        if (port < 1 || port > 65535) {
+            return "Port must be between 1 and 65535"
+        }
+        return null
     }
 
     fun connect() {
@@ -233,6 +272,8 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
             val connectionStatus by viewModel.connectionStatus
             val ipAddress by viewModel.ipAddress
             val port by viewModel.port
+            val ipAddressError by viewModel.ipAddressError
+            val portError by viewModel.portError
             val statusMessage by viewModel.statusMessage
             val testResults by viewModel.testResults
             val isRunningTests by viewModel.isRunningTests
@@ -364,6 +405,8 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                         .fillMaxWidth()
                                         .padding(bottom = 8.dp),
                                     singleLine = true,
+                                    isError = ipAddressError != null,
+                                    supportingText = ipAddressError?.let { { Text(it) } },
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Number,
                                         imeAction = ImeAction.Next
@@ -384,6 +427,8 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                         .fillMaxWidth()
                                         .padding(bottom = 16.dp),
                                     singleLine = true,
+                                    isError = portError != null,
+                                    supportingText = portError?.let { { Text(it) } },
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Number,
                                         imeAction = ImeAction.Done
@@ -397,11 +442,12 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
 
                                 Button(
                                     onClick = { viewModel.connect() },
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth(),
+                                    enabled = ipAddressError == null && portError == null
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Link,
-                                        contentDescription = null,
+                                        contentDescription = "Connect",
                                         modifier = Modifier.size(18.dp)
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
