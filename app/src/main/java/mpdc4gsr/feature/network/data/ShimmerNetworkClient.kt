@@ -291,7 +291,7 @@ class ShimmerNetworkClient(
         outputStream = null
         inputStream = null
         socket = null
-        
+
         onConnected = null
         onDisconnected = null
         onError = null

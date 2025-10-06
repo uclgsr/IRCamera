@@ -50,9 +50,11 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 is ThermalViewModel.ExportStatus.Success -> {
                     snackbarHostState.showSnackbar("Data exported successfully")
                 }
+
                 is ThermalViewModel.ExportStatus.Error -> {
                     snackbarHostState.showSnackbar("Export failed: ${(exportStatus as ThermalViewModel.ExportStatus.Error).message}")
                 }
+
                 else -> {}
             }
         }
@@ -79,7 +81,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { 
+                            IconButton(onClick = {
                                 // Show format selection dialog
                                 showExportDialog = true
                             }) {
@@ -89,7 +91,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     tint = Color.White
                                 )
                             }
-                            IconButton(onClick = { 
+                            IconButton(onClick = {
                                 // Show settings dialog
                                 showSettingsDialog = true
                             }) {
@@ -174,7 +176,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         LaunchedEffect(pagerState.currentPage) {
             selectedTab = pagerState.currentPage
         }
-        
+
         // Export format selection dialog
         if (showExportDialog) {
             AlertDialog(
@@ -205,7 +207,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             )
         }
-        
+
         // Settings dialog
         if (showSettingsDialog) {
             AlertDialog(
@@ -215,8 +217,10 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     Column {
                         Text("Monitor Settings")
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text("Configure monitoring parameters here", 
-                            style = MaterialTheme.typography.bodySmall)
+                        Text(
+                            "Configure monitoring parameters here",
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
                 },
                 confirmButton = {

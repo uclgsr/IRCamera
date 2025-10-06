@@ -70,9 +70,13 @@ class ThermalMonitoringComposeActivity : BaseComposeActivity<BaseViewModel>() {
                             IconButton(onClick = { showAlertDialog = true }) {
                                 Icon(Icons.Default.Notifications, contentDescription = "Alerts")
                             }
-                            IconButton(onClick = { 
+                            IconButton(onClick = {
                                 // TODO: Implement monitoring options menu
-                                android.widget.Toast.makeText(context, "More monitoring options", android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(
+                                    context,
+                                    "More monitoring options",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
                             }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }

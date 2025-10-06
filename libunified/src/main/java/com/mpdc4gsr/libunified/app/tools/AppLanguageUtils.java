@@ -27,8 +27,8 @@ public class AppLanguageUtils {
     /**
      * Wraps context with English locale during Activity/Application initialization.
      * This is the correct approach for setting locale on API 24+.
-     * 
-     * @param context Base context to wrap
+     *
+     * @param context  Base context to wrap
      * @param language Language parameter (ignored - always uses English)
      * @return Context wrapped with English locale on API 24+, unchanged context on older APIs
      */

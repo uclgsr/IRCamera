@@ -7,6 +7,7 @@
 
 % Rendered Mermaid examples (compiled by LaTeX). See README for build requirements.
 
+
 \section*{Rendered Mermaid Diagrams (LaTeX)}
 
 \begin{mermaid}
@@ -720,7 +721,7 @@ Coverage Analysis:
 - Performance requirements: 100% quantitative validation
 \end{verbatim}
 
-Table 5.2: Performance Results - Latency and Synchronization  
+Table 5.2: Performance Results - Latency and Synchronization
 
 \begin{verbatim}
 Synchronization Performance (Target: ±5ms, Achieved: ±2.1ms median):
@@ -833,17 +834,17 @@ Figure 3.8: Synchronisation Quality vs Network Latency
 
 ```mermaid
 graph LR
-    subgraph "Network Quality Impact"
-        LOW_LAT[<20ms RTT<br/>±1.2ms sync error]
-        MED_LAT[20-50ms RTT<br/>±2.1ms sync error]
-        HIGH_LAT[50-100ms RTT<br/>±4.8ms sync error]
-        POOR_LAT[>100ms RTT<br/>±12.3ms sync error]
-    end
+subgraph "Network Quality Impact"
+LOW_LAT[<20ms RTT<br/>±1.2ms sync error]
+MED_LAT[20-50ms RTT<br/>±2.1ms sync error]
+HIGH_LAT[50-100ms RTT<br/>±4.8ms sync error]
+POOR_LAT[>100ms RTT<br/>±12.3ms sync error]
+end
 
-    LOW_LAT --> EXCELLENT[Excellent Performance]
-    MED_LAT --> GOOD[Good Performance]
-    HIGH_LAT --> ACCEPTABLE[Acceptable Performance]
-    POOR_LAT --> DEGRADED[Degraded Performance]
+LOW_LAT --> EXCELLENT[Excellent Performance]
+MED_LAT --> GOOD[Good Performance]
+HIGH_LAT --> ACCEPTABLE[Acceptable Performance]
+POOR_LAT --> DEGRADED[Degraded Performance]
 ```
 
 *Figure 3.8: Synchronisation Quality vs Network Latency demonstrating
@@ -856,23 +857,23 @@ Figure 3.9: GSR Sampling Rate Stability
 
 ```mermaid
 graph LR
-    subgraph "Sampling Performance"
-        TARGET_RATE[Target: 128 Hz]
-        ACTUAL_RATE[Actual: 127.98 Hz<br/>±0.12 Hz StdDev]
-        DROPOUT[Sample Loss: <0.1%]
-    end
+subgraph "Sampling Performance"
+TARGET_RATE[Target: 128 Hz]
+ACTUAL_RATE[Actual: 127.98 Hz<br/>±0.12 Hz StdDev]
+DROPOUT[Sample Loss: <0.1%]
+end
 
-    subgraph "Quality Metrics"
-        SNR[SNR: 28.3 ± 3.1 dB]
-        BASELINE[Baseline Stability: ±0.008 μS]
-        SENSITIVITY[Event Detection: 94.7%]
-    end
+subgraph "Quality Metrics"
+SNR[SNR: 28.3 ± 3.1 dB]
+BASELINE[Baseline Stability: ±0.008 μS]
+SENSITIVITY[Event Detection: 94.7%]
+end
 
-    TARGET_RATE --> ACTUAL_RATE
-    ACTUAL_RATE --> DROPOUT
-    DROPOUT --> SNR
-    SNR --> BASELINE
-    BASELINE --> SENSITIVITY
+TARGET_RATE --> ACTUAL_RATE
+ACTUAL_RATE --> DROPOUT
+DROPOUT --> SNR
+SNR --> BASELINE
+BASELINE --> SENSITIVITY
 ```
 
 *Figure 3.9: GSR Sampling Rate Stability showing consistent performance
@@ -885,25 +886,25 @@ Figure 3.10: Session Workflow Timeline
 
 ```mermaid
 gantt
-    title Typical Recording Session Timeline
-    dateFormat X
-    axisFormat %M:%S
+title Typical Recording Session Timeline
+dateFormat X
+axisFormat %M:%S
 
-    section Setup Phase
-    Power Management          :a1, 0, 2m
-    Network Verification      :a2, after a1, 1m
-    Device Registration       :a3, after a2, 2m
-    Calibration              :a4, after a3, 3m
+section Setup Phase
+Power Management :a1, 0, 2m
+Network Verification :a2, after a1, 1m
+Device Registration :a3, after a2, 2m
+Calibration :a4, after a3, 3m
 
-    section Recording Phase
-    Session Preparation      :b1, after a4, 1m
-    Active Recording         :b2, after b1, 30m
-    Quality Monitoring       :b3, after b1, 30m
+section Recording Phase
+Session Preparation :b1, after a4, 1m
+Active Recording :b2, after b1, 30m
+Quality Monitoring :b3, after b1, 30m
 
-    section Completion Phase
-    Stop Coordination        :c1, after b2, 1m
-    Data Transfer           :c2, after c1, 3m
-    Validation              :c3, after c2, 2m
+section Completion Phase
+Stop Coordination :c1, after b2, 1m
+Data Transfer :c2, after c1, 3m
+Validation :c3, after c2, 2m
 ```
 
 *Figure 3.10: Session Workflow Timeline showing the typical duration and
@@ -914,26 +915,26 @@ Figure 3.11: System Reliability Timeline
 
 ```mermaid
 graph LR
-    subgraph "72-Hour Continuous Operation"
-        HOUR_0[Hour 0<br/>System Start<br/>100% Performance]
-        HOUR_24[Hour 24<br/>Memory: 1.1GB<br/>CPU: 12.8%]
-        HOUR_48[Hour 48<br/>Memory: 1.2GB<br/>CPU: 12.3%]
-        HOUR_72[Hour 72<br/>Memory: 1.2GB<br/>CPU: 12.1%]
-    end
+subgraph "72-Hour Continuous Operation"
+HOUR_0[Hour 0<br/>System Start<br/>100% Performance]
+HOUR_24[Hour 24<br/>Memory: 1.1GB<br/>CPU: 12.8%]
+HOUR_48[Hour 48<br/>Memory: 1.2GB<br/>CPU: 12.3%]
+HOUR_72[Hour 72<br/>Memory: 1.2GB<br/>CPU: 12.1%]
+end
 
-    HOUR_0 --> HOUR_24
-    HOUR_24 --> HOUR_48
-    HOUR_48 --> HOUR_72
+HOUR_0 --> HOUR_24
+HOUR_24 --> HOUR_48
+HOUR_48 --> HOUR_72
 
-    subgraph "Performance Metrics"
-        UPTIME[99.97% Uptime]
-        NO_LEAKS[No Memory Leaks]
-        STABLE_CPU[Stable CPU Usage]
-    end
+subgraph "Performance Metrics"
+UPTIME[99.97% Uptime]
+NO_LEAKS[No Memory Leaks]
+STABLE_CPU[Stable CPU Usage]
+end
 
-    HOUR_72 --> UPTIME
-    HOUR_72 --> NO_LEAKS
-    HOUR_72 --> STABLE_CPU
+HOUR_72 --> UPTIME
+HOUR_72 --> NO_LEAKS
+HOUR_72 --> STABLE_CPU
 ```
 
 *Figure 3.11: System Reliability Timeline from 72-hour endurance testing
@@ -946,23 +947,23 @@ Figure 3.12: Data Throughput Analysis
 
 ```mermaid
 graph TD
-    subgraph "Data Volume Distribution"
-        RGB[RGB Video: 68%<br/>1.56 GB/30min]
-        THERMAL[Thermal Data: 23%<br/>0.53 GB/30min]
-        GSR[GSR CSV: 4%<br/>0.09 GB/30min]
-        LOGS[Sync Logs: 3%<br/>0.08 GB/30min]
-        META[Metadata: 2%<br/>0.04 GB/30min]
-    end
+subgraph "Data Volume Distribution"
+RGB[RGB Video: 68%<br/>1.56 GB/30min]
+THERMAL[Thermal Data: 23%<br/>0.53 GB/30min]
+GSR[GSR CSV: 4%<br/>0.09 GB/30min]
+LOGS[Sync Logs: 3%<br/>0.08 GB/30min]
+META[Metadata: 2%<br/>0.04 GB/30min]
+end
 
-    subgraph "Performance Metrics"
-        WRITE_SPEED[Write Speed: 145 MB/s]
-        TRANSFER_SUCCESS[Transfer Success: 99.2%]
-        RETRY_RATE[Retry Rate: 3.1%]
-    end
+subgraph "Performance Metrics"
+WRITE_SPEED[Write Speed: 145 MB/s]
+TRANSFER_SUCCESS[Transfer Success: 99.2%]
+RETRY_RATE[Retry Rate: 3.1%]
+end
 
-    RGB --> WRITE_SPEED
-    THERMAL --> TRANSFER_SUCCESS
-    GSR --> RETRY_RATE
+RGB --> WRITE_SPEED
+THERMAL --> TRANSFER_SUCCESS
+GSR --> RETRY_RATE
 ```
 
 *Figure 3.12: Data Throughput Analysis showing typical session data

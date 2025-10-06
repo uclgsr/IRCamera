@@ -5,15 +5,18 @@
 \chapter{Requirements and Analysis}
 \label{ch:requirements}
 
+
 \section{Problem Statement}
 
 The system tackles the challenge of contactless physiological monitoring by synchronously collecting wearable GSR measurements and remote sensory data [1]. Unlike traditional GSR, which needs skin-contact sensors, this platform provides ground-truth GSR signals alongside contactless data (thermal imagery, RGB video), aiding research on predicting skin conductance from non-invasive cues [1]. It combines thermal cameras, video, inertial sensors, and GSR to create a comprehensive multi-modal dataset for stress and emotion analysis [2]. Focusing on temporal precision and data integrity, the system captures and aligns subtle physiological responses across modalities [3]. Ultimately, the goal is to facilitate experiments that correlate a participant's physiological responses with visual and thermal cues, establishing a basis for contactless stress detection [3].
+
 
 \section{Requirements Structure and Approach}
 
 Requirements were developed through an iterative, research-driven process [4]. High-level objectives, such as “synchronised GSR and video recording,” were identified from project goals and refined with stakeholder input and hardware constraints [4]. A rapid prototyping methodology was employed: early system versions were built and tested, and user feedback prompted updates to requirements, including data encryption and device fault tolerance as new needs arose [5].
 
 Requirements engineering adhered to IEEE 29148 practices [6]: each requirement has a unique ID and is classified (functional or non-functional). Implementation and code changes were systematically traced to specific requirements, ensuring full traceability (see the matrix in Section 3.6) [6]. This incremental, user-focused approach began with core research use cases and refined requirements as development insights emerged [6].
+
 
 \section{Functional Requirements}
 
@@ -59,6 +62,7 @@ Requirements engineering adhered to IEEE 29148 practices [6]: each requirement h
     \paragraph{Acceptance Criteria:} After stopping a session, all Android-recorded files (video, thermal, etc.) appear in the PC’s session directory, with entries in the metadata JSON. The researcher is notified when the transfer completes; any missing files are reported.
 \end{description}
 
+
 \section{Non-Functional Requirements}
 
 \begin{description}[style=unboxed,leftmargin=0cm]
@@ -78,6 +82,7 @@ Requirements engineering adhered to IEEE 29148 practices [6]: each requirement h
 
     \item[\textbf{NFR8}] \textbf{(Maintainability and Modularity):} The system shall be modular and configurable [14]. Components (e.g. \textit{Session Manager}, \textit{Shimmer Manager}, \textit{Network Server}) shall have clear interfaces, allowing parts to be updated independently (for example, swapping a thermal camera SDK). Configuration parameters (e.g. sensor types, sampling rates) shall be externalised (in files like \texttt{config.json}) so changing requirements can be accommodated without code changes. Extensive logging and test scripts shall support debugging and future development.
 \end{description}
+
 
 \section{Use Case Scenarios}
 
@@ -142,6 +147,7 @@ Requirements engineering adhered to IEEE 29148 practices [6]: each requirement h
     \item \textbf{Using Stored Calibration:} If a valid calibration exists from a prior session, the researcher can skip this use case by loading the saved calibration profile. The system will then apply those parameters without re-running the procedure.
 \end{itemize}
 
+
 \section{System Analysis (Architecture \& Data Flow)}
 
 The system uses a hub-and-spoke architecture [15]. A central PC functions as the master controller and timing hub, while each Android device acts as a recording client.
@@ -157,6 +163,7 @@ Communication and data flow follow a client-server model [20]. A TCP server on t
     \item \textbf{Time Sync and Heartbeats:} Throughout the session, the PC’s time server and periodic sync packets keep Android clocks aligned. A heartbeat mechanism (Androids sending status every few seconds) allows the PC to detect offline devices and mark them as such.
     \item \textbf{Data Aggregation:} Once all data are collected on the PC, the \textit{Session Manager} can perform any post-session processing (e.g. indexing timestamps, running computer vision algorithms). At this point, all distributed data is centralised on the PC file system for analysis.
 \end{itemize}
+
 
 \section{Requirements Summary Table}
 

@@ -159,7 +159,8 @@ class ComposeComponentsShowcaseActivity :
                                 Button(
                                     onClick = {
                                         // TODO: Implement sensor selection dialog
-                                        Toast.makeText(context, "Sensor selection will open here", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, "Sensor selection will open here", Toast.LENGTH_SHORT)
+                                            .show()
                                         // viewModel.showSensorSelection()
                                     },
                                     modifier = Modifier.fillMaxWidth()

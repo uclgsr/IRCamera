@@ -10,13 +10,13 @@ Comprehensive code quality analysis and quick-fix guide for the IRCamera Android
 
 ### Issue Severity Summary
 
-| Severity | Count | Status |
-|----------|-------|--------|
-| CRITICAL | 3 | ⚠️ Immediate Action Required |
-| HIGH | 7 | 🔶 High Priority |
-| MEDIUM | 8 | 🟡 Medium Priority |
-| LOW | 5 | ⚪ Low Priority |
-| **TOTAL** | **23** | **Needs Attention** |
+| Severity  | Count  | Status                       |
+|-----------|--------|------------------------------|
+| CRITICAL  | 3      | ⚠️ Immediate Action Required |
+| HIGH      | 7      | 🔶 High Priority             |
+| MEDIUM    | 8      | 🟡 Medium Priority           |
+| LOW       | 5      | ⚪ Low Priority               |
+| **TOTAL** | **23** | **Needs Attention**          |
 
 ---
 
@@ -28,12 +28,14 @@ Comprehensive code quality analysis and quick-fix guide for the IRCamera Android
 **Impact:** Application-lifetime coroutines that prevent proper cleanup and cause memory leaks
 
 **Locations:**
+
 - `FileUploadService.kt:279`
 - `WebSocketClient.kt:1024`
 - `EnhancedThermalRecorder.kt:46,74,123`
 - `SessionManager.kt:135,307`
 
 #### ❌ WRONG
+
 ```kotlin
 @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
 GlobalScope.launch {
@@ -44,6 +46,7 @@ GlobalScope.launch {
 ```
 
 #### ✅ CORRECT
+
 ```kotlin
 // Option 1: Use ViewModel scope
 viewModelScope.launch {
@@ -72,6 +75,7 @@ class MyService(private val serviceScope: CoroutineScope) {
 ```
 
 **Why Critical:**
+
 - Coroutines launched in GlobalScope live as long as the application
 - Cannot be cancelled when component is destroyed
 - Causes memory leaks as references are held
@@ -85,11 +89,13 @@ class MyService(private val serviceScope: CoroutineScope) {
 **Impact:** Blocking the main thread can cause Application Not Responding (ANR) errors
 
 **Locations:**
+
 - `ThermalCameraViewModel.kt:182`
 - `Camera2System.kt:192`
 - `CrashSafeSupervisor.kt:429`
 
 #### ❌ WRONG
+
 ```kotlin
 override fun onCleared() {
     super.onCleared()
@@ -106,6 +112,7 @@ fun release() {
 ```
 
 #### ✅ CORRECT
+
 ```kotlin
 override fun onCleared() {
     super.onCleared()
@@ -126,6 +133,7 @@ fun release() {
 ```
 
 **Why Critical:**
+
 - runBlocking blocks the calling thread (usually main/UI thread)
 - Can cause ANR if cleanup takes >5 seconds
 - Violates Android lifecycle best practices
@@ -139,11 +147,13 @@ fun release() {
 **Impact:** Thread accumulation, resource exhaustion, memory leaks
 
 **Locations:**
+
 - `RgbCameraRecorder.kt:142` - `cameraExecutor` never shutdown
 - `EasyBLEBuilder.java:11` - `executorService` created but not managed
 - `PosterDispatcher.java:14` - `executorService` lacks shutdown
 
 #### ❌ WRONG
+
 ```kotlin
 private val cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -153,6 +163,7 @@ fun cleanup() {
 ```
 
 #### ✅ CORRECT
+
 ```kotlin
 private val cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -176,6 +187,7 @@ fun cleanup() {
 ```
 
 **Why Critical:**
+
 - Thread pools continue running after component destruction
 - Accumulating threads consume memory and CPU
 - Can lead to resource exhaustion
@@ -191,6 +203,7 @@ fun cleanup() {
 **Locations:** 3 ViewModels
 
 **Problem:**
+
 ```kotlin
 class MyViewModel(private val context: Context) : ViewModel() {
     // Context held for entire ViewModel lifetime
@@ -198,6 +211,7 @@ class MyViewModel(private val context: Context) : ViewModel() {
 ```
 
 **Fix:**
+
 ```kotlin
 class MyViewModel(
     private val application: Application
@@ -215,6 +229,7 @@ class MyViewModel(
 **Locations:** 10+ files
 
 **Problem:**
+
 ```kotlin
 class MyManager {
     private var callback: OnDataListener? = null
@@ -226,6 +241,7 @@ class MyManager {
 ```
 
 **Fix:**
+
 ```kotlin
 class MyManager {
     private var callback: OnDataListener? = null
@@ -246,10 +262,12 @@ class MyManager {
 
 **Severity:** HIGH  
 **Locations:**
+
 - `NetworkServer.kt:89`
 - `WebSocketClient.kt:156`
 
 **Problem:**
+
 ```kotlin
 try {
     socket = ServerSocket(port)
@@ -260,6 +278,7 @@ try {
 ```
 
 **Fix:**
+
 ```kotlin
 try {
     socket = ServerSocket(port).use { serverSocket ->
@@ -276,10 +295,12 @@ try {
 
 **Severity:** HIGH  
 **Locations:**
+
 - `ThermalRecorder.kt:234`
 - `GsrRecorder.kt:178`
 
 **Problem:**
+
 ```kotlin
 while (isRecording) {
     captureData()
@@ -288,6 +309,7 @@ while (isRecording) {
 ```
 
 **Fix:**
+
 ```kotlin
 scope.launch {
     while (isActive && isRecording) {
@@ -305,6 +327,7 @@ scope.launch {
 **Locations:** 25+ files
 
 **Problem:**
+
 ```kotlin
 try {
     riskyOperation()
@@ -314,6 +337,7 @@ try {
 ```
 
 **Fix:**
+
 ```kotlin
 try {
     riskyOperation()
@@ -331,6 +355,7 @@ try {
 
 **Severity:** HIGH  
 **Files:**
+
 - `EasyBLEBuilder.java`
 - `PosterDispatcher.java`
 
@@ -344,6 +369,7 @@ try {
 **Locations:** 15+ files
 
 **Problem:**
+
 ```kotlin
 private lateinit var recorder: Recorder
 
@@ -353,6 +379,7 @@ fun stop() {
 ```
 
 **Fix:**
+
 ```kotlin
 private lateinit var recorder: Recorder
 
@@ -443,6 +470,7 @@ fun stop() {
 ## Quick Reference Checklist
 
 ### Before Committing
+
 - [ ] No GlobalScope usage
 - [ ] No runBlocking in lifecycle methods
 - [ ] All ExecutorServices properly shutdown
@@ -455,6 +483,7 @@ fun stop() {
 - [ ] Use theme colors
 
 ### Before PR Review
+
 - [ ] All critical issues addressed
 - [ ] All high priority issues addressed
 - [ ] Code review checklist completed
@@ -466,16 +495,19 @@ fun stop() {
 ## Fixing Priority
 
 **Week 1 (Critical):**
+
 1. Fix all GlobalScope usages (6 locations)
 2. Remove all runBlocking from lifecycle methods (3 locations)
 3. Add ExecutorService shutdown (3 locations)
 
 **Week 2 (High):**
+
 4. Fix context leaks in ViewModels
 5. Clear callback references
 6. Add proper socket cleanup
 
 **Week 3 (High):**
+
 7. Replace Thread.sleep with coroutine delay
 8. Replace bare exception catching with specific types
 9. Add lateinit checks
@@ -488,16 +520,19 @@ fun stop() {
 ## Related Documentation
 
 ### For Detailed Analysis
+
 - See [REPOSITORY_ANALYSIS.md](../REPOSITORY_ANALYSIS.md) for complete repository-wide analysis
 - See [code-quality-analysis.md](code-quality-analysis.md) for detailed Android issue descriptions
 
 ### For Maintenance
+
 - [../maintenance/code-review-fixes.md](../maintenance/code-review-fixes.md) - Code review resolutions
 - [../maintenance/migration-complete-summary.md](../maintenance/migration-complete-summary.md) - AndroidX migration
 - [../maintenance/rgb-camera-fixes-summary.md](../maintenance/rgb-camera-fixes-summary.md) - RGB camera fixes
 - [../maintenance/ripple-fix-summary.md](../maintenance/ripple-fix-summary.md) - Ripple effect fixes
 
 ### For Development
+
 - [../developer-guides/](../developer-guides/) - Development best practices guides
 
 ---
@@ -507,11 +542,13 @@ fun stop() {
 The Android application has a solid architecture but needs immediate attention to critical issues:
 
 **Critical Actions Required:**
+
 1. Eliminate GlobalScope - use lifecycle-aware scopes
 2. Remove runBlocking - use proper async patterns
 3. Add proper resource cleanup - especially ExecutorServices
 
-**Impact:** Fixing these 3 critical issues will eliminate major memory leak sources and ANR risks, significantly improving app stability and performance.
+**Impact:** Fixing these 3 critical issues will eliminate major memory leak sources and ANR risks, significantly
+improving app stability and performance.
 
 **Estimated Effort:** 3-4 weeks for all critical and high priority issues
 

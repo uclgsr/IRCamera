@@ -39,12 +39,12 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
         val showCompass by viewModel.showCompass.collectAsState()
         val isRecording by viewModel.isRecording.collectAsState()
         val isRangeLocked by viewModel.isRangeLocked.collectAsState()
-        
+
         var showRangeEditDialog by remember { mutableStateOf(false) }
         var showMoreOptionsDialog by remember { mutableStateOf(false) }
         var minTemp by remember { mutableStateOf("0") }
         var maxTemp by remember { mutableStateOf("100") }
-        
+
         val context = androidx.compose.ui.platform.LocalContext.current
 
         LibUnifiedTheme {
@@ -103,17 +103,25 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                         },
                         actions = {
                             val context = androidx.compose.ui.platform.LocalContext.current
-                            IconButton(onClick = { 
+                            IconButton(onClick = {
                                 // TODO: Implement info dialog display
-                                android.widget.Toast.makeText(context, "Show thermal info", android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(
+                                    context,
+                                    "Show thermal info",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
                             }) {
                                 Icon(Icons.Default.Info, contentDescription = "Info", tint = Color.White)
                             }
-                            IconButton(onClick = { 
+                            IconButton(onClick = {
                                 // TODO: Implement TISR (Thermal Image Super Resolution) toggle
                                 // TODO: Implement toggleTISR() in IRThermalDoubleViewModel
                                 // viewModel.toggleTISR()
-                                android.widget.Toast.makeText(context, "Toggle TISR mode", android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(
+                                    context,
+                                    "Toggle TISR mode",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
                             }) {
                                 Icon(Icons.Default.Settings, contentDescription = "TISR", tint = Color.White)
                             }
@@ -300,7 +308,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                     .padding(vertical = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
-                                IconButton(onClick = { 
+                                IconButton(onClick = {
                                     val intent = Intent(context, ThermalGalleryComposeActivity::class.java)
                                     context.startActivity(intent)
                                 }) {
@@ -313,9 +321,13 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                         tint = if (isRecording) Color.Red else Color.White
                                     )
                                 }
-                                IconButton(onClick = { 
+                                IconButton(onClick = {
                                     // Capture thermal snapshot
-                                    android.widget.Toast.makeText(context, "Thermal snapshot captured", android.widget.Toast.LENGTH_SHORT).show()
+                                    android.widget.Toast.makeText(
+                                        context,
+                                        "Thermal snapshot captured",
+                                        android.widget.Toast.LENGTH_SHORT
+                                    ).show()
                                     // TODO: Implement actual thermal snapshot capture logic
                                 }) {
                                     Icon(Icons.Default.CameraAlt, "Camera", tint = Color.White)
@@ -329,7 +341,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                 }
             }
         }
-        
+
         // Range Edit Dialog
         if (showRangeEditDialog) {
             AlertDialog(
@@ -355,7 +367,11 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                     TextButton(onClick = {
                         // Apply temperature range
                         showRangeEditDialog = false
-                        android.widget.Toast.makeText(context, "Range updated: $minTemp°C - $maxTemp°C", android.widget.Toast.LENGTH_SHORT).show()
+                        android.widget.Toast.makeText(
+                            context,
+                            "Range updated: $minTemp°C - $maxTemp°C",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
                     }) {
                         Text("Apply")
                     }
@@ -367,7 +383,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                 }
             )
         }
-        
+
         // More Options Dialog
         if (showMoreOptionsDialog) {
             AlertDialog(
@@ -378,7 +394,11 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                         TextButton(
                             onClick = {
                                 showMoreOptionsDialog = false
-                                android.widget.Toast.makeText(context, "Opening color palette", android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(
+                                    context,
+                                    "Opening color palette",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
@@ -395,7 +415,11 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                         TextButton(
                             onClick = {
                                 showMoreOptionsDialog = false
-                                android.widget.Toast.makeText(context, "Opening measurement tools", android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(
+                                    context,
+                                    "Opening measurement tools",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
@@ -412,7 +436,11 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                         TextButton(
                             onClick = {
                                 showMoreOptionsDialog = false
-                                android.widget.Toast.makeText(context, "Opening advanced settings", android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(
+                                    context,
+                                    "Opening advanced settings",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {

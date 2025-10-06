@@ -222,21 +222,21 @@ class RecordingService : Service(), CoroutineScope {
 
     inner class RecordingServiceBinder : Binder() {
         fun getService(): RecordingService = this@RecordingService
-        
-        fun getRecordingController(): ComprehensiveRecordingController? = 
+
+        fun getRecordingController(): ComprehensiveRecordingController? =
             if (::recordingController.isInitialized) recordingController else null
-            
-        fun getNetworkServer(): NetworkServer? = 
+
+        fun getNetworkServer(): NetworkServer? =
             if (::networkServer.isInitialized) networkServer else null
-            
-        fun getPreviewStreamer(): PreviewStreamer? = 
+
+        fun getPreviewStreamer(): PreviewStreamer? =
             if (::previewStreamer.isInitialized) previewStreamer else null
-            
-        fun getPreviewDataAdapter(): PreviewDataAdapter? = 
+
+        fun getPreviewDataAdapter(): PreviewDataAdapter? =
             if (::previewDataAdapter.isInitialized) previewDataAdapter else null
-            
+
         fun isConnectedToPC(): Boolean = this@RecordingService.isConnectedToPC
-        
+
         fun getServerStatus(): String {
             return if (isServerRunning.get()) {
                 "Running on port $actualServerPort (${activeConnections.size} clients)"
@@ -252,8 +252,8 @@ class RecordingService : Service(), CoroutineScope {
         }
 
         fun getNetworkClient(): NetworkClient? = if (isNetworkInitialized) networkClient else null
-        
-        fun getNetworkManager(): NetworkManager? = 
+
+        fun getNetworkManager(): NetworkManager? =
             if (::networkManager.isInitialized) networkManager else null
     }
 
@@ -560,7 +560,7 @@ class RecordingService : Service(), CoroutineScope {
                     recordingController.cleanup()
                 }
             }
-            
+
             if (::crashSafeSupervisor.isInitialized) {
                 crashSafeSupervisor.shutdown()
             }

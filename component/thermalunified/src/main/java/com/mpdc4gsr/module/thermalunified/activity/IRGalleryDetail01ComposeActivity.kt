@@ -148,7 +148,10 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
                                 scope.launch {
                                     try {
                                         val contentValues = ContentValues().apply {
-                                            put(MediaStore.Images.Media.DISPLAY_NAME, "thermal_export_${System.currentTimeMillis()}.jpg")
+                                            put(
+                                                MediaStore.Images.Media.DISPLAY_NAME,
+                                                "thermal_export_${System.currentTimeMillis()}.jpg"
+                                            )
                                             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
                                             put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/ThermalExports")
                                         }
@@ -156,9 +159,11 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
                                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                                             contentValues
                                         )
-                                        Toast.makeText(context, "Image exported successfully", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, "Image exported successfully", Toast.LENGTH_SHORT)
+                                            .show()
                                     } catch (e: Exception) {
-                                        Toast.makeText(context, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, "Export failed: ${e.message}", Toast.LENGTH_SHORT)
+                                            .show()
                                     }
                                 }
                             },

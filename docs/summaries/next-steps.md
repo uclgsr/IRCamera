@@ -5,20 +5,20 @@
 ### Immediate Actions
 
 1. **Close the Issue**
-   - The PC networking feature is already fully implemented
-   - No code changes are needed
-   - Add label: `status: already-implemented`
-   - Link to PR #583 where it was implemented
+    - The PC networking feature is already fully implemented
+    - No code changes are needed
+    - Add label: `status: already-implemented`
+    - Link to PR #583 where it was implemented
 
 2. **Review Documentation**
-   - Read `RESOLUTION_SUMMARY.md` for quick overview
-   - Read `ISSUE_VERIFICATION_PC_NETWORKING.md` for detailed evidence
-   - Share `PC_NETWORKING_GUIDE.md` with users
+    - Read `RESOLUTION_SUMMARY.md` for quick overview
+    - Read `ISSUE_VERIFICATION_PC_NETWORKING.md` for detailed evidence
+    - Share `PC_NETWORKING_GUIDE.md` with users
 
 3. **Communicate to Stakeholders**
-   - Notify that feature is available and ready to use
-   - Share usage instructions from `PC_NETWORKING_GUIDE.md`
-   - Clarify any confusion about implementation status
+    - Notify that feature is available and ready to use
+    - Share usage instructions from `PC_NETWORKING_GUIDE.md`
+    - Clarify any confusion about implementation status
 
 ### Optional Follow-up Actions
 
@@ -40,17 +40,17 @@
    ```
 
 5. **Create New Issues for Enhancements** (if needed)
-   - SSL/TLS support
-   - Multi-client connections
-   - Enhanced discovery (mDNS)
-   - WebSocket alternative
-   - Performance optimization
+    - SSL/TLS support
+    - Multi-client connections
+    - Enhanced discovery (mDNS)
+    - WebSocket alternative
+    - Performance optimization
 
 6. **Update Project Documentation**
-   - Add feature to README.md
-   - Update architecture diagrams
-   - Add to feature list
-   - Create user guides
+    - Add feature to README.md
+    - Update architecture diagrams
+    - Add to feature list
+    - Create user guides
 
 ## For Users Wanting to Use This Feature
 
@@ -68,9 +68,9 @@
    ```
 
 3. **Launch the App**
-   - RecordingService starts automatically
-   - Check notification bar for: "Listening for PC Controller on port 8080"
-   - If you don't see this, check logs: `adb logcat | grep RecordingService`
+    - RecordingService starts automatically
+    - Check notification bar for: "Listening for PC Controller on port 8080"
+    - If you don't see this, check logs: `adb logcat | grep RecordingService`
 
 4. **Get Android Device IP**
    ```bash
@@ -124,26 +124,26 @@ Testing connection to 192.168.1.100:8080
 **Key Files to Review:**
 
 1. **RecordingService.kt** - Main service
-   - Lines 241-330: Initialization
-   - Lines 1486-1560: Network server setup
-   - Service registered in AndroidManifest.xml (lines 311-316)
-   - Auto-started in App.kt (lines 192-200)
+    - Lines 241-330: Initialization
+    - Lines 1486-1560: Network server setup
+    - Service registered in AndroidManifest.xml (lines 311-316)
+    - Auto-started in App.kt (lines 192-200)
 
 2. **NetworkServer.kt** - TCP server
-   - Lines 47-80: Server start
-   - Lines 162-203: Connection acceptance
-   - Lines 205-229: Message listening
-   - Lines 114-133: Message sending
+    - Lines 47-80: Server start
+    - Lines 162-203: Connection acceptance
+    - Lines 205-229: Message listening
+    - Lines 114-133: Message sending
 
 3. **Protocol.kt** - Protocol definitions
-   - Lines 10-20: Message types
-   - Lines 40-165: Message creation functions
+    - Lines 10-20: Message types
+    - Lines 40-165: Message creation functions
 
 4. **ProtocolHandler.kt** - Command processing
-   - Lines 67-80: Message dispatcher
-   - Lines 186-227: START_RECORD handler
-   - Lines 229-270: STOP_RECORD handler
-   - Lines 82-147: SYNC_REQUEST handler
+    - Lines 67-80: Message dispatcher
+    - Lines 186-227: START_RECORD handler
+    - Lines 229-270: STOP_RECORD handler
+    - Lines 82-147: SYNC_REQUEST handler
 
 ### Architecture Flow
 
@@ -201,9 +201,9 @@ Send ACK response
    Look for: "TCP server started successfully on port 8080"
 
 3. **Check firewall settings**
-   - Android: Ensure port 8080 is not blocked
-   - PC: Ensure outgoing connections allowed
-   - Router: Check if devices can communicate
+    - Android: Ensure port 8080 is not blocked
+    - PC: Ensure outgoing connections allowed
+    - Router: Check if devices can communicate
 
 4. **Verify IP address is correct**
    ```bash
@@ -223,9 +223,9 @@ Send ACK response
    ```
 
 2. **Verify protocol message format**
-   - Must end with newline (`\n`)
-   - Parameters must be key=value format
-   - Example: `START_RECORD session_id=test_001\n`
+    - Must end with newline (`\n`)
+    - Parameters must be key=value format
+    - Example: `START_RECORD session_id=test_001\n`
 
 3. **Check command handler is registered**
    ```bash
@@ -237,6 +237,7 @@ Send ACK response
 ### Q: Does this work without WiFi?
 
 A: The TCP connection requires network connectivity between PC and Android. This can be:
+
 - WiFi (most common)
 - USB with ADB port forwarding:
   ```bash
@@ -247,15 +248,18 @@ A: The TCP connection requires network connectivity between PC and Android. This
 
 ### Q: Can multiple PCs connect simultaneously?
 
-A: The current implementation accepts one PC at a time. When a new PC connects, the previous connection is closed. Multi-client support is possible but not currently implemented.
+A: The current implementation accepts one PC at a time. When a new PC connects, the previous connection is closed.
+Multi-client support is possible but not currently implemented.
 
 ### Q: Is the connection encrypted?
 
-A: No, the current implementation uses plain TCP. SSL/TLS support infrastructure exists but is not activated. See `NetworkServer.kt` for hooks.
+A: No, the current implementation uses plain TCP. SSL/TLS support infrastructure exists but is not activated. See
+`NetworkServer.kt` for hooks.
 
 ### Q: What data is streamed to the PC?
 
 A: When recording is active:
+
 - GSR sensor data (real-time)
 - Thermal camera frames (if available)
 - RGB camera frames (if available)
@@ -287,14 +291,15 @@ A: When recording is active:
 ### Getting Help
 
 If you encounter issues:
+
 1. Check logs: `adb logcat | grep -E "RecordingService|NetworkServer|ProtocolHandler"`
 2. Review documentation listed above
 3. Run test script: `test_android_connection.py`
 4. Create new issue with:
-   - Detailed description
-   - Log output
-   - Steps to reproduce
-   - Expected vs actual behavior
+    - Detailed description
+    - Log output
+    - Steps to reproduce
+    - Expected vs actual behavior
 
 ---
 

@@ -33,7 +33,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
         var showAIDialog by remember { mutableStateOf(false) }
         val snackbarHostState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
-        
+
         LibUnifiedTheme {
             Scaffold(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -72,7 +72,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                 },
                 floatingActionButton = {
                     FloatingActionButton(
-                        onClick = { 
+                        onClick = {
                             showAIDialog = true
                         },
                         containerColor = Color(0xFFFFD700),
@@ -88,7 +88,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                     snackbarHostState = snackbarHostState
                 )
             }
-            
+
             // AI Enhancement Dialog
             if (showAIDialog) {
                 AlertDialog(
@@ -98,7 +98,12 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                         Column {
                             Text("Select AI enhancement mode:")
                             Spacer(modifier = Modifier.height(16.dp))
-                            listOf("Auto Enhance", "Noise Reduction", "Detail Enhancement", "Color Correction").forEach { mode ->
+                            listOf(
+                                "Auto Enhance",
+                                "Noise Reduction",
+                                "Detail Enhancement",
+                                "Color Correction"
+                            ).forEach { mode ->
                                 TextButton(
                                     onClick = {
                                         scope.launch {

@@ -18,29 +18,35 @@ docs/
 ## Quick Navigation
 
 ### PC Controller (Desktop Application)
+
 - **[PC Controller Documentation](../pc-controller/docs/)** - Complete PC controller implementation
-  - [Implementation Guide](../pc-controller/docs/implementation.md) - Comprehensive feature documentation
-  - [Quick Start](../pc-controller/docs/quick_start.md) - Installation and usage
-  - [Time Sync Implementation](../pc-controller/docs/time_sync_implementation.md) - Time synchronization guide
-  - [Protocol Documentation](../pc-controller/docs/protocol.md) - Network protocol specs
-  - [Verification & Testing](../pc-controller/docs/verification.md) - Test coverage and verification
+    - [Implementation Guide](../pc-controller/docs/implementation.md) - Comprehensive feature documentation
+    - [Quick Start](../pc-controller/docs/quick_start.md) - Installation and usage
+    - [Time Sync Implementation](../pc-controller/docs/time_sync_implementation.md) - Time synchronization guide
+    - [Protocol Documentation](../pc-controller/docs/protocol.md) - Network protocol specs
+    - [Verification & Testing](../pc-controller/docs/verification.md) - Test coverage and verification
 
 ### Android Application
+
 - [Android Code Quality Guide](android/android-code-quality-guide.md) - Complete code quality guide (consolidated)
-- [PC Networking Summary](summaries/pc-networking-summary.md) - Complete PC-Android communication implementation (consolidated)
+- [PC Networking Summary](summaries/pc-networking-summary.md) - Complete PC-Android communication implementation (
+  consolidated)
 - [Time Sync Flow Diagram](android/time-sync-flow-diagram.txt) - Time synchronization flow
 
 ### Developer Guides
+
 - [UI Components Guide](developer-guides/ui-components-guide.md) - Permissions handling system
 - [Logging Utilities Guide](developer-guides/logging-utilities-guide.md) - Centralized logging and error handling
 - [Permission Handling Guide](developer-guides/permission-handling-guide.md) - Permission tools and utilities
 
 ### Implementation Summaries
+
 - [PC Networking Summary](summaries/pc-networking-summary.md) - Complete PC networking implementation (consolidated)
 - [Testing Time Sync](summaries/testing-time-sync.md) - Time sync testing
 - [Next Steps](summaries/next-steps.md) - Planned improvements
 
 ### Maintenance and Fixes
+
 - [Code Review Fixes](maintenance/code-review-fixes.md) - Code review resolutions
 - [Migration Complete Summary](maintenance/migration-complete-summary.md) - AndroidX migration
 - [RGB Camera Fixes](maintenance/rgb-camera-fixes-summary.md) - RGB camera issues
@@ -49,6 +55,7 @@ docs/
 - [Deprecated Java Patterns](maintenance/deprecated-java-patterns-analysis.md) - Legacy code analysis
 
 ### Thesis Content
+
 - [Chapter 3: System Design](thesis/chapter3/) - Architecture and design decisions
 - [Chapter 4 Documentation](thesis/chapter4-documentation-summary.md) - Implementation details
 - [Chapter 5: Experimental Evaluation](thesis/chapter5/) - Performance testing
@@ -57,17 +64,21 @@ docs/
 - [Thesis Evaluation Tests](thesis/evaluation/) - Test suite for thesis
 
 ### Code Quality
-- **[android/android-code-quality-guide.md](android/android-code-quality-guide.md) - Complete Android Code Quality Guide (CONSOLIDATED)**
+
+- **[android/android-code-quality-guide.md](android/android-code-quality-guide.md) - Complete Android Code Quality
+  Guide (CONSOLIDATED)**
 - [anti-patterns-readme.md](anti-patterns-readme.md) - Anti-patterns overview
 - [anti-patterns-analysis.md](anti-patterns-analysis.md) - Detailed analysis
 - [anti-patterns-checklist.md](anti-patterns-checklist.md) - Developer checklist
 - [anti-patterns-action-plan.md](anti-patterns-action-plan.md) - Remediation plan
 
 ### Performance
+
 - [anr-prevention-guide.md](anr-prevention-guide.md) - ANR prevention guidelines
 - [anr-fix-summary.md](anr-fix-summary.md) - ANR fixes
 
 ### Migration Documentation
+
 - [third-party-migration-status.md](third-party-migration-status.md) - Third-party library status
 - [androidx-alternatives-to-utilcode.md](androidx-alternatives-to-utilcode.md) - AndroidX alternatives
 - [utilcode-library-analysis.md](utilcode-library-analysis.md) - Utilcode analysis
@@ -75,6 +86,7 @@ docs/
 - [utilcode-progress-tracker.md](utilcode-progress-tracker.md) - Migration tracking
 
 ### UI and Design
+
 - [ui-consistency-review.md](ui-consistency-review.md) - UI consistency review
 - [material-icons-guide.md](material-icons-guide.md) - Material Icons guide
 - [material-icons-examples.md](material-icons-examples.md) - Material Icons examples
@@ -85,7 +97,8 @@ docs/
 
 ### For New Developers
 
-1. **Start Here**: [android/android-code-quality-guide.md](android/android-code-quality-guide.md) - Complete code quality guide
+1. **Start Here**: [android/android-code-quality-guide.md](android/android-code-quality-guide.md) - Complete code
+   quality guide
 2. **Code Standards**: [anti-patterns-checklist.md](anti-patterns-checklist.md)
 3. **Performance**: [anr-prevention-guide.md](anr-prevention-guide.md)
 4. **Architecture**: [maintenance/migration-complete-summary.md](maintenance/migration-complete-summary.md)
@@ -107,15 +120,18 @@ docs/
 ### Security & Quality (CRITICAL - READ FIRST)
 
 **🆕 2024 Complete Code Quality Guide (CONSOLIDATED):**
-- **[android/android-code-quality-guide.md](android/android-code-quality-guide.md)** - Complete Android code quality guide
-  - 3 CRITICAL issues with immediate fixes (GlobalScope, runBlocking, ExecutorService leaks)
-  - 7 HIGH priority issues
-  - 8 MEDIUM priority issues
-  - Quick-fix reference with before/after code examples
-  - Detailed recommendations with priority timeline
-  - Testing guidelines and checklist
+
+- **[android/android-code-quality-guide.md](android/android-code-quality-guide.md)** - Complete Android code quality
+  guide
+    - 3 CRITICAL issues with immediate fixes (GlobalScope, runBlocking, ExecutorService leaks)
+    - 7 HIGH priority issues
+    - 8 MEDIUM priority issues
+    - Quick-fix reference with before/after code examples
+    - Detailed recommendations with priority timeline
+    - Testing guidelines and checklist
 
 **Previous Anti-Patterns Analysis (Still Relevant):**
+
 - [anti-patterns-readme.md](anti-patterns-readme.md) - Overview
 - [anti-patterns-analysis.md](anti-patterns-analysis.md) - 16 patterns identified
 - [anti-patterns-checklist.md](anti-patterns-checklist.md) - Daily development reference
@@ -126,10 +142,12 @@ docs/
 **Focus**: Preventing Application Not Responding (ANR) errors and optimizing performance.
 
 **Key Documents**:
+
 - [anr-prevention-guide.md](anr-prevention-guide.md) - Best practices and monitoring
 - [anr-fix-summary.md](anr-fix-summary.md) - Fixed issues and solutions
 
 **Key Topics**:
+
 - Main thread blocking prevention
 - Background processing strategies
 - SafeMainThreadHandler usage
@@ -140,11 +158,13 @@ docs/
 **Focus**: Modernization from legacy libraries to AndroidX and Kotlin standards.
 
 **Key Documents**:
+
 - [MIGRATION_COMPLETE_SUMMARY.md](maintenance/migration-complete-summary.md) - Complete migration overview
 - [androidx-alternatives-to-utilcode.md](androidx-alternatives-to-utilcode.md) - AndroidX patterns
 - [third-party-migration-status.md](third-party-migration-status.md) - Current status
 
 **Achievements**:
+
 - ✅ Utilcode migration: 100% complete (200+ uses removed)
 - ✅ RxJava migration: 100% complete
 - ✅ EventBus migration: 100% complete
@@ -155,6 +175,7 @@ docs/
 **Focus**: Consistent Material Design implementation and icon usage.
 
 **Key Documents**:
+
 - [ui-consistency-review.md](ui-consistency-review.md) - UI consistency standards
 - [material-icons-guide.md](material-icons-guide.md) - Icon usage guidelines
 - [icon-migration-summary.md](icon-migration-summary.md) - Icon migration progress
@@ -163,7 +184,8 @@ docs/
 
 ### 🔴 Critical (Read Immediately)
 
-1. **[android/android-code-quality-guide.md](android/android-code-quality-guide.md) - Complete Android code quality guide (START HERE)**
+1. **[android/android-code-quality-guide.md](android/android-code-quality-guide.md) - Complete Android code quality
+   guide (START HERE)**
 2. [anti-patterns-analysis.md](anti-patterns-analysis.md) - Previous anti-patterns analysis
 3. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Development standards
 
@@ -221,26 +243,26 @@ docs/
 ### ✅ Completed Initiatives
 
 - **AndroidX Migration**: 100% complete
-  - 200+ Utilcode uses removed
-  - 69+ EventBus uses removed
-  - RxJava completely replaced with Coroutines
-  
+    - 200+ Utilcode uses removed
+    - 69+ EventBus uses removed
+    - RxJava completely replaced with Coroutines
+
 - **ANR Prevention**: Implemented
-  - SafeMainThreadHandler monitoring
-  - Background frame processing
-  - Performance tracking
+    - SafeMainThreadHandler monitoring
+    - Background frame processing
+    - Performance tracking
 
 - **Icon Standardization**: Complete
-  - Material Icons adopted
-  - Consistent icon usage
+    - Material Icons adopted
+    - Consistent icon usage
 
 ### 🚧 In Progress
 
 - **Anti-Pattern Remediation**: Documented, awaiting implementation
-  - P0: 4 critical issues identified
-  - P1: 5 high-priority issues
-  - P2: 9 medium-priority issues
-  
+    - P0: 4 critical issues identified
+    - P1: 5 high-priority issues
+    - P2: 9 medium-priority issues
+
 ### 📋 Planned
 
 - Enable ProGuard obfuscation
@@ -263,9 +285,9 @@ docs/
 ### Current Status
 
 - **2024 Code Quality Analysis: ✅ Complete**
-  - 3 CRITICAL issues identified
-  - 9 HIGH priority issues
-  - Comprehensive fix guide created
+    - 3 CRITICAL issues identified
+    - 9 HIGH priority issues
+    - Comprehensive fix guide created
 - Anti-patterns documented: ✅ 16 identified
 - Action plan created: ✅ 5-sprint roadmap
 - Developer guidelines: ✅ Checklist available
@@ -292,16 +314,19 @@ docs/
 ## Support and Questions
 
 ### Technical Questions
+
 - Check relevant documentation first
 - Search existing GitHub issues
 - Create new issue with appropriate label
 
 ### Security Concerns
+
 - Review [anti-patterns-analysis.md](anti-patterns-analysis.md)
 - Contact security team immediately
 - Do not commit sensitive information
 
 ### Process Questions
+
 - Check [anti-patterns-readme.md](anti-patterns-readme.md) FAQ
 - Contact team lead
 - Review during sprint retrospective
@@ -309,11 +334,13 @@ docs/
 ## External Resources
 
 ### Android Documentation
+
 - [Android Developers](https://developer.android.com/)
 - [Kotlin Documentation](https://kotlinlang.org/docs/)
 - [Android Security](https://developer.android.com/topic/security)
 
 ### Best Practices
+
 - [Android Best Practices](https://developer.android.com/topic/performance/best-practices)
 - [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html)
 - [OWASP Mobile Security](https://owasp.org/www-project-mobile-security-testing-guide/)
@@ -323,6 +350,7 @@ docs/
 This documentation is maintained by the IRCamera development team.
 
 **Review Schedule**:
+
 - Weekly: Action plan progress
 - Monthly: Anti-pattern tracking
 - Quarterly: Full documentation review

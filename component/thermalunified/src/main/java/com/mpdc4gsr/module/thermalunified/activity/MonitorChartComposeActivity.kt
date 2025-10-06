@@ -33,7 +33,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var showSettings by remember { mutableStateOf(false) }
         val snackbarHostState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -263,7 +263,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { 
+                    onClick = {
                         scope.launch {
                             snackbarHostState.showSnackbar("Chart data exported")
                         }
@@ -279,7 +279,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
 
                 OutlinedButton(
-                    onClick = { 
+                    onClick = {
                         scope.launch {
                             snackbarHostState.showSnackbar("Chart data cleared")
                         }
@@ -295,7 +295,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
 
                 Button(
-                    onClick = { 
+                    onClick = {
                         scope.launch {
                             snackbarHostState.showSnackbar("Zoom to fit applied")
                         }

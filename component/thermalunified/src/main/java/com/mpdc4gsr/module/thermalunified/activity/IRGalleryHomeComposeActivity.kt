@@ -124,7 +124,10 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             items = galleryItems,
                             modifier = Modifier.fillMaxSize(),
                             onItemClick = { item ->
-                                val intent = Intent(this@IRGalleryHomeComposeActivity, IRGalleryDetail01ComposeActivity::class.java)
+                                val intent = Intent(
+                                    this@IRGalleryHomeComposeActivity,
+                                    IRGalleryDetail01ComposeActivity::class.java
+                                )
                                 intent.putExtra("item_id", item.id)
                                 startActivity(intent)
                             },
@@ -138,7 +141,10 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             items = galleryItems,
                             modifier = Modifier.fillMaxSize(),
                             onItemClick = { item ->
-                                val intent = Intent(this@IRGalleryHomeComposeActivity, IRGalleryDetail01ComposeActivity::class.java)
+                                val intent = Intent(
+                                    this@IRGalleryHomeComposeActivity,
+                                    IRGalleryDetail01ComposeActivity::class.java
+                                )
                                 intent.putExtra("item_id", item.id)
                                 startActivity(intent)
                             },
@@ -150,7 +156,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 }
             }
-            
+
             // Search Dialog
             if (showSearchDialog) {
                 GallerySearchDialog(
@@ -161,12 +167,12 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 )
             }
-            
+
             // More Options Dialog
             if (showMoreOptionsDialog && selectedItemForOptions != null) {
                 GalleryItemOptionsDialog(
                     item = selectedItemForOptions!!,
-                    onDismiss = { 
+                    onDismiss = {
                         showMoreOptionsDialog = false
                         selectedItemForOptions = null
                     },
@@ -498,7 +504,7 @@ private fun GallerySearchDialog(
     onSearch: (String) -> Unit
 ) {
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
-    
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Search Gallery", color = Color.White) },
@@ -549,7 +555,7 @@ private fun GalleryItemOptionsDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("${item.name}", color = Color(0xFF7D8590), fontSize = 14.sp)
-                
+
                 TextButton(
                     onClick = onShare,
                     modifier = Modifier.fillMaxWidth()
@@ -562,7 +568,7 @@ private fun GalleryItemOptionsDialog(
                         Text("Share", color = Color.White)
                     }
                 }
-                
+
                 TextButton(
                     onClick = onExport,
                     modifier = Modifier.fillMaxWidth()
@@ -575,7 +581,7 @@ private fun GalleryItemOptionsDialog(
                         Text("Export", color = Color.White)
                     }
                 }
-                
+
                 TextButton(
                     onClick = onDelete,
                     modifier = Modifier.fillMaxWidth()

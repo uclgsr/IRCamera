@@ -7,23 +7,23 @@ Technical guides for developers working on the IRCamera codebase.
 ### Core Systems
 
 - [ui-components-guide.md](ui-components-guide.md) - Phase 1 permissions handling implementation
-  - Permission controller architecture
-  - Runtime permission management
-  - USB device permissions
-  - Battery optimization handling
-  - Integration examples
+    - Permission controller architecture
+    - Runtime permission management
+    - USB device permissions
+    - Battery optimization handling
+    - Integration examples
 
 - [logging-utilities-guide.md](logging-utilities-guide.md) - Centralized logging and error handling
-  - AppLogger API and usage
-  - ErrorHandler utilities
-  - Structured logging
-  - Migration from legacy logging
+    - AppLogger API and usage
+    - ErrorHandler utilities
+    - Structured logging
+    - Migration from legacy logging
 
 - [permission-handling-guide.md](permission-handling-guide.md) - Permission tools and utilities
-  - PermissionTools API
-  - Activity/Fragment integration
-  - Permission callbacks
-  - Best practices
+    - PermissionTools API
+    - Activity/Fragment integration
+    - Permission callbacks
+    - Best practices
 
 ## Usage
 

@@ -189,7 +189,7 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
                 AppLogger.e(TAG, "Error cleaning up thermal recorder", e)
             }
         }
-        
+
         // Note: viewModelScope will be automatically cancelled after onCleared returns
     }
 }

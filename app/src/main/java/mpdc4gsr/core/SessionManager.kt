@@ -183,7 +183,7 @@ class SessionManager(
         isRunning.set(false)
         sessionJob.get()?.cancel()
         sessionJob.set(null)
-        
+
         // Cancel the sessionScope to cleanup all coroutines
         sessionScope.cancel()
 

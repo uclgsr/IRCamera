@@ -80,7 +80,7 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             IconButton(onClick = { showFilterDialog = true }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter", tint = Color.White)
                             }
-                            IconButton(onClick = { 
+                            IconButton(onClick = {
                                 scope.launch {
                                     try {
                                         // Perform heavy IO operations on background thread
@@ -92,15 +92,24 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                                     appendLine("${entry.timestamp},${entry.temperature},${entry.location},${entry.notes}")
                                                 }
                                             }
-                                            
+
                                             // Create file in Downloads directory
                                             val contentValues = android.content.ContentValues().apply {
-                                                put(android.provider.MediaStore.Files.FileColumns.DISPLAY_NAME, "monitor_log_${System.currentTimeMillis()}.csv")
+                                                put(
+                                                    android.provider.MediaStore.Files.FileColumns.DISPLAY_NAME,
+                                                    "monitor_log_${System.currentTimeMillis()}.csv"
+                                                )
                                                 put(android.provider.MediaStore.Files.FileColumns.MIME_TYPE, "text/csv")
-                                                put(android.provider.MediaStore.Files.FileColumns.RELATIVE_PATH, android.os.Environment.DIRECTORY_DOWNLOADS)
+                                                put(
+                                                    android.provider.MediaStore.Files.FileColumns.RELATIVE_PATH,
+                                                    android.os.Environment.DIRECTORY_DOWNLOADS
+                                                )
                                             }
-                                            
-                                            val uri = context.contentResolver.insert(android.provider.MediaStore.Files.getContentUri("external"), contentValues)
+
+                                            val uri = context.contentResolver.insert(
+                                                android.provider.MediaStore.Files.getContentUri("external"),
+                                                contentValues
+                                            )
                                             uri?.let {
                                                 context.contentResolver.openOutputStream(it)?.use { outputStream ->
                                                     outputStream.write(csv.toByteArray())
@@ -178,13 +187,13 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 }
             }
-            
+
             // Add Log Entry Dialog
             if (showAddLogDialog) {
                 var newTemp by remember { mutableStateOf("25.0") }
                 var newLocation by remember { mutableStateOf("") }
                 var newNotes by remember { mutableStateOf("") }
-                
+
                 AlertDialog(
                     onDismissRequest = { showAddLogDialog = false },
                     title = { Text("Add Log Entry") },
@@ -214,8 +223,9 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     confirmButton = {
                         TextButton(onClick = {
                             val temp = newTemp.toFloatOrNull() ?: 25.0f
-                            val timestamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault())
-                                .format(java.util.Date())
+                            val timestamp =
+                                java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault())
+                                    .format(java.util.Date())
                             logEntries.add(0, LogEntry(timestamp, temp, newLocation, newNotes))
                             showAddLogDialog = false
                             scope.launch {

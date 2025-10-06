@@ -2,7 +2,7 @@ package com.mpdc4gsr.libunified.app.comm.util
 
 /**
  * Thread-safe singleton holder using double-checked locking pattern.
- * 
+ *
  * Improved implementation that eliminates the !! operator and properly
  * handles the creator function to avoid potential NPE in race conditions.
  */
