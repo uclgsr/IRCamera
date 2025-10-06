@@ -30,6 +30,7 @@ import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.feature.network.data.NetworkServer
+import mpdc4gsr.feature.thermal.data.ThermalSettingsRepository
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -295,6 +296,8 @@ class ThermalCameraRecorder(
     private val sessionReferenceTimestampNs = AtomicLong(0)
     private val sessionStartOffsetNs = AtomicLong(0)
 
+    // Thermal settings - loaded from ThermalSettingsRepository
+    private val thermalSettingsRepository = ThermalSettingsRepository.getInstance(context)
     private var ambientTemperature = 25.0
     private var emissivity = 0.95
     private var reflectedTemperature = 23.0
@@ -495,7 +498,11 @@ class ThermalCameraRecorder(
                 "Initializing thermal camera using USBMonitor automatic permission framework"
             )
 
+            // Load thermal settings from repository
+            loadThermalSettings()
+
             observeDeviceEvents()
+            observeSettingsChanges()
 
             usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
 
@@ -1391,14 +1398,14 @@ class ThermalCameraRecorder(
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to extract thermal data from engine, falling back to default", e)
             ThermalFrameData(
-                temperatureMatrix = Array(IR_CAMERA_HEIGHT) { FloatArray(IR_CAMERA_WIDTH) { 25.0f } },
-                minTemperature = 25.0f,
-                maxTemperature = 25.0f,
-                avgTemperature = 25.0f,
-                centerTemperature = 25.0f,
-                ambientTemperature = 25.0f,
-                emissivity = 0.95f,
-                reflectedTemperature = 25.0f
+                temperatureMatrix = Array(IR_CAMERA_HEIGHT) { FloatArray(IR_CAMERA_WIDTH) { ambientTemperature.toFloat() } },
+                minTemperature = ambientTemperature.toFloat(),
+                maxTemperature = ambientTemperature.toFloat(),
+                avgTemperature = ambientTemperature.toFloat(),
+                centerTemperature = ambientTemperature.toFloat(),
+                ambientTemperature = ambientTemperature.toFloat(),
+                emissivity = emissivity.toFloat(),
+                reflectedTemperature = reflectedTemperature.toFloat()
             )
         }
     }
@@ -1426,7 +1433,7 @@ class ThermalCameraRecorder(
                         avgTemperature = Float.NaN,
                         centerTemperature = Float.NaN,
                         ambientTemperature = Float.NaN,
-                        emissivity = 0.95f,
+                        emissivity = emissivity.toFloat(),
                         reflectedTemperature = Float.NaN
                     )
                 }
@@ -1440,21 +1447,21 @@ class ThermalCameraRecorder(
                     avgTemperature = Float.NaN,
                     centerTemperature = Float.NaN,
                     ambientTemperature = Float.NaN,
-                    emissivity = 0.95f,
+                    emissivity = emissivity.toFloat(),
                     reflectedTemperature = Float.NaN
                 )
             }
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to extract thermal data from IRUVCTC", e)
             ThermalFrameData(
-                temperatureMatrix = Array(IR_CAMERA_HEIGHT) { FloatArray(IR_CAMERA_WIDTH) { 25.0f } },
-                minTemperature = 25.0f,
-                maxTemperature = 25.0f,
-                avgTemperature = 25.0f,
-                centerTemperature = 25.0f,
-                ambientTemperature = 25.0f,
-                emissivity = 0.95f,
-                reflectedTemperature = 25.0f
+                temperatureMatrix = Array(IR_CAMERA_HEIGHT) { FloatArray(IR_CAMERA_WIDTH) { ambientTemperature.toFloat() } },
+                minTemperature = ambientTemperature.toFloat(),
+                maxTemperature = ambientTemperature.toFloat(),
+                avgTemperature = ambientTemperature.toFloat(),
+                centerTemperature = ambientTemperature.toFloat(),
+                ambientTemperature = ambientTemperature.toFloat(),
+                emissivity = emissivity.toFloat(),
+                reflectedTemperature = reflectedTemperature.toFloat()
             )
         }
     }
@@ -1669,9 +1676,9 @@ class ThermalCameraRecorder(
             maxTemperature = maxTemp,
             avgTemperature = avgTemp,
             centerTemperature = centerTemp,
-            ambientTemperature = 25.0f,
-            emissivity = 0.95f,
-            reflectedTemperature = 25.0f
+            ambientTemperature = ambientTemperature.toFloat(),
+            emissivity = emissivity.toFloat(),
+            reflectedTemperature = reflectedTemperature.toFloat()
         )
     }
 
@@ -2098,9 +2105,9 @@ class ThermalCameraRecorder(
             maxTemperature = maxTemp,
             avgTemperature = avgTemp,
             centerTemperature = centerTemp,
-            ambientTemperature = 25.0f,
-            emissivity = 0.95f,
-            reflectedTemperature = 25.0f
+            ambientTemperature = ambientTemperature.toFloat(),
+            emissivity = emissivity.toFloat(),
+            reflectedTemperature = reflectedTemperature.toFloat()
         )
 
         saveRealIRThermalData(TimestampManager.createTimestampRecord(), frameNumber, thermalData)
@@ -2157,9 +2164,9 @@ class ThermalCameraRecorder(
                     maxTemperature = maxTemp,
                     avgTemperature = avgTemp,
                     centerTemperature = centerTemp,
-                    ambientTemperature = 25.0f,
-                    emissivity = 0.95f,
-                    reflectedTemperature = 25.0f
+                    ambientTemperature = ambientTemperature.toFloat(),
+                    emissivity = emissivity.toFloat(),
+                    reflectedTemperature = reflectedTemperature.toFloat()
                 )
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Failed to generate test thermal frame", e)
@@ -3196,6 +3203,82 @@ class ThermalCameraRecorder(
             }
         }
     }
+
+    private fun loadThermalSettings() {
+        try {
+            val settings = thermalSettingsRepository.getSettings()
+            emissivity = settings.emissivity.toDouble()
+            AppLogger.i(TAG, "Loaded thermal settings - emissivity: $emissivity")
+        } catch (e: Exception) {
+            AppLogger.e(TAG, "Failed to load thermal settings, using defaults", e)
+        }
+    }
+
+    private fun observeSettingsChanges() {
+        recordingScope.launch {
+            thermalSettingsRepository.thermalSettings.collectLatest { settings ->
+                AppLogger.i(TAG, "Thermal settings changed - emissivity: ${settings.emissivity}")
+                updateEmissivity(settings.emissivity.toDouble())
+            }
+        }
+    }
+
+    fun updateEmissivity(newEmissivity: Double) {
+        if (newEmissivity in 0.1..1.0) {
+            emissivity = newEmissivity
+            AppLogger.i(TAG, "Updated emissivity to $emissivity")
+            
+            ircamEngine?.let { engine ->
+                try {
+                    AppLogger.d(TAG, "Applying emissivity to IrcamEngine")
+                } catch (e: Exception) {
+                    AppLogger.w(TAG, "Failed to apply emissivity to engine", e)
+                }
+            }
+        } else {
+            AppLogger.w(TAG, "Invalid emissivity value: $newEmissivity (must be between 0.1 and 1.0)")
+        }
+    }
+
+    fun updateAmbientTemperature(newTemp: Double) {
+        if (newTemp in -50.0..100.0) {
+            ambientTemperature = newTemp
+            AppLogger.i(TAG, "Updated ambient temperature to $ambientTemperature")
+            
+            ircamEngine?.let { engine ->
+                try {
+                    AppLogger.d(TAG, "Applying ambient temperature to IrcamEngine")
+                } catch (e: Exception) {
+                    AppLogger.w(TAG, "Failed to apply ambient temperature to engine", e)
+                }
+            }
+        } else {
+            AppLogger.w(TAG, "Invalid ambient temperature: $newTemp (must be between -50 and 100)")
+        }
+    }
+
+    fun updateReflectedTemperature(newTemp: Double) {
+        if (newTemp in -50.0..100.0) {
+            reflectedTemperature = newTemp
+            AppLogger.i(TAG, "Updated reflected temperature to $reflectedTemperature")
+        } else {
+            AppLogger.w(TAG, "Invalid reflected temperature: $newTemp (must be between -50 and 100)")
+        }
+    }
+
+    fun getCurrentThermalSettings(): ThermalSettings {
+        return ThermalSettings(
+            emissivity = emissivity.toFloat(),
+            ambientTemperature = ambientTemperature.toFloat(),
+            reflectedTemperature = reflectedTemperature.toFloat()
+        )
+    }
+
+    data class ThermalSettings(
+        val emissivity: Float,
+        val ambientTemperature: Float,
+        val reflectedTemperature: Float
+    )
 
     override suspend fun cleanup() {
         try {
