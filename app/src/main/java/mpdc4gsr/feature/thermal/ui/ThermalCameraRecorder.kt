@@ -963,10 +963,12 @@ class ThermalCameraRecorder(
             } else {
                 AppLogger.w(TAG, "No Activity context available, using DeviceEventManager permission request")
 
-                recordingScope.launch {
-                    DeviceEventManager.emitDevicePermissionRequest(device)
+                val emitted = DeviceEventManager.emitDevicePermissionRequestSync(device)
+                if (emitted) {
+                    AppLogger.i(TAG, "USB permission request sent via DeviceEventManager")
+                } else {
+                    AppLogger.w(TAG, "Failed to emit USB permission request - no active collectors")
                 }
-                AppLogger.i(TAG, "USB permission request sent via DeviceEventManager")
             }
 
         } catch (e: Exception) {
