@@ -1,5 +1,6 @@
 package com.topdon.ble;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
@@ -13,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import androidx.core.content.ContextCompat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -364,8 +366,16 @@ public class EasyBLE {
                 int connectDelay = 0;
                 if (bondController != null && bondController.accept(device)) {
                     BluetoothDevice remoteDevice = bluetoothAdapter.getRemoteDevice(device.getAddress());
-                    if (remoteDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
-                        connectDelay = createBond(device.getAddress()) ? 1500 : 0;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        if (application != null && ContextCompat.checkSelfPermission(application, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                            if (remoteDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
+                                connectDelay = createBond(device.getAddress()) ? 1500 : 0;
+                            }
+                        }
+                    } else {
+                        if (remoteDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
+                            connectDelay = createBond(device.getAddress()) ? 1500 : 0;
+                        }
                     }
                 }
                 connection = new ConnectionImpl(this, bluetoothAdapter, device, configuration, connectDelay, observer);

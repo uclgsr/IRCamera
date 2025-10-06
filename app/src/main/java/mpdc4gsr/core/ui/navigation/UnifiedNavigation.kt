@@ -197,7 +197,7 @@ fun UnifiedNavHost(
             NavigationPerformanceHelper.TrackNavigation("ResearchTemplates")
 
             ResearchTemplateScreen(
-                onBackClick = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() }
             )
         }
 
