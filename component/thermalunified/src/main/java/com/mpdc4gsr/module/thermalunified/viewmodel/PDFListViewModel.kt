@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -41,52 +42,51 @@ class PDFListViewModel : BaseViewModel() {
         loadPDFItems()
     }
 
-    // Load PDF items
     private fun loadPDFItems() {
         viewModelScope.launch(Dispatchers.IO) {
-            _isLoading.value = true
+            _isLoading.update { true }
             try {
                 val items = getPDFItemsList()
                 withContext(Dispatchers.Main) {
-                    _pdfItems.value = items
+                    _pdfItems.update { items }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading PDF items", e)
             } finally {
-                _isLoading.value = false
+                _isLoading.update { false }
             }
         }
     }
 
-    // Selection mode methods
     fun enterSelectionMode(itemPath: String? = null) {
-        _isSelectionMode.value = true
-        itemPath?.let {
-            _selectedItems.value = setOf(it)
+        _isSelectionMode.update { true }
+        itemPath?.let { path ->
+            _selectedItems.update { setOf(path) }
         }
     }
 
     fun exitSelectionMode() {
-        _isSelectionMode.value = false
-        _selectedItems.value = emptySet()
+        _isSelectionMode.update { false }
+        _selectedItems.update { emptySet() }
     }
 
     fun clearSelection() {
-        _selectedItems.value = emptySet()
-        _isSelectionMode.value = false
+        _selectedItems.update { emptySet() }
+        _isSelectionMode.update { false }
     }
 
     fun toggleItemSelection(itemPath: String) {
-        val currentSelected = _selectedItems.value.toMutableSet()
-        if (currentSelected.contains(itemPath)) {
-            currentSelected.remove(itemPath)
-        } else {
-            currentSelected.add(itemPath)
+        _selectedItems.update { currentSet ->
+            val mutableSet = currentSet.toMutableSet()
+            if (mutableSet.contains(itemPath)) {
+                mutableSet.remove(itemPath)
+            } else {
+                mutableSet.add(itemPath)
+            }
+            mutableSet
         }
-        _selectedItems.value = currentSelected
-        // Exit selection mode if no items selected
-        if (currentSelected.isEmpty()) {
-            _isSelectionMode.value = false
+        if (_selectedItems.value.isEmpty()) {
+            _isSelectionMode.update { false }
         }
     }
 
