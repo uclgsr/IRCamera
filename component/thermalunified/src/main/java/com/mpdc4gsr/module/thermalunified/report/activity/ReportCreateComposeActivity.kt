@@ -453,7 +453,7 @@ fun ThermalImagesSection(
                         onAddImage(mockUri)
                     }
                 ) {
-                    Icon(Icons.Default.Add, contentDescription = null)
+                    Icon(Icons.Default.Add, contentDescription = "Add Image")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Add Image")
                 }
@@ -739,7 +739,7 @@ fun ReportNavigationBar(
         ) {
             if (currentStep > 0) {
                 OutlinedButton(onClick = onPrevious) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Previous")
                 }
@@ -766,7 +766,7 @@ fun ReportNavigationBar(
                     Text(if (currentStep == totalSteps - 1) "Create Report" else "Next")
                     if (currentStep < totalSteps - 1) {
                         Spacer(modifier = Modifier.width(8.dp))
-                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
+                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next")
                     }
                 }
             }

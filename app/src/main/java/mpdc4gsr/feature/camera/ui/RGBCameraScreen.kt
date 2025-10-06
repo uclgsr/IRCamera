@@ -473,7 +473,7 @@ private fun FullScreenCameraPreviewSimulated(
             ) {
                 Icon(
                     imageVector = Icons.Default.CameraAlt,
-                    contentDescription = null,
+                    contentDescription = "Camera Off",
                     tint = Color.Gray,
                     modifier = Modifier.size(64.dp)
                 )
@@ -649,7 +649,7 @@ private fun RGBCameraPreview(
                     ) {
                         Icon(
                             imageVector = Icons.Default.CameraAlt,
-                            contentDescription = null,
+                            contentDescription = "Camera Off",
                             tint = Color.Gray,
                             modifier = Modifier.size(64.dp)
                         )
@@ -887,7 +887,7 @@ private fun RecordingControlsCard(
                 ) {
                     Icon(
                         imageVector = if (isRecording) Icons.Default.Stop else Icons.Default.VideoCall,
-                        contentDescription = null
+                        contentDescription = if (isRecording) "Stop Recording" else "Start Recording"
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(if (isRecording) "Stop" else "Record")
@@ -898,7 +898,7 @@ private fun RecordingControlsCard(
                     enabled = isPreviewActive && !isRecording,
                     colors = ButtonDefaults.buttonColors(containerColor = Purple)
                 ) {
-                    Icon(Icons.Default.CameraAlt, contentDescription = null)
+                    Icon(Icons.Default.CameraAlt, contentDescription = "Capture Photo")
                     Spacer(Modifier.width(4.dp))
                     Text("Photo")
                 }

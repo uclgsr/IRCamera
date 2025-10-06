@@ -201,7 +201,7 @@ private fun ThermalImageGridItem(item: ThermalMediaItem) {
             ) {
                 Icon(
                     Icons.Default.Thermostat,
-                    contentDescription = null,
+                    contentDescription = "Thermal Image",
                     tint = Color.Red,
                     modifier = Modifier
                         .size(48.dp)
@@ -268,7 +268,7 @@ private fun ThermalImageListItem(item: ThermalMediaItem) {
             ) {
                 Icon(
                     Icons.Default.Thermostat,
-                    contentDescription = null,
+                    contentDescription = "Thermal Image",
                     tint = Color.Red,
                     modifier = Modifier
                         .size(24.dp)
@@ -344,7 +344,7 @@ private fun ThermalVideoGridItem(item: ThermalMediaItem) {
             ) {
                 Icon(
                     Icons.Default.PlayArrow,
-                    contentDescription = null,
+                    contentDescription = "Play Video",
                     tint = Color.White,
                     modifier = Modifier
                         .size(48.dp)
@@ -412,7 +412,7 @@ private fun ThermalVideoListItem(item: ThermalMediaItem) {
             ) {
                 Icon(
                     Icons.Default.PlayArrow,
-                    contentDescription = null,
+                    contentDescription = "Play Video",
                     tint = Color.White,
                     modifier = Modifier
                         .size(24.dp)
@@ -472,7 +472,7 @@ private fun ThermalReportItem(item: ThermalMediaItem) {
         ) {
             Icon(
                 Icons.Default.Description,
-                contentDescription = null,
+                contentDescription = "Report",
                 tint = Color.Green,
                 modifier = Modifier.size(32.dp)
             )

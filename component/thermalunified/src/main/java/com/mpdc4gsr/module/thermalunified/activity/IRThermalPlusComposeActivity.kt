@@ -38,7 +38,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                             ) {
                                 Icon(
                                     Icons.Default.Stars,
-                                    contentDescription = null,
+                                    contentDescription = "Plus Features",
                                     tint = Color(0xFFFFD700)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
@@ -109,7 +109,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                 ) {
                     Icon(
                         Icons.Default.Stars,
-                        contentDescription = null,
+                        contentDescription = "Premium Features",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(32.dp)
                     )
@@ -226,7 +226,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                     ) {
                         Icon(
                             Icons.Default.AutoAwesome,
-                            contentDescription = null,
+                            contentDescription = "Plus Mode Active",
                             tint = Color(0xFFFFD700),
                             modifier = Modifier.size(48.dp)
                         )
@@ -331,7 +331,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                         brush = androidx.compose.ui.graphics.SolidColor(Color(0xFFFFD700))
                     )
                 ) {
-                    Icon(Icons.Default.Camera, contentDescription = null)
+                    Icon(Icons.Default.Camera, contentDescription = "AI Capture")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("AI Capture")
                 }
@@ -344,7 +344,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                         contentColor = Color.Black
                     )
                 ) {
-                    Icon(Icons.Default.AutoAwesome, contentDescription = null)
+                    Icon(Icons.Default.AutoAwesome, contentDescription = "Analyze")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Analyze")
                 }

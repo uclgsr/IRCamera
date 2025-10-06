@@ -245,7 +245,7 @@ fun ConnectionStatusItem(name: String, connected: Boolean) {
     ) {
         Icon(
             imageVector = if (connected) Icons.Default.CheckCircle else Icons.Default.Error,
-            contentDescription = null,
+            contentDescription = if (connected) "$name Connected" else "$name Disconnected",
             tint = if (connected) Color.Green else Color.Red
         )
         Spacer(modifier = Modifier.height(4.dp))
@@ -285,7 +285,7 @@ fun QuickActionsCard(navController: NavController) {
                     onClick = { navController.navigate("thermal") },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Camera, contentDescription = null)
+                    Icon(Icons.Default.Camera, contentDescription = "Thermal Camera")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Thermal")
                 }
@@ -294,7 +294,7 @@ fun QuickActionsCard(navController: NavController) {
                     onClick = { navController.navigate("gsr") },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Sensors, contentDescription = null)
+                    Icon(Icons.Default.Sensors, contentDescription = "GSR Sensor")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("GSR")
                 }
@@ -310,7 +310,7 @@ fun QuickActionsCard(navController: NavController) {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.PlayArrow, contentDescription = null)
+                    Icon(Icons.Default.PlayArrow, contentDescription = "Start Recording")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Record")
                 }
@@ -453,7 +453,7 @@ fun ThermalControlsPanel() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.PhotoCamera, contentDescription = null)
+                    Icon(Icons.Default.PhotoCamera, contentDescription = "Capture Image")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Capture")
                 }
@@ -469,7 +469,7 @@ fun ThermalControlsPanel() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Videocam, contentDescription = null)
+                    Icon(Icons.Default.Videocam, contentDescription = "Record Video")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Record")
                 }
@@ -485,7 +485,7 @@ fun ThermalControlsPanel() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Settings, contentDescription = null)
+                    Icon(Icons.Default.Settings, contentDescription = "Settings")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Settings")
                 }
@@ -619,7 +619,7 @@ fun GSRRecordingControlsCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.PlayArrow, contentDescription = null)
+                    Icon(Icons.Default.PlayArrow, contentDescription = "Start GSR Recording")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Start")
                 }
@@ -635,7 +635,7 @@ fun GSRRecordingControlsCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Stop, contentDescription = null)
+                    Icon(Icons.Default.Stop, contentDescription = "Stop GSR Recording")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Stop")
                 }
@@ -651,7 +651,7 @@ fun GSRRecordingControlsCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Pause, contentDescription = null)
+                    Icon(Icons.Default.Pause, contentDescription = "Pause GSR Recording")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Pause")
                 }

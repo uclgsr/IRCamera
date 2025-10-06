@@ -204,7 +204,7 @@ fun SessionInfoItem(
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
+                contentDescription = label,
                 tint = Color(0xFF4ECDC4),
                 modifier = Modifier.size(16.dp)
             )
@@ -503,7 +503,7 @@ fun ExportOptionsCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.TableChart,
-                        contentDescription = null,
+                        contentDescription = "Export Raw Data",
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -518,7 +518,7 @@ fun ExportOptionsCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Description,
-                        contentDescription = null,
+                        contentDescription = "Export Report",
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -533,7 +533,7 @@ fun ExportOptionsCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.VideoFile,
-                        contentDescription = null,
+                        contentDescription = "Export Video",
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
