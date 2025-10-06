@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 import org.json.JSONObject
+import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
@@ -437,7 +438,7 @@ class SessionManager(
     }
 
     private fun generateSessionId(): String {
-        return "session_${System.currentTimeMillis()}_${(Math.random() * 1000).toInt()}"
+        return "session_${System.currentTimeMillis()}_${UUID.randomUUID().toString().take(8)}"
     }
 
     private fun updateSessionState(newState: SessionState? = null) {

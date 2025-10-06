@@ -69,7 +69,6 @@ android {
                 "GradleDependency",
                 "NewerVersionAvailable",
                 "UnusedIds",
-                "ContentDescription",
                 "SmallSp",
                 "SpUsage",
                 "HardcodedText",
