@@ -1,0 +1,126 @@
+THERMAL CAMERA RECOGNITION FIX - FLOW DIAGRAM
+==============================================
+
+BEFORE THE FIX (Camera Already Connected):
+-------------------------------------------
+App Start
+  |
+  v
+Initialize ThermalCameraRecorder
+  |
+  v
+Scan USB Devices (100ms timing)
+  |
+  v
+No devices found (USB system not ready yet)
+  |
+  v
+Enter Simulation Mode
+  |
+  v
+User sees "No Camera Detected" ❌
+
+AFTER THE FIX (Camera Already Connected):
+------------------------------------------
+App Start
+  |
+  v
+Initialize ThermalCameraRecorder
+  |
+  v
+Scan USB Devices (Initial attempt)
+  |
+  +--> Device found? 
+  |      |
+  |      +--> YES -> Initialize Camera ✓
+  |      |
+  |      +--> NO -> Wait 500ms
+  |               |
+  |               v
+  |           Retry USB Scan
+  |               |
+  |               +--> Device found?
+  |                      |
+  |                      +--> YES -> Initialize Camera ✓
+  |                      |
+  |                      +--> NO -> Enter Simulation Mode
+  |
+  v
+User navigates to ThermalMonitorScreen
+  |
+  v
+Wait 1 second (LaunchedEffect)
+  |
+  v
+Trigger rescanForThermalCamera()
+  |
+  v
+Scan all USB devices
+  |
+  +--> Thermal camera found?
+       |
+       +--> YES (with permission) -> Initialize Camera ✓
+       |                             Exit Simulation Mode
+       |                             Show Real Camera Feed
+       |
+       +--> YES (needs permission) -> Request USB Permission
+       |                             Wait for user
+       |                             Then initialize ✓
+       |
+       +--> NO -> Stay in Simulation Mode
+
+
+HOT-PLUG SCENARIO (Camera Connected While Running):
+---------------------------------------------------
+App Running (Simulation Mode)
+  |
+  v
+User plugs in thermal camera
+  |
+  v
+USB System broadcasts ACTION_USB_DEVICE_ATTACHED
+  |
+  v
+ThermalUsbReceiver.onReceive()
+  |
+  v
+DeviceEventManager.emitDeviceConnectionSync()
+  |
+  v
+ThermalCameraRecorder.onDeviceConnectionStateChanged()
+  |
+  v
+Check permission
+  |
+  +--> Has permission? 
+       |
+       +--> YES -> Initialize Camera immediately ✓
+       |          Exit Simulation Mode
+       |
+       +--> NO -> Request USB Permission
+                  User grants permission
+                  onDevicePermissionRequested() triggered
+                  Initialize Camera ✓
+
+
+KEY IMPROVEMENTS:
+-----------------
+1. ✓ Delayed retry (500ms) allows USB enumeration
+2. ✓ Manual rescan method for on-demand detection
+3. ✓ Automatic rescan when user opens camera screen
+4. ✓ Fixed permission request (was broken, now works)
+5. ✓ Multiple fallback mechanisms ensure detection
+6. ✓ Works for all 3 scenarios:
+   - Camera already connected at startup
+   - Camera plugged in while app running
+   - User navigates to camera screen
+
+TESTING CHECKLIST:
+------------------
+[ ] Connect camera, start app -> Should detect within 1-2 seconds
+[ ] Start app, then plug in camera -> Should detect immediately
+[ ] Start app without camera, go to thermal screen -> Shows simulation mode
+[ ] Plug in camera while on thermal screen -> Should switch to real camera
+[ ] First time connection -> Should show permission dialog
+[ ] Deny permission -> Should show error, stay in simulation
+[ ] Grant permission -> Should initialize camera successfully

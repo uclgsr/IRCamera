@@ -17,6 +17,7 @@ object InitUtils {
 
     /**
      * Initialize receiver for device broadcast events
+     * Registers dynamically to ensure compatibility with all Android versions
      */
     fun initReceiver() {
         try {
@@ -25,9 +26,12 @@ object InitUtils {
             val filter = IntentFilter().apply {
                 addAction("android.hardware.usb.action.USB_DEVICE_ATTACHED")
                 addAction("android.hardware.usb.action.USB_DEVICE_DETACHED")
+                addAction("android.hardware.usb.action.USB_ACCESSORY_ATTACHED")
+                addAction("android.hardware.usb.action.USB_ACCESSORY_DETACHED")
+                addAction(DeviceBroadcastReceiver.ACTION_USB_PERMISSION)
             }
             context.registerReceiver(receiver, filter)
-            XLog.i("InitUtils: Device broadcast receiver initialized")
+            XLog.i("InitUtils: Device broadcast receiver initialized with USB permission action")
         } catch (e: Exception) {
             XLog.e("InitUtils: Failed to initialize receiver: ${e.message}")
         }

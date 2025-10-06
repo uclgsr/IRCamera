@@ -507,6 +507,7 @@ class ThermalCameraRecorder(
                     "IRUVCTC initialization failed, enabling simulation mode"
                 )
                 isSimulationMode = true
+                delay(INITIALIZATION_RETRY_DELAY_MS)
                 emitError(
                     ErrorType.DEVICE_ERROR,
                     "Thermal camera initialization failed - using simulation mode"
@@ -3084,6 +3085,68 @@ class ThermalCameraRecorder(
         val qualityScore: Double
     )
 
+    suspend fun rescanForThermalCamera(): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                AppLogger.i(TAG, "Manually rescanning for thermal camera devices")
+                
+                val manager = usbManager
+                if (manager == null) {
+                    AppLogger.w(TAG, "USB manager not available for rescan")
+                    return@withContext false
+                }
+                
+                val deviceList = manager.deviceList
+                AppLogger.i(TAG, "Found ${deviceList.size} USB devices during rescan")
+                
+                for (device in deviceList.values) {
+                    Log.d(
+                        TAG,
+                        "Checking device: VID=${device.vendorId.toString(16)}, PID=${
+                            device.productId.toString(16)
+                        }, Name=${device.productName}"
+                    )
+                    
+                    if (device.isTcTsDevice()) {
+                        Log.i(
+                            TAG,
+                            "Found thermal camera during rescan: ${device.productName}"
+                        )
+                        
+                        // Update device reference immediately so status reflects the device
+                        thermalCameraDevice = device
+                        
+                        if (manager.hasPermission(device)) {
+                            AppLogger.i(TAG, "Thermal camera has permission, initializing")
+                            hasUsbPermission = true
+                            
+                            val success = initializeRealThermalCamera(device)
+                            if (success) {
+                                isSimulationMode = false
+                                Log.i(TAG, "Successfully initialized thermal camera from rescan")
+                                emitStatus()
+                                return@withContext true
+                            }
+                        } else {
+                            AppLogger.i(TAG, "Thermal camera found but needs permission, requesting")
+                            hasUsbPermission = false
+                            requestUsbPermission(device)
+                            emitStatus()
+                            return@withContext false
+                        }
+                    }
+                }
+                
+                AppLogger.w(TAG, "No thermal camera devices found during rescan")
+                return@withContext false
+                
+            } catch (e: Exception) {
+                AppLogger.e(TAG, "Error during thermal camera rescan", e)
+                return@withContext false
+            }
+        }
+    }
+
     override suspend fun cleanup() {
         try {
             if (_isRecording.get()) {
@@ -3297,17 +3360,11 @@ class ThermalCameraRecorder(
                             emitStatus()
                         }
                     } else {
-                        Log.w(
+                        Log.i(
                             TAG,
-                            "USB permission denied for thermal camera, using simulation mode"
+                            "USB permission not yet granted, requesting permission for thermal camera"
                         )
-                        isSimulationMode = true
-                        recordingScope.launch {
-                            emitError(
-                                ErrorType.DEVICE_ERROR,
-                                "USB permission denied - using simulation mode"
-                            )
-                        }
+                        requestUsbPermission(device)
                     }
                 }
             }
