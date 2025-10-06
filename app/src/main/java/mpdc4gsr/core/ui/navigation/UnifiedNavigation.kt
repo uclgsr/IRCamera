@@ -195,7 +195,8 @@ fun UnifiedNavHost(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToDualMode = { navController.navigate(UnifiedRoute.DualModeCamera.route) },
                 onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) },
-                onNavigateToSingleCamera = { navController.navigate(UnifiedRoute.RGBCamera.route) }
+                onNavigateToSingleCamera = { navController.navigate(UnifiedRoute.RGBCamera.route) },
+                onNavigateToGallery = { navController.navigate(UnifiedRoute.ThermalGallery.route) }
             )
         }
 
@@ -344,7 +345,8 @@ fun UnifiedNavHost(
             mpdc4gsr.feature.settings.ui.ProfileScreen(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToResearchTemplates = { navController.navigate(UnifiedRoute.ResearchTemplates.route) },
-                onNavigateToPreferences = { navController.navigate(UnifiedRoute.Settings.route) }
+                onNavigateToPreferences = { navController.navigate(UnifiedRoute.Settings.route) },
+                onExportData = { navController.navigate(UnifiedRoute.GSRDataView.route) }
             )
         }
 

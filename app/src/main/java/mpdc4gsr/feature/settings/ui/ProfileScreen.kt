@@ -28,6 +28,7 @@ fun ProfileScreen(
     onBackClick: (() -> Unit)? = null,
     onNavigateToResearchTemplates: (() -> Unit)? = null,
     onNavigateToPreferences: (() -> Unit)? = null,
+    onExportData: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -301,12 +302,7 @@ private fun QuickActionsCard(
                     icon = Icons.Default.CloudUpload,
                     label = "Export Data",
                     onClick = {
-                        // TODO: Export user data
-                        android.widget.Toast.makeText(
-                            context,
-                            "Exporting data...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        onExportData?.invoke()
                     }
                 )
                 QuickActionButton(

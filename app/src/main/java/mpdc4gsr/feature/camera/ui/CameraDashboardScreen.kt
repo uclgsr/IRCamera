@@ -31,6 +31,7 @@ fun CameraDashboardScreen(
     onNavigateToDualMode: () -> Unit,
     onNavigateToSettings: () -> Unit,
     onNavigateToSingleCamera: (() -> Unit)? = null,
+    onNavigateToGallery: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     LibUnifiedTheme {
@@ -59,6 +60,7 @@ fun CameraDashboardScreen(
             CameraDashboardContent(
                 onNavigateToDualMode = onNavigateToDualMode,
                 onNavigateToSingleCamera = onNavigateToSingleCamera,
+                onNavigateToGallery = onNavigateToGallery,
                 modifier = Modifier.padding(paddingValues)
             )
         }
@@ -69,6 +71,7 @@ fun CameraDashboardScreen(
 private fun CameraDashboardContent(
     onNavigateToDualMode: () -> Unit,
     onNavigateToSingleCamera: (() -> Unit)? = null,
+    onNavigateToGallery: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -387,15 +390,9 @@ private fun RecordingControlsCard() {
                     }
                 }
 
-                val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
                     onClick = {
-                        // TODO: Take photo
-                        android.widget.Toast.makeText(
-                            context,
-                            "Photo captured",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        onNavigateToSingleCamera?.invoke()
                     },
                     modifier = Modifier.weight(1f)
                 ) {
@@ -507,12 +504,7 @@ private fun PreviewGalleryCard() {
             ) {
                 OutlinedButton(
                     onClick = {
-                        // TODO: Open camera preview
-                        android.widget.Toast.makeText(
-                            context,
-                            "Preview feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        onNavigateToSingleCamera?.invoke()
                     },
                     modifier = Modifier.weight(1f)
                 ) {
@@ -523,12 +515,7 @@ private fun PreviewGalleryCard() {
 
                 OutlinedButton(
                     onClick = {
-                        // TODO: Open gallery
-                        android.widget.Toast.makeText(
-                            context,
-                            "Gallery feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        onNavigateToGallery?.invoke()
                     },
                     modifier = Modifier.weight(1f)
                 ) {
