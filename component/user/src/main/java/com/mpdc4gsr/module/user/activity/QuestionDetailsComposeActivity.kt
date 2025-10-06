@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.user.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,10 +17,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.QuestionDetailsViewModel
+
 class QuestionDetailsComposeActivity : BaseComposeActivity<QuestionDetailsViewModel>() {
     override fun createViewModel(): QuestionDetailsViewModel {
         return viewModels<QuestionDetailsViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: QuestionDetailsViewModel) {

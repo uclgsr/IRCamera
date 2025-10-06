@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui
+
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -18,6 +19,7 @@ import kotlin.system.measureTimeMillis
 
 object ComposePerformanceMonitor {
     private const val TAG = "ComposePerformance"
+
     // Performance thresholds
     private const val FRAME_BUDGET_MS = 16L // 60fps target
     const val MAX_SAMPLES = 100
@@ -103,6 +105,7 @@ data class PerformanceMetric(
             samples.removeAt(0)
         }
     }
+
     val average: Double get() = if (samples.isEmpty()) 0.0 else samples.average()
     val max: Long get() = samples.maxOrNull() ?: 0L
     val min: Long get() = samples.minOrNull() ?: 0L
@@ -185,6 +188,7 @@ object SensorDataPerformanceTracker {
             )
         }
     }
+
     fun trackThermalImageProcessing(imageSize: String, processingTimeMs: Long) {
         AppLogger.d("SensorPerformance", "Thermal image processing: $imageSize in ${processingTimeMs}ms")
         if (processingTimeMs > SENSOR_PROCESSING_CRITICAL_MS) {
@@ -194,6 +198,7 @@ object SensorDataPerformanceTracker {
             )
         }
     }
+
     fun trackNavigationPerformance(fromRoute: String, toRoute: String, transitionTimeMs: Long) {
         AppLogger.d("SensorPerformance", "Navigation from $fromRoute to $toRoute: ${transitionTimeMs}ms")
         if (transitionTimeMs > NAVIGATION_SLOW_THRESHOLD_MS) {
@@ -229,21 +234,25 @@ object ComposeMemoryOptimizer {
                 "Clear unused caches",
                 "Reduce number of concurrent operations"
             )
+
             MemoryPressureLevel.HIGH -> listOf(
                 "Optimize image loading",
                 "Use lighter data structures",
                 "Consider pagination for long lists"
             )
+
             MemoryPressureLevel.MODERATE -> listOf(
                 "Monitor memory usage trends",
                 "Consider preemptive cleanup"
             )
+
             MemoryPressureLevel.LOW -> listOf(
                 "Memory usage is optimal"
             )
         }
     }
 }
+
 enum class MemoryPressureLevel {
     LOW, MODERATE, HIGH, CRITICAL
 }

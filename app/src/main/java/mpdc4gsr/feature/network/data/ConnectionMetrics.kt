@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -11,6 +12,7 @@ class ConnectionMetrics {
         private const val TAG = "ConnectionMetrics"
         private const val PING_TIMEOUT_MS = 5000L
     }
+
     private val mutex = Mutex()
     private val connectionStartTime = AtomicLong(0)
     private val lastPingTime = AtomicLong(0)
@@ -22,6 +24,7 @@ class ConnectionMetrics {
     private val latencyHistory = mutableListOf<Long>()
     private val bandwidthHistory = mutableListOf<BandwidthSample>()
     private val maxHistorySize = 100
+
     data class BandwidthSample(
         val timestamp: Long,
         val bytesSent: Long,

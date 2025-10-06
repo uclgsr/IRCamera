@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.main.ui
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -54,6 +55,7 @@ class MainComposeActivity : ComponentActivity() {
         }
     }
 }
+
 @Composable
 fun MainApp() {
     val navController = rememberNavController()

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.config
+
 import android.content.Context
 import android.os.Build
 import android.os.Environment
@@ -6,6 +7,7 @@ import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
 import com.mpdc4gsr.libunified.app.utils.CommUtils
 import java.io.File
+
 object FileConfig {
     fun getDetectImageDir(
         context: Context,
@@ -22,6 +24,7 @@ object FileConfig {
             File(externalDir, child)
         }
     }
+
     fun getSignImageDir(
         context: Context,
         child: String,
@@ -37,8 +40,10 @@ object FileConfig {
             File(externalDir, child)
         }
     }
+
     fun getFirmwareFile(filename: String): File =
         File(ContextProvider.getContext().getExternalFilesDir("firmware"), filename)
+
     @JvmStatic
     fun getPdfDir(): String {
         return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
@@ -54,6 +59,7 @@ object FileConfig {
             Environment.DIRECTORY_DOCUMENTS + "/${CommUtils.getAppName()}/pdf"
         }
     }
+
     @JvmStatic
     val excelDir: String
         get() {
@@ -70,6 +76,7 @@ object FileConfig {
                 Environment.DIRECTORY_DOCUMENTS + "/${CommUtils.getAppName()}/excel"
             }
         }
+
     @JvmStatic
     val gallerySourDir: String
         get() {
@@ -82,6 +89,7 @@ object FileConfig {
             }
             return result
         }
+
     @JvmStatic
     val oldTc001GalleryDir: String
         get() {
@@ -94,12 +102,14 @@ object FileConfig {
             }
             return path
         }
+
     fun getGalleryDirByType(currentDirType: DirType): String =
         when (currentDirType) {
             DirType.LINE -> lineGalleryDir
             DirType.TC007 -> tc007GalleryDir
             else -> ts004GalleryDir
         }
+
     @JvmStatic
     val lineGalleryDir: String
         get() {
@@ -112,6 +122,7 @@ object FileConfig {
             }
             return path
         }
+
     @JvmStatic
     val ts004GalleryDir: String
         get() {
@@ -124,6 +135,7 @@ object FileConfig {
             }
             return path
         }
+
     @JvmStatic
     val tc007GalleryDir: String
         get() {
@@ -136,6 +148,7 @@ object FileConfig {
             }
             return path
         }
+
     @JvmStatic
     val lineIrGalleryDir: String
         get() {
@@ -149,6 +162,7 @@ object FileConfig {
             }
             return path
         }
+
     @JvmStatic
     val tc007IrGalleryDir: String
         get() {
@@ -162,6 +176,7 @@ object FileConfig {
             }
             return path
         }
+
     @JvmStatic
     val documentsDir: String
         get() {

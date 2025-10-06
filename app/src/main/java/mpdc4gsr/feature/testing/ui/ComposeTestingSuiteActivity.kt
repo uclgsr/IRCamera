@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.os.Bundle
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -25,6 +26,7 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
     companion object {
         private const val TAG = "ComposeTestingSuiteActivity"
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -33,6 +35,7 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun ComposeTestingSuiteScreen() {
@@ -139,6 +142,7 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
             }
         }
     }
+
     private suspend fun runComprehensiveTests(
         onProgress: (Float, List<TestResult>) -> Unit
     ) {

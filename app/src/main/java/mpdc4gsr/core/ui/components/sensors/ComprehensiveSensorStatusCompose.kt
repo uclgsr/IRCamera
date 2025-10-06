@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.components.sensors
+
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,6 +24,7 @@ import kotlinx.coroutines.delay
 enum class SensorType {
     THERMAL, RGB, GSR, AUDIO
 }
+
 enum class SensorStatus {
     DISCONNECTED,
     CONNECTED,
@@ -30,6 +32,7 @@ enum class SensorStatus {
     ERROR,
     SIMULATION
 }
+
 data class SensorState(
     val id: String,
     val displayName: String,
@@ -42,11 +45,13 @@ data class SensorState(
     val streamingDevices: Int = 0,
     val maxDevices: Int = 1
 )
+
 data class RecordingState(
     val isRecording: Boolean = false,
     val sessionId: String? = null,
     val startTime: Long = 0L
 )
+
 @Composable
 fun ComprehensiveSensorStatusDashboard(
     sensors: List<SensorState>,
@@ -87,6 +92,7 @@ fun ComprehensiveSensorStatusDashboard(
         }
     }
 }
+
 @Composable
 private fun OverallStatusCard(
     sensors: List<SensorState>,
@@ -124,6 +130,7 @@ private fun OverallStatusCard(
         )
     }
 }
+
 @Composable
 private fun RecordingStatusCard(recordingState: RecordingState) {
     Row(
@@ -167,6 +174,7 @@ private fun RecordingStatusCard(recordingState: RecordingState) {
         }
     }
 }
+
 @Composable
 private fun RecordingTimer(startTime: Long) {
     var duration by remember { mutableLongStateOf(0L) }
@@ -186,6 +194,7 @@ private fun RecordingTimer(startTime: Long) {
         fontWeight = FontWeight.Bold
     )
 }
+
 @Composable
 private fun SensorStatusCard(
     sensor: SensorState,
@@ -270,6 +279,7 @@ private fun SensorStatusCard(
         }
     }
 }
+
 @Composable
 private fun StatusIndicator(status: SensorStatus) {
     Box(
@@ -281,6 +291,7 @@ private fun StatusIndicator(status: SensorStatus) {
             )
     )
 }
+
 private fun getStatusColor(status: SensorStatus): Color = when (status) {
     SensorStatus.CONNECTED -> Color(0xFF4CAF50) // Green
     SensorStatus.STREAMING -> Color(0xFF2196F3) // Blue
@@ -288,6 +299,7 @@ private fun getStatusColor(status: SensorStatus): Color = when (status) {
     SensorStatus.SIMULATION -> Color(0xFFFFEB3B) // Yellow
     SensorStatus.DISCONNECTED -> Color(0xFF9E9E9E) // Gray
 }
+
 private fun getStatusText(sensor: SensorState): String {
     return when (sensor.status) {
         SensorStatus.DISCONNECTED -> "Disconnected"

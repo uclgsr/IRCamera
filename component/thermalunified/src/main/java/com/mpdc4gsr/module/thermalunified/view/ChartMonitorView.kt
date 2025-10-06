@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.view
+
 import android.content.Context
 import android.graphics.Color
 import android.os.Handler
@@ -24,8 +25,10 @@ import com.mpdc4gsr.module.thermalunified.chart.YValueFormatter
 import com.mpdc4gsr.module.thermalunified.utils.ChartTools
 import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.module.thermalunified.R as ThermalR
+
 class ChartMonitorView : LineChart, OnChartGestureListener {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(
@@ -35,10 +38,12 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
     ) {
         initChart()
     }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         mHandler.removeCallbacksAndMessages(null)
     }
+
     private val textColor by lazy { ContextCompat.getColor(context, LibR.color.chart_text) }
     private val axisChartColors by lazy { ContextCompat.getColor(context, LibR.color.chart_axis) }
     private val axisLine by lazy { ContextCompat.getColor(context, LibR.color.circle_white) }
@@ -96,6 +101,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             this.axisRight.isEnabled = false
         }
     }
+
     private var startTime = 0L
     fun addPointToChart(
         bean: ThermalEntity,
@@ -133,6 +139,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         volDataSet.addEntry(entity)
                         Log.w("123", ":$entity")
                     }
+
                     2 -> {
                         if (volDataSet == null) {
                             volDataSet = createSet(0, "line max temp")
@@ -151,6 +158,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         secondEntity.data = bean
                         secondDataSet.addEntry(secondEntity)
                     }
+
                     else -> {
                         if (volDataSet == null) {
                             volDataSet = createSet(0, "fence max temp")
@@ -187,6 +195,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             }
         }
     }
+
     private val bgChartColors =
         intArrayOf(
             R.drawable.bg_chart_fill,
@@ -205,6 +214,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             LibR.color.chart_point_min,
             LibR.color.chart_point_center,
         )
+
     private fun createSet(
         index: Int,
         label: String,
@@ -225,22 +235,28 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
         set.setDrawValues(false)
         return set
     }
+
     override fun onChartGestureStart(
         me: MotionEvent?,
         lastPerformedGesture: ChartTouchListener.ChartGesture?,
     ) {
     }
+
     override fun onChartGestureEnd(
         me: MotionEvent?,
         lastPerformedGesture: ChartTouchListener.ChartGesture?,
     ) {
     }
+
     override fun onChartLongPressed(me: MotionEvent?) {
     }
+
     override fun onChartDoubleTapped(me: MotionEvent?) {
     }
+
     override fun onChartSingleTapped(me: MotionEvent?) {
     }
+
     override fun onChartFling(
         me1: MotionEvent?,
         me2: MotionEvent?,
@@ -248,6 +264,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
         velocityY: Float,
     ) {
     }
+
     override fun onChartScale(
         me: MotionEvent?,
         scaleX: Float,
@@ -255,6 +272,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
     ) {
         highlightValue(null)
     }
+
     override fun onChartTranslate(
         me: MotionEvent?,
         dX: Float,

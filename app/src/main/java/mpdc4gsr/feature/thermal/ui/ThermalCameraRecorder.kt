@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.thermal.ui
+
 import android.content.Context
 import android.graphics.Bitmap
 import android.hardware.usb.UsbDevice
@@ -36,6 +37,7 @@ import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+
 // import ch.systemsx.cisd.hdf5.HDF5Factory // HDF5 library not available
 class ThermalCameraRecorder(
     private val context: Context,
@@ -74,6 +76,7 @@ class ThermalCameraRecorder(
                 }
             }
         }
+
         private fun checkForEnhancedThermalCapabilities(): Boolean {
             return try {
                 val modelProperty = System.getProperty("ro.product.model", "") ?: ""
@@ -102,6 +105,7 @@ class ThermalCameraRecorder(
                 return false
             }
         }
+
         private fun checkForISPLibrarySupport(): Boolean {
             return try {
                 Class.forName("com.infisense.iruvc.sdkisp.LibIRProcess")
@@ -123,6 +127,7 @@ class ThermalCameraRecorder(
                 false
             }
         }
+
         private fun checkUSBDeviceCapabilities(): Boolean {
             return try {
                 false
@@ -131,12 +136,14 @@ class ThermalCameraRecorder(
                 false
             }
         }
+
         fun getCurrentOptimalFrameRate(): Double = detectOptimalFrameRate()
         fun supportsEnhancedFrameRate(): Boolean = checkForEnhancedThermalCapabilities()
         private const val THERMAL_SENSITIVITY = 0.1
         private const val IR_TEMP_RANGE_MIN = -20.0f
         private const val IR_TEMP_RANGE_MAX = 400.0f
     }
+
     data class ThermalCameraConfig(
         val width: Int = 256,
         val height: Int = 192,
@@ -149,6 +156,7 @@ class ThermalCameraRecorder(
         val distance: Float = 1.0f,
         val temperatureRange: Pair<Float, Float> = Pair(-20.0f, 400.0f)
     )
+
     data class ThermalPerformanceMetrics(
         val averageFrameTime: Double,
         val maxFrameTime: Double,
@@ -165,6 +173,7 @@ class ThermalCameraRecorder(
         val calibrationAccuracy: Double? = null,
         val networkLatencyMs: Double? = null
     )
+
     data class ThermalFrameData(
         val temperatureMatrix: Array<FloatArray>,
         val minTemperature: Float,
@@ -190,6 +199,7 @@ class ThermalCameraRecorder(
                     reflectedTemperature == other.reflectedTemperature &&
                     timestamp == other.timestamp
         }
+
         override fun hashCode(): Int {
             var result = temperatureMatrix.contentDeepHashCode()
             result = 31 * result + minTemperature.hashCode()
@@ -203,9 +213,11 @@ class ThermalCameraRecorder(
             return result
         }
     }
+
     enum class ThermalExportFormat {
         CSV, JSON, HDF5, MATLAB
     }
+
     override val sensorId: String = sensorIdParam
     override val sensorType: String = "IR Thermal Camera"
     override val samplingRate: Double = thermalFrameRate
@@ -216,6 +228,7 @@ class ThermalCameraRecorder(
     private var ircamEngine: IrcamEngine? = null
     internal var isIRCameraConnected = false
     private var isTopdonSdkInitialized = false
+
     // Properties for real SDK data extraction
     private var lastCapturedFrame: ByteArray? = null
     private var lastFrameTimestamp: Long = 0L
@@ -242,28 +255,35 @@ class ThermalCameraRecorder(
     private var thermalFramesFile: File? = null
     private val sessionReferenceTimestampNs = AtomicLong(0)
     private val sessionStartOffsetNs = AtomicLong(0)
+
     // Thermal settings - loaded from ThermalSettingsRepository
     private val thermalSettingsRepository = ThermalSettingsRepository.getInstance(context)
     private var ambientTemperature = 25.0
     private var emissivity = 0.95
     private var reflectedTemperature = 23.0
+
     // TC001 frame capture settings
     private var saveFrameImages = false
     private var thermalImagesDirectory: File? = null
+
     @Volatile
     private var networkServer: NetworkServer? = null
+
     @Volatile
     private var enableNetworkStreaming = false
     private var networkFrameCounter = 0
     private val networkStreamingInterval: Int
         get() = maxOf(1, (thermalFrameRate / 2.0).toInt())
+
     interface ThermalPreviewCallback {
         fun onThermalFrame(bitmap: Bitmap?, temperatureData: ThermalFrameData?)
     }
+
     private var previewCallback: ThermalPreviewCallback? = null
     fun setThermalPreviewCallback(callback: ThermalPreviewCallback?) {
         this.previewCallback = callback
     }
+
     data class ThermalFrameStats(
         val timestampNs: Long,
         val frameSequence: Long,
@@ -272,24 +292,29 @@ class ThermalCameraRecorder(
         val maxTemp: Float,
         val pixelCount: Int
     )
+
     interface ThermalFrameListener {
         fun onFrameProcessed(stats: ThermalFrameStats)
         fun onError(error: String)
     }
+
     private var frameListener: ThermalFrameListener? = null
     fun setFrameListener(listener: ThermalFrameListener) {
         this.frameListener = listener
     }
+
     fun enableNetworkStreaming(networkServer: NetworkServer) {
         this.networkServer = networkServer
         this.enableNetworkStreaming = true
         AppLogger.i(TAG, "Thermal network streaming enabled")
     }
+
     fun disableNetworkStreaming() {
         this.networkServer = null
         this.enableNetworkStreaming = false
         AppLogger.i(TAG, "Thermal network streaming disabled")
     }
+
     suspend fun checkThermalCameraAvailability(): Boolean {
         return try {
             AppLogger.d(TAG, "Checking thermal camera availability...")
@@ -306,6 +331,7 @@ class ThermalCameraRecorder(
             false
         }
     }
+
     suspend fun reinitializeThermalCamera(): Boolean {
         return try {
             AppLogger.d(TAG, "Reinitializing thermal camera...")
@@ -330,6 +356,7 @@ class ThermalCameraRecorder(
             false
         }
     }
+
     suspend fun restartThermalRecording(): Boolean {
         return try {
             AppLogger.d(TAG, "Restarting thermal recording...")
@@ -363,6 +390,7 @@ class ThermalCameraRecorder(
             false
         }
     }
+
     fun getThermalSystemStatus(): ThermalSystemStatus {
         return ThermalSystemStatus(
             isConnected = isIRCameraConnected,
@@ -382,6 +410,7 @@ class ThermalCameraRecorder(
             statusMessage = generateThermalStatusMessage()
         )
     }
+
     private fun generateThermalStatusMessage(): String {
         return when {
             !hasUsbPermission -> "USB permission required for thermal camera"
@@ -393,9 +422,11 @@ class ThermalCameraRecorder(
                     thermalFrameRate
                 )
             }Hz"
+
             else -> "Thermal camera ready"
         }
     }
+
     data class ThermalSystemStatus(
         val isConnected: Boolean,
         val hasUsbPermission: Boolean,
@@ -406,12 +437,14 @@ class ThermalCameraRecorder(
         val deviceInfo: ThermalDeviceInfo?,
         val statusMessage: String
     )
+
     data class ThermalDeviceInfo(
         val productName: String,
         val vendorId: Int,
         val productId: Int,
         val isEnhanced: Boolean
     )
+
     override suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
         try {
             Log.i(
@@ -518,6 +551,7 @@ class ThermalCameraRecorder(
                             }
                         }
                     }
+
                     override fun onIRCMDCreate(ircmd: com.energy.iruvc.ircmd.IRCMD?) {
                         AppLogger.d(TAG, "IRCMD created for thermal camera")
                         ircmd?.let { ircmdInstance ->
@@ -557,18 +591,22 @@ class ThermalCameraRecorder(
                     override fun onAttach() {
                         AppLogger.i(TAG, "USB thermal camera attached - permission will be requested automatically")
                     }
+
                     override fun onGranted() {
                         AppLogger.i(TAG, "USB permission granted - camera will connect automatically")
                         hasUsbPermission = true
                     }
+
                     override fun onConnect() {
                         AppLogger.i(TAG, "USB thermal camera connected successfully")
                         isIRCameraConnected = true
                     }
+
                     override fun onDisconnect() {
                         AppLogger.w(TAG, "USB thermal camera disconnected")
                         isIRCameraConnected = false
                     }
+
                     override fun onDettach() {
                         AppLogger.w(TAG, "USB thermal camera detached")
                         isIRCameraConnected = false
@@ -578,6 +616,7 @@ class ThermalCameraRecorder(
                             isRecoverable = false
                         )
                     }
+
                     override fun onCancel() {
                         AppLogger.w(TAG, "USB permission cancelled by user")
                         hasUsbPermission = false
@@ -639,6 +678,7 @@ class ThermalCameraRecorder(
                 return@withContext false
             }
         }
+
     private suspend fun scanForThermalCameraDevicesWithPermissions(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -690,6 +730,7 @@ class ThermalCameraRecorder(
                 return@withContext false
             }
         }
+
     private suspend fun requestUsbPermissionWithCallback(device: UsbDevice): Boolean =
         withContext(Dispatchers.IO) {
             return@withContext try {
@@ -751,6 +792,7 @@ class ThermalCameraRecorder(
                 false
             }
         }
+
     private suspend fun scanForThermalCameraDevices(): Boolean = withContext(Dispatchers.IO) {
         try {
             AppLogger.i(TAG, "Scanning for thermal camera devices")
@@ -782,6 +824,7 @@ class ThermalCameraRecorder(
             return@withContext false
         }
     }
+
     private fun requestUsbPermission(device: UsbDevice) {
         AppLogger.i(TAG, "Requesting USB permission for thermal camera device: ${device.productName}")
         try {
@@ -808,6 +851,7 @@ class ThermalCameraRecorder(
             }
         }
     }
+
     private fun getActivityFromContext(context: Context): android.app.Activity? {
         return when (context) {
             is android.app.Activity -> context
@@ -820,12 +864,14 @@ class ThermalCameraRecorder(
                 }
                 unwrapped as? android.app.Activity
             }
+
             else -> {
                 AppLogger.w(TAG, "Context is not an Activity: ${context.javaClass.simpleName}")
                 null
             }
         }
     }
+
     private suspend fun initializeRealThermalCamera(device: UsbDevice): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -887,6 +933,7 @@ class ThermalCameraRecorder(
                             }
                         }
                     }
+
                     override fun onIRCMDCreate(ircmd: com.energy.iruvc.ircmd.IRCMD?) {
                         AppLogger.d(TAG, "IRCMD created for thermal camera")
                         // Configure device settings equivalent to reference implementation
@@ -937,15 +984,19 @@ class ThermalCameraRecorder(
                         override fun onAttach() {
                             AppLogger.d(TAG, "USB thermal camera attached")
                         }
+
                         override fun onGranted() {
                             AppLogger.d(TAG, "USB thermal camera permission granted")
                         }
+
                         override fun onConnect() {
                             AppLogger.d(TAG, "USB thermal camera connected")
                         }
+
                         override fun onDisconnect() {
                             AppLogger.d(TAG, "USB thermal camera disconnected")
                         }
+
                         override fun onDettach() {
                             AppLogger.w(TAG, " USB thermal camera detached")
                             isIRCameraConnected = false
@@ -955,6 +1006,7 @@ class ThermalCameraRecorder(
                                 isRecoverable = false
                             )
                         }
+
                         override fun onCancel() {
                             AppLogger.d(TAG, "USB thermal camera connection cancelled")
                         }
@@ -1035,6 +1087,7 @@ class ThermalCameraRecorder(
                 return@withContext false
             }
         }
+
     private suspend fun initializeTopdonSdk(): Boolean = withContext(Dispatchers.IO) {
         return@withContext try {
             AppLogger.i(TAG, "Pre-initializing Topdon SDK (without UVC handle)")
@@ -1046,6 +1099,7 @@ class ThermalCameraRecorder(
             false
         }
     }
+
     private suspend fun initializeIrcamEngineWithHandle(uvcCamera: UVCCamera) = withContext(Dispatchers.IO) {
         try {
             AppLogger.i(TAG, "Initializing IrcamEngine with UVC camera handle")
@@ -1131,6 +1185,7 @@ class ThermalCameraRecorder(
             AppLogger.e(TAG, "Exception during IrcamEngine initialization", e)
         }
     }
+
     private suspend fun extractRealThermalDataFromEngine(
         timestamp: Long,
         frameNumber: Long
@@ -1192,6 +1247,7 @@ class ThermalCameraRecorder(
             )
         }
     }
+
     private suspend fun extractRealThermalDataFromIRUVCTC(
         timestamp: Long,
         frameNumber: Long
@@ -1289,6 +1345,7 @@ class ThermalCameraRecorder(
             thermalData // Return original data if correction fails
         }
     }
+
     private fun generateAdvancedSimulatedThermalData(
         timestamp: Long,
         frameNumber: Long
@@ -1343,6 +1400,7 @@ class ThermalCameraRecorder(
             reflectedTemperature = reflectedTemperature.toFloat()
         )
     }
+
     private fun processRealIRFrame(
         image: ByteArray?,
         temperature: ByteArray?,
@@ -1388,6 +1446,7 @@ class ThermalCameraRecorder(
             }
         }
     }
+
     private fun processRealThermalData(
         temperatureBytes: ByteArray,
         width: Int,
@@ -1424,6 +1483,7 @@ class ThermalCameraRecorder(
             reflectedTemperature = reflectedTemperature.toFloat()
         )
     }
+
     private suspend fun saveRealIRThermalData(
         timestampRecord: TimestampRecord,
         frameNumber: Long,
@@ -1478,6 +1538,7 @@ class ThermalCameraRecorder(
             }
         }
     }
+
     private fun generateThermalPreviewBitmap(
         thermalData: ThermalFrameData,
         width: Int,
@@ -1498,6 +1559,7 @@ class ThermalCameraRecorder(
                             val ratio = normalized / 85f
                             android.graphics.Color.rgb(0, (ratio * 255).toInt(), 255)
                         }
+
                         normalized < 170 -> {
                             val ratio = (normalized - 85) / 85f
                             android.graphics.Color.rgb(
@@ -1506,6 +1568,7 @@ class ThermalCameraRecorder(
                                 (255 * (1 - ratio)).toInt()
                             )
                         }
+
                         else -> {
                             val ratio = (normalized - 170) / 85f
                             android.graphics.Color.rgb(255, (255 * (1 - ratio)).toInt(), 0)
@@ -1521,6 +1584,7 @@ class ThermalCameraRecorder(
             null
         }
     }
+
     private suspend fun sendThermalFrameOverNetwork(
         bitmap: Bitmap?,
         thermalData: ThermalFrameData,
@@ -1567,6 +1631,7 @@ class ThermalCameraRecorder(
             AppLogger.e(TAG, "Error sending thermal frame over network", e)
         }
     }
+
     // TC001 frame image saving helper
     private suspend fun saveFrameImageToPNG(
         imageData: ByteArray?,
@@ -1597,6 +1662,7 @@ class ThermalCameraRecorder(
             // Don't crash recording on image save failure
         }
     }
+
     override suspend fun startRecording(
         sessionDirectory: String,
         sessionMetadata: SessionMetadata
@@ -1604,6 +1670,7 @@ class ThermalCameraRecorder(
         this.sessionMetadata = sessionMetadata
         return startRecording(sessionDirectory)
     }
+
     override suspend fun startRecording(sessionDirectory: String): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -1676,6 +1743,7 @@ class ThermalCameraRecorder(
                 return@withContext false
             }
         }
+
     private suspend fun startSimulatedThermalRecording() = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Starting simulated thermal data generation")
         if (!isSimulationMode) {
@@ -1750,6 +1818,7 @@ class ThermalCameraRecorder(
             )
         }
     }
+
     private suspend fun generateSimulatedThermalFrame() = withContext(Dispatchers.IO) {
         val timestamp = System.nanoTime()
         val frameNumber = frameCount.incrementAndGet()
@@ -1805,6 +1874,7 @@ class ThermalCameraRecorder(
         }
         emitStatus()
     }
+
     private suspend fun generateTestThermalFrame(): ThermalFrameData? =
         withContext(Dispatchers.IO) {
             return@withContext try {
@@ -1841,6 +1911,7 @@ class ThermalCameraRecorder(
                 null
             }
         }
+
     private fun Float.format(digits: Int) = "%.${digits}f".format(this)
     private fun extractThermalDataFromBitmap(
         bitmap: Bitmap,
@@ -1886,6 +1957,7 @@ class ThermalCameraRecorder(
             reflectedTemperature = reflectedTemperature.toFloat()
         )
     }
+
     private suspend fun processRealThermalFrameData(
         thermalData: ThermalFrameData,
         frameNumber: Long,
@@ -1918,6 +1990,7 @@ class ThermalCameraRecorder(
             emitStatus()
         }
     }
+
     private suspend fun processFrameForPreviewAndNetwork(
         thermalData: ThermalFrameData,
         frameNumber: Long,
@@ -1934,6 +2007,7 @@ class ThermalCameraRecorder(
             }
         }
     }
+
     private suspend fun startRealIRCameraRecording(irCamera: IRUVCTC): Boolean {
         return try {
             AppLogger.i(TAG, " Starting enhanced real thermal camera recording")
@@ -1956,6 +2030,7 @@ class ThermalCameraRecorder(
             false
         }
     }
+
     // Continuous frame capture loop for TC001 at ~10Hz
     private fun startThermalHealthMonitor() {
         recordingScope.launch {
@@ -2002,6 +2077,7 @@ class ThermalCameraRecorder(
             AppLogger.i(TAG, "TC001 continuous frame capture loop ended")
         }
     }
+
     // Health check method to verify TC001 camera prerequisites for capture loop
     private suspend fun isThermalCameraHealthy(): Boolean = withContext(Dispatchers.IO) {
         return@withContext try {
@@ -2020,6 +2096,7 @@ class ThermalCameraRecorder(
             false
         }
     }
+
     private fun configureOptimalThermalPerformance(irCamera: IRUVCTC, targetFrameRate: Double) {
         try {
             AppLogger.d(TAG, "Configuring thermal performance for ${targetFrameRate}Hz operation")
@@ -2027,6 +2104,7 @@ class ThermalCameraRecorder(
                 targetFrameRate >= 20.0 -> {
                     AppLogger.d(TAG, "Applying high-performance thermal configuration")
                 }
+
                 else -> {
                     AppLogger.d(TAG, "Applying standard thermal configuration")
                 }
@@ -2035,6 +2113,7 @@ class ThermalCameraRecorder(
             AppLogger.w(TAG, "Error configuring thermal performance", e)
         }
     }
+
     private fun setupEnhancedFrameCallback(targetFrameRate: Double) {
         try {
             val targetIntervalMs = (1000.0 / targetFrameRate).toLong()
@@ -2091,6 +2170,7 @@ class ThermalCameraRecorder(
             AppLogger.e(TAG, "Error setting up enhanced frame callback", e)
         }
     }
+
     private fun startPerformanceMonitoring(targetFrameRate: Double) {
         recordingScope.launch {
             var lastMonitorTime = System.currentTimeMillis()
@@ -2125,6 +2205,7 @@ class ThermalCameraRecorder(
             }
         }
     }
+
     private fun handleThermalError(
         errorType: String,
         errorMessage: String,
@@ -2163,6 +2244,7 @@ class ThermalCameraRecorder(
             }
         }
     }
+
     private suspend fun attemptThermalRecovery(errorType: String, errorMessage: String) {
         try {
             AppLogger.i(TAG, "Attempting thermal camera recovery for error: $errorType")
@@ -2187,6 +2269,7 @@ class ThermalCameraRecorder(
                         }
                     }
                 }
+
                 errorType.contains("SDK") -> {
                     // Enhanced SDK recovery with multiple retry strategies
                     AppLogger.i(TAG, "Attempting enhanced SDK recovery with multiple strategies")
@@ -2215,6 +2298,7 @@ class ThermalCameraRecorder(
                         isSimulationMode = true
                     }
                 }
+
                 errorType.contains("Frame") -> {
                     // Enhanced frame capture recovery
                     AppLogger.i(TAG, "Attempting frame capture recovery with diagnostic checks")
@@ -2255,6 +2339,7 @@ class ThermalCameraRecorder(
                         AppLogger.i(TAG, " Frame capture recovery attempted with buffer reset")
                     }
                 }
+
                 errorType.contains("Permission") -> {
                     // Enhanced permission recovery
                     AppLogger.i(TAG, "Attempting permission recovery with user guidance")
@@ -2284,6 +2369,7 @@ class ThermalCameraRecorder(
                         }
                     }
                 }
+
                 errorType.contains("Temperature") -> {
                     // Enhanced temperature processing recovery
                     AppLogger.i(TAG, "Attempting temperature processing recovery")
@@ -2300,6 +2386,7 @@ class ThermalCameraRecorder(
                         isSimulationMode = true
                     }
                 }
+
                 else -> {
                     AppLogger.w(TAG, "Unknown thermal error type - applying general recovery")
                     delay(1000)
@@ -2318,6 +2405,7 @@ class ThermalCameraRecorder(
             isSimulationMode = true
         }
     }
+
     override suspend fun stopRecording(): Boolean {
         try {
             if (!_isRecording.get()) {
@@ -2356,6 +2444,7 @@ class ThermalCameraRecorder(
             return false
         }
     }
+
     private suspend fun stopRealIRCameraRecording(irCamera: IRUVCTC): Boolean {
         return try {
             AppLogger.i(TAG, "Stopping real IR camera recording using IRUVCTC")
@@ -2367,6 +2456,7 @@ class ThermalCameraRecorder(
             false
         }
     }
+
     private suspend fun setupOutputFiles() {
         val thermalDir = File(sessionDirectory)
         thermalDir.mkdirs()
@@ -2410,6 +2500,7 @@ class ThermalCameraRecorder(
         thermalFramesWriter?.writeLine(framesHeader)
         writeThermalCalibration()
     }
+
     private fun initializeSessionTiming() {
         val localStartNs = System.nanoTime()
         recordingStartTime = localStartNs
@@ -2422,6 +2513,7 @@ class ThermalCameraRecorder(
             sessionStartOffsetNs.set(0L)
         }
     }
+
     private fun alignedTimestampNs(timestampNs: Long): Long {
         return if (sessionMetadata != null) {
             timestampNs - sessionStartOffsetNs.get()
@@ -2429,6 +2521,7 @@ class ThermalCameraRecorder(
             timestampNs
         }
     }
+
     private fun sessionRelativeMs(timestampNs: Long): Long {
         val metadata = sessionMetadata
         return if (metadata != null) {
@@ -2438,11 +2531,13 @@ class ThermalCameraRecorder(
             (timestampNs - recordingStartTime) / 1_000_000
         }
     }
+
     private fun wallClockMs(timestampNs: Long): Long? {
         val metadata = sessionMetadata ?: return null
         val alignedNs = alignedTimestampNs(timestampNs)
         return metadata.monotonicToWallClock(alignedNs)
     }
+
     private suspend fun writeThermalCalibration() {
         val calibrationFile = File(sessionDirectory, CALIBRATION_FILENAME)
         val deviceInfo = if (isSimulationMode) {
@@ -2564,6 +2659,7 @@ class ThermalCameraRecorder(
         """.trimIndent()
         calibrationFile.writeText(calibrationData)
     }
+
     override suspend fun addSyncMarker(
         markerType: String,
         timestampNs: Long,
@@ -2589,6 +2685,7 @@ class ThermalCameraRecorder(
             emitError(ErrorType.SYNC_FAILED, "IR thermal sync marker failed: ${e.message}")
         }
     }
+
     private fun getFirmwareVersion(): String {
         return try {
             if (isSimulationMode) {
@@ -2604,6 +2701,7 @@ class ThermalCameraRecorder(
             "Unknown - Error Reading Firmware"
         }
     }
+
     private fun getDeviceSerialNumber(): String {
         return try {
             if (isSimulationMode) {
@@ -2622,6 +2720,7 @@ class ThermalCameraRecorder(
             "ERROR-READING-SERIAL"
         }
     }
+
     fun getThermalRecordingStatistics(): ThermalRecordingStats {
         return ThermalRecordingStats(
             totalFramesCaptured = frameCount.get(),
@@ -2640,6 +2739,7 @@ class ThermalCameraRecorder(
             qualityScore = calculateCurrentQualityScore()
         )
     }
+
     private fun calculateCurrentQualityScore(): Double {
         return try {
             var score = 0.0
@@ -2658,6 +2758,7 @@ class ThermalCameraRecorder(
             0.5
         }
     }
+
     data class ThermalRecordingStats(
         val totalFramesCaptured: Long,
         val recordingDurationMs: Long,
@@ -2671,6 +2772,7 @@ class ThermalCameraRecorder(
         val temperatureRangeMax: Float,
         val qualityScore: Double
     )
+
     suspend fun rescanForThermalCamera(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -2731,6 +2833,7 @@ class ThermalCameraRecorder(
             }
         }
     }
+
     private fun loadThermalSettings() {
         try {
             val settings = thermalSettingsRepository.getSettings()
@@ -2740,6 +2843,7 @@ class ThermalCameraRecorder(
             AppLogger.e(TAG, "Failed to load thermal settings, using defaults", e)
         }
     }
+
     private fun observeSettingsChanges() {
         recordingScope.launch {
             thermalSettingsRepository.thermalSettings.collectLatest { settings ->
@@ -2748,6 +2852,7 @@ class ThermalCameraRecorder(
             }
         }
     }
+
     fun updateEmissivity(newEmissivity: Double) {
         if (newEmissivity in 0.1..1.0) {
             emissivity = newEmissivity
@@ -2760,6 +2865,7 @@ class ThermalCameraRecorder(
             AppLogger.w(TAG, "Invalid emissivity value: $newEmissivity (must be between 0.1 and 1.0)")
         }
     }
+
     fun updateAmbientTemperature(newTemp: Double) {
         if (newTemp in -50.0..100.0) {
             ambientTemperature = newTemp
@@ -2772,6 +2878,7 @@ class ThermalCameraRecorder(
             AppLogger.w(TAG, "Invalid ambient temperature: $newTemp (must be between -50 and 100)")
         }
     }
+
     fun updateReflectedTemperature(newTemp: Double) {
         if (newTemp in -50.0..100.0) {
             reflectedTemperature = newTemp
@@ -2780,6 +2887,7 @@ class ThermalCameraRecorder(
             AppLogger.w(TAG, "Invalid reflected temperature: $newTemp (must be between -50 and 100)")
         }
     }
+
     fun getCurrentThermalSettings(): ThermalSettings {
         return ThermalSettings(
             emissivity = emissivity.toFloat(),
@@ -2787,11 +2895,13 @@ class ThermalCameraRecorder(
             reflectedTemperature = reflectedTemperature.toFloat()
         )
     }
+
     data class ThermalSettings(
         val emissivity: Float,
         val ambientTemperature: Float,
         val reflectedTemperature: Float
     )
+
     override suspend fun cleanup() {
         try {
             if (_isRecording.get()) {
@@ -2831,6 +2941,7 @@ class ThermalCameraRecorder(
             AppLogger.e(TAG, "Thermal camera cleanup failed", e)
         }
     }
+
     private fun observeDeviceEvents() {
         recordingScope.launch {
             DeviceEventManager.deviceConnectionState.collectLatest { state ->
@@ -2845,6 +2956,7 @@ class ThermalCameraRecorder(
             }
         }
     }
+
     private fun onDeviceConnectionStateChanged(isConnect: Boolean, device: android.hardware.usb.UsbDevice?) {
         try {
             Log.d(
@@ -2944,6 +3056,7 @@ class ThermalCameraRecorder(
             AppLogger.e(TAG, "Error handling device connection event", e)
         }
     }
+
     private fun onDevicePermissionRequested(device: android.hardware.usb.UsbDevice) {
         try {
             AppLogger.d(TAG, "USB permission event for device: ${device.productName}")
@@ -2986,6 +3099,7 @@ class ThermalCameraRecorder(
             AppLogger.e(TAG, "Error handling device permission event", e)
         }
     }
+
     override fun getStatusFlow(): Flow<RecordingStatus> = _statusFlow.asSharedFlow()
     override fun getErrorFlow(): Flow<SensorError> = _errorFlow.asSharedFlow()
     override fun getRecordingStats(): RecordingStats {
@@ -3004,14 +3118,17 @@ class ThermalCameraRecorder(
             lastSampleTimestampNs = currentTime
         )
     }
+
     private fun calculateStorageUsed(): Double {
         val dataSize = thermalDataFile?.length() ?: 0L
         val framesSize = thermalFramesFile?.length() ?: 0L
         return (dataSize + framesSize) / (1024.0 * 1024.0)
     }
+
     private fun getSyncMarkerCount(): Int {
         return 0
     }
+
     private suspend fun emitStatus() {
         val status = RecordingStatus(
             sensorId = sensorId,
@@ -3024,6 +3141,7 @@ class ThermalCameraRecorder(
         )
         _statusFlow.emit(status)
     }
+
     private suspend fun emitError(
         errorType: ErrorType,
         message: String,
@@ -3039,6 +3157,7 @@ class ThermalCameraRecorder(
         )
         _errorFlow.emit(error)
     }
+
     fun configureThermalDevice(
         emissivity: Double = 0.95,
         temperatureRange: Pair<Float, Float> = Pair(-20.0f, 400.0f),
@@ -3078,6 +3197,7 @@ class ThermalCameraRecorder(
             false
         }
     }
+
     fun applyAdvancedConfig(config: ThermalCameraConfig): Boolean {
         return try {
             AppLogger.i(TAG, "Applying advanced thermal camera configuration")
@@ -3100,6 +3220,7 @@ class ThermalCameraRecorder(
             false
         }
     }
+
     fun getPerformanceMetrics(): ThermalPerformanceMetrics {
         return try {
             val currentTime = System.nanoTime()
@@ -3137,6 +3258,7 @@ class ThermalCameraRecorder(
             performanceMetrics
         }
     }
+
     private suspend fun captureRealThermalFrameWithErrorHandling(): Boolean =
         withContext(Dispatchers.IO) {
             var retryCount = 0
@@ -3177,6 +3299,7 @@ class ThermalCameraRecorder(
             }
             return@withContext false
         }
+
     private suspend fun captureRealThermalFrame(): Boolean = withContext(Dispatchers.IO) {
         return@withContext try {
             if (isIRCameraConnected && !isSimulationMode && ircamEngine != null) {
@@ -3191,6 +3314,7 @@ class ThermalCameraRecorder(
             false
         }
     }
+
     fun updateCalibration(
         ambientTemp: Double,
         emissivity: Double,
@@ -3203,6 +3327,7 @@ class ThermalCameraRecorder(
             "Thermal calibration updated: ambient=$ambientTemp°C, emissivity=$emissivity, reflected=$reflectedTemp°C"
         )
     }
+
     suspend fun exportThermalData(
         outputDir: String,
         format: ThermalExportFormat,
@@ -3225,6 +3350,7 @@ class ThermalCameraRecorder(
             false
         }
     }
+
     private fun exportToCSV(exportDir: File, includeImages: Boolean): Boolean {
         return try {
             val csvFile = File(exportDir, "thermal_data.csv")
@@ -3263,6 +3389,7 @@ class ThermalCameraRecorder(
             false
         }
     }
+
     private fun exportToJSON(exportDir: File, includeImages: Boolean): Boolean {
         return try {
             val jsonFile = File(exportDir, "thermal_data.json")
@@ -3280,6 +3407,7 @@ class ThermalCameraRecorder(
             false
         }
     }
+
     private fun exportToHDF5(exportDir: File, includeImages: Boolean): Boolean {
         return try {
             AppLogger.i(TAG, "Starting HDF5 export of thermal data")
@@ -3364,6 +3492,7 @@ class ThermalCameraRecorder(
             false
         }
     }
+
     private fun exportToMatlab(exportDir: File, includeImages: Boolean): Boolean {
         return try {
             val matFile = File(exportDir, "thermal_data.m")

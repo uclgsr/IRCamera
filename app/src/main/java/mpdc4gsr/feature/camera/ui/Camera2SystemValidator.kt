@@ -1,13 +1,16 @@
 package mpdc4gsr.feature.camera.ui
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 import mpdc4gsr.feature.camera.data.ModeManager
+
 class Camera2SystemValidator(private val context: Context) {
     companion object {
         private const val TAG = "Camera2SystemValidator"
     }
+
     suspend fun validateSystem(): ValidationResult {
         val results = mutableListOf<String>()
         var allPassed = true
@@ -51,6 +54,7 @@ class Camera2SystemValidator(private val context: Context) {
         }
         return ValidationResult(allPassed, results)
     }
+
     private fun validateArchitectureComponents(): Boolean {
         return try {
             Class.forName("com.mpdc4gsr.camera.Camera2System")
@@ -66,6 +70,7 @@ class Camera2SystemValidator(private val context: Context) {
             false
         }
     }
+
     private fun validateModeSwitching(): Boolean {
         return try {
             val modeManager = ModeManager()
@@ -79,6 +84,7 @@ class Camera2SystemValidator(private val context: Context) {
             false
         }
     }
+
     private fun validateFastSessionSwitching(): Boolean {
         return try {
             val cameraControllerClass =
@@ -95,6 +101,7 @@ class Camera2SystemValidator(private val context: Context) {
             false
         }
     }
+
     private fun validateSamsungCompatibility(): Boolean {
         return try {
             val deviceCapsClass = Class.forName("com.mpdc4gsr.camera.core.DeviceCaps")
@@ -109,6 +116,7 @@ class Camera2SystemValidator(private val context: Context) {
             false
         }
     }
+
     private fun validateStage3Level3Support(): Boolean {
         return try {
             // Instead of using brittle reflection, test actual functionality
@@ -166,6 +174,7 @@ class Camera2SystemValidator(private val context: Context) {
             false
         }
     }
+
     data class ValidationResult(
         val allTestsPassed: Boolean,
         val results: List<String>,

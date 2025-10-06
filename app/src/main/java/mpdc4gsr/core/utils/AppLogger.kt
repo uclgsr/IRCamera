@@ -1,6 +1,8 @@
 package mpdc4gsr.core.utils
+
 import android.util.Log
 import mpdc4gsr.core.StructuredLogger
+
 object AppLogger {
     enum class LogLevel {
         VERBOSE,
@@ -9,6 +11,7 @@ object AppLogger {
         WARN,
         ERROR,
     }
+
     private var minLogLevel = LogLevel.DEBUG
     private var enableStructuredLogging = false
     private var structuredLogger: StructuredLogger? = null
@@ -21,24 +24,31 @@ object AppLogger {
         enableStructuredLogging = enableStructured
         structuredLogger = structuredLoggerInstance
     }
+
     fun setMinLogLevel(level: LogLevel) {
         minLogLevel = level
     }
+
     fun v(tag: String, message: String, throwable: Throwable? = null) {
         log(LogLevel.VERBOSE, tag, message, throwable)
     }
+
     fun d(tag: String, message: String, throwable: Throwable? = null) {
         log(LogLevel.DEBUG, tag, message, throwable)
     }
+
     fun i(tag: String, message: String, throwable: Throwable? = null, component: String? = null) {
         log(LogLevel.INFO, tag, message, throwable, component)
     }
+
     fun w(tag: String, message: String, throwable: Throwable? = null, component: String? = null) {
         log(LogLevel.WARN, tag, message, throwable, component)
     }
+
     fun e(tag: String, message: String, throwable: Throwable? = null, component: String? = null) {
         log(LogLevel.ERROR, tag, message, throwable, component)
     }
+
     private fun log(
         level: LogLevel,
         tag: String,
@@ -58,9 +68,11 @@ object AppLogger {
             logToStructured(level, component ?: tag, message, throwable)
         }
     }
+
     private fun shouldLog(level: LogLevel): Boolean {
         return level.ordinal >= minLogLevel.ordinal
     }
+
     private fun logToStructured(
         level: LogLevel,
         component: String,

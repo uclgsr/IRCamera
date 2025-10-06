@@ -1,9 +1,11 @@
 package com.mpdc4gsr.module.thermalunified.adapter
+
 import android.content.Context
 import android.util.AttributeSet
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+
 class MenuRecyclerView : RecyclerView {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -12,6 +14,7 @@ class MenuRecyclerView : RecyclerView {
         attrs,
         defStyleAttr,
     )
+
     fun initType(type: Int) {
         val span =
             when (type) {

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -44,9 +45,11 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
             context.startActivity(intent)
         }
     }
+
     override fun createViewModel(): GSRPlotViewModel {
         return viewModels<GSRPlotViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: GSRPlotViewModel) {
@@ -112,6 +115,7 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
         }
     }
 }
+
 @Composable
 private fun GSRPlotContent(
     sessionId: String,
@@ -153,12 +157,14 @@ private fun GSRPlotContent(
         ExportOptionsCard(context = context)
     }
 }
+
 enum class VisualizationType {
     LINE_CHART,
     SCATTER_PLOT,
     HISTOGRAM,
     HEATMAP
 }
+
 enum class TimeRange {
     ALL,
     LAST_MINUTE,
@@ -166,6 +172,7 @@ enum class TimeRange {
     LAST_10_MINUTES,
     CUSTOM
 }
+
 @Composable
 private fun VisualizationControlsCard(
     selectedVisualization: VisualizationType,
@@ -269,6 +276,7 @@ private fun VisualizationControlsCard(
         }
     }
 }
+
 @Composable
 private fun MainPlotCard(
     visualizationType: VisualizationType,
@@ -339,6 +347,7 @@ private fun MainPlotCard(
                             .height(300.dp)
                     )
                 }
+
                 VisualizationType.SCATTER_PLOT -> {
                     GSRScatterPlot(
                         modifier = Modifier
@@ -346,6 +355,7 @@ private fun MainPlotCard(
                             .height(300.dp)
                     )
                 }
+
                 VisualizationType.HISTOGRAM -> {
                     GSRHistogram(
                         modifier = Modifier
@@ -353,6 +363,7 @@ private fun MainPlotCard(
                             .height(300.dp)
                     )
                 }
+
                 VisualizationType.HEATMAP -> {
                     GSRHeatmap(
                         modifier = Modifier
@@ -366,6 +377,7 @@ private fun MainPlotCard(
         }
     }
 }
+
 @Composable
 private fun GSRLineChart(modifier: Modifier = Modifier) {
     val primaryColor = MaterialTheme.colorScheme.primary
@@ -380,6 +392,7 @@ private fun GSRLineChart(modifier: Modifier = Modifier) {
         drawGSRLineChart(this, primaryColor, secondaryColor)
     }
 }
+
 private fun drawGSRLineChart(drawScope: DrawScope, primaryColor: Color, secondaryColor: Color) {
     with(drawScope) {
         val width = size.width
@@ -428,6 +441,7 @@ private fun drawGSRLineChart(drawScope: DrawScope, primaryColor: Color, secondar
         }
     }
 }
+
 @Composable
 private fun GSRScatterPlot(modifier: Modifier = Modifier) {
     val primaryColor = MaterialTheme.colorScheme.primary
@@ -441,6 +455,7 @@ private fun GSRScatterPlot(modifier: Modifier = Modifier) {
         drawGSRScatterPlot(this, primaryColor)
     }
 }
+
 private fun drawGSRScatterPlot(drawScope: DrawScope, primaryColor: Color) {
     with(drawScope) {
         val width = size.width
@@ -474,6 +489,7 @@ private fun drawGSRScatterPlot(drawScope: DrawScope, primaryColor: Color) {
         }
     }
 }
+
 @Composable
 private fun GSRHistogram(modifier: Modifier = Modifier) {
     val primaryColor = MaterialTheme.colorScheme.primary
@@ -487,6 +503,7 @@ private fun GSRHistogram(modifier: Modifier = Modifier) {
         drawGSRHistogram(this, primaryColor)
     }
 }
+
 private fun drawGSRHistogram(drawScope: DrawScope, primaryColor: Color) {
     with(drawScope) {
         val width = size.width
@@ -520,6 +537,7 @@ private fun drawGSRHistogram(drawScope: DrawScope, primaryColor: Color) {
         }
     }
 }
+
 @Composable
 private fun GSRHeatmap(modifier: Modifier = Modifier) {
     val primaryColor = MaterialTheme.colorScheme.primary
@@ -533,6 +551,7 @@ private fun GSRHeatmap(modifier: Modifier = Modifier) {
         drawGSRHeatmap(this, primaryColor)
     }
 }
+
 private fun drawGSRHeatmap(drawScope: DrawScope, primaryColor: Color) {
     with(drawScope) {
         val width = size.width
@@ -553,6 +572,7 @@ private fun drawGSRHeatmap(drawScope: DrawScope, primaryColor: Color) {
         }
     }
 }
+
 @Composable
 private fun PlotLegend() {
     Row(
@@ -564,6 +584,7 @@ private fun PlotLegend() {
         LegendItem("Threshold", MaterialTheme.colorScheme.tertiary)
     }
 }
+
 @Composable
 private fun LegendItem(
     label: String,
@@ -584,6 +605,7 @@ private fun LegendItem(
         )
     }
 }
+
 @Composable
 private fun StatisticsCard(sessionId: String) {
     Card(
@@ -621,6 +643,7 @@ private fun StatisticsCard(sessionId: String) {
         }
     }
 }
+
 @Composable
 private fun StatisticItem(
     label: String,
@@ -642,6 +665,7 @@ private fun StatisticItem(
         )
     }
 }
+
 @Composable
 private fun DataAnalysisToolsCard(context: android.content.Context) {
     Card(
@@ -731,6 +755,7 @@ private fun DataAnalysisToolsCard(context: android.content.Context) {
         }
     }
 }
+
 @Composable
 private fun ExportOptionsCard(context: android.content.Context) {
     Card(
@@ -785,6 +810,7 @@ private fun ExportOptionsCard(context: android.content.Context) {
         }
     }
 }
+
 // Helper functions for generating sample data
 private fun generateSampleGSRData(points: Int): List<Float> {
     return (0 until points).map { i ->
@@ -793,12 +819,14 @@ private fun generateSampleGSRData(points: Int): List<Float> {
         (baseValue + noise).coerceIn(0f, 1f)
     }
 }
+
 private fun generateHistogramData(bins: Int): List<Float> {
     return (0 until bins).map { i ->
         val centerValue = i.toFloat() / bins
         kotlin.math.exp(-((centerValue - 0.5f) * (centerValue - 0.5f)) / 0.2f).toFloat()
     }
 }
+
 class GSRPlotViewModel : AppBaseViewModel() {
     // ViewModel implementation for managing plot data, zoom state, filters, etc.
     // Future implementation would include:

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.utils
+
 import android.util.Log
 import kotlinx.coroutines.*
 import java.io.BufferedWriter
@@ -8,6 +9,7 @@ import java.io.IOException
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+
 class UnifiedDataWriterUtils(
     private val outputFile: File,
     private val bufferSize: Int = 8192,
@@ -28,6 +30,7 @@ class UnifiedDataWriterUtils(
             Log.d(TAG, "BufferedDataWriter started for ${outputFile.name}")
         }
     }
+
     fun stop() {
         if (isRunning.compareAndSet(true, false)) {
             writerJob?.cancel()
@@ -37,6 +40,7 @@ class UnifiedDataWriterUtils(
             Log.d(TAG, "BufferedDataWriter stopped for ${outputFile.name}")
         }
     }
+
     fun writeData(data: String) {
         if (isRunning.get()) {
             if (!dataQueue.offer(data)) {
@@ -44,6 +48,7 @@ class UnifiedDataWriterUtils(
             }
         }
     }
+
     fun writeCSVRow(vararg values: Any) {
         val csvLine = values.joinToString(",") { value ->
             when (value) {
@@ -53,15 +58,18 @@ class UnifiedDataWriterUtils(
         }
         writeData(csvLine)
     }
+
     fun writeCSVHeader(vararg headers: String) {
         writeCSVRow(*headers)
     }
+
     data class WriterStats(
         val bytesWritten: Long,
         val linesWritten: Long,
         val queueSize: Int,
         val isRunning: Boolean
     )
+
     fun getStats(): WriterStats {
         return WriterStats(
             bytesWritten = bytesWritten.get(),
@@ -70,6 +78,7 @@ class UnifiedDataWriterUtils(
             isRunning = isRunning.get()
         )
     }
+
     private suspend fun startWriting() {
         var bufferedWriter: BufferedWriter? = null
         try {
@@ -115,6 +124,7 @@ class UnifiedDataWriterUtils(
             }
         }
     }
+
     private fun writeBatch(writer: BufferedWriter, batch: List<String>) {
         for (data in batch) {
             writer.write(data)
@@ -123,6 +133,7 @@ class UnifiedDataWriterUtils(
             linesWritten.incrementAndGet()
         }
     }
+
     private suspend fun flushAll() = withContext(Dispatchers.IO) {
         try {
             if (outputFile.exists()) {
@@ -139,6 +150,7 @@ class UnifiedDataWriterUtils(
             Log.e(TAG, "Error flushing remaining data", e)
         }
     }
+
     // Static utility methods for simple file operations
     companion object {
         private const val TAG = "UnifiedDataWriter"
@@ -150,6 +162,7 @@ class UnifiedDataWriterUtils(
                 Log.e(TAG, "Error writing to file: ${file.name}", e)
             }
         }
+
         fun writeCSVToFile(file: File, headers: Array<String>, rows: List<Array<Any>>) {
             try {
                 file.parentFile?.mkdirs()
@@ -174,6 +187,7 @@ class UnifiedDataWriterUtils(
                 Log.e(TAG, "Error writing CSV to file: ${file.name}", e)
             }
         }
+
         fun createWriter(
             outputFile: File,
             bufferSize: Int = 8192,

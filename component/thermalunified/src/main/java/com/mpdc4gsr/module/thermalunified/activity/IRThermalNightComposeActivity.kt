@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,10 +19,12 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+
 class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewModel>() {
     override fun createViewModel(): IRThermalNightViewModel {
         return IRThermalNightViewModel()
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRThermalNightViewModel) {
@@ -94,6 +97,7 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
             }
         }
     }
+
     @Composable
     private fun IRThermalNightContent(
         viewModel: IRThermalNightViewModel,
@@ -266,7 +270,7 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = {  },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF58A6FF)
@@ -297,4 +301,5 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
         }
     }
 }
+
 class IRThermalNightViewModel : BaseViewModel()

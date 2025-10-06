@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.user.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,10 +22,12 @@ import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.utils.Constants
 import com.mpdc4gsr.module.user.viewmodel.ElectronicManualViewModel
+
 class ElectronicManualComposeActivity : BaseComposeActivity<ElectronicManualViewModel>() {
     override fun createViewModel(): ElectronicManualViewModel {
         return viewModels<ElectronicManualViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ElectronicManualViewModel) {
@@ -73,6 +76,7 @@ class ElectronicManualComposeActivity : BaseComposeActivity<ElectronicManualView
             }
         }
     }
+
     private fun handleOptionClick(isTS001: Boolean, isBookMode: Boolean) {
         if (isTS001) {
             if (isBookMode) {
@@ -101,6 +105,7 @@ class ElectronicManualComposeActivity : BaseComposeActivity<ElectronicManualView
         }
     }
 }
+
 @Composable
 private fun ManualOptionItem(
     option: ElectronicManualViewModel.ManualOption,

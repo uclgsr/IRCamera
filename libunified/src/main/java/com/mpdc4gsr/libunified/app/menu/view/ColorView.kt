@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.menu.view
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -12,6 +13,7 @@ import androidx.core.content.ContextCompat
 import com.mpdc4gsr.libunified.compat.dpToPx
 import com.mpdc4gsr.libunified.compat.spToPx
 import com.mpdc4gsr.libunified.R
+
 class ColorView : View {
     var colors: IntArray = intArrayOf(0xfffbda00.toInt(), 0xffea0e0e.toInt(), 0xff6907af.toInt())
     var positions: FloatArray = floatArrayOf(0f, 0.5f, 1f)
@@ -21,6 +23,7 @@ class ColorView : View {
     private var shaderSelectNot =
         LinearGradient(0f, 0f, 0f, 0f, colors, positions, Shader.TileMode.CLAMP)
     private val triangleDrawable: Drawable
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
@@ -29,6 +32,7 @@ class ColorView : View {
         defStyleAttr,
         0
     )
+
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -43,6 +47,7 @@ class ColorView : View {
         paint.color = 0xffffffff.toInt()
         triangleDrawable = ContextCompat.getDrawable(context, R.drawable.ic_color_select_svg)!!
     }
+
     @SuppressLint("DrawAllocation")
     override fun onMeasure(
         widthMeasureSpec: Int,
@@ -74,6 +79,7 @@ class ColorView : View {
             height
         )
     }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val radius: Float = 10f.dpToPx(context).toFloat()
@@ -121,6 +127,7 @@ class ColorView : View {
             )
         }
     }
+
     fun refreshColor(
         colors: IntArray,
         positions: FloatArray,
@@ -130,6 +137,7 @@ class ColorView : View {
         refreshShader()
         invalidate()
     }
+
     private fun refreshShader() {
         val strokeSize: Float = 2f.dpToPx(context).toFloat() // Border width 2dp
         val barHeight: Int =

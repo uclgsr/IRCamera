@@ -1,4 +1,5 @@
 package mpdc4gsr.tests
+
 import android.hardware.usb.UsbDevice
 import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import io.mockk.mockk
@@ -10,23 +11,28 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+
 @OptIn(ExperimentalCoroutinesApi::class)
 class DeviceEventManagementTest {
     private lateinit var mockDevice: UsbDevice
+
     @Before
     fun setUp() {
         mockDevice = mockk(relaxed = true)
     }
+
     @Test
     fun `deviceConnectionState initial value is null`() = runTest {
         val initialState = DeviceEventManager.deviceConnectionState.value
         assertNull("Initial device connection state should be null", initialState)
     }
+
     @Test
     fun `socketConnectionState initial value is null`() = runTest {
         val initialState = DeviceEventManager.socketConnectionState.value
         assertNull("Initial socket connection state should be null", initialState)
     }
+
     @Test
     fun `emitDeviceConnection updates deviceConnectionState`() = runTest {
         val testDispatcher = UnconfinedTestDispatcher(testScheduler)
@@ -45,6 +51,7 @@ class DeviceEventManagementTest {
         assertEquals("Device should match mock device", mockDevice, state.device)
         job.cancel()
     }
+
     @Test
     fun `emitDeviceConnection with null device`() = runTest {
         DeviceEventManager.emitDeviceConnection(false, null)
@@ -53,6 +60,7 @@ class DeviceEventManagementTest {
         assertFalse("Device should be disconnected", state!!.isConnected)
         assertNull("Device should be null", state.device)
     }
+
     @Test
     fun `emitSocketConnection updates socketConnectionState`() = runTest {
         DeviceEventManager.emitSocketConnection(true, false)
@@ -61,6 +69,7 @@ class DeviceEventManagementTest {
         assertTrue("Socket should be connected", state!!.isConnected)
         assertFalse("Should not be TS004", state.isTS004)
     }
+
     @Test
     fun `emitSocketConnection with TS004 flag`() = runTest {
         DeviceEventManager.emitSocketConnection(true, true)
@@ -69,6 +78,7 @@ class DeviceEventManagementTest {
         assertTrue("Socket should be connected", state!!.isConnected)
         assertTrue("Should be TS004", state.isTS004)
     }
+
     @Test
     fun `emitDeviceConnectionSync updates state synchronously`() = runTest {
         DeviceEventManager.emitDeviceConnectionSync(true, mockDevice)
@@ -77,6 +87,7 @@ class DeviceEventManagementTest {
         assertTrue("Device should be connected", state!!.isConnected)
         assertEquals("Device should match mock device", mockDevice, state.device)
     }
+
     @Test
     fun `emitSocketConnectionSync updates state synchronously`() = runTest {
         DeviceEventManager.emitSocketConnectionSync(false, false)
@@ -85,6 +96,7 @@ class DeviceEventManagementTest {
         assertFalse("Socket should be disconnected", state!!.isConnected)
         assertFalse("Should not be TS004", state.isTS004)
     }
+
     @Test
     fun `emitDevicePermissionRequest emits to SharedFlow`() = runTest {
         val testDispatcher = UnconfinedTestDispatcher(testScheduler)
@@ -99,6 +111,7 @@ class DeviceEventManagementTest {
         assertEquals("Collected device should match mock", mockDevice, collectedDevices[0])
         job.cancel()
     }
+
     @Test
     fun `emitDevicePermissionRequestSync emits to SharedFlow synchronously`() = runTest {
         val testDispatcher = UnconfinedTestDispatcher(testScheduler)
@@ -114,6 +127,7 @@ class DeviceEventManagementTest {
         assertEquals("Collected device should match mock", mockDevice, collectedDevices[0])
         job.cancel()
     }
+
     @Test
     fun `multiple emissions update state correctly`() = runTest {
         val device1 = mockk<UsbDevice>(relaxed = true)
@@ -130,6 +144,7 @@ class DeviceEventManagementTest {
         assertEquals("Second device should be set", device2, state?.device)
         assertTrue("Should be connected", state?.isConnected ?: false)
     }
+
     @Test
     fun `DeviceConnectionState data class equality`() {
         val state1 = DeviceEventManager.DeviceConnectionState(true, mockDevice)
@@ -138,6 +153,7 @@ class DeviceEventManagementTest {
         assertEquals("Same states should be equal", state1, state2)
         assertNotEquals("Different states should not be equal", state1, state3)
     }
+
     @Test
     fun `SocketConnectionState data class equality`() {
         val state1 = DeviceEventManager.SocketConnectionState(true, false)
@@ -146,6 +162,7 @@ class DeviceEventManagementTest {
         assertEquals("Same states should be equal", state1, state2)
         assertNotEquals("Different states should not be equal", state1, state3)
     }
+
     @Test
     fun `deviceConnectionState is a cold StateFlow`() = runTest {
         DeviceEventManager.emitDeviceConnection(true, mockDevice)
@@ -153,6 +170,7 @@ class DeviceEventManagementTest {
         val state2 = DeviceEventManager.deviceConnectionState.first()
         assertEquals("StateFlow should provide same value on multiple collections", state1, state2)
     }
+
     @Test
     fun `socket connection state transitions correctly`() = runTest {
         DeviceEventManager.emitSocketConnection(false, false)

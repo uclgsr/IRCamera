@@ -1,4 +1,5 @@
 package mpdc4gsr.tests
+
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -17,9 +18,11 @@ class GSRBluetoothDiscoveryTest {
     private lateinit var mockBluetoothManager: BluetoothManager
     private lateinit var mockBluetoothAdapter: BluetoothAdapter
     private lateinit var mockBluetoothDevice: BluetoothDevice
+
     // Target Shimmer3 GSR+ device characteristics
     private val shimmerDeviceName = "Shimmer3-GSR"
     private val shimmerMacAddress = "00:06:66:12:34:56"
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
@@ -35,6 +38,7 @@ class GSRBluetoothDiscoveryTest {
         every { mockBluetoothManager.adapter } returns mockBluetoothAdapter
         every { mockBluetoothAdapter.isEnabled } returns true
     }
+
     @Test
     fun `should detect required BLE permissions for GSR device discovery`() {
         // Test specific BLE permissions required for Shimmer3 GSR+
@@ -61,6 +65,7 @@ class GSRBluetoothDiscoveryTest {
         assertTrue("Bluetooth permission required for device access", hasBluetoothPermission)
         assertTrue("Bluetooth admin permission required for pairing", hasBluetoothAdminPermission)
     }
+
     @Test
     fun `should validate Shimmer device characteristics during discovery`() {
         // Test real Shimmer3 GSR+ device identification
@@ -81,6 +86,7 @@ class GSRBluetoothDiscoveryTest {
             mockBluetoothDevice.type
         )
     }
+
     @Test
     fun `should handle Bluetooth adapter state changes`() = runTest {
         // Test Bluetooth adapter state handling during device discovery
@@ -93,6 +99,7 @@ class GSRBluetoothDiscoveryTest {
         // Verify proper error handling when Bluetooth disabled
         // Real implementation should handle this gracefully without crashing
     }
+
     @Test
     fun `should validate device connection attempt with proper service discovery`() = runTest {
         // Test actual Shimmer device connection process
@@ -108,6 +115,7 @@ class GSRBluetoothDiscoveryTest {
         // Connection attempt should include proper service discovery
         // Real implementation validates Shimmer-specific GATT services
     }
+
     @Test
     fun `should implement exponential backoff for connection retries`() = runTest {
         // Test connection retry logic with timing validation
@@ -133,6 +141,7 @@ class GSRBluetoothDiscoveryTest {
             )
         }
     }
+
     @Test
     fun `should validate GSR data packet structure for Shimmer3`() {
         // Test Shimmer3 GSR+ specific data packet validation
@@ -147,6 +156,7 @@ class GSRBluetoothDiscoveryTest {
         // Real implementation should parse actual Shimmer ObjectCluster data
         // and validate timestamp, GSR resistance, and conductance values
     }
+
     @Test
     fun `should handle device disconnection detection`() = runTest {
         // Test proper disconnection detection and cleanup
@@ -165,6 +175,7 @@ class GSRBluetoothDiscoveryTest {
         // 3. Attempt automatic reconnection
         // 4. Update UI with connection status
     }
+
     @Test
     fun `should validate resource cleanup after discovery`() {
         // Test proper resource management during BLE operations

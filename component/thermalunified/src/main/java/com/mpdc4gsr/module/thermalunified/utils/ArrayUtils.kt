@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.utils
+
 object ArrayUtils {
     fun getMaxIndex(
         data: FloatArray,
@@ -12,6 +13,7 @@ object ArrayUtils {
             }
         return index
     }
+
     fun getMinIndex(
         data: FloatArray,
         rotateType: Int = 0,
@@ -24,6 +26,7 @@ object ArrayUtils {
             }
         return index
     }
+
     fun matrixRotate(
         srcData: FloatArray,
         rotateType: Int = 0,
@@ -35,6 +38,7 @@ object ArrayUtils {
             else -> srcData
         }
     }
+
     private fun getMaxIndex(
         data: FloatArray,
         selectIndexList: ArrayList<Int> = arrayListOf(),
@@ -61,6 +65,7 @@ object ArrayUtils {
             return selectIndexList[maxIndex]
         }
     }
+
     private fun getMinIndex(
         data: FloatArray,
         selectIndexList: ArrayList<Int> = arrayListOf(),
@@ -93,6 +98,7 @@ object ArrayUtils {
             return selectIndexList[minIndex]
         }
     }
+
     private fun getRotateMaxIndex(
         data: FloatArray,
         rotateType: Int = 0,
@@ -122,6 +128,7 @@ object ArrayUtils {
             return selectIndexList[maxIndex]
         }
     }
+
     private fun getRotateMinIndex(
         data: FloatArray,
         rotateType: Int = 0,
@@ -157,6 +164,7 @@ object ArrayUtils {
             return selectIndexList[minIndex]
         }
     }
+
     private fun matrixRotate90(srcData: FloatArray): FloatArray {
         val row = 192
         val column = 256
@@ -180,6 +188,7 @@ object ArrayUtils {
         }
         return data
     }
+
     private fun matrixRotate180(srcData: FloatArray): FloatArray {
         val row = 192
         val column = 256
@@ -203,6 +212,7 @@ object ArrayUtils {
         }
         return data
     }
+
     private fun matrixRotate270(srcData: FloatArray): FloatArray {
         val row = 192
         val column = 256

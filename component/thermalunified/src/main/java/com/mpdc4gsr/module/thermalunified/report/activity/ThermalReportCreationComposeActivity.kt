@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.report.activity
+
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -22,11 +23,13 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+
 class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>() {
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, ThermalReportCreationComposeActivity::class.java))
         }
+
         fun startWithImage(context: Context, imagePath: String) {
             val intent = Intent(context, ThermalReportCreationComposeActivity::class.java).apply {
                 putExtra("image_path", imagePath)
@@ -34,9 +37,11 @@ class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>(
             context.startActivity(intent)
         }
     }
+
     override fun createViewModel(): BaseViewModel {
         return viewModels<BaseViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: BaseViewModel) {
@@ -101,6 +106,7 @@ class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>(
         }
     }
 }
+
 @Composable
 private fun ReportCreationContent(
     currentStep: Int,
@@ -129,16 +135,19 @@ private fun ReportCreationContent(
                 onTemplateSelect = onTemplateSelect,
                 modifier = Modifier.weight(1f)
             )
+
             1 -> ReportInfoStep(
                 reportData = reportData,
                 onReportDataChange = onReportDataChange,
                 modifier = Modifier.weight(1f)
             )
+
             2 -> ThermalDataStep(
                 reportData = reportData,
                 onReportDataChange = onReportDataChange,
                 modifier = Modifier.weight(1f)
             )
+
             3 -> ReviewStep(
                 reportData = reportData,
                 template = selectedTemplate,
@@ -160,6 +169,7 @@ private fun ReportCreationContent(
         )
     }
 }
+
 @Composable
 private fun ReportCreationProgress(
     currentStep: Int,
@@ -224,6 +234,7 @@ private fun ReportCreationProgress(
         )
     }
 }
+
 @Composable
 private fun TemplateSelectionStep(
     selectedTemplate: ReportTemplate?,
@@ -250,6 +261,7 @@ private fun TemplateSelectionStep(
         }
     }
 }
+
 @Composable
 private fun ReportTemplateCard(
     template: ReportTemplate,
@@ -301,6 +313,7 @@ private fun ReportTemplateCard(
         }
     }
 }
+
 @Composable
 private fun ReportInfoStep(
     reportData: ReportData,
@@ -351,6 +364,7 @@ private fun ReportInfoStep(
         )
     }
 }
+
 @Composable
 private fun ThermalDataStep(
     reportData: ReportData,
@@ -454,6 +468,7 @@ private fun ThermalDataStep(
         }
     }
 }
+
 @Composable
 private fun ReviewStep(
     reportData: ReportData,
@@ -503,7 +518,7 @@ private fun ReviewStep(
                 val exportFormats = listOf("PDF", "Word", "HTML")
                 exportFormats.forEach { format ->
                     TextButton(
-                        onClick = {  },
+                        onClick = { },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(
@@ -524,6 +539,7 @@ private fun ReviewStep(
         }
     }
 }
+
 @Composable
 private fun ReportSummaryItem(
     label: String,
@@ -548,6 +564,7 @@ private fun ReportSummaryItem(
         )
     }
 }
+
 @Composable
 private fun ReportNavigationButtons(
     currentStep: Int,
@@ -605,6 +622,7 @@ private fun ReportNavigationButtons(
         }
     }
 }
+
 @Composable
 private fun ReportPreviewDialog(
     reportData: ReportData,
@@ -656,6 +674,7 @@ private fun ReportPreviewDialog(
         }
     )
 }
+
 private fun getTemplateIcon(type: String) = when (type) {
     "inspection" -> Icons.Default.Search
     "maintenance" -> Icons.Default.Build
@@ -663,12 +682,14 @@ private fun getTemplateIcon(type: String) = when (type) {
     "compliance" -> Icons.Default.Verified
     else -> Icons.Default.Description
 }
+
 data class ReportTemplate(
     val id: String,
     val name: String,
     val description: String,
     val type: String
 )
+
 data class ReportData(
     val title: String = "",
     val author: String = "",
@@ -679,6 +700,7 @@ data class ReportData(
     val includeHotspotDetection: Boolean = true,
     val includeStatistics: Boolean = true
 )
+
 private fun getReportTemplates() = listOf(
     ReportTemplate(
         "inspection",

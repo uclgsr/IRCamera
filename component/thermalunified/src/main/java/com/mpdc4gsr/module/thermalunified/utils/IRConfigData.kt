@@ -1,6 +1,8 @@
 package com.mpdc4gsr.module.thermalunified.utils
+
 import android.content.Context
 import com.mpdc4gsr.libunified.R as LibcoreR
+
 data class IRConfigData(val name: String, val value: String) {
     companion object {
         fun irConfigData(context: Context): ArrayList<IRConfigData> =
@@ -42,6 +44,7 @@ data class IRConfigData(val name: String, val value: String) {
                     value = "0.85"
                 ),
             )
+
         fun getTextByEmissivity(
             context: Context,
             emissivity: Float,

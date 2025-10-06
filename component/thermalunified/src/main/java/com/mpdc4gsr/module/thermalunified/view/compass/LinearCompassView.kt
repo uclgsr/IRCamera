@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.view.compass
+
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -20,6 +21,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.coroutines.EmptyCoroutineContext
+
 class LinearCompassView : View {
     private val paint = Paint()
     private val textPaint = Paint()
@@ -45,12 +47,15 @@ class LinearCompassView : View {
     private var step = 1000 / 10
     private var scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     var curBitmap: Bitmap? = null
+
     constructor(context: Context) : this(context, null) {
         initView()
     }
+
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0) {
         initView()
     }
+
     constructor(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         ctx,
         attrs,
@@ -99,6 +104,7 @@ class LinearCompassView : View {
         attributes.recycle()
         initView()
     }
+
     private fun initView() {
         paint.color = backgroundColor
         paint.style = Paint.Style.FILL_AND_STROKE
@@ -127,6 +133,7 @@ class LinearCompassView : View {
         positionPaint.isAntiAlias = true
         positionPaint.strokeWidth = 1f
     }
+
     private var showAzimuthArrow = true
     private var azimuth = 0f
     private var range = 180f
@@ -139,9 +146,11 @@ class LinearCompassView : View {
         drawAzimuthArrow()
         drawCompassLine()
     }
+
     private fun drawBackGround() {
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
     }
+
     private fun drawAzimuthArrow() {
         if (!showAzimuthArrow) {
             return
@@ -155,6 +164,7 @@ class LinearCompassView : View {
             textPaint
         )
     }
+
     private fun drawCompassLine() {
         drawCompass()
         val bottomHeight = height * 7 / 10f
@@ -167,6 +177,7 @@ class LinearCompassView : View {
             markerPaint,
         )
     }
+
     fun setCurAzimuth(azimuth: Int) {
         scope.launch(Dispatchers.IO) {
             this@LinearCompassView.azimuth = azimuth.toFloat()
@@ -181,6 +192,7 @@ class LinearCompassView : View {
             }
         }
     }
+
     private fun drawCompass() {
         getValuesBetween(getRawMinimum(), getRawMaximum(), 5f).map {
             it.toInt()
@@ -208,6 +220,7 @@ class LinearCompassView : View {
             }
         }
     }
+
     private fun getPositionText(position: Int): String =
         when (position) {
             -90, 270 -> resources.getString(R.string.compass_west)
@@ -220,6 +233,7 @@ class LinearCompassView : View {
             -135, 225 -> resources.getString(R.string.compass_southwest)
             else -> ""
         }
+
     private fun toPixel(bearing: Float): Float {
         return getPixelLinear(
             bearing,
@@ -228,6 +242,7 @@ class LinearCompassView : View {
             range,
         )
     }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         // Recreate the scope if it was cancelled
@@ -235,6 +250,7 @@ class LinearCompassView : View {
             scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         }
     }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         scope.cancel()

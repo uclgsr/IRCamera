@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,10 +21,12 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorViewModel
+
 class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
     override fun createViewModel(): IRMonitorViewModel {
         return viewModels<IRMonitorViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRMonitorViewModel) {
@@ -100,6 +103,7 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                                 )
                             }
                         }
+
                         1 -> {
                             // Selection state - show type selection
                             MonitorTypeSelection(
@@ -116,6 +120,7 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                                 }
                             )
                         }
+
                         2 -> {
                             // Ready to start monitoring
                             Button(
@@ -156,6 +161,7 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
         }
     }
 }
+
 @Composable
 private fun MonitorStatusCard(
     monitorState: Int,
@@ -222,6 +228,7 @@ private fun MonitorStatusCard(
         }
     }
 }
+
 @Composable
 private fun MonitorTypeSelection(
     selectedType: Int,
@@ -267,6 +274,7 @@ private fun MonitorTypeSelection(
         }
     }
 }
+
 @Composable
 private fun MonitorTypeButton(
     text: String,

@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.utils
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.presentation
+
 import android.Manifest
 import android.app.Application
 import android.bluetooth.BluetoothAdapter
@@ -29,30 +30,36 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
     val pairedDevices: StateFlow<List<DeviceInfo>> = _pairedDevices.asStateFlow()
     private val _networkInfo = MutableStateFlow(NetworkInfo())
     val networkInfo: StateFlow<NetworkInfo> = _networkInfo.asStateFlow()
+
     data class NetworkSettings(
         val wifiEnabled: Boolean = true,
         val bluetoothEnabled: Boolean = true,
         val autoConnect: Boolean = true
     )
+
     data class DeviceInfo(
         val name: String,
         val address: String,
         val type: DeviceType,
         val isConnected: Boolean
     )
+
     enum class DeviceType {
         SHIMMER_GSR, TOPDON_THERMAL, UNKNOWN
     }
+
     data class NetworkInfo(
         val wifiNetwork: String = "Not Connected",
         val ipAddress: String = "N/A",
         val bluetoothStatus: String = "Unknown"
     )
+
     companion object {
         private const val KEY_WIFI_ENABLED = "network_wifi_enabled"
         private const val KEY_BLUETOOTH_ENABLED = "network_bluetooth_enabled"
         private const val KEY_AUTO_CONNECT = "network_auto_connect"
     }
+
     init {
         val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         bluetoothAdapter = bluetoothManager?.adapter
@@ -61,12 +68,14 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
         updateNetworkInfo()
         loadPairedDevices()
     }
+
     fun initialize() {
         // Kept for compatibility, but initialization now happens in init block
         loadSettings()
         updateNetworkInfo()
         loadPairedDevices()
     }
+
     private fun loadSettings() {
         _networkSettings.value = NetworkSettings(
             wifiEnabled = wifiManager?.isWifiEnabled ?: true,
@@ -74,6 +83,7 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
             autoConnect = prefs.getBoolean(KEY_AUTO_CONNECT, true)
         )
     }
+
     @Suppress("DEPRECATION")
     private fun updateNetworkInfo() {
         viewModelScope.launch {
@@ -94,6 +104,7 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
             )
         }
     }
+
     private fun loadPairedDevices() {
         viewModelScope.launch {
             val devices = mutableListOf<DeviceInfo>()
@@ -108,6 +119,7 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
                         device.name?.contains("Shimmer", ignoreCase = true) == true -> DeviceType.SHIMMER_GSR
                         device.name?.contains("Topdon", ignoreCase = true) == true ||
                                 device.name?.contains("TC001", ignoreCase = true) == true -> DeviceType.TOPDON_THERMAL
+
                         else -> DeviceType.UNKNOWN
                     }
                     devices.add(
@@ -123,12 +135,14 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
             _pairedDevices.value = devices
         }
     }
+
     fun updateAutoConnect(enabled: Boolean) {
         viewModelScope.launch {
             prefs.edit().putBoolean(KEY_AUTO_CONNECT, enabled).apply()
             _networkSettings.value = _networkSettings.value.copy(autoConnect = enabled)
         }
     }
+
     fun scanForDevices() {
         viewModelScope.launch {
             loadPairedDevices()

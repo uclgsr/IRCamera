@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -20,17 +21,20 @@ import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import kotlin.math.sin
 import kotlin.math.sqrt
+
 data class GSRReading(
     val timestamp: Long,
     val value: Double, // in microsiemens
     val quality: SignalQuality = SignalQuality.GOOD
 )
+
 enum class SignalQuality {
     EXCELLENT,
     GOOD,
     FAIR,
     POOR
 }
+
 enum class RecordingState {
     IDLE,
     CONNECTING,
@@ -40,6 +44,7 @@ enum class RecordingState {
     COMPLETED,
     ERROR
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRQuickRecordingScreen(
@@ -157,6 +162,7 @@ fun GSRQuickRecordingScreen(
         }
     }
 }
+
 @Composable
 fun DeviceStatusCard(
     recordingState: RecordingState,
@@ -256,6 +262,7 @@ fun DeviceStatusCard(
         }
     }
 }
+
 @Composable
 fun RecordingStateBadge(state: RecordingState) {
     val (color, text, icon) = when (state) {
@@ -265,16 +272,19 @@ fun RecordingStateBadge(state: RecordingState) {
             "Connecting",
             Icons.Default.Bluetooth
         )
+
         RecordingState.CONNECTED -> Triple(
             Color(0xFF4ECDC4),
             "Connected",
             Icons.Default.CheckCircle
         )
+
         RecordingState.RECORDING -> Triple(
             Color(0xFFFF6B6B),
             "Recording",
             Icons.Default.FiberManualRecord
         )
+
         RecordingState.PAUSED -> Triple(Color(0xFFFFB74D), "Paused", Icons.Default.Pause)
         RecordingState.COMPLETED -> Triple(Color(0xFF4ECDC4), "Completed", Icons.Default.Done)
         RecordingState.ERROR -> Triple(Color(0xFFFF6B6B), "Error", Icons.Default.Error)
@@ -303,6 +313,7 @@ fun RecordingStateBadge(state: RecordingState) {
         }
     }
 }
+
 @Composable
 fun GSRDisplayCard(
     currentValue: Double,
@@ -376,6 +387,7 @@ fun GSRDisplayCard(
         }
     }
 }
+
 @Composable
 fun RecordingControlsCard(
     recordingState: RecordingState,
@@ -423,6 +435,7 @@ fun RecordingControlsCard(
                             )
                         }
                     }
+
                     RecordingState.RECORDING -> {
                         FloatingActionButton(
                             onClick = onPauseRecording,
@@ -445,6 +458,7 @@ fun RecordingControlsCard(
                             )
                         }
                     }
+
                     RecordingState.PAUSED -> {
                         FloatingActionButton(
                             onClick = onResumeRecording,
@@ -467,6 +481,7 @@ fun RecordingControlsCard(
                             )
                         }
                     }
+
                     else -> {
                         // Show disabled button
                         FloatingActionButton(
@@ -502,6 +517,7 @@ fun RecordingControlsCard(
         }
     }
 }
+
 @Composable
 fun SessionSummaryCard(readings: List<GSRReading>) {
     Card(
@@ -556,6 +572,7 @@ fun SessionSummaryCard(readings: List<GSRReading>) {
         }
     }
 }
+
 @Composable
 fun SummaryMetric(
     label: String,
@@ -578,6 +595,7 @@ fun SummaryMetric(
         )
     }
 }
+
 @Composable
 fun QuickSetupCard(onStartSetup: () -> Unit) {
     Card(
@@ -616,16 +634,19 @@ fun QuickSetupCard(onStartSetup: () -> Unit) {
         }
     }
 }
+
 private fun formatDuration(seconds: Int): String {
     val minutes = seconds / 60
     val remainingSeconds = seconds % 60
     return String.format("%02d:%02d", minutes, remainingSeconds)
 }
+
 private fun calculateStandardDeviation(values: List<Double>): Double {
     val mean = values.average()
     val variance = values.map { (it - mean) * (it - mean) }.average()
     return sqrt(variance)
 }
+
 @Preview(showBackground = true)
 @Composable
 fun GSRQuickRecordingScreenPreview() {

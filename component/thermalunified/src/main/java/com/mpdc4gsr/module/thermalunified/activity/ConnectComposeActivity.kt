@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,10 +24,12 @@ import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -106,6 +109,7 @@ class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
+
 @Composable
 private fun ConnectionStatusCard(
     isConnected: Boolean,
@@ -133,6 +137,7 @@ private fun ConnectionStatusCard(
                         modifier = Modifier.size(48.dp)
                     )
                 }
+
                 isConnected -> {
                     Icon(
                         Icons.Default.CheckCircle,
@@ -141,6 +146,7 @@ private fun ConnectionStatusCard(
                         modifier = Modifier.size(48.dp)
                     )
                 }
+
                 else -> {
                     Icon(
                         Icons.Default.Error,
@@ -175,6 +181,7 @@ private fun ConnectionStatusCard(
         }
     }
 }
+
 @Composable
 private fun ConnectionControls(
     isConnected: Boolean,
@@ -244,6 +251,7 @@ private fun ConnectionControls(
         }
     }
 }
+
 @Composable
 private fun DeviceInfoCard(
     modifier: Modifier = Modifier
@@ -275,6 +283,7 @@ private fun DeviceInfoCard(
         }
     }
 }
+
 @Composable
 private fun DeviceInfoItem(
     label: String,

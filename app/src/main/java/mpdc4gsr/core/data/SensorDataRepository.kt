@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data
+
 import android.content.Context
 import com.mpdc4gsr.libunified.app.repository.BaseRepository
 import kotlinx.coroutines.delay
@@ -12,6 +13,7 @@ class SensorDataRepository(
         private const val DEVICE_STATUS_CACHE_KEY = "device_status"
         private const val DEVICE_STATUS_TTL = 30 * 1000L // 30 seconds for device status
     }
+
     // Data classes for type-safe sensor data
     data class GSRSensorData(
         val timestamp: Long,
@@ -22,6 +24,7 @@ class SensorDataRepository(
         val deviceId: String,
         val batteryLevel: Int? = null
     )
+
     data class ThermalSensorData(
         val timestamp: Long,
         val frameData: ByteArray,
@@ -38,10 +41,12 @@ class SensorDataRepository(
             other as ThermalSensorData
             return timestamp == other.timestamp && deviceId == other.deviceId
         }
+
         override fun hashCode(): Int {
             return timestamp.hashCode() * 31 + deviceId.hashCode()
         }
     }
+
     data class DeviceStatus(
         val deviceId: String,
         val deviceType: DeviceType,
@@ -51,12 +56,15 @@ class SensorDataRepository(
         val lastSeen: Long,
         val firmwareVersion: String?
     )
+
     enum class DataQuality {
         EXCELLENT, GOOD, FAIR, POOR, UNKNOWN
     }
+
     enum class DeviceType {
         TC007, TS004, SHIMMER_GSR, UNKNOWN
     }
+
     enum class SensorType {
         GSR, THERMAL, PPG, ACCELEROMETER
     }
@@ -96,6 +104,7 @@ class SensorDataRepository(
             BaseRepository.Result.Success(CombinedSensorData(gsrData, thermalData))
         }
     }
+
     data class CombinedSensorData(
         val gsrData: List<GSRSensorData>,
         val thermalData: List<ThermalSensorData>

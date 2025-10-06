@@ -1,4 +1,5 @@
 package mpdc4gsr.tests
+
 import android.app.Application
 import io.mockk.MockKAnnotations
 import io.mockk.mockk
@@ -14,11 +15,13 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class GSRSensorReconnectionTest {
     private lateinit var mockApplication: Application
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         mockApplication = mockk(relaxed = true)
     }
+
     @Test
     fun `GSRSensorState should have default values for reconnection fields`() {
         val state = GSRSensorViewModel.GSRSensorState()
@@ -26,6 +29,7 @@ class GSRSensorReconnectionTest {
         assertEquals("reconnectionAttempt should be 0 by default", 0, state.reconnectionAttempt)
         assertEquals("connectionStatus should be Disconnected by default", "Disconnected", state.connectionStatus)
     }
+
     @Test
     fun `GSRSensorState should track reconnection attempts`() {
         val state = GSRSensorViewModel.GSRSensorState(
@@ -35,6 +39,7 @@ class GSRSensorReconnectionTest {
         assertTrue("isReconnecting should be true", state.isReconnecting)
         assertEquals("reconnectionAttempt should be 2", 2, state.reconnectionAttempt)
     }
+
     @Test
     fun `GSRSensorState should update connection status`() {
         val initialState = GSRSensorViewModel.GSRSensorState()
@@ -53,6 +58,7 @@ class GSRSensorReconnectionTest {
         assertTrue("Should be in reconnecting state", reconnectingState.isReconnecting)
         assertEquals("Should track attempt number", 1, reconnectingState.reconnectionAttempt)
     }
+
     @Test
     fun `should calculate exponential backoff correctly`() = runTest {
         val maxAttempts = 3
@@ -68,6 +74,7 @@ class GSRSensorReconnectionTest {
             )
         }
     }
+
     @Test
     fun `ReconnectionConfig should have default values`() {
         val config = GSRSensorViewModel.ReconnectionConfig()
@@ -75,6 +82,7 @@ class GSRSensorReconnectionTest {
         assertEquals("Default base delay should be 2000ms", 2000L, config.baseDelayMs)
         assertTrue("Reconnection should be enabled by default", config.enabled)
     }
+
     @Test
     fun `ReconnectionConfig should be customizable`() {
         val config = GSRSensorViewModel.ReconnectionConfig(
@@ -86,6 +94,7 @@ class GSRSensorReconnectionTest {
         assertEquals("Base delay should be customizable", 3000L, config.baseDelayMs)
         assertFalse("Reconnection should be disableable", config.enabled)
     }
+
     @Test
     fun `connection status should indicate error after failed reconnection`() {
         val failedState = GSRSensorViewModel.GSRSensorState(
@@ -103,6 +112,7 @@ class GSRSensorReconnectionTest {
             failedState.error?.contains("Failed to reconnect") == true
         )
     }
+
     @Test
     fun `successful reconnection should reset state`() {
         val reconnectedState = GSRSensorViewModel.GSRSensorState(
@@ -118,6 +128,7 @@ class GSRSensorReconnectionTest {
         assertEquals("Status should show Reconnected", "Reconnected", reconnectedState.connectionStatus)
         assertEquals("Error should be cleared", null, reconnectedState.error)
     }
+
     @Test
     fun `connection status should be visible to UI`() {
         val states = listOf(
@@ -133,6 +144,7 @@ class GSRSensorReconnectionTest {
             assertEquals("Status should match", status, state.connectionStatus)
         }
     }
+
     @Test
     fun `maxReconnectionAttempts should be tracked in state`() {
         val state = GSRSensorViewModel.GSRSensorState(

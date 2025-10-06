@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.user.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,10 +22,12 @@ import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.model.QuestionData
 import com.mpdc4gsr.module.user.viewmodel.QuestionViewModel
+
 class QuestionComposeActivity : BaseComposeActivity<QuestionViewModel>() {
     override fun createViewModel(): QuestionViewModel {
         return viewModels<QuestionViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: QuestionViewModel) {
@@ -75,6 +78,7 @@ class QuestionComposeActivity : BaseComposeActivity<QuestionViewModel>() {
         }
     }
 }
+
 @Composable
 private fun QuestionItem(
     question: QuestionData,

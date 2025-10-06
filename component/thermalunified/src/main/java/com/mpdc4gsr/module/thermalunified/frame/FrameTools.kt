@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.frame
+
 import android.graphics.Bitmap
 import android.graphics.Rect
 import com.elvishew.xlog.XLog
@@ -12,6 +13,7 @@ import com.mpdc4gsr.libunified.ir.utils.IRImageHelp
 import com.mpdc4gsr.libunified.ir.utils.OpencvTools
 import java.io.IOException
 import java.nio.ByteBuffer
+
 class FrameTool {
     val imageWidth = 256
     val imageHeight = 192
@@ -46,11 +48,13 @@ class FrameTool {
             XLog.e("Failed to read frame raw data: ${e.message}")
         }
     }
+
     fun initStruct(struct: FrameStruct) {
         this.struct = struct
         imageRes.width = imageWidth.toChar()
         imageRes.height = imageHeight.toChar()
     }
+
     fun initRotate(): ImageParams {
         var rotate = ImageParams.ROTATE_0
         when (struct.rotate) {
@@ -61,6 +65,7 @@ class FrameTool {
         }
         return rotate
     }
+
     fun getTempBytes(rotate: ImageParams = ImageParams.ROTATE_0): ByteArray {
         val tempBytes = ByteArray(srcTemperatureLen)
         val dstTempBytes = ByteArray(srcTemperatureLen)
@@ -73,6 +78,7 @@ class FrameTool {
                     CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
                     dstTempBytes,
                 )
+
             ImageParams.ROTATE_90 ->
                 LibIRProcess.rotateRight90(
                     tempBytes,
@@ -80,6 +86,7 @@ class FrameTool {
                     CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
                     dstTempBytes,
                 )
+
             ImageParams.ROTATE_180 ->
                 LibIRProcess.rotate180(
                     tempBytes,
@@ -87,10 +94,12 @@ class FrameTool {
                     CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
                     dstTempBytes,
                 )
+
             else -> System.arraycopy(temperatureBytes, 0, dstTempBytes, 0, srcTemperatureLen)
         }
         return dstTempBytes
     }
+
     fun getRotate90Temp(temperatureBytes: ByteArray): ByteArray {
         val tempBytes = ByteArray(temperatureBytes.size)
         val dstTempBytes = ByteArray(temperatureBytes.size)
@@ -106,6 +115,7 @@ class FrameTool {
         )
         return dstTempBytes
     }
+
     fun getScrPseudoColorScaledBitmap(
         pseudoColorMode: CommonParams.PseudoColorType = CommonParams.PseudoColorType.PSEUDO_3,
         max: Float = -273f,
@@ -260,6 +270,7 @@ class FrameTool {
         }
         return scrBitmap
     }
+
     fun getBaseBitmap(rotate: ImageParams): Bitmap {
         val dstImageRes = getDstImageRes(rotate)
         val scrBitmap =
@@ -273,6 +284,7 @@ class FrameTool {
         }
         return scrBitmap
     }
+
     private fun getDstImageRes(rotate: ImageParams): LibIRProcess.ImageRes_t {
         val dstImageRes = LibIRProcess.ImageRes_t()
         if (rotate == ImageParams.ROTATE_270 || rotate == ImageParams.ROTATE_90) {
@@ -284,6 +296,7 @@ class FrameTool {
         }
         return dstImageRes
     }
+
     private fun argbBytesRotate(
         argbBytes: ByteArray,
         dstArgbBytes: ByteArray,
@@ -297,6 +310,7 @@ class FrameTool {
                     CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
                     dstArgbBytes,
                 )
+
             ImageParams.ROTATE_90 ->
                 LibIRProcess.rotateRight90(
                     argbBytes,
@@ -304,6 +318,7 @@ class FrameTool {
                     CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
                     dstArgbBytes,
                 )
+
             ImageParams.ROTATE_180 ->
                 LibIRProcess.rotate180(
                     argbBytes,
@@ -311,9 +326,11 @@ class FrameTool {
                     CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
                     dstArgbBytes,
                 )
+
             else -> System.arraycopy(argbBytes, 0, dstArgbBytes, 0, argbBytes.size)
         }
     }
+
     fun getSrcTemp(): LibIRTemp.TemperatureSampleResult {
         val irTemp = LibIRTemp(imageWidth, imageHeight)
         irTemp.setTempData(temperatureBytes)

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -41,9 +42,11 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
             context.startActivity(intent)
         }
     }
+
     override fun createViewModel(): AppBaseViewModel {
         return viewModels<AppBaseViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: AppBaseViewModel) {
@@ -108,6 +111,7 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
         }
     }
 }
+
 @Composable
 private fun GSRVideoPlayerContent(
     videoPath: String,
@@ -180,6 +184,7 @@ private fun GSRVideoPlayerContent(
         }
     }
 }
+
 @Composable
 private fun VideoPlayerCard(
     videoPath: String,
@@ -277,6 +282,7 @@ private fun VideoPlayerCard(
         }
     }
 }
+
 @Composable
 private fun GSRDataOverlay(
     currentPosition: Float,
@@ -309,6 +315,7 @@ private fun GSRDataOverlay(
         }
     }
 }
+
 @Composable
 private fun VideoControlsCard(
     isPlaying: Boolean,
@@ -407,6 +414,7 @@ private fun VideoControlsCard(
         }
     }
 }
+
 @Composable
 private fun VideoInfoCard(
     videoPath: String,
@@ -437,6 +445,7 @@ private fun VideoInfoCard(
         }
     }
 }
+
 @Composable
 private fun VideoInfoRow(
     label: String,
@@ -458,6 +467,7 @@ private fun VideoInfoRow(
         )
     }
 }
+
 @Composable
 private fun GSRDataTimelineCard(
     sessionId: String,
@@ -527,6 +537,7 @@ private fun GSRDataTimelineCard(
         }
     }
 }
+
 @Composable
 private fun GSRTimelineMetric(
     label: String,
@@ -548,6 +559,7 @@ private fun GSRTimelineMetric(
         )
     }
 }
+
 @Composable
 private fun PlaybackStatisticsCard(
     currentPosition: Float,
@@ -579,6 +591,7 @@ private fun PlaybackStatisticsCard(
         }
     }
 }
+
 @Composable
 private fun PlaybackStatistic(
     label: String,
@@ -600,6 +613,7 @@ private fun PlaybackStatistic(
         )
     }
 }
+
 @Composable
 private fun VideoExportCard(
     videoPath: String,
@@ -693,6 +707,7 @@ private fun VideoExportCard(
         }
     }
 }
+
 // Helper function to format time
 private fun formatTime(seconds: Float): String {
     val totalSeconds = seconds.toInt()
@@ -700,6 +715,7 @@ private fun formatTime(seconds: Float): String {
     val remainingSeconds = totalSeconds % 60
     return String.format("%02d:%02d", minutes, remainingSeconds)
 }
+
 class GSRVideoPlayerViewModel : AppBaseViewModel() {
     // ViewModel implementation for managing video playback state, GSR data synchronization, etc.
     // Future implementation would include:

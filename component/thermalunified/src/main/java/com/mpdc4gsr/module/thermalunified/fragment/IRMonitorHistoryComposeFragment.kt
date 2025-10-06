@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,10 +23,12 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorHistoryViewModel
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorHistoryViewModel.*
 import java.text.SimpleDateFormat
 import java.util.*
+
 class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryViewModel>() {
     override fun createViewModel(): IRMonitorHistoryViewModel {
         return viewModels<IRMonitorHistoryViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRMonitorHistoryViewModel) {
@@ -64,12 +67,14 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                         isLoading -> {
                             LoadingState()
                         }
+
                         historyItems.isEmpty() -> {
                             EmptyHistoryState(
                                 filter = selectedFilter,
                                 onRefresh = { viewModel.refreshHistory() }
                             )
                         }
+
                         else -> {
                             HistoryList(
                                 viewModel = viewModel,
@@ -96,6 +101,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
             }
         }
     }
+
     @Composable
     private fun HistoryHeader(
         selectedFilter: HistoryFilter,
@@ -167,6 +173,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
             }
         }
     }
+
     @Composable
     private fun HistorySelectionToolbar(
         selectedCount: Int,
@@ -214,6 +221,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
             }
         }
     }
+
     @Composable
     private fun LoadingState() {
         Box(
@@ -233,6 +241,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
             }
         }
     }
+
     @Composable
     private fun EmptyHistoryState(
         filter: HistoryFilter,
@@ -276,6 +285,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
             }
         }
     }
+
     @Composable
     private fun HistoryList(
         viewModel: IRMonitorHistoryViewModel,
@@ -301,6 +311,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
             }
         }
     }
+
     @Composable
     private fun HistoryListItem(
         viewModel: IRMonitorHistoryViewModel,
@@ -428,6 +439,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
             }
         }
     }
+
     @Composable
     private fun StatusChip(
         text: String,
@@ -447,6 +459,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
             )
         }
     }
+
     // Helper functions
     private fun formatDuration(durationMs: Long): String {
         val seconds = durationMs / 1000
@@ -458,12 +471,14 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
             else -> "${seconds}s"
         }
     }
+
     private fun getSessionTypeIcon(type: SessionType): androidx.compose.ui.graphics.vector.ImageVector = when (type) {
         SessionType.MONITORING -> Icons.Default.Monitor
         SessionType.CAPTURE -> Icons.Default.CameraAlt
         SessionType.ANALYSIS -> Icons.Default.Analytics
         SessionType.CALIBRATION -> Icons.Default.Tune
     }
+
     @Composable
     private fun getSessionTypeColor(type: SessionType): Color = when (type) {
         SessionType.MONITORING -> MaterialTheme.colorScheme.primary

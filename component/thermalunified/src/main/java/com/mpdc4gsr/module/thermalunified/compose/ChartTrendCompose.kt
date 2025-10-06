@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,6 +21,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 @Composable
 fun ChartTrendCompose(
     dataPoints: List<Float>,
@@ -104,6 +106,7 @@ fun ChartTrendCompose(
         }
     }
 }
+
 private fun DrawScope.drawTrendChart(
     dataPoints: List<Float>,
     minValue: Float,
@@ -186,6 +189,7 @@ private fun DrawScope.drawTrendChart(
         )
     }
 }
+
 @Composable
 fun TemperatureTrendCompose(
     temperatures: List<Float>,
@@ -211,6 +215,7 @@ fun TemperatureTrendCompose(
         modifier = modifier
     )
 }
+
 @Composable
 fun ChartTrendComposePreview() {
     Column(

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.presentation
+
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -19,6 +20,7 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
     val storageSettings: StateFlow<StorageSettings> = _storageSettings.asStateFlow()
     private val _storageInfo = MutableStateFlow(StorageInfo())
     val storageInfo: StateFlow<StorageInfo> = _storageInfo.asStateFlow()
+
     data class StorageSettings(
         val autoExport: Boolean = false,
         val exportFormat: String = "CSV",
@@ -27,11 +29,13 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
         val compressionEnabled: Boolean = true,
         val deleteAfterExport: Boolean = false
     )
+
     data class StorageInfo(
         val availableSpace: String = "Calculating...",
         val usedSpace: String = "Calculating...",
         val totalSpace: String = "Calculating..."
     )
+
     companion object {
         private const val KEY_AUTO_EXPORT = "storage_auto_export"
         private const val KEY_EXPORT_FORMAT = "storage_export_format"
@@ -40,15 +44,18 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
         private const val KEY_COMPRESSION = "storage_compression"
         private const val KEY_DELETE_AFTER_EXPORT = "storage_delete_after_export"
     }
+
     init {
         loadSettings()
         updateStorageInfo()
     }
+
     fun initialize() {
         // Kept for compatibility, but initialization now happens in init block
         loadSettings()
         updateStorageInfo()
     }
+
     private fun loadSettings() {
         _storageSettings.value = StorageSettings(
             autoExport = prefs.getBoolean(KEY_AUTO_EXPORT, false),
@@ -59,7 +66,7 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
             deleteAfterExport = prefs.getBoolean(KEY_DELETE_AFTER_EXPORT, false)
         )
     }
-    
+
     private fun updateStorageInfo() {
         viewModelScope.launch {
             try {
@@ -73,11 +80,13 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
                             Environment.getDataDirectory()
                         }
                     }
+
                     "External USB" -> {
                         // For External USB, would need to scan removable storage
                         // Falling back to internal for now
                         Environment.getDataDirectory()
                     }
+
                     else -> Environment.getDataDirectory()
                 }
                 val stat = StatFs(path.path)
@@ -102,18 +111,21 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
             }
         }
     }
+
     fun updateAutoExport(enabled: Boolean) {
         viewModelScope.launch {
             prefs.edit().putBoolean(KEY_AUTO_EXPORT, enabled).apply()
             _storageSettings.value = _storageSettings.value.copy(autoExport = enabled)
         }
     }
+
     fun updateExportFormat(format: String) {
         viewModelScope.launch {
             prefs.edit().putString(KEY_EXPORT_FORMAT, format).apply()
             _storageSettings.value = _storageSettings.value.copy(exportFormat = format)
         }
     }
+
     fun updateStorageLocation(location: String) {
         viewModelScope.launch {
             prefs.edit().putString(KEY_STORAGE_LOCATION, location).apply()
@@ -121,18 +133,21 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
             updateStorageInfo()
         }
     }
+
     fun updateAutoBackup(enabled: Boolean) {
         viewModelScope.launch {
             prefs.edit().putBoolean(KEY_AUTO_BACKUP, enabled).apply()
             _storageSettings.value = _storageSettings.value.copy(autoBackup = enabled)
         }
     }
+
     fun updateCompression(enabled: Boolean) {
         viewModelScope.launch {
             prefs.edit().putBoolean(KEY_COMPRESSION, enabled).apply()
             _storageSettings.value = _storageSettings.value.copy(compressionEnabled = enabled)
         }
     }
+
     fun updateDeleteAfterExport(enabled: Boolean) {
         viewModelScope.launch {
             prefs.edit().putBoolean(KEY_DELETE_AFTER_EXPORT, enabled).apply()

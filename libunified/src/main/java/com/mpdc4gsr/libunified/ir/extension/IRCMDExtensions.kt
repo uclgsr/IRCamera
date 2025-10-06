@@ -1,6 +1,8 @@
 package com.mpdc4gsr.libunified.ir.extension
+
 import android.util.Log
 import com.energy.iruvc.ircmd.IRCMD
+
 private const val TAG = "IRCMDExtensions"
 fun IRCMD.setMirror(enabled: Boolean) {
     try {
@@ -14,6 +16,7 @@ fun IRCMD.setMirror(enabled: Boolean) {
         Log.e(TAG, "Failed to set mirror mode: ${e.message}")
     }
 }
+
 fun IRCMD.setAutoShutter(enabled: Boolean) {
     try {
         val result = if (enabled) {
@@ -26,6 +29,7 @@ fun IRCMD.setAutoShutter(enabled: Boolean) {
         Log.e(TAG, "Failed to set auto shutter: ${e.message}")
     }
 }
+
 fun IRCMD.setPropDdeLevel(level: Int) {
     try {
         val clampedLevel = level.coerceIn(0, 255)
@@ -35,6 +39,7 @@ fun IRCMD.setPropDdeLevel(level: Int) {
         Log.e(TAG, "Failed to set DDE level: ${e.message}")
     }
 }
+
 fun IRCMD.setContrast(level: Int) {
     try {
         val clampedLevel = level.coerceIn(0, 255)
@@ -44,6 +49,7 @@ fun IRCMD.setContrast(level: Int) {
         Log.e(TAG, "Failed to set contrast: ${e.message}")
     }
 }
+
 private fun IRCMD.nativeSetProperty(property: String, value: Int): Boolean {
     return try {
         Log.d(TAG, "Setting $property to $value via native IRCMD interface")

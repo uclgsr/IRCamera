@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -19,10 +20,12 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ImageColorViewModel
+
 class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
     override fun createViewModel(): ImageColorViewModel {
         return viewModels<ImageColorViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ImageColorViewModel) {
@@ -160,7 +163,7 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                             Text(if (showData) "Hide Data" else "Show Data")
                         }
                         Button(
-                            onClick = {  },
+                            onClick = { },
                             modifier = Modifier.width(120.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.secondary

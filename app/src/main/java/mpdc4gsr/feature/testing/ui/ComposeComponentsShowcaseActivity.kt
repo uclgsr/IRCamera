@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -26,6 +27,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 class ComposeComponentsShowcaseViewModel : AppBaseViewModel() {
     private val _showSensorDialog = mutableStateOf(false)
     val showSensorDialog: State<Boolean> = _showSensorDialog
@@ -34,9 +36,11 @@ class ComposeComponentsShowcaseViewModel : AppBaseViewModel() {
     fun showSensorSelection() {
         _showSensorDialog.value = true
     }
+
     fun hideSensorSelection() {
         _showSensorDialog.value = false
     }
+
     fun updateSelectedSensors(sensors: Set<mpdc4gsr.core.ui.components.SensorType>) {
         _selectedSensors.value = sensors
     }
@@ -47,6 +51,7 @@ class ComposeComponentsShowcaseActivity :
     private val showcaseVM: ComposeComponentsShowcaseViewModel by viewModels()
     override fun createViewModel(): ComposeComponentsShowcaseViewModel =
         showcaseVM
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ComposeComponentsShowcaseViewModel) {
@@ -234,6 +239,7 @@ class ComposeComponentsShowcaseActivity :
         }
     }
 }
+
 @Composable
 private fun ComponentSection(
     title: String,

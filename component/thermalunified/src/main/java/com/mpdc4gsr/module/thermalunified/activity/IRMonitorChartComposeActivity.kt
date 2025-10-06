@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,10 +19,12 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+
 class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -155,6 +158,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
+
 @Composable
 private fun ThermalCameraView(
     modifier: Modifier = Modifier
@@ -179,6 +183,7 @@ private fun ThermalCameraView(
         }
     }
 }
+
 @Composable
 private fun TemperatureOverlay(
     maxTemp: Float,
@@ -209,6 +214,7 @@ private fun TemperatureOverlay(
         }
     }
 }
+
 @Composable
 private fun TemperatureItem(
     label: String,
@@ -232,6 +238,7 @@ private fun TemperatureItem(
         )
     }
 }
+
 @Composable
 private fun RecordingIndicator(
     recordingTime: Long,
@@ -266,6 +273,7 @@ private fun RecordingIndicator(
         }
     }
 }
+
 @Composable
 private fun RecordingControls(
     isRecording: Boolean,
@@ -328,6 +336,7 @@ private fun RecordingControls(
         }
     }
 }
+
 @Composable
 private fun TemperatureStatsCard(
     maxTemp: Float,
@@ -363,6 +372,7 @@ private fun TemperatureStatsCard(
         }
     }
 }
+
 @Composable
 private fun StatItem(
     label: String,
@@ -385,6 +395,7 @@ private fun StatItem(
         )
     }
 }
+
 @Composable
 private fun ChartControlsCard(context: android.content.Context) {
     Card(

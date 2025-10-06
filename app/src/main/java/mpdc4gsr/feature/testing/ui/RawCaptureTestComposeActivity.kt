@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.os.Bundle
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -29,12 +30,14 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
     companion object {
         private const val TAG = "RawCaptureTestCompose"
     }
+
     data class CaptureFormat(
         val name: String,
         val description: String,
         val supported: Boolean,
         val fileExtension: String
     )
+
     data class CaptureResult(
         val format: String,
         val success: Boolean,
@@ -42,6 +45,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
         val captureDurationMs: Long,
         val details: String
     )
+
     private var rgbCameraRecorder: RgbCameraRecorder? = null
     private var isRecording = false
     private var captureResults by mutableStateOf(listOf<CaptureResult>())
@@ -55,6 +59,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun RawCaptureTestScreen() {
@@ -338,6 +343,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     fun CaptureFormatItem(
         format: CaptureFormat,
@@ -378,6 +384,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     fun CaptureResultItem(result: CaptureResult) {
         Row(
@@ -418,6 +425,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private fun initializeCamera() {
         try {
             rgbCameraRecorder = RgbCameraRecorder(this, this)
@@ -426,6 +434,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Failed to initialize camera: ${e.message}")
         }
     }
+
     private suspend fun runAllCaptureTests() {
         AppLogger.i(TAG, "Running all RAW capture tests")
         val results = mutableListOf<CaptureResult>()
@@ -450,6 +459,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             isTestRunning = false
         }
     }
+
     private suspend fun captureRawImage(format: String): CaptureResult? {
         AppLogger.d(TAG, "Capturing RAW image in $format format")
         return try {
@@ -487,6 +497,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             )
         }
     }
+
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {
@@ -499,6 +510,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private suspend fun testDeviceCompatibility() {
         AppLogger.d(TAG, "Testing device compatibility")
         try {
@@ -508,6 +520,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Device compatibility test failed: ${e.message}")
         }
     }
+
     private suspend fun testStage3Support() {
         AppLogger.d(TAG, "Testing Stage 3/Level 3 support")
         try {
@@ -517,6 +530,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Stage 3 support test failed: ${e.message}")
         }
     }
+
     private suspend fun testCaptureQuality() {
         AppLogger.d(TAG, "Testing capture quality")
         try {
@@ -526,6 +540,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Capture quality test failed: ${e.message}")
         }
     }
+
     private suspend fun testFileFormats() {
         AppLogger.d(TAG, "Testing file formats")
         try {
@@ -535,6 +550,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "File formats test failed: ${e.message}")
         }
     }
+
     private suspend fun testCapturePerformance() {
         AppLogger.d(TAG, "Testing capture performance")
         try {

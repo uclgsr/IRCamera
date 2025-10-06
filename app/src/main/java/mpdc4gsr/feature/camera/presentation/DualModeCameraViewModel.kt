@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.presentation
+
 import android.content.Context
 import androidx.camera.view.PreviewView
 import androidx.lifecycle.LifecycleOwner
@@ -19,6 +20,7 @@ class DualModeCameraViewModel : AppBaseViewModel() {
         val currentResolution: String = "",
         val frameRate: Int = 0
     )
+
     data class RecordingState(
         val isRecording: Boolean = false,
         val recordingDuration: Long = 0L,
@@ -26,6 +28,7 @@ class DualModeCameraViewModel : AppBaseViewModel() {
         val currentFileSize: Long = 0L,
         val totalRecordedSize: Long = 0L
     )
+
     data class CameraScreenState(
         val canRecord: Boolean = false,
         val canSwitchMode: Boolean = false,
@@ -33,6 +36,7 @@ class DualModeCameraViewModel : AppBaseViewModel() {
         val showProgress: Boolean = false,
         val displayMessage: String = ""
     )
+
     // StateFlow for reactive state management
     private val _permissionState = MutableStateFlow(PermissionState.UNKNOWN)
     val permissionState: StateFlow<PermissionState> = _permissionState.asStateFlow()
@@ -42,15 +46,18 @@ class DualModeCameraViewModel : AppBaseViewModel() {
     val cameraMode: StateFlow<CameraMode> = _cameraMode.asStateFlow()
     private val _recordingState = MutableStateFlow(RecordingState())
     val recordingState: StateFlow<RecordingState> = _recordingState.asStateFlow()
+
     // SharedFlow for one-time events
     private val _events = MutableSharedFlow<CameraEvent>()
     val events: SharedFlow<CameraEvent> = _events.asSharedFlow()
+
     // Combined state for complex UI scenarios
     private val _cameraScreenState = MutableStateFlow(CameraScreenState())
     val cameraScreenState: StateFlow<CameraScreenState> = _cameraScreenState.asStateFlow()
     private var rgbCameraRecorder: RgbCameraRecorder? = null
     private var enableSamsungOptimizations: Boolean = true
     private var appContext: Context? = null
+
     enum class PermissionState {
         UNKNOWN,
         GRANTED,
@@ -58,6 +65,7 @@ class DualModeCameraViewModel : AppBaseViewModel() {
         REQUESTING,
         PERMANENTLY_DENIED
     }
+
     enum class CameraMode {
         PREVIEW,
         RAW,
@@ -66,6 +74,7 @@ class DualModeCameraViewModel : AppBaseViewModel() {
         PHOTO_BURST,
         NIGHT_MODE
     }
+
     sealed class CameraEvent {
         data class ShowError(val message: String) : CameraEvent()
         data class ShowSuccess(val message: String) : CameraEvent()
@@ -75,6 +84,7 @@ class DualModeCameraViewModel : AppBaseViewModel() {
         data class ModeChanged(val newMode: CameraMode) : CameraEvent()
         object NavigateToGallery : CameraEvent()
     }
+
     init {
         // Setup combined state management
         viewModelScope.launch {
@@ -96,6 +106,7 @@ class DualModeCameraViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun initialize(initialMode: String, enableOptimizations: Boolean) {
         launchWithErrorHandling {
             enableSamsungOptimizations = enableOptimizations
@@ -120,12 +131,14 @@ class DualModeCameraViewModel : AppBaseViewModel() {
             _events.emit(CameraEvent.ShowSuccess("Camera system initialized with mode: ${mode.name}"))
         }
     }
+
     fun onPermissionGranted() {
         _permissionState.value = PermissionState.GRANTED
         viewModelScope.launch {
             _events.emit(CameraEvent.ShowSuccess("Camera permission granted"))
         }
     }
+
     fun onPermissionDenied(isPermanent: Boolean = false) {
         _permissionState.value =
             if (isPermanent) PermissionState.PERMANENTLY_DENIED else PermissionState.DENIED
@@ -138,6 +151,7 @@ class DualModeCameraViewModel : AppBaseViewModel() {
             _events.emit(CameraEvent.ShowError(message))
         }
     }
+
     fun requestPermission() {
         _permissionState.value = PermissionState.REQUESTING
         viewModelScope.launch {
@@ -152,6 +166,7 @@ class DualModeCameraViewModel : AppBaseViewModel() {
             )
         }
     }
+
     fun initializeCamera(
         context: Context,
         lifecycleOwner: LifecycleOwner,
@@ -178,6 +193,7 @@ class DualModeCameraViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun switchCameraMode(newMode: CameraMode) {
         launchWithErrorHandling {
             if (!_cameraState.value.isInitialized) {
@@ -194,30 +210,35 @@ class DualModeCameraViewModel : AppBaseViewModel() {
                 CameraMode.RAW -> {
                     handleRawModeSwitch()
                 }
+
                 CameraMode.VIDEO_4K -> {
                     _cameraState.value = _cameraState.value.copy(
                         currentResolution = "3840x2160",
                         frameRate = 30
                     )
                 }
+
                 CameraMode.VIDEO_1080P -> {
                     _cameraState.value = _cameraState.value.copy(
                         currentResolution = "1920x1080",
                         frameRate = 60
                     )
                 }
+
                 CameraMode.PREVIEW -> {
                     _cameraState.value = _cameraState.value.copy(
                         currentResolution = "1920x1080",
                         frameRate = 30
                     )
                 }
+
                 CameraMode.PHOTO_BURST -> {
                     _cameraState.value = _cameraState.value.copy(
                         currentResolution = "4000x3000",
                         frameRate = 0
                     )
                 }
+
                 CameraMode.NIGHT_MODE -> {
                     _cameraState.value = _cameraState.value.copy(
                         currentResolution = "1920x1080",
@@ -229,6 +250,7 @@ class DualModeCameraViewModel : AppBaseViewModel() {
             _events.emit(CameraEvent.ShowSuccess("Switched from ${previousMode.name} to ${newMode.name}"))
         }
     }
+
     private suspend fun handleRawModeSwitch() {
         val message =
             if (enableSamsungOptimizations && SamsungDeviceCompatibility.isStage3Compatible()) {
@@ -243,6 +265,7 @@ class DualModeCameraViewModel : AppBaseViewModel() {
         )
         _events.emit(CameraEvent.ShowSuccess(message))
     }
+
     fun startRecording() {
         launchWithErrorHandling {
             if (!_cameraState.value.isInitialized) {
@@ -269,6 +292,7 @@ class DualModeCameraViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun stopRecording() {
         launchWithErrorHandling {
             if (!_recordingState.value.isRecording) {
@@ -291,11 +315,13 @@ class DualModeCameraViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun navigateToGallery() {
         viewModelScope.launch {
             _events.emit(CameraEvent.NavigateToGallery)
         }
     }
+
     private fun getSupportedModes(): List<CameraMode> {
         return if (SamsungDeviceCompatibility.isStage3Compatible()) {
             CameraMode.values().toList()
@@ -303,6 +329,7 @@ class DualModeCameraViewModel : AppBaseViewModel() {
             listOf(CameraMode.PREVIEW, CameraMode.VIDEO_1080P, CameraMode.PHOTO_BURST)
         }
     }
+
     private fun generateDisplayMessage(
         permission: PermissionState,
         camera: CameraState,
@@ -316,12 +343,14 @@ class DualModeCameraViewModel : AppBaseViewModel() {
             else -> "Mode: ${mode.name} | ${camera.currentResolution}@${camera.frameRate}fps"
         }
     }
+
     override fun onCleared() {
         viewModelScope.launch {
             rgbCameraRecorder?.cleanup()
         }
         super.onCleared()
     }
+
     companion object {
         private const val TAG = "DualModeCameraViewModel"
     }

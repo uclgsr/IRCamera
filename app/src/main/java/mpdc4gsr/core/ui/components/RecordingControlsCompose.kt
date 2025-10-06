@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.components
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloatAsState
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 enum class RecordingState {
     IDLE,
     STARTING,
@@ -31,12 +33,14 @@ enum class RecordingState {
     STOPPING,
     ERROR
 }
+
 enum class TriggerSource {
     LOCAL,
     REMOTE_PC,
     REMOTE_MOBILE,
     SCHEDULED
 }
+
 data class RecordingSession(
     val state: RecordingState,
     val triggerSource: TriggerSource,
@@ -47,6 +51,7 @@ data class RecordingSession(
     val errorMessage: String? = null,
     val startTime: Long = 0L
 )
+
 @Composable
 fun RecordingControlsCompose(
     session: RecordingSession,
@@ -88,6 +93,7 @@ fun RecordingControlsCompose(
         }
     }
 }
+
 @Composable
 private fun RecordingHeader(session: RecordingSession) {
     Row(
@@ -111,6 +117,7 @@ private fun RecordingHeader(session: RecordingSession) {
         RecordingStatusIndicator(state = session.state)
     }
 }
+
 @Composable
 private fun RecordingStatusIndicator(state: RecordingState) {
     val color by animateColorAsState(
@@ -138,6 +145,7 @@ private fun RecordingStatusIndicator(state: RecordingState) {
             .background(color)
     )
 }
+
 @Composable
 private fun RecordingControls(
     session: RecordingSession,
@@ -167,6 +175,7 @@ private fun RecordingControls(
                     Text("Start Recording")
                 }
             }
+
             RecordingState.STARTING -> {
                 Button(
                     onClick = {}, // Disabled during starting state
@@ -182,6 +191,7 @@ private fun RecordingControls(
                     Text("Starting...")
                 }
             }
+
             RecordingState.RECORDING -> {
                 Button(
                     onClick = onStopRecording,
@@ -214,6 +224,7 @@ private fun RecordingControls(
                     Text("Emergency", fontSize = 12.sp)
                 }
             }
+
             RecordingState.STOPPING -> {
                 Button(
                     onClick = {}, // Disabled during stopping state
@@ -229,6 +240,7 @@ private fun RecordingControls(
                     Text("Stopping...")
                 }
             }
+
             RecordingState.ERROR -> {
                 Button(
                     onClick = onStartRecording,
@@ -249,6 +261,7 @@ private fun RecordingControls(
         }
     }
 }
+
 @Composable
 private fun SessionDetails(session: RecordingSession) {
     Column {
@@ -322,6 +335,7 @@ private fun SessionDetails(session: RecordingSession) {
         }
     }
 }
+
 @Composable
 private fun SessionDetailItem(
     label: String,
@@ -352,6 +366,7 @@ private fun SessionDetailItem(
         )
     }
 }
+
 @Composable
 private fun TriggerSourceChip(triggerSource: TriggerSource) {
     val (text, color) = when (triggerSource) {
@@ -389,6 +404,7 @@ private fun TriggerSourceChip(triggerSource: TriggerSource) {
         }
     }
 }
+
 private fun getStatusMessage(session: RecordingSession): String {
     return when (session.state) {
         RecordingState.IDLE -> "Ready to start recording"
@@ -398,6 +414,7 @@ private fun getStatusMessage(session: RecordingSession): String {
         RecordingState.ERROR -> session.errorMessage ?: "Recording error occurred"
     }
 }
+
 // Demo component with simulated recording
 @Composable
 fun RecordingControlsDemo(

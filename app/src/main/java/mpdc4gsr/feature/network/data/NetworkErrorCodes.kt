@@ -9,6 +9,7 @@ object NetworkErrorCodes {
     const val ERROR_CONNECTION_RESET = 1005
     const val ERROR_AUTHENTICATION_FAILED = 1006
     const val ERROR_SSL_HANDSHAKE_FAILED = 1007
+
     // Bluetooth Error Codes (2xxx)
     const val ERROR_BLUETOOTH_NOT_SUPPORTED = 2001
     const val ERROR_BLUETOOTH_DISABLED = 2002
@@ -16,34 +17,40 @@ object NetworkErrorCodes {
     const val ERROR_BLUETOOTH_DEVICE_NOT_FOUND = 2004
     const val ERROR_BLUETOOTH_PAIRING_FAILED = 2005
     const val ERROR_BLUETOOTH_SERVICE_DISCOVERY_FAILED = 2006
+
     // Wi-Fi Error Codes (3xxx)
     const val ERROR_WIFI_DISABLED = 3001
     const val ERROR_WIFI_NO_NETWORK = 3002
     const val ERROR_WIFI_INVALID_IP = 3003
     const val ERROR_WIFI_PORT_UNREACHABLE = 3004
     const val ERROR_WIFI_DNS_RESOLUTION_FAILED = 3005
+
     // Protocol Error Codes (4xxx)
     const val ERROR_PROTOCOL_VERSION_MISMATCH = 4001
     const val ERROR_INVALID_MESSAGE_FORMAT = 4002
     const val ERROR_UNSUPPORTED_COMMAND = 4003
     const val ERROR_MESSAGE_TOO_LARGE = 4004
     const val ERROR_PROTOCOL_VIOLATION = 4005
+
     // Recording Error Codes (5xxx)
     const val ERROR_RECORDING_ALREADY_ACTIVE = 5001
     const val ERROR_RECORDING_NOT_ACTIVE = 5002
     const val ERROR_RECORDING_PERMISSION_DENIED = 5003
     const val ERROR_RECORDING_HARDWARE_FAILURE = 5004
     const val ERROR_RECORDING_STORAGE_FULL = 5005
+
     // Configuration Error Codes (6xxx)
     const val ERROR_INVALID_CONFIGURATION = 6001
     const val ERROR_SETTINGS_NOT_FOUND = 6002
     const val ERROR_SETTINGS_CORRUPTED = 6003
     const val ERROR_UNSUPPORTED_SETTING = 6004
+
     // System Error Codes (7xxx)
     const val ERROR_INSUFFICIENT_MEMORY = 7001
     const val ERROR_INSUFFICIENT_BATTERY = 7002
     const val ERROR_DEVICE_OVERHEATING = 7003
     const val ERROR_SYSTEM_RESOURCE_UNAVAILABLE = 7004
+
     // Unknown/Generic Error
     const val ERROR_UNKNOWN = 9999
 
@@ -116,6 +123,7 @@ object NetworkErrorCodes {
             ERROR_CONNECTION_RESET,
             ERROR_WIFI_NO_NETWORK,
             ERROR_WIFI_PORT_UNREACHABLE -> true
+
             else -> false
         }
     }

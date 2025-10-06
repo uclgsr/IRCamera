@@ -1,7 +1,9 @@
 package com.mpdc4gsr.module.thermalunified.stubs
+
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+
 class FenceView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -11,6 +13,7 @@ class FenceView @JvmOverloads constructor(
     fun clear() {
         // Stub implementation for clear method
     }
+
     interface CallBack {
         fun callback(
             startPoint: IntArray,
@@ -19,6 +22,7 @@ class FenceView @JvmOverloads constructor(
         )
     }
 }
+
 class FencePointView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -28,6 +32,7 @@ class FencePointView @JvmOverloads constructor(
     fun clear() {
         // Stub implementation for clear method
     }
+
     interface CallBack {
         fun callback(
             startPoint: IntArray,
@@ -35,6 +40,7 @@ class FencePointView @JvmOverloads constructor(
         )
     }
 }
+
 class FenceLineView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -44,6 +50,7 @@ class FenceLineView @JvmOverloads constructor(
     fun clear() {
         // Stub implementation for clear method
     }
+
     interface CallBack {
         fun callback(
             startPoint: IntArray,

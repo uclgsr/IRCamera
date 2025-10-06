@@ -1,7 +1,9 @@
 package com.mpdc4gsr.module.thermalunified.video.base
+
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
+
 open class GSYVideoPlayer
 @JvmOverloads
 constructor(
@@ -18,18 +20,24 @@ constructor(
     var fullWindowPlayer: GSYVideoPlayer? = null
     open fun startPlayLogic() {
     }
+
     open fun release() {
     }
+
     open fun onBackFullscreen() {
     }
+
     open fun getCurrentState(): Int = mCurrentState
     open fun updateStartImage() {
     }
+
     open fun getLayoutId(): Int = 0
     open fun onVideoResume(isResume: Boolean) {
     }
+
     open fun onVideoPause() {
     }
+
     companion object {
         const val CURRENT_STATE_NORMAL = 0
         const val CURRENT_STATE_PLAYING = 1

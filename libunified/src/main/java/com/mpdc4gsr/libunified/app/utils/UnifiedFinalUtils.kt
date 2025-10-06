@@ -1,8 +1,10 @@
 package com.mpdc4gsr.libunified.app.utils
+
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
+
 object UnifiedFinalUtils {
     // Convert byte array to various numeric types with endianness support
     fun bytesToShort(bytes: ByteArray, offset: Int = 0, littleEndian: Boolean = true): Short {
@@ -13,6 +15,7 @@ object UnifiedFinalUtils {
             ((bytes[offset].toInt() and 0xFF) shl 8 or (bytes[offset + 1].toInt() and 0xFF)).toShort()
         }
     }
+
     fun bytesToInt(bytes: ByteArray, offset: Int = 0, littleEndian: Boolean = true): Int {
         if (offset + 3 >= bytes.size) return 0
         return if (littleEndian) {
@@ -27,6 +30,7 @@ object UnifiedFinalUtils {
                     (bytes[offset + 3].toInt() and 0xFF)
         }
     }
+
     fun bytesToLong(bytes: ByteArray, offset: Int = 0, littleEndian: Boolean = true): Long {
         if (offset + 7 >= bytes.size) return 0L
         return if (littleEndian) {
@@ -49,14 +53,17 @@ object UnifiedFinalUtils {
                     (bytes[offset + 7].toLong() and 0xFF)
         }
     }
+
     fun bytesToFloat(bytes: ByteArray, offset: Int = 0, littleEndian: Boolean = true): Float {
         val intBits = bytesToInt(bytes, offset, littleEndian)
         return Float.fromBits(intBits)
     }
+
     fun bytesToDouble(bytes: ByteArray, offset: Int = 0, littleEndian: Boolean = true): Double {
         val longBits = bytesToLong(bytes, offset, littleEndian)
         return Double.fromBits(longBits)
     }
+
     data class TemperatureDrawConfig(
         val showGrid: Boolean = true,
         val showScale: Boolean = true,
@@ -67,6 +74,7 @@ object UnifiedFinalUtils {
         val textSize: Float = 12f,
         val lineWidth: Float = 2f
     )
+
     fun drawTemperatureOverlay(
         canvas: Canvas,
         config: TemperatureDrawConfig,
@@ -133,6 +141,7 @@ object UnifiedFinalUtils {
             canvas.drawLine(centerX, centerY - 10f, centerX, centerY + 10f, paint)
         }
     }
+
     private fun getTemperatureColor(
         temp: Float,
         minTemp: Float,
@@ -146,29 +155,35 @@ object UnifiedFinalUtils {
                 val hsv = floatArrayOf(hue, 1f, 1f)
                 android.graphics.Color.HSVToColor(hsv)
             }
+
             "IRON" -> {
                 when {
                     normalized < 0.33f -> {
                         val factor = normalized / 0.33f
                         android.graphics.Color.rgb((factor * 255).toInt(), 0, 0)
                     }
+
                     normalized < 0.66f -> {
                         val factor = (normalized - 0.33f) / 0.33f
                         android.graphics.Color.rgb(255, (factor * 255).toInt(), 0)
                     }
+
                     else -> {
                         val factor = (normalized - 0.66f) / 0.34f
                         android.graphics.Color.rgb(255, 255, (factor * 255).toInt())
                     }
                 }
             }
+
             "GRAYSCALE" -> {
                 val gray = (normalized * 255).toInt()
                 android.graphics.Color.rgb(gray, gray, gray)
             }
+
             else -> android.graphics.Color.WHITE
         }
     }
+
     data class InitializationConfig(
         val enableDebugMode: Boolean = false,
         val initializeNetworking: Boolean = true,
@@ -178,12 +193,14 @@ object UnifiedFinalUtils {
         val crashReportingEnabled: Boolean = true,
         val performanceMonitoringEnabled: Boolean = false
     )
+
     data class InitializationResult(
         val success: Boolean,
         val errors: List<String> = emptyList(),
         val warnings: List<String> = emptyList(),
         val initializationTimeMs: Long = 0L
     )
+
     fun initializeApplication(
         context: Context,
         config: InitializationConfig
@@ -246,6 +263,7 @@ object UnifiedFinalUtils {
             )
         }
     }
+
     fun validateRepositoryConsolidation(): Map<String, Any> {
         return mapOf(
             "consolidated_utilities_count" to 25,

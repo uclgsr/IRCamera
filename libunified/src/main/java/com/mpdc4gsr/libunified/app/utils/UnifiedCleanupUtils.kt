@@ -1,18 +1,22 @@
 package com.mpdc4gsr.libunified.app.utils
+
 import android.content.Context
 import java.io.File
+
 object UnifiedCleanupUtils {
     // ==================== FINAL BLE MODULE CONSOLIDATION ====================
     fun setDoubleAccuracy(num: Double, scale: Int): Double {
         val factor = Math.pow(10.0, scale.toDouble())
         return Math.floor(num * factor) / factor
     }
+
     fun getPercents(scale: Int, vararg values: Float): FloatArray {
         val sum = values.sum()
         if (sum == 0f) return FloatArray(values.size) { 0f }
         val factor = Math.pow(10.0, scale.toDouble()).toFloat()
         return values.map { (it / sum * 100 * factor).toInt() / factor }.toFloatArray()
     }
+
     fun splitPackage(src: ByteArray, size: Int): List<ByteArray> {
         if (size <= 0) return emptyList()
         val result = mutableListOf<ByteArray>()
@@ -24,6 +28,7 @@ object UnifiedCleanupUtils {
         }
         return result
     }
+
     fun joinPackage(vararg src: ByteArray): ByteArray {
         val totalSize = src.sumOf { it.size }
         val result = ByteArray(totalSize)
@@ -34,16 +39,20 @@ object UnifiedCleanupUtils {
         }
         return result
     }
+
     // ==================== FINAL LIBUNIFIED CONSOLIDATION ====================
     fun getScreenDensity(context: Context): Float {
         return context.resources.displayMetrics.density
     }
+
     fun dpToPx(context: Context, dp: Float): Int {
         return (dp * context.resources.displayMetrics.density + 0.5f).toInt()
     }
+
     fun pxToDp(context: Context, px: Float): Int {
         return (px / context.resources.displayMetrics.density + 0.5f).toInt()
     }
+
     // Color utility consolidation
     fun adjustColorBrightness(color: Int, factor: Float): Int {
         val red = ((color shr 16) and 0xFF)
@@ -55,10 +64,12 @@ object UnifiedCleanupUtils {
         val newBlue = (blue * factor).toInt().coerceIn(0, 255)
         return (alpha shl 24) or (newRed shl 16) or (newGreen shl 8) or newBlue
     }
+
     // ==================== FINAL COMPONENT CONSOLIDATION ====================
     fun calculateThermalAverage(temperatures: FloatArray): Float {
         return if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
     }
+
     fun findThermalHotspot(temperatures: FloatArray, width: Int): Pair<Int, Float> {
         if (temperatures.isEmpty()) return Pair(0, 0f)
         var maxTemp = temperatures[0]
@@ -71,9 +82,11 @@ object UnifiedCleanupUtils {
         }
         return Pair(maxIndex, maxTemp)
     }
+
     fun validateUserInput(input: String, minLength: Int = 1, maxLength: Int = 100): Boolean {
         return input.isNotBlank() && input.length in minLength..maxLength
     }
+
     // ==================== FINAL APP UTILITIES CONSOLIDATION ====================
     fun cleanupTempFiles(context: Context, maxAgeHours: Int = 24): Int {
         val tempDir = File(context.cacheDir, "temp")
@@ -87,6 +100,7 @@ object UnifiedCleanupUtils {
         }
         return deletedCount
     }
+
     fun formatFileSize(bytes: Long): String {
         val units = arrayOf("B", "KB", "MB", "GB", "TB")
         var size = bytes.toDouble()
@@ -97,6 +111,7 @@ object UnifiedCleanupUtils {
         }
         return "%.1f %s".format(size, units[unitIndex])
     }
+
     // ==================== REPOSITORY-WIDE CLEANUP UTILITIES ====================
     fun validateRepositoryStructure(rootPath: String): RepositoryValidationResult {
         val root = File(rootPath)
@@ -128,12 +143,14 @@ object UnifiedCleanupUtils {
             consolidationComplete = issues.isEmpty()
         )
     }
+
     data class RepositoryValidationResult(
         val isClean: Boolean,
         val issues: List<String>,
         val utilityFilesRemaining: Int,
         val consolidationComplete: Boolean
     )
+
     fun generateConsolidationReport(rootPath: String): String {
         val validation = validateRepositoryStructure(rootPath)
         return buildString {

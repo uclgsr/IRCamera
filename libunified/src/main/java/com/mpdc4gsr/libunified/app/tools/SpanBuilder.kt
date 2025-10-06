@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.tools
+
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -17,10 +18,12 @@ import androidx.annotation.Px
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import java.lang.ref.WeakReference
+
 class SpanBuilder : SpannableStringBuilder {
     constructor() : super()
     constructor(text: CharSequence) : super(text)
     constructor(text: CharSequence, start: Int, end: Int) : super(text, start, end)
+
     fun appendDrawable(
         context: Context,
         @DrawableRes resourceId: Int,
@@ -38,6 +41,7 @@ class SpanBuilder : SpannableStringBuilder {
         this.append(" ")
         return this
     }
+
     fun appendColor(
         text: CharSequence,
         @ColorInt color: Int,
@@ -55,6 +59,7 @@ class SpanBuilder : SpannableStringBuilder {
         )
         return this
     }
+
     fun appendColorAndClick(
         text: CharSequence,
         @ColorInt color: Int,
@@ -73,6 +78,7 @@ class SpanBuilder : SpannableStringBuilder {
         )
         return this
     }
+
     fun appendColorAndClick(
         context: Context,
         @StringRes resId: Int,
@@ -92,6 +98,7 @@ class SpanBuilder : SpannableStringBuilder {
         )
         return this
     }
+
     private class MyClickSpan(
         val listener: OnClickListener,
         val color: Int,
@@ -101,10 +108,12 @@ class SpanBuilder : SpannableStringBuilder {
             ds.color = color
             ds.isUnderlineText = hasUnderLine
         }
+
         override fun onClick(widget: View) {
             listener.onClick(widget)
         }
     }
+
     private class MyImageSpan(
         val context: Context,
         @DrawableRes val resourceId: Int,
@@ -126,6 +135,7 @@ class SpanBuilder : SpannableStringBuilder {
             weakReference = WeakReference(drawable)
             return drawable
         }
+
         override fun getSize(
             paint: Paint,
             text: CharSequence?,
@@ -142,6 +152,7 @@ class SpanBuilder : SpannableStringBuilder {
             }
             return rect.right
         }
+
         override fun draw(
             canvas: Canvas,
             text: CharSequence?,

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.data
+
 import android.os.Build
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -14,6 +15,7 @@ import androidx.camera.video.Recorder
 class CameraConfigurationManager {
     companion object {
         private const val TAG = "CameraConfigManager"
+
         // Video configuration constants
         private const val VIDEO_WIDTH_4K = 3840
         private const val VIDEO_HEIGHT_4K = 2160
@@ -25,6 +27,7 @@ class CameraConfigurationManager {
         private const val VIDEO_BITRATE_4K = 50_000_000
         private const val VIDEO_BITRATE_1080P = 20_000_000
         private const val JPEG_QUALITY = 100
+
         // Known devices that support specific features
         private val KNOWN_4K_DEVICES = setOf(
             "SM-S906B", "SM-S916B", "SM-S908B", "SM-S901B", "SM-S911B", "SM-S918B"
@@ -33,6 +36,7 @@ class CameraConfigurationManager {
             "SM-S906B", "SM-S916B", "SM-S908B", "SM-S901B", "SM-S911B", "SM-S918B"
         )
     }
+
     data class CameraConfiguration(
         val videoWidth: Int,
         val videoHeight: Int,
@@ -42,7 +46,7 @@ class CameraConfigurationManager {
         val supportsRAW: Boolean,
         val supports60fps: Boolean
     )
-    
+
     fun detectDeviceCapabilities(): Triple<Boolean, Boolean, Boolean> {
         return try {
             val deviceModel = Build.MODEL
@@ -65,6 +69,7 @@ class CameraConfigurationManager {
                                 deviceModel.startsWith("SM-G9") ||
                                 deviceModel.startsWith("SM-G99")
                         ) -> true
+
                 else -> false
             }
             Log.i(
@@ -78,7 +83,7 @@ class CameraConfigurationManager {
             Triple(false, false, false)
         }
     }
-    
+
     fun createOptimizedConfiguration(): CameraConfiguration {
         val (supports4K, supportsRAW, supports60fps) = detectDeviceCapabilities()
         return if (supports4K) {
@@ -103,7 +108,7 @@ class CameraConfigurationManager {
             )
         }
     }
-    
+
     fun createOptimizedRecorder(configuration: CameraConfiguration): Recorder {
         return try {
             val qualitySelector = if (configuration.supports4K) {
@@ -134,7 +139,7 @@ class CameraConfigurationManager {
                 .build()
         }
     }
-    
+
     fun createPreviewConfiguration(configuration: CameraConfiguration): Preview {
         return Preview.Builder().apply {
             val previewSize = Size(configuration.videoWidth, configuration.videoHeight)
@@ -143,7 +148,7 @@ class CameraConfigurationManager {
             AppLogger.i(TAG, "Preview configured: ${previewSize.width}x${previewSize.height}")
         }.build()
     }
-    
+
     fun createImageCaptureConfiguration(configuration: CameraConfiguration): ImageCapture {
         return ImageCapture.Builder().apply {
             @Suppress("DEPRECATION")
@@ -165,7 +170,7 @@ class CameraConfigurationManager {
             }
         }.build()
     }
-    
+
     fun getConfigurationSummary(configuration: CameraConfiguration): String {
         return buildString {
             appendLine("Camera Configuration:")

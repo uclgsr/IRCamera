@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.view
+
 import android.content.Context
 import android.graphics.Color
 import android.os.Handler
@@ -31,9 +32,11 @@ import kotlinx.coroutines.launch
 import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.libunified.R as LibcoreR
 import com.mpdc4gsr.module.thermalunified.R as ThermalR
+
 class ChartLogView : LineChart {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }
     private var viewScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(
@@ -43,6 +46,7 @@ class ChartLogView : LineChart {
     ) {
         initChart()
     }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         // Recreate the scope if it was cancelled
@@ -50,11 +54,13 @@ class ChartLogView : LineChart {
             viewScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         }
     }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         mHandler.removeCallbacksAndMessages(null)
         viewScope.cancel()
     }
+
     private val textColor by lazy { ContextCompat.getColor(context, LibcoreR.color.chart_text) }
     private val axisChartColors by lazy {
         ContextCompat.getColor(
@@ -116,6 +122,7 @@ class ChartLogView : LineChart {
             this.axisRight.isEnabled = false
         }
     }
+
     fun initEntry(
         data: ArrayList<ThermalEntity>,
         type: Int = 1,
@@ -162,6 +169,7 @@ class ChartLogView : LineChart {
                         }
                         XLog.w("DataSet:${set.entryCount}")
                     }
+
                     "line" -> {
                         var maxDataSet = lineData.getDataSetByIndex(0)
                         if (maxDataSet == null) {
@@ -190,6 +198,7 @@ class ChartLogView : LineChart {
                         lineData.addDataSet(minDataSet)
                         XLog.w("DataSet:${maxDataSet.entryCount}")
                     }
+
                     else -> {
                         var maxTempDataSet = lineData.getDataSetByIndex(0)
                         if (maxTempDataSet == null) {
@@ -230,6 +239,7 @@ class ChartLogView : LineChart {
             }
         }
     }
+
     private val bgChartColors =
         intArrayOf(
             R.drawable.bg_chart_fill,
@@ -248,6 +258,7 @@ class ChartLogView : LineChart {
             LibR.color.chart_point_min,
             LibR.color.chart_point_center,
         )
+
     private fun createSet(
         index: Int,
         label: String,
@@ -268,6 +279,7 @@ class ChartLogView : LineChart {
         set.setDrawValues(false)
         return set
     }
+
     private fun clearEntity(isEmpty: Boolean) {
         initChart()
         if (isEmpty) {

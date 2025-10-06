@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.bean
+
 data class TargetColorBean(
     val res: Int,
     val name: String,

@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data.utils
+
 import android.content.Context
 import android.os.Build
 import android.os.StatFs
@@ -9,6 +10,7 @@ import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+
 class SessionDirectoryManager(private val context: Context) {
     companion object {
         private const val TAG = "SessionDirectoryManager"
@@ -26,17 +28,20 @@ class SessionDirectoryManager(private val context: Context) {
         private const val WARNING_FREE_SPACE_MB = 1000L
         private val SESSION_ID_FORMAT = SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault())
     }
+
     private val baseDirectory: File by lazy {
         File(context.getExternalFilesDir(null), SESSIONS_ROOT_DIR).also {
             it.mkdirs()
         }
     }
+
     fun generateSessionId(): String {
         val timestamp = SESSION_ID_FORMAT.format(Date())
         val deviceModel = Build.MODEL.replace(Regex("[^a-zA-Z0-9]"), "")
         val uuid = UUID.randomUUID().toString().take(8)
         return "${timestamp}_${deviceModel}_${uuid}"
     }
+
     fun createSessionDirectory(sessionId: String): SessionDirectory {
         val sessionDir = File(baseDirectory, sessionId)
         if (!sessionDir.mkdirs() && !sessionDir.exists()) {
@@ -54,6 +59,7 @@ class SessionDirectoryManager(private val context: Context) {
             shimmerDir = shimmerDir
         )
     }
+
     fun createSessionMetadata(sessionDir: SessionDirectory, metadata: SessionMetadata): File {
         val metadataFile = File(sessionDir.rootDir, SESSION_METADATA_FILE)
         val jsonMetadata = JSONObject().apply {
@@ -72,6 +78,7 @@ class SessionDirectoryManager(private val context: Context) {
         AppLogger.i(TAG, "Created session metadata: ${metadataFile.absolutePath}")
         return metadataFile
     }
+
     fun updateSessionMetadata(
         sessionDir: SessionDirectory,
         endTime: Long,
@@ -97,6 +104,7 @@ class SessionDirectoryManager(private val context: Context) {
             }
         }
     }
+
     fun checkStorageSpace(): StorageStatus {
         val stat = StatFs(baseDirectory.absolutePath)
         val availableBytes = stat.availableBytes
@@ -109,6 +117,7 @@ class SessionDirectoryManager(private val context: Context) {
             shouldWarn = availableMB < WARNING_FREE_SPACE_MB
         )
     }
+
     fun cleanupFailedSessions(): List<String> {
         val cleanedSessions = mutableListOf<String>()
         baseDirectory.listFiles()?.forEach { sessionDir ->
@@ -124,6 +133,7 @@ class SessionDirectoryManager(private val context: Context) {
         }
         return cleanedSessions
     }
+
     private fun getSessionFilesInfo(sessionDir: SessionDirectory): Map<String, Any> {
         val filesInfo = mutableMapOf<String, Any>()
         val rgbVideo = File(sessionDir.rgbDir, RGB_VIDEO_FILE)
@@ -152,6 +162,7 @@ class SessionDirectoryManager(private val context: Context) {
         )
         return filesInfo
     }
+
     private fun isFailedSession(sessionDir: File): Boolean {
         val metadataFile = File(sessionDir, SESSION_METADATA_FILE)
         if (!metadataFile.exists()) {
@@ -173,6 +184,7 @@ class SessionDirectoryManager(private val context: Context) {
         }
         return false
     }
+
     private fun getAppVersion(): String {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
@@ -181,6 +193,7 @@ class SessionDirectoryManager(private val context: Context) {
             "unknown"
         }
     }
+
     fun getStandardFilePath(sessionDir: SessionDirectory, sensor: String, fileName: String): File {
         val sensorDir = when (sensor.lowercase()) {
             "rgb", "camera", "rgbcamera" -> sessionDir.rgbDir
@@ -190,6 +203,7 @@ class SessionDirectoryManager(private val context: Context) {
         }
         return File(sensorDir, fileName)
     }
+
     fun deleteSession(sessionId: String): Boolean {
         return try {
             val sessionDir = File(baseDirectory, sessionId)
@@ -209,6 +223,7 @@ class SessionDirectoryManager(private val context: Context) {
             false
         }
     }
+
     fun exportSession(sessionId: String): Boolean {
         return try {
             val sessionDir = File(baseDirectory, sessionId)
@@ -226,6 +241,7 @@ class SessionDirectoryManager(private val context: Context) {
         }
     }
 }
+
 data class SessionDirectory(
     val sessionId: String,
     val rootDir: File,
@@ -233,6 +249,7 @@ data class SessionDirectory(
     val thermalDir: File,
     val shimmerDir: File
 )
+
 data class SessionMetadata(
     val startTime: Long,
     val enabledSensors: List<String>,
@@ -240,6 +257,7 @@ data class SessionMetadata(
     val studyName: String? = null,
     val customMetadata: Map<String, Any> = emptyMap()
 )
+
 data class StorageStatus(
     val availableMB: Long,
     val totalMB: Long,

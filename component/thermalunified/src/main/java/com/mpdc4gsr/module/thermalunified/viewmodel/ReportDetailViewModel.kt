@@ -1,7 +1,9 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
+
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.repository.BaseRepository
 import kotlinx.coroutines.flow.*
+
 class ReportDetailViewModel : BaseViewModel() {
     private val _reportDate = MutableStateFlow("")
     val reportDate: StateFlow<String> = _reportDate.asStateFlow()
@@ -18,10 +20,12 @@ class ReportDetailViewModel : BaseViewModel() {
     private val _events = MutableSharedFlow<ReportDetailEvent>()
     val events: SharedFlow<ReportDetailEvent> = _events.asSharedFlow()
     private val reportRepository = ReportDetailRepository()
+
     sealed class ReportDetailEvent {
         data class ShareReport(val reportId: String) : ReportDetailEvent()
         data class DeleteReport(val reportId: String) : ReportDetailEvent()
     }
+
     fun loadReportData(reportId: String) {
         launchWithLoading {
             _reportId.value = reportId
@@ -35,13 +39,16 @@ class ReportDetailViewModel : BaseViewModel() {
                     _inspector.value = report.inspector
                     _equipment.value = report.equipment
                 }
+
                 is BaseRepository.Result.Error -> {
                     throw result.exception
                 }
+
                 else -> {}
             }
         }
     }
+
     fun shareReport() {
         launchWithErrorHandling {
             val currentReportId = _reportId.value
@@ -52,6 +59,7 @@ class ReportDetailViewModel : BaseViewModel() {
             }
         }
     }
+
     fun deleteReport() {
         launchWithErrorHandling {
             val currentReportId = _reportId.value
@@ -62,6 +70,7 @@ class ReportDetailViewModel : BaseViewModel() {
             }
         }
     }
+
     private inner class ReportDetailRepository : BaseRepository() {
         suspend fun getReportById(reportId: String): Result<ReportDetail> = safeCall {
             val cacheKey = "report_detail_$reportId"
@@ -77,6 +86,7 @@ class ReportDetailViewModel : BaseViewModel() {
             }
         }
     }
+
     data class ReportDetail(
         val id: String,
         val date: String,

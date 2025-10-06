@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,6 +18,7 @@ fun Modifier.safeClickable(
     role: Role? = null,
     onClick: () -> Unit
 ): Modifier = libSafeClickable(enabled, onClickLabel, role, onClick)
+
 fun Modifier.safeClickableWithRipple(
     enabled: Boolean = true,
     bounded: Boolean = true,
@@ -26,6 +28,7 @@ fun Modifier.safeClickableWithRipple(
     role: Role? = null,
     onClick: () -> Unit
 ): Modifier = libSafeClickableWithRipple(enabled, bounded, radius, color, onClickLabel, role, onClick)
+
 @Composable
 fun Modifier.safeClickableNoRipple(
     enabled: Boolean = true,
@@ -33,6 +36,7 @@ fun Modifier.safeClickableNoRipple(
     role: Role? = null,
     onClick: () -> Unit
 ): Modifier = libSafeClickableNoRipple(enabled, onClickLabel, role, onClick)
+
 @Composable
 fun Modifier.safeClickableDeferred(
     enabled: Boolean = true,
@@ -40,5 +44,6 @@ fun Modifier.safeClickableDeferred(
     role: Role? = null,
     onClick: () -> Unit
 ): Modifier = libSafeClickableDeferred(enabled, onClickLabel, role, onClick)
+
 @Composable
 fun deferAction(action: () -> Unit): () -> Unit = libDeferAction(action)

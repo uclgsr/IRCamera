@@ -1,5 +1,7 @@
 package com.mpdc4gsr.gsr.model
+
 import java.io.Serializable
+
 data class SessionInfo(
     val sessionId: String,
     val startTime: Long,
@@ -19,6 +21,7 @@ data class SessionInfo(
         val end = endTime ?: System.currentTimeMillis()
         return end - startTime
     }
+
     fun getDurationFormatted(): String {
         val durationMs = getDurationMs()
         val seconds = durationMs / 1000
@@ -30,9 +33,11 @@ data class SessionInfo(
             else -> "${seconds}s"
         }
     }
+
     fun addSyncMark(mark: SyncMark) {
         syncMarks.add(mark)
     }
+
     fun getDataTypeSummary(): String {
         val types = mutableListOf<String>()
         if (hasGSRData) types.add("GSR")

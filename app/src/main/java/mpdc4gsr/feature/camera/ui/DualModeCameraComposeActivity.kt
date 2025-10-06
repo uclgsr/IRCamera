@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.ui
+
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -28,6 +29,7 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, DualModeCameraComposeActivity::class.java))
         }
+
         fun startWithMode(context: Context, mode: String) {
             val intent = Intent(context, DualModeCameraComposeActivity::class.java).apply {
                 putExtra("INITIAL_MODE", mode)
@@ -35,9 +37,11 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
             context.startActivity(intent)
         }
     }
+
     override fun createViewModel(): DualModeCameraViewModel {
         return viewModels<DualModeCameraViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: DualModeCameraViewModel) {
@@ -111,6 +115,7 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
         }
     }
 }
+
 @Composable
 private fun DualModeCameraContent(
     isRecording: Boolean,
@@ -145,6 +150,7 @@ private fun DualModeCameraContent(
         )
     }
 }
+
 @Composable
 private fun CameraPreviewSection(
     cameraMode: String,
@@ -190,16 +196,19 @@ private fun CameraPreviewSection(
                     }
                 }
             }
+
             "Thermal" -> {
                 ThermalCameraPreview(
                     modifier = Modifier.fillMaxSize()
                 )
             }
+
             "RGB" -> {
                 RGBCameraPreview(
                     modifier = Modifier.fillMaxSize()
                 )
             }
+
             "Split" -> {
                 Row(
                     modifier = Modifier.fillMaxSize()
@@ -234,6 +243,7 @@ private fun CameraPreviewSection(
         )
     }
 }
+
 @Composable
 private fun CameraControlsSection(
     isRecording: Boolean,
@@ -323,6 +333,7 @@ private fun CameraControlsSection(
         }
     }
 }
+
 @Composable
 private fun CameraModeSelector(
     selectedMode: String,
@@ -347,6 +358,7 @@ private fun CameraModeSelector(
         }
     }
 }
+
 @Composable
 private fun RecordingStatusCard(
     isRecording: Boolean,
@@ -393,6 +405,7 @@ private fun RecordingStatusCard(
         }
     }
 }
+
 @Composable
 private fun ThermalCameraPreview(
     modifier: Modifier = Modifier
@@ -420,6 +433,7 @@ private fun ThermalCameraPreview(
         }
     }
 }
+
 @Composable
 private fun RGBCameraPreview(
     modifier: Modifier = Modifier
@@ -449,6 +463,7 @@ private fun RGBCameraPreview(
         }
     }
 }
+
 @Composable
 private fun TemperatureOverlay(
     centerTemp: Float,
@@ -494,6 +509,7 @@ private fun TemperatureOverlay(
         }
     }
 }
+
 @Composable
 private fun RecordingIndicator(
     modifier: Modifier = Modifier
@@ -524,6 +540,7 @@ private fun RecordingIndicator(
         }
     }
 }
+
 @Composable
 private fun CameraModeIndicator(
     mode: String,
@@ -543,6 +560,7 @@ private fun CameraModeIndicator(
         )
     }
 }
+
 @Composable
 private fun CameraSettingsDialog(
     onDismiss: () -> Unit,
@@ -625,6 +643,7 @@ private fun CameraSettingsDialog(
         }
     )
 }
+
 private fun formatDuration(seconds: Long): String {
     val minutes = seconds / 60
     val remainingSeconds = seconds % 60

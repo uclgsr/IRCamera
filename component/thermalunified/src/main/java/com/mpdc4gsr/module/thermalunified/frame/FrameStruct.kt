@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.frame
+
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
 import com.mpdc4gsr.module.thermalunified.compat.spToPx
@@ -7,6 +8,7 @@ import com.mpdc4gsr.libunified.app.bean.WatermarkBean
 import com.mpdc4gsr.libunified.app.common.ProductType.PRODUCT_NAME_TC007
 import com.mpdc4gsr.libunified.app.utils.ByteUtils
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.toBytes
+
 class FrameStruct() {
     companion object {
         private const val SIZE = 1024
@@ -81,6 +83,7 @@ class FrameStruct() {
             return resultArray
         }
     }
+
     var len = 0
     var name: String = ""
     var ver: String = ""
@@ -101,6 +104,7 @@ class FrameStruct() {
     var distance: Float = 0f
     var radiation: Float = 0f
     var isAmplify: Boolean = false
+
     constructor(data: ByteArray) : this() {
         len = (data[0].toInt() and 0xff shl 8) or (data[1].toInt() and 0xff)
         var nameEndIndex = 17
@@ -149,5 +153,6 @@ class FrameStruct() {
         radiation = java.nio.ByteBuffer.wrap(radiationBytes).float
         isAmplify = data[672].toInt() == 1
     }
+
     fun isTC007(): Boolean = name == PRODUCT_NAME_TC007
 }

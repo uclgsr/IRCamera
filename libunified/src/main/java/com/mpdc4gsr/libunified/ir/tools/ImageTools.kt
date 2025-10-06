@@ -1,10 +1,12 @@
 package com.mpdc4gsr.libunified.ir.tools
+
 import androidx.annotation.ColorInt
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.utils.ByteUtils
 import com.mpdc4gsr.libunified.ir.tools.bean.SelectIndexBean
 import java.util.concurrent.LinkedBlockingQueue
+
 object ImageTools {
     fun readFrame(
         imageBytes: ByteArray,
@@ -18,6 +20,7 @@ object ImageTools {
         val selectBean = getTempIndex(tempBytes, max, min)
         bitmapFromRgbaGrey(bytes = imageBytes, bean = selectBean)
     }
+
     fun readFrame(
         imageBytes: ByteArray,
         tempBytes: ByteArray,
@@ -37,6 +40,7 @@ object ImageTools {
             minColor = minColor,
         )
     }
+
     private fun bitmapFromRgba(
         bytes: ByteArray,
         bean: SelectIndexBean,
@@ -80,6 +84,7 @@ object ImageTools {
             }
         }
     }
+
     private fun bitmapFromRgbaGrey(
         bytes: ByteArray,
         bean: SelectIndexBean,
@@ -108,6 +113,7 @@ object ImageTools {
             }
         }
     }
+
     private fun getTempIndex(
         bytes: ByteArray,
         max: Float,
@@ -130,12 +136,14 @@ object ImageTools {
         val minIndex: IntArray = minList.toIntArray()
         return SelectIndexBean(maxIndex, minIndex)
     }
+
     private fun readTempValue(bytes: ByteArray): Float {
         val data: ByteArray = with(ByteUtils) { bytes.descBytes() }
         val scale = 16
         val tempInt = with(ByteUtils) { bytesToInt(data) } / 4
         return (tempInt.toDouble() / scale.toDouble() - 273.15).toFloat()
     }
+
     fun dualReadFrame(
         imageBytes: ByteArray,
         tempBytes: ByteArray,
@@ -149,6 +157,7 @@ object ImageTools {
         }
         dualReplaceColor(imageBytes, tempBytes, max, min, maxColor, minColor)
     }
+
     @JvmStatic
     private fun dualReplaceColor(
         imageBytes: ByteArray,

@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data.utils
+
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -10,6 +11,7 @@ import java.io.IOException
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+
 open class BufferedDataWriter(
     private val outputFile: File,
     private val bufferSize: Int = 8192,
@@ -19,6 +21,7 @@ open class BufferedDataWriter(
     companion object {
         private const val TAG = "BufferedDataWriter"
     }
+
     private var writer: BufferedWriter? = null
     private val writeQueue = LinkedBlockingQueue<String>(maxQueueSize)
     private val isRunning = AtomicBoolean(false)
@@ -50,6 +53,7 @@ open class BufferedDataWriter(
             false
         }
     }
+
     fun writeLine(line: String): Boolean {
         if (!isRunning.get()) {
             AppLogger.w(TAG, "Writer not running, cannot write line")
@@ -61,6 +65,7 @@ open class BufferedDataWriter(
         }
         return success
     }
+
     fun writeLines(lines: List<String>): Int {
         if (!isRunning.get()) {
             return 0
@@ -76,6 +81,7 @@ open class BufferedDataWriter(
         }
         return written
     }
+
     suspend fun flush() = withContext(Dispatchers.IO) {
         try {
             writer?.flush()
@@ -83,6 +89,7 @@ open class BufferedDataWriter(
             AppLogger.e(TAG, "Failed to flush writer for ${outputFile.name}", e)
         }
     }
+
     suspend fun stop() = withContext(Dispatchers.IO) {
         if (!isRunning.get()) {
             return@withContext
@@ -106,6 +113,7 @@ open class BufferedDataWriter(
             AppLogger.e(TAG, "Error stopping writer for ${outputFile.name}", e)
         }
     }
+
     fun getWriteStats(): WriteStats {
         return WriteStats(
             fileName = outputFile.name,
@@ -115,6 +123,7 @@ open class BufferedDataWriter(
             isRunning = isRunning.get()
         )
     }
+
     private suspend fun runWriterLoop() {
         AppLogger.d(TAG, "Starting writer loop for ${outputFile.name}")
         while (isRunning.get()) {
@@ -144,6 +153,7 @@ open class BufferedDataWriter(
         }
         AppLogger.d(TAG, "Writer loop ended for ${outputFile.name}")
     }
+
     private suspend fun runFlushLoop() {
         while (isRunning.get()) {
             try {
@@ -158,6 +168,7 @@ open class BufferedDataWriter(
             }
         }
     }
+
     private fun drainQueue() {
         try {
             val remainingLines = mutableListOf<String>()
@@ -177,6 +188,7 @@ open class BufferedDataWriter(
             AppLogger.e(TAG, "Error draining queue for ${outputFile.name}", e)
         }
     }
+
     private fun cleanup() {
         try {
             isRunning.set(false)
@@ -189,6 +201,7 @@ open class BufferedDataWriter(
         }
     }
 }
+
 data class WriteStats(
     val fileName: String,
     val bytesWritten: Long,

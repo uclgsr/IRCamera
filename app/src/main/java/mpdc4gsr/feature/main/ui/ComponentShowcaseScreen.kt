@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.main.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -44,6 +45,7 @@ fun ComponentShowcaseScreen(
         }
     }
 }
+
 @Composable
 private fun ComponentShowcaseContent(
     modifier: Modifier = Modifier
@@ -69,6 +71,7 @@ private fun ComponentShowcaseContent(
         NavigationComponentsShowcase()
     }
 }
+
 @Composable
 private fun TypographyShowcase() {
     Card(
@@ -120,6 +123,7 @@ private fun TypographyShowcase() {
         }
     }
 }
+
 @Composable
 private fun ColorPaletteShowcase() {
     Card(
@@ -155,6 +159,7 @@ private fun ColorPaletteShowcase() {
         }
     }
 }
+
 @Composable
 private fun ColorSwatch(
     name: String,
@@ -175,6 +180,7 @@ private fun ColorSwatch(
         )
     }
 }
+
 @Composable
 private fun InteractiveComponentsShowcase() {
     var sliderValue by remember { mutableFloatStateOf(0.5f) }
@@ -254,6 +260,7 @@ private fun InteractiveComponentsShowcase() {
         }
     }
 }
+
 @Composable
 private fun StatusIndicatorsShowcase() {
     Card(
@@ -317,6 +324,7 @@ private fun StatusIndicatorsShowcase() {
         }
     }
 }
+
 @Composable
 private fun StatusIcon(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -339,6 +347,7 @@ private fun StatusIcon(
         )
     }
 }
+
 @Composable
 private fun CardLayoutsShowcase() {
     Card(
@@ -431,6 +440,7 @@ private fun CardLayoutsShowcase() {
         }
     }
 }
+
 @Composable
 private fun NavigationComponentsShowcase() {
     Card(
@@ -469,6 +479,7 @@ private fun NavigationComponentsShowcase() {
         }
     }
 }
+
 @Composable
 private fun NavigationFeature(feature: String) {
     Row(

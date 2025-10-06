@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -23,15 +24,18 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRConfigViewModel
+
 class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
     private var isTC007 = false
     override fun onCreate(savedInstanceState: Bundle?) {
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
         super.onCreate(savedInstanceState)
     }
+
     override fun createViewModel(): IRConfigViewModel {
         return viewModels<IRConfigViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRConfigViewModel) {
@@ -159,6 +163,7 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
         }
     }
 }
+
 @Composable
 private fun DefaultModelCard(
     isSelected: Boolean,
@@ -204,6 +209,7 @@ private fun DefaultModelCard(
         }
     }
 }
+
 @Composable
 private fun ConfigurationCard(
     title: String,
@@ -261,6 +267,7 @@ private fun ConfigurationCard(
         }
     }
 }
+
 @Composable
 private fun MaterialPresetCard(
     material: MaterialPreset,
@@ -321,12 +328,14 @@ private fun MaterialPresetCard(
         }
     }
 }
+
 // Data classes and helper functions
 data class MaterialPreset(
     val name: String,
     val emissivity: Float,
     val icon: androidx.compose.ui.graphics.vector.ImageVector
 )
+
 private fun getMaterialPresets(): List<MaterialPreset> {
     return listOf(
         MaterialPreset("Human Skin", 0.98f, Icons.Default.Person),

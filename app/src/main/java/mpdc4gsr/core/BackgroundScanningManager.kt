@@ -1,4 +1,5 @@
 package mpdc4gsr.core
+
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -9,25 +10,30 @@ import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+
 class BackgroundScanningManager(
     private val context: Context
 ) : DefaultLifecycleObserver, ServiceConnection {
     companion object {
         private const val TAG = "BackgroundScanningManager"
     }
+
     private var scanningService: BackgroundDeviceScanningService? = null
     private var isBound = false
     private var isServiceStarted = false
+
     // Callback interface for service status updates
     interface ServiceStatusCallback {
         fun onServiceConnected(service: BackgroundDeviceScanningService)
         fun onServiceDisconnected()
         fun onServiceStatusChanged(status: BackgroundDeviceScanningService.ServiceStatus)
     }
+
     private var statusCallback: ServiceStatusCallback? = null
     fun setStatusCallback(callback: ServiceStatusCallback?) {
         this.statusCallback = callback
     }
+
     fun startBackgroundScanning() {
         try {
             AppLogger.i(TAG, "Starting background device scanning service")
@@ -42,6 +48,7 @@ class BackgroundScanningManager(
             AppLogger.e(TAG, "Failed to start background scanning service", e)
         }
     }
+
     fun stopBackgroundScanning() {
         try {
             AppLogger.i(TAG, "Stopping background device scanning service")
@@ -59,6 +66,7 @@ class BackgroundScanningManager(
             AppLogger.e(TAG, "Failed to stop background scanning service", e)
         }
     }
+
     fun pauseBackgroundScanning() {
         try {
             AppLogger.d(TAG, "Pausing background device scanning")
@@ -70,6 +78,7 @@ class BackgroundScanningManager(
             AppLogger.e(TAG, "Failed to pause background scanning", e)
         }
     }
+
     fun resumeBackgroundScanning() {
         try {
             AppLogger.d(TAG, "Resuming background device scanning")
@@ -81,6 +90,7 @@ class BackgroundScanningManager(
             AppLogger.e(TAG, "Failed to resume background scanning", e)
         }
     }
+
     private fun bindService() {
         try {
             val intent = Intent(context, BackgroundDeviceScanningService::class.java)
@@ -89,6 +99,7 @@ class BackgroundScanningManager(
             AppLogger.e(TAG, "Failed to bind to background scanning service", e)
         }
     }
+
     private fun unbindService() {
         try {
             if (isBound) {
@@ -101,12 +112,15 @@ class BackgroundScanningManager(
             AppLogger.w(TAG, "Failed to unbind from background scanning service", e)
         }
     }
+
     fun getServiceStatus(): BackgroundDeviceScanningService.ServiceStatus? {
         return scanningService?.getStatus()
     }
+
     fun isServiceRunning(): Boolean {
         return isServiceStarted && scanningService != null
     }
+
     // ServiceConnection implementation
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         AppLogger.d(TAG, "Connected to background scanning service")
@@ -115,12 +129,14 @@ class BackgroundScanningManager(
         isBound = true
         statusCallback?.onServiceConnected(scanningService!!)
     }
+
     override fun onServiceDisconnected(name: ComponentName?) {
         AppLogger.d(TAG, "Disconnected from background scanning service")
         scanningService = null
         isBound = false
         statusCallback?.onServiceDisconnected()
     }
+
     // Lifecycle observer implementation
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
@@ -128,6 +144,7 @@ class BackgroundScanningManager(
             bindService()
         }
     }
+
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
         // Keep service running in background, but unbind to avoid leaks
@@ -135,6 +152,7 @@ class BackgroundScanningManager(
             unbindService()
         }
     }
+
     override fun onDestroy(owner: LifecycleOwner) {
         super.onDestroy(owner)
         stopBackgroundScanning()

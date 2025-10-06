@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,10 +24,12 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+
 class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -208,6 +211,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
+
 @Composable
 private fun SettingsCategoryCard(
     title: String,
@@ -247,6 +251,7 @@ private fun SettingsCategoryCard(
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsDropdownItem(
@@ -303,6 +308,7 @@ private fun SettingsDropdownItem(
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
+
 @Composable
 private fun SettingsSliderItem(
     title: String,
@@ -344,6 +350,7 @@ private fun SettingsSliderItem(
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
+
 @Composable
 private fun SettingsSwitchItem(
     title: String,
@@ -382,6 +389,7 @@ private fun SettingsSwitchItem(
     }
     Spacer(modifier = Modifier.height(16.dp))
 }
+
 @Composable
 private fun AdvancedSettingItem(
     title: String,
@@ -427,6 +435,7 @@ private fun AdvancedSettingItem(
     }
     Spacer(modifier = Modifier.height(8.dp))
 }
+
 @Composable
 private fun SaveResetButtons(
     onSave: () -> Unit,

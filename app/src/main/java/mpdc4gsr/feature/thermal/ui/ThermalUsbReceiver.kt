@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.thermal.ui
+
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -9,11 +10,13 @@ import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
 import com.mpdc4gsr.libunified.app.event.DeviceEventManager
+
 class ThermalUsbReceiver : BroadcastReceiver() {
     companion object {
         private const val TAG = "ThermalUsbReceiver"
         private const val USB_PERMISSION_ACTION = "mpdc4gsr.USB_PERMISSION"
     }
+
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context == null || intent == null) return
         try {
@@ -21,9 +24,11 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 UsbManager.ACTION_USB_DEVICE_ATTACHED -> {
                     handleDeviceAttached(context, intent)
                 }
+
                 UsbManager.ACTION_USB_DEVICE_DETACHED -> {
                     handleDeviceDetached(context, intent)
                 }
+
                 USB_PERMISSION_ACTION -> {
                     handleUsbPermissionResult(context, intent)
                 }
@@ -32,6 +37,7 @@ class ThermalUsbReceiver : BroadcastReceiver() {
             AppLogger.e(TAG, "Error handling USB broadcast", e)
         }
     }
+
     private fun handleDeviceAttached(context: Context, intent: Intent) {
         val device =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
@@ -63,6 +69,7 @@ class ThermalUsbReceiver : BroadcastReceiver() {
             }
         }
     }
+
     private fun handleDeviceDetached(context: Context, intent: Intent) {
         val device =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
@@ -84,6 +91,7 @@ class ThermalUsbReceiver : BroadcastReceiver() {
             }
         }
     }
+
     private fun handleUsbPermissionResult(context: Context, intent: Intent) {
         val device =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {

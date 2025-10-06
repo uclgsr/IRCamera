@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.libunified.app.compose.utils.deferAction
+
 @Composable
 fun HomeGuideDialogCompose(
     initialStep: Int = 1,
@@ -61,10 +63,12 @@ fun HomeGuideDialogCompose(
                                 currentStep = 2
                                 onNextStep(1)
                             }
+
                             2 -> {
                                 currentStep = 3
                                 onNextStep(2)
                             }
+
                             3 -> {
                                 onNextStep(3)
                                 onDismiss()
@@ -80,6 +84,7 @@ fun HomeGuideDialogCompose(
         }
     }
 }
+
 @Composable
 private fun GuideStepContent(
     step: Int,
@@ -105,6 +110,7 @@ private fun GuideStepContent(
         }
     }
 }
+
 @Composable
 private fun GuideStep1Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
     Column(
@@ -141,6 +147,7 @@ private fun GuideStep1Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
         }
     }
 }
+
 @Composable
 private fun GuideStep2Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
     Column(
@@ -177,6 +184,7 @@ private fun GuideStep2Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
         }
     }
 }
+
 @Composable
 private fun GuideStep3Content(onNext: () -> Unit) {
     Column(
@@ -202,6 +210,7 @@ private fun GuideStep3Content(onNext: () -> Unit) {
         }
     }
 }
+
 @Composable
 fun HomeGuideDialogComposePreview() {
     var showDialog by remember { mutableStateOf(true) }

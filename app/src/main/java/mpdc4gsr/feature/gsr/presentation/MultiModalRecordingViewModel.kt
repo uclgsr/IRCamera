@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.presentation
+
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -30,6 +31,7 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
         val sessionId: String = "",
         val participantId: String? = null
     )
+
     data class GSRState(
         val isConnected: Boolean = false,
         val isRecording: Boolean = false,
@@ -38,6 +40,7 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
         val signalQuality: SignalQuality = SignalQuality.UNKNOWN,
         val deviceBattery: Int? = null
     )
+
     data class CameraState(
         val isInitialized: Boolean = false,
         val isRecording: Boolean = false,
@@ -47,12 +50,14 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
         val frameRate: Int = 30,
         val resolution: String = "1080p"
     )
+
     data class NetworkState(
         val isConnected: Boolean = false,
         val controllerInfo: NetworkClient.ControllerInfo? = null,
         val isSyncing: Boolean = false,
         val lastSyncTime: Long? = null
     )
+
     data class ShimmerDeviceInfo(
         val shimmer: Shimmer?,
         val deviceName: String,
@@ -61,6 +66,7 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
         val signalStrength: Int = 0,
         val isConnected: Boolean = false
     )
+
     data class RecordingConfiguration(
         val enableVideo: Boolean = true,
         val enable4K: Boolean = false,
@@ -70,6 +76,7 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
         val participantId: String = "",
         val sessionTemplate: String? = null
     )
+
     data class CombinedRecordingState(
         val gsrState: GSRState,
         val cameraState: CameraState,
@@ -80,24 +87,29 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
         val anySystemRecording: Boolean
             get() = gsrState.isRecording || cameraState.isRecording
     }
+
     enum class SignalQuality {
         EXCELLENT, GOOD, FAIR, POOR, UNKNOWN
     }
+
     data class RecordingAction(
         val type: ActionType,
         val message: String? = null,
         val data: Any? = null
     )
+
     private val context: Context = application.applicationContext
     private lateinit var gsrRecorder: GSRRecorder
     private lateinit var sessionManager: SessionManager
     private var rgbCameraRecorder: RgbCameraRecorder? = null
     private var networkClient: NetworkClient? = null
+
     // Recording State Management
     private val _recordingState = MutableLiveData<RecordingState>()
     val recordingState: LiveData<RecordingState> = _recordingState
     private val _sessionInfo = MutableLiveData<SessionInfo?>()
     val sessionInfo: LiveData<SessionInfo?> = _sessionInfo
+
     // Multimodal Sensor States
     private val _gsrState = MutableStateFlow<GSRState>(GSRState())
     val gsrState: StateFlow<GSRState> = _gsrState
@@ -105,11 +117,13 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
     val cameraState: StateFlow<CameraState> = _cameraState
     private val _networkState = MutableStateFlow<NetworkState>(NetworkState())
     val networkState: StateFlow<NetworkState> = _networkState
+
     // Device Management
     private val _discoveredDevices = MutableLiveData<List<ShimmerDeviceInfo>>()
     val discoveredDevices: LiveData<List<ShimmerDeviceInfo>> = _discoveredDevices
     private val _connectedDevices = MutableLiveData<List<ShimmerDeviceInfo>>()
     val connectedDevices: LiveData<List<ShimmerDeviceInfo>> = _connectedDevices
+
     // UI State and Actions
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
@@ -117,16 +131,19 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
     val statusMessage: LiveData<String> = _statusMessage
     private val _recordingAction = MutableLiveData<RecordingAction?>()
     val recordingAction: LiveData<RecordingAction?> = _recordingAction
+
     // Configuration
     private val _recordingConfig =
         MutableStateFlow<RecordingConfiguration>(RecordingConfiguration())
     val recordingConfig: StateFlow<RecordingConfiguration> = _recordingConfig
+
     // Combined state for UI optimization
     val combinedRecordingState = combine(
         _gsrState, _cameraState, _networkState
     ) { gsrState, cameraState, networkState ->
         CombinedRecordingState(gsrState, cameraState, networkState)
     }
+
     enum class ActionType {
         RECORDING_STARTED,
         RECORDING_STOPPED,
@@ -137,17 +154,20 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
         ERROR_OCCURRED,
         PERMISSION_REQUIRED
     }
+
     init {
         initializeRecorders()
         generateDefaultSessionId()
         updateSystemReadiness()
     }
+
     fun initialize() {
         // Kept for compatibility, but initialization now happens in init block
         initializeRecorders()
         generateDefaultSessionId()
         updateSystemReadiness()
     }
+
     private fun initializeRecorders() {
         viewModelScope.launch {
             try {
@@ -165,6 +185,7 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
             }
         }
     }
+
     fun initializeCameraRecorder(rgbCameraRecorder: RgbCameraRecorder) {
         this.rgbCameraRecorder = rgbCameraRecorder
         viewModelScope.launch {
@@ -182,6 +203,7 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
             }
         }
     }
+
     fun updateRecordingConfiguration(config: RecordingConfiguration) {
         _recordingConfig.value = config
         // Update camera configuration
@@ -192,6 +214,7 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
             frameRate = config.rawFrameRate
         )
     }
+
     fun startRecording() {
         val currentState = _recordingState.value
         if (currentState?.isRecording == true || currentState?.isStartingRecording == true) {
@@ -234,6 +257,7 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
             }
         }
     }
+
     fun stopRecording() {
         viewModelScope.launch {
             try {
@@ -261,6 +285,7 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
             }
         }
     }
+
     fun triggerSyncEvent() {
         val currentState = _recordingState.value
         if (currentState?.isRecording != true) {
@@ -299,6 +324,7 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
             }
         }
     }
+
     fun discoverDevices() {
         viewModelScope.launch {
             try {
@@ -312,6 +338,7 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
             }
         }
     }
+
     fun connectToDevice(deviceInfo: ShimmerDeviceInfo) {
         viewModelScope.launch {
             try {
@@ -333,6 +360,7 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
             }
         }
     }
+
     private suspend fun discoverShimmerDevices(): List<ShimmerDeviceInfo> {
         // Simulate device discovery - use null placeholders for now as this is discovery phase
         return listOf(
@@ -352,14 +380,17 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
             )
         )
     }
+
     private fun createGSRListener(): GSRRecorder.GSRRecordingListener {
         return object : GSRRecorder.GSRRecordingListener {
             override fun onRecordingStarted(sessionInfo: SessionInfo) {
                 _statusMessage.value = "GSR recording started"
             }
+
             override fun onRecordingStopped(sessionInfo: SessionInfo) {
                 _statusMessage.value = "GSR recording stopped"
             }
+
             override fun onSampleRecorded(sample: GSRSample) {
                 val currentState = _recordingState.value
                 _recordingState.value = currentState?.copy(
@@ -367,6 +398,7 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
                 )
                 _gsrState.value = _gsrState.value.copy(lastSample = sample)
             }
+
             override fun onSyncMarkAdded(syncMark: SyncMark) {
                 // Handle sync mark addition
                 val currentState = _recordingState.value
@@ -374,11 +406,13 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
                     syncMarkCount = currentState.syncMarkCount + 1
                 )
             }
+
             override fun onError(error: String) {
                 _error.value = "GSR recording error: $error"
             }
         }
     }
+
     private fun updateSystemReadiness() {
         val gsrReady = _gsrState.value.isConnected
         val cameraReady = _cameraState.value.isInitialized
@@ -389,14 +423,17 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
             else -> "Initializing recording systems..."
         }
     }
+
     private fun generateDefaultSessionId() {
         val config = _recordingConfig.value
         val defaultParticipantId = TimeUtils.generateSessionId("MultiModal")
         _recordingConfig.value = config.copy(participantId = defaultParticipantId)
     }
+
     fun clearAction() {
         _recordingAction.value = null
     }
+
     override fun onCleared() {
         super.onCleared()
         viewModelScope.launch {
@@ -410,6 +447,7 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
             }
         }
     }
+
     companion object {
         private const val TAG = "MultiModalRecordingViewModel"
     }

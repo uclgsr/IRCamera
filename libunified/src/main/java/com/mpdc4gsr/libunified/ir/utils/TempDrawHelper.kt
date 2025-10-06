@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.ir.utils
+
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -9,6 +10,7 @@ import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.compat.dpToPx
 import kotlin.math.max
 import kotlin.math.min
+
 class TempDrawHelper {
     companion object {
         private val POINT_SIZE: Int by lazy { 16f.dpToPx(ContextProvider.getContext()).toInt() }
@@ -17,12 +19,15 @@ class TempDrawHelper {
         fun Float.correctPoint(max: Int): Int = this.toInt()
             .coerceAtLeast(POINT_SIZE / 2)
             .coerceAtMost(max - POINT_SIZE / 2)
+
         fun Float.correct(max: Int): Int = this.toInt()
             .coerceAtLeast(CIRCLE_RADIUS)
             .coerceAtMost(max - CIRCLE_RADIUS)
+
         fun getRect(width: Int, height: Int): Rect =
             Rect(CIRCLE_RADIUS, CIRCLE_RADIUS, width - CIRCLE_RADIUS, height - CIRCLE_RADIUS)
     }
+
     var textSize: Int
         get() = textPaint.textSize.toInt()
         set(value) {
@@ -37,6 +42,7 @@ class TempDrawHelper {
     private val bluePaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val redPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
     init {
         linePaint.strokeWidth = 1f.dpToPx(ContextProvider.getContext())
         linePaint.color = Color.WHITE
@@ -59,6 +65,7 @@ class TempDrawHelper {
         canvas.drawLine(left, y.toFloat(), right, y.toFloat(), linePaint) //
         canvas.drawLine(x.toFloat(), top, x.toFloat(), bottom, linePaint) //
     }
+
     fun drawLine(canvas: Canvas, startX: Int, startY: Int, stopX: Int, stopY: Int) {
         canvas.drawLine(
             startX.toFloat(),
@@ -68,6 +75,7 @@ class TempDrawHelper {
             linePaint
         )
     }
+
     fun drawRect(canvas: Canvas, left: Int, top: Int, right: Int, bottom: Int) {
         val leftF: Float = left.toFloat()
         val topF: Float = top.toFloat()
@@ -93,6 +101,7 @@ class TempDrawHelper {
         )
         canvas.drawLines(points, linePaint)
     }
+
     fun drawCircle(canvas: Canvas, x: Int, y: Int, isMax: Boolean) {
         canvas.drawCircle(
             x.toFloat(),
@@ -101,6 +110,7 @@ class TempDrawHelper {
             if (isMax) redPaint else bluePaint
         )
     }
+
     fun drawTempText(canvas: Canvas, text: String, width: Int, x: Int, y: Int) {
         var textX: Float = (x + TEMP_TEXT_OFFSET).toFloat()
         var textY: Float = (y - TEMP_TEXT_OFFSET).toFloat()
@@ -114,6 +124,7 @@ class TempDrawHelper {
         }
         canvas.drawText(text, textX, textY, textPaint)
     }
+
     fun drawTrendText(
         canvas: Canvas,
         width: Int,
@@ -138,6 +149,7 @@ class TempDrawHelper {
         canvas.drawText("A", leftX, if (k >= 0) topY else bottomY, textPaint)
         canvas.drawText("B", rightX, if (k >= 0) bottomY else topY, textPaint)
     }
+
     fun drawPointName(canvas: Canvas, name: String, width: Int, height: Int, x: Int, y: Int) {
         val textWidth: Float = textPaint.measureText(name)
         val textHeight: Float = -textPaint.getFontMetrics().top
@@ -154,6 +166,7 @@ class TempDrawHelper {
         }
         canvas.drawText(name, textX, textY, textPaint)
     }
+
     fun drawPointRectName(
         canvas: Canvas,
         name: String,

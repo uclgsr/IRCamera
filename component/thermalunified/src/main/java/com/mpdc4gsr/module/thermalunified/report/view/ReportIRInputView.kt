@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.report.view
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.text.InputFilter.LengthFilter
@@ -14,6 +15,7 @@ import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.report.bean.ImageTempBean
 import com.mpdc4gsr.libunified.R as LibR
+
 class ReportIRInputView : LinearLayout {
     companion object {
         private const val TYPE_FULL = 0
@@ -21,6 +23,7 @@ class ReportIRInputView : LinearLayout {
         private const val TYPE_LINE = 2
         private const val TYPE_RECT = 3
     }
+
     private lateinit var clTitle: View
     private lateinit var viewLine: View
     private lateinit var tvTitle: TextView
@@ -28,8 +31,10 @@ class ReportIRInputView : LinearLayout {
     private lateinit var clMin: View
     private lateinit var clAverage: View
     private lateinit var clExplain: View
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+
     @SuppressLint("SetTextI18n")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
@@ -60,6 +65,7 @@ class ReportIRInputView : LinearLayout {
         viewLine.isVisible = index > 0
         setupTypeSpecificViews(type, index)
     }
+
     private fun initViews() {
         clTitle = findViewById(R.id.cl_title)
         viewLine = findViewById(R.id.view_line)
@@ -69,6 +75,7 @@ class ReportIRInputView : LinearLayout {
         clAverage = findViewById(R.id.cl_average)
         clExplain = findViewById(R.id.cl_explain)
     }
+
     private fun setupTypeSpecificViews(
         type: Int,
         index: Int,
@@ -88,6 +95,7 @@ class ReportIRInputView : LinearLayout {
                     context.getString(LibR.string.chart_temperature_low) + " (${UnitTools.showUnit()})"
                 tvExplainName.text = context.getString(LibR.string.album_report_comment)
             }
+
             TYPE_POINT -> {
                 tvTitle.text = context.getString(LibR.string.thermal_point) + "(P)"
                 clMin.isVisible = false
@@ -97,6 +105,7 @@ class ReportIRInputView : LinearLayout {
                 tvExplainName.text =
                     "P${index + 1} " + context.getString(LibR.string.album_report_comment)
             }
+
             TYPE_LINE -> {
                 tvTitle.text = context.getString(LibR.string.thermal_line) + "(L)"
                 clMin.isVisible = true
@@ -110,6 +119,7 @@ class ReportIRInputView : LinearLayout {
                 tvExplainName.text =
                     "L${index + 1} " + context.getString(LibR.string.album_report_comment)
             }
+
             TYPE_RECT -> {
                 tvTitle.text = context.getString(LibR.string.thermal_rect) + "(R)"
                 clMin.isVisible = true
@@ -125,38 +135,47 @@ class ReportIRInputView : LinearLayout {
             }
         }
     }
+
     fun isSwitchMaxCheck(): Boolean {
         val switchMax = clMax.findViewById<SwitchCompat>(R.id.switch_item)
         return switchMax.isChecked
     }
+
     fun isSwitchMinCheck(): Boolean {
         val switchMin = clMin.findViewById<SwitchCompat>(R.id.switch_item)
         return switchMin.isChecked
     }
+
     fun isSwitchAverageCheck(): Boolean {
         val switchAverage = clAverage.findViewById<SwitchCompat>(R.id.switch_item)
         return switchAverage.isChecked
     }
+
     fun isSwitchExplainCheck(): Boolean {
         val switchExplain = clExplain.findViewById<SwitchCompat>(R.id.switch_item)
         return switchExplain.isChecked
     }
+
     fun getMaxInput(): String {
         val etMax = clMax.findViewById<EditText>(R.id.et_item)
         return etMax.text.toString()
     }
+
     fun getMinInput(): String {
         val etMin = clMin.findViewById<EditText>(R.id.et_item)
         return etMin.text.toString()
     }
+
     fun getAverageInput(): String {
         val etAverage = clAverage.findViewById<EditText>(R.id.et_item)
         return etAverage.text.toString()
     }
+
     fun getExplainInput(): String {
         val etExplain = clExplain.findViewById<EditText>(R.id.et_item)
         return etExplain.text.toString()
     }
+
     fun refreshData(tempBean: ImageTempBean.TempBean?) {
         val etMax = clMax.findViewById<EditText>(R.id.et_item)
         val etMin = clMin.findViewById<EditText>(R.id.et_item)
@@ -173,6 +192,7 @@ class ReportIRInputView : LinearLayout {
         }
         etExplain.setText("")
     }
+
     private fun setSwitchListener(
         switchCompat: SwitchCompat,
         editText: EditText,

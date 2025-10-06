@@ -13,11 +13,13 @@ object Protocol {
     const val MSG_ERROR = "ERROR"
     const val MSG_DATA_GSR = "DATA_GSR"
     const val MSG_FRAME = "FRAME"
+
     // Protocol configuration
     const val PROTOCOL_VERSION = "1.0"
     const val DEFAULT_PORT = 8080
     const val DEFAULT_SERVER_PORT = 8081  // Different port for NetworkServer to avoid conflicts
     const val MAX_MESSAGE_SIZE = 10 * 1024 * 1024 // 10MB for frames
+
     // Error codes
     const val ERR_FAIL = "FAIL"
     const val ERR_BUSY = "BUSY"
@@ -81,6 +83,7 @@ object Protocol {
             null
         }
     }
+
     private fun parseParameters(paramString: String): Map<String, String> {
         val params = mutableMapOf<String, String>()
         // Updated regex to properly handle quoted strings
@@ -93,6 +96,7 @@ object Protocol {
         }
         return params
     }
+
     data class ProtocolMessage(
         val type: String,
         val parameters: Map<String, String>

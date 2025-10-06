@@ -1,4 +1,5 @@
 package mpdc4gsr.core.monitoring
+
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -9,16 +10,19 @@ class PerformanceMetricsTest {
     fun setUp() {
         PerformanceMetrics.reset()
     }
+
     @After
     fun tearDown() {
         PerformanceMetrics.reset()
     }
+
     @Test
     fun testInitialize() {
         PerformanceMetrics.initialize()
         // Should not throw exception
         PerformanceMetrics.initialize()
     }
+
     @Test
     fun testStartAndEndMeasurement() {
         PerformanceMetrics.startMeasurement("test_operation")
@@ -27,11 +31,13 @@ class PerformanceMetricsTest {
         assertTrue("Duration should be at least 100ms", duration >= 100)
         assertTrue("Duration should be less than 200ms", duration < 200)
     }
+
     @Test
     fun testEndMeasurementWithoutStart() {
         val duration = PerformanceMetrics.endMeasurement("non_existent")
         assertEquals(-1, duration)
     }
+
     @Test
     fun testIncrementCounter() {
         PerformanceMetrics.incrementCounter("test_counter")
@@ -39,10 +45,12 @@ class PerformanceMetricsTest {
         PerformanceMetrics.incrementCounter("test_counter")
         assertEquals(3, PerformanceMetrics.getCounter("test_counter"))
     }
+
     @Test
     fun testGetCounterNonExistent() {
         assertEquals(0, PerformanceMetrics.getCounter("non_existent"))
     }
+
     @Test
     fun testRecordFrameTime() {
         // Normal frame (< 16ms)
@@ -54,6 +62,7 @@ class PerformanceMetricsTest {
         assertEquals(3, PerformanceMetrics.getCounter("total_frames"))
         assertEquals(2, PerformanceMetrics.getCounter("janky_frames"))
     }
+
     @Test
     fun testGetJankyFramePercentage() {
         // 2 janky frames out of 10 total
@@ -62,11 +71,13 @@ class PerformanceMetricsTest {
         val percentage = PerformanceMetrics.getJankyFramePercentage()
         assertEquals(20.0f, percentage, 0.01f)
     }
+
     @Test
     fun testGetJankyFramePercentageNoFrames() {
         val percentage = PerformanceMetrics.getJankyFramePercentage()
         assertEquals(0.0f, percentage, 0.01f)
     }
+
     @Test
     fun testMeasureTimeFunction() {
         var executed = false
@@ -78,6 +89,7 @@ class PerformanceMetricsTest {
         assertTrue(executed)
         assertEquals("result", result)
     }
+
     @Test
     fun testMeasureTimeFunctionWithException() {
         try {
@@ -89,6 +101,7 @@ class PerformanceMetricsTest {
             assertEquals("Test exception", e.message)
         }
     }
+
     @Test
     fun testReset() {
         PerformanceMetrics.incrementCounter("test_counter")

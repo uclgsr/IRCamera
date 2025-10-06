@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.ui
+
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiManager
@@ -36,6 +37,7 @@ import com.mpdc4gsr.libunified.app.utils.Constants
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 data class HelpStep(
     val icon: ImageVector,
     val title: String,
@@ -44,6 +46,7 @@ data class HelpStep(
     val actionText: String = "",
     val action: (() -> Unit)? = null
 )
+
 class MoreHelpViewModel : AppBaseViewModel() {
     private val _connectionType = mutableStateOf(0)
     val connectionType: State<Int> = _connectionType
@@ -53,6 +56,7 @@ class MoreHelpViewModel : AppBaseViewModel() {
         _connectionType.value = type
         updateHelpSteps(type)
     }
+
     private fun updateHelpSteps(type: Int) {
         _helpSteps.value = if (type == Constants.SETTING_CONNECTION) {
             getConnectionHelpSteps()
@@ -60,6 +64,7 @@ class MoreHelpViewModel : AppBaseViewModel() {
             getDisconnectionHelpSteps()
         }
     }
+
     private fun getConnectionHelpSteps(): List<HelpStep> {
         return listOf(
             HelpStep(
@@ -91,6 +96,7 @@ class MoreHelpViewModel : AppBaseViewModel() {
             )
         )
     }
+
     private fun getDisconnectionHelpSteps(): List<HelpStep> {
         return listOf(
             HelpStep(
@@ -125,6 +131,7 @@ class MoreHelpViewModel : AppBaseViewModel() {
         )
     }
 }
+
 class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
     private lateinit var wifiManager: WifiManager
     override fun createViewModel(): MoreHelpViewModel = viewModels<MoreHelpViewModel>().value
@@ -134,6 +141,7 @@ class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
         val connectionType = intent.getIntExtra(Constants.SETTING_CONNECTION_TYPE, 0)
         viewModels<MoreHelpViewModel>().value.setConnectionType(connectionType)
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: MoreHelpViewModel) {
@@ -261,6 +269,7 @@ class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
             }
         }
     }
+
     private fun openWifiSettings() {
         try {
             val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
@@ -269,6 +278,7 @@ class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
             showSettingsError("WiFi settings")
         }
     }
+
     private fun openNetworkSettings() {
         try {
             val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -281,6 +291,7 @@ class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
             showSettingsError("Network settings")
         }
     }
+
     private fun openBluetoothSettings() {
         try {
             val intent = Intent(Settings.ACTION_BLUETOOTH_SETTINGS)
@@ -289,6 +300,7 @@ class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
             showSettingsError("Bluetooth settings")
         }
     }
+
     private fun showSettingsError(settingType: String) {
         val tipDialogState = TipDialogState(this)
         tipDialogState.show(
@@ -300,6 +312,7 @@ class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
         )
     }
 }
+
 @Composable
 private fun HelpStepCard(
     step: HelpStep,

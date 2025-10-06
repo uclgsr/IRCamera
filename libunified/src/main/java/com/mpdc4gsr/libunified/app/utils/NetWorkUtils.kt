@@ -1,5 +1,7 @@
 @file:Suppress("DEPRECATION")
+
 package com.mpdc4gsr.libunified.app.utils
+
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -10,6 +12,7 @@ import android.net.wifi.WifiNetworkSpecifier
 import android.os.Build
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
+
 object NetWorkUtils {
     private var mNetworkCallback: ConnectivityManager.NetworkCallback? = null
     private var netWorkListener: ((network: Network?) -> Unit)? = null
@@ -19,9 +22,11 @@ object NetWorkUtils {
     private val wifiManager by lazy {
         BaseApplication.instance.getSystemService(Context.WIFI_SERVICE) as WifiManager
     }
+
     fun isWifiNameValid(context: Context, prefixes: List<String>): Boolean {
         val wifiManager =
             context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+
         @Suppress("DEPRECATION")
         val wifiInfo = wifiManager.connectionInfo
         val ssid = wifiInfo.ssid.replace("\"", "") // 
@@ -32,6 +37,7 @@ object NetWorkUtils {
         }
         return false
     }
+
     fun connectWifi(
         ssid: String,
         password: String,
@@ -47,6 +53,7 @@ object NetWorkUtils {
                     super.onAvailable(network)
                     netWorkListener?.invoke(network)
                 }
+
                 override fun onUnavailable() {
                     super.onUnavailable()
                     netWorkListener?.invoke(null)
@@ -68,6 +75,7 @@ object NetWorkUtils {
                     super.onAvailable(network)
                     netWorkListener?.invoke(network)
                 }
+
                 override fun onUnavailable() {
                     super.onUnavailable()
                     netWorkListener?.invoke(null)
@@ -76,12 +84,14 @@ object NetWorkUtils {
             connectivityManager.requestNetwork(request, mNetworkCallback!!)
         }
     }
+
     fun switchNetwork(enable: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             // For Android 10+, network switching is handled differently
             XLog.d("NetWorkUtils: switchNetwork called with enable=$enable")
         }
     }
+
     fun disconnectWifi() {
         mNetworkCallback?.let {
             connectivityManager.unregisterNetworkCallback(it)
@@ -89,6 +99,7 @@ object NetWorkUtils {
         }
         netWorkListener = null
     }
+
     fun isNetworkAvailable(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

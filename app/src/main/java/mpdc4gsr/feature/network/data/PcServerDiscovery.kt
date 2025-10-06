@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -20,6 +21,7 @@ class PcServerDiscovery(private val context: Context) {
         private const val DISCOVERY_TIMEOUT = 5000L
         private const val SCAN_INTERVAL = 30000L
     }
+
     data class DiscoveredServer(
         val ipAddress: String,
         val port: Int,
@@ -28,6 +30,7 @@ class PcServerDiscovery(private val context: Context) {
         val discoveredAt: Long = System.currentTimeMillis(),
         val responseTime: Long = -1
     )
+
     private val discoveryScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var discoveryJob: Job? = null
     private var continuousDiscoveryJob: Job? = null

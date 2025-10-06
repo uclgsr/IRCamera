@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import android.content.Intent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -21,10 +22,12 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+
 class ManualStep1ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -86,6 +89,7 @@ class ManualStep1ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
+
 @Composable
 private fun SetupProgressIndicator(
     currentStep: Int,
@@ -130,6 +134,7 @@ private fun SetupProgressIndicator(
         }
     }
 }
+
 @Composable
 private fun ManualSetupCard(
     step: Int,
@@ -193,6 +198,7 @@ private fun ManualSetupCard(
         }
     }
 }
+
 @Composable
 private fun SetupInstructions() {
     Column(
@@ -218,6 +224,7 @@ private fun SetupInstructions() {
         )
     }
 }
+
 @Composable
 private fun InstructionItem(
     step: String,
@@ -251,6 +258,7 @@ private fun InstructionItem(
         )
     }
 }
+
 @Composable
 private fun SetupChecklist() {
     var devicePowered by remember { mutableStateOf(false) }
@@ -292,6 +300,7 @@ private fun SetupChecklist() {
         }
     }
 }
+
 @Composable
 private fun ChecklistItem(
     text: String,

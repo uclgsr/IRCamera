@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.os.Bundle
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -34,9 +35,11 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
         private const val DEFAULT_PC_IP = "192.168.1.100"
         private const val DEFAULT_PC_PORT = 8080
     }
+
     enum class ConnectionStatus {
         DISCONNECTED, CONNECTING, CONNECTED, ERROR
     }
+
     data class NetworkCommand(
         val command: String,
         val description: String,
@@ -44,9 +47,11 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
         val success: Boolean = false,
         val timestamp: Long = System.currentTimeMillis()
     )
+
     private val mockController = MockRecordingController()
     private var tcpClient: TcpClient? = null
     private var commandHandler: SimpleCommandHandler? = null
+
     // State variables hoisted to activity level
     // State hoisted to activity level
     private val _networkCommands = mutableStateOf(listOf<NetworkCommand>())
@@ -60,6 +65,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SimpleNetworkTestScreen() {
@@ -345,6 +351,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     fun NetworkCommandItem(command: NetworkCommand) {
         Row(
@@ -382,6 +389,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private fun getConnectionIcon(status: ConnectionStatus): androidx.compose.ui.graphics.vector.ImageVector {
         return when (status) {
             ConnectionStatus.DISCONNECTED -> Icons.Default.LinkOff
@@ -390,6 +398,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             ConnectionStatus.ERROR -> Icons.Default.Error
         }
     }
+
     @Composable
     private fun getConnectionColor(status: ConnectionStatus): androidx.compose.ui.graphics.Color {
         return when (status) {
@@ -399,6 +408,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             ConnectionStatus.ERROR -> MaterialTheme.colorScheme.error
         }
     }
+
     private suspend fun connectWiFi(ipAddr: String, portNum: String): ConnectionStatus {
         AppLogger.d(TAG, "Connecting via WiFi to $ipAddr:$portNum")
         return try {
@@ -410,6 +420,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             ConnectionStatus.ERROR
         }
     }
+
     private suspend fun connectBluetooth(): ConnectionStatus {
         AppLogger.d(TAG, "Connecting via Bluetooth")
         return try {
@@ -421,6 +432,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             ConnectionStatus.ERROR
         }
     }
+
     private suspend fun disconnect() {
         AppLogger.d(TAG, "Disconnecting from PC")
         try {
@@ -430,6 +442,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Disconnect failed: ${e.message}")
         }
     }
+
     private suspend fun testCommands() {
         AppLogger.d(TAG, "Testing network commands")
         val commands = listOf(
@@ -446,6 +459,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
         }
         _networkCommands.value = _networkCommands.value + updatedCommands
     }
+
     private suspend fun runAllNetworkTests() {
         AppLogger.i(TAG, "Running all network tests")
         val metrics = mutableMapOf<String, Any>()
@@ -479,6 +493,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             _isTestRunning.value = false
         }
     }
+
     private suspend fun testWiFiConnection() {
         AppLogger.d(TAG, "Testing WiFi connection")
         try {
@@ -488,6 +503,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "WiFi connection test failed: ${e.message}")
         }
     }
+
     private suspend fun testCommandExecution() {
         AppLogger.d(TAG, "Testing command execution")
         try {
@@ -497,6 +513,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Command execution test failed: ${e.message}")
         }
     }
+
     private suspend fun testBidirectionalTelemetry() {
         AppLogger.d(TAG, "Testing bidirectional telemetry")
         try {
@@ -506,6 +523,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Bidirectional telemetry test failed: ${e.message}")
         }
     }
+
     private suspend fun testConnectionStability() {
         AppLogger.d(TAG, "Testing connection stability")
         try {
@@ -515,6 +533,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Connection stability test failed: ${e.message}")
         }
     }
+
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {

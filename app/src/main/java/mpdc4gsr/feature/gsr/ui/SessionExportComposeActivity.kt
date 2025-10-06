@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,6 +29,7 @@ class SessionExportComposeActivity : BaseComposeActivity<SessionExportViewModel>
         viewModels<SessionExportViewModel> {
             SessionExportViewModelFactory(application)
         }.value
+
     @Composable
     override fun Content(viewModel: SessionExportViewModel) {
         IRCameraTheme {
@@ -38,6 +40,7 @@ class SessionExportComposeActivity : BaseComposeActivity<SessionExportViewModel>
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionExportScreen(
@@ -84,6 +87,7 @@ fun SessionExportScreen(
             uiState.isLoading -> {
                 LoadingContent()
             }
+
             uiState.error != null -> {
                 val errorMessage = uiState.error ?: "Unknown error"
                 ErrorContent(
@@ -91,9 +95,11 @@ fun SessionExportScreen(
                     onRetry = { viewModel.loadSessions() }
                 )
             }
+
             uiState.sessions.isEmpty() -> {
                 EmptyContent()
             }
+
             else -> {
                 ExportContent(
                     uiState = uiState,
@@ -106,6 +112,7 @@ fun SessionExportScreen(
         }
     }
 }
+
 @Composable
 private fun ExportContent(
     uiState: SessionExportViewModel.SessionExportState,
@@ -190,6 +197,7 @@ private fun ExportContent(
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SessionSelectionCard(
@@ -262,6 +270,7 @@ private fun SessionSelectionCard(
         }
     }
 }
+
 @Composable
 private fun ExportConfigurationCard(
     selectedFormat: ExportFormat,
@@ -343,6 +352,7 @@ private fun ExportConfigurationCard(
         }
     }
 }
+
 @Composable
 private fun ExportProgressCard(
     progress: Float,
@@ -387,6 +397,7 @@ private fun ExportProgressCard(
         }
     }
 }
+
 @Composable
 private fun LoadingContent() {
     Box(
@@ -405,6 +416,7 @@ private fun LoadingContent() {
         }
     }
 }
+
 @Composable
 private fun ErrorContent(
     error: String,
@@ -438,6 +450,7 @@ private fun ErrorContent(
         }
     }
 }
+
 @Composable
 private fun EmptyContent() {
     Box(

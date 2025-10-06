@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,10 +19,12 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+
 class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -80,6 +83,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
             }
         }
     }
+
     @Composable
     private fun GalleryDetailContent(
         modifier: Modifier = Modifier
@@ -251,6 +255,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
             }
         }
     }
+
     @Composable
     private fun AnalysisButton(
         icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -280,6 +285,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
             )
         }
     }
+
     @Composable
     private fun InfoRow(
         label: String,

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.report.activity
+
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -37,6 +38,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
 class ReportCreateComposeActivity : ComponentActivity() {
     private lateinit var viewModel: ReportCreateViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +61,7 @@ class ReportCreateComposeActivity : ComponentActivity() {
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportCreateScreen(
@@ -122,16 +125,19 @@ fun ReportCreateScreen(
                     reportInfo = uiState.reportInfo,
                     onUpdateInfo = { viewModel.updateReportInfo(it) }
                 )
+
                 1 -> ThermalDataStep(
                     thermalData = uiState.thermalData,
                     onUpdateData = { viewModel.updateThermalData(it) },
                     onAddImage = { viewModel.addThermalImage(it) },
                     onRemoveImage = { viewModel.removeThermalImage(it) }
                 )
+
                 2 -> AnalysisResultsStep(
                     analysisResults = uiState.analysisResults,
                     onUpdateResults = { viewModel.updateAnalysisResults(it) }
                 )
+
                 3 -> ReportPreviewStep(
                     reportPreview = uiState.reportPreview,
                     onUpdateSettings = { viewModel.updateReportSettings(it) }
@@ -140,6 +146,7 @@ fun ReportCreateScreen(
         }
     }
 }
+
 @Composable
 fun ReportBasicInfoStep(
     reportInfo: ReportBasicInfo,
@@ -256,6 +263,7 @@ fun ReportBasicInfoStep(
         }
     }
 }
+
 @Composable
 fun ThermalDataStep(
     thermalData: ThermalDataInfo,
@@ -388,6 +396,7 @@ fun ThermalDataStep(
         }
     }
 }
+
 @Composable
 fun ThermalImagesSection(
     images: List<Uri>,
@@ -445,6 +454,7 @@ fun ThermalImagesSection(
         }
     }
 }
+
 @Composable
 fun ThermalImageItem(
     imageUri: Uri,
@@ -489,6 +499,7 @@ fun ThermalImageItem(
         }
     }
 }
+
 @Composable
 fun AnalysisResultsStep(
     analysisResults: AnalysisResults,
@@ -553,6 +564,7 @@ fun AnalysisResultsStep(
         }
     }
 }
+
 @Composable
 fun ReportPreviewStep(
     reportPreview: ReportPreview,
@@ -640,6 +652,7 @@ fun ReportPreviewStep(
         }
     }
 }
+
 @Composable
 private fun ReportSummaryItem(
     label: String,
@@ -661,6 +674,7 @@ private fun ReportSummaryItem(
         )
     }
 }
+
 @Composable
 fun ReportNavigationBar(
     currentStep: Int,
@@ -716,6 +730,7 @@ fun ReportNavigationBar(
         }
     }
 }
+
 fun DrawScope.drawTemperatureDistribution(distribution: List<Float>) {
     if (distribution.isEmpty()) return
     val width = size.width
@@ -733,6 +748,7 @@ fun DrawScope.drawTemperatureDistribution(distribution: List<Float>) {
         )
     }
 }
+
 class ReportCreateViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ReportCreateUiState())
     val uiState: StateFlow<ReportCreateUiState> = _uiState.asStateFlow()
@@ -742,47 +758,55 @@ class ReportCreateViewModel : ViewModel() {
             _uiState.value = _uiState.value.copy(currentStep = currentStep + 1)
         }
     }
+
     fun previousStep() {
         val currentStep = _uiState.value.currentStep
         if (currentStep > 0) {
             _uiState.value = _uiState.value.copy(currentStep = currentStep - 1)
         }
     }
+
     fun updateReportInfo(info: ReportBasicInfo) {
         _uiState.value = _uiState.value.copy(
             reportInfo = info,
             canProceedToNext = info.title.isNotBlank() && info.inspector.isNotBlank()
         )
     }
+
     fun updateThermalData(data: ThermalDataInfo) {
         _uiState.value = _uiState.value.copy(
             thermalData = data,
             canProceedToNext = data.images.isNotEmpty()
         )
     }
+
     fun addThermalImage(uri: Uri) {
         val currentImages = _uiState.value.thermalData.images
         _uiState.value = _uiState.value.copy(
             thermalData = _uiState.value.thermalData.copy(images = currentImages + uri)
         )
     }
+
     fun removeThermalImage(uri: Uri) {
         val currentImages = _uiState.value.thermalData.images
         _uiState.value = _uiState.value.copy(
             thermalData = _uiState.value.thermalData.copy(images = currentImages - uri)
         )
     }
+
     fun updateAnalysisResults(results: AnalysisResults) {
         _uiState.value = _uiState.value.copy(
             analysisResults = results,
             canProceedToNext = results.findings.isNotBlank()
         )
     }
+
     fun updateReportSettings(settings: ReportSettings) {
         _uiState.value = _uiState.value.copy(
             reportPreview = _uiState.value.reportPreview.copy(settings = settings)
         )
     }
+
     fun createReport(onComplete: (String) -> Unit) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isCreatingReport = true)
@@ -793,6 +817,7 @@ class ReportCreateViewModel : ViewModel() {
         }
     }
 }
+
 data class ReportCreateUiState(
     val currentStep: Int = 0,
     val totalSteps: Int = 4,
@@ -803,6 +828,7 @@ data class ReportCreateUiState(
     val analysisResults: AnalysisResults = AnalysisResults(),
     val reportPreview: ReportPreview = ReportPreview()
 )
+
 data class ReportBasicInfo(
     val title: String = "",
     val description: String = "",
@@ -814,6 +840,7 @@ data class ReportBasicInfo(
     val humidity: String = "",
     val windSpeed: String = ""
 )
+
 data class ThermalDataInfo(
     val maxTemp: Float = 0f,
     val minTemp: Float = 0f,
@@ -823,12 +850,14 @@ data class ThermalDataInfo(
     val images: List<Uri> = emptyList(),
     val temperatureDistribution: List<Float> = listOf(12f, 15f, 22f, 18f, 25f, 30f, 28f, 20f)
 )
+
 data class AnalysisResults(
     val findings: String = "",
     val recommendations: String = "",
     val conclusions: String = "",
     val severity: IssueSeverity = IssueSeverity.LOW
 )
+
 data class ReportPreview(
     val title: String = "Thermal Inspection Report",
     val inspector: String = "",
@@ -838,17 +867,20 @@ data class ReportPreview(
     val severity: String = "",
     val settings: ReportSettings = ReportSettings()
 )
+
 data class ReportSettings(
     val includeThermalImages: Boolean = true,
     val includeCharts: Boolean = true,
     val includeRawData: Boolean = false
 )
+
 enum class ReportType(val displayName: String) {
     INSPECTION("Thermal Inspection"),
     MAINTENANCE("Maintenance Report"),
     COMPLIANCE("Compliance Check"),
     RESEARCH("Research Analysis")
 }
+
 enum class IssueSeverity(val displayName: String, val color: Color) {
     LOW("Low", Color(0xFF4CAF50)),
     MEDIUM("Medium", Color(0xFFFF9800)),

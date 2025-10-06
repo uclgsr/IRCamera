@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.utils
+
 object UnifiedArrayUtils {
     fun getMaxIndex(
         data: FloatArray,
@@ -10,6 +11,7 @@ object UnifiedArrayUtils {
             else -> getMaxIndex(data, selectIndexList)
         }
     }
+
     fun getMinIndex(
         data: FloatArray,
         rotateType: Int = 0,
@@ -20,6 +22,7 @@ object UnifiedArrayUtils {
             else -> getMinIndex(data, selectIndexList)
         }
     }
+
     private fun getMaxIndex(data: FloatArray, selectIndexList: ArrayList<Int>): Int {
         if (data.isEmpty()) return -1
         var maxIndex = 0
@@ -33,6 +36,7 @@ object UnifiedArrayUtils {
         }
         return maxIndex
     }
+
     private fun getMinIndex(data: FloatArray, selectIndexList: ArrayList<Int>): Int {
         if (data.isEmpty()) return -1
         var minIndex = 0
@@ -46,6 +50,7 @@ object UnifiedArrayUtils {
         }
         return minIndex
     }
+
     private fun getRotateMaxIndex(
         data: FloatArray,
         rotateType: Int,
@@ -54,6 +59,7 @@ object UnifiedArrayUtils {
         val maxIndex = getMaxIndex(data, selectIndexList)
         return rotateIndex(maxIndex, data.size, rotateType)
     }
+
     private fun getRotateMinIndex(
         data: FloatArray,
         rotateType: Int,
@@ -62,6 +68,7 @@ object UnifiedArrayUtils {
         val minIndex = getMinIndex(data, selectIndexList)
         return rotateIndex(minIndex, data.size, rotateType)
     }
+
     private fun rotateIndex(
         index: Int,
         arraySize: Int,
@@ -93,19 +100,23 @@ object UnifiedArrayUtils {
         }
         return newY * newWidth + newX
     }
+
     fun findAllMaxIndices(data: FloatArray): List<Int> {
         if (data.isEmpty()) return emptyList()
         val maxValue = data.maxOrNull() ?: return emptyList()
         return data.indices.filter { data[it] == maxValue }
     }
+
     fun findAllMinIndices(data: FloatArray): List<Int> {
         if (data.isEmpty()) return emptyList()
         val minValue = data.minOrNull() ?: return emptyList()
         return data.indices.filter { data[it] == minValue }
     }
+
     fun getIndicesInRange(data: FloatArray, minValue: Float, maxValue: Float): List<Int> {
         return data.indices.filter { data[it] in minValue..maxValue }
     }
+
     data class ArrayStats(
         val min: Float,
         val max: Float,
@@ -113,6 +124,7 @@ object UnifiedArrayUtils {
         val median: Float,
         val standardDeviation: Float
     )
+
     fun calculateStats(data: FloatArray): ArrayStats? {
         if (data.isEmpty()) return null
         val sorted = data.sorted()
@@ -128,6 +140,7 @@ object UnifiedArrayUtils {
         val standardDeviation = kotlin.math.sqrt(variance)
         return ArrayStats(min, max, mean, median, standardDeviation)
     }
+
     fun applyGaussianFilter(
         data: FloatArray,
         width: Int,
@@ -173,6 +186,7 @@ object UnifiedArrayUtils {
         }
         return result
     }
+
     private fun generateGaussianKernel(size: Int, sigma: Float): FloatArray {
         val kernel = FloatArray(size)
         val center = size / 2
@@ -188,6 +202,7 @@ object UnifiedArrayUtils {
         }
         return kernel
     }
+
     fun downsample(data: FloatArray, width: Int, height: Int, factor: Int): FloatArray {
         val newWidth = width / factor
         val newHeight = height / factor
@@ -211,6 +226,7 @@ object UnifiedArrayUtils {
         }
         return result
     }
+
     fun normalize(data: FloatArray): FloatArray {
         if (data.isEmpty()) return data.copyOf()
         val min = data.minOrNull() ?: 0f

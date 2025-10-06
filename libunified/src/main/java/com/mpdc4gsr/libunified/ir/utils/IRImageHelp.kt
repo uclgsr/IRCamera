@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.ir.utils
+
 import android.util.Log
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import org.opencv.android.Utils
@@ -6,9 +7,11 @@ import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
 import java.io.IOException
+
 class IRImageHelp {
     @Volatile
     private var colorList: IntArray? = null
+
     @Volatile
     private var places: FloatArray? = null
     private var isUseGray = true
@@ -19,6 +22,7 @@ class IRImageHelp {
     fun getColorList(): IntArray? {
         return colorList
     }
+
     fun setColorList(
         colorList: IntArray?,
         places: FloatArray?,
@@ -46,6 +50,7 @@ class IRImageHelp {
             this.minRGB[2] = minColor and 0xFF
         }
     }
+
     fun customPseudoColor(
         imageDst: ByteArray,
         temperatureSrc: ByteArray,
@@ -99,6 +104,7 @@ class IRImageHelp {
             return imageDst
         }
     }
+
     fun setPseudoColorMaxMin(
         imageDst: ByteArray?,
         temperatureSrc: ByteArray?,
@@ -139,6 +145,7 @@ class IRImageHelp {
             }
         }
     }
+
     fun contourDetection(
         alarmBean: AlarmBean?,
         imageDst: ByteArray?,

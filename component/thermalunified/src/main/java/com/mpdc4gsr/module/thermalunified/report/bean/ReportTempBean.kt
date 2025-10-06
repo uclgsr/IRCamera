@@ -1,6 +1,8 @@
 package com.mpdc4gsr.module.thermalunified.report.bean
+
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+
 @Parcelize
 data class ReportTempBean(
     val max_temperature: String?,
@@ -31,6 +33,7 @@ data class ReportTempBean(
         temperature,
         is_temperature,
     )
+
     fun isMaxOpen() = is_max_temperature == 1
     fun isMinOpen() = is_min_temperature == 1
     fun isAverageOpen() = is_mean_temperature == 1

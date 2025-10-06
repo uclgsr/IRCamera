@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,10 +22,12 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.launch
+
 class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -214,6 +217,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
+
 @Composable
 private fun LoggingStatusCard(
     isLogging: Boolean,
@@ -274,6 +278,7 @@ private fun LoggingStatusCard(
         }
     }
 }
+
 @Composable
 private fun LogStatItem(
     label: String,
@@ -295,6 +300,7 @@ private fun LogStatItem(
         )
     }
 }
+
 @Composable
 private fun ChartDisplayCard(
     selectedTimeRange: String,
@@ -354,6 +360,7 @@ private fun ChartDisplayCard(
         }
     }
 }
+
 @Composable
 private fun TimeRangeSelector(
     selectedRange: String,
@@ -399,6 +406,7 @@ private fun TimeRangeSelector(
         }
     }
 }
+
 @Composable
 private fun ChartStatisticsCard() {
     Card(
@@ -431,6 +439,7 @@ private fun ChartStatisticsCard() {
         }
     }
 }
+
 @Composable
 private fun StatItem(
     label: String,
@@ -453,6 +462,7 @@ private fun StatItem(
         )
     }
 }
+
 @Composable
 private fun DataManagementCard(
     onExportCsv: () -> Unit,

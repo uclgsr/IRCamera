@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.presentation
+
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,7 @@ class TimeLapseCameraViewModel(
     companion object {
         private const val DEFAULT_PLAYBACK_FPS = 30
     }
+
     data class TimeLapseState(
         val isRecording: Boolean = false,
         val capturedFrames: Int = 0,
@@ -33,6 +35,7 @@ class TimeLapseCameraViewModel(
         val resolution: String = "1920×1080",
         val quality: Int = 90
     )
+
     private val _timeLapseState = MutableStateFlow(TimeLapseState())
     val timeLapseState: StateFlow<TimeLapseState> = _timeLapseState.asStateFlow()
     fun startTimeLapse() {
@@ -45,6 +48,7 @@ class TimeLapseCameraViewModel(
             )
         }
     }
+
     fun stopTimeLapse() {
         launchWithErrorHandling {
             _timeLapseState.value = _timeLapseState.value.copy(
@@ -52,11 +56,13 @@ class TimeLapseCameraViewModel(
             )
         }
     }
+
     fun updateInterval(seconds: Int) {
         _timeLapseState.value = _timeLapseState.value.copy(
             intervalSeconds = seconds.coerceIn(1, 60)
         )
     }
+
     fun setMode(mode: TimeLapseMode) {
         val interval = when (mode) {
             TimeLapseMode.PRESET_FAST -> 1
@@ -69,6 +75,7 @@ class TimeLapseCameraViewModel(
             intervalSeconds = interval
         )
     }
+
     fun captureFrame() {
         launchWithErrorHandling {
             val current = _timeLapseState.value

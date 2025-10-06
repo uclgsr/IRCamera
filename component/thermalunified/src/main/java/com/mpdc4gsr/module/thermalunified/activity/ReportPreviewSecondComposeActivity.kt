@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,10 +20,12 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+
 class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSecondViewModel>() {
     override fun createViewModel(): ReportPreviewSecondViewModel {
         return ReportPreviewSecondViewModel()
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ReportPreviewSecondViewModel) {
@@ -81,6 +84,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
             }
         }
     }
+
     @Composable
     private fun ReportPreviewSecondContent(
         viewModel: ReportPreviewSecondViewModel,
@@ -192,7 +196,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                         )
                         if (selectedSection != null) {
                             IconButton(
-                                onClick = {  }
+                                onClick = { }
                             ) {
                                 Icon(
                                     Icons.Default.Edit,
@@ -263,6 +267,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
             }
         }
     }
+
     @Composable
     private fun NavigationItem(
         section: ReportSection,
@@ -308,6 +313,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
             }
         }
     }
+
     @Composable
     private fun PreviewContent(
         section: String?,
@@ -329,6 +335,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     color = Color(0xFF666666)
                 )
             }
+
             "Header" -> {
                 Text(
                     "Report Header Section",
@@ -340,6 +347,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+
             "Thermal Analysis" -> {
                 Text(
                     "Thermal Analysis Results",
@@ -351,6 +359,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+
             else -> {
                 Text(
                     "$section Content",
@@ -365,9 +374,11 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
         }
     }
 }
+
 data class ReportSection(
     val title: String,
     val description: String,
     val hasContent: Boolean
 )
+
 class ReportPreviewSecondViewModel : BaseViewModel()

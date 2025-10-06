@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 data class PairableDevice(
     val id: String,
     val name: String,
@@ -24,12 +26,14 @@ data class PairableDevice(
     val signalStrength: Int = 0, // 0-100
     val batteryLevel: Int? = null
 )
+
 enum class DeviceType {
     THERMAL_CAMERA,
     GSR_SENSOR,
     RGB_CAMERA,
     BLUETOOTH_DEVICE
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DevicePairingScreen(
@@ -144,6 +148,7 @@ fun DevicePairingScreen(
         }
     }
 }
+
 @Composable
 fun DevicePairingItem(
     device: PairableDevice,
@@ -238,6 +243,7 @@ fun DevicePairingItem(
                         modifier = Modifier.size(24.dp)
                     )
                 }
+
                 device.isPairing -> {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
@@ -245,6 +251,7 @@ fun DevicePairingItem(
                         strokeWidth = 2.dp
                     )
                 }
+
                 else -> {
                     OutlinedButton(
                         onClick = onPair,
@@ -259,6 +266,7 @@ fun DevicePairingItem(
         }
     }
 }
+
 private fun getSampleDevices() = listOf(
     PairableDevice(
         id = "TC001-A5B2C1",
@@ -287,6 +295,7 @@ private fun getSampleDevices() = listOf(
         batteryLevel = 89
     )
 )
+
 @Preview(showBackground = true)
 @Composable
 fun DevicePairingScreenPreview() {

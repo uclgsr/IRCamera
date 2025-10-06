@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.view
+
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
@@ -15,6 +16,7 @@ import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.module.thermalunified.R as ThermalR
+
 class ChartTrendView : LineChart {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -91,6 +93,7 @@ class ChartTrendView : LineChart {
         leftAxis.axisMaximum = 50f
         data = LineData()
     }
+
     fun setToEmpty() {
         axisLeft.valueFormatter =
             object : ValueFormatter() {
@@ -99,6 +102,7 @@ class ChartTrendView : LineChart {
         data = LineData()
         invalidate()
     }
+
     fun refresh(tempList: List<Float>) {
         if (tempList.isEmpty()) {
             setToEmpty()

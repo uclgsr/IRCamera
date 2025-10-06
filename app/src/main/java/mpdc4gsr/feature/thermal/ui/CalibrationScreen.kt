@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.thermal.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -137,6 +138,7 @@ fun CalibrationScreen(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun CalibrationScreenPreview() {

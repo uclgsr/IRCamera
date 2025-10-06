@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mpdc4gsr.module.thermalunified.model.AlbumItem
+
 @Composable
 fun CameraItemListCompose(
     items: List<CameraItem>,
@@ -47,6 +49,7 @@ fun CameraItemListCompose(
         }
     }
 }
+
 @Composable
 private fun CameraItemCard(
     item: CameraItem,
@@ -95,6 +98,7 @@ private fun CameraItemCard(
                         )
                     }
                 }
+
                 CameraItemType.AUTO_FOCUS -> {
                     Icon(
                         imageVector = if (item.isSelected) Icons.Default.CenterFocusStrong else Icons.Default.CenterFocusWeak,
@@ -107,6 +111,7 @@ private fun CameraItemCard(
                         }
                     )
                 }
+
                 CameraItemType.FLASH -> {
                     Icon(
                         imageVector = if (item.isSelected) Icons.Default.FlashOn else Icons.Default.FlashOff,
@@ -119,6 +124,7 @@ private fun CameraItemCard(
                         }
                     )
                 }
+
                 CameraItemType.HDR -> {
                     Icon(
                         imageVector = if (item.isSelected) Icons.Default.WbSunny else Icons.Default.WbCloudy,
@@ -135,6 +141,7 @@ private fun CameraItemCard(
         }
     }
 }
+
 @Composable
 fun MeasureItemGridCompose(
     items: List<MeasureItem>,
@@ -159,6 +166,7 @@ fun MeasureItemGridCompose(
         }
     }
 }
+
 @Composable
 private fun MeasureItemCard(
     item: MeasureItem,
@@ -229,6 +237,7 @@ private fun MeasureItemCard(
         }
     }
 }
+
 @Composable
 fun GalleryAlbumListCompose(
     albums: List<AlbumItem>,
@@ -250,6 +259,7 @@ fun GalleryAlbumListCompose(
         }
     }
 }
+
 @Composable
 private fun GalleryAlbumCard(
     album: AlbumItem,
@@ -326,6 +336,7 @@ private fun GalleryAlbumCard(
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuTabBarCompose(
@@ -365,6 +376,7 @@ fun MenuTabBarCompose(
         }
     }
 }
+
 @Composable
 fun SettingOptionsListCompose(
     options: List<SettingOption>,
@@ -385,6 +397,7 @@ fun SettingOptionsListCompose(
         }
     }
 }
+
 @Composable
 private fun SettingOptionCard(
     option: SettingOption,
@@ -451,34 +464,41 @@ private fun SettingOptionCard(
         }
     }
 }
+
 // Data classes for adapters
 data class CameraItem(
     val type: CameraItemType,
     val delayTime: Int = 0,
     val isSelected: Boolean = false
 )
+
 enum class CameraItemType {
     DELAY, AUTO_FOCUS, FLASH, HDR
 }
+
 data class MeasureItem(
     val title: String,
     val description: String,
     val icon: ImageVector,
     val code: Int
 )
+
 data class MenuTab(
     val title: String,
     val icon: ImageVector
 )
+
 data class SettingOption(
     val title: String,
     val description: String = "",
     val icon: ImageVector,
     val type: SettingOptionType = SettingOptionType.SIMPLE
 )
+
 enum class SettingOptionType {
     SIMPLE, CHECKBOX, SWITCH
 }
+
 @Composable
 fun ThermalAdaptersPreview() {
     val sampleCameraItems = listOf(

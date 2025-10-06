@@ -1,5 +1,7 @@
 package mpdc4gsr.feature.gsr.data
+
 import kotlin.math.max
+
 object GSRCalculationUtils {
 
     fun calculateGSRMicrosiemens(rawValue: Int): Double {

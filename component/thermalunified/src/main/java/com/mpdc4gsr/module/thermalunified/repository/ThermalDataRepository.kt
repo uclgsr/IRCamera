@@ -1,10 +1,12 @@
 package com.mpdc4gsr.module.thermalunified.repository
+
 import com.mpdc4gsr.libunified.app.repository.BaseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+
 class ThermalDataRepository : BaseRepository() {
     data class ThermalReading(
         val timestamp: Long,
@@ -14,6 +16,7 @@ class ThermalDataRepository : BaseRepository() {
         val deviceId: String,
         val quality: ReadingQuality = ReadingQuality.GOOD
     )
+
     enum class ReadingQuality { EXCELLENT, GOOD, FAIR, POOR, INVALID }
     data class ThermalFrameData(
         val frameId: String,
@@ -23,12 +26,14 @@ class ThermalDataRepository : BaseRepository() {
         val readings: List<ThermalReading>,
         val metadata: FrameMetadata
     )
+
     data class FrameMetadata(
         val deviceType: String,
         val calibrationData: String,
         val ambientTemperature: Float,
         val frameRate: Int
     )
+
     // Real-time thermal data stream
     fun getThermalDataStream(deviceId: String): Flow<BaseRepository.Result<ThermalFrameData>> =
         flow {
@@ -43,6 +48,7 @@ class ThermalDataRepository : BaseRepository() {
                 emit(BaseRepository.Result.Error(e))
             }
         }.flowOn(Dispatchers.IO)
+
     // Historical thermal data with caching
     fun getHistoricalThermalData(
         deviceId: String,
@@ -57,6 +63,7 @@ class ThermalDataRepository : BaseRepository() {
         }
         data
     }
+
     private fun generateThermalFrame(deviceId: String): ThermalFrameData {
         val timestamp = System.currentTimeMillis()
         val readings = mutableListOf<ThermalReading>()
@@ -92,6 +99,7 @@ class ThermalDataRepository : BaseRepository() {
             )
         )
     }
+
     private fun generateHistoricalData(
         deviceId: String,
         startTime: Long,

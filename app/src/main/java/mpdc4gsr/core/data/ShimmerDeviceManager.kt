@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data
+
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -29,6 +30,7 @@ import mpdc4gsr.core.data.model.DeviceInfo
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
+
 class ShimmerDeviceManager(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner
@@ -46,6 +48,7 @@ class ShimmerDeviceManager(
         private val SHIMMER_MAC_PREFIXES = listOf("00:06:66", "d0:39:72", "00:80:98")
         private val SHIMMER_NAME_PATTERNS = listOf("shimmer", "gsr", "rn4", "shimmer3")
     }
+
     private var shimmerManager: ShimmerBluetoothManagerAndroid? = null
     var bluetoothManager: BluetoothManager? = null
         private set
@@ -63,14 +66,17 @@ class ShimmerDeviceManager(
     private val _connectionEvents = MutableSharedFlow<ConnectionEvent>()
     val connectionEvents: SharedFlow<ConnectionEvent> = _connectionEvents.asSharedFlow()
     private val mainHandler = Handler(Looper.getMainLooper())
+
     data class ConnectionEvent(
         val deviceAddress: String,
         val state: ConnectionState,
         val message: String? = null
     )
+
     enum class ConnectionState {
         CONNECTING, CONNECTED, DISCONNECTED, FAILED, TIMEOUT
     }
+
     suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
         try {
             if (!hasRequiredPermissions()) {
@@ -92,6 +98,7 @@ class ShimmerDeviceManager(
             return@withContext false
         }
     }
+
     private fun startConnectionMonitoring() {
         connectionMonitorJob?.cancel()
         connectionMonitorJob = lifecycleOwner.lifecycleScope.launch {
@@ -114,6 +121,7 @@ class ShimmerDeviceManager(
             }
         }
     }
+
     suspend fun startDeviceScanning(): Boolean = withContext(Dispatchers.IO) {
         if (isScanning.get()) {
             AppLogger.d(TAG, "Scanning already in progress")
@@ -160,6 +168,7 @@ class ShimmerDeviceManager(
             return@withContext false
         }
     }
+
     private fun getPairedShimmerDevices(): List<BluetoothDevice> {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT)
             != PackageManager.PERMISSION_GRANTED
@@ -169,6 +178,7 @@ class ShimmerDeviceManager(
         return bluetoothManager?.adapter?.bondedDevices
             ?.filter { isValidShimmerDevice(it) } ?: emptyList()
     }
+
     private suspend fun performEnhancedBluetoothLeScanning() {
         val bluetoothManager =
             context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
@@ -219,10 +229,12 @@ class ShimmerDeviceManager(
             override fun onScanResult(callbackType: Int, result: ScanResult) {
                 handleScanResult(result)
             }
+
             override fun onBatchScanResults(results: MutableList<ScanResult>?) {
                 super.onBatchScanResults(results)
                 results?.forEach { handleScanResult(it) }
             }
+
             override fun onScanFailed(errorCode: Int) {
                 super.onScanFailed(errorCode)
                 AppLogger.e(TAG, "BLE scan failed with error code: $errorCode")
@@ -249,6 +261,7 @@ class ShimmerDeviceManager(
             isScanning.set(false)
         }
     }
+
     private fun handleScanResult(result: ScanResult) {
         val device = result.device
         val rssi = result.rssi
@@ -274,6 +287,7 @@ class ShimmerDeviceManager(
             }
         }
     }
+
     private fun detectShimmerDeviceType(device: BluetoothDevice): String {
         val deviceName = try {
             device.name?.lowercase() ?: ""
@@ -289,6 +303,7 @@ class ShimmerDeviceManager(
             else -> "Unknown Shimmer"
         }
     }
+
     suspend fun stopDeviceScanning() = withContext(Dispatchers.IO) {
         if (!isScanning.get()) {
             AppLogger.d(TAG, "Scanning not active")
@@ -318,6 +333,7 @@ class ShimmerDeviceManager(
             isScanning.set(false)
         }
     }
+
     suspend fun connectToDevice(deviceInfo: DeviceInfo): Boolean = withContext(Dispatchers.IO) {
         Log.i(
             TAG,
@@ -405,10 +421,13 @@ class ShimmerDeviceManager(
             val errorMessage = when {
                 e.message?.contains("permission", ignoreCase = true) == true ->
                     "Permission denied for Bluetooth connection"
+
                 e.message?.contains("timeout", ignoreCase = true) == true ->
                     "Connection timeout - check device proximity"
+
                 e.message?.contains("unavailable", ignoreCase = true) == true ->
                     "Device unavailable - may be connected to another app"
+
                 else -> "Connection failed: ${e.message}"
             }
             _connectionEvents.emit(
@@ -421,6 +440,7 @@ class ShimmerDeviceManager(
             return@withContext false
         }
     }
+
     suspend fun disconnectDevice(deviceAddress: String): Boolean = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Disconnecting Shimmer device: $deviceAddress")
         try {
@@ -438,6 +458,7 @@ class ShimmerDeviceManager(
             return@withContext false
         }
     }
+
     fun getConnectedDevices(): List<DeviceInfo> {
         return connectedDevices.values.map { shimmer ->
             DeviceInfo(
@@ -449,9 +470,11 @@ class ShimmerDeviceManager(
             )
         }
     }
+
     fun getConnectedShimmer(deviceAddress: String): Shimmer? {
         return connectedDevices[deviceAddress]
     }
+
     suspend fun handleDeviceDisconnection(
         deviceAddress: String,
         shouldAttemptReconnection: Boolean = true
@@ -532,6 +555,7 @@ class ShimmerDeviceManager(
             }
         }
     }
+
     suspend fun disconnectAllDevices(): Boolean = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Disconnecting all Shimmer devices")
         val addresses = connectedDevices.keys.toList()
@@ -543,6 +567,7 @@ class ShimmerDeviceManager(
         }
         return@withContext allDisconnected
     }
+
     suspend fun startMultiDeviceTesting(targetDeviceCount: Int = 3): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -581,6 +606,7 @@ class ShimmerDeviceManager(
                 return@withContext false
             }
         }
+
     private suspend fun startSynchronizedStreamingOnAllDevices(): Boolean {
         return try {
             AppLogger.i(TAG, "Starting synchronized streaming on ${connectedDevices.size} devices")
@@ -623,6 +649,7 @@ class ShimmerDeviceManager(
             false
         }
     }
+
     suspend fun stopMultiDeviceTesting(): Boolean = withContext(Dispatchers.IO) {
         try {
             AppLogger.i(TAG, "Stopping multi-device testing")
@@ -649,6 +676,7 @@ class ShimmerDeviceManager(
             return@withContext false
         }
     }
+
     fun getMultiDeviceStatus(): MultiDeviceStatus {
         return MultiDeviceStatus(
             connectedDeviceCount = connectedDevices.size,
@@ -657,12 +685,14 @@ class ShimmerDeviceManager(
             readyForTesting = connectedDevices.size >= 2
         )
     }
+
     data class MultiDeviceStatus(
         val connectedDeviceCount: Int,
         val deviceAddresses: List<String>,
         val maxSupportedDevices: Int,
         val readyForTesting: Boolean
     )
+
     fun getShimmerSystemStatus(): ShimmerSystemStatus {
         val bluetoothEnabled = bluetoothAdapter?.isEnabled == true
         val hasPermissions = hasRequiredPermissions()
@@ -709,6 +739,7 @@ class ShimmerDeviceManager(
             }
         )
     }
+
     data class ShimmerSystemStatus(
         val state: ShimmerSystemState,
         val message: String,
@@ -719,12 +750,14 @@ class ShimmerDeviceManager(
         val discoveredDeviceCount: Int,
         val connectedDevices: List<ConnectedDeviceInfo>
     )
+
     data class ConnectedDeviceInfo(
         val address: String,
         val name: String,
         val isStreaming: Boolean,
         val connectionState: String
     )
+
     enum class ShimmerSystemState {
         PERMISSIONS_REQUIRED,
         BLUETOOTH_DISABLED,
@@ -733,27 +766,35 @@ class ShimmerDeviceManager(
         CONNECTED,
         READY
     }
+
     fun getErrorMessage(error: ConnectionEvent): String {
         return when (error.state) {
             ConnectionState.FAILED -> {
                 when {
                     error.message?.contains("permission", ignoreCase = true) == true ->
                         "GSR sensor connection failed: Please grant Bluetooth permissions and try again"
+
                     error.message?.contains("timeout", ignoreCase = true) == true ->
                         "GSR sensor connection timeout: Move closer to the device and ensure it's powered on"
+
                     error.message?.contains("unavailable", ignoreCase = true) == true ->
                         "GSR sensor unavailable: Device may be connected to another app"
+
                     else ->
                         "GSR sensor connection failed: ${error.message ?: "Unknown error"}"
                 }
             }
+
             ConnectionState.TIMEOUT ->
                 "GSR sensor connection timeout: Check device proximity and battery level"
+
             ConnectionState.DISCONNECTED ->
                 "GSR sensor disconnected: ${error.message ?: "Device connection lost"}"
+
             else -> error.message ?: "GSR sensor status: ${error.state}"
         }
     }
+
     fun getActionableRecommendations(): List<String> {
         val recommendations = mutableListOf<String>()
         val status = getShimmerSystemStatus()
@@ -762,25 +803,30 @@ class ShimmerDeviceManager(
                 recommendations.add("Grant Bluetooth and Location permissions in app settings")
                 recommendations.add("Ensure 'Nearby devices' permission is enabled for Android 12+")
             }
+
             ShimmerSystemState.BLUETOOTH_DISABLED -> {
                 recommendations.add("Enable Bluetooth in device settings")
                 recommendations.add("Ensure Bluetooth LE is supported on this device")
             }
+
             ShimmerSystemState.READY -> {
                 recommendations.add("Power on your Shimmer GSR device")
                 recommendations.add("Ensure the device is within 10 meters")
                 recommendations.add("Tap 'Scan for Devices' to discover GSR sensors")
             }
+
             ShimmerSystemState.DEVICES_FOUND -> {
                 recommendations.add("Select a discovered device to connect")
                 recommendations.add("Ensure the device is not connected to another app")
             }
+
             ShimmerSystemState.CONNECTED -> {
                 recommendations.add("GSR sensors ready for recording")
                 if (status.connectedDeviceCount > 1) {
                     recommendations.add("Multi-device setup detected - great for research!")
                 }
             }
+
             ShimmerSystemState.SCANNING -> {
                 recommendations.add("Scanning in progress... please wait")
                 recommendations.add("Ensure GSR devices are powered on and nearby")
@@ -788,6 +834,7 @@ class ShimmerDeviceManager(
         }
         return recommendations
     }
+
     suspend fun release() = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Releasing Shimmer Device Manager")
         connectionMonitorJob?.cancel()
@@ -798,6 +845,7 @@ class ShimmerDeviceManager(
         bluetoothAdapter = null
         bluetoothManager = null
     }
+
     private fun isValidShimmerDevice(btDevice: BluetoothDevice): Boolean {
         val address = btDevice.address
         val name = if (ActivityCompat.checkSelfPermission(
@@ -823,6 +871,7 @@ class ShimmerDeviceManager(
         }
         return isValid
     }
+
     private fun hasRequiredPermissions(): Boolean {
         val requiredPermissions =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {

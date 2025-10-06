@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data
+
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -26,6 +27,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+
 class UnifiedGSRRecorder(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
@@ -53,6 +55,7 @@ class UnifiedGSRRecorder(
             ) == PackageManager.PERMISSION_GRANTED
             return bluetoothScan && bluetoothConnect && locationFine
         }
+
         fun getRequiredPermissions(): Array<String> = arrayOf(
             Manifest.permission.BLUETOOTH_SCAN,
             Manifest.permission.BLUETOOTH_CONNECT,
@@ -61,6 +64,7 @@ class UnifiedGSRRecorder(
             Manifest.permission.BLUETOOTH_ADMIN
         )
     }
+
     override val sensorType: String = "GSR (Galvanic Skin Response)"
     override val samplingRate: Double = samplingRateHz.toDouble()
     private val _isRecording = AtomicBoolean(false)
@@ -72,6 +76,7 @@ class UnifiedGSRRecorder(
     private var shimmerDeviceManager: ShimmerDeviceManager? = null
     private val discoveredDevices = mutableListOf<DeviceInfo>()
     private var selectedDevice: DeviceInfo? = null
+
     // Expose last connected device for reconnection
     val lastConnectedDeviceAddress: String?
         get() = selectedDevice?.address
@@ -89,11 +94,13 @@ class UnifiedGSRRecorder(
     private var lastExpectedSampleTime: Long = 0
     private val sampleInterval = (1000.0 / samplingRateHz).toLong()
     private val syncMarkers = mutableListOf<SyncMarker>()
+
     private data class SyncMarker(
         val timestampNs: Long,
         val markerType: String,
         val metadata: Map<String, String>
     )
+
     private val _connectionQuality = MutableStateFlow(0.0)
     val connectionQuality: StateFlow<Double> = _connectionQuality.asStateFlow()
     private val _deviceStatus = MutableStateFlow("Disconnected")
@@ -131,10 +138,12 @@ class UnifiedGSRRecorder(
                                 _deviceStatus.value = "Connected"
                                 connectedShimmer = shimmerDeviceManager?.getConnectedShimmer(event.deviceAddress)
                             }
+
                             ShimmerDeviceManager.ConnectionState.DISCONNECTED -> {
                                 _deviceStatus.value = "Disconnected"
                                 connectedShimmer = null
                             }
+
                             ShimmerDeviceManager.ConnectionState.FAILED -> {
                                 _deviceStatus.value = "Connection Failed"
                                 _errorFlow.emit(
@@ -148,9 +157,11 @@ class UnifiedGSRRecorder(
                                     )
                                 )
                             }
+
                             ShimmerDeviceManager.ConnectionState.CONNECTING -> {
                                 _deviceStatus.value = "Connecting..."
                             }
+
                             ShimmerDeviceManager.ConnectionState.TIMEOUT -> {
                                 _deviceStatus.value = "Connection Timeout"
                             }
@@ -167,6 +178,7 @@ class UnifiedGSRRecorder(
             return@withContext false
         }
     }
+
     suspend fun startDeviceDiscovery(): Boolean = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Starting enhanced Shimmer3 GSR+ device discovery with BLE scanning")
         if (shimmerManager == null) {
@@ -215,6 +227,7 @@ class UnifiedGSRRecorder(
             return@withContext false
         }
     }
+
     suspend fun connectToDevice(deviceInfo: DeviceInfo): Boolean = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Connecting to Shimmer device: ${deviceInfo.address} (${deviceInfo.name})")
         if (shimmerManager == null) {
@@ -246,6 +259,7 @@ class UnifiedGSRRecorder(
             return@withContext false
         }
     }
+
     private suspend fun configureGSRSensor() = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Configuring GSR sensor for research-grade recording")
         val shimmer = connectedShimmer ?: return@withContext
@@ -259,6 +273,7 @@ class UnifiedGSRRecorder(
             throw e
         }
     }
+
     override suspend fun startRecording(
         sessionDirectory: String,
         sessionMetadata: SessionMetadata
@@ -318,6 +333,7 @@ class UnifiedGSRRecorder(
                 return@withContext false
             }
         }
+
     override suspend fun startRecording(sessionDirectory: String): Boolean =
         withContext(Dispatchers.IO) {
             AppLogger.i(TAG, "Starting GSR recording session (legacy mode)")
@@ -359,6 +375,7 @@ class UnifiedGSRRecorder(
                 return@withContext false
             }
         }
+
     override suspend fun stopRecording(): Boolean = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Stopping GSR recording session")
         if (!_isRecording.get()) {
@@ -401,6 +418,7 @@ class UnifiedGSRRecorder(
             return@withContext false
         }
     }
+
     private suspend fun processRecordingData() = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Starting real-time GSR data processing")
         while (_isRecording.get()) {
@@ -420,10 +438,12 @@ class UnifiedGSRRecorder(
         }
         AppLogger.i(TAG, "GSR data processing stopped")
     }
+
     private fun createMockObjectCluster(): ObjectCluster {
         // Create a mock ObjectCluster for testing purposes
         return ObjectCluster()
     }
+
     private fun updateConnectionQuality() {
         val shimmer = connectedShimmer ?: return
         try {
@@ -439,6 +459,7 @@ class UnifiedGSRRecorder(
                     val rateQuality = minOf(1.0, sampleRate / samplingRate)
                     baseQuality * rateQuality
                 }
+
                 else -> 0.5
             }
             _connectionQuality.value = quality
@@ -447,6 +468,7 @@ class UnifiedGSRRecorder(
             _connectionQuality.value = 0.5
         }
     }
+
     override suspend fun addSyncMarker(
         markerType: String,
         timestampNs: Long,
@@ -476,6 +498,7 @@ class UnifiedGSRRecorder(
             AppLogger.e(TAG, "Error adding sync marker", e)
         }
     }
+
     override fun getStatusFlow(): Flow<RecordingStatus> = _statusFlow.asSharedFlow()
     override fun getErrorFlow(): Flow<SensorError> = _errorFlow.asSharedFlow()
     override fun getRecordingStats(): RecordingStats {
@@ -497,6 +520,7 @@ class UnifiedGSRRecorder(
             lastSampleTimestampNs = System.nanoTime()
         )
     }
+
     fun getRecordingStatus(): Map<String, Any> {
         return mapOf(
             "sensor_type" to sensorType,
@@ -510,13 +534,16 @@ class UnifiedGSRRecorder(
             "discovered_devices" to discoveredDevices.size
         )
     }
+
     fun getDiscoveredDevices(): List<DeviceInfo> = discoveredDevices.toList()
     fun getDataStream(): Flow<GSRSample> = gsrDataFlow.asSharedFlow()
+
     // Additional statistics methods required by UnifiedSessionManager
     fun getSampleCount(): Long = recordedSamples.get()
     fun getOutputFileSize(): Long = sessionDirectory?.let { dir ->
         dir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
     } ?: 0L
+
     fun getAverageDataRate(): Double {
         val sessionDuration = if (recordingStartTime > 0) {
             (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
@@ -525,17 +552,21 @@ class UnifiedGSRRecorder(
             recordedSamples.get().toDouble() / sessionDuration
         } else 0.0
     }
+
     fun getDroppedSampleCount(): Long = droppedSamples.get()
     fun getAverageSignalQuality(): Double = _connectionQuality.value
+
     // Error tracking implementation
     private val errorCount = AtomicLong(0)
     fun getErrorCount(): Long {
         return errorCount.get()
     }
+
     private fun incrementErrorCount() {
         errorCount.incrementAndGet()
         AppLogger.w(TAG, "GSR error count increased to: ${errorCount.get()}")
     }
+
     suspend fun flushAndCloseFiles() = withContext(Dispatchers.IO) {
         try {
             csvWriter?.flush()
@@ -546,6 +577,7 @@ class UnifiedGSRRecorder(
             AppLogger.e(TAG, "Error flushing and closing GSR files", e)
         }
     }
+
     suspend fun disconnectDevice(): Boolean = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Disconnecting from Shimmer device")
         try {
@@ -563,6 +595,7 @@ class UnifiedGSRRecorder(
             return@withContext false
         }
     }
+
     override suspend fun cleanup(): Unit = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Cleaning up GSR recorder resources")
         try {
@@ -579,6 +612,7 @@ class UnifiedGSRRecorder(
             AppLogger.e(TAG, "Error during cleanup", e)
         }
     }
+
     private suspend fun processGSRData(shimmer: Shimmer, objectCluster: ObjectCluster) {
         if (!_isRecording.get()) return
         try {

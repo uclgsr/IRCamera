@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.components.sensors
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +23,7 @@ import mpdc4gsr.core.ui.model.GSRAction
 import mpdc4gsr.core.ui.model.SensorState
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import kotlin.math.sin
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRSensorCard(
@@ -138,6 +140,7 @@ fun GSRSensorCard(
                             Text("Connect")
                         }
                     }
+
                     SensorState.Connected -> {
                         Button(
                             onClick = { onAction(GSRAction.StartStream) },
@@ -154,6 +157,7 @@ fun GSRSensorCard(
                             Text("Disconnect")
                         }
                     }
+
                     SensorState.Streaming -> {
                         Button(
                             onClick = { onAction(GSRAction.StopStream) },
@@ -173,6 +177,7 @@ fun GSRSensorCard(
                             )
                         }
                     }
+
                     SensorState.Error -> {
                         Button(
                             onClick = { onAction(GSRAction.Connect) },
@@ -181,12 +186,14 @@ fun GSRSensorCard(
                             Text("Retry")
                         }
                     }
+
                     else -> {}
                 }
             }
         }
     }
 }
+
 @Composable
 private fun GSRDataVisualization(
     gsrValue: Float,
@@ -257,6 +264,7 @@ private fun GSRDataVisualization(
         }
     }
 }
+
 @Composable
 private fun MetricItem(
     label: String,
@@ -281,6 +289,7 @@ private fun MetricItem(
         )
     }
 }
+
 @Composable
 private fun getStatusColor(state: SensorState): Color {
     return when (state) {
@@ -292,6 +301,7 @@ private fun getStatusColor(state: SensorState): Color {
         SensorState.Simulation -> Color.Magenta
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun GSRSensorCardPreview() {

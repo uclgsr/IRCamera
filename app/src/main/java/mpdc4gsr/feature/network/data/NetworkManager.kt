@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
@@ -20,6 +21,7 @@ class NetworkManager(
         private const val RECONNECT_DELAY_MS = 5000L
         private const val TELEMETRY_INTERVAL_MS = 5000L
     }
+
     private var activeConnection: CommandConnection? = null
     private var commandHandler: CommandHandler? = null
     private val networkSettings = NetworkSettings(context)
@@ -40,12 +42,14 @@ class NetworkManager(
     val lastErrorCode: StateFlow<NetworkErrorCodes.NetworkError?> = _lastErrorCode.asStateFlow()
     private val _connectionSummary = MutableStateFlow("Not configured")
     val connectionSummary: StateFlow<String> = _connectionSummary.asStateFlow()
+
     data class ConnectionConfig(
         val type: NetworkSettings.ConnectionType,
         val host: String? = null,
         val port: Int? = null,
         val bluetoothDevice: BluetoothDevice? = null
     )
+
     init {
         commandHandler = CommandHandler(recordingController, this)
         _connectionSummary.value = networkSettings.getConnectionSummary()
@@ -68,6 +72,7 @@ class NetworkManager(
                 )
                 connectWifi(networkSettings.pcIpAddress, networkSettings.pcPort)
             }
+
             NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM -> {
                 try {
                     val (address, _) = networkSettings.getSavedBluetoothDeviceInfo()
@@ -152,6 +157,7 @@ class NetworkManager(
         val bluetoothClient = BluetoothClient(context, bluetoothDevice)
         return connectWithClient(bluetoothClient, "Bluetooth RFCOMM")
     }
+
     private suspend fun connectWithClient(
         client: CommandConnection,
         connectionType: String
@@ -246,6 +252,7 @@ class NetworkManager(
         }
         managerScope.cancel()
     }
+
     private fun handleIncomingMessage(message: String) {
         managerScope.launch {
             try {
@@ -255,6 +262,7 @@ class NetworkManager(
             }
         }
     }
+
     private fun sendInitialHandshake() {
         managerScope.launch {
             try {
@@ -289,23 +297,29 @@ class NetworkManager(
             }
         }
     }
+
     private fun startPeriodicUpdates() {
         commandHandler?.startPeriodicStatusUpdates()
     }
+
     private fun stopPeriodicUpdates() {
         connectionMonitorJob?.cancel()
         connectionMonitorJob = null
     }
+
     // Event notification methods for integration with RecordingController
     fun notifySessionStarted(sessionId: String) {
         commandHandler?.notifySessionStarted(sessionId)
     }
+
     fun notifySessionStopped(sessionId: String, duration: Long) {
         commandHandler?.notifySessionStopped(sessionId, duration)
     }
+
     fun notifyError(errorType: String, errorMessage: String) {
         commandHandler?.notifyError(errorType, errorMessage)
     }
+
     // Enhanced connection management methods
     private fun handleConnectionStateChange(
         state: CommandConnection.ConnectionState,
@@ -321,6 +335,7 @@ class NetworkManager(
                 startPeriodicUpdates()
                 startTelemetryUpdates()
             }
+
             CommandConnection.ConnectionState.DISCONNECTED -> {
                 AppLogger.i(TAG, "$connectionType connection closed")
                 connectionMetrics.recordConnectionEnd()
@@ -331,6 +346,7 @@ class NetworkManager(
                     scheduleReconnection()
                 }
             }
+
             CommandConnection.ConnectionState.ERROR -> {
                 AppLogger.w(TAG, "$connectionType connection error")
                 _lastError.value = "$connectionType connection error"
@@ -342,10 +358,12 @@ class NetworkManager(
                     scheduleReconnection()
                 }
             }
+
             else -> {
             }
         }
     }
+
     private fun scheduleReconnection() {
         if (currentReconnectAttempts >= networkSettings.reconnectAttempts) {
             Log.w(
@@ -368,6 +386,7 @@ class NetworkManager(
             attemptReconnection()
         }
     }
+
     private suspend fun attemptReconnection() {
         lastConnectionConfig?.let { config ->
             AppLogger.i(TAG, "Attempting reconnection...")
@@ -380,6 +399,7 @@ class NetworkManager(
                         }
                     } ?: false
                 }
+
                 NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM -> {
                     config.bluetoothDevice?.let { device ->
                         connectBluetooth(device)
@@ -394,6 +414,7 @@ class NetworkManager(
             }
         }
     }
+
     private fun startTelemetryUpdates() {
         telemetryJob?.cancel()
         telemetryJob = managerScope.launch {
@@ -416,10 +437,12 @@ class NetworkManager(
             }
         }
     }
+
     private fun stopTelemetryUpdates() {
         telemetryJob?.cancel()
         telemetryJob = null
     }
+
     private fun setupSessionEventBroadcasting() {
         // Monitor recording state changes to notify PC
         managerScope.launch {
@@ -431,10 +454,12 @@ class NetworkManager(
                                 "STATUS Recording started locally, sensors: [RGB,Thermal,GSR]"
                             sendTelemetry(message)
                         }
+
                         RecordingState.STOPPED -> {
                             val message = "STATUS Recording stopped locally"
                             sendTelemetry(message)
                         }
+
                         else -> {
                         }
                     }

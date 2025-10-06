@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.config
+
 object ExtraKeyConfig {
     const val IS_PICK_REPORT_IMG = "IS_PICK_REPORT_IMG"
     const val IS_VIDEO = "IS_VIDEO"

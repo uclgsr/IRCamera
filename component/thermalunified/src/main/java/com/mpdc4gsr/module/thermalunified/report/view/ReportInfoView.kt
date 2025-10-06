@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.report.view
+
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import androidx.core.view.isVisible
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportConditionBean
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportInfoBean
+
 class ReportInfoView : LinearLayout {
     private lateinit var tvReportName: android.widget.TextView
     private lateinit var tvReportAuthor: android.widget.TextView
@@ -27,6 +29,7 @@ class ReportInfoView : LinearLayout {
     private lateinit var groupEmissivity: androidx.constraintlayout.widget.Group
     private lateinit var tvEmissivity: android.widget.TextView
     private lateinit var clTop: androidx.constraintlayout.widget.ConstraintLayout
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
@@ -37,6 +40,7 @@ class ReportInfoView : LinearLayout {
         LayoutInflater.from(context).inflate(R.layout.view_report_info, this, true)
         initViews()
     }
+
     private fun initViews() {
         tvReportName = findViewById(R.id.tv_report_name)
         tvReportAuthor = findViewById(R.id.tv_report_author)
@@ -57,6 +61,7 @@ class ReportInfoView : LinearLayout {
         tvEmissivity = findViewById(R.id.tv_emissivity)
         clTop = findViewById(R.id.cl_top)
     }
+
     fun refreshInfo(reportInfoBean: ReportInfoBean?) {
         tvReportName.text = reportInfoBean?.report_name
         tvReportAuthor.isVisible = reportInfoBean?.is_report_author == 1
@@ -66,6 +71,7 @@ class ReportInfoView : LinearLayout {
         tvReportDate.isVisible = reportInfoBean?.is_report_date == 1
         tvReportDate.text = reportInfoBean?.report_date
     }
+
     fun refreshCondition(conditionBean: ReportConditionBean?) {
         clReportCondition.isVisible = conditionBean?.is_ambient_humidity == 1 ||
                 conditionBean?.is_ambient_temperature == 1 ||
@@ -86,6 +92,7 @@ class ReportInfoView : LinearLayout {
         groupEmissivity.isVisible = conditionBean?.is_emissivity == 1
         tvEmissivity.text = conditionBean?.emissivity
     }
+
     fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
         result.add(clTop)

@@ -1,6 +1,8 @@
 package com.mpdc4gsr.libunified.app.bean
+
 import com.mpdc4gsr.libunified.app.utils.ByteUtils
 import com.mpdc4gsr.libunified.app.utils.CommUtils
+
 data class WatermarkBean(
     var isOpen: Boolean = false,
     var title: String = CommUtils.getAppName(),
@@ -23,6 +25,7 @@ data class WatermarkBean(
             )
         }
     }
+
     fun toByteArray(): ByteArray {
         val result = ByteArray(450)
         val titleByteArray = title.toByteArray()

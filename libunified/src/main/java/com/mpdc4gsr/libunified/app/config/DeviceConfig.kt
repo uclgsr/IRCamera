@@ -1,5 +1,7 @@
 package com.mpdc4gsr.libunified.app.config
+
 import android.hardware.usb.UsbDevice
+
 object DeviceConfig {
     const val IR_VENDOR_ID = 0x0BDA
     const val IR_PRODUCT_ID = 0x5840
@@ -19,9 +21,11 @@ object DeviceConfig {
                 (productId == TCLITE_PRODUCT_ID && vendorId == TCLITE_VENDOR_ID) ||
                 (productId == HIK_PRODUCT_ID && vendorId == HIK_VENDOR_ID)
     }
+
     fun UsbDevice.isTcLiteDevice(): Boolean {
         return (productId == TCLITE_PRODUCT_ID && vendorId == TCLITE_VENDOR_ID)
     }
+
     fun UsbDevice.isHik256(): Boolean = productId == HIK_PRODUCT_ID && vendorId == HIK_VENDOR_ID
     const val SKU = "TDTC001A11"
     const val SN = "TC001A11000001"

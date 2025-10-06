@@ -1,8 +1,10 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
+
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+
 class ThermalIrNightViewModel : BaseViewModel() {
     private val _selectedMode = MutableStateFlow(0)
     val selectedMode: StateFlow<Int> = _selectedMode.asStateFlow()
@@ -17,16 +19,19 @@ class ThermalIrNightViewModel : BaseViewModel() {
             _selectedMode.value = mode
         }
     }
+
     fun toggleNightMode() {
         launchWithErrorHandling {
             _nightModeEnabled.value = !_nightModeEnabled.value
         }
     }
+
     fun toggleOverlay() {
         launchWithErrorHandling {
             _showOverlay.value = !_showOverlay.value
         }
     }
+
     fun toggleRecording() {
         launchWithErrorHandling {
             _isRecording.value = !_isRecording.value

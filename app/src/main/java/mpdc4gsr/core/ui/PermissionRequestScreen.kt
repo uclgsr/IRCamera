@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.collectLatest
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermissionRequestScreen(
@@ -35,9 +37,11 @@ fun PermissionRequestScreen(
                 is PermissionRequestViewModel.PermissionEvent.ShowError -> {
                     // Handle error display
                 }
+
                 is PermissionRequestViewModel.PermissionEvent.ShowSuccess -> {
                     // Handle success display
                 }
+
                 PermissionRequestViewModel.PermissionEvent.NavigateToRecording -> {
                     // Navigate to recording activity
                 }
@@ -99,6 +103,7 @@ fun PermissionRequestScreen(
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StatusOverviewCard(
@@ -162,6 +167,7 @@ private fun StatusOverviewCard(
         }
     }
 }
+
 @Composable
 private fun PermissionStatusChip(
     name: String,
@@ -193,6 +199,7 @@ private fun PermissionStatusChip(
         )
     )
 }
+
 @Composable
 private fun PermissionCardsSection(
     permissionStates: PermissionRequestViewModel.PermissionStates,
@@ -256,6 +263,7 @@ private fun PermissionCardsSection(
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PermissionCard(
@@ -309,6 +317,7 @@ private fun PermissionCard(
         }
     }
 }
+
 @Composable
 private fun ActionButtonsSection(
     screenState: PermissionRequestViewModel.ScreenState,
@@ -355,6 +364,7 @@ private fun ActionButtonsSection(
         }
     }
 }
+
 @Composable
 private fun LogSection(
     logMessages: List<PermissionRequestViewModel.LogMessage>,

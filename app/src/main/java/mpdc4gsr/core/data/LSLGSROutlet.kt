@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data
+
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -71,6 +72,7 @@ class LSLGSROutlet(
                 false
             }
         }
+
         private suspend fun acceptConnections() {
             while (isActive.get()) {
                 try {
@@ -107,6 +109,7 @@ class LSLGSROutlet(
                 }
             }
         }
+
         private fun sendStreamInfo(socket: Socket) {
             try {
                 val writer = PrintWriter(socket.outputStream, true)
@@ -132,6 +135,7 @@ class LSLGSROutlet(
                 AppLogger.e(TAG, "Failed to send stream info to client", e)
             }
         }
+
         fun pushSample(sample: FloatArray): Boolean {
             if (!isActive.get() || sample.size != streamInfo.channelCount) {
                 return false
@@ -167,6 +171,7 @@ class LSLGSROutlet(
                 false
             }
         }
+
         fun pushChunk(samples: Array<FloatArray>): Boolean {
             if (!isActive.get()) {
                 return false
@@ -207,6 +212,7 @@ class LSLGSROutlet(
                 false
             }
         }
+
         fun close() {
             isActive.set(false)
             // Close all client connections
@@ -219,10 +225,12 @@ class LSLGSROutlet(
             serverJob?.cancel()
             AppLogger.i(TAG, "LSL outlet closed")
         }
+
         fun getSampleCount(): Long = sampleCount.get()
         fun getUptimeMs(): Long = System.currentTimeMillis() - startTime
         fun getConnectedClients(): Int = synchronized(connectedClients) { connectedClients.size }
     }
+
     // Stream configuration
     private val streamInfo = LSLStreamInfo(
         name = streamName,
@@ -259,6 +267,7 @@ class LSLGSROutlet(
             false
         }
     }
+
     private suspend fun streamingLoop() {
         while (isStreaming.get()) {
             try {
@@ -291,6 +300,7 @@ class LSLGSROutlet(
             }
         }
     }
+
     fun pushSample(sample: GSRSample) {
         if (isStreaming.get()) {
             // Add to buffer for batch processing
@@ -303,6 +313,7 @@ class LSLGSROutlet(
             updateQualityMetrics(sample)
         }
     }
+
     private fun updateQualityMetrics(sample: GSRSample) {
         // Simple quality metric based on signal stability
         val quality = if (sample.gsrMicrosiemens in 0.1..10.0) 1.0 else 0.0
@@ -311,6 +322,7 @@ class LSLGSROutlet(
             qualityHistory.poll()
         }
     }
+
     fun stopStreaming() {
         isStreaming.set(false)
         streamingJob?.cancel()
@@ -320,6 +332,7 @@ class LSLGSROutlet(
         qualityHistory.clear()
         AppLogger.i(TAG, "LSL GSR streaming stopped")
     }
+
     fun getStreamingStatistics(): Map<String, Any> {
         return mapOf(
             "is_streaming" to isStreaming.get(),
@@ -330,6 +343,7 @@ class LSLGSROutlet(
             "quality_score" to getAverageQuality()
         )
     }
+
     private fun getAverageQuality(): Double {
         return if (qualityHistory.isEmpty()) {
             0.0
@@ -337,6 +351,7 @@ class LSLGSROutlet(
             qualityHistory.average()
         }
     }
+
     fun isStreamingActive(): Boolean = isStreaming.get()
     fun getSamplesSent(): Long = samplesSent.get()
     fun getBufferSize(): Int = sampleBuffer.size

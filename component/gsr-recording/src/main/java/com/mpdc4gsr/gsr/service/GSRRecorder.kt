@@ -1,4 +1,5 @@
 package com.mpdc4gsr.gsr.service
+
 import android.content.Context
 import android.os.Environment
 import android.util.Log
@@ -14,6 +15,7 @@ import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.coroutines.coroutineContext
+
 class GSRRecorder(
     private val context: Context,
     private val shimmerDeviceFactory: ShimmerDeviceFactory,
@@ -21,6 +23,7 @@ class GSRRecorder(
 ) {
     private val shimmerRecorder = ShimmerGSRRecorder(context, shimmerDeviceFactory, samplingRateHz)
     private val useShimmerDevice = true
+
     companion object {
         private const val TAG = "GSRRecorder"
         private const val SESSIONS_DIR = "IRCamera_Sessions"
@@ -45,6 +48,7 @@ class GSRRecorder(
                 "metadata",
             )
     }
+
     private val sampleIntervalMs = 1000L / samplingRateHz
     private val isRecording = AtomicBoolean(false)
     private val sampleIndex = AtomicLong(0)
@@ -54,6 +58,7 @@ class GSRRecorder(
     private var signalsWriter: CSVWriter? = null
     private var syncMarksWriter: CSVWriter? = null
     private val listeners = mutableListOf<GSRRecordingListener>()
+
     interface GSRRecordingListener {
         fun onRecordingStarted(sessionInfo: SessionInfo)
         fun onRecordingStopped(sessionInfo: SessionInfo)
@@ -61,12 +66,15 @@ class GSRRecorder(
         fun onSyncMarkAdded(syncMark: SyncMark)
         fun onError(error: String)
     }
+
     fun addListener(listener: GSRRecordingListener) {
         listeners.add(listener)
     }
+
     fun removeListener(listener: GSRRecordingListener) {
         listeners.remove(listener)
     }
+
     suspend fun initialize(): Boolean {
         return if (useShimmerDevice) {
             Log.i(TAG, "Attempting to initialize Shimmer3 GSR device...")
@@ -84,33 +92,41 @@ class GSRRecorder(
             true
         }
     }
+
     private fun setupShimmerListeners() {
         shimmerRecorder.addListener(
             object : ShimmerGSRRecorder.GSRRecordingListener {
                 override fun onRecordingStarted(session: SessionInfo) {
                     listeners.forEach { it.onRecordingStarted(session) }
                 }
+
                 override fun onRecordingStopped(session: SessionInfo) {
                     listeners.forEach { it.onRecordingStopped(session) }
                 }
+
                 override fun onSampleRecorded(sample: GSRSample) {
                     listeners.forEach { it.onSampleRecorded(sample) }
                 }
+
                 override fun onSyncMarkRecorded(syncMark: SyncMark) {
                     listeners.forEach { it.onSyncMarkAdded(syncMark) }
                 }
+
                 override fun onError(error: String) {
                     listeners.forEach { it.onError(error) }
                 }
+
                 override fun onDeviceConnected() {
                     Log.i(TAG, "Shimmer3 GSR device connected")
                 }
+
                 override fun onDeviceDisconnected() {
                     Log.w(TAG, "Shimmer3 GSR device disconnected")
                 }
             },
         )
     }
+
     suspend fun startRecording(
         sessionId: String,
         participantId: String? = null,
@@ -126,6 +142,7 @@ class GSRRecorder(
             startSimulatedRecording(sessionId, participantId, studyName)
         }
     }
+
     private suspend fun startSimulatedRecording(
         sessionId: String,
         participantId: String?,
@@ -169,6 +186,7 @@ class GSRRecorder(
             return false
         }
     }
+
     private suspend fun generateSimulatedGSRData() {
         val baseTime = System.currentTimeMillis()
         while (isRecording.get()) {
@@ -214,6 +232,7 @@ class GSRRecorder(
             }
         }
     }
+
     fun stopRecording(): SessionInfo? {
         if (!isRecording.get()) {
             Log.w(TAG, "No recording in progress")
@@ -226,6 +245,7 @@ class GSRRecorder(
             stopSimulatedRecording()
         }
     }
+
     private fun stopSimulatedRecording(): SessionInfo? {
         recordingJob?.cancel()
         recordingJob = null
@@ -244,6 +264,7 @@ class GSRRecorder(
         currentSession = null
         return completedSession
     }
+
     fun triggerSyncEvent(
         eventType: String,
         metadata: String = "",
@@ -255,6 +276,7 @@ class GSRRecorder(
             triggerSimulatedSyncEvent(eventType, metadata)
         }
     }
+
     private fun triggerSimulatedSyncEvent(
         eventType: String,
         metadata: String,
@@ -281,6 +303,7 @@ class GSRRecorder(
         }
         return false
     }
+
     private fun createSessionDirectory(sessionId: String): File? {
         return try {
             val externalStorage = Environment.getExternalStorageDirectory()
@@ -297,6 +320,7 @@ class GSRRecorder(
             null
         }
     }
+
     private fun initializeCsvWriters(): Boolean {
         return try {
             sessionDirectory?.let { dir ->
@@ -319,6 +343,7 @@ class GSRRecorder(
             false
         }
     }
+
     private fun saveSessionMetadata(session: SessionInfo) {
         try {
             sessionDirectory?.let { dir ->
@@ -332,6 +357,7 @@ class GSRRecorder(
             Log.e(TAG, "Failed to save session metadata", e)
         }
     }
+
     private fun cleanup() {
         try {
             signalsWriter?.close()
@@ -343,10 +369,12 @@ class GSRRecorder(
             syncMarksWriter = null
         }
     }
+
     private fun notifyError(error: String) {
         Log.e(TAG, error)
         listeners.forEach { it.onError(error) }
     }
+
     fun disconnect() {
         if (useShimmerDevice) {
             shimmerRecorder.disconnect()
@@ -355,6 +383,7 @@ class GSRRecorder(
             stopRecording()
         }
     }
+
     fun isDeviceConnected(): Boolean {
         return if (useShimmerDevice) {
             shimmerRecorder.isDeviceConnected()
@@ -362,15 +391,19 @@ class GSRRecorder(
             true
         }
     }
+
     fun isRecording(): Boolean {
         return isRecording.get()
     }
+
     fun getCurrentSession(): SessionInfo? {
         return currentSession
     }
+
     fun getSessionDirectory(): File? {
         return sessionDirectory
     }
+
     suspend fun addSyncMark(
         eventType: String,
         metadata: String = "",

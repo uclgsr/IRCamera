@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -31,18 +32,21 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
     companion object {
         private const val TAG = "BLEIntegrationTestCompose"
     }
+
     private lateinit var permissionController: PermissionController
     private var gsrRecorder: UnifiedGSRRecorder? = null
     private var deviceManager: ShimmerDeviceManager? = null
     override fun createViewModel(): BLEIntegrationTestViewModel {
         return viewModels<BLEIntegrationTestViewModel>().value
     }
+
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
         // Initialize components
         permissionController = PermissionController(this)
         initializeRecorder()
     }
+
     @Composable
     override fun Content(viewModel: BLEIntegrationTestViewModel) {
         val logMessages = remember { mutableStateListOf<String>() }
@@ -58,6 +62,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
             )
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun BLEIntegrationTestScreen(
@@ -190,6 +195,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
             }
         }
     }
+
     private fun initializeRecorder() {
         try {
             // Initialize GSR recorder and device manager
@@ -200,6 +206,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
             AppLogger.e(TAG, "Failed to initialize BLE components: ${e.message}")
         }
     }
+
     private suspend fun runAllTests() {
         AppLogger.i(TAG, "Starting comprehensive BLE integration tests")
         // Run each test sequentially
@@ -214,6 +221,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
         runReconnectionTest()
         AppLogger.i(TAG, "BLE integration tests completed")
     }
+
     private suspend fun runPermissionsTest() {
         AppLogger.d(TAG, "Running BLE permissions test")
         // Test BLE and location permissions
@@ -225,6 +233,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
             AppLogger.e(TAG, "Permissions test failed: ${e.message}")
         }
     }
+
     private suspend fun runDiscoveryTest() {
         AppLogger.d(TAG, "Running device discovery test")
         try {
@@ -240,6 +249,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
             AppLogger.e(TAG, "Discovery test failed: ${e.message}")
         }
     }
+
     private suspend fun runConnectionTest() {
         AppLogger.d(TAG, "Running connection test")
         try {
@@ -252,6 +262,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
             AppLogger.e(TAG, "Connection test failed: ${e.message}")
         }
     }
+
     private suspend fun runStreamingTest() {
         AppLogger.d(TAG, "Running data streaming test")
         try {
@@ -268,6 +279,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
             AppLogger.e(TAG, "Streaming test failed: ${e.message}")
         }
     }
+
     private suspend fun runReconnectionTest() {
         AppLogger.d(TAG, "Running reconnection test")
         try {
@@ -291,6 +303,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
             AppLogger.e(TAG, "Reconnection test failed: ${e.message}")
         }
     }
+
     private fun runTest(testType: String) {
         lifecycleScope.launch {
             when (testType) {

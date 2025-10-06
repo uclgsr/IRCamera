@@ -1,10 +1,12 @@
 package com.mpdc4gsr.libunified.app.utils
+
 import android.content.Context
 import android.os.StatFs
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+
 object UnifiedSessionUtils {
     // Directory constants
     private const val SESSIONS_ROOT_DIR = "sessions"
@@ -12,6 +14,7 @@ object UnifiedSessionUtils {
     private const val THERMAL_SUBDIR = "Thermal"
     private const val SHIMMER_SUBDIR = "Shimmer"
     private const val METADATA_SUBDIR = "metadata"
+
     // File constants
     const val RGB_VIDEO_FILE = "rgb_video.mp4"
     const val SHIMMER_DATA_FILE = "shimmer_data.csv"
@@ -24,6 +27,7 @@ object UnifiedSessionUtils {
         val sessionDir = File(getSessionsRootDirectory(context), dirName)
         return createSessionDirectoryStructure(sessionDir)
     }
+
     private fun createSessionDirectoryStructure(sessionDir: File): File {
         sessionDir.mkdirs()
         // Create subdirectories
@@ -33,22 +37,28 @@ object UnifiedSessionUtils {
         File(sessionDir, METADATA_SUBDIR).mkdirs()
         return sessionDir
     }
+
     fun getSessionsRootDirectory(context: Context): File {
         val rootDir = context.getExternalFilesDir(null) ?: context.filesDir
         return File(rootDir, SESSIONS_ROOT_DIR).apply { mkdirs() }
     }
+
     fun getRGBDirectory(sessionDir: File): File {
         return File(sessionDir, RGB_SUBDIR).apply { mkdirs() }
     }
+
     fun getThermalDirectory(sessionDir: File): File {
         return File(sessionDir, THERMAL_SUBDIR).apply { mkdirs() }
     }
+
     fun getShimmerDirectory(sessionDir: File): File {
         return File(sessionDir, SHIMMER_SUBDIR).apply { mkdirs() }
     }
+
     fun getMetadataDirectory(sessionDir: File): File {
         return File(sessionDir, METADATA_SUBDIR).apply { mkdirs() }
     }
+
     fun createSessionInfo(
         sessionDir: File,
         sessionId: String,
@@ -71,6 +81,7 @@ object UnifiedSessionUtils {
         infoFile.writeText(sessionInfo.toString(2))
         return infoFile
     }
+
     fun getAvailableStorageSpace(context: Context): Long {
         return try {
             val sessionDir = getSessionsRootDirectory(context)
@@ -80,6 +91,7 @@ object UnifiedSessionUtils {
             0L
         }
     }
+
     fun getTotalStorageSpace(context: Context): Long {
         return try {
             val sessionDir = getSessionsRootDirectory(context)
@@ -89,6 +101,7 @@ object UnifiedSessionUtils {
             0L
         }
     }
+
     fun cleanupOldSessions(context: Context, olderThanDays: Int): Int {
         val cutoffTime = System.currentTimeMillis() - (olderThanDays * 24 * 60 * 60 * 1000L)
         val sessionsDir = getSessionsRootDirectory(context)
@@ -102,15 +115,18 @@ object UnifiedSessionUtils {
         }
         return deletedCount
     }
+
     fun listSessionDirectories(context: Context): List<File> {
         val sessionsDir = getSessionsRootDirectory(context)
         return sessionsDir.listFiles()?.filter { it.isDirectory }
             ?.sortedByDescending { it.lastModified() }
             ?: emptyList()
     }
+
     fun generateSessionId(): String {
         return UUID.randomUUID().toString()
     }
+
     fun validateSessionDirectory(sessionDir: File): Boolean {
         return sessionDir.exists() &&
                 sessionDir.isDirectory &&

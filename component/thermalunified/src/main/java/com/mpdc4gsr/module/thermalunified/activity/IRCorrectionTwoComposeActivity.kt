@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -14,10 +15,12 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+
 class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewModel>() {
     override fun createViewModel(): IRCorrectionTwoViewModel {
         return IRCorrectionTwoViewModel()
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRCorrectionTwoViewModel) {
@@ -54,6 +57,7 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
             }
         }
     }
+
     @Composable
     private fun IRCorrectionTwoContent(
         viewModel: IRCorrectionTwoViewModel,
@@ -211,7 +215,7 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                     Text("Reset")
                 }
                 Button(
-                    onClick = {  },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFF6B35)
@@ -225,4 +229,5 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
         }
     }
 }
+
 class IRCorrectionTwoViewModel : BaseViewModel()

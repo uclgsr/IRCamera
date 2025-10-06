@@ -1,10 +1,12 @@
 package com.mpdc4gsr.libunified.ui.widget
+
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Path
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import com.mpdc4gsr.libunified.R
+
 class RoundImageView : AppCompatImageView {
     companion object {
         const val LEFT_TOP = 1
@@ -14,6 +16,7 @@ class RoundImageView : AppCompatImageView {
         private const val DEFAULT_RADIUS = 10f
         private const val DEFAULT_POSITION = 15
     }
+
     var position = 0 //
         set(value) {
             if (field != value) {
@@ -24,6 +27,7 @@ class RoundImageView : AppCompatImageView {
     private var radius = 0 //， px
     private val path = Path()//
     private var density = 0f //，dppx
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
@@ -41,6 +45,7 @@ class RoundImageView : AppCompatImageView {
         position = typedArray.getInt(R.styleable.RoundImageView_round_position, DEFAULT_POSITION)
         typedArray.recycle()
     }
+
     override fun onDraw(canvas: Canvas) {
         path.rewind()
         if (position and LEFT_TOP == LEFT_TOP) {
@@ -78,12 +83,14 @@ class RoundImageView : AppCompatImageView {
         canvas.clipPath(path)
         super.onDraw(canvas)
     }
+
     fun setRadius(radius: Float) {
         if (this.radius != dp2px(radius)) {
             this.radius = dp2px(radius)
             invalidate()
         }
     }
+
     private fun dp2px(dpValue: Float): Int {
         return (dpValue * density + 0.5f).toInt()
     }

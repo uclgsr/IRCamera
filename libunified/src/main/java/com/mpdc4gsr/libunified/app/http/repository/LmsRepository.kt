@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.http.repository
+
 import android.text.TextUtils
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
@@ -14,6 +15,7 @@ import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CountDownLatch
+
 object LmsRepository {
     suspend fun getVersionInfo(): CheckVersionJson? {
         var result: CheckVersionJson? = null
@@ -35,6 +37,7 @@ object LmsRepository {
         }
         return result
     }
+
     suspend fun getStatementUrl(type: String): StatementJson? {
         var result: StatementJson? = null
         val downLatch = CountDownLatch(1)
@@ -53,10 +56,12 @@ object LmsRepository {
                     }
                     downLatch.countDown()
                 }
+
                 override fun onFail(p0: Exception?) {
                     downLatch.countDown()
                     XLog.w("onFail: $result")
                 }
+
                 override fun onFail(
                     failMsg: String?,
                     errorCode: String,

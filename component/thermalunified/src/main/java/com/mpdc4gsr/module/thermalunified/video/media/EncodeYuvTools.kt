@@ -1,7 +1,10 @@
 @file:Suppress("DEPRECATION")
+
 package com.mpdc4gsr.module.thermalunified.video.media
+
 import android.graphics.Bitmap
 import android.media.MediaCodecInfo.CodecCapabilities.*
+
 object EncodeYuvTools {
     fun getNV12(
         inputWidth: Int,
@@ -20,6 +23,7 @@ object EncodeYuvTools {
                     inputWidth,
                     inputHeight,
                 )
+
             @Suppress("DEPRECATION") COLOR_FormatYUV420Planar ->
                 encodeYUV420P(
                     yuv,
@@ -27,6 +31,7 @@ object EncodeYuvTools {
                     inputWidth,
                     inputHeight,
                 )
+
             @Suppress("DEPRECATION") COLOR_FormatYUV420PackedSemiPlanar ->
                 encodeYUV420PSP(
                     yuv,
@@ -34,6 +39,7 @@ object EncodeYuvTools {
                     inputWidth,
                     inputHeight,
                 )
+
             @Suppress("DEPRECATION") COLOR_FormatYUV420PackedPlanar ->
                 encodeYUV420PP(
                     yuv,
@@ -41,6 +47,7 @@ object EncodeYuvTools {
                     inputWidth,
                     inputHeight,
                 )
+
             else ->
                 encodeYUV420SP(
                     yuv,
@@ -51,6 +58,7 @@ object EncodeYuvTools {
         }
         return yuv
     }
+
     private fun encodeYUV420SP(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -105,6 +113,7 @@ object EncodeYuvTools {
             }
         }
     }
+
     private fun encodeYUV420P(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -160,6 +169,7 @@ object EncodeYuvTools {
             }
         }
     }
+
     private fun encodeYUV420PSP(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -215,6 +225,7 @@ object EncodeYuvTools {
             }
         }
     }
+
     private fun encodeYUV420PP(
         yuv420sp: ByteArray,
         argb: IntArray,

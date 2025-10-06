@@ -1,10 +1,13 @@
 package com.mpdc4gsr.libunified.app.config.router
+
 import android.content.Context
 import android.widget.Toast
 import com.elvishew.xlog.XLog
+
 class DegradeServiceImpl {
     fun init(context: Context?) {
     }
+
     fun onLost(
         context: Context?,
         path: String?,

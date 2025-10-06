@@ -1,4 +1,5 @@
 package mpdc4gsr.tests
+
 import android.util.Log
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
@@ -10,6 +11,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+
 class ErrorHandlingTest {
     @Before
     fun setup() {
@@ -19,11 +21,13 @@ class ErrorHandlingTest {
         mockkObject(AppLogger)
         every { AppLogger.e(any(), any(), any(), any()) } just Runs
     }
+
     @After
     fun teardown() {
         unmockkStatic(Log::class)
         unmockkAll()
     }
+
     @Test
     fun testRunSafelySuccessCase() {
         val result =
@@ -34,6 +38,7 @@ class ErrorHandlingTest {
         assertEquals(42, result.getOrNull())
         verify(exactly = 0) { AppLogger.e(any(), any(), any(), any()) }
     }
+
     @Test
     fun testRunSafelyFailureCase() {
         val exception = RuntimeException("Test error")
@@ -47,6 +52,7 @@ class ErrorHandlingTest {
             AppLogger.e("TEST", "Failed to test operation: Test error", exception)
         }
     }
+
     @Test
     fun testRunSafelyWithDefaultSuccess() {
         val result =
@@ -60,6 +66,7 @@ class ErrorHandlingTest {
         assertEquals(42, result)
         verify(exactly = 0) { AppLogger.e(any(), any(), any(), any()) }
     }
+
     @Test
     fun testRunSafelyWithDefaultFailure() {
         val exception = RuntimeException("Test error")
@@ -80,6 +87,7 @@ class ErrorHandlingTest {
             )
         }
     }
+
     @Test
     fun testRunSafelyIgnoreResultSuccess() {
         var executed = false
@@ -89,6 +97,7 @@ class ErrorHandlingTest {
         assertTrue(executed)
         verify(exactly = 0) { AppLogger.e(any(), any(), any(), any()) }
     }
+
     @Test
     fun testRunSafelyIgnoreResultFailure() {
         val exception = RuntimeException("Test error")
@@ -99,6 +108,7 @@ class ErrorHandlingTest {
             AppLogger.e("TEST", "Failed to test operation: Test error", exception)
         }
     }
+
     @Test
     fun testRunSafelySuspendSuccess() =
         runBlocking {
@@ -110,6 +120,7 @@ class ErrorHandlingTest {
             assertEquals(42, result.getOrNull())
             verify(exactly = 0) { AppLogger.e(any(), any(), any(), any()) }
         }
+
     @Test
     fun testRunSafelySuspendFailure() =
         runBlocking {
@@ -124,6 +135,7 @@ class ErrorHandlingTest {
                 AppLogger.e("TEST", "Failed to test operation: Test error", exception)
             }
         }
+
     @Test
     fun testRunSafelySuspendWithDefaultSuccess() =
         runBlocking {
@@ -138,6 +150,7 @@ class ErrorHandlingTest {
             assertEquals(42, result)
             verify(exactly = 0) { AppLogger.e(any(), any(), any(), any()) }
         }
+
     @Test
     fun testRunSafelySuspendWithDefaultFailure() =
         runBlocking {

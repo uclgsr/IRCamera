@@ -1,29 +1,35 @@
 package com.mpdc4gsr.module.user.viewmodel
+
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+
 class MoreViewModel : BaseViewModel() {
     data class SettingsItem(
         val title: String,
         val subtitle: String,
         val action: SettingsAction
     )
+
     data class QuickAction(
         val title: String,
         val subtitle: String,
         val actionType: String
     )
+
     data class HelpResource(
         val title: String,
         val subtitle: String,
         val resourceType: String
     )
+
     data class CommunityLink(
         val title: String,
         val subtitle: String,
         val linkType: String
     )
+
     enum class SettingsAction {
         DEVICE_INFORMATION,
         TISR,
@@ -34,6 +40,7 @@ class MoreViewModel : BaseViewModel() {
         DISCONNECT,
         RESET
     }
+
     private val _settingsItems = MutableStateFlow<List<SettingsItem>>(emptyList())
     val settingsItems: StateFlow<List<SettingsItem>> = _settingsItems.asStateFlow()
     private val _quickActions = MutableStateFlow<List<QuickAction>>(emptyList())
@@ -44,12 +51,14 @@ class MoreViewModel : BaseViewModel() {
     val communityLinks: StateFlow<List<CommunityLink>> = _communityLinks.asStateFlow()
     private val _isUpgradeAvailable = MutableStateFlow(false)
     val isUpgradeAvailable: StateFlow<Boolean> = _isUpgradeAvailable.asStateFlow()
+
     init {
         loadSettingsItems()
         loadQuickActions()
         loadHelpResources()
         loadCommunityLinks()
     }
+
     private fun loadSettingsItems() {
         launchWithErrorHandling {
             val items = listOf(
@@ -97,6 +106,7 @@ class MoreViewModel : BaseViewModel() {
             _settingsItems.value = items
         }
     }
+
     fun checkForUpdates() {
         launchWithErrorHandling {
             // Check for firmware/app updates
@@ -106,6 +116,7 @@ class MoreViewModel : BaseViewModel() {
             _isUpgradeAvailable.value = false
         }
     }
+
     private fun loadQuickActions() {
         launchWithErrorHandling {
             val actions = listOf(
@@ -128,6 +139,7 @@ class MoreViewModel : BaseViewModel() {
             _quickActions.value = actions
         }
     }
+
     private fun loadHelpResources() {
         launchWithErrorHandling {
             val resources = listOf(
@@ -150,6 +162,7 @@ class MoreViewModel : BaseViewModel() {
             _helpResources.value = resources
         }
     }
+
     private fun loadCommunityLinks() {
         launchWithErrorHandling {
             val links = listOf(
@@ -172,31 +185,37 @@ class MoreViewModel : BaseViewModel() {
             _communityLinks.value = links
         }
     }
+
     fun startQuickCalibration() {
         launchWithErrorHandling {
             // Start quick calibration process
         }
     }
+
     fun exportData() {
         launchWithErrorHandling {
             // Export thermal data
         }
     }
+
     fun shareAnalysis() {
         launchWithErrorHandling {
             // Share analysis results
         }
     }
+
     fun openAdvancedAnalysis() {
         launchWithErrorHandling {
             // Open advanced analysis tools
         }
     }
+
     fun openBatchProcessing() {
         launchWithErrorHandling {
             // Open batch processing interface
         }
     }
+
     fun openAIDetection() {
         launchWithErrorHandling {
             // Open AI detection interface

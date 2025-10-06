@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -23,6 +24,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+
 class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
     companion object {
         private const val KEY_PATH = "video_path"
@@ -35,9 +37,11 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
             context.startActivity(intent)
         }
     }
+
     override fun createViewModel(): BaseViewModel {
         return viewModels<BaseViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: BaseViewModel) {
@@ -110,6 +114,7 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
         }
     }
 }
+
 @Composable
 private fun ThermalVideoContent(
     videoPath: String,
@@ -195,6 +200,7 @@ private fun ThermalVideoContent(
         }
     }
 }
+
 @Composable
 private fun ThermalVideoPlayer(
     videoPath: String,
@@ -231,6 +237,7 @@ private fun ThermalVideoPlayer(
         modifier = modifier
     )
 }
+
 @Composable
 private fun ThermalDataOverlay(
     currentTemp: Float,
@@ -276,6 +283,7 @@ private fun ThermalDataOverlay(
         }
     }
 }
+
 @Composable
 private fun ThermalVideoControls(
     isPlaying: Boolean,
@@ -451,6 +459,7 @@ private fun ThermalVideoControls(
         }
     }
 }
+
 private fun formatTime(timeMs: Long): String {
     val totalSeconds = timeMs / 1000
     val minutes = totalSeconds / 60

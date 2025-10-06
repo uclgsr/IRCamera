@@ -1,4 +1,5 @@
 package thesis_evaluation.robustness_tests
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,10 +25,12 @@ import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+
 class ThermalCameraDisconnectionTest : ComponentActivity() {
     companion object {
         private const val TAG = "ThermalCameraDisconnectionTest"
     }
+
     data class DisconnectionEvent(
         val timestamp: Long,
         val eventType: String,
@@ -35,6 +38,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
         val thermalState: String,
         val systemState: String
     )
+
     data class TestMetrics(
         val recordingStartTime: Long = 0,
         val disconnectTime: Long = 0,
@@ -44,6 +48,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
         val gracefulHandling: Boolean = false,
         val otherSensorsContinued: Boolean = false
     )
+
     private var thermalRecorder: ThermalCameraRecorder? = null
     private var recordingController: RecordingController? = null
     private var testOutputFile: File? = null
@@ -56,6 +61,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun ThermalCameraDisconnectionTestScreen() {
@@ -315,6 +321,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun StatusRow(label: String, value: String, isOk: Boolean) {
         Row(
@@ -342,6 +349,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun MetricRow(label: String, value: String) {
         Row(
@@ -358,6 +366,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
             )
         }
     }
+
     @Composable
     private fun EventLogItem(event: DisconnectionEvent) {
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
@@ -387,6 +396,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
             )
         }
     }
+
     private fun initializeTestComponents() {
         try {
             recordingController = RecordingController(this, this)
@@ -399,6 +409,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
             AppLogger.e(TAG, "Failed to initialize test components", e)
         }
     }
+
     private suspend fun startRecording(
         onStateChange: (String) -> Unit,
         onThermalStateChange: (Boolean, Boolean) -> Unit,
@@ -420,6 +431,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
         onThermalStateChange(true, false)
         monitorThermalCamera(onStateChange, onThermalStateChange, onEvent, onMetrics)
     }
+
     private suspend fun monitorThermalCamera(
         onStateChange: (String) -> Unit,
         onThermalStateChange: (Boolean, Boolean) -> Unit,
@@ -478,6 +490,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
             }
         }
     }
+
     private suspend fun stopRecording(
         onStateChange: (String) -> Unit,
         onEvent: (DisconnectionEvent) -> Unit
@@ -494,19 +507,24 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
         delay(500)
         onStateChange("Test complete - system did not crash")
     }
+
     private enum class ThermalState {
         CONNECTED, DISCONNECTED, SIMULATION
     }
+
     private fun checkThermalCameraState(): ThermalState {
         return when {
             thermalRecorder?.isIRCameraConnected == true && thermalRecorder?.isSimulationMode == false ->
                 ThermalState.CONNECTED
+
             thermalRecorder?.isSimulationMode == true ->
                 ThermalState.SIMULATION
+
             else ->
                 ThermalState.DISCONNECTED
         }
     }
+
     private fun logEvent(
         eventType: String,
         description: String,
@@ -526,9 +544,11 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
             "${formatTimestamp(event.timestamp)} | $eventType | Thermal: $thermalState | System: $systemState | $description\n"
         )
     }
+
     private fun formatTimestamp(timestamp: Long): String {
         return SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault()).format(Date(timestamp))
     }
+
     private fun formatDuration(seconds: Long): String {
         val hours = seconds / 3600
         val minutes = (seconds % 3600) / 60

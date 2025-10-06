@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +21,7 @@ import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import kotlin.math.sin
+
 data class SessionInfo(
     val id: String,
     val title: String,
@@ -30,6 +32,7 @@ data class SessionInfo(
     val dataPoints: Int,
     val notes: String
 )
+
 data class SessionMetrics(
     val gsrMean: Double,
     val gsrStd: Double,
@@ -40,11 +43,13 @@ data class SessionMetrics(
     val heartRateAvg: Int,
     val stressLevel: String
 )
+
 data class TimeSeriesData(
     val timestamp: Long,
     val gsrValue: Double,
     val thermalValue: Double
 )
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionDetailScreen(
@@ -115,6 +120,7 @@ fun SessionDetailScreen(
         }
     }
 }
+
 @Composable
 fun SessionHeaderCard(session: SessionInfo) {
     Card(
@@ -173,6 +179,7 @@ fun SessionHeaderCard(session: SessionInfo) {
         }
     }
 }
+
 @Composable
 fun SessionInfoItem(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -204,6 +211,7 @@ fun SessionInfoItem(
         )
     }
 }
+
 @Composable
 fun MetricsOverviewCard(metrics: SessionMetrics) {
     Card(
@@ -265,6 +273,7 @@ fun MetricsOverviewCard(metrics: SessionMetrics) {
         }
     }
 }
+
 @Composable
 private fun MetricItem(
     label: String,
@@ -287,6 +296,7 @@ private fun MetricItem(
         )
     }
 }
+
 @Composable
 fun GSRWaveformCard(data: List<TimeSeriesData>) {
     Card(
@@ -337,6 +347,7 @@ fun GSRWaveformCard(data: List<TimeSeriesData>) {
         }
     }
 }
+
 @Composable
 fun ThermalDataCard(data: List<TimeSeriesData>) {
     Card(
@@ -387,6 +398,7 @@ fun ThermalDataCard(data: List<TimeSeriesData>) {
         }
     }
 }
+
 @Composable
 fun AnalysisSummaryCard(
     session: SessionInfo,
@@ -430,6 +442,7 @@ fun AnalysisSummaryCard(
         }
     }
 }
+
 @Composable
 fun ExportOptionsCard(
     onExportRaw: () -> Unit,
@@ -500,6 +513,7 @@ fun ExportOptionsCard(
         }
     }
 }
+
 private fun getSampleSession(id: String) = SessionInfo(
     id = id,
     title = "Stress Response Study - Session A",
@@ -510,6 +524,7 @@ private fun getSampleSession(id: String) = SessionInfo(
     dataPoints = 15420,
     notes = "Baseline recording with cognitive stress tasks. Participant reported feeling moderately stressed during math problems."
 )
+
 private fun getSampleMetrics() = SessionMetrics(
     gsrMean = 12.45,
     gsrStd = 3.21,
@@ -520,6 +535,7 @@ private fun getSampleMetrics() = SessionMetrics(
     heartRateAvg = 78,
     stressLevel = "Medium"
 )
+
 private fun getSampleTimeSeriesData(): List<TimeSeriesData> {
     return (0..100).map { i ->
         TimeSeriesData(
@@ -529,6 +545,7 @@ private fun getSampleTimeSeriesData(): List<TimeSeriesData> {
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun SessionDetailScreenPreview() {

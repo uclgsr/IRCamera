@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.ui
+
 import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -155,6 +156,7 @@ fun CameraSettingsScreen(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun CameraSettingsScreenPreview() {

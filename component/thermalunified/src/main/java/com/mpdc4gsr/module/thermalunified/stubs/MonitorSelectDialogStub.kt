@@ -1,5 +1,7 @@
 package com.mpdc4gsr.module.thermalunified.stubs
+
 import android.content.Context
+
 class MonitorSelectDialog {
     class Builder(private val context: Context) {
         private var positiveListener: ((Int) -> Unit)? = null
@@ -7,10 +9,12 @@ class MonitorSelectDialog {
             this.positiveListener = listener
             return this
         }
+
         fun create(): MonitorSelectDialog {
             return MonitorSelectDialog()
         }
     }
+
     fun show() {
         // Stub implementation - would show a dialog with monitor selection options
         // For now, just trigger the positive listener with default option

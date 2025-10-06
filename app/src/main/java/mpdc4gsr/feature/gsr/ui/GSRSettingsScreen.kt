@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -194,6 +195,7 @@ fun GSRSettingsScreen(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun GSRSettingsScreenPreview() {

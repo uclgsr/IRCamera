@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
+
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
@@ -7,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
+
 class ThermalViewModel : BaseViewModel() {
     private val _exportStatus = MutableStateFlow<ExportStatus>(ExportStatus.Idle)
     val exportStatus: StateFlow<ExportStatus> = _exportStatus.asStateFlow()
@@ -29,6 +31,7 @@ class ThermalViewModel : BaseViewModel() {
             }
         }
     }
+
     fun exportData(context: Context, format: ExportFormat) {
         viewModelScope.launch {
             _exportStatus.value = ExportStatus.Exporting
@@ -42,24 +45,29 @@ class ThermalViewModel : BaseViewModel() {
             }
         }
     }
+
     private fun createExportFile(context: Context, format: ExportFormat): File {
         val fileName = "thermal_export_${System.currentTimeMillis()}.${format.extension}"
         return File(context.getExternalFilesDir(null), fileName)
     }
+
     fun toggleRecording() {
         _isRecording.value = !_isRecording.value
     }
+
     fun captureSnapshot() {
         viewModelScope.launch {
             // Capture thermal snapshot
         }
     }
+
     sealed class ExportStatus {
         object Idle : ExportStatus()
         object Exporting : ExportStatus()
         data class Success(val file: File) : ExportStatus()
         data class Error(val message: String) : ExportStatus()
     }
+
     enum class ExportFormat(val extension: String) {
         CSV("csv"),
         JSON("json"),

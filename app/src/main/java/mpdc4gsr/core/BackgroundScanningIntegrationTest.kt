@@ -1,4 +1,5 @@
 package mpdc4gsr.core
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -63,12 +64,14 @@ class BackgroundScanningIntegrationTest {
                 BackgroundScanHelper.startBackgroundScanning(context)
                 AppLogger.i(TAG, "Normal background scanning enabled (battery > 50%)")
             }
+
             batteryLevel > 20 -> {
                 // Medium battery - start but pause frequently
                 BackgroundScanHelper.startBackgroundScanning(context)
                 // The service will automatically use longer intervals when no devices found
                 AppLogger.i(TAG, "Conservative background scanning enabled (battery 20-50%)")
             }
+
             else -> {
                 // Low battery - disable background scanning
                 BackgroundScanHelper.stopBackgroundScanning(context)

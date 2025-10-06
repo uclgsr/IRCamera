@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.data
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -18,6 +19,7 @@ import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+
 class GSRDataPersistence(
     private val context: Context,
     private val sessionId: String,
@@ -27,6 +29,7 @@ class GSRDataPersistence(
         private const val BATCH_SIZE = 100
         private const val FLUSH_INTERVAL_MS = 500L
     }
+
     private val dataQueue = ConcurrentLinkedQueue<GSRDataRecord>()
     private val writeMutex = Mutex()
     private val isWriting = AtomicBoolean(false)
@@ -56,6 +59,7 @@ class GSRDataPersistence(
             false
         }
     }
+
     private fun createSessionDirectory(): File {
         val baseDir = File(context.getExternalFilesDir(null), "sessions")
         val sessionDir = File(baseDir, sessionId)
@@ -65,9 +69,11 @@ class GSRDataPersistence(
         }
         return shimmerDir
     }
+
     private fun createCsvFile(sessionDir: File): File {
         return File(sessionDir, SessionDirectoryManager.SHIMMER_DATA_FILE)
     }
+
     private fun createCsvHeaders(): List<String> {
         return listOf(
             "system_nanos", "elapsed_realtime_ms", "device_timestamp_ms",
@@ -79,6 +85,7 @@ class GSRDataPersistence(
             "session_id", "participant_id", "recording_mode"
         )
     }
+
     fun queueDataRecord(gsrData: GSRSampleData) {
         val timestamp = TimestampManager.createTimestampRecord()
         val record =
@@ -101,6 +108,7 @@ class GSRDataPersistence(
             )
         dataQueue.offer(record)
     }
+
     private fun startBatchWriter() {
         scope.launch {
             while (isWriting.get() || dataQueue.isNotEmpty()) {
@@ -113,6 +121,7 @@ class GSRDataPersistence(
             }
         }
     }
+
     private suspend fun writeBatch() {
         if (dataQueue.isEmpty()) return
         val batch = mutableListOf<GSRDataRecord>()
@@ -136,11 +145,13 @@ class GSRDataPersistence(
             }
         }
     }
+
     fun startPersistence() {
         isWriting.set(true)
         TimestampManager.startSession()
         AppLogger.i(TAG, "GSR data persistence started")
     }
+
     suspend fun stopPersistence() {
         isWriting.set(false)
         while (dataQueue.isNotEmpty()) {
@@ -149,6 +160,7 @@ class GSRDataPersistence(
         TimestampManager.endSession()
         AppLogger.i(TAG, "GSR data persistence stopped. Total samples written: ${samplesWritten.get()}")
     }
+
     suspend fun cleanup() {
         stopPersistence()
         writeMutex.withLock {
@@ -161,6 +173,7 @@ class GSRDataPersistence(
             }
         }
     }
+
     fun getStatistics(): GSRPersistenceStats {
         val writeStats = csvBufferedWriter?.getWriteStats()
         return GSRPersistenceStats(
@@ -173,6 +186,7 @@ class GSRDataPersistence(
         )
     }
 }
+
 data class GSRDataRecord(
     val timestamp: TimestampRecord,
     val gsrRawValue: Int,
@@ -213,6 +227,7 @@ data class GSRDataRecord(
             recordingMode
         )
     }
+
     fun toCsvLine(): String {
         return buildString {
             append(timestamp.toCsvFormat())
@@ -225,6 +240,7 @@ data class GSRDataRecord(
         }
     }
 }
+
 data class GSRSampleData(
     val rawValue: Int,
     val microsiemens: Double,
@@ -240,6 +256,7 @@ data class GSRSampleData(
     val participantId: String,
     val recordingMode: String = "shimmer_ble",
 )
+
 data class GSRPersistenceStats(
     val samplesWritten: Long,
     val pendingSamples: Int,

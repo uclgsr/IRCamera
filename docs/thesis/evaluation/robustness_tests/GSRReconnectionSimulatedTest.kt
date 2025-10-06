@@ -1,4 +1,5 @@
 package thesis_evaluation.robustness_tests
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,6 +25,7 @@ import mpdc4gsr.feature.network.data.RecordingController
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+
 class GSRReconnectionSimulatedTest : ComponentActivity() {
     companion object {
         private const val TAG = "GSRReconnectionSimulatedTest"
@@ -31,12 +33,14 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
         private const val DISCONNECT_AT_SECONDS = 20
         private const val RECONNECT_AT_SECONDS = 40
     }
+
     data class TestEvent(
         val timestamp: Long,
         val eventType: String,
         val description: String,
         val connectionState: String
     )
+
     data class TestMetrics(
         val totalTestDuration: Long = 0,
         val disconnectDuration: Long = 0,
@@ -45,6 +49,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
         val eventsLogged: Int = 0,
         val testPassed: Boolean = false
     )
+
     private var gsrRecorder: GSRSensorRecorder? = null
     private var recordingController: RecordingController? = null
     private var testOutputFile: File? = null
@@ -57,6 +62,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun GSRReconnectionSimulatedTestScreen() {
@@ -217,6 +223,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun MetricRow(
         label: String,
@@ -238,6 +245,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             )
         }
     }
+
     @Composable
     private fun EventLogItem(event: TestEvent) {
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
@@ -267,6 +275,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             )
         }
     }
+
     private fun initializeTestComponents() {
         try {
             recordingController = RecordingController(this, this)
@@ -279,6 +288,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             AppLogger.e(TAG, "Failed to initialize test components", e)
         }
     }
+
     private suspend fun runTest(
         onProgress: (Float, Int, String) -> Unit,
         onEvent: (TestEvent) -> Unit,
@@ -308,6 +318,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                     )
                     AppLogger.w(TAG, "GSR disconnected at $second seconds")
                 }
+
                 in (DISCONNECT_AT_SECONDS + 1)..RECONNECT_AT_SECONDS -> {
                     status = "GSR disconnected - attempting reconnection..."
                     if (second % 5 == 0) {
@@ -321,6 +332,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                         AppLogger.i(TAG, "Reconnection attempt $reconnectionAttempts")
                     }
                 }
+
                 RECONNECT_AT_SECONDS -> {
                     status = "GSR reconnected successfully"
                     reconnectTime = System.currentTimeMillis()
@@ -375,6 +387,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
         AppLogger.i(TAG, "Test completed successfully")
         onComplete()
     }
+
     private fun logTestEvent(
         eventType: String,
         description: String,
@@ -392,12 +405,15 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             "${formatTimestamp(event.timestamp)} | $eventType | $connectionState | $description\n"
         )
     }
+
     private fun simulateDisconnection() {
         AppLogger.w(TAG, "Simulating GSR disconnection")
     }
+
     private fun simulateReconnection() {
         AppLogger.i(TAG, "Simulating GSR reconnection")
     }
+
     private fun writeTestReport(
         testStartTime: Long,
         testEndTime: Long,
@@ -420,6 +436,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             AppLogger.e(TAG, "Failed to write test report", e)
         }
     }
+
     private fun formatTimestamp(timestamp: Long): String {
         return SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault()).format(Date(timestamp))
     }

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.report.viewmodel
+
 import androidx.lifecycle.viewModelScope
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
@@ -21,6 +22,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.CountDownLatch
+
 class UpReportViewModel : BaseViewModel() {
     val commonBeanLD = SingleLiveEvent<CommonBean>()
     val exceptionLD = SingleLiveEvent<Exception?>()
@@ -35,6 +37,7 @@ class UpReportViewModel : BaseViewModel() {
             uploadJSON(isTC007, reportBean)
         }
     }
+
     private suspend fun uploadImages(reportBean: ReportBean?) {
         withContext(Dispatchers.IO) {
             val irList = reportBean?.infrared_data
@@ -73,6 +76,7 @@ class UpReportViewModel : BaseViewModel() {
             }
         }
     }
+
     private suspend fun uploadJSON(
         isTC007: Boolean,
         reportBean: ReportBean?,
@@ -95,6 +99,7 @@ class UpReportViewModel : BaseViewModel() {
                     override fun onResponse(response: String?) {
                         commonBeanLD.postValue(ResponseBean.convertCommonBean(response, null))
                     }
+
                     override fun onFail(exception: Exception?) {
                         exceptionLD.postValue(exception)
                     }

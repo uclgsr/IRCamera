@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.user.ble
+
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -10,6 +11,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.CoroutineContext
+
 class BleDeviceManager(private val context: Context) : CoroutineScope {
     companion object {
         private const val TAG = "BleDeviceManager"
@@ -20,11 +22,13 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                 "GSR_Unit",
             )
     }
+
     enum class SystemBleStatus {
         NOT_SUPPORTED,
         ENABLED,
         DISABLED
     }
+
     override val coroutineContext: CoroutineContext = Dispatchers.Main + Job()
     private var easyBLE: EasyBLE? = null
     private val gsrSensorAddresses = mutableSetOf<String>()
@@ -36,6 +40,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
     val deviceStatus: LiveData<Map<String, DeviceConnectionStatus>> = _deviceStatus
     private val deviceConnections = ConcurrentHashMap<String, Connection>()
     private val deviceInfoMap = ConcurrentHashMap<String, BleDeviceInfo>()
+
     data class BleDeviceInfo(
         val address: String,
         val name: String?,
@@ -44,6 +49,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
         val isPaired: Boolean,
         val lastSeen: Long = System.currentTimeMillis(),
     )
+
     data class DeviceConnectionStatus(
         val address: String,
         val connectionState: ConnectionState,
@@ -51,6 +57,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
         val dataIntegrity: Double,
         val isActive: Boolean,
     )
+
     fun initialize(enableNordicBackend: Boolean = true) {
         launch {
             Log.i(TAG, "Initializing BLE Device Manager with Nordic backend: $enableNordicBackend")
@@ -63,15 +70,18 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
             Log.i(TAG, "BLE Device Manager initialized successfully")
         }
     }
+
     private fun setupDeviceDiscovery() {
         easyBLE?.addScanListener(
             object : com.topdon.ble.callback.ScanListener {
                 override fun onScanStart() {
                     Log.d(TAG, "Enhanced BLE scan started")
                 }
+
                 override fun onScanStop() {
                     Log.d(TAG, "Enhanced BLE scan stopped")
                 }
+
                 override fun onScanResult(
                     device: Device,
                     isConnectedBySys: Boolean,
@@ -91,6 +101,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                     }
                     updateDiscoveredDevices()
                 }
+
                 override fun onScanError(
                     errorCode: Int,
                     errorMsg: String?,
@@ -103,24 +114,28 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
             },
         )
     }
+
     private fun isGsrSensorDevice(device: Device): Boolean {
         val deviceName = device.name?.uppercase() ?: return false
         return GSR_DEVICE_NAMES.any { gsrName ->
             deviceName.contains(gsrName.uppercase())
         }
     }
+
     fun startDeviceDiscovery() {
         launch {
             Log.i(TAG, "Starting enhanced device discovery")
             easyBLE?.startScan()
         }
     }
+
     fun stopDeviceDiscovery() {
         launch {
             Log.i(TAG, "Stopping device discovery")
             easyBLE?.stopScan()
         }
     }
+
     fun connectToDevice(deviceAddress: String): Boolean {
         return try {
             Log.i(TAG, "Attempting enhanced connection to device: $deviceAddress")
@@ -146,6 +161,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
             false
         }
     }
+
     private fun createOptimalConnectionConfig(isGsrSensor: Boolean): ConnectionConfiguration {
         return ConnectionConfiguration().apply {
             if (isGsrSensor) {
@@ -158,6 +174,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
             }
         }
     }
+
     private fun createDeviceObserver(deviceAddress: String): EventObserver {
         return object : EventObserver {
             override fun onConnectionStateChanged(device: Device) {
@@ -175,6 +192,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                             }
                             updatePairedDevices()
                         }
+
                         ConnectionState.DISCONNECTED -> {
                             deviceConnections.remove(deviceAddress)
                             val deviceInfo = deviceInfoMap[deviceAddress]?.copy(isPaired = false)
@@ -183,6 +201,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                             }
                             updatePairedDevices()
                         }
+
                         else -> {
                             Log.d(
                                 TAG,
@@ -193,6 +212,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                     updateDeviceStatus()
                 }
             }
+
             override fun onConnectFailed(
                 device: Device,
                 failType: Int,
@@ -202,6 +222,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                     updateDeviceStatus()
                 }
             }
+
             override fun onConnectTimeout(
                 device: Device,
                 type: Int,
@@ -211,6 +232,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                     updateDeviceStatus()
                 }
             }
+
             override fun onCharacteristicChanged(
                 device: Device,
                 service: java.util.UUID,
@@ -222,6 +244,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                     "Characteristic changed for $deviceAddress: service=$service, char=$characteristic"
                 )
             }
+
             override fun onNotificationChanged(
                 request: Request,
                 isEnabled: Boolean,
@@ -231,18 +254,21 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                     "Notification changed for $deviceAddress: ${request.type}, enabled: $isEnabled"
                 )
             }
+
             override fun onCharacteristicRead(
                 request: Request,
                 value: ByteArray?,
             ) {
                 Log.d(TAG, "Characteristic read for $deviceAddress: ${request.type}")
             }
+
             override fun onCharacteristicWrite(
                 request: Request,
                 value: ByteArray?,
             ) {
                 Log.d(TAG, "Characteristic write for $deviceAddress: ${request.type}")
             }
+
             override fun onRequestFailed(
                 request: Request,
                 failType: Int,
@@ -253,27 +279,32 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                     "Request failed for $deviceAddress: ${request.type}, fail type: $failType"
                 )
             }
+
             override fun onMtuChanged(
                 request: Request,
                 mtu: Int,
             ) {
                 Log.i(TAG, "MTU changed for $deviceAddress: $mtu")
             }
+
             override fun onRssiRead(
                 request: Request,
                 rssi: Int,
             ) {
                 Log.d(TAG, "RSSI read for $deviceAddress: $rssi")
             }
+
             override fun onDescriptorRead(
                 request: Request,
                 value: ByteArray?,
             ) {
                 Log.d(TAG, "Descriptor read for $deviceAddress: ${request.type}")
             }
+
             override fun onBluetoothAdapterStateChanged(state: Int) {
                 Log.d(TAG, "Bluetooth adapter state changed: $state")
             }
+
             override fun onPhyChange(
                 request: Request,
                 txPhy: Int,
@@ -283,12 +314,14 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
             }
         }
     }
+
     fun disconnectDevice(deviceAddress: String) {
         launch {
             Log.i(TAG, "Disconnecting device: $deviceAddress")
             deviceConnections[deviceAddress]?.disconnect()
         }
     }
+
     fun getSystemBleStatus(): Any? { // UnifiedBleManager.SystemBleStatus replaced
         return try {
             val adapter = easyBLE?.bluetoothAdapter
@@ -302,13 +335,16 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
             null
         }
     }
+
     private fun updateDiscoveredDevices() {
         _discoveredDevices.postValue(deviceInfoMap.values.toList())
     }
+
     private fun updatePairedDevices() {
         val paired = deviceInfoMap.values.filter { it.isPaired }
         _pairedDevices.postValue(paired)
     }
+
     private fun updateDeviceStatus() {
         val statusMap =
             deviceConnections.mapValues { (address, connection) ->
@@ -322,18 +358,23 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
             }
         _deviceStatus.postValue(statusMap)
     }
+
     fun getDiscoveredDeviceCount(): Int {
         return deviceInfoMap.size
     }
+
     fun getGsrDeviceCount(): Int {
         return gsrSensorAddresses.size
     }
+
     fun getPairedDeviceCount(): Int {
         return deviceInfoMap.values.count { it.isPaired }
     }
+
     fun isScanning(): Boolean {
         return easyBLE?.isScanning() ?: false
     }
+
     fun release() {
         launch {
             Log.i(TAG, "Releasing BLE Device Manager")

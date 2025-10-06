@@ -1,4 +1,5 @@
 package com.mpdc4gsr.gsr.tests
+
 import android.content.Context
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
@@ -11,16 +12,19 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+
 @Ignore("All tests disabled")
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
 @OptIn(ExperimentalCoroutinesApi::class)
 class RobolectricFrameworkTest {
     private lateinit var context: Context
+
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
     }
+
     @Test
     fun testSharedPreferencesWithRealContext() {
         val prefs = context.getSharedPreferences("test_session_prefs", Context.MODE_PRIVATE)
@@ -38,6 +42,7 @@ class RobolectricFrameworkTest {
         assertEquals("start_time should be cleared", 0L, prefs.getLong("start_time", 0))
         assertFalse("is_active should be false", prefs.getBoolean("is_active", false))
     }
+
     @Test
     fun testFileOperationsWithRealFileSystem() {
         val filesDir = context.filesDir
@@ -54,6 +59,7 @@ class RobolectricFrameworkTest {
         testFile.delete()
         assertFalse("File should be deleted", testFile.exists())
     }
+
     @Test
     fun testSystemServiceAccess() {
         val notificationManager =
@@ -67,6 +73,7 @@ class RobolectricFrameworkTest {
         val bluetoothAdapter = bluetoothManager?.adapter
         assertNotNull("BluetoothAdapter should be available", bluetoothAdapter)
     }
+
     @Test
     fun testIntegrationWithMultipleServices() {
         val prefs = context.getSharedPreferences("integration_test", Context.MODE_PRIVATE)
@@ -98,6 +105,7 @@ class RobolectricFrameworkTest {
         assertTrue("Config should contain bluetooth setting", configContent.contains("true"))
         configFile.delete()
     }
+
     @Test
     fun testAndroidSpecificBehavior() {
         assertTrue(
@@ -113,12 +121,14 @@ class RobolectricFrameworkTest {
         assertTrue("Screen width should be realistic", displayMetrics.widthPixels > 0)
         assertTrue("Screen height should be realistic", displayMetrics.heightPixels > 0)
     }
+
     @Test
     fun testContextAccess() {
         assertNotNull("Context should be available", context)
         assertNotNull("Package name should be available", context.packageName)
         assertFalse("Package name should not be empty", context.packageName.isEmpty())
     }
+
     @Test
     fun testResourceAccess() {
         val resources = context.resources
@@ -127,6 +137,7 @@ class RobolectricFrameworkTest {
         assertNotNull("Display metrics should be available", displayMetrics)
         assertTrue("Display density should be positive", displayMetrics.density > 0)
     }
+
     @Test
     fun testPackageManagerAccess() {
         val packageManager = context.packageManager
@@ -139,6 +150,7 @@ class RobolectricFrameworkTest {
             // Expected in test environment
         }
     }
+
     @Test
     fun testMultipleContextInstances() {
         val context1 = ApplicationProvider.getApplicationContext<Context>()

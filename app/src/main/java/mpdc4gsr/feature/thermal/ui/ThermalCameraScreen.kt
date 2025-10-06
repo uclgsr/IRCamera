@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.thermal.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -60,6 +61,7 @@ fun ThermalCameraScreen(
         }
     }
 }
+
 @Composable
 private fun ThermalCameraContent(
     modifier: Modifier = Modifier
@@ -102,6 +104,7 @@ private fun ThermalCameraContent(
         ThermalCameraStatusCard()
     }
 }
+
 // ThermalPalette enum is defined in IRGalleryEditComposeActivity.kt
 // TemperatureUnit and MeasurementMode are imported from mpdc4gsr.feature.thermal.data.ThermalModels.kt
 @Composable
@@ -188,6 +191,7 @@ private fun ThermalPreviewCard(
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
+
                         MeasurementMode.LINE -> {
                             Text(
                                 "Line Profile: Max ${formatTemperature(31.2f, temperatureUnit)}",
@@ -195,6 +199,7 @@ private fun ThermalPreviewCard(
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
+
                         MeasurementMode.AREA -> {
                             Text(
                                 "Area Avg: ${formatTemperature(27.8f, temperatureUnit)}",
@@ -202,6 +207,7 @@ private fun ThermalPreviewCard(
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
+
                         MeasurementMode.CONTINUOUS -> {
                             Text(
                                 "Continuous: ${formatTemperature(30.0f, temperatureUnit)}",
@@ -243,6 +249,7 @@ private fun ThermalPreviewCard(
         }
     }
 }
+
 @Composable
 private fun TemperatureMeasurementsCard(
     temperatureUnit: TemperatureUnit
@@ -307,6 +314,7 @@ private fun TemperatureMeasurementsCard(
         }
     }
 }
+
 @Composable
 private fun MeasurementRow(
     label: String,
@@ -346,6 +354,7 @@ private fun MeasurementRow(
         )
     }
 }
+
 @Composable
 private fun ThermalCameraControlsCard(
     selectedPalette: ThermalPalette,
@@ -502,6 +511,7 @@ private fun ThermalCameraControlsCard(
         }
     }
 }
+
 @Composable
 private fun ThermalAnalysisToolsCard() {
     Card(
@@ -592,6 +602,7 @@ private fun ThermalAnalysisToolsCard() {
         }
     }
 }
+
 @Composable
 private fun ThermalCameraStatusCard() {
     Card(
@@ -653,6 +664,7 @@ private fun ThermalCameraStatusCard() {
         }
     }
 }
+
 @Composable
 private fun StatusRow(
     label: String,
@@ -688,6 +700,7 @@ private fun StatusRow(
         )
     }
 }
+
 // Helper functions
 private fun getThermalPreviewColor(palette: ThermalPalette): Color {
     return when (palette) {
@@ -701,6 +714,7 @@ private fun getThermalPreviewColor(palette: ThermalPalette): Color {
         ThermalPalette.CONTRAST -> Color(0xFF696969)
     }
 }
+
 private fun getThermalGradient(palette: ThermalPalette): Color {
     return when (palette) {
         ThermalPalette.IRON -> Color(0xFFFF4500)
@@ -713,6 +727,7 @@ private fun getThermalGradient(palette: ThermalPalette): Color {
         ThermalPalette.CONTRAST -> Color(0xFFFFFFFF)
     }
 }
+
 private fun formatTemperature(temperature: Float, unit: TemperatureUnit): String {
     return when (unit) {
         TemperatureUnit.CELSIUS -> "${String.format("%.1f", temperature)}°C"

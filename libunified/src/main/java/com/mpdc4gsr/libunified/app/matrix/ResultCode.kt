@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.matrix
+
 object ResultCode {
     val TAG = "mobilelibrary"
     val READY_CONNECT_DEVICE = 1

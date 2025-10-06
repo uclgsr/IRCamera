@@ -1,4 +1,5 @@
 package com.mpdc4gsr.gsr.model
+
 data class GSRSample(
     val timestamp: Long,
     val utcTimestamp: Long = timestamp,
@@ -31,6 +32,7 @@ data class GSRSample(
             )
         }
     }
+
     fun toCsvRow(): Array<String> {
         return arrayOf(
             timestamp.toString(),
@@ -43,6 +45,7 @@ data class GSRSample(
         )
     }
 }
+
 data class SyncMark(
     val timestamp: Long,
     val utcTimestamp: Long,

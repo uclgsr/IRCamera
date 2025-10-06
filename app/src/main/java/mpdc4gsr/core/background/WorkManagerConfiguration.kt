@@ -1,4 +1,5 @@
 package mpdc4gsr.core.background
+
 import android.content.Context
 import androidx.work.Configuration
 import androidx.work.WorkManager
@@ -19,9 +20,7 @@ object WorkManagerConfiguration {
         }
     }
 
-    
 
-    
 }
 
 

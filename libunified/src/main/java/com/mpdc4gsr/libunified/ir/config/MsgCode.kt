@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.ir.config
+
 object MsgCode {
     const val RESTART_USB = 1000
     const val Y16_START_MSG = 1001

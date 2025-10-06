@@ -1,4 +1,5 @@
 package mpdc4gsr.tests
+
 import android.content.Context
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
@@ -24,6 +25,7 @@ class ThermalCameraTC001HardwareTest {
     private lateinit var thermalRecorder: ThermalCameraRecorder
     private lateinit var testSessionDir: File
     private lateinit var usbManager: UsbManager
+
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
@@ -33,6 +35,7 @@ class ThermalCameraTC001HardwareTest {
         testSessionDir = File(context.cacheDir, "tc001_hardware_test_${System.currentTimeMillis()}")
         testSessionDir.mkdirs()
     }
+
     @After
     fun cleanup() {
         // Ensure recording is stopped
@@ -81,6 +84,7 @@ class ThermalCameraTC001HardwareTest {
             override fun onFrameProcessed(stats: ThermalCameraRecorder.ThermalFrameStats) {
                 frameCount.incrementAndGet()
             }
+
             override fun onError(error: String) {
                 println("Frame processing error: $error")
             }
@@ -121,6 +125,7 @@ class ThermalCameraTC001HardwareTest {
             override fun onFrameProcessed(stats: ThermalCameraRecorder.ThermalFrameStats) {
                 recordingContinued.set(true)
             }
+
             override fun onError(error: String) {
                 println("Recording error: $error")
             }
@@ -164,6 +169,7 @@ class ThermalCameraTC001HardwareTest {
         assertTrue("Should have at least one thermal CSV file", csvFiles!!.isNotEmpty())
         println("Test completed successfully - files generated in ${testSessionDir.absolutePath}")
     }
+
     // Helper methods
     private fun findTC001Device(): UsbDevice? {
         val deviceList = usbManager.deviceList

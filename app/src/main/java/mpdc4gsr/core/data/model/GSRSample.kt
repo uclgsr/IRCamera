@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data.model
+
 data class GSRSample(
     val timestamp: Long,
     val timestampIso: String,
@@ -21,9 +22,11 @@ data class GSRSample(
             qualityScore >= 0.5 -> QualityLevel.FAIR
             else -> QualityLevel.POOR
         }
+
     fun toCsvRow(): String {
         return "$timestamp,$timestampIso,$gsrMicrosiemens,$gsrRaw,$ppgRaw,$qualityScore,$connectionRssi"
     }
+
     fun toMap(): Map<String, Any> {
         return mapOf(
             "timestamp" to timestamp,
@@ -38,15 +41,18 @@ data class GSRSample(
             "quality_level" to qualityLevel.name
         )
     }
+
     enum class QualityLevel {
         EXCELLENT,
         GOOD,
         FAIR,
         POOR
     }
+
     companion object {
         const val CSV_HEADER =
             "timestamp_ns,timestamp_iso,gsr_microsiemens,gsr_raw,ppg_raw,quality_score,connection_rssi"
+
         fun fromRawData(
             timestamp: Long,
             timestampIso: String,
@@ -71,6 +77,7 @@ data class GSRSample(
                 connectionRssi = connectionRssi
             )
         }
+
         fun fromCsvRow(csvRow: String): GSRSample? {
             return try {
                 val parts = csvRow.split(",")

@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.navigation
+
 import android.content.Intent
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -37,38 +38,47 @@ sealed class UnifiedRoute(val route: String, val displayName: String = "") {
     // Main Application Routes
     object Home : UnifiedRoute("home", "Home")
     object Dashboard : UnifiedRoute("dashboard", "Sensor Overview")
+
     // GSR Sensor Routes
     object GSRSettings : UnifiedRoute("gsr_settings", "GSR Settings")
     object GSRPlot : UnifiedRoute("gsr_plot/{sessionId}", "GSR Session") {
         fun createRoute(sessionId: String) = "gsr_plot/$sessionId"
     }
+
     object GSRDataView : UnifiedRoute("gsr_data_view", "Export GSR Data") {
         fun createRoute() = "gsr_data_view"
     }
+
     object GSRSessionDetail : UnifiedRoute("gsr_session_detail/{sessionId}", "Session Details") {
         fun createRoute(sessionId: String) = "gsr_session_detail/$sessionId"
     }
+
     object ResearchTemplates : UnifiedRoute("research_templates", "Research Templates")
+
     // Camera Integration Routes
     object CameraDashboard : UnifiedRoute("camera_dashboard", "Camera Hub")
     object DualModeCamera : UnifiedRoute("dual_mode_camera", "Thermal + RGB Camera")
     object RGBCamera : UnifiedRoute("rgb_camera", "RGB Camera")
     object CameraSettings : UnifiedRoute("camera_settings", "Camera Settings")
     object TimeLapseCamera : UnifiedRoute("timelapse_camera", "Time-Lapse Camera")
+
     // Network Routes
     object DevicePairing : UnifiedRoute("device_pairing", "Device Pairing")
     object PermissionRequest : UnifiedRoute("permission_request", "Permissions")
+
     // Thermal Camera Routes - Consolidated (removed ThermalMain duplicate)
     object ThermalGallery : UnifiedRoute("thermal_gallery", "Gallery")
     object ThermalReport : UnifiedRoute("thermal_report", "Reports")
     object ThermalCamera : UnifiedRoute("thermal_camera", "Thermal Imaging")
     object ThermalSettings : UnifiedRoute("thermal_settings", "Thermal Settings")
+
     // System Routes
     object Settings : UnifiedRoute("settings", "Settings")
     object About : UnifiedRoute("about", "About")
     object Profile : UnifiedRoute("profile", "Profile")
     object ProfileEdit : UnifiedRoute("profile_edit", "Edit Profile")
     object NetworkConfig : UnifiedRoute("network_config", "Network")
+
     // Settings Sub-Routes
     object RecordingSettings : UnifiedRoute("recording_settings", "Recording Settings")
     object StorageSettings : UnifiedRoute("storage_settings", "Storage Settings")
@@ -79,10 +89,12 @@ sealed class UnifiedRoute(val route: String, val displayName: String = "") {
     object AppInfo : UnifiedRoute("app_info", "App Info")
     object PrivacyPolicy : UnifiedRoute("privacy_policy", "Privacy Policy")
     object Help : UnifiedRoute("help", "Help")
+
     // Development and Demo Routes
     object ComponentShowcase : UnifiedRoute("component_showcase", "Feature Demos")
     object TestingSuite : UnifiedRoute("testing_suite", "Diagnostics")
 }
+
 @Composable
 fun UnifiedNavHost(
     navController: NavHostController = rememberNavController(),
@@ -182,7 +194,7 @@ fun UnifiedNavHost(
             RGBCameraScreen(
                 onBackClick = { navController.popBackStack() },
                 onSettingsClick = { navController.navigate(UnifiedRoute.CameraSettings.route) },
-                onCapturePhoto = {  }
+                onCapturePhoto = { }
             )
         }
         composable(UnifiedRoute.TimeLapseCamera.route) {
@@ -423,34 +435,44 @@ object NavigationHelper {
     fun navigateToGSRSettings(navController: NavHostController) {
         navController.navigate(UnifiedRoute.GSRSettings.route)
     }
+
     fun navigateToSessionDetail(navController: NavHostController, sessionId: String) {
         navController.navigate(UnifiedRoute.GSRSessionDetail.createRoute(sessionId))
     }
+
     fun navigateToCamera(navController: NavHostController) {
         navController.navigate(UnifiedRoute.CameraDashboard.route)
     }
+
     fun navigateToDevicePairing(navController: NavHostController) {
         navController.navigate(UnifiedRoute.DevicePairing.route)
     }
+
     fun navigateToPermissionRequest(navController: NavHostController) {
         navController.navigate(UnifiedRoute.PermissionRequest.route)
     }
+
     // Quick Action Navigation - User-centric direct access
     fun captureThermalImage(navController: NavHostController) {
         navController.navigate(UnifiedRoute.ThermalCamera.route)
     }
+
     fun startGSRSession(navController: NavHostController) {
         navController.navigate(UnifiedRoute.GSRSettings.route)
     }
+
     fun thermalRGBCapture(navController: NavHostController) {
         navController.navigate(UnifiedRoute.DualModeCamera.route)
     }
+
     fun viewGallery(navController: NavHostController) {
         navController.navigate(UnifiedRoute.ThermalGallery.route)
     }
+
     fun viewRecentSessions(navController: NavHostController) {
         navController.navigate(UnifiedRoute.GSRDataView.route)
     }
+
     fun navigateWithPopUp(
         navController: NavHostController,
         destination: String,

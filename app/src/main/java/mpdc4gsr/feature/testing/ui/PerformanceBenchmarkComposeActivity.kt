@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -46,12 +47,14 @@ class PerformanceBenchmarkComposeActivity : ComponentActivity() {
             }
         }
     }
+
     companion object {
         fun start(context: Context) {
             context.startActivity(Intent(context, PerformanceBenchmarkComposeActivity::class.java))
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerformanceBenchmarkScreen(
@@ -134,6 +137,7 @@ fun PerformanceBenchmarkScreen(
         }
     }
 }
+
 @Composable
 fun PerformanceSummaryCard(
     summary: PerformanceSummary,
@@ -184,6 +188,7 @@ fun PerformanceSummaryCard(
         }
     }
 }
+
 @Composable
 fun MetricColumn(
     label: String,
@@ -206,6 +211,7 @@ fun MetricColumn(
         )
     }
 }
+
 @Composable
 fun PerformanceChartCard(
     chartData: List<PerformanceDataPoint>,
@@ -238,6 +244,7 @@ fun PerformanceChartCard(
         }
     }
 }
+
 fun DrawScope.drawPerformanceChart(
     data: List<PerformanceDataPoint>,
     width: Float,
@@ -277,6 +284,7 @@ fun DrawScope.drawPerformanceChart(
     }
     drawPath(memoryPath, errorColor, style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3.dp.toPx()))
 }
+
 @Composable
 fun BenchmarkControlsCard(
     onStartBenchmark: () -> Unit,
@@ -326,6 +334,7 @@ fun BenchmarkControlsCard(
         }
     }
 }
+
 @Composable
 fun BenchmarkResultCard(result: BenchmarkResult) {
     Card(
@@ -372,6 +381,7 @@ fun BenchmarkResultCard(result: BenchmarkResult) {
         }
     }
 }
+
 @Composable
 fun SystemInfoCard(systemInfo: SystemInfo) {
     Card(
@@ -395,6 +405,7 @@ fun SystemInfoCard(systemInfo: SystemInfo) {
         }
     }
 }
+
 @Composable
 fun InfoRow(label: String, value: String) {
     Row(
@@ -412,6 +423,7 @@ fun InfoRow(label: String, value: String) {
         )
     }
 }
+
 // Data Classes
 data class PerformanceDataPoint(
     val timestamp: Long,
@@ -419,6 +431,7 @@ data class PerformanceDataPoint(
     val memoryMB: Float,
     val cpuUsage: Float
 )
+
 data class PerformanceSummary(
     val averageFps: Float = 0f,
     val targetFps: Float = 60f,
@@ -426,6 +439,7 @@ data class PerformanceSummary(
     val cpuUsage: Float = 0f,
     val temperature: Float = 0f
 )
+
 data class BenchmarkResult(
     val testName: String,
     val durationMs: Long,
@@ -433,6 +447,7 @@ data class BenchmarkResult(
     val score: Float,
     val notes: String
 )
+
 data class SystemInfo(
     val deviceModel: String = "Unknown",
     val androidVersion: String = "Unknown",
@@ -440,6 +455,7 @@ data class SystemInfo(
     val cpuCores: Int = 0,
     val gpuRenderer: String = "Unknown"
 )
+
 data class PerformanceBenchmarkUiState(
     val isRunning: Boolean = false,
     val isLoading: Boolean = false,
@@ -448,22 +464,27 @@ data class PerformanceBenchmarkUiState(
     val benchmarkResults: List<BenchmarkResult> = emptyList(),
     val systemInfo: SystemInfo = SystemInfo()
 )
+
 // ViewModel
 class PerformanceBenchmarkViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(PerformanceBenchmarkUiState())
     val uiState: StateFlow<PerformanceBenchmarkUiState> = _uiState.asStateFlow()
+
     init {
         loadSystemInfo()
     }
+
     fun startBenchmark() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isRunning = true)
             runBenchmarkSuite()
         }
     }
+
     fun stopBenchmark() {
         _uiState.value = _uiState.value.copy(isRunning = false)
     }
+
     fun resetResults() {
         _uiState.value = _uiState.value.copy(
             performanceData = emptyList(),
@@ -471,12 +492,14 @@ class PerformanceBenchmarkViewModel : ViewModel() {
             performanceSummary = PerformanceSummary()
         )
     }
+
     fun exportResults() {
         viewModelScope.launch {
             // Export benchmark results to file
             // Implementation would depend on specific export mechanism
         }
     }
+
     private suspend fun runBenchmarkSuite() {
         val tests = listOf(
             "Thermal Image Processing",
@@ -526,6 +549,7 @@ class PerformanceBenchmarkViewModel : ViewModel() {
         }
         _uiState.value = _uiState.value.copy(isRunning = false)
     }
+
     private fun calculateSummary(data: List<PerformanceDataPoint>): PerformanceSummary {
         if (data.isEmpty()) return PerformanceSummary()
         return PerformanceSummary(
@@ -535,6 +559,7 @@ class PerformanceBenchmarkViewModel : ViewModel() {
             temperature = Random.nextFloat() * 20f + 40f // Simulated temperature
         )
     }
+
     private fun loadSystemInfo() {
         _uiState.value = _uiState.value.copy(
             systemInfo = SystemInfo(
@@ -547,11 +572,13 @@ class PerformanceBenchmarkViewModel : ViewModel() {
         )
     }
 }
+
 // Theme placeholder
 @Composable
 fun IRCameraTheme(content: @Composable () -> Unit) {
     MaterialTheme(content = content)
 }
+
 @Preview(showBackground = true)
 @Composable
 fun PerformanceBenchmarkScreenPreview() {

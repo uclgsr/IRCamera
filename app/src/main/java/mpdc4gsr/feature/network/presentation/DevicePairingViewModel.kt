@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.presentation
+
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.flow.*
@@ -21,17 +22,21 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
     val scanState: StateFlow<ScanState> = _scanState.asStateFlow()
     private val _statusMessage = MutableStateFlow("")
     val statusMessage: StateFlow<String> = _statusMessage.asStateFlow()
+
     // SharedFlow for one-time events
     private val _events = MutableSharedFlow<PairingEvent>()
     val events: SharedFlow<PairingEvent> = _events.asSharedFlow()
+
     // Flash overlay state
     private val _flashState = MutableStateFlow(FlashState())
     val flashState: StateFlow<FlashState> = _flashState.asStateFlow()
+
     // Combined state for complex UI scenarios
     private val _pairingScreenState = MutableStateFlow(PairingScreenState())
     val pairingScreenState: StateFlow<PairingScreenState> = _pairingScreenState.asStateFlow()
     private lateinit var networkClient: NetworkClient
     private val controllers = mutableListOf<NetworkClient.ControllerInfo>()
+
     // Enhanced state enums
     enum class ConnectionState {
         DISCONNECTED,
@@ -41,6 +46,7 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
         AUTHENTICATING,
         AUTHENTICATED
     }
+
     enum class ScanState {
         IDLE,
         SCANNING,
@@ -48,6 +54,7 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
         FAILED,
         TIMEOUT
     }
+
     // Sealed classes for type-safe event handling
     sealed class PairingEvent {
         data class ShowError(val message: String) : PairingEvent()
@@ -55,8 +62,10 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
         data class NavigateToSession(val sessionInfo: SessionInfo) : PairingEvent()
         data class ShowConnectionDialog(val controller: NetworkClient.ControllerInfo) :
             PairingEvent()
+
         object NavigateBack : PairingEvent()
     }
+
     data class PairingScreenState(
         val isInitialized: Boolean = false,
         val canScan: Boolean = true,
@@ -65,10 +74,12 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
         val discoveredCount: Int = 0,
         val lastScanTime: Long? = null
     )
+
     data class FlashState(
         val isVisible: Boolean = false,
         val durationMs: Int = 0
     )
+
     init {
         // Setup combined state management
         viewModelScope.launch {
@@ -90,6 +101,7 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
             }
         }
     }
+
     fun initialize(context: android.content.Context) {
         launchWithErrorHandling {
             networkClient = NetworkClient(context)
@@ -101,6 +113,7 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
             _events.emit(PairingEvent.ShowSuccess("Network client initialized successfully"))
         }
     }
+
     fun startControllerScan(forceRefresh: Boolean = false) {
         launchWithErrorHandling {
             val currentScanState = _scanState.value
@@ -138,6 +151,7 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
             }
         }
     }
+
     fun connectToController(controller: NetworkClient.ControllerInfo) {
         launchWithLoading {
             val currentConnectionState = _pairingConnectionState.value
@@ -170,6 +184,7 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
             }
         }
     }
+
     fun disconnectFromController() {
         launchWithErrorHandling {
             val currentController = _connectedController.value
@@ -186,6 +201,7 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
             }
         }
     }
+
     fun retryConnection() {
         val lastController = _connectedController.value
         if (lastController != null) {
@@ -194,6 +210,7 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
             startControllerScan(forceRefresh = true)
         }
     }
+
     fun startSession(sessionInfo: SessionInfo) {
         launchWithErrorHandling {
             val currentController = _connectedController.value
@@ -205,6 +222,7 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
             }
         }
     }
+
     // NetworkClient.NetworkEventListener implementation
     override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
         viewModelScope.launch {
@@ -215,6 +233,7 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
             }
         }
     }
+
     override fun onConnected(controller: NetworkClient.ControllerInfo) {
         viewModelScope.launch {
             _connectedController.value = controller
@@ -223,6 +242,7 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
             _events.emit(PairingEvent.ShowSuccess("Connection established"))
         }
     }
+
     override fun onDisconnected(reason: String) {
         viewModelScope.launch {
             _connectedController.value = null
@@ -231,34 +251,41 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
             _events.emit(PairingEvent.ShowError("Connection lost: $reason"))
         }
     }
+
     override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
         viewModelScope.launch {
             _events.emit(PairingEvent.NavigateToSession(sessionInfo))
         }
     }
+
     override fun onSyncFlash(durationMs: Int) {
         triggerSyncFlash(durationMs)
     }
+
     override fun onTimeSynchronized(offsetNanoseconds: Long) {
         viewModelScope.launch {
             _statusMessage.value = "Time synchronized (offset: ${offsetNanoseconds}ns)"
         }
     }
+
     override fun onDataStreamingStarted() {
         viewModelScope.launch {
             _statusMessage.value = "Data streaming started"
         }
     }
+
     override fun onDataStreamingStopped() {
         viewModelScope.launch {
             _statusMessage.value = "Data streaming stopped"
         }
     }
+
     override fun onError(operation: String, error: String) {
         viewModelScope.launch {
             _events.emit(PairingEvent.ShowError("$operation: $error"))
         }
     }
+
     fun triggerSyncFlash(durationMs: Int) {
         viewModelScope.launch {
             _flashState.value = FlashState(isVisible = true, durationMs = durationMs)
@@ -266,12 +293,14 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
             _flashState.value = FlashState(isVisible = false, durationMs = 0)
         }
     }
+
     override fun onCleared() {
         super.onCleared()
         if (::networkClient.isInitialized) {
             networkClient.disconnect()
         }
     }
+
     companion object {
         private const val TAG = "DevicePairingViewModel"
     }

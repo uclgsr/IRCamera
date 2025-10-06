@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data.model
+
 data class DeviceInfo(
     val address: String,
     val name: String,
@@ -40,6 +41,7 @@ data class DeviceInfo(
             batteryLevel?.let { append(" • $it% battery") }
             if (isRecommended) append(" • Recommended")
         }
+
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "address" to address,
@@ -57,6 +59,7 @@ data class DeviceInfo(
             "status_summary" to statusSummary
         )
     }
+
     enum class SignalStrength(val displayName: String) {
         EXCELLENT("Excellent"),
         GOOD("Good"),
@@ -64,6 +67,7 @@ data class DeviceInfo(
         POOR("Poor"),
         VERY_POOR("Very Poor")
     }
+
     companion object {
         val SHIMMER_MAC_PREFIXES = listOf("00:06:66", "d0:39:72")
         fun isShimmerDevice(address: String): Boolean {
@@ -71,6 +75,7 @@ data class DeviceInfo(
                 address.startsWith(it, ignoreCase = true)
             }
         }
+
         fun fromBluetoothDevice(
             address: String,
             name: String?,
@@ -101,6 +106,7 @@ data class DeviceInfo(
                 priority = priority
             )
         }
+
         fun sortByPriority(devices: List<DeviceInfo>): List<DeviceInfo> {
             return devices.sortedWith(
                 compareBy<DeviceInfo> { it.priority }
@@ -108,11 +114,13 @@ data class DeviceInfo(
                     .thenBy { it.name }
             )
         }
+
         fun getRecommendedDevices(devices: List<DeviceInfo>): List<DeviceInfo> {
             return devices
                 .filter { it.isRecommended }
                 .let { sortByPriority(it) }
         }
+
         fun createMockDevice(
             deviceId: String = "test_device",
             isGSR: Boolean = true,

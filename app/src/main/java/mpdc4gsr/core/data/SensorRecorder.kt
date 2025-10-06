@@ -1,5 +1,7 @@
 package mpdc4gsr.core.data
+
 import kotlinx.coroutines.flow.Flow
+
 interface SensorRecorder {
     val sensorId: String
     val sensorType: String
@@ -14,17 +16,20 @@ interface SensorRecorder {
         // Default implementation delegates to original method for backward compatibility
         return startRecording(sessionDirectory)
     }
+
     suspend fun stopRecording(): Boolean
     suspend fun addSyncMarker(
         markerType: String,
         timestampNs: Long,
         metadata: Map<String, String> = emptyMap(),
     )
+
     suspend fun cleanup()
     fun getStatusFlow(): Flow<RecordingStatus>
     fun getErrorFlow(): Flow<SensorError>
     fun getRecordingStats(): RecordingStats
 }
+
 data class RecordingStatus(
     val sensorId: String,
     val sensorType: String,
@@ -41,6 +46,7 @@ data class RecordingStatus(
             "Ready - ${String.format("%.1f", storageUsedMB)} MB"
         }
 }
+
 data class SensorError(
     val sensorId: String,
     val sensorType: String,
@@ -49,6 +55,7 @@ data class SensorError(
     val timestampNs: Long,
     val isRecoverable: Boolean = true,
 )
+
 enum class ErrorType {
     INITIALIZATION_FAILED,
     HARDWARE_DISCONNECTED,
@@ -69,6 +76,7 @@ enum class ErrorType {
     DEVICE_NOT_SUPPORTED,
     UNKNOWN,
 }
+
 data class RecordingStats(
     val sensorId: String,
     val sensorType: String,

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.data
+
 import mpdc4gsr.core.data.ErrorType
 
 object CameraErrorMessageProvider {
@@ -11,12 +12,14 @@ object CameraErrorMessageProvider {
                         "• Enable Camera permission\n" +
                         "• Restart the app and try again"
             }
+
             ErrorType.HARDWARE_UNAVAILABLE -> {
                 "Camera not available. Please:\n" +
                         "• Close other camera apps\n" +
                         "• Restart your device if the issue persists\n" +
                         "• Check if camera hardware is functioning properly"
             }
+
             ErrorType.INITIALIZATION_FAILED -> {
                 when {
                     originalMessage.contains("another application", ignoreCase = true) -> {
@@ -25,12 +28,14 @@ object CameraErrorMessageProvider {
                                 "• Wait a few seconds and try again\n" +
                                 "• Restart the device if the problem continues"
                     }
+
                     originalMessage.contains("service unavailable", ignoreCase = true) -> {
                         "Camera service unavailable. Please:\n" +
                                 "• Restart the camera app\n" +
                                 "• If problem persists, restart your device\n" +
                                 "• Check for system updates"
                     }
+
                     else -> {
                         "Camera initialization failed. Please:\n" +
                                 "• Try switching between front/back camera\n" +
@@ -39,6 +44,7 @@ object CameraErrorMessageProvider {
                     }
                 }
             }
+
             ErrorType.RECORDING_FAILED -> {
                 when {
                     originalMessage.contains("storage", ignoreCase = true) -> {
@@ -47,12 +53,14 @@ object CameraErrorMessageProvider {
                                 "• Check if SD card is properly inserted\n" +
                                 "• Try recording to internal storage instead"
                     }
+
                     originalMessage.contains("encoder", ignoreCase = true) -> {
                         "Video encoder error. Please:\n" +
                                 "• Try recording at lower resolution (1080p instead of 4K)\n" +
                                 "• Close other apps using camera/video\n" +
                                 "• Restart the device if problem persists"
                     }
+
                     else -> {
                         "Recording failed. Please:\n" +
                                 "• Check available storage space\n" +
@@ -61,6 +69,7 @@ object CameraErrorMessageProvider {
                     }
                 }
             }
+
             ErrorType.FEATURE_NOT_SUPPORTED -> {
                 when {
                     originalMessage.contains("4K", ignoreCase = true) -> {
@@ -70,6 +79,7 @@ object CameraErrorMessageProvider {
                                 "• Enable 60fps if available\n" +
                                 "• Check device specifications for camera capabilities"
                     }
+
                     originalMessage.contains("RAW", ignoreCase = true) -> {
                         "RAW capture not supported on this device.\n" +
                                 "Alternative options:\n" +
@@ -77,6 +87,7 @@ object CameraErrorMessageProvider {
                                 "• Enable HDR if available\n" +
                                 "• Consider using manual exposure controls"
                     }
+
                     originalMessage.contains("60fps", ignoreCase = true) -> {
                         "60fps recording not supported at current resolution.\n" +
                                 "Try these options:\n" +
@@ -84,6 +95,7 @@ object CameraErrorMessageProvider {
                                 "• Use 30fps at current resolution\n" +
                                 "• Check if device supports high-speed recording"
                     }
+
                     originalMessage.contains("focus", ignoreCase = true) -> {
                         "Manual focus control not fully supported.\n" +
                                 "Available alternatives:\n" +
@@ -91,6 +103,7 @@ object CameraErrorMessageProvider {
                                 "• Enable continuous autofocus\n" +
                                 "• Lock focus after tapping to focus"
                     }
+
                     originalMessage.contains("exposure", ignoreCase = true) -> {
                         "Advanced exposure control not supported.\n" +
                                 "Available alternatives:\n" +
@@ -98,6 +111,7 @@ object CameraErrorMessageProvider {
                                 "• Enable auto-exposure lock\n" +
                                 "• Adjust scene mode settings"
                     }
+
                     else -> {
                         "Feature not supported on this device.\n" +
                                 "• Check device specifications\n" +
@@ -106,6 +120,7 @@ object CameraErrorMessageProvider {
                     }
                 }
             }
+
             ErrorType.OPERATION_FAILED -> {
                 when {
                     originalMessage.contains("focus", ignoreCase = true) -> {
@@ -114,12 +129,14 @@ object CameraErrorMessageProvider {
                                 "• Ensure adequate lighting\n" +
                                 "• Try tapping different areas to focus"
                     }
+
                     originalMessage.contains("exposure", ignoreCase = true) -> {
                         "Exposure adjustment failed. Please:\n" +
                                 "• Reset to auto-exposure mode\n" +
                                 "• Adjust lighting conditions\n" +
                                 "• Try smaller exposure compensation values"
                     }
+
                     else -> {
                         "Camera operation failed. Please:\n" +
                                 "• Try the operation again\n" +
@@ -128,6 +145,7 @@ object CameraErrorMessageProvider {
                     }
                 }
             }
+
             ErrorType.DEVICE_NOT_SUPPORTED -> {
                 "Device compatibility issue detected.\n" +
                         "Possible solutions:\n" +
@@ -135,12 +153,14 @@ object CameraErrorMessageProvider {
                         "• Enable Camera2 API in developer options\n" +
                         "• Use basic camera features only"
             }
+
             ErrorType.SYNC_FAILED -> {
                 "Synchronization failed. This may affect:\n" +
                         "• Multi-sensor data alignment\n" +
                         "• Timestamp accuracy\n" +
                         "Recording can continue but check results carefully."
             }
+
             else -> {
                 "Camera error occurred. Please:\n" +
                         "• Try restarting the app\n" +

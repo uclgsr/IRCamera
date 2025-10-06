@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.presentation
+
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,24 +27,31 @@ class ProfileEditViewModel : AppBaseViewModel() {
     fun updateUserName(value: String) {
         _profileData.value = _profileData.value.copy(userName = value)
     }
+
     fun updateUserId(value: String) {
         _profileData.value = _profileData.value.copy(userId = value)
     }
+
     fun updateEmail(value: String) {
         _profileData.value = _profileData.value.copy(email = value)
     }
+
     fun updateInstitution(value: String) {
         _profileData.value = _profileData.value.copy(institution = value)
     }
+
     fun updateResearchArea(value: String) {
         _profileData.value = _profileData.value.copy(researchArea = value)
     }
+
     fun updateBio(value: String) {
         _profileData.value = _profileData.value.copy(bio = value)
     }
+
     fun updateProfileVisibility(visible: Boolean) {
         _profileData.value = _profileData.value.copy(isProfileVisible = visible)
     }
+
     fun updateDataSharing(enabled: Boolean) {
         _profileData.value = _profileData.value.copy(allowDataSharing = enabled)
     }

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.data
+
 import android.content.Context
 import android.media.MediaRecorder
 import android.os.Build
@@ -7,10 +8,12 @@ import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 import android.util.Size
 import java.io.File
+
 class VideoEngine(private val context: Context? = null) {
     companion object {
         private const val TAG = "VideoEngine"
     }
+
     private var mediaRecorder: MediaRecorder? = null
     private var isRecording = false
     private var isPrepared = false
@@ -62,6 +65,7 @@ class VideoEngine(private val context: Context? = null) {
             return null
         }
     }
+
     fun start(): Boolean {
         return try {
             if (!isPrepared) {
@@ -77,6 +81,7 @@ class VideoEngine(private val context: Context? = null) {
             false
         }
     }
+
     fun stop() {
         try {
             if (isRecording) {
@@ -88,6 +93,7 @@ class VideoEngine(private val context: Context? = null) {
             AppLogger.e(TAG, "Failed to stop video recording", e)
         }
     }
+
     fun release() {
         try {
             if (isRecording) {
@@ -102,6 +108,7 @@ class VideoEngine(private val context: Context? = null) {
             AppLogger.e(TAG, "Error releasing MediaRecorder", e)
         }
     }
+
     fun isRecording(): Boolean = isRecording
     fun getSurface(): android.view.Surface? = mediaRecorder?.surface
 }

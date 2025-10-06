@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
+
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.common.SharedManager
@@ -7,6 +8,7 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import kotlinx.coroutines.launch
+
 class IRMainActivityViewModel : BaseViewModel() {
     // Device state management
     data class DeviceState(
@@ -16,23 +18,27 @@ class IRMainActivityViewModel : BaseViewModel() {
         val shouldAutoOpen: Boolean = false,
         val shouldBlur: Boolean = false
     )
+
     // Fragment communication state
     data class FragmentCommunicationState(
         val activeFragment: Int = 0,
         val deviceConnected: Boolean = false,
         val pendingNavigation: NavigationEvent? = null
     )
+
     // Navigation events
     sealed class NavigationEvent {
         data class ToMonitor(val isTC007: Boolean) : NavigationEvent()
         object ToGallery : NavigationEvent()
         data class ToThermal(val routeConfig: String) : NavigationEvent()
     }
+
     // ViewPager state management
     sealed class ViewPagerState {
         data class PageSelected(val position: Int) : ViewPagerState()
         data class NavigateToPage(val position: Int) : ViewPagerState()
     }
+
     private val _deviceState = MutableLiveData<DeviceState>()
     val deviceState = _deviceState
     private val _fragmentCommunication = MutableLiveData<FragmentCommunicationState>()
@@ -46,11 +52,13 @@ class IRMainActivityViewModel : BaseViewModel() {
         currentDeviceType = isTC007
         refreshDeviceState()
     }
+
     fun initializeDeviceState() {
         viewModelScope.launch {
             refreshDeviceState()
         }
     }
+
     fun refreshDeviceState() {
         viewModelScope.launch {
             val deviceState = if (currentDeviceType) {
@@ -73,19 +81,24 @@ class IRMainActivityViewModel : BaseViewModel() {
             _deviceState.value = deviceState
         }
     }
+
     fun onPageSelected(position: Int) {
         _viewPagerState.value = ViewPagerState.PageSelected(position)
         updateFragmentCommunication(position)
     }
+
     fun navigateToPage(position: Int) {
         _viewPagerState.value = ViewPagerState.NavigateToPage(position)
     }
+
     fun navigateToMonitor() {
         _navigationEvent.value = NavigationEvent.ToMonitor(currentDeviceType)
     }
+
     fun navigateToGallery() {
         _navigationEvent.value = NavigationEvent.ToGallery
     }
+
     fun navigateToThermal() {
         val routeConfig = if (currentDeviceType) {
             RouterConfig.IR_THERMAL_07
@@ -94,6 +107,7 @@ class IRMainActivityViewModel : BaseViewModel() {
         }
         _navigationEvent.value = NavigationEvent.ToThermal(routeConfig)
     }
+
     private fun updateFragmentCommunication(activeFragment: Int) {
         val currentDeviceState = _deviceState.value ?: DeviceState()
         val communicationState = FragmentCommunicationState(
@@ -102,6 +116,7 @@ class IRMainActivityViewModel : BaseViewModel() {
         )
         _fragmentCommunication.value = communicationState
     }
+
     // Guide dialog management
     fun handleGuideDialog(onGuideShow: (Int, Int) -> Unit) {
         val currentStep = SharedManager.homeGuideStep
@@ -114,6 +129,7 @@ class IRMainActivityViewModel : BaseViewModel() {
         }
         onGuideShow(currentStep, navigationTarget)
     }
+
     fun handleGuideNavigation(step: Int) {
         SharedManager.homeGuideStep = when (step) {
             1 -> 2
@@ -122,6 +138,7 @@ class IRMainActivityViewModel : BaseViewModel() {
             else -> 0
         }
     }
+
     fun completeGuide() {
         SharedManager.homeGuideStep = 0
     }

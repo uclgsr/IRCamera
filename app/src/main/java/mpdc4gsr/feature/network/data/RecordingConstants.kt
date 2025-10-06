@@ -7,6 +7,7 @@ object RecordingConstants {
     const val THERMAL_STORAGE_MB_PER_MIN = 5.0
     const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
     const val MIN_STORAGE_SPACE_GB = 1.0
+
     // Timing constants
     const val SYNC_MARKER_DISTRIBUTION_DELAY_MS = 50L
     const val STATUS_UPDATE_INTERVAL_MS = 1000L

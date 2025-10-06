@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.adapter
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.bean.TargetColorBean
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.libunified.R as LibR
+
 class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
@@ -19,9 +21,11 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         selected = index
         notifyDataSetChanged()
     }
+
     fun getSelected(): Int {
         return selected
     }
+
     private val secondBean =
         arrayListOf(
             TargetColorBean(
@@ -36,6 +40,7 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             ),
             TargetColorBean(LibR.drawable.ic_menu_thermal6003, "", ObserveBean.TYPE_TARGET_CIRCLE),
         )
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -44,6 +49,7 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             LayoutInflater.from(parent.context).inflate(R.layout.itme_target_mode, parent, false)
         return ItemView(view)
     }
+
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
@@ -67,9 +73,11 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             )
         }
     }
+
     override fun getItemCount(): Int {
         return secondBean.size
     }
+
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val lay: View = itemView.findViewById(R.id.item_menu_tab_lay)
         val img: ImageView = itemView.findViewById(R.id.item_menu_tab_img)

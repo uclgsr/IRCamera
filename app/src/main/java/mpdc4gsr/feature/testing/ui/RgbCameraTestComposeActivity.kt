@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -42,6 +43,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
     companion object {
         private const val TAG = "RgbCameraTestCompose"
     }
+
     private var cameraRecorder: RgbCameraRecorder? = null
     private var permissionManager: PermissionManager? = null
     private var permissionController: PermissionController? = null
@@ -56,15 +58,18 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             AppLogger.e(TAG, "Camera permissions required for testing")
         }
     }
+
     override fun createViewModel(): RgbCameraTestViewModel {
         return viewModels<RgbCameraTestViewModel>().value
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         permissionController = PermissionController(this)
         permissionManager = PermissionManager(this, permissionController!!)
         checkPermissions()
     }
+
     @Composable
     override fun Content(viewModel: RgbCameraTestViewModel) {
         val context = LocalContext.current
@@ -76,6 +81,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             RgbCameraTestScreen(viewModel)
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun RgbCameraTestScreen(viewModel: RgbCameraTestViewModel) {
@@ -207,6 +213,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             }
         }
     }
+
     private fun checkPermissions() {
         val requiredPermissions = arrayOf(
             Manifest.permission.CAMERA,
@@ -215,6 +222,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
         )
         permissionLauncher.launch(requiredPermissions)
     }
+
     private fun initializeCamera() {
         try {
             cameraRecorder = RgbCameraRecorder(this, this)
@@ -223,6 +231,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             AppLogger.e(TAG, "Failed to initialize camera: ${e.message}")
         }
     }
+
     private suspend fun initializeCameraCapabilities() {
         try {
             // Simulate loading camera capabilities
@@ -241,6 +250,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             AppLogger.e(TAG, "Failed to load camera capabilities: ${e.message}")
         }
     }
+
     private suspend fun runAllCameraTests() {
         AppLogger.i(TAG, "Starting comprehensive camera tests")
         try {
@@ -260,6 +270,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             AppLogger.e(TAG, "Camera tests failed: ${e.message}")
         }
     }
+
     private suspend fun runPermissionsTest() {
         AppLogger.d(TAG, "Testing camera permissions")
         try {
@@ -271,6 +282,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             AppLogger.e(TAG, "Permissions test failed: ${e.message}")
         }
     }
+
     private suspend fun runCapabilityTest() {
         AppLogger.d(TAG, "Testing camera capabilities")
         try {
@@ -281,6 +293,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             AppLogger.e(TAG, "Capability test failed: ${e.message}")
         }
     }
+
     private suspend fun run4KRecordingTest() {
         AppLogger.d(TAG, "Testing 4K recording")
         try {
@@ -293,6 +306,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             AppLogger.e(TAG, "4K recording test failed: ${e.message}")
         }
     }
+
     private suspend fun runTapFocusTest() {
         AppLogger.d(TAG, "Testing tap-to-focus")
         try {
@@ -303,6 +317,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             AppLogger.e(TAG, "Tap-to-focus test failed: ${e.message}")
         }
     }
+
     private suspend fun runManualControlsTest() {
         AppLogger.d(TAG, "Testing manual controls")
         try {
@@ -313,6 +328,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             AppLogger.e(TAG, "Manual controls test failed: ${e.message}")
         }
     }
+
     private suspend fun runRawCaptureTest() {
         AppLogger.d(TAG, "Testing RAW capture")
         try {
@@ -323,6 +339,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             AppLogger.e(TAG, "RAW capture test failed: ${e.message}")
         }
     }
+
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {
@@ -335,6 +352,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             }
         }
     }
+
     private fun startTestRecording() {
         lifecycleScope.launch {
             try {
@@ -354,6 +372,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             }
         }
     }
+
     private fun stopRecording() {
         lifecycleScope.launch {
             try {
@@ -366,6 +385,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
         }
     }
 }
+
 @Composable
 private fun TestResultCard(
     testCase: RgbCameraTestViewModel.TestCase,

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,10 +22,12 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+
 class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -83,6 +86,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             }
         }
     }
+
     @Composable
     private fun ReportPreviewContent(
         modifier: Modifier = Modifier
@@ -150,7 +154,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 tint = Color.White
                             )
                         }
-                        IconButton(onClick = {  }) {
+                        IconButton(onClick = { }) {
                             Icon(
                                 Icons.Default.FitScreen,
                                 contentDescription = "Fit to screen",
@@ -223,6 +227,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             }
         }
     }
+
     @Composable
     private fun BookmarkItem(
         title: String,
@@ -250,6 +255,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             }
         }
     }
+
     @Composable
     private fun RowScope.FormatButton(
         label: String,
@@ -277,6 +283,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             )
         }
     }
+
     @Composable
     private fun ExecutiveSummaryPage() {
         Text(
@@ -305,6 +312,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         BulletPoint("Peak temperature recorded: 42.1°C")
         BulletPoint("No critical temperature violations observed")
     }
+
     @Composable
     private fun ThermalAnalysisPage() {
         Text(
@@ -321,6 +329,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             lineHeight = 20.sp
         )
     }
+
     @Composable
     private fun TemperatureDataPage() {
         Text(
@@ -337,6 +346,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             lineHeight = 20.sp
         )
     }
+
     @Composable
     private fun ConclusionsPage() {
         Text(
@@ -353,6 +363,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             lineHeight = 20.sp
         )
     }
+
     @Composable
     private fun AppendixPage() {
         Text(
@@ -369,6 +380,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             lineHeight = 20.sp
         )
     }
+
     @Composable
     private fun BulletPoint(text: String) {
         Row(

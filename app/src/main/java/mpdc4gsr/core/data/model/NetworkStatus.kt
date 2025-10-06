@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data.model
+
 enum class NetworkStatus(
     val displayName: String,
     val isConnected: Boolean,
@@ -16,6 +17,7 @@ enum class NetworkStatus(
     CONNECTION_FAILED("Connection Failed", true, true),
     NETWORK_LOST("Network Lost", false, false),
     ERROR("Network Error", false, false);
+
     val isNetworkAvailable: Boolean
         get() = this != DISCONNECTED && this != NO_WIFI && this != NETWORK_LOST && this != PERMISSION_DENIED
     val isError: Boolean
@@ -57,6 +59,7 @@ enum class NetworkStatus(
             ERROR -> "Check network settings and try again"
             else -> null
         }
+
     enum class StatusColor {
         GREEN,
         BLUE,
@@ -64,16 +67,20 @@ enum class NetworkStatus(
         ORANGE,
         RED
     }
+
     companion object {
         fun getConnectedStates(): List<NetworkStatus> {
             return values().filter { it.isConnected }
         }
+
         fun getErrorStates(): List<NetworkStatus> {
             return values().filter { it.isError }
         }
+
         fun getDiscoveryStates(): List<NetworkStatus> {
             return values().filter { it.canDiscover }
         }
+
         fun fromConnectionState(
             hasWifi: Boolean,
             hasInternet: Boolean,

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.matrix
+
 enum class FirmwareUpgradeResultCode {
     SUCCESS("Success", 0),
     FILE_ERROR("File path is null", 1),
@@ -9,21 +10,27 @@ enum class FirmwareUpgradeResultCode {
     RENDER_DATA_ERROR("Render data is not available", 7),
     INVALID_FILE_ERROR("Upgrade file is invalid", 8),
     FILE_WRITE_ERROR("Write upgrade file error", 9);
+
     private var msg: String? = null
     private var code = 0
+
     constructor (msg: String, code: Int) {
         this.msg = msg
         this.code = code
     }
+
     open fun getMsg(): String? {
         return msg
     }
+
     open fun setMsg(msg: String?) {
         this.msg = msg
     }
+
     open fun getCode(): Int {
         return code
     }
+
     open fun setCode(code: Int) {
         this.code = code
     }

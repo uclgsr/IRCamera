@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.ui
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -30,21 +31,25 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 enum class NetworkConnectionStatus {
     DISCONNECTED, CONNECTING, CONNECTED, ERROR
 }
+
 data class NetworkTestCommand(
     val name: String,
     val description: String,
     val command: String,
     val expectedResponse: String
 )
+
 data class TestResult(
     val command: String,
     val response: String,
     val success: Boolean,
     val timestamp: Long
 )
+
 class SimpleNetworkTestViewModel : AppBaseViewModel() {
     private val _connectionStatus = mutableStateOf(NetworkConnectionStatus.DISCONNECTED)
     val connectionStatus: State<NetworkConnectionStatus> = _connectionStatus
@@ -107,10 +112,12 @@ class SimpleNetworkTestViewModel : AppBaseViewModel() {
         _ipAddress.value = ip
         _ipAddressError.value = validateIpAddress(ip)
     }
+
     fun updatePort(portStr: String) {
         _port.value = portStr
         _portError.value = validatePort(portStr)
     }
+
     private fun validateIpAddress(ip: String): String? {
         if (ip.isBlank()) {
             return "IP address cannot be empty"
@@ -127,6 +134,7 @@ class SimpleNetworkTestViewModel : AppBaseViewModel() {
         }
         return null
     }
+
     private fun validatePort(portStr: String): String? {
         if (portStr.isBlank()) {
             return "Port cannot be empty"
@@ -140,6 +148,7 @@ class SimpleNetworkTestViewModel : AppBaseViewModel() {
         }
         return null
     }
+
     fun connect() {
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             _connectionStatus.value = NetworkConnectionStatus.CONNECTING
@@ -156,11 +165,13 @@ class SimpleNetworkTestViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun disconnect() {
         _connectionStatus.value = NetworkConnectionStatus.DISCONNECTED
         _statusMessage.value = "Disconnected from PC Remote Control"
         _testResults.value = emptyList()
     }
+
     fun runAllTests() {
         if (_connectionStatus.value != NetworkConnectionStatus.CONNECTED) return
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
@@ -191,6 +202,7 @@ class SimpleNetworkTestViewModel : AppBaseViewModel() {
             _isRunningTests.value = false
         }
     }
+
     fun runSingleTest(command: NetworkTestCommand) {
         if (_connectionStatus.value != NetworkConnectionStatus.CONNECTED) return
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
@@ -216,14 +228,17 @@ class SimpleNetworkTestViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun clearResults() {
         _testResults.value = emptyList()
         _statusMessage.value = "Test results cleared"
     }
 }
+
 class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestViewModel>() {
     override fun createViewModel(): SimpleNetworkTestViewModel =
         viewModels<SimpleNetworkTestViewModel>().value
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: SimpleNetworkTestViewModel) {
@@ -291,6 +306,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                         strokeWidth = 2.dp
                                     )
                                 }
+
                                 NetworkConnectionStatus.CONNECTED -> {
                                     Icon(
                                         imageVector = Icons.Default.CheckCircle,
@@ -299,6 +315,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
+
                                 NetworkConnectionStatus.ERROR -> {
                                     Icon(
                                         imageVector = Icons.Default.Error,
@@ -307,6 +324,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
+
                                 else -> {
                                     Icon(
                                         imageVector = Icons.Default.NetworkCheck,
@@ -540,6 +558,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
         }
     }
 }
+
 @Composable
 private fun NetworkTestCommandCard(
     command: NetworkTestCommand,
@@ -585,6 +604,7 @@ private fun NetworkTestCommandCard(
         }
     }
 }
+
 @Composable
 private fun TestResultRow(
     result: TestResult,

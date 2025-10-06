@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -35,9 +36,11 @@ class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewMode
             context.startActivity(Intent(context, SessionManagerComposeActivity::class.java))
         }
     }
+
     override fun createViewModel(): SessionManagerViewModel {
         return viewModels<SessionManagerViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: SessionManagerViewModel) {
@@ -125,6 +128,7 @@ class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewMode
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SessionManagerContent(
@@ -223,6 +227,7 @@ private fun SessionManagerContent(
         }
     }
 }
+
 @Composable
 private fun SessionStatisticsCard(
     selectedCount: Int,
@@ -272,6 +277,7 @@ private fun SessionStatisticsCard(
         }
     }
 }
+
 @Composable
 private fun SessionCard(
     session: SessionInfo,
@@ -345,6 +351,7 @@ private fun SessionCard(
         }
     }
 }
+
 @Composable
 private fun SessionFilterDialog(
     onDismiss: () -> Unit,

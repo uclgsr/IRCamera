@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,10 +22,12 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -147,6 +150,7 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
+
 @Composable
 private fun AlgorithmImageView(
     selectedAlgorithm: String,
@@ -187,6 +191,7 @@ private fun AlgorithmImageView(
         }
     }
 }
+
 @Composable
 private fun ProcessingOverlay(
     progress: Float,
@@ -223,6 +228,7 @@ private fun ProcessingOverlay(
         }
     }
 }
+
 @Composable
 private fun AlgorithmInfoOverlay(
     selectedAlgorithm: String,
@@ -252,6 +258,7 @@ private fun AlgorithmInfoOverlay(
         }
     }
 }
+
 @Composable
 private fun AlgorithmSelector(
     selectedAlgorithm: String,
@@ -290,6 +297,7 @@ private fun AlgorithmSelector(
         }
     }
 }
+
 @Composable
 private fun AlgorithmChip(
     algorithm: AlgorithmOption,
@@ -313,6 +321,7 @@ private fun AlgorithmChip(
         )
     )
 }
+
 @Composable
 private fun ProcessingControls(
     isProcessing: Boolean,
@@ -391,11 +400,13 @@ private fun ProcessingControls(
         }
     }
 }
+
 // Data classes
 data class AlgorithmOption(
     val name: String,
     val description: String
 )
+
 private fun getAlgorithmOptions(): List<AlgorithmOption> {
     return listOf(
         AlgorithmOption("Edge Detection", "Detect temperature boundaries"),

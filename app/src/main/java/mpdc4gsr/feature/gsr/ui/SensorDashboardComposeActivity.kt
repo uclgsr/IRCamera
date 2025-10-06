@@ -35,6 +35,7 @@ class SensorDashboardComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun Content(viewModel: MainActivityViewModel) {
@@ -161,6 +162,7 @@ class SensorDashboardComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun AdditionalSensorInfo(
         thermalCameraState: ConnectionState,
@@ -254,6 +256,7 @@ class SensorDashboardComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun DataManagementSection(
         onExportAllData: () -> Unit,
@@ -301,6 +304,7 @@ class SensorDashboardComposeActivity : ComponentActivity() {
             }
         }
     }
+
     // Helper functions to map existing state to Compose-friendly types
     private fun mapSensorStateToConnectionState(sensorState: MainActivityViewModel.SensorState): ConnectionState {
         return when (sensorState.status) {
@@ -314,9 +318,11 @@ class SensorDashboardComposeActivity : ComponentActivity() {
                     "Sensor Error"
                 )
             )
+
             MainActivityViewModel.SensorStatus.SIMULATION -> ConnectionState.Connected()
         }
     }
+
     private fun mapGSRConnectionToConnectionState(gsrState: MainActivityViewModel.GSRConnectionState): ConnectionState {
         return when (gsrState) {
             MainActivityViewModel.GSRConnectionState.DISCONNECTED -> ConnectionState.Disconnected
@@ -331,6 +337,7 @@ class SensorDashboardComposeActivity : ComponentActivity() {
             )
         }
     }
+
     private fun generateMockGSRReadings(): List<Float> {
         return (0..50).map {
             100f + (kotlin.random.Random.nextFloat() - 0.5f) * 40f

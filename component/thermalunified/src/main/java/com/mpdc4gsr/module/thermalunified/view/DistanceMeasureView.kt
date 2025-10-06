@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.view
+
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -7,6 +8,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+
 class DistanceMeasureView : View {
     private var margin: Float = 0f
     private var linePaint: Paint? = null
@@ -15,12 +17,15 @@ class DistanceMeasureView : View {
     var distance = 0f
         private set
     var moveListener: ((distance: Float) -> Unit)? = null
+
     constructor(context: Context?) : super(context) {
         init()
     }
+
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
         init()
     }
+
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -28,6 +33,7 @@ class DistanceMeasureView : View {
     ) {
         init()
     }
+
     private fun init() {
         linePaint = Paint()
         linePaint!!.color = Color.GREEN
@@ -36,6 +42,7 @@ class DistanceMeasureView : View {
         val intervals = floatArrayOf(10f, 10f)
         linePaint!!.pathEffect = DashPathEffect(intervals, 0f)
     }
+
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
@@ -48,11 +55,13 @@ class DistanceMeasureView : View {
         line2Y = margin + lineHeight
         distance = lineHeight.toFloat()
     }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawLine(50f, line1Y, (width - 50).toFloat(), line1Y, linePaint!!)
         canvas.drawLine(50f, line2Y, (width - 50).toFloat(), line2Y, linePaint!!)
     }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {

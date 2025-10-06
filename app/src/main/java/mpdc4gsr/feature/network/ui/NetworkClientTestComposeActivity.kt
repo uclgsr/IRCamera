@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.ui
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,6 +20,7 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 class NetworkClientTestComposeActivity : BaseComposeActivity<NetworkClientTestViewModel>() {
     override fun createViewModel(): NetworkClientTestViewModel =
         viewModels<NetworkClientTestViewModel>().value
+
     @Composable
     override fun Content(viewModel: NetworkClientTestViewModel) {
         IRCameraTheme {
@@ -29,6 +31,7 @@ class NetworkClientTestComposeActivity : BaseComposeActivity<NetworkClientTestVi
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NetworkClientTestScreen(
@@ -156,6 +159,7 @@ fun NetworkClientTestScreen(
         }
     }
 }
+
 @Composable
 private fun NetworkStatusOverviewCard(
     networkStatus: NetworkTestStatus,
@@ -249,6 +253,7 @@ private fun NetworkStatusOverviewCard(
         }
     }
 }
+
 @Composable
 private fun NetworkMetric(
     label: String,
@@ -275,6 +280,7 @@ private fun NetworkMetric(
         )
     }
 }
+
 @Composable
 private fun TestProgressCard(
     currentTest: String,
@@ -336,6 +342,7 @@ private fun TestProgressCard(
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TestCategoryCard(
@@ -447,6 +454,7 @@ private fun TestCategoryCard(
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TestResultCard(
@@ -509,6 +517,7 @@ private fun TestResultCard(
         }
     }
 }
+
 @Composable
 private fun NetworkConfigurationCard(
     configuration: NetworkConfiguration,
@@ -585,6 +594,7 @@ private fun NetworkConfigurationCard(
         }
     }
 }
+
 @Composable
 private fun ConfigurationItem(
     label: String,
@@ -606,6 +616,7 @@ private fun ConfigurationItem(
         )
     }
 }
+
 @Composable
 private fun ErrorCard(
     error: String,
@@ -651,6 +662,7 @@ typealias NetworkTestResult = NetworkClientTestViewModel.NetworkTestResult
 typealias TestStatus = NetworkClientTestViewModel.TestStatus
 typealias NetworkTestType = NetworkClientTestViewModel.NetworkTestType
 typealias NetworkConfiguration = NetworkClientTestViewModel.NetworkConfiguration
+
 // Data classes specific to this activity
 data class NetworkTestStatus(
     val overallStatus: TestStatus,

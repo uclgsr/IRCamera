@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.utils
+
 object UnifiedConstants {
     // Product Configuration Constants
     object Product {
@@ -6,6 +7,7 @@ object UnifiedConstants {
         const val TS001_NAME = "TS001"
         const val TS004_NAME = "TS004"
     }
+
     // Settings Constants
     object Settings {
         const val TYPE = "setting_type"
@@ -16,6 +18,7 @@ object UnifiedConstants {
         const val DISCONNECTION = 1
         const val IS_REPORT_FIRST = "IS_REPORT_FIRST"
     }
+
     // IR Mode Constants
     object IRMode {
         const val TEMPERATURE_MODE = 1
@@ -25,6 +28,7 @@ object UnifiedConstants {
         const val TC007_MODE = 6
         const val TEMPERATURE_LITE = 7
     }
+
     // Network and Connection Constants
     object Network {
         const val DEFAULT_TIMEOUT = 5000L
@@ -32,6 +36,7 @@ object UnifiedConstants {
         const val DISCOVERY_PORT = 8081
         const val CONTROLLER_PORT = 8080
     }
+
     // File System Constants
     object FileSystem {
         const val TEMP_DIR = "temp"
@@ -42,6 +47,7 @@ object UnifiedConstants {
         const val RGB_DIR = "rgb"
         const val GSR_DIR = "gsr"
     }
+
     // Sensor Constants
     object Sensors {
         const val THERMAL_SENSOR = "thermal"
@@ -50,6 +56,7 @@ object UnifiedConstants {
         const val POLLING_INTERVAL_MS = 100L
         const val CONNECTION_TIMEOUT_MS = 10000L
     }
+
     // Recording Constants
     object Recording {
         const val DEFAULT_QUALITY = 80

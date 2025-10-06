@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.db
+
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -8,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mpdc4gsr.libunified.app.db.dao.*
 import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.app.db.entity.*
+
 @Database(
     entities = [
         ThermalEntity::class,
@@ -30,6 +32,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun thermalDayDao(): ThermalDayDao
     abstract fun houseDetectDao(): HouseDetectDao
     abstract fun houseReportDao(): HouseReportDao
+
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
@@ -37,6 +40,7 @@ abstract class AppDatabase : RoomDatabase() {
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
             }
+
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "MPDC4GSR.db")
                 .addMigrations(

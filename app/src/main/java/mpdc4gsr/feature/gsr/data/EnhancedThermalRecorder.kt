@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.data
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -16,10 +17,12 @@ import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import java.io.File
 import java.io.FileWriter
+
 class EnhancedThermalRecorder(private val context: Context) {
     companion object {
         private const val TAG = "EnhancedThermalRecorder"
     }
+
     private val thermalCameraRecorder = ThermalCameraRecorder(context)
     private var currentSessionDirectory: File? = null
     private var syncEventWriter: FileWriter? = null
@@ -27,6 +30,7 @@ class EnhancedThermalRecorder(private val context: Context) {
     suspend fun initialize(): Boolean {
         return thermalCameraRecorder.initialize()
     }
+
     fun startRecording(
         sessionId: String,
         sessionMetadata: SessionMetadata?,
@@ -58,6 +62,7 @@ class EnhancedThermalRecorder(private val context: Context) {
             return false
         }
     }
+
     fun stopRecording(): SessionInfo? {
         return try {
             recorderScope.launch {
@@ -75,6 +80,7 @@ class EnhancedThermalRecorder(private val context: Context) {
             null
         }
     }
+
     fun triggerSyncEvent(eventType: String, eventData: Map<String, String>) {
         try {
             val timestamp = System.nanoTime()
@@ -95,9 +101,11 @@ class EnhancedThermalRecorder(private val context: Context) {
             AppLogger.e(TAG, "Failed to trigger sync event: $eventType", e)
         }
     }
+
     fun getSessionDirectory(): File? {
         return currentSessionDirectory
     }
+
     fun cleanup() {
         try {
             closeSyncEventsFile()
@@ -111,6 +119,7 @@ class EnhancedThermalRecorder(private val context: Context) {
             AppLogger.e(TAG, "Error during cleanup", e)
         }
     }
+
     fun getStatusFlow(): Flow<RecordingStatus> = thermalCameraRecorder.getStatusFlow()
     fun getErrorFlow(): Flow<SensorError> = thermalCameraRecorder.getErrorFlow()
     fun getRecordingStats(): RecordingStats = thermalCameraRecorder.getRecordingStats()
@@ -126,6 +135,7 @@ class EnhancedThermalRecorder(private val context: Context) {
             AppLogger.e(TAG, "Failed to setup sync events file", e)
         }
     }
+
     private fun closeSyncEventsFile() {
         try {
             syncEventWriter?.close()
@@ -134,6 +144,7 @@ class EnhancedThermalRecorder(private val context: Context) {
             AppLogger.e(TAG, "Failed to close sync events file", e)
         }
     }
+
     data class SessionInfo(
         val sessionDirectory: File?,
         val sampleCount: Long,

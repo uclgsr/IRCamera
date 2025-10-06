@@ -1,4 +1,5 @@
 package thesis_evaluation.robustness_tests
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,10 +25,12 @@ import mpdc4gsr.feature.network.data.RecordingController
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+
 class NetworkConnectionDropTest : ComponentActivity() {
     companion object {
         private const val TAG = "NetworkConnectionDropTest"
     }
+
     data class NetworkEvent(
         val timestamp: Long,
         val eventType: String,
@@ -35,6 +38,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
         val networkState: String,
         val recordingState: String
     )
+
     data class TestMetrics(
         val recordingStartTime: Long = 0,
         val networkDropTime: Long = 0,
@@ -43,6 +47,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
         val reconnectionAttempts: Int = 0,
         val dataLossDuringDrop: Boolean = false
     )
+
     private var networkController: UnifiedNetworkController? = null
     private var recordingController: RecordingController? = null
     private var testOutputFile: File? = null
@@ -55,6 +60,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun NetworkConnectionDropTestScreen() {
@@ -307,6 +313,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun StatusRow(label: String, value: String, isOk: Boolean) {
         Row(
@@ -334,6 +341,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun MetricRow(label: String, value: String) {
         Row(
@@ -350,6 +358,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
             )
         }
     }
+
     @Composable
     private fun EventLogItem(event: NetworkEvent) {
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
@@ -379,6 +388,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
             )
         }
     }
+
     private fun initializeTestComponents() {
         try {
             networkController = UnifiedNetworkController(this, this)
@@ -391,6 +401,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
             AppLogger.e(TAG, "Failed to initialize test components", e)
         }
     }
+
     private suspend fun startRecording(
         onStateChange: (String) -> Unit,
         onNetworkStateChange: (Boolean) -> Unit,
@@ -421,6 +432,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
             startTime
         )
     }
+
     private suspend fun monitorNetworkConnection(
         onStateChange: (String) -> Unit,
         onNetworkStateChange: (Boolean) -> Unit,
@@ -497,6 +509,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
             }
         }
     }
+
     private suspend fun stopRecording(
         onStateChange: (String) -> Unit,
         onEvent: (NetworkEvent) -> Unit
@@ -513,9 +526,11 @@ class NetworkConnectionDropTest : ComponentActivity() {
         delay(500)
         onStateChange("Test complete - recording continued without data loss")
     }
+
     private fun checkNetworkConnection(): Boolean {
         return networkController?.isConnected?.value ?: false
     }
+
     private fun logEvent(
         eventType: String,
         description: String,
@@ -535,9 +550,11 @@ class NetworkConnectionDropTest : ComponentActivity() {
             "${formatTimestamp(event.timestamp)} | $eventType | Network: $networkState | Recording: $recordingState | $description\n"
         )
     }
+
     private fun formatTimestamp(timestamp: Long): String {
         return SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault()).format(Date(timestamp))
     }
+
     private fun formatDuration(seconds: Long): String {
         val hours = seconds / 3600
         val minutes = (seconds % 3600) / 60

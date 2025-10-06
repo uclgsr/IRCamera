@@ -1,9 +1,11 @@
 package com.mpdc4gsr.module.thermalunified.stubs
+
 import android.app.AlertDialog
 import android.content.Context
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+
 class ThermalInputDialog {
     class Builder(private val context: Context) {
         private var message: String = ""
@@ -17,11 +19,13 @@ class ThermalInputDialog {
             this.message = message
             return this
         }
+
         fun setNum(max: Float = 100f, min: Float = 0f): Builder {
             this.maxTemp = max
             this.minTemp = min
             return this
         }
+
         fun setColor(
             maxColor: Int = android.graphics.Color.RED,
             minColor: Int = android.graphics.Color.BLUE
@@ -30,6 +34,7 @@ class ThermalInputDialog {
             this.minColor = minColor
             return this
         }
+
         fun setPositiveListener(
             textResId: Int,
             listener: (Float, Float, Int, Int) -> Unit
@@ -37,13 +42,16 @@ class ThermalInputDialog {
             this.positiveListener = listener
             return this
         }
+
         fun setCancelListener(textResId: Int): Builder {
             return this
         }
+
         fun setCancelListener(text: String, listener: () -> Unit): Builder {
             this.cancelListener = listener
             return this
         }
+
         fun create(): ThermalInputDialog {
             return ThermalInputDialog().apply {
                 this.context = this@Builder.context
@@ -57,6 +65,7 @@ class ThermalInputDialog {
             }
         }
     }
+
     private lateinit var context: Context
     private var message: String = ""
     private var positiveListener: ((Float, Float, Int, Int) -> Unit)? = null

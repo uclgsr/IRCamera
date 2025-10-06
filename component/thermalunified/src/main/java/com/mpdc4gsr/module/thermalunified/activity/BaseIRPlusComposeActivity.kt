@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,10 +19,12 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.launch
+
 class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -118,6 +121,7 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
+
 @Composable
 private fun PlusStatusCard(
     isPlushActive: Boolean,
@@ -178,6 +182,7 @@ private fun PlusStatusCard(
         }
     }
 }
+
 @Composable
 private fun PlusThermalSurface(
     isPlushActive: Boolean,
@@ -228,6 +233,7 @@ private fun PlusThermalSurface(
         }
     }
 }
+
 @Composable
 private fun PlusEnhancementIndicators(
     modifier: Modifier = Modifier
@@ -256,6 +262,7 @@ private fun PlusEnhancementIndicators(
         }
     }
 }
+
 @Composable
 private fun PlusIndicatorItem(
     feature: String,
@@ -278,6 +285,7 @@ private fun PlusIndicatorItem(
         )
     }
 }
+
 @Composable
 private fun PlusFeatureOverlay(
     scope: kotlinx.coroutines.CoroutineScope,
@@ -331,6 +339,7 @@ private fun PlusFeatureOverlay(
         }
     }
 }
+
 @Composable
 private fun PlusFeatureButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -363,6 +372,7 @@ private fun PlusFeatureButton(
         }
     }
 }
+
 @Composable
 private fun PlusControlsOverlay(
     plusMode: String,
@@ -415,6 +425,7 @@ private fun PlusControlsOverlay(
         }
     }
 }
+
 @Composable
 private fun PlusModeSelector(
     selectedMode: String,
@@ -450,6 +461,7 @@ private fun PlusModeSelector(
         }
     }
 }
+
 @Composable
 private fun AdvancedPlusControls() {
     var aiStrength by remember { mutableFloatStateOf(75f) }
@@ -523,6 +535,7 @@ private fun AdvancedPlusControls() {
         }
     }
 }
+
 @Composable
 private fun PlusQuickActions(
     onCapture: () -> Unit = {},
@@ -583,6 +596,7 @@ private fun PlusQuickActions(
         }
     }
 }
+
 private fun getPlusModes(): List<String> {
     return listOf("enhanced", "precision", "speed", "balanced")
 }

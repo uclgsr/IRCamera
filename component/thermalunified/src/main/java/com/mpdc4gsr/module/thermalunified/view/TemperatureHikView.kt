@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.view
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -19,11 +20,13 @@ import com.energy.iruvc.utils.CommonParams.IRPROCSRCFMTType
 import com.energy.iruvc.utils.Line
 import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper.Companion.correct
 import com.mpdc4gsr.libunified.ir.utils.TempUtils
+
 class TemperatureHikView : TemperatureBaseView {
     @Volatile
     private var tempInfo = TempInfo()
     private var libIRTemp = LibIRTemp()
     private var calculateThread: CalculateThread? = null
+
     @Volatile
     var rotateAngle: Int = 270
         set(value) {
@@ -31,6 +34,7 @@ class TemperatureHikView : TemperatureBaseView {
             val isPortrait = value == 90 || value == 270
             setImageSize(if (isPortrait) 192 else 256, if (isPortrait) 256 else 192)
         }
+
     @Volatile
     var onTempChangeListener: ((min: Float, max: Float) -> Unit)? = null
     var onTrendChangeListener: ((tempList: List<Float>) -> Unit)? = null
@@ -51,6 +55,7 @@ class TemperatureHikView : TemperatureBaseView {
             wantAddPoint = point
         }
     }
+
     fun addSourceLine(line: Line) {
         if (xScale > 0 && yScale > 0) {
             val start = Point((line.start.x * xScale).toInt(), (line.start.y * yScale).toInt())
@@ -66,6 +71,7 @@ class TemperatureHikView : TemperatureBaseView {
             wantAddLine = line
         }
     }
+
     fun addSourceRect(rect: Rect) {
         if (xScale > 0 && yScale > 0) {
             val left = (rect.left * xScale).toInt()
@@ -83,6 +89,7 @@ class TemperatureHikView : TemperatureBaseView {
             wantAddRect = rect
         }
     }
+
     private val imageRes = LibIRProcess.ImageRes_t()
     private var beforeTime: Long = 0
     private val sourceTempArray = ByteArray(256 * 192 * 2)
@@ -99,18 +106,21 @@ class TemperatureHikView : TemperatureBaseView {
                     IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
                     rotateTempArray
                 )
+
                 180 -> LibIRProcess.rotate180(
                     sourceTempArray,
                     imageRes,
                     IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
                     rotateTempArray
                 )
+
                 270 -> LibIRProcess.rotateRight90(
                     sourceTempArray,
                     imageRes,
                     IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
                     rotateTempArray
                 )
+
                 else -> System.arraycopy(
                     sourceTempArray,
                     0,
@@ -125,6 +135,7 @@ class TemperatureHikView : TemperatureBaseView {
             }
         }
     }
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
@@ -133,6 +144,7 @@ class TemperatureHikView : TemperatureBaseView {
         defStyleAttr,
         0
     )
+
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -151,6 +163,7 @@ class TemperatureHikView : TemperatureBaseView {
             context.lifecycle.addObserver(MyLifecycleObserver())
         }
     }
+
     override fun setImageSize(
         imageWidth: Int,
         imageHeight: Int,
@@ -158,6 +171,7 @@ class TemperatureHikView : TemperatureBaseView {
         super.setImageSize(imageWidth, imageHeight)
         libIRTemp = LibIRTemp(imageWidth, imageHeight)
     }
+
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
@@ -176,6 +190,7 @@ class TemperatureHikView : TemperatureBaseView {
             wantAddRect = null
         }
     }
+
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         if (isShowFull || pointList.isNotEmpty() || lineList.isNotEmpty() || rectList.isNotEmpty()) {
@@ -253,6 +268,7 @@ class TemperatureHikView : TemperatureBaseView {
             drawTrendText(canvas, it)
         }
     }
+
     private inner class CalculateThread : HandlerThread("Calculate Thread") {
         private val mainHandler = Handler(Looper.getMainLooper())
         private var currentHandler: Handler? = null
@@ -261,13 +277,16 @@ class TemperatureHikView : TemperatureBaseView {
             val looper: Looper = getLooper() ?: return
             currentHandler = MyHandler(looper)
         }
+
         override fun quit(): Boolean {
             mainHandler.removeCallbacksAndMessages(null)
             return super.quit()
         }
+
         fun calculateTemp() {
             currentHandler?.sendEmptyMessage(0)
         }
+
         private inner class MyHandler(looper: Looper) : Handler(looper) {
             override fun handleMessage(msg: Message) {
                 val fullResult = libIRTemp.getTemperatureOfRect(Rect(0, 0, imageWidth, imageHeight))
@@ -353,16 +372,19 @@ class TemperatureHikView : TemperatureBaseView {
             }
         }
     }
+
     private inner class MyLifecycleObserver : DefaultLifecycleObserver {
         override fun onStart(owner: LifecycleOwner) {
             calculateThread = CalculateThread()
             calculateThread?.start()
         }
+
         override fun onStop(owner: LifecycleOwner) {
             calculateThread?.quit()
             calculateThread = null
         }
     }
+
     data class TempInfo(
         val center: TemperatureSampleResult? = null,
         val full: TemperatureSampleResult? = null,

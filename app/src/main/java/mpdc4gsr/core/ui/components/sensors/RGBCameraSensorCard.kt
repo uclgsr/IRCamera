@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.components.sensors
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.model.CameraAction
 import mpdc4gsr.core.ui.model.SensorState
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RGBCameraSensorCard(
@@ -141,6 +143,7 @@ fun RGBCameraSensorCard(
                             Text("Connect")
                         }
                     }
+
                     SensorState.Connected -> {
                         Button(
                             onClick = {
@@ -161,6 +164,7 @@ fun RGBCameraSensorCard(
                             Text("Settings")
                         }
                     }
+
                     SensorState.Streaming -> {
                         Button(
                             onClick = { onAction(CameraAction.StopPreview) },
@@ -188,6 +192,7 @@ fun RGBCameraSensorCard(
                             )
                         }
                     }
+
                     SensorState.Error -> {
                         Button(
                             onClick = { onAction(CameraAction.Connect) },
@@ -196,12 +201,14 @@ fun RGBCameraSensorCard(
                             Text("Retry")
                         }
                     }
+
                     else -> {}
                 }
             }
         }
     }
 }
+
 @Composable
 private fun RGBPreviewVisualization(
     resolution: String,
@@ -359,6 +366,7 @@ private fun RGBPreviewVisualization(
         }
     }
 }
+
 @Composable
 private fun MetricItem(
     label: String,
@@ -383,6 +391,7 @@ private fun MetricItem(
         )
     }
 }
+
 @Composable
 private fun getStatusColor(state: SensorState): Color {
     return when (state) {
@@ -394,6 +403,7 @@ private fun getStatusColor(state: SensorState): Color {
         SensorState.Simulation -> Color.Magenta
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun RGBCameraSensorCardPreview() {

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
+
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,10 +24,12 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalFragmentViewModel
+
 class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>() {
     override fun createViewModel(): IRThermalFragmentViewModel {
         return viewModels<IRThermalFragmentViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRThermalFragmentViewModel) {
@@ -92,6 +95,7 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
             }
         }
     }
+
     @Composable
     private fun ConnectionStatusCard(
         connectionStatus: IRThermalFragmentViewModel.ConnectionStatus,
@@ -175,6 +179,7 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
             }
         }
     }
+
     @Composable
     private fun ThermalEntryCard(
         onOpenThermal: () -> Unit,
@@ -235,6 +240,7 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
             }
         }
     }
+
     @Composable
     private fun ConnectionGuideCard(
         connectionStatus: IRThermalFragmentViewModel.ConnectionStatus,
@@ -306,6 +312,7 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
             }
         }
     }
+
     @Composable
     private fun AdvancedFeaturesSection(
         onNavigateToFeature: (String) -> Unit
@@ -339,6 +346,7 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
             }
         }
     }
+
     @Composable
     private fun FeatureCard(
         title: String,
@@ -378,6 +386,7 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
             }
         }
     }
+
     private fun getStatusText(status: IRThermalFragmentViewModel.ConnectionStatus): String = when (status) {
         IRThermalFragmentViewModel.ConnectionStatus.CONNECTED -> "Device connected and ready"
         IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> "Connecting to device..."

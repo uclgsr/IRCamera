@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -20,10 +21,12 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+
 class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>() {
     override fun createViewModel(): ReportPickImgViewModel {
         return ReportPickImgViewModel()
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ReportPickImgViewModel) {
@@ -48,10 +51,10 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                             }
                         },
                         actions = {
-                            IconButton(onClick = {  }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
                             }
-                            IconButton(onClick = {  }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter", tint = Color.White)
                             }
                         },
@@ -68,6 +71,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
             }
         }
     }
+
     @Composable
     private fun ReportPickImgContent(
         viewModel: ReportPickImgViewModel,
@@ -245,6 +249,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
             }
         }
     }
+
     @Composable
     private fun ThermalImageCard(
         image: ReportThermalImage,
@@ -342,6 +347,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
         }
     }
 }
+
 private data class ReportThermalImage(
     val id: Int,
     val name: String,
@@ -350,4 +356,5 @@ private data class ReportThermalImage(
     val isRecommended: Boolean,
     val timestamp: String
 )
+
 class ReportPickImgViewModel : BaseViewModel()

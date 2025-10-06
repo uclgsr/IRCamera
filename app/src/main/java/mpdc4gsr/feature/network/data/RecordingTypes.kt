@@ -9,6 +9,7 @@ enum class RecordingState {
     STOPPING,
     ERROR
 }
+
 enum class TriggerSource {
     LOCAL_UI,
     LOCAL_NOTIFICATION,
@@ -16,6 +17,7 @@ enum class TriggerSource {
     AUTOMATIC,
     CRASH_RECOVERY
 }
+
 enum class SessionState {
     IDLE,
     STARTING,
@@ -29,6 +31,7 @@ enum class SessionState {
     FAILED,
     CANCELLED
 }
+
 // Session orchestration data classes
 data class SessionManifest(
     val sessionId: String,
@@ -43,6 +46,7 @@ data class SessionManifest(
     val fileReferences: Map<String, String> = emptyMap(),
     val sessionState: SessionState = SessionState.COMPLETED
 )
+
 data class SessionEvent(
     val eventType: String,
     val timestampMs: Long,
@@ -52,6 +56,7 @@ data class SessionEvent(
     val success: Boolean = true,
     val errorMessage: String? = null
 )
+
 data class SensorActivityInfo(
     val sensorName: String,
     val wasActive: Boolean,
@@ -61,6 +66,7 @@ data class SensorActivityInfo(
     val dropouts: List<DropoutEvent> = emptyList(),
     val reconnections: List<ReconnectionEvent> = emptyList()
 )
+
 data class SensorHealthInfo(
     val sensorId: String,
     val isHealthy: Boolean,
@@ -70,6 +76,7 @@ data class SensorHealthInfo(
     val consecutiveFailures: Int = 0,
     val lastError: String? = null
 )
+
 data class DropoutEvent(
     val sensorId: String,
     val startTime: Long,
@@ -79,6 +86,7 @@ data class DropoutEvent(
     val durationMs: Long = if (endTime != null) endTime - startTime else 0L,
     val recoverable: Boolean = true
 )
+
 data class ReconnectionEvent(
     val sensorId: String,
     val timestamp: Long,
@@ -89,6 +97,7 @@ data class ReconnectionEvent(
     val delayMs: Long = 0L,
     val errorMessage: String? = null
 )
+
 // Recording status and statistics
 data class RecordingStats(
     val sessionId: String,
@@ -101,6 +110,7 @@ data class RecordingStats(
     val warnings: Int,
     val qualityScore: Double = 1.0
 )
+
 data class SensorStatusInfo(
     val sensorId: String,
     val isActive: Boolean,
@@ -109,12 +119,14 @@ data class SensorStatusInfo(
     val samplesRecorded: Long,
     val errorCount: Int
 )
+
 // Legacy compatibility for ComprehensiveRecordingController
 data class SensorHealthSummary(
     val sensorId: String,
     val name: String,
     val isHealthy: Boolean
 )
+
 data class SessionInfoData(
     val sessionId: String,
     val startTime: Long,
@@ -127,10 +139,12 @@ data class SessionInfoData(
     val errors: List<String>?,
     val finalizedAt: Long
 )
+
 data class ValidationResult(
     val isValid: Boolean,
     val failureReason: String = ""
 )
+
 data class RecordingError(
     val timestamp: Long,
     val sensorId: String?,
@@ -138,6 +152,7 @@ data class RecordingError(
     val message: String,
     val isRecoverable: Boolean = true
 )
+
 // Hardware validation types
 data class ValidationReport(
     val timestamp: Long,
@@ -148,17 +163,20 @@ data class ValidationReport(
     val errorLogs: List<String>,
     val summary: ValidationSummary
 )
+
 data class HardwareValidationResult(
     val sensorId: String,
     val isOperational: Boolean,
     val capabilities: List<SensorCapability>,
     val issues: List<String>
 )
+
 data class SensorCapability(
     val name: String,
     val isSupported: Boolean,
     val details: String
 )
+
 data class ValidationSummary(
     val totalSensors: Int,
     val operationalSensors: Int,
@@ -166,6 +184,7 @@ data class ValidationSummary(
     val overallHealthScore: Double,
     val readyForRecording: Boolean
 )
+
 data class DeviceInfo(
     val deviceId: String,
     val model: String,
@@ -173,6 +192,7 @@ data class DeviceInfo(
     val availableStorageGB: Double,
     val batteryLevel: Int
 )
+
 // Simple recording status for basic status reporting
 data class SimpleRecordingStatus(
     val isRecording: Boolean,

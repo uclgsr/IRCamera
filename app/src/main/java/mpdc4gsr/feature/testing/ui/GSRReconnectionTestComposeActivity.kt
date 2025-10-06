@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.os.Bundle
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -33,15 +34,18 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
         private const val DISCONNECT_SIMULATION_TIME = 20 // Simulate disconnect at 20s
         private const val RECONNECT_SIMULATION_TIME = 40 // Simulate reconnect at 40s
     }
+
     enum class ConnectionState {
         CONNECTED, DISCONNECTED, RECONNECTING, ERROR
     }
+
     data class ConnectionEvent(
         val eventType: String,
         val timestamp: String,
         val connectionState: ConnectionState,
         val details: String
     )
+
     private var gsrRecorder: GSRSensorRecorder? = null
     private var recordingController: RecordingController? = null
     private var testStartTime: Long = 0
@@ -56,6 +60,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun GSRReconnectionTestScreen() {
@@ -123,6 +128,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                                 details = "GSR device connection lost"
                             )
                         }
+
                         DISCONNECT_SIMULATION_TIME + 5 -> {
                             connectionState = ConnectionState.RECONNECTING
                             connectionEvents = connectionEvents + ConnectionEvent(
@@ -135,6 +141,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                                 details = "Attempting automatic reconnection"
                             )
                         }
+
                         RECONNECT_SIMULATION_TIME -> {
                             connectionState = ConnectionState.CONNECTED
                             reconnectTime = System.currentTimeMillis()
@@ -373,6 +380,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     fun ConnectionEventItem(event: ConnectionEvent) {
         Row(
@@ -407,6 +415,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
             )
         }
     }
+
     private fun getConnectionIcon(state: ConnectionState): androidx.compose.ui.graphics.vector.ImageVector {
         return when (state) {
             ConnectionState.CONNECTED -> Icons.Default.Link
@@ -415,6 +424,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
             ConnectionState.ERROR -> Icons.Default.Error
         }
     }
+
     @Composable
     private fun getConnectionColor(state: ConnectionState): androidx.compose.ui.graphics.Color {
         return when (state) {
@@ -424,6 +434,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
             ConnectionState.ERROR -> MaterialTheme.colorScheme.error
         }
     }
+
     private fun initializeComponents() {
         try {
             val controller = RecordingController(this, this)
@@ -434,6 +445,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Failed to initialize components: ${e.message}")
         }
     }
+
     private suspend fun simulateDisconnect() {
         AppLogger.d(TAG, "Simulating GSR device disconnect")
         try {
@@ -443,6 +455,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Failed to simulate disconnect: ${e.message}")
         }
     }
+
     private suspend fun simulateReconnect() {
         AppLogger.d(TAG, "Simulating GSR device reconnect")
         try {
@@ -452,6 +465,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Failed to simulate reconnect: ${e.message}")
         }
     }
+
     private suspend fun analyzeDataGaps() {
         AppLogger.d(TAG, "Analyzing data gaps")
         try {
@@ -461,6 +475,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Data gap analysis failed: ${e.message}")
         }
     }
+
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {
@@ -473,6 +488,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private suspend fun testConnectionStability() {
         AppLogger.d(TAG, "Testing connection stability")
         try {
@@ -482,6 +498,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Connection stability test failed: ${e.message}")
         }
     }
+
     private suspend fun testDisconnectDetection() {
         AppLogger.d(TAG, "Testing disconnect detection")
         try {
@@ -491,6 +508,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Disconnect detection test failed: ${e.message}")
         }
     }
+
     private suspend fun testReconnectionLogic() {
         AppLogger.d(TAG, "Testing reconnection logic")
         try {
@@ -500,6 +518,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Reconnection logic test failed: ${e.message}")
         }
     }
+
     private suspend fun testUIIndicators() {
         AppLogger.d(TAG, "Testing UI indicators")
         try {
@@ -509,6 +528,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "UI indicators test failed: ${e.message}")
         }
     }
+
     private suspend fun testRecoveryValidation() {
         AppLogger.d(TAG, "Testing recovery validation")
         try {

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.bean
+
 import android.os.Parcel
 import android.os.Parcelable
 import com.mpdc4gsr.libunified.app.config.FileConfig
@@ -8,6 +9,7 @@ import com.mpdc4gsr.libunified.app.tools.VideoTools
 import kotlinx.parcelize.Parcelize
 import java.io.File
 import java.util.*
+
 @Parcelize
 open class GalleryBean(
     val id: Int,
@@ -27,6 +29,7 @@ open class GalleryBean(
         timeMillis = TimeTools.updateDateTime(file),
         hasDownload = true,
     )
+
     constructor(isVideo: Boolean, fileBean: TS004FileBean) : this(
         id = fileBean.id,
         path = "http://192.168.40.1:8080/DCIM/${fileBean.name}",
@@ -37,6 +40,7 @@ open class GalleryBean(
         hasDownload = File(FileConfig.ts004GalleryDir, fileBean.name).exists(),
     )
 }
+
 class GalleryTitle(timeMillis: Long) : GalleryBean(
     id = 0,
     path = "",
@@ -50,6 +54,7 @@ class GalleryTitle(timeMillis: Long) : GalleryBean(
         override fun createFromParcel(parcel: Parcel): GalleryTitle {
             return GalleryTitle(parcel.readLong())
         }
+
         override fun newArray(size: Int): Array<GalleryTitle?> {
             return arrayOfNulls(size)
         }

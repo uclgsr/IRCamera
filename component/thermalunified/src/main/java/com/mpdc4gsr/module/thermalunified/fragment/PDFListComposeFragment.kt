@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
+
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,13 +27,16 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.PDFListViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+
 // Type alias for cleaner code
 typealias PDFItem = PDFListViewModel.PDFItem
+
 class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
     private var isTC007 by mutableStateOf(false)
     override fun createViewModel(): PDFListViewModel {
         return viewModels<PDFListViewModel>().value
     }
+
     companion object {
         fun newInstance(isTC007: Boolean): PDFListComposeFragment {
             return PDFListComposeFragment().apply {
@@ -40,6 +44,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: PDFListViewModel) {
@@ -80,11 +85,13 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                         isLoading -> {
                             LoadingState()
                         }
+
                         pdfItems.isEmpty() -> {
                             EmptyPDFState(
                                 onRefresh = { viewModel.refreshPDFList() }
                             )
                         }
+
                         else -> {
                             PDFList(
                                 viewModel = viewModel,
@@ -111,6 +118,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
+
     @Composable
     private fun PDFListHeader(
         isTC007: Boolean,
@@ -161,6 +169,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
+
     @Composable
     private fun StatusChip(
         text: String,
@@ -180,6 +189,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             )
         }
     }
+
     @Composable
     private fun PDFSelectionToolbar(
         selectedCount: Int,
@@ -231,6 +241,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
+
     @Composable
     private fun LoadingState() {
         Box(
@@ -250,6 +261,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
+
     @Composable
     private fun EmptyPDFState(
         onRefresh: () -> Unit
@@ -287,6 +299,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
+
     @Composable
     private fun PDFList(
         viewModel: PDFListViewModel,
@@ -312,6 +325,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
+
     @Composable
     private fun PDFListItem(
         viewModel: PDFListViewModel,
@@ -428,6 +442,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             }
         }
     }
+
     // Helper functions
     private fun openPDF(context: android.content.Context, path: String) {
         try {
@@ -447,6 +462,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             // Handle error - maybe show a toast or use internal PDF viewer
         }
     }
+
     private fun shareSelectedPDFs(context: android.content.Context, selectedPaths: List<String>) {
         try {
             val uris = selectedPaths.map { path ->
@@ -472,10 +488,12 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
             // Handle error
         }
     }
+
     private fun exportSelectedPDFs(context: android.content.Context, selectedPaths: List<String>) {
         // Implementation for exporting PDFs to external storage
         // This would typically involve copying files to a user-accessible location
     }
+
     private fun formatFileSize(bytes: Long): String {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()

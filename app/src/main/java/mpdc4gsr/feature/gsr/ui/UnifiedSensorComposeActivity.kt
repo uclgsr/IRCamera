@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import androidx.activity.viewModels
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
@@ -31,6 +32,7 @@ import mpdc4gsr.core.data.model.SessionType
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 enum class UnifiedSensorType(
     val displayName: String,
     val icon: ImageVector,
@@ -42,6 +44,7 @@ enum class UnifiedSensorType(
     AUDIO("Audio", Icons.Default.Audiotrack, "Audio recording"),
     NETWORK("Network", Icons.Default.NetworkCheck, "Network connectivity and data transmission")
 }
+
 data class SensorStatus(
     val type: UnifiedSensorType,
     val isConnected: Boolean = false,
@@ -50,6 +53,7 @@ data class SensorStatus(
     val dataRate: String = "0 KB/s",
     val lastUpdate: String = "Never"
 )
+
 data class UnifiedSessionInfo(
     val name: String = "New Session",
     val type: SessionType = SessionType.RESEARCH,
@@ -58,6 +62,7 @@ data class UnifiedSessionInfo(
     val duration: String = "00:00:00",
     val dataSize: String = "0 MB"
 )
+
 class UnifiedSensorViewModel : AppBaseViewModel() {
     private val _sensorStatuses = mutableStateOf(
         UnifiedSensorType.values().map { type ->
@@ -97,6 +102,7 @@ class UnifiedSensorViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun disconnectSensor(sensorType: UnifiedSensorType) {
         _sensorStatuses.value = _sensorStatuses.value.map { status ->
             if (status.type == sensorType) {
@@ -110,6 +116,7 @@ class UnifiedSensorViewModel : AppBaseViewModel() {
             } else status
         }
     }
+
     fun startRecording() {
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             _isRecording.value = true
@@ -137,6 +144,7 @@ class UnifiedSensorViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun stopRecording() {
         _isRecording.value = false
         _sessionInfo.value = _sessionInfo.value.copy(status = SessionStatus.IDLE)
@@ -144,13 +152,16 @@ class UnifiedSensorViewModel : AppBaseViewModel() {
             status.copy(isRecording = false)
         }
     }
+
     fun updateSessionName(name: String) {
         _sessionInfo.value = _sessionInfo.value.copy(name = name)
     }
 }
+
 class UnifiedSensorComposeActivity : BaseComposeActivity<UnifiedSensorViewModel>() {
     override fun createViewModel(): UnifiedSensorViewModel =
         viewModels<UnifiedSensorViewModel>().value
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: UnifiedSensorViewModel) {
@@ -357,6 +368,7 @@ class UnifiedSensorComposeActivity : BaseComposeActivity<UnifiedSensorViewModel>
         }
     }
 }
+
 @Composable
 private fun SensorStatusCard(
     sensorStatus: SensorStatus,

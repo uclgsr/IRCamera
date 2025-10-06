@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.report.view
+
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
@@ -12,6 +13,7 @@ import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportIRBean
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportTempBean
 import com.mpdc4gsr.libunified.R as LibR
+
 class ReportIRShowView : LinearLayout {
     companion object {
         private const val TYPE_FULL = 0
@@ -19,6 +21,7 @@ class ReportIRShowView : LinearLayout {
         private const val TYPE_LINE = 2
         private const val TYPE_RECT = 3
     }
+
     private lateinit var clImage: View
     private lateinit var clFull: View
     private lateinit var clPoint1: View
@@ -36,6 +39,7 @@ class ReportIRShowView : LinearLayout {
     private lateinit var clRect3: View
     private lateinit var clRect4: View
     private lateinit var clRect5: View
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
@@ -47,6 +51,7 @@ class ReportIRShowView : LinearLayout {
         initViews()
         initTitleTexts()
     }
+
     private fun initViews() {
         clImage = findViewById(R.id.cl_image)
         clFull = findViewById(R.id.cl_full)
@@ -66,6 +71,7 @@ class ReportIRShowView : LinearLayout {
         clRect4 = findViewById(R.id.cl_rect4)
         clRect5 = findViewById(R.id.cl_rect5)
     }
+
     private fun initTitleTexts() {
         initTitleText(clFull, TYPE_FULL, 0)
         initTitleText(clPoint1, TYPE_POINT, 0)
@@ -84,6 +90,7 @@ class ReportIRShowView : LinearLayout {
         initTitleText(clRect4, TYPE_RECT, 3)
         initTitleText(clRect5, TYPE_RECT, 4)
     }
+
     private fun initTitleText(
         itemRoot: View,
         type: Int,
@@ -114,6 +121,7 @@ class ReportIRShowView : LinearLayout {
                 else -> "R${index + 1} " + context.getString(LibR.string.album_report_comment)
             }
     }
+
     fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
         result.add(clImage)
@@ -135,6 +143,7 @@ class ReportIRShowView : LinearLayout {
         getItemChild(clRect5, result)
         return result
     }
+
     private fun getItemChild(
         itemRoot: View,
         resultList: ArrayList<View>,
@@ -154,6 +163,7 @@ class ReportIRShowView : LinearLayout {
             }
         }
     }
+
     fun setImageDrawable(drawable: Drawable?) {
         val ivImage = findViewById<View>(R.id.iv_image)
         val isLand = (drawable?.intrinsicWidth ?: 0) > (drawable?.intrinsicHeight ?: 0)
@@ -166,6 +176,7 @@ class ReportIRShowView : LinearLayout {
         ivImage.layoutParams = layoutParams
         (ivImage as? android.widget.ImageView)?.setImageDrawable(drawable)
     }
+
     fun refreshData(
         isFirst: Boolean,
         isLast: Boolean,
@@ -268,6 +279,7 @@ class ReportIRShowView : LinearLayout {
         }
         hideLastLine(isLast, clFull, reportIRBean.full_graph_data, TYPE_FULL)
     }
+
     private fun hideLastLine(
         isLast: Boolean,
         itemRoot: View,
@@ -288,6 +300,7 @@ class ReportIRShowView : LinearLayout {
             viewLineRange.isVisible = !isLast
         }
     }
+
     private fun refreshItem(
         itemRoot: View,
         tempBean: ReportTempBean?,

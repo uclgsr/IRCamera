@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.presentation
+
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,18 +17,22 @@ class GSRSensorViewModel(
     context: Context
 ) : AppBaseViewModel() {
     private val application: Context = context.applicationContext
+
     companion object {
         // Reuse SimpleDateFormat instance for better performance
         private val ISO_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
             timeZone = TimeZone.getTimeZone("UTC")
         }
         private const val MAX_HISTORY_SIZE = 100
+
         // Reconnection configuration (can be made user-configurable)
         const val DEFAULT_MAX_RECONNECTION_ATTEMPTS = 3
         const val DEFAULT_BASE_RECONNECTION_DELAY_MS = 2000L
+
         // Device scanning delay
         private const val DEVICE_SCAN_DELAY_MS = 3000L
     }
+
     data class GSRSensorState(
         val isConnected: Boolean = false,
         val isRecording: Boolean = false,
@@ -42,17 +47,20 @@ class GSRSensorViewModel(
         val reconnectionAttempt: Int = 0,
         val maxReconnectionAttempts: Int = 0
     )
+
     data class ReconnectionConfig(
         val maxAttempts: Int = DEFAULT_MAX_RECONNECTION_ATTEMPTS,
         val baseDelayMs: Long = DEFAULT_BASE_RECONNECTION_DELAY_MS,
         val enabled: Boolean = true
     )
+
     private val _sensorState = MutableStateFlow(GSRSensorState())
     val sensorState: StateFlow<GSRSensorState> = _sensorState.asStateFlow()
     private var reconnectionConfig = ReconnectionConfig()
     private var lastConnectedDeviceAddress: String? = null
     private var wasRecordingBeforeDisconnect = false
     private var settingsRepository: GSRSettingsRepository? = null
+
     // Expose recorder for lifecycle management from UI layer
     var gsrRecorder: UnifiedGSRRecorder? = null
         private set
@@ -374,6 +382,7 @@ class GSRSensorViewModel(
             }
         }
     }
+
     override fun onCleared() {
         super.onCleared()
         viewModelScope.launch {

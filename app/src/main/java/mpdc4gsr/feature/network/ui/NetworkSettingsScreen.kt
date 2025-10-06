@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -142,6 +143,7 @@ fun NetworkSettingsScreen(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun NetworkSettingsScreenPreview() {

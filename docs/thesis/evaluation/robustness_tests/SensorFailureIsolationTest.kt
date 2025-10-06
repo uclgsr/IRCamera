@@ -1,4 +1,5 @@
 package thesis_evaluation.robustness_tests
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,13 +26,16 @@ import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+
 class SensorFailureIsolationTest : ComponentActivity() {
     companion object {
         private const val TAG = "SensorFailureIsolationTest"
     }
+
     enum class SensorType {
         GSR, CAMERA, THERMAL, AUDIO
     }
+
     data class SensorState(
         val type: SensorType,
         val status: String,
@@ -39,6 +43,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
         val errorMessage: String? = null,
         val sampleCount: Int = 0
     )
+
     data class IsolationEvent(
         val timestamp: Long,
         val eventType: String,
@@ -46,6 +51,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
         val description: String,
         val otherSensorsStatus: String
     )
+
     data class TestMetrics(
         val testStartTime: Long = 0,
         val failureInducedTime: Long = 0,
@@ -56,6 +62,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
         val thermalFramesBeforeFailure: Int = 0,
         val thermalFramesAfterFailure: Int = 0
     )
+
     private var gsrRecorder: GSRSensorRecorder? = null
     private var thermalRecorder: ThermalCameraRecorder? = null
     private var recordingController: RecordingController? = null
@@ -69,6 +76,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SensorFailureIsolationTestScreen() {
@@ -289,6 +297,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun SensorStatusRow(sensor: SensorState) {
         Row(
@@ -341,6 +350,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun MetricRow(label: String, value: String) {
         Row(
@@ -357,6 +367,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
             )
         }
     }
+
     @Composable
     private fun EventLogItem(event: IsolationEvent) {
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
@@ -386,6 +397,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
             )
         }
     }
+
     private fun initializeTestComponents() {
         try {
             recordingController = RecordingController(this, this)
@@ -399,6 +411,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
             AppLogger.e(TAG, "Failed to initialize test components", e)
         }
     }
+
     private suspend fun runTest(
         failureSensor: SensorType,
         onStateChange: (String) -> Unit,
@@ -539,6 +552,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
         onStateChange("Test complete - failure isolation verified")
         onComplete()
     }
+
     private fun logEvent(
         eventType: String,
         affectedSensor: SensorType,
@@ -558,6 +572,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
             "${formatTimestamp(event.timestamp)} | $eventType | Affected: ${affectedSensor.name} | Others: $otherSensorsStatus | $description\n"
         )
     }
+
     private fun formatTimestamp(timestamp: Long): String {
         return SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault()).format(Date(timestamp))
     }

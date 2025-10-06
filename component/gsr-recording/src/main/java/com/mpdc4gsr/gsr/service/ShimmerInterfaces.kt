@@ -1,5 +1,7 @@
 package com.mpdc4gsr.gsr.service
+
 import android.util.Log
+
 interface ShimmerDataCluster {
     fun getGSRRawValue(): Double
     fun getGSRCalibratedValue(): Double
@@ -7,6 +9,7 @@ interface ShimmerDataCluster {
     fun getTimestamp(): Long
     fun hasValidGSRData(): Boolean
 }
+
 interface ShimmerDeviceInterface {
     fun connect(address: String, name: String): Boolean
     fun startStreaming(): Boolean
@@ -16,9 +19,11 @@ interface ShimmerDeviceInterface {
     fun setDataCallback(callback: (ShimmerDataCluster) -> Unit)
     fun setConnectionCallback(callback: (String) -> Unit)
 }
+
 interface ShimmerDeviceFactory {
     fun createShimmerDevice(): ShimmerDeviceInterface
 }
+
 object ShimmerDeviceFactoryResolver {
     private const val TAG = "ShimmerFactoryResolver"
     fun createFactory(context: android.content.Context): ShimmerDeviceFactory {
@@ -36,9 +41,11 @@ object ShimmerDeviceFactoryResolver {
         }
     }
 }
+
 class MockShimmerDeviceFactory : ShimmerDeviceFactory {
     override fun createShimmerDevice(): ShimmerDeviceInterface = MockShimmerDevice()
 }
+
 class MockShimmerDevice : ShimmerDeviceInterface {
     private var connected = false
     private var streaming = false
@@ -50,30 +57,36 @@ class MockShimmerDevice : ShimmerDeviceInterface {
         connectionCallback?.invoke("CONNECTED")
         return true
     }
+
     override fun startStreaming(): Boolean {
         Log.d("MockShimmerDevice", "Mock start streaming")
         streaming = true
         return true
     }
+
     override fun stopStreaming(): Boolean {
         Log.d("MockShimmerDevice", "Mock stop streaming")
         streaming = false
         return true
     }
+
     override fun disconnect(): Boolean {
         Log.d("MockShimmerDevice", "Mock disconnect")
         connected = false
         connectionCallback?.invoke("DISCONNECTED")
         return true
     }
+
     override fun isConnected(): Boolean = connected
     override fun setDataCallback(callback: (ShimmerDataCluster) -> Unit) {
         this.dataCallback = callback
     }
+
     override fun setConnectionCallback(callback: (String) -> Unit) {
         this.connectionCallback = callback
     }
 }
+
 class MockShimmerDataCluster : ShimmerDataCluster {
     override fun getGSRRawValue(): Double = 2048.0
     override fun getGSRCalibratedValue(): Double = 1.5

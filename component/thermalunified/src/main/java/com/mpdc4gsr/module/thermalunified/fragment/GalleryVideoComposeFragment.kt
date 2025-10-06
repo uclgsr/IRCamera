@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
+
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -31,10 +32,12 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+
 class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
     override fun createViewModel(): GalleryViewModel {
         return viewModels<GalleryViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: GalleryViewModel) {
@@ -70,11 +73,13 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         isLoading -> {
                             LoadingState()
                         }
+
                         videoItems.isEmpty() -> {
                             EmptyVideoGalleryState(
                                 onRefresh = { viewModel.refreshVideoGallery() }
                             )
                         }
+
                         else -> {
                             VideoGrid(
                                 videos = videoItems,
@@ -100,6 +105,7 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
+
     @Composable
     private fun VideoSelectionToolbar(
         selectedCount: Int,
@@ -151,6 +157,7 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
+
     @Composable
     private fun LoadingState() {
         Box(
@@ -170,6 +177,7 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
+
     @Composable
     private fun EmptyVideoGalleryState(
         onRefresh: () -> Unit
@@ -207,6 +215,7 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
+
     @Composable
     private fun VideoGrid(
         videos: List<GalleryViewModel.MediaItem>,
@@ -234,6 +243,7 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
+
     @Composable
     private fun VideoGridItem(
         item: GalleryViewModel.MediaItem,
@@ -380,6 +390,7 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
+
     // Helper functions
     private fun playVideo(context: android.content.Context, path: String) {
         try {
@@ -398,6 +409,7 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             // Handle error - maybe show a toast or use internal video player
         }
     }
+
     private fun shareSelectedVideos(context: android.content.Context, selectedPaths: List<String>) {
         try {
             val uris = selectedPaths.map { path ->
@@ -423,10 +435,12 @@ class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             // Handle error
         }
     }
+
     private fun exportSelectedVideos(context: android.content.Context, selectedPaths: List<String>) {
         // Implementation for exporting videos to external storage
         // This would typically involve copying files to a user-accessible location
     }
+
     private fun formatFileSize(bytes: Long): String {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.thermal.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -95,6 +96,7 @@ fun ThermalGalleryScreen(
         }
     }
 }
+
 @Composable
 private fun ThermalImagesContent(viewMode: ViewMode) {
     val sampleImages = remember { generateSampleThermalImages() }
@@ -120,6 +122,7 @@ private fun ThermalImagesContent(viewMode: ViewMode) {
         }
     }
 }
+
 @Composable
 private fun ThermalVideosContent(viewMode: ViewMode) {
     val sampleVideos = remember { generateSampleThermalVideos() }
@@ -145,6 +148,7 @@ private fun ThermalVideosContent(viewMode: ViewMode) {
         }
     }
 }
+
 @Composable
 private fun ThermalReportsContent(viewMode: ViewMode) {
     val sampleReports = remember { generateSampleThermalReports() }
@@ -157,6 +161,7 @@ private fun ThermalReportsContent(viewMode: ViewMode) {
         }
     }
 }
+
 @Composable
 private fun ThermalImageGridItem(item: ThermalMediaItem) {
     Card(
@@ -230,6 +235,7 @@ private fun ThermalImageGridItem(item: ThermalMediaItem) {
         }
     }
 }
+
 @Composable
 private fun ThermalImageListItem(item: ThermalMediaItem) {
     Card(
@@ -292,6 +298,7 @@ private fun ThermalImageListItem(item: ThermalMediaItem) {
         }
     }
 }
+
 @Composable
 private fun ThermalVideoGridItem(item: ThermalMediaItem) {
     Card(
@@ -366,6 +373,7 @@ private fun ThermalVideoGridItem(item: ThermalMediaItem) {
         }
     }
 }
+
 @Composable
 private fun ThermalVideoListItem(item: ThermalMediaItem) {
     Card(
@@ -429,6 +437,7 @@ private fun ThermalVideoListItem(item: ThermalMediaItem) {
         }
     }
 }
+
 @Composable
 private fun ThermalReportItem(item: ThermalMediaItem) {
     Card(
@@ -496,9 +505,11 @@ private fun ThermalReportItem(item: ThermalMediaItem) {
         }
     }
 }
+
 enum class ViewMode {
     GRID, LIST
 }
+
 data class ThermalMediaItem(
     val name: String,
     val date: String,
@@ -506,6 +517,7 @@ data class ThermalMediaItem(
     val temperature: String,
     val duration: String? = null
 )
+
 private fun generateSampleThermalImages(): List<ThermalMediaItem> {
     return listOf(
         ThermalMediaItem("IMG_001.thermal", "2024-01-15", "2.3 MB", "45.2°C"),
@@ -516,6 +528,7 @@ private fun generateSampleThermalImages(): List<ThermalMediaItem> {
         ThermalMediaItem("IMG_006.thermal", "2024-01-13", "2.0 MB", "36.9°C")
     )
 }
+
 private fun generateSampleThermalVideos(): List<ThermalMediaItem> {
     return listOf(
         ThermalMediaItem("VID_001.mp4", "2024-01-15", "15.2 MB", "48.5°C", "2:34"),
@@ -524,6 +537,7 @@ private fun generateSampleThermalVideos(): List<ThermalMediaItem> {
         ThermalMediaItem("VID_004.mp4", "2024-01-12", "12.3 MB", "44.2°C", "2:01")
     )
 }
+
 private fun generateSampleThermalReports(): List<ThermalMediaItem> {
     return listOf(
         ThermalMediaItem("Thermal_Report_001.pdf", "2024-01-15", "1.2 MB", ""),
@@ -532,6 +546,7 @@ private fun generateSampleThermalReports(): List<ThermalMediaItem> {
         ThermalMediaItem("Analysis_Summary.pdf", "2024-01-12", "2.1 MB", "")
     )
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun ThermalGalleryScreenPreview() {

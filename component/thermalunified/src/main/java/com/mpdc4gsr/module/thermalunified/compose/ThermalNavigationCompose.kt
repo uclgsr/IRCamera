@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThermalNavigationDrawer(
@@ -129,6 +131,7 @@ fun ThermalNavigationDrawer(
         }
     }
 }
+
 @Composable
 fun ThermalActionMenu(
     isExpanded: Boolean,
@@ -192,6 +195,7 @@ fun ThermalActionMenu(
         }
     }
 }
+
 @Composable
 fun ThermalBottomNavigation(
     destinations: List<ThermalDestination>,
@@ -223,6 +227,7 @@ fun ThermalBottomNavigation(
         }
     }
 }
+
 @Composable
 fun ThermalMenuGrid(
     menuItems: List<ThermalMenuItem>,
@@ -254,6 +259,7 @@ fun ThermalMenuGrid(
         }
     }
 }
+
 @Composable
 private fun ThermalMenuCard(
     item: ThermalMenuItem,
@@ -305,6 +311,7 @@ private fun ThermalMenuCard(
         }
     }
 }
+
 @Composable
 fun ThermalStatusBar(
     status: ThermalStatus,
@@ -362,6 +369,7 @@ fun ThermalStatusBar(
         }
     }
 }
+
 // Data classes and enums
 enum class ThermalDestination(
     val title: String,
@@ -375,6 +383,7 @@ enum class ThermalDestination(
     REPORTS("Reports", Icons.Default.Description),
     SETTINGS("Settings", Icons.Default.Settings)
 }
+
 enum class ThermalAction(
     val title: String,
     val icon: ImageVector,
@@ -385,6 +394,7 @@ enum class ThermalAction(
     MEASURE("Measure", Icons.Default.Straighten, Color(0xFF2196F3)),
     ANALYZE("Analyze", Icons.Default.Analytics, Color(0xFF9C27B0))
 }
+
 data class ThermalMenuItem(
     val title: String,
     val subtitle: String = "",
@@ -393,14 +403,17 @@ data class ThermalMenuItem(
     val iconColor: Color = Color.Unspecified,
     val textColor: Color = Color.Unspecified
 )
+
 data class ThermalStatus(
     val message: String,
     val level: ThermalStatusLevel,
     val currentTemp: Float? = null
 )
+
 enum class ThermalStatusLevel {
     NORMAL, WARNING, CRITICAL
 }
+
 @Composable
 fun ThermalNavigationPreview() {
     val sampleMenuItems = listOf(

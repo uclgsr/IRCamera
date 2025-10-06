@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.ui
+
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.background
@@ -74,11 +75,13 @@ fun PolicyScreen(
         }
     }
 }
+
 enum class PolicyType {
     PRIVACY,
     TERMS,
     ABOUT
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun PolicyScreenPreview() {

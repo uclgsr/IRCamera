@@ -1,4 +1,5 @@
 package com.mpdc4gsr.gsr.network
+
 import android.content.Context
 import android.util.Log
 import com.mpdc4gsr.gsr.model.GSRSample
@@ -7,6 +8,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
+
 class DataStreamingService(
     private val context: Context,
     private val networkClient: NetworkClient,
@@ -19,6 +21,7 @@ class DataStreamingService(
         private const val RETRY_ATTEMPTS = 3
         private const val RETRY_DELAY_MS = 500L
     }
+
     private val streamingJob = SupervisorJob()
     private val streamingScope = CoroutineScope(Dispatchers.IO + streamingJob)
     private val gsrQueue = ConcurrentLinkedQueue<GSRSample>()
@@ -28,6 +31,7 @@ class DataStreamingService(
     private val isConnected = AtomicBoolean(false)
     private var batchingJob: Job? = null
     private var currentSessionId: String? = null
+
     data class ThermalSample(
         val timestamp: Long,
         val frameIndex: Long,
@@ -36,6 +40,7 @@ class DataStreamingService(
         val y: Int,
         val sessionId: String,
     )
+
     data class VideoMetadata(
         val timestamp: Long,
         val frameIndex: Long,
@@ -43,6 +48,7 @@ class DataStreamingService(
         val sessionId: String,
         val cameraType: String,
     )
+
     interface StreamingEventListener {
         fun onStreamingStarted(sessionId: String)
         fun onStreamingStopped(sessionId: String)
@@ -50,16 +56,19 @@ class DataStreamingService(
             batchSize: Int,
             dataType: String,
         )
+
         fun onStreamingError(error: String)
         fun onQueueFull(
             dataType: String,
             droppedSamples: Int,
         )
     }
+
     private var eventListener: StreamingEventListener? = null
     fun setEventListener(listener: StreamingEventListener?) {
         eventListener = listener
     }
+
     suspend fun startStreaming(sessionId: String): Boolean =
         withContext(Dispatchers.IO) {
             if (isStreaming.get()) {
@@ -91,6 +100,7 @@ class DataStreamingService(
                 false
             }
         }
+
     suspend fun stopStreaming(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isStreaming.get()) {
@@ -115,6 +125,7 @@ class DataStreamingService(
                 false
             }
         }
+
     fun queueGSRSample(sample: GSRSample) {
         if (!isStreaming.get()) return
         if (gsrQueue.size >= MAX_QUEUE_SIZE) {
@@ -125,6 +136,7 @@ class DataStreamingService(
         }
         gsrQueue.offer(sample)
     }
+
     fun queueThermalSample(sample: ThermalSample) {
         if (!isStreaming.get()) return
         if (thermalQueue.size >= MAX_QUEUE_SIZE) {
@@ -135,6 +147,7 @@ class DataStreamingService(
         }
         thermalQueue.offer(sample)
     }
+
     fun queueVideoMetadata(metadata: VideoMetadata) {
         if (!isStreaming.get()) return
         if (videoMetadataQueue.size >= MAX_QUEUE_SIZE) {
@@ -145,6 +158,7 @@ class DataStreamingService(
         }
         videoMetadataQueue.offer(metadata)
     }
+
     private fun startBatchingProcess() {
         batchingJob =
             streamingScope.launch {
@@ -170,6 +184,7 @@ class DataStreamingService(
                 }
             }
     }
+
     private suspend fun sendGSRBatch() {
         val batch = mutableListOf<GSRSample>()
         repeat(minOf(BATCH_SIZE, gsrQueue.size)) {
@@ -182,6 +197,7 @@ class DataStreamingService(
             }
         }
     }
+
     private suspend fun sendThermalBatch() {
         val batch = mutableListOf<ThermalSample>()
         repeat(minOf(BATCH_SIZE, thermalQueue.size)) {
@@ -194,6 +210,7 @@ class DataStreamingService(
             }
         }
     }
+
     private suspend fun sendVideoMetadataBatch() {
         val batch = mutableListOf<VideoMetadata>()
         repeat(minOf(BATCH_SIZE, videoMetadataQueue.size)) {
@@ -206,6 +223,7 @@ class DataStreamingService(
             }
         }
     }
+
     private suspend fun sendBatchWithRetry(
         batchData: JSONObject,
         dataType: String,
@@ -231,6 +249,7 @@ class DataStreamingService(
         eventListener?.onStreamingError("Failed to send $dataType batch")
         return false
     }
+
     private fun createGSRBatchJson(samples: List<GSRSample>): JSONObject {
         val samplesArray = JSONArray()
         samples.forEach { sample ->
@@ -253,6 +272,7 @@ class DataStreamingService(
             put("synchronized_timestamp", networkClient.getSynchronizedTimestamp())
         }
     }
+
     private fun createThermalBatchJson(samples: List<ThermalSample>): JSONObject {
         val samplesArray = JSONArray()
         samples.forEach { sample ->
@@ -274,6 +294,7 @@ class DataStreamingService(
             put("synchronized_timestamp", networkClient.getSynchronizedTimestamp())
         }
     }
+
     private fun createVideoMetadataBatchJson(samples: List<VideoMetadata>): JSONObject {
         val samplesArray = JSONArray()
         samples.forEach { sample ->
@@ -294,6 +315,7 @@ class DataStreamingService(
             put("synchronized_timestamp", networkClient.getSynchronizedTimestamp())
         }
     }
+
     private suspend fun sendRemainingData() {
         while (gsrQueue.isNotEmpty()) {
             sendGSRBatch()
@@ -305,11 +327,13 @@ class DataStreamingService(
             sendVideoMetadataBatch()
         }
     }
+
     private fun clearQueues() {
         gsrQueue.clear()
         thermalQueue.clear()
         videoMetadataQueue.clear()
     }
+
     fun getQueueSizes(): Map<String, Int> {
         return mapOf(
             "gsr" to gsrQueue.size,
@@ -317,6 +341,7 @@ class DataStreamingService(
             "video_metadata" to videoMetadataQueue.size,
         )
     }
+
     fun isStreamingActive(): Boolean = isStreaming.get()
     suspend fun cleanup() {
         stopStreaming()

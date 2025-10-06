@@ -1,14 +1,17 @@
 package com.mpdc4gsr.module.user.viewmodel
+
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.utils.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+
 class ElectronicManualViewModel : BaseViewModel() {
     data class ManualOption(
         val name: String,
         val isTS001: Boolean
     )
+
     private val _title = MutableStateFlow("")
     val title: StateFlow<String> = _title.asStateFlow()
     private val _options = MutableStateFlow<List<ManualOption>>(emptyList())
@@ -32,5 +35,6 @@ class ElectronicManualViewModel : BaseViewModel() {
             }
         }
     }
+
     fun isBookMode(): Boolean = _productType.value == Constants.SETTING_BOOK
 }

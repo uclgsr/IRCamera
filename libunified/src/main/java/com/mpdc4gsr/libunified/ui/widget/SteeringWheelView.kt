@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.ui.widget
+
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -7,6 +8,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.mpdc4gsr.libunified.R
+
 class SteeringWheelView : LinearLayout, OnClickListener {
     private lateinit var tvConfirm: TextView
     private lateinit var steeringWheelStartBtn: ImageView
@@ -26,15 +28,18 @@ class SteeringWheelView : LinearLayout, OnClickListener {
             }
             requestLayout()
         }
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         initView()
     }
+
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
         defStyleAttr
     )
+
     private fun initView() {
         inflate(context, R.layout.ui_steering_wheel_view, this)
         tvConfirm = findViewById(R.id.tv_confirm)
@@ -52,6 +57,7 @@ class SteeringWheelView : LinearLayout, OnClickListener {
             rotation = 0f
         }
     }
+
     override fun onClick(v: View?) {
         when (v) {
             steeringWheelStartBtn -> {
@@ -61,9 +67,11 @@ class SteeringWheelView : LinearLayout, OnClickListener {
                 }
                 listener?.invoke(-1, moveX)
             }
+
             steeringWheelCenterBtn -> {
                 listener?.invoke(0, moveX)
             }
+
             steeringWheelEndBtn -> {
                 moveX -= 10
                 if (moveX < -20) {

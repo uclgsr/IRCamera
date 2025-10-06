@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,10 +23,12 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
+
 class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
     override fun createViewModel(): ThermalFragmentViewModel {
         return viewModels<ThermalFragmentViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalFragmentViewModel) {
@@ -78,6 +81,7 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
             }
         }
     }
+
     @Composable
     private fun StatusBar(
         connectionStatus: String,
@@ -137,6 +141,7 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
             }
         }
     }
+
     @Composable
     private fun ThermalCameraView(
         modifier: Modifier = Modifier,
@@ -153,6 +158,7 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
                 .background(Color.Black)
         )
     }
+
     @Composable
     private fun TemperatureOverlays(
         temperatureData: ThermalFragmentViewModel.TemperatureData?,
@@ -191,6 +197,7 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
             }
         }
     }
+
     @Composable
     private fun TemperatureCard(
         label: String,
@@ -231,6 +238,7 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
             }
         }
     }
+
     @Composable
     private fun ControlPanel(
         isRecording: Boolean,

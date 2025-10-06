@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import android.content.Intent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -25,10 +26,12 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+
 class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -185,6 +188,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
+
 @Composable
 private fun GalleryControls(
     sortBy: String,
@@ -263,6 +267,7 @@ private fun GalleryControls(
         }
     }
 }
+
 @Composable
 private fun GalleryGrid(
     items: List<GalleryItem>,
@@ -285,6 +290,7 @@ private fun GalleryGrid(
         }
     }
 }
+
 @Composable
 private fun GalleryGridItem(
     item: GalleryItem,
@@ -364,6 +370,7 @@ private fun GalleryGridItem(
         }
     }
 }
+
 @Composable
 private fun GalleryList(
     items: List<GalleryItem>,
@@ -385,6 +392,7 @@ private fun GalleryList(
         }
     }
 }
+
 @Composable
 private fun GalleryListItem(
     item: GalleryItem,
@@ -467,6 +475,7 @@ private fun GalleryListItem(
         }
     }
 }
+
 // Data classes
 data class GalleryItem(
     val id: String,
@@ -476,6 +485,7 @@ data class GalleryItem(
     val maxTemp: Float,
     val isVideo: Boolean
 )
+
 @Composable
 private fun GallerySearchDialog(
     onDismiss: () -> Unit,
@@ -517,6 +527,7 @@ private fun GallerySearchDialog(
         containerColor = Color(0xFF21262D)
     )
 }
+
 @Composable
 private fun GalleryItemOptionsDialog(
     item: GalleryItem,
@@ -577,6 +588,7 @@ private fun GalleryItemOptionsDialog(
         containerColor = Color(0xFF21262D)
     )
 }
+
 private fun getGalleryItems(): List<GalleryItem> {
     return listOf(
         GalleryItem("1", "thermal_001.jpg", "2024-01-15 14:30", "2.1 MB", 45.2f, false),

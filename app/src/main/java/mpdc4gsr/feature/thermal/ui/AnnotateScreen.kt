@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.thermal.ui
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -180,6 +181,7 @@ private fun DrawScope.drawAnnotation(
                 style = Stroke(width = 2.dp.toPx())
             )
         }
+
         is ThermalAnnotation.Line -> {
             val start = Offset(
                 annotation.start.x * imageWidth,
@@ -199,6 +201,7 @@ private fun DrawScope.drawAnnotation(
             drawCircle(color = Color.Green, radius = 6f, center = start)
             drawCircle(color = Color.Green, radius = 6f, center = end)
         }
+
         is ThermalAnnotation.Rectangle -> {
             val topLeft = Offset(
                 annotation.topLeft.x * imageWidth,
@@ -334,6 +337,7 @@ private fun MeasurementSummary(
                             )
                         }
                     }
+
                     is ThermalAnnotation.Line -> {
                         Column {
                             Text("Line Measurement", color = Color.Green, fontSize = 14.sp)
@@ -354,6 +358,7 @@ private fun MeasurementSummary(
                             }
                         }
                     }
+
                     is ThermalAnnotation.Rectangle -> {
                         Column {
                             Text("Area Measurement", color = Color.Cyan, fontSize = 14.sp)
@@ -428,12 +433,14 @@ sealed class ThermalAnnotation {
         val position: Offset,
         val temperature: Float
     ) : ThermalAnnotation()
+
     data class Line(
         val start: Offset,
         val end: Offset,
         val maxTemp: Float,
         val minTemp: Float
     ) : ThermalAnnotation()
+
     data class Rectangle(
         val topLeft: Offset,
         val bottomRight: Offset,
@@ -449,6 +456,7 @@ data class ReportInfo(
     val location: String,
     val timestamp: String
 )
+
 @Preview(showBackground = true)
 @Composable
 private fun AnnotateScreenPreview() {

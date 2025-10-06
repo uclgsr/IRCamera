@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.ui
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -18,6 +19,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
     override fun createViewModel(): SettingsViewModel {
         return viewModels<SettingsViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: SettingsViewModel) {
@@ -350,6 +352,7 @@ class SettingsViewModel : AppBaseViewModel() {
     // Settings-specific state management
     private val _settingsState = mutableStateOf(SettingsState())
     val settingsState: State<SettingsState> = _settingsState
+
     data class SettingsState(
         val darkModeEnabled: Boolean = false,
         val networkDiscoveryEnabled: Boolean = true,

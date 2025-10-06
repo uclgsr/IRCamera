@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -28,10 +29,12 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+
 class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     companion object {
         const val KEY_PATH = "video_path"
     }
+
     private var videoPath = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         if (intent.hasExtra(KEY_PATH)) {
@@ -39,9 +42,11 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
         super.onCreate(savedInstanceState)
     }
+
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -158,6 +163,7 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
+
 @Composable
 private fun ThermalVideoPlayer(
     videoPath: String,
@@ -178,6 +184,7 @@ private fun ThermalVideoPlayer(
         modifier = modifier
     )
 }
+
 @Composable
 private fun VideoControlsOverlay(
     isPlaying: Boolean,
@@ -366,6 +373,7 @@ private fun VideoControlsOverlay(
         }
     }
 }
+
 @Composable
 private fun ThermalAnalysisOverlay(
     pointAnalysisEnabled: Boolean,
@@ -417,6 +425,7 @@ private fun ThermalAnalysisOverlay(
         }
     }
 }
+
 @Composable
 private fun AnalysisItem(
     label: String,
@@ -441,6 +450,7 @@ private fun AnalysisItem(
         )
     }
 }
+
 private fun formatTime(timeMs: Long): String {
     val seconds = (timeMs / 1000) % 60
     val minutes = (timeMs / (1000 * 60)) % 60

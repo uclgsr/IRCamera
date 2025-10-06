@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.video
+
 import android.graphics.Bitmap
 import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.app.config.FileConfig
@@ -14,6 +15,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+
 class VideoRecordMedia(
     private var cameraView: CameraView,
     private var temperatureView: TemperatureView,
@@ -24,6 +26,7 @@ class VideoRecordMedia(
     private var isRunning = false
     var width = 480
     var height = 640
+
     init {
         encoder.setFrameDelay(25)
         width = 480
@@ -32,6 +35,7 @@ class VideoRecordMedia(
             height -= 1
         }
     }
+
     override fun startRecord() {
         val downloadDir = FileConfig.lineGalleryDir
         val exportedFile = File(downloadDir, "${Date().time}.mp4")
@@ -50,8 +54,10 @@ class VideoRecordMedia(
             }
         }
     }
+
     override fun startRecord(fileDir: String) {
     }
+
     override fun stopRecord() {
         if (isRunning) {
             encoder.stopEncode()
@@ -59,8 +65,10 @@ class VideoRecordMedia(
         }
         isRunning = false
     }
+
     override fun updateAudioState(audioRecord: Boolean) {
     }
+
     private fun createBitmapFromView(): Bitmap {
         var cameraViewBitmap = cameraView.bitmap
         if (temperatureView.temperatureRegionMode != TemperatureView.REGION_MODE_CLEAN) {

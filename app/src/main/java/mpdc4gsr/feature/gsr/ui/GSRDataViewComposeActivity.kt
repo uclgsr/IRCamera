@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -39,9 +40,11 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
             context.startActivity(intent)
         }
     }
+
     override fun createViewModel(): GSRDataViewViewModel {
         return viewModels<GSRDataViewViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: GSRDataViewViewModel) {
@@ -117,6 +120,7 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GSRDataViewContent(
@@ -171,6 +175,7 @@ private fun GSRDataViewContent(
         }
     }
 }
+
 @Composable
 private fun DataInfoCard(
     filePath: String,
@@ -212,6 +217,7 @@ private fun DataInfoCard(
         }
     }
 }
+
 @Composable
 private fun DataInfoRow(
     label: String,
@@ -236,6 +242,7 @@ private fun DataInfoRow(
         }
     }
 }
+
 @Composable
 private fun RawDataView() {
     val localContext = androidx.compose.ui.platform.LocalContext.current
@@ -343,6 +350,7 @@ private fun RawDataView() {
         }
     }
 }
+
 @Composable
 private fun GSRDataRow(dataRow: GSRDataRowModel) {
     Card(
@@ -395,6 +403,7 @@ private fun GSRDataRow(dataRow: GSRDataRowModel) {
         }
     }
 }
+
 @Composable
 private fun ProcessedDataView() {
     Column(
@@ -409,6 +418,7 @@ private fun ProcessedDataView() {
         ProcessingResultsCard()
     }
 }
+
 @Composable
 private fun ProcessingOptionsCard() {
     val localContext = androidx.compose.ui.platform.LocalContext.current
@@ -480,6 +490,7 @@ private fun ProcessingOptionsCard() {
         }
     }
 }
+
 @Composable
 private fun ProcessedDataPreviewCard() {
     Card(
@@ -512,6 +523,7 @@ private fun ProcessedDataPreviewCard() {
         }
     }
 }
+
 @Composable
 private fun ProcessingMetric(
     label: String,
@@ -533,6 +545,7 @@ private fun ProcessingMetric(
         )
     }
 }
+
 @Composable
 private fun ProcessingResultsCard() {
     val localContext = androidx.compose.ui.platform.LocalContext.current
@@ -588,6 +601,7 @@ private fun ProcessingResultsCard() {
         }
     }
 }
+
 @Composable
 private fun StatisticsView() {
     Column(
@@ -602,6 +616,7 @@ private fun StatisticsView() {
         TimeSeriesAnalysisCard()
     }
 }
+
 @Composable
 private fun DescriptiveStatisticsCard() {
     Card(
@@ -645,6 +660,7 @@ private fun DescriptiveStatisticsCard() {
         }
     }
 }
+
 @Composable
 private fun DistributionAnalysisCard() {
     Card(
@@ -678,6 +694,7 @@ private fun DistributionAnalysisCard() {
         }
     }
 }
+
 @Composable
 private fun TimeSeriesAnalysisCard() {
     Card(
@@ -713,6 +730,7 @@ private fun TimeSeriesAnalysisCard() {
         }
     }
 }
+
 @Composable
 private fun QualityAssessmentView() {
     Column(
@@ -727,6 +745,7 @@ private fun QualityAssessmentView() {
         DataIntegrityCard()
     }
 }
+
 @Composable
 private fun OverallQualityCard() {
     Card(
@@ -776,6 +795,7 @@ private fun OverallQualityCard() {
         }
     }
 }
+
 @Composable
 private fun SignalQualityCard() {
     Card(
@@ -799,6 +819,7 @@ private fun SignalQualityCard() {
         }
     }
 }
+
 @Composable
 private fun QualityMetric(
     name: String,
@@ -838,6 +859,7 @@ private fun QualityMetric(
         )
     }
 }
+
 @Composable
 private fun DataIntegrityCard() {
     Card(
@@ -861,6 +883,7 @@ private fun DataIntegrityCard() {
         }
     }
 }
+
 @Composable
 private fun IntegrityCheck(
     name: String,
@@ -894,6 +917,7 @@ private fun IntegrityCheck(
         )
     }
 }
+
 @Composable
 private fun EventsView() {
     Column(
@@ -933,6 +957,7 @@ private fun EventsView() {
         }
     }
 }
+
 @Composable
 private fun EventItem(event: GSREventModel) {
     Card(
@@ -983,6 +1008,7 @@ private fun EventItem(event: GSREventModel) {
         }
     }
 }
+
 // Data Models
 data class GSRDataRowModel(
     val timestamp: String,
@@ -990,12 +1016,14 @@ data class GSRDataRowModel(
     val quality: Float,
     val flags: String
 )
+
 data class GSREventModel(
     val timestamp: String,
     val type: String,
     val description: String,
     val value: String
 )
+
 // Helper functions
 private fun generateSampleGSRDataRows(count: Int): List<GSRDataRowModel> {
     return (0 until count).map { i ->
@@ -1009,6 +1037,7 @@ private fun generateSampleGSRDataRows(count: Int): List<GSRDataRowModel> {
         )
     }
 }
+
 private fun generateSampleEvents(): List<GSREventModel> {
     return listOf(
         GSREventModel("00:02:15.123", "Peak", "High conductance detected", "18.4 μS"),
@@ -1019,6 +1048,7 @@ private fun generateSampleEvents(): List<GSREventModel> {
         GSREventModel("00:18:12.890", "Peak", "Emotional response detected", "17.2 μS")
     )
 }
+
 @Composable
 private fun StatisticItem(label: String, value: String) {
     Column(
@@ -1037,6 +1067,7 @@ private fun StatisticItem(label: String, value: String) {
         )
     }
 }
+
 class GSRDataViewViewModel : AppBaseViewModel() {
     // ViewModel implementation for managing data loading, processing, filtering, etc.
     // Future implementation would include:

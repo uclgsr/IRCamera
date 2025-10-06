@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.user.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,10 +23,12 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.viewmodel.MoreViewModel
+
 class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
     override fun createViewModel(): MoreViewModel {
         return viewModels<MoreViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: MoreViewModel) {
@@ -69,12 +72,14 @@ class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
             }
         }
     }
+
     private fun handleSettingsClick(action: MoreViewModel.SettingsAction) {
         when (action) {
             MoreViewModel.SettingsAction.DEVICE_INFORMATION -> {
                 // Navigate to device details - for now just finish, would need router setup
                 finish()
             }
+
             MoreViewModel.SettingsAction.TISR -> {
                 // Navigate to TISR Compose Activity (would need to be registered in router)
                 // For now, use the original activity
@@ -82,30 +87,36 @@ class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
                     .build(RouterConfig.TISR)
                     .navigation(this)
             }
+
             MoreViewModel.SettingsAction.STORAGE_SPACE -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.STORAGE_SPACE)
                     .navigation(this)
             }
+
             MoreViewModel.SettingsAction.AUTO_SAVE -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.AUTO_SAVE)
                     .navigation(this)
             }
+
             MoreViewModel.SettingsAction.UNIT -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.UNIT)
                     .navigation(this)
             }
+
             MoreViewModel.SettingsAction.VERSION -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.VERSION)
                     .navigation(this)
             }
+
             MoreViewModel.SettingsAction.DISCONNECT -> {
                 // Handle disconnect logic
                 finish()
             }
+
             MoreViewModel.SettingsAction.RESET -> {
                 // Handle reset confirmation dialog
                 // Original implementation had complex reset logic
@@ -113,6 +124,7 @@ class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
         }
     }
 }
+
 @Composable
 private fun SettingsMenuItem(
     item: MoreViewModel.SettingsItem,
@@ -185,6 +197,7 @@ private fun SettingsMenuItem(
         }
     }
 }
+
 @Composable
 private fun getIconForAction(action: MoreViewModel.SettingsAction): ImageVector {
     return when (action) {

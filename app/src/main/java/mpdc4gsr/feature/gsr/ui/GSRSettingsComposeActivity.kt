@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -14,9 +15,11 @@ class GSRSettingsComposeActivity : BaseComposeActivity<GSRSettingsViewModel>() {
             context.startActivity(Intent(context, GSRSettingsComposeActivity::class.java))
         }
     }
+
     override fun createViewModel(): GSRSettingsViewModel {
         return viewModels<GSRSettingsViewModel>().value
     }
+
     @Composable
     override fun Content(viewModel: GSRSettingsViewModel) {
         LibUnifiedTheme {

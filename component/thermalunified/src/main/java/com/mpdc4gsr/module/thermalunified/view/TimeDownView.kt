@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.view
+
 import android.content.Context
 import android.graphics.Canvas
 import android.os.Handler
@@ -13,6 +14,7 @@ import android.view.animation.ScaleAnimation
 import androidx.appcompat.widget.AppCompatTextView
 import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import java.util.*
+
 public class TimeDownView : AppCompatTextView {
     private var timer: Timer? = null
     private var downTimerTask: DownTimerTask? = null
@@ -32,6 +34,7 @@ public class TimeDownView : AppCompatTextView {
         gravity = Gravity.CENTER
         textSize = 30f.spToPx(context)
     }
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(
@@ -41,9 +44,11 @@ public class TimeDownView : AppCompatTextView {
     ) {
         init()
     }
+
     fun downSecond(seconds: Int) {
         downSecond(seconds, true)
     }
+
     fun downSecond(
         seconds: Int,
         openAnimation: Boolean,
@@ -59,6 +64,7 @@ public class TimeDownView : AppCompatTextView {
             downTime(seconds, 1, 0, 1000, openAnimation)
         }
     }
+
     fun downTime(
         downCount: Int,
         lastDown: Int,
@@ -77,6 +83,7 @@ public class TimeDownView : AppCompatTextView {
         downTimerTask = DownTimerTask()
         timer?.schedule(downTimerTask, delayMills, intervalMills)
     }
+
     override fun setVisibility(visibility: Int) {
         super.setVisibility(visibility)
         if (GONE == visibility) {
@@ -85,12 +92,14 @@ public class TimeDownView : AppCompatTextView {
             timer = null
         }
     }
+
     override fun onDraw(canvas: Canvas) {
         if (drawTextFlag == DRAW_TEXT_NO) {
             return
         }
         super.onDraw(canvas)
     }
+
     fun cancel() {
         animationSet?.cancel()
         downTimerTask?.cancel()
@@ -102,6 +111,7 @@ public class TimeDownView : AppCompatTextView {
         timer = null
         isRunning = false
     }
+
     private inner class DownTimerTask : TimerTask() {
         override fun run() {
             if (downCount >= lastDown - 1) {
@@ -111,18 +121,22 @@ public class TimeDownView : AppCompatTextView {
             }
         }
     }
+
     interface DownTimeWatcher {
         fun onTime(num: Int)
         fun onLastTime(num: Int)
         fun onLastTimeFinish(num: Int)
     }
+
     var onTimeListener: ((time: Int) -> Unit)? = null
     var onFinishListener: (() -> Unit)? = null
     var downTimeWatcher: DownTimeWatcher? = null
     fun setOnTimeDownListener(downTimeWatcher: DownTimeWatcher?) {
         this.downTimeWatcher = downTimeWatcher
     }
+
     private var downHandler: DownHandler? = null
+
     private inner class DownHandler : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
@@ -158,6 +172,7 @@ public class TimeDownView : AppCompatTextView {
             }
         }
     }
+
     private val DRAW_TEXT_YES = 1
     private val DRAW_TEXT_NO = 0
     private var drawTextFlag = DRAW_TEXT_YES
@@ -167,19 +182,23 @@ public class TimeDownView : AppCompatTextView {
     fun setAfterDownNoDimiss() {
         afterDownDimissFlag = AFTER_LAST_TIME_NODIMISS
     }
+
     fun setAferDownDimiss() {
         afterDownDimissFlag = AFTER_LAST_TIME_DIMISS
     }
+
     var startDefaultAnimFlag = true
     fun closeDefaultAnimate() {
         animationSet?.reset()
         startDefaultAnimFlag = false
     }
+
     private fun startDefaultAnimate() {
         if (startDefaultAnimFlag && isAttachedToWindow) {
             animation?.start()
         }
     }
+
     private fun initDefaultAnimate() {
         if (animationSet == null) {
             animationSet = AnimationSet(true)

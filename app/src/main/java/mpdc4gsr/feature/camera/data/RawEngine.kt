@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.data
+
 import android.content.Context
 import android.graphics.ImageFormat
 import android.hardware.camera2.CameraCharacteristics
@@ -15,17 +16,20 @@ import android.view.Surface
 import java.io.File
 import java.io.FileOutputStream
 import java.util.concurrent.ConcurrentHashMap
+
 class RawEngine(private val context: Context) {
     companion object {
         private const val TAG = "RawEngine"
         private const val RAW_CAPTURE_TIMEOUT_MS = 5000L
     }
+
     private var rawImageReader: ImageReader? = null
     private var isCapturing = false
     private var rawOutputDirectory: File? = null
     private var sessionId: String = ""
     private var rawCaptureCount = 0
     private val pendingCaptureResults = ConcurrentHashMap<Long, TotalCaptureResult>()
+
     // Camera characteristics for DNG creation
     private var cameraCharacteristics: CameraCharacteristics? = null
     private var enableStage3Processing = true // Enable Samsung Stage3/Level3 by default
@@ -62,16 +66,19 @@ class RawEngine(private val context: Context) {
             onError?.invoke("RAW setup failed: ${e.message}")
         }
     }
+
     fun getSurface(): Surface? = rawImageReader?.surface
     fun startCapture() {
         isCapturing = true
         rawCaptureCount = 0
         AppLogger.i(TAG, "RAW capture started")
     }
+
     fun stopCapture() {
         isCapturing = false
         AppLogger.i(TAG, "RAW capture stopped, captured $rawCaptureCount images")
     }
+
     fun storeCaptureResult(result: TotalCaptureResult) {
         if (isCapturing) {
             val timestamp = result.get(CaptureResult.SENSOR_TIMESTAMP) ?: System.nanoTime()
@@ -82,6 +89,7 @@ class RawEngine(private val context: Context) {
             }
         }
     }
+
     fun isCapturing(): Boolean = isCapturing
     fun getCaptureCount(): Int = rawCaptureCount
 
@@ -99,6 +107,7 @@ class RawEngine(private val context: Context) {
         pendingCaptureResults.clear()
         AppLogger.i(TAG, "RAW engine released")
     }
+
     private val rawImageAvailableListener =
         ImageReader.OnImageAvailableListener { reader ->
             if (!isCapturing) return@OnImageAvailableListener
@@ -119,6 +128,7 @@ class RawEngine(private val context: Context) {
                 image.close()
             }
         }
+
     private fun saveRawImageAsDng(
         image: Image,
         captureResult: TotalCaptureResult,
@@ -181,6 +191,7 @@ class RawEngine(private val context: Context) {
             }
         }
     }
+
     private fun saveRawImageAsRaw(image: Image) {
         val outputDir = rawOutputDirectory ?: return
         val timestamp = System.currentTimeMillis()

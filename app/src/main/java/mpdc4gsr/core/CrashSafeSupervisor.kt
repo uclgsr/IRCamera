@@ -1,4 +1,5 @@
 package mpdc4gsr.core
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -7,9 +8,11 @@ import kotlinx.coroutines.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+
 class CrashSafeSupervisor private constructor(private val context: Context) {
     companion object {
         private const val TAG = "CrashSafeSupervisor"
+
         @Volatile
         private var instance: CrashSafeSupervisor? = null
         fun getInstance(context: Context): CrashSafeSupervisor {
@@ -18,6 +21,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             }
         }
     }
+
     private val isRunning = AtomicBoolean(false)
     private val supervisorScope =
         CoroutineScope(
@@ -35,6 +39,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
     private val restartDelayMs = 5000L
     private val healthCheckIntervalMs = 30000L
     private val logger = StructuredLogger.getInstance(context)
+
     data class ManagedJob(
         val id: String,
         val name: String,
@@ -44,24 +49,29 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         val critical: Boolean = false,
         val startTime: Long = System.currentTimeMillis(),
     )
+
     interface HealthCheck {
         suspend fun checkHealth(): HealthStatus
     }
+
     data class HealthStatus(
         val isHealthy: Boolean,
         val message: String,
         val details: Map<String, Any> = emptyMap(),
     )
+
     class StopToken {
         private val stopped = AtomicBoolean(false)
         fun isStopRequested(): Boolean = stopped.get()
         fun requestStop() {
             stopped.set(true)
         }
+
         fun reset() {
             stopped.set(false)
         }
     }
+
     fun initialize() {
         if (isRunning.getAndSet(true)) {
             AppLogger.i(TAG, "Crash-safe supervisor already running")
@@ -76,6 +86,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         startHealthMonitoring()
         AppLogger.i(TAG, "Crash-safe supervisor initialized")
     }
+
     fun registerJob(
         id: String,
         name: String,
@@ -132,6 +143,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         )
         return job
     }
+
     fun unregisterJob(id: String) {
         val managedJob = managedJobs.remove(id)
         healthChecks.remove(id)
@@ -149,6 +161,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             )
         }
     }
+
     fun stopJob(id: String) {
         val managedJob = managedJobs[id]
         if (managedJob != null) {
@@ -161,6 +174,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             )
         }
     }
+
     fun getJobStatuses(): Map<String, JobStatus> {
         return managedJobs.mapValues { (_, managedJob) ->
             JobStatus(
@@ -177,6 +191,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             )
         }
     }
+
     data class JobStatus(
         val id: String,
         val name: String,
@@ -189,6 +204,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         val startTime: Long,
         val upTimeSeconds: Long,
     )
+
     private fun handleSupervisorException(exception: Throwable) {
         logger.log(
             StructuredLogger.LogLevel.ERROR,
@@ -198,6 +214,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         )
         AppLogger.e(TAG, "Supervisor exception", exception)
     }
+
     private fun handleCriticalJobFailure(
         id: String,
         name: String,
@@ -215,6 +232,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         )
         AppLogger.e(TAG, "Critical job failure: $name ($id)", exception)
     }
+
     private fun scheduleJobRestart(
         id: String,
         name: String,
@@ -287,6 +305,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             }
         }
     }
+
     private fun startHealthMonitoring() {
         supervisorScope.launch {
             while (isRunning.get()) {
@@ -304,6 +323,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             }
         }
     }
+
     private suspend fun performHealthChecks() {
         healthChecks.forEach { (jobId, healthCheck) ->
             try {
@@ -334,6 +354,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             }
         }
     }
+
     private fun handleUnhealthyJob(
         jobId: String,
         status: HealthStatus,
@@ -353,6 +374,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             managedJob.job.cancel("Health check failed: ${status.message}")
         }
     }
+
     fun shutdown() {
         if (!isRunning.getAndSet(false)) {
             return

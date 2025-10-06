@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.thermal.ui
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -52,6 +53,7 @@ import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel
 import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModelFactory
+
 private const val CAMERA_RESCAN_DELAY_MS = 500L
 
 @Composable
@@ -559,6 +561,7 @@ private fun AdvancedControlsPanel(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun ThermalMonitorScreenPreview() {

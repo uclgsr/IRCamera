@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -59,6 +60,7 @@ fun DualModeCameraScreen(
         }
     }
 }
+
 @Composable
 private fun DualModeCameraContent(
     modifier: Modifier = Modifier
@@ -104,12 +106,14 @@ private fun DualModeCameraContent(
         CalibrationToolsCard()
     }
 }
+
 enum class CameraMode {
     RGB_ONLY,
     THERMAL_ONLY,
     DUAL_VIEW,
     OVERLAY
 }
+
 @Composable
 private fun CameraModeSelector(
     selectedMode: CameraMode,
@@ -169,6 +173,7 @@ private fun CameraModeSelector(
         }
     }
 }
+
 @Composable
 private fun CameraModeChip(
     mode: CameraMode,
@@ -189,6 +194,7 @@ private fun CameraModeChip(
         modifier = modifier
     )
 }
+
 @Composable
 private fun DualCameraPreviewCard(
     mode: CameraMode,
@@ -238,15 +244,18 @@ private fun DualCameraPreviewCard(
                 CameraMode.RGB_ONLY -> {
                     RGBPreviewArea(active = rgbActive)
                 }
+
                 CameraMode.THERMAL_ONLY -> {
                     ThermalPreviewArea(active = thermalActive)
                 }
+
                 CameraMode.DUAL_VIEW -> {
                     DualViewPreviewArea(
                         rgbActive = rgbActive,
                         thermalActive = thermalActive
                     )
                 }
+
                 CameraMode.OVERLAY -> {
                     OverlayPreviewArea(
                         rgbActive = rgbActive,
@@ -257,6 +266,7 @@ private fun DualCameraPreviewCard(
         }
     }
 }
+
 @Composable
 private fun RGBPreviewArea(active: Boolean) {
     Box(
@@ -306,6 +316,7 @@ private fun RGBPreviewArea(active: Boolean) {
         }
     }
 }
+
 @Composable
 private fun ThermalPreviewArea(active: Boolean) {
     Box(
@@ -360,6 +371,7 @@ private fun ThermalPreviewArea(active: Boolean) {
         }
     }
 }
+
 @Composable
 private fun DualViewPreviewArea(
     rgbActive: Boolean,
@@ -423,6 +435,7 @@ private fun DualViewPreviewArea(
         }
     }
 }
+
 @Composable
 private fun OverlayPreviewArea(
     rgbActive: Boolean,
@@ -469,6 +482,7 @@ private fun OverlayPreviewArea(
         }
     }
 }
+
 @Composable
 private fun CameraControlsCard(
     rgbActive: Boolean,
@@ -593,6 +607,7 @@ private fun CameraControlsCard(
         }
     }
 }
+
 @Composable
 private fun RecordingSettingsCard() {
     Card(
@@ -634,6 +649,7 @@ private fun RecordingSettingsCard() {
         }
     }
 }
+
 @Composable
 private fun CalibrationToolsCard() {
     Card(

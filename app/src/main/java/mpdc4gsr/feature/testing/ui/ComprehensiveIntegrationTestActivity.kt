@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -19,6 +20,7 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 
 class ComprehensiveIntegrationTestActivity : BaseComposeActivity<IntegrationTestViewModel>() {
     override fun createViewModel(): IntegrationTestViewModel = IntegrationTestViewModel()
+
     @Composable
     override fun Content(viewModel: IntegrationTestViewModel) {
         LibUnifiedTheme {
@@ -26,6 +28,7 @@ class ComprehensiveIntegrationTestActivity : BaseComposeActivity<IntegrationTest
         }
     }
 }
+
 class IntegrationTestViewModel : AppBaseViewModel() {
     data class TestItem(
         val name: String,
@@ -33,9 +36,11 @@ class IntegrationTestViewModel : AppBaseViewModel() {
         val isImplemented: Boolean,
         val category: TestCategory
     )
+
     enum class TestCategory {
         NAVIGATION, COMPOSE_SCREENS, THERMAL_STUBS, GSR_SENSORS, NETWORK, UI_COMPONENTS
     }
+
     val testItems = listOf(
         // Navigation System
         TestItem(
@@ -72,6 +77,7 @@ class IntegrationTestViewModel : AppBaseViewModel() {
         TestItem("ThermalLoadingScreen", "Loading state visualization", true, TestCategory.UI_COMPONENTS)
     )
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IntegrationTestScreen(viewModel: IntegrationTestViewModel) {
@@ -161,6 +167,7 @@ fun IntegrationTestScreen(viewModel: IntegrationTestViewModel) {
         }
     }
 }
+
 @Composable
 private fun TestItemCard(item: IntegrationTestViewModel.TestItem) {
     Card(

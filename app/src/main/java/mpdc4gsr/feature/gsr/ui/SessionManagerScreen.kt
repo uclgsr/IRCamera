@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 data class ResearchSession(
     val id: String,
     val title: String,
@@ -32,6 +34,7 @@ data class ResearchSession(
     val dataSize: String,
     val progress: Float = 0f // 0.0 to 1.0
 )
+
 enum class SessionStatus {
     COMPLETED,
     IN_PROGRESS,
@@ -39,6 +42,7 @@ enum class SessionStatus {
     FAILED,
     SCHEDULED
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionManagerScreen(
@@ -172,6 +176,7 @@ fun SessionManagerScreen(
         }
     }
 }
+
 @Composable
 fun SessionStatsCard(
     sessions: List<ResearchSession>,
@@ -207,6 +212,7 @@ fun SessionStatsCard(
         }
     }
 }
+
 @Composable
 private fun StatItem(
     label: String,
@@ -229,6 +235,7 @@ private fun StatItem(
         )
     }
 }
+
 @Composable
 fun SessionItem(
     session: ResearchSession,
@@ -347,6 +354,7 @@ fun SessionItem(
         }
     }
 }
+
 @Composable
 fun SessionStatusBadge(status: SessionStatus) {
     val (color, text) = when (status) {
@@ -369,6 +377,7 @@ fun SessionStatusBadge(status: SessionStatus) {
         )
     }
 }
+
 @Composable
 fun EmptySessionsState(
     searchQuery: String,
@@ -421,6 +430,7 @@ fun EmptySessionsState(
         }
     }
 }
+
 private fun parseDuration(duration: String): Int {
     // Parse "25:42" format to minutes
     val parts = duration.split(":")
@@ -432,11 +442,13 @@ private fun parseDuration(duration: String): Int {
         } ?: 0
     } else 0
 }
+
 private fun formatTotalDuration(totalMinutes: Int): String {
     val hours = totalMinutes / 60
     val minutes = totalMinutes % 60
     return "${hours}h ${minutes}m"
 }
+
 private fun getSampleSessions() = listOf(
     ResearchSession(
         id = "SESSION-001",
@@ -490,6 +502,7 @@ private fun getSampleSessions() = listOf(
         dataSize = "0.8 MB"
     )
 )
+
 @Preview(showBackground = true)
 @Composable
 fun SessionManagerScreenPreview() {

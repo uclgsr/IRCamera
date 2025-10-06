@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.components
+
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -57,6 +58,7 @@ fun RecordingStatusIndicator(
         }
     }
 }
+
 @Composable
 private fun RecordingStatusIcon(isRecording: Boolean) {
     val infiniteTransition = rememberInfiniteTransition(label = "recording")
@@ -86,6 +88,7 @@ private fun RecordingStatusIcon(isRecording: Boolean) {
         )
     }
 }
+
 @Composable
 private fun RecordingDuration(startTime: Long) {
     var duration by remember { mutableLongStateOf(0L) }

@@ -1,4 +1,5 @@
 package mpdc4gsr.tests
+
 import io.mockk.MockKAnnotations
 import io.mockk.mockk
 import io.mockk.verify
@@ -16,15 +17,18 @@ class MultiSensorCoordinationTest {
         val lastTimestamp: Long = 0L,
         val sampleCount: Int = 0
     )
+
     private lateinit var gsrSensorState: SensorState
     private lateinit var cameraSensorState: SensorState
     private lateinit var thermalSensorState: SensorState
+
     // Multi-modal coordination parameters
     private val targetSynchronizationAccuracy = 100L // ±100ms as per requirements
     private val recordingDurationSeconds = 60
     private val gsrSamplingRate = 128 // Hz
     private val camerFrameRate = 30 // FPS
     private val thermalFrameRate = 10 // FPS
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
@@ -32,21 +36,25 @@ class MultiSensorCoordinationTest {
         cameraSensorState = SensorState()
         thermalSensorState = SensorState()
     }
+
     @Test
     fun `should initialize all sensors in correct sequence`() = runTest {
         // Test proper sensor initialization order and dependencies
         val initializationOrder = mutableListOf<String>()
+
         // Simulate sensor initialization sequence
         fun initializeGSR(): Boolean {
             initializationOrder.add("GSR")
             gsrSensorState = gsrSensorState.copy(isConnected = true)
             return true
         }
+
         fun initializeCamera(): Boolean {
             initializationOrder.add("Camera")
             cameraSensorState = cameraSensorState.copy(isConnected = true)
             return true
         }
+
         fun initializeThermal(): Boolean {
             initializationOrder.add("Thermal")
             thermalSensorState = thermalSensorState.copy(isConnected = true)
@@ -70,11 +78,13 @@ class MultiSensorCoordinationTest {
         assertTrue("Camera should be connected", cameraSensorState.isConnected)
         assertTrue("Thermal should be connected", thermalSensorState.isConnected)
     }
+
     @Test
     fun `should start all sensors simultaneously for recording`() = runTest {
         // Test synchronized start of all sensor modalities
         val sessionStartTime = System.currentTimeMillis()
         val sensorStartTimes = mutableMapOf<String, Long>()
+
         // Simulate simultaneous sensor start
         fun startAllSensors() {
             val startTime = System.currentTimeMillis()
@@ -112,6 +122,7 @@ class MultiSensorCoordinationTest {
             maxStartTimeDiff <= targetSynchronizationAccuracy
         )
     }
+
     @Test
     fun `should maintain timestamp synchronization across sensors`() = runTest {
         // Test cross-sensor timestamp alignment during recording
@@ -159,6 +170,7 @@ class MultiSensorCoordinationTest {
             findSynchronizationEvents(synchronizedTimestamps, targetSynchronizationAccuracy)
         assertTrue("Should have synchronization reference points", syncEvents.isNotEmpty())
     }
+
     @Test
     fun `should handle sensor failure without affecting other modalities`() = runTest {
         // Test individual sensor failure isolation
@@ -187,6 +199,7 @@ class MultiSensorCoordinationTest {
         recoverGSR()
         assertTrue("GSR should recover and resume recording", gsrSensorState.isRecording)
     }
+
     @Test
     fun `should coordinate data file generation across sensors`() = runTest {
         // Test synchronized data file creation and naming
@@ -223,12 +236,14 @@ class MultiSensorCoordinationTest {
             maxTimeDiff <= targetSynchronizationAccuracy
         )
     }
+
     @Test
     fun `should validate cross-sensor data correlation`() = runTest {
         // Test data correlation between different sensor modalities
         // Simulate synchronized event across all sensors
         val eventTimestamp = System.currentTimeMillis()
         val eventWindow = 200L // ±200ms window for event detection
+
         data class SensorEvent(
             val timestamp: Long,
             val sensorType: String,
@@ -254,9 +269,11 @@ class MultiSensorCoordinationTest {
                     assertTrue("GSR value should be positive", event.value > 0)
                     assertTrue("GSR value should be reasonable", event.value < 100)
                 }
+
                 "Camera" -> {
                     assertEquals("Camera event should be frame indicator", 1.0, event.value, 0.1)
                 }
+
                 "Thermal" -> {
                     assertTrue(
                         "Thermal value should be reasonable body temperature",
@@ -266,6 +283,7 @@ class MultiSensorCoordinationTest {
             }
         }
     }
+
     @Test
     fun `should measure multi-modal system performance impact`() = runTest {
         // Test performance impact of running all sensors simultaneously
@@ -314,6 +332,7 @@ class MultiSensorCoordinationTest {
             batteryCapacityHours / (multiModalMetrics.batteryDrain / 100.0)
         assertTrue("Should support at least 2 hours of recording", estimatedRecordingHours >= 2.0)
     }
+
     @Test
     fun `should handle graceful shutdown of all sensors`() = runTest {
         // Test coordinated shutdown of multi-modal recording
@@ -352,6 +371,7 @@ class MultiSensorCoordinationTest {
         assertTrue("Camera should be in shutdown order", shutdownOrder.contains("Camera"))
         assertTrue("Thermal should be in shutdown order", shutdownOrder.contains("Thermal"))
     }
+
     private fun findSynchronizationEvents(
         timestamps: Map<String, List<Long>>,
         accuracyMs: Long

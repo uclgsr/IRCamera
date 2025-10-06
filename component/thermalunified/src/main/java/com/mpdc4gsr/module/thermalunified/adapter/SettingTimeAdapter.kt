@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.adapter
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.module.thermalunified.R
+
 class SettingTimeAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var datas = arrayOf("1min", "5min", "10min", "30min")
@@ -17,6 +19,7 @@ class SettingTimeAdapter(val context: Context) :
         this.select = index
         notifyDataSetChanged()
     }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -25,6 +28,7 @@ class SettingTimeAdapter(val context: Context) :
             LayoutInflater.from(parent.context).inflate(R.layout.item_setting_time, parent, false)
         return ItemView(view)
     }
+
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
@@ -54,12 +58,15 @@ class SettingTimeAdapter(val context: Context) :
             }
         }
     }
+
     override fun getItemCount(): Int {
         return datas.size
     }
+
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val btn: Button = itemView.findViewById(R.id.item_setting_time_btn)
     }
+
     interface OnItemClickListener {
         fun onClick(
             index: Int,

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.os.Bundle
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -28,12 +29,14 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
         private const val TAG = "CrossModalSyncTestCompose"
         private const val SYNC_TOLERANCE_MS = 50L
     }
+
     data class SyncResult(
         val sensorPair: String,
         val timeDifferenceMs: Long,
         val isSynchronized: Boolean,
         val details: String
     )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -42,6 +45,7 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun CrossModalSyncTestScreen() {
@@ -265,6 +269,7 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     fun SyncResultItem(result: SyncResult) {
         Row(
@@ -303,6 +308,7 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private suspend fun runAllSyncTests(
         onSyncResults: (List<SyncResult>) -> Unit,
         onStatusUpdate: (String) -> Unit,
@@ -338,6 +344,7 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
             onComplete()
         }
     }
+
     private suspend fun testSensorPairSync(sensor1: String, sensor2: String): SyncResult {
         AppLogger.d(TAG, "Testing sync between $sensor1 and $sensor2")
         val testTime = measureTimeMillis {
@@ -354,6 +361,7 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
             details = "Test completed in ${testTime}ms"
         )
     }
+
     private suspend fun testTripleSensorSync(): SyncResult {
         AppLogger.d(TAG, "Testing triple sensor synchronization")
         val testTime = measureTimeMillis {
@@ -370,6 +378,7 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
             details = "Triple sync test completed in ${testTime}ms"
         )
     }
+
     private suspend fun runRealTimeSync() {
         AppLogger.d(TAG, "Running real-time synchronization monitoring")
         try {
@@ -380,6 +389,7 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Real-time sync test failed: ${e.message}")
         }
     }
+
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {
@@ -392,6 +402,7 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private suspend fun runTimestampAccuracyTest() {
         AppLogger.d(TAG, "Testing timestamp accuracy")
         try {
@@ -401,6 +412,7 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Timestamp accuracy test failed: ${e.message}")
         }
     }
+
     private suspend fun runSyncRecoveryTest() {
         AppLogger.d(TAG, "Testing sync recovery")
         try {

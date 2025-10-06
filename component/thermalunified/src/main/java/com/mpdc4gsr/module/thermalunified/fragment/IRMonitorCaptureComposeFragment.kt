@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,10 +25,12 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel.*
 import java.text.SimpleDateFormat
 import java.util.*
+
 class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureViewModel>() {
     override fun createViewModel(): IRMonitorCaptureViewModel {
         return viewModels<IRMonitorCaptureViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRMonitorCaptureViewModel) {
@@ -93,6 +96,7 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
             }
         }
     }
+
     @Composable
     private fun CaptureStatusBar(
         captureState: CaptureState,
@@ -150,6 +154,7 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
             }
         }
     }
+
     @Composable
     private fun StatusChip(
         text: String,
@@ -169,6 +174,7 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
             )
         }
     }
+
     @Composable
     private fun ThermalCaptureView(
         temperatureData: TemperatureData?,
@@ -231,6 +237,7 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
             }
         }
     }
+
     @Composable
     private fun TemperatureCaptureOverlay(
         temperatureData: TemperatureData?,
@@ -259,6 +266,7 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
             }
         }
     }
+
     @Composable
     private fun CaptureTemperatureCard(
         label: String,
@@ -296,6 +304,7 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
             }
         }
     }
+
     @Composable
     private fun CaptureControlsOverlay(
         captureState: CaptureState,
@@ -349,6 +358,7 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
             }
         }
     }
+
     @Composable
     private fun CaptureHistoryPanel(
         captureState: CaptureState,
@@ -450,6 +460,7 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
             }
         }
     }
+
     @Composable
     private fun CaptureHistoryItem(
         capture: CaptureData,
@@ -503,6 +514,7 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
             }
         }
     }
+
     // Helper functions
     private fun getConnectionStatusText(state: DeviceConnectionState): String = when (state) {
         DeviceConnectionState.CONNECTED -> "Connected"
@@ -510,18 +522,21 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
         DeviceConnectionState.DISCONNECTED -> "Disconnected"
         DeviceConnectionState.ERROR -> "Error"
     }
+
     private fun getConnectionStatusColor(state: DeviceConnectionState): Color = when (state) {
         DeviceConnectionState.CONNECTED -> Color.Green
         DeviceConnectionState.CONNECTING -> Color(0xFFFFA500)
         DeviceConnectionState.DISCONNECTED -> Color.Gray
         DeviceConnectionState.ERROR -> Color.Red
     }
+
     private fun getCaptureStatusText(state: CaptureState): String = when (state) {
         CaptureState.INACTIVE -> "Inactive"
         CaptureState.ACTIVE -> "Ready"
         CaptureState.CONTINUOUS -> "Auto Capture"
         CaptureState.CAPTURING -> "Capturing"
     }
+
     @Composable
     private fun getCaptureStatusColor(state: CaptureState): Color = when (state) {
         CaptureState.INACTIVE -> Color.Gray

@@ -1,9 +1,11 @@
 package com.mpdc4gsr.module.thermalunified.view
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.MotionEvent
+
 class Temperature07View : TemperatureBaseView {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -13,6 +15,7 @@ class Temperature07View : TemperatureBaseView {
         defStyleAttr,
         0
     )
+
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -24,6 +27,7 @@ class Temperature07View : TemperatureBaseView {
         defStyleAttr,
         defStyleRes,
     )
+
     override fun onDraw(canvas: Canvas) {
         if (!isTouching) {
             return
@@ -34,11 +38,14 @@ class Temperature07View : TemperatureBaseView {
             Mode.RECT -> operateRect?.let { drawRect(canvas, it) }
             Mode.TREND -> {
             }
+
             else -> {
             }
         }
     }
+
     private var isTouching = false
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!isEnabled) {

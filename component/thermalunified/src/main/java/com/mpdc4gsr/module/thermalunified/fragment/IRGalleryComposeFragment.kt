@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,10 +32,12 @@ import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+
 class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
     override fun createViewModel(): IRGalleryViewModel {
         return viewModels<IRGalleryViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRGalleryViewModel) {
@@ -72,12 +75,14 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                         isLoading -> {
                             LoadingState()
                         }
+
                         galleryItems.isEmpty() -> {
                             EmptyGalleryState(
                                 dirType = currentDirType,
                                 onRefresh = { viewModel.refreshGallery() }
                             )
                         }
+
                         isGridView -> {
                             GridGalleryView(
                                 galleryItems = galleryItems,
@@ -99,6 +104,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                                 onRefresh = { viewModel.refreshGallery() }
                             )
                         }
+
                         else -> {
                             ListGalleryView(
                                 galleryItems = galleryItems,
@@ -125,6 +131,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun IRGalleryTopBar(
@@ -205,6 +212,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
             }
         )
     }
+
     @Composable
     private fun LoadingState() {
         Box(
@@ -224,6 +232,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
             }
         }
     }
+
     @Composable
     private fun EmptyGalleryState(
         dirType: DirType,
@@ -261,6 +270,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
             }
         }
     }
+
     @Composable
     private fun GridGalleryView(
         galleryItems: List<GalleryBean>,
@@ -289,6 +299,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
             }
         }
     }
+
     @Composable
     private fun ListGalleryView(
         galleryItems: List<GalleryBean>,
@@ -315,6 +326,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
             }
         }
     }
+
     @Composable
     private fun GridGalleryItem(
         item: GalleryBean,
@@ -399,6 +411,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
             }
         }
     }
+
     @Composable
     private fun ListGalleryItem(
         item: GalleryBean,
@@ -467,11 +480,13 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
             }
         }
     }
+
     private fun getDirTypeName(dirType: DirType): String = when (dirType) {
         DirType.LINE -> "LINE device"
         DirType.TS004_LOCALE -> "TS004 device"
         else -> "device"
     }
+
     private fun formatFileSize(bytes: Long): String {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()

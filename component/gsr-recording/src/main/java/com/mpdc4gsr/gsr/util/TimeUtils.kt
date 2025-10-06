@@ -1,4 +1,5 @@
 package com.mpdc4gsr.gsr.util
+
 object TimeUtils {
     private const val TAG = "TimeUtils"
     private var pcTimeOffset: Long = 0L
@@ -11,6 +12,7 @@ object TimeUtils {
         val deviceOffset = currentDeviceTime - deviceGroundTruthBase
         return deviceGroundTruthBase + deviceOffset + pcTimeOffset
     }
+
     fun initializeGroundTruthTiming() {
         deviceGroundTruthBase = System.currentTimeMillis()
         detectSamsungS22Processor()
@@ -35,6 +37,7 @@ object TimeUtils {
         } catch (e: Exception) {
         }
     }
+
     private fun detectSamsungS22Processor() {
         try {
             deviceModel = android.os.Build.MODEL
@@ -50,25 +53,31 @@ object TimeUtils {
                 deviceModel.contains("SM-S901E", ignoreCase = true) -> {
                     detectedProcessor = "Exynos_2200"
                 }
+
                 deviceModel.contains("SM-S901U", ignoreCase = true) ||
                         deviceModel.contains("SM-S901W", ignoreCase = true) -> {
                     detectedProcessor = "Snapdragon_8_Gen_1"
                 }
+
                 deviceModel.contains("SM-S901N", ignoreCase = true) -> {
                     detectedProcessor = "Snapdragon_8_Gen_1"
                 }
+
                 hardware.contains("qcom", ignoreCase = true) ||
                         soc.contains("qualcomm", ignoreCase = true) -> {
                     detectedProcessor = "Snapdragon_8_Gen_1"
                 }
+
                 hardware.contains("exynos", ignoreCase = true) ||
                         soc.contains("samsung", ignoreCase = true) -> {
                     detectedProcessor = "Exynos_2200"
                 }
+
                 deviceBrand.contains("samsung", ignoreCase = true) &&
                         deviceModel.contains("SM-S90", ignoreCase = true) -> {
                     detectedProcessor = "Samsung_S22_Generic"
                 }
+
                 else -> {
                     detectedProcessor = "Generic_Android_Timer"
                 }
@@ -78,6 +87,7 @@ object TimeUtils {
             deviceModel = "Unknown"
         }
     }
+
     fun setPcTimeOffset(offset: Long) {
         pcTimeOffset = offset
         try {
@@ -92,18 +102,22 @@ object TimeUtils {
         } catch (e: Exception) {
         }
     }
+
     fun getPcTimeOffset(): Long = pcTimeOffset
     fun getGroundTruthBase(): Long = deviceGroundTruthBase
     fun systemToUtc(systemTime: Long): Long {
         val deviceOffset = systemTime - deviceGroundTruthBase
         return deviceGroundTruthBase + deviceOffset + pcTimeOffset
     }
+
     fun utcToSystem(utcTime: Long): Long {
         return utcTime - pcTimeOffset - (deviceGroundTruthBase - System.currentTimeMillis())
     }
+
     fun getSynchronizedTimestamp(): Long {
         return getUtcTimestamp()
     }
+
     fun getHighPrecisionTimestamp(): Long {
         return try {
             val nanoOffset = (System.nanoTime() / 1_000_000L) - bootTimeReference
@@ -112,6 +126,7 @@ object TimeUtils {
             getSynchronizedTimestamp()
         }
     }
+
     fun formatTimestamp(timestamp: Long): String {
         return try {
             java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", java.util.Locale.US)
@@ -120,6 +135,7 @@ object TimeUtils {
             timestamp.toString()
         }
     }
+
     fun generateSessionId(prefix: String = "GSR"): String {
         return try {
             val timestamp =
@@ -130,6 +146,7 @@ object TimeUtils {
             "${prefix}_${getSynchronizedTimestamp()}"
         }
     }
+
     fun getTimingMetadata(): Map<String, String> {
         return mapOf(
             "ground_truth_base" to deviceGroundTruthBase.toString(),
@@ -143,6 +160,7 @@ object TimeUtils {
             "system_uptime_ms" to (System.nanoTime() / 1_000_000L).toString(),
         )
     }
+
     fun getMonotonicTimestampNs(): Long {
         return try {
             android.os.SystemClock.elapsedRealtimeNanos()
@@ -150,12 +168,15 @@ object TimeUtils {
             System.nanoTime()
         }
     }
+
     fun getMonotonicTimestampMs(): Long {
         return getMonotonicTimestampNs() / 1_000_000L
     }
+
     fun getElapsedTimeMs(startMonotonicNs: Long): Long {
         return (getMonotonicTimestampNs() - startMonotonicNs) / 1_000_000L
     }
+
     fun createSessionTimingMetadata(sessionId: String): Map<String, Any> {
         val wallClockMs = getSynchronizedTimestamp()
         val monotonicNs = getMonotonicTimestampNs()
@@ -171,6 +192,7 @@ object TimeUtils {
             "session_start_iso" to formatTimestamp(wallClockMs)
         )
     }
+
     fun validateTimingSystem(): Map<String, Any> {
         val currentTime = System.currentTimeMillis()
         val syncTime = getSynchronizedTimestamp()
@@ -195,6 +217,7 @@ object TimeUtils {
             )),
         )
     }
+
     fun getDetectedProcessor(): String = detectedProcessor
     fun getDeviceModel(): String = deviceModel
 }

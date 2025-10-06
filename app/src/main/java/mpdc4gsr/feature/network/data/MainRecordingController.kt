@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -14,6 +15,7 @@ import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
+
 class MainRecordingController(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner
@@ -24,6 +26,7 @@ class MainRecordingController(
         private const val THERMAL_SENSOR_NAME = "Thermal"
         private const val GSR_SENSOR_NAME = "GSR"
     }
+
     private val _isRecording = AtomicBoolean(false)
     val isRecording: Boolean get() = _isRecording.get()
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
@@ -35,10 +38,12 @@ class MainRecordingController(
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val recordingSettingsRepository =
         mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context)
+
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
         sensorRecorders[name] = recorder
         AppLogger.d(TAG, "Added sensor recorder: $name")
     }
+
     suspend fun startRecording(
         sessionId: String? = null,
         enabledSensors: List<String> = listOf(RGB_SENSOR_NAME, THERMAL_SENSOR_NAME, GSR_SENSOR_NAME)
@@ -106,6 +111,7 @@ class MainRecordingController(
             }
         }
     }
+
     suspend fun stopRecording(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -136,6 +142,7 @@ class MainRecordingController(
             }
         }
     }
+
     fun getRecordingStatus(): SimpleRecordingStatus {
         val activeSensors = activeRecorders.count { it.value }
         return SimpleRecordingStatus(
@@ -145,6 +152,7 @@ class MainRecordingController(
             state = _recordingStateFlow.value
         )
     }
+
     private fun getAvailableSpaceGB(): Double {
         return try {
             val sessionDir = File(context.filesDir, "sessions")

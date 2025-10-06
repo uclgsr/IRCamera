@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data
+
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -22,6 +23,7 @@ class FileSchemaManager {
             "audio" to AudioSchema()
         )
     }
+
     interface SensorSchema {
         fun getRequiredColumns(): List<String>
         fun getOptionalColumns(): List<String>
@@ -29,28 +31,33 @@ class FileSchemaManager {
         fun validateData(data: Map<String, Any>): ValidationResult
         fun getUnits(): Map<String, String>
     }
+
     data class ValidationResult(
         val isValid: Boolean,
         val errors: List<String> = emptyList(),
         val warnings: List<String> = emptyList()
     )
+
     data class StandardFileName(
         val fileName: String,
         val fullPath: String,
         val isRenamed: Boolean = false,
         val originalName: String? = null
     )
+
     class ThermalSchema : SensorSchema {
         override fun getRequiredColumns(): List<String> = listOf(
             MANDATORY_TIMESTAMP_COLUMN, "frame_index", "temp_matrix_serialized",
             "min_temp_celsius", "max_temp_celsius", "avg_temp_celsius",
             "emissivity", "ambient_temp_celsius"
         )
+
         override fun getOptionalColumns(): List<String> = listOf(
             "hotspot_x", "hotspot_y", "coldspot_x", "coldspot_y",
             "quality_score", "processing_time_ms", "device_serial",
             "firmware_version", "calibration_status"
         )
+
         override fun getFileExtensions(): List<String> = listOf("csv", "json")
         override fun getUnits(): Map<String, String> = mapOf(
             MANDATORY_TIMESTAMP_COLUMN to "nanoseconds",
@@ -63,6 +70,7 @@ class FileSchemaManager {
             "quality_score" to "unitless (0.0-1.0)",
             "processing_time_ms" to "milliseconds"
         )
+
         override fun validateData(data: Map<String, Any>): ValidationResult {
             val errors = mutableListOf<String>()
             val warnings = mutableListOf<String>()
@@ -84,16 +92,19 @@ class FileSchemaManager {
             return ValidationResult(errors.isEmpty(), errors, warnings)
         }
     }
+
     class RgbSchema : SensorSchema {
         override fun getRequiredColumns(): List<String> = listOf(
             MANDATORY_TIMESTAMP_COLUMN, "frame_number", "video_timestamp_us",
             "resolution_width", "resolution_height", "frame_rate_fps"
         )
+
         override fun getOptionalColumns(): List<String> = listOf(
             "exposure_time_ns", "iso_value", "focal_length_mm",
             "white_balance_mode", "quality_score", "motion_detected",
             "brightness_level", "contrast_level"
         )
+
         override fun getFileExtensions(): List<String> = listOf("csv", "mp4")
         override fun getUnits(): Map<String, String> = mapOf(
             MANDATORY_TIMESTAMP_COLUMN to "nanoseconds",
@@ -105,6 +116,7 @@ class FileSchemaManager {
             "exposure_time_ns" to "nanoseconds",
             "focal_length_mm" to "millimeters"
         )
+
         override fun validateData(data: Map<String, Any>): ValidationResult {
             val errors = mutableListOf<String>()
             val warnings = mutableListOf<String>()
@@ -122,15 +134,18 @@ class FileSchemaManager {
             return ValidationResult(errors.isEmpty(), errors, warnings)
         }
     }
+
     class GsrSchema : SensorSchema {
         override fun getRequiredColumns(): List<String> = listOf(
             MANDATORY_TIMESTAMP_COLUMN, "gsr_microsiemens", "gsr_raw_12bit",
             "resistance_ohms", "sampling_rate_hz"
         )
+
         override fun getOptionalColumns(): List<String> = listOf(
             "device_id", "battery_level", "signal_quality",
             "gsr_range", "calibration_factor", "temperature_celsius"
         )
+
         override fun getFileExtensions(): List<String> = listOf("csv")
         override fun getUnits(): Map<String, String> = mapOf(
             MANDATORY_TIMESTAMP_COLUMN to "nanoseconds",
@@ -141,6 +156,7 @@ class FileSchemaManager {
             "battery_level" to "percentage",
             "signal_quality" to "unitless (0.0-1.0)"
         )
+
         override fun validateData(data: Map<String, Any>): ValidationResult {
             val errors = mutableListOf<String>()
             val warnings = mutableListOf<String>()
@@ -155,15 +171,18 @@ class FileSchemaManager {
             return ValidationResult(errors.isEmpty(), errors, warnings)
         }
     }
+
     class AudioSchema : SensorSchema {
         override fun getRequiredColumns(): List<String> = listOf(
             MANDATORY_TIMESTAMP_COLUMN, "sample_rate_hz", "bit_depth",
             "channels", "duration_ms"
         )
+
         override fun getOptionalColumns(): List<String> = listOf(
             "volume_db", "quality_score", "noise_floor_db",
             "peak_frequency_hz", "rms_level"
         )
+
         override fun getFileExtensions(): List<String> = listOf("csv", "wav")
         override fun getUnits(): Map<String, String> = mapOf(
             MANDATORY_TIMESTAMP_COLUMN to "nanoseconds",
@@ -174,6 +193,7 @@ class FileSchemaManager {
             "volume_db" to "dB",
             "noise_floor_db" to "dB"
         )
+
         override fun validateData(data: Map<String, Any>): ValidationResult {
             val errors = mutableListOf<String>()
             val warnings = mutableListOf<String>()
@@ -188,6 +208,7 @@ class FileSchemaManager {
             return ValidationResult(errors.isEmpty(), errors, warnings)
         }
     }
+
     fun generateStandardFileName(
         sensorType: String,
         sessionId: String,
@@ -209,6 +230,7 @@ class FileSchemaManager {
             fullPath = fileName
         )
     }
+
     fun validateAndStandardizeFileName(
         filePath: String,
         sensorType: String,
@@ -237,10 +259,12 @@ class FileSchemaManager {
             originalName = fileName
         )
     }
+
     private fun isStandardFormat(fileName: String, sensorType: String, sessionId: String): Boolean {
         val pattern = "${sensorType.lowercase()}_\\d{8}_\\d{6}_\\d{3}_${sessionId}\\.\\w+"
         return fileName.matches(Regex(pattern))
     }
+
     fun validateCsvSchema(filePath: String, sensorType: String): ValidationResult {
         val schema = SENSOR_SCHEMAS[sensorType.lowercase()]
         if (schema == null) {
@@ -261,6 +285,7 @@ class FileSchemaManager {
             ValidationResult(false, listOf("Error reading CSV file: ${e.message}"))
         }
     }
+
     private fun validateCsvHeader(header: List<String>, schema: SensorSchema): ValidationResult {
         val errors = mutableListOf<String>()
         val warnings = mutableListOf<String>()
@@ -282,6 +307,7 @@ class FileSchemaManager {
         }
         return ValidationResult(errors.isEmpty(), errors, warnings)
     }
+
     fun createSessionDirectoryStructure(baseDir: File, sessionId: String): File {
         val sessionDir = File(baseDir, sessionId)
         if (!sessionDir.exists()) {
@@ -297,6 +323,7 @@ class FileSchemaManager {
         }
         return sessionDir
     }
+
     fun validateSessionDirectoryStructure(sessionDir: File): ValidationResult {
         val errors = mutableListOf<String>()
         val warnings = mutableListOf<String>()
@@ -322,6 +349,7 @@ class FileSchemaManager {
         }
         return ValidationResult(errors.isEmpty(), errors, warnings)
     }
+
     fun generateCsvHeader(sensorType: String, includeUnits: Boolean = true): String? {
         val schema = SENSOR_SCHEMAS[sensorType.lowercase()] ?: return null
         val columns = schema.getRequiredColumns() + schema.getOptionalColumns()
@@ -336,6 +364,7 @@ class FileSchemaManager {
             columns.joinToString(",")
         }
     }
+
     fun getSchemaDocumentation(sensorType: String): Map<String, Any>? {
         val schema = SENSOR_SCHEMAS[sensorType.lowercase()] ?: return null
         return mapOf(
@@ -348,6 +377,7 @@ class FileSchemaManager {
             "file_naming_pattern" to FILE_NAME_PATTERN
         )
     }
+
     fun getAllSchemaDocumentation(): Map<String, Any> {
         val allSchemas = mutableMapOf<String, Any>()
         for (sensorType in SENSOR_SCHEMAS.keys) {

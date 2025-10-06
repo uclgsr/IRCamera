@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -33,9 +34,11 @@ class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
             context.startActivity(intent)
         }
     }
+
     override fun createViewModel(): AppBaseViewModel {
         return viewModels<AppBaseViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: AppBaseViewModel) {
@@ -88,6 +91,7 @@ class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
         }
     }
 }
+
 @Composable
 private fun SessionDetailContent(
     sessionId: String,
@@ -138,6 +142,7 @@ private fun SessionDetailContent(
         )
     }
 }
+
 @Composable
 private fun SessionOverviewCard(sessionId: String) {
     Card(
@@ -179,6 +184,7 @@ private fun SessionOverviewCard(sessionId: String) {
         }
     }
 }
+
 @Composable
 private fun SessionInfoRow(
     label: String,
@@ -206,6 +212,7 @@ private fun SessionInfoRow(
         }
     }
 }
+
 @Composable
 private fun SessionStatisticsCard() {
     Card(
@@ -233,6 +240,7 @@ private fun SessionStatisticsCard() {
         }
     }
 }
+
 @Composable
 private fun StatisticItem(label: String, value: String) {
     Column(
@@ -251,6 +259,7 @@ private fun StatisticItem(label: String, value: String) {
         )
     }
 }
+
 @Composable
 private fun DataQualityCard() {
     Card(
@@ -273,6 +282,7 @@ private fun DataQualityCard() {
         }
     }
 }
+
 @Composable
 private fun QualityIndicator(
     label: String,
@@ -308,6 +318,7 @@ private fun QualityIndicator(
         )
     }
 }
+
 @Composable
 private fun SessionTimelineCard() {
     Card(
@@ -337,6 +348,7 @@ private fun SessionTimelineCard() {
         }
     }
 }
+
 @Composable
 private fun SessionActionsCard(
     onViewData: () -> Unit,
@@ -386,6 +398,7 @@ private fun SessionActionsCard(
         }
     }
 }
+
 // Simple ViewModel for the session detail
 class SessionDetailViewModel : AppBaseViewModel() {
     // Future implementation would include:

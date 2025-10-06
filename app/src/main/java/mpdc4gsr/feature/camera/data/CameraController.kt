@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.data
+
 import android.content.Context
 import android.graphics.ImageFormat
 import android.hardware.camera2.*
@@ -15,11 +16,13 @@ import android.view.Surface
 import java.util.concurrent.Executor
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
+
 class CameraController(private val context: Context) {
     companion object {
         private const val TAG = "CameraController"
         private const val CAMERA_OPEN_TIMEOUT_MS = 2500L
     }
+
     private var cameraDevice: CameraDevice? = null
     private var captureSession: CameraCaptureSession? = null
     private var currentCameraId: String = "0"
@@ -29,9 +32,11 @@ class CameraController(private val context: Context) {
     private val cameraOpenCloseLock = Semaphore(1)
     var onCameraOpened: ((DeviceCaps) -> Unit)? = null
     var onCameraError: ((String) -> Unit)? = null
+
     init {
         startBackgroundThread()
     }
+
     fun openCamera(cameraId: String = "0") {
         AppLogger.i(TAG, "Opening camera $cameraId")
         var lockAcquired = false
@@ -101,6 +106,7 @@ class CameraController(private val context: Context) {
             onCameraError?.invoke("Failed to open camera: ${e.javaClass.simpleName} - ${e.message}")
         }
     }
+
     fun createCaptureSession(
         surfaces: List<Surface>,
         callback: CameraCaptureSession.StateCallback,
@@ -136,6 +142,7 @@ class CameraController(private val context: Context) {
             onCameraError?.invoke("Camera not opened")
         }
     }
+
     fun createCaptureRequest(template: Int): CaptureRequest.Builder? {
         return try {
             cameraDevice?.createCaptureRequest(template)
@@ -144,11 +151,13 @@ class CameraController(private val context: Context) {
             null
         }
     }
+
     fun getDeviceCaps(): DeviceCaps? = deviceCaps
     fun isOpen(): Boolean = cameraDevice != null
     fun setCaptureSession(session: CameraCaptureSession) {
         captureSession = session
     }
+
     fun getCaptureSession(): CameraCaptureSession? = captureSession
     fun getCameraCharacteristics(): CameraCharacteristics? {
         return try {
@@ -161,6 +170,7 @@ class CameraController(private val context: Context) {
             null
         }
     }
+
     fun close() {
         try {
             cameraOpenCloseLock.acquire()
@@ -175,6 +185,7 @@ class CameraController(private val context: Context) {
         }
         stopBackgroundThread()
     }
+
     private fun detectCapabilities(characteristics: CameraCharacteristics): DeviceCaps {
         val capabilities =
             characteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES) ?: IntArray(0)
@@ -207,6 +218,7 @@ class CameraController(private val context: Context) {
             sensorOrientation = sensorOrientation,
         )
     }
+
     private val stateCallback =
         object : CameraDevice.StateCallback() {
             override fun onOpened(camera: CameraDevice) {
@@ -217,6 +229,7 @@ class CameraController(private val context: Context) {
                     onCameraOpened?.invoke(caps)
                 }
             }
+
             override fun onDisconnected(camera: CameraDevice) {
                 cameraOpenCloseLock.release()
                 camera.close()
@@ -224,6 +237,7 @@ class CameraController(private val context: Context) {
                 AppLogger.w(TAG, "Camera disconnected")
                 onCameraError?.invoke("Camera disconnected")
             }
+
             override fun onError(
                 camera: CameraDevice,
                 error: Int,
@@ -244,11 +258,13 @@ class CameraController(private val context: Context) {
                 onCameraError?.invoke("Camera error: $errorMessage")
             }
         }
+
     private fun startBackgroundThread() {
         backgroundThread = HandlerThread("CameraBackground")
         backgroundThread!!.start()
         backgroundHandler = Handler(backgroundThread!!.looper)
     }
+
     private fun stopBackgroundThread() {
         backgroundThread?.quitSafely()
         try {

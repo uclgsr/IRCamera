@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -26,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+
 @Composable
 fun VideoPlayerCompose(
     url: String?,
@@ -113,6 +115,7 @@ fun VideoPlayerCompose(
         }
     }
 }
+
 @Composable
 private fun EmptyVideoStateCompose() {
     Column(
@@ -133,6 +136,7 @@ private fun EmptyVideoStateCompose() {
         )
     }
 }
+
 @Composable
 private fun VideoSurfaceCompose(
     url: String,
@@ -165,6 +169,7 @@ private fun VideoSurfaceCompose(
         )
     }
 }
+
 @Composable
 private fun VideoControlsOverlayCompose(
     isPlaying: Boolean,
@@ -270,6 +275,7 @@ private fun VideoControlsOverlayCompose(
         }
     }
 }
+
 @Composable
 private fun VideoBottomControlsCompose(
     currentPosition: Long,
@@ -362,6 +368,7 @@ private fun VideoBottomControlsCompose(
         }
     }
 }
+
 @Composable
 fun ThermalImageLoaderCompose(
     url: String?,
@@ -383,6 +390,7 @@ fun ThermalImageLoaderCompose(
         onError = { onImageError?.invoke() }
     )
 }
+
 @Composable
 fun MediaUtilsCompose(
     mediaFiles: List<MediaFile>,
@@ -407,6 +415,7 @@ fun MediaUtilsCompose(
         }
     }
 }
+
 @Composable
 private fun MediaFileItemCompose(
     file: MediaFile,
@@ -472,6 +481,7 @@ private fun MediaFileItemCompose(
         }
     }
 }
+
 // Helper functions
 private fun formatTime(milliseconds: Long): String {
     val seconds = milliseconds / 1000
@@ -483,6 +493,7 @@ private fun formatTime(milliseconds: Long): String {
         "%02d:%02d".format(minutes, seconds % 60)
     }
 }
+
 private fun formatFileSize(bytes: Long): String {
     val kb = bytes / 1024.0
     val mb = kb / 1024.0
@@ -494,6 +505,7 @@ private fun formatFileSize(bytes: Long): String {
         else -> "$bytes B"
     }
 }
+
 // Data classes and interfaces
 interface VideoPlayerCallback {
     fun onPlayStateChanged(isPlaying: Boolean)
@@ -501,6 +513,7 @@ interface VideoPlayerCallback {
     fun onVolumeChanged(volume: Float)
     fun onFullscreenChanged(isFullscreen: Boolean)
 }
+
 data class MediaFile(
     val id: String,
     val name: String,
@@ -510,9 +523,11 @@ data class MediaFile(
     val duration: Long,
     val thumbnailPath: String? = null
 )
+
 enum class MediaFileType {
     VIDEO, IMAGE, AUDIO
 }
+
 // Preview functions
 @Preview(showBackground = true)
 @Composable
@@ -525,6 +540,7 @@ private fun VideoPlayerComposePreview() {
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun MediaUtilsComposePreview() {

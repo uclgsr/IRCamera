@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.compose.dialogs
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+
 @Composable
 fun ConfirmDialog(
     title: String,

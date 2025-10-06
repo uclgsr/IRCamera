@@ -1,4 +1,5 @@
 package mpdc4gsr.tests
+
 import android.content.Context
 import android.content.SharedPreferences
 import mpdc4gsr.feature.settings.data.RecordingSettingsRepository
@@ -10,16 +11,20 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
+
 @Ignore("All tests disabled")
 @RunWith(MockitoJUnitRunner::class)
 class RecordingSettingsTest {
     @Mock
     private lateinit var mockContext: Context
+
     @Mock
     private lateinit var mockSharedPreferences: SharedPreferences
+
     @Mock
     private lateinit var mockEditor: SharedPreferences.Editor
     private lateinit var repository: RecordingSettingsRepository
+
     @Before
     fun setup() {
         `when`(mockContext.applicationContext).thenReturn(mockContext)
@@ -34,6 +39,7 @@ class RecordingSettingsTest {
         `when`(mockSharedPreferences.getBoolean(eq("recording_simultaneous"), anyBoolean())).thenReturn(true)
         `when`(mockSharedPreferences.getBoolean(eq("recording_timestamp_sync"), anyBoolean())).thenReturn(true)
     }
+
     @Test
     fun `test default settings`() {
         val settings = RecordingSettingsRepository.RecordingSettings()
@@ -44,6 +50,7 @@ class RecordingSettingsTest {
         assertEquals(true, settings.simultaneousRecording)
         assertEquals(true, settings.timestampSync)
     }
+
     @Test
     fun `test quality config for Ultra quality`() {
         repository = RecordingSettingsRepository(mockContext)
@@ -53,6 +60,7 @@ class RecordingSettingsTest {
         assertEquals(2160, qualityConfig.videoHeight)
         assertEquals(60, qualityConfig.preferredFps)
     }
+
     @Test
     fun `test quality config for High quality`() {
         repository = RecordingSettingsRepository(mockContext)
@@ -62,6 +70,7 @@ class RecordingSettingsTest {
         assertEquals(1080, qualityConfig.videoHeight)
         assertEquals(30, qualityConfig.preferredFps)
     }
+
     @Test
     fun `test quality config for Medium quality`() {
         repository = RecordingSettingsRepository(mockContext)
@@ -71,6 +80,7 @@ class RecordingSettingsTest {
         assertEquals(720, qualityConfig.videoHeight)
         assertEquals(30, qualityConfig.preferredFps)
     }
+
     @Test
     fun `test quality config for Low quality`() {
         repository = RecordingSettingsRepository(mockContext)

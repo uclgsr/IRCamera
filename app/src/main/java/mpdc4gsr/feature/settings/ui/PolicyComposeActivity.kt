@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.ui
+
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.webkit.WebResourceError
@@ -29,12 +30,14 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 class PolicyViewModel : AppBaseViewModel() {
     enum class PolicyType(val title: String, val contentRes: Int) {
         USER_AGREEMENT("User Services Agreement", R.string.user_services_agreement),
         PRIVACY_POLICY("Privacy Policy", R.string.privacy_policy),
         THIRD_PARTY("Third Party Components", R.string.third_party_components)
     }
+
     private val _policyType = mutableStateOf(PolicyType.USER_AGREEMENT)
     val policyType: State<PolicyType> = _policyType
     private val _isLoading = mutableStateOf(true)
@@ -51,12 +54,15 @@ class PolicyViewModel : AppBaseViewModel() {
             else -> PolicyType.USER_AGREEMENT
         }
     }
+
     fun updateLoadingState(loading: Boolean) {
         _isLoading.value = loading
     }
+
     fun setError(error: Boolean) {
         _showError.value = error
     }
+
     suspend fun loadContent(context: android.content.Context) {
         try {
             _isLoading.value = true
@@ -75,6 +81,7 @@ class PolicyViewModel : AppBaseViewModel() {
             _showError.value = true
         }
     }
+
     private fun generateUserAgreementContent(): String = """
         <html>
         <head>
@@ -157,6 +164,7 @@ class PolicyViewModel : AppBaseViewModel() {
         </body>
         </html>
     """.trimIndent()
+
     private fun generatePrivacyPolicyContent(): String = """
         <html>
         <head>
@@ -276,6 +284,7 @@ class PolicyViewModel : AppBaseViewModel() {
         </body>
         </html>
     """.trimIndent()
+
     private fun generateThirdPartyContent(): String = """
         <html>
         <head>
@@ -367,11 +376,13 @@ class PolicyViewModel : AppBaseViewModel() {
         </html>
     """.trimIndent()
 }
+
 class PolicyComposeActivity : BaseComposeActivity<PolicyViewModel>() {
     companion object {
         const val KEY_THEME_TYPE = "key_theme_type"
         const val KEY_USE_TYPE = "key_use_type"
     }
+
     override fun createViewModel(): PolicyViewModel = viewModels<PolicyViewModel>().value
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -379,6 +390,7 @@ class PolicyComposeActivity : BaseComposeActivity<PolicyViewModel>() {
         val viewModel = viewModels<PolicyViewModel>().value
         viewModel.setPolicyType(themeType)
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: PolicyViewModel) {
@@ -488,6 +500,7 @@ class PolicyComposeActivity : BaseComposeActivity<PolicyViewModel>() {
         }
     }
 }
+
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun PolicyWebView(

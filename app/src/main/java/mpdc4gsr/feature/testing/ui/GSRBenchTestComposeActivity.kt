@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.os.Bundle
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -33,6 +34,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
         private const val TEST_DURATION_SECONDS = 10
         private const val SAMPLE_TOLERANCE = 50
     }
+
     private var gsrRecorder: GSRSensorRecorder? = null
     private var recordingController: RecordingController? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +46,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun GSRBenchTestScreen() {
@@ -193,6 +196,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private fun initializeComponents() {
         try {
             val controller = RecordingController(this, this)
@@ -203,6 +207,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Failed to initialize GSR components: ${e.message}")
         }
     }
+
     private suspend fun runComprehensiveBenchTest() {
         AppLogger.i(TAG, "Starting comprehensive GSR bench test")
         val overallStartTime = System.currentTimeMillis()
@@ -236,6 +241,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Comprehensive bench test failed: ${e.message}")
         }
     }
+
     private suspend fun runConnectionTest() {
         AppLogger.d(TAG, "Testing GSR connection")
         try {
@@ -246,6 +252,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Connection test failed: ${e.message}")
         }
     }
+
     private suspend fun runCalibrationTest() {
         AppLogger.d(TAG, "Testing GSR calibration")
         try {
@@ -256,6 +263,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Calibration test failed: ${e.message}")
         }
     }
+
     private suspend fun runDataQualityTest(): Map<String, Any> {
         AppLogger.d(TAG, "Running GSR data quality test")
         val qualityMetrics = mutableMapOf<String, Any>()
@@ -271,6 +279,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
         }
         return qualityMetrics
     }
+
     private suspend fun runPerformanceBenchmark(): Map<String, Any> {
         AppLogger.d(TAG, "Running GSR performance benchmark")
         val performanceMetrics = mutableMapOf<String, Any>()
@@ -292,6 +301,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
         }
         return performanceMetrics
     }
+
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {
@@ -303,6 +313,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private suspend fun runStressTest() {
         AppLogger.d(TAG, "Running GSR stress test")
         try {

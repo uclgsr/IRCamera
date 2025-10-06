@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.components.sensors
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.model.SensorState
 import mpdc4gsr.core.ui.model.ThermalAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThermalSensorCard(
@@ -151,6 +153,7 @@ fun ThermalSensorCard(
                             Text("Connect")
                         }
                     }
+
                     SensorState.Connected -> {
                         Button(
                             onClick = {
@@ -169,6 +172,7 @@ fun ThermalSensorCard(
                             Text("Calibrate")
                         }
                     }
+
                     SensorState.Streaming -> {
                         Button(
                             onClick = { onAction(ThermalAction.StopPreview) },
@@ -190,6 +194,7 @@ fun ThermalSensorCard(
                             )
                         }
                     }
+
                     SensorState.Error -> {
                         Button(
                             onClick = { onAction(ThermalAction.Connect) },
@@ -198,12 +203,14 @@ fun ThermalSensorCard(
                             Text("Retry")
                         }
                     }
+
                     else -> {}
                 }
             }
         }
     }
 }
+
 @Composable
 private fun ThermalPreviewVisualization(
     centerTemp: Float,
@@ -332,6 +339,7 @@ private fun ThermalPreviewVisualization(
         }
     }
 }
+
 @Composable
 private fun MetricItem(
     label: String,
@@ -356,6 +364,7 @@ private fun MetricItem(
         )
     }
 }
+
 @Composable
 private fun getStatusColor(state: SensorState): Color {
     return when (state) {
@@ -367,6 +376,7 @@ private fun getStatusColor(state: SensorState): Color {
         SensorState.Simulation -> Color.Magenta
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun ThermalSensorCardPreview() {

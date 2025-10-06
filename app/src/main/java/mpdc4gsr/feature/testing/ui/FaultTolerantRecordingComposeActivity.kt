@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -26,9 +27,11 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.network.data.RecordingState
+
 enum class SensorConnectionStatus {
     DISCONNECTED, CONNECTING, CONNECTED, ERROR
 }
+
 data class RecordingSessionInfo(
     val sessionName: String = "Recording Session",
     val duration: String = "00:00:00",
@@ -37,9 +40,11 @@ data class RecordingSessionInfo(
     val thermalFrames: Int = 0,
     val gsrSamples: Int = 0
 )
+
 private const val DEFAULT_PLAYBACK_FPS = 30
 private const val THERMAL_FPS = 9
 private const val GSR_SAMPLING_RATE_HZ = 128
+
 data class SensorInfo(
     val name: String,
     val status: SensorConnectionStatus,
@@ -47,6 +52,7 @@ data class SensorInfo(
     val dataRate: String = "0 KB/s",
     val errorMessage: String? = null
 )
+
 class FaultTolerantRecordingViewModel : AppBaseViewModel() {
     private val _recordingState = mutableStateOf(RecordingState.IDLE)
     val recordingState: State<RecordingState> = _recordingState
@@ -108,6 +114,7 @@ class FaultTolerantRecordingViewModel : AppBaseViewModel() {
             _isInitializing.value = false
         }
     }
+
     fun startRecording() {
         if (_sensorInfoList.value.none { it.status == SensorConnectionStatus.CONNECTED }) {
             _systemStatus.value = "Error: No sensors connected. Cannot start recording."
@@ -148,6 +155,7 @@ class FaultTolerantRecordingViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun stopRecording() {
         _recordingState.value = RecordingState.IDLE
         _systemStatus.value = "Recording stopped. Data saved successfully."
@@ -158,6 +166,7 @@ class FaultTolerantRecordingViewModel : AppBaseViewModel() {
             } else sensor
         }
     }
+
     fun reconnectSensor(sensorName: String) {
         viewModelScope.launch {
             _sensorInfoList.value = _sensorInfoList.value.map { sensor ->
@@ -180,14 +189,17 @@ class FaultTolerantRecordingViewModel : AppBaseViewModel() {
         }
     }
 }
+
 class FaultTolerantRecordingComposeActivity :
     BaseComposeActivity<FaultTolerantRecordingViewModel>() {
     override fun createViewModel(): FaultTolerantRecordingViewModel =
         viewModels<FaultTolerantRecordingViewModel>().value
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModels<FaultTolerantRecordingViewModel>().value.initializeSystem()
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: FaultTolerantRecordingViewModel) {
@@ -420,6 +432,7 @@ class FaultTolerantRecordingComposeActivity :
         }
     }
 }
+
 @Composable
 private fun InfoColumn(
     label: String,
@@ -443,6 +456,7 @@ private fun InfoColumn(
         )
     }
 }
+
 @Composable
 private fun SensorStatusCard(
     sensor: SensorInfo,

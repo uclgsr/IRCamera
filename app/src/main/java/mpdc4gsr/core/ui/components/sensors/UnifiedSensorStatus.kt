@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.components.sensors
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +21,7 @@ import mpdc4gsr.core.ui.model.*
 import mpdc4gsr.core.ui.model.SensorState
 import mpdc4gsr.core.ui.model.SensorType
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 @Composable
 fun UnifiedSensorStatus(
     systemState: UnifiedSystemState,
@@ -123,6 +125,7 @@ fun UnifiedSensorStatus(
                             Text("Sync All")
                         }
                     }
+
                     UnifiedSystemState.Active -> {
                         Button(
                             onClick = { onSystemAction(SystemAction.StartRecording) },
@@ -141,6 +144,7 @@ fun UnifiedSensorStatus(
                             Text("Re-sync")
                         }
                     }
+
                     UnifiedSystemState.Recording -> {
                         Button(
                             onClick = { onSystemAction(SystemAction.StopRecording) },
@@ -164,6 +168,7 @@ fun UnifiedSensorStatus(
                             fontSize = 14.sp
                         )
                     }
+
                     UnifiedSystemState.Error -> {
                         Button(
                             onClick = { onSystemAction(SystemAction.Synchronize) },
@@ -177,6 +182,7 @@ fun UnifiedSensorStatus(
         }
     }
 }
+
 @Composable
 private fun SensorStatusVisualization(
     sensors: List<SensorInfo>,
@@ -270,6 +276,7 @@ private fun SensorStatusVisualization(
         }
     }
 }
+
 @Composable
 private fun MetricItem(
     label: String,
@@ -294,6 +301,7 @@ private fun MetricItem(
         )
     }
 }
+
 private fun getSystemStatusText(state: UnifiedSystemState, sensorCount: Int): String {
     return when (state) {
         UnifiedSystemState.Inactive -> "$sensorCount sensors available"
@@ -302,6 +310,7 @@ private fun getSystemStatusText(state: UnifiedSystemState, sensorCount: Int): St
         UnifiedSystemState.Error -> "System error - check sensors"
     }
 }
+
 private fun getSystemStatusColor(state: UnifiedSystemState): Color {
     return when (state) {
         UnifiedSystemState.Inactive -> Color.Gray
@@ -310,6 +319,7 @@ private fun getSystemStatusColor(state: UnifiedSystemState): Color {
         UnifiedSystemState.Error -> Color.Red
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun UnifiedSensorStatusPreview() {

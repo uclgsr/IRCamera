@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,6 +31,7 @@ import kotlin.random.Random
 
 class GSRQuickRecordingComposeActivity : BaseComposeActivity<GSRQuickRecordingViewModel>() {
     override fun createViewModel(): GSRQuickRecordingViewModel = GSRQuickRecordingViewModel()
+
     @Composable
     override fun Content(viewModel: GSRQuickRecordingViewModel) {
         IRCameraTheme {
@@ -37,6 +39,7 @@ class GSRQuickRecordingComposeActivity : BaseComposeActivity<GSRQuickRecordingVi
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
@@ -116,6 +119,7 @@ fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
         }
     }
 }
+
 @Composable
 fun QuickRecordingStatusCard(
     isRecording: Boolean,
@@ -219,6 +223,7 @@ fun QuickRecordingStatusCard(
         }
     }
 }
+
 @Composable
 fun GSRDeviceStatusCard(
     deviceStatus: String,
@@ -288,6 +293,7 @@ fun GSRDeviceStatusCard(
         }
     }
 }
+
 @Composable
 fun LiveGSRDataCard(
     currentValue: Double,
@@ -337,6 +343,7 @@ fun LiveGSRDataCard(
         }
     }
 }
+
 @Composable
 fun QuickSettingsCard(
     sampleRate: Int,
@@ -388,6 +395,7 @@ fun QuickSettingsCard(
         }
     }
 }
+
 @Composable
 fun QuickSessionCard(
     session: QuickSession,
@@ -428,6 +436,7 @@ fun QuickSessionCard(
         }
     }
 }
+
 @Composable
 fun QuickStatItem(label: String, value: String) {
     Column(
@@ -446,11 +455,13 @@ fun QuickStatItem(label: String, value: String) {
         )
     }
 }
+
 private fun formatDuration(millis: Long): String {
     val seconds = millis / 1000
     val minutes = seconds / 60
     return String.format("%d:%02d", minutes, seconds % 60)
 }
+
 // Data classes
 data class QuickSession(
     val name: String,
@@ -458,6 +469,7 @@ data class QuickSession(
     val sampleCount: Int,
     val timestamp: Long
 )
+
 data class GSRQuickRecordingUiState(
     val isRecording: Boolean = false,
     val recordingDuration: Long = 0,
@@ -472,6 +484,7 @@ data class GSRQuickRecordingUiState(
     val autoSave: Boolean = true,
     val recentSessions: List<QuickSession> = emptyList()
 )
+
 // ViewModel
 class GSRQuickRecordingViewModel : AppBaseViewModel() {
     private val _recordingState = MutableStateFlow(GSRQuickRecordingUiState())
@@ -485,6 +498,7 @@ class GSRQuickRecordingViewModel : AppBaseViewModel() {
         )
         _recordingState.value = _recordingState.value.copy(recentSessions = mockSessions)
     }
+
     fun startQuickRecording() {
         _recordingState.value = _recordingState.value.copy(isRecording = true)
         // Cancel any existing recording job
@@ -504,24 +518,30 @@ class GSRQuickRecordingViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun stopQuickRecording() {
         _recordingState.value = _recordingState.value.copy(isRecording = false)
         recordingJob?.cancel()
         recordingJob = null
     }
+
     override fun onCleared() {
         super.onCleared()
         recordingJob?.cancel()
     }
+
     fun setSampleRate(rate: Int) {
         _recordingState.value = _recordingState.value.copy(sampleRate = rate)
     }
+
     fun toggleAutoSave() {
         _recordingState.value = _recordingState.value.copy(autoSave = !_recordingState.value.autoSave)
     }
+
     fun viewSession(session: QuickSession) {
         // Implementation for viewing session
     }
+
     fun exportSession(session: QuickSession) {
         // Implementation for exporting session
     }

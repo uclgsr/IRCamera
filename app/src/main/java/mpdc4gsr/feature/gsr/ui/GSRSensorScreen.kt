@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -611,6 +612,7 @@ private fun generateInitialGSRData(): List<Float> {
         2.0f + kotlin.math.sin(it * 0.1f).toFloat() * 0.5f + kotlin.random.Random.nextFloat() * 0.2f
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun GSRSensorScreenPreview() {

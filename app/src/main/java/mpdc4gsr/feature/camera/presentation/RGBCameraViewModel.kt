@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.presentation
+
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,6 +16,7 @@ enum class FocusMode(val displayName: String) {
     AUTO("Auto"),
     MANUAL("Manual"),
     CONTINUOUS("Continuous");
+
     fun getNext(): FocusMode {
         return when (this) {
             AUTO -> MANUAL
@@ -29,6 +31,7 @@ enum class WhiteBalance(val displayName: String) {
     DAYLIGHT("Daylight"),
     CLOUDY("Cloudy"),
     TUNGSTEN("Tungsten");
+
     fun getNext(): WhiteBalance {
         return when (this) {
             AUTO -> DAYLIGHT
@@ -43,12 +46,14 @@ class RGBCameraViewModel(
     context: Context
 ) : AppBaseViewModel() {
     private val application: Context = context.applicationContext
+
     companion object {
         // Reuse SimpleDateFormat instance for better performance
         private val ISO_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
             timeZone = TimeZone.getTimeZone("UTC")
         }
     }
+
     data class CameraState(
         val isPreviewActive: Boolean = false,
         val isRecording: Boolean = false,
@@ -63,6 +68,7 @@ class RGBCameraViewModel(
         val error: String? = null,
         val cameraChangeCounter: Int = 0
     )
+
     private val _cameraState = MutableStateFlow(CameraState())
     val cameraState: StateFlow<CameraState> = _cameraState.asStateFlow()
     private val _cameraRecorder = MutableStateFlow<RgbCameraRecorder?>(null)
@@ -200,18 +206,23 @@ class RGBCameraViewModel(
     fun updateResolution(resolution: String) {
         _cameraState.update { it.copy(resolution = resolution) }
     }
+
     fun updateFrameRate(frameRate: Int) {
         _cameraState.update { it.copy(frameRate = frameRate) }
     }
+
     fun updateFocusMode(focusMode: FocusMode) {
         _cameraState.update { it.copy(focusMode = focusMode) }
     }
+
     fun updateWhiteBalance(whiteBalance: WhiteBalance) {
         _cameraState.update { it.copy(whiteBalance = whiteBalance) }
     }
+
     fun updateExposureTime(exposureTime: String) {
         _cameraState.update { it.copy(exposureTime = exposureTime) }
     }
+
     fun updateISO(iso: Int) {
         _cameraState.update { it.copy(iso = iso) }
     }
@@ -254,6 +265,7 @@ class RGBCameraViewModel(
             }
         }
     }
+
     override fun onCleared() {
         super.onCleared()
         viewModelScope.launch {

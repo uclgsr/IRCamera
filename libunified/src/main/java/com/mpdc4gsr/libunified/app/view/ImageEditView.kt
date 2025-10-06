@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.view
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
@@ -8,6 +9,7 @@ import android.view.View
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
+
 class ImageEditView : View {
     companion object {
         private const val PAINT_WIDTH = 6
@@ -15,11 +17,13 @@ class ImageEditView : View {
         private const val ARROW_WIDTH = 30
         private const val PAINT_COLOR = 0xffe22400.toInt()
     }
+
     enum class Type {
         CIRCLE,
         RECT,
         ARROW,
     }
+
     var type: Type = Type.CIRCLE
     var color: Int
         get() = paint.color
@@ -46,6 +50,7 @@ class ImageEditView : View {
     private var canvas: Canvas? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
     private val path = Path()
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
@@ -54,6 +59,7 @@ class ImageEditView : View {
         defStyleAttr,
         0
     )
+
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -70,11 +76,13 @@ class ImageEditView : View {
         paint.strokeWidth = PAINT_WIDTH.toFloat()
         paint.isDither = true
     }
+
     fun clear() {
         hasEditData = false
         canvas?.drawColor(0x00000000, PorterDuff.Mode.CLEAR)
         invalidate()
     }
+
     fun buildResultBitmap(): Bitmap? {
         val bgBitmap = this.bgBitmap ?: return null
         val editBitmap = this.editBitmap
@@ -84,6 +92,7 @@ class ImageEditView : View {
         }
         return bgBitmap
     }
+
     @SuppressLint("DrawAllocation")
     override fun onLayout(
         changed: Boolean,
@@ -114,6 +123,7 @@ class ImageEditView : View {
             }
         }
     }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         bgBitmap?.let {
@@ -124,6 +134,7 @@ class ImageEditView : View {
         }
         drawEdit(canvas)
     }
+
     private fun drawEdit(canvas: Canvas?) {
         if (downX == 0 && downY == 0 && currentX == 0 && currentY == 0) {
             return
@@ -137,6 +148,7 @@ class ImageEditView : View {
                 val bottom = downY.coerceAtLeast(currentY).toFloat()
                 canvas?.drawOval(left, top, right, bottom, paint)
             }
+
             Type.RECT -> {
                 paint.style = Paint.Style.STROKE
                 val left = downX.coerceAtMost(currentX).toFloat()
@@ -145,6 +157,7 @@ class ImageEditView : View {
                 val bottom = downY.coerceAtLeast(currentY).toFloat()
                 canvas?.drawRect(left, top, right, bottom, paint)
             }
+
             Type.ARROW -> {
                 if (abs(downX - currentX) < ARROW_WIDTH && abs(downY - currentY) < ARROW_WIDTH) {
                     return
@@ -254,10 +267,12 @@ class ImageEditView : View {
             }
         }
     }
+
     private var downX = 0
     private var downY = 0
     private var currentX = 0
     private var currentY = 0
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event == null || !isEnabled) {
@@ -274,9 +289,11 @@ class ImageEditView : View {
                 downY = event.y.toInt().coerceAtLeast(HALF_PAINT_WIDTH)
                     .coerceAtMost(height - HALF_PAINT_WIDTH)
             }
+
             MotionEvent.ACTION_MOVE -> {
                 invalidate()
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 drawEdit(canvas)
                 downX = 0
@@ -289,6 +306,7 @@ class ImageEditView : View {
         }
         return true
     }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         canvas = null

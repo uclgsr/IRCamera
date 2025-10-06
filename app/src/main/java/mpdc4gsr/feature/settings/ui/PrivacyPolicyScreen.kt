@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -75,6 +76,7 @@ fun PrivacyPolicyScreen(
         }
     }
 }
+
 @Composable
 private fun PolicySection(
     title: String,
@@ -103,6 +105,7 @@ private fun PolicySection(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun PrivacyPolicyScreenPreview() {

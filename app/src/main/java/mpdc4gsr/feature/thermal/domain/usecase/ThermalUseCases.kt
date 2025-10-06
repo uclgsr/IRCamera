@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.thermal.domain.usecase
+
 import kotlinx.coroutines.flow.Flow
 import mpdc4gsr.feature.thermal.data.source.ThermalFrameData
 import mpdc4gsr.feature.thermal.data.source.ThermalSnapshot

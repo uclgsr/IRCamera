@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data
+
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
@@ -16,6 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.crypto.KeyGenerator
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
+
 class AdvancedAuthenticationManager(private val context: Context) {
     companion object {
         private const val TAG = "AdvancedAuth"
@@ -32,6 +34,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         private const val KEYSTORE_ALIAS_SESSION = "ircamera_session_key"
         private const val KEYSTORE_ALIAS_HMAC = "ircamera_hmac_key"
     }
+
     private val currentAuthLevel = AtomicBoolean(false)
     private var authenticatedDeviceId: String? = null
     private var authenticatedRole: DeviceRole = DeviceRole.GUEST
@@ -44,6 +47,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
     private var certificateManager: CertificateManager? = null
     private var roleManager: RoleBasedAccessControl? = null
     private var securityMonitor: SecurityMonitor? = null
+
     enum class DeviceRole(val level: Int, val permissions: Set<String>) {
         GUEST(0, setOf("view_status")),
         OBSERVER(1, setOf("view_status", "view_sessions", "download_data")),
@@ -71,6 +75,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         ),
         ADMINISTRATOR(4, setOf("*")),
     }
+
     enum class AuthenticationResult {
         SUCCESS,
         INVALID_CREDENTIALS,
@@ -82,6 +87,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         BIOMETRIC_FAILED,
         UNKNOWN_ERROR,
     }
+
     data class AuthenticationContext(
         val deviceId: String,
         val authLevel: Int,
@@ -90,22 +96,26 @@ class AdvancedAuthenticationManager(private val context: Context) {
         val expiryTime: Long,
         val capabilities: Set<String>,
     )
+
     interface AuthenticationListener {
         fun onAuthenticationSuccess(context: AuthenticationContext)
         fun onAuthenticationFailure(
             reason: AuthenticationResult,
             attemptsRemaining: Int,
         )
+
         fun onSessionExpired()
         fun onSecurityAlert(
             alertType: String,
             details: Map<String, Any>,
         )
+
         fun onRoleChanged(
             newRole: DeviceRole,
             permissions: Set<String>,
         )
     }
+
     private var authListener: AuthenticationListener? = null
     fun initialize(): Boolean {
         return try {
@@ -149,9 +159,11 @@ class AdvancedAuthenticationManager(private val context: Context) {
             false
         }
     }
+
     fun setAuthenticationListener(listener: AuthenticationListener) {
         this.authListener = listener
     }
+
     suspend fun authenticate(
         deviceId: String,
         authLevel: Int,
@@ -190,6 +202,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             return AuthenticationResult.UNKNOWN_ERROR
         }
     }
+
     private suspend fun authenticateBasic(
         deviceId: String,
         credentials: Map<String, Any>,
@@ -205,6 +218,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         }
         return AuthenticationResult.INVALID_CREDENTIALS
     }
+
     private suspend fun authenticateCertificate(
         deviceId: String,
         credentials: Map<String, Any>,
@@ -247,6 +261,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             }
         }
     }
+
     private suspend fun authenticateToken(
         deviceId: String,
         credentials: Map<String, Any>,
@@ -265,6 +280,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         }
         return AuthenticationResult.SUCCESS
     }
+
     private suspend fun authenticateBiometric(
         deviceId: String,
         credentials: Map<String, Any>,
@@ -280,6 +296,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             AuthenticationResult.BIOMETRIC_FAILED
         }
     }
+
     private suspend fun onAuthenticationSuccess(
         deviceId: String,
         authLevel: Int,
@@ -318,6 +335,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         authListener?.onAuthenticationSuccess(context)
         startSessionMonitoring(deviceId, sessionExpiry)
     }
+
     private suspend fun onAuthenticationFailure(
         deviceId: String,
         result: AuthenticationResult,
@@ -349,6 +367,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         )
         authListener?.onAuthenticationFailure(result, attemptsRemaining)
     }
+
     private fun isDeviceLocked(deviceId: String): Boolean {
         val lockoutTime = lockoutExpiry[deviceId] ?: return false
         if (System.currentTimeMillis() < lockoutTime) {
@@ -359,6 +378,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             return false
         }
     }
+
     private fun determineDeviceRole(
         deviceId: String,
         authLevel: Int,
@@ -374,11 +394,13 @@ class AdvancedAuthenticationManager(private val context: Context) {
                     "THERMAL_CAMERA" -> DeviceRole.OBSERVER
                     else -> DeviceRole.GUEST
                 }
+
             AUTH_LEVEL_TOKEN -> DeviceRole.RESEARCHER
             AUTH_LEVEL_BIOMETRIC -> DeviceRole.ADMINISTRATOR
             else -> DeviceRole.GUEST
         }
     }
+
     private fun generateSessionToken(
         deviceId: String,
         role: DeviceRole,
@@ -393,6 +415,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             android.util.Base64.NO_WRAP,
         )
     }
+
     private fun verifyHmac(
         deviceId: String,
         token: String,
@@ -412,6 +435,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             false
         }
     }
+
     private fun verifyHardwareKey(
         deviceId: String,
         hardwareKey: ByteArray,
@@ -433,6 +457,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             false
         }
     }
+
     private fun getEnhancedBasicCredentials(): Map<String, String> {
         return mapOf(
             "researcher" to "research2024!",
@@ -440,6 +465,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             "observer" to "view_only_123",
         )
     }
+
     private fun getHmacKey(deviceId: String): ByteArray {
         return try {
             val keyStore = KeyStore.getInstance("AndroidKeyStore")
@@ -452,6 +478,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             "default_hmac_key_$deviceId".toByteArray()
         }
     }
+
     private fun initializeKeystore() {
         try {
             generateDeviceKey()
@@ -462,6 +489,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             AppLogger.e(TAG, "Failed to initialize keystore", e)
         }
     }
+
     private fun generateDeviceKey() {
         val keyGenerator =
             KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
@@ -477,6 +505,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         keyGenerator.init(keyGenParameterSpec)
         keyGenerator.generateKey()
     }
+
     private fun generateSessionKey() {
         val keyGenerator =
             KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
@@ -492,6 +521,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         keyGenerator.init(keyGenParameterSpec)
         keyGenerator.generateKey()
     }
+
     private fun generateHmacKey() {
         val keyGenerator = KeyGenerator.getInstance("HmacSHA256", "AndroidKeyStore")
         val keyGenParameterSpec =
@@ -504,6 +534,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         keyGenerator.init(keyGenParameterSpec)
         keyGenerator.generateKey()
     }
+
     private fun startSessionMonitoring(
         deviceId: String,
         expiryTime: Long,
@@ -519,6 +550,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             }
         }
     }
+
     fun logout() {
         currentAuthLevel.set(false)
         authenticatedDeviceId = null
@@ -527,8 +559,10 @@ class AdvancedAuthenticationManager(private val context: Context) {
         sessionExpiry = 0L
         logger.log(StructuredLogger.LogLevel.INFO, TAG, "logout", emptyMap())
     }
+
     fun isAuthenticated(): Boolean =
         currentAuthLevel.get() && System.currentTimeMillis() < sessionExpiry
+
     fun getCurrentContext(): AuthenticationContext? {
         if (!isAuthenticated()) return null
         return AuthenticationContext(
@@ -547,11 +581,13 @@ class AdvancedAuthenticationManager(private val context: Context) {
             capabilities = authenticatedRole.permissions,
         )
     }
+
     fun hasPermission(permission: String): Boolean {
         if (!isAuthenticated()) return false
         return authenticatedRole.permissions.contains("*") ||
                 authenticatedRole.permissions.contains(permission)
     }
+
     fun getSecurityDiagnostics(): JSONObject {
         return JSONObject().apply {
             put("authentication_enabled", true)
@@ -567,6 +603,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             put("phase4_enabled", true)
         }
     }
+
     fun shutdown() {
         scope.cancel()
         securityMonitor?.stopMonitoring()

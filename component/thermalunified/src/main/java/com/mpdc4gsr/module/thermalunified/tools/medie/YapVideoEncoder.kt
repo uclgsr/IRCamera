@@ -1,5 +1,7 @@
 @file:Suppress(names = ["DEPRECATION", "SpellCheckingInspection"])
+
 package com.mpdc4gsr.module.thermalunified.tools.medie
+
 import android.graphics.Bitmap
 import android.media.*
 import android.os.Build
@@ -9,6 +11,7 @@ import java.io.File
 import java.io.IOException
 import java.nio.ByteBuffer
 import kotlin.concurrent.thread
+
 class YapVideoEncoder(
     private val IProvider: IYapVideoProvider<Bitmap>,
     private val out: File,
@@ -51,6 +54,7 @@ class YapVideoEncoder(
             val capabilities = codecInfo!!.getCapabilitiesForType("video/avc")
             return capabilities.colorFormats
         }
+
     private fun init(
         width: Int,
         height: Int,
@@ -62,18 +66,22 @@ class YapVideoEncoder(
                     colorFormat = format
                     break@lab
                 }
+
                 MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar -> {
                     colorFormat = format
                     break@lab
                 }
+
                 MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420PackedSemiPlanar -> {
                     colorFormat = format
                     break@lab
                 }
+
                 MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420PackedPlanar -> {
                     colorFormat = format
                     break@lab
                 }
+
                 else -> break@lab
             }
         }
@@ -107,6 +115,7 @@ class YapVideoEncoder(
         mediaCodec!!.start()
         isRunning = true
     }
+
     fun start() {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             thread(start = true) {
@@ -124,6 +133,7 @@ class YapVideoEncoder(
             finish()
         }
     }
+
     private fun finish() {
         isRunning = false
         if (mediaCodec != null) {
@@ -142,6 +152,7 @@ class YapVideoEncoder(
             }
         }
     }
+
     private fun run(bitmapFirst: Bitmap?) {
         var bitmap = bitmapFirst
         isRunning = true
@@ -203,9 +214,11 @@ class YapVideoEncoder(
             }
         }
     }
+
     private fun computePresentationTime(frameIndex: Long): Long {
         return 132 + frameIndex * 1000000 / mFrameRate
     }
+
     private fun drainEncoder(
         endOfStream: Boolean,
         bufferInfo: MediaCodec.BufferInfo,
@@ -278,6 +291,7 @@ class YapVideoEncoder(
             }
         }
     }
+
     private fun getNV12(
         inputWidth: Int,
         inputHeight: Int,
@@ -294,6 +308,7 @@ class YapVideoEncoder(
                     inputWidth,
                     inputHeight,
                 )
+
             MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar ->
                 encodeYUV420P(
                     yuv,
@@ -301,6 +316,7 @@ class YapVideoEncoder(
                     inputWidth,
                     inputHeight,
                 )
+
             MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420PackedSemiPlanar ->
                 encodeYUV420PSP(
                     yuv,
@@ -308,6 +324,7 @@ class YapVideoEncoder(
                     inputWidth,
                     inputHeight,
                 )
+
             MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420PackedPlanar ->
                 encodeYUV420PP(
                     yuv,
@@ -318,6 +335,7 @@ class YapVideoEncoder(
         }
         return yuv
     }
+
     private fun encodeYUV420SP(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -372,6 +390,7 @@ class YapVideoEncoder(
             }
         }
     }
+
     private fun encodeYUV420P(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -427,6 +446,7 @@ class YapVideoEncoder(
             }
         }
     }
+
     private fun encodeYUV420PSP(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -482,6 +502,7 @@ class YapVideoEncoder(
             }
         }
     }
+
     private fun encodeYUV420PP(
         yuv420sp: ByteArray,
         argb: IntArray,

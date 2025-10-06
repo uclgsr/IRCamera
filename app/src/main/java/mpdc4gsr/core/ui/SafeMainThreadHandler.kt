@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui
+
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -22,6 +23,7 @@ class SafeMainThreadHandler(private val componentName: String = "Unknown") {
             )
         }
     }
+
     private val handler = Handler(Looper.getMainLooper())
 
     fun post(runnable: Runnable) {
@@ -56,6 +58,7 @@ class SafeMainThreadHandler(private val componentName: String = "Unknown") {
                                     "This may cause ANR. Move work to background thread."
                         )
                     }
+
                     executionTime > WARNING_THRESHOLD_MS -> {
                         slowOperations.incrementAndGet()
                         Log.w(
@@ -68,6 +71,7 @@ class SafeMainThreadHandler(private val componentName: String = "Unknown") {
             }
         }
     }
+
     data class HandlerStatistics(
         val totalOperations: Long,
         val slowOperations: Long,

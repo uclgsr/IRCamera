@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import kotlin.math.roundToInt
+
 @Composable
 fun SeekBarPopupCompose(
     visible: Boolean,
@@ -135,6 +137,7 @@ fun SeekBarPopupCompose(
         }
     }
 }
+
 @Composable
 fun OptionPickPopupCompose(
     visible: Boolean,
@@ -192,6 +195,7 @@ fun OptionPickPopupCompose(
         }
     }
 }
+
 @Composable
 private fun OptionItemCompose(
     text: String,
@@ -245,6 +249,7 @@ private fun OptionItemCompose(
         }
     }
 }
+
 @Composable
 fun GalleryChangePopupCompose(
     visible: Boolean,
@@ -324,6 +329,7 @@ fun GalleryChangePopupCompose(
         }
     }
 }
+
 @Composable
 private fun GalleryOptionItemCompose(
     galleryName: String,
@@ -374,6 +380,7 @@ private fun GalleryOptionItemCompose(
         }
     }
 }
+
 // Preview functions
 @Preview(showBackground = true)
 @Composable
@@ -388,6 +395,7 @@ private fun SeekBarPopupPreview() {
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun OptionPickPopupPreview() {
@@ -402,6 +410,7 @@ private fun OptionPickPopupPreview() {
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun GalleryChangePopupPreview() {

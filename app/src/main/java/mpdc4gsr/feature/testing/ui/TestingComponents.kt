@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -19,9 +20,11 @@ data class TestCase(
     val duration: Long = 0,
     val details: String = ""
 )
+
 enum class TestStatus {
     PENDING, RUNNING, PASSED, FAILED, SKIPPED
 }
+
 @Composable
 fun TestResultCard(
     testCase: TestCase,
@@ -89,6 +92,7 @@ fun TestResultCard(
         }
     }
 }
+
 @Composable
 fun TestStatusIcon(
     status: TestStatus,
@@ -108,6 +112,7 @@ fun TestStatusIcon(
         modifier = modifier.size(24.dp)
     )
 }
+
 @Composable
 fun TestProgressIndicator(
     totalTests: Int,
@@ -169,6 +174,7 @@ fun TestProgressIndicator(
         }
     }
 }
+
 @Composable
 fun TestMetricChip(
     label: String,
@@ -191,6 +197,7 @@ fun TestMetricChip(
         modifier = modifier
     )
 }
+
 @Composable
 fun TestMetricsDisplay(
     metrics: Map<String, Any>,

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.presentation
+
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.*
@@ -12,12 +13,15 @@ class TestingPatternsViewModel : BaseViewModel() {
     val testResults: StateFlow<List<TestResult>> = _testResults.asStateFlow()
     private val _currentTest = MutableStateFlow<TestCase?>(null)
     val currentTest: StateFlow<TestCase?> = _currentTest.asStateFlow()
+
     // SharedFlow for test events
     private val _testEvents = MutableSharedFlow<TestEvent>()
     val testEvents: SharedFlow<TestEvent> = _testEvents.asSharedFlow()
+
     // Combined state for complex test scenarios
     private val _testSuiteState = MutableStateFlow(TestSuiteState())
     val testSuiteState: StateFlow<TestSuiteState> = _testSuiteState.asStateFlow()
+
     // Data classes for testing
     sealed class TestExecutionState {
         object Idle : TestExecutionState()
@@ -26,6 +30,7 @@ class TestingPatternsViewModel : BaseViewModel() {
         data class Error(val message: String) : TestExecutionState()
         object Paused : TestExecutionState()
     }
+
     data class TestResult(
         val testId: String,
         val testName: String,
@@ -34,6 +39,7 @@ class TestingPatternsViewModel : BaseViewModel() {
         val message: String? = null,
         val timestamp: Long = System.currentTimeMillis()
     )
+
     data class TestCase(
         val id: String,
         val name: String,
@@ -41,6 +47,7 @@ class TestingPatternsViewModel : BaseViewModel() {
         val category: TestCategory,
         val estimatedDuration: Long
     )
+
     data class TestSuiteState(
         val totalTests: Int = 0,
         val completedTests: Int = 0,
@@ -51,12 +58,15 @@ class TestingPatternsViewModel : BaseViewModel() {
         val progress: Float = 0f,
         val estimatedTimeRemaining: Long = 0L
     )
+
     enum class TestStatus {
         PASSED, FAILED, SKIPPED, RUNNING, PENDING
     }
+
     enum class TestCategory {
         UNIT, INTEGRATION, UI, PERFORMANCE, STRESS, REGRESSION
     }
+
     sealed class TestEvent {
         data class TestStarted(val testCase: TestCase) : TestEvent()
         data class TestCompleted(val result: TestResult) : TestEvent()
@@ -64,6 +74,7 @@ class TestingPatternsViewModel : BaseViewModel() {
         data class SuiteCompleted(val summary: TestSummary) : TestEvent()
         data class ShowTestReport(val reportPath: String) : TestEvent()
     }
+
     data class TestSummary(
         val totalDuration: Long,
         val totalTests: Int,
@@ -71,6 +82,7 @@ class TestingPatternsViewModel : BaseViewModel() {
         val failedTests: Int,
         val coverage: Float
     )
+
     init {
         // Setup combined state management for test suite
         viewModelScope.launch {
@@ -160,6 +172,7 @@ class TestingPatternsViewModel : BaseViewModel() {
             )
         }
     }
+
     private suspend fun executeUnitTest(testCase: TestCase): TestResult {
         val startTime = System.currentTimeMillis()
         // Simulate unit test execution
@@ -174,6 +187,7 @@ class TestingPatternsViewModel : BaseViewModel() {
             message = if (passed) "Test passed successfully" else "Assertion failed"
         )
     }
+
     private suspend fun executeIntegrationTest(testCase: TestCase): TestResult {
         val startTime = System.currentTimeMillis()
         kotlinx.coroutines.delay(testCase.estimatedDuration)
@@ -187,6 +201,7 @@ class TestingPatternsViewModel : BaseViewModel() {
             message = if (result) "Integration test passed" else "Integration test failed"
         )
     }
+
     private suspend fun executeUITest(testCase: TestCase): TestResult {
         val startTime = System.currentTimeMillis()
         kotlinx.coroutines.delay(testCase.estimatedDuration)
@@ -200,6 +215,7 @@ class TestingPatternsViewModel : BaseViewModel() {
             message = if (passed) "UI test passed" else "UI element not found"
         )
     }
+
     private suspend fun executePerformanceTest(testCase: TestCase): TestResult {
         val startTime = System.currentTimeMillis()
         kotlinx.coroutines.delay(testCase.estimatedDuration)
@@ -215,6 +231,7 @@ class TestingPatternsViewModel : BaseViewModel() {
                 "Performance exceeded threshold by ${duration - testCase.estimatedDuration}ms"
         )
     }
+
     private suspend fun executeStressTest(testCase: TestCase): TestResult {
         val startTime = System.currentTimeMillis()
         kotlinx.coroutines.delay(testCase.estimatedDuration)
@@ -228,6 +245,7 @@ class TestingPatternsViewModel : BaseViewModel() {
             message = if (stressTestPassed) "System stable under stress" else "System failed under stress"
         )
     }
+
     private suspend fun executeRegressionTest(testCase: TestCase): TestResult {
         val startTime = System.currentTimeMillis()
         kotlinx.coroutines.delay(testCase.estimatedDuration)
@@ -241,6 +259,7 @@ class TestingPatternsViewModel : BaseViewModel() {
             message = if (regressionPassed) "No regression detected" else "Regression detected"
         )
     }
+
     private fun getAvailableTestCases(): List<TestCase> {
         return listOf(
             TestCase(
@@ -322,6 +341,7 @@ class TestingPatternsViewModel : BaseViewModel() {
             )
         )
     }
+
     private fun calculateCoverage(): Float {
         // Simulate code coverage calculation
         return 0.85f + (Math.random() * 0.1).toFloat()
@@ -340,6 +360,7 @@ class TestingPatternsViewModel : BaseViewModel() {
         _testExecutionState.value = TestExecutionState.Idle
         _currentTest.value = null
     }
+
     companion object {
         private const val TAG = "TestingPatternsViewModel"
     }

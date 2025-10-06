@@ -1,4 +1,5 @@
 package thesis_evaluation.robustness_tests
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,16 +25,19 @@ import mpdc4gsr.feature.network.data.RecordingController
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+
 class GSRReconnectionRealHardwareTest : ComponentActivity() {
     companion object {
         private const val TAG = "GSRReconnectionRealHardwareTest"
     }
+
     data class ConnectionEvent(
         val timestamp: Long,
         val eventType: String,
         val description: String,
         val connectionState: String
     )
+
     data class RecordingMetrics(
         val recordingStartTime: Long = 0,
         val recordingEndTime: Long = 0,
@@ -43,6 +47,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
         val totalSamplesAfterReconnect: Int = 0,
         val dataGapDuration: Long = 0
     )
+
     private var gsrRecorder: GSRSensorRecorder? = null
     private var recordingController: RecordingController? = null
     private var testOutputFile: File? = null
@@ -55,6 +60,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun GSRReconnectionRealHardwareTestScreen() {
@@ -298,6 +304,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun MetricRow(label: String, value: String) {
         Row(
@@ -314,6 +321,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
             )
         }
     }
+
     @Composable
     private fun EventLogItem(event: ConnectionEvent) {
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
@@ -343,6 +351,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
             )
         }
     }
+
     private fun initializeTestComponents() {
         try {
             recordingController = RecordingController(this, this)
@@ -355,6 +364,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
             AppLogger.e(TAG, "Failed to initialize test components", e)
         }
     }
+
     private suspend fun startRecording(
         onStateChange: (String) -> Unit,
         onConnectionChange: (Boolean) -> Unit,
@@ -370,6 +380,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
         onConnectionChange(true)
         monitorGSRConnection(onStateChange, onConnectionChange, onEvent, onMetrics)
     }
+
     private suspend fun monitorGSRConnection(
         onStateChange: (String) -> Unit,
         onConnectionChange: (Boolean) -> Unit,
@@ -414,6 +425,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
             }
         }
     }
+
     private suspend fun stopRecording(
         onStateChange: (String) -> Unit,
         onEvent: (ConnectionEvent) -> Unit
@@ -424,9 +436,11 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
         delay(500)
         onStateChange("Recording complete")
     }
+
     private fun checkGSRConnectionState(): Boolean {
         return gsrRecorder?.isConnected ?: false
     }
+
     private fun logEvent(
         eventType: String,
         description: String,
@@ -444,9 +458,11 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
             "${formatTimestamp(event.timestamp)} | $eventType | $connectionState | $description\n"
         )
     }
+
     private fun formatTimestamp(timestamp: Long): String {
         return SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault()).format(Date(timestamp))
     }
+
     private fun formatDuration(seconds: Long): String {
         val hours = seconds / 3600
         val minutes = (seconds % 3600) / 60

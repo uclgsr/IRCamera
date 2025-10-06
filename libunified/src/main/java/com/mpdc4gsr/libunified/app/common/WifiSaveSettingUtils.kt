@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.common
+
 import com.mpdc4gsr.libunified.compat.SPUtils
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
@@ -8,6 +9,7 @@ import com.mpdc4gsr.libunified.app.common.SaveSettingUtils.FusionTypeIROnly
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtils.FusionTypeLPYFusion
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.utils.CommUtils
+
 object WifiSaveSettingUtils {
     private const val SP_NAME = "WifiSaveSettingUtils"
     const val TYPE_PLUG = 0
@@ -44,6 +46,7 @@ object WifiSaveSettingUtils {
         registrationX = 0
         registrationY = 0
     }
+
     var registrationX: Int
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("registrationX", 0) else 0
         set(value) {

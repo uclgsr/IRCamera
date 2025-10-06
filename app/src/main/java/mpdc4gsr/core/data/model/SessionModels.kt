@@ -1,5 +1,7 @@
 package mpdc4gsr.core.data.model
+
 import org.json.JSONObject
+
 data class SessionConfig(
     val sessionName: String,
     val studyName: String,
@@ -35,6 +37,7 @@ data class SessionConfig(
         }
     }
 }
+
 data class SessionInfo(
     val sessionId: String,
     val sessionName: String,
@@ -56,6 +59,7 @@ data class SessionInfo(
         }
     val isActive: Boolean
         get() = startedAt != null && completedAt == null
+
     fun toJson(): JSONObject {
         return JSONObject().apply {
             put("session_id", sessionId)
@@ -74,12 +78,14 @@ data class SessionInfo(
         }
     }
 }
+
 enum class SessionType {
     LOCAL,
     REMOTE,
     HYBRID,
     RESEARCH
 }
+
 enum class SessionStatus(val displayName: String) {
     IDLE("Idle"),
     CREATED("Created"),
@@ -89,6 +95,7 @@ enum class SessionStatus(val displayName: String) {
     STOPPING("Stopping"),
     COMPLETED("Completed"),
     ERROR("Error");
+
     val isActive: Boolean
         get() = this == RECORDING || this == PAUSED
     val isTransitioning: Boolean
@@ -96,6 +103,7 @@ enum class SessionStatus(val displayName: String) {
     val isCompleted: Boolean
         get() = this == COMPLETED || this == ERROR
 }
+
 data class SessionQuality(
     val overallQuality: Double = 0.0,
     val networkQuality: Double = 0.0,
@@ -121,6 +129,7 @@ data class SessionQuality(
         get() = gsrSampleCount + thermalFrameCount + rgbFrameCount
     val isAcceptableQuality: Boolean
         get() = overallQuality >= 0.6 && errorCount < 10
+
     fun toMap(): Map<String, Any> {
         return mapOf(
             "overall_quality" to overallQuality,
@@ -139,6 +148,7 @@ data class SessionQuality(
             "last_updated" to lastUpdated
         )
     }
+
     enum class QualityLevel {
         CRITICAL,
         POOR,
@@ -147,6 +157,7 @@ data class SessionQuality(
         EXCELLENT
     }
 }
+
 data class SessionStatistics(
     val sessionId: String?,
     val isActive: Boolean,
@@ -175,6 +186,7 @@ data class SessionStatistics(
             dataQuality >= 0.3 -> "Poor"
             else -> "Critical"
         }
+
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "session_id" to sessionId,
@@ -195,6 +207,7 @@ data class SessionStatistics(
             "quality_status" to qualityStatus
         )
     }
+
     private fun formatDuration(durationMs: Long): String {
         val seconds = durationMs / 1000
         val minutes = seconds / 60
@@ -206,6 +219,7 @@ data class SessionStatistics(
         }
     }
 }
+
 data class SessionSummary(
     val sessionId: String,
     val duration: Long,
@@ -222,6 +236,7 @@ data class SessionSummary(
         get() = if (totalSamples > 0) {
             ((totalSamples - errorCount).toDouble() / totalSamples.toDouble()) * 100.0
         } else 0.0
+
     fun toMap(): Map<String, Any> {
         return mapOf(
             "session_id" to sessionId,
@@ -236,6 +251,7 @@ data class SessionSummary(
             "metadata" to metadata
         )
     }
+
     private fun formatBytes(bytes: Long): String {
         val kb = bytes / 1024.0
         val mb = kb / 1024.0
@@ -248,6 +264,7 @@ data class SessionSummary(
         }
     }
 }
+
 data class SensorConfig(
     val sensorType: String,
     val enabled: Boolean,

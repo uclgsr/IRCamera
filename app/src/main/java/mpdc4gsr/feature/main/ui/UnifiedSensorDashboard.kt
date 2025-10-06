@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.main.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -81,9 +82,11 @@ fun UnifiedSensorDashboard(
                         is SystemAction.StartRecording -> {
                             unifiedState = UnifiedSystemState.Recording
                         }
+
                         is SystemAction.StopRecording -> {
                             unifiedState = UnifiedSystemState.Active
                         }
+
                         is SystemAction.Synchronize -> {
                             // Trigger sensor synchronization
                         }
@@ -119,6 +122,7 @@ fun UnifiedSensorDashboard(
                         is ThermalAction.StopPreview -> thermalState = SensorState.Connected
                         is ThermalAction.Calibrate -> {
                         }
+
                         is ThermalAction.OpenSettings -> {
                         }
                     }
@@ -144,6 +148,7 @@ fun UnifiedSensorDashboard(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun UnifiedSensorDashboardPreview() {

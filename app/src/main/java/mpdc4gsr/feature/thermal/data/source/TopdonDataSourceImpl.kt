@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.thermal.data.source
+
 import android.content.Context
 import android.graphics.Bitmap
 import android.hardware.usb.UsbDevice
@@ -43,6 +44,7 @@ class TopdonDataSourceImpl(
         private const val FRAME_BUFFER_SIZE = 256 * 192 * 2
         private const val FRAME_RECEIVE_TIMEOUT_MS = 1000L
     }
+
     private var isConnected = false
     private var isStreaming = false
     private var isRecording = false
@@ -72,6 +74,7 @@ class TopdonDataSourceImpl(
                             usbMonitor?.requestPermission(it)
                         }
                     }
+
                     override fun onGranted(usbDevice: UsbDevice?, granted: Boolean) {
                         if (granted && usbDevice != null) {
                             AppLogger.i(TAG, "USB permission granted for device")
@@ -80,6 +83,7 @@ class TopdonDataSourceImpl(
                             connectionDeferred?.complete(Result.failure(Exception("USB permission denied")))
                         }
                     }
+
                     override fun onConnect(
                         device: UsbDevice?,
                         ctrlBlock: USBMonitor.UsbControlBlock?,
@@ -96,14 +100,17 @@ class TopdonDataSourceImpl(
                             }
                         }
                     }
+
                     override fun onDisconnect(device: UsbDevice?, ctrlBlock: USBMonitor.UsbControlBlock?) {
                         AppLogger.i(TAG, "USB device disconnected")
                         isConnected = false
                     }
+
                     override fun onDettach(device: UsbDevice?) {
                         AppLogger.i(TAG, "USB device detached")
                         isConnected = false
                     }
+
                     override fun onCancel(device: UsbDevice?) {
                         AppLogger.w(TAG, "USB connection cancelled")
                         connectionDeferred?.complete(Result.failure(Exception("USB connection cancelled")))
@@ -127,6 +134,7 @@ class TopdonDataSourceImpl(
             Result.failure(e)
         }
     }
+
     private fun openCamera(ctrlBlock: USBMonitor.UsbControlBlock): Boolean {
         return try {
             uvcCamera?.let { camera ->
@@ -146,6 +154,7 @@ class TopdonDataSourceImpl(
             false
         }
     }
+
     private fun initializeIRCMD() {
         try {
             uvcCamera?.let { camera ->
@@ -159,6 +168,7 @@ class TopdonDataSourceImpl(
             AppLogger.e(TAG, "Error initializing IRCMD", e)
         }
     }
+
     private fun initializeLibIRTemp() {
         try {
             irTemp = LibIRTemp()
@@ -167,6 +177,7 @@ class TopdonDataSourceImpl(
             AppLogger.e(TAG, "Error initializing LibIRTemp", e)
         }
     }
+
     override suspend fun disconnectDevice() {
         try {
             AppLogger.d(TAG, "Disconnecting thermal camera")
@@ -189,6 +200,7 @@ class TopdonDataSourceImpl(
             AppLogger.e(TAG, "Error disconnecting thermal camera", e)
         }
     }
+
     override suspend fun startStreaming(): Flow<ThermalFrameData> {
         return flow {
             if (!isConnected) {
@@ -231,6 +243,7 @@ class TopdonDataSourceImpl(
             }
         }
     }
+
     private fun processFrame(frame: ByteArray): ByteArray? {
         return try {
             val imageRes = LibIRProcess.ImageRes_t().apply {
@@ -249,6 +262,7 @@ class TopdonDataSourceImpl(
             null
         }
     }
+
     private fun createThermalFrameData(processedData: ByteArray): ThermalFrameData {
         val temperatureMatrix = Array(CAMERA_HEIGHT) { FloatArray(CAMERA_WIDTH) }
         var minTemp = MIN_TEMP_RANGE
@@ -286,6 +300,7 @@ class TopdonDataSourceImpl(
             centerTemp = centerTemp
         )
     }
+
     private fun createBitmapFromFrame(data: ByteArray): Bitmap {
         return try {
             val bitmap = Bitmap.createBitmap(CAMERA_WIDTH, CAMERA_HEIGHT, Bitmap.Config.ARGB_8888)
@@ -296,6 +311,7 @@ class TopdonDataSourceImpl(
             Bitmap.createBitmap(CAMERA_WIDTH, CAMERA_HEIGHT, Bitmap.Config.ARGB_8888)
         }
     }
+
     override suspend fun stopStreaming() {
         try {
             AppLogger.d(TAG, "Stopping thermal frame streaming")
@@ -307,6 +323,7 @@ class TopdonDataSourceImpl(
             AppLogger.e(TAG, "Error stopping thermal streaming", e)
         }
     }
+
     override suspend fun captureSnapshot(): Result<ThermalSnapshot> {
         return try {
             if (!isConnected) {
@@ -348,6 +365,7 @@ class TopdonDataSourceImpl(
             Result.failure(e)
         }
     }
+
     override suspend fun startRecording(): Result<Unit> {
         return try {
             if (!isConnected) {
@@ -366,6 +384,7 @@ class TopdonDataSourceImpl(
             Result.failure(e)
         }
     }
+
     override suspend fun stopRecording(): Result<String> {
         return try {
             AppLogger.d(TAG, "Stopping thermal recording and flushing data")
@@ -381,9 +400,11 @@ class TopdonDataSourceImpl(
             Result.failure(e)
         }
     }
+
     override fun isConnected(): Boolean {
         return isConnected
     }
+
     override suspend fun setTemperatureRange(min: Float, max: Float): Result<Unit> {
         return try {
             if (!isConnected) {
@@ -404,6 +425,7 @@ class TopdonDataSourceImpl(
             Result.failure(e)
         }
     }
+
     fun configureCameraSettings(
         enableMirror: Boolean = false,
         enableAutoShutter: Boolean = true,

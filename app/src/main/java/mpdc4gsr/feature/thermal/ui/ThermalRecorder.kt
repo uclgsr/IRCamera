@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.thermal.ui
+
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
@@ -17,12 +18,14 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.max
 import kotlin.math.min
+
 class ThermalRecorder(private val context: Context) {
     companion object {
         private const val TAG = "ThermalRecorder"
         private const val CSV_HEADER =
             "timestamp_ns,frame_sequence,min_temp_c,avg_temp_c,max_temp_c,pixel_count"
     }
+
     private var isRecording = AtomicBoolean(false)
     private var frameSequence = AtomicLong(0)
     private var sessionDirectory: File? = null
@@ -31,9 +34,11 @@ class ThermalRecorder(private val context: Context) {
     private var sessionMetadata: SessionMetadata? = null
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var thermalSettings: mpdc4gsr.feature.thermal.data.ThermalSettingsRepository.ThermalSettings? = null
+
     interface ThermalFrameCallback {
         fun onFrameReceived(frameData: ByteArray, width: Int, height: Int, timestamp: Long)
     }
+
     data class ThermalFrameStats(
         val timestampNs: Long,
         val frameSequence: Long,
@@ -42,14 +47,18 @@ class ThermalRecorder(private val context: Context) {
         val maxTemp: Float,
         val pixelCount: Int
     )
+
     private var frameListener: ThermalFrameListener? = null
+
     interface ThermalFrameListener {
         fun onFrameProcessed(stats: ThermalFrameStats)
         fun onError(error: String)
     }
+
     fun setFrameListener(listener: ThermalFrameListener) {
         this.frameListener = listener
     }
+
     suspend fun startRecording(
         sessionDir: String,
         sessionMetadata: SessionMetadata,
@@ -118,6 +127,7 @@ class ThermalRecorder(private val context: Context) {
                 return@withContext false
             }
         }
+
     suspend fun startRecording(sessionDir: String, saveImages: Boolean = false): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording.get()) {
@@ -160,6 +170,7 @@ class ThermalRecorder(private val context: Context) {
                 return@withContext false
             }
         }
+
     suspend fun stopRecording(): Boolean = withContext(Dispatchers.IO) {
         if (!isRecording.get()) {
             AppLogger.w(TAG, "No thermal recording in progress")
@@ -178,6 +189,7 @@ class ThermalRecorder(private val context: Context) {
             return@withContext false
         }
     }
+
     fun processFrame(
         frameData: ByteArray,
         width: Int,
@@ -201,6 +213,7 @@ class ThermalRecorder(private val context: Context) {
             }
         }
     }
+
     fun processFrameFromIntensity(
         intensityData: ByteArray,
         width: Int,
@@ -232,6 +245,7 @@ class ThermalRecorder(private val context: Context) {
             }
         }
     }
+
     private fun calculateFrameStats(
         frameData: ByteArray,
         width: Int,
@@ -269,6 +283,7 @@ class ThermalRecorder(private val context: Context) {
             pixelCount = validPixels
         )
     }
+
     private fun calculateFrameStatsFromFloat(
         tempData: FloatArray,
         width: Int,
@@ -298,6 +313,7 @@ class ThermalRecorder(private val context: Context) {
             pixelCount = validPixels
         )
     }
+
     private suspend fun logFrameStats(stats: ThermalFrameStats) = withContext(Dispatchers.IO) {
         try {
             csvWriter?.let { writer ->
@@ -351,6 +367,7 @@ class ThermalRecorder(private val context: Context) {
             AppLogger.e(TAG, "Error writing thermal stats to CSV", e)
         }
     }
+
     private suspend fun saveFrameImage(
         frameData: ByteArray,
         width: Int,
@@ -373,6 +390,7 @@ class ThermalRecorder(private val context: Context) {
             AppLogger.e(TAG, "Error saving thermal frame image", e)
         }
     }
+
     private suspend fun saveFrameImageFromIntensity(
         intensityData: ByteArray,
         width: Int,
@@ -405,6 +423,7 @@ class ThermalRecorder(private val context: Context) {
             AppLogger.e(TAG, "Error saving thermal frame PNG", e)
         }
     }
+
     fun isRecording(): Boolean = isRecording.get()
     fun getFrameCount(): Long = frameSequence.get()
 }

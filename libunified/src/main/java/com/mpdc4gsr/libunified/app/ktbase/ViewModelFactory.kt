@@ -1,8 +1,10 @@
 package com.mpdc4gsr.libunified.app.ktbase
+
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
+
 class BaseViewModelFactory(
     private val application: Application,
     private val repositories: Map<Class<*>, Any> = emptyMap()
@@ -13,6 +15,7 @@ class BaseViewModelFactory(
             modelClass.isAssignableFrom(BaseViewModel::class.java) -> {
                 BaseViewModel() as T
             }
+
             else -> {
                 try {
                     // Try to create with application context
@@ -30,6 +33,7 @@ class BaseViewModelFactory(
             }
         }
     }
+
     @Suppress("UNCHECKED_CAST")
     private fun <T : ViewModel> createWithRepositories(modelClass: Class<T>): T {
         val constructors = modelClass.declaredConstructors
@@ -42,9 +46,11 @@ class BaseViewModelFactory(
                     paramType == Application::class.java -> {
                         parameters.add(application)
                     }
+
                     repositories.containsKey(paramType) -> {
                         parameters.add(repositories[paramType]!!)
                     }
+
                     else -> {
                         canCreate = false
                         break
@@ -57,20 +63,24 @@ class BaseViewModelFactory(
         }
         throw IllegalArgumentException("Cannot create ViewModel ${modelClass.simpleName}")
     }
+
     class Builder(private val application: Application) {
         private val repositories = mutableMapOf<Class<*>, Any>()
         fun <T : Any> addRepository(repositoryClass: Class<T>, repository: T): Builder {
             repositories[repositoryClass] = repository
             return this
         }
+
         inline fun <reified T : Any> addRepository(repository: T): Builder {
             return addRepository(T::class.java, repository)
         }
+
         fun build(): BaseViewModelFactory {
             return BaseViewModelFactory(application, repositories)
         }
     }
 }
+
 inline fun <reified T : ViewModel> androidx.lifecycle.ViewModelStoreOwner.createViewModelWithFactory(
     factory: BaseViewModelFactory
 ): T {

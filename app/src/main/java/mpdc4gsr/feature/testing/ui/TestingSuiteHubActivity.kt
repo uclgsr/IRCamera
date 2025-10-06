@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -40,14 +41,17 @@ class TestingSuiteHubActivity : ComponentActivity() {
         val category: TestCategory,
         val priority: TestPriority = TestPriority.MEDIUM
     )
+
     enum class TestCategory {
         BLE_INTEGRATION, GSR_SENSORS, CAMERA_SYSTEMS,
         SYNCHRONIZATION, DATA_INTEGRITY, PERFORMANCE,
         USER_INTERFACE, NETWORK, SYSTEM
     }
+
     enum class TestPriority {
         HIGH, MEDIUM, LOW
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -56,6 +60,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun TestingSuiteHubScreen() {
@@ -394,6 +399,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     fun TestingModuleCard(
         module: TestingModule,
@@ -482,6 +488,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
             }
         }
     }
+
     private fun runComprehensiveTests() {
         lifecycleScope.launch {
             // Run comprehensive testing suite using activity launcher

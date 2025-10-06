@@ -1,9 +1,11 @@
 package com.mpdc4gsr.gsr.network
+
 import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+
 class NetworkErrorRecoveryManager(
     private val context: Context,
     private val networkClient: NetworkClient,
@@ -18,6 +20,7 @@ class NetworkErrorRecoveryManager(
         private const val RAPID_FAILURE_THRESHOLD = 3
         private const val RAPID_FAILURE_WINDOW_MS = 60000L
     }
+
     private val recoveryJob = SupervisorJob()
     private val recoveryScope = CoroutineScope(Dispatchers.IO + recoveryJob)
     private val isRecoveryActive = AtomicBoolean(false)
@@ -26,21 +29,25 @@ class NetworkErrorRecoveryManager(
     private var lastFailureTime = 0L
     private var lastKnownGoodController: NetworkClient.ControllerInfo? = null
     private var healthCheckJob: Job? = null
+
     interface RecoveryEventListener {
         fun onRecoveryStarted(reason: String)
         fun onRecoveryAttempt(
             attempt: Int,
             maxAttempts: Int,
         )
+
         fun onRecoverySuccess(controller: NetworkClient.ControllerInfo)
         fun onRecoveryFailed(reason: String)
         fun onConnectionHealthChanged(isHealthy: Boolean)
         fun onRapidFailureDetected(failureCount: Int)
     }
+
     private var eventListener: RecoveryEventListener? = null
     fun setEventListener(listener: RecoveryEventListener?) {
         eventListener = listener
     }
+
     fun enableAutoRecovery() {
         if (isRecoveryActive.get()) {
             Log.w(TAG, "Auto recovery already enabled")
@@ -50,6 +57,7 @@ class NetworkErrorRecoveryManager(
         startHealthMonitoring()
         Log.i(TAG, "Network error recovery enabled")
     }
+
     fun disableAutoRecovery() {
         if (!isRecoveryActive.get()) {
             Log.w(TAG, "Auto recovery not active")
@@ -59,6 +67,7 @@ class NetworkErrorRecoveryManager(
         stopHealthMonitoring()
         Log.i(TAG, "Network error recovery disabled")
     }
+
     suspend fun triggerRecovery(reason: String): Boolean {
         if (isRecoveryActive.get() && reconnectionAttempts.get() > 0) {
             Log.w(TAG, "Recovery already in progress")
@@ -66,12 +75,14 @@ class NetworkErrorRecoveryManager(
         }
         return performRecovery(reason)
     }
+
     fun recordSuccessfulConnection(controller: NetworkClient.ControllerInfo) {
         lastKnownGoodController = controller
         reconnectionAttempts.set(0)
         rapidFailureCount.set(0)
         Log.i(TAG, "Recorded successful connection: ${controller.deviceName}")
     }
+
     fun handleNetworkError(
         operation: String,
         error: String,
@@ -91,6 +102,7 @@ class NetworkErrorRecoveryManager(
             }
         }
     }
+
     private fun startHealthMonitoring() {
         healthCheckJob =
             recoveryScope.launch {
@@ -111,10 +123,12 @@ class NetworkErrorRecoveryManager(
                 }
             }
     }
+
     private fun stopHealthMonitoring() {
         healthCheckJob?.cancel()
         healthCheckJob = null
     }
+
     private suspend fun performHealthCheck(): Boolean {
         if (!networkClient.isConnected()) {
             return false
@@ -134,6 +148,7 @@ class NetworkErrorRecoveryManager(
             false
         }
     }
+
     private suspend fun performRecovery(reason: String): Boolean {
         if (reconnectionAttempts.get() >= MAX_RECONNECTION_ATTEMPTS) {
             Log.e(TAG, "Maximum reconnection attempts reached")
@@ -180,6 +195,7 @@ class NetworkErrorRecoveryManager(
         }
         return success
     }
+
     private suspend fun attemptReconnection(controller: NetworkClient.ControllerInfo): Boolean {
         return try {
             Log.d(
@@ -196,6 +212,7 @@ class NetworkErrorRecoveryManager(
             false
         }
     }
+
     private suspend fun attemptDiscoveryAndConnect(): Boolean {
         return try {
             Log.d(TAG, "Attempting discovery and connection")
@@ -223,12 +240,14 @@ class NetworkErrorRecoveryManager(
             false
         }
     }
+
     private fun calculateRetryDelay(attempt: Int): Long {
         val baseDelay = INITIAL_RETRY_DELAY_MS * (1L shl (attempt - 1))
         val cappedDelay = minOf(baseDelay, MAX_RETRY_DELAY_MS)
         val jitter = (Math.random() * 0.1 * cappedDelay).toLong()
         return cappedDelay + jitter
     }
+
     private fun isRapidFailure(): Boolean {
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastFailureTime > RAPID_FAILURE_WINDOW_MS) {
@@ -239,12 +258,14 @@ class NetworkErrorRecoveryManager(
         lastFailureTime = currentTime
         return rapidFailureCount.get() >= RAPID_FAILURE_THRESHOLD
     }
+
     fun resetRecoveryState() {
         reconnectionAttempts.set(0)
         rapidFailureCount.set(0)
         lastFailureTime = 0L
         Log.i(TAG, "Recovery state reset")
     }
+
     fun getRecoveryStats(): Map<String, Any> {
         return mapOf(
             "recovery_active" to isRecoveryActive.get(),
@@ -254,6 +275,7 @@ class NetworkErrorRecoveryManager(
             "has_known_good_controller" to (lastKnownGoodController != null),
         )
     }
+
     fun cleanup() {
         disableAutoRecovery()
         recoveryJob.cancel()

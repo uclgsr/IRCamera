@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.report.viewmodel
+
 import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CountDownLatch
 import com.mpdc4gsr.libunified.R as LibR
+
 class PdfViewModel : BaseViewModel() {
     val listData = MutableLiveData<ReportData?>()
     fun getReportData(
@@ -34,6 +36,7 @@ class PdfViewModel : BaseViewModel() {
             listData.postValue(data)
         }
     }
+
     private suspend fun getReportDataRepository(
         isTC007: Boolean,
         page: Int,
@@ -48,6 +51,7 @@ class PdfViewModel : BaseViewModel() {
                     result = Gson().fromJson(p0, ReportData::class.java)
                     downLatch.countDown()
                 }
+
                 override fun onFail(p0: Exception?) {
                     result = ReportData()
                     result?.msg = p0?.message
@@ -55,6 +59,7 @@ class PdfViewModel : BaseViewModel() {
                     downLatch.countDown()
                     TLog.e("bcf", "：" + p0?.message)
                 }
+
                 override fun onFail(
                     failMsg: String?,
                     errorCode: String,

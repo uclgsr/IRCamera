@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
+
 @Composable
 fun ChartLogCompose(
     thermalData: List<ThermalDataEntry>,
@@ -78,6 +80,7 @@ fun ChartLogCompose(
         }
     }
 }
+
 @Composable
 private fun ChartHeader(
     title: String,
@@ -109,6 +112,7 @@ private fun ChartHeader(
         )
     }
 }
+
 @Composable
 private fun EmptyChartState(
     modifier: Modifier = Modifier
@@ -135,6 +139,7 @@ private fun EmptyChartState(
         }
     }
 }
+
 @Composable
 private fun ChartLegend(
     chartType: ThermalChartType
@@ -143,10 +148,12 @@ private fun ChartLegend(
         ThermalChartType.POINT -> listOf(
             LegendItem("Point Temperature", Color(0xFF2196F3))
         )
+
         ThermalChartType.LINE -> listOf(
             LegendItem("Max Temperature", Color(0xFFFF5722)),
             LegendItem("Min Temperature", Color(0xFF2196F3))
         )
+
         ThermalChartType.AREA -> listOf(
             LegendItem("Max Temperature", Color(0xFFFF5722)),
             LegendItem("Center Temperature", Color(0xFF4CAF50)),
@@ -176,6 +183,7 @@ private fun ChartLegend(
         }
     }
 }
+
 private fun DrawScope.drawThermalChart(
     data: List<ThermalDataEntry>,
     chartType: ThermalChartType,
@@ -229,6 +237,7 @@ private fun DrawScope.drawThermalChart(
                 color = Color(0xFF2196F3)
             )
         }
+
         ThermalChartType.LINE -> {
             drawLineSeries(
                 data = data,
@@ -241,6 +250,7 @@ private fun DrawScope.drawThermalChart(
                 tempRange = tempRange
             )
         }
+
         ThermalChartType.AREA -> {
             drawAreaSeries(
                 data = data,
@@ -255,6 +265,7 @@ private fun DrawScope.drawThermalChart(
         }
     }
 }
+
 private fun DrawScope.drawGrid(
     padding: Float,
     chartWidth: Float,
@@ -319,6 +330,7 @@ private fun DrawScope.drawGrid(
         )
     }
 }
+
 private fun DrawScope.drawPointSeries(
     data: List<ThermalDataEntry>,
     padding: Float,
@@ -355,6 +367,7 @@ private fun DrawScope.drawPointSeries(
         style = Stroke(width = 2.dp.toPx())
     )
 }
+
 private fun DrawScope.drawLineSeries(
     data: List<ThermalDataEntry>,
     padding: Float,
@@ -404,6 +417,7 @@ private fun DrawScope.drawLineSeries(
         style = Stroke(width = 2.dp.toPx())
     )
 }
+
 private fun DrawScope.drawAreaSeries(
     data: List<ThermalDataEntry>,
     padding: Float,
@@ -443,6 +457,7 @@ private fun DrawScope.drawAreaSeries(
     drawPath(path = centerPath, color = Color(0xFF4CAF50), style = Stroke(width = 2.dp.toPx()))
     drawPath(path = minPath, color = Color(0xFF2196F3), style = Stroke(width = 2.dp.toPx()))
 }
+
 // Data classes and enums
 data class ThermalDataEntry(
     val timestamp: Long,
@@ -452,6 +467,7 @@ data class ThermalDataEntry(
     val temperatureCenter: Float = temperature,
     val type: String = "point"
 )
+
 enum class ThermalChartType(
     val displayName: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector
@@ -460,13 +476,16 @@ enum class ThermalChartType(
     LINE("Line Temperature", Icons.Default.Timeline),
     AREA("Area Temperature", Icons.Default.CropFree)
 }
+
 enum class TimeFormat {
     SECONDS, MINUTES, HOURS
 }
+
 private data class LegendItem(
     val label: String,
     val color: Color
 )
+
 @Composable
 fun ChartLogComposePreview() {
     val sampleData = remember {

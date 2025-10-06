@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -102,6 +103,7 @@ fun MultiModalRecordingScreen(
         }
     }
 }
+
 @Composable
 private fun RecordingStatusCard(
     isRecording: Boolean,
@@ -156,6 +158,7 @@ private fun RecordingStatusCard(
         }
     }
 }
+
 @Composable
 private fun SensorStatusSection(
     gsrEnabled: Boolean,
@@ -210,6 +213,7 @@ private fun SensorStatusSection(
         }
     }
 }
+
 @Composable
 private fun SensorToggleItem(
     name: String,
@@ -270,6 +274,7 @@ private fun SensorToggleItem(
         )
     }
 }
+
 @Composable
 private fun LiveDataPreviewSection() {
     Card(
@@ -312,6 +317,7 @@ private fun LiveDataPreviewSection() {
         }
     }
 }
+
 @Composable
 private fun LiveGSRWaveform(modifier: Modifier = Modifier) {
     var phase by remember { mutableFloatStateOf(0f) }
@@ -351,6 +357,7 @@ private fun LiveGSRWaveform(modifier: Modifier = Modifier) {
         }
     }
 }
+
 @Composable
 private fun LiveMetricItem(
     label: String,
@@ -373,6 +380,7 @@ private fun LiveMetricItem(
         )
     }
 }
+
 @Composable
 private fun RecordingControlsSection(
     isRecording: Boolean,
@@ -451,12 +459,14 @@ private fun RecordingControlsSection(
         }
     }
 }
+
 enum class SyncStatus(val displayName: String, val color: Color) {
     SYNCED("Synced", Color.Green),
     SYNCING("Syncing", Color.Yellow),
     OUT_OF_SYNC("Out of Sync", Color.Red),
     DISABLED("Disabled", Color.Gray)
 }
+
 private fun formatDuration(seconds: Int): String {
     val hours = seconds / 3600
     val minutes = (seconds % 3600) / 60
@@ -467,6 +477,7 @@ private fun formatDuration(seconds: Int): String {
         String.format("%d:%02d", minutes, remainingSeconds)
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun MultiModalRecordingScreenPreview() {

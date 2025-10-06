@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.components.settings
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+
 @Composable
 fun SettingsSection(
     title: String,
@@ -38,6 +40,7 @@ fun SettingsSection(
         }
     }
 }
+
 @Composable
 fun SettingsItem(
     title: String,
@@ -90,6 +93,7 @@ fun SettingsItem(
         }
     }
 }
+
 @Composable
 fun SwitchSettingsItem(
     title: String,
@@ -136,6 +140,7 @@ fun SwitchSettingsItem(
         }
     }
 }
+
 @Composable
 fun SliderSettingsItem(
     title: String,
@@ -199,6 +204,7 @@ fun SliderSettingsItem(
         }
     }
 }
+
 @Composable
 fun RadioButtonSettingsItem(
     title: String,
@@ -252,6 +258,7 @@ fun RadioButtonSettingsItem(
         }
     }
 }
+
 @Composable
 fun ActionSettingsItem(
     title: String,
@@ -307,6 +314,7 @@ fun ActionSettingsItem(
         }
     }
 }
+
 @Composable
 fun SettingsCard(
     title: String,
@@ -348,6 +356,7 @@ fun SettingsCard(
         }
     }
 }
+
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDropdown(
@@ -404,6 +413,7 @@ fun SettingsDropdown(
         }
     }
 }
+
 @Composable
 fun SettingsSlider(
     label: String,
@@ -449,6 +459,7 @@ fun SettingsSlider(
         )
     }
 }
+
 @Composable
 fun SettingsToggle(
     label: String,
@@ -496,6 +507,7 @@ fun SettingsToggle(
         )
     }
 }
+
 @Composable
 fun SettingsRow(
     label: String,

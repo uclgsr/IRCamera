@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.report.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,10 +22,12 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ReportDetailViewModel
+
 class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>() {
     override fun createViewModel(): ReportDetailViewModel {
         return viewModels<ReportDetailViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ReportDetailViewModel) {
@@ -218,6 +221,7 @@ class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>()
             }
         }
     }
+
     @Composable
     fun ReportInfoRow(label: String, value: String) {
         Row(
@@ -237,6 +241,7 @@ class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>()
             )
         }
     }
+
     @Composable
     fun MeasurementRow(label: String, value: String, valueColor: Color) {
         Row(

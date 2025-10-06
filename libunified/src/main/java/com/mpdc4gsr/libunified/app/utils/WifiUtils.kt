@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.utils
+
 import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -13,10 +14,12 @@ import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+
 object WifiUtils {
     @Suppress("DEPRECATION")
     fun ScanResult.getWifiName(): String =
         if (Build.VERSION.SDK_INT < 33) SSID else removeQuotation(wifiSsid.toString())
+
     fun WifiInfo.getWifiName(): String = removeQuotation(ssid)
     private fun removeQuotation(source: String): String {
         return if (source.length > 1 && source[0] == '\"' && source[source.length - 1] == '\"') {
@@ -25,6 +28,7 @@ object WifiUtils {
             source
         }
     }
+
     fun getCurrentWifiSSID(context: Context): String? {
         if (ContextCompat.checkSelfPermission(
                 context,
@@ -37,29 +41,34 @@ object WifiUtils {
         @Suppress("DEPRECATION")
         return wifiManager.connectionInfo?.getWifiName()
     }
+
     fun addWifiStateListener(
         activity: ComponentActivity,
         listener: ((isEnable: Boolean) -> Unit),
     ) {
         activity.lifecycle.addObserver(WifiStateObserver(activity, WifiStateReceiver(listener)))
     }
+
     fun addWifiScanListener(
         activity: ComponentActivity,
         listener: ((isSuccess: Boolean) -> Unit),
     ) {
         activity.lifecycle.addObserver(WifiScanObserver(activity, WifiScanReceiver(listener)))
     }
+
     private class WifiStateObserver(val context: Context, val receiver: BroadcastReceiver) :
         DefaultLifecycleObserver {
         override fun onResume(owner: LifecycleOwner) {
             super.onResume(owner)
             context.registerReceiver(receiver, IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION))
         }
+
         override fun onPause(owner: LifecycleOwner) {
             super.onPause(owner)
             context.unregisterReceiver(receiver)
         }
     }
+
     private class WifiScanObserver(val context: Context, val receiver: BroadcastReceiver) :
         DefaultLifecycleObserver {
         override fun onResume(owner: LifecycleOwner) {
@@ -69,11 +78,13 @@ object WifiUtils {
                 IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
             )
         }
+
         override fun onPause(owner: LifecycleOwner) {
             super.onPause(owner)
             context.unregisterReceiver(receiver)
         }
     }
+
     private class WifiStateReceiver(val listener: (isEnable: Boolean) -> Unit) :
         BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -84,6 +95,7 @@ object WifiUtils {
             }
         }
     }
+
     private class WifiScanReceiver(val listener: (isSuccess: Boolean) -> Unit) :
         BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {

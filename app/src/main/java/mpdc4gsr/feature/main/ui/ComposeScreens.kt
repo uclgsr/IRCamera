@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.main.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -42,6 +43,7 @@ fun MainDashboardScreen(navController: NavController) {
         }
     }
 }
+
 @Composable
 fun ThermalCameraScreen(navController: NavController) {
     Column(
@@ -72,6 +74,7 @@ fun ThermalCameraScreen(navController: NavController) {
         ThermalControlsPanel()
     }
 }
+
 @Composable
 fun GSRSensorScreen(navController: NavController) {
     mpdc4gsr.feature.gsr.ui.GSRSensorScreen(
@@ -83,6 +86,7 @@ fun GSRSensorScreen(navController: NavController) {
         }
     )
 }
+
 @Composable
 private fun GSRSensorScreenDeprecated(navController: NavController) {
     LazyColumn(
@@ -112,6 +116,7 @@ private fun GSRSensorScreenDeprecated(navController: NavController) {
         }
     }
 }
+
 @Composable
 fun SensorDashboardScreen(navController: NavController) {
     LazyColumn(
@@ -141,6 +146,7 @@ fun SensorDashboardScreen(navController: NavController) {
         }
     }
 }
+
 @Composable
 fun SettingsScreen(navController: NavController) {
     LazyColumn(
@@ -173,6 +179,7 @@ fun SettingsScreen(navController: NavController) {
         }
     }
 }
+
 // Reusable component cards
 @Composable
 fun ConnectionStatusCard() {
@@ -202,6 +209,7 @@ fun ConnectionStatusCard() {
         }
     }
 }
+
 @Composable
 fun ConnectionStatusItem(name: String, connected: Boolean) {
     Column(
@@ -224,6 +232,7 @@ fun ConnectionStatusItem(name: String, connected: Boolean) {
         )
     }
 }
+
 @Composable
 fun QuickActionsCard(navController: NavController) {
     Card(
@@ -277,6 +286,7 @@ fun QuickActionsCard(navController: NavController) {
         }
     }
 }
+
 @Composable
 fun RecentSessionsCard() {
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -327,6 +337,7 @@ fun RecentSessionsCard() {
         }
     }
 }
+
 @Composable
 fun SystemHealthCard() {
     Card(
@@ -353,6 +364,7 @@ fun SystemHealthCard() {
         }
     }
 }
+
 @Composable
 fun HealthMetric(name: String, value: String, color: Color) {
     Column(
@@ -371,6 +383,7 @@ fun HealthMetric(name: String, value: String, color: Color) {
         )
     }
 }
+
 @Composable
 fun ThermalControlsPanel() {
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -439,6 +452,7 @@ fun ThermalControlsPanel() {
         }
     }
 }
+
 @Composable
 fun GSRConnectionCard() {
     Card(
@@ -480,6 +494,7 @@ fun GSRConnectionCard() {
         }
     }
 }
+
 @Composable
 fun GSRDataVisualizationCard() {
     Card(
@@ -522,6 +537,7 @@ fun GSRDataVisualizationCard() {
         }
     }
 }
+
 @Composable
 fun GSRRecordingControlsCard() {
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -590,6 +606,7 @@ fun GSRRecordingControlsCard() {
         }
     }
 }
+
 @Composable
 fun GSRCalibrationCard() {
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -640,6 +657,7 @@ fun GSRCalibrationCard() {
         }
     }
 }
+
 // Additional placeholder composables for other screens
 @Composable
 fun AllSensorsStatusCard() {
@@ -654,6 +672,7 @@ fun AllSensorsStatusCard() {
         }
     }
 }
+
 @Composable
 fun SensorMetricsCard() {
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -667,6 +686,7 @@ fun SensorMetricsCard() {
         }
     }
 }
+
 @Composable
 fun DataSynchronizationCard() {
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -680,6 +700,7 @@ fun DataSynchronizationCard() {
         }
     }
 }
+
 @Composable
 fun AdvancedAnalyticsCard() {
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -693,6 +714,7 @@ fun AdvancedAnalyticsCard() {
         }
     }
 }
+
 @Composable
 fun GeneralSettingsCard() {
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -706,6 +728,7 @@ fun GeneralSettingsCard() {
         }
     }
 }
+
 @Composable
 fun ThermalCameraSettingsCard() {
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -719,6 +742,7 @@ fun ThermalCameraSettingsCard() {
         }
     }
 }
+
 @Composable
 fun GSRSensorSettingsCard() {
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -732,6 +756,7 @@ fun GSRSensorSettingsCard() {
         }
     }
 }
+
 @Composable
 fun NetworkSettingsCard() {
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -745,6 +770,7 @@ fun NetworkSettingsCard() {
         }
     }
 }
+
 @Composable
 fun AboutCard() {
     Card(modifier = Modifier.fillMaxWidth()) {

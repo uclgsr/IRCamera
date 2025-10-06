@@ -12,6 +12,7 @@ class MockRecordingController : SimpleRecordingInterface {
     private var sessionStartTime: Long? = null
     override val isRecording: Boolean
         get() = _isRecording
+
     override fun startRecording(): Boolean {
         if (_isRecording) {
             return false // Already recording
@@ -20,6 +21,7 @@ class MockRecordingController : SimpleRecordingInterface {
         sessionStartTime = System.currentTimeMillis()
         return true
     }
+
     override fun stopRecording(): Boolean {
         if (!_isRecording) {
             return false // Not recording
@@ -28,6 +30,7 @@ class MockRecordingController : SimpleRecordingInterface {
         sessionStartTime = null
         return true
     }
+
     override fun getStatus(): Map<String, Any> {
         val status = mutableMapOf<String, Any>()
         status["recording"] = _isRecording

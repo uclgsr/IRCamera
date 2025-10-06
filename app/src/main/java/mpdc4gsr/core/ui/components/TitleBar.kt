@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.components
+
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -13,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TitleBar(
@@ -60,6 +62,7 @@ fun TitleBar(
         modifier = modifier
     )
 }
+
 @Composable
 fun TitleBarAction(
     icon: ImageVector,
@@ -78,6 +81,7 @@ fun TitleBarAction(
         )
     }
 }
+
 @Composable
 fun TitleBarAction(
     iconRes: Int,
@@ -96,6 +100,7 @@ fun TitleBarAction(
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun TitleBarPreview() {

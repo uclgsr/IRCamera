@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -14,6 +15,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import kotlin.math.abs
+
 @Composable
 fun DistanceMeasureCompose(
     onDistanceChanged: (Float) -> Unit = {},
@@ -65,6 +67,7 @@ fun DistanceMeasureCompose(
         }
     }
 }
+
 private fun DrawScope.drawDistanceLines(line1Y: Float, line2Y: Float) {
     val strokeWidth = 4.dp.toPx()
     val dashEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
@@ -87,6 +90,7 @@ private fun DrawScope.drawDistanceLines(line1Y: Float, line2Y: Float) {
         pathEffect = dashEffect
     )
 }
+
 @Composable
 fun DistanceMeasureComposePreview() {
     var distance by remember { mutableFloatStateOf(0f) }

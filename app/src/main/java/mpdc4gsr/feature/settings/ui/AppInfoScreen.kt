@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -125,6 +126,7 @@ fun AppInfoScreen(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun AppInfoScreenPreview() {

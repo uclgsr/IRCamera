@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.net.TrafficStats
 import android.os.Process
 import android.util.Log
@@ -12,6 +13,7 @@ import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.Socket
 import java.util.concurrent.atomic.AtomicBoolean
+
 class ShimmerNetworkClient(
     private val serverHost: String = "192.168.1.100",
     private val serverPort: Int = 8888
@@ -21,6 +23,7 @@ class ShimmerNetworkClient(
         private const val CONNECTION_TIMEOUT_MS = 5000
         private const val RECONNECT_DELAY_MS = 3000L
     }
+
     private var socket: Socket? = null
     private var outputStream: PrintWriter? = null
     private var inputStream: BufferedReader? = null
@@ -66,6 +69,7 @@ class ShimmerNetworkClient(
             return@withContext false
         }
     }
+
     fun disconnect() {
         networkScope.launch {
             try {
@@ -79,6 +83,7 @@ class ShimmerNetworkClient(
             }
         }
     }
+
     fun sendGSRSample(sample: GSRSample, sequenceNumber: Long) {
         if (!isConnected.get()) return
         networkScope.launch {
@@ -97,6 +102,7 @@ class ShimmerNetworkClient(
             }
         }
     }
+
     fun sendRecordingStart(sessionId: String) {
         networkScope.launch {
             try {
@@ -112,6 +118,7 @@ class ShimmerNetworkClient(
             }
         }
     }
+
     fun sendRecordingStop(sessionId: String, sampleCount: Long) {
         networkScope.launch {
             try {
@@ -128,6 +135,7 @@ class ShimmerNetworkClient(
             }
         }
     }
+
     fun sendSyncMarker(markerType: String, metadata: Map<String, String> = emptyMap()) {
         networkScope.launch {
             try {
@@ -144,6 +152,7 @@ class ShimmerNetworkClient(
             }
         }
     }
+
     private fun sendMessage(message: JSONObject) {
         try {
             outputStream?.let { out ->
@@ -156,6 +165,7 @@ class ShimmerNetworkClient(
             handleConnectionError(e)
         }
     }
+
     private fun startMessageListener() {
         connectionJob = networkScope.launch {
             try {
@@ -179,6 +189,7 @@ class ShimmerNetworkClient(
             }
         }
     }
+
     private fun startHeartbeat() {
         heartbeatJob = networkScope.launch {
             while (isRunning.get() && isConnected.get()) {
@@ -196,6 +207,7 @@ class ShimmerNetworkClient(
             }
         }
     }
+
     private fun processServerMessage(message: String) {
         try {
             val json = JSONObject(message)
@@ -204,9 +216,11 @@ class ShimmerNetworkClient(
                 "connection_ack" -> {
                     AppLogger.i(TAG, "Received connection acknowledgment from PC Controller")
                 }
+
                 "sync_request" -> {
                     AppLogger.i(TAG, "Received sync request from PC Controller")
                 }
+
                 else -> {
                     AppLogger.d(TAG, "Received message: $type")
                 }
@@ -215,6 +229,7 @@ class ShimmerNetworkClient(
             AppLogger.w(TAG, "Error processing server message: ${e.message}")
         }
     }
+
     private fun handleConnectionError(error: Exception) {
         AppLogger.w(TAG, "Connection error: ${error.message}")
         if (isRunning.get()) {
@@ -228,6 +243,7 @@ class ShimmerNetworkClient(
             }
         }
     }
+
     private fun cleanup() {
         isConnected.set(false)
         isRunning.set(false)
@@ -250,6 +266,7 @@ class ShimmerNetworkClient(
         onDisconnected = null
         onError = null
     }
+
     fun isConnected(): Boolean = isConnected.get()
     fun getConnectionStatus(): String {
         return when {
@@ -258,6 +275,7 @@ class ShimmerNetworkClient(
             else -> "Disconnected"
         }
     }
+
     fun updateServerAddress(host: String, port: Int = serverPort): ShimmerNetworkClient {
         return ShimmerNetworkClient(host, port)
     }

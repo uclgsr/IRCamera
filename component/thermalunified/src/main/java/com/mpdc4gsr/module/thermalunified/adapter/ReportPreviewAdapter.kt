@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.adapter
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
@@ -13,12 +14,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.app.bean.HouseRepPreviewItemBean
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.module.thermalunified.R
+
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRepPreviewItemBean>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemViewType(position: Int): Int {
         return position
     }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -27,6 +30,7 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
             LayoutInflater.from(parent.context).inflate(R.layout.item_report_floor, parent, false),
         )
     }
+
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
@@ -65,9 +69,11 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
             }
         }
     }
+
     override fun getItemCount(): Int {
         return dataList.size
     }
+
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvFloorNumber: TextView = itemView.findViewById(R.id.tv_floor_number)
         val rcyReport: RecyclerView = itemView.findViewById(R.id.rcy_report)

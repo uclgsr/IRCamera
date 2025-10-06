@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.util.*
 import kotlin.math.roundToInt
+
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun FenceCompose(
@@ -164,6 +166,7 @@ fun FenceCompose(
         }
     }
 }
+
 @Composable
 fun ThermalToolCompose(
     selectedTool: ThermalToolType,
@@ -232,6 +235,7 @@ fun ThermalToolCompose(
         )
     }
 }
+
 @Composable
 private fun ThermalToolItemCompose(
     tool: ThermalToolType,
@@ -263,6 +267,7 @@ private fun ThermalToolItemCompose(
         )
     }
 }
+
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun FenceToolCompose(
@@ -396,6 +401,7 @@ fun FenceToolCompose(
         }
     }
 }
+
 @OptIn(ExperimentalTextApi::class)
 private fun DrawScope.drawFence(
     bounds: List<Offset>,
@@ -483,10 +489,12 @@ private fun DrawScope.drawFence(
         )
     }
 }
+
 // Data classes
 enum class ThermalToolType {
     POINT, LINE, RECTANGLE, CIRCLE, FENCE, MEASURE
 }
+
 data class ThermalFence(
     val id: String,
     val bounds: List<Offset>,
@@ -494,9 +502,11 @@ data class ThermalFence(
     val averageTemperature: Float,
     val status: ThermalFenceStatus
 )
+
 enum class ThermalFenceStatus {
     NORMAL, WARNING, ALARM
 }
+
 // Preview functions
 @Preview(showBackground = true)
 @Composable
@@ -515,6 +525,7 @@ private fun FenceComposePreview() {
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun ThermalToolComposePreview() {

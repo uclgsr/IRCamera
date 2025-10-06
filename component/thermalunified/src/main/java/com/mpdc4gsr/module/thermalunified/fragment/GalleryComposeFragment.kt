@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,10 +33,12 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+
 class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
     override fun createViewModel(): GalleryViewModel {
         return viewModels<GalleryViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: GalleryViewModel) {
@@ -64,6 +67,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                             modifier = Modifier.fillMaxSize()
                         )
                     }
+
                     isGridView -> {
                         GridGalleryView(
                             mediaItems = mediaItems,
@@ -83,6 +87,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                             }
                         )
                     }
+
                     else -> {
                         ListGalleryView(
                             mediaItems = mediaItems,
@@ -106,6 +111,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun GalleryTopBar(
@@ -150,6 +156,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         )
     }
+
     @Composable
     private fun GridGalleryView(
         mediaItems: List<GalleryViewModel.MediaItem>,
@@ -175,6 +182,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
+
     @Composable
     private fun ListGalleryView(
         mediaItems: List<GalleryViewModel.MediaItem>,
@@ -198,6 +206,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
+
     @Composable
     private fun GridMediaItem(
         item: GalleryViewModel.MediaItem,
@@ -284,6 +293,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
+
     @Composable
     private fun ListMediaItem(
         item: GalleryViewModel.MediaItem,
@@ -352,6 +362,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
+
     @Composable
     private fun EmptyGalleryState(
         modifier: Modifier = Modifier
@@ -383,6 +394,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             }
         }
     }
+
     private fun formatFileSize(bytes: Long): String {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()

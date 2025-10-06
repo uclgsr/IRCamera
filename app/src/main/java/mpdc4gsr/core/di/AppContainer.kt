@@ -1,5 +1,7 @@
 package mpdc4gsr.core.di
+
 import android.content.Context
+
 interface AppContainer {
     val context: Context
     // Add repository dependencies here as they are created
@@ -8,6 +10,7 @@ interface AppContainer {
     // val userRepository: UserRepository
     // val networkRepository: NetworkRepository
 }
+
 class DefaultAppContainer(
     override val context: Context
 ) : AppContainer {

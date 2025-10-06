@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import android.content.Intent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -22,10 +23,12 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalDoubleViewModel
+
 class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewModel>() {
     override fun createViewModel(): IRThermalDoubleViewModel {
         return viewModels<IRThermalDoubleViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRThermalDoubleViewModel) {

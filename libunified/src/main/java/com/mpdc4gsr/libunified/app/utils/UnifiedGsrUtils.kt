@@ -1,6 +1,8 @@
 package com.mpdc4gsr.libunified.app.utils
+
 object UnifiedGsrUtils {
     private const val TAG = "UnifiedGsrUtils"
+
     // Time synchronization state
     private var pcTimeOffset: Long = 0L
     private var deviceGroundTruthBase: Long = System.currentTimeMillis()
@@ -12,6 +14,7 @@ object UnifiedGsrUtils {
         val deviceOffset = currentDeviceTime - deviceGroundTruthBase
         return deviceGroundTruthBase + deviceOffset + pcTimeOffset
     }
+
     fun initializeGroundTruthTiming() {
         deviceGroundTruthBase = System.currentTimeMillis()
         detectSamsungS22Processor()
@@ -21,9 +24,11 @@ object UnifiedGsrUtils {
             bootTimeReference = 0L
         }
     }
+
     fun setPcTimeOffset(offset: Long) {
         pcTimeOffset = offset
     }
+
     fun getPcTimeOffset(): Long = pcTimeOffset
     private fun detectSamsungS22Processor() {
         try {
@@ -43,6 +48,7 @@ object UnifiedGsrUtils {
             deviceModel = "Unknown"
         }
     }
+
     data class DeviceTimingInfo(
         val processor: String,
         val model: String,
@@ -50,6 +56,7 @@ object UnifiedGsrUtils {
         val bootTimeReference: Long,
         val pcTimeOffset: Long
     )
+
     fun getDeviceTimingInfo(): DeviceTimingInfo {
         return DeviceTimingInfo(
             detectedProcessor,
@@ -59,10 +66,12 @@ object UnifiedGsrUtils {
             pcTimeOffset
         )
     }
+
     fun calculateGsrSampleTimestamp(sampleIndex: Long, samplingRate: Double): Long {
         val sampleTimeMs = (sampleIndex / samplingRate * 1000).toLong()
         return deviceGroundTruthBase + sampleTimeMs + pcTimeOffset
     }
+
     fun resistanceToMicrosiemens(resistance: Double): Double {
         return if (resistance > 0) {
             1_000_000.0 / resistance
@@ -70,6 +79,7 @@ object UnifiedGsrUtils {
             0.0
         }
     }
+
     fun microsiemensToResistance(microsiemens: Double): Double {
         return if (microsiemens > 0) {
             1_000_000.0 / microsiemens
@@ -77,21 +87,25 @@ object UnifiedGsrUtils {
             Double.MAX_VALUE
         }
     }
+
     fun applyGsrCalibration(rawValue: Double, gain: Double, offset: Double): Double {
         return (rawValue * gain) + offset
     }
+
     fun calculateBaseline(gsrValues: DoubleArray, windowSize: Int = 100): Double {
         if (gsrValues.isEmpty()) return 0.0
         val sortedValues = gsrValues.sorted()
         val baselineWindowSize = minOf(windowSize, sortedValues.size)
         return sortedValues.take(baselineWindowSize).average()
     }
+
     data class GsrPeak(
         val index: Int,
         val timestamp: Long,
         val value: Double,
         val amplitude: Double
     )
+
     fun detectGsrPeaks(
         gsrValues: DoubleArray,
         timestamps: LongArray,
@@ -118,6 +132,7 @@ object UnifiedGsrUtils {
         }
         return peaks
     }
+
     fun smoothGsrData(gsrValues: DoubleArray, windowSize: Int = 5): DoubleArray {
         if (gsrValues.size <= windowSize) return gsrValues.copyOf()
         val smoothed = DoubleArray(gsrValues.size)
@@ -135,6 +150,7 @@ object UnifiedGsrUtils {
         }
         return smoothed
     }
+
     data class GsrStats(
         val mean: Double,
         val median: Double,
@@ -144,6 +160,7 @@ object UnifiedGsrUtils {
         val range: Double,
         val peakCount: Int
     )
+
     fun calculateGsrStats(gsrValues: DoubleArray, timestamps: LongArray): GsrStats {
         if (gsrValues.isEmpty()) {
             return GsrStats(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0)
@@ -163,6 +180,7 @@ object UnifiedGsrUtils {
         val peaks = detectGsrPeaks(gsrValues, timestamps)
         return GsrStats(mean, median, standardDeviation, min, max, range, peaks.size)
     }
+
     fun exportGsrToCsv(
         gsrValues: DoubleArray,
         timestamps: LongArray,
@@ -180,11 +198,13 @@ object UnifiedGsrUtils {
         }
         return csv.toString()
     }
+
     data class GsrQualityReport(
         val isValid: Boolean,
         val issues: List<String>,
         val qualityScore: Double
     )
+
     fun validateGsrDataQuality(gsrValues: DoubleArray, samplingRate: Double): GsrQualityReport {
         val issues = mutableListOf<String>()
         var qualityScore = 1.0

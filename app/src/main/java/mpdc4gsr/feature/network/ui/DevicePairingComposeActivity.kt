@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.ui
+
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -31,9 +32,11 @@ class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>
             context.startActivity(Intent(context, DevicePairingComposeActivity::class.java))
         }
     }
+
     override fun createViewModel(): DevicePairingViewModel {
         return viewModels<DevicePairingViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: DevicePairingViewModel) {
@@ -101,6 +104,7 @@ class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>
         }
     }
 }
+
 @Composable
 private fun DevicePairingContent(
     isScanning: Boolean,
@@ -165,6 +169,7 @@ private fun DevicePairingContent(
         }
     }
 }
+
 @Composable
 private fun ScanningStatusCard(
     isScanning: Boolean,
@@ -215,6 +220,7 @@ private fun ScanningStatusCard(
         }
     }
 }
+
 @Composable
 private fun DeviceFilterRow(
     selectedFilter: String,
@@ -238,6 +244,7 @@ private fun DeviceFilterRow(
         }
     }
 }
+
 @Composable
 private fun DeviceCard(
     device: BluetoothDeviceInfo,
@@ -367,6 +374,7 @@ private fun DeviceCard(
         }
     }
 }
+
 @Composable
 private fun ConnectionStatusFooter(
     device: BluetoothDeviceInfo,
@@ -414,6 +422,7 @@ private fun ConnectionStatusFooter(
         }
     }
 }
+
 @Composable
 private fun DevicePairingDialog(
     device: BluetoothDeviceInfo,
@@ -464,6 +473,7 @@ private fun DevicePairingDialog(
         }
     )
 }
+
 @Composable
 private fun getDeviceTypeColor(type: String) = when (type) {
     "Thermal" -> MaterialTheme.colorScheme.error
@@ -471,12 +481,14 @@ private fun getDeviceTypeColor(type: String) = when (type) {
     "Camera" -> MaterialTheme.colorScheme.tertiary
     else -> MaterialTheme.colorScheme.outline
 }
+
 @Composable
 private fun getSignalStrengthColor(rssi: Int) = when {
     rssi > -50 -> MaterialTheme.colorScheme.primary
     rssi > -60 -> MaterialTheme.colorScheme.secondary
     else -> MaterialTheme.colorScheme.error
 }
+
 data class BluetoothDeviceInfo(
     val name: String,
     val address: String,
@@ -484,6 +496,7 @@ data class BluetoothDeviceInfo(
     val rssi: Int,
     val connectionStatus: String
 )
+
 private fun getMockBluetoothDevices() = listOf(
     BluetoothDeviceInfo("TOPDON TC001", "00:11:22:33:44:55", "Thermal", -45, "available"),
     BluetoothDeviceInfo("Shimmer3 GSR+", "AA:BB:CC:DD:EE:FF", "GSR", -52, "paired"),

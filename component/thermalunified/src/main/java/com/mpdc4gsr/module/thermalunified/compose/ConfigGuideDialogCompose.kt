@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.module.thermalunified.R
+
 @Composable
 fun ConfigGuideDialogCompose(
     isTC007: Boolean,
@@ -61,6 +63,7 @@ fun ConfigGuideDialogCompose(
                         isTC007 = isTC007,
                         onNext = { currentStep = 2 }
                     )
+
                     2 -> ConfigStep2Content(
                         isTC007 = isTC007,
                         onComplete = {
@@ -73,6 +76,7 @@ fun ConfigGuideDialogCompose(
         }
     }
 }
+
 @Composable
 private fun ConfigStep1Content(
     isTC007: Boolean,
@@ -124,6 +128,7 @@ private fun ConfigStep1Content(
         }
     }
 }
+
 @Composable
 private fun ConfigStep2Content(
     isTC007: Boolean,
@@ -179,6 +184,7 @@ private fun ConfigStep2Content(
         }
     }
 }
+
 @Composable
 private fun ConfigParameterCard(
     title: String,
@@ -208,6 +214,7 @@ private fun ConfigParameterCard(
         }
     }
 }
+
 @Composable
 private fun EmissivityPresetCard(
     preset: EmissivityPreset,
@@ -252,6 +259,7 @@ private fun EmissivityPresetCard(
         }
     }
 }
+
 private fun getEmissivityPresets(isTC007: Boolean): List<EmissivityPreset> {
     return listOf(
         EmissivityPreset("Human Skin", 0.98f, "Human body temperature measurement"),
@@ -268,11 +276,13 @@ private fun getEmissivityPresets(isTC007: Boolean): List<EmissivityPreset> {
         it.emissivity >= (if (isTC007) 0.1f else 0.01f) && it.emissivity <= 1.0f
     }
 }
+
 data class EmissivityPreset(
     val material: String,
     val emissivity: Float,
     val description: String = ""
 )
+
 @Composable
 fun ConfigGuideDialogComposePreview() {
     var showDialog by remember { mutableStateOf(true) }

@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.utils
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -27,7 +28,7 @@ data class ComposeThermalData(
     val connectionState: String = "Disconnected"
 ) {
     companion object {
-        
+
         fun fromExistingData(
             center: Float,
             max: Float,

@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.navigation
+
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -6,9 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import mpdc4gsr.core.ui.ComposePerformanceMonitor
+
 object NavigationPerformanceHelper {
     private const val TAG = "NavigationPerf"
     private const val WARNING_THRESHOLD_MS = 300L
+
     @Composable
     fun TrackNavigation(routeName: String) {
         val startTime = remember { System.currentTimeMillis() }
@@ -20,6 +23,7 @@ object NavigationPerformanceHelper {
             }
         }
     }
+
     fun logPerformanceSummary() {
         val summary = ComposePerformanceMonitor.getPerformanceSummary()
         AppLogger.d(TAG, "=== Navigation Performance Summary ===")
@@ -45,6 +49,7 @@ object NavigationPerformanceHelper {
         }
         AppLogger.d(TAG, "======================================")
     }
+
     fun getSlowRoutes(thresholdMs: Long = WARNING_THRESHOLD_MS): List<Pair<String, Double>> {
         val summary = ComposePerformanceMonitor.getPerformanceSummary()
         val navigationMetrics = summary.filter { it.key.startsWith("navigation_") }
@@ -55,6 +60,7 @@ object NavigationPerformanceHelper {
             }
             .sortedByDescending { it.second }
     }
+
     fun getFastestRoute(): Pair<String, Double>? {
         val summary = ComposePerformanceMonitor.getPerformanceSummary()
         val navigationMetrics = summary.filter { it.key.startsWith("navigation_") }
@@ -62,6 +68,7 @@ object NavigationPerformanceHelper {
             .minByOrNull { it.value.average }
             ?.let { it.key.removePrefix("navigation_") to it.value.average }
     }
+
     fun getSlowestRoute(): Pair<String, Double>? {
         val summary = ComposePerformanceMonitor.getPerformanceSummary()
         val navigationMetrics = summary.filter { it.key.startsWith("navigation_") }

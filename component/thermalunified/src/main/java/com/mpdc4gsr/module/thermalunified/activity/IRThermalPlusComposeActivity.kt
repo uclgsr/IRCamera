@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -17,10 +18,12 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+
 class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>() {
     override fun createViewModel(): IRThermalPlusViewModel {
         return IRThermalPlusViewModel()
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRThermalPlusViewModel) {
@@ -55,7 +58,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                             }
                         },
                         actions = {
-                            IconButton(onClick = {  }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
                             }
                         },
@@ -72,6 +75,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
             }
         }
     }
+
     @Composable
     private fun IRThermalPlusContent(
         viewModel: IRThermalPlusViewModel,
@@ -308,7 +312,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = {  },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFFFFD700)
@@ -322,7 +326,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                     Text("AI Capture")
                 }
                 Button(
-                    onClick = {  },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFFD700),
@@ -337,4 +341,5 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
         }
     }
 }
+
 class IRThermalPlusViewModel : BaseViewModel()

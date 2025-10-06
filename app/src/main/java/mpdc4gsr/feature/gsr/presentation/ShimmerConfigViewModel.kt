@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.presentation
+
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -33,20 +34,25 @@ class ShimmerConfigViewModel(
                 )
             }
     }
+
     // StateFlow for UI state management
     private val _shimmerUiState = MutableStateFlow(ShimmerConfigUiState())
     val shimmerUiState: StateFlow<ShimmerConfigUiState> = _shimmerUiState.asStateFlow()
+
     // Device management StateFlows
     private val _discoveredDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())
     val discoveredDevices: StateFlow<List<DeviceInfo>> = _discoveredDevices.asStateFlow()
     private val _shimmerConnectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
     val shimmerConnectionState: StateFlow<ConnectionState> = _shimmerConnectionState.asStateFlow()
+
     // Permission management StateFlow
     private val _permissionState = MutableStateFlow(PermissionState(false, emptyList()))
     val permissionState: StateFlow<PermissionState> = _permissionState.asStateFlow()
+
     // SharedFlow for one-time events
     private val _configEvents = MutableSharedFlow<ConfigEvent>()
     val configEvents: SharedFlow<ConfigEvent> = _configEvents.asSharedFlow()
+
     // SharedFlow for config actions
     private val _configAction = MutableSharedFlow<ConfigAction>()
     val configAction: SharedFlow<ConfigAction> = _configAction.asSharedFlow()

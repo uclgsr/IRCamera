@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.thermal.ui
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -365,6 +366,7 @@ private fun DrawScope.drawCalibrationOverlay(
                 size = Size(radius * 2, radius * 2)
             )
         }
+
         step >= 1 -> {
             // Draw crosshair for alignment
             val crosshairSize = 30f
@@ -535,6 +537,7 @@ fun CalibrationOverlay(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun CalibrateScreenPreview() {

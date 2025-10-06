@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -35,9 +36,11 @@ class ResearchTemplateComposeActivity : BaseComposeActivity<AppBaseViewModel>() 
             context.startActivity(Intent(context, ResearchTemplateComposeActivity::class.java))
         }
     }
+
     override fun createViewModel(): AppBaseViewModel {
         return viewModels<AppBaseViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: AppBaseViewModel) {
@@ -131,10 +134,12 @@ class ResearchTemplateComposeActivity : BaseComposeActivity<AppBaseViewModel>() 
             )
         }
     }
+
     private fun startRecordingWithTemplate(template: ResearchTemplate) {
         MultiModalRecordingComposeActivity.startWithTemplate(this, template.id)
     }
 }
+
 @Composable
 private fun ResearchTemplateContent(
     selectedTemplate: ResearchTemplate?,
@@ -176,6 +181,7 @@ private fun ResearchTemplateContent(
         }
     }
 }
+
 @Composable
 private fun CategoryFilterRow(
     selectedCategory: ResearchTemplate.TemplateCategory?,
@@ -201,6 +207,7 @@ private fun CategoryFilterRow(
         }
     }
 }
+
 @Composable
 private fun TemplateCard(
     template: ResearchTemplate,
@@ -299,6 +306,7 @@ private fun TemplateCard(
         }
     }
 }
+
 @Composable
 private fun TemplateDetailsDialog(
     template: ResearchTemplate,
@@ -379,6 +387,7 @@ private fun TemplateDetailsDialog(
         }
     )
 }
+
 @Composable
 private fun CreateTemplateDialog(
     onDismiss: () -> Unit,
@@ -472,6 +481,7 @@ private fun CreateTemplateDialog(
         }
     )
 }
+
 private fun getTemplateIcon(category: ResearchTemplate.TemplateCategory) = when (category) {
     ResearchTemplate.TemplateCategory.STRESS_RESPONSE -> Icons.Default.Psychology
     ResearchTemplate.TemplateCategory.COGNITIVE_LOAD -> Icons.Default.Psychology
@@ -480,6 +490,7 @@ private fun getTemplateIcon(category: ResearchTemplate.TemplateCategory) = when 
     ResearchTemplate.TemplateCategory.BEHAVIORAL_ANALYSIS -> Icons.Default.Groups
     ResearchTemplate.TemplateCategory.CUSTOM -> Icons.Default.Build
 }
+
 private fun getCategoryColor(category: ResearchTemplate.TemplateCategory) = when (category) {
     ResearchTemplate.TemplateCategory.STRESS_RESPONSE -> Color(0xFF9C27B0)
     ResearchTemplate.TemplateCategory.COGNITIVE_LOAD -> Color(0xFF2196F3)

@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.components
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -13,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.ConnectionState
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SensorStatusCard(
@@ -60,6 +62,7 @@ fun SensorStatusCard(
         }
     }
 }
+
 @Composable
 private fun SensorStatusRow(
     label: String,
@@ -89,6 +92,7 @@ private fun SensorStatusRow(
         StatusIndicator(state = state)
     }
 }
+
 @Composable
 private fun StatusIndicator(state: ConnectionState) {
     val (icon, color, text) = when (state) {
@@ -97,16 +101,19 @@ private fun StatusIndicator(state: ConnectionState) {
             Color.Green,
             "Connected"
         )
+
         is ConnectionState.Connecting -> Triple(
             Icons.Default.Warning,
             MaterialTheme.colorScheme.primary,
             "Connecting"
         )
+
         is ConnectionState.Disconnected -> Triple(
             Icons.Default.Error,
             Color.Red,
             "Disconnected"
         )
+
         is ConnectionState.Error -> Triple(
             Icons.Default.Error,
             Color.Red,

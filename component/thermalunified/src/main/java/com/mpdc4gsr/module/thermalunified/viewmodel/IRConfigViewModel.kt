@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
+
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
@@ -7,6 +8,7 @@ import com.mpdc4gsr.module.thermalunified.bean.ModelBean
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 class IRConfigViewModel : BaseViewModel() {
     val configLiveData = SingleLiveEvent<ModelBean>()
     fun getConfig(isTC007: Boolean) {
@@ -14,6 +16,7 @@ class IRConfigViewModel : BaseViewModel() {
             configLiveData.postValue(ConfigRepository.read(isTC007))
         }
     }
+
     fun updateDefaultEnvironment(
         isTC007: Boolean,
         environment: Float,
@@ -25,6 +28,7 @@ class IRConfigViewModel : BaseViewModel() {
             configLiveData.postValue(modelBean)
         }
     }
+
     fun updateDefaultDistance(
         isTC007: Boolean,
         distance: Float,
@@ -36,6 +40,7 @@ class IRConfigViewModel : BaseViewModel() {
             configLiveData.postValue(modelBean)
         }
     }
+
     fun updateDefaultRadiation(
         isTC007: Boolean,
         radiation: Float,
@@ -47,6 +52,7 @@ class IRConfigViewModel : BaseViewModel() {
             configLiveData.postValue(modelBean)
         }
     }
+
     fun addConfig(isTC007: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             val modelBean = configLiveData.value ?: ConfigRepository.read(isTC007)
@@ -60,6 +66,7 @@ class IRConfigViewModel : BaseViewModel() {
             configLiveData.postValue(modelBean)
         }
     }
+
     fun checkConfig(
         isTC007: Boolean,
         id: Int,
@@ -74,6 +81,7 @@ class IRConfigViewModel : BaseViewModel() {
             configLiveData.postValue(modelBean)
         }
     }
+
     fun deleteConfig(
         isTC007: Boolean,
         id: Int,
@@ -103,6 +111,7 @@ class IRConfigViewModel : BaseViewModel() {
             configLiveData.postValue(modelBean)
         }
     }
+
     fun updateCustom(
         isTC007: Boolean,
         dataBean: DataBean,

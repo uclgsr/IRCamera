@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -25,16 +26,19 @@ data class TestResult(
     val details: String,
     val severity: TestSeverity = TestSeverity.INFO
 )
+
 enum class TestSeverity {
     INFO,
     WARNING,
     ERROR,
     CRITICAL
 }
+
 class ComposeTestingSuite {
     companion object {
         private const val TAG = "ComposeTestingSuite"
     }
+
     private val testResults = mutableListOf<TestResult>()
 
     suspend fun runAllTests(): List<TestResult> {
@@ -53,6 +57,7 @@ class ComposeTestingSuite {
         AppLogger.i(TAG, "Testing suite completed with ${testResults.size} tests")
         return testResults.toList()
     }
+
     private suspend fun runPerformanceTests() {
         AppLogger.d(TAG, "Running performance tests...")
         // Test navigation performance
@@ -99,6 +104,7 @@ class ComposeTestingSuite {
             )
         )
     }
+
     private suspend fun runNavigationTests() {
         AppLogger.d(TAG, "Running navigation tests...")
         val routes = listOf(
@@ -125,6 +131,7 @@ class ComposeTestingSuite {
             )
         }
     }
+
     private suspend fun runMemoryTests() {
         AppLogger.d(TAG, "Running memory tests...")
         val runtime = Runtime.getRuntime()
@@ -159,6 +166,7 @@ class ComposeTestingSuite {
             )
         )
     }
+
     private suspend fun runIntegrationTests() {
         AppLogger.d(TAG, "Running integration tests...")
         // Test BaseComposeActivity integration
@@ -192,6 +200,7 @@ class ComposeTestingSuite {
             )
         )
     }
+
     private suspend fun runUserFlowTests() {
         AppLogger.d(TAG, "Running user flow tests...")
         // Test complete GSR analysis workflow
@@ -288,6 +297,7 @@ fun TestResultsScreen(
         }
     }
 }
+
 @Composable
 private fun TestResultsContent(
     testResults: List<TestResult>,
@@ -348,6 +358,7 @@ private fun TestResultsContent(
         }
     }
 }
+
 @Composable
 private fun TestSummaryCard(
     testResults: List<TestResult>,
@@ -399,6 +410,7 @@ private fun TestSummaryCard(
         }
     }
 }
+
 @Composable
 private fun TestSummaryMetric(
     label: String,
@@ -420,6 +432,7 @@ private fun TestSummaryMetric(
         )
     }
 }
+
 @Composable
 internal fun TestResultCard(
     result: TestResult,
@@ -433,6 +446,7 @@ internal fun TestResultCard(
                 TestSeverity.ERROR, TestSeverity.CRITICAL -> MaterialTheme.colorScheme.errorContainer.copy(
                     alpha = 0.1f
                 )
+
                 TestSeverity.WARNING -> MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.1f)
                 else -> MaterialTheme.colorScheme.surface
             }
@@ -490,6 +504,7 @@ internal fun TestResultCard(
         }
     }
 }
+
 // Sample data for demonstration
 private fun generateSampleTestResults(): List<TestResult> {
     return listOf(

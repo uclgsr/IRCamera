@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -11,6 +12,7 @@ import java.io.PrintWriter
 import java.net.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
+
 class NetworkController(private val context: Context) {
     companion object {
         private const val TAG = "NetworkController"
@@ -18,22 +20,26 @@ class NetworkController(private val context: Context) {
         private const val SOCKET_TIMEOUT = 30000
         private const val BUFFER_SIZE = 4096
     }
+
     private var serverSocket: ServerSocket? = null
     private val isRunning = AtomicBoolean(false)
     private val clientConnections = ConcurrentHashMap<String, ClientConnection>()
     private val controllerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var eventListener: NetworkControllerListener? = null
+
     interface NetworkControllerListener {
         fun onStartRecordingCommand(
             sessionId: String,
             modalities: List<String>,
             options: Map<String, Any>
         )
+
         fun onStopRecordingCommand()
         fun onClientConnected(clientId: String, clientInfo: String)
         fun onClientDisconnected(clientId: String, reason: String)
         fun onError(operation: String, error: String)
     }
+
     data class ClientConnection(
         val socket: Socket,
         val clientId: String,
@@ -41,15 +47,18 @@ class NetworkController(private val context: Context) {
         val outputStream: PrintWriter,
         val connectedAt: Long = System.currentTimeMillis()
     )
+
     data class RemoteCommand(
         val command: String,
         val sessionId: String? = null,
         val modalities: List<String> = emptyList(),
         val options: Map<String, Any> = emptyMap()
     )
+
     fun setEventListener(listener: NetworkControllerListener) {
         this.eventListener = listener
     }
+
     suspend fun start(port: Int = DEFAULT_PORT): Boolean = withContext(Dispatchers.IO) {
         if (isRunning.get()) {
             AppLogger.w(TAG, "NetworkController already running")
@@ -98,6 +107,7 @@ class NetworkController(private val context: Context) {
             return@withContext false
         }
     }
+
     suspend fun stop() = withContext(Dispatchers.IO) {
         if (!isRunning.get()) {
             AppLogger.w(TAG, "NetworkController is not running")
@@ -140,6 +150,7 @@ class NetworkController(private val context: Context) {
             AppLogger.e(TAG, "Error stopping NetworkController", e)
         }
     }
+
     private suspend fun acceptConnections() = withContext(Dispatchers.IO) {
         while (isRunning.get() && serverSocket != null) {
             try {
@@ -158,6 +169,7 @@ class NetworkController(private val context: Context) {
             }
         }
     }
+
     private suspend fun handleNewClient(clientSocket: Socket) = withContext(Dispatchers.IO) {
         try {
             val clientId = "${clientSocket.inetAddress.hostAddress}:${clientSocket.port}"
@@ -184,6 +196,7 @@ class NetworkController(private val context: Context) {
             }
         }
     }
+
     private suspend fun handleClientMessages(connection: ClientConnection) =
         withContext(Dispatchers.IO) {
             try {
@@ -203,9 +216,11 @@ class NetworkController(private val context: Context) {
                     e.message?.contains("Connection reset") == true -> {
                         AppLogger.d(TAG, "Client ${connection.clientId} connection reset")
                     }
+
                     e.message?.contains("Socket closed") == true -> {
                         AppLogger.d(TAG, "Client ${connection.clientId} socket closed")
                     }
+
                     else -> {
                         Log.w(
                             TAG,
@@ -220,6 +235,7 @@ class NetworkController(private val context: Context) {
                 disconnectClient(connection.clientId, "Connection closed")
             }
         }
+
     private suspend fun handleCommand(connection: ClientConnection, message: String) {
         try {
             val json = JSONObject(message)
@@ -246,6 +262,7 @@ class NetworkController(private val context: Context) {
             )
         }
     }
+
     private suspend fun handleStartRecordingCommand(
         connection: ClientConnection,
         json: JSONObject
@@ -291,6 +308,7 @@ class NetworkController(private val context: Context) {
             )
         }
     }
+
     private suspend fun handleStopRecordingCommand(connection: ClientConnection, json: JSONObject) {
         try {
             AppLogger.i(TAG, "Stop recording command received")
@@ -307,9 +325,11 @@ class NetworkController(private val context: Context) {
             )
         }
     }
+
     private suspend fun handlePingCommand(connection: ClientConnection, json: JSONObject) {
         sendResponse(connection, createResponse("pong", "Server is alive"))
     }
+
     private suspend fun handleGetStatusCommand(connection: ClientConnection, json: JSONObject) {
         val status = mapOf(
             "connected_clients" to clientConnections.size,
@@ -318,6 +338,7 @@ class NetworkController(private val context: Context) {
         )
         sendResponse(connection, createResponse("status", "Server status", status))
     }
+
     private fun sendResponse(connection: ClientConnection, response: String) {
         try {
             connection.outputStream.println(response)
@@ -326,6 +347,7 @@ class NetworkController(private val context: Context) {
             AppLogger.e(TAG, "Error sending response to ${connection.clientId}", e)
         }
     }
+
     private fun createResponse(
         status: String,
         message: String,
@@ -340,6 +362,7 @@ class NetworkController(private val context: Context) {
         }
         return json.toString()
     }
+
     private fun createErrorResponse(error: String, message: String): String {
         val json = JSONObject()
         json.put("status", "error")
@@ -348,6 +371,7 @@ class NetworkController(private val context: Context) {
         json.put("timestamp", System.currentTimeMillis())
         return json.toString()
     }
+
     private fun disconnectClient(clientId: String, reason: String) {
         clientConnections[clientId]?.let { connection ->
             try {
@@ -359,6 +383,7 @@ class NetworkController(private val context: Context) {
             AppLogger.i(TAG, "Client disconnected: $clientId - $reason")
         }
     }
+
     fun getConnectedClientsCount(): Int = clientConnections.size
     fun isRunning(): Boolean = isRunning.get()
 

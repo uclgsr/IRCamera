@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -16,8 +17,9 @@ class CommandHandler(
         private const val TAG = "CommandHandler"
         private const val STATUS_UPDATE_INTERVAL_MS = 5000L
     }
+
     private val handlerScope = CoroutineScope(Dispatchers.IO)
-    
+
     suspend fun handleCommand(commandLine: String) {
         try {
             AppLogger.d(TAG, "Processing command: $commandLine")
@@ -43,6 +45,7 @@ class CommandHandler(
             networkManager.sendResponse(errorResponse)
         }
     }
+
     private suspend fun handleStartCommand(commandLine: String): String =
         withContext(Dispatchers.IO) {
             try {
@@ -66,6 +69,7 @@ class CommandHandler(
                 "ERROR cmd=START code=START_EXCEPTION msg=\"Start error: ${e.message}\""
             }
         }
+
     private suspend fun handleStopCommand(commandLine: String): String =
         withContext(Dispatchers.IO) {
             try {
@@ -87,6 +91,7 @@ class CommandHandler(
                 "ERROR cmd=STOP code=STOP_EXCEPTION msg=\"Stop error: ${e.message}\""
             }
         }
+
     private suspend fun handleSyncCommand(commandLine: String): String =
         withContext(Dispatchers.IO) {
             try {
@@ -109,10 +114,12 @@ class CommandHandler(
                 "ERROR cmd=SYNC code=SYNC_EXCEPTION msg=\"Sync error: ${e.message}\""
             }
         }
+
     private fun handlePingCommand(): String {
         AppLogger.d(TAG, "Responding to PING")
         return "PONG"
     }
+
     private suspend fun handleGetStatusCommand(): String = withContext(Dispatchers.IO) {
         try {
             val status = if (recordingController.isRecording) "recording" else "idle"
@@ -136,6 +143,7 @@ class CommandHandler(
             "ERROR cmd=GET_STATUS code=STATUS_EXCEPTION msg=\"Status error: ${e.message}\""
         }
     }
+
     private suspend fun handleJsonCommand(jsonString: String): String =
         withContext(Dispatchers.IO) {
             try {
@@ -149,6 +157,7 @@ class CommandHandler(
                         val syncCmd = if (pcTimestamp > 0) "SYNC t_pc=$pcTimestamp" else "SYNC"
                         handleSyncCommand(syncCmd)
                     }
+
                     "PING" -> handlePingCommand()
                     "GET_STATUS" -> handleGetStatusCommand()
                     else -> "ERROR cmd=$command code=UNKNOWN_JSON_COMMAND msg=\"Unknown JSON command: $command\""
@@ -158,6 +167,7 @@ class CommandHandler(
                 "ERROR cmd=JSON code=JSON_PARSE_ERROR msg=\"Invalid JSON command: ${e.message}\""
             }
         }
+
     private fun extractTimestampFromCommand(commandLine: String): Long? {
         return try {
             val regex = Regex("t_pc=(\\d+)")
@@ -167,7 +177,7 @@ class CommandHandler(
             null
         }
     }
-    
+
     fun startPeriodicStatusUpdates() {
         handlerScope.launch {
             while (true) {
@@ -183,7 +193,7 @@ class CommandHandler(
             }
         }
     }
-    
+
     fun notifySessionStarted(sessionId: String) {
         handlerScope.launch {
             try {
@@ -196,6 +206,7 @@ class CommandHandler(
             }
         }
     }
+
     fun notifySessionStopped(sessionId: String, duration: Long) {
         handlerScope.launch {
             try {
@@ -208,6 +219,7 @@ class CommandHandler(
             }
         }
     }
+
     fun notifyError(errorType: String, errorMessage: String) {
         handlerScope.launch {
             try {

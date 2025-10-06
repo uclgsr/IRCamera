@@ -1,8 +1,10 @@
 package com.mpdc4gsr.module.thermalunified.repository
+
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.module.thermalunified.bean.DataBean
 import com.mpdc4gsr.module.thermalunified.bean.ModelBean
+
 object ConfigRepository {
     fun read(isTC007: Boolean): ModelBean =
         try {
@@ -14,6 +16,7 @@ object ConfigRepository {
         } catch (_: Exception) {
             ModelBean(DataBean(id = 0, use = true))
         }
+
     fun update(
         isTC007: Boolean,
         bean: ModelBean,
@@ -24,6 +27,7 @@ object ConfigRepository {
             SharedManager.setIRConfig(Gson().toJson(bean))
         }
     }
+
     fun readConfig(isTC007: Boolean): DataBean {
         val config = read(isTC007)
         if (config.defaultModel.use) {

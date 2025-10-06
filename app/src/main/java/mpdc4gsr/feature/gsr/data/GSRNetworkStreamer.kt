@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.data
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -11,6 +12,7 @@ import org.json.JSONObject
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+
 class GSRNetworkStreamer(
     private val context: Context,
     private val sessionId: String,
@@ -25,6 +27,7 @@ class GSRNetworkStreamer(
         private const val HEARTBEAT_INTERVAL_MS = 5000L
         private const val QUALITY_REPORTING_INTERVAL_MS = 10000L
     }
+
     private var networkClient: NetworkClient? = null
     private val sampleBuffer = ConcurrentLinkedQueue<GSRSample>()
     private val _isStreaming = AtomicBoolean(false)
@@ -61,6 +64,7 @@ class GSRNetworkStreamer(
             }
         }
     }
+
     suspend fun startStreaming(): Boolean {
         if (_isStreaming.get()) {
             AppLogger.w(TAG, "GSR streaming already active")
@@ -89,6 +93,7 @@ class GSRNetworkStreamer(
             false
         }
     }
+
     suspend fun stopStreaming(): Boolean {
         if (!_isStreaming.get()) {
             return true
@@ -107,6 +112,7 @@ class GSRNetworkStreamer(
             false
         }
     }
+
     fun addSample(sample: GSRSample) {
         if (!_isStreaming.get()) {
             return
@@ -125,6 +131,7 @@ class GSRNetworkStreamer(
             AppLogger.e(TAG, "Failed to add GSR sample to buffer", e)
         }
     }
+
     private suspend fun streamGSRData() {
         while (_isStreaming.get()) {
             try {
@@ -142,6 +149,7 @@ class GSRNetworkStreamer(
             }
         }
     }
+
     private suspend fun sendBatch() {
         val batch = mutableListOf<GSRSample>()
         repeat(BATCH_SIZE) {
@@ -184,6 +192,7 @@ class GSRNetworkStreamer(
             networkErrors.incrementAndGet()
         }
     }
+
     private fun createBatchMessage(batch: List<GSRSample>): JSONObject {
         return JSONObject().apply {
             put("type", GSR_STREAM_TYPE)
@@ -215,6 +224,7 @@ class GSRNetworkStreamer(
             )
         }
     }
+
     private suspend fun performTimeSync() {
         try {
             val clientSent = System.nanoTime()
@@ -250,6 +260,7 @@ class GSRNetworkStreamer(
             AppLogger.w(TAG, "Time synchronization failed", e)
         }
     }
+
     private fun performLocalTimeSync(clientSent: Long) {
         val clientReceived = System.nanoTime()
         val roundTripTime = clientReceived - clientSent
@@ -257,6 +268,7 @@ class GSRNetworkStreamer(
         lastSyncTime = System.currentTimeMillis()
         AppLogger.d(TAG, "Local time sync completed, RTT: ${roundTripTime}ns")
     }
+
     private suspend fun sendHeartbeats() {
         while (_isStreaming.get()) {
             try {
@@ -290,6 +302,7 @@ class GSRNetworkStreamer(
             delay(HEARTBEAT_INTERVAL_MS)
         }
     }
+
     private suspend fun reportQualityMetrics() {
         while (_isStreaming.get()) {
             try {
@@ -328,6 +341,7 @@ class GSRNetworkStreamer(
             delay(QUALITY_REPORTING_INTERVAL_MS)
         }
     }
+
     private suspend fun registerGSRStream() {
         try {
             val registration =
@@ -367,6 +381,7 @@ class GSRNetworkStreamer(
             AppLogger.e(TAG, "Failed to register GSR stream", e)
         }
     }
+
     private suspend fun sendStreamEndNotification() {
         try {
             val endNotification =
@@ -403,15 +418,18 @@ class GSRNetworkStreamer(
             AppLogger.e(TAG, "Failed to send stream end notification", e)
         }
     }
+
     private suspend fun flushBuffer() {
         while (sampleBuffer.isNotEmpty()) {
             sendBatch()
         }
     }
+
     private fun shouldFlushBuffer(): Boolean {
         return sampleBuffer.isNotEmpty() &&
                 (System.currentTimeMillis() % (STREAM_INTERVAL_MS * 5) == 0L)
     }
+
     fun getStreamingStats(): Map<String, Any> {
         return mapOf(
             "samples_sent" to samplesSent.get(),
@@ -423,6 +441,7 @@ class GSRNetworkStreamer(
             "clock_offset_ns" to clockOffset,
         )
     }
+
     suspend fun cleanup() {
         stopStreaming()
         streamingScope.cancel()

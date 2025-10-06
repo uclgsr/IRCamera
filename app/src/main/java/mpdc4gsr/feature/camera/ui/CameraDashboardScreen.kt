@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -58,6 +59,7 @@ fun CameraDashboardScreen(
         }
     }
 }
+
 @Composable
 private fun CameraDashboardContent(
     onNavigateToDualMode: () -> Unit,
@@ -104,6 +106,7 @@ private fun CameraDashboardContent(
         )
     }
 }
+
 @Composable
 private fun CameraStatusCard() {
     Card(
@@ -142,6 +145,7 @@ private fun CameraStatusCard() {
         }
     }
 }
+
 @Composable
 private fun CameraStatusRow(
     cameraName: String,
@@ -174,6 +178,7 @@ private fun CameraStatusRow(
         }
     }
 }
+
 @Composable
 private fun CameraInfoRow(
     label: String,
@@ -196,6 +201,7 @@ private fun CameraInfoRow(
         )
     }
 }
+
 @Composable
 private fun CameraModesCard(
     onNavigateToDualMode: () -> Unit,
@@ -248,6 +254,7 @@ private fun CameraModesCard(
         }
     }
 }
+
 @Composable
 private fun CameraModeItem(
     title: String,
@@ -299,6 +306,7 @@ private fun CameraModeItem(
         }
     }
 }
+
 @Composable
 private fun RecordingControlsCard(
     onNavigateToSingleCamera: (() -> Unit)? = null
@@ -386,6 +394,7 @@ private fun RecordingControlsCard(
         }
     }
 }
+
 @Composable
 private fun CameraSettingsCard() {
     Card(
@@ -423,6 +432,7 @@ private fun CameraSettingsCard() {
         }
     }
 }
+
 @Composable
 private fun SettingRow(
     title: String,
@@ -452,6 +462,7 @@ private fun SettingRow(
         )
     }
 }
+
 @Composable
 private fun PreviewGalleryCard(
     onNavigateToSingleCamera: (() -> Unit)? = null,

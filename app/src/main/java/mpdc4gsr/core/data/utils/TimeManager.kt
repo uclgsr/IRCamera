@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data.utils
+
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -10,6 +11,7 @@ import kotlinx.coroutines.*
 import java.util.*
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.abs
+
 class TimeManager(
     private val context: Context,
 ) {
@@ -23,6 +25,7 @@ class TimeManager(
         private const val POOR_NETWORK_RETRY_COUNT = 5
         private const val AUTO_RESYNC_THRESHOLD_MS = 300_000L
         private const val CRITICAL_DRIFT_THRESHOLD_MS = 100.0
+
         @Volatile
         private var INSTANCE: TimeManager? = null
         fun getInstance(context: Context): TimeManager {
@@ -31,6 +34,7 @@ class TimeManager(
             }
         }
     }
+
     private var clockOffsetNs = AtomicLong(0)
     private var lastSyncTimestamp = AtomicLong(0)
     private var syncQualityMs = AtomicLong(Long.MAX_VALUE)
@@ -44,9 +48,11 @@ class TimeManager(
         val offset = clockOffsetNs.get()
         return monotonicTime + offset
     }
+
     fun getCurrentTimestampMs(): Long {
         return getCurrentTimestampNs() / 1_000_000
     }
+
     suspend fun synchronizeWithPC(
         pcControllerAddress: String,
         port: Int = 8082,
@@ -124,6 +130,7 @@ class TimeManager(
             }
         }
     }
+
     private suspend fun performTimeSyncRound(
         pcAddress: String,
         port: Int,
@@ -153,6 +160,7 @@ class TimeManager(
             }
         }
     }
+
     private suspend fun sendTimeSyncRequest(
         pcAddress: String,
         port: Int,
@@ -198,6 +206,7 @@ class TimeManager(
             null
         }
     }
+
     private fun parseTimeSyncResponse(responseJson: String): TimeSyncResponse? {
         return try {
             var serverReceiveTime: Long? = null
@@ -225,10 +234,12 @@ class TimeManager(
                         pcReceiveTime =
                             line.substringAfter(":").trim().removeSuffix("}").toLongOrNull()
                     }
+
                     line.contains("pc_send_time") -> {
                         pcSendTime =
                             line.substringAfter(":").trim().removeSuffix("}").toLongOrNull()
                     }
+
                     line.contains("server_timestamp") && pcReceiveTime == null -> {
                         pcReceiveTime = line.substringAfter(":").trim()
                             .removeSuffix("}")
@@ -251,6 +262,7 @@ class TimeManager(
             null
         }
     }
+
     private fun startDriftMonitoring() {
         driftMonitoringJob?.cancel()
         driftMonitoringJob =
@@ -269,6 +281,7 @@ class TimeManager(
                                 )
                                 attemptAutoResync("time_threshold")
                             }
+
                             currentQuality > CRITICAL_DRIFT_THRESHOLD_MS -> {
                                 Log.w(
                                     TAG,
@@ -276,6 +289,7 @@ class TimeManager(
                                 )
                                 attemptAutoResync("quality_degradation")
                             }
+
                             timeSinceSync > 120_000L -> {
                                 Log.d(
                                     TAG,
@@ -289,6 +303,7 @@ class TimeManager(
                 }
             }
     }
+
     private fun attemptAutoResync(reason: String) {
         syncScope.launch {
             try {
@@ -311,6 +326,7 @@ class TimeManager(
             }
         }
     }
+
     private suspend fun performEnhancedTimeSync(
         pcAddress: String?,
         pcPort: Int?,
@@ -364,6 +380,7 @@ class TimeManager(
             }
         }
     }
+
     private var cachedPCAddress: String? = null
     private var cachedPCPort: Int? = null
     private fun getCurrentPCAddress(): String? = cachedPCAddress
@@ -372,6 +389,7 @@ class TimeManager(
         cachedPCAddress = address
         cachedPCPort = port
     }
+
     private fun isNetworkAvailable(): Boolean {
         return try {
             val network = connectivityManager.activeNetwork
@@ -381,6 +399,7 @@ class TimeManager(
             false
         }
     }
+
     fun getSyncQuality(): SyncQuality {
         val qualityMs = syncQualityMs.get()
         val timeSinceSync =
@@ -405,6 +424,7 @@ class TimeManager(
             isSynced = isTimeSynced,
         )
     }
+
     fun createSyncMarker(markerType: String): SyncMarker {
         val timestamp = getCurrentTimestampNs()
         return SyncMarker(
@@ -414,12 +434,14 @@ class TimeManager(
             syncQuality = getSyncQuality(),
         )
     }
+
     fun calculateTimeDifferenceNs(
         timestamp1: Long,
         timestamp2: Long,
     ): Long {
         return abs(timestamp2 - timestamp1)
     }
+
     fun areTimestampsSynchronized(
         timestamp1: Long,
         timestamp2: Long,
@@ -428,12 +450,14 @@ class TimeManager(
         val differenceMs = calculateTimeDifferenceNs(timestamp1, timestamp2) / 1_000_000.0
         return differenceMs <= toleranceMs
     }
+
     fun cleanup() {
         driftMonitoringJob?.cancel()
         syncScope.cancel()
         isTimeSynced = false
         AppLogger.i(TAG, "TimeManager cleaned up")
     }
+
     private fun logSyncQualityInfo() {
         val quality = getSyncQuality()
         val qualityLevel = when (quality.level) {
@@ -467,15 +491,18 @@ class TimeManager(
 
     fun getClockOffsetNs(): Long = clockOffsetNs.get()
 }
+
 private data class TimeSyncResult(
     val clockOffsetNs: Long,
     val roundTripTimeNs: Long,
     val networkDelayNs: Long,
 )
+
 private data class TimeSyncResponse(
     val pcReceiveTime: Long,
     val pcSendTime: Long,
 )
+
 enum class SyncQualityLevel {
     NOT_SYNCED,
     EXCELLENT,
@@ -483,6 +510,7 @@ enum class SyncQualityLevel {
     FAIR,
     POOR,
 }
+
 data class SyncQuality(
     val level: SyncQualityLevel,
     val offsetNs: Long,
@@ -490,6 +518,7 @@ data class SyncQuality(
     val timeSinceSyncMs: Long?,
     val isSynced: Boolean,
 )
+
 data class SyncMarker(
     val markerType: String,
     val timestampNs: Long,

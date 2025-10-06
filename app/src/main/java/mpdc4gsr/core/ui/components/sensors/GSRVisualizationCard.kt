@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.components.sensors
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRVisualizationCard(
@@ -68,6 +70,7 @@ fun GSRVisualizationCard(
         }
     }
 }
+
 @Composable
 private fun GSRSensorHeader(
     connectionState: GSRConnectionState,
@@ -129,6 +132,7 @@ private fun GSRSensorHeader(
         }
     }
 }
+
 @Composable
 private fun GSRDataChart(
     recentReadings: List<Float>,
@@ -191,6 +195,7 @@ private fun GSRDataChart(
         }
     }
 }
+
 @Composable
 private fun GSRStatistics(
     currentValue: Float,
@@ -227,6 +232,7 @@ private fun GSRStatistics(
         }
     }
 }
+
 @Composable
 private fun StatisticItem(
     label: String,
@@ -249,6 +255,7 @@ private fun StatisticItem(
         )
     }
 }
+
 @Composable
 private fun GSRDataControls(
     onExportData: () -> Unit,
@@ -273,6 +280,7 @@ private fun GSRDataControls(
         }
     }
 }
+
 // Data classes for GSR visualization
 data class GSRData(
     val currentValue: Float,
@@ -283,6 +291,7 @@ data class GSRData(
     val minValue: Float = 0f,
     val maxValue: Float = 0f
 )
+
 data class GSRConnectionState(
     val isConnected: Boolean,
     val deviceName: String = "",

@@ -1,9 +1,11 @@
 package com.mpdc4gsr.module.thermalunified.utils
+
 import android.util.Log
 import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.SynchronizedBitmap
+
 object CalibrationTools {
     fun sign(
         irCmd: IRCMD,
@@ -26,6 +28,7 @@ object CalibrationTools {
         }
         return success
     }
+
     fun pointFirst(
         irCmd: IRCMD,
         pointTemp: Int,
@@ -46,6 +49,7 @@ object CalibrationTools {
         }
         return success
     }
+
     fun pointEnd(
         irCmd: IRCMD,
         pointTemp: Int,
@@ -66,9 +70,11 @@ object CalibrationTools {
         }
         return success
     }
+
     fun potReady(irCmd: IRCMD): Boolean {
         return irCmd.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_DIS) == 0
     }
+
     fun potStart(
         irCmd: IRCMD,
         type: Int,
@@ -83,17 +89,21 @@ object CalibrationTools {
         irCmd.rmCoverAutoCalc(gainType)
         irCmd.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_EN)
     }
+
     fun cancelCalibration(irCmd: IRCMD) {
         irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD)
     }
+
     fun reset(irCmd: IRCMD) {
         irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_ALL)
     }
+
     fun queryGain(irCmd: IRCMD): Boolean {
         val value = IntArray(1)
         irCmd.getPropTPDParams(CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL, value)
         return value[0] == 1
     }
+
     fun setGain(
         irCmd: IRCMD,
         type: Int,
@@ -110,6 +120,7 @@ object CalibrationTools {
             )
         }
     }
+
     fun queryTpd(
         irCmd: IRCMD,
         params: CommonParams.PropTPDParams,
@@ -118,6 +129,7 @@ object CalibrationTools {
         irCmd.getPropTPDParams(params, value)
         return value[0]
     }
+
     fun shutter(
         irCmd: IRCMD?,
         syncImage: SynchronizedBitmap,
@@ -128,6 +140,7 @@ object CalibrationTools {
             irCmd?.updateOOCOrB(CommonParams.UpdateOOCOrBType.B_UPDATE)
         }
     }
+
     fun stsSwitch(
         irCmd: IRCMD?,
         flag: Boolean,
@@ -138,6 +151,7 @@ object CalibrationTools {
             irCmd?.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_DIS)
         }
     }
+
     fun pot(
         irCmd: IRCMD,
         type: Int,
@@ -151,6 +165,7 @@ object CalibrationTools {
             }
         irCmd.rmCoverAutoCalc(gainType)
     }
+
     fun autoShutter(
         irCmd: IRCMD?,
         flag: Boolean,
@@ -162,6 +177,7 @@ object CalibrationTools {
             data
         )
     }
+
     fun setTpdDis(
         irCmd: IRCMD?,
         value: Int,
@@ -173,6 +189,7 @@ object CalibrationTools {
             value = data
         )
     }
+
     fun setTpdEms(
         irCmd: IRCMD?,
         value: Int,
@@ -180,6 +197,7 @@ object CalibrationTools {
         val data = CommonParams.PropTPDParamsValue.NumberType(value.toString())
         setTpdParams(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_EMS, value = data)
     }
+
     private fun setTpdParams(
         irCmd: IRCMD?,
         params: CommonParams.PropTPDParams,

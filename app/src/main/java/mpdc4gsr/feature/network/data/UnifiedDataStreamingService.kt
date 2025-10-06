@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -16,6 +17,7 @@ import java.net.Socket
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+
 class UnifiedDataStreamingService(
     private val context: Context
 ) {
@@ -27,6 +29,7 @@ class UnifiedDataStreamingService(
         private const val MAX_CLIENTS = 10
         private const val HEARTBEAT_INTERVAL_MS = 5000L
     }
+
     private val streamingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val isStreaming = AtomicBoolean(false)
     private val connectedClients = mutableListOf<ClientHandler>()
@@ -77,6 +80,7 @@ class UnifiedDataStreamingService(
             }
         }
     }
+
     suspend fun stopStreaming() {
         withContext(Dispatchers.IO) {
             try {
@@ -106,6 +110,7 @@ class UnifiedDataStreamingService(
             }
         }
     }
+
     fun streamGSRData(gsrSample: GSRSample, timestampRecord: TimestampRecord) {
         if (!isStreaming.get()) return
         val packet = StreamingDataPacket(
@@ -120,6 +125,7 @@ class UnifiedDataStreamingService(
         )
         dataQueue.offer(packet)
     }
+
     fun streamThermalData(
         frameNumber: Long,
         timestampRecord: TimestampRecord,
@@ -142,6 +148,7 @@ class UnifiedDataStreamingService(
         )
         dataQueue.offer(packet)
     }
+
     fun streamRGBMetadata(
         frameNumber: Long,
         timestampRecord: TimestampRecord,
@@ -160,6 +167,7 @@ class UnifiedDataStreamingService(
         )
         dataQueue.offer(packet)
     }
+
     fun broadcastSyncMarker(
         markerType: String,
         timestampRecord: TimestampRecord,
@@ -176,6 +184,7 @@ class UnifiedDataStreamingService(
         broadcastToClients(syncPacket.toString())
         AppLogger.d(TAG, "Broadcasted sync marker: $markerType")
     }
+
     fun getStreamingStats(): StreamingStats {
         val uptime = if (streamStartTime.get() > 0) {
             (System.currentTimeMillis() - streamStartTime.get()) / 1000.0
@@ -189,6 +198,7 @@ class UnifiedDataStreamingService(
             sessionId = currentSessionId
         )
     }
+
     private suspend fun acceptClients() {
         while (isStreaming.get()) {
             try {
@@ -217,6 +227,7 @@ class UnifiedDataStreamingService(
             }
         }
     }
+
     private suspend fun processStreamingData() {
         val batch = mutableListOf<StreamingDataPacket>()
         while (isStreaming.get()) {
@@ -258,6 +269,7 @@ class UnifiedDataStreamingService(
             }
         }
     }
+
     private suspend fun distributeHeartbeats() {
         while (isStreaming.get()) {
             try {
@@ -280,6 +292,7 @@ class UnifiedDataStreamingService(
             }
         }
     }
+
     private fun broadcastSessionSyncEvent(eventType: String, metadata: Map<String, String>) {
         val syncEvent = JSONObject().apply {
             put("type", "SESSION_SYNC_EVENT")
@@ -290,6 +303,7 @@ class UnifiedDataStreamingService(
         }
         broadcastToClients(syncEvent.toString())
     }
+
     private fun broadcastToClients(message: String) {
         synchronized(connectedClients) {
             val disconnectedClients = mutableListOf<ClientHandler>()
@@ -305,6 +319,7 @@ class UnifiedDataStreamingService(
             }
         }
     }
+
     private inner class ClientHandler(private val socket: Socket) {
         private val writer: PrintWriter = PrintWriter(socket.getOutputStream(), true)
         private val isConnected = AtomicBoolean(true)
@@ -321,6 +336,7 @@ class UnifiedDataStreamingService(
                 false
             }
         }
+
         fun sendSessionInfo() {
             val sessionInfo = JSONObject().apply {
                 put("type", "SESSION_INFO")
@@ -330,6 +346,7 @@ class UnifiedDataStreamingService(
             }
             sendMessage(sessionInfo.toString())
         }
+
         fun disconnect() {
             isConnected.set(false)
             try {
@@ -340,11 +357,13 @@ class UnifiedDataStreamingService(
             }
         }
     }
+
     data class StreamingDataPacket(
         val dataType: String,
         val timestamp: TimestampRecord,
         val data: JSONObject
     )
+
     data class StreamingStats(
         val isActive: Boolean,
         val connectedClients: Int,

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.comm.bean
+
 import android.util.TypedValue
 import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.compat.SPUtils
@@ -9,9 +10,11 @@ import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtils
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.utils.CommUtils
+
 class SaveSettingBean(private val isWifi: Boolean = false) {
     private fun getSPUtils(): SPUtils =
         SPUtils.getInstance(if (isWifi) "WifiSaveSettingUtils" else "SaveSettingUtils")
+
     var isSaveSetting: Boolean = getSPUtils().getBoolean("isSaveSetting", true)
         set(value) {
             field = value
@@ -152,6 +155,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
                 getSPUtils().put("rotateAngle", value)
             }
         }
+
     fun isRotatePortrait(): Boolean = rotateAngle == 90 || rotateAngle == 270
     var isOpenMirror: Boolean =
         if (isSaveSetting) getSPUtils().getBoolean("isOpenMirror", false) else false
@@ -194,6 +198,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
                 getSPUtils().put("tempTextSize", value)
             }
         }
+
     fun isTempTextDefault(): Boolean {
         val context = ContextProvider.getContext()
         val defaultSize = TypedValue.applyDimension(
@@ -203,6 +208,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
         ).toInt()
         return tempTextColor == 0xffffffff.toInt() && tempTextSize == defaultSize
     }
+
     var temperatureMode: Int =
         if (isSaveSetting) {
             getSPUtils().getInt(

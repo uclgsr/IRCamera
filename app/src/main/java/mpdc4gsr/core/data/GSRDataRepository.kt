@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data
+
 import com.mpdc4gsr.libunified.app.repository.BaseRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -14,6 +15,7 @@ class GSRDataRepository : BaseRepository() {
         val sessionId: String?,
         val quality: SignalQuality = SignalQuality.GOOD
     )
+
     enum class SignalQuality { EXCELLENT, GOOD, FAIR, POOR, DISCONNECTED }
     data class GSRSession(
         val sessionId: String,
@@ -25,7 +27,9 @@ class GSRDataRepository : BaseRepository() {
         val avgConductance: Float,
         val status: SessionStatus
     )
+
     enum class SessionStatus { ACTIVE, PAUSED, COMPLETED, CANCELLED }
+
     // Real-time GSR data stream
     fun getGSRDataStream(deviceId: String): Flow<BaseRepository.Result<GSRReading>> = flow {
         emit(BaseRepository.Result.Loading)
@@ -40,6 +44,7 @@ class GSRDataRepository : BaseRepository() {
             emit(BaseRepository.Result.Error(e))
         }
     }.flowOn(kotlinx.coroutines.Dispatchers.IO)
+
     // Historical GSR data with advanced caching
     fun getHistoricalGSRData(
         sessionId: String,
@@ -58,6 +63,7 @@ class GSRDataRepository : BaseRepository() {
         }
         data
     }
+
     // Session management
     fun getGSRSessions(deviceId: String): Flow<BaseRepository.Result<List<GSRSession>>> = safeFlow {
         val cacheKey = "sessions_$deviceId"
@@ -71,6 +77,7 @@ class GSRDataRepository : BaseRepository() {
         }
         data
     }
+
     private fun generateGSRReading(deviceId: String, counter: Int): GSRReading {
         val baselineResistance = 50.0f // kiloohms
         val variation = (Math.sin(counter * 0.01) * 10 + Math.random() * 5).toFloat()
@@ -85,6 +92,7 @@ class GSRDataRepository : BaseRepository() {
             quality = if (Math.random() < 0.9) SignalQuality.GOOD else SignalQuality.FAIR
         )
     }
+
     private fun generateHistoricalGSRData(
         sessionId: String,
         startTime: Long,
@@ -105,6 +113,7 @@ class GSRDataRepository : BaseRepository() {
         }
         return readings
     }
+
     private fun generateSampleSessions(deviceId: String): List<GSRSession> {
         val currentTime = System.currentTimeMillis()
         return listOf(

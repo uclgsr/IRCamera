@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.presentation
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -19,9 +20,11 @@ class SessionManagerViewModel : AppBaseViewModel() {
     val filteredSessions: StateFlow<List<SessionInfo>> = _filteredSessions.asStateFlow()
     private val _storageInfo = MutableStateFlow(StorageInfo("0 MB", 0, false))
     val storageInfo: StateFlow<StorageInfo> = _storageInfo.asStateFlow()
+
     // SharedFlow for one-time events
     private val _sessionEvents = MutableSharedFlow<SessionEvent>()
     val sessionEvents: SharedFlow<SessionEvent> = _sessionEvents.asSharedFlow()
+
     // UI State
     private val _sessionUiState = MutableStateFlow(SessionManagerUiState())
     val sessionUiState: StateFlow<SessionManagerUiState> = _sessionUiState.asStateFlow()
@@ -29,6 +32,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
     private lateinit var sessionDirectoryManager: SessionDirectoryManager
     private var currentFilter: FilterType = FilterType.ALL
     private var currentSearchQuery: String = ""
+
     data class SessionManagerUiState(
         val isLoading: Boolean = false,
         val sessionCount: Int = 0,
@@ -36,11 +40,13 @@ class SessionManagerViewModel : AppBaseViewModel() {
         val currentFilter: FilterType = FilterType.ALL,
         val searchQuery: String = ""
     )
+
     data class StorageInfo(
         val formattedAvailable: String,
         val usagePercentage: Int,
         val isLowStorage: Boolean
     )
+
     sealed class SessionEvent {
         data class OpenDetails(val session: SessionInfo) : SessionEvent()
         data class DeleteConfirm(val session: SessionInfo) : SessionEvent()
@@ -51,13 +57,16 @@ class SessionManagerViewModel : AppBaseViewModel() {
         data class ShowError(val message: String) : SessionEvent()
         data class ShowToast(val message: String) : SessionEvent()
     }
+
     enum class FilterType {
         ALL, RECENT, COMPLETED, WITH_DATA
     }
+
     fun initialize(context: Context) {
         sessionManager = SessionManager.getInstance(context)
         sessionDirectoryManager = SessionDirectoryManager(context)
     }
+
     fun loadSessions(context: Context) {
         if (!::sessionManager.isInitialized) {
             initialize(context)
@@ -96,6 +105,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
             }
         }
     }
+
     private suspend fun updateStorageInfo() {
         try {
             val storageStatus = sessionDirectoryManager.checkStorageSpace()
@@ -108,6 +118,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
             AppLogger.e(TAG, "Failed to get storage info", e)
         }
     }
+
     private suspend fun loadHistoricalSessions(context: Context): List<SessionInfo> {
         return withContext(Dispatchers.IO) {
             val historicalSessions = mutableListOf<SessionInfo>()
@@ -131,6 +142,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
             historicalSessions
         }
     }
+
     private fun parseSessionFromDirectory(sessionDir: File): SessionInfo {
         val sessionId = sessionDir.name
         val metadataFile = File(sessionDir, "session_metadata.txt")
@@ -151,6 +163,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
                             "endTime" -> sessionInfo.endTime = value.trim().toLongOrNull()
                             "sampleCount" -> sessionInfo.sampleCount =
                                 value.trim().toLongOrNull() ?: 0
+
                             else -> sessionInfo.metadata[key.trim()] = value.trim()
                         }
                     }
@@ -163,6 +176,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
         calculateSessionDataInfo(sessionDir, sessionInfo)
         return sessionInfo
     }
+
     private fun calculateSessionDataInfo(sessionDir: File, sessionInfo: SessionInfo) {
         try {
             var totalSize = 0L
@@ -187,11 +201,13 @@ class SessionManagerViewModel : AppBaseViewModel() {
             AppLogger.w(TAG, "Failed to calculate data info for ${sessionInfo.sessionId}", e)
         }
     }
+
     fun filterSessions(query: String?) {
         currentSearchQuery = query ?: ""
         _sessionUiState.value = _sessionUiState.value.copy(searchQuery = currentSearchQuery)
         applyCurrentFilters()
     }
+
     fun filterSessionsByType(filterPosition: Int) {
         currentFilter = when (filterPosition) {
             0 -> FilterType.ALL
@@ -203,6 +219,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
         _sessionUiState.value = _sessionUiState.value.copy(currentFilter = currentFilter)
         applyCurrentFilters()
     }
+
     private fun applyCurrentFilters() {
         val allSessions = _allSessions.value
         var filtered = allSessions
@@ -212,6 +229,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
             FilterType.RECENT -> filtered.filter {
                 System.currentTimeMillis() - it.startTime < 24 * 60 * 60 * 1000 // Last 24 hours
             }
+
             FilterType.COMPLETED -> filtered.filter { it.endTime != null }
             FilterType.WITH_DATA -> filtered.filter { it.totalDataSize > 0 }
         }
@@ -229,21 +247,25 @@ class SessionManagerViewModel : AppBaseViewModel() {
         _filteredSessions.value = filtered
         _sessionUiState.value = _sessionUiState.value.copy(filteredCount = filtered.size)
     }
+
     fun onSessionClick(session: SessionInfo) {
         launchWithErrorHandling {
             _sessionEvents.emit(SessionEvent.OpenDetails(session))
         }
     }
+
     fun onSessionDelete(session: SessionInfo) {
         launchWithErrorHandling {
             _sessionEvents.emit(SessionEvent.DeleteConfirm(session))
         }
     }
+
     fun onSessionExport(session: SessionInfo) {
         launchWithErrorHandling {
             _sessionEvents.emit(SessionEvent.Export(session))
         }
     }
+
     fun deleteSession(session: SessionInfo) {
         launchWithErrorHandling {
             val success = withContext(Dispatchers.IO) {
@@ -268,6 +290,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun exportSession(session: SessionInfo) {
         launchWithErrorHandling {
             val success = withContext(Dispatchers.IO) {
@@ -290,6 +313,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
             }
         }
     }
+
     companion object {
         private const val TAG = "SessionManagerViewModel"
     }

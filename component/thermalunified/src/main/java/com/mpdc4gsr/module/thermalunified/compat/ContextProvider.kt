@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compat
+
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
@@ -6,10 +7,12 @@ import android.content.Context
 @SuppressLint("StaticFieldLeak")
 object ContextProvider {
     private lateinit var applicationContext: Context
+
     @JvmStatic
     fun init(application: Application) {
         applicationContext = application.applicationContext
     }
+
     @JvmStatic
     fun getContext(): Context {
         if (!::applicationContext.isInitialized) {
@@ -19,6 +22,7 @@ object ContextProvider {
         }
         return applicationContext
     }
+
     @JvmStatic
     fun getApplication(): Application {
         return getContext() as Application

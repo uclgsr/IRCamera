@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.os.Bundle
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -33,6 +34,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
         private const val EXTENDED_DURATION_SECONDS = 300 // 5 minutes as per plan
         private const val STATUS_UPDATE_INTERVAL = 10 // Update every 10 seconds
     }
+
     private var recordingController: RecordingController? = null
     private var trialSessionDir: File? = null
     private var trialStartTime: Long = 0
@@ -46,6 +48,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun CompleteSessionTrialScreen() {
@@ -102,6 +105,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                                 elapsedTime % 60
                             )
                         })"
+
                         else -> "Finalizing"
                     }
                     // Log status every 10 seconds
@@ -352,6 +356,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private fun initializeComponents() {
         try {
             recordingController = RecordingController(this, this)
@@ -360,6 +365,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Failed to initialize components: ${e.message}")
         }
     }
+
     private suspend fun startCompleteSessionTrial() {
         AppLogger.i(TAG, "Starting complete session trial")
         trialStartTime = System.currentTimeMillis()
@@ -376,6 +382,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Failed to start session trial: ${e.message}")
         }
     }
+
     private suspend fun stopCompleteSessionTrial() {
         AppLogger.i(TAG, "Stopping complete session trial")
         trialEndTime = System.currentTimeMillis()
@@ -386,6 +393,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Failed to stop session trial: ${e.message}")
         }
     }
+
     private suspend fun verifySessionOutput() {
         AppLogger.d(TAG, "Verifying session output")
         try {
@@ -395,6 +403,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Session output verification failed: ${e.message}")
         }
     }
+
     private suspend fun generateCompleteReport() {
         AppLogger.d(TAG, "Generating complete report")
         try {
@@ -404,6 +413,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Report generation failed: ${e.message}")
         }
     }
+
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {
@@ -415,6 +425,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private suspend fun testSessionInitialization() {
         AppLogger.d(TAG, "Testing session initialization")
         try {
@@ -424,6 +435,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Session initialization test failed: ${e.message}")
         }
     }
+
     private suspend fun testExtendedRecording() {
         AppLogger.d(TAG, "Testing extended recording")
         try {
@@ -433,6 +445,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Extended recording test failed: ${e.message}")
         }
     }
+
     private suspend fun testSessionCleanup() {
         AppLogger.d(TAG, "Testing session cleanup")
         try {

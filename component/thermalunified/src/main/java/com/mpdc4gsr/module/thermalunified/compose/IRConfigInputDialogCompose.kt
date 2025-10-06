@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,6 +20,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.module.thermalunified.R
+
 @Composable
 fun IRConfigInputDialogCompose(
     type: IRConfigInputType,
@@ -44,12 +46,14 @@ fun IRConfigInputDialogCompose(
                     )
                 }
             )
+
             IRConfigInputType.DIS -> IRConfigDialogData(
                 title = "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)",
                 unit = "m",
                 showUnit = true,
                 validator = { value -> value in 0.2f..(if (isTC007) 4f else 5f) }
             )
+
             IRConfigInputType.EM -> IRConfigDialogData(
                 title = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)",
                 unit = "",
@@ -152,6 +156,7 @@ fun IRConfigInputDialogCompose(
         }
     }
 }
+
 private fun handleConfirm(
     inputText: String,
     validator: (Float) -> Boolean,
@@ -171,9 +176,11 @@ private fun handleConfirm(
         TToast.shortToast(context, R.string.tip_input_format)
     }
 }
+
 enum class IRConfigInputType {
     TEMP, DIS, EM
 }
+
 private data class IRConfigDialogData(
     val title: String,
     val unit: String,

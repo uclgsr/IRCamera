@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data.model
+
 data class PCControllerInfo(
     val name: String,
     val host: String,
@@ -56,6 +57,7 @@ data class PCControllerInfo(
             if (supportsSecure) priority += 5
             return priority
         }
+
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "name" to name,
@@ -79,10 +81,12 @@ data class PCControllerInfo(
             "connection_priority" to connectionPriority
         )
     }
+
     fun getWebSocketUrl(secure: Boolean = false): String {
         val protocol = if (secure && supportsSecure) "wss" else "ws"
         return "$protocol://$host:$port"
     }
+
     fun isCompatibleWith(requiredFeatures: List<String>): Boolean {
         return requiredFeatures.all { feature ->
             when (feature.lowercase()) {
@@ -94,6 +98,7 @@ data class PCControllerInfo(
             }
         }
     }
+
     companion object {
         fun fromServiceInfo(
             serviceName: String,
@@ -115,6 +120,7 @@ data class PCControllerInfo(
                 protocolVersion = protocolVersion
             )
         }
+
         fun createMockController(
             controllerId: String = "test_pc",
             includeGSR: Boolean = true,
@@ -146,18 +152,22 @@ data class PCControllerInfo(
                 protocolVersion = "2.0"
             )
         }
+
         fun sortByPriority(controllers: List<PCControllerInfo>): List<PCControllerInfo> {
             return controllers.sortedByDescending { it.connectionPriority }
         }
+
         fun filterByFeatures(
             controllers: List<PCControllerInfo>,
             requiredFeatures: List<String>
         ): List<PCControllerInfo> {
             return controllers.filter { it.isCompatibleWith(requiredFeatures) }
         }
+
         fun getGSRCapableControllers(controllers: List<PCControllerInfo>): List<PCControllerInfo> {
             return controllers.filter { it.supportsGSR }
         }
+
         fun getActiveControllers(controllers: List<PCControllerInfo>): List<PCControllerInfo> {
             return controllers.filter { it.isRecentlyActive }
         }

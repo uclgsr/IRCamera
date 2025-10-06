@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.ui
+
 import androidx.camera.view.PreviewView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -965,6 +966,7 @@ private fun MetricItem(
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun RGBCameraScreenPreview() {

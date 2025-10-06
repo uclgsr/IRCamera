@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.compose.dialogs
+
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+
 @Composable
 fun TipDialog(
     title: String = "",
@@ -128,6 +130,7 @@ fun TipDialog(
         }
     }
 }
+
 @Composable
 fun MessageDialog(
     @DrawableRes iconRes: Int? = null,
@@ -192,6 +195,7 @@ fun MessageDialog(
         }
     }
 }
+
 @Composable
 fun EmissivityDialog(
     title: String = "Emissivity Settings",

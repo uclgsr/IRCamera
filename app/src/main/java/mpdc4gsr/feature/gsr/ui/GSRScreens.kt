@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -39,6 +40,7 @@ fun GSRSettingsScreenPlaceholder(
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionDetailScreen(
@@ -83,6 +85,7 @@ fun SessionDetailScreen(
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun GSRPlotScreenPlaceholder(
@@ -123,6 +126,7 @@ internal fun GSRPlotScreenPlaceholder(
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRDataViewScreen(

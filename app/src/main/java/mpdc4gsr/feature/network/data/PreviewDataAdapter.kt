@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.graphics.Bitmap
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -8,6 +9,7 @@ import kotlinx.coroutines.*
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import java.util.concurrent.atomic.AtomicReference
+
 class PreviewDataAdapter(
     private val previewStreamer: PreviewStreamer,
     private val recordingService: RecordingService
@@ -16,6 +18,7 @@ class PreviewDataAdapter(
         private const val TAG = "PreviewDataAdapter"
         private const val POLLING_INTERVAL_MS = 500L
     }
+
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var pollingJob: Job? = null
     private var isRunning = false
@@ -40,6 +43,7 @@ class PreviewDataAdapter(
             }
         }
     }
+
     fun stopDataPolling() {
         if (!isRunning) {
             return
@@ -49,19 +53,23 @@ class PreviewDataAdapter(
         pollingJob?.cancel()
         pollingJob = null
     }
+
     fun setThermalCameraManager(manager: CameraPreviewManager?) {
         thermalCameraManager.set(manager)
         AppLogger.d(TAG, "Thermal camera manager ${if (manager != null) "set" else "cleared"}")
     }
+
     fun setGsrRecorder(recorder: GSRSensorRecorder?) {
         gsrRecorder.set(recorder)
         AppLogger.d(TAG, "GSR recorder ${if (recorder != null) "set" else "cleared"}")
     }
+
     private suspend fun pollSensorData() {
         pollThermalFrame()
         pollGsrData()
         updateRecordingStatus()
     }
+
     private suspend fun pollThermalFrame() {
         try {
             val manager = thermalCameraManager.get()
@@ -79,6 +87,7 @@ class PreviewDataAdapter(
             AppLogger.w(TAG, "Error polling thermal frame", e)
         }
     }
+
     private suspend fun pollGsrData() {
         try {
             val recorder = gsrRecorder.get()
@@ -101,6 +110,7 @@ class PreviewDataAdapter(
             AppLogger.w(TAG, "Error polling GSR data", e)
         }
     }
+
     private suspend fun updateRecordingStatus() {
         try {
             val recordingController = recordingService.getRecordingController()
@@ -115,15 +125,19 @@ class PreviewDataAdapter(
             AppLogger.w(TAG, "Error updating recording status", e)
         }
     }
+
     fun updateRgbFrame(bitmap: Bitmap) {
         previewStreamer.updateRgbFrame(bitmap)
     }
+
     fun updateThermalFrameDirect(bitmap: Bitmap) {
         previewStreamer.updateThermalFrame(bitmap)
     }
+
     fun updateGsrValueDirect(gsrValue: Float) {
         previewStreamer.updateGsrValue(gsrValue)
     }
+
     fun cleanup() {
         stopDataPolling()
         scope.cancel()

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
+
 import androidx.lifecycle.viewModelScope
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
@@ -7,6 +8,7 @@ import com.mpdc4gsr.libunified.app.utils.UnifiedByteUtils.bytesToInt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
+
 class IRGalleryEditViewModel : BaseViewModel() {
     val resultLiveData = SingleLiveEvent<FrameBean>()
     fun initData(path: String) {
@@ -29,8 +31,10 @@ class IRGalleryEditViewModel : BaseViewModel() {
             resultLiveData.postValue(FrameBean(headDataBytes, frameDataBytes))
         }
     }
+
     fun getTailData(bytes: ByteArray) {
     }
+
     data class FrameBean(val capital: ByteArray, val frame: ByteArray) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
@@ -40,6 +44,7 @@ class IRGalleryEditViewModel : BaseViewModel() {
             if (!frame.contentEquals(other.frame)) return false
             return true
         }
+
         override fun hashCode(): Int {
             var result = capital.contentHashCode()
             result = 31 * result + frame.contentHashCode()

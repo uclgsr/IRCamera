@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+
 @Composable
 fun TimeDownCompose(
     initialSeconds: Int,
@@ -94,6 +96,7 @@ fun TimeDownCompose(
         }
     }
 }
+
 @Composable
 fun TimeDownStatefulCompose(
     seconds: Int,
@@ -111,6 +114,7 @@ fun TimeDownStatefulCompose(
         modifier = modifier
     )
 }
+
 @Composable
 fun TimeDownComposePreview() {
     var seconds by remember { mutableIntStateOf(5) }

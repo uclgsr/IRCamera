@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.utils
+
 import android.util.Log
 import com.elvishew.xlog.XLog
 import com.energy.iruvc.dual.DualUVCCamera
@@ -14,6 +15,7 @@ import java.io.IOException
 import java.io.InputStream
 import kotlin.math.ceil
 import kotlin.math.floor
+
 object IRCmdTools {
     val TAG = "IRCmdTool"
     var dispNumber = 30
@@ -90,6 +92,7 @@ object IRCmdTools {
         }
         return parameters
     }
+
     fun getSNStr(irCmd: IRCMD?): String {
         val oemInfo = ByteArray(512)
         irCmd?.oemRead(CommonParams.ProductType.P2, oemInfo)
@@ -102,6 +105,7 @@ object IRCmdTools {
             ""
         }
     }
+
     fun setTpdEms(
         irCmd: IRCMD?,
         value: Int,
@@ -109,6 +113,7 @@ object IRCmdTools {
         val data = CommonParams.PropTPDParamsValue.NumberType(value.toString())
         setTpdParams(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_EMS, value = data)
     }
+
     fun setTpdDis(
         irCmd: IRCMD?,
         value: Int,
@@ -120,6 +125,7 @@ object IRCmdTools {
             value = data
         )
     }
+
     fun setLevelContrast(
         irCmd: IRCMD?,
         value: Int,
@@ -131,6 +137,7 @@ object IRCmdTools {
             value = data
         )
     }
+
     fun setLevelDdd(
         irCmd: IRCMD?,
         value: Int,
@@ -150,6 +157,7 @@ object IRCmdTools {
             value = data
         )
     }
+
     fun setLevelAgc(
         irCmd: IRCMD?,
         value: Boolean,
@@ -166,6 +174,7 @@ object IRCmdTools {
             value = data
         )
     }
+
     fun getTpdGainSel(irCmd: IRCMD?): Int {
         val result =
             queryTpdParam(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL)
@@ -175,6 +184,7 @@ object IRCmdTools {
             0
         }
     }
+
     fun setTpdGainSel(
         irCmd: IRCMD?,
         value: Int,
@@ -191,6 +201,7 @@ object IRCmdTools {
             value = data
         )
     }
+
     fun queryTpdParam(
         irCmd: IRCMD?,
         params: CommonParams.PropTPDParams,
@@ -199,6 +210,7 @@ object IRCmdTools {
         irCmd?.getPropTPDParams(params, value)
         return value[0]
     }
+
     fun queryImageParam(
         irCmd: IRCMD?,
         params: CommonParams.PropImageParams,
@@ -207,6 +219,7 @@ object IRCmdTools {
         irCmd?.getPropImageParams(params, value)
         return value[0]
     }
+
     private fun setTpdParams(
         irCmd: IRCMD?,
         params: CommonParams.PropTPDParams,
@@ -219,6 +232,7 @@ object IRCmdTools {
             0
         }
     }
+
     private fun setImageParams(
         irCmd: IRCMD?,
         params: CommonParams.PropImageParams,
@@ -231,6 +245,7 @@ object IRCmdTools {
             0
         }
     }
+
     fun setDisp(
         dualView: BaseDualView?,
         value: Int,
@@ -247,6 +262,7 @@ object IRCmdTools {
             0
         }
     }
+
     fun setAlignTranslate(
         dualView: BaseDualView?,
         moveX: Int,
@@ -261,6 +277,7 @@ object IRCmdTools {
         System.arraycopy(ySrc, 0, newSrc, 4, 4)
         dualView?.dualUVCCamera?.setAlignTranslateParameter(newSrc)
     }
+
     fun shutter(
         irCmd: IRCMD?,
         syncImage: SynchronizedBitmap,
@@ -271,6 +288,7 @@ object IRCmdTools {
             irCmd?.updateOOCOrB(CommonParams.UpdateOOCOrBType.B_UPDATE)
         }
     }
+
     fun autoShutter(
         irCmd: IRCMD?,
         flag: Boolean,
@@ -282,6 +300,7 @@ object IRCmdTools {
             data
         )
     }
+
     fun setIsoColorOpen(
         dualUVCCamera: DualUVCCamera?,
         highC: Float,
@@ -303,15 +322,18 @@ object IRCmdTools {
         dualUVCCamera?.setTempL(tempLFin)
         dualUVCCamera?.setTempH(tempHFin)
     }
+
     fun setIsoColorClose(dualUVCCamera: DualUVCCamera?) {
         dualUVCCamera?.setIsothermal(DualCameraParams.IsothermalState.OFF)
     }
+
     fun setZoomUp(irCmd: IRCMD?) {
         irCmd?.zoomCenterUp(
             CommonParams.PreviewPathChannel.PREVIEW_PATH0,
             CommonParams.ZoomScaleStep.ZOOM_STEP2
         )
     }
+
     fun setZoomDown(irCmd: IRCMD?) {
         irCmd?.zoomCenterDown(
             CommonParams.PreviewPathChannel.PREVIEW_PATH0,

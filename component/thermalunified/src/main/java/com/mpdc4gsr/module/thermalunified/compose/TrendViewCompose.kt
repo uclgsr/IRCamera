@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.animation.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+
 @Composable
 fun TrendViewCompose(
     temperatureData: List<Float>,
@@ -58,6 +60,7 @@ fun TrendViewCompose(
         }
     }
 }
+
 @Composable
 private fun TrendHeader(
     isExpanded: Boolean,
@@ -91,6 +94,7 @@ private fun TrendHeader(
         )
     }
 }
+
 @Composable
 private fun TrendChart(
     temperatureData: List<Float>,
@@ -124,6 +128,7 @@ private fun TrendChart(
         drawTrendChart(temperatureData)
     }
 }
+
 private fun DrawScope.drawTrendChart(temperatureData: List<Float>) {
     if (temperatureData.size < 2) return
     val minTemp = temperatureData.minOrNull() ?: 0f
@@ -193,6 +198,7 @@ private fun DrawScope.drawTrendChart(temperatureData: List<Float>) {
         textPaint
     )
 }
+
 @Composable
 fun TrendViewStatefulCompose(
     temperatureData: List<Float>,
@@ -207,6 +213,7 @@ fun TrendViewStatefulCompose(
         modifier = modifier
     )
 }
+
 @Composable
 fun TrendViewComposePreview() {
     Column(

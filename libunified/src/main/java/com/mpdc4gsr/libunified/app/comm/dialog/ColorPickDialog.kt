@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.comm.dialog
+
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -16,6 +17,7 @@ import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.libunified.app.view.ColorSelectView
 import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener
 import com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
+
 class ColorPickDialog(
     context: Context,
     @ColorInt private var color: Int,
@@ -25,6 +27,7 @@ class ColorPickDialog(
     var onPickListener: ((color: Int, textSize: Int) -> Unit)? = null
     private val rootView: View =
         LayoutInflater.from(context).inflate(R.layout.dialog_color_pick, null)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCancelable(true)
@@ -89,11 +92,13 @@ class ColorPickDialog(
                             }
                         findViewById<TextView>(R.id.tv_size_value).text = text
                     }
+
                     override fun onStartTrackingTouch(
                         view: RangeSeekBar,
                         isLeft: Boolean,
                     ) {
                     }
+
                     override fun onStopTrackingTouch(
                         view: RangeSeekBar,
                         isLeft: Boolean,
@@ -118,6 +123,7 @@ class ColorPickDialog(
         rootView.findViewById<View>(R.id.rl_close).setOnClickListener(this)
         rootView.findViewById<View>(R.id.tv_save).setOnClickListener(this)
     }
+
     private fun textSizeToNifyValue(
         size: Int,
         // isTC007 parameter removed - TC007 functionality disabled
@@ -129,6 +135,7 @@ class ColorPickDialog(
             else -> 100f
         }
     }
+
     override fun onClick(v: View?) {
         when (v) {
             rootView.findViewById<View>(R.id.rl_close) -> dismiss()
@@ -136,36 +143,42 @@ class ColorPickDialog(
                 dismiss()
                 onPickListener?.invoke(color, textSize)
             }
+
             rootView.findViewById<View>(R.id.view_color1) -> {
                 unSelect6Color()
                 rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
                 rootView.findViewById<View>(R.id.view_color1).isSelected = true
                 color = 0xff0000ff.toInt()
             }
+
             rootView.findViewById<View>(R.id.view_color2) -> {
                 unSelect6Color()
                 rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
                 rootView.findViewById<View>(R.id.view_color2).isSelected = true
                 color = 0xffff0000.toInt()
             }
+
             rootView.findViewById<View>(R.id.view_color3) -> {
                 unSelect6Color()
                 rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
                 rootView.findViewById<View>(R.id.view_color3).isSelected = true
                 color = 0xff00ff00.toInt()
             }
+
             rootView.findViewById<View>(R.id.view_color4) -> {
                 unSelect6Color()
                 rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
                 rootView.findViewById<View>(R.id.view_color4).isSelected = true
                 color = 0xffffff00.toInt()
             }
+
             rootView.findViewById<View>(R.id.view_color5) -> {
                 unSelect6Color()
                 rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
                 rootView.findViewById<View>(R.id.view_color5).isSelected = true
                 color = 0xff000000.toInt()
             }
+
             rootView.findViewById<View>(R.id.view_color6) -> {
                 unSelect6Color()
                 rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
@@ -174,6 +187,7 @@ class ColorPickDialog(
             }
         }
     }
+
     private fun unSelect6Color() {
         rootView.findViewById<View>(R.id.view_color1).isSelected = false
         rootView.findViewById<View>(R.id.view_color2).isSelected = false

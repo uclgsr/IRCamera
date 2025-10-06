@@ -1,4 +1,5 @@
 package mpdc4gsr.core.monitoring
+
 import android.content.Context
 import android.os.Build
 import mpdc4gsr.core.utils.AppLogger
@@ -167,6 +168,7 @@ object TelemetryManager {
         setProperty("sdk_version", Build.VERSION.SDK_INT.toString())
         setProperty("app_version", getAppVersion(context))
     }
+
     private fun getAppVersion(context: Context): String {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
@@ -175,6 +177,7 @@ object TelemetryManager {
             "Unknown"
         }
     }
+
     private fun generateSessionId(): String {
         return "session_${System.currentTimeMillis()}_${java.util.UUID.randomUUID().toString().substring(0, 8)}"
     }

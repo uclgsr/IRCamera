@@ -21,6 +21,7 @@ class RealShimmerDeviceFactory @JvmOverloads constructor(
     companion object {
         private const val TAG = "RealShimmerDeviceFactory"
     }
+
     override fun createShimmerDevice(): ShimmerDeviceInterface {
         return RealShimmerDevice(context, lifecycleOwner)
     }
@@ -33,16 +34,19 @@ class RealShimmerDevice(
     companion object {
         private const val TAG = "RealShimmerDevice"
     }
+
     private var shimmer: Shimmer? = null
     private var shimmerManager: ShimmerBluetoothManagerAndroid? = null
     private var dataCallback: ((ShimmerDataCluster) -> Unit)? = null
     private var connectionCallback: ((String) -> Unit)? = null
     private var isConnected = false
     private var shimmerHandler: Handler? = null
+
     init {
         // Defer Handler creation until connect is called to avoid Looper issues
         AppLogger.d(TAG, "RealShimmerDevice created, will initialize Handler on first connect")
     }
+
     override fun connect(address: String, name: String): Boolean {
         return try {
             // Initialize Handler and ShimmerManager if not already done
@@ -102,6 +106,7 @@ class RealShimmerDevice(
             false
         }
     }
+
     override fun startStreaming(): Boolean {
         return try {
             shimmer?.let { device ->
@@ -114,6 +119,7 @@ class RealShimmerDevice(
             false
         }
     }
+
     override fun stopStreaming(): Boolean {
         return try {
             shimmer?.let { device ->
@@ -126,6 +132,7 @@ class RealShimmerDevice(
             false
         }
     }
+
     override fun disconnect(): Boolean {
         return try {
             shimmer?.let { device ->
@@ -142,12 +149,15 @@ class RealShimmerDevice(
             false
         }
     }
+
     override fun isConnected(): Boolean {
         return isConnected
     }
+
     override fun setDataCallback(callback: (ShimmerDataCluster) -> Unit) {
         this.dataCallback = callback
     }
+
     override fun setConnectionCallback(callback: (String) -> Unit) {
         this.connectionCallback = callback
     }
@@ -162,19 +172,23 @@ class RealShimmerDevice(
                     isConnected = true
                     connectionCallback?.invoke("CONNECTED")
                 }
+
                 1 -> {
                     AppLogger.i(TAG, "Shimmer device connecting")
                     connectionCallback?.invoke("CONNECTING")
                 }
+
                 0 -> {
                     AppLogger.i(TAG, "Shimmer device disconnected")
                     isConnected = false
                     connectionCallback?.invoke("DISCONNECTED")
                 }
+
                 3 -> {
                     AppLogger.i(TAG, "Shimmer device streaming")
                     connectionCallback?.invoke("STREAMING")
                 }
+
                 else -> {
                     AppLogger.d(TAG, "Unknown Shimmer state: $state")
                 }
@@ -210,6 +224,7 @@ class RealShimmerDevice(
             AppLogger.e(TAG, "Error handling Shimmer data packet", e)
         }
     }
+
     private fun handleShimmerData(objectCluster: ObjectCluster) {
         try {
             val shimmerDataCluster = RealShimmerDataCluster(objectCluster)
@@ -228,16 +243,19 @@ class RealShimmerDevice(
                     connectionCallback?.invoke("CONNECTED")
                     AppLogger.i(TAG, "Shimmer device connected")
                 }
+
                 "CONNECTING", "2" -> {
                     isConnected = false
                     connectionCallback?.invoke("CONNECTING")
                     AppLogger.i(TAG, "Shimmer device connecting")
                 }
+
                 "DISCONNECTED", "NONE", "0" -> {
                     isConnected = false
                     connectionCallback?.invoke("DISCONNECTED")
                     AppLogger.i(TAG, "Shimmer device disconnected")
                 }
+
                 else -> {
                     AppLogger.d(TAG, "Unknown Shimmer connection state: $state")
                 }
@@ -253,6 +271,7 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
         private const val TAG = "RealShimmerDataCluster"
         // Shimmer sensor constants
     }
+
     override fun getGSRRawValue(): Double {
         return try {
             objectCluster.getFormatClusterValue("GSR", "RAW") ?: 0.0
@@ -261,6 +280,7 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
             0.0
         }
     }
+
     override fun getGSRCalibratedValue(): Double {
         return try {
             objectCluster.getFormatClusterValue("GSR Conductance", "CAL") ?: 0.0
@@ -269,6 +289,7 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
             0.0
         }
     }
+
     override fun getPPGValue(): Double {
         return try {
             objectCluster.getFormatClusterValue("PPG_A13", "CAL") ?: 0.0
@@ -277,6 +298,7 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
             0.0
         }
     }
+
     override fun getTimestamp(): Long {
         return try {
             objectCluster.getFormatClusterValue("Timestamp", "CAL")?.toLong() ?: System.currentTimeMillis()
@@ -285,6 +307,7 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
             System.currentTimeMillis()
         }
     }
+
     override fun hasValidGSRData(): Boolean {
         return try {
             val gsrValue = getGSRRawValue()

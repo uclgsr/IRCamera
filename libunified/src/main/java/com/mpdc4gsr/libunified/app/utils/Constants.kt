@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.utils
+
 object Constants {
     const val PRODUCT_TYPE_NAME = "product_type"
     const val PRODUCT_TS001_NAME = "TS001"

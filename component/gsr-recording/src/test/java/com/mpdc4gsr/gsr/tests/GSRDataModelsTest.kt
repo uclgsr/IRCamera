@@ -1,10 +1,12 @@
 package com.mpdc4gsr.gsr.tests
+
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
 import org.junit.Assert.*
 import org.junit.Ignore
 import org.junit.Test
+
 @Ignore("All tests disabled")
 class GSRDataModelsTest {
     @Test
@@ -21,6 +23,7 @@ class GSRDataModelsTest {
         assertTrue("Conductance should be positive", sample.conductance > 0)
         assertTrue("Resistance should be positive", sample.resistance > 0)
     }
+
     @Test
     fun testGSRSampleToCsvRow() {
         val sample =
@@ -43,6 +46,7 @@ class GSRDataModelsTest {
         assertEquals("100", csvRow[5])
         assertEquals("test_session", csvRow[6])
     }
+
     @Test
     fun testSessionInfo() {
         val sessionId = "test_session"
@@ -57,6 +61,7 @@ class GSRDataModelsTest {
         assertFalse(session.isActive())
         assertEquals(5000L, session.getDurationMs())
     }
+
     @Test
     fun testSyncMark() {
         val timestamp = System.currentTimeMillis()
@@ -86,6 +91,7 @@ class GSRDataModelsTest {
         assertTrue(csvRow[4].contains("camera=thermal"))
         assertTrue(csvRow[4].contains("frame=123"))
     }
+
     @Test
     fun testSyncMarkEmptyMetadata() {
         val syncMark =

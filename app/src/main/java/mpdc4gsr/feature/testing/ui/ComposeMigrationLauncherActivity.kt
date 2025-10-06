@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -38,12 +39,14 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
             }
         }
     }
+
     override fun onStop() {
         super.onStop()
         window.decorView.post {
             window.decorView.clearAnimation()
         }
     }
+
     @Composable
     private fun LifecycleAwareMigrationLauncherScreen() {
         val lifecycleOwner = LocalLifecycleOwner.current
@@ -55,6 +58,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                             window.decorView.clearAnimation()
                         }
                     }
+
                     else -> {}
                 }
             }
@@ -65,6 +69,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
         }
         MigrationLauncherScreen()
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun MigrationLauncherScreen() {
@@ -850,6 +855,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun LauncherCard(
         title: String,

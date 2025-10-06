@@ -1,4 +1,5 @@
 package com.mpdc4gsr.gsr.tests
+
 import android.Manifest
 import android.bluetooth.BluetoothManager
 import android.content.Context
@@ -21,6 +22,7 @@ import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowApplication
 import org.robolectric.shadows.ShadowEnvironment
+
 @Ignore("All tests disabled")
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
@@ -29,6 +31,7 @@ class ShimmerGSRRecorderTest {
     private lateinit var context: Context
     private lateinit var recorder: ShimmerGSRRecorder
     private lateinit var shadowApplication: ShadowApplication
+
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
@@ -43,16 +46,19 @@ class ShimmerGSRRecorderTest {
         ShadowEnvironment.setExternalStorageState(Environment.MEDIA_MOUNTED)
         recorder = ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz = 128)
     }
+
     @Test
     fun testRecorderCreation() {
         assertNotNull("Recorder should be created", recorder)
     }
+
     @Test
     fun testBluetoothPermissionCheck() {
         val hasPermission =
             context.checkSelfPermission(Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED
         assertTrue("Bluetooth permission should be granted in test", hasPermission)
     }
+
     @Test
     fun testBluetoothAdapterAccess() {
         val bluetoothManager =
@@ -61,6 +67,7 @@ class ShimmerGSRRecorderTest {
         val bluetoothAdapter = bluetoothManager?.adapter
         assertNotNull("BluetoothAdapter should be available", bluetoothAdapter)
     }
+
     @Test
     fun testRecordingStateManagement() =
         runTest {
@@ -75,6 +82,7 @@ class ShimmerGSRRecorderTest {
             } catch (e: Exception) {
             }
         }
+
     @Test
     fun testSensorConfiguration() {
         val customRecorder =
@@ -82,6 +90,7 @@ class ShimmerGSRRecorderTest {
         assertNotNull("Custom recorder should be created", customRecorder)
         assertNotNull("Default recorder should have context", recorder)
     }
+
     @Test
     fun testContextUsage() {
         val bluetoothManager =
@@ -94,6 +103,7 @@ class ShimmerGSRRecorderTest {
             externalStorageState
         )
     }
+
     @Test
     fun testFileSystemAccess() {
         val filesDir = context.filesDir
@@ -102,6 +112,7 @@ class ShimmerGSRRecorderTest {
         val externalFilesDir = context.getExternalFilesDir(null)
         assertNotNull("External files directory should be accessible", externalFilesDir)
     }
+
     @Test
     fun testErrorHandling() =
         runTest {
@@ -112,6 +123,7 @@ class ShimmerGSRRecorderTest {
                 assertTrue("Exception handled gracefully", true)
             }
         }
+
     @Test
     fun testCleanupHandling() =
         runTest {
@@ -126,6 +138,7 @@ class ShimmerGSRRecorderTest {
             }
             assertTrue("Cleanup handling test completed", true)
         }
+
     @Test
     fun testMultipleInstances() {
         val recorder2 = ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz = 64)
@@ -136,6 +149,7 @@ class ShimmerGSRRecorderTest {
         assertNotSame("Recorders should be different instances", recorder, recorder2)
         assertNotSame("Recorders should be different instances", recorder2, recorder3)
     }
+
     @Test
     fun testRecordingModeConfiguration() {
         val streamingRecorder = ShimmerGSRRecorder(
@@ -172,6 +186,7 @@ class ShimmerGSRRecorderTest {
             logAndStreamRecorder.getRecordingMode()
         )
     }
+
     @Test
     fun testGSRDataProcessingAccuracy() {
         val apisBridge = ShimmerApiBridge.getInstance()

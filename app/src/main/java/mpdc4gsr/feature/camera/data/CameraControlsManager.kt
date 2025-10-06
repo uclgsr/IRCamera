@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.data
+
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -13,7 +14,7 @@ class CameraControlsManager(
     companion object {
         private const val TAG = "CameraControlsManager"
     }
-    
+
     fun setManualExposureMode(camera: Camera?, enabled: Boolean) {
         try {
             camera?.cameraControl?.let { cameraControl ->
@@ -37,7 +38,7 @@ class CameraControlsManager(
             onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to set exposure mode: ${e.message}")
         }
     }
-    
+
     fun setExposureCompensation(camera: Camera?, evValue: Float) {
         try {
             camera?.cameraControl?.let { cameraControl ->
@@ -75,7 +76,7 @@ class CameraControlsManager(
             )
         }
     }
-    
+
     fun setAutoExposureLock(camera: Camera?, locked: Boolean) {
         try {
             camera?.cameraControl?.let { cameraControl ->
@@ -92,7 +93,7 @@ class CameraControlsManager(
             onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to set AE lock: ${e.message}")
         }
     }
-    
+
     fun setManualFocusMode(camera: Camera?, enabled: Boolean) {
         try {
             camera?.cameraControl?.let { cameraControl ->
@@ -115,7 +116,7 @@ class CameraControlsManager(
             onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to set focus mode: ${e.message}")
         }
     }
-    
+
     fun setFocusDistance(camera: Camera?, distance: Float) {
         try {
             camera?.let { cam ->
@@ -190,7 +191,7 @@ class CameraControlsManager(
             )
         }
     }
-    
+
     fun setAutoFocusLock(camera: Camera?, locked: Boolean) {
         try {
             camera?.cameraControl?.let { cameraControl ->
@@ -212,7 +213,7 @@ class CameraControlsManager(
             onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to set AF lock: ${e.message}")
         }
     }
-    
+
     fun triggerTapToFocus(camera: Camera?, previewView: PreviewView?, x: Float, y: Float) {
         try {
             camera?.cameraControl?.let { cameraControl ->

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.gsr.tests
+
 import android.content.Context
 import android.net.nsd.NsdManager
 import android.os.Build
@@ -14,6 +15,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowNsdManager
+
 @Ignore("All tests disabled")
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
@@ -22,6 +24,7 @@ class ZeroconfServiceDiscoveryTest {
     private lateinit var discoveryService: ZeroconfDiscoveryService
     private lateinit var nsdManager: NsdManager
     private lateinit var shadowNsdManager: ShadowNsdManager
+
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
@@ -29,15 +32,18 @@ class ZeroconfServiceDiscoveryTest {
         nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
         shadowNsdManager = Shadows.shadowOf(nsdManager)
     }
+
     @Test
     fun testServiceCreation() {
         assertNotNull("Discovery service should be created", discoveryService)
     }
+
     @Test
     fun testNsdManagerAccess() {
         assertNotNull("NsdManager should be available", nsdManager)
         assertNotNull("Shadow NsdManager should be available", shadowNsdManager)
     }
+
     @Test
     fun testSetServiceListener() {
         var serviceDiscovered = false
@@ -49,12 +55,15 @@ class ZeroconfServiceDiscoveryTest {
                 override fun onServiceDiscovered(serviceInfo: NetworkClient.ControllerInfo) {
                     serviceDiscovered = true
                 }
+
                 override fun onServiceLost(serviceName: String) {
                     serviceLost = true
                 }
+
                 override fun onServiceRegistered(serviceName: String) {
                     serviceRegistered = true
                 }
+
                 override fun onDiscoveryError(
                     errorCode: Int,
                     message: String,
@@ -67,12 +76,14 @@ class ZeroconfServiceDiscoveryTest {
         discoveryService.setServiceListener(null)
         assertTrue("Removing service listener should succeed", true)
     }
+
     @Test
     fun testGetDiscoveredServices() {
         val initialServices = discoveryService.getDiscoveredControllers()
         assertNotNull("Discovered services should not be null", initialServices)
         assertTrue("Initial services should be empty", initialServices.isEmpty())
     }
+
     @Test
     fun testServiceNameGeneration() {
         val deviceName1 = "Device One"
@@ -82,21 +93,26 @@ class ZeroconfServiceDiscoveryTest {
             deviceName1 != deviceName2,
         )
     }
+
     @Test
     fun testCleanupResources() {
         discoveryService.cleanup()
         assertTrue("Cleanup should complete without errors", true)
     }
+
     @Test
     fun testServiceListenerInterface() {
         val listener =
             object : ZeroconfDiscoveryService.ServiceDiscoveryListener {
                 override fun onServiceDiscovered(serviceInfo: NetworkClient.ControllerInfo) {
                 }
+
                 override fun onServiceLost(serviceName: String) {
                 }
+
                 override fun onServiceRegistered(serviceName: String) {
                 }
+
                 override fun onDiscoveryError(
                     errorCode: Int,
                     message: String,
@@ -108,6 +124,7 @@ class ZeroconfServiceDiscoveryTest {
         discoveryService.setServiceListener(null)
         assertTrue("Service listener interface test should pass", true)
     }
+
     @Test
     fun testContextDependency() {
         val testContext = ApplicationProvider.getApplicationContext<Context>()
@@ -117,6 +134,7 @@ class ZeroconfServiceDiscoveryTest {
         assertNotNull("Controllers list should not be null", controllers)
         assertTrue("Controllers list should be empty initially", controllers.isEmpty())
     }
+
     @Test
     fun testNetworkClientControllerInfo() {
         val controllerInfo =

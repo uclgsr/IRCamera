@@ -1,4 +1,5 @@
 package mpdc4gsr.core.utils
+
 import android.content.Context
 import android.content.res.Resources
 import android.util.TypedValue
@@ -11,9 +12,11 @@ import androidx.compose.ui.unit.Dp
 fun Int.dpToPx(context: Context): Int {
     return (this * context.resources.displayMetrics.density).toInt()
 }
+
 fun Int.pxToDp(context: Context): Int {
     return (this / context.resources.displayMetrics.density).toInt()
 }
+
 fun Int.spToPx(context: Context): Int {
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_SP,
@@ -21,12 +24,15 @@ fun Int.spToPx(context: Context): Int {
         context.resources.displayMetrics
     ).toInt()
 }
+
 fun Float.dpToPx(context: Context): Float {
     return this * context.resources.displayMetrics.density
 }
+
 fun Float.pxToDp(context: Context): Float {
     return this / context.resources.displayMetrics.density
 }
+
 fun Float.spToPx(context: Context): Float {
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_SP,
@@ -48,6 +54,7 @@ val Float.dp: Dp
 )
 val Int.dpLegacy: Int
     get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+
 @Deprecated(
     message = "Use pxToDp(context) for context-aware conversion",
     replaceWith = ReplaceWith("this.pxToDp(context)")

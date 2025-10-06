@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -79,6 +80,7 @@ fun GSRDataViewerScreen(
                         color = Color.Cyan
                     )
                 }
+
                 AnalysisType.FILTERED -> {
                     GSRSignalChart(
                         title = "Filtered Signal",
@@ -86,9 +88,11 @@ fun GSRDataViewerScreen(
                         color = Color.Green
                     )
                 }
+
                 AnalysisType.FEATURES -> {
                     GSRFeaturesCard(gsrData)
                 }
+
                 AnalysisType.STATISTICS -> {
                     GSRStatisticsCard(gsrData)
                 }
@@ -97,6 +101,7 @@ fun GSRDataViewerScreen(
         }
     }
 }
+
 @Composable
 private fun SessionInfoCard(sessionId: String) {
     Card(
@@ -137,6 +142,7 @@ private fun SessionInfoCard(sessionId: String) {
         }
     }
 }
+
 @Composable
 private fun AnalysisTypeSelector(
     selectedType: AnalysisType,
@@ -182,6 +188,7 @@ private fun AnalysisTypeSelector(
         }
     }
 }
+
 @Composable
 private fun GSRSignalChart(
     title: String,
@@ -239,6 +246,7 @@ private fun GSRSignalChart(
         }
     }
 }
+
 @Composable
 private fun GSRFeaturesCard(data: List<Float>) {
     Card(
@@ -275,6 +283,7 @@ private fun GSRFeaturesCard(data: List<Float>) {
         }
     }
 }
+
 @Composable
 private fun GSRStatisticsCard(data: List<Float>) {
     Card(
@@ -314,17 +323,20 @@ private fun GSRStatisticsCard(data: List<Float>) {
         }
     }
 }
+
 enum class AnalysisType(val displayName: String) {
     RAW_SIGNAL("Raw"),
     FILTERED("Filtered"),
     FEATURES("Features"),
     STATISTICS("Stats")
 }
+
 private fun generateSampleGSRData(): List<Float> {
     return (0..200).map { i ->
         0.5f + 0.3f * sin(i * 0.1).toFloat() + 0.1f * Random.nextFloat()
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun GSRDataViewerScreenPreview() {

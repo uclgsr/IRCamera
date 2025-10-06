@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -120,6 +121,7 @@ data class ConnectedDevice(
     val name: String,
     val isConnected: Boolean
 )
+
 @Preview(showBackground = true)
 @Composable
 private fun ConnectScreenPreview() {

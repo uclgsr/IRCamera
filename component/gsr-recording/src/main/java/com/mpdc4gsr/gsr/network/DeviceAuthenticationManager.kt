@@ -1,4 +1,5 @@
 package com.mpdc4gsr.gsr.network
+
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Base64
@@ -7,6 +8,7 @@ import org.json.JSONObject
 import java.security.SecureRandom
 import java.time.Instant
 import java.util.*
+
 class DeviceAuthenticationManager(private val context: Context) {
     companion object {
         private const val TAG = "DeviceAuth"
@@ -19,13 +21,16 @@ class DeviceAuthenticationManager(private val context: Context) {
         private const val TOKEN_VALIDITY_HOURS = 24
         private const val PAIRING_PIN_LENGTH = 6
     }
+
     private val prefs: SharedPreferences =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private var deviceToken: String? = null
     private var deviceId: String? = null
+
     init {
         initializeDeviceAuth()
     }
+
     data class PairingRequest(
         val deviceId: String,
         val deviceName: String,
@@ -34,6 +39,7 @@ class DeviceAuthenticationManager(private val context: Context) {
         val timestamp: Long,
         val capabilities: List<String>,
     )
+
     data class AuthToken(
         val token: String,
         val deviceId: String,
@@ -42,15 +48,18 @@ class DeviceAuthenticationManager(private val context: Context) {
         val controllerId: String,
         val permissions: List<String>,
     )
+
     interface AuthEventListener {
         fun onPairingRequested(
             controllerId: String,
             controllerName: String,
         )
+
         fun onPairingCompleted(
             controllerId: String,
             success: Boolean,
         )
+
         fun onAuthTokenReceived(token: AuthToken)
         fun onAuthTokenExpired(controllerId: String)
         fun onAuthenticationFailed(
@@ -58,10 +67,12 @@ class DeviceAuthenticationManager(private val context: Context) {
             reason: String,
         )
     }
+
     private var authEventListener: AuthEventListener? = null
     fun setAuthEventListener(listener: AuthEventListener?) {
         authEventListener = listener
     }
+
     private fun initializeDeviceAuth() {
         try {
             deviceId = getOrCreateDeviceId()
@@ -71,6 +82,7 @@ class DeviceAuthenticationManager(private val context: Context) {
             Log.e(TAG, "Failed to initialize device authentication", e)
         }
     }
+
     private fun getOrCreateDeviceId(): String {
         var id = prefs.getString(PREF_DEVICE_ID, null)
         if (id == null) {
@@ -79,6 +91,7 @@ class DeviceAuthenticationManager(private val context: Context) {
         }
         return id
     }
+
     private fun getOrCreateDeviceToken(): String {
         var token = prefs.getString(PREF_DEVICE_TOKEN, null)
         if (token == null || isTokenExpired(token)) {
@@ -87,12 +100,14 @@ class DeviceAuthenticationManager(private val context: Context) {
         }
         return token
     }
+
     private fun generateDeviceToken(): String {
         val random = SecureRandom()
         val tokenBytes = ByteArray(32)
         random.nextBytes(tokenBytes)
         return Base64.encodeToString(tokenBytes, Base64.URL_SAFE or Base64.NO_WRAP)
     }
+
     private fun isTokenExpired(token: String): Boolean {
         try {
             return false
@@ -100,6 +115,7 @@ class DeviceAuthenticationManager(private val context: Context) {
             return true
         }
     }
+
     fun generatePairingPin(): String {
         val random = SecureRandom()
         val pin = StringBuilder()
@@ -110,9 +126,11 @@ class DeviceAuthenticationManager(private val context: Context) {
         prefs.edit().putString(PREF_PAIRING_PIN, pairingPin).apply()
         return pairingPin
     }
+
     fun getCurrentPairingPin(): String? {
         return prefs.getString(PREF_PAIRING_PIN, null)
     }
+
     fun createPairingRequest(): PairingRequest {
         val pin = getCurrentPairingPin() ?: generatePairingPin()
         return PairingRequest(
@@ -124,6 +142,7 @@ class DeviceAuthenticationManager(private val context: Context) {
             capabilities = listOf("GSR", "RGB Camera", "Thermal Camera", "Multi-modal Recording"),
         )
     }
+
     fun processPairingResponse(response: JSONObject): Boolean {
         try {
             val success = response.getBoolean("success")
@@ -163,6 +182,7 @@ class DeviceAuthenticationManager(private val context: Context) {
             return false
         }
     }
+
     fun getAuthToken(controllerId: String): AuthToken? {
         try {
             val tokenJson = prefs.getString("auth_token_$controllerId", null) ?: return null
@@ -190,6 +210,7 @@ class DeviceAuthenticationManager(private val context: Context) {
             return null
         }
     }
+
     private fun storeAuthToken(
         controllerId: String,
         authToken: AuthToken,
@@ -209,9 +230,11 @@ class DeviceAuthenticationManager(private val context: Context) {
             Log.e(TAG, "Failed to store auth token", e)
         }
     }
+
     fun removeAuthToken(controllerId: String) {
         prefs.edit().remove("auth_token_$controllerId").apply()
     }
+
     fun createAuthenticatedMessage(
         messageType: String,
         data: JSONObject,
@@ -228,6 +251,7 @@ class DeviceAuthenticationManager(private val context: Context) {
             }
         }
     }
+
     fun validateMessageAuthentication(
         message: JSONObject,
         controllerId: String,
@@ -249,6 +273,7 @@ class DeviceAuthenticationManager(private val context: Context) {
             return false
         }
     }
+
     fun getPairedControllers(): Set<String> {
         val pairedJson = prefs.getString(PREF_PAIRED_CONTROLLERS, "[]")
         return try {
@@ -258,11 +283,13 @@ class DeviceAuthenticationManager(private val context: Context) {
             emptySet()
         }
     }
+
     private fun storePairedControllers(controllers: Set<String>) {
         val array = org.json.JSONArray()
         controllers.forEach { array.put(it) }
         prefs.edit().putString(PREF_PAIRED_CONTROLLERS, array.toString()).apply()
     }
+
     fun unpairController(controllerId: String) {
         val pairedControllers = getPairedControllers().toMutableSet()
         pairedControllers.remove(controllerId)
@@ -270,6 +297,7 @@ class DeviceAuthenticationManager(private val context: Context) {
         removeAuthToken(controllerId)
         Log.d(TAG, "Unpaired controller: $controllerId")
     }
+
     fun clearAllPairings() {
         val pairedControllers = getPairedControllers()
         pairedControllers.forEach { removeAuthToken(it) }
@@ -277,9 +305,11 @@ class DeviceAuthenticationManager(private val context: Context) {
         prefs.edit().remove(PREF_PAIRING_PIN).apply()
         Log.d(TAG, "Cleared all pairing data")
     }
+
     private fun getDeviceName(): String {
         return android.os.Build.MODEL + " (" + android.os.Build.DEVICE + ")"
     }
+
     fun getDeviceId(): String? = deviceId
     fun getDeviceToken(): String? = deviceToken
     fun isPaired(): Boolean = getPairedControllers().isNotEmpty()

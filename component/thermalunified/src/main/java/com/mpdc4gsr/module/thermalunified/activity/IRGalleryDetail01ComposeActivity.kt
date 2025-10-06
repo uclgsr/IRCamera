@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import android.content.ContentValues
 import android.content.Intent
 import android.provider.MediaStore
@@ -30,10 +31,12 @@ import com.mpdc4gsr.module.thermalunified.report.activity.ThermalReportCreationC
 import com.mpdc4gsr.module.thermalunified.fragment.GalleryComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryEditViewModel
 import kotlinx.coroutines.launch
+
 class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>() {
     override fun createViewModel(): IRGalleryEditViewModel {
         return viewModels<IRGalleryEditViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRGalleryEditViewModel) {
@@ -178,6 +181,7 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
         }
     }
 }
+
 @Composable
 private fun GalleryImageView(
     modifier: Modifier = Modifier
@@ -193,6 +197,7 @@ private fun GalleryImageView(
         modifier = modifier
     )
 }
+
 @Composable
 private fun ImageInfoOverlay(
     imageInfo: ImageInfo,
@@ -228,6 +233,7 @@ private fun ImageInfoOverlay(
         }
     }
 }
+
 @Composable
 private fun EditToolsPanel(
     selectedTool: String,
@@ -266,6 +272,7 @@ private fun EditToolsPanel(
         }
     }
 }
+
 @Composable
 private fun EditToolChip(
     tool: EditTool,
@@ -298,6 +305,7 @@ private fun EditToolChip(
         )
     )
 }
+
 @Composable
 private fun ImageInfoCard(
     imageInfo: ImageInfo
@@ -328,6 +336,7 @@ private fun ImageInfoCard(
         }
     }
 }
+
 @Composable
 private fun InfoItem(
     label: String,
@@ -352,6 +361,7 @@ private fun InfoItem(
         )
     }
 }
+
 @Composable
 private fun ImageActionButtons(
     onExport: () -> Unit,
@@ -410,6 +420,7 @@ private fun ImageActionButtons(
         }
     }
 }
+
 // Data classes
 data class ImageInfo(
     val id: Long = 0,
@@ -421,10 +432,12 @@ data class ImageInfo(
     val minTemp: Float = 18.7f,
     val timestamp: String = "2024-01-15 14:30:25"
 )
+
 data class EditTool(
     val name: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector
 )
+
 private fun getEditTools(): List<EditTool> {
     return listOf(
         EditTool("Crop", Icons.Default.CropFree),

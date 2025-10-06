@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -18,10 +19,12 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryTabViewModel
 import kotlinx.coroutines.launch
+
 class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>() {
     override fun createViewModel(): IRGalleryTabViewModel {
         return viewModels<IRGalleryTabViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRGalleryTabViewModel) {
@@ -36,6 +39,7 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
                     is com.mpdc4gsr.libunified.app.ktbase.BaseViewModel.UiEvent.NavigateBack -> {
                         requireActivity().finish()
                     }
+
                     else -> {} // Handle other events if needed
                 }
             }
@@ -92,10 +96,12 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
                             dirType = currentDirType,
                             modifier = Modifier.fillMaxSize()
                         )
+
                         1 -> GalleryVideoTab(
                             dirType = currentDirType,
                             modifier = Modifier.fillMaxSize()
                         )
+
                         2 -> GalleryReportsTab(
                             dirType = currentDirType,
                             modifier = Modifier.fillMaxSize()
@@ -105,6 +111,7 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun GalleryTopBar(
@@ -150,6 +157,7 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
             }
         )
     }
+
     @Composable
     private fun DirectorySwitcher(
         currentDirType: DirType,
@@ -200,6 +208,7 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
             }
         }
     }
+
     @Composable
     private fun GalleryPictureTab(
         dirType: DirType,
@@ -239,6 +248,7 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
             }
         }
     }
+
     @Composable
     private fun GalleryVideoTab(
         dirType: DirType,
@@ -276,6 +286,7 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
             }
         }
     }
+
     @Composable
     private fun GalleryReportsTab(
         dirType: DirType,
@@ -313,6 +324,7 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
             }
         }
     }
+
     private fun getDirTypeDisplayName(dirType: DirType): String = when (dirType) {
         DirType.LINE -> "LINE Device"
         DirType.TS004_LOCALE -> "TS004 Local"

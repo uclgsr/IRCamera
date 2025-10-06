@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import kotlin.math.sin
+
 @Composable
 fun HikSurfaceCompose(
     thermalImageData: ByteArray? = null,
@@ -80,6 +82,7 @@ fun HikSurfaceCompose(
         }
     }
 }
+
 @Composable
 private fun ThermalOverlayControls(
     rotateAngle: Int,
@@ -165,6 +168,7 @@ private fun ThermalOverlayControls(
         }
     }
 }
+
 @Composable
 private fun TemperatureRangeIndicator(
     minTemp: Float?,
@@ -203,6 +207,7 @@ private fun TemperatureRangeIndicator(
         }
     }
 }
+
 private fun DrawScope.drawThermalSurface(
     thermalData: ByteArray?,
     rotateAngle: Int,
@@ -227,6 +232,7 @@ private fun DrawScope.drawThermalSurface(
         drawAlarmOverlay(alarmSettings)
     }
 }
+
 private fun DrawScope.drawPlaceholderThermalImage(
     dimensions: ThermalDimensions,
     rotateAngle: Int,
@@ -270,6 +276,7 @@ private fun DrawScope.drawPlaceholderThermalImage(
         }
     }
 }
+
 private fun DrawScope.drawThermalData(
     thermalData: ByteArray,
     dimensions: ThermalDimensions,
@@ -314,6 +321,7 @@ private fun DrawScope.drawThermalData(
         }
     }
 }
+
 private fun DrawScope.drawAlarmOverlay(alarmSettings: ThermalAlarmSettings) {
     // Draw pulsing red overlay for alarm
     val alpha = (sin(System.currentTimeMillis() / 200.0) * 0.3 + 0.4).toFloat()
@@ -328,6 +336,7 @@ private fun DrawScope.drawAlarmOverlay(alarmSettings: ThermalAlarmSettings) {
         style = androidx.compose.ui.graphics.drawscope.Stroke(width = 4.dp.toPx())
     )
 }
+
 private fun getThermalDimensions(rotateAngle: Int, isAmplified: Boolean): ThermalDimensions {
     val multiplier = if (isAmplified) 2 else 1
     val isPortrait = rotateAngle == 90 || rotateAngle == 270
@@ -336,22 +345,26 @@ private fun getThermalDimensions(rotateAngle: Int, isAmplified: Boolean): Therma
         height = (if (isPortrait) 256 else 192) * multiplier
     )
 }
+
 // Data classes
 data class ThermalDimensions(
     val width: Int,
     val height: Int
 )
+
 data class ThermalAlarmSettings(
     val isEnabled: Boolean = false,
     val isAlarmActive: Boolean = false,
     val alarmType: ThermalAlarmType = ThermalAlarmType.HIGH_TEMPERATURE,
     val threshold: Float = 50f
 )
+
 enum class ThermalAlarmType {
     HIGH_TEMPERATURE,
     LOW_TEMPERATURE,
     TEMPERATURE_RANGE
 }
+
 @Composable
 fun HikSurfaceWithAndroidView(
     rotateAngle: Int = 270,
@@ -369,6 +382,7 @@ fun HikSurfaceWithAndroidView(
                     override fun surfaceCreated(holder: android.view.SurfaceHolder) {
                         onSurfaceReady(this@apply)
                     }
+
                     override fun surfaceChanged(
                         holder: android.view.SurfaceHolder,
                         format: Int,
@@ -376,6 +390,7 @@ fun HikSurfaceWithAndroidView(
                         height: Int
                     ) {
                     }
+
                     override fun surfaceDestroyed(holder: android.view.SurfaceHolder) {}
                 })
             }
@@ -386,6 +401,7 @@ fun HikSurfaceWithAndroidView(
         }
     )
 }
+
 @Composable
 fun HikSurfaceComposePreview() {
     var rotateAngle by remember { mutableIntStateOf(270) }

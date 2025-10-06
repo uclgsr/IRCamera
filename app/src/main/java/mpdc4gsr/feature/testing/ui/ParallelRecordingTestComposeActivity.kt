@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.os.Bundle
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -27,6 +28,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
     companion object {
         private const val TAG = "ParallelRecordingTestCompose"
     }
+
     data class SensorStatus(
         val sensorName: String,
         val isRecording: Boolean = false,
@@ -36,9 +38,11 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
         val avgDataRate: Float = 0f,
         val bufferUtilization: Float = 0f
     )
+
     enum class RecordingState {
         IDLE, STARTING, RECORDING, STOPPING, COMPLETED, ERROR
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -47,6 +51,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun ParallelRecordingTestScreen() {
@@ -254,6 +259,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     fun SensorStatusCard(
         sensor: SensorStatus,
@@ -347,6 +353,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private fun getRecordingStateIcon(state: RecordingState): androidx.compose.ui.graphics.vector.ImageVector {
         return when (state) {
             RecordingState.IDLE -> Icons.Default.Stop
@@ -357,6 +364,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             RecordingState.ERROR -> Icons.Default.Error
         }
     }
+
     private fun getSensorIcon(sensorName: String): androidx.compose.ui.graphics.vector.ImageVector {
         return when {
             sensorName.contains("GSR") -> Icons.Default.Sensors
@@ -365,6 +373,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             else -> Icons.Default.DeviceHub
         }
     }
+
     private suspend fun runParallelRecordingTest(
         onStateUpdate: (RecordingState) -> Unit,
         onDurationUpdate: (Long) -> Unit,
@@ -418,6 +427,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             onComplete()
         }
     }
+
     private suspend fun startParallelRecording(currentStatuses: List<SensorStatus>): List<SensorStatus> {
         AppLogger.d(TAG, "Starting parallel recording from all sensors")
         var statuses = currentStatuses
@@ -432,6 +442,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
         statuses = updateSensorRecordingState(statuses, "RGB Camera", true)
         return statuses
     }
+
     private suspend fun stopParallelRecording(currentStatuses: List<SensorStatus>): List<SensorStatus> {
         AppLogger.d(TAG, "Stopping parallel recording")
         // Stop all sensors
@@ -439,6 +450,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             sensor.copy(isRecording = false)
         }
     }
+
     private fun updateSensorRecordingState(
         currentStatuses: List<SensorStatus>,
         sensorName: String,
@@ -452,6 +464,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private fun updateSensorStatuses(currentStatuses: List<SensorStatus>, second: Int): List<SensorStatus> {
         return currentStatuses.map { sensor ->
             if (sensor.isRecording) {
@@ -474,6 +487,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private suspend fun stopRecording(
         currentStatuses: List<SensorStatus>,
         onStateUpdate: (RecordingState) -> Unit,
@@ -485,6 +499,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
         delay(1000)
         onStateUpdate(RecordingState.COMPLETED)
     }
+
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {
@@ -497,6 +512,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private suspend fun testSensorInitialization() {
         AppLogger.d(TAG, "Testing sensor initialization")
         try {
@@ -506,6 +522,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Sensor initialization test failed: ${e.message}")
         }
     }
+
     private suspend fun testSynchronizedStart() {
         AppLogger.d(TAG, "Testing synchronized start")
         try {
@@ -521,6 +538,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Synchronized start test failed: ${e.message}")
         }
     }
+
     private suspend fun testDataCollection() {
         AppLogger.d(TAG, "Testing data collection")
         try {
@@ -530,6 +548,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Data collection test failed: ${e.message}")
         }
     }
+
     private suspend fun testBufferManagement() {
         AppLogger.d(TAG, "Testing buffer management")
         try {
@@ -539,6 +558,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Buffer management test failed: ${e.message}")
         }
     }
+
     private suspend fun testErrorHandling() {
         AppLogger.d(TAG, "Testing error handling")
         try {
@@ -548,6 +568,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Error handling test failed: ${e.message}")
         }
     }
+
     private suspend fun testSynchronizedStop() {
         AppLogger.d(TAG, "Testing synchronized stop")
         try {

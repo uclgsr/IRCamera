@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
+
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.delay
@@ -7,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.random.Random
+
 class IRMonitorCaptureViewModel : BaseViewModel() {
     // Data classes matching the fragment requirements
     data class TemperatureData(
@@ -14,18 +16,22 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
         val maxTemp: Float,
         val minTemp: Float
     )
+
     data class CaptureData(
         val id: Int,
         val timestamp: Long,
         val temperature: Float,
         val imagePath: String
     )
+
     enum class DeviceConnectionState {
         DISCONNECTED, CONNECTING, CONNECTED, ERROR
     }
+
     enum class CaptureState {
         INACTIVE, ACTIVE, CONTINUOUS, CAPTURING
     }
+
     // StateFlow properties for UI state management
     private val _captureState = MutableStateFlow(CaptureState.INACTIVE)
     val captureState: StateFlow<CaptureState> = _captureState.asStateFlow()
@@ -35,15 +41,18 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
     val captureHistory: StateFlow<List<CaptureData>> = _captureHistory.asStateFlow()
     private val _deviceConnectionState = MutableStateFlow(DeviceConnectionState.DISCONNECTED)
     val deviceConnectionState: StateFlow<DeviceConnectionState> = _deviceConnectionState.asStateFlow()
+
     // Internal state
     private var captureIdCounter = 1
     private var continuousCapturingJob: kotlinx.coroutines.Job? = null
+
     init {
         // Initialize with mock data for development
         initializeMockData()
         // Start temperature monitoring simulation
         startTemperatureMonitoring()
     }
+
     fun toggleCapture() {
         viewModelScope.launch {
             when (_captureState.value) {
@@ -51,20 +60,24 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
                     _captureState.value = CaptureState.ACTIVE
                     simulateDeviceConnection()
                 }
+
                 CaptureState.ACTIVE -> {
                     _captureState.value = CaptureState.INACTIVE
                     stopContinuousCapture()
                 }
+
                 CaptureState.CONTINUOUS -> {
                     stopContinuousCapture()
                     _captureState.value = CaptureState.ACTIVE
                 }
+
                 CaptureState.CAPTURING -> {
                     // Already capturing, ignore
                 }
             }
         }
     }
+
     fun captureFrame() {
         if (_deviceConnectionState.value != DeviceConnectionState.CONNECTED) return
         viewModelScope.launch {
@@ -91,6 +104,7 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
             }
         }
     }
+
     fun toggleContinuousCapture() {
         if (_deviceConnectionState.value != DeviceConnectionState.CONNECTED) return
         viewModelScope.launch {
@@ -102,11 +116,13 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
             }
         }
     }
+
     fun clearCaptureHistory() {
         viewModelScope.launch {
             _captureHistory.value = emptyList()
         }
     }
+
     fun exportCaptures() {
         viewModelScope.launch {
             val captures = _captureHistory.value
@@ -127,6 +143,7 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
             android.util.Log.d("IRMonitorCaptureVM", "Exporting ${captures.size} captures")
         }
     }
+
     fun deleteCapture(capture: CaptureData) {
         viewModelScope.launch {
             val currentHistory = _captureHistory.value.toMutableList()
@@ -134,6 +151,7 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
             _captureHistory.value = currentHistory
         }
     }
+
     // Private helper methods
     private fun initializeMockData() {
         // Initialize with mock temperature data
@@ -144,6 +162,7 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
         )
         _deviceConnectionState.value = DeviceConnectionState.DISCONNECTED
     }
+
     private fun simulateDeviceConnection() {
         viewModelScope.launch {
             _deviceConnectionState.value = DeviceConnectionState.CONNECTING
@@ -151,6 +170,7 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
             _deviceConnectionState.value = DeviceConnectionState.CONNECTED
         }
     }
+
     private fun startTemperatureMonitoring() {
         viewModelScope.launch {
             while (true) {
@@ -169,6 +189,7 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
             }
         }
     }
+
     private fun startContinuousCapture() {
         _captureState.value = CaptureState.CONTINUOUS
         continuousCapturingJob = viewModelScope.launch {
@@ -178,10 +199,12 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
             }
         }
     }
+
     private fun stopContinuousCapture() {
         continuousCapturingJob?.cancel()
         continuousCapturingJob = null
     }
+
     override fun onCleared() {
         super.onCleared()
         stopContinuousCapture()

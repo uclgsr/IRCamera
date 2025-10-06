@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -17,10 +18,12 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+
 class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
     override fun createViewModel(): IRVideoGSYViewModel {
         return IRVideoGSYViewModel()
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRVideoGSYViewModel) {
@@ -57,6 +60,7 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
             }
         }
     }
+
     @Composable
     private fun IRVideoGSYContent(
         viewModel: IRVideoGSYViewModel,
@@ -268,4 +272,5 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
         }
     }
 }
+
 class IRVideoGSYViewModel : BaseViewModel()

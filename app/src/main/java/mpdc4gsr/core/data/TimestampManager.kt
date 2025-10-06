@@ -1,10 +1,12 @@
 package mpdc4gsr.core.data
+
 import android.os.SystemClock
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.system.measureNanoTime
+
 object TimestampManager {
     private const val TAG = "TimestampManager"
     private val bootTimeReference = AtomicLong(0L)
@@ -12,16 +14,20 @@ object TimestampManager {
     private val sessionStartTime = AtomicLong(0L)
     private val sessionStartSystemMs = AtomicLong(0L)
     private val sessionStartMonotonicNs = AtomicLong(0L)
+
     init {
         initializeTimestampSystem()
     }
+
     private fun initializeTimestampSystem() {
         bootTimeReference.set(System.currentTimeMillis() - SystemClock.elapsedRealtime())
         AppLogger.i(TAG, "Timestamp system initialized with boot reference: ${bootTimeReference.get()}")
     }
+
     fun nowNanos(): Long {
         return System.nanoTime()
     }
+
     fun getCurrentTimestampNanos(): Long {
         return SystemClock.elapsedRealtimeNanos()
     }
@@ -31,20 +37,25 @@ object TimestampManager {
             timeZone = java.util.TimeZone.getTimeZone("UTC")
         }
     }
+
     fun formatTimestampIso(timestampNanos: Long): String {
         val timestampMillis = timestampNanos / 1_000_000
         val date = java.util.Date(timestampMillis)
         return iso8601Format.format(date)
     }
+
     fun getCurrentSystemTimeMs(): Long {
         return System.currentTimeMillis()
     }
+
     fun getCurrentElapsedRealtimeMs(): Long {
         return SystemClock.elapsedRealtime()
     }
+
     fun getDeviceTimestampMs(): Long {
         return bootTimeReference.get() + SystemClock.elapsedRealtime()
     }
+
     fun getSessionRelativeTimestampMs(): Long {
         val sessionStart = sessionStartTime.get()
         if (sessionStart == 0L) {
@@ -53,6 +64,7 @@ object TimestampManager {
         }
         return getCurrentElapsedRealtimeMs() - sessionStart
     }
+
     fun startSession(): SessionTimestampReference {
         val sessionStart = getCurrentElapsedRealtimeMs()
         val systemStart = getCurrentSystemTimeMs()
@@ -72,6 +84,7 @@ object TimestampManager {
         )
         return reference
     }
+
     fun endSession(): Long {
         val sessionEnd = getCurrentElapsedRealtimeMs()
         val sessionDuration = sessionEnd - sessionStartTime.get()
@@ -94,6 +107,7 @@ object TimestampManager {
     fun getSynchronizedTimestampMs(): Long {
         return getDeviceTimestampMs() + clockOffset.get()
     }
+
     fun createTimestampRecord(): TimestampRecord {
         val currentNanos = getCurrentTimestampNanos()
         val systemMs = getCurrentSystemTimeMs()
@@ -110,6 +124,7 @@ object TimestampManager {
             synchronizedTimestampMs = synchronizedMs,
         )
     }
+
     fun convertMonotonicToWallClock(monotonicNs: Long): Long {
         val sessionStartMono = sessionStartMonotonicNs.get()
         val sessionStartSys = sessionStartSystemMs.get()
@@ -121,6 +136,7 @@ object TimestampManager {
         val offsetMs = offsetNs / 1_000_000
         return sessionStartSys + offsetMs
     }
+
     fun getSessionRelativeNanos(currentMonotonicNs: Long = getCurrentTimestampNanos()): Long {
         val sessionStartMono = sessionStartMonotonicNs.get()
         if (sessionStartMono == 0L) {
@@ -129,6 +145,7 @@ object TimestampManager {
         }
         return currentMonotonicNs - sessionStartMono
     }
+
     inline fun <T> measureExecutionTime(block: () -> T): Pair<T, Long> {
         var result: T
         val executionTime = measureNanoTime {
@@ -137,6 +154,7 @@ object TimestampManager {
         return Pair(result, executionTime)
     }
 }
+
 data class SessionTimestampReference(
     val sessionStartElapsedMs: Long,
     val sessionStartSystemMs: Long,
@@ -151,6 +169,7 @@ data class SessionTimestampReference(
                 "# boot_time_reference_ms=$bootTimeReferenceMs\n"
     }
 }
+
 data class TimestampRecord(
     val systemNanos: Long,
     val systemTimeMs: Long,
@@ -162,6 +181,7 @@ data class TimestampRecord(
     fun toCsvFormat(): String {
         return "$systemNanos,$systemTimeMs,$elapsedRealtimeMs,$deviceTimestampMs,$sessionRelativeMs,$synchronizedTimestampMs"
     }
+
     companion object {
         fun getCsvHeader(): String {
             return "system_nanos,system_time_ms,elapsed_realtime_ms,device_timestamp_ms,session_relative_ms,synchronized_timestamp_ms"

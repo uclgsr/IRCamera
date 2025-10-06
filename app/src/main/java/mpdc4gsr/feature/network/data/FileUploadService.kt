@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.content.Context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.random.Random
+
 class FileUploadService(private val context: Context) {
     enum class UploadStatus {
         PENDING,
@@ -25,6 +27,7 @@ class FileUploadService(private val context: Context) {
         FAILED,
         CANCELLED,
     }
+
     enum class FileType(val extension: String, val mimeType: String) {
         THERMAL_VIDEO("mp4", "video/mp4"),
         VISUAL_VIDEO("mp4", "video/mp4"),
@@ -34,6 +37,7 @@ class FileUploadService(private val context: Context) {
         METADATA("json", "application/json"),
         CALIBRATION("json", "application/json"),
     }
+
     companion object {
         private const val TAG = "FileUploadService"
         private const val BYTES_PER_MB = 1024 * 1024
@@ -44,6 +48,7 @@ class FileUploadService(private val context: Context) {
         private const val QUEUE_RETRY_DELAY_MS = 1000L
         private const val ERROR_RETRY_DELAY_MS = 5000L
     }
+
     private val logger = StructuredLogger.getInstance(context)
     private val activeUploads = ConcurrentHashMap<String, UploadJob>()
     private val uploadQueue = Channel<String>(Channel.UNLIMITED)
@@ -54,6 +59,7 @@ class FileUploadService(private val context: Context) {
     private val maxConcurrent = MAX_CONCURRENT_UPLOADS
     private val retryLimit = RETRY_LIMIT
     private var webSocketClient: WebSocketClient? = null
+
     data class UploadJob(
         val jobId: String,
         val filePath: String,
@@ -86,6 +92,7 @@ class FileUploadService(private val context: Context) {
                 return if (elapsed > 0) bytesUploaded.toFloat() / (elapsed / 1000f) else 0f
             }
     }
+
     fun initialize(webSocketClient: WebSocketClient) {
         this.webSocketClient = webSocketClient
         isActive.set(true)
@@ -102,6 +109,7 @@ class FileUploadService(private val context: Context) {
         )
         startUploadProcessor()
     }
+
     suspend fun queueUpload(
         filePath: String,
         sessionId: String,
@@ -172,6 +180,7 @@ class FileUploadService(private val context: Context) {
             throw e
         }
     }
+
     suspend fun cancelUpload(jobId: String): Boolean {
         val job = activeUploads[jobId] ?: return false
         job.status = UploadStatus.CANCELLED
@@ -188,6 +197,7 @@ class FileUploadService(private val context: Context) {
         )
         return true
     }
+
     suspend fun pauseUpload(jobId: String): Boolean {
         val job = activeUploads[jobId] ?: return false
         if (job.status == UploadStatus.IN_PROGRESS) {
@@ -207,6 +217,7 @@ class FileUploadService(private val context: Context) {
         }
         return false
     }
+
     suspend fun resumeUpload(jobId: String): Boolean {
         val job = activeUploads[jobId] ?: return false
         if (job.status == UploadStatus.PAUSED) {
@@ -227,12 +238,15 @@ class FileUploadService(private val context: Context) {
         }
         return false
     }
+
     fun getUploadStatus(jobId: String): UploadJob? {
         return activeUploads[jobId]
     }
+
     fun getActiveUploads(): List<UploadJob> {
         return activeUploads.values.toList()
     }
+
     fun getUploadStats(): Map<String, Any> {
         val jobs = activeUploads.values
         return mapOf(
@@ -244,6 +258,7 @@ class FileUploadService(private val context: Context) {
             "concurrent_capacity" to "${concurrentUploads.get()}/$maxConcurrent",
         )
     }
+
     private fun startUploadProcessor() {
         serviceScope.launch {
             while (this@FileUploadService.isActive.get()) {
@@ -273,6 +288,7 @@ class FileUploadService(private val context: Context) {
             }
         }
     }
+
     private suspend fun executeUpload(job: UploadJob) {
         concurrentUploads.incrementAndGet()
         try {
@@ -355,6 +371,7 @@ class FileUploadService(private val context: Context) {
             concurrentUploads.decrementAndGet()
         }
     }
+
     private suspend fun initiateUpload(job: UploadJob): Boolean {
         return try {
             val initMessage =
@@ -386,6 +403,7 @@ class FileUploadService(private val context: Context) {
             false
         }
     }
+
     private suspend fun uploadFileChunks(job: UploadJob) {
         val file = File(job.filePath)
         FileInputStream(file).use { inputStream ->
@@ -419,6 +437,7 @@ class FileUploadService(private val context: Context) {
             }
         }
     }
+
     private suspend fun verifyUploadCompletion(job: UploadJob): Boolean {
         return try {
             val verifyMessage =
@@ -444,6 +463,7 @@ class FileUploadService(private val context: Context) {
             false
         }
     }
+
     private suspend fun checkExistingUpload(job: UploadJob): Long {
         return try {
             val checkMessage =
@@ -469,6 +489,7 @@ class FileUploadService(private val context: Context) {
             0L
         }
     }
+
     private fun calculateSHA256(file: File): String {
         val digest = MessageDigest.getInstance("SHA-256")
         FileInputStream(file).use { inputStream ->
@@ -480,6 +501,7 @@ class FileUploadService(private val context: Context) {
         }
         return digest.digest().joinToString("") { "%02x".format(it) }
     }
+
     private fun generateJobId(
         sessionId: String,
         deviceId: String,
@@ -489,6 +511,7 @@ class FileUploadService(private val context: Context) {
         val random = Random.nextInt(1000, 9999)
         return "upload_${sessionId}_${deviceId}_${timestamp}_$random"
     }
+
     fun shutdown() {
         isActive.set(false)
         activeUploads.values.forEach { job ->

@@ -1,10 +1,12 @@
 package mpdc4gsr.core.ui
+
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
+
 class PermissionManager(
     private val activity: ComponentActivity,
     private val permissionController: PermissionController

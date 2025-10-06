@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
+
 @Composable
 fun CompassCompose(
     bearing: Float,
@@ -68,6 +70,7 @@ fun CompassCompose(
         }
     }
 }
+
 @Composable
 fun LinearCompassCompose(
     bearing: Float,
@@ -115,6 +118,7 @@ fun LinearCompassCompose(
         }
     }
 }
+
 private fun DrawScope.drawCompass(
     bearing: Float,
     center: Offset,
@@ -181,6 +185,7 @@ private fun DrawScope.drawCompass(
         )
     }
 }
+
 private fun DrawScope.drawLinearCompass(
     bearing: Float,
     centerY: Float
@@ -222,6 +227,7 @@ private fun DrawScope.drawLinearCompass(
         }
     }
 }
+
 private fun getCardinalDirection(bearing: Float): String {
     val normalizedBearing = (bearing + 360f) % 360f
     return when {
@@ -236,6 +242,7 @@ private fun getCardinalDirection(bearing: Float): String {
         else -> "N"
     }
 }
+
 @Composable
 fun CompassStatusCompose(
     bearing: Float,
@@ -270,6 +277,7 @@ fun CompassStatusCompose(
         }
     }
 }
+
 enum class CompassQuality(
     val displayName: String,
     val color: Color
@@ -280,6 +288,7 @@ enum class CompassQuality(
     POOR("Poor", Color(0xFFFF6600)),
     UNRELIABLE("Unreliable", Color.Red)
 }
+
 @Composable
 fun CompassComposePreview() {
     Column(

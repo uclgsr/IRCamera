@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.thermal.ui
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -392,6 +393,7 @@ data class ThermalImage(
     val maxTemp: Float,
     val minTemp: Float
 )
+
 data class Recording(
     val id: Int,
     val name: String,
@@ -399,11 +401,13 @@ data class Recording(
     val size: String,
     val timestamp: String
 )
+
 data class DataExport(
     val filename: String,
     val size: String,
     val type: String
 )
+
 @Preview(showBackground = true)
 @Composable
 private fun GalleryScreenPreview() {

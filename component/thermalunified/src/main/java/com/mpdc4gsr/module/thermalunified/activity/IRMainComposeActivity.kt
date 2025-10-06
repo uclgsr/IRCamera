@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +33,7 @@ import com.mpdc4gsr.module.thermalunified.fragment.PDFListComposeFragment
 import com.mpdc4gsr.module.user.compose.MoreComposeFragment
 import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
 import kotlinx.coroutines.launch
+
 class IRMainComposeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +43,7 @@ class IRMainComposeActivity : AppCompatActivity() {
             }
         }
     }
+
     @Composable
     private fun MainContent() {
         val pagerState = rememberPagerState(pageCount = { 5 })
@@ -85,6 +88,7 @@ class IRMainComposeActivity : AppCompatActivity() {
         }
     }
 }
+
 @Composable
 private fun ThermalTabContent() {
     val context = LocalContext.current
@@ -107,6 +111,7 @@ private fun ThermalTabContent() {
         modifier = Modifier.fillMaxSize()
     )
 }
+
 @Composable
 private fun GalleryTabContent() {
     val context = LocalContext.current
@@ -129,6 +134,7 @@ private fun GalleryTabContent() {
         modifier = Modifier.fillMaxSize()
     )
 }
+
 @Composable
 private fun AbilityTabContent() {
     val context = LocalContext.current
@@ -151,6 +157,7 @@ private fun AbilityTabContent() {
         modifier = Modifier.fillMaxSize()
     )
 }
+
 @Composable
 private fun PDFTabContent() {
     val context = LocalContext.current
@@ -173,6 +180,7 @@ private fun PDFTabContent() {
         modifier = Modifier.fillMaxSize()
     )
 }
+
 @Composable
 private fun MoreTabContent() {
     val viewModel: MoreComposeFragmentViewModel = viewModel()
@@ -182,6 +190,7 @@ private fun MoreTabContent() {
         modifier = Modifier.fillMaxSize()
     )
 }
+
 @Composable
 private fun ThermalBottomNavigation(
     selectedPage: Int,
@@ -214,6 +223,7 @@ private fun ThermalBottomNavigation(
         }
     }
 }
+
 @Composable
 private fun ThermalTabButton(
     tab: MainThermalTab,
@@ -252,11 +262,13 @@ private fun ThermalTabButton(
         )
     }
 }
+
 // Data class for tab configuration
 internal data class MainThermalTab(
     val title: String,
     val icon: ImageVector
 )
+
 private fun getThermalTabs(): List<MainThermalTab> {
     return listOf(
         MainThermalTab("Thermal", Icons.Default.Videocam),

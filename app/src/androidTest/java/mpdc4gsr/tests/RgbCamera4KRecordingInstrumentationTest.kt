@@ -1,4 +1,5 @@
 package mpdc4gsr.tests
+
 import android.content.Context
 import android.util.Log
 import androidx.test.core.app.ApplicationProvider
@@ -19,6 +20,7 @@ class RgbCamera4KRecordingInstrumentationTest {
         private const val VIDEO_RECORDING_DURATION_MS = 10000L
         private const val BURST_CAPTURE_COUNT = 5
     }
+
     @get:Rule
     val permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         android.Manifest.permission.CAMERA,
@@ -28,6 +30,7 @@ class RgbCamera4KRecordingInstrumentationTest {
     )
     private lateinit var context: Context
     private lateinit var testOutputDir: File
+
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext<Context>()
@@ -35,11 +38,13 @@ class RgbCamera4KRecordingInstrumentationTest {
         testOutputDir.mkdirs()
         Log.i(TAG, "RGB Camera instrumentation test setup completed")
     }
+
     @After
     fun tearDown() {
         testOutputDir.deleteRecursively()
         Log.i(TAG, "RGB Camera instrumentation test cleanup completed")
     }
+
     @Test
     fun test4KVideoRecording() {
         Log.i(TAG, "Testing 4K video recording capability")
@@ -62,6 +67,7 @@ class RgbCamera4KRecordingInstrumentationTest {
         Log.i(TAG, " 4K video recording test completed successfully")
         Log.i(TAG, "Test results: ${testResult.summary}")
     }
+
     @Test
     fun test1080pVideoRecording() {
         Log.i(TAG, "Testing 1080p video recording")
@@ -77,6 +83,7 @@ class RgbCamera4KRecordingInstrumentationTest {
         Assert.assertTrue("1080p video should have good quality", testResult.qualityScore >= 0.7)
         Log.i(TAG, " 1080p video recording test completed successfully")
     }
+
     @Test
     fun testFrameRateValidation() {
         Log.i(TAG, "Testing frame rate validation at 30 FPS")
@@ -97,6 +104,7 @@ class RgbCamera4KRecordingInstrumentationTest {
         Log.i(TAG, "  Deviation: ${frameRateTest.deviationPercent}%")
         Log.i(TAG, " Frame rate validation test passed")
     }
+
     @Test
     fun testBurstStillCapture() {
         Log.i(TAG, "Testing burst still capture")
@@ -114,6 +122,7 @@ class RgbCamera4KRecordingInstrumentationTest {
         )
         Log.i(TAG, " Burst capture test completed: ${burstTest.capturedCount} images")
     }
+
     @Test
     fun testDeviceSpecificConfigurations() {
         Log.i(TAG, "Testing device-specific configurations")
@@ -132,6 +141,7 @@ class RgbCamera4KRecordingInstrumentationTest {
         Log.i(TAG, "Device capabilities: $capabilities")
         Log.i(TAG, " Device-specific configuration tests completed")
     }
+
     @Test
     fun testErrorHandlingAndRecovery() {
         Log.i(TAG, "Testing error handling and recovery")
@@ -141,6 +151,7 @@ class RgbCamera4KRecordingInstrumentationTest {
         Assert.assertTrue("Should manage resources properly", resourceTest)
         Log.i(TAG, " Error handling and recovery tests passed")
     }
+
     private fun simulateVideoRecordingTest(
         sessionDir: File,
         resolution: String,
@@ -174,6 +185,7 @@ class RgbCamera4KRecordingInstrumentationTest {
             summary = "Recording: $resolution @ ${frameRate}fps, Quality: $qualityScore"
         )
     }
+
     private fun simulateFrameRateTest(
         targetFps: Int,
         durationMs: Long,
@@ -192,6 +204,7 @@ class RgbCamera4KRecordingInstrumentationTest {
             totalFrames = actualFrames.toInt()
         )
     }
+
     private fun simulateBurstCaptureTest(
         captureCount: Int,
         intervalMs: Long,
@@ -213,6 +226,7 @@ class RgbCamera4KRecordingInstrumentationTest {
             successRate = successfulCaptures.toDouble() / captureCount
         )
     }
+
     private fun analyzeDeviceCapabilities(): DeviceCapabilities {
         val deviceModel = android.os.Build.MODEL
         val sdkVersion = android.os.Build.VERSION.SDK_INT
@@ -232,6 +246,7 @@ class RgbCamera4KRecordingInstrumentationTest {
             maxFrameRate = if (supportsHighFrameRate) 60 else 30
         )
     }
+
     private fun testInvalidConfigurations(): Boolean {
         return try {
             Log.d(TAG, "Testing invalid configuration handling")
@@ -244,6 +259,7 @@ class RgbCamera4KRecordingInstrumentationTest {
             false
         }
     }
+
     private fun testResourceManagement(): Boolean {
         return try {
             Log.d(TAG, "Testing resource management")
@@ -257,25 +273,31 @@ class RgbCamera4KRecordingInstrumentationTest {
             false
         }
     }
+
     private fun handleInvalidSessionDirectory(dir: String?): Boolean {
         Log.d(TAG, "Handling invalid session directory: $dir")
         return true
     }
+
     private fun handleInvalidFrameRate(fps: Int): Boolean {
         Log.d(TAG, "Handling invalid frame rate: $fps")
         return true
     }
+
     private fun handleInvalidResolution(resolution: String): Boolean {
         Log.d(TAG, "Handling invalid resolution: $resolution")
         return true
     }
+
     private fun simulateResourceAllocation(instanceId: String): Boolean {
         Log.d(TAG, "Simulating resource allocation for: $instanceId")
         return true
     }
+
     private fun simulateResourceCleanup(instanceId: String) {
         Log.d(TAG, "Simulating resource cleanup for: $instanceId")
     }
+
     data class VideoTestResult(
         val success: Boolean,
         val qualityScore: Double,
@@ -284,6 +306,7 @@ class RgbCamera4KRecordingInstrumentationTest {
         val fileSizeBytes: Long,
         val summary: String
     )
+
     data class FrameRateTestResult(
         val averageFps: Double,
         val targetFps: Double,
@@ -291,12 +314,14 @@ class RgbCamera4KRecordingInstrumentationTest {
         val withinTolerance: Boolean,
         val totalFrames: Int
     )
+
     data class BurstCaptureTestResult(
         val success: Boolean,
         val requestedCount: Int,
         val capturedCount: Int,
         val successRate: Double
     )
+
     data class DeviceCapabilities(
         val supportsBasicRecording: Boolean,
         val supports4K: Boolean,

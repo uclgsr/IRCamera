@@ -1,8 +1,10 @@
 package com.mpdc4gsr.gsr.tests
+
 import com.mpdc4gsr.gsr.util.TimeUtils
 import org.junit.Assert.*
 import org.junit.Ignore
 import org.junit.Test
+
 @Ignore("All tests disabled")
 class TimeUtilitiesTest {
     @Test
@@ -15,6 +17,7 @@ class TimeUtilitiesTest {
         assertEquals(testOffset, TimeUtils.getPcTimeOffset())
         TimeUtils.setPcTimeOffset(0L)
     }
+
     @Test
     fun testUtcTimestamp() {
         val offset = 1000L
@@ -28,6 +31,7 @@ class TimeUtilitiesTest {
         )
         TimeUtils.setPcTimeOffset(0L)
     }
+
     @Test
     fun testTimeConversion() {
         TimeUtils.initializeGroundTruthTiming()
@@ -46,6 +50,7 @@ class TimeUtilitiesTest {
         )
         TimeUtils.setPcTimeOffset(0L)
     }
+
     @Test
     fun testFormatTimestamp() {
         val timestamp = 1640995200000L
@@ -56,6 +61,7 @@ class TimeUtilitiesTest {
         )
         assertTrue("Formatted time should contain time separator", formatted.contains(":"))
     }
+
     @Test
     fun testGenerateSessionId() {
         val sessionId1 = TimeUtils.generateSessionId()
@@ -67,6 +73,7 @@ class TimeUtilitiesTest {
         assertTrue("Session ID should not be empty", sessionId1.length > 4)
         assertTrue("Session ID should contain underscore", sessionId1.contains("_"))
     }
+
     @Test
     fun testGroundTruthTiming() {
         TimeUtils.initializeGroundTruthTiming()
@@ -78,6 +85,7 @@ class TimeUtilitiesTest {
         val syncTime = TimeUtils.getSynchronizedTimestamp()
         assertTrue("Synchronized timestamp should be valid", syncTime > 0)
     }
+
     @Test
     fun testTimingMetadata() {
         TimeUtils.initializeGroundTruthTiming()

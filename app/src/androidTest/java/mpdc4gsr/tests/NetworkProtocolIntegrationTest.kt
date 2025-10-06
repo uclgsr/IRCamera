@@ -1,4 +1,5 @@
 package mpdc4gsr.tests
+
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -21,16 +22,19 @@ class NetworkProtocolIntegrationTest {
     private lateinit var networkServer: NetworkServer
     private lateinit var protocolHandler: ProtocolHandler
     private var mockPcSocket: Socket? = null
+
     companion object {
         // Use a different port for testing to avoid conflicts with production server (8081)
         // and to isolate test traffic. Production port is 8081.
         private const val TEST_PORT = 8182
         private const val CONNECTION_TIMEOUT_MS = 5000L
     }
+
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
     }
+
     @After
     fun cleanup() = runBlocking {
         mockPcSocket?.close()
@@ -39,6 +43,7 @@ class NetworkProtocolIntegrationTest {
             networkServer.stop()
         }
     }
+
     @Test
     fun testProtocolMessageParsing() {
         val testMessages = listOf(
@@ -56,6 +61,7 @@ class NetworkProtocolIntegrationTest {
             assertTrue("Should have type", parsed!!.type.isNotEmpty())
         }
     }
+
     @Test
     fun testProtocolMessageCreation() {
         val hello = Protocol.createHelloMessage("test_device", listOf("GSR", "RGB"))
@@ -80,6 +86,7 @@ class NetworkProtocolIntegrationTest {
         assertTrue("ERROR should contain code", error.contains("code=FAIL"))
         assertTrue("ERROR should contain msg", error.contains("msg=\"Test error\""))
     }
+
     @Test
     fun testProtocolHandlerWithMockCommands() = runBlocking {
         networkServer = NetworkServer(context, TEST_PORT)
@@ -97,6 +104,7 @@ class NetworkProtocolIntegrationTest {
                     data = mapOf("session_id" to sessionId)
                 )
             }
+
             override suspend fun onStopRecording(sessionId: String): ProtocolHandler.CommandResult {
                 stopRecordingCalled = true
                 return ProtocolHandler.CommandResult(
@@ -105,6 +113,7 @@ class NetworkProtocolIntegrationTest {
                     data = mapOf("session_id" to sessionId)
                 )
             }
+
             override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
                 syncRequestCalled = true
                 assertTrue("PC timestamp should be positive", pcTimestamp > 0)
@@ -134,6 +143,7 @@ class NetworkProtocolIntegrationTest {
         assertTrue("Should call handler", syncRequestCalled)
         assertTrue("Response should be SYNC_RESPONSE", syncResponse!!.contains("SYNC_RESPONSE"))
     }
+
     @Test
     fun testProtocolHandlerErrorCases() = runBlocking {
         networkServer = NetworkServer(context, TEST_PORT)
@@ -145,12 +155,14 @@ class NetworkProtocolIntegrationTest {
                     message = "Sensor not connected"
                 )
             }
+
             override suspend fun onStopRecording(sessionId: String): ProtocolHandler.CommandResult {
                 return ProtocolHandler.CommandResult(
                     success = false,
                     message = "Not recording"
                 )
             }
+
             override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
                 return ProtocolHandler.SyncResult(
                     success = false
@@ -168,6 +180,7 @@ class NetworkProtocolIntegrationTest {
         val stopResponse = protocolHandler.processMessage(stopMessage!!)
         assertTrue("Failed stop should return ERROR", stopResponse!!.contains("ERROR"))
     }
+
     @Test
     fun testMessageFormatCompatibility() {
         val pcFormattedMessages = listOf(
@@ -186,18 +199,21 @@ class NetworkProtocolIntegrationTest {
                         parsed.parameters.containsKey("session_id")
                     )
                 }
+
                 Protocol.MSG_STOP_RECORD -> {
                     assertTrue(
                         "STOP_RECORD should have session_id",
                         parsed.parameters.containsKey("session_id")
                     )
                 }
+
                 Protocol.MSG_SYNC_REQUEST -> {
                     assertTrue(
                         "SYNC_REQUEST should have t_pc",
                         parsed.parameters.containsKey("t_pc")
                     )
                 }
+
                 Protocol.MSG_SYNC_RESULT -> {
                     assertTrue(
                         "SYNC_RESULT should have t1",
@@ -223,6 +239,7 @@ class NetworkProtocolIntegrationTest {
             }
         }
     }
+
     @Test
     fun testParameterParsing() {
         val message = Protocol.parseMessage("START_RECORD session_id=test_session_123")
@@ -236,6 +253,7 @@ class NetworkProtocolIntegrationTest {
         assertEquals("FAIL", messageWithQuotes.parameters["code"])
         assertEquals("Sensor not found", messageWithQuotes.parameters["msg"])
     }
+
     @Test
     fun testArrayParameterParsing() {
         val message = Protocol.parseMessage("HELLO device_name=test sensors=[GSR,RGB,THERMAL]")
@@ -247,12 +265,14 @@ class NetworkProtocolIntegrationTest {
         assertTrue("Sensors should contain array brackets", sensors!!.contains("["))
         assertTrue("Sensors should contain array brackets", sensors.contains("]"))
     }
+
     @Test
     fun testProtocolVersionConstants() {
         assertEquals("Protocol version", "1.0", Protocol.PROTOCOL_VERSION)
         assertEquals("Default port", 8080, Protocol.DEFAULT_PORT)
         assertEquals("Server port", 8081, Protocol.DEFAULT_SERVER_PORT)
     }
+
     @Test
     fun testErrorCodes() {
         assertEquals("FAIL", Protocol.ERR_FAIL)

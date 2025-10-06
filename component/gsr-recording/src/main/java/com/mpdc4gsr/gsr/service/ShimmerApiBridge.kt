@@ -1,6 +1,8 @@
 package com.mpdc4gsr.gsr.service
+
 import android.util.Log
 import com.mpdc4gsr.gsr.model.GSRSample
+
 class ShimmerApiBridge private constructor() {
     companion object {
         private const val TAG = "ShimmerApiBridge"
@@ -11,20 +13,25 @@ class ShimmerApiBridge private constructor() {
             }
         }
     }
+
     private var isOfficialAPIAvailable: Boolean = false
     private var processingMode: String = "FALLBACK"
+
     init {
         initializeShimmerProcessing()
     }
+
     private fun initializeShimmerProcessing() {
         Log.i(TAG, "Using fallback processing - official Shimmer SDK handled by main app module")
         setupEnhancedFallback()
     }
+
     private fun setupEnhancedFallback() {
         isOfficialAPIAvailable = false
         processingMode = "ENHANCED_FALLBACK"
         Log.i(TAG, "Using enhanced fallback GSR processing with research-grade algorithms")
     }
+
     fun processGSRData(
         rawValue: Double,
         timestamp: Long,
@@ -36,6 +43,7 @@ class ShimmerApiBridge private constructor() {
             processWithEnhancedFallback(rawValue, timestamp, sessionId)
         }
     }
+
     private fun processWithOfficialAPI(
         rawValue: Double,
         timestamp: Long,
@@ -56,6 +64,7 @@ class ShimmerApiBridge private constructor() {
             processWithEnhancedFallback(rawValue, timestamp, sessionId)
         }
     }
+
     private fun processWithEnhancedFallback(
         rawValue: Double,
         timestamp: Long,
@@ -71,6 +80,7 @@ class ShimmerApiBridge private constructor() {
             sessionId = sessionId,
         )
     }
+
     private fun convertToConductanceOfficial(rawValue: Double): Double {
         return try {
             val resistance = convertToResistanceShimmer3(rawValue)
@@ -80,6 +90,7 @@ class ShimmerApiBridge private constructor() {
             0.0
         }
     }
+
     private fun convertToResistanceOfficial(conductance: Double): Double {
         return try {
             if (conductance > 0) 1000000.0 / conductance else Double.MAX_VALUE
@@ -88,6 +99,7 @@ class ShimmerApiBridge private constructor() {
             100.0
         }
     }
+
     private fun convertToResistanceShimmer3(rawValue: Double): Double {
         val vRef = 3.0
         val rRef = 40200.0
@@ -103,6 +115,7 @@ class ShimmerApiBridge private constructor() {
         val resistanceKohms = resistance / 1000.0
         return resistanceKohms.coerceIn(10.0, 4700.0)
     }
+
     fun isOfficialProcessingAvailable(): Boolean = isOfficialAPIAvailable
     fun getProcessingInfo(): String =
         when (processingMode) {
@@ -110,6 +123,7 @@ class ShimmerApiBridge private constructor() {
             "ENHANCED_FALLBACK" -> "Enhanced Fallback Processing (Research-grade algorithms)"
             else -> "Fallback GSR Processing"
         }
+
     fun getTechnicalSpecs(): Map<String, Any> =
         mapOf(
             "processing_mode" to processingMode,

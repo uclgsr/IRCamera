@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,10 +20,12 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+
 class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -122,6 +125,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
             }
         }
     }
+
     @Composable
     private fun ImagePickerPlusContent(
         modifier: Modifier = Modifier,
@@ -348,6 +352,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
             }
         }
     }
+
     @Composable
     private fun CaptureModeChip(
         label: String,

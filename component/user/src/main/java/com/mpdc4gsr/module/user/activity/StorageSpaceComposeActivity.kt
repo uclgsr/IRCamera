@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.user.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -21,10 +22,12 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.StorageSpaceViewModel
 import com.mpdc4gsr.libunified.R as RCore
+
 class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>() {
     override fun createViewModel(): StorageSpaceViewModel {
         return viewModels<StorageSpaceViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: StorageSpaceViewModel) {
@@ -212,6 +215,7 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
         }
     }
 }
+
 @Composable
 private fun StorageItem(
     icon: ImageVector,

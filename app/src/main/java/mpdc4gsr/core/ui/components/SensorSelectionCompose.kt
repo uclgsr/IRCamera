@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.components
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+
 enum class SensorType(
     val displayName: String,
     val description: String,
@@ -35,6 +37,7 @@ enum class SensorType(
     TEMPERATURE("Temperature", "Ambient temperature sensor", Icons.Default.DeviceThermostat, true),
     HUMIDITY("Humidity", "Environmental humidity sensor", Icons.Default.Water, false)
 }
+
 data class SensorAvailability(
     val sensorType: SensorType,
     val isAvailable: Boolean,
@@ -43,6 +46,7 @@ data class SensorAvailability(
     val batteryImpact: String = "Low",
     val dataRate: String = "Unknown"
 )
+
 @Composable
 fun SensorSelectionDialog(
     availableSensors: List<SensorAvailability>,
@@ -137,6 +141,7 @@ fun SensorSelectionDialog(
         }
     }
 }
+
 @Composable
 private fun SensorSelectionHeader(
     title: String,
@@ -175,6 +180,7 @@ private fun SensorSelectionHeader(
         )
     }
 }
+
 @Composable
 private fun SensorSelectionItem(
     sensorAvailability: SensorAvailability,
@@ -199,6 +205,7 @@ private fun SensorSelectionItem(
                 !sensorAvailability.isAvailable -> MaterialTheme.colorScheme.surfaceVariant.copy(
                     alpha = 0.5f
                 )
+
                 isSelected -> MaterialTheme.colorScheme.primaryContainer
                 else -> MaterialTheme.colorScheme.surface
             }
@@ -222,6 +229,7 @@ private fun SensorSelectionItem(
                     !sensorAvailability.isAvailable -> MaterialTheme.colorScheme.onSurfaceVariant.copy(
                         alpha = 0.5f
                     )
+
                     isSelected -> MaterialTheme.colorScheme.primary
                     else -> MaterialTheme.colorScheme.onSurface
                 }
@@ -299,6 +307,7 @@ private fun SensorSelectionItem(
         }
     }
 }
+
 @Composable
 private fun BatteryImpactWarning(
     selectedSensors: Set<SensorType>,
@@ -335,6 +344,7 @@ private fun BatteryImpactWarning(
         }
     }
 }
+
 // Sample data generator - returns unavailable sensors by default
 fun getSampleSensorAvailability(): List<SensorAvailability> {
     return listOf(
@@ -420,6 +430,7 @@ fun getSampleSensorAvailability(): List<SensorAvailability> {
         )
     )
 }
+
 // Demo usage
 @Composable
 fun SensorSelectionDemo() {

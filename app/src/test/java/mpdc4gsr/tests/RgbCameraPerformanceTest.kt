@@ -1,4 +1,5 @@
 package mpdc4gsr.tests
+
 import android.content.Context
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
@@ -17,10 +18,12 @@ class RgbCameraPerformanceTest {
     private lateinit var mockContext: Context
     private lateinit var mockCameraManager: CameraManager
     private lateinit var mockCameraCharacteristics: CameraCharacteristics
+
     // Samsung Galaxy S22 camera specifications
     private val target4KResolution = Size(3840, 2160)
     private val targetFrameRate = 30
     private val expectedBitrate = 20_000_000 // 20 Mbps for 4K
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
@@ -30,6 +33,7 @@ class RgbCameraPerformanceTest {
         every { mockContext.getSystemService(Context.CAMERA_SERVICE) } returns mockCameraManager
         every { mockCameraManager.cameraIdList } returns arrayOf("0", "1") // Back and front cameras
     }
+
     @Test
     fun `should validate Samsung Galaxy S22 4K recording capabilities`() {
         // Test 4K (UHD) recording support on Samsung Galaxy S22
@@ -55,6 +59,7 @@ class RgbCameraPerformanceTest {
             0.01f
         )
     }
+
     @Test
     fun `should validate frame rate capabilities for 4K recording`() = runTest {
         // Test frame rate support for 4K recording on Galaxy S22
@@ -84,6 +89,7 @@ class RgbCameraPerformanceTest {
             kotlin.math.abs(avgInterval - frameIntervalNs) < 1_000_000 // 1ms tolerance
         )
     }
+
     @Test
     fun `should calculate expected file sizes for 4K recording`() {
         // Test file size calculations for 4K video on Galaxy S22
@@ -104,6 +110,7 @@ class RgbCameraPerformanceTest {
             maxRecordingMinutes >= 180
         )
     }
+
     @Test
     fun `should monitor thermal performance during extended recording`() = runTest {
         // Test thermal management during extended 4K recording
@@ -140,6 +147,7 @@ class RgbCameraPerformanceTest {
             deviceTemperature < thermalThrottleThreshold
         )
     }
+
     @Test
     fun `should validate simultaneous video and frame capture`() = runTest {
         // Test parallel video recording and JPEG frame extraction
@@ -167,6 +175,7 @@ class RgbCameraPerformanceTest {
             effectiveVideoQuality > 0.9f
         )
     }
+
     @Test
     fun `should handle camera permission and initialization sequence`() {
         // Test proper camera permission handling and initialization
@@ -195,6 +204,7 @@ class RgbCameraPerformanceTest {
             assertFalse("Preview should not start without permission", previewStarted)
         }
     }
+
     @Test
     fun `should validate camera resource management`() = runTest {
         // Test proper camera resource cleanup and management
@@ -225,6 +235,7 @@ class RgbCameraPerformanceTest {
         // 4. Camera device is closed
         // 5. Background threads are terminated
     }
+
     @Test
     fun `should validate video encoding parameters for Galaxy S22`() {
         // Test video encoding configuration for Samsung Galaxy S22
@@ -253,6 +264,7 @@ class RgbCameraPerformanceTest {
             bitsPerPixel >= 0.1f && bitsPerPixel <= 1.0f
         )
     }
+
     @Test
     fun `should measure camera startup and capture latency`() = runTest {
         // Test camera startup time and capture latency measurements

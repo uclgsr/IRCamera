@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -15,25 +16,30 @@ class CommandServer(
     companion object {
         private const val TAG = "CommandServer"
     }
+
     // Data classes and enums - defined first to avoid forward reference issues
     sealed class CommandEvent {
         data class StartRecord(val sessionId: String, val configuration: JSONObject) :
             CommandEvent()
+
         object StopRecord : CommandEvent()
         data class SyncRequest(val pcAddress: String) : CommandEvent()
         object StatusRequest : CommandEvent()
     }
+
     enum class ServerStatus {
         STOPPED,
         STARTING,
         RUNNING,
         ERROR
     }
+
     enum class ConnectionStatus {
         DISCONNECTED,
         CONNECTED,
         ERROR
     }
+
     private val serverScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val _serverStatus = MutableStateFlow(ServerStatus.STOPPED)
     val serverStatus: StateFlow<ServerStatus> = _serverStatus.asStateFlow()
@@ -44,6 +50,7 @@ class CommandServer(
     private var networkServer: NetworkServer? = null
     private var protocolHandler: ProtocolHandler? = null
     private var timeSyncManager: TimeSyncManager? = null
+
     // Command callback interface for RecordingController integration
     interface CommandCallback {
         suspend fun onStartRecording(sessionId: String, configuration: JSONObject): Boolean
@@ -51,6 +58,7 @@ class CommandServer(
         suspend fun onSyncRequest(pcAddress: String): Boolean
         suspend fun onStatusRequest(): JSONObject
     }
+
     private var commandCallback: CommandCallback? = null
 
     suspend fun start(callback: CommandCallback, syncManager: TimeSyncManager) {
@@ -165,6 +173,7 @@ class CommandServer(
                     )
                 }
             }
+
             override suspend fun onStopRecording(sessionId: String): ProtocolHandler.CommandResult {
                 AppLogger.i(TAG, "Stopping recording for session: $sessionId")
                 return try {
@@ -187,6 +196,7 @@ class CommandServer(
                     )
                 }
             }
+
             override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
                 AppLogger.i(TAG, "Processing sync request from PC")
                 return try {

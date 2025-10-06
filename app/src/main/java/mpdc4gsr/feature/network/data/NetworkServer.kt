@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.content.Context
 import android.net.TrafficStats
 import android.os.Process
@@ -13,6 +14,7 @@ import java.net.ServerSocket
 import java.net.Socket
 import java.net.SocketException
 import java.util.concurrent.atomic.AtomicBoolean
+
 class NetworkServer(
     private val context: Context,
     private val port: Int = Protocol.DEFAULT_SERVER_PORT,
@@ -20,6 +22,7 @@ class NetworkServer(
     companion object {
         private const val TAG = "NetworkServer"
     }
+
     private var serverSocket: ServerSocket? = null
     private var clientSocket: Socket? = null
     private var outputWriter: BufferedWriter? = null
@@ -34,6 +37,7 @@ class NetworkServer(
     val connectionStateFlow: StateFlow<Boolean> = _connectionStateFlow.asStateFlow()
     private var serverJob: Job? = null
     private var messageListenerJob: Job? = null
+
     // Device information for HELLO message
     private val deviceId = "android_${android.os.Build.MODEL.replace(" ", "_")}"
     private val supportedSensors = listOf("RGB", "THERMAL", "GSR")
@@ -68,6 +72,7 @@ class NetworkServer(
             }
         }
     }
+
     suspend fun stop() {
         withContext(Dispatchers.IO) {
             try {
@@ -95,6 +100,7 @@ class NetworkServer(
             }
         }
     }
+
     suspend fun sendMessage(message: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -113,6 +119,7 @@ class NetworkServer(
             }
         }
     }
+
     suspend fun sendBinaryData(header: String, data: ByteArray): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -136,6 +143,7 @@ class NetworkServer(
             }
         }
     }
+
     private suspend fun acceptConnections() {
         while (isRunning.get() && serverJob?.isCancelled != true) {
             try {
@@ -173,6 +181,7 @@ class NetworkServer(
             }
         }
     }
+
     private suspend fun listenForMessages() {
         while (isClientConnected.get() && isRunning.get() && messageListenerJob?.isCancelled != true) {
             try {
@@ -197,6 +206,7 @@ class NetworkServer(
         }
         disconnectClient()
     }
+
     private suspend fun receiveMessage(): String? {
         return withContext(Dispatchers.IO) {
             try {
@@ -212,6 +222,7 @@ class NetworkServer(
             }
         }
     }
+
     private fun disconnectClient() {
         if (isClientConnected.get()) {
             AppLogger.i(TAG, "Disconnecting PC Controller client")
@@ -233,6 +244,7 @@ class NetworkServer(
             clientSocket = null
         }
     }
+
     fun isRunning(): Boolean = isRunning.get()
     fun isClientConnected(): Boolean = isClientConnected.get()
     suspend fun cleanup() {

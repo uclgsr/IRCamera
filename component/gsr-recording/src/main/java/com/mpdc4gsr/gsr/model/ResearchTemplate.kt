@@ -1,4 +1,5 @@
 package com.mpdc4gsr.gsr.model
+
 data class ResearchTemplate(
     val id: String,
     val name: String,
@@ -21,17 +22,20 @@ data class ResearchTemplate(
         BEHAVIORAL_ANALYSIS,
         CUSTOM,
     }
+
     enum class SensorType {
         GSR,
         THERMAL_CAMERA,
         RGB_CAMERA,
     }
+
     enum class VideoResolution(val width: Int, val height: Int) {
         SD(720, 480),
         HD(1280, 720),
         FULL_HD(1920, 1080),
         UHD_4K(3840, 2160),
     }
+
     companion object {
         val PREDEFINED_TEMPLATES =
             listOf(
@@ -216,12 +220,15 @@ data class ResearchTemplate(
                     icon = "",
                 ),
             )
+
         fun getTemplatesByCategory(category: TemplateCategory): List<ResearchTemplate> {
             return PREDEFINED_TEMPLATES.filter { it.category == category }
         }
+
         fun getTemplateById(id: String): ResearchTemplate? {
             return PREDEFINED_TEMPLATES.find { it.id == id }
         }
+
         fun getTemplatesWithSensor(sensorType: SensorType): List<ResearchTemplate> {
             return PREDEFINED_TEMPLATES.filter { it.sensors.contains(sensorType) }
         }

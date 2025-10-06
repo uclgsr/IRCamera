@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -23,15 +24,18 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+
 class ThermalMonitoringComposeActivity : BaseComposeActivity<BaseViewModel>() {
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, ThermalMonitoringComposeActivity::class.java))
         }
     }
+
     override fun createViewModel(): BaseViewModel {
         return viewModels<BaseViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: BaseViewModel) {
@@ -102,6 +106,7 @@ class ThermalMonitoringComposeActivity : BaseComposeActivity<BaseViewModel>() {
         }
     }
 }
+
 @Composable
 private fun MonitoringContent(
     selectedTab: Int,
@@ -113,11 +118,13 @@ private fun MonitoringContent(
             isMonitoring = isMonitoring,
             modifier = modifier
         )
+
         1 -> ThermalAnalyticsTab(modifier = modifier)
         2 -> AlertsHistoryTab(modifier = modifier)
         3 -> MonitoringSettingsTab(modifier = modifier)
     }
 }
+
 @Composable
 private fun RealTimeMonitoringTab(
     isMonitoring: Boolean,
@@ -180,6 +187,7 @@ private fun RealTimeMonitoringTab(
         }
     }
 }
+
 @Composable
 private fun MonitoringStatusCard(
     isMonitoring: Boolean,
@@ -225,6 +233,7 @@ private fun MonitoringStatusCard(
         }
     }
 }
+
 @Composable
 private fun TemperatureZoneCard(
     zone: TemperatureZone,
@@ -284,6 +293,7 @@ private fun TemperatureZoneCard(
         }
     }
 }
+
 @Composable
 private fun AlertCard(
     alert: ThermalAlert,
@@ -333,6 +343,7 @@ private fun AlertCard(
         }
     }
 }
+
 @Composable
 private fun ThermalAnalyticsTab(
     modifier: Modifier = Modifier
@@ -362,6 +373,7 @@ private fun ThermalAnalyticsTab(
         )
     }
 }
+
 @Composable
 private fun AlertsHistoryTab(
     modifier: Modifier = Modifier
@@ -387,6 +399,7 @@ private fun AlertsHistoryTab(
         }
     }
 }
+
 @Composable
 private fun MonitoringSettingsTab(
     modifier: Modifier = Modifier
@@ -416,6 +429,7 @@ private fun MonitoringSettingsTab(
         )
     }
 }
+
 @Composable
 private fun MonitoringNavigationBar(
     selectedTab: Int,
@@ -439,6 +453,7 @@ private fun MonitoringNavigationBar(
         }
     }
 }
+
 @Composable
 private fun AlertConfigurationDialog(
     onDismiss: () -> Unit,
@@ -513,35 +528,41 @@ private fun AlertConfigurationDialog(
         }
     )
 }
+
 private fun getZoneStatusColor(status: String) = when (status) {
     "normal" -> Color(0xFF4CAF50)
     "warning" -> Color(0xFFFF9800)
     "critical" -> Color(0xFFE53E3E)
     else -> Color(0xFF9E9E9E)
 }
+
 private fun getTemperatureColor(current: Float, threshold: Float) = when {
     current > threshold * 1.1f -> Color(0xFFE53E3E)
     current > threshold * 0.9f -> Color(0xFFFF9800)
     else -> Color(0xFF4CAF50)
 }
+
 data class TemperatureZone(
     val name: String,
     val currentTemp: Float,
     val threshold: Float,
     val status: String
 )
+
 data class ThermalAlert(
     val message: String,
     val zone: String,
     val timestamp: String,
     val severity: String
 )
+
 private fun getMockTemperatureZones() = listOf(
     TemperatureZone("Zone A - Engine Bay", 76.5f, 80.0f, "warning"),
     TemperatureZone("Zone B - Electronics", 42.3f, 60.0f, "normal"),
     TemperatureZone("Zone C - Exhaust", 95.2f, 90.0f, "critical"),
     TemperatureZone("Zone D - Ambient", 24.8f, 40.0f, "normal")
 )
+
 private fun getMockAlerts() = listOf(
     ThermalAlert("Temperature exceeded threshold", "Zone C - Exhaust", "2 min ago", "high"),
     ThermalAlert("Warning temperature detected", "Zone A - Engine Bay", "5 min ago", "medium"),

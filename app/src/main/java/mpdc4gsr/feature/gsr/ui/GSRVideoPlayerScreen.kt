@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import android.widget.VideoView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -108,6 +109,7 @@ fun GSRVideoPlayerScreen(
         }
     }
 }
+
 @Composable
 private fun GSRDataOverlay(
     modifier: Modifier = Modifier
@@ -154,6 +156,7 @@ private fun GSRDataOverlay(
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun VideoControlsCard(
@@ -253,6 +256,7 @@ private fun VideoControlsCard(
         }
     }
 }
+
 @Composable
 private fun SessionDetailsCard(sessionId: String) {
     Card(
@@ -289,6 +293,7 @@ private fun SessionDetailsCard(sessionId: String) {
         }
     }
 }
+
 @Composable
 private fun GSRMetricsCard() {
     Card(
@@ -316,6 +321,7 @@ private fun GSRMetricsCard() {
         }
     }
 }
+
 @Composable
 private fun MetricItem(
     label: String,
@@ -338,11 +344,13 @@ private fun MetricItem(
         )
     }
 }
+
 private fun formatTime(seconds: Int): String {
     val minutes = seconds / 60
     val remainingSeconds = seconds % 60
     return String.format("%d:%02d", minutes, remainingSeconds)
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun GSRVideoPlayerScreenPreview() {

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,6 +25,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.components.SensorStatus
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 enum class TestSensorType(
     val displayName: String,
     val icon: ImageVector,
@@ -36,6 +38,7 @@ enum class TestSensorType(
     NETWORK("Network", Icons.Default.NetworkCheck, "network_device"),
     STORAGE("Storage", Icons.Default.Storage, "storage_device")
 }
+
 data class SensorTestStatus(
     val sensorType: TestSensorType,
     val status: SensorStatus,
@@ -43,6 +46,7 @@ data class SensorTestStatus(
     val lastUpdate: String = "Never",
     val dataRate: String = "0 KB/s"
 )
+
 class SensorDashboardTestViewModel : AppBaseViewModel() {
     private val _sensorStatuses = mutableStateOf(
         TestSensorType.values().map { type ->
@@ -92,6 +96,7 @@ class SensorDashboardTestViewModel : AppBaseViewModel() {
                             }
                         )
                     }
+
                     1 -> {
                         // Warning state
                         Triple(
@@ -100,6 +105,7 @@ class SensorDashboardTestViewModel : AppBaseViewModel() {
                             "Reduced rate"
                         )
                     }
+
                     2 -> {
                         // Error state
                         Triple(
@@ -108,6 +114,7 @@ class SensorDashboardTestViewModel : AppBaseViewModel() {
                             "0 KB/s"
                         )
                     }
+
                     else -> {
                         // Disconnected
                         Triple(
@@ -131,6 +138,7 @@ class SensorDashboardTestViewModel : AppBaseViewModel() {
             _isRunningTest.value = false
         }
     }
+
     fun testIndividualSensor(sensorType: TestSensorType) {
         launchWithErrorHandling {
             _testMessage.value = "Testing ${sensorType.displayName}..."
@@ -171,6 +179,7 @@ class SensorDashboardTestViewModel : AppBaseViewModel() {
             }
         }
     }
+
     private fun updateSensorStatus(
         sensorType: TestSensorType,
         status: SensorStatus,
@@ -189,6 +198,7 @@ class SensorDashboardTestViewModel : AppBaseViewModel() {
             } else sensorStatus
         }
     }
+
     fun resetAllSensors() {
         _sensorStatuses.value = TestSensorType.values().map { type ->
             SensorTestStatus(
@@ -200,9 +210,11 @@ class SensorDashboardTestViewModel : AppBaseViewModel() {
         _testMessage.value = "All sensors reset to initial state"
     }
 }
+
 class SensorDashboardTestComposeActivity : BaseComposeActivity<SensorDashboardTestViewModel>() {
     override fun createViewModel(): SensorDashboardTestViewModel =
         viewModels<SensorDashboardTestViewModel>().value
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: SensorDashboardTestViewModel) {
@@ -387,6 +399,7 @@ class SensorDashboardTestComposeActivity : BaseComposeActivity<SensorDashboardTe
         }
     }
 }
+
 @Composable
 private fun SensorTestCard(
     sensorStatus: SensorTestStatus,

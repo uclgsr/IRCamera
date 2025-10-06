@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -444,6 +445,7 @@ data class Activity(
     val timestamp: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector
 )
+
 @Preview(showBackground = true)
 @Composable
 private fun ProfileScreenPreview() {

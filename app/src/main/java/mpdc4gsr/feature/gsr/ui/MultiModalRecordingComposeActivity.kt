@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -29,12 +30,14 @@ class MultiModalRecordingComposeActivity : BaseComposeActivity<MultiModalRecordi
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, MultiModalRecordingComposeActivity::class.java))
         }
+
         fun startWithTemplate(context: Context, templateId: String) {
             val intent = Intent(context, MultiModalRecordingComposeActivity::class.java).apply {
                 putExtra("template_id", templateId)
             }
             context.startActivity(intent)
         }
+
         fun startRecording(context: Context, sessionInfo: SessionInfo) {
             val intent = Intent(context, MultiModalRecordingComposeActivity::class.java).apply {
                 putExtra("session_info", sessionInfo)
@@ -43,9 +46,11 @@ class MultiModalRecordingComposeActivity : BaseComposeActivity<MultiModalRecordi
             context.startActivity(intent)
         }
     }
+
     override fun createViewModel(): MultiModalRecordingViewModel {
         return viewModels<MultiModalRecordingViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: MultiModalRecordingViewModel) {
@@ -111,6 +116,7 @@ class MultiModalRecordingComposeActivity : BaseComposeActivity<MultiModalRecordi
         }
     }
 }
+
 @Composable
 private fun MultiModalRecordingContent(
     isRecording: Boolean,
@@ -186,6 +192,7 @@ private fun MultiModalRecordingContent(
         }
     }
 }
+
 @Composable
 private fun RecordingStatusCard(
     isRecording: Boolean,
@@ -232,6 +239,7 @@ private fun RecordingStatusCard(
         }
     }
 }
+
 @Composable
 private fun SensorCard(
     title: String,
@@ -305,6 +313,7 @@ private fun SensorCard(
         }
     }
 }
+
 @Composable
 private fun RecordingControls(
     isRecording: Boolean,
@@ -360,6 +369,7 @@ private fun RecordingControls(
         }
     }
 }
+
 @Composable
 private fun LiveDataPreview(
     selectedSensors: Set<String>,
@@ -389,6 +399,7 @@ private fun LiveDataPreview(
                             modifier = Modifier.padding(bottom = 4.dp)
                         )
                     }
+
                     "thermal" -> {
                         Text(
                             text = "Thermal: 36.8°C (Body temp detected)",
@@ -396,6 +407,7 @@ private fun LiveDataPreview(
                             modifier = Modifier.padding(bottom = 4.dp)
                         )
                     }
+
                     "rgb" -> {
                         Text(
                             text = "RGB: 1920x1080 @ 30fps",
@@ -408,6 +420,7 @@ private fun LiveDataPreview(
         }
     }
 }
+
 private fun formatDuration(seconds: Long): String {
     val minutes = seconds / 60
     val remainingSeconds = seconds % 60

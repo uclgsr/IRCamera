@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.graphics.Bitmap
 import android.util.Base64
 import android.util.Log
@@ -9,6 +10,7 @@ import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+
 class PreviewStreamer(
     private val networkServer: NetworkServer
 ) {
@@ -20,6 +22,7 @@ class PreviewStreamer(
         private const val DEFAULT_PREVIEW_HEIGHT = 240
         private const val DEFAULT_JPEG_QUALITY = 70
     }
+
     private val isStreaming = AtomicBoolean(false)
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var frameStreamingJob: Job? = null
@@ -52,6 +55,7 @@ class PreviewStreamer(
         }
         return true
     }
+
     suspend fun stopStreaming() {
         if (!isStreaming.get()) {
             return
@@ -63,18 +67,23 @@ class PreviewStreamer(
         frameStreamingJob = null
         sensorStreamingJob = null
     }
+
     fun updateRgbFrame(bitmap: Bitmap?) {
         currentRgbFrame.set(bitmap)
     }
+
     fun updateThermalFrame(bitmap: Bitmap?) {
         currentThermalFrame.set(bitmap)
     }
+
     fun updateGsrValue(gsrValue: Float) {
         currentGsrValue.set(gsrValue)
     }
+
     fun updateRecordingStatus(status: String) {
         currentRecordingStatus.set(status)
     }
+
     fun configure(
         frameIntervalMs: Long = DEFAULT_FRAME_INTERVAL_MS,
         sensorIntervalMs: Long = DEFAULT_SENSOR_INTERVAL_MS,
@@ -92,6 +101,7 @@ class PreviewStreamer(
             "Preview streaming configured: ${frameIntervalMs}ms frames, ${sensorIntervalMs}ms sensors, ${previewWidth}x${previewHeight}@${jpegQuality}%"
         )
     }
+
     private suspend fun streamFrames() {
         AppLogger.i(TAG, "Frame streaming started")
         while (currentCoroutineContext().isActive && isStreaming.get()) {
@@ -110,6 +120,7 @@ class PreviewStreamer(
         }
         AppLogger.i(TAG, "Frame streaming stopped")
     }
+
     private suspend fun streamSensorData() {
         AppLogger.i(TAG, "Sensor data streaming started")
         while (currentCoroutineContext().isActive && isStreaming.get()) {
@@ -136,6 +147,7 @@ class PreviewStreamer(
         }
         AppLogger.i(TAG, "Sensor data streaming stopped")
     }
+
     private suspend fun streamFrame(frameType: String, bitmap: Bitmap) {
         try {
             val scaledBitmap = BitmapUtils.scaleWithWH(
@@ -172,6 +184,7 @@ class PreviewStreamer(
             AppLogger.e(TAG, "Error streaming $frameType frame", e)
         }
     }
+
     fun isStreaming(): Boolean = isStreaming.get()
     fun cleanup() {
         scope.launch {

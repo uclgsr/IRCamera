@@ -1,4 +1,5 @@
 package mpdc4gsr.core
+
 import android.app.Activity
 import android.app.Application
 import android.os.Build
@@ -43,9 +44,11 @@ class App : BaseApplication() {
             }
         }
     }
+
     override fun getSoftWareCode(): String = BuildConfig.SOFT_CODE
     override fun isDomestic(): Boolean =
         false
+
     val activityNameList: MutableList<String> = mutableListOf()
     override fun onCreate() {
         super.onCreate()
@@ -90,6 +93,7 @@ class App : BaseApplication() {
                         activityNameList.add(activity.javaClass.getSimpleName())
                     }
                 }
+
                 override fun onActivityStarted(activity: Activity) {}
                 override fun onActivityResumed(activity: Activity) {}
                 override fun onActivityPaused(activity: Activity) {}
@@ -99,6 +103,7 @@ class App : BaseApplication() {
                     outState: Bundle,
                 ) {
                 }
+
                 override fun onActivityDestroyed(activity: Activity) {
                     activityNameList.remove(activity.javaClass.getSimpleName())
                 }
@@ -109,6 +114,7 @@ class App : BaseApplication() {
         // Start RecordingService to enable PC networking and control interface
         startRecordingService()
     }
+
     override fun initWebSocket() {
         try {
             AppLogger.i("App", "initWebSocket() - Initializing WebSocket connection")
@@ -120,6 +126,7 @@ class App : BaseApplication() {
             // Continue even if WebSocket initialization fails to avoid breaking app startup
         }
     }
+
     private fun initializeAppLogger() {
         try {
             AppLogger.initialize(
@@ -136,6 +143,7 @@ class App : BaseApplication() {
             android.util.Log.e("App", "Failed to initialize AppLogger: ${e.message}", e)
         }
     }
+
     private fun setupGlobalExceptionHandler() {
         val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
@@ -148,6 +156,7 @@ class App : BaseApplication() {
             defaultHandler?.uncaughtException(thread, throwable)
         }
     }
+
     private fun startRecordingService() {
         try {
             AppLogger.i("App", "Starting RecordingService for PC networking and control interface")
@@ -157,6 +166,7 @@ class App : BaseApplication() {
             AppLogger.e("App", "Failed to start RecordingService - PC networking will not be available", e)
         }
     }
+
     private fun enableStrictMode() {
         AppLogger.d("App", "Enabling StrictMode for debug build")
         StrictMode.setThreadPolicy(

@@ -1,9 +1,11 @@
 package com.mpdc4gsr.module.thermalunified.chart
+
 import android.annotation.SuppressLint
 import com.mpdc4gsr.libunified.ui.components.AxisBase
 import com.mpdc4gsr.libunified.ui.formatter.IndexAxisValueFormatter
 import java.text.SimpleDateFormat
 import java.util.*
+
 class MyValueFormatter(private val startTime: Long, private val type: Int = 1) :
     IndexAxisValueFormatter() {
     companion object {
@@ -12,6 +14,7 @@ class MyValueFormatter(private val startTime: Long, private val type: Int = 1) :
         const val TYPE_TIME_HOUR = 3
         const val TYPE_TIME_DAY = 4
     }
+
     @Suppress("OVERRIDE_DEPRECATION")
     override fun getFormattedValue(
         value: Float,
@@ -20,6 +23,7 @@ class MyValueFormatter(private val startTime: Long, private val type: Int = 1) :
         val time = startTime + value.toLong()
         return showDateSecond(time)
     }
+
     @SuppressLint("SimpleDateFormat")
     fun showDateSecond(time: Long): String {
         val date = Date(time)

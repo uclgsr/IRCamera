@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.presentation
+
 import android.content.Context
 import android.content.Intent
 import android.os.Environment
@@ -13,18 +14,21 @@ import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.*
+
 enum class ExportFormat(val displayName: String) {
     CSV("CSV (Comma Separated Values)"),
     JSON("JSON (JavaScript Object Notation)"),
     XML("XML (eXtensible Markup Language)"),
     EXCEL("Excel Spreadsheet")
 }
+
 enum class ExportDestination(val displayName: String) {
     DOWNLOADS("Downloads Folder"),
     EXTERNAL_STORAGE("External Storage"),
     SHARE("Share with Other Apps"),
     EMAIL("Email Export")
 }
+
 data class GSRSession(
     val sessionId: String,
     val name: String,
@@ -45,6 +49,7 @@ class SessionExportViewModel(
     context: Context
 ) : AppBaseViewModel() {
     private val application: Context = context.applicationContext
+
     data class SessionExportState(
         val isLoading: Boolean = false,
         val error: String? = null,
@@ -56,8 +61,10 @@ class SessionExportViewModel(
         val exportProgress: Float = 0f,
         val currentExportFile: String? = null
     )
+
     private val _exportState = MutableStateFlow(SessionExportState())
     val exportState: StateFlow<SessionExportState> = _exportState.asStateFlow()
+
     init {
         loadSessions()
     }
@@ -286,6 +293,7 @@ class SessionExportViewModel(
                         error = "Export completed! Files saved to Downloads folder."
                     )
                 }
+
                 ExportDestination.EXTERNAL_STORAGE -> {
                     // Files are already in external storage
                     _exportState.value = _exportState.value.copy(
@@ -293,9 +301,11 @@ class SessionExportViewModel(
                         error = "Export completed! Files saved to external storage."
                     )
                 }
+
                 ExportDestination.SHARE -> {
                     shareFiles(exportFiles)
                 }
+
                 ExportDestination.EMAIL -> {
                     emailFiles(exportFiles)
                 }
@@ -316,90 +326,98 @@ class SessionExportViewModel(
             }
             val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
                 type = "*
-    private fun emailFiles(files: List<File>) {
-        try {
-            val context = application.applicationContext
-            val uris = files.map { file ->
-                FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+                private fun emailFiles(files: List<File>) {
+                    try {
+                        val context = application.applicationContext
+                        val uris = files.map { file ->
+                            FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+                        }
+                        val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
+                            type = "message/rfc822"
+                            putExtra(Intent.EXTRA_SUBJECT, "GSR Session Export")
+                            putExtra(Intent.EXTRA_TEXT, "Attached are the exported GSR session files.")
+                            putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
+                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
+                        context.startActivity(Intent.createChooser(intent, "Email GSR Export"))
+                        _exportState.value = _exportState.value.copy(
+                            isExporting = false,
+                            error = "Export completed! Opening email client..."
+                        )
+                    } catch (e: Exception) {
+                        _exportState.value = _exportState.value.copy(
+                            isExporting = false,
+                            error = "Export completed but failed to email: ${e.message}"
+                        )
+                    }
+                }
+
+                // Utility functions
+                private fun getExportDirectory(): File {
+                    return when (_exportState.value.exportDestination) {
+                        ExportDestination.DOWNLOADS -> File(
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                            "GSR_Exports"
+                        )
+
+                        ExportDestination.EXTERNAL_STORAGE -> File(
+                            Environment.getExternalStorageDirectory(),
+                            "IRCamera/GSR_Exports"
+                        )
+
+                        else -> File(application.getExternalFilesDir(null), "exports")
+                    }
+                }
+
+                private fun calculateSessionDuration(file: File): String {
+                    // Simple duration calculation based on file timestamps
+                    // In a real implementation, you'd parse the actual session data
+                    val durationMinutes = (file.length() / 1000).coerceAtMost(999)
+                    return "${durationMinutes}min"
+                }
+
+                private fun countDataPoints(file: File): Int {
+                    return try {
+                        file.readLines().count { line ->
+                            line.isNotBlank() && !line.startsWith("#")
+                        }
+                    } catch (e: Exception) {
+                        0
+                    }
+                }
+
+                private fun convertDataLineToCSV(line: String): String {
+                    // Convert data line to CSV format
+                    // This is a simplified conversion - adjust based on actual data format
+                    return line.replace("\t", ",")
+                }
+
+                private fun convertDataLineToJSON(line: String): String {
+                    // Convert data line to JSON format
+                    val parts = line.split("\t", ",")
+                    return if (parts.size >= 2) {
+                        "{ \"timestamp\": \"${parts[0]}\", \"value\": ${parts[1]} }"
+                    } else {
+                        "{ \"data\": \"$line\" }"
+                    }
+                }
+
+                private fun convertDataLineToXML(line: String): String {
+                    // Convert data line to XML format
+                    val parts = line.split("\t", ",")
+                    return if (parts.size >= 2) {
+                        "<dataPoint timestamp=\"${parts[0]}\" value=\"${parts[1]}\" />"
+                    } else {
+                        "<dataPoint data=\"$line\" />"
+                    }
+                }
             }
-            val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
-                type = "message/rfc822"
-                putExtra(Intent.EXTRA_SUBJECT, "GSR Session Export")
-                putExtra(Intent.EXTRA_TEXT, "Attached are the exported GSR session files.")
-                putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            context.startActivity(Intent.createChooser(intent, "Email GSR Export"))
-            _exportState.value = _exportState.value.copy(
-                isExporting = false,
-                error = "Export completed! Opening email client..."
-            )
-        } catch (e: Exception) {
-            _exportState.value = _exportState.value.copy(
-                isExporting = false,
-                error = "Export completed but failed to email: ${e.message}"
-            )
-        }
-    }
-    // Utility functions
-    private fun getExportDirectory(): File {
-        return when (_exportState.value.exportDestination) {
-            ExportDestination.DOWNLOADS -> File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                "GSR_Exports"
-            )
-            ExportDestination.EXTERNAL_STORAGE -> File(
-                Environment.getExternalStorageDirectory(),
-                "IRCamera/GSR_Exports"
-            )
-            else -> File(application.getExternalFilesDir(null), "exports")
-        }
-    }
-    private fun calculateSessionDuration(file: File): String {
-        // Simple duration calculation based on file timestamps
-        // In a real implementation, you'd parse the actual session data
-        val durationMinutes = (file.length() / 1000).coerceAtMost(999)
-        return "${durationMinutes}min"
-    }
-    private fun countDataPoints(file: File): Int {
-        return try {
-            file.readLines().count { line ->
-                line.isNotBlank() && !line.startsWith("#")
-            }
-        } catch (e: Exception) {
-            0
-        }
-    }
-    private fun convertDataLineToCSV(line: String): String {
-        // Convert data line to CSV format
-        // This is a simplified conversion - adjust based on actual data format
-        return line.replace("\t", ",")
-    }
-    private fun convertDataLineToJSON(line: String): String {
-        // Convert data line to JSON format
-        val parts = line.split("\t", ",")
-        return if (parts.size >= 2) {
-            "{ \"timestamp\": \"${parts[0]}\", \"value\": ${parts[1]} }"
-        } else {
-            "{ \"data\": \"$line\" }"
-        }
-    }
-    private fun convertDataLineToXML(line: String): String {
-        // Convert data line to XML format
-        val parts = line.split("\t", ",")
-        return if (parts.size >= 2) {
-            "<dataPoint timestamp=\"${parts[0]}\" value=\"${parts[1]}\" />"
-        } else {
-            "<dataPoint data=\"$line\" />"
-        }
-    }
-}
 // Extension property for file extensions
-private val ExportFormat.fileExtension: String
-    get() = when (this) {
-        ExportFormat.CSV -> "csv"
-        ExportFormat.JSON -> "json"
-        ExportFormat.XML -> "xml"
-        ExportFormat.EXCEL -> "xlsx"
-    }
+            private val ExportFormat.fileExtension: String
+            get() = when (this) {
+                ExportFormat.CSV -> "csv"
+                ExportFormat.JSON -> "json"
+                ExportFormat.XML -> "xml"
+                ExportFormat.EXCEL -> "xlsx"
+            }

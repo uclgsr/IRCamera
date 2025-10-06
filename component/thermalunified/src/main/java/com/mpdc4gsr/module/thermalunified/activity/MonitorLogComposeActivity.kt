@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,16 +23,19 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     data class LogEntry(
         val timestamp: String,
         val temperature: Float,
         val location: String,
         val notes: String = ""
     )
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -233,6 +237,7 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
             }
         }
     }
+
     @Composable
     fun LogEntryCard(entry: LogEntry) {
         Card(

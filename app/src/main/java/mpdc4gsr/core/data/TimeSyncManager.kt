@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -14,30 +15,38 @@ import java.util.concurrent.atomic.AtomicLong
 
 class TimeSyncManager(private val context: Context) {
     private val timeManager = TimeManager.getInstance(context)
+
     companion object {
         private const val TAG = "TimeSyncManager"
         private const val SYNC_LOG_FILENAME = "timesync_log.csv"
         private const val CSV_HEADER =
             "sync_index,timestamp_iso,phone_timestamp_t2,pc_send_time_t1,pc_recv_time_t3,offset_ms,rtt_ms,session_relative_time_ms,sync_quality,retry_count"
+
         // Default timeout for sync operations
         private const val SYNC_TIMEOUT_MS = 5000L
+
         // Periodic sync configuration
         private const val PERIODIC_SYNC_INTERVAL_MS = 300_000L // 5 minutes
         private const val LONG_SESSION_THRESHOLD_MS = 600_000L // 10 minutes
+
         // Timestamp validation constants
         private const val MAX_TIMESTAMP_DRIFT_MS = 86400_000L // 24 hours
         private const val MAX_FUTURE_TIMESTAMP_MS = 300_000L // 5 minutes in future
+
         // Retry logic constants
         private const val MAX_SYNC_RETRIES = 3
         private const val RETRY_DELAY_MS = 1000L
+
         // Sync quality thresholds
         private const val EXCELLENT_RTT_THRESHOLD_MS = 10L
         private const val GOOD_RTT_THRESHOLD_MS = 50L
         private const val FAIR_RTT_THRESHOLD_MS = 200L
     }
+
     enum class SyncQuality {
         EXCELLENT, GOOD, FAIR, POOR
     }
+
     data class SyncConfiguration(
         val periodicSyncIntervalMs: Long = PERIODIC_SYNC_INTERVAL_MS,
         val longSessionThresholdMs: Long = LONG_SESSION_THRESHOLD_MS,
@@ -49,6 +58,7 @@ class TimeSyncManager(private val context: Context) {
         val enableJsonLogging: Boolean = true,
         val enableCsvLogging: Boolean = true
     )
+
     data class SyncResult(
         val success: Boolean,
         val t1: Long = 0L, // PC send time
@@ -61,6 +71,7 @@ class TimeSyncManager(private val context: Context) {
         val retryCount: Int = 0,
         val errorMessage: String? = null
     )
+
     private val syncScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val syncCounter = AtomicLong(0)
     private var sessionStartTime: Long = 0L
@@ -68,13 +79,17 @@ class TimeSyncManager(private val context: Context) {
     private var syncLogFile: File? = null
     private val periodicSyncEnabled = AtomicBoolean(false)
     private var periodicSyncJob: kotlinx.coroutines.Job? = null
+
     // Configuration for sync behavior
     private var syncConfig = SyncConfiguration()
+
     // Callback interface for manual sync triggers
     interface SyncTriggerCallback {
         suspend fun onManualSyncRequested(): Boolean
     }
+
     private var syncTriggerCallback: SyncTriggerCallback? = null
+
     // Sync quality tracking
     private val syncQualityHistory = mutableListOf<Pair<Long, SyncQuality>>()
     private val maxQualityHistorySize = 100
@@ -98,10 +113,12 @@ class TimeSyncManager(private val context: Context) {
                 AppLogger.w(TAG, "$context timestamp too far in future: ${timeDiff}ms")
                 false
             }
+
             timeDiff < -syncConfig.maxTimestampDriftMs -> {
                 AppLogger.w(TAG, "$context timestamp too far in past: ${timeDiff}ms")
                 false
             }
+
             else -> true
         }
     }

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.ui
+
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -37,6 +38,7 @@ import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.network.data.NetworkSettings
+
 enum class ConnectionType(
     val displayName: String,
     val description: String,
@@ -47,6 +49,7 @@ enum class ConnectionType(
     ETHERNET("Wired Connection", "Connect devices via Ethernet cable", Icons.Default.Cable),
     HOTSPOT("Mobile Hotspot", "Create hotspot for device connection", Icons.Default.WifiTethering)
 }
+
 data class NetworkDevice(
     val name: String,
     val address: String,
@@ -54,6 +57,7 @@ data class NetworkDevice(
     val isConnected: Boolean = false,
     val signalStrength: Int = 0
 )
+
 class NetworkConfigViewModel : AppBaseViewModel() {
     private val _selectedConnectionType = mutableStateOf<ConnectionType?>(null)
     val selectedConnectionType: State<ConnectionType?> = _selectedConnectionType
@@ -69,6 +73,7 @@ class NetworkConfigViewModel : AppBaseViewModel() {
         _selectedConnectionType.value = type
         startDeviceDiscovery()
     }
+
     private fun startDeviceDiscovery() {
         launchWithErrorHandling {
             _isScanning.value = true
@@ -96,6 +101,7 @@ class NetworkConfigViewModel : AppBaseViewModel() {
                         signalStrength = 91
                     )
                 )
+
                 ConnectionType.BLUETOOTH -> listOf(
                     NetworkDevice(
                         "TC001-BT",
@@ -116,6 +122,7 @@ class NetworkConfigViewModel : AppBaseViewModel() {
                         signalStrength = 82
                     )
                 )
+
                 ConnectionType.ETHERNET -> listOf(
                     NetworkDevice(
                         "Wired-TC001",
@@ -130,6 +137,7 @@ class NetworkConfigViewModel : AppBaseViewModel() {
                         signalStrength = 100
                     )
                 )
+
                 ConnectionType.HOTSPOT -> listOf(
                     NetworkDevice(
                         "Mobile-TC001",
@@ -144,6 +152,7 @@ class NetworkConfigViewModel : AppBaseViewModel() {
                         signalStrength = 75
                     )
                 )
+
                 null -> emptyList()
             }
             delay(2000) // Simulate scanning time
@@ -151,6 +160,7 @@ class NetworkConfigViewModel : AppBaseViewModel() {
             _isScanning.value = false
         }
     }
+
     fun connectToDevice(device: NetworkDevice) {
         launchWithErrorHandling {
             _connectionStatus.value = "Connecting..."
@@ -166,12 +176,14 @@ class NetworkConfigViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun disconnectDevice() {
         _connectedDevice.value = null
         _connectionStatus.value = "Disconnected"
         _availableDevices.value = _availableDevices.value.map { it.copy(isConnected = false) }
     }
 }
+
 class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>() {
     private lateinit var networkSettings: NetworkSettings
     private lateinit var permissionManager: PermissionManager
@@ -183,8 +195,10 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
             // Bluetooth enabled
         }
     }
+
     override fun createViewModel(): NetworkConfigViewModel =
         viewModels<NetworkConfigViewModel>().value
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         networkSettings = NetworkSettings(this)
@@ -192,6 +206,7 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         bluetoothAdapter = bluetoothManager?.adapter
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: NetworkConfigViewModel) {
@@ -388,6 +403,7 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
         }
     }
 }
+
 @Composable
 private fun ConnectionTypeCard(
     connectionType: ConnectionType,
@@ -447,6 +463,7 @@ private fun ConnectionTypeCard(
         }
     }
 }
+
 @Composable
 private fun DeviceCard(
     device: NetworkDevice,

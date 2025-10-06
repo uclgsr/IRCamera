@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data
+
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -24,6 +25,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+
 class Shimmer3GSRRecorder(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
@@ -60,6 +62,7 @@ class Shimmer3GSRRecorder(
             }
         }
     }
+
     override val sensorType: String = "Shimmer3 GSR+ (Galvanic Skin Response)"
     override val samplingRate: Double = samplingRateHz.toDouble()
     private val _isRecording = AtomicBoolean(false)
@@ -106,18 +109,22 @@ class Shimmer3GSRRecorder(
                             _deviceStatus.value = "Connected: ${selectedDevice?.name}"
                             _connectionQuality.value = 1.0
                         }
+
                         ShimmerDeviceManager.ConnectionState.DISCONNECTED -> {
                             connectedShimmer = null
                             _deviceStatus.value = "Disconnected"
                             _connectionQuality.value = 0.0
                         }
+
                         ShimmerDeviceManager.ConnectionState.FAILED -> {
                             _deviceStatus.value = "Connection Failed"
                             _connectionQuality.value = 0.0
                         }
+
                         ShimmerDeviceManager.ConnectionState.CONNECTING -> {
                             _deviceStatus.value = "Connecting..."
                         }
+
                         ShimmerDeviceManager.ConnectionState.TIMEOUT -> {
                             _deviceStatus.value = "Connection Timeout"
                             _connectionQuality.value = 0.0
@@ -134,28 +141,34 @@ class Shimmer3GSRRecorder(
             return@withContext false
         }
     }
+
     suspend fun startDeviceDiscovery(): Boolean {
         AppLogger.i(TAG, "Starting Shimmer3 GSR+ device discovery with MAC filtering")
         return deviceManager?.startDeviceScanning() ?: false
     }
+
     suspend fun stopDeviceDiscovery(): Boolean {
         deviceManager?.stopDeviceScanning()
         return true
     }
+
     fun getDiscoveredDevices(): SharedFlow<List<DeviceInfo>> {
         return deviceManager?.scanResults ?: MutableSharedFlow<List<DeviceInfo>>().asSharedFlow()
     }
+
     suspend fun connectToDevice(deviceInfo: DeviceInfo): Boolean {
         AppLogger.i(TAG, "Connecting to Shimmer3 GSR+ device: ${deviceInfo.address} (${deviceInfo.name})")
         selectedDevice = deviceInfo
         return deviceManager?.connectToDevice(deviceInfo) ?: false
     }
+
     suspend fun disconnectDevice(): Boolean {
         selectedDevice?.address?.let { address ->
             return deviceManager?.disconnectDevice(address) ?: false
         }
         return false
     }
+
     private suspend fun configureGSRSensor() = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Configuring Shimmer3 GSR+ sensor for research-grade recording")
         val shimmer = connectedShimmer ?: return@withContext
@@ -173,6 +186,7 @@ class Shimmer3GSRRecorder(
             throw e
         }
     }
+
     override suspend fun startRecording(sessionDirectory: String): Boolean =
         withContext(Dispatchers.IO) {
             AppLogger.i(TAG, "Starting Shimmer3 GSR+ recording session")
@@ -251,6 +265,7 @@ class Shimmer3GSRRecorder(
                 return@withContext false
             }
         }
+
     fun processObjectCluster(objectCluster: ObjectCluster) {
         if (!_isRecording.get()) return
         try {
@@ -299,6 +314,7 @@ class Shimmer3GSRRecorder(
             AppLogger.e(TAG, "Error processing GSR data from ObjectCluster", e)
         }
     }
+
     override suspend fun stopRecording(): Boolean = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Stopping Shimmer3 GSR+ recording")
         if (!_isRecording.get()) {
@@ -346,6 +362,7 @@ class Shimmer3GSRRecorder(
             return@withContext false
         }
     }
+
     private fun setupDataProcessingCallback(shimmer: Shimmer) {
         try {
             AppLogger.i(TAG, "Setting up Shimmer data processing callback for real GSR streaming")
@@ -393,6 +410,7 @@ class Shimmer3GSRRecorder(
             setupFallbackDataGeneration()
         }
     }
+
     private fun checkForRealShimmerData(shimmer: Shimmer): Boolean {
         return try {
             val isStreaming = shimmer.isStreaming() ?: false
@@ -405,6 +423,7 @@ class Shimmer3GSRRecorder(
             false
         }
     }
+
     private fun generateRealisticFallbackData(currentTime: Long) {
         val baseValue = 2048
         val breathingPattern = (Math.sin(currentTime / 5000.0) * 200).toInt()
@@ -416,6 +435,7 @@ class Shimmer3GSRRecorder(
         val timestamp = System.nanoTime()
         processSimulatedGSRData(simulatedRawValue, timestamp)
     }
+
     private fun setupFallbackDataGeneration() {
         AppLogger.i(TAG, "Setting up fallback data generation mode")
         recordingJob = lifecycleOwner.lifecycleScope.launch {
@@ -434,6 +454,7 @@ class Shimmer3GSRRecorder(
             }
         }
     }
+
     private fun processSimulatedGSRData(rawValue: Int, timestamp: Long) {
         if (!_isRecording.get()) return
         try {
@@ -470,10 +491,12 @@ class Shimmer3GSRRecorder(
             AppLogger.e(TAG, "Error processing simulated GSR data", e)
         }
     }
+
     private fun calculateGSRMicrosiemens(gsrRaw: Int): Double {
         // Use centralized GSR calculation utility
         return GSRCalculationUtils.calculateGSRMicrosiemens(gsrRaw)
     }
+
     private var lastSampleTime: Long = 0
     private var lastGsrValue: Int = 0
     private fun calculateQualityScore(gsrRaw: Int, timestamp: Long): Double {
@@ -506,6 +529,7 @@ class Shimmer3GSRRecorder(
             return 0.5
         }
     }
+
     fun getDataFlow(): SharedFlow<GSRSample> = gsrDataFlow.asSharedFlow()
     fun getRecordedSampleCount(): Long = recordedSamples.get()
     fun getRecordingDurationMs(): Long {
@@ -515,11 +539,13 @@ class Shimmer3GSRRecorder(
             0
         }
     }
+
     private data class AutoConnectionResult(
         val success: Boolean,
         val deviceName: String? = null,
         val reason: String? = null
     )
+
     private suspend fun attemptIntelligentAutoConnection(deviceManager: ShimmerDeviceManager): AutoConnectionResult {
         return try {
             AppLogger.i(TAG, "Starting intelligent Shimmer device discovery")
@@ -580,6 +606,7 @@ class Shimmer3GSRRecorder(
             return AutoConnectionResult(false, reason = "Exception: ${e.message}")
         }
     }
+
     private fun selectBestShimmerDevice(devices: List<DeviceInfo>): DeviceInfo {
         return devices.sortedWith(compareByDescending<DeviceInfo> { device ->
             var score = 0
@@ -602,6 +629,7 @@ class Shimmer3GSRRecorder(
             score
         }).first()
     }
+
     suspend fun getConnectionStatus(): String {
         return when {
             connectedShimmer != null -> "Connected to ${selectedDevice?.name ?: "Shimmer Device"}"
@@ -609,6 +637,7 @@ class Shimmer3GSRRecorder(
             else -> "Not initialized"
         }
     }
+
     suspend fun getRecordingStatistics(): Map<String, Any> {
         return mapOf(
             "isRecording" to _isRecording.get(),
@@ -629,6 +658,7 @@ class Shimmer3GSRRecorder(
             "connectionQuality" to _connectionQuality.value
         )
     }
+
     override suspend fun addSyncMarker(
         markerType: String,
         timestampNs: Long,
@@ -638,6 +668,7 @@ class Shimmer3GSRRecorder(
         csvWriter?.write("# SYNC_MARKER: $markerType at $timestampNs, metadata: $metadata\n")
         csvWriter?.flush()
     }
+
     override fun getStatusFlow(): Flow<RecordingStatus> = _statusFlow.asSharedFlow()
     override fun getErrorFlow(): Flow<SensorError> = _errorFlow.asSharedFlow()
     override fun getRecordingStats(): RecordingStats {
@@ -655,6 +686,7 @@ class Shimmer3GSRRecorder(
             lastSampleTimestampNs = System.nanoTime()
         )
     }
+
     override suspend fun cleanup(): Unit = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Cleaning up Shimmer3 GSR+ Recorder")
         try {

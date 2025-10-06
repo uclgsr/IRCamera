@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
+
 @Composable
 fun TargetBarPickCompose(
     progress: Int,
@@ -144,6 +146,7 @@ fun TargetBarPickCompose(
         }
     }
 }
+
 private fun DrawScope.drawTargetBar(
     progress: Int,
     min: Int,
@@ -178,6 +181,7 @@ private fun DrawScope.drawTargetBar(
         )
     }
 }
+
 private fun DrawScope.drawHorizontalBar(
     progressRatio: Float,
     trackHeight: Float,
@@ -223,6 +227,7 @@ private fun DrawScope.drawHorizontalBar(
         style = Stroke(width = 2.dp.toPx())
     )
 }
+
 private fun DrawScope.drawVerticalBar(
     progressRatio: Float,
     trackHeight: Float,
@@ -270,6 +275,7 @@ private fun DrawScope.drawVerticalBar(
         style = Stroke(width = 2.dp.toPx())
     )
 }
+
 private fun calculateProgressFromOffset(
     offset: Offset,
     size: androidx.compose.ui.geometry.Size,
@@ -291,6 +297,7 @@ private fun calculateProgressFromOffset(
     }
     return (min + ratio * totalRange).roundToInt().coerceIn(min, max)
 }
+
 @Composable
 fun SimpleTargetBarCompose(
     value: Float,
@@ -325,6 +332,7 @@ fun SimpleTargetBarCompose(
         )
     }
 }
+
 @Composable
 fun TargetBarPickComposePreview() {
     var horizontalProgress by remember { mutableIntStateOf(50) }

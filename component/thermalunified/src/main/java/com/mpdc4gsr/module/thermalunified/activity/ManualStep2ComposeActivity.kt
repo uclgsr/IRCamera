@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,10 +24,12 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -112,6 +115,7 @@ class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
+
 @Composable
 private fun SetupProgressIndicator(
     currentStep: Int,
@@ -156,6 +160,7 @@ private fun SetupProgressIndicator(
         }
     }
 }
+
 @Composable
 private fun ConnectionSetupCard(
     isConnecting: Boolean,
@@ -188,12 +193,14 @@ private fun ConnectionSetupCard(
                         modifier = Modifier.size(64.dp)
                     )
                 }
+
                 isConnecting -> {
                     CircularProgressIndicator(
                         color = Color(0xFFFF6B35),
                         modifier = Modifier.size(64.dp)
                     )
                 }
+
                 isConnected -> {
                     Icon(
                         Icons.Default.CheckCircle,
@@ -202,6 +209,7 @@ private fun ConnectionSetupCard(
                         modifier = Modifier.size(64.dp)
                     )
                 }
+
                 else -> {
                     Icon(
                         Icons.Default.Bluetooth,
@@ -261,6 +269,7 @@ private fun ConnectionSetupCard(
         }
     }
 }
+
 @Composable
 private fun ConnectionSteps() {
     Card(
@@ -287,6 +296,7 @@ private fun ConnectionSteps() {
         }
     }
 }
+
 @Composable
 private fun ConnectionStep(
     step: String,
@@ -319,6 +329,7 @@ private fun ConnectionStep(
         )
     }
 }
+
 @Composable
 private fun CalibrationInfo() {
     Card(
@@ -347,6 +358,7 @@ private fun CalibrationInfo() {
         }
     }
 }
+
 @Composable
 private fun ActionButtons(
     isConnecting: Boolean,
@@ -385,6 +397,7 @@ private fun ActionButtons(
                     )
                 }
             }
+
             isConnected && !isCalibrating -> {
                 Button(
                     onClick = onCalibrate,
@@ -409,6 +422,7 @@ private fun ActionButtons(
                     )
                 }
             }
+
             !isConnected && !isConnecting -> {
                 Button(
                     onClick = onConnect,

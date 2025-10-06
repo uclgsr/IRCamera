@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -9,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.components.NavigationBreadcrumb
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(

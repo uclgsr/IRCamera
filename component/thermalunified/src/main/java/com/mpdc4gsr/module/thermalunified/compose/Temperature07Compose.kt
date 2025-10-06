@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -24,6 +25,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 @Composable
 fun Temperature07Compose(
     mode: TemperatureMeasurementMode = TemperatureMeasurementMode.POINT,
@@ -55,15 +57,18 @@ fun Temperature07Compose(
                                     )
                                 )
                             }
+
                             TemperatureMeasurementMode.LINE -> {
                                 // For line, we need start and end points
                                 // This is simplified - in real implementation would need drag handling
                                 currentLine = Pair(offset, offset)
                             }
+
                             TemperatureMeasurementMode.RECT -> {
                                 // For rect, we need drag to define rectangle
                                 currentRect = Rect(offset, offset)
                             }
+
                             TemperatureMeasurementMode.TREND -> {
                                 // Trend mode - could accumulate points over time
                             }
@@ -83,16 +88,19 @@ fun Temperature07Compose(
                             drawMeasurementPoint(point)
                         }
                     }
+
                     TemperatureMeasurementMode.LINE -> {
                         currentLine?.let { (start, end) ->
                             drawMeasurementLine(start, end)
                         }
                     }
+
                     TemperatureMeasurementMode.RECT -> {
                         currentRect?.let { rect ->
                             drawMeasurementRect(rect)
                         }
                     }
+
                     TemperatureMeasurementMode.TREND -> {
                         // Draw trend indicators
                     }
@@ -109,6 +117,7 @@ fun Temperature07Compose(
         )
     }
 }
+
 private fun DrawScope.drawMeasurementPoint(point: Offset) {
     // Draw crosshair
     val crosshairSize = 20.dp.toPx()
@@ -131,6 +140,7 @@ private fun DrawScope.drawMeasurementPoint(point: Offset) {
         center = point
     )
 }
+
 private fun DrawScope.drawMeasurementLine(start: Offset, end: Offset) {
     drawLine(
         color = Color.Green,
@@ -142,6 +152,7 @@ private fun DrawScope.drawMeasurementLine(start: Offset, end: Offset) {
     drawCircle(color = Color.Green, radius = 6.dp.toPx(), center = start)
     drawCircle(color = Color.Green, radius = 6.dp.toPx(), center = end)
 }
+
 private fun DrawScope.drawMeasurementRect(rect: Rect) {
     drawRect(
         color = Color.Blue,
@@ -164,6 +175,7 @@ private fun DrawScope.drawMeasurementRect(rect: Rect) {
         )
     }
 }
+
 @Composable
 private fun MeasurementModeIndicator(
     mode: TemperatureMeasurementMode,
@@ -216,6 +228,7 @@ private fun MeasurementModeIndicator(
         }
     }
 }
+
 @Composable
 fun TemperatureModeSelector(
     selectedMode: TemperatureMeasurementMode,
@@ -252,6 +265,7 @@ fun TemperatureModeSelector(
         }
     }
 }
+
 // Data classes and enums
 enum class TemperatureMeasurementMode(
     val displayName: String,
@@ -262,11 +276,13 @@ enum class TemperatureMeasurementMode(
     RECT("Rectangle", Icons.Default.CropFree),
     TREND("Trend", Icons.AutoMirrored.Filled.TrendingUp)
 }
+
 sealed class TemperatureMeasurement {
     data class Point(
         val position: Offset,
         val temperature: Float
     ) : TemperatureMeasurement()
+
     data class Line(
         val start: Offset,
         val end: Offset,
@@ -274,17 +290,20 @@ sealed class TemperatureMeasurement {
         val minTemperature: Float,
         val maxTemperature: Float
     ) : TemperatureMeasurement()
+
     data class Rectangle(
         val rect: Rect,
         val averageTemperature: Float,
         val minTemperature: Float,
         val maxTemperature: Float
     ) : TemperatureMeasurement()
+
     data class Trend(
         val points: List<Offset>,
         val temperatures: List<Float>
     ) : TemperatureMeasurement()
 }
+
 @Composable
 fun Temperature07ComposePreview() {
     var selectedMode by remember { mutableStateOf(TemperatureMeasurementMode.POINT) }
@@ -340,12 +359,15 @@ fun Temperature07ComposePreview() {
                         is TemperatureMeasurement.Point -> {
                             Text("Point: ${measurement.temperature}°C at (${measurement.position.x.toInt()}, ${measurement.position.y.toInt()})")
                         }
+
                         is TemperatureMeasurement.Line -> {
                             Text("Line: Avg ${measurement.averageTemperature}°C, Range ${measurement.minTemperature}°C - ${measurement.maxTemperature}°C")
                         }
+
                         is TemperatureMeasurement.Rectangle -> {
                             Text("Rect: Avg ${measurement.averageTemperature}°C, Range ${measurement.minTemperature}°C - ${measurement.maxTemperature}°C")
                         }
+
                         is TemperatureMeasurement.Trend -> {
                             Text("Trend: ${measurement.points.size} points")
                         }

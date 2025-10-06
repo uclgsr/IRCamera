@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.ui
+
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.webkit.WebResourceError
@@ -28,6 +29,7 @@ import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 class WebViewViewModel : AppBaseViewModel() {
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
@@ -38,17 +40,21 @@ class WebViewViewModel : AppBaseViewModel() {
     fun setUrl(url: String) {
         _url.value = url
     }
+
     fun setWebViewLoading(loading: Boolean) {
         _isLoading.value = loading
     }
+
     fun setError(error: Boolean) {
         _showError.value = error
     }
+
     fun reload() {
         _showError.value = false
         _isLoading.value = true
     }
 }
+
 class WebViewComposeActivity : BaseComposeActivity<WebViewViewModel>() {
     override fun createViewModel(): WebViewViewModel = viewModels<WebViewViewModel>().value
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +62,7 @@ class WebViewComposeActivity : BaseComposeActivity<WebViewViewModel>() {
         val url = intent.extras?.getString(ExtraKeyConfig.URL) ?: ""
         viewModels<WebViewViewModel>().value.setUrl(url)
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: WebViewViewModel) {
@@ -148,6 +155,7 @@ class WebViewComposeActivity : BaseComposeActivity<WebViewViewModel>() {
         }
     }
 }
+
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun ComposeWebView(
@@ -175,6 +183,7 @@ fun ComposeWebView(
                         super.onPageFinished(view, url)
                         onLoadFinish()
                     }
+
                     override fun onReceivedError(
                         view: WebView?,
                         request: WebResourceRequest?,

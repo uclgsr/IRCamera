@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+
 @Composable
 fun ThermalCameraFragment(
     onCapturePhoto: () -> Unit = {},
@@ -88,6 +90,7 @@ fun ThermalCameraFragment(
         }
     }
 }
+
 @Composable
 private fun ThermalCameraControls(
     onCapturePhoto: () -> Unit,
@@ -142,6 +145,7 @@ private fun ThermalCameraControls(
         }
     }
 }
+
 @Composable
 fun ThermalGalleryFragment(
     images: List<ThermalGalleryItem>,
@@ -184,6 +188,7 @@ fun ThermalGalleryFragment(
         }
     }
 }
+
 @Composable
 private fun ThermalGalleryItemCard(
     item: ThermalGalleryItem,
@@ -246,6 +251,7 @@ private fun ThermalGalleryItemCard(
         }
     }
 }
+
 @Composable
 fun MonitorCaptureFragment(
     isMonitoring: Boolean,
@@ -316,6 +322,7 @@ fun MonitorCaptureFragment(
         }
     }
 }
+
 @Composable
 private fun MonitorStatusCard(
     isMonitoring: Boolean,
@@ -363,6 +370,7 @@ private fun MonitorStatusCard(
         }
     }
 }
+
 @Composable
 private fun MonitorFrameCard(
     frame: MonitorFrame,
@@ -402,6 +410,7 @@ private fun MonitorFrameCard(
         }
     }
 }
+
 @Composable
 private fun AndroidViewPlaceholder(
     viewType: String,
@@ -432,6 +441,7 @@ private fun AndroidViewPlaceholder(
         }
     }
 }
+
 // Data classes for fragment patterns
 data class ThermalGalleryItem(
     val id: String,
@@ -441,12 +451,14 @@ data class ThermalGalleryItem(
     val temperature: Float? = null,
     val type: String = "thermal"
 )
+
 data class MonitorFrame(
     val id: String,
     val imagePath: String,
     val timestamp: String,
     val temperature: Float? = null
 )
+
 @Composable
 fun ThermalFragmentPatternsPreview() {
     Column(

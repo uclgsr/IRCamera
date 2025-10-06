@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.utils
+
 import android.graphics.Bitmap
 import android.util.Log
 import android.widget.ImageView
@@ -10,6 +11,7 @@ import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 import kotlin.math.pow
 import com.mpdc4gsr.libunified.R as UiR
+
 object IRImageUtils {
     fun showContrast(
         imageView: ImageView,
@@ -60,6 +62,7 @@ object IRImageUtils {
             e.printStackTrace()
         }
     }
+
     private fun lutGamma(
         @FloatRange(from = 0.0, to = 1.0) x: Double,
         a: Double = 0.5,
@@ -73,6 +76,7 @@ object IRImageUtils {
             }
         return y
     }
+
     private fun showSharpen(
         imageView: ImageView,
         @FloatRange(from = 0.0, to = 2.55) sharpen: Double,

@@ -1,9 +1,11 @@
 package com.mpdc4gsr.module.thermalunified.tools
+
 import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import coil.load
 import com.maning.imagebrowserlibrary.ImageEngine
+
 class CoilImageEngine : ImageEngine {
     override fun loadImage(
         context: Context,

@@ -1,4 +1,5 @@
 package mpdc4gsr.core.data
+
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -11,11 +12,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileWriter
+
 class TimeSynchronizationService {
     companion object {
         private const val TAG = "TimeSynchronizationService"
         private const val SYNC_METADATA_FILENAME = "session_sync_metadata.csv"
     }
+
     private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var sessionReference: SessionTimestampReference? = null
     private var sessionDirectory: String? = null
@@ -31,6 +34,7 @@ class TimeSynchronizationService {
         }
         return sessionReference!!
     }
+
     private suspend fun logSessionStartSyncEvent() {
         try {
             logSyncEvent(
@@ -45,10 +49,12 @@ class TimeSynchronizationService {
             AppLogger.w(TAG, "Failed to log SessionStart sync event", e)
         }
     }
+
     fun getSessionReference(): SessionTimestampReference? = sessionReference
     fun createSynchronizedTimestamp(): TimestampRecord {
         return TimestampManager.createTimestampRecord()
     }
+
     fun convertDeviceTimestamp(deviceTimestamp: Long, sensorId: String): TimestampRecord {
         val unifiedTimestamp = TimestampManager.createTimestampRecord()
         Log.v(
@@ -57,6 +63,7 @@ class TimeSynchronizationService {
         )
         return unifiedTimestamp
     }
+
     suspend fun emitSyncEvent(eventType: String, metadata: Map<String, String> = emptyMap()) {
         val timestampRecord = createSynchronizedTimestamp()
         val syncEvent = SyncEvent(
@@ -67,6 +74,7 @@ class TimeSynchronizationService {
         _syncEvents.emit(syncEvent)
         AppLogger.i(TAG, "Sync event emitted: $eventType at ${timestampRecord.systemTimeMs}ms")
     }
+
     fun finalizeSession(): Long {
         val sessionDuration = TimestampManager.endSession()
         sessionReference = null
@@ -74,6 +82,7 @@ class TimeSynchronizationService {
         AppLogger.i(TAG, "Session finalized. Duration: ${sessionDuration}ms")
         return sessionDuration
     }
+
     private fun writeSessionSyncMetadata() {
         val reference = sessionReference ?: return
         val sessionDir = sessionDirectory ?: return
@@ -94,6 +103,7 @@ class TimeSynchronizationService {
             AppLogger.e(TAG, "Failed to write session sync metadata", e)
         }
     }
+
     suspend fun logSyncEvent(eventType: String, metadata: Map<String, String> = emptyMap()) {
         val timestampRecord = createSynchronizedTimestamp()
         val sessionDir = sessionDirectory ?: return
@@ -108,6 +118,7 @@ class TimeSynchronizationService {
             AppLogger.e(TAG, "Failed to log sync event", e)
         }
     }
+
     suspend fun logTimestampWithDriftAnalysis(
         sensorId: String,
         deviceTimestamp: Long?,
@@ -133,6 +144,7 @@ class TimeSynchronizationService {
             AppLogger.w(TAG, "Failed to log drift analysis for $sensorId", e)
         }
     }
+
     fun validateTimestampConsistency(
         gsrTimestamp: Long,
         thermalTimestamp: Long,
@@ -153,11 +165,13 @@ class TimeSynchronizationService {
         )
     }
 }
+
 data class SyncEvent(
     val eventType: String,
     val timestampRecord: TimestampRecord,
     val metadata: Map<String, String>
 )
+
 data class TimestampConsistencyReport(
     val isConsistent: Boolean,
     val maxDifferenceNs: Long,
@@ -168,6 +182,7 @@ data class TimestampConsistencyReport(
     fun toCsvLine(): String {
         return "$isConsistent,$maxDifferenceNs,$gsrTimestamp,$thermalTimestamp,$rgbTimestamp"
     }
+
     companion object {
         fun getCsvHeader(): String {
             return "is_consistent,max_difference_ns,gsr_timestamp,thermal_timestamp,rgb_timestamp"

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.view.compass
+
 import android.content.Context
 import android.hardware.Sensor
 import com.kylecorry.andromeda.sense.Sensors
@@ -6,6 +7,7 @@ import com.kylecorry.andromeda.sense.compass.ICompass
 import com.kylecorry.andromeda.sense.compass.LegacyCompass
 import com.kylecorry.andromeda.sense.orientation.GeomagneticRotationSensor
 import com.kylecorry.andromeda.sense.orientation.RotationSensor
+
 class CompassProvider(private val context: Context) {
     fun get(): ICompass {
         val smoothing = 1
@@ -23,18 +25,22 @@ class CompassProvider(private val context: Context) {
                 CompassSource.RotationVector -> {
                     RotationSensor(context, SensorService.MOTION_SENSOR_DELAY)
                 }
+
                 CompassSource.GeomagneticRotationVector -> {
                     GeomagneticRotationSensor(context, SensorService.MOTION_SENSOR_DELAY)
                 }
+
                 CompassSource.CustomMagnetometer -> {
                     RotationSensor(context, SensorService.MOTION_SENSOR_DELAY)
                 }
+
                 CompassSource.Orientation -> {
                     LegacyCompass(context, useTrueNorth, SensorService.MOTION_SENSOR_DELAY)
                 }
             }
         return compass as ICompass
     }
+
     companion object {
         fun getAvailableSources(context: Context): List<CompassSource> {
             val sources = mutableListOf<CompassSource>()

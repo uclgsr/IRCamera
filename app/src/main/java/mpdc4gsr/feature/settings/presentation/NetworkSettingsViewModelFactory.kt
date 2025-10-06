@@ -1,7 +1,9 @@
 package mpdc4gsr.feature.settings.presentation
+
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+
 class NetworkSettingsViewModelFactory(
     private val context: Context
 ) : ViewModelProvider.Factory {

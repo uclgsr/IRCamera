@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,10 +21,12 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -52,7 +55,7 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = {  }) {
+                            IconButton(onClick = { }) {
                                 Icon(
                                     Icons.Default.Refresh,
                                     contentDescription = "Reset",
@@ -116,7 +119,7 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     isProcessing = false
                                 }
                             },
-                            onSaveCorrection = {  },
+                            onSaveCorrection = { },
                             onDiscardChanges = {
                                 correctionProgress = 0f
                                 isProcessing = false
@@ -128,6 +131,7 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
+
 @Composable
 private fun CorrectionTypeSelector(
     selectedCorrection: Int,
@@ -165,6 +169,7 @@ private fun CorrectionTypeSelector(
         }
     }
 }
+
 @Composable
 private fun CorrectionTypeCard(
     correction: CorrectionType,
@@ -217,6 +222,7 @@ private fun CorrectionTypeCard(
         }
     }
 }
+
 @Composable
 private fun ProcessingStatusCard(
     isProcessing: Boolean,
@@ -277,6 +283,7 @@ private fun ProcessingStatusCard(
         }
     }
 }
+
 @Composable
 private fun CorrectionParametersCard(
     correctionType: Int
@@ -331,6 +338,7 @@ private fun CorrectionParametersCard(
         }
     }
 }
+
 @Composable
 private fun ParameterSlider(
     label: String,
@@ -370,6 +378,7 @@ private fun ParameterSlider(
         )
     }
 }
+
 @Composable
 private fun CorrectionComparisonCard() {
     Card(
@@ -410,6 +419,7 @@ private fun CorrectionComparisonCard() {
         }
     }
 }
+
 @Composable
 private fun ComparisonImageCard(
     title: String,
@@ -461,6 +471,7 @@ private fun ComparisonImageCard(
         }
     }
 }
+
 @Composable
 private fun CorrectionActionButtons(
     isProcessing: Boolean,
@@ -524,12 +535,14 @@ private fun CorrectionActionButtons(
         }
     }
 }
+
 // Data classes
 data class CorrectionType(
     val name: String,
     val description: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector
 )
+
 private fun getCorrectionTypes(): List<CorrectionType> {
     return listOf(
         CorrectionType(

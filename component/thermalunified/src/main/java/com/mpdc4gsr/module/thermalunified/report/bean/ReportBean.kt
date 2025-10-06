@@ -1,6 +1,8 @@
 package com.mpdc4gsr.module.thermalunified.report.bean
+
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+
 @Parcelize
 data class ReportBean(
     val software_info: SoftwareInfo,

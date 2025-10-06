@@ -1,7 +1,9 @@
 package com.mpdc4gsr.libunified.ir.tools
+
 import androidx.annotation.ColorInt
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.utils.ByteUtils
+
 object BitmapTools {
     private fun readTempValue(bytes: ByteArray): Float {
         val data: ByteArray = with(ByteUtils) { bytes.descBytes() }
@@ -9,6 +11,7 @@ object BitmapTools {
         val tempInt = with(ByteUtils) { bytesToInt(data) } / 4
         return (tempInt.toDouble() / scale.toDouble() - 273.15).toFloat()
     }
+
     fun replaceBitmapColor(
         imageBytes: ByteArray,
         tempBytes: ByteArray,

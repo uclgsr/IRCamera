@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
+
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.config.FileConfig
@@ -10,10 +11,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+
 class PDFListViewModel : BaseViewModel() {
     companion object {
         private const val TAG = "PDFListViewModel"
     }
+
     // Data class for PDF items (matching the one in fragment)
     data class PDFItem(
         val path: String,
@@ -23,6 +26,7 @@ class PDFListViewModel : BaseViewModel() {
         val dateModified: Long,
         val isAnalysisReport: Boolean = false
     )
+
     // State flows for Compose
     private val _pdfItems = MutableStateFlow<List<PDFItem>>(emptyList())
     val pdfItems: StateFlow<List<PDFItem>> = _pdfItems.asStateFlow()
@@ -32,9 +36,11 @@ class PDFListViewModel : BaseViewModel() {
     val isSelectionMode: StateFlow<Boolean> = _isSelectionMode.asStateFlow()
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     init {
         loadPDFItems()
     }
+
     // Load PDF items
     private fun loadPDFItems() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -51,6 +57,7 @@ class PDFListViewModel : BaseViewModel() {
             }
         }
     }
+
     // Selection mode methods
     fun enterSelectionMode(itemPath: String? = null) {
         _isSelectionMode.value = true
@@ -58,14 +65,17 @@ class PDFListViewModel : BaseViewModel() {
             _selectedItems.value = setOf(it)
         }
     }
+
     fun exitSelectionMode() {
         _isSelectionMode.value = false
         _selectedItems.value = emptySet()
     }
+
     fun clearSelection() {
         _selectedItems.value = emptySet()
         _isSelectionMode.value = false
     }
+
     fun toggleItemSelection(itemPath: String) {
         val currentSelected = _selectedItems.value.toMutableSet()
         if (currentSelected.contains(itemPath)) {
@@ -79,6 +89,7 @@ class PDFListViewModel : BaseViewModel() {
             _isSelectionMode.value = false
         }
     }
+
     // File operations
     fun deleteSelectedItems() {
         val selectedPaths = _selectedItems.value
@@ -97,9 +108,11 @@ class PDFListViewModel : BaseViewModel() {
             }
         }
     }
+
     fun refreshPDFList() {
         loadPDFItems()
     }
+
     // Get PDF items from file system
     private suspend fun getPDFItemsList(): List<PDFItem> {
         return try {
@@ -148,6 +161,7 @@ class PDFListViewModel : BaseViewModel() {
             emptyList()
         }
     }
+
     fun showMoreActions(item: PDFItem) {
         // Placeholder for more actions functionality
     }

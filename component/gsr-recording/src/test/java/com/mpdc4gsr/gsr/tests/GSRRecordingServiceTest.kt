@@ -1,4 +1,5 @@
 package com.mpdc4gsr.gsr.tests
+
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -11,15 +12,18 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+
 @Ignore("All tests disabled")
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
 class GSRRecordingServiceTest {
     private lateinit var context: Context
+
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
     }
+
     @Test
     fun testServiceCreation() {
         val serviceClass = EnhancedRecordingService::class.java
@@ -30,6 +34,7 @@ class GSRRecordingServiceTest {
             serviceClass.simpleName
         )
     }
+
     @Test
     fun testServiceBinder() {
         try {
@@ -40,6 +45,7 @@ class GSRRecordingServiceTest {
             assertTrue("Service structure test completed", true)
         }
     }
+
     @Test
     fun testServiceLifecycle() {
         val intent = Intent(context, EnhancedRecordingService::class.java)
@@ -50,6 +56,7 @@ class GSRRecordingServiceTest {
             intent.component?.className,
         )
     }
+
     @Test
     fun testStartRecordingIntent() {
         val intent = Intent(context, EnhancedRecordingService::class.java)
@@ -65,6 +72,7 @@ class GSRRecordingServiceTest {
             intent.getStringExtra("extra_session_id")
         )
     }
+
     @Test
     fun testStopRecordingIntent() {
         val intent = Intent(context, EnhancedRecordingService::class.java)
@@ -72,6 +80,7 @@ class GSRRecordingServiceTest {
         assertNotNull("Stop recording intent should be created", intent)
         assertEquals("Action should be set", "action_stop_recording", intent.action)
     }
+
     @Test
     fun testPCConnectionIntent() {
         val intent = Intent(context, EnhancedRecordingService::class.java)
@@ -83,6 +92,7 @@ class GSRRecordingServiceTest {
         assertEquals("PC IP should be set", "192.168.1.100", intent.getStringExtra("extra_pc_ip"))
         assertEquals("PC port should be set", 8080, intent.getIntExtra("extra_pc_port", 0))
     }
+
     @Test
     fun testDiscoveryIntent() {
         val intent = Intent(context, EnhancedRecordingService::class.java)
@@ -90,6 +100,7 @@ class GSRRecordingServiceTest {
         assertNotNull("Discovery intent should be created", intent)
         assertEquals("Action should be set", "action_start_discovery", intent.action)
     }
+
     @Test
     fun testServiceState() {
         try {
@@ -101,6 +112,7 @@ class GSRRecordingServiceTest {
             assertTrue("Service state test attempted", true)
         }
     }
+
     @Test
     fun testNotificationChannelCreation() {
         val channelId = "gsr_recording_channel"

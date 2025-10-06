@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.ui.widget
+
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
@@ -6,6 +7,7 @@ import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.mpdc4gsr.libunified.R
 import kotlin.math.roundToInt
+
 class CommSeekBar : AppCompatSeekBar {
     private val orientation: Int
     private var mMaxWidth = 48
@@ -14,6 +16,7 @@ class CommSeekBar : AppCompatSeekBar {
     private var mMinHeight = 24
     var level = 0;
     private var onSeekBarChangeListener: OnSeekBarChangeListener? = null
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
@@ -34,6 +37,7 @@ class CommSeekBar : AppCompatSeekBar {
             typedArray.getDimensionPixelSize(R.styleable.CommSeekBar_android_minHeight, mMinHeight)
         typedArray.recycle()
     }
+
     override fun setOnSeekBarChangeListener(l: OnSeekBarChangeListener?) {
         if (orientation == 0) {
             super.setOnSeekBarChangeListener(l)
@@ -41,24 +45,28 @@ class CommSeekBar : AppCompatSeekBar {
             onSeekBarChangeListener = l
         }
     }
+
     override fun setProgress(progress: Int) {
         super.setProgress(progress)
         if (orientation != 0) {
             onSeekBarChangeListener?.onProgressChanged(this, progress, false)
         }
     }
+
     override fun setProgress(progress: Int, animate: Boolean) {
         super.setProgress(progress, animate)
         if (orientation != 0) {
             onSeekBarChangeListener?.onProgressChanged(this, progress, false)
         }
     }
+
     override fun setMax(max: Int) {
         super.setMax(max)
         if (orientation != 0) {
             onSeekBarChangeListener?.onProgressChanged(this, progress, false)
         }
     }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         if (orientation == 0) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -80,12 +88,14 @@ class CommSeekBar : AppCompatSeekBar {
             )
         }
     }
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (orientation != 0) {
             calculateDrawable(w, h)
         }
     }
+
     private fun calculateDrawable(w: Int, h: Int) {
         val paddingWidth: Int = w - paddingLeft - paddingRight
         val paddingHeight: Int = h - paddingTop - paddingBottom
@@ -119,6 +129,7 @@ class CommSeekBar : AppCompatSeekBar {
             )
         }
     }
+
     override fun onDraw(canvas: Canvas) {
         if (orientation == 0) {
             super.onDraw(canvas)
@@ -130,6 +141,7 @@ class CommSeekBar : AppCompatSeekBar {
             }
         }
     }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (orientation == 0) {
             return super.onTouchEvent(event)
@@ -143,15 +155,18 @@ class CommSeekBar : AppCompatSeekBar {
                 trackTouchEvent(event)
                 onSeekBarChangeListener?.onStartTrackingTouch(this)
             }
+
             MotionEvent.ACTION_MOVE -> {
                 trackTouchEvent(event)
             }
+
             MotionEvent.ACTION_UP -> {
                 isPressed = false
                 trackTouchEvent(event)
                 invalidate()
                 onSeekBarChangeListener?.onStopTrackingTouch(this)
             }
+
             MotionEvent.ACTION_CANCEL -> {
                 isPressed = false
                 invalidate()
@@ -161,12 +176,14 @@ class CommSeekBar : AppCompatSeekBar {
         }
         return true
     }
+
     fun stopTrackTouchLevel() {
         if (level > 0) {
             val newLevel = (progress.toFloat() / 100 * 4).roundToInt()
             setProgress((newLevel.toFloat() / level * 100).toInt())
         }
     }
+
     private fun trackTouchEvent(event: MotionEvent) {
         val y = event.y.roundToInt()
         progress = if (y < paddingTop) {

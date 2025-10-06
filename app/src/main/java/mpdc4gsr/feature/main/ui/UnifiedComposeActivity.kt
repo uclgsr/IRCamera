@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.main.ui
+
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
@@ -9,6 +10,7 @@ class UnifiedComposeActivity : BaseComposeActivity<UnifiedComposeViewModel>() {
     override fun createViewModel(): UnifiedComposeViewModel {
         return viewModels<UnifiedComposeViewModel>().value
     }
+
     @Composable
     override fun Content(viewModel: UnifiedComposeViewModel) {
         UnifiedNavHost()

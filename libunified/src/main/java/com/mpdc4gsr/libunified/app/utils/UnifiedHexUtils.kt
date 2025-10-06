@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.utils
+
 object UnifiedHexUtils {
     private const val HEX_CHARS = "0123456789ABCDEF"
     fun binaryToHexString(bytes: ByteArray): String {
@@ -9,6 +10,7 @@ object UnifiedHexUtils {
         }
         return result.toString().trim()
     }
+
     fun bytesToHex(bytes: ByteArray): String {
         val result = StringBuilder()
         for (b in bytes) {
@@ -16,6 +18,7 @@ object UnifiedHexUtils {
         }
         return result.toString()
     }
+
     fun hexToBytes(hex: String): ByteArray {
         val cleanHex = hex.replace(" ", "").replace("-", "").replace(":", "")
         val len = cleanHex.length
@@ -30,21 +33,27 @@ object UnifiedHexUtils {
         }
         return data
     }
+
     fun byteToHex(byte: Byte): String {
         return String.format("%02X", byte)
     }
+
     fun intToHex(value: Int): String {
         return String.format("%08X", value)
     }
+
     fun longToHex(value: Long): String {
         return String.format("%016X", value)
     }
+
     fun hexToInt(hex: String): Int {
         return hex.toInt(16)
     }
+
     fun hexToLong(hex: String): Long {
         return hex.toLong(16)
     }
+
     fun isValidHex(hex: String): Boolean {
         return try {
             hex.toLong(16)
@@ -53,6 +62,7 @@ object UnifiedHexUtils {
             false
         }
     }
+
     fun hexDump(bytes: ByteArray, bytesPerLine: Int = 16): String {
         val result = StringBuilder()
         for (i in bytes.indices step bytesPerLine) {
@@ -79,9 +89,11 @@ object UnifiedHexUtils {
         }
         return result.toString()
     }
+
     fun stringToHex(str: String): String {
         return bytesToHex(str.toByteArray())
     }
+
     fun hexToString(hex: String): String {
         return String(hexToBytes(hex))
     }

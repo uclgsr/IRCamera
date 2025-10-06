@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
@@ -7,6 +8,7 @@ object NetworkLogger {
     enum class LogLevel {
         VERBOSE, DEBUG, INFO, WARN, ERROR, NONE
     }
+
     private var currentLogLevel = LogLevel.DEBUG
     private var enableFileLogging = false
 
@@ -69,6 +71,7 @@ object NetworkLogger {
             }
         }
     }
+
     private fun shouldLog(level: LogLevel): Boolean {
         return level.ordinal >= currentLogLevel.ordinal
     }

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.common
+
 import android.util.TypedValue
 import com.mpdc4gsr.libunified.compat.SPUtils
 import com.google.gson.Gson
@@ -8,12 +9,14 @@ import com.mpdc4gsr.libunified.app.bean.CameraItemBean
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.utils.CommUtils
+
 object SaveSettingUtils {
     private const val SP_NAME = "SaveSettingUtils"
     const val FusionTypeLPYFusion = 4
     const val FusionTypeMeanFusion = 2
     const val FusionTypeIROnly = 1
     const val FusionTypeVLOnly = 0
+
     // FusionTypeTC007Fusion constant removed - TC007 device support discontinued
     const val FusionTypeHSLFusion = 3
     const val FusionTypeScreenFusion = 5
@@ -49,6 +52,7 @@ object SaveSettingUtils {
         fusionType = FusionTypeLPYFusion
         isOpenAmplify = false
     }
+
     var isSaveSetting: Boolean
         get() = SPUtils.getInstance(SP_NAME).getBoolean("isSaveSetting", true)
         set(value) {

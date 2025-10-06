@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -13,10 +14,12 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+
 class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>() {
     override fun createViewModel(): IRLogMPChartViewModel {
         return IRLogMPChartViewModel()
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRLogMPChartViewModel) {
@@ -65,6 +68,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
             }
         }
     }
+
     @Composable
     private fun IRLogMPChartContent(
         viewModel: IRLogMPChartViewModel,
@@ -296,6 +300,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
             }
         }
     }
+
     @Composable
     private fun StatisticItem(
         label: String,
@@ -319,4 +324,5 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
         }
     }
 }
+
 class IRLogMPChartViewModel : BaseViewModel()

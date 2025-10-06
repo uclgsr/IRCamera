@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.tools
+
 object FenceTools {
     fun pointToIndex(
         point: IntArray,
@@ -8,6 +9,7 @@ object FenceTools {
         val y = point[1]
         return y * w + x
     }
+
     fun indexToPoint(
         index: Int,
         w: Int,

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -33,15 +34,18 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
             context.startActivity(Intent(context, ShimmerConfigComposeActivity::class.java))
         }
     }
+
     private val viewModel: ShimmerConfigViewModel by viewModels {
         ShimmerConfigViewModelFactory(application, this)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Content(viewModel)
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun Content(viewModel: ShimmerConfigViewModel) {
@@ -108,6 +112,7 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
         }
     }
 }
+
 @Composable
 private fun ShimmerConfigContent(
     isScanning: Boolean,
@@ -174,6 +179,7 @@ private fun ShimmerConfigContent(
         }
     }
 }
+
 @Composable
 private fun ScanningStatusCard(
     isScanning: Boolean,
@@ -222,6 +228,7 @@ private fun ScanningStatusCard(
         }
     }
 }
+
 @Composable
 private fun DeviceCard(
     device: DeviceInfo,
@@ -347,6 +354,7 @@ private fun DeviceCard(
         }
     }
 }
+
 @Composable
 private fun SelectedDevicePanel(
     device: DeviceInfo,
@@ -394,6 +402,7 @@ private fun SelectedDevicePanel(
         }
     }
 }
+
 @Composable
 private fun DeviceConfigurationDialog(
     device: DeviceInfo,

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.main.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -57,6 +58,7 @@ fun MainScreen(
                 0 -> SensorDashboardTab(
                     onSensorClick = onNavigateToSensor
                 )
+
                 1 -> GalleryTab(onNavigateToGallery = onNavigateToGallery)
                 2 -> ProfileTab(onNavigateToProfile = onNavigateToProfile)
             }
@@ -132,12 +134,16 @@ private fun SensorDashboardTab(
             when (action) {
                 is mpdc4gsr.core.ui.model.GSRAction.Connect ->
                     gsrState = mpdc4gsr.core.ui.model.SensorState.Connecting
+
                 is mpdc4gsr.core.ui.model.GSRAction.Disconnect ->
                     gsrState = mpdc4gsr.core.ui.model.SensorState.Disconnected
+
                 is mpdc4gsr.core.ui.model.GSRAction.StartStream ->
                     gsrState = mpdc4gsr.core.ui.model.SensorState.Streaming
+
                 is mpdc4gsr.core.ui.model.GSRAction.StopStream ->
                     gsrState = mpdc4gsr.core.ui.model.SensorState.Connected
+
                 is mpdc4gsr.core.ui.model.GSRAction.ConfigureDevice -> {}
             }
         }
@@ -147,12 +153,16 @@ private fun SensorDashboardTab(
             when (action) {
                 is mpdc4gsr.core.ui.model.ThermalAction.Connect ->
                     thermalState = mpdc4gsr.core.ui.model.SensorState.Connecting
+
                 is mpdc4gsr.core.ui.model.ThermalAction.Disconnect ->
                     thermalState = mpdc4gsr.core.ui.model.SensorState.Disconnected
+
                 is mpdc4gsr.core.ui.model.ThermalAction.StartPreview ->
                     thermalState = mpdc4gsr.core.ui.model.SensorState.Streaming
+
                 is mpdc4gsr.core.ui.model.ThermalAction.StopPreview ->
                     thermalState = mpdc4gsr.core.ui.model.SensorState.Connected
+
                 is mpdc4gsr.core.ui.model.ThermalAction.Calibrate -> {}
                 is mpdc4gsr.core.ui.model.ThermalAction.OpenSettings -> {}
             }
@@ -163,12 +173,16 @@ private fun SensorDashboardTab(
             when (action) {
                 is mpdc4gsr.core.ui.model.CameraAction.Connect ->
                     rgbState = mpdc4gsr.core.ui.model.SensorState.Connecting
+
                 is mpdc4gsr.core.ui.model.CameraAction.Disconnect ->
                     rgbState = mpdc4gsr.core.ui.model.SensorState.Disconnected
+
                 is mpdc4gsr.core.ui.model.CameraAction.StartPreview ->
                     rgbState = mpdc4gsr.core.ui.model.SensorState.Streaming
+
                 is mpdc4gsr.core.ui.model.CameraAction.StopPreview ->
                     rgbState = mpdc4gsr.core.ui.model.SensorState.Connected
+
                 is mpdc4gsr.core.ui.model.CameraAction.SetResolution -> {}
             }
         }
@@ -401,6 +415,7 @@ private fun StatusItem(
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenPreview() {

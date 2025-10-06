@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
+
 import android.view.SurfaceView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,10 +22,12 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel.*
+
 class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
     override fun createViewModel(): IRPlushViewModel {
         return viewModels<IRPlushViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRPlushViewModel) {
@@ -91,6 +94,7 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
             }
         }
     }
+
     @Composable
     private fun IRPlusStatusBar(
         dualViewState: DualViewState,
@@ -166,6 +170,7 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
             }
         }
     }
+
     @Composable
     private fun StatusChip(
         text: String,
@@ -185,6 +190,7 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
             )
         }
     }
+
     @Composable
     private fun DualCameraView(
         dualViewState: DualViewState,
@@ -252,6 +258,7 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
             }
         }
     }
+
     @Composable
     private fun TemperatureOverlays(
         temperatureData: TemperatureData?,
@@ -285,6 +292,7 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
             }
         }
     }
+
     @Composable
     private fun TemperatureCard(
         label: String,
@@ -322,6 +330,7 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
             }
         }
     }
+
     @Composable
     private fun PlusFeatureOverlay(
         modifier: Modifier = Modifier
@@ -353,6 +362,7 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
             }
         }
     }
+
     @Composable
     private fun IRPlusControlsPanel(
         viewModel: IRPlushViewModel,
@@ -411,6 +421,7 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
             }
         }
     }
+
     @Composable
     private fun ProcessingModeSelector(
         currentMode: ProcessingMode,
@@ -442,6 +453,7 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
             }
         }
     }
+
     @Composable
     private fun CalibrationSection(
         onCalibrate: () -> Unit,
@@ -480,6 +492,7 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
             }
         }
     }
+
     @Composable
     private fun PlusFeaturesSection() {
         Column(
@@ -520,6 +533,7 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
             }
         }
     }
+
     // Helper functions
     private fun getDualViewStatusText(state: DualViewState): String = when (state) {
         DualViewState.INACTIVE -> "Inactive"
@@ -527,6 +541,7 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
         DualViewState.CALIBRATING -> "Calibrating"
         DualViewState.ERROR -> "Error"
     }
+
     private fun getDualViewStatusColor(state: DualViewState): Color = when (state) {
         DualViewState.INACTIVE -> Color.Gray
         DualViewState.ACTIVE -> Color.Green

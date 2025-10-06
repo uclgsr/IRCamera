@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.os.Bundle
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -37,6 +38,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
         private const val EXPECTED_INTERVAL_MS = 1000.0 / EXPECTED_SAMPLE_RATE  // ~7.8ms
         private const val INTERVAL_TOLERANCE_MS = 2.0  // Allow 2ms variance
     }
+
     private var gsrRecorder: GSRSensorRecorder? = null
     private var recordingController: RecordingController? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +50,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun GSRDataIntegrityTestScreen() {
@@ -319,6 +322,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     fun IntegrityCheckItem(check: IntegrityCheck) {
         Row(
@@ -357,12 +361,14 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     data class IntegrityCheck(
         val checkName: String,
         val value: String,
         val passed: Boolean,
         val details: String
     )
+
     private fun initializeComponents() {
         try {
             val controller = RecordingController(this, this)
@@ -373,6 +379,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Failed to initialize components: ${e.message}")
         }
     }
+
     private suspend fun runFullIntegrityTest(
         onSamplesUpdate: (Int) -> Unit,
         onRateUpdate: (Double) -> Unit,
@@ -442,6 +449,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
             onComplete()
         }
     }
+
     private suspend fun runQuickIntegrityCheck(
         onSamplesUpdate: (Int) -> Unit,
         onRateUpdate: (Double) -> Unit,
@@ -478,6 +486,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Quick integrity check failed: ${e.message}")
         }
     }
+
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {
@@ -489,6 +498,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private suspend fun testSamplingRate() {
         AppLogger.d(TAG, "Testing sampling rate")
         try {
@@ -498,6 +508,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Sampling rate test failed: ${e.message}")
         }
     }
+
     private suspend fun testDataConsistency() {
         AppLogger.d(TAG, "Testing data consistency")
         try {
@@ -507,6 +518,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Data consistency test failed: ${e.message}")
         }
     }
+
     private suspend fun testTimestampAccuracy() {
         AppLogger.d(TAG, "Testing timestamp accuracy")
         try {
@@ -516,6 +528,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Timestamp accuracy test failed: ${e.message}")
         }
     }
+
     private suspend fun testSignalQuality() {
         AppLogger.d(TAG, "Testing signal quality")
         try {
@@ -525,6 +538,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Signal quality test failed: ${e.message}")
         }
     }
+
     private suspend fun testRangeValidation() {
         AppLogger.d(TAG, "Testing range validation")
         try {

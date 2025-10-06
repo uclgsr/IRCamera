@@ -1,8 +1,10 @@
 package mpdc4gsr.feature.settings.data
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
+
 object RecordingSettingsValidator {
     private const val TAG = "RecordingSettingsValidator"
     fun validateAndLogSettings(context: Context) {
@@ -24,6 +26,7 @@ object RecordingSettingsValidator {
         AppLogger.i(TAG, "Quality Config - Preferred FPS: ${qualityConfig.preferredFps}")
         AppLogger.i(TAG, "==================================================")
     }
+
     fun verifySettingsApplied(
         context: Context,
         actualAudioEnabled: Boolean,

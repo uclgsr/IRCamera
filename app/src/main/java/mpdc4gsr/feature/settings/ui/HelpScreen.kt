@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -138,6 +139,7 @@ fun HelpScreen(
         }
     }
 }
+
 @Composable
 private fun FAQItem(
     question: String,
@@ -158,6 +160,7 @@ private fun FAQItem(
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun HelpScreenPreview() {

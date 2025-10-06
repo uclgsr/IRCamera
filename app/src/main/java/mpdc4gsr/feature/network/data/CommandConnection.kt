@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import kotlinx.coroutines.flow.StateFlow
 
 interface CommandConnection {

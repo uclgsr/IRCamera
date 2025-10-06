@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 @Composable
 fun EmissivityCompose(
     textList: List<String>,
@@ -100,6 +102,7 @@ fun EmissivityCompose(
         }
     }
 }
+
 @Composable
 fun EmissivityComposePreview() {
     Column(

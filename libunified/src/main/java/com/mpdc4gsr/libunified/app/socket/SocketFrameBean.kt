@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.socket
+
 data class SocketFrameBean(
     val isMaxShow: Boolean,
     val isMinShow: Boolean,
@@ -255,11 +256,13 @@ data class SocketFrameBean(
         isR3MinWarn = byteArray[251].toInt() and 0xff == 1,
         isR3CenterWarn = byteArray[252].toInt() and 0xff == 1,
     )
+
     companion object {
         private fun Boolean.openText(): String = if (this) "[ph][ph]" else "[ph][ph]"
         private fun Int.toCStr(): String =
             "${this / 10}${if (this % 10 == 0) "" else ".${this % 10}"}°C"
     }
+
     override fun toString(): String {
         val stringBuilder = StringBuilder()
         if (isMaxShow) {

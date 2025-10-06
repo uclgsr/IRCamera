@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.presentation
+
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
@@ -18,17 +19,20 @@ class GSRSettingsViewModel : AppBaseViewModel() {
         val scanningState: ScanningState = ScanningState.IDLE,
         val isLoading: Boolean = false
     )
+
     data class PermissionState(
         val hasAllPermissions: Boolean,
         val missingPermissions: List<String>,
         val shouldShowRationale: List<String>
     )
+
     data class DeviceConnectionState(
         val isConnected: Boolean,
         val deviceInfo: DeviceInfo? = null,
         val connectionStatus: String = "Disconnected",
         val signalStrength: Int = 0
     )
+
     data class DeviceInfo(
         val id: String,
         val name: String,
@@ -37,11 +41,14 @@ class GSRSettingsViewModel : AppBaseViewModel() {
         val batteryLevel: Int? = null,
         val signalStrength: Int = 0
     )
+
     enum class ScanningState {
         IDLE, SCANNING, COMPLETED, FAILED
     }
+
     private lateinit var repository: GSRSettingsRepository
     private var gsrSensorRecorder: GSRSensorRecorder? = null
+
     // StateFlow from Repository
     val gsrSettings: StateFlow<GSRSettingsRepository.GSRSettings> by lazy {
         repository.gsrSettings.stateIn(
@@ -57,6 +64,7 @@ class GSRSettingsViewModel : AppBaseViewModel() {
             GSRSettingsRepository.DeviceSettings()
         )
     }
+
     // Modern UI State Management with StateFlow
     private val _permissionState =
         MutableStateFlow(PermissionState(false, emptyList(), emptyList()))
@@ -68,9 +76,11 @@ class GSRSettingsViewModel : AppBaseViewModel() {
     val availableDevices: StateFlow<List<DeviceInfo>> = _availableDevices.asStateFlow()
     private val _scanningState = MutableStateFlow(ScanningState.IDLE)
     val scanningState: StateFlow<ScanningState> = _scanningState.asStateFlow()
+
     // SharedFlow for one-time events
     private val _settingsEvents = MutableSharedFlow<SettingsEvent>()
     val settingsEvents: SharedFlow<SettingsEvent> = _settingsEvents.asSharedFlow()
+
     // Combined state for UI optimization
     val settingsUiState: StateFlow<UIState> by lazy {
         combine(
@@ -85,29 +95,34 @@ class GSRSettingsViewModel : AppBaseViewModel() {
             UIState(gsrSettings, deviceSettings, permissions, connection, scanning)
         }.stateIn(viewModelScope, SharingStarted.Lazily, UIState())
     }
+
     // Modern Event-driven architecture with SharedFlow
     sealed class SettingsEvent {
         data class ShowPermissionDialog(val permissions: List<String>) : SettingsEvent()
         data class ShowPermissionDeniedDialog(val permissions: List<String>) : SettingsEvent()
         data class ShowPermissionPermanentlyDeniedDialog(val permissions: List<String>) :
             SettingsEvent()
+
         object OpenAppSettings : SettingsEvent()
         data class DeviceScanCompleted(val message: String) : SettingsEvent()
         data class DeviceConnected(val device: DeviceInfo, val message: String) : SettingsEvent()
         data class DeviceDisconnected(val message: String) : SettingsEvent()
         data class SettingsExported(val data: Map<String, Any>, val message: String) :
             SettingsEvent()
+
         data class SettingsImported(val message: String) : SettingsEvent()
         data class CalibrationStarted(val message: String) : SettingsEvent()
         data class CalibrationCompleted(val message: String) : SettingsEvent()
         data class ShowToast(val message: String) : SettingsEvent()
         data class ShowError(val message: String) : SettingsEvent()
     }
+
     fun initialize(context: Context) {
         repository = GSRSettingsRepository(context)
         checkPermissions(context)
         initializeGSRRecorder(context)
     }
+
     private fun initializeGSRRecorder(context: Context) {
         launchWithErrorHandling {
             try {
@@ -135,6 +150,7 @@ class GSRSettingsViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun checkPermissions(context: Context) {
         val missingPermissions = getMissingPermissions(context)
         val shouldShowRationale = mutableListOf<String>()
@@ -149,6 +165,7 @@ class GSRSettingsViewModel : AppBaseViewModel() {
             shouldShowRationale = shouldShowRationale
         )
     }
+
     fun onPermissionsResult(permissions: Array<String>, grantResults: IntArray) {
         val deniedPermissions = mutableListOf<String>()
         val permanentlyDeniedPermissions = mutableListOf<String>()
@@ -168,6 +185,7 @@ class GSRSettingsViewModel : AppBaseViewModel() {
                     )
                     enableDeviceManagement()
                 }
+
                 permanentlyDeniedPermissions.isNotEmpty() -> {
                     _settingsEvents.emit(
                         SettingsEvent.ShowPermissionPermanentlyDeniedDialog(
@@ -175,12 +193,14 @@ class GSRSettingsViewModel : AppBaseViewModel() {
                         )
                     )
                 }
+
                 else -> {
                     _settingsEvents.emit(SettingsEvent.ShowPermissionDeniedDialog(deniedPermissions))
                 }
             }
         }
     }
+
     fun requestPermissions() {
         launchWithErrorHandling {
             val currentState = _permissionState.value
@@ -189,6 +209,7 @@ class GSRSettingsViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun startDeviceScan() {
         if (_scanningState.value == ScanningState.SCANNING) return
         _scanningState.value = ScanningState.SCANNING
@@ -205,6 +226,7 @@ class GSRSettingsViewModel : AppBaseViewModel() {
             }
         }
     }
+
     private suspend fun scanForDevices(): List<DeviceInfo> {
         // Simulate device discovery
         return listOf(
@@ -213,6 +235,7 @@ class GSRSettingsViewModel : AppBaseViewModel() {
             DeviceInfo("shimmer_003", "Shimmer GSR #003", "00:11:22:AA:BB:EE")
         )
     }
+
     fun connectToDevice(deviceInfo: DeviceInfo) {
         launchWithErrorHandling {
             try {
@@ -252,6 +275,7 @@ class GSRSettingsViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun disconnectDevice() {
         launchWithErrorHandling {
             try {
@@ -265,6 +289,7 @@ class GSRSettingsViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun updateGSRSettings(settings: GSRSettingsRepository.GSRSettings) {
         launchWithErrorHandling {
             repository.updateGSRSettings(settings)
@@ -274,17 +299,20 @@ class GSRSettingsViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun updateSamplingRate(samplingRate: Int) {
         launchWithErrorHandling {
             val currentSettings = repository.gsrSettings.value
             repository.updateGSRSettings(currentSettings.copy(samplingRate = samplingRate))
         }
     }
+
     fun updateDeviceSettings(settings: GSRSettingsRepository.DeviceSettings) {
         launchWithErrorHandling {
             repository.updateDeviceSettings(settings)
         }
     }
+
     fun exportSettings() {
         launchWithErrorHandling {
             val settingsMap = repository.exportSettings()
@@ -296,6 +324,7 @@ class GSRSettingsViewModel : AppBaseViewModel() {
             )
         }
     }
+
     fun importSettings(settingsMap: Map<String, Any>) {
         launchWithErrorHandling {
             val success = repository.importSettings(settingsMap)
@@ -306,11 +335,13 @@ class GSRSettingsViewModel : AppBaseViewModel() {
             }
         }
     }
+
     fun resetToDefaults() {
         launchWithErrorHandling {
             repository.resetToDefaults()
         }
     }
+
     fun startCalibration() {
         launchWithErrorHandling {
             _settingsEvents.emit(SettingsEvent.CalibrationStarted("Starting GSR calibration..."))
@@ -350,9 +381,11 @@ class GSRSettingsViewModel : AppBaseViewModel() {
             }
         }
     }
+
     private fun enableDeviceManagement() {
         // Enable device-related UI
     }
+
     private fun getMissingPermissions(context: Context): List<String> {
         val missing = mutableListOf<String>()
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
@@ -381,6 +414,7 @@ class GSRSettingsViewModel : AppBaseViewModel() {
         }
         return missing
     }
+
     companion object {
         private const val TAG = "GSRSettingsViewModel"
     }

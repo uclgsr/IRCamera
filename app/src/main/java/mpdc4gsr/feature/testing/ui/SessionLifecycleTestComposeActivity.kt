@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.os.Bundle
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -27,6 +28,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
     companion object {
         private const val TAG = "SessionLifecycleTestCompose"
     }
+
     data class SessionEvent(
         val eventType: String,
         val timestamp: Long,
@@ -34,9 +36,11 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
         val success: Boolean = true,
         val details: String = ""
     )
+
     enum class SessionState {
         IDLE, INITIALIZING, ACTIVE, PAUSED, STOPPING, COMPLETED, ERROR
     }
+
     private var sessionEvents by mutableStateOf(listOf<SessionEvent>())
     private var currentSessionState by mutableStateOf(SessionState.IDLE)
     private var isTestRunning by mutableStateOf(false)
@@ -49,6 +53,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SessionLifecycleTestScreen() {
@@ -247,6 +252,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     fun SessionEventItem(event: SessionEvent) {
         Row(
@@ -287,6 +293,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private fun getSessionStateIcon(state: SessionState): androidx.compose.ui.graphics.vector.ImageVector {
         return when (state) {
             SessionState.IDLE -> Icons.Default.Stop
@@ -298,6 +305,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
             SessionState.ERROR -> Icons.Default.Error
         }
     }
+
     private suspend fun runFullLifecycleTest() {
         AppLogger.i(TAG, "Starting full session lifecycle test")
         val testMetrics = mutableMapOf<String, Any>()
@@ -330,6 +338,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
             isTestRunning = false
         }
     }
+
     private suspend fun testSessionCreation(): Long {
         AppLogger.d(TAG, "Testing session creation")
         return measureTimeMillis {
@@ -344,6 +353,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
             )
         }
     }
+
     private suspend fun testMultiSensorStart(): Long {
         AppLogger.d(TAG, "Testing multi-sensor start")
         return measureTimeMillis {
@@ -373,6 +383,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
             )
         }
     }
+
     private suspend fun testPauseResume(): Long {
         AppLogger.d(TAG, "Testing pause/resume functionality")
         return measureTimeMillis {
@@ -396,6 +407,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
             )
         }
     }
+
     private suspend fun testGracefulStop(): Long {
         AppLogger.d(TAG, "Testing graceful session stop")
         return measureTimeMillis {
@@ -432,6 +444,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
             )
         }
     }
+
     private suspend fun simulateSession() {
         AppLogger.d(TAG, "Simulating quick session")
         currentSessionState = SessionState.INITIALIZING
@@ -448,6 +461,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
             details = "Quick session simulation completed"
         )
     }
+
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {
@@ -460,6 +474,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private suspend fun testErrorRecovery() {
         AppLogger.d(TAG, "Testing error recovery")
         try {
@@ -475,6 +490,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Error recovery test failed: ${e.message}")
         }
     }
+
     private suspend fun testDataIntegrity() {
         AppLogger.d(TAG, "Testing data integrity")
         try {

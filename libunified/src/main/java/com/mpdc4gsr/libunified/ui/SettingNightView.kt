@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.R
+
 class SettingNightView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -24,6 +25,7 @@ class SettingNightView @JvmOverloads constructor(
             field = value
             itemSettingEndImage.isVisible = value
         }
+
     init {
         LayoutInflater.from(context).inflate(R.layout.ui_setting_view_night, this, true)
         itemSettingImage = findViewById(R.id.item_setting_image)
@@ -59,6 +61,7 @@ class SettingNightView @JvmOverloads constructor(
             }
         }
     }
+
     fun setRightTextId(textResId: Int) {
         if (textResId == 0) {
             tvEnd.visibility = GONE
@@ -69,6 +72,7 @@ class SettingNightView @JvmOverloads constructor(
             itemSettingEndImage.visibility = GONE
         }
     }
+
     override fun setOnClickListener(listener: OnClickListener?) {
         super.setOnClickListener(listener)
     }

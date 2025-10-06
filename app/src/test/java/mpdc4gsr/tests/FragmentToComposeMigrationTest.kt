@@ -1,4 +1,5 @@
 package mpdc4gsr.tests
+
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -17,8 +18,10 @@ import org.mockito.kotlin.whenever
 class FragmentToComposeMigrationTest {
     @get:Rule
     val composeTestRule = createComposeRule()
+
     // Mock ViewModels for testing
     private val mockMainFragmentViewModel = mock<MainFragmentViewModel>()
+
     @Test
     fun testMainFragmentCompose_InitialState() = runTest {
         // Setup mock data
@@ -40,6 +43,7 @@ class FragmentToComposeMigrationTest {
         composeTestRule.onNodeWithContentDescription("Add Device").assertExists()
         composeTestRule.onNodeWithContentDescription("GSR Recording").assertExists()
     }
+
     @Test
     fun testMainFragmentCompose_WithConnectedDevices() = runTest {
         // Setup mock data with connected devices
@@ -60,6 +64,7 @@ class FragmentToComposeMigrationTest {
         composeTestRule.onNodeWithText("TC Line Device").assertExists()
         composeTestRule.onNodeWithText("Online").assertExists()
     }
+
     @Test
     fun testSensorDashboardFragmentCompose_InitialState() = runTest {
         composeTestRule.setContent {
@@ -76,6 +81,7 @@ class FragmentToComposeMigrationTest {
         composeTestRule.onNodeWithText("Shimmer GSR Sensor").assertExists()
         composeTestRule.onNodeWithText("Audio Recorder").assertExists()
     }
+
     @Test
     fun testSensorDashboardFragmentCompose_RecordingState() = runTest {
         composeTestRule.setContent {
@@ -88,6 +94,7 @@ class FragmentToComposeMigrationTest {
         composeTestRule.onNodeWithText("Stop Recording").assertExists()
         composeTestRule.onNodeWithText("RECORDING").assertExists()
     }
+
     @Test
     fun testAccessibility_MainFragmentCompose() = runTest {
         val deviceState = MainFragmentViewModel.DeviceState(
@@ -109,6 +116,7 @@ class FragmentToComposeMigrationTest {
         composeTestRule.onAllNodesWithContentDescription("Add Device")[0].assertHasClickAction()
         composeTestRule.onAllNodesWithContentDescription("GSR Recording")[0].assertHasClickAction()
     }
+
     @Test
     fun testThemeConsistency_AllFragments() = runTest {
         // Test that all fragments use consistent Material 3 theming

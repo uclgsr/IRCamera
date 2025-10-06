@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.compose.dialogs
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+
 @Composable
 fun LongTextDialog(
     title: String,
@@ -84,6 +86,7 @@ fun LongTextDialog(
         }
     }
 }
+
 @Composable
 fun NotificationDialog(
     message: String,
@@ -162,6 +165,7 @@ fun NotificationDialog(
         }
     }
 }
+
 @Composable
 fun FirmwareUpdateDialog(
     title: String,

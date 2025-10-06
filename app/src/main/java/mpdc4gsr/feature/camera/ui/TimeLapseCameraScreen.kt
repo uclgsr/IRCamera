@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -260,6 +261,7 @@ fun TimeLapseCameraScreen(
         }
     }
 }
+
 @Composable
 private fun InfoRow(label: String, value: String) {
     Row(
@@ -277,6 +279,7 @@ private fun InfoRow(label: String, value: String) {
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun TimeLapseCameraScreenPreview() {

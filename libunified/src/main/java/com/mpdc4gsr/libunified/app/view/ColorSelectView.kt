@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.view
+
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -7,6 +8,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
+
 class ColorSelectView : View {
     companion object {
         private const val DEFAULT_STROKE_WIDTH = 3
@@ -173,6 +175,7 @@ class ColorSelectView : View {
                 ROW_COLOR_9,
                 ROW_COLOR_10
             )
+
         private fun getRowFromColor(
             @ColorInt color: Int,
         ): Int =
@@ -189,6 +192,7 @@ class ColorSelectView : View {
                 0xFFCBF0FF.toInt(), 0xFFD2E2FE.toInt(), 0xFFD8C9FE.toInt(), 0xFFEFCAFE.toInt(), 0xFFF9D3E0.toInt(), 0xFFFFDAD8.toInt(), 0xFFFFE2D6.toInt(), 0xFFFEECD4.toInt(), 0xFFFEF1D5.toInt(), 0xFFFDFBDD.toInt(), 0xFFF6FADB.toInt(), 0xFFDEEED4.toInt() -> 9
                 else -> -1
             }
+
         private fun getColumnFromColor(
             @ColorInt color: Int,
         ): Int =
@@ -208,6 +212,7 @@ class ColorSelectView : View {
                 else -> -1
             }
     }
+
     var isNeedStroke: Boolean = false
         set(value) {
             invalidate()
@@ -219,6 +224,7 @@ class ColorSelectView : View {
         currentColumn = -1
         invalidate()
     }
+
     fun selectColor(
         @ColorInt color: Int,
     ) {
@@ -226,6 +232,7 @@ class ColorSelectView : View {
         currentColumn = getColumnFromColor(color)
         invalidate()
     }
+
     private var currentRow: Int = -1
     private var currentColumn: Int = -1
     private val widthPixels: Int
@@ -235,6 +242,7 @@ class ColorSelectView : View {
     private val itemPaint = Paint()
     private val itemSelectPaint = Paint()
     private val strokePaint = Paint()
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
@@ -243,6 +251,7 @@ class ColorSelectView : View {
         defStyleAttr,
         0
     )
+
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -268,6 +277,7 @@ class ColorSelectView : View {
         strokePaint.color = 0xff999999.toInt()
         strokePaint.strokeWidth = strokeWidth / 2f
     }
+
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
@@ -289,6 +299,7 @@ class ColorSelectView : View {
             }
         setMeasuredDimension(width, height)
     }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val itemSize = (measuredWidth - strokeWidth) / 12f
@@ -411,6 +422,7 @@ class ColorSelectView : View {
             canvas?.drawPath(path, itemSelectPaint)
         }
     }
+
     private var downRow = 0
     private var downColumn = 0
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -429,6 +441,7 @@ class ColorSelectView : View {
                 downRow = row
                 downColumn = column
             }
+
             MotionEvent.ACTION_UP -> {
                 if (row == downRow && column == downColumn) {
                     currentRow = row
@@ -440,6 +453,7 @@ class ColorSelectView : View {
         }
         return true
     }
+
     private fun dp2px(dpValue: Float): Int {
         return (dpValue * density + 0.5f).toInt()
     }

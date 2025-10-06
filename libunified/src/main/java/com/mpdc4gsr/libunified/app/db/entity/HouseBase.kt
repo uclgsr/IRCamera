@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.db.entity
+
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -6,31 +7,44 @@ import androidx.room.PrimaryKey
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+
 open class HouseBase {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
+
     @ColumnInfo
     var name: String = ""
+
     @ColumnInfo
     var inspectorName: String = ""
+
     @ColumnInfo
     var address: String = ""
+
     @ColumnInfo
     var imagePath: String = ""
+
     @ColumnInfo
     var year: Int? = null
+
     @ColumnInfo
     var houseSpace: String = ""
+
     @ColumnInfo
     var houseSpaceUnit: Int = 0
+
     @ColumnInfo
     var cost: String = ""
+
     @ColumnInfo
     var costUnit: Int = 0
+
     @ColumnInfo
     var detectTime: Long = 0
+
     @ColumnInfo
     var createTime: Long = 0
+
     @ColumnInfo
     var updateTime: Long = 0
     override fun equals(other: Any?): Boolean = other is HouseBase && other.id == id
@@ -41,6 +55,7 @@ open class HouseBase {
             1 -> "m²"
             else -> "ha"
         }
+
     fun getCostUnitStr(): String =
         when (costUnit) {
             1 -> "EUR"
@@ -53,6 +68,7 @@ open class HouseBase {
             8 -> "HKD"
             else -> "USD"
         }
+
     fun getPdfFileName(): String {
         val formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")
         val formatted = Instant.ofEpochMilli(createTime)
@@ -61,6 +77,7 @@ open class HouseBase {
         return "TC_${formatted}.pdf"
     }
 }
+
 @Entity
 class HouseDetect : HouseBase() {
     @Ignore
@@ -82,6 +99,7 @@ class HouseDetect : HouseBase() {
         newDetect.updateTime = updateTime
         return newDetect
     }
+
     fun toHouseReport(): HouseReport {
         val houseReport = HouseReport()
         houseReport.id = 0
@@ -110,16 +128,21 @@ class HouseDetect : HouseBase() {
         return houseReport
     }
 }
+
 @Entity
 class HouseReport : HouseBase() {
     @ColumnInfo
     var inspectorWhitePath: String = ""
+
     @ColumnInfo
     var inspectorBlackPath: String = ""
+
     @ColumnInfo
     var houseOwnerWhitePath: String = ""
+
     @ColumnInfo
     var houseOwnerBlackPath: String = ""
+
     @Ignore
     var dirList: ArrayList<DirReport> = ArrayList()
 }

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.ui
+
 import androidx.camera.view.PreviewView
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
@@ -61,6 +62,7 @@ fun TapToFocusPreview(
         }
     }
 }
+
 @Composable
 private fun FocusIndicator(focusPoint: Offset) {
     val density = LocalDensity.current
@@ -145,6 +147,7 @@ fun TapToFocusPreviewWithCustomIndicator(
         }
     }
 }
+
 @Composable
 private fun CustomFocusIndicator(
     focusPoint: Offset,

@@ -1,9 +1,11 @@
 package com.mpdc4gsr.module.thermalunified.base
+
 import android.graphics.Bitmap
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
 import kotlinx.coroutines.Job
+
 open class BaseThermalFragment : BaseFragment() {
     var mIrBitmap: Bitmap? = null
     val REQUEST_CODE_FROM_UPGRADE = 1001
@@ -55,6 +57,7 @@ open class BaseThermalFragment : BaseFragment() {
     override fun initContentView() = 0
     override fun initView() {
     }
+
     override fun initData() {
     }
 }

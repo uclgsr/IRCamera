@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -32,6 +33,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun Content(viewModel: MainActivityViewModel) {
@@ -199,6 +201,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun MultiModalSensorOverview(
         thermalCameraState: MainActivityViewModel.SensorState,
@@ -285,6 +288,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun SensorStatusIndicator(
         title: String,
@@ -317,6 +321,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
             )
         }
     }
+
     @Composable
     private fun DeviceManagementSection(
         thermalCameraState: MainActivityViewModel.SensorState,
@@ -366,6 +371,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun DeviceCard(
         title: String,
@@ -427,6 +433,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun DataExportSection(
         sessionState: MainActivityViewModel.SessionState,
@@ -492,6 +499,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
             }
         }
     }
+
     @Composable
     private fun SystemDiagnosticsSection(
         thermalCameraState: MainActivityViewModel.SensorState,
@@ -570,6 +578,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
             }
         }
     }
+
     // Launch methods for enhanced functionality
     private fun launchDeviceConfig(deviceType: String) {
         // Launch device-specific configuration
@@ -577,22 +586,26 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
             "thermal" -> {
                 // Launch thermal camera configuration
             }
+
             "gsr" -> {
                 // Launch GSR sensor configuration
             }
         }
     }
+
     private fun launchDeviceTest(deviceType: String) {
         // Launch device-specific testing
         when (deviceType) {
             "thermal" -> {
                 // Launch thermal camera test
             }
+
             "gsr" -> {
                 // Launch GSR sensor test
             }
         }
     }
+
     // Enhanced mock data generation
     private fun generateEnhancedGSRReadings(): List<Float> {
         return (0..100).map {

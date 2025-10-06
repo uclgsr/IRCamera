@@ -1,4 +1,5 @@
 package com.mpdc4gsr.gsr.tests
+
 import android.content.Context
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
@@ -13,6 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+
 @Ignore("All tests disabled")
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
@@ -20,17 +22,20 @@ import org.robolectric.annotation.Config
 class RecordingSessionManagerTest {
     private lateinit var context: Context
     private lateinit var sessionManager: SessionManager
+
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
         sessionManager = SessionManager.getInstance(context)
     }
+
     @Test
     fun testSingletonInstance() {
         val instance1 = SessionManager.getInstance(context)
         val instance2 = SessionManager.getInstance(context)
         assertSame("SessionManager should be singleton", instance1, instance2)
     }
+
     @Test
     fun testCreateSession() =
         runTest {
@@ -45,6 +50,7 @@ class RecordingSessionManagerTest {
             assertTrue("Session should be active", session.isActive())
             assertNull("End time should be null for active session", session.endTime)
         }
+
     @Test
     fun testGetActiveSession() =
         runTest {
@@ -57,6 +63,7 @@ class RecordingSessionManagerTest {
             assertNotNull("Should find the created session", foundSession)
             assertEquals("Session ID should match", sessionId, foundSession?.sessionId)
         }
+
     @Test
     fun testCompleteSession() =
         runTest {
@@ -75,6 +82,7 @@ class RecordingSessionManagerTest {
                 stillActiveSession == null || !stillActiveSession.isActive()
             )
         }
+
     @Test
     fun testGetSessionInfo() =
         runTest {
@@ -85,6 +93,7 @@ class RecordingSessionManagerTest {
             assertNotNull("Should have session info", sessionInfo)
             assertEquals("Session ID should match", sessionId, sessionInfo?.sessionId)
         }
+
     @Test
     fun testSessionListener() =
         runTest {
@@ -97,12 +106,15 @@ class RecordingSessionManagerTest {
                     override fun onSessionCreated(session: SessionInfo) {
                         createdSession = session
                     }
+
                     override fun onSessionUpdated(session: SessionInfo) {
                         updatedSession = session
                     }
+
                     override fun onSessionCompleted(session: SessionInfo) {
                         completedSession = session
                     }
+
                     override fun onSessionError(
                         sessionId: String,
                         error: String,
@@ -118,6 +130,7 @@ class RecordingSessionManagerTest {
             assertTrue("Test completed successfully", true)
             sessionManager.removeSessionListener(listener)
         }
+
     @Test
     fun testSessionMetadata() =
         runTest {
@@ -135,6 +148,7 @@ class RecordingSessionManagerTest {
                 retrievedSession?.sessionId
             )
         }
+
     @Test
     fun testGetAllSessions() =
         runTest {
@@ -149,6 +163,7 @@ class RecordingSessionManagerTest {
             assertTrue("Should contain session_1", sessionIds.contains("session_1"))
             assertTrue("Should contain session_2", sessionIds.contains("session_2"))
         }
+
     @Test
     fun testSessionLifecycle() =
         runTest {

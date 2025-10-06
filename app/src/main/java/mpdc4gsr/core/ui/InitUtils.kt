@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui
+
 import android.content.IntentFilter
 import com.csl.irCamera.BuildConfig
 import com.elvishew.xlog.XLog

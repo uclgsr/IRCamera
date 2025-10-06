@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+
 // Data classes for component state
 data class MonitorOption(
     val id: Int,
@@ -28,15 +30,18 @@ data class MonitorOption(
     val icon: ImageVector,
     val isEnabled: Boolean = true
 )
+
 data class TipDialogData(
     val title: String,
     val message: String,
     val icon: ImageVector,
     val type: TipType = TipType.INFO
 )
+
 enum class TipType {
     INFO, WARNING, ERROR, SUCCESS
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MonitorSelectDialogCompose(
@@ -121,6 +126,7 @@ fun MonitorSelectDialogCompose(
         }
     }
 }
+
 @Composable
 private fun MonitorOptionItem(
     option: MonitorOption,
@@ -188,6 +194,7 @@ private fun MonitorOptionItem(
         }
     }
 }
+
 @Composable
 fun TipDialogCompose(
     showDialog: Boolean,
@@ -247,6 +254,7 @@ fun TipDialogCompose(
         )
     }
 }
+
 @Composable
 fun FenceViewsCompose(
     fences: List<FenceData>,
@@ -267,6 +275,7 @@ fun FenceViewsCompose(
         }
     }
 }
+
 @Composable
 private fun FenceItemCompose(
     fence: FenceData,
@@ -315,6 +324,7 @@ private fun FenceItemCompose(
         }
     }
 }
+
 @Composable
 fun GuideStubsCompose(
     guideSteps: List<GuideStep>,
@@ -388,6 +398,7 @@ fun GuideStubsCompose(
         }
     }
 }
+
 @Composable
 fun UIWidgetsCompose(
     widgets: List<WidgetData>,
@@ -402,6 +413,7 @@ fun UIWidgetsCompose(
         }
     }
 }
+
 @Composable
 private fun WidgetItemCompose(
     widget: WidgetData,
@@ -443,6 +455,7 @@ private fun WidgetItemCompose(
         }
     }
 }
+
 // Data classes for components
 data class FenceData(
     val id: Int,
@@ -450,17 +463,20 @@ data class FenceData(
     val points: List<Pair<Float, Float>>,
     val temperature: Float
 )
+
 data class GuideStep(
     val title: String,
     val description: String,
     val imageRes: Int? = null
 )
+
 data class WidgetData(
     val id: Int,
     val title: String,
     val description: String,
     val icon: ImageVector
 )
+
 // Preview functions
 @Preview(showBackground = true)
 @Composable
@@ -480,6 +496,7 @@ private fun MonitorSelectDialogPreview() {
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun TipDialogPreview() {
@@ -497,6 +514,7 @@ private fun TipDialogPreview() {
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun FenceViewsPreview() {

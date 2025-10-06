@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.comm.dialog
+
 import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
@@ -19,6 +20,7 @@ import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.libunified.app.tools.UnitTools
+
 class TempAlarmSetDialog(
     context: Context,
     private val isEdit: Boolean,
@@ -69,10 +71,12 @@ class TempAlarmSetDialog(
             it.attributes = layoutParams
         }
     }
+
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         dismiss()
     }
+
     private fun initView() {
         clRoot = findViewById(R.id.cl_root)
         clClose = findViewById(R.id.cl_close)
@@ -135,10 +139,12 @@ class TempAlarmSetDialog(
         tvAlarmHighUnit.text = UnitTools.showUnit()
         tvAlarmLowUnit.text = UnitTools.showUnit()
     }
+
     override fun show() {
         super.show()
         refreshAlarmView()
     }
+
     private fun refreshAlarmView() {
         switchAlarmHigh.isChecked = alarmBean.isHighOpen
         switchAlarmLow.isChecked = alarmBean.isLowOpen
@@ -185,6 +191,7 @@ class TempAlarmSetDialog(
             4 -> ivRingtone5.isSelected = true
         }
     }
+
     private fun save() {
         try {
             val inputHigh =
@@ -230,6 +237,7 @@ class TempAlarmSetDialog(
         onSaveListener?.invoke(alarmBean)
         dismiss()
     }
+
     private fun showColorDialog(isHigh: Boolean) {
         val colorPickDialog =
             ColorPickDialog(context, if (isHigh) alarmBean.highColor else alarmBean.lowColor, -1)
@@ -244,6 +252,7 @@ class TempAlarmSetDialog(
         }
         colorPickDialog.show()
     }
+
     override fun dismiss() {
         super.dismiss()
         try {
@@ -255,20 +264,24 @@ class TempAlarmSetDialog(
         } catch (_: Exception) {
         }
     }
+
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         when (buttonView?.id) {
             R.id.switch_alarm_high -> {
                 etAlarmHigh.isEnabled = isChecked
                 alarmBean.isHighOpen = isChecked
             }
+
             R.id.switch_alarm_low -> {
                 etAlarmLow.isEnabled = isChecked
                 alarmBean.isLowOpen = isChecked
             }
+
             R.id.switch_alarm_mark -> {
                 clAlarmMark.isVisible = isChecked
                 alarmBean.isMarkOpen = isChecked
             }
+
             R.id.switch_alarm_ringtone -> {
                 clRingtoneSelect.isVisible = isChecked
                 if (isChecked) {
@@ -279,6 +292,7 @@ class TempAlarmSetDialog(
             }
         }
     }
+
     private fun selectRingtone(position: Int?) {
         try {
             if (mediaPlayer != null) {

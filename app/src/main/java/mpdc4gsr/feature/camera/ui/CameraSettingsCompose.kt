@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -121,6 +122,7 @@ fun CameraSettingsPanel(
         }
     }
 }
+
 @Composable
 private fun CameraSettingsSection(
     title: String,
@@ -147,6 +149,7 @@ private fun CameraSettingsSection(
         }
     }
 }
+
 @Composable
 private fun SwitchSettingItem(
     label: String,
@@ -182,6 +185,7 @@ private fun SwitchSettingItem(
         )
     }
 }
+
 @Composable
 private fun SliderSettingItem(
     label: String,

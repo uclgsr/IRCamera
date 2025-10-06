@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,10 +25,12 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryActivityViewModel
 import kotlinx.coroutines.launch
+
 class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
     override fun createViewModel(): GalleryActivityViewModel {
         return viewModels<GalleryActivityViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: GalleryActivityViewModel) {
@@ -127,6 +130,7 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
         }
     }
 }
+
 @Composable
 private fun GalleryTabRow(
     selectedTab: Int,
@@ -163,6 +167,7 @@ private fun GalleryTabRow(
         }
     }
 }
+
 @Composable
 private fun GalleryTab(
     text: String,
@@ -197,6 +202,7 @@ private fun GalleryTab(
         }
     }
 }
+
 @Composable
 private fun GalleryPictureTab() {
     // Embed existing picture fragment using AndroidView wrapper
@@ -209,6 +215,7 @@ private fun GalleryPictureTab() {
         modifier = Modifier.fillMaxSize()
     )
 }
+
 @Composable
 private fun GalleryVideoTab() {
     // Embed existing video fragment using AndroidView wrapper

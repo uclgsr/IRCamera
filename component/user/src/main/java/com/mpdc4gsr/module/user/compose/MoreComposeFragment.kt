@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.user.compose
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +21,7 @@ import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
 import com.mpdc4gsr.libunified.R as RCore
+
 @Composable
 fun MoreComposeFragment(
     viewModel: MoreComposeFragmentViewModel,

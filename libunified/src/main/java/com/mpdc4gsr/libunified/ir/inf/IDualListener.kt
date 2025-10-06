@@ -1,6 +1,8 @@
 package com.mpdc4gsr.libunified.ir.inf
+
 import com.energy.iruvc.dual.DualUVCCamera
 import com.energy.iruvc.utils.DualCameraParams
+
 @Deprecated("[ph][ph][ph]，[ph][ph][ph][ph][ph][ph]")
 interface IDualListener {
     fun setDualUVCCamera(dualUVCCamera: DualUVCCamera)

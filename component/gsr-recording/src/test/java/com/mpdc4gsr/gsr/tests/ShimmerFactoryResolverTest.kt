@@ -1,4 +1,5 @@
 package com.mpdc4gsr.gsr.tests
+
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.mpdc4gsr.gsr.service.MockShimmerDevice
@@ -12,15 +13,18 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+
 @Ignore("All tests disabled")
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
 class ShimmerFactoryResolverTest {
     private lateinit var context: Context
+
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
     }
+
     @Test
     fun `resolver creates factory successfully`() {
         // When
@@ -29,6 +33,7 @@ class ShimmerFactoryResolverTest {
         assertNotNull("Factory should not be null", factory)
         // factory is always ShimmerDeviceFactory by contract, no need for type check
     }
+
     @Test
     fun `resolver factory creates device interface`() {
         // Given
@@ -39,6 +44,7 @@ class ShimmerFactoryResolverTest {
         assertNotNull("Device should not be null", device)
         // device is always ShimmerDeviceInterface by contract, no need for type check
     }
+
     @Test
     fun `resolver falls back to mock in test environment`() {
         // Given
@@ -56,6 +62,7 @@ class ShimmerFactoryResolverTest {
             device is MockShimmerDevice
         )
     }
+
     @Test
     fun `mock device has expected interface methods`() {
         // Given

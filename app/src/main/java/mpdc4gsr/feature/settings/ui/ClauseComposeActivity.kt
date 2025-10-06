@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.ui
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -29,6 +30,7 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import java.util.*
+
 class ClauseViewModel : AppBaseViewModel() {
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
@@ -39,6 +41,7 @@ class ClauseViewModel : AppBaseViewModel() {
     fun setAgreementAccepted(accepted: Boolean) {
         _agreementAccepted.value = accepted
     }
+
     suspend fun confirmInitApp(context: android.content.Context): Boolean {
         return try {
             _isLoading.value = true
@@ -61,9 +64,11 @@ class ClauseViewModel : AppBaseViewModel() {
         }
     }
 }
+
 class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
     private val clauseVM: ClauseViewModel by viewModels()
     override fun createViewModel(): ClauseViewModel = clauseVM
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ClauseViewModel) {
@@ -282,6 +287,7 @@ class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
             }
         }
     }
+
     private fun buildTermsContent(): String {
         return """
             Welcome to the IRCamera application. By using this application, you agree to comply with and be bound by the following terms and conditions.

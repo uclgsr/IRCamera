@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,6 +30,7 @@ class GSRRawImageViewComposeActivity : BaseComposeActivity<GSRRawImageViewViewMo
         viewModels<GSRRawImageViewViewModel> {
             GSRRawImageViewViewModelFactory(application)
         }.value
+
     @Composable
     override fun Content(viewModel: GSRRawImageViewViewModel) {
         IRCameraTheme {
@@ -39,6 +41,7 @@ class GSRRawImageViewComposeActivity : BaseComposeActivity<GSRRawImageViewViewMo
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRRawImageViewScreen(
@@ -88,6 +91,7 @@ fun GSRRawImageViewScreen(
                     }
                 }
             }
+
             uiState.error != null -> {
                 val errorMessage = uiState.error ?: "Unknown error"
                 ErrorContent(
@@ -95,9 +99,11 @@ fun GSRRawImageViewScreen(
                     onRetry = { viewModel.loadImages() }
                 )
             }
+
             uiState.imageFiles.isEmpty() -> {
                 EmptyContent()
             }
+
             else -> {
                 ImageListContent(
                     imageFiles = uiState.imageFiles,
@@ -107,6 +113,7 @@ fun GSRRawImageViewScreen(
         }
     }
 }
+
 @Composable
 private fun ImageListContent(
     imageFiles: List<File>,
@@ -125,6 +132,7 @@ private fun ImageListContent(
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GSRImageCard(
@@ -191,6 +199,7 @@ private fun GSRImageCard(
         }
     }
 }
+
 @Composable
 private fun ErrorContent(
     error: String,
@@ -226,6 +235,7 @@ private fun ErrorContent(
         }
     }
 }
+
 @Composable
 private fun EmptyContent() {
     Box(
@@ -255,6 +265,7 @@ private fun EmptyContent() {
         }
     }
 }
+
 // Utility functions
 private fun formatFileSize(bytes: Long): String {
     return when {
@@ -263,6 +274,7 @@ private fun formatFileSize(bytes: Long): String {
         else -> "${bytes / (1024 * 1024)} MB"
     }
 }
+
 private fun formatDate(timestamp: Long): String {
     return java.text.SimpleDateFormat("MMM dd, yyyy HH:mm", java.util.Locale.getDefault())
         .format(java.util.Date(timestamp))

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.ui
+
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -98,6 +99,7 @@ fun CameraStatusWidget(
         }
     }
 }
+
 @Composable
 private fun CameraPreviewView(cameraRecorder: RgbCameraRecorder) {
     val context = LocalContext.current

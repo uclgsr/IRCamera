@@ -1,4 +1,5 @@
 package com.mpdc4gsr.gsr.service
+
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
@@ -21,6 +22,7 @@ import java.io.FileWriter
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+
 class ShimmerGSRRecorder(
     private val context: Context,
     private val shimmerDeviceFactory: ShimmerDeviceFactory,
@@ -32,6 +34,7 @@ class ShimmerGSRRecorder(
         LOGGING,
         LOG_AND_STREAM
     }
+
     companion object {
         private const val TAG = "ShimmerGSRRecorder"
         private const val SESSIONS_DIR = "IRCamera_Sessions"
@@ -63,6 +66,7 @@ class ShimmerGSRRecorder(
                 "metadata",
             )
     }
+
     private val isRecording = AtomicBoolean(false)
     private val sampleIndex = AtomicLong(0)
     private val isDeviceConnected = AtomicBoolean(false)
@@ -75,6 +79,7 @@ class ShimmerGSRRecorder(
     private val mainHandler = Handler(Looper.getMainLooper())
     private val listeners = mutableListOf<GSRRecordingListener>()
     private val shimmerAPIBridge = ShimmerApiBridge.getInstance()
+
     interface GSRRecordingListener {
         fun onRecordingStarted(session: SessionInfo)
         fun onRecordingStopped(session: SessionInfo)
@@ -84,12 +89,15 @@ class ShimmerGSRRecorder(
         fun onDeviceConnected()
         fun onDeviceDisconnected()
     }
+
     fun addListener(listener: GSRRecordingListener) {
         listeners.add(listener)
     }
+
     fun removeListener(listener: GSRRecordingListener) {
         listeners.remove(listener)
     }
+
     suspend fun initializeDevice(deviceAddress: String? = null): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -118,11 +126,13 @@ class ShimmerGSRRecorder(
                                 Log.i(TAG, "Shimmer device connected")
                                 listeners.forEach { it.onDeviceConnected() }
                             }
+
                             "DISCONNECTED" -> {
                                 isDeviceConnected.set(false)
                                 Log.w(TAG, "Shimmer device disconnected")
                                 listeners.forEach { it.onDeviceDisconnected() }
                             }
+
                             else -> {
                                 Log.d(TAG, "Shimmer connection state: $connectionState")
                             }
@@ -180,6 +190,7 @@ class ShimmerGSRRecorder(
                 false
             }
         }
+
     suspend fun startRecording(sessionId: String): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording.get()) {
@@ -226,6 +237,7 @@ class ShimmerGSRRecorder(
                 return@withContext false
             }
         }
+
     fun stopRecording(): SessionInfo? {
         if (!isRecording.get()) {
             Log.w(TAG, "No recording in progress")
@@ -248,6 +260,7 @@ class ShimmerGSRRecorder(
         currentSession = null
         return completedSession
     }
+
     fun triggerSyncEvent(
         eventType: String,
         metadata: String = "",
@@ -275,6 +288,7 @@ class ShimmerGSRRecorder(
         }
         return false
     }
+
     private fun handleShimmerData(dataCluster: ShimmerDataCluster) {
         if (!isRecording.get()) return
         try {
@@ -303,6 +317,7 @@ class ShimmerGSRRecorder(
             notifyError("Error processing Shimmer data: ${e.message}")
         }
     }
+
     private fun createGSRConfiguration(): ByteArray {
         try {
             val config = ByteArray(12)
@@ -327,6 +342,7 @@ class ShimmerGSRRecorder(
             return ByteArray(12) { if (it == 1) 0x08.toByte() else 0x00.toByte() }
         }
     }
+
     private fun createSessionDirectory(sessionId: String): File? {
         return try {
             val externalStorage = Environment.getExternalStorageDirectory()
@@ -343,6 +359,7 @@ class ShimmerGSRRecorder(
             null
         }
     }
+
     private fun initializeCsvWriters(): Boolean {
         return try {
             sessionDirectory?.let { dir ->
@@ -365,6 +382,7 @@ class ShimmerGSRRecorder(
             false
         }
     }
+
     private fun saveSessionMetadata(session: SessionInfo) {
         try {
             sessionDirectory?.let { dir ->
@@ -378,6 +396,7 @@ class ShimmerGSRRecorder(
             Log.e(TAG, "Failed to save session metadata", e)
         }
     }
+
     private fun cleanup() {
         try {
             signalsWriter?.close()
@@ -388,9 +407,11 @@ class ShimmerGSRRecorder(
             Log.e(TAG, "Error cleaning up resources", e)
         }
     }
+
     private fun notifyError(message: String) {
         listeners.forEach { it.onError(message) }
     }
+
     fun disconnect() {
         if (isRecording.get()) {
             stopRecording()
@@ -400,6 +421,7 @@ class ShimmerGSRRecorder(
         listeners.forEach { it.onDeviceDisconnected() }
         Log.i(TAG, "Shimmer device disconnected")
     }
+
     fun isRecording(): Boolean = isRecording.get()
     fun isDeviceConnected(): Boolean = isDeviceConnected.get()
     private fun startShimmerLogging() {
@@ -410,6 +432,7 @@ class ShimmerGSRRecorder(
             Log.w(TAG, "Failed to start Shimmer logging: ${e.message}")
         }
     }
+
     private fun stopShimmerLogging() {
         try {
             // Shimmer internal logging is not implemented in this wrapper
@@ -418,5 +441,6 @@ class ShimmerGSRRecorder(
             Log.w(TAG, "Failed to stop Shimmer logging: ${e.message}")
         }
     }
+
     fun getRecordingMode(): RecordingMode = recordingMode
 }

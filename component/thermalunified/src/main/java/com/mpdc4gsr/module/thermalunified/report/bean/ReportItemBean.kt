@@ -1,8 +1,10 @@
 package com.mpdc4gsr.module.thermalunified.report.bean
+
 import android.os.Parcelable
 import com.google.gson.Gson
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+
 @Parcelize
 data class ReportItemBean(
     val testReportId: String?,
@@ -21,8 +23,10 @@ data class ReportItemBean(
             }
             return field
         }
+
     @IgnoredOnParcel
     var isFirst: Boolean = false
+
     @IgnoredOnParcel
     var isTitle: Boolean = false
 }

@@ -1,8 +1,10 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
+
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+
 class IRThermalDoubleViewModel : BaseViewModel() {
     private val _selectedMode = MutableStateFlow(0)
     val selectedMode: StateFlow<Int> = _selectedMode.asStateFlow()
@@ -21,26 +23,31 @@ class IRThermalDoubleViewModel : BaseViewModel() {
             _selectedMode.value = mode
         }
     }
+
     fun toggleOverlay() {
         launchWithErrorHandling {
             _showOverlay.value = !_showOverlay.value
         }
     }
+
     fun toggleTrendChart() {
         launchWithErrorHandling {
             _showTrendChart.value = !_showTrendChart.value
         }
     }
+
     fun toggleCompass() {
         launchWithErrorHandling {
             _showCompass.value = !_showCompass.value
         }
     }
+
     fun toggleRecording() {
         launchWithErrorHandling {
             _isRecording.value = !_isRecording.value
         }
     }
+
     fun toggleRangeLock() {
         launchWithErrorHandling {
             _isRangeLocked.value = !_isRangeLocked.value

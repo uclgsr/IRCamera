@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
+
 import android.widget.FrameLayout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,10 +26,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
+
 class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
     override fun createViewModel(): ThermalFragmentViewModel {
         return viewModels<ThermalFragmentViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalFragmentViewModel) {
@@ -60,6 +63,7 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
             }
         }
     }
+
     @Composable
     private fun IRMonitorThermalContent(
         viewModel: ThermalFragmentViewModel,
@@ -101,6 +105,7 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
             )
         }
     }
+
     @Composable
     private fun ThermalCameraSection(
         modifier: Modifier = Modifier
@@ -161,6 +166,7 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
             }
         }
     }
+
     @Composable
     private fun MonitoringControlsSection(
         onStartMonitoring: () -> Unit,
@@ -213,6 +219,7 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
             }
         }
     }
+
     @Composable
     private fun TemperatureDataSection(
         currentTemp: Float?,
@@ -245,6 +252,7 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
             }
         }
     }
+
     @Composable
     private fun TemperatureCard(
         label: String,
@@ -274,6 +282,7 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
             }
         }
     }
+
     @Composable
     private fun MonitoringStatusSection(
         isConnected: Boolean,
@@ -331,6 +340,7 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
             }
         }
     }
+
     @Composable
     private fun StatusRow(
         label: String,

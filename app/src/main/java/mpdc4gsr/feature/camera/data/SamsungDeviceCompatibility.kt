@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.data
+
 import android.os.Build
 
 object SamsungDeviceCompatibility {

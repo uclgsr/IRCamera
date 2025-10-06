@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,10 +23,12 @@ import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.thermalunified.fragment.MonitorThermalComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorViewModel
+
 class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
     override fun createViewModel(): MonitorViewModel {
         return viewModels<MonitorViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: MonitorViewModel) {
@@ -121,6 +124,7 @@ class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
         }
     }
 }
+
 @Composable
 private fun ThermalCameraView(
     modifier: Modifier = Modifier
@@ -138,6 +142,7 @@ private fun ThermalCameraView(
         modifier = modifier
     )
 }
+
 @Composable
 private fun MonitorControlPanel(
     monitorState: Int,
@@ -160,11 +165,13 @@ private fun MonitorControlPanel(
                     onCreateChart = onCreateChart
                 )
             }
+
             MonitorViewModel.STATS_MONITOR -> {
                 MonitorTypeSelectionView(
                     onTypeSelected = onMonitorTypeSelected
                 )
             }
+
             MonitorViewModel.STATS_FINISH -> {
                 StartMonitoringView(
                     recordingTime = recordingTime,
@@ -174,6 +181,7 @@ private fun MonitorControlPanel(
         }
     }
 }
+
 @Composable
 private fun InitialControlsView(
     onQueryLog: () -> Unit,
@@ -217,6 +225,7 @@ private fun InitialControlsView(
         }
     }
 }
+
 @Composable
 private fun MonitorTypeSelectionView(
     onTypeSelected: (Int) -> Unit
@@ -268,6 +277,7 @@ private fun MonitorTypeSelectionView(
         }
     }
 }
+
 @Composable
 private fun MonitorTypeButton(
     text: String,
@@ -300,6 +310,7 @@ private fun MonitorTypeButton(
         }
     }
 }
+
 @Composable
 private fun StartMonitoringView(
     recordingTime: Long,

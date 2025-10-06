@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.ktbase
+
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
@@ -6,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
+
 abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
     protected lateinit var viewModel: VM
     abstract fun providerVMClass(): Class<VM>?
@@ -17,12 +19,14 @@ abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupObservers()
     }
+
     private fun initVM() {
         providerVMClass()?.let {
             viewModel = ViewModelProvider(this).get(it)
             lifecycle.addObserver(viewModel)
         }
     }
+
     private fun setupObservers() {
         if (!this::viewModel.isInitialized) return
         // Observe UI state
@@ -42,6 +46,7 @@ abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
             }
         }
     }
+
     protected open fun handleUiState(uiState: BaseViewModel.UiState) {
         // Handle loading state
         if (uiState.isLoading) {
@@ -54,6 +59,7 @@ abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
             showError(error)
         }
     }
+
     protected open fun handleUiEvent(event: BaseViewModel.UiEvent) {
         when (event) {
             is BaseViewModel.UiEvent.ShowError -> showError(event.message)
@@ -63,18 +69,23 @@ abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
             }
         }
     }
+
     protected open fun showLoading() {
         // Override in subclasses to show loading indicator
     }
+
     protected open fun hideLoading() {
         // Override in subclasses to hide loading indicator
     }
+
     protected open fun showError(message: String) {
         // Override in subclasses for custom error display
     }
+
     protected open fun showMessage(message: String) {
         // Override in subclasses for custom message display
     }
+
     override fun onDestroy() {
         super.onDestroy()
         if (this::viewModel.isInitialized) {

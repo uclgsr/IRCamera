@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.http
+
 import android.net.Network
 import com.google.gson.Gson
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -14,6 +15,7 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+
 object HttpClient {
     private val gson = Gson()
     private val JSON_MEDIA_TYPE = "application/json; charset=utf-8".toMediaType()
@@ -35,6 +37,7 @@ object HttpClient {
         }
         return builder.build()
     }
+
     suspend fun <T> executeJsonPost(
         client: OkHttpClient,
         url: String,
@@ -60,6 +63,7 @@ object HttpClient {
                 override fun onFailure(call: Call, e: IOException) {
                     continuation.resumeWithException(e)
                 }
+
                 override fun onResponse(call: Call, response: Response) {
                     response.use {
                         try {
@@ -78,6 +82,7 @@ object HttpClient {
             })
         }
     }
+
     suspend fun executeOctetPost(
         client: OkHttpClient,
         url: String,
@@ -101,6 +106,7 @@ object HttpClient {
                 override fun onFailure(call: Call, e: IOException) {
                     continuation.resumeWithException(e)
                 }
+
                 override fun onResponse(call: Call, response: Response) {
                     response.use {
                         try {
@@ -118,6 +124,7 @@ object HttpClient {
             })
         }
     }
+
     suspend fun executeGet(
         client: OkHttpClient,
         url: String,
@@ -139,6 +146,7 @@ object HttpClient {
                 override fun onFailure(call: Call, e: IOException) {
                     continuation.resumeWithException(e)
                 }
+
                 override fun onResponse(call: Call, response: Response) {
                     response.use {
                         try {

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.camera.data
+
 import android.content.Context
 import android.hardware.camera2.CameraCaptureSession
 import android.hardware.camera2.CameraDevice
@@ -12,6 +13,7 @@ import android.util.Size
 import android.view.TextureView
 import kotlinx.coroutines.*
 import java.io.File
+
 class Camera2System(
     private val context: Context,
     private val textureView: TextureView,
@@ -20,6 +22,7 @@ class Camera2System(
         private const val TAG = "Camera2System"
         private const val DEFAULT_BITRATE = 20_000_000
     }
+
     private val cameraController = CameraController(context)
     private val videoEngine = VideoEngine(context)
     private val rawEngine = RawEngine(context)
@@ -28,6 +31,7 @@ class Camera2System(
     private var currentSessionId: String = ""
     private var isRecording = false
     private var outputDirectory: File? = null
+
     // CoroutineScope for managing release cleanup
     private val releaseScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     var onError: ((String) -> Unit)? = null
@@ -35,18 +39,20 @@ class Camera2System(
     var onModeChanged: ((ModeManager.CameraMode) -> Unit)? = null
     var onRecordingStarted: (() -> Unit)? = null
     var onRecordingStopped: (() -> Unit)? = null
-    
+
     fun configureStage3Processing(enabled: Boolean) {
         rawEngine.setStage3ProcessingEnabled(enabled)
         val mode = if (enabled) "Stage3/Level3" else "Standard"
         AppLogger.i(TAG, "Samsung RAW processing mode set to: $mode")
         onProgress?.invoke("RAW processing: $mode")
     }
-    
+
     fun isStage3ProcessingEnabled(): Boolean = rawEngine.isStage3ProcessingEnabled()
+
     init {
         setupCallbacks()
     }
+
     suspend fun initialize(cameraId: String = "0"): Boolean =
         withContext(Dispatchers.Main) {
             try {
@@ -62,6 +68,7 @@ class Camera2System(
                 return@withContext false
             }
         }
+
     suspend fun switchMode(mode: ModeManager.CameraMode): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -94,6 +101,7 @@ class Camera2System(
                 return@withContext false
             }
         }
+
     suspend fun startRecording(sessionId: String): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording) {
@@ -125,6 +133,7 @@ class Camera2System(
                 return@withContext false
             }
         }
+
     suspend fun stopRecording(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isRecording) {
@@ -149,6 +158,7 @@ class Camera2System(
                 return@withContext false
             }
         }
+
     fun getCurrentMode(): ModeManager.CameraMode = modeManager.getCurrentMode()
     fun getAvailableModes(): List<ModeManager.CameraMode> = modeManager.getAvailableModes()
     fun isRecording(): Boolean = isRecording
@@ -168,6 +178,7 @@ class Camera2System(
         releaseScope.cancel()
         AppLogger.i(TAG, "Camera2System released")
     }
+
     private fun setupCallbacks() {
         cameraController.onCameraOpened = { caps ->
             modeManager.initialize(caps)
@@ -187,6 +198,7 @@ class Camera2System(
         uiBridge.onError = { error -> onError?.invoke(error) }
         uiBridge.onProgress = { message -> onProgress?.invoke(message) }
     }
+
     @Suppress("DEPRECATION")
     private suspend fun setupRawMode(): Boolean =
         withContext(Dispatchers.IO) {
@@ -223,6 +235,7 @@ class Camera2System(
                                     continuation.resume(false, null)
                                 }
                             }
+
                             override fun onConfigureFailed(session: CameraCaptureSession) {
                                 AppLogger.e(TAG, "RAW mode session configuration failed")
                                 continuation.resume(false, null)
@@ -235,6 +248,7 @@ class Camera2System(
                 return@withContext false
             }
         }
+
     @Suppress("DEPRECATION")
     private suspend fun setupVideoMode(): Boolean =
         withContext(Dispatchers.IO) {
@@ -265,6 +279,7 @@ class Camera2System(
                                     continuation.resume(false, null)
                                 }
                             }
+
                             override fun onConfigureFailed(session: CameraCaptureSession) {
                                 AppLogger.e(TAG, "Video mode session configuration failed")
                                 continuation.resume(false, null)
@@ -277,6 +292,7 @@ class Camera2System(
                 return@withContext false
             }
         }
+
     @Suppress("DEPRECATION")
     private suspend fun setupPreviewMode(): Boolean =
         withContext(Dispatchers.IO) {
@@ -304,6 +320,7 @@ class Camera2System(
                                     continuation.resume(false, null)
                                 }
                             }
+
                             override fun onConfigureFailed(session: CameraCaptureSession) {
                                 AppLogger.e(TAG, "Preview mode session configuration failed")
                                 continuation.resume(false, null)
@@ -316,6 +333,7 @@ class Camera2System(
                 return@withContext false
             }
         }
+
     private suspend fun startRawRecording(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -327,6 +345,7 @@ class Camera2System(
                 return@withContext false
             }
         }
+
     @Suppress("DEPRECATION")
     private suspend fun startVideoRecording(): Boolean =
         withContext(Dispatchers.IO) {
@@ -374,6 +393,7 @@ class Camera2System(
                                     continuation.resume(false, null)
                                 }
                             }
+
                             override fun onConfigureFailed(session: CameraCaptureSession) {
                                 AppLogger.e(TAG, "Recording session configuration failed")
                                 continuation.resume(false, null)
@@ -386,6 +406,7 @@ class Camera2System(
                 return@withContext false
             }
         }
+
     private fun startPeriodicRawCapture() {
         val captureInterval = 1000L / 15
         CoroutineScope(Dispatchers.IO).launch {
@@ -395,6 +416,7 @@ class Camera2System(
             }
         }
     }
+
     private fun captureRawImage() {
         try {
             val rawSurface = rawEngine.getSurface() ?: return
@@ -460,6 +482,7 @@ class Camera2System(
             AppLogger.e(TAG, "Failed to capture RAW image", e)
         }
     }
+
     private fun createOutputDirectory(sessionId: String): File {
         val timestamp = System.currentTimeMillis()
         val dirName = "Camera_${sessionId}_$timestamp"
@@ -467,14 +490,17 @@ class Camera2System(
             mkdirs()
         }
     }
+
     private fun createTempDirectory(): File {
         return File(context.cacheDir, "temp_raw").apply { mkdirs() }
     }
+
     private fun createVideoFile(): File {
         val timestamp = System.currentTimeMillis()
         val filename = "Video_${currentSessionId}_$timestamp.mp4"
         return File(outputDirectory, filename)
     }
+
     private fun calculateOrientationHint(sensorOrientation: Int): Int {
         return try {
             val windowManager =

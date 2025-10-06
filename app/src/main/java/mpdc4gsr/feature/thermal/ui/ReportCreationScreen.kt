@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.thermal.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -83,6 +84,7 @@ fun ReportCreationScreen(
                     description = description,
                     onDescriptionChange = { description = it }
                 )
+
                 1 -> ContentStep(
                     observations = observations,
                     onObservationsChange = { observations = it },
@@ -93,10 +95,12 @@ fun ReportCreationScreen(
                     includeAnnotations = includeAnnotations,
                     onAnnotationsChange = { includeAnnotations = it }
                 )
+
                 2 -> FormatStep(
                     selectedFormat = reportFormat,
                     onFormatChange = { reportFormat = it }
                 )
+
                 3 -> PreviewStep(
                     title = reportTitle,
                     description = description,
@@ -124,6 +128,7 @@ fun ReportCreationScreen(
         }
     }
 }
+
 @Composable
 private fun ReportProgressIndicator(
     currentStep: Int,
@@ -153,6 +158,7 @@ private fun ReportProgressIndicator(
         }
     }
 }
+
 @Composable
 private fun BasicInfoStep(
     title: String,
@@ -232,6 +238,7 @@ private fun BasicInfoStep(
         MetadataInfoCard()
     }
 }
+
 @Composable
 private fun ContentStep(
     observations: String,
@@ -325,6 +332,7 @@ private fun ContentStep(
         }
     }
 }
+
 @Composable
 private fun FormatStep(
     selectedFormat: ReportFormat,
@@ -355,6 +363,7 @@ private fun FormatStep(
         }
     }
 }
+
 @Composable
 private fun PreviewStep(
     title: String,
@@ -418,6 +427,7 @@ private fun PreviewStep(
         }
     }
 }
+
 @Composable
 private fun MetadataInfoCard() {
     Card(
@@ -454,6 +464,7 @@ private fun MetadataInfoCard() {
         }
     }
 }
+
 @Composable
 private fun ContentToggleItem(
     label: String,
@@ -494,6 +505,7 @@ private fun ContentToggleItem(
         )
     }
 }
+
 @Composable
 private fun ReportFormatOption(
     format: ReportFormat,
@@ -538,6 +550,7 @@ private fun ReportFormatOption(
         }
     }
 }
+
 @Composable
 private fun ReportNavigationButtons(
     currentStep: Int,
@@ -589,12 +602,14 @@ private fun ReportNavigationButtons(
         }
     }
 }
+
 enum class ReportFormat(val displayName: String, val description: String) {
     PDF("PDF Document", "Portable document format with images and text"),
     WORD("Word Document", "Microsoft Word document with editable content"),
     HTML("HTML Report", "Web-based report with interactive elements"),
     EXCEL("Excel Spreadsheet", "Data-focused report with temperature analysis")
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun ReportCreationScreenPreview() {

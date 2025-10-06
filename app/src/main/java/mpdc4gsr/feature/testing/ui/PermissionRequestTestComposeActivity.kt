@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -36,9 +37,11 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
     companion object {
         private const val TAG = "PermissionRequestTestCompose"
     }
+
     enum class PermissionStatus {
         GRANTED, DENIED, NOT_REQUESTED, REQUESTING
     }
+
     data class PermissionInfo(
         val permission: String,
         val name: String,
@@ -47,12 +50,14 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
         val isRequired: Boolean,
         val lastChecked: Long = System.currentTimeMillis()
     )
+
     data class PermissionLog(
         val timestamp: String,
         val action: String,
         val permission: String,
         val result: String
     )
+
     private lateinit var permissionController: PermissionController
     private lateinit var permissionManager: PermissionManager
     private var isTestRunning by mutableStateOf(false)
@@ -61,19 +66,23 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
     ) { permissions ->
         handlePermissionResults(permissions)
     }
+
     override fun createViewModel(): PermissionRequestTestViewModel {
         return viewModels<PermissionRequestTestViewModel>().value
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializePermissionSystem()
     }
+
     @Composable
     override fun Content(viewModel: PermissionRequestTestViewModel) {
         LibUnifiedTheme {
             PermissionRequestTestScreen()
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun PermissionRequestTestScreen() {
@@ -82,6 +91,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
         var permissionLogs by remember { mutableStateOf(listOf<PermissionLog>()) }
         var overallPermissionStatus by remember { mutableStateOf("Not Checked") }
         var canStartRecording by remember { mutableStateOf(false) }
+
         // Function to update permission status (defined before being used)
         fun updatePermissionStatus() {
             val permissionList = listOf(
@@ -397,6 +407,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             }
         }
     }
+
     @Composable
     fun PermissionItem(
         permission: PermissionInfo,
@@ -443,6 +454,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             }
         }
     }
+
     @Composable
     fun PermissionLogItem(log: PermissionLog) {
         Row(
@@ -467,6 +479,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             )
         }
     }
+
     private fun getPermissionIcon(status: PermissionStatus): androidx.compose.ui.graphics.vector.ImageVector {
         return when (status) {
             PermissionStatus.GRANTED -> Icons.Default.CheckCircle
@@ -475,6 +488,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             PermissionStatus.REQUESTING -> Icons.Default.HourglassEmpty
         }
     }
+
     @Composable
     private fun getPermissionColor(status: PermissionStatus): androidx.compose.ui.graphics.Color {
         return when (status) {
@@ -484,10 +498,12 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             PermissionStatus.REQUESTING -> MaterialTheme.colorScheme.tertiary
         }
     }
+
     private fun initializePermissionSystem() {
         permissionController = PermissionController(this)
         permissionManager = PermissionManager(this, permissionController)
     }
+
     private fun getPermissionStatus(permission: String): PermissionStatus {
         return when (ContextCompat.checkSelfPermission(this, permission)) {
             PackageManager.PERMISSION_GRANTED -> PermissionStatus.GRANTED
@@ -495,6 +511,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             else -> PermissionStatus.NOT_REQUESTED
         }
     }
+
     private fun requestAllPermissions() {
         val requiredPermissions = arrayOf(
             Manifest.permission.CAMERA,
@@ -508,22 +525,26 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
         addPermissionLog("REQUEST_ALL", "Multiple", "Requesting all required permissions")
         permissionLauncher.launch(requiredPermissions)
     }
+
     private fun requestSinglePermission(permission: String) {
         addPermissionLog("REQUEST_SINGLE", permission, "Requesting single permission")
         permissionLauncher.launch(arrayOf(permission))
     }
+
     private fun handlePermissionResults(permissions: Map<String, Boolean>) {
         permissions.forEach { (permission, granted) ->
             val result = if (granted) "GRANTED" else "DENIED"
             addPermissionLog("RESULT", permission, result)
         }
     }
+
     private fun addPermissionLog(action: String, permission: String, result: String) {
         val timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
         val log = PermissionLog(timestamp, action, permission, result)
         // In a real implementation, this would update the state properly
         AppLogger.d(TAG, "Permission log: $log")
     }
+
     private suspend fun runAllPermissionTests() {
         AppLogger.i(TAG, "Running all permission tests")
         try {
@@ -544,6 +565,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             isTestRunning = false
         }
     }
+
     private suspend fun testCameraPermissions() {
         AppLogger.d(TAG, "Testing camera permissions")
         try {
@@ -553,6 +575,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             AppLogger.e(TAG, "Camera permissions test failed: ${e.message}")
         }
     }
+
     private suspend fun testBluetoothPermissions() {
         AppLogger.d(TAG, "Testing Bluetooth permissions")
         try {
@@ -562,6 +585,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             AppLogger.e(TAG, "Bluetooth permissions test failed: ${e.message}")
         }
     }
+
     private suspend fun testStoragePermissions() {
         AppLogger.d(TAG, "Testing storage permissions")
         try {
@@ -571,6 +595,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             AppLogger.e(TAG, "Storage permissions test failed: ${e.message}")
         }
     }
+
     private suspend fun testMicrophonePermissions() {
         AppLogger.d(TAG, "Testing microphone permissions")
         try {
@@ -580,6 +605,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             AppLogger.e(TAG, "Microphone permissions test failed: ${e.message}")
         }
     }
+
     private suspend fun testPermissionFlow() {
         AppLogger.d(TAG, "Testing permission flow")
         try {
@@ -589,6 +615,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             AppLogger.e(TAG, "Permission flow test failed: ${e.message}")
         }
     }
+
     private suspend fun testPermissionPersistence() {
         AppLogger.d(TAG, "Testing permission persistence")
         try {
@@ -598,6 +625,7 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             AppLogger.e(TAG, "Permission persistence test failed: ${e.message}")
         }
     }
+
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {

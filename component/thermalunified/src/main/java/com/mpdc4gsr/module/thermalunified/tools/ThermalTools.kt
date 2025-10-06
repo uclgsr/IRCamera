@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.tools
+
 object ThermalTools {
     fun getRotate(rotateType: Int): Float {
         return when (rotateType) {

@@ -1,8 +1,10 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
+
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+
 class IRMonitorChartLiteViewModel : BaseViewModel() {
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
@@ -26,11 +28,13 @@ class IRMonitorChartLiteViewModel : BaseViewModel() {
             }
         }
     }
+
     fun toggleOverlay() {
         launchWithErrorHandling {
             _showOverlay.value = !_showOverlay.value
         }
     }
+
     fun updateTemperature(current: Float, high: Float, low: Float) {
         launchWithErrorHandling {
             _currentTemp.value = current
@@ -38,11 +42,13 @@ class IRMonitorChartLiteViewModel : BaseViewModel() {
             _lowTemp.value = low
         }
     }
+
     fun startMonitoring() {
         launchWithLoading {
             _isMonitoring.value = true
         }
     }
+
     fun stopMonitoring() {
         launchWithErrorHandling {
             _isMonitoring.value = false

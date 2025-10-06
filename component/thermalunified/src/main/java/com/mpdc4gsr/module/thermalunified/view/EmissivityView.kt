@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.view
+
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -9,10 +10,12 @@ import android.util.AttributeSet
 import android.view.View
 import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.compat.spToPx
+
 class EmissivityView : View {
     companion object {
         private const val DEFAULT_STROKE_WIDTH: Float = 0.5f
     }
+
     var isAlignTop = false
     var drawTopLine = false
     private val textList: ArrayList<CharSequence> = ArrayList(3)
@@ -20,6 +23,7 @@ class EmissivityView : View {
     private var strokeWidth: Float = 0f
     private val linePaint = Paint()
     private val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
@@ -28,6 +32,7 @@ class EmissivityView : View {
         defStyleAttr,
         0
     )
+
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -44,6 +49,7 @@ class EmissivityView : View {
         linePaint.style = Paint.Style.STROKE
         linePaint.strokeWidth = strokeWidth
     }
+
     fun refreshText(newList: List<String>) {
         textList.clear()
         textList.addAll(newList)
@@ -51,6 +57,7 @@ class EmissivityView : View {
         textPaint.textSize = (if (textList.size == 1) 12f else 11f).spToPx(context)
         requestLayout()
     }
+
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
@@ -89,6 +96,7 @@ class EmissivityView : View {
         maxHeight += 12.dpToPx(context)
         setMeasuredDimension(contentWidth + paddingStart + paddingEnd, maxHeight)
     }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.translate(paddingStart.toFloat(), 0f)

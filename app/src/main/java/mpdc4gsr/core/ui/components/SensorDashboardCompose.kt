@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.components
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+
 enum class SensorStatus {
     DISCONNECTED,
     CONNECTING,
@@ -30,6 +32,7 @@ enum class SensorStatus {
     ERROR,
     SIMULATION
 }
+
 data class SensorInfo(
     val id: String,
     val name: String,
@@ -41,6 +44,7 @@ data class SensorInfo(
     val signalStrength: Int = 0,
     val isAnimating: Boolean = false
 )
+
 @Composable
 fun SensorDashboardCompose(
     sensors: List<SensorInfo>,
@@ -69,6 +73,7 @@ fun SensorDashboardCompose(
         }
     }
 }
+
 @Composable
 private fun DashboardHeader(
     connectedCount: Int,
@@ -111,6 +116,7 @@ private fun DashboardHeader(
         }
     }
 }
+
 @Composable
 private fun SensorCard(
     sensor: SensorInfo,
@@ -203,6 +209,7 @@ private fun SensorCard(
         }
     }
 }
+
 @Composable
 private fun StatusBadge(status: SensorStatus) {
     val (text, containerColor, textColor) = when (status) {
@@ -238,6 +245,7 @@ private fun StatusBadge(status: SensorStatus) {
         }
     }
 }
+
 // Sample data generator for testing - returns disconnected sensors by default
 fun getSampleSensorData(): List<SensorInfo> {
     return listOf(
@@ -303,6 +311,7 @@ fun getSampleSensorData(): List<SensorInfo> {
         )
     )
 }
+
 // Static sensor dashboard for demo purposes - shows disconnected sensors
 // For actual sensor connections, use SensorDashboardCompose with real sensor data
 @Composable
@@ -319,6 +328,7 @@ fun SensorDashboardDemo(
         onRefresh = onRefresh
     )
 }
+
 @Deprecated(
     message = "Function renamed to SensorDashboardDemo to reflect its static demo nature",
     replaceWith = ReplaceWith("SensorDashboardDemo(modifier, onSensorClick, onRefresh)")

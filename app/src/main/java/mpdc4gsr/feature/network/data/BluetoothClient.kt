@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
@@ -20,9 +21,11 @@ class BluetoothClient(
 ) : CommandConnection {
     companion object {
         private const val TAG = "BluetoothClient"
+
         // Standard Serial Port Profile UUID
         val DEFAULT_SPP_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
     }
+
     private var bluetoothSocket: BluetoothSocket? = null
     private var reader: BufferedReader? = null
     private var writer: BufferedWriter? = null
@@ -90,6 +93,7 @@ class BluetoothClient(
             return@withContext false
         }
     }
+
     override suspend fun sendMessage(message: String): Boolean = withContext(Dispatchers.IO) {
         try {
             val currentWriter = writer
@@ -109,6 +113,7 @@ class BluetoothClient(
             return@withContext false
         }
     }
+
     override suspend fun disconnect(): Unit = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Disconnecting from PC Bluetooth server")
         // Cancel reader job first to stop any ongoing reads
@@ -150,15 +155,19 @@ class BluetoothClient(
         _connectionState.value = CommandConnection.ConnectionState.DISCONNECTED
         connectionCallback?.invoke(CommandConnection.ConnectionState.DISCONNECTED)
     }
+
     override fun isConnected(): Boolean {
         return bluetoothSocket?.isConnected == true && _connectionState.value == CommandConnection.ConnectionState.CONNECTED
     }
+
     override fun setMessageCallback(callback: (String) -> Unit) {
         messageCallback = callback
     }
+
     override fun setConnectionCallback(callback: (CommandConnection.ConnectionState) -> Unit) {
         connectionCallback = callback
     }
+
     override fun cleanup() {
         clientScope.launch {
             disconnect()
@@ -167,6 +176,7 @@ class BluetoothClient(
         messageCallback = null
         connectionCallback = null
     }
+
     private fun startReaderLoop() {
         readerJob = clientScope.launch {
             val currentReader = reader ?: return@launch
@@ -199,6 +209,7 @@ class BluetoothClient(
             }
         }
     }
+
     private fun handleConnectionError(errorMessage: String) {
         AppLogger.w(TAG, "Bluetooth connection error: $errorMessage")
         _connectionState.value = CommandConnection.ConnectionState.ERROR

@@ -1,5 +1,7 @@
 package com.mpdc4gsr.libunified.app.tools
+
 import android.media.MediaMetadataRetriever
+
 object VideoTools {
     fun getLocalVideoDuration(videoPath: String): Long {
         return if (videoPath.uppercase().endsWith(".MP4") || videoPath.uppercase()

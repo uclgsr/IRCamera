@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 data class ResearchTemplate(
     val id: String,
     val title: String,
@@ -32,11 +34,13 @@ data class ResearchTemplate(
     val category: TemplateCategory,
     val isCustom: Boolean = false
 )
+
 enum class TemplateDifficulty {
     BEGINNER,
     INTERMEDIATE,
     ADVANCED
 }
+
 enum class TemplateCategory {
     STRESS_RESPONSE,
     COGNITIVE_LOAD,
@@ -44,6 +48,7 @@ enum class TemplateCategory {
     PHYSIOLOGICAL_MONITORING,
     CUSTOM
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResearchTemplateScreen(
@@ -151,6 +156,7 @@ fun ResearchTemplateScreen(
         }
     }
 }
+
 @Composable
 fun CategoryFilterChips(
     selectedCategory: TemplateCategory?,
@@ -203,6 +209,7 @@ fun CategoryFilterChips(
         }
     }
 }
+
 @Composable
 fun TemplateStatsCard(templates: List<ResearchTemplate>) {
     val totalTemplates = templates.size
@@ -234,6 +241,7 @@ fun TemplateStatsCard(templates: List<ResearchTemplate>) {
         }
     }
 }
+
 @Composable
 private fun StatItem(
     label: String,
@@ -256,6 +264,7 @@ private fun StatItem(
         )
     }
 }
+
 @Composable
 fun TemplateItem(
     template: ResearchTemplate,
@@ -407,6 +416,7 @@ fun TemplateItem(
         }
     }
 }
+
 @Composable
 fun DifficultyBadge(difficulty: TemplateDifficulty) {
     val (color, text) = when (difficulty) {
@@ -427,6 +437,7 @@ fun DifficultyBadge(difficulty: TemplateDifficulty) {
         )
     }
 }
+
 @Composable
 fun CategoryBadge(category: TemplateCategory) {
     val (color, text) = when (category) {
@@ -449,6 +460,7 @@ fun CategoryBadge(category: TemplateCategory) {
         )
     }
 }
+
 @Composable
 fun EmptyTemplatesState(
     searchQuery: String,
@@ -504,10 +516,12 @@ fun EmptyTemplatesState(
         }
     }
 }
+
 private fun parseDuration(duration: String): Int {
     // Parse "25 min" format to minutes
     return duration.replace(" min", "").toIntOrNull() ?: 0
 }
+
 private fun getSampleTemplates() = listOf(
     ResearchTemplate(
         id = "TEMPLATE-001",
@@ -561,6 +575,7 @@ private fun getSampleTemplates() = listOf(
         isCustom = true
     )
 )
+
 @Preview(showBackground = true)
 @Composable
 fun ResearchTemplateScreenPreview() {

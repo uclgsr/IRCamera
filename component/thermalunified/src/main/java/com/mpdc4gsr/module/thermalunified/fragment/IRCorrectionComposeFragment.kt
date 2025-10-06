@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,12 +23,14 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.CalibrationStatus
 import com.mpdc4gsr.module.thermalunified.viewmodel.CorrectionState
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRCorrectionViewModel
 import com.mpdc4gsr.module.thermalunified.viewmodel.TemperatureData
+
 class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>() {
     // Compatibility property for legacy code that checks frameReady
     val frameReady: Boolean get() = createViewModel().correctionState.value == CorrectionState.ACTIVE
     override fun createViewModel(): IRCorrectionViewModel {
         return viewModels<IRCorrectionViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRCorrectionViewModel) {
@@ -89,6 +92,7 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
+
     @Composable
     private fun CorrectionStatusBar(
         correctionState: CorrectionState,
@@ -146,6 +150,7 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
+
     @Composable
     private fun ThermalCorrectionView(
         temperatureData: TemperatureData?,
@@ -186,6 +191,7 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
+
     @Composable
     private fun TemperatureOverlay(
         temperatureData: TemperatureData?,
@@ -214,6 +220,7 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
+
     @Composable
     private fun TemperatureCard(
         label: String,
@@ -251,6 +258,7 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
+
     @Composable
     private fun CorrectionControlsPanel(
         correctionState: CorrectionState,
@@ -315,6 +323,7 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
+
     @Composable
     private fun CorrectionValueSlider(
         onValueChange: (Float) -> Unit,
@@ -339,6 +348,7 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             )
         }
     }
+
     @Composable
     private fun CalibrationSection(
         onCalibrate: () -> Unit,
@@ -377,6 +387,7 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
+
     @Composable
     private fun TemperatureRegionsSection() {
         Column(
@@ -396,6 +407,7 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         }
     }
+
     @Composable
     private fun RegionButton(
         text: String,
@@ -415,6 +427,7 @@ class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>()
             }
         )
     }
+
     private fun getStatusText(
         correctionState: CorrectionState,
         calibrationStatus: CalibrationStatus

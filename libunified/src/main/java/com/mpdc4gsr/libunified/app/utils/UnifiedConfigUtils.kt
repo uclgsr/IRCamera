@@ -1,6 +1,8 @@
 package com.mpdc4gsr.libunified.app.utils
+
 import android.content.Context
 import java.io.File
+
 object UnifiedConfigUtils {
     data class ConfigSection(
         val name: String,
@@ -9,16 +11,20 @@ object UnifiedConfigUtils {
         fun getString(key: String, defaultValue: String = ""): String {
             return properties[key] ?: defaultValue
         }
+
         fun getInt(key: String, defaultValue: Int = 0): Int {
             return properties[key]?.toIntOrNull() ?: defaultValue
         }
+
         fun getBoolean(key: String, defaultValue: Boolean = false): Boolean {
             return properties[key]?.toBooleanStrictOrNull() ?: defaultValue
         }
+
         fun getFloat(key: String, defaultValue: Float = 0f): Float {
             return properties[key]?.toFloatOrNull() ?: defaultValue
         }
     }
+
     fun parseIniContent(content: String): Map<String, ConfigSection> {
         val sections = mutableMapOf<String, ConfigSection>()
         var currentSection: ConfigSection? = null
@@ -28,12 +34,14 @@ object UnifiedConfigUtils {
                 trimmedLine.isEmpty() || trimmedLine.startsWith("#") || trimmedLine.startsWith(";") -> {
                     // Skip empty lines and comments
                 }
+
                 trimmedLine.startsWith("[") && trimmedLine.endsWith("]") -> {
                     // Section header
                     val sectionName = trimmedLine.substring(1, trimmedLine.length - 1)
                     currentSection = ConfigSection(sectionName)
                     sections[sectionName] = currentSection
                 }
+
                 trimmedLine.contains("=") -> {
                     // Key-value pair
                     val parts = trimmedLine.split("=", limit = 2)
@@ -47,6 +55,7 @@ object UnifiedConfigUtils {
         }
         return sections
     }
+
     fun readIniFromAssets(context: Context, fileName: String): Map<String, ConfigSection> {
         return try {
             val inputStream = context.assets.open(fileName)
@@ -56,6 +65,7 @@ object UnifiedConfigUtils {
             emptyMap()
         }
     }
+
     fun readIniFromFile(file: File): Map<String, ConfigSection> {
         return try {
             val content = file.readText()
@@ -64,6 +74,7 @@ object UnifiedConfigUtils {
             emptyMap()
         }
     }
+
     fun writeIniToFile(file: File, sections: Map<String, ConfigSection>): Boolean {
         return try {
             file.parentFile?.mkdirs()
@@ -81,6 +92,7 @@ object UnifiedConfigUtils {
             false
         }
     }
+
     fun mergeSections(
         base: Map<String, ConfigSection>,
         overlay: Map<String, ConfigSection>
@@ -98,12 +110,14 @@ object UnifiedConfigUtils {
         }
         return result
     }
+
     data class ConfigValidationRule(
         val section: String,
         val key: String,
         val required: Boolean = false,
         val validator: (String) -> Boolean = { true }
     )
+
     fun validateConfiguration(
         config: Map<String, ConfigSection>,
         rules: List<ConfigValidationRule>
@@ -116,6 +130,7 @@ object UnifiedConfigUtils {
                 rule.required && value == null -> {
                     errors.add("Required configuration missing: [${rule.section}] ${rule.key}")
                 }
+
                 value != null && !rule.validator(value) -> {
                     errors.add("Invalid configuration value: [${rule.section}] ${rule.key} = $value")
                 }
@@ -123,6 +138,7 @@ object UnifiedConfigUtils {
         }
         return errors
     }
+
     fun createDefaultAppConfig(): Map<String, ConfigSection> {
         return mapOf(
             "app" to ConfigSection(
@@ -163,6 +179,7 @@ object UnifiedConfigUtils {
             )
         )
     }
+
     fun getSystemConfig(context: Context): Map<String, String> {
         return mapOf(
             "android_version" to android.os.Build.VERSION.RELEASE,
@@ -175,9 +192,11 @@ object UnifiedConfigUtils {
             "is_debuggable" to UnifiedPackageUtils.isDebuggable(context).toString()
         )
     }
+
     enum class Environment {
         DEVELOPMENT, TESTING, PRODUCTION
     }
+
     fun loadEnvironmentConfig(
         context: Context,
         environment: Environment = Environment.PRODUCTION
@@ -191,10 +210,12 @@ object UnifiedConfigUtils {
         val envConfig = readIniFromAssets(context, envConfigFile)
         return mergeSections(baseConfig, envConfig)
     }
+
     fun backupConfiguration(context: Context, config: Map<String, ConfigSection>): Boolean {
         val backupFile = File(context.filesDir, "config_backup_${System.currentTimeMillis()}.ini")
         return writeIniToFile(backupFile, config)
     }
+
     fun restoreConfiguration(
         context: Context,
         backupFileName: String
@@ -206,6 +227,7 @@ object UnifiedConfigUtils {
             null
         }
     }
+
     fun calculateConfigHash(config: Map<String, ConfigSection>): String {
         val content = buildString {
             config.values.sortedBy { it.name }.forEach { section ->
@@ -217,6 +239,7 @@ object UnifiedConfigUtils {
         }
         return content.hashCode().toString()
     }
+
     fun hasConfigChanged(
         oldConfig: Map<String, ConfigSection>,
         newConfig: Map<String, ConfigSection>

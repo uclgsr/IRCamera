@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,10 +23,12 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+
 class IREmissivityComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -95,6 +98,7 @@ class IREmissivityComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
+
 @Composable
 private fun CurrentSelectionCard(
     selectedEmissivity: Float,
@@ -148,6 +152,7 @@ private fun CurrentSelectionCard(
         }
     }
 }
+
 @Composable
 private fun EmissivityCategorySection(
     category: EmissivityCategory,
@@ -196,6 +201,7 @@ private fun EmissivityCategorySection(
         }
     }
 }
+
 @Composable
 private fun EmissivityMaterialItem(
     material: EmissivityMaterial,
@@ -258,17 +264,20 @@ private fun EmissivityMaterialItem(
         }
     }
 }
+
 // Data classes
 data class EmissivityCategory(
     val name: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector,
     val materials: List<EmissivityMaterial>
 )
+
 data class EmissivityMaterial(
     val name: String,
     val emissivity: Float,
     val description: String = ""
 )
+
 private fun getEmissivityCategories(): List<EmissivityCategory> {
     return listOf(
         EmissivityCategory(

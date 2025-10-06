@@ -1,6 +1,8 @@
 package com.mpdc4gsr.libunified.app.tools
+
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import java.util.*
+
 object UnitTools {
     @JvmStatic
     fun showC(float: Float): String {
@@ -12,6 +14,7 @@ object UnitTools {
             }
         return str
     }
+
     @JvmStatic
     fun showC(
         float: Float,
@@ -25,6 +28,7 @@ object UnitTools {
             }
         return str
     }
+
     @JvmStatic
     fun showIntervalC(
         min: Int,
@@ -40,6 +44,7 @@ object UnitTools {
             }
         return str
     }
+
     @JvmStatic
     fun showConfigC(
         min: Int,
@@ -55,6 +60,7 @@ object UnitTools {
             }
         return str
     }
+
     @JvmStatic
     fun showUnit(): String {
         val str =
@@ -65,6 +71,7 @@ object UnitTools {
             }
         return str
     }
+
     @JvmStatic
     fun showUnitValue(value: Float): Float {
         val str =
@@ -75,6 +82,7 @@ object UnitTools {
             }
         return str.toFloat()
     }
+
     @JvmStatic
     fun showUnitValue(
         value: Float,
@@ -91,6 +99,7 @@ object UnitTools {
             }
         return str.toFloat()
     }
+
     @JvmStatic
     fun showToCValue(
         value: Float,
@@ -104,6 +113,7 @@ object UnitTools {
             }
         return str.toFloat()
     }
+
     @JvmStatic
     fun showToCValue(value: Float): Float {
         val str =
@@ -114,12 +124,15 @@ object UnitTools {
             }
         return str.toFloat()
     }
+
     fun toF(value: Float): Float {
         return value * 1.8000f + 32.00f
     }
+
     fun toC(value: Float): Float {
         return (value - 32.0f) / 1.8000f
     }
+
     @JvmStatic
     fun showNoUnit(float: Float): String {
         val str =
@@ -130,6 +143,7 @@ object UnitTools {
             }
         return if (str.endsWith(".0")) str.substring(0, str.length - 2) else str
     }
+
     @JvmStatic
     fun showWithUnit(float: Float): String {
         val str =

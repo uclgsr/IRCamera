@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -13,30 +14,36 @@ class ProtocolHandler(
     companion object {
         private const val TAG = "ProtocolHandler"
     }
+
     private val timeManager = TimeManager.getInstance(context)
     private var timeSyncManager: TimeSyncManager? = null
+
     // Command callback interfaces
     interface CommandHandler {
         suspend fun onStartRecording(sessionId: String): CommandResult
         suspend fun onStopRecording(sessionId: String): CommandResult
         suspend fun onSyncRequest(pcTimestamp: Long): SyncResult
     }
+
     // Extended interface for cases that need configuration and client address
     interface CommandCallback {
         suspend fun onStartRecording(sessionId: String, configuration: org.json.JSONObject): Boolean
         suspend fun onStopRecording(): Boolean
         suspend fun onSyncRequest(pcAddress: String): Boolean
     }
+
     data class CommandResult(
         val success: Boolean,
         val message: String = "",
         val data: Map<String, String> = emptyMap()
     )
+
     data class SyncResult(
         val success: Boolean,
         val phoneTimestamp: Long = 0L,
         val offsetNs: Long = 0L
     )
+
     private var commandHandler: CommandHandler? = null
     fun setCommandHandler(handler: CommandHandler) {
         commandHandler = handler
@@ -59,6 +66,7 @@ class ProtocolHandler(
             }
         }
     }
+
     private suspend fun handleSyncRequest(message: Protocol.ProtocolMessage): String {
         return try {
             val pcTimestamp = message.parameters["t_pc"]?.toLong()
@@ -155,6 +163,7 @@ class ProtocolHandler(
             null
         }
     }
+
     private suspend fun handleStartRecord(message: Protocol.ProtocolMessage): String {
         return try {
             val sessionId = message.parameters["session_id"]
@@ -197,6 +206,7 @@ class ProtocolHandler(
             )
         }
     }
+
     private suspend fun handleStopRecord(message: Protocol.ProtocolMessage): String {
         return try {
             val sessionId = message.parameters["session_id"]

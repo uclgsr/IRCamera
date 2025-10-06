@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.utils
+
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
@@ -6,6 +7,7 @@ import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.tools.FileTools
 import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
 import java.io.File
+
 object WriteTools {
     fun delete(file: File): Int {
         val uri: Uri = FileTools.getUri(file)
@@ -18,6 +20,7 @@ object WriteTools {
         XLog.w("[ph][ph][ph][ph][ph][ph]: $result")
         return result
     }
+
     private fun queryId(uri: Uri): Long {
         val fileName = uri.path!!.substring(uri.path!!.lastIndexOf("/") + 1)
         var result = 0L

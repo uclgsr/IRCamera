@@ -1,4 +1,5 @@
 package mpdc4gsr.tests
+
 import android.content.Context
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
@@ -16,11 +17,13 @@ class ThermalCameraUsbIntegrationTest {
     private lateinit var mockContext: Context
     private lateinit var mockUsbManager: UsbManager
     private lateinit var mockUsbDevice: UsbDevice
+
     // Topdon TC001 specific characteristics
     private val topdonVendorId = 0x1234 // Topdon vendor ID
     private val topdonProductId = 0x5678 // TC001 product ID
     private val expectedThermalFrameRate = 10 // 10 FPS target
     private val thermalResolution = "160x120" // TC001 resolution
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
@@ -34,6 +37,7 @@ class ThermalCameraUsbIntegrationTest {
         every { mockUsbDevice.productName } returns "TC001 Thermal Camera"
         every { mockContext.getSystemService(Context.USB_SERVICE) } returns mockUsbManager
     }
+
     @Test
     fun `should detect Topdon TC001 USB device characteristics`() {
         // Test specific Topdon TC001 device identification
@@ -56,6 +60,7 @@ class ThermalCameraUsbIntegrationTest {
             mockUsbDevice.productName?.contains("Thermal", ignoreCase = true) == true
         )
     }
+
     @Test
     fun `should validate USB permission request flow`() {
         // Test USB device permission handling for Topdon TC001
@@ -81,6 +86,7 @@ class ThermalCameraUsbIntegrationTest {
         // 2. BroadcastReceiver for permission response
         // 3. Proper user dialog handling
     }
+
     @Test
     fun `should initialize thermal capture at correct frame rate`() = runTest {
         // Test thermal camera initialization with proper frame rate
@@ -108,6 +114,7 @@ class ThermalCameraUsbIntegrationTest {
             )
         }
     }
+
     @Test
     fun `should validate thermal image file format and structure`() = runTest {
         // Test thermal image file generation and validation
@@ -147,6 +154,7 @@ class ThermalCameraUsbIntegrationTest {
             csvLines[1].contains("15.2") && csvLines[1].contains("37.8")
         )
     }
+
     @Test
     fun `should handle USB device hot-plugging scenarios`() = runTest {
         // Test USB device connection/disconnection during operation
@@ -171,6 +179,7 @@ class ThermalCameraUsbIntegrationTest {
         // 3. Attempt automatic reconnection when device returns
         // 4. Fall back to simulation mode if device unavailable
     }
+
     @Test
     fun `should validate thermal data extraction from TC001`() {
         // Test extraction of thermal data from Topdon TC001 frames
@@ -200,6 +209,7 @@ class ThermalCameraUsbIntegrationTest {
             calibratedTemp > -50f && calibratedTemp < 100f
         )
     }
+
     @Test
     fun `should handle thermal camera initialization failure gracefully`() = runTest {
         // Test graceful fallback when thermal camera fails to initialize
@@ -221,6 +231,7 @@ class ThermalCameraUsbIntegrationTest {
         // 3. Continue with other sensor modalities
         // 4. Provide user notification of fallback
     }
+
     @Test
     fun `should validate thermal camera performance metrics`() = runTest {
         // Test performance monitoring for thermal camera operations
@@ -254,6 +265,7 @@ class ThermalCameraUsbIntegrationTest {
             droppedFrames < expectedFrameCount * 0.05 // Less than 5% dropped frames
         )
     }
+
     @Test
     fun `should validate thermal image file integrity`() {
         // Test thermal image file generation and integrity

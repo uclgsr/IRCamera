@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -23,10 +24,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+
 class ThermalGalleryComposeActivity : BaseComposeActivity<ThermalGalleryViewModel>() {
     override fun createViewModel(): ThermalGalleryViewModel {
         return ThermalGalleryViewModel()
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalGalleryViewModel) {
@@ -35,9 +38,11 @@ class ThermalGalleryComposeActivity : BaseComposeActivity<ThermalGalleryViewMode
         )
     }
 }
+
 class ThermalGalleryViewModel : BaseViewModel() {
     // ViewModel implementation
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ThermalGalleryScreen(
@@ -173,6 +178,7 @@ private fun ThermalGalleryScreen(
         )
     }
 }
+
 @Composable
 private fun ThermalFilterBar(
     selectedFilter: FilterType,
@@ -211,6 +217,7 @@ private fun ThermalFilterBar(
         }
     }
 }
+
 @Composable
 private fun ThermalGridView() {
     LazyVerticalGrid(
@@ -224,6 +231,7 @@ private fun ThermalGridView() {
         }
     }
 }
+
 @Composable
 private fun ThermalListView(
     onMoreClick: (GalleryThermalImage) -> Unit = {}
@@ -241,6 +249,7 @@ private fun ThermalListView(
         }
     }
 }
+
 @Composable
 private fun ThermalImageCard(image: GalleryThermalImage, onMoreClick: () -> Unit = {}) {
     Card(
@@ -293,6 +302,7 @@ private fun ThermalImageCard(image: GalleryThermalImage, onMoreClick: () -> Unit
         }
     }
 }
+
 @Composable
 private fun ThermalImageListItem(
     image: GalleryThermalImage,
@@ -359,6 +369,7 @@ private fun ThermalImageListItem(
         }
     }
 }
+
 private fun generateSampleThermalImages(): List<GalleryThermalImage> {
     return (1..20).map { index ->
         GalleryThermalImage(
@@ -371,6 +382,7 @@ private fun generateSampleThermalImages(): List<GalleryThermalImage> {
         )
     }
 }
+
 private data class GalleryThermalImage(
     val id: Int,
     val name: String,
@@ -379,9 +391,11 @@ private data class GalleryThermalImage(
     val resolution: String,
     val size: String
 )
+
 private enum class ViewMode {
     GRID, LIST
 }
+
 private enum class FilterType(val displayName: String) {
     ALL("All"),
     TODAY("Today"),

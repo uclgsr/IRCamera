@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+
 // Data classes for report components
 data class ReportData(
     val id: String,
@@ -38,6 +40,7 @@ data class ReportData(
     val measurements: List<MeasurementData>,
     val metadata: ReportMetadata
 )
+
 data class MeasurementData(
     val id: Int,
     val name: String,
@@ -46,6 +49,7 @@ data class MeasurementData(
     val type: MeasurementType,
     val isEditable: Boolean = true
 )
+
 data class ReportMetadata(
     val author: String,
     val location: String,
@@ -53,9 +57,11 @@ data class ReportMetadata(
     val conditions: String,
     val notes: String
 )
+
 enum class MeasurementType {
     TEMPERATURE, HUMIDITY, PRESSURE, DISTANCE, EMISSIVITY
 }
+
 data class WatermarkData(
     val text: String,
     val position: WatermarkPosition,
@@ -63,9 +69,11 @@ data class WatermarkData(
     val fontSize: Float = 14f,
     val color: Color = Color.Gray
 )
+
 enum class WatermarkPosition {
     TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, CENTER
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportIRInputCompose(
@@ -132,6 +140,7 @@ fun ReportIRInputCompose(
         }
     }
 }
+
 @Composable
 private fun ReportHeaderCompose(
     report: ReportData,
@@ -183,6 +192,7 @@ private fun ReportHeaderCompose(
         }
     }
 }
+
 @Composable
 private fun ReportImagesCompose(
     images: List<String>,
@@ -262,6 +272,7 @@ private fun ReportImagesCompose(
         }
     }
 }
+
 @Composable
 private fun ReportImageItem(
     imagePath: String,
@@ -300,6 +311,7 @@ private fun ReportImageItem(
         }
     }
 }
+
 @Composable
 private fun ReportMeasurementsCompose(
     measurements: List<MeasurementData>,
@@ -331,6 +343,7 @@ private fun ReportMeasurementsCompose(
         }
     }
 }
+
 @Composable
 private fun MeasurementItemCompose(
     measurement: MeasurementData,
@@ -386,6 +399,7 @@ private fun MeasurementItemCompose(
         )
     }
 }
+
 @Composable
 private fun ReportMetadataCompose(
     metadata: ReportMetadata,
@@ -476,6 +490,7 @@ private fun ReportMetadataCompose(
         }
     }
 }
+
 @Composable
 fun ReportIRShowCompose(
     reportData: ReportData,
@@ -669,6 +684,7 @@ fun ReportIRShowCompose(
         }
     }
 }
+
 @Composable
 private fun MetadataRow(
     label: String,
@@ -695,6 +711,7 @@ private fun MetadataRow(
         }
     }
 }
+
 @Composable
 fun WatermarkCompose(
     watermarkData: WatermarkData,
@@ -718,6 +735,7 @@ fun WatermarkCompose(
         )
     }
 }
+
 // Preview functions
 @Preview(showBackground = true)
 @Composable

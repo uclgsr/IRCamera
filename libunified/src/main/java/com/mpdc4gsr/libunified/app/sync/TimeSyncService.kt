@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.sync
+
 import android.util.Log
 import kotlinx.coroutines.*
 import org.json.JSONObject
@@ -7,6 +8,7 @@ import java.io.DataOutputStream
 import java.net.InetSocketAddress
 import java.net.Socket
 import kotlin.math.abs
+
 class TimeSyncService {
     companion object {
         private const val TAG = "TimeSyncService"
@@ -16,8 +18,10 @@ class TimeSyncService {
         private const val MAX_ACCEPTABLE_DELAY_MS = 100L
         private const val SYNC_INTERVAL_MS = 30000L
     }
+
     private val syncScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var periodicSyncJob: Job? = null
+
     data class SyncResult(
         val isSuccess: Boolean,
         val clockOffsetMs: Long = 0L,
@@ -25,6 +29,7 @@ class TimeSyncService {
         val accuracyMs: Long = 0L,
         val errorMessage: String? = null,
     )
+
     data class SyncSample(
         val t1: Long,
         val t2: Long,
@@ -33,15 +38,18 @@ class TimeSyncService {
         val roundTripDelay: Long,
         val clockOffset: Long,
     )
+
     interface TimeSyncListener {
         fun onSyncCompleted(result: SyncResult)
         fun onSyncStarted(targetHost: String)
         fun onSyncError(error: String)
     }
+
     private var listener: TimeSyncListener? = null
     fun setListener(listener: TimeSyncListener?) {
         this.listener = listener
     }
+
     suspend fun synchronizeTime(
         targetHost: String,
         targetPort: Int = 8080,
@@ -93,6 +101,7 @@ class TimeSyncService {
             listener?.onSyncCompleted(result)
             result
         }
+
     fun startPeriodicSync(
         targetHost: String,
         targetPort: Int = 8080,
@@ -117,11 +126,13 @@ class TimeSyncService {
             "Started periodic time sync with $targetHost:$targetPort (interval: ${intervalMs}ms)"
         )
     }
+
     fun stopPeriodicSync() {
         periodicSyncJob?.cancel()
         periodicSyncJob = null
         Log.i(TAG, "Stopped periodic time sync")
     }
+
     private suspend fun performSyncRequest(
         host: String,
         port: Int,
@@ -162,6 +173,7 @@ class TimeSyncService {
             }
         }
     }
+
     private fun calculateSyncResult(samples: List<SyncSample>): SyncResult {
         val sortedSamples = samples.sortedBy { it.roundTripDelay }
         val offsets = sortedSamples.map { it.clockOffset }.sorted()
@@ -177,14 +189,17 @@ class TimeSyncService {
             accuracyMs = accuracy,
         )
     }
+
     private fun getHighPrecisionTime(): Long {
         val systemTime = System.currentTimeMillis()
         val nanoOffset = (System.nanoTime() % 1000000) / 1000
         return systemTime * 1000 + nanoOffset
     }
+
     fun getSynchronizedTime(clockOffsetMs: Long): Long {
         return getHighPrecisionTime() + (clockOffsetMs * 1000)
     }
+
     fun validateSync(
         localTime: Long,
         remoteTime: Long,
@@ -195,6 +210,7 @@ class TimeSyncService {
         val diff = abs(synchronizedLocalTime - (remoteTime * 1000)) / 1000
         return diff <= toleranceMs
     }
+
     fun createSyncPacket(): JSONObject {
         val currentTime = getHighPrecisionTime()
         return JSONObject().apply {
@@ -204,6 +220,7 @@ class TimeSyncService {
             put("sender_id", android.os.Build.MODEL)
         }
     }
+
     fun processSyncPacket(packet: JSONObject): Long? {
         return try {
             if (packet.optString("message_type") == "time_sync_broadcast") {
@@ -218,6 +235,7 @@ class TimeSyncService {
             null
         }
     }
+
     fun cleanup() {
         stopPeriodicSync()
         syncScope.cancel()

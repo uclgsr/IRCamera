@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.view
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -10,6 +11,7 @@ import com.energy.iruvc.utils.Line
 import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper.Companion.correct
 import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import java.lang.ref.WeakReference
+
 class TemperatureEditView : TemperatureBaseView {
     override var mode: Mode
         get() = super.mode
@@ -28,11 +30,13 @@ class TemperatureEditView : TemperatureBaseView {
                 }
             }
         }
+
     class TemperatureList {
         var pointTemps = arrayListOf<LibIRTemp.TemperatureSampleResult>()
         var lineTemps = arrayListOf<LibIRTemp.TemperatureSampleResult>()
         var rectangleTemps = arrayListOf<LibIRTemp.TemperatureSampleResult>()
     }
+
     var tempListData = TemperatureList()
     private var irtemp: LibIRTemp = LibIRTemp()
     private var irTempData: ByteArray = byteArrayOf()
@@ -46,8 +50,10 @@ class TemperatureEditView : TemperatureBaseView {
     fun setITsTempListener(listener: ITsTempListener) {
         iTsTempListenerWeakReference = WeakReference(listener)
     }
+
     private fun getTSTemp(temp: Float): Float =
         iTsTempListenerWeakReference?.get()?.tempCorrectByTs(temp) ?: temp
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
@@ -56,6 +62,7 @@ class TemperatureEditView : TemperatureBaseView {
         defStyleAttr,
         0
     )
+
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -78,6 +85,7 @@ class TemperatureEditView : TemperatureBaseView {
             tempListData.rectangleTemps.add(tmp)
         }
     }
+
     override fun setImageSize(
         imageWidth: Int,
         imageHeight: Int,
@@ -85,11 +93,13 @@ class TemperatureEditView : TemperatureBaseView {
         super.setImageSize(imageWidth, imageHeight)
         irtemp = LibIRTemp(imageWidth, imageHeight)
     }
+
     fun setData(bytes: ByteArray) {
         irTempData = bytes
         irtemp.setTempData(irTempData)
         fullInfo = irtemp.getTemperatureOfRect(Rect(0, 0, imageWidth, imageHeight))
     }
+
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         for (i in pointList.indices) {
@@ -125,6 +135,7 @@ class TemperatureEditView : TemperatureBaseView {
             drawTempText(canvas, centerX, centerY, getTSTemp(centerResult.maxTemperature))
         }
     }
+
     private fun drawOnePoint(
         canvas: Canvas,
         point: Point,
@@ -149,6 +160,7 @@ class TemperatureEditView : TemperatureBaseView {
         }
         return result
     }
+
     private fun drawOneLine(
         canvas: Canvas,
         line: Line,
@@ -186,6 +198,7 @@ class TemperatureEditView : TemperatureBaseView {
         }
         return result
     }
+
     private fun drawOneRect(
         canvas: Canvas,
         rect: Rect,

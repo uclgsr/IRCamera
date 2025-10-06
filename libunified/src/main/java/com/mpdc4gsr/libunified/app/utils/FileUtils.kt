@@ -1,10 +1,12 @@
 package com.mpdc4gsr.libunified.app.utils
+
 import android.util.Log
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.DecimalFormat
+
 object FileUtils {
     const val SIZETYPE_B = 1    // Bdouble
     const val SIZETYPE_KB = 2   // KBdouble
@@ -25,6 +27,7 @@ object FileUtils {
         }
         return formatFileSize(blockSize, sizeType)
     }
+
     private fun formatFileSize(fileSize: Long, sizeType: Int): Double {
         val df = DecimalFormat("#.00")
         val fileSizeString: String = when (sizeType) {
@@ -36,6 +39,7 @@ object FileUtils {
         }
         return fileSizeString.toDouble()
     }
+
     private fun getFileSize(file: File): Long {
         var size: Long = 0
         if (file.exists()) {
@@ -53,6 +57,7 @@ object FileUtils {
         }
         return size
     }
+
     private fun getFileSizes(f: File): Long {
         var size: Long = 0
         val fList = f.listFiles()
@@ -67,6 +72,7 @@ object FileUtils {
         }
         return size
     }
+
     // Additional compatibility methods
     fun copyFile(source: File, dest: File): Boolean {
         return try {
@@ -85,6 +91,7 @@ object FileUtils {
             false
         }
     }
+
     fun deleteFile(file: File): Boolean {
         return if (file.exists()) {
             if (file.isDirectory) {
@@ -96,6 +103,7 @@ object FileUtils {
             false
         }
     }
+
     fun deleteDirectory(dir: File): Boolean {
         if (dir.isDirectory) {
             val children = dir.list()
@@ -110,6 +118,7 @@ object FileUtils {
         }
         return dir.delete()
     }
+
     fun createDirectory(dirPath: String): Boolean {
         val dir = File(dirPath)
         return if (!dir.exists()) {
@@ -118,6 +127,7 @@ object FileUtils {
             true
         }
     }
+
     fun getFileExtension(fileName: String): String {
         return if (fileName.contains(".")) {
             fileName.substring(fileName.lastIndexOf(".") + 1)
@@ -125,6 +135,7 @@ object FileUtils {
             ""
         }
     }
+
     fun saveFile(filePath: String, data: ByteArray): Boolean {
         return try {
             val file = File(filePath)
@@ -141,6 +152,7 @@ object FileUtils {
             false
         }
     }
+
     // Extension function for saveFile to be used as lambda
     fun saveFile(file: File?, data: ByteArray) = saveFile(file?.absolutePath ?: "", data)
 }

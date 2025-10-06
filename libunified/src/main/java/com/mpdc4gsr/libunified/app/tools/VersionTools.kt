@@ -1,6 +1,8 @@
 package com.mpdc4gsr.libunified.app.tools
+
 import com.elvishew.xlog.XLog
 import java.util.regex.Pattern
+
 object VersionTools {
     fun getVersion(str: String): String {
         var versionStr = "1.0"
@@ -17,6 +19,7 @@ object VersionTools {
         }
         return versionStr
     }
+
     fun checkNewVersion(
         serverVersionStr: String,
         localVersionStr: String,
@@ -30,6 +33,7 @@ object VersionTools {
             return false
         }
     }
+
     fun checkVersion(
         remoteStr: String,
         localStr: String,

@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui.navigation
+
 import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,11 +37,13 @@ sealed class IRCameraScreen(val route: String) {
     object Gallery : IRCameraScreen("gallery")
     object GalleryFragment : IRCameraScreen("gallery_fragment")
     object GalleryFragmentCompose : IRCameraScreen("gallery_fragment_compose")
+
     // Priority 3: Specialized Thermal Fragments
     object IRCorrectionFragment : IRCameraScreen("ir_correction_fragment")
     object IRCorrectionFragmentCompose : IRCameraScreen("ir_correction_fragment_compose")
     object MonitorThermalFragment : IRCameraScreen("monitor_thermal_fragment")
     object MonitorThermalFragmentCompose : IRCameraScreen("monitor_thermal_fragment_compose")
+
     // Priority 4: Additional Gallery and Lite Fragments
     object IRGalleryTabFragmentCompose : IRCameraScreen("ir_gallery_tab_fragment_compose")
     object GalleryPictureFragment : IRCameraScreen("gallery_picture_fragment")
@@ -49,6 +52,7 @@ sealed class IRCameraScreen(val route: String) {
     object IRPlushFragmentCompose : IRCameraScreen("ir_plush_fragment_compose")
     object IRMonitorLiteFragment : IRCameraScreen("ir_monitor_lite_fragment")
     object IRMonitorLiteFragmentCompose : IRCameraScreen("ir_monitor_lite_fragment_compose")
+
     // Priority 5: Final Specialized Fragments
     object GalleryVideoFragment : IRCameraScreen("gallery_video_fragment")
     object GalleryVideoFragmentCompose : IRCameraScreen("gallery_video_fragment_compose")
@@ -63,6 +67,7 @@ sealed class IRCameraScreen(val route: String) {
     object SettingsCompose : IRCameraScreen("settings_compose")
     object About : IRCameraScreen("about")
 }
+
 @Composable
 fun IRCameraNavHost(
     navController: NavHostController = rememberNavController(),
@@ -154,6 +159,7 @@ fun IRCameraNavHost(
         }
     }
 }
+
 @Composable
 private fun LoadingScreen() {
     Box(
@@ -163,6 +169,7 @@ private fun LoadingScreen() {
         CircularProgressIndicator()
     }
 }
+
 @Composable
 private fun ThermalCameraFragmentScreen(onNavigateBack: () -> Unit) {
     // This would embed the existing ThermalFragment using FragmentContainer
@@ -189,6 +196,7 @@ private fun ThermalCameraFragmentScreen(onNavigateBack: () -> Unit) {
         }
     }
 }
+
 @Composable
 private fun SensorDashboardFragmentScreen(onNavigateBack: () -> Unit) {
     // This would embed the existing SensorDashboardFragment using FragmentContainer
@@ -214,6 +222,7 @@ private fun SensorDashboardFragmentScreen(onNavigateBack: () -> Unit) {
         }
     }
 }
+
 @Composable
 private fun SettingsFragmentScreen(onNavigateBack: () -> Unit) {
     // This would embed existing settings fragments

@@ -1,10 +1,12 @@
 package com.mpdc4gsr.libunified.app.compose.theme
+
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+
 // Shared theme colors that can be used across modules
 // These colors are now public for use in Compose components
 val ThermalOrange = Color(0xFFFF6B35)
@@ -25,6 +27,7 @@ private val DarkColorScheme = darkColorScheme(
     background = ThermalDark,
     surface = ThermalDark
 )
+
 @Composable
 fun LibUnifiedTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

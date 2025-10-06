@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.user.compose
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import java.text.DecimalFormat
 import com.mpdc4gsr.libunified.R as RCore
+
 @Composable
 fun DownloadProgressDialog(
     isVisible: Boolean,
@@ -91,6 +93,7 @@ fun DownloadProgressDialog(
         }
     }
 }
+
 private fun formatFileSize(size: Long): String {
     return when {
         size < 1024 -> "${size}B"

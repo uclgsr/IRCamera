@@ -1,5 +1,7 @@
 package com.mpdc4gsr.libunified.app.bean
+
 import java.nio.ByteBuffer
+
 data class AlarmBean(
     var isHighOpen: Boolean = false,
     var isLowOpen: Boolean = false,
@@ -41,6 +43,7 @@ data class AlarmBean(
             )
         }
     }
+
     fun toByteArray(): ByteArray =
         ByteBuffer.allocate(28)
             .put(if (isHighOpen) 1 else 0)
@@ -54,5 +57,6 @@ data class AlarmBean(
             .put(if (isRingtoneOpen) 1 else 0)
             .putInt(ringtoneType)
             .array()
+
     fun isOpen(): Boolean = isHighOpen || isLowOpen
 }

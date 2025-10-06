@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.thermal.ui
+
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+
 enum class EditTool(
     val displayName: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -41,6 +43,7 @@ enum class EditTool(
     FILTER("Filter", Icons.Default.FilterAlt, "Apply thermal filters"),
     EXPORT("Export", Icons.Default.FileDownload, "Export processed image")
 }
+
 enum class IRGalleryThermalPalette(
     val displayName: String,
     val colors: List<Color>
@@ -50,6 +53,7 @@ enum class IRGalleryThermalPalette(
     GRAYSCALE("Grayscale", listOf(Color.Black, Color.Gray, Color.White)),
     HOT("Hot", listOf(Color.Black, Color.Red, Color(0xFFFFA500), Color.Yellow))
 }
+
 data class ImageEditState(
     val isImageLoaded: Boolean = false,
     val selectedTool: EditTool? = null,
@@ -58,6 +62,7 @@ data class ImageEditState(
     val temperatureRange: Pair<Float, Float> = 20f to 40f,
     val annotations: List<String> = emptyList()
 )
+
 class IRGalleryEditViewModel : AppBaseViewModel() {
     private val _editState = mutableStateOf(ImageEditState())
     val editState: State<ImageEditState> = _editState
@@ -75,10 +80,12 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
             _isProcessing.value = false
         }
     }
+
     fun selectTool(tool: EditTool) {
         _editState.value = _editState.value.copy(selectedTool = tool)
         _statusMessage.value = "Selected tool: ${tool.displayName}"
     }
+
     fun selectPalette(palette: IRGalleryThermalPalette) {
         _editState.value = _editState.value.copy(
             selectedPalette = palette,
@@ -86,6 +93,7 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
         )
         _statusMessage.value = "Applied ${palette.displayName} palette"
     }
+
     fun updateTemperatureRange(min: Float, max: Float) {
         _editState.value = _editState.value.copy(
             temperatureRange = min to max,
@@ -93,6 +101,7 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
         )
         _statusMessage.value = "Temperature range: ${min}°C - ${max}°C"
     }
+
     fun addAnnotation(text: String) {
         val currentAnnotations = _editState.value.annotations
         _editState.value = _editState.value.copy(
@@ -101,6 +110,7 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
         )
         _statusMessage.value = "Added annotation: $text"
     }
+
     fun saveImage() {
         viewModelScope.launch {
             _isProcessing.value = true
@@ -111,6 +121,7 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
             _isProcessing.value = false
         }
     }
+
     fun exportImage() {
         viewModelScope.launch {
             _isProcessing.value = true
@@ -121,6 +132,7 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
         }
     }
 }
+
 class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>() {
     private val viewModelInstance: IRGalleryEditViewModel by viewModels()
     override fun createViewModel(): IRGalleryEditViewModel = viewModelInstance
@@ -129,6 +141,7 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
         val imagePath = intent?.getStringExtra("image_path") ?: "sample_thermal_image.jpg"
         viewModelInstance.loadImage(imagePath)
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRGalleryEditViewModel) {
@@ -422,6 +435,7 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
         }
     }
 }
+
 @Composable
 private fun EditToolButton(
     tool: EditTool,
@@ -465,6 +479,7 @@ private fun EditToolButton(
         }
     }
 }
+
 @Composable
 private fun PaletteButton(
     palette: IRGalleryThermalPalette,

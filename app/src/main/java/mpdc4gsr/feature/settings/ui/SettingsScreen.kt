@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.settings.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -314,6 +315,7 @@ private fun SettingsSwitchItem(
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun SettingsScreenPreview() {

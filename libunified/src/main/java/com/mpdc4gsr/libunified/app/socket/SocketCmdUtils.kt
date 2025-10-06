@@ -1,8 +1,10 @@
 package com.mpdc4gsr.libunified.app.socket
+
 import android.text.TextUtils
 import com.google.gson.Gson
 import org.json.JSONException
 import org.json.JSONObject
+
 object SocketCmdUtils {
     fun getSocketCmd(cmd: Int): String? {
         var cmdJson: String? = null
@@ -17,6 +19,7 @@ object SocketCmdUtils {
             return cmdJson
         }
     }
+
     fun getCmdResponse(response: String?): Int? {
         var cmd: Int? = null
         if (TextUtils.isEmpty(response)) return null
@@ -28,6 +31,7 @@ object SocketCmdUtils {
         }
         return cmd
     }
+
     fun getIpResponse(response: String?): String? {
         var ip: String? = null
         if (TextUtils.isEmpty(response)) return null
@@ -39,6 +43,7 @@ object SocketCmdUtils {
         }
         return ip
     }
+
     fun getDataResponse(response: String?): String? {
         var data: String? = null
         if (TextUtils.isEmpty(response)) return null

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 @Composable
 fun MonitorControlPanel(
     onLogQuery: () -> Unit = {},
@@ -85,6 +87,7 @@ fun MonitorControlPanel(
         }
     }
 }
+
 @Composable
 fun ChartInfoPanel(
     currentValue: String,
@@ -133,6 +136,7 @@ fun ChartInfoPanel(
         }
     }
 }
+
 @Composable
 private fun ChartInfoItem(
     label: String,
@@ -169,6 +173,7 @@ private fun ChartInfoItem(
         )
     }
 }
+
 @Composable
 fun ReportInfoSection(
     reportName: String,
@@ -212,6 +217,7 @@ fun ReportInfoSection(
         }
     }
 }
+
 @Composable
 private fun ReportInfoRow(
     label: String,
@@ -239,6 +245,7 @@ private fun ReportInfoRow(
         )
     }
 }
+
 @Composable
 fun TargetModeItem(
     title: String,
@@ -321,6 +328,7 @@ fun TargetModeItem(
         }
     }
 }
+
 @Composable
 fun ConfigurationItem(
     title: String,
@@ -390,6 +398,7 @@ fun ConfigurationItem(
         }
     }
 }
+
 @Composable
 fun EmptyStateComponent(
     title: String = "No Data Available",
@@ -435,6 +444,7 @@ fun EmptyStateComponent(
         }
     }
 }
+
 @Composable
 fun LayoutComponentsPreview() {
     Column(

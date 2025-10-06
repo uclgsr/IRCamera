@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.user.compose
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -23,6 +24,7 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.utils.Constants
 import com.mpdc4gsr.module.user.viewmodel.MineFragmentViewModel
 import com.mpdc4gsr.libunified.R as RCore
+
 @Composable
 fun MineComposeFragment(
     viewModel: MineFragmentViewModel,

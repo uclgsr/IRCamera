@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,10 +26,12 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel
 import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.*
 import java.text.SimpleDateFormat
 import java.util.*
+
 class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewModel>() {
     override fun createViewModel(): MonitorThermalViewModel {
         return viewModels<MonitorThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: MonitorThermalViewModel) {
@@ -97,6 +100,7 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
             }
         }
     }
+
     @Composable
     private fun MonitoringStatusBar(
         monitoringState: MonitoringState,
@@ -176,6 +180,7 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
             }
         }
     }
+
     @Composable
     private fun StatusChip(
         text: String,
@@ -195,6 +200,7 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
             )
         }
     }
+
     @Composable
     private fun ThermalMonitorView(
         thermalData: ThermalData?,
@@ -251,6 +257,7 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
             }
         }
     }
+
     @Composable
     private fun MonitoringOverlays(
         thermalData: ThermalData?,
@@ -285,6 +292,7 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
             }
         }
     }
+
     @Composable
     private fun TemperatureMonitorCard(
         label: String,
@@ -324,6 +332,7 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
             }
         }
     }
+
     @Composable
     private fun AlertNotifications(
         alerts: List<MonitoringAlert>,
@@ -343,6 +352,7 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
             }
         }
     }
+
     @Composable
     private fun AlertCard(alert: MonitoringAlert) {
         Card(
@@ -391,6 +401,7 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
             }
         }
     }
+
     @Composable
     private fun MonitoringControlsPanel(
         monitoringState: MonitoringState,
@@ -455,6 +466,7 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
             }
         }
     }
+
     @Composable
     private fun ThresholdControls(
         onThresholdChange: (TemperatureThreshold) -> Unit,
@@ -502,6 +514,7 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
             )
         }
     }
+
     @Composable
     private fun AlertSettingsSection(
         onAlertSettingsChange: (AlertSettings) -> Unit
@@ -546,6 +559,7 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
             }
         }
     }
+
     @Composable
     private fun MonitoringDataSection(
         thermalData: ThermalData?
@@ -566,6 +580,7 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
             }
         }
     }
+
     @Composable
     private fun DataRow(label: String, value: String) {
         Row(
@@ -584,12 +599,14 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
             )
         }
     }
+
     // Helper functions
     private fun getMonitoringStatusText(state: MonitoringState): String = when (state) {
         MonitoringState.ACTIVE -> "Active"
         MonitoringState.PAUSED -> "Paused"
         MonitoringState.STOPPED -> "Stopped"
     }
+
     private fun getMonitoringStatusColor(state: MonitoringState): Color = when (state) {
         MonitoringState.ACTIVE -> Color.Green
         MonitoringState.PAUSED -> Color(0xFFFFA500)

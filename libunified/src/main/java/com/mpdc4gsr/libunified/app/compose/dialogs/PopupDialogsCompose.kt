@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.compose.dialogs
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+
 @Composable
 fun EmissivityTipPopup(
     title: String = "",
@@ -153,6 +155,7 @@ fun EmissivityTipPopup(
         }
     }
 }
+
 @Composable
 private fun EmissivityInfoRow(
     label: String,

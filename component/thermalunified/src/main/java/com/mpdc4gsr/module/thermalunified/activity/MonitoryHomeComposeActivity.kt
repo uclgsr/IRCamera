@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,10 +25,12 @@ import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorCaptureComposeFragme
 import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorHistoryComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.launch
+
 class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
@@ -45,9 +48,11 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 is ThermalViewModel.ExportStatus.Success -> {
                     snackbarHostState.showSnackbar("Data exported successfully")
                 }
+
                 is ThermalViewModel.ExportStatus.Error -> {
                     snackbarHostState.showSnackbar("Export failed: ${(exportStatus as ThermalViewModel.ExportStatus.Error).message}")
                 }
+
                 else -> {}
             }
         }
@@ -153,8 +158,8 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             1 -> MonitorRealTimeTab(
                                 isRecording = isRecording,
                                 onSnapshot = { viewModel.captureSnapshot() },
-                                onZoom = {  },
-                                onAdjust = {  }
+                                onZoom = { },
+                                onAdjust = { }
                             )
                         }
                     }
@@ -220,6 +225,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
     }
 }
+
 @Composable
 private fun RecordingStatusBar(
     modifier: Modifier = Modifier
@@ -254,6 +260,7 @@ private fun RecordingStatusBar(
         }
     }
 }
+
 @Composable
 private fun MonitorTabRow(
     selectedTab: Int,
@@ -290,6 +297,7 @@ private fun MonitorTabRow(
         }
     }
 }
+
 @Composable
 private fun MonitorTab(
     text: String,
@@ -324,6 +332,7 @@ private fun MonitorTab(
         }
     }
 }
+
 @Composable
 private fun MonitorHistoryTab() {
     // Embed existing history fragment using AndroidView
@@ -349,6 +358,7 @@ private fun MonitorHistoryTab() {
         )
     }
 }
+
 @Composable
 private fun HistoryStatsOverlay(
     modifier: Modifier = Modifier
@@ -388,6 +398,7 @@ private fun HistoryStatsOverlay(
         }
     }
 }
+
 @Composable
 private fun MonitorRealTimeTab(
     isRecording: Boolean,
@@ -428,6 +439,7 @@ private fun MonitorRealTimeTab(
         )
     }
 }
+
 @Composable
 private fun RealTimeMonitorOverlay(
     isRecording: Boolean,
@@ -491,6 +503,7 @@ private fun RealTimeMonitorOverlay(
         }
     }
 }
+
 @Composable
 private fun QuickControlsOverlay(
     onSnapshot: () -> Unit = {},

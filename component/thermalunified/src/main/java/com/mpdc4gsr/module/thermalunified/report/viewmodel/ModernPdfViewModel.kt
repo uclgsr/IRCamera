@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.report.viewmodel
+
 import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -19,30 +20,36 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.concurrent.CountDownLatch
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+
 class ModernPdfViewModel : BaseViewModel() {
     // Modern StateFlow-based state management
     private val _reportDataState = MutableStateFlow<ReportDataState>(ReportDataState.Idle)
     val reportDataState: StateFlow<ReportDataState> = _reportDataState.asStateFlow()
     private val _paginationState = MutableStateFlow(PaginationState())
     val paginationState: StateFlow<PaginationState> = _paginationState.asStateFlow()
+
     // One-time events using SharedFlow
     private val _events = MutableSharedFlow<PdfEvent>()
     val events: SharedFlow<PdfEvent> = _events.asSharedFlow()
+
     // Data classes for type-safe state management
     sealed class ReportDataState {
         object Idle : ReportDataState()
         object Loading : ReportDataState()
         data class Success(val data: ReportData, val isLoadMore: Boolean = false) :
             ReportDataState()
+
         data class Error(val message: String, val code: Int = -1) : ReportDataState()
         object NoNetwork : ReportDataState()
     }
+
     data class PaginationState(
         val currentPage: Int = 1,
         val hasMorePages: Boolean = true,
         val totalPages: Int = 0,
         val isLoadingMore: Boolean = false
     )
+
     sealed class PdfEvent {
         data class ShowToast(val message: String) : PdfEvent()
         data class ShowError(val message: String) : PdfEvent()
@@ -50,6 +57,7 @@ class ModernPdfViewModel : BaseViewModel() {
         object RefreshCompleted : PdfEvent()
         data class ShareReport(val reportData: ReportData) : PdfEvent()
     }
+
     // Repository instance
     private val reportRepository = ReportRepository()
     fun getReportData(
@@ -90,12 +98,14 @@ class ModernPdfViewModel : BaseViewModel() {
                             _events.emit(PdfEvent.RefreshCompleted)
                         }
                     }
+
                     is BaseRepository.Result.Error -> {
                         val errorMessage = result.exception.message ?: "Unknown error occurred"
                         _reportDataState.value = ReportDataState.Error(errorMessage)
                         _paginationState.value = _paginationState.value.copy(isLoadingMore = false)
                         _events.emit(PdfEvent.ShowError(errorMessage))
                     }
+
                     is BaseRepository.Result.Loading -> {
                         // Already handled above
                     }
@@ -108,35 +118,42 @@ class ModernPdfViewModel : BaseViewModel() {
             }
         }
     }
+
     fun loadNextPage(isTC007: Boolean) {
         val currentState = _paginationState.value
         if (currentState.hasMorePages && !currentState.isLoadingMore) {
             getReportData(isTC007, currentState.currentPage + 1)
         }
     }
+
     fun refreshData(isTC007: Boolean) {
         getReportData(isTC007, 1, forceRefresh = true)
     }
+
     fun navigateToReport(reportId: String) {
         launchWithErrorHandling {
             _events.emit(PdfEvent.NavigateToReport(reportId))
         }
     }
+
     fun shareReport(reportData: ReportData) {
         launchWithErrorHandling {
             _events.emit(PdfEvent.ShareReport(reportData))
         }
     }
+
     fun clearErrorState() {
         super.clearError()
         if (_reportDataState.value is ReportDataState.Error) {
             _reportDataState.value = ReportDataState.Idle
         }
     }
+
     fun resetStates() {
         _reportDataState.value = ReportDataState.Idle
         _paginationState.value = PaginationState()
     }
+
     private inner class ReportRepository : BaseRepository() {
         private val cacheKey = "report_data"
         suspend fun getReportData(
@@ -156,6 +173,7 @@ class ModernPdfViewModel : BaseViewModel() {
                 fetchReportDataFromNetwork(isTC007, page)
             }
         }
+
         private suspend fun fetchReportDataFromNetwork(
             isTC007: Boolean,
             page: Int
@@ -183,6 +201,7 @@ class ModernPdfViewModel : BaseViewModel() {
                             downLatch.countDown()
                         }
                     }
+
                     override fun onFail(exception: Exception?) {
                         error = exception ?: Exception("Network request failed")
                         result = ReportData().apply {
@@ -192,6 +211,7 @@ class ModernPdfViewModel : BaseViewModel() {
                         downLatch.countDown()
                         TLog.e("ModernPdfViewModel", "Network error: ${exception?.message}")
                     }
+
                     override fun onFail(failMsg: String?, errorCode: String) {
                         super.onFail(failMsg, errorCode)
                         // Handle localized error messages
@@ -234,10 +254,12 @@ class ModernPdfViewModel : BaseViewModel() {
             }
         }
     }
+
     // Extension functions for ReportData
     private fun ReportData.hasMoreData(): Boolean {
         return code == 200 && data?.records?.isNotEmpty() == true && data!!.records!!.size >= 20
     }
+
     companion object {
         private const val TAG = "ModernPdfViewModel"
     }

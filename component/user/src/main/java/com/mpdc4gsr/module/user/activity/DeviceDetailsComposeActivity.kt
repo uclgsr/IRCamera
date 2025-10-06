@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.user.activity
+
 import android.content.ClipData
 import android.content.ClipboardManager
 import androidx.activity.viewModels
@@ -23,10 +24,12 @@ import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.module.user.viewmodel.DeviceDetailsViewModel
 import com.mpdc4gsr.libunified.R as RCore
+
 class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>() {
     override fun createViewModel(): DeviceDetailsViewModel {
         return viewModels<DeviceDetailsViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: DeviceDetailsViewModel) {

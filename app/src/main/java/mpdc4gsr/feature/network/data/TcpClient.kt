@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.net.TrafficStats
 import android.os.Process
 import android.util.Log
@@ -23,6 +24,7 @@ class TcpClient(
         private const val CONNECTION_TIMEOUT_MS = 10000
         private const val READ_TIMEOUT_MS = 30000
     }
+
     private var socket: Socket? = null
     private var reader: BufferedReader? = null
     private var writer: BufferedWriter? = null
@@ -73,6 +75,7 @@ class TcpClient(
             return@withContext false
         }
     }
+
     override suspend fun sendMessage(message: String): Boolean = withContext(Dispatchers.IO) {
         try {
             val currentWriter = writer
@@ -92,6 +95,7 @@ class TcpClient(
             return@withContext false
         }
     }
+
     override suspend fun disconnect(): Unit = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Disconnecting from PC server")
         // Cancel reader job first to stop any ongoing reads
@@ -133,15 +137,19 @@ class TcpClient(
         _connectionState.value = CommandConnection.ConnectionState.DISCONNECTED
         connectionCallback?.invoke(CommandConnection.ConnectionState.DISCONNECTED)
     }
+
     override fun isConnected(): Boolean {
         return socket?.isConnected == true && !socket!!.isClosed && _connectionState.value == CommandConnection.ConnectionState.CONNECTED
     }
+
     override fun setMessageCallback(callback: (String) -> Unit) {
         messageCallback = callback
     }
+
     override fun setConnectionCallback(callback: (CommandConnection.ConnectionState) -> Unit) {
         connectionCallback = callback
     }
+
     override fun cleanup() {
         clientScope.launch {
             disconnect()
@@ -150,6 +158,7 @@ class TcpClient(
         messageCallback = null
         connectionCallback = null
     }
+
     private fun startReaderLoop() {
         readerJob = clientScope.launch {
             val currentReader = reader ?: return@launch
@@ -185,6 +194,7 @@ class TcpClient(
             }
         }
     }
+
     private fun handleConnectionError(errorMessage: String) {
         AppLogger.w(TAG, "Connection error: $errorMessage")
         _connectionState.value = CommandConnection.ConnectionState.ERROR

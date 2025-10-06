@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.data
+
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -19,6 +20,7 @@ class NetworkConnectionManager(
         private const val MAX_RECONNECT_ATTEMPTS = 5
         private const val CONNECTION_TIMEOUT_MS = 30000L
     }
+
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val _connectionState = MutableStateFlow(ConnectionState.DISCONNECTED)
     val connectionState: StateFlow<ConnectionState> = _connectionState.asStateFlow()
@@ -26,6 +28,7 @@ class NetworkConnectionManager(
     val errorState: StateFlow<String?> = _errorState.asStateFlow()
     private var reconnectAttempts = 0
     private var connectionTimeoutJob: kotlinx.coroutines.Job? = null
+
     enum class ConnectionState {
         DISCONNECTED,
         CONNECTING,
@@ -33,6 +36,7 @@ class NetworkConnectionManager(
         ERROR,
         RECONNECTING
     }
+
     init {
         // Monitor network server connection state
         scope.launch {
@@ -51,6 +55,7 @@ class NetworkConnectionManager(
             }
         }
     }
+
     suspend fun startServer(): Boolean {
         return try {
             _connectionState.value = ConnectionState.CONNECTING
@@ -74,6 +79,7 @@ class NetworkConnectionManager(
             false
         }
     }
+
     suspend fun stopServer() {
         try {
             connectionTimeoutJob?.cancel()
@@ -86,6 +92,7 @@ class NetworkConnectionManager(
             AppLogger.e(TAG, "Error stopping network server", e)
         }
     }
+
     private fun onConnectionEstablished() {
         AppLogger.i(TAG, "PC Controller connection established")
         _connectionState.value = ConnectionState.CONNECTED
@@ -108,6 +115,7 @@ class NetworkConnectionManager(
             }
         }
     }
+
     private fun onConnectionLost() {
         AppLogger.i(TAG, "PC Controller connection lost")
         connectionTimeoutJob?.cancel()
@@ -136,6 +144,7 @@ class NetworkConnectionManager(
             _connectionState.value = ConnectionState.DISCONNECTED
         }
     }
+
     private fun scheduleReconnect() {
         _connectionState.value = ConnectionState.RECONNECTING
         reconnectAttempts++
@@ -150,6 +159,7 @@ class NetworkConnectionManager(
             }
         }
     }
+
     private suspend fun attemptReconnection() {
         try {
             AppLogger.i(TAG, "Attempting reconnection $reconnectAttempts/$MAX_RECONNECT_ATTEMPTS")
@@ -179,6 +189,7 @@ class NetworkConnectionManager(
             }
         }
     }
+
     private fun onProtocolMessageReceived(message: Protocol.ProtocolMessage) {
         // Reset connection timeout when we receive messages
         connectionTimeoutJob?.cancel()
@@ -196,18 +207,21 @@ class NetworkConnectionManager(
             Protocol.MSG_HELLO -> {
                 AppLogger.d(TAG, "Received HELLO from PC - connection healthy")
             }
+
             Protocol.MSG_ERROR -> {
                 val errorCode = message.parameters["code"]
                 val errorMsg = message.parameters["msg"]
                 AppLogger.w(TAG, "Received ERROR from PC: $errorCode - $errorMsg")
                 _errorState.value = "PC Error: $errorMsg"
             }
+
             else -> {
                 // Other messages indicate healthy connection
                 AppLogger.d(TAG, "Received ${message.type} - connection active")
             }
         }
     }
+
     private fun checkConnectionHealth() {
         AppLogger.w(TAG, "Checking connection health due to inactivity")
         // In a real implementation, we might send a ping/keepalive message

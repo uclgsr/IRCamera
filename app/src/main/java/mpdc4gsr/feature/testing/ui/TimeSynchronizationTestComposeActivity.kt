@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.testing.ui
+
 import android.os.Bundle
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
@@ -33,6 +34,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
         private const val FLASH_DURATION_MS = 500L
         private const val TEST_RECORDING_DURATION_MS = 10000L
     }
+
     data class TimestampCheck(
         val sensorName: String,
         val timestamp: Long,
@@ -40,6 +42,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
         val isSynchronized: Boolean,
         val details: String
     )
+
     data class SyncEvent(
         val eventName: String,
         val timestamp: String,
@@ -47,8 +50,10 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
         val maxDrift: Long,
         val synchronized: Boolean
     )
+
     private var timeSyncService: TimeSynchronizationService? = null
     private var recordingController: RecordingController? = null
+
     // State variables hoisted to activity level
     private val _timestampChecks = mutableStateOf(listOf<TimestampCheck>())
     private val _syncEvents = mutableStateOf(listOf<SyncEvent>())
@@ -65,6 +70,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun TimeSynchronizationTestScreen() {
@@ -327,6 +333,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     fun TimestampCheckItem(check: TimestampCheck) {
         Row(
@@ -371,6 +378,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     fun SyncEventItem(event: SyncEvent) {
         Column {
@@ -413,6 +421,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private fun initializeComponents() {
         try {
             recordingController = RecordingController(this, this)
@@ -422,6 +431,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Failed to initialize components: ${e.message}")
         }
     }
+
     private suspend fun runAllSyncTests() {
         AppLogger.i(TAG, "Running all time synchronization tests")
         val startTime = System.currentTimeMillis()
@@ -463,6 +473,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             _isTestRunning.value = false
         }
     }
+
     private suspend fun testUnifiedTimestampSystem(): List<TimestampCheck> {
         AppLogger.d(TAG, "Testing unified timestamp system")
         val checks = mutableListOf<TimestampCheck>()
@@ -490,6 +501,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
         }
         return checks
     }
+
     private suspend fun testCrossSensorSyncEvents(): List<SyncEvent> {
         AppLogger.d(TAG, "Testing cross-sensor sync events")
         val events = mutableListOf<SyncEvent>()
@@ -524,6 +536,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
         }
         return events
     }
+
     private suspend fun checkTimestampAccuracy() {
         AppLogger.d(TAG, "Checking timestamp accuracy")
         try {
@@ -533,6 +546,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Timestamp accuracy check failed: ${e.message}")
         }
     }
+
     private suspend fun measureClockDrift() {
         AppLogger.d(TAG, "Measuring clock drift")
         try {
@@ -542,6 +556,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Clock drift measurement failed: ${e.message}")
         }
     }
+
     private suspend fun performFlashSyncTest() {
         AppLogger.d(TAG, "Performing flash sync test")
         try {
@@ -551,6 +566,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             AppLogger.e(TAG, "Flash sync test failed: ${e.message}")
         }
     }
+
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
             when (testId) {
@@ -563,6 +579,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             }
         }
     }
+
     private suspend fun testSyncRecovery() {
         AppLogger.d(TAG, "Testing sync recovery")
         try {

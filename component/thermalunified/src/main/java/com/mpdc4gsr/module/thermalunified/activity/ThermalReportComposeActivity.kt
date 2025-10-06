@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -19,10 +20,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+
 class ThermalReportComposeActivity : BaseComposeActivity<ThermalReportViewModel>() {
     override fun createViewModel(): ThermalReportViewModel {
         return ThermalReportViewModel()
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalReportViewModel) {
@@ -31,9 +34,11 @@ class ThermalReportComposeActivity : BaseComposeActivity<ThermalReportViewModel>
         )
     }
 }
+
 class ThermalReportViewModel : BaseViewModel() {
     // ViewModel implementation for report generation
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ThermalReportScreen(
@@ -148,6 +153,7 @@ private fun ThermalReportScreen(
         }
     }
 }
+
 @Composable
 private fun ReportConfigurationSection(
     reportTitle: String,
@@ -214,6 +220,7 @@ private fun ReportConfigurationSection(
         }
     }
 }
+
 @Composable
 private fun DataSelectionSection() {
     Card(
@@ -239,6 +246,7 @@ private fun DataSelectionSection() {
         }
     }
 }
+
 @Composable
 private fun DataSelectionItem(title: String, selected: Boolean, onSelectionChange: (Boolean) -> Unit = {}) {
     Row(
@@ -261,6 +269,7 @@ private fun DataSelectionItem(title: String, selected: Boolean, onSelectionChang
         )
     }
 }
+
 @Composable
 private fun AnalysisOptionsSection() {
     Card(
@@ -285,6 +294,7 @@ private fun AnalysisOptionsSection() {
         }
     }
 }
+
 @Composable
 private fun AnalysisOptionItem(
     title: String,
@@ -308,6 +318,7 @@ private fun AnalysisOptionItem(
         )
     }
 }
+
 @Composable
 private fun ExportSettingsSection() {
     Card(
@@ -330,7 +341,7 @@ private fun ExportSettingsSection() {
             ) {
                 ExportFormat.values().forEach { format ->
                     FilterChip(
-                        onClick = {  },
+                        onClick = { },
                         label = {
                             Text(
                                 format.displayName,
@@ -350,12 +361,14 @@ private fun ExportSettingsSection() {
         }
     }
 }
+
 private enum class ReportTemplate(val displayName: String) {
     STANDARD("Standard"),
     DETAILED("Detailed"),
     SUMMARY("Summary"),
     RESEARCH("Research")
 }
+
 private enum class ExportFormat(val displayName: String) {
     PDF("PDF"),
     DOCX("Word"),

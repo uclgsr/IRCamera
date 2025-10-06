@@ -1,4 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.utils.UnifiedMathUtils
 import kotlin.math.roundToInt
+
 @Composable
 fun TemperatureIndicator(
     temperature: Float,
@@ -59,6 +61,7 @@ fun TemperatureIndicator(
         }
     }
 }
+
 @Composable
 fun ThermalGradientBar(
     minTemp: Float,
@@ -105,6 +108,7 @@ fun ThermalGradientBar(
         }
     }
 }
+
 @Composable
 fun ThermalStatusIndicator(
     level: ThermalStatusLevel,
@@ -145,6 +149,7 @@ fun ThermalStatusIndicator(
         )
     }
 }
+
 @Composable
 fun MeasurementPoint(
     label: String,
@@ -194,6 +199,7 @@ fun MeasurementPoint(
         }
     }
 }
+
 @Composable
 fun ThermalToolbar(
     selectedTool: ThermalTool?,
@@ -230,6 +236,7 @@ fun ThermalToolbar(
         }
     }
 }
+
 // Data classes and enums for the utilities
 enum class ThermalTool(
     val displayName: String,
@@ -241,6 +248,7 @@ enum class ThermalTool(
     CIRCLE("Circle", Icons.Default.RadioButtonUnchecked),
     AREA("Area", Icons.Default.CropFree)
 }
+
 @Composable
 fun ThermalUtilsComposePreview() {
     Column(

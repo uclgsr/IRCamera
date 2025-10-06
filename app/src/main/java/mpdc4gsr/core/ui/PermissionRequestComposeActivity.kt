@@ -1,4 +1,5 @@
 package mpdc4gsr.core.ui
+
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -29,9 +30,11 @@ class PermissionRequestComposeActivity : BaseComposeActivity<BaseViewModel>() {
             context.startActivity(Intent(context, PermissionRequestComposeActivity::class.java))
         }
     }
+
     override fun createViewModel(): BaseViewModel {
         return viewModels<BaseViewModel>().value
     }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: BaseViewModel) {
@@ -101,6 +104,7 @@ class PermissionRequestComposeActivity : BaseComposeActivity<BaseViewModel>() {
         }
     }
 }
+
 @Composable
 private fun PermissionRequestContent(
     onPermissionSelect: (PermissionInfo) -> Unit,
@@ -154,6 +158,7 @@ private fun PermissionRequestContent(
         )
     }
 }
+
 @Composable
 private fun PermissionStatusOverview(
     modifier: Modifier = Modifier
@@ -196,6 +201,7 @@ private fun PermissionStatusOverview(
         }
     }
 }
+
 @Composable
 private fun PermissionStatusItem(
     label: String,
@@ -220,6 +226,7 @@ private fun PermissionStatusItem(
         )
     }
 }
+
 @Composable
 private fun PermissionCard(
     permission: PermissionInfo,
@@ -290,11 +297,13 @@ private fun PermissionCard(
                         tint = Color(0xFF4CAF50)
                     )
                 }
+
                 PermissionStatus.DENIED -> {
                     OutlinedButton(onClick = onSelect) {
                         Text("Grant")
                     }
                 }
+
                 PermissionStatus.PENDING -> {
                     Button(onClick = onSelect) {
                         Text("Request")
@@ -304,6 +313,7 @@ private fun PermissionCard(
         }
     }
 }
+
 @Composable
 private fun GrantAllPermissionsButton(
     modifier: Modifier = Modifier,
@@ -325,6 +335,7 @@ private fun GrantAllPermissionsButton(
         )
     }
 }
+
 @Composable
 private fun PermissionDetailDialog(
     permission: PermissionInfo,
@@ -368,6 +379,7 @@ private fun PermissionDetailDialog(
         }
     )
 }
+
 @Composable
 private fun PermissionEducationDialog(
     onDismiss: () -> Unit
@@ -415,6 +427,7 @@ private fun PermissionEducationDialog(
         }
     )
 }
+
 @Composable
 private fun PermissionEducationItem(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -449,6 +462,7 @@ private fun PermissionEducationItem(
         }
     }
 }
+
 private fun getPermissionIcon(type: String) = when (type) {
     "camera" -> Icons.Default.Camera
     "bluetooth" -> Icons.Default.Bluetooth
@@ -458,16 +472,19 @@ private fun getPermissionIcon(type: String) = when (type) {
     "notification" -> Icons.Default.Notifications
     else -> Icons.Default.Security
 }
+
 private fun getPermissionStatusColor(status: PermissionStatus) = when (status) {
     PermissionStatus.GRANTED -> Color(0xFF4CAF50)
     PermissionStatus.DENIED -> Color(0xFFE53E3E)
     PermissionStatus.PENDING -> Color(0xFFFF9800)
 }
+
 enum class PermissionStatus {
     GRANTED,
     DENIED,
     PENDING
 }
+
 data class PermissionInfo(
     val name: String,
     val type: String,
@@ -476,6 +493,7 @@ data class PermissionInfo(
     val status: PermissionStatus,
     val isCritical: Boolean
 )
+
 private fun getCriticalPermissions() = listOf(
     PermissionInfo(
         "Camera Access",
@@ -502,6 +520,7 @@ private fun getCriticalPermissions() = listOf(
         true
     )
 )
+
 private fun getOptionalPermissions() = listOf(
     PermissionInfo(
         "Storage Access",
