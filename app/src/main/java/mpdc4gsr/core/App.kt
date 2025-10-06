@@ -96,6 +96,9 @@ class App : BaseApplication() {
         // Initialize centralized logging
         initializeAppLogger()
 
+        // Load native libraries for thermal camera support
+        loadNativeLibraries()
+
         // Initialize telemetry and observability
         mpdc4gsr.core.monitoring.TelemetryManager.initialize(this)
 
@@ -188,6 +191,17 @@ class App : BaseApplication() {
             AppLogger.i("App", "AppLogger initialized successfully")
         } catch (e: Exception) {
             android.util.Log.e("App", "Failed to initialize AppLogger: ${e.message}", e)
+        }
+    }
+
+    private fun loadNativeLibraries() {
+        try {
+            System.loadLibrary("USBUVCCamera")
+            AppLogger.i("App", "USBUVCCamera native library loaded successfully")
+        } catch (e: UnsatisfiedLinkError) {
+            AppLogger.w("App", "USBUVCCamera native library not available: ${e.message}")
+        } catch (e: Exception) {
+            AppLogger.e("App", "Error loading USBUVCCamera native library", e)
         }
     }
 

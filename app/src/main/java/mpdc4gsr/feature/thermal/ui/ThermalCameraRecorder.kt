@@ -732,8 +732,20 @@ class ThermalCameraRecorder(
                         usbMonitorCallback
                     )
                     AppLogger.i(TAG, "IRUVCTC instance created successfully")
+                } catch (e: UnsatisfiedLinkError) {
+                    AppLogger.e(TAG, "Native library not loaded for thermal camera", e)
+                    AppLogger.e(TAG, "Missing native library: ${e.message}")
+                    emitError(
+                        ErrorType.INITIALIZATION_FAILED,
+                        "Thermal camera native library not available. Ensure USBUVCCamera library is included in the build."
+                    )
+                    return@withContext false
                 } catch (e: Exception) {
                     AppLogger.e(TAG, "Failed to create IRUVCTC instance", e)
+                    emitError(
+                        ErrorType.INITIALIZATION_FAILED,
+                        "Failed to initialize thermal camera: ${e.message}"
+                    )
                     return@withContext false
                 }
 
