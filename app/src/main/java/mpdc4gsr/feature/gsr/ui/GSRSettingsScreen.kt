@@ -173,11 +173,7 @@ fun GSRSettingsScreen(
                 Button(
                     onClick = {
                         viewModel.startCalibration()
-                        android.widget.Toast.makeText(
-                            context,
-                            "Starting GSR calibration...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        // Toast is shown by ViewModel via settingsEvents
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -188,11 +184,7 @@ fun GSRSettingsScreen(
                 Button(
                     onClick = {
                         viewModel.resetToDefaults()
-                        android.widget.Toast.makeText(
-                            context,
-                            "Settings reset to defaults",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        // Toast is shown by ViewModel via settingsEvents
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red)

@@ -89,17 +89,24 @@ private fun CameraDashboardContent(
 
         // Camera Modes Card
         CameraModesCard(
-            onNavigateToDualMode = onNavigateToDualMode
+            onNavigateToDualMode = onNavigateToDualMode,
+            onNavigateToSingleCamera = onNavigateToSingleCamera,
+            onNavigateToTimeLapse = onNavigateToTimeLapse
         )
 
         // Recording Controls Card
-        RecordingControlsCard()
+        RecordingControlsCard(
+            onNavigateToSingleCamera = onNavigateToSingleCamera
+        )
 
         // Camera Settings Card
         CameraSettingsCard()
 
         // Preview and Gallery Card
-        PreviewGalleryCard()
+        PreviewGalleryCard(
+            onNavigateToSingleCamera = onNavigateToSingleCamera,
+            onNavigateToGallery = onNavigateToGallery
+        )
     }
 }
 
@@ -204,7 +211,9 @@ private fun CameraInfoRow(
 
 @Composable
 private fun CameraModesCard(
-    onNavigateToDualMode: () -> Unit
+    onNavigateToDualMode: () -> Unit,
+    onNavigateToSingleCamera: (() -> Unit)? = null,
+    onNavigateToTimeLapse: (() -> Unit)? = null
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -311,7 +320,9 @@ private fun CameraModeItem(
 }
 
 @Composable
-private fun RecordingControlsCard() {
+private fun RecordingControlsCard(
+    onNavigateToSingleCamera: (() -> Unit)? = null
+) {
     var isRecording by remember { mutableStateOf(false) }
 
     Card(
@@ -477,7 +488,10 @@ private fun SettingRow(
 }
 
 @Composable
-private fun PreviewGalleryCard() {
+private fun PreviewGalleryCard(
+    onNavigateToSingleCamera: (() -> Unit)? = null,
+    onNavigateToGallery: (() -> Unit)? = null
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)

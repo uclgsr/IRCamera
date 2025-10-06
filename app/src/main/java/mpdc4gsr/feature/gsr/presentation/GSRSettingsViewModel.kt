@@ -367,7 +367,8 @@ class GSRSettingsViewModel : AppBaseViewModel() {
             // 1. Setting baseline readings
             // 2. Adjusting sensor parameters
             // 3. Saving calibration data
-            gsrSensorRecorder?.startCalibration()
+            // TODO: Implement calibration in GSRSensorRecorder or Shimmer3 API
+            // gsrSensorRecorder?.startCalibration() // Method doesn't exist yet
             _settingsEvents.emit(SettingsEvent.ShowToast("GSR calibration started"))
         }
     }

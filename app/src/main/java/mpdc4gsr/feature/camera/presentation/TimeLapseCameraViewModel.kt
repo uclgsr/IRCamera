@@ -24,10 +24,12 @@ enum class TimeLapseMode(val displayName: String) {
  * Manages time-lapse recording with configurable intervals
  */
 class TimeLapseCameraViewModel(
-    context: Context
+    @Suppress("UNUSED_PARAMETER") context: Context
 ) : AppBaseViewModel() {
 
-    private val application: Context = context.applicationContext
+    companion object {
+        private const val DEFAULT_PLAYBACK_FPS = 30
+    }
 
     data class TimeLapseState(
         val isRecording: Boolean = false,
@@ -89,7 +91,7 @@ class TimeLapseCameraViewModel(
             _timeLapseState.value = current.copy(
                 capturedFrames = current.capturedFrames + 1,
                 lastCaptureTime = System.currentTimeMillis(),
-                estimatedVideoLength = (current.capturedFrames + 1) / 30
+                estimatedVideoLength = (current.capturedFrames + 1) / DEFAULT_PLAYBACK_FPS
             )
         }
     }

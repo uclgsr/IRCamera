@@ -53,7 +53,9 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // User profile card
-            UserProfileCard()
+            UserProfileCard(
+                onNavigateToEditProfile = onNavigateToEditProfile
+            )
 
             // Research statistics
             ResearchStatsCard()
@@ -62,7 +64,11 @@ fun ProfileScreen(
             RecentActivitiesCard()
 
             // Quick actions
-            QuickActionsCard()
+            QuickActionsCard(
+                onNavigateToResearchTemplates = onNavigateToResearchTemplates,
+                onExportData = onExportData,
+                onNavigateToPreferences = onNavigateToPreferences
+            )
         }
     }
 }
@@ -72,6 +78,7 @@ fun ProfileScreen(
  */
 @Composable
 private fun UserProfileCard(
+    onNavigateToEditProfile: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -261,6 +268,9 @@ private fun RecentActivitiesCard(
  */
 @Composable
 private fun QuickActionsCard(
+    onNavigateToResearchTemplates: (() -> Unit)? = null,
+    onExportData: (() -> Unit)? = null,
+    onNavigateToPreferences: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Card(
