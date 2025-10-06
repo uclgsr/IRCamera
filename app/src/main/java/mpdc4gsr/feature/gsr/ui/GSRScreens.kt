@@ -18,7 +18,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GSRSettingsScreen(
+fun GSRSettingsScreenPlaceholder(
     onBackClick: () -> Unit
 ) {
     LibUnifiedTheme {
