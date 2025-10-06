@@ -46,25 +46,19 @@ fun GSRSettingsScreen(
     LaunchedEffect(Unit) {
         viewModel.initialize(context)
         viewModel.settingsEvents.collect { event ->
-            when (event) {
-                is GSRSettingsViewModel.SettingsEvent.ShowToast,
-                is GSRSettingsViewModel.SettingsEvent.CalibrationStarted,
-                is GSRSettingsViewModel.SettingsEvent.CalibrationCompleted,
-                is GSRSettingsViewModel.SettingsEvent.ShowError -> {
-                    val message = when (event) {
-                        is GSRSettingsViewModel.SettingsEvent.ShowToast -> event.message
-                        is GSRSettingsViewModel.SettingsEvent.CalibrationStarted -> event.message
-                        is GSRSettingsViewModel.SettingsEvent.CalibrationCompleted -> event.message
-                        is GSRSettingsViewModel.SettingsEvent.ShowError -> event.message
-                        else -> ""
-                    }
-                    android.widget.Toast.makeText(
-                        context,
-                        message,
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                }
-                else -> {}
+            val message = when (event) {
+                is GSRSettingsViewModel.SettingsEvent.ShowToast -> event.message
+                is GSRSettingsViewModel.SettingsEvent.CalibrationStarted -> event.message
+                is GSRSettingsViewModel.SettingsEvent.CalibrationCompleted -> event.message
+                is GSRSettingsViewModel.SettingsEvent.ShowError -> event.message
+                else -> null
+            }
+            message?.let {
+                android.widget.Toast.makeText(
+                    context,
+                    it,
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

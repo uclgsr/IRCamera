@@ -384,9 +384,7 @@ class GSRSettingsViewModel : AppBaseViewModel() {
                 // 2. Optionally writing new calibration coefficients
                 // 3. Verifying calibration by checking sensor readings
                 
-                // For now, verify that the device is providing calibrated data
-                kotlinx.coroutines.delay(1000)
-                
+                // Verify that the device is providing calibrated data
                 if (gsrSensorRecorder != null) {
                     _settingsEvents.emit(SettingsEvent.CalibrationCompleted(
                         "GSR sensor calibration verified. Device is using Shimmer factory calibration parameters."

@@ -84,14 +84,6 @@ sealed class UnifiedRoute(val route: String, val displayName: String = "") {
 
     // System Routes
     object Settings : UnifiedRoute("settings", "Settings")
-    object RecordingSettings : UnifiedRoute("recording_settings", "Recording Settings")
-    object StorageSettings : UnifiedRoute("storage_settings", "Storage Settings")
-    object SyncSettings : UnifiedRoute("sync_settings", "Sync Settings")
-    object Calibration : UnifiedRoute("calibration", "Calibration")
-    object Diagnostics : UnifiedRoute("diagnostics", "Diagnostics")
-    object AppInfo : UnifiedRoute("app_info", "App Info")
-    object PrivacyPolicy : UnifiedRoute("privacy_policy", "Privacy Policy")
-    object Help : UnifiedRoute("help", "Help")
     object About : UnifiedRoute("about", "About")
     object Profile : UnifiedRoute("profile", "Profile")
     object ProfileEdit : UnifiedRoute("profile_edit", "Edit Profile")
