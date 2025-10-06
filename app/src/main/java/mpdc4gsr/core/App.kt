@@ -106,9 +106,8 @@ class App : BaseApplication() {
             SPUtils.getInstance(this).put(Config.KEY_PRIVACY_AGREEMENT, true)
 
             if (SharedManager.getHasShowClause() || !isDomestic()) {
-                Executors.newSingleThreadExecutor().execute {
-                    delayInit()
-                }
+                // Initialize immediately to ensure USB receiver is registered before activities start
+                delayInit()
             }
 
             // RxJava error handling removed - using Kotlin Coroutines exception handling

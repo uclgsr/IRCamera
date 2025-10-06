@@ -504,48 +504,36 @@ class ThermalCameraRecorder(
             if (!deviceFound) {
                 Log.w(
                     TAG,
-                    "No thermal cameras found on initial scan, will retry after delay to allow USB enumeration"
+                    "No thermal cameras found, enabling simulation mode - USB receiver will detect hot-plug events"
                 )
-                
-                delay(500)
-                
-                val retryFound = scanForThermalCameraDevicesWithPermissions()
-                if (!retryFound) {
-                    Log.w(
-                        TAG,
-                        "No thermal cameras found after retry, enabling simulation mode"
-                    )
-                    isSimulationMode = true
-                    emitError(
-                        ErrorType.DEVICE_ERROR,
-                        "No thermal camera detected - using simulation mode"
-                    )
+                isSimulationMode = true
+                emitError(
+                    ErrorType.DEVICE_ERROR,
+                    "No thermal camera detected - using simulation mode"
+                )
 
-                    recordingScope.launch {
-                        AppLogger.i(TAG, "Testing simulation mode with sample thermal frame generation")
-                        try {
-                            val testFrame = generateTestThermalFrame()
-                            if (testFrame != null) {
-                                Log.i(
-                                    TAG,
-                                    "Simulation mode test successful - thermal frame generated with ${testFrame.temperatureMatrix.size}x${testFrame.temperatureMatrix[0].size} matrix"
-                                )
-                                Log.d(
-                                    TAG,
-                                    "Test frame temperature range: ${testFrame.minTemperature}°C to ${testFrame.maxTemperature}°C"
-                                )
-                            } else {
-                                AppLogger.w(TAG, "Simulation mode test failed - null frame generated")
-                            }
-                        } catch (e: Exception) {
-                            AppLogger.e(TAG, "Simulation mode test failed", e)
+                recordingScope.launch {
+                    AppLogger.i(TAG, "Testing simulation mode with sample thermal frame generation")
+                    try {
+                        val testFrame = generateTestThermalFrame()
+                        if (testFrame != null) {
+                            Log.i(
+                                TAG,
+                                "Simulation mode test successful - thermal frame generated with ${testFrame.temperatureMatrix.size}x${testFrame.temperatureMatrix[0].size} matrix"
+                            )
+                            Log.d(
+                                TAG,
+                                "Test frame temperature range: ${testFrame.minTemperature}°C to ${testFrame.maxTemperature}°C"
+                            )
+                        } else {
+                            AppLogger.w(TAG, "Simulation mode test failed - null frame generated")
                         }
+                    } catch (e: Exception) {
+                        AppLogger.e(TAG, "Simulation mode test failed", e)
                     }
-
-                    return@withContext true
-                } else {
-                    Log.i(TAG, "Thermal camera found on retry attempt")
                 }
+
+                return@withContext true
             }
 
             val device = thermalCameraDevice
