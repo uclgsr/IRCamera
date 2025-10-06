@@ -124,7 +124,7 @@ fun NetworkSettingsScreen(
                 if (pairedDevices.isEmpty()) {
                     Text(
                         text = "No paired devices found",
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
