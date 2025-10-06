@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.feature.gsr.presentation.GSRSettingsViewModel
 
 /**
@@ -32,9 +33,11 @@ class GSRSettingsComposeActivity : BaseComposeActivity<GSRSettingsViewModel>() {
 
     @Composable
     override fun Content(viewModel: GSRSettingsViewModel) {
-        GSRSettingsScreen(
-            onBackClick = { finish() },
-            viewModel = viewModel
-        )
+        LibUnifiedTheme {
+            GSRSettingsScreen(
+                onBackClick = { finish() },
+                viewModel = viewModel
+            )
+        }
     }
 }
