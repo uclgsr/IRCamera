@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.compose.components
+
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
+
 @Composable
 fun ComposeToast(
     message: String,
@@ -50,6 +52,7 @@ fun ComposeToast(
         }
     }
 }
+
 object ComposeToastHelper {
     private var currentToast: android.app.Dialog? = null
     fun show(context: Context, message: String, duration: Long = 2000L) {
@@ -80,9 +83,11 @@ object ComposeToastHelper {
             show()
         }
     }
+
     fun show(context: Context, @StringRes resId: Int, duration: Long = 2000L) {
         show(context, context.getString(resId), duration)
     }
+
     fun dismiss() {
         currentToast?.dismiss()
         currentToast = null

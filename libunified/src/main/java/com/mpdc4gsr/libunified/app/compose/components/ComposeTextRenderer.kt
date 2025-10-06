@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.compose.components
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +15,7 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 @Composable
 fun ComposeLegendTextDemo(
     modifier: Modifier = Modifier
@@ -32,6 +34,7 @@ fun ComposeLegendTextDemo(
         )
     }
 }
+
 private fun DrawScope.drawComposeLegendText(
     textMeasurer: TextMeasurer,
     textStyle: TextStyle
@@ -55,6 +58,7 @@ private fun DrawScope.drawComposeLegendText(
         )
     }
 }
+
 @Composable
 fun rememberThemeAwarePaintColor(): Int {
     val color = MaterialTheme.colorScheme.onSurface

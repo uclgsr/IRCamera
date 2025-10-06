@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.activity
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -28,6 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
 class PseudoSetComposeActivity : ComponentActivity() {
     private val viewModel: PseudoSetViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,12 +43,14 @@ class PseudoSetComposeActivity : ComponentActivity() {
             }
         }
     }
+
     companion object {
         fun start(context: Context) {
             context.startActivity(Intent(context, PseudoSetComposeActivity::class.java))
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PseudoSetScreen(
@@ -208,6 +212,7 @@ fun PseudoSetScreen(
         }
     }
 }
+
 @Composable
 fun PaletteItem(
     palette: ThermalPalette,
@@ -261,11 +266,13 @@ fun PaletteItem(
         }
     }
 }
+
 // Data Classes
 data class ThermalPalette(
     val name: String,
     val colors: List<Color>
 )
+
 data class PseudoSetUiState(
     val minTemp: Float = -20f,
     val maxTemp: Float = 120f,
@@ -284,6 +291,7 @@ data class PseudoSetUiState(
     val lockRange: Boolean = false,
     val isLoading: Boolean = false
 )
+
 // ViewModel
 class PseudoSetViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(PseudoSetUiState())
@@ -291,21 +299,27 @@ class PseudoSetViewModel : ViewModel() {
     fun updateMinTemp(temp: Float) {
         _uiState.value = _uiState.value.copy(minTemp = temp)
     }
+
     fun updateMaxTemp(temp: Float) {
         _uiState.value = _uiState.value.copy(maxTemp = temp)
     }
+
     fun selectPalette(palette: ThermalPalette) {
         _uiState.value = _uiState.value.copy(selectedPalette = palette)
     }
+
     fun toggleAutoRange(enabled: Boolean) {
         _uiState.value = _uiState.value.copy(autoRange = enabled)
     }
+
     fun toggleLockRange(enabled: Boolean) {
         _uiState.value = _uiState.value.copy(lockRange = enabled)
     }
+
     fun resetToDefaults() {
         _uiState.value = PseudoSetUiState()
     }
+
     fun applySettings() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
@@ -315,11 +329,13 @@ class PseudoSetViewModel : ViewModel() {
         }
     }
 }
+
 // Theme placeholder (would be imported from actual theme)
 @Composable
 fun IRCameraTheme(content: @Composable () -> Unit) {
     MaterialTheme(content = content)
 }
+
 @Preview(showBackground = true)
 @Composable
 fun PseudoSetScreenPreview() {

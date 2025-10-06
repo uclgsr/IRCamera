@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.compose.dialogs
+
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+
 @Composable
 fun ObserveDialog(
     title: String = "Observation Mode",
@@ -105,6 +107,7 @@ fun ObserveDialog(
         }
     }
 }
+
 @Composable
 fun ShutterDialog(
     title: String = "Shutter Calibration",
@@ -194,6 +197,7 @@ fun ShutterDialog(
         }
     }
 }
+
 @Composable
 fun OtgDialog(
     title: String = "OTG Connection",
@@ -286,6 +290,7 @@ fun OtgDialog(
         }
     }
 }
+
 @Composable
 fun WaterMarkDialog(
     title: String = "Watermark Settings",
@@ -397,6 +402,7 @@ fun WaterMarkDialog(
         }
     }
 }
+
 @Composable
 fun ChangeDeviceDialog(
     title: String = "Change Device",

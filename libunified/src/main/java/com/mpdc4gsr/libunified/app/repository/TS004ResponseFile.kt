@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.repository
+
 data class TS004Response<T>(
     val command: Int,
     val data: T?,
@@ -8,42 +9,53 @@ data class TS004Response<T>(
 ) {
     fun isSuccess(): Boolean = status == 0
 }
+
 data class PseudoColorBean(
     val enable: Boolean?,
     val mode: Int?,
 )
+
 data class RangeBean(
     val state: Int?,
 )
+
 data class PipBean(
     val enable: Boolean?,
 )
+
 data class BrightnessBean(
     val brightness: Int
 )
+
 data class ZoomBean(
     val factor: Int?,
 )
+
 data class TISRBean(
     val enable: Int?,
 )
+
 data class VersionBean(
     val firmware: String?,
 )
+
 data class DeviceInfo(
     val code: String,
     val model: String,
     val sn: String,
     val uuid: String,
 )
+
 data class FileCountBean(
     val fileCount: Int,
 )
+
 data class FilePageBean(
     val current: Int,
     val total: Int,
     val filelist: List<TS004FileBean>,
 )
+
 data class TS004FileBean(
     val id: Int,
     val type: Int,
@@ -54,10 +66,12 @@ data class TS004FileBean(
     val time: Long,
     val timezone: Int,
 )
+
 data class UpgradeStatus(
     val status: Int,
     val percent: Int,
 )
+
 data class FreeSpaceBean(
     val total: Long,
     val free: Long,
@@ -67,6 +81,7 @@ data class FreeSpaceBean(
 ) {
     fun hasUseSize(): Long = system + image_size + video_size
 }
+
 data class RecordStatusBean(
     val errCode: Int,
     val path: String,

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app
+
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
@@ -34,11 +35,13 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.Locale
+
 abstract class BaseApplication : Application() {
     companion object {
         lateinit var instance: BaseApplication
         val usbObserver by lazy { DeviceBroadcastReceiver() }
     }
+
     // Application-scoped coroutine scope for database operations
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     var tau_data_H: ByteArray? = null
@@ -61,6 +64,7 @@ abstract class BaseApplication : Application() {
             parserSocketMessage(it)
         }
     }
+
     open fun initWebSocket() {
         connectWebSocket()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -100,6 +104,7 @@ abstract class BaseApplication : Application() {
             }
         }
     }
+
     private fun connectWebSocket() {
         val ssid = WifiUtils.getCurrentWifiSSID(this) ?: return
         Log.i("WebSocket", "current[ph][ph] Wifi SSID: $ssid")
@@ -114,10 +119,12 @@ abstract class BaseApplication : Application() {
         NetWorkUtils.switchNetwork(true)
         // }
     }
+
     fun disconnectWebSocket() {
         Log.i("WebSocket", "disconnectWebSocket()")
         WebSocketProxy.getInstance().stopWebSocket()
     }
+
     private fun parserSocketMessage(msgJson: String) {
         if (TextUtils.isEmpty(msgJson)) return
         if (SharedManager.is04AutoSync) {
@@ -125,6 +132,7 @@ abstract class BaseApplication : Application() {
                 WsCmdConstants.AR_COMMAND_SNAPSHOT -> {
                     autoSaveNewest(false)
                 }
+
                 WsCmdConstants.AR_COMMAND_VRECORD -> {
                     try {
                         val data: JSONObject = JSONObject(msgJson).getJSONObject("data")
@@ -138,6 +146,7 @@ abstract class BaseApplication : Application() {
             }
         }
     }
+
     private fun autoSaveNewest(isVideo: Boolean) {
         // TS004Repository functionality removed
         // CoroutineScope(Dispatchers.IO).launch {
@@ -156,6 +165,7 @@ abstract class BaseApplication : Application() {
         //     }
         // }
     }
+
     private inner class NetworkChangedReceiver : BroadcastReceiver() {
         override fun onReceive(
             context: Context?,
@@ -188,6 +198,7 @@ abstract class BaseApplication : Application() {
             }
         }
     }
+
     @RequiresApi(api = 28)
     open fun webviewSetPath(context: Context?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -197,6 +208,7 @@ abstract class BaseApplication : Application() {
             }
         }
     }
+
     open fun getProcessName(context: Context?): String? {
         if (context == null) return null
         val manager: ActivityManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
@@ -207,6 +219,7 @@ abstract class BaseApplication : Application() {
         }
         return null
     }
+
     fun clearDb() {
         applicationScope.launch {
             try {
@@ -216,6 +229,7 @@ abstract class BaseApplication : Application() {
             }
         }
     }
+
     @Suppress("DEPRECATION")
     open fun onLanguageChange() {
         // Force English locale for the application.
@@ -231,9 +245,11 @@ abstract class BaseApplication : Application() {
         SharedManager.setLanguage(baseContext, ConstantLanguages.ENGLISH)
         WebView(this).destroy()
     }
+
     open fun getAppLanguage(context: Context): String? {
         return ConstantLanguages.ENGLISH
     }
+
     fun exitAll() {
         hasOtgShow = false
         activitys.forEach {

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.compose.dialogs
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+
 @Composable
 fun ProgressDialog(
     message: String = "",
@@ -78,6 +80,7 @@ fun ProgressDialog(
         }
     }
 }
+
 @Composable
 fun ColorPickerDialog(
     initialColor: Int,

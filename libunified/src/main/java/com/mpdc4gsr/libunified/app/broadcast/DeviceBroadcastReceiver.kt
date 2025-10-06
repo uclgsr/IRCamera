@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.broadcast
+
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -8,11 +9,14 @@ import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
 import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
+
 class DeviceBroadcastReceiver : BroadcastReceiver() {
     private val TAG = this.javaClass.simpleName
+
     companion object {
         const val ACTION_USB_PERMISSION = "com.mpdc4gsr.topInfrared.USB_PERMISSION"
     }
+
     override fun onReceive(
         context: Context?,
         intent: Intent?,
@@ -32,6 +36,7 @@ class DeviceBroadcastReceiver : BroadcastReceiver() {
             handleUsbEvent(intent)
         }
     }
+
     private fun handleUsbEvent(intent: Intent) {
         val usbDevice: UsbDevice?
         try {

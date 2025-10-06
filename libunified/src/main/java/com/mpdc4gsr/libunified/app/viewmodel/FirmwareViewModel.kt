@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.viewmodel
+
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -22,6 +23,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.util.concurrent.CountDownLatch
+
 class FirmwareViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
         private const val TS004_SOFT_CODE = "TS004_FirmwareSW_Scope"
@@ -36,21 +38,25 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         private const val TC007_DEBUG_SN = "1D004714E10002"
         private const val TC007_DEBUG_RANDOM_NUM = "EN6L6Q"
     }
+
     @Volatile
     private var isRequest = false
     val firmwareDataLD: MutableLiveData<FirmwareData?> = MutableLiveData()
     val failLD: MutableLiveData<Boolean> = MutableLiveData()
+
     data class FirmwareData(
         val version: String,
         val updateStr: String,
         val downUrl: String,
         val size: Long,
     )
+
     fun queryFirmware(isTS004: Boolean) {
         if (isRequest) {
             return
         }
     }
+
     private fun getInfoFromAssets(
         isTS004: Boolean,
         firmware: String,
@@ -95,6 +101,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         )
         isRequest = false
     }
+
     private suspend fun getInfoFromNetwork(
         isTS004: Boolean,
         sn: String,
@@ -148,6 +155,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         }
         isRequest = false
     }
+
     private suspend fun bindDevice(
         sn: String,
         randomNum: String,
@@ -170,6 +178,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             return@withContext code
         }
     }
+
     private suspend fun querySoftPackage(
         sn: String,
         softCode: String,
@@ -203,6 +212,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                         }
                         countDownLatch.countDown()
                     }
+
                     override fun onFail(exception: Exception?) {
                         countDownLatch.countDown()
                     }
@@ -211,6 +221,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             countDownLatch.await()
             return@withContext packageData
         }
+
     private suspend fun queryDownloadUrl(
         sn: String,
         businessId: Int,
@@ -243,6 +254,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                         }
                         countDownLatch.countDown()
                     }
+
                     override fun onFail(exception: Exception?) {
                         countDownLatch.countDown()
                     }
@@ -251,6 +263,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             countDownLatch.await()
             return@withContext result
         }
+
     private fun getVersionFromStr(versionStr: String): Double =
         try {
             if (versionStr[0] == 'V') {
@@ -261,6 +274,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         } catch (e: NumberFormatException) {
             0.0
         }
+
     private class PackageData {
         var records: List<Record>? = null
         fun getFirstRecord(): Record? = if (records?.isNotEmpty() == true) records?.get(0) else null
@@ -281,14 +295,17 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 return ""
             }
         }
+
         data class MaxVersionDetailResVO(
             val otherExplain: List<OtherExplain>?,
         )
+
         data class OtherExplain(
             val valueType: Int,
             val textDescription: String?,
         )
     }
+
     private data class DownloadData(
         val downUrl: String?,
         val size: Long?,

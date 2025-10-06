@@ -1,10 +1,12 @@
 package com.mpdc4gsr.libunified.app.repository
+
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+
 abstract class BaseRepository(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
@@ -13,6 +15,7 @@ abstract class BaseRepository(
         data class Error(val exception: Throwable) : Result<Nothing>()
         object Loading : Result<Nothing>()
     }
+
     data class CachedData<T>(
         val data: T,
         val timestamp: Long = System.currentTimeMillis(),
@@ -21,6 +24,7 @@ abstract class BaseRepository(
         val isExpired: Boolean
             get() = System.currentTimeMillis() - timestamp > ttlMs
     }
+
     // Simple in-memory cache
     private val cache = mutableMapOf<String, CachedData<Any>>()
     protected suspend fun <T> safeCall(
@@ -35,6 +39,7 @@ abstract class BaseRepository(
             }
         }
     }
+
     protected fun <T> safeFlow(
         operation: suspend () -> T
     ): Flow<Result<T>> = flow {
@@ -46,6 +51,7 @@ abstract class BaseRepository(
             emit(Result.Error(e))
         }
     }.flowOn(ioDispatcher)
+
     // The unchecked cast from CachedData<Any> to CachedData<T> is safe here because
     // each cacheKey is always associated with a single type T for the lifetime of the cache entry.
     // The function contract ensures that the same key is not reused for different types.
@@ -64,6 +70,7 @@ abstract class BaseRepository(
             result
         }
     }
+
     protected fun clearCache(key: String? = null) {
         if (key != null) {
             cache.remove(key)
@@ -71,6 +78,7 @@ abstract class BaseRepository(
             cache.clear()
         }
     }
+
     protected fun <T> networkBoundResource(
         query: () -> Flow<T?>,
         fetch: suspend () -> T,
@@ -96,6 +104,7 @@ abstract class BaseRepository(
             }
         }
     }.flowOn(ioDispatcher)
+
     companion object {
         private const val DEFAULT_CACHE_TTL = 5 * 60 * 1000L // 5 minutes
     }

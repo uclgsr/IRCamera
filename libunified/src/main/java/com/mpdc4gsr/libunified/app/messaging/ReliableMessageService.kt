@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.messaging
+
 import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.*
@@ -6,6 +7,7 @@ import org.json.JSONObject
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
+
 class ReliableMessageService(private val context: Context? = null) {
     companion object {
         private const val TAG = "ReliableMessage"
@@ -15,11 +17,13 @@ class ReliableMessageService(private val context: Context? = null) {
         private const val CLEANUP_INTERVAL_MS = 60000L
         private const val MESSAGE_EXPIRY_MS = 300000L
     }
+
     private val messageScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val sequenceNumber = AtomicLong(0)
     private val pendingMessages = ConcurrentHashMap<String, PendingMessage>()
     private val messageHandlers = ConcurrentHashMap<String, MessageHandler>()
     private var cleanupJob: Job? = null
+
     data class PendingMessage(
         val messageId: String,
         val messageType: String,
@@ -34,26 +38,31 @@ class ReliableMessageService(private val context: Context? = null) {
         var lastRetryAt: Long = 0,
         val callback: MessageCallback?,
     )
+
     enum class MessagePriority {
         LOW,
         NORMAL,
         HIGH,
         CRITICAL,
     }
+
     interface MessageCallback {
         fun onAcknowledged(messageId: String)
         fun onFailed(
             messageId: String,
             error: String,
         )
+
         fun onRetrying(
             messageId: String,
             attempt: Int,
         )
     }
+
     interface MessageHandler {
         fun handleMessage(message: JSONObject): JSONObject?
     }
+
     interface MessageTransport {
         suspend fun sendMessage(
             host: String,
@@ -61,10 +70,12 @@ class ReliableMessageService(private val context: Context? = null) {
             message: JSONObject,
         ): Boolean
     }
+
     private var transport: MessageTransport? = null
     fun setTransport(transport: MessageTransport) {
         this.transport = transport
     }
+
     fun initialize() {
         cleanupJob =
             messageScope.launch {
@@ -75,6 +86,7 @@ class ReliableMessageService(private val context: Context? = null) {
             }
         Log.i(TAG, "Reliable messaging service initialized")
     }
+
     suspend fun sendMessage(
         targetHost: String,
         targetPort: Int,
@@ -118,6 +130,7 @@ class ReliableMessageService(private val context: Context? = null) {
         Log.d(TAG, "Queued reliable message: $messageType (ID: $messageId)")
         return messageId
     }
+
     suspend fun sendUnreliableMessage(
         targetHost: String,
         targetPort: Int,
@@ -138,6 +151,7 @@ class ReliableMessageService(private val context: Context? = null) {
             }
         return transport?.sendMessage(targetHost, targetPort, message) ?: false
     }
+
     suspend fun processIncomingMessage(message: JSONObject): JSONObject? {
         try {
             val messageId = message.optString("message_id")
@@ -177,6 +191,7 @@ class ReliableMessageService(private val context: Context? = null) {
             return null
         }
     }
+
     fun registerMessageHandler(
         messageType: String,
         handler: MessageHandler,
@@ -184,10 +199,12 @@ class ReliableMessageService(private val context: Context? = null) {
         messageHandlers[messageType] = handler
         Log.d(TAG, "Registered handler for message type: $messageType")
     }
+
     fun unregisterMessageHandler(messageType: String) {
         messageHandlers.remove(messageType)
         Log.d(TAG, "Unregistered handler for message type: $messageType")
     }
+
     fun cancelMessage(messageId: String): Boolean {
         val removed = pendingMessages.remove(messageId)
         if (removed != null) {
@@ -196,9 +213,11 @@ class ReliableMessageService(private val context: Context? = null) {
         }
         return false
     }
+
     fun getPendingMessages(): List<PendingMessage> {
         return pendingMessages.values.toList()
     }
+
     fun getPendingMessageCount(priority: MessagePriority? = null): Int {
         return if (priority == null) {
             pendingMessages.size
@@ -206,6 +225,7 @@ class ReliableMessageService(private val context: Context? = null) {
             pendingMessages.values.count { it.priority == priority }
         }
     }
+
     private suspend fun sendWithRetry(pendingMessage: PendingMessage) {
         while (pendingMessage.retryCount <= pendingMessage.maxRetries) {
             try {
@@ -262,6 +282,7 @@ class ReliableMessageService(private val context: Context? = null) {
             }
         }
     }
+
     private suspend fun waitForAcknowledgment(pendingMessage: PendingMessage): Boolean {
         val startTime = System.currentTimeMillis()
         while (System.currentTimeMillis() - startTime < pendingMessage.timeoutMs) {
@@ -272,6 +293,7 @@ class ReliableMessageService(private val context: Context? = null) {
         }
         return false
     }
+
     private fun handleAcknowledgment(messageId: String) {
         val pendingMessage = pendingMessages.remove(messageId)
         if (pendingMessage != null) {
@@ -279,6 +301,7 @@ class ReliableMessageService(private val context: Context? = null) {
             pendingMessage.callback?.onAcknowledged(messageId)
         }
     }
+
     private fun handleNegativeAcknowledgment(
         messageId: String,
         errorReason: String,
@@ -289,6 +312,7 @@ class ReliableMessageService(private val context: Context? = null) {
             pendingMessage.callback?.onFailed(messageId, errorReason)
         }
     }
+
     private fun createAcknowledgment(
         messageId: String,
         senderId: String,
@@ -304,6 +328,7 @@ class ReliableMessageService(private val context: Context? = null) {
             }
         }
     }
+
     private fun createNegativeAcknowledgment(
         messageId: String,
         senderId: String,
@@ -317,6 +342,7 @@ class ReliableMessageService(private val context: Context? = null) {
             put("sender_id", getSenderId())
         }
     }
+
     private fun cleanupExpiredMessages() {
         val currentTime = System.currentTimeMillis()
         val expiredMessages =
@@ -332,9 +358,11 @@ class ReliableMessageService(private val context: Context? = null) {
             Log.d(TAG, "Cleaned up ${expiredMessages.size} expired messages")
         }
     }
+
     private fun generateMessageId(): String {
         return UUID.randomUUID().toString()
     }
+
     private fun getSenderId(): String {
         return if (context != null) {
             val androidId =
@@ -347,6 +375,7 @@ class ReliableMessageService(private val context: Context? = null) {
             "${android.os.Build.MODEL}-${UUID.randomUUID()}"
         }
     }
+
     fun shutdown() {
         cleanupJob?.cancel()
         messageScope.cancel()

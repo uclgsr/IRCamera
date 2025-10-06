@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.repository
+
 // ProductBean data class to replace removed TC007 functionality
 data class ProductBean(
     val ProductName: String = "",
@@ -10,6 +11,7 @@ data class ProductBean(
     fun getVersionStr(): String =
         "${SoftwareVersion?.Major ?: "-"}.${SoftwareVersion?.Minor ?: "-"}${SoftwareVersion?.Build ?: "-"}"
 }
+
 data class Version07Bean(
     val Major: String? = "",
     val Minor: String? = "",

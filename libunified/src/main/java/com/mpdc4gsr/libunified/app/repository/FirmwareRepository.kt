@@ -1,7 +1,9 @@
 package com.mpdc4gsr.libunified.app.repository
+
 import android.app.Application
 import kotlinx.coroutines.flow.Flow
 import java.io.File
+
 class FirmwareRepository(
     private val application: Application
 ) : BaseRepository() {
@@ -13,6 +15,7 @@ class FirmwareRepository(
         private const val CACHE_KEY_FIRMWARE_CHECK = "firmware_check"
         private const val FIRMWARE_CACHE_TTL = 30 * 60 * 1000L // 30 minutes
     }
+
     data class FirmwareInfo(
         val version: String,
         val updateDescription: String,
@@ -20,11 +23,13 @@ class FirmwareRepository(
         val size: Long,
         val isUpdateAvailable: Boolean = false
     )
+
     data class DeviceInfo(
         val serialNumber: String,
         val randomNumber: String,
         val currentFirmwareVersion: String
     )
+
     fun checkFirmwareUpdate(
         isTC007: Boolean,
         deviceInfo: DeviceInfo
@@ -34,6 +39,7 @@ class FirmwareRepository(
             performFirmwareCheck(isTC007, deviceInfo)
         }
     }
+
     suspend fun downloadFirmware(
         firmwareInfo: FirmwareInfo,
         outputDir: File
@@ -43,6 +49,7 @@ class FirmwareRepository(
         outputFile.createNewFile()
         outputFile
     }
+
     suspend fun getFirmwareFromAssets(isTC007: Boolean): BaseRepository.Result<FirmwareInfo> =
         safeCall {
             val version = if (isTC007) TC007_FIRMWARE_VERSION else TS004_FIRMWARE_VERSION
@@ -55,6 +62,7 @@ class FirmwareRepository(
                 isUpdateAvailable = true
             )
         }
+
     private suspend fun performFirmwareCheck(
         isTC007: Boolean,
         deviceInfo: DeviceInfo
@@ -75,6 +83,7 @@ class FirmwareRepository(
             null
         }
     }
+
     private fun compareVersions(version1: String, version2: String): Int {
         val v1Parts = version1.removePrefix("V").split(".")
         val v2Parts = version2.removePrefix("V").split(".")
@@ -89,9 +98,11 @@ class FirmwareRepository(
         }
         return 0
     }
+
     private fun extractFileName(url: String): String {
         return url.substringAfterLast("/").ifEmpty { "firmware.zip" }
     }
+
     private fun getAssetFileSize(fileName: String): Long {
         return try {
             application.assets.openFd(fileName).length

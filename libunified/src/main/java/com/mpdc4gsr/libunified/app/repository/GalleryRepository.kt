@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.repository
+
 import android.content.ContentResolver
 import android.media.MediaScannerConnection
 import android.provider.MediaStore
@@ -10,6 +11,7 @@ import com.mpdc4gsr.libunified.app.utils.CommUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.*
+
 object GalleryRepository {
     enum class DirType {
         LINE,
@@ -17,6 +19,7 @@ object GalleryRepository {
         TS004_LOCALE,
         TS004_REMOTE,
     }
+
     private fun copySourDir(
         sourceDir: File,
         targetDir: File,
@@ -44,6 +47,7 @@ object GalleryRepository {
             false
         }
     }
+
     private fun copyPictureFile(
         oldPath: String,
         newPath: String,
@@ -63,6 +67,7 @@ object GalleryRepository {
             false
         }
     }
+
     fun readLatest(dirType: DirType): String {
         var firstPath = ""
         try {
@@ -85,6 +90,7 @@ object GalleryRepository {
         }
         return firstPath
     }
+
     suspend fun loadByPage(
         isVideo: Boolean,
         dirType: DirType,
@@ -119,6 +125,7 @@ object GalleryRepository {
             return@withContext resultList
         }
     }
+
     suspend fun loadAllReportImg(dirType: DirType): ArrayList<GalleryBean> =
         withContext(Dispatchers.IO) {
             val resultList: ArrayList<GalleryBean> = ArrayList()
@@ -137,6 +144,7 @@ object GalleryRepository {
             }
             return@withContext resultList
         }
+
     private fun loadAllLocale(
         isVideo: Boolean,
         dirType: DirType,
@@ -177,6 +185,7 @@ object GalleryRepository {
         }
         return resultList
     }
+
     private fun loadAllLocaleByMediaStore(dirType: DirType): Array<out File> {
         val tc001Files: MutableList<File> = ArrayList()
         val projection =

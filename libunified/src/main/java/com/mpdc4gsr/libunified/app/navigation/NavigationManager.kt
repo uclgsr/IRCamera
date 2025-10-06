@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.navigation
+
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -6,6 +7,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
+
 object NavigationManager {
     private val routeToClassMap = mapOf(
         RouterConfig.MAIN to "mpdc4gsr.feature.main.ui.MainComposeActivity",
@@ -57,6 +59,7 @@ object NavigationManager {
         RouterConfig.AUTO_SAVE to "com.mpdc4gsr.module.user.activity.AutoSaveComposeActivity",
         RouterConfig.UNIT to "com.mpdc4gsr.module.user.activity.UnitComposeActivity"
     )
+
     class NavigationBuilder(private val route: String) {
         private val extras = Bundle()
         private var requestCode: Int? = null
@@ -66,46 +69,54 @@ object NavigationManager {
         ) = apply {
             extras.putString(key, value)
         }
+
         fun withBoolean(
             key: String,
             value: Boolean,
         ) = apply {
             extras.putBoolean(key, value)
         }
+
         fun withInt(
             key: String,
             value: Int,
         ) = apply {
             extras.putInt(key, value)
         }
+
         fun withFloat(
             key: String,
             value: Float,
         ) = apply {
             extras.putFloat(key, value)
         }
+
         fun withLong(
             key: String,
             value: Long,
         ) = apply {
             extras.putLong(key, value)
         }
+
         fun withParcelable(
             key: String,
             value: Parcelable,
         ) = apply {
             extras.putParcelable(key, value)
         }
+
         fun withParcelableArrayList(
             key: String,
             value: ArrayList<out Parcelable>,
         ) = apply {
             extras.putParcelableArrayList(key, value)
         }
+
         fun withExtras(bundle: Bundle) =
             apply {
                 extras.putAll(bundle)
             }
+
         fun navigation(
             context: Context,
             requestCode: Int? = null,
@@ -120,9 +131,11 @@ object NavigationManager {
             }
         }
     }
+
     fun build(route: String): NavigationBuilder {
         return NavigationBuilder(route)
     }
+
     fun getInstance(): NavigationManager = this
     private fun createIntent(
         context: Context,
@@ -132,6 +145,7 @@ object NavigationManager {
             ?: throw IllegalArgumentException("Unknown route: $route")
         return Intent(context, getClassByName(className))
     }
+
     fun jumpImagePick(
         activity: Activity,
         // isTC007 parameter removed - TC007 functionality disabled
@@ -149,6 +163,7 @@ object NavigationManager {
             .withString("RESULT_IMAGE_PATH", imgPath)
             .navigation(activity, 101)
     }
+
     private fun getClassByName(className: String): Class<*> {
         return try {
             Class.forName(className)

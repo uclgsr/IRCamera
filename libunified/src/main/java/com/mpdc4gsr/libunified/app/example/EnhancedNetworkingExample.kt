@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.example
+
 import android.content.Context
 import android.util.Log
 import com.mpdc4gsr.libunified.app.discovery.NetworkDiscoveryService
@@ -10,10 +11,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+
 class EnhancedNetworkingExample(private val context: Context) {
     companion object {
         private const val TAG = "NetworkingExample"
     }
+
     private val discoveryService = NetworkDiscoveryService(context)
     private val certManager = CertificateManager(context)
     private val timeSyncService = TimeSyncService()
@@ -77,6 +80,7 @@ class EnhancedNetworkingExample(private val context: Context) {
             }
         }
     }
+
     private suspend fun demonstrateReliableMessaging(
         targetHost: String,
         targetPort: Int,
@@ -127,12 +131,14 @@ class EnhancedNetworkingExample(private val context: Context) {
                         override fun onAcknowledged(messageId: String) {
                             Log.i(TAG, " Message acknowledged: $messageId")
                         }
+
                         override fun onFailed(
                             messageId: String,
                             error: String,
                         ) {
                             Log.e(TAG, " Message failed: $messageId - $error")
                         }
+
                         override fun onRetrying(
                             messageId: String,
                             attempt: Int,
@@ -145,6 +151,7 @@ class EnhancedNetworkingExample(private val context: Context) {
         kotlinx.coroutines.delay(2000)
         reliableMessaging.shutdown()
     }
+
     private fun demonstrateSecureWebSocket(deviceName: String = "TS004_DEMO_DEVICE") {
         Log.i(TAG, "7. Demonstrating secure WebSocket connection...")
         webSocketProxy.startWebSocket(deviceName)
@@ -156,6 +163,7 @@ class EnhancedNetworkingExample(private val context: Context) {
         webSocketProxy.sendMessage(command.toString())
         Log.i(TAG, "Sent command to thermal camera via secure WebSocket")
     }
+
     fun cleanup() {
         discoveryService.stopDiscovery()
         webSocketProxy.stopWebSocket()

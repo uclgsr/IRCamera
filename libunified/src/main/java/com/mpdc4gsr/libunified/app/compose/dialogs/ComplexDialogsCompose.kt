@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.compose.dialogs
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,6 +20,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.compose.components.TargetColorPicker
+
 @Composable
 fun TargetColorDialog(
     title: String = "Select Target Color",
@@ -90,16 +92,19 @@ fun TargetColorDialog(
         }
     }
 }
+
 data class CarDetectItem(
     val title: String,
     val children: List<CarDetectChildItem>,
     val isExpanded: Boolean = false
 )
+
 data class CarDetectChildItem(
     val name: String,
     val value: String,
     val isSelected: Boolean = false
 )
+
 @Composable
 fun CarDetectDialog(
     title: String = "Car Detection",
@@ -185,6 +190,7 @@ fun CarDetectDialog(
         }
     }
 }
+
 @Composable
 private fun CarDetectSection(
     item: CarDetectItem,
@@ -241,6 +247,7 @@ private fun CarDetectSection(
         }
     }
 }
+
 @Composable
 fun CameraProgressDialog(
     title: String = "Camera Progress",

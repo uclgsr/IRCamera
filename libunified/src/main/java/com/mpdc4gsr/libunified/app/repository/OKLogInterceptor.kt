@@ -1,10 +1,12 @@
 package com.mpdc4gsr.libunified.app.repository
+
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.Buffer
 import java.nio.charset.StandardCharsets
+
 class OKLogInterceptor(val isTC007: Boolean) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()

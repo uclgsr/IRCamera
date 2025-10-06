@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.repository
+
 import android.net.Network
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.http.HttpClient
@@ -14,6 +15,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.util.*
+
 object TS004Repository {
     private const val BASE_URL = "http://192.168.40.1:8080"
     private fun calculateMD5(file: File): String {
@@ -28,6 +30,7 @@ object TS004Repository {
         val digest = md.digest()
         return digest.joinToString("") { "%02x".format(it) }
     }
+
     var netWork: Network? = null
         set(value) {
             field = value
@@ -39,6 +42,7 @@ object TS004Repository {
                 .addInterceptor(OKLogInterceptor(false))
                 .build()
         }
+
     private suspend inline fun <reified T> post(
         endpoint: String,
         body: Any
@@ -50,6 +54,7 @@ object TS004Repository {
             T::class.java
         )
     }
+
     private suspend fun postOctet(
         endpoint: String,
         data: ByteArray
@@ -60,6 +65,7 @@ object TS004Repository {
             data
         ).close()
     }
+
     suspend fun downloadList(
         dataMap: Map<String, File>,
         listener: ((path: String, isSuccess: Boolean) -> Unit)
@@ -78,6 +84,7 @@ object TS004Repository {
             return@withContext successCount
         }
     }
+
     suspend fun download(url: String, file: File): Boolean = withContext(Dispatchers.IO) {
         val responseBody = try {
             HttpClient.executeGet(okHttpClient, url)
@@ -104,6 +111,7 @@ object TS004Repository {
             fileOutputString?.close()
         }
     }
+
     suspend fun syncTime(): Boolean = withContext(Dispatchers.IO) {
         try {
             val calendar = Calendar.getInstance()
@@ -120,6 +128,7 @@ object TS004Repository {
             false
         }
     }
+
     suspend fun syncTimeZone(): Boolean = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
@@ -129,6 +138,7 @@ object TS004Repository {
             false
         }
     }
+
     suspend fun getVersion(): TS004Response<VersionBean>? = withContext(Dispatchers.IO) {
         try {
             post<TS004Response<VersionBean>>("/api/v1/system/getVersion", emptyMap<String, Any>())
@@ -136,6 +146,7 @@ object TS004Repository {
             null
         }
     }
+
     suspend fun getDeviceInfo(): TS004Response<DeviceInfo>? = withContext(Dispatchers.IO) {
         try {
             post<TS004Response<DeviceInfo>>("/api/v1/system/getDeviceInfo", emptyMap<String, Any>())
@@ -143,6 +154,7 @@ object TS004Repository {
             null
         }
     }
+
     suspend fun getFileCount(fileType: Int): Int? = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
@@ -152,6 +164,7 @@ object TS004Repository {
             null
         }
     }
+
     suspend fun getNewestFile(fileType: Int): List<TS004FileBean>? = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
@@ -164,6 +177,7 @@ object TS004Repository {
             null
         }
     }
+
     suspend fun getAllFileList(fileType: Int): List<TS004FileBean> = withContext(Dispatchers.IO) {
         try {
             val fileCount = getFileCount(fileType) ?: return@withContext ArrayList()
@@ -179,6 +193,7 @@ object TS004Repository {
             ArrayList()
         }
     }
+
     suspend fun getFileByPage(fileType: Int, pageNum: Int, pageCount: Int): List<TS004FileBean>? =
         withContext(Dispatchers.IO) {
             try {
@@ -191,7 +206,9 @@ object TS004Repository {
                 null
             }
         }
+
     data class IdData(val id: Int)
+
     suspend fun deleteFiles(ids: Array<Int>): Boolean = withContext(Dispatchers.IO) {
         try {
             val idArray: Array<IdData> = Array(ids.size) {
@@ -204,6 +221,7 @@ object TS004Repository {
             false
         }
     }
+
     suspend fun updateFirmware(file: File): Boolean = withContext(Dispatchers.IO) {
         try {
             val isStartSuccess =
@@ -239,6 +257,7 @@ object TS004Repository {
             false
         }
     }
+
     private suspend fun sendUpgradeFileStart(file: File): Boolean = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
@@ -250,6 +269,7 @@ object TS004Repository {
             false
         }
     }
+
     private suspend fun sendUpgradeFile(file: File): Boolean = withContext(Dispatchers.IO) {
         var fileInputStream: FileInputStream? = null
         try {
@@ -279,6 +299,7 @@ object TS004Repository {
             fileInputStream?.close()
         }
     }
+
     private suspend fun sendUpgradeFileEnd(file: File): Boolean = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
@@ -288,6 +309,7 @@ object TS004Repository {
             false
         }
     }
+
     suspend fun setPseudoColor(mode: Int): Boolean = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
@@ -298,6 +320,7 @@ object TS004Repository {
             false
         }
     }
+
     suspend fun getPseudoColor(): TS004Response<PseudoColorBean>? = withContext(Dispatchers.IO) {
         try {
             post<TS004Response<PseudoColorBean>>("/api/v1/system/getPseudoColor", emptyMap<String, Any>())
@@ -305,6 +328,7 @@ object TS004Repository {
             null
         }
     }
+
     suspend fun setRangeFind(state: Int): Boolean = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
@@ -314,6 +338,7 @@ object TS004Repository {
             false
         }
     }
+
     suspend fun getRangeFind(): TS004Response<RangeBean>? = withContext(Dispatchers.IO) {
         try {
             post<TS004Response<RangeBean>>("/api/v1/system/getRangeFind", emptyMap<String, Any>())
@@ -321,6 +346,7 @@ object TS004Repository {
             null
         }
     }
+
     suspend fun setPanelParam(brightness: Int): Boolean = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
@@ -330,6 +356,7 @@ object TS004Repository {
             false
         }
     }
+
     suspend fun getPanelParam(): TS004Response<BrightnessBean>? = withContext(Dispatchers.IO) {
         try {
             post<TS004Response<BrightnessBean>>("/api/v1/system/getPanelParam", emptyMap<String, Any>())
@@ -337,6 +364,7 @@ object TS004Repository {
             null
         }
     }
+
     suspend fun setPip(enable: Boolean): Boolean = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
@@ -346,6 +374,7 @@ object TS004Repository {
             false
         }
     }
+
     suspend fun getPip(): TS004Response<PipBean>? = withContext(Dispatchers.IO) {
         try {
             post<TS004Response<PipBean>>("/api/v1/system/getPip", emptyMap<String, Any>())
@@ -353,6 +382,7 @@ object TS004Repository {
             null
         }
     }
+
     suspend fun setZoom(factor: Int): Boolean = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
@@ -363,6 +393,7 @@ object TS004Repository {
             false
         }
     }
+
     suspend fun getZoom(): TS004Response<ZoomBean>? = withContext(Dispatchers.IO) {
         try {
             post<TS004Response<ZoomBean>>("/api/v1/system/getZoom", emptyMap<String, Any>())
@@ -370,6 +401,7 @@ object TS004Repository {
             null
         }
     }
+
     suspend fun setSnapshot(): Boolean = withContext(Dispatchers.IO) {
         try {
             post<TS004Response<Boolean>>("/api/v1/system/snapshot", emptyMap<String, Any>()).isSuccess()
@@ -377,6 +409,7 @@ object TS004Repository {
             false
         }
     }
+
     suspend fun setVideo(enable: Boolean): Boolean = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
@@ -386,6 +419,7 @@ object TS004Repository {
             false
         }
     }
+
     suspend fun getRecordStatus(): TS004Response<RecordStatusBean>? = withContext(Dispatchers.IO) {
         try {
             post<TS004Response<RecordStatusBean>>("/api/v1/system/getRecordStatus", emptyMap<String, Any>())
@@ -393,6 +427,7 @@ object TS004Repository {
             null
         }
     }
+
     suspend fun getFreeSpace(): FreeSpaceBean? = withContext(Dispatchers.IO) {
         try {
             post<TS004Response<FreeSpaceBean>>("/api/v1/system/getFreeSpace", emptyMap<String, Any>()).data
@@ -400,6 +435,7 @@ object TS004Repository {
             null
         }
     }
+
     suspend fun getFormatStorage(): Boolean = withContext(Dispatchers.IO) {
         try {
             post<TS004Response<Boolean>>("/api/v1/system/formatStorage", emptyMap<String, Any>()).isSuccess()
@@ -407,6 +443,7 @@ object TS004Repository {
             false
         }
     }
+
     suspend fun getResetAll(): Boolean = withContext(Dispatchers.IO) {
         try {
             post<TS004Response<Boolean>>("/api/v1/system/resetAll", emptyMap<String, Any>()).status == 100
@@ -414,6 +451,7 @@ object TS004Repository {
             false
         }
     }
+
     suspend fun setTISR(state: Int): Boolean = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
@@ -423,6 +461,7 @@ object TS004Repository {
             false
         }
     }
+
     suspend fun getTISR(): TS004Response<TISRBean>? = withContext(Dispatchers.IO) {
         try {
             post<TS004Response<TISRBean>>("/api/v1/system/getTISR", emptyMap<String, Any>())

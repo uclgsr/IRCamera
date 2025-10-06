@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.compose.components
+
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 @Composable
 fun MenuEditView(
     @DrawableRes menu1Icon: Int,
@@ -73,6 +75,7 @@ fun MenuEditView(
         )
     }
 }
+
 @Composable
 private fun MenuEditItem(
     @DrawableRes iconRes: Int? = null,
@@ -106,6 +109,7 @@ private fun MenuEditItem(
                         tint = if (isSelected) Color.White else Color.Gray
                     )
                 }
+
                 iconRes != null -> {
                     Image(
                         painter = painterResource(id = iconRes),
@@ -126,6 +130,7 @@ private fun MenuEditItem(
         )
     }
 }
+
 @Composable
 fun CameraMenuView(
     @DrawableRes actionIcon: Int? = null,
@@ -211,6 +216,7 @@ fun CameraMenuView(
                             modifier = Modifier.fillMaxSize()
                         )
                     }
+
                     galleryIcon != null -> {
                         Image(
                             painter = painterResource(id = galleryIcon),
@@ -264,6 +270,7 @@ fun CameraMenuView(
                             modifier = Modifier.fillMaxSize()
                         )
                     }
+
                     moreIcon != null -> {
                         Image(
                             painter = painterResource(id = moreIcon),

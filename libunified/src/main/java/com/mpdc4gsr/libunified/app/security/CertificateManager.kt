@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.security
+
 import android.content.Context
 import android.util.Log
 import java.io.ByteArrayInputStream
@@ -8,6 +9,7 @@ import java.security.cert.CertificateException
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import javax.net.ssl.*
+
 class CertificateManager(private val context: Context) {
     companion object {
         private const val TAG = "CertificateManager"
@@ -15,6 +17,7 @@ class CertificateManager(private val context: Context) {
         private const val KEY_STORE_TYPE = "PKCS12"
         private const val TLS_PROTOCOL = "TLS"
     }
+
     private var trustManager: X509TrustManager? = null
     private var keyManager: X509KeyManager? = null
     private var deviceKeyStore: KeyStore? = null
@@ -31,6 +34,7 @@ class CertificateManager(private val context: Context) {
             false
         }
     }
+
     fun createSSLContext(): SSLContext? {
         return try {
             val sslContext = SSLContext.getInstance(TLS_PROTOCOL)
@@ -46,9 +50,11 @@ class CertificateManager(private val context: Context) {
             null
         }
     }
+
     fun createSSLSocketFactory(): SSLSocketFactory? {
         return createSSLContext()?.socketFactory
     }
+
     fun getTrustManager(): X509TrustManager? = trustManager
     fun validateDeviceCertificate(certificate: X509Certificate): Boolean {
         return try {
@@ -74,6 +80,7 @@ class CertificateManager(private val context: Context) {
             false
         }
     }
+
     fun installDeviceCertificate(
         certificateData: ByteArray,
         alias: String,
@@ -96,6 +103,7 @@ class CertificateManager(private val context: Context) {
             false
         }
     }
+
     private fun createCustomTrustManager(): X509TrustManager {
         return object : X509TrustManager {
             override fun checkClientTrusted(
@@ -104,12 +112,14 @@ class CertificateManager(private val context: Context) {
             ) {
                 validateCertificateChain(chain, "client")
             }
+
             override fun checkServerTrusted(
                 chain: Array<X509Certificate>,
                 authType: String,
             ) {
                 validateCertificateChain(chain, "server")
             }
+
             override fun getAcceptedIssuers(): Array<X509Certificate> {
                 return deviceKeyStore?.let { ks ->
                     val aliases = ks.aliases()
@@ -122,6 +132,7 @@ class CertificateManager(private val context: Context) {
                     certificates.toTypedArray()
                 } ?: emptyArray()
             }
+
             private fun validateCertificateChain(
                 chain: Array<X509Certificate>,
                 type: String,
@@ -137,6 +148,7 @@ class CertificateManager(private val context: Context) {
             }
         }
     }
+
     private fun createKeyManager(): X509KeyManager? {
         return try {
             null
@@ -145,6 +157,7 @@ class CertificateManager(private val context: Context) {
             null
         }
     }
+
     fun createHostnameVerifier(): HostnameVerifier {
         return HostnameVerifier { hostname, session ->
             val validHosts =
@@ -162,6 +175,7 @@ class CertificateManager(private val context: Context) {
             isValid
         }
     }
+
     fun generateAuthToken(): String {
         val deviceId =
             android.provider.Settings.Secure.getString(
@@ -174,6 +188,7 @@ class CertificateManager(private val context: Context) {
         val hash = payload.hashCode().toString(16)
         return "$payload:$hash"
     }
+
     fun validateAuthToken(
         token: String,
         maxAgeMs: Long = 300000,

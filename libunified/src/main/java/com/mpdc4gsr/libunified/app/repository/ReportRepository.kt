@@ -1,9 +1,12 @@
 package com.mpdc4gsr.libunified.app.repository
+
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.ConcurrentHashMap
+
 class ReportRepository : BaseRepository() {
     private val reportCache = ConcurrentHashMap<String, CachedReportData>()
+
     data class ReportData(
         val id: String,
         val title: String,
@@ -12,6 +15,7 @@ class ReportRepository : BaseRepository() {
         val type: ReportType,
         val status: ReportStatus
     )
+
     enum class ReportType { GSR, THERMAL, COMBINED, ANALYSIS }
     enum class ReportStatus { DRAFT, PROCESSING, COMPLETED, ERROR }
     data class CachedReportData(
@@ -19,6 +23,7 @@ class ReportRepository : BaseRepository() {
         val cachedAt: Long,
         val page: Int
     )
+
     fun getReports(
         isTC007: Boolean,
         page: Int,
@@ -41,6 +46,7 @@ class ReportRepository : BaseRepository() {
         )
         reports
     }
+
     private fun generateSampleReports(
         isTC007: Boolean,
         page: Int,
@@ -59,6 +65,7 @@ class ReportRepository : BaseRepository() {
             )
         }
     }
+
     fun clearCache() {
         reportCache.clear()
     }

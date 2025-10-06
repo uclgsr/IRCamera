@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.activity
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
 class BaseConfigComposeActivity : ComponentActivity() {
     private val viewModel: BaseConfigViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,12 +40,14 @@ class BaseConfigComposeActivity : ComponentActivity() {
             }
         }
     }
+
     companion object {
         fun start(context: Context) {
             context.startActivity(Intent(context, BaseConfigComposeActivity::class.java))
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BaseConfigScreen(
@@ -153,6 +157,7 @@ fun BaseConfigScreen(
         }
     }
 }
+
 @Composable
 fun ConfigSection(
     title: String,
@@ -181,6 +186,7 @@ fun ConfigSection(
         }
     }
 }
+
 @Composable
 fun ConfigItemRow(
     item: ConfigItem,
@@ -212,6 +218,7 @@ fun ConfigItemRow(
                     onCheckedChange = onValueChange
                 )
             }
+
             ConfigType.INTEGER -> {
                 OutlinedTextField(
                     value = (item.value as Int).toString(),
@@ -221,6 +228,7 @@ fun ConfigItemRow(
                     modifier = Modifier.width(100.dp)
                 )
             }
+
             ConfigType.STRING -> {
                 OutlinedTextField(
                     value = item.value as String,
@@ -228,6 +236,7 @@ fun ConfigItemRow(
                     modifier = Modifier.width(150.dp)
                 )
             }
+
             ConfigType.FLOAT -> {
                 OutlinedTextField(
                     value = (item.value as Float).toString(),
@@ -240,6 +249,7 @@ fun ConfigItemRow(
         }
     }
 }
+
 // Data Classes
 data class ConfigItem(
     val key: String,
@@ -249,9 +259,11 @@ data class ConfigItem(
     val type: ConfigType,
     val defaultValue: Any
 )
+
 enum class ConfigType {
     BOOLEAN, INTEGER, STRING, FLOAT
 }
+
 data class BaseConfigUiState(
     val systemConfigs: List<ConfigItem> = listOf(
         ConfigItem("debug_mode", "Debug Mode", "Enable debug logging", false, ConfigType.BOOLEAN, false),
@@ -286,6 +298,7 @@ data class BaseConfigUiState(
     ),
     val isLoading: Boolean = false
 )
+
 // ViewModel
 class BaseConfigViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(BaseConfigUiState())
@@ -293,15 +306,19 @@ class BaseConfigViewModel : ViewModel() {
     fun updateSystemConfig(key: String, value: Any) {
         updateConfigList("system", key, value)
     }
+
     fun updateNetworkConfig(key: String, value: Any) {
         updateConfigList("network", key, value)
     }
+
     fun updateCameraConfig(key: String, value: Any) {
         updateConfigList("camera", key, value)
     }
+
     fun updateSensorConfig(key: String, value: Any) {
         updateConfigList("sensor", key, value)
     }
+
     private fun updateConfigList(category: String, key: String, value: Any) {
         val currentState = _uiState.value
         val updatedState = when (category) {
@@ -310,25 +327,30 @@ class BaseConfigViewModel : ViewModel() {
                     if (it.key == key) it.copy(value = value) else it
                 }
             )
+
             "network" -> currentState.copy(
                 networkConfigs = currentState.networkConfigs.map {
                     if (it.key == key) it.copy(value = value) else it
                 }
             )
+
             "camera" -> currentState.copy(
                 cameraConfigs = currentState.cameraConfigs.map {
                     if (it.key == key) it.copy(value = value) else it
                 }
             )
+
             "sensor" -> currentState.copy(
                 sensorConfigs = currentState.sensorConfigs.map {
                     if (it.key == key) it.copy(value = value) else it
                 }
             )
+
             else -> currentState
         }
         _uiState.value = updatedState
     }
+
     fun resetToDefaults() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
@@ -336,6 +358,7 @@ class BaseConfigViewModel : ViewModel() {
             _uiState.value = BaseConfigUiState()
         }
     }
+
     fun saveConfiguration() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
@@ -344,12 +367,14 @@ class BaseConfigViewModel : ViewModel() {
             _uiState.value = _uiState.value.copy(isLoading = false)
         }
     }
+
     fun exportConfig() {
         viewModelScope.launch {
             // Export configuration as JSON or XML
             // Implementation would depend on specific export mechanism
         }
     }
+
     fun importConfig() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
@@ -359,6 +384,7 @@ class BaseConfigViewModel : ViewModel() {
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun BaseConfigScreenPreview() {

@@ -1,4 +1,5 @@
 package com.mpdc4gsr.libunified.app.compose.components
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,11 +19,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
+
 data class TargetColor(
     val drawableRes: Int,
     val code: Int,
     val name: String = ""
 )
+
 @Composable
 fun TargetColorPicker(
     selectedColor: Int,
@@ -58,6 +61,7 @@ fun TargetColorPicker(
         }
     }
 }
+
 @Composable
 private fun TargetColorItem(
     targetColor: TargetColor,
