@@ -47,7 +47,9 @@ class PDFListViewModel : BaseViewModel() {
             _isLoading.update { true }
             try {
                 val items = getPDFItemsList()
-                _pdfItems.update { items }
+                withContext(Dispatchers.Main) {
+                    _pdfItems.update { items }
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading PDF items", e)
             } finally {
