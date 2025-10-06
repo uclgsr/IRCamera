@@ -18,25 +18,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.feature.settings.presentation.ProfileData
+import mpdc4gsr.feature.settings.presentation.ProfileEditViewModel
 
 /**
  * Profile Edit Screen - Interface for editing user profile information
  * Allows users to update personal details, research information, and preferences
+ * Now uses ViewModel for configuration change resilience
  */
 @Composable
 fun ProfileEditScreen(
     onBackClick: (() -> Unit)? = null,
     onSave: ((ProfileData) -> Unit)? = null,
+    viewModel: ProfileEditViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    var userName by remember { mutableStateOf("Research Participant") }
-    var userId by remember { mutableStateOf("RP-2025-001") }
-    var email by remember { mutableStateOf("participant@research.edu") }
-    var institution by remember { mutableStateOf("University Research Lab") }
-    var researchArea by remember { mutableStateOf("Physiological Computing") }
-    var bio by remember { mutableStateOf("Conducting multi-modal sensor research") }
+    val profileData by viewModel.profileData.collectAsState()
+    val isSaving by viewModel.isSaving.collectAsState()
     var showSaveDialog by remember { mutableStateOf(false) }
 
     IRCameraTheme {
@@ -108,8 +109,8 @@ fun ProfileEditScreen(
                         )
 
                         OutlinedTextField(
-                            value = userName,
-                            onValueChange = { userName = it },
+                            value = profileData.userName,
+                            onValueChange = viewModel::updateUserName,
                             label = { Text("Name") },
                             leadingIcon = {
                                 Icon(Icons.Default.Person, contentDescription = null)
@@ -118,8 +119,8 @@ fun ProfileEditScreen(
                         )
 
                         OutlinedTextField(
-                            value = userId,
-                            onValueChange = { userId = it },
+                            value = profileData.userId,
+                            onValueChange = viewModel::updateUserId,
                             label = { Text("User ID") },
                             leadingIcon = {
                                 Icon(Icons.Default.Badge, contentDescription = null)
@@ -129,8 +130,8 @@ fun ProfileEditScreen(
                         )
 
                         OutlinedTextField(
-                            value = email,
-                            onValueChange = { email = it },
+                            value = profileData.email,
+                            onValueChange = viewModel::updateEmail,
                             label = { Text("Email") },
                             leadingIcon = {
                                 Icon(Icons.Default.Email, contentDescription = null)
@@ -156,8 +157,8 @@ fun ProfileEditScreen(
                         )
 
                         OutlinedTextField(
-                            value = institution,
-                            onValueChange = { institution = it },
+                            value = profileData.institution,
+                            onValueChange = viewModel::updateInstitution,
                             label = { Text("Institution") },
                             leadingIcon = {
                                 Icon(Icons.Default.School, contentDescription = null)
@@ -166,8 +167,8 @@ fun ProfileEditScreen(
                         )
 
                         OutlinedTextField(
-                            value = researchArea,
-                            onValueChange = { researchArea = it },
+                            value = profileData.researchArea,
+                            onValueChange = viewModel::updateResearchArea,
                             label = { Text("Research Area") },
                             leadingIcon = {
                                 Icon(Icons.Default.Science, contentDescription = null)
@@ -176,8 +177,8 @@ fun ProfileEditScreen(
                         )
 
                         OutlinedTextField(
-                            value = bio,
-                            onValueChange = { bio = it },
+                            value = profileData.bio,
+                            onValueChange = viewModel::updateBio,
                             label = { Text("Bio") },
                             leadingIcon = {
                                 Icon(Icons.Default.Description, contentDescription = null)
@@ -211,8 +212,8 @@ fun ProfileEditScreen(
                         ) {
                             Text("Profile Visible to Researchers")
                             Switch(
-                                checked = true,
-                                onCheckedChange = { }
+                                checked = profileData.isProfileVisible,
+                                onCheckedChange = viewModel::updateProfileVisibility
                             )
                         }
 
@@ -223,8 +224,8 @@ fun ProfileEditScreen(
                         ) {
                             Text("Share Anonymized Data")
                             Switch(
-                                checked = false,
-                                onCheckedChange = { }
+                                checked = profileData.allowDataSharing,
+                                onCheckedChange = viewModel::updateDataSharing
                             )
                         }
                     }
@@ -244,17 +245,24 @@ fun ProfileEditScreen(
 
                     Button(
                         onClick = {
-                            val profileData = ProfileData(
-                                userName, userId, email, institution, researchArea, bio
-                            )
-                            onSave?.invoke(profileData)
-                            showSaveDialog = true
+                            viewModel.saveProfile {
+                                onSave?.invoke(profileData)
+                                showSaveDialog = true
+                            }
                         },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        enabled = !isSaving
                     ) {
-                        Icon(Icons.Default.Save, contentDescription = null)
+                        if (isSaving) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(16.dp),
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Icon(Icons.Default.Save, contentDescription = null)
+                        }
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Save")
+                        Text(if (isSaving) "Saving..." else "Save")
                     }
                 }
             }
@@ -280,18 +288,6 @@ fun ProfileEditScreen(
         }
     }
 }
-
-/**
- * Data class for profile information
- */
-data class ProfileData(
-    val userName: String,
-    val userId: String,
-    val email: String,
-    val institution: String,
-    val researchArea: String,
-    val bio: String
-)
 
 @Preview(showBackground = true)
 @Composable
