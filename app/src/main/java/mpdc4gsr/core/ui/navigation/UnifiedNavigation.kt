@@ -15,6 +15,7 @@ import mpdc4gsr.core.ui.model.SensorType
 import mpdc4gsr.feature.camera.ui.CameraDashboardScreen
 import mpdc4gsr.feature.camera.ui.CameraSettingsScreen
 import mpdc4gsr.feature.camera.ui.DualModeCameraScreen
+import mpdc4gsr.feature.camera.ui.RGBCameraScreen
 import mpdc4gsr.feature.gsr.ui.GSRDataViewScreen
 import mpdc4gsr.feature.gsr.ui.GSRPlotScreen
 import mpdc4gsr.feature.gsr.ui.GSRSettingsScreen
@@ -62,6 +63,7 @@ sealed class UnifiedRoute(val route: String, val displayName: String = "") {
     // Camera Integration Routes
     object CameraDashboard : UnifiedRoute("camera_dashboard", "Camera Hub")
     object DualModeCamera : UnifiedRoute("dual_mode_camera", "Thermal + RGB Camera")
+    object RGBCamera : UnifiedRoute("rgb_camera", "RGB Camera")
     object CameraSettings : UnifiedRoute("camera_settings", "Camera Settings")
 
     // Network Routes
@@ -181,7 +183,16 @@ fun UnifiedNavHost(
             CameraDashboardScreen(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToDualMode = { navController.navigate(UnifiedRoute.DualModeCamera.route) },
-                onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) }
+                onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) },
+                onNavigateToSingleCamera = { navController.navigate(UnifiedRoute.RGBCamera.route) }
+            )
+        }
+
+        composable(UnifiedRoute.RGBCamera.route) {
+            RGBCameraScreen(
+                onBackClick = { navController.popBackStack() },
+                onSettingsClick = { navController.navigate(UnifiedRoute.CameraSettings.route) },
+                onCapturePhoto = { /* Photo capture handled by screen */ }
             )
         }
 

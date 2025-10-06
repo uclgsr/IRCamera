@@ -30,6 +30,7 @@ fun CameraDashboardScreen(
     onBackClick: () -> Unit,
     onNavigateToDualMode: () -> Unit,
     onNavigateToSettings: () -> Unit,
+    onNavigateToSingleCamera: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     LibUnifiedTheme {
@@ -57,6 +58,7 @@ fun CameraDashboardScreen(
         ) { paddingValues ->
             CameraDashboardContent(
                 onNavigateToDualMode = onNavigateToDualMode,
+                onNavigateToSingleCamera = onNavigateToSingleCamera,
                 modifier = Modifier.padding(paddingValues)
             )
         }
@@ -66,6 +68,7 @@ fun CameraDashboardScreen(
 @Composable
 private fun CameraDashboardContent(
     onNavigateToDualMode: () -> Unit,
+    onNavigateToSingleCamera: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -220,8 +223,7 @@ private fun CameraModesCard(
                 icon = Icons.Default.Camera,
                 isActive = false,
                 onClick = {
-                    // TODO: Navigate to single camera activity
-                    // For now, show a toast as placeholder
+                    onNavigateToSingleCamera?.invoke()
                 }
             )
 
