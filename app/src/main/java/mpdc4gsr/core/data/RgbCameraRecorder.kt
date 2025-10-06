@@ -192,6 +192,9 @@ class RgbCameraRecorder(
                 "Recording settings loaded: quality=${recordingSettings?.recordingQuality}, fps=${recordingSettings?.videoFrameRate}, audio=${recordingSettings?.audioEnabled}"
             )
 
+            // Observe settings changes for real-time updates
+            observeRecordingSettingsChanges()
+
             Log.d(
                 TAG,
                 "Initializing CameraX with ${if (useFrontCamera) "front" else "back"} camera"
@@ -1986,6 +1989,22 @@ class RgbCameraRecorder(
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to add sync marker", e)
             emitError(ErrorType.SYNC_FAILED, "Failed to add sync marker: ${e.message}")
+        }
+    }
+
+    private fun observeRecordingSettingsChanges() {
+        recordingScope.launch {
+            mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context)
+                .settings.collectLatest { settings ->
+                    AppLogger.i(TAG, "Recording settings changed - quality: ${settings.recordingQuality}, fps: ${settings.videoFrameRate}, audio: ${settings.audioEnabled}")
+                    recordingSettings = settings
+                    
+                    // Note: Camera needs to be re-initialized for some settings like FPS and quality
+                    // Log a warning if recording is active as changes won't apply until restart
+                    if (_isRecording.get()) {
+                        AppLogger.w(TAG, "Recording settings changed during active recording - changes will apply on next recording session")
+                    }
+                }
         }
     }
 

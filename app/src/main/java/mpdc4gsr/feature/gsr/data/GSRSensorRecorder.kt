@@ -224,6 +224,9 @@ class GSRSensorRecorder(
                     "Effective sampling rate for Shimmer: ${effectiveSamplingRate}Hz (within Shimmer range: $SHIMMER_MIN_SAMPLING_RATE-$SHIMMER_MAX_SAMPLING_RATE Hz)"
                 )
 
+                // Observe settings changes for real-time updates
+                observeGSRSettingsChanges()
+
                 realShimmerGSRRecorder =
                     ShimmerGSRRecorder(
                         context,
@@ -1101,6 +1104,31 @@ class GSRSensorRecorder(
             }
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to set up enhanced ObjectCluster data handler", e)
+        }
+    }
+
+    private fun observeGSRSettingsChanges() {
+        recordingScope.launch {
+            gsrSettingsRepository?.gsrSettings?.collectLatest { settings ->
+                AppLogger.i(TAG, "GSR settings changed - samplingRate: ${settings.samplingRate}Hz, filtering: ${settings.enableFiltering}, bufferSize: ${settings.bufferSize}")
+                
+                val newSamplingRate = settings.samplingRate.toDouble().coerceIn(SHIMMER_MIN_SAMPLING_RATE, SHIMMER_MAX_SAMPLING_RATE)
+                
+                if (newSamplingRate != effectiveSamplingRate) {
+                    effectiveSamplingRate = newSamplingRate
+                    _samplingRate = effectiveSamplingRate
+                    
+                    AppLogger.i(TAG, "Sampling rate updated to ${effectiveSamplingRate}Hz")
+                    
+                    // Note: Shimmer device needs to be reconfigured for sampling rate changes
+                    // Log a warning if recording is active as changes won't apply until restart
+                    if (_isRecording.get()) {
+                        AppLogger.w(TAG, "GSR settings changed during active recording - changes will apply on next recording session")
+                    } else if (isShimmerConnected) {
+                        AppLogger.i(TAG, "GSR settings changed - device reconfiguration may be needed")
+                    }
+                }
+            }
         }
     }
 
