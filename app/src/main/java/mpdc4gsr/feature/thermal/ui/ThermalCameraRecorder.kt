@@ -2940,9 +2940,11 @@ class ThermalCameraRecorder(
                             "Found thermal camera during rescan: ${device.productName}"
                         )
                         
+                        // Update device reference immediately so status reflects the device
+                        thermalCameraDevice = device
+                        
                         if (manager.hasPermission(device)) {
                             AppLogger.i(TAG, "Thermal camera has permission, initializing")
-                            thermalCameraDevice = device
                             hasUsbPermission = true
                             
                             val success = initializeRealThermalCamera(device)
@@ -2954,7 +2956,9 @@ class ThermalCameraRecorder(
                             }
                         } else {
                             AppLogger.i(TAG, "Thermal camera found but needs permission, requesting")
+                            hasUsbPermission = false
                             requestUsbPermission(device)
+                            emitStatus()
                             return@withContext false
                         }
                     }

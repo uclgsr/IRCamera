@@ -140,13 +140,13 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
                 _uiState.value = _uiState.value.copy(
                     isConnected = status?.isConnected ?: false,
                     isSimulationMode = status?.isSimulationMode ?: false,
-                    errorMessage = if (found) null else "No thermal camera found"
+                    errorMessage = if (found) null else status?.statusMessage
                 )
                 
                 if (found) {
                     AppLogger.i(TAG, "Thermal camera found during rescan")
                 } else {
-                    AppLogger.w(TAG, "No thermal camera found during rescan")
+                    AppLogger.w(TAG, "Rescan did not initialize camera: ${status?.statusMessage}")
                 }
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Error during thermal camera rescan", e)
