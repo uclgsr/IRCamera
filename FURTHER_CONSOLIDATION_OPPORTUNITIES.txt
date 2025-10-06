@@ -6,14 +6,19 @@ This document outlines potential future consolidation opportunities in the app/ 
 
 **Files removed during Android-focused analysis:**
 1. MainRecordingController.kt (163 lines) - Unused recording controller variant
+2. ThermalComposeIntegration.kt (2 lines) - Empty file with no content
+
+**Total Android files removed:** 5 files, 1,601 lines
 
 **Verified as appropriate (NOT duplicates):**
 - NetworkManager vs NetworkConnectionManager - Different purposes (client vs server)
 - RecordingController vs ComprehensiveRecordingController - Different feature sets  
 - Background scanning files (Service, Manager, Helper) - All actively used
 - GSRConstants vs RecordingConstants - Domain-specific separation
-- Multiple ViewModel factories - All actively used
+- Multiple ViewModel factories - All actively used (9 files)
 - Activity/Screen pairs - Proper Compose architecture
+- Navigation files (IRCameraNavigation, UnifiedNavigation) - Different scopes
+- Compatibility utilities (SamsungDeviceCompatibility) - Heavily used across camera features
 
 ## ViewModelFactory Pattern Modernization
 
