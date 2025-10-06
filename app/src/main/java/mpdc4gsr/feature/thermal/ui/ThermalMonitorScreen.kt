@@ -80,6 +80,7 @@ fun ThermalMonitorScreen(
     var showAdvancedControls by remember { mutableStateOf(false) }
 
     // Trigger immediate rescan when screen appears to catch already-connected devices
+    LaunchedEffect(Unit) {
         kotlinx.coroutines.delay(CAMERA_RESCAN_DELAY_MS)
         viewModel.rescanForThermalCamera()
     }
