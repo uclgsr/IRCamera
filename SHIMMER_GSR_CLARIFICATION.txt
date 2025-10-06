@@ -1,0 +1,60 @@
+# Shimmer and GSR Clarification
+
+## Important: Shimmer and GSR are NOT different sensors
+
+Throughout this codebase, you will see references to both "Shimmer" and "GSR". 
+This document clarifies the relationship between these terms.
+
+### What is Shimmer?
+**Shimmer** (specifically **Shimmer3**) is the DEVICE/HARDWARE name.  
+It is a wearable sensor platform manufactured by Shimmer Research.
+
+### What is GSR?
+**GSR** (Galvanic Skin Response) is the MEASUREMENT/SENSOR TYPE.  
+It measures skin conductance, which correlates with physiological arousal.
+
+### The Relationship
+The **Shimmer3 device** includes a **GSR sensor** (among other sensors like accelerometer, PPG, etc.).
+
+Therefore:
+- `Shimmer` = the physical device
+- `GSR` = what it measures
+- `Shimmer GSR` or `Shimmer3 GSR+` = a Shimmer device configured to measure GSR
+
+### Naming Conventions in This Codebase
+
+#### Correct Usage:
+- `ShimmerDeviceManager` - manages Shimmer devices
+- `GSRData` - data structure for GSR measurements
+- `Shimmer3GSRRecorder` - records GSR data from a Shimmer3 device
+- `SHIMMER_GSR` device type - a Shimmer device with GSR capability
+
+#### Key Classes:
+
+**C++:**
+- `shimmer.h` / `shimmer.cpp` - Shimmer device interface
+- `GSRData` struct - holds GSR measurement data
+
+**Kotlin/Android:**
+- `ShimmerDeviceManager.kt` - manages Bluetooth connections to Shimmer devices
+- `Shimmer3GSRRecorder.kt` - records GSR data from Shimmer3
+- `UnifiedGSRRecorder.kt` - unified interface for GSR recording
+- `GSRSensorRecorder.kt` - enhanced GSR sensor recorder with network support
+
+**Python:**
+- `gsr_analytics.py` - analyzes GSR data
+- `gsr_ingestor.py` - ingests GSR data
+- `gsr_receiver.py` - receives GSR data over network
+
+### Why Multiple Recorder Classes?
+
+The codebase has multiple recorder implementations for historical and architectural reasons:
+1. `Shimmer3GSRRecorder` - Direct Shimmer SDK integration
+2. `UnifiedGSRRecorder` - Simplified unified interface
+3. `GSRSensorRecorder` - Enhanced version with network/recording controller integration
+
+These serve different use cases and integration points in the application.
+
+### References
+- Shimmer Research official documentation: https://www.shimmersensing.com/
+- Shimmer Android SDK: https://github.com/ShimmerEngineering/Shimmer-Java-Android-API
