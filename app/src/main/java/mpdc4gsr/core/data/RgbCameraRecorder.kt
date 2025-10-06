@@ -860,17 +860,21 @@ class RgbCameraRecorder(
             return true
         }
 
+        val missing = mutableListOf<String>()
         if (!hasCameraPermission) {
+            missing.add("Camera")
             AppLogger.w(TAG, "Camera permission not granted")
-            _cameraStatus.value = "Camera Permission Required"
-        } else if (!hasStoragePermission) {
-            AppLogger.w(TAG, "Storage permission not granted - required for saving frames and RAW capture")
-            _cameraStatus.value = "Storage Permission Required"
+        }
+        if (!hasStoragePermission) {
+            missing.add("Storage")
+            AppLogger.w(TAG, "Storage permission not granted")
         }
 
         return permissionManager?.let { permissionManager ->
             try {
-                AppLogger.i(TAG, "Requesting camera and storage permissions")
+                AppLogger.i(TAG, "Requesting camera and storage permissions via PermissionManager")
+                _cameraStatus.value = "Requesting Permissions..."
+                
                 val granted = permissionManager.requestCameraPermissions()
                 if (granted) {
                     val recheckCamera = hasCameraPermission()
@@ -883,20 +887,20 @@ class RgbCameraRecorder(
                         AppLogger.i(TAG, "All required permissions granted successfully")
                         true
                     } else {
-                        val missing = mutableListOf<String>()
-                        if (!recheckCamera) missing.add("Camera")
-                        if (!recheckStorage) missing.add("Storage")
+                        val stillMissing = mutableListOf<String>()
+                        if (!recheckCamera) stillMissing.add("Camera")
+                        if (!recheckStorage) stillMissing.add("Storage")
 
-                        _cameraStatus.value = "Missing Permissions: ${missing.joinToString()}"
-                        AppLogger.e(TAG, "Still missing permissions after request: ${missing.joinToString()}")
+                        _cameraStatus.value = "Missing Permissions: ${stillMissing.joinToString()}"
+                        AppLogger.e(TAG, "Still missing permissions after request: ${stillMissing.joinToString()}")
                         emitError(
                             ErrorType.PERMISSION_DENIED,
-                            "Required permissions denied: ${missing.joinToString()}. Please grant permissions in Settings."
+                            "Required permissions denied: ${stillMissing.joinToString()}. Please grant permissions in Settings."
                         )
                         false
                     }
                 } else {
-                    _cameraStatus.value = "Camera Permission Denied"
+                    _cameraStatus.value = "Permissions Denied"
                     AppLogger.e(TAG, "Camera permission request denied by user")
                     emitError(
                         ErrorType.PERMISSION_DENIED,
@@ -914,11 +918,12 @@ class RgbCameraRecorder(
                 false
             }
         } ?: run {
-            _cameraStatus.value = "Permission Required - Check Settings"
-            AppLogger.e(TAG, "PermissionManager not available - cannot request permissions")
+            _cameraStatus.value = "Missing Permissions: ${missing.joinToString()}"
+            AppLogger.w(TAG, "PermissionManager not available - permissions must be granted before initialization")
+            AppLogger.w(TAG, "Missing permissions: ${missing.joinToString()}")
             emitError(
                 ErrorType.PERMISSION_DENIED,
-                "Camera and storage permissions required. Please enable them in device Settings."
+                "Missing permissions: ${missing.joinToString()}. PermissionManager not configured. Grant permissions before initializing camera."
             )
             false
         }
