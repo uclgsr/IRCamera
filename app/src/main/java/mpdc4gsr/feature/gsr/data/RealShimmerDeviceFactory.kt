@@ -70,9 +70,9 @@ class RealShimmerDevice(
                             2 -> handleDataPacket(msg)
                             4 -> AppLogger.d(TAG, "ACK received from Shimmer")
                             5 -> AppLogger.d(TAG, "Device name received")
-                            999 -> AppLogger.d(TAG, "Toast message from Shimmer")
                             9 -> AppLogger.d(TAG, "Stop streaming complete")
                             11 -> AppLogger.w(TAG, "Packet loss detected")
+                            999 -> AppLogger.d(TAG, "Toast message from Shimmer")
                             else -> AppLogger.d(TAG, "Unknown message type: ${msg.what}")
                         }
                     }
