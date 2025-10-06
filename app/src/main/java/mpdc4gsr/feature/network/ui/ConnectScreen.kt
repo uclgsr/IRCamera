@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,11 +24,14 @@ fun ConnectScreen(
 ) {
     val context = LocalContext.current
 
-    val deviceTypes = remember {
+    val deviceConnectionState = com.mpdc4gsr.libunified.app.event.DeviceEventManager.deviceConnectionState.collectAsState()
+    val socketConnectionState = com.mpdc4gsr.libunified.app.event.DeviceEventManager.socketConnectionState.collectAsState()
+
+    val deviceTypes = remember(deviceConnectionState.value, socketConnectionState.value) {
         val tc001Status = try {
             val hasUsbDevice = com.mpdc4gsr.libunified.app.tools.DeviceTools.findUsbDevice() != null
             if (hasUsbDevice) {
-                com.mpdc4gsr.libunified.app.tools.DeviceTools.isConnect(isAutoRequest = false)
+                deviceConnectionState.value?.isConnected ?: false
             } else {
                 null
             }
