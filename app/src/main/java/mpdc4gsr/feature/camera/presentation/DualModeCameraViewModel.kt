@@ -10,12 +10,7 @@ import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
 
-/**
- * Modernized DualModeCameraViewModel using StateFlow and Repository pattern
- * Manages dual-mode camera operations with reactive state management
- */
 class DualModeCameraViewModel : AppBaseViewModel() {
-
     // Enhanced data classes
     data class CameraState(
         val isInitialized: Boolean = false,
@@ -45,13 +40,10 @@ class DualModeCameraViewModel : AppBaseViewModel() {
     // StateFlow for reactive state management
     private val _permissionState = MutableStateFlow(PermissionState.UNKNOWN)
     val permissionState: StateFlow<PermissionState> = _permissionState.asStateFlow()
-
     private val _cameraState = MutableStateFlow(CameraState())
     val cameraState: StateFlow<CameraState> = _cameraState.asStateFlow()
-
     private val _cameraMode = MutableStateFlow(CameraMode.PREVIEW)
     val cameraMode: StateFlow<CameraMode> = _cameraMode.asStateFlow()
-
     private val _recordingState = MutableStateFlow(RecordingState())
     val recordingState: StateFlow<RecordingState> = _recordingState.asStateFlow()
 
@@ -62,7 +54,6 @@ class DualModeCameraViewModel : AppBaseViewModel() {
     // Combined state for complex UI scenarios
     private val _cameraScreenState = MutableStateFlow(CameraScreenState())
     val cameraScreenState: StateFlow<CameraScreenState> = _cameraScreenState.asStateFlow()
-
     private var rgbCameraRecorder: RgbCameraRecorder? = null
     private var enableSamsungOptimizations: Boolean = true
     private var appContext: Context? = null
@@ -119,7 +110,6 @@ class DualModeCameraViewModel : AppBaseViewModel() {
     fun initialize(initialMode: String, enableOptimizations: Boolean) {
         launchWithErrorHandling {
             enableSamsungOptimizations = enableOptimizations
-
             val mode = when (initialMode) {
                 "RAW_50MP" -> CameraMode.RAW
                 "VIDEO_4K" -> CameraMode.VIDEO_4K
@@ -128,20 +118,16 @@ class DualModeCameraViewModel : AppBaseViewModel() {
                 "NIGHT_MODE" -> CameraMode.NIGHT_MODE
                 else -> CameraMode.PREVIEW
             }
-
             _cameraMode.value = mode
             _permissionState.value = PermissionState.UNKNOWN
-
             val deviceInfo = SamsungDeviceCompatibility.getDeviceInfo()
             val supportedModes = getSupportedModes()
-
             _cameraState.value = CameraState(
                 isInitialized = false,
                 isRecording = false,
                 deviceInfo = deviceInfo,
                 supportedModes = supportedModes
             )
-
             _events.emit(CameraEvent.ShowSuccess("Camera system initialized with mode: ${mode.name}"))
         }
     }
@@ -195,17 +181,13 @@ class DualModeCameraViewModel : AppBaseViewModel() {
                     previewView = previewView,
                     useFrontCamera = false
                 )
-
                 rgbCameraRecorder?.initialize()
-
                 _cameraState.value = _cameraState.value.copy(
                     isInitialized = true,
                     currentResolution = "1920x1080", // Default resolution
                     frameRate = 30
                 )
-
                 _events.emit(CameraEvent.ShowSuccess("Dual-mode camera system initialized"))
-
             } catch (e: Exception) {
                 _events.emit(CameraEvent.ShowError("Failed to initialize camera: ${e.message}"))
             }
@@ -218,15 +200,12 @@ class DualModeCameraViewModel : AppBaseViewModel() {
                 _events.emit(CameraEvent.ShowError("Camera not initialized"))
                 return@launchWithErrorHandling
             }
-
             if (_recordingState.value.isRecording) {
                 _events.emit(CameraEvent.ShowError("Cannot switch mode while recording"))
                 return@launchWithErrorHandling
             }
-
             val previousMode = _cameraMode.value
             _cameraMode.value = newMode
-
             when (newMode) {
                 CameraMode.RAW -> {
                     handleRawModeSwitch()
@@ -267,7 +246,6 @@ class DualModeCameraViewModel : AppBaseViewModel() {
                     )
                 }
             }
-
             _events.emit(CameraEvent.ModeChanged(newMode))
             _events.emit(CameraEvent.ShowSuccess("Switched from ${previousMode.name} to ${newMode.name}"))
         }
@@ -281,12 +259,10 @@ class DualModeCameraViewModel : AppBaseViewModel() {
                 val deviceInfo = SamsungDeviceCompatibility.getDeviceInfo()
                 "RAW Mode: Standard DNG ($deviceInfo)"
             }
-
         _cameraState.value = _cameraState.value.copy(
             currentResolution = "4000x3000",
             frameRate = 0
         )
-
         _events.emit(CameraEvent.ShowSuccess(message))
     }
 
@@ -296,27 +272,21 @@ class DualModeCameraViewModel : AppBaseViewModel() {
                 _events.emit(CameraEvent.ShowError("Camera not initialized"))
                 return@launchWithErrorHandling
             }
-
             if (_recordingState.value.isRecording) {
                 _events.emit(CameraEvent.ShowError("Already recording"))
                 return@launchWithErrorHandling
             }
-
             try {
                 val fileName = "recording_${System.currentTimeMillis()}"
                 val sessionDir = appContext?.getExternalFilesDir("recordings")?.absolutePath ?: ""
                 rgbCameraRecorder?.startRecording(sessionDir)
-
                 _recordingState.value = _recordingState.value.copy(
                     isRecording = true,
                     recordingDuration = 0L
                 )
-
                 _cameraState.value = _cameraState.value.copy(isRecording = true)
-
                 _events.emit(CameraEvent.RecordingStarted(fileName))
                 _events.emit(CameraEvent.ShowSuccess("Recording started"))
-
             } catch (e: Exception) {
                 _events.emit(CameraEvent.ShowError("Failed to start recording: ${e.message}"))
             }
@@ -329,22 +299,17 @@ class DualModeCameraViewModel : AppBaseViewModel() {
                 _events.emit(CameraEvent.ShowError("Not currently recording"))
                 return@launchWithErrorHandling
             }
-
             try {
                 val duration = _recordingState.value.recordingDuration
                 rgbCameraRecorder?.stopRecording()
-
                 _recordingState.value = _recordingState.value.copy(
                     isRecording = false,
                     recordedFileCount = _recordingState.value.recordedFileCount + 1
                 )
-
                 _cameraState.value = _cameraState.value.copy(isRecording = false)
-
                 val filePath = "recording_path" // Would be actual path in real implementation
                 _events.emit(CameraEvent.RecordingStopped(filePath, duration))
                 _events.emit(CameraEvent.ShowSuccess("Recording stopped"))
-
             } catch (e: Exception) {
                 _events.emit(CameraEvent.ShowError("Failed to stop recording: ${e.message}"))
             }

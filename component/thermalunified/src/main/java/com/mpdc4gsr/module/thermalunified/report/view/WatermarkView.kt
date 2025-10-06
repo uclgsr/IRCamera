@@ -9,21 +9,16 @@ import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.compat.spToPx
 
 class WatermarkView : View {
-
     var watermarkText: String? = null
         set(value) {
             field = value
             invalidate()
         }
-
     private var marginTop: Float = 0f
-
     private val textPaint: TextPaint = TextPaint()
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,

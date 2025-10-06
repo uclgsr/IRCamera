@@ -27,10 +27,6 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.settings.presentation.StorageSettingsViewModel
 import mpdc4gsr.feature.settings.presentation.StorageSettingsViewModelFactory
 
-/**
- * Storage Settings Screen - Configure data storage and export options
- * Integrated with StorageSettingsViewModel for MVVM architecture
- */
 @Composable
 fun StorageSettingsScreen(
     onBackClick: (() -> Unit)? = null,
@@ -44,11 +40,9 @@ fun StorageSettingsScreen(
     val context = LocalContext.current
     val settings by viewModel.storageSettings.collectAsState()
     val storageInfo by viewModel.storageInfo.collectAsState()
-
     LaunchedEffect(Unit) {
         viewModel.initialize()
     }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -59,7 +53,6 @@ fun StorageSettingsScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -78,22 +71,17 @@ fun StorageSettingsScreen(
                     options = listOf("Internal Storage", "SD Card", "External USB"),
                     onValueChange = { viewModel.updateStorageLocation(it) }
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 SettingsRow(
                     label = "Available Space",
                     value = storageInfo.availableSpace
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 SettingsRow(
                     label = "Used Space",
                     value = storageInfo.usedSpace
                 )
             }
-
             // Export Settings Card
             SettingsCard(
                 title = "Export Settings",
@@ -105,18 +93,14 @@ fun StorageSettingsScreen(
                     checked = settings.autoExport,
                     onCheckedChange = { viewModel.updateAutoExport(it) }
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 SettingsDropdown(
                     label = "Export Format",
                     value = settings.exportFormat,
                     options = listOf("CSV", "JSON", "XML", "MATLAB"),
                     onValueChange = { viewModel.updateExportFormat(it) }
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 SettingsToggle(
                     label = "Compression",
                     description = "Compress exported files to save space",
@@ -124,7 +108,6 @@ fun StorageSettingsScreen(
                     onCheckedChange = { viewModel.updateCompression(it) }
                 )
             }
-
             // Backup Settings Card
             SettingsCard(
                 title = "Backup Settings",
@@ -136,9 +119,7 @@ fun StorageSettingsScreen(
                     checked = settings.autoBackup,
                     onCheckedChange = { viewModel.updateAutoBackup(it) }
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 SettingsToggle(
                     label = "Delete After Export",
                     description = "Delete local data after successful export",

@@ -27,21 +27,15 @@ import com.mpdc4gsr.libunified.app.db.entity.*
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun thermalDao(): ThermalDao
-
     abstract fun thermalMinDao(): ThermalMinuteDao
-
     abstract fun thermalHourDao(): ThermalHourDao
-
     abstract fun thermalDayDao(): ThermalDayDao
-
     abstract fun houseDetectDao(): HouseDetectDao
-
     abstract fun houseReportDao(): HouseReportDao
 
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
-
         fun getInstance(context: Context = ContextProvider.getContext()): AppDatabase =
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
@@ -88,7 +82,6 @@ abstract class AppDatabase : RoomDatabase() {
                 .addMigrations(
                     object : Migration(5, 6) {
                         override fun migrate(db: SupportSQLiteDatabase) {
-
                             db.execSQL(
                                 "CREATE TABLE IF NOT EXISTS `thermal_minute` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `thermal_id` TEXT NOT NULL, `user_id` TEXT NOT NULL, `thermal` REAL NOT NULL, `thermal_max` REAL NOT NULL, `thermal_min` REAL NOT NULL, `sn` TEXT NOT NULL, `info` TEXT NOT NULL, `type` TEXT NOT NULL, `start_time` INTEGER NOT NULL, `create_time` INTEGER NOT NULL, `update_time` INTEGER NOT NULL)",
                             )

@@ -16,7 +16,6 @@ class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
     private var selected = -1
-
     fun selected(index: Int) {
         selected = index
         notifyDataSetChanged()
@@ -56,8 +55,7 @@ class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
             holder.name.isSelected = bean.code == selected
             holder.name.setTextColor(
                 ContextCompat.getColor(context, R.color.white),
-
-                )
+            )
         }
     }
 
@@ -69,6 +67,5 @@ class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
         val lay: View = itemView.findViewById(R.id.item_menu_tab_lay)
         val img: ImageView = itemView.findViewById(R.id.item_menu_tab_img)
         val name: TextView = itemView.findViewById(R.id.item_menu_tab_text)
-
     }
 }

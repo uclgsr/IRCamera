@@ -9,10 +9,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
-/**
- * Simplified command handler for PC remote control that works with basic recording interface.
- * Handles START, STOP, SYNC, PING, and GET_STATUS commands as specified in the requirements.
- */
 class SimpleCommandHandler(
     private val recordingController: SimpleRecordingInterface,
     private val networkManager: NetworkManager
@@ -24,13 +20,9 @@ class SimpleCommandHandler(
 
     private val handlerScope = CoroutineScope(Dispatchers.IO)
 
-    /**
-     * Process incoming command from PC
-     */
     suspend fun handleCommand(commandLine: String) {
         try {
             AppLogger.d(TAG, "Processing command: $commandLine")
-
             val response = when {
                 commandLine.startsWith("START") -> handleStartCommand()
                 commandLine.startsWith("STOP") -> handleStopCommand()
@@ -43,11 +35,9 @@ class SimpleCommandHandler(
                     "ERROR cmd=UNKNOWN code=UNKNOWN_COMMAND msg=\"Unknown command: $commandLine\""
                 }
             }
-
             if (response.isNotEmpty()) {
                 networkManager.sendResponse(response)
             }
-
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error handling command: $commandLine", e)
             val errorResponse =
@@ -62,10 +52,8 @@ class SimpleCommandHandler(
                 AppLogger.w(TAG, "START command received but already recording")
                 return@withContext "ERROR cmd=START code=ALREADY_RECORDING msg=\"Recording session already active\""
             }
-
             AppLogger.i(TAG, "Executing START command")
             val success = recordingController.startRecording()
-
             if (success) {
                 AppLogger.i(TAG, "Recording started successfully via remote command")
                 val sessionId = "session_${System.currentTimeMillis()}"
@@ -86,10 +74,8 @@ class SimpleCommandHandler(
                 AppLogger.i(TAG, "STOP command received but not currently recording")
                 return@withContext "STOP-ACK msg=\"No active recording session\""
             }
-
             AppLogger.i(TAG, "Executing STOP command")
             val success = recordingController.stopRecording()
-
             if (success) {
                 AppLogger.i(TAG, "Recording stopped successfully via remote command")
                 "STOP-ACK msg=\"Recording session stopped\""
@@ -108,10 +94,8 @@ class SimpleCommandHandler(
             try {
                 AppLogger.i(TAG, "Executing SYNC command")
                 val phoneTimestamp = System.currentTimeMillis()
-
                 // Extract PC timestamp if provided in the command
                 val pcTimestamp = extractTimestampFromCommand(commandLine)
-
                 if (pcTimestamp != null) {
                     Log.d(
                         TAG,
@@ -136,14 +120,12 @@ class SimpleCommandHandler(
     private suspend fun handleGetStatusCommand(): String = withContext(Dispatchers.IO) {
         try {
             val statusMap = recordingController.getStatus()
-
             // Create JSON response for rich status info
             val statusJson = JSONObject().apply {
                 statusMap.forEach { (key, value) ->
                     put(key, value)
                 }
             }
-
             AppLogger.d(TAG, "Status query response: $statusJson")
             "STATUS $statusJson"
         } catch (e: Exception) {
@@ -157,7 +139,6 @@ class SimpleCommandHandler(
             try {
                 val jsonObj = JSONObject(jsonString)
                 val command = jsonObj.optString("cmd", "")
-
                 return@withContext when (command) {
                     "START" -> handleStartCommand()
                     "STOP" -> handleStopCommand()
@@ -187,14 +168,10 @@ class SimpleCommandHandler(
         }
     }
 
-    /**
-     * Send periodic status updates while recording
-     */
     fun startPeriodicStatusUpdates() {
         handlerScope.launch {
             while (true) {
                 kotlinx.coroutines.delay(STATUS_UPDATE_INTERVAL_MS)
-
                 if (recordingController.isRecording) {
                     try {
                         val statusResponse = handleGetStatusCommand()
@@ -207,9 +184,6 @@ class SimpleCommandHandler(
         }
     }
 
-    /**
-     * Send event-driven notifications for significant events
-     */
     fun notifySessionStarted(sessionId: String) {
         handlerScope.launch {
             try {

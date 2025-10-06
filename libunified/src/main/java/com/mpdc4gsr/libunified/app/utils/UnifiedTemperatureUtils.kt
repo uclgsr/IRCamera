@@ -6,7 +6,6 @@ import kotlin.math.max
 import kotlin.math.min
 
 object UnifiedTemperatureUtils {
-
     @JvmStatic
     fun getLineTemperatures(
         point1: Point,
@@ -18,10 +17,8 @@ object UnifiedTemperatureUtils {
         if (point1 == point2) {
             return emptyList()
         }
-
         val points = getLinePoints(point1, point2)
         val temperatures = mutableListOf<Float>()
-
         for (point in points) {
             if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
                 val index = point.y * width + point.x
@@ -30,7 +27,6 @@ object UnifiedTemperatureUtils {
                 }
             }
         }
-
         return temperatures
     }
 
@@ -42,12 +38,10 @@ object UnifiedTemperatureUtils {
         height: Int
     ): List<Float> {
         val temperatures = mutableListOf<Float>()
-
         val minX = max(0, min(topLeft.x, bottomRight.x))
         val maxX = min(width - 1, max(topLeft.x, bottomRight.x))
         val minY = max(0, min(topLeft.y, bottomRight.y))
         val maxY = min(height - 1, max(topLeft.y, bottomRight.y))
-
         for (y in minY..maxY) {
             for (x in minX..maxX) {
                 val index = y * width + x
@@ -56,7 +50,6 @@ object UnifiedTemperatureUtils {
                 }
             }
         }
-
         return temperatures
     }
 
@@ -69,7 +62,6 @@ object UnifiedTemperatureUtils {
         if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height) {
             return null
         }
-
         val index = point.y * width + point.x
         return if (index < temperatureArray.size) {
             byteToTemperature(temperatureArray[index])
@@ -99,12 +91,10 @@ object UnifiedTemperatureUtils {
     ): Pair<Point, Float>? {
         var maxTemp = Float.MIN_VALUE
         var hotspotPoint: Point? = null
-
         val minX = max(0, min(topLeft.x, bottomRight.x))
         val maxX = min(width - 1, max(topLeft.x, bottomRight.x))
         val minY = max(0, min(topLeft.y, bottomRight.y))
         val maxY = min(height - 1, max(topLeft.y, bottomRight.y))
-
         for (y in minY..maxY) {
             for (x in minX..maxX) {
                 val index = y * width + x
@@ -117,7 +107,6 @@ object UnifiedTemperatureUtils {
                 }
             }
         }
-
         return hotspotPoint?.let { Pair(it, maxTemp) }
     }
 
@@ -130,12 +119,10 @@ object UnifiedTemperatureUtils {
     ): Pair<Point, Float>? {
         var minTemp = Float.MAX_VALUE
         var coldspotPoint: Point? = null
-
         val minX = max(0, min(topLeft.x, bottomRight.x))
         val maxX = min(width - 1, max(topLeft.x, bottomRight.x))
         val minY = max(0, min(topLeft.y, bottomRight.y))
         val maxY = min(height - 1, max(topLeft.y, bottomRight.y))
-
         for (y in minY..maxY) {
             for (x in minX..maxX) {
                 val index = y * width + x
@@ -148,7 +135,6 @@ object UnifiedTemperatureUtils {
                 }
             }
         }
-
         return coldspotPoint?.let { Pair(it, minTemp) }
     }
 
@@ -191,7 +177,6 @@ object UnifiedTemperatureUtils {
 
     private fun getLinePoints(point1: Point, point2: Point): List<Point> {
         val points = mutableListOf<Point>()
-
         if (point1.x == point2.x) {
             // Vertical line
             val startY = min(point1.y, point2.y)
@@ -213,15 +198,11 @@ object UnifiedTemperatureUtils {
             val sx = if (point1.x < point2.x) 1 else -1
             val sy = if (point1.y < point2.y) 1 else -1
             var err = dx - dy
-
             var x = point1.x
             var y = point1.y
-
             while (true) {
                 points.add(Point(x, y))
-
                 if (x == point2.x && y == point2.y) break
-
                 val e2 = 2 * err
                 if (e2 > -dy) {
                     err -= dy
@@ -233,7 +214,6 @@ object UnifiedTemperatureUtils {
                 }
             }
         }
-
         return points
     }
 }

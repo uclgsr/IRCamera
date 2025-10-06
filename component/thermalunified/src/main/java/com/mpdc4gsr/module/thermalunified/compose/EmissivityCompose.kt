@@ -25,11 +25,9 @@ fun EmissivityCompose(
     val density = LocalDensity.current
     val strokeWidth = with(density) { 0.5.dp.toPx() }
     val lineColor = Color(0xff5b5961)
-
     if (textList.isEmpty()) {
         return
     }
-
     Box(modifier = modifier) {
         // Background canvas for custom borders
         Canvas(
@@ -37,7 +35,6 @@ fun EmissivityCompose(
         ) {
             val width = size.width
             val height = size.height
-
             // Draw top line if needed
             if (drawTopLine) {
                 drawLine(
@@ -47,7 +44,6 @@ fun EmissivityCompose(
                     strokeWidth = strokeWidth
                 )
             }
-
             // Draw bottom line
             drawLine(
                 color = lineColor,
@@ -55,7 +51,6 @@ fun EmissivityCompose(
                 end = Offset(width, height - strokeWidth / 2),
                 strokeWidth = strokeWidth
             )
-
             // Draw left line
             drawLine(
                 color = lineColor,
@@ -63,13 +58,11 @@ fun EmissivityCompose(
                 end = Offset(strokeWidth / 2, height),
                 strokeWidth = strokeWidth
             )
-
             // Draw vertical separators
             if (textList.size > 1) {
                 val firstColumnWidth = width * 135f / 335f
                 val remainingWidth = width - firstColumnWidth
                 val columnWidth = remainingWidth / 2f
-
                 var x = firstColumnWidth
                 repeat(textList.size - 1) {
                     drawLine(
@@ -82,7 +75,6 @@ fun EmissivityCompose(
                 }
             }
         }
-
         // Content row
         Row(
             modifier = Modifier
@@ -96,7 +88,6 @@ fun EmissivityCompose(
                 } else {
                     if (index == 0) 135f / 335f else (200f / 335f) / 2f
                 }
-
                 Text(
                     text = text,
                     modifier = Modifier
@@ -125,14 +116,12 @@ fun EmissivityComposePreview() {
             textList = listOf("Single Value: 0.95"),
             modifier = Modifier.height(40.dp)
         )
-
         // Multiple items
         EmissivityCompose(
             textList = listOf("Label", "Value 1", "Value 2"),
             drawTopLine = true,
             modifier = Modifier.height(40.dp)
         )
-
         // Aligned top
         EmissivityCompose(
             textList = listOf("Long Label Text", "Short", "Medium Value"),

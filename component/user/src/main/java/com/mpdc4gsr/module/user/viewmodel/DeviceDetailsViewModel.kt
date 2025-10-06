@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class DeviceDetailsViewModel : BaseViewModel() {
-
     companion object {
         private const val TC007_DEMO_SERIAL = "TC007-DEMO-SN"
         private const val TC007_MODEL = "TC007"
@@ -18,20 +17,15 @@ class DeviceDetailsViewModel : BaseViewModel() {
 
     private val _serialNumber = MutableStateFlow("N/A")
     val serialNumber: StateFlow<String> = _serialNumber.asStateFlow()
-
     private val _deviceModel = MutableStateFlow("N/A")
     val deviceModel: StateFlow<String> = _deviceModel.asStateFlow()
-
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
     private val _copyMessage = MutableStateFlow("")
     val copyMessage: StateFlow<String> = _copyMessage.asStateFlow()
-
     fun loadDeviceDetails(isTC007: Boolean) {
         launchWithErrorHandling {
             _isLoading.value = true
-
             try {
                 // Note: Original TS004Repository functionality was removed
                 // Setting default values as per the original implementation

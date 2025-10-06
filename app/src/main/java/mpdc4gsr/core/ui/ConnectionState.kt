@@ -1,9 +1,5 @@
 package mpdc4gsr.core.ui
 
-/**
- * Sealed classes for connection state management
- * Moved to core/ui to avoid dependency from core to outer layers
- */
 sealed class ConnectionState {
     object Disconnected : ConnectionState()
     object Connecting : ConnectionState()

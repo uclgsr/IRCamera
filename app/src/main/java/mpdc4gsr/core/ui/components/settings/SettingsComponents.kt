@@ -81,7 +81,6 @@ fun SettingsItem(
                     )
                 }
             }
-
             if (trailing != null) {
                 trailing()
             } else {
@@ -134,7 +133,6 @@ fun SwitchSettingsItem(
                     )
                 }
             }
-
             Switch(
                 checked = checked,
                 onCheckedChange = onCheckedChange
@@ -188,7 +186,6 @@ fun SliderSettingsItem(
                         )
                     }
                 }
-
                 Text(
                     text = valueLabel(value),
                     style = MaterialTheme.typography.bodyMedium,
@@ -196,9 +193,7 @@ fun SliderSettingsItem(
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Slider(
                 value = value,
                 onValueChange = onValueChange,
@@ -237,7 +232,6 @@ fun RadioButtonSettingsItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-
             options.forEach { option ->
                 Row(
                     modifier = Modifier
@@ -305,7 +299,6 @@ fun ActionSettingsItem(
                     )
                 }
             }
-
             Button(
                 onClick = onAction,
                 colors = if (isDestructive) {
@@ -375,7 +368,6 @@ fun SettingsDropdown(
     enabled: Boolean = true
 ) {
     var expanded by remember { mutableStateOf(false) }
-
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = label,
@@ -387,7 +379,6 @@ fun SettingsDropdown(
             },
             modifier = Modifier.padding(bottom = 4.dp)
         )
-
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { if (enabled) expanded = !expanded }
@@ -405,7 +396,6 @@ fun SettingsDropdown(
                     .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true),
                 colors = OutlinedTextFieldDefaults.colors()
             )
-
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
@@ -460,7 +450,6 @@ fun SettingsSlider(
                 }
             )
         }
-
         Slider(
             value = value,
             onValueChange = onValueChange,
@@ -511,7 +500,6 @@ fun SettingsToggle(
                 )
             }
         }
-
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,

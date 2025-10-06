@@ -69,7 +69,6 @@ class ChartLogView : LineChart {
         )
     }
     private val axisLine by lazy { ContextCompat.getColor(context, LibcoreR.color.circle_white) }
-
     private fun initChart() {
         synchronized(this) {
             this.setTouchEnabled(true)
@@ -100,7 +99,6 @@ class ChartLogView : LineChart {
             l.form = Legend.LegendForm.CIRCLE
             l.textColor = textColor
             l.isEnabled = false
-
             val xAxis = this.xAxis
             xAxis.textColor = textColor
             xAxis.setDrawGridLines(false)
@@ -112,7 +110,6 @@ class ChartLogView : LineChart {
             xAxis.granularity = 1f
             xAxis.isGranularityEnabled = true
             xAxis.textSize = 8f
-
             val leftAxis = this.axisLeft
             leftAxis.textColor = textColor
             leftAxis.axisLineColor = 0x00000000
@@ -122,7 +119,6 @@ class ChartLogView : LineChart {
             leftAxis.setLabelCount(6, true)
             leftAxis.valueFormatter = YValueFormatter()
             leftAxis.textSize = 8f
-
             this.axisRight.isEnabled = false
         }
     }
@@ -152,7 +148,6 @@ class ChartLogView : LineChart {
                 val startTime = data[0].createTime / 1000 * 1000
                 xAxis.valueFormatter = IRMyValueFormatter(startTime = startTime, type = type)
                 XLog.w("chart init startTime:$startTime")
-
                 when (data[0].type) {
                     "point" -> {
                         var set = lineData.getDataSetByIndex(0)
@@ -180,7 +175,6 @@ class ChartLogView : LineChart {
                         if (maxDataSet == null) {
                             maxDataSet = createSet(0, "line max temp")
                         }
-
                         var minDataSet = lineData.getDataSetByIndex(1)
                         if (minDataSet == null) {
                             minDataSet = createSet(1, "line min temp")
@@ -193,11 +187,9 @@ class ChartLogView : LineChart {
                                     startTime = startTime,
                                     type = type,
                                 ).toFloat()
-
                             val entity = Entry(x, it.thermalMax)
                             entity.data = it
                             maxDataSet.addEntry(entity)
-
                             val entityMin = Entry(x, it.thermalMin)
                             entityMin.data = it
                             minDataSet.addEntry(entityMin)
@@ -208,13 +200,11 @@ class ChartLogView : LineChart {
                     }
 
                     else -> {
-
                         var maxTempDataSet = lineData.getDataSetByIndex(0)
                         if (maxTempDataSet == null) {
                             maxTempDataSet = createSet(0, "fence max temp")
                             lineData.addDataSet(maxTempDataSet)
                         }
-
                         var centerTempDataSet = lineData.getDataSetByIndex(1)
                         if (centerTempDataSet == null) {
                             centerTempDataSet = createSet(1, "fence min temp")
@@ -228,11 +218,9 @@ class ChartLogView : LineChart {
                                     startTime = startTime,
                                     type = type,
                                 ).toFloat()
-
                             val entityMax = Entry(x, it.thermalMax)
                             entityMax.data = it
                             maxTempDataSet.addEntry(entityMax)
-
                             val entity = Entry(x, it.thermalMin)
                             entity.data = it
                             centerTempDataSet.addEntry(entity)
@@ -264,7 +252,6 @@ class ChartLogView : LineChart {
             LibcoreR.color.chart_line_min,
             LibcoreR.color.chart_line_center,
         )
-
     private val linePointColors =
         intArrayOf(
             LibR.color.chart_point_max,

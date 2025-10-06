@@ -15,7 +15,6 @@ import java.io.File
 import java.io.FileOutputStream
 
 object ImageUtils {
-
     fun saveToCache(context: Context, bitmap: Bitmap): String {
         val cacheFile = context.externalCacheDir ?: context.cacheDir
         val file = File(cacheFile, "Report_${System.currentTimeMillis()}.jpg")
@@ -29,7 +28,6 @@ object ImageUtils {
     fun save(bitmap: Bitmap, isTC007: Boolean = false): String {
         val dicName = if (isTC007) "TC007" else CommUtils.getAppName()
         val fileName = "${dicName}_${System.currentTimeMillis()}.jpg"
-
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val values = ContentValues().apply {
@@ -64,7 +62,6 @@ object ImageUtils {
         } catch (e: Exception) {
             XLog.e("Failed to save image: ${e.message}")
         }
-
         return fileName.removeSuffix(".jpg")
     }
 

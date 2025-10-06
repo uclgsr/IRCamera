@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class ThermalDataRepository : BaseRepository() {
-
     data class ThermalReading(
         val timestamp: Long,
         val temperature: Float,
@@ -19,7 +18,6 @@ class ThermalDataRepository : BaseRepository() {
     )
 
     enum class ReadingQuality { EXCELLENT, GOOD, FAIR, POOR, INVALID }
-
     data class ThermalFrameData(
         val frameId: String,
         val timestamp: Long,
@@ -43,7 +41,6 @@ class ThermalDataRepository : BaseRepository() {
             try {
                 while (true) {
                     delay(100) // 10 FPS simulation
-
                     val frame = generateThermalFrame(deviceId)
                     emit(BaseRepository.Result.Success(frame))
                 }
@@ -70,14 +67,12 @@ class ThermalDataRepository : BaseRepository() {
     private fun generateThermalFrame(deviceId: String): ThermalFrameData {
         val timestamp = System.currentTimeMillis()
         val readings = mutableListOf<ThermalReading>()
-
         // Generate sample thermal readings for a 32x24 array
         for (y in 0 until 24) {
             for (x in 0 until 32) {
                 val baseTemp = 25.0f
                 val variation = (Math.sin(x * 0.2) * Math.cos(y * 0.3) * 10).toFloat()
                 val noise = (Math.random() * 2 - 1).toFloat()
-
                 readings.add(
                     ThermalReading(
                         timestamp = timestamp,
@@ -90,7 +85,6 @@ class ThermalDataRepository : BaseRepository() {
                 )
             }
         }
-
         return ThermalFrameData(
             frameId = "frame_${timestamp}",
             timestamp = timestamp,
@@ -113,13 +107,11 @@ class ThermalDataRepository : BaseRepository() {
     ): List<ThermalFrameData> {
         val frames = mutableListOf<ThermalFrameData>()
         val interval = 1000L // 1 second intervals
-
         var currentTime = startTime
         while (currentTime <= endTime) {
             frames.add(generateThermalFrame(deviceId).copy(timestamp = currentTime))
             currentTime += interval
         }
-
         return frames
     }
 }

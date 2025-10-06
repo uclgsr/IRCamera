@@ -25,7 +25,6 @@ import com.mpdc4gsr.module.thermalunified.fragment.MonitorThermalComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorViewModel
 
 class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
-
     override fun createViewModel(): MonitorViewModel {
         return viewModels<MonitorViewModel>().value
     }
@@ -37,7 +36,6 @@ class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
         var monitorState by remember { mutableIntStateOf(MonitorViewModel.STATS_START) }
         var selectedType by remember { mutableIntStateOf(1) }
         var recordingTime by remember { mutableLongStateOf(0L) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -77,8 +75,7 @@ class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
                             .fillMaxWidth()
                             .weight(0.85f)
                     )
-
-                    // Control panel (15% of screen)  
+                    // Control panel (15% of screen)
                     MonitorControlPanel(
                         monitorState = monitorState,
                         selectedType = selectedType,
@@ -102,7 +99,6 @@ class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
                         onMonitorTypeSelected = { type ->
                             selectedType = type
                             monitorState = MonitorViewModel.STATS_FINISH
-
                             // Thermal action tracking
                             val action = when (type) {
                                 1 -> 2001 // Point monitoring
@@ -117,7 +113,6 @@ class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
                 }
             }
         }
-
         // Handle time updates for recording display
         LaunchedEffect(monitorState) {
             if (monitorState == MonitorViewModel.STATS_MONITOR) {
@@ -213,9 +208,7 @@ private fun InitialControlsView(
                 fontSize = 14.sp
             )
         }
-
         Spacer(modifier = Modifier.weight(0.2f))
-
         Button(
             onClick = onCreateChart,
             modifier = Modifier.weight(0.4f),
@@ -258,7 +251,6 @@ private fun MonitorTypeSelectionView(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -269,14 +261,12 @@ private fun MonitorTypeSelectionView(
                     onClick = { onTypeSelected(1) },
                     modifier = Modifier.weight(1f)
                 )
-
                 MonitorTypeButton(
                     text = "Line",
                     icon = Icons.Default.Place,
                     onClick = { onTypeSelected(2) },
                     modifier = Modifier.weight(1f)
                 )
-
                 MonitorTypeButton(
                     text = "Area",
                     icon = Icons.Default.Place,
@@ -344,7 +334,6 @@ private fun StartMonitoringView(
             val minutes = recordingTime / 60 % 60
             val seconds = recordingTime % 60
             val timeText = String.format("%02d:%02d", minutes, seconds)
-
             Text(
                 if (recordingTime > 0) timeText else "Start",
                 fontSize = 16.sp,

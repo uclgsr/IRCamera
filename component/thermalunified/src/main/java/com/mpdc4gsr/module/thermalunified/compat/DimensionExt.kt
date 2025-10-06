@@ -4,15 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.util.TypedValue
 
-/**
- * Context-aware dimension conversions for thermalunified component
- * These provide safe, configuration-aware dimension conversions
- */
 
-/**
- * Context-based dimension conversions (RECOMMENDED)
- * Use these for correct UI rendering across different configurations
- */
 fun Int.dpToPx(context: Context): Int {
     return (this * context.resources.displayMetrics.density).toInt()
 }
@@ -45,12 +37,6 @@ fun Float.spToPx(context: Context): Float {
     )
 }
 
-/**
- * Legacy extensions using Resources.getSystem() - USE SPARINGLY
- * These are provided for backward compatibility during migration
- * but should be replaced with context-aware versions
- * @deprecated Use context-based functions like dpToPx(context)
- */
 @Deprecated(
     message = "Use dpToPx(context) for context-aware conversion",
     replaceWith = ReplaceWith("this.dpToPx(context)")

@@ -35,11 +35,8 @@ open class ItemBase {
 
     @ColumnInfo
     var image4: String = ""
-
     override fun equals(other: Any?): Boolean = other is ItemBase && other.id == id
-
     override fun hashCode(): Int = id.toInt()
-
     fun getStateStr(context: Context): String =
         when (state) {
             1 -> context.getString(R.string.house_state_good)
@@ -175,9 +172,7 @@ class ItemDetect() : ItemBase() {
 
     @Ignore
     var dirDetect = DirDetect()
-
     fun copyName(): String = "$itemName(1)"
-
     fun copyOne(
         parentId: Long = this.parentId,
         position: Int = this.position,
@@ -215,7 +210,6 @@ class ItemDetect() : ItemBase() {
     }
 
     companion object {
-
         fun buildDefaultItemList(
             parentId: Long,
             position: Int,
@@ -538,7 +532,6 @@ class ItemDetect() : ItemBase() {
     ],
 )
 class ItemReport : ItemBase() {
-
     @ColumnInfo(index = true)
     override var parentId: Long = 0
 }

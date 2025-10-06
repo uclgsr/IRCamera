@@ -14,7 +14,6 @@ import kotlin.coroutines.cancellation.CancellationException
 
 abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {
     protected lateinit var viewModel: VM
-
     override fun onCreate(savedInstanceState: Bundle?) {
         initVM()
         super.onCreate(savedInstanceState)
@@ -37,7 +36,6 @@ abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {
                 }
             }
         }
-
         // Observe UI events
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -55,7 +53,6 @@ abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {
         } else {
             hideLoading()
         }
-
         // Handle error state
         uiState.error?.let { error ->
             showError(error)
@@ -88,7 +85,6 @@ abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {
     }
 
     abstract fun providerVMClass(): Class<VM>
-
     protected fun requestError(it: Exception?) {
         it?.run {
             when (it) {
@@ -115,7 +111,6 @@ abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {
     }
 
     private val messageDialogState by lazy { SimpleMessageDialogState(this) }
-
     open fun httpErrorTip(
         text: String,
         requestUrl: String,

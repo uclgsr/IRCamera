@@ -57,7 +57,6 @@ fun ListItemComponent(
                             Spacer(modifier = Modifier.width(12.dp))
                         }
                     }
-
                     // Left text
                     Text(
                         text = leftText,
@@ -66,7 +65,6 @@ fun ListItemComponent(
                         fontWeight = FontWeight.Medium
                     )
                 }
-
                 // Right text
                 rightText?.let {
                     Text(
@@ -77,7 +75,6 @@ fun ListItemComponent(
                 }
             }
         }
-
         if (onClick != null) {
             Card(
                 onClick = onClick,
@@ -97,7 +94,6 @@ fun ListItemComponent(
                 content()
             }
         }
-
         // Line separator
         if (showLine) {
             HorizontalDivider(

@@ -5,28 +5,20 @@ import com.mpdc4gsr.libunified.app.repository.BaseRepository
 import kotlinx.coroutines.flow.*
 
 class ReportDetailViewModel : BaseViewModel() {
-
     private val _reportDate = MutableStateFlow("")
     val reportDate: StateFlow<String> = _reportDate.asStateFlow()
-
     private val _reportTime = MutableStateFlow("")
     val reportTime: StateFlow<String> = _reportTime.asStateFlow()
-
     private val _location = MutableStateFlow("")
     val location: StateFlow<String> = _location.asStateFlow()
-
     private val _inspector = MutableStateFlow("")
     val inspector: StateFlow<String> = _inspector.asStateFlow()
-
     private val _equipment = MutableStateFlow("")
     val equipment: StateFlow<String> = _equipment.asStateFlow()
-
     private val _reportId = MutableStateFlow<String?>(null)
     val reportId: StateFlow<String?> = _reportId.asStateFlow()
-
     private val _events = MutableSharedFlow<ReportDetailEvent>()
     val events: SharedFlow<ReportDetailEvent> = _events.asSharedFlow()
-
     private val reportRepository = ReportDetailRepository()
 
     sealed class ReportDetailEvent {
@@ -38,7 +30,6 @@ class ReportDetailViewModel : BaseViewModel() {
         launchWithLoading {
             _reportId.value = reportId
             val result = reportRepository.getReportById(reportId)
-
             when (result) {
                 is BaseRepository.Result.Success -> {
                     val report = result.data

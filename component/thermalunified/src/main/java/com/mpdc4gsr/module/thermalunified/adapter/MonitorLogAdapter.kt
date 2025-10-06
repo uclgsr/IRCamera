@@ -13,7 +13,6 @@ import com.mpdc4gsr.module.thermalunified.R
 class MonitorLogAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: OnItemClickListener? = null
-
     var datas = arrayListOf<ThermalEntity>()
         set(value) {
             field = value

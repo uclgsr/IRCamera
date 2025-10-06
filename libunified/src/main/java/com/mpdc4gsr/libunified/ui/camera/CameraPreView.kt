@@ -12,9 +12,7 @@ class CameraPreView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
     private val TAG = "CameraPreView"
-
     private var cameraAlpha: Float = 1.0f
     private var isRotationSet: Boolean = false
 
@@ -23,7 +21,6 @@ class CameraPreView @JvmOverloads constructor(
     }
 
     private var closeListener: CameraPreViewCloseListener? = null
-
     var cameraPreViewCloseListener: CameraPreViewCloseListener? = null
         set(value) {
             field = value
@@ -51,7 +48,6 @@ class CameraPreView @JvmOverloads constructor(
     }
 
     fun getCameraAlpha(): Float = cameraAlpha
-
     fun openCamera() {
         visibility = VISIBLE
         XLog.d(TAG, "Camera opened")

@@ -27,18 +27,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * GSRGalleryComposeActivity - Enhanced GSR Data Gallery
- *
- * Modern gallery interface for GSR recordings with:
- * - Grid and list view modes for recorded sessions
- * - Advanced filtering and search capabilities
- * - Data visualization preview thumbnails
- * - Batch operations for multiple sessions
- * - Integration with analysis and export tools
- */
 class GSRGalleryComposeActivity : BaseComposeActivity<GSRGalleryViewModel>() {
-
     override fun createViewModel(): GSRGalleryViewModel = GSRGalleryViewModel()
 
     @Composable
@@ -53,15 +42,12 @@ class GSRGalleryComposeActivity : BaseComposeActivity<GSRGalleryViewModel>() {
 @Composable
 fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
     val uiState by viewModel.galleryState.collectAsState()
-
     var searchQuery by remember { mutableStateOf("") }
     var isGridView by remember { mutableStateOf(true) }
     var showFilterDialog by remember { mutableStateOf(false) }
-
     LaunchedEffect(Unit) {
         viewModel.loadGSRSessions()
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -79,9 +65,7 @@ fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
             onShowFilter = { showFilterDialog = true },
             sessionsCount = uiState.sessions.size
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         // Content based on view mode
         if (isGridView) {
             GSRSessionGrid(
@@ -99,7 +83,6 @@ fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
             )
         }
     }
-
     // Filter Dialog
     if (showFilterDialog) {
         GSRFilterDialog(
@@ -111,7 +94,6 @@ fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
             }
         )
     }
-
     // Selection Actions
     if (uiState.selectedSessions.isNotEmpty()) {
         SelectionActionsBar(
@@ -133,7 +115,6 @@ fun GSRGalleryHeader(
     sessionsCount: Int
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -145,16 +126,13 @@ fun GSRGalleryHeader(
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
-
             Text(
                 text = "$sessionsCount sessions",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
         }
-
         Spacer(modifier = Modifier.height(12.dp))
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -184,16 +162,13 @@ fun GSRGalleryHeader(
                     }
                 )
             )
-
             Spacer(modifier = Modifier.width(8.dp))
-
             IconButton(onClick = onViewToggle) {
                 Icon(
                     imageVector = if (isGridView) Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
                     contentDescription = if (isGridView) "List View" else "Grid View"
                 )
             }
-
             IconButton(onClick = onShowFilter) {
                 Icon(Icons.Default.FilterList, contentDescription = "Filter")
             }
@@ -290,23 +265,19 @@ fun GSRSessionGridItem(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = session.name,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold,
                 maxLines = 1
             )
-
             Text(
                 text = "${formatDuration(session.duration)} • ${session.sampleCount} samples",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 maxLines = 1
             )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -358,16 +329,13 @@ fun GSRSessionListItem(
                     tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                 )
             }
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = session.name,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
-
                 if (session.participantId.isNotEmpty()) {
                     Text(
                         text = "Participant: ${session.participantId}",
@@ -375,7 +343,6 @@ fun GSRSessionListItem(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
                 }
-
                 Row {
                     Text(
                         text = formatDuration(session.duration),
@@ -398,7 +365,6 @@ fun GSRSessionListItem(
                     )
                 }
             }
-
             Text(
                 text = formatFileSize(session.fileSize),
                 style = MaterialTheme.typography.bodySmall,
@@ -415,7 +381,6 @@ fun GSRFilterDialog(
     onApplyFilter: (GSRFilter) -> Unit
 ) {
     var filter by remember { mutableStateOf(currentFilter) }
-
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Filter GSR Sessions") },
@@ -429,9 +394,7 @@ fun GSRFilterDialog(
                     steps = 10
                 )
                 Text("${filter.minQuality}%")
-
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Text("Minimum Duration (minutes):")
                 Slider(
                     value = filter.minDuration.toFloat(),
@@ -440,9 +403,7 @@ fun GSRFilterDialog(
                     steps = 12
                 )
                 Text("${filter.minDuration} min")
-
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = filter.hasParticipant,
@@ -486,7 +447,6 @@ fun SelectionActionsBar(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-
             Row {
                 TextButton(onClick = onClearSelection) {
                     Text("Clear")
@@ -562,10 +522,8 @@ data class GSRGalleryUiState(
 class GSRGalleryViewModel : AppBaseViewModel() {
     private val _galleryState = MutableStateFlow(GSRGalleryUiState())
     val galleryState: StateFlow<GSRGalleryUiState> = _galleryState.asStateFlow()
-
     fun loadGSRSessions() {
         _galleryState.value = _galleryState.value.copy(isLoading = true)
-
         val mockSessions = listOf(
             GSRSession(
                 "1",
@@ -618,7 +576,6 @@ class GSRGalleryViewModel : AppBaseViewModel() {
                 System.currentTimeMillis() - 432000000
             )
         )
-
         _galleryState.value = _galleryState.value.copy(
             sessions = mockSessions,
             filteredSessions = mockSessions,

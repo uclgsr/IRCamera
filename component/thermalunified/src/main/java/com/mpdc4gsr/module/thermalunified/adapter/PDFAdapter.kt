@@ -18,7 +18,6 @@ class PDFAdapter : BaseQuickAdapter<ReportData.Records?, BaseViewHolder>, LoadMo
 
     var delListener: ((item: ReportData.Records, position: Int) -> Unit)? = null
     var jumpDetailListener: ((item: ReportData.Records, position: Int) -> Unit)? = null
-
     override fun convert(
         holder: BaseViewHolder,
         item: ReportData.Records?,
@@ -71,7 +70,6 @@ class PDFAdapter : BaseQuickAdapter<ReportData.Records?, BaseViewHolder>, LoadMo
             if (i == 0) {
                 dataList[i]?.isShowTitleTime = true
             } else {
-
                 val lastTimes = dataList[i - 1]?.uploadTime?.split(" ")
                 val times = dataList[i]?.uploadTime?.split(" ")
                 if (lastTimes?.size!! > 1 && times?.size!! > 1) {

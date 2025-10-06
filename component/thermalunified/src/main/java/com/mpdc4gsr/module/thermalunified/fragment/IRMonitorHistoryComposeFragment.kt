@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryViewModel>() {
-
     override fun createViewModel(): IRMonitorHistoryViewModel {
         return viewModels<IRMonitorHistoryViewModel>().value
     }
@@ -39,7 +38,6 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
         val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
         val selectedItems by viewModel.selectedItems.collectAsStateWithLifecycle()
         val isSelectionMode by viewModel.isSelectionMode.collectAsStateWithLifecycle()
-
         LibUnifiedTheme {
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -52,7 +50,6 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                         viewModel.changeFilter(filter)
                     }
                 )
-
                 // Selection toolbar
                 if (isSelectionMode) {
                     HistorySelectionToolbar(
@@ -62,7 +59,6 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                         onDeleteSelected = { viewModel.deleteSelectedItems() }
                     )
                 }
-
                 // History content
                 Box(
                     modifier = Modifier.fillMaxSize()
@@ -143,7 +139,6 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
-
                     Icon(
                         Icons.Default.History,
                         contentDescription = "History",
@@ -151,7 +146,6 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
-
                 // Filter chips
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -207,7 +201,6 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -268,7 +261,6 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = when (filter) {
                         HistoryFilter.ALL -> "No History Found"
@@ -280,13 +272,11 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = "Monitor thermal sessions to see history here",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Button(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -369,7 +359,6 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                         modifier = Modifier.size(24.dp)
                     )
                 }
-
                 // Session info
                 Column(
                     modifier = Modifier.weight(1f),
@@ -381,7 +370,6 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                         fontWeight = FontWeight.Medium,
                         maxLines = 1
                     )
-
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -401,14 +389,12 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                             color = getSessionTypeColor(item.sessionType)
                         )
                     }
-
                     Text(
                         text = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault()).format(Date(item.startTime)),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
                 // Temperature summary
                 Column(
                     horizontalAlignment = Alignment.End
@@ -425,7 +411,6 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
                 // Selection indicator or actions
                 if (isSelectionMode) {
                     if (isSelected) {
@@ -480,7 +465,6 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
         val seconds = durationMs / 1000
         val minutes = seconds / 60
         val hours = minutes / 60
-
         return when {
             hours > 0 -> "${hours}h ${minutes % 60}m"
             minutes > 0 -> "${minutes}m ${seconds % 60}s"

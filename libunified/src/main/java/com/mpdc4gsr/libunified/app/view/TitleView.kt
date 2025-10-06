@@ -17,28 +17,19 @@ import com.mpdc4gsr.libunified.R
 
 open class TitleView : ViewGroup {
     companion object {
-
         private const val ICON_SIZE = 48f
     }
 
     private val isTitleCenter: Boolean
-
     private val actionBarSize: Int
-
     protected var tvLeft: MyTextView? = null
-
     protected var tvRight1: MyTextView? = null
-
     protected var tvRight2: MyTextView? = null
-
     protected var tvRight3: MyTextView? = null
-
     protected var tvTitle: MyTextView? = null
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
@@ -60,16 +51,12 @@ open class TitleView : ViewGroup {
         val typedArray = context.obtainStyledAttributes(intArrayOf(android.R.attr.actionBarSize))
         actionBarSize = typedArray.getDimensionPixelSize(0, 0)
         typedArray.recycle()
-
         initView()
-
         tvTitle?.setPadding(0)
         tvTitle?.isVisible = true
         tvTitle?.maxLines = 2
         tvTitle?.ellipsize = TextUtils.TruncateAt.END
-
         val a = context.obtainStyledAttributes(attrs, R.styleable.TitleView, defStyleAttr, 0)
-
         tvLeft?.text = a.getText(R.styleable.TitleView_leftText)
         tvLeft?.setOnlyDrawableStart(a.getDrawable(R.styleable.TitleView_leftDrawable))
         tvLeft?.isVisible = tvLeft?.text?.isNotEmpty() == true || tvLeft!!.hasAnyDrawable()
@@ -86,7 +73,6 @@ open class TitleView : ViewGroup {
                 }
             }
         }
-
         tvRight1?.text = a.getText(R.styleable.TitleView_rightText)
         tvRight1?.setOnlyDrawableStart(a.getDrawable(R.styleable.TitleView_rightDrawable))
         tvRight1?.isVisible = tvRight1?.text?.isNotEmpty() == true || tvRight1!!.hasAnyDrawable()
@@ -94,12 +80,10 @@ open class TitleView : ViewGroup {
         if (rightColor != null) {
             tvRight1?.setTextColor(rightColor)
         }
-
         tvRight2?.setOnlyDrawableStart(a.getDrawable(R.styleable.TitleView_right2Drawable))
         tvRight2?.isVisible = tvRight2!!.hasAnyDrawable()
         tvRight3?.setOnlyDrawableStart(a.getDrawable(R.styleable.TitleView_right3Drawable))
         tvRight3?.isVisible = tvRight3!!.hasAnyDrawable()
-
         isTitleCenter = a.getBoolean(R.styleable.TitleView_isTitleCenter, false)
         tvTitle?.text = a.getText(R.styleable.TitleView_titleText)
         tvTitle?.gravity =
@@ -139,7 +123,6 @@ open class TitleView : ViewGroup {
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
     ) {
-
         var maxHeight = actionBarSize.coerceAtLeast(ICON_SIZE.dpToPx(context).toInt())
         for (i in 0 until childCount) {
             val childView: View = getChildAt(i)
@@ -148,9 +131,7 @@ open class TitleView : ViewGroup {
                 maxHeight = maxHeight.coerceAtLeast(childView.measuredHeight)
             }
         }
-
         setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), maxHeight)
-
         for (i in 0 until childCount) {
             val childView: View = getChildAt(i)
             if (childView != tvTitle && childView.visibility != View.GONE) {
@@ -162,7 +143,6 @@ open class TitleView : ViewGroup {
                 )
             }
         }
-
         if (isTitleCenter) {
             val leftSize: Int =
                 if (tvLeft?.isVisible == true) tvLeft?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context).toInt()

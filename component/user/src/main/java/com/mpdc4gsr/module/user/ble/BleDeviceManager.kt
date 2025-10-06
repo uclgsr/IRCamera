@@ -15,7 +15,6 @@ import kotlin.coroutines.CoroutineContext
 class BleDeviceManager(private val context: Context) : CoroutineScope {
     companion object {
         private const val TAG = "BleDeviceManager"
-
         private val GSR_DEVICE_NAMES =
             setOf(
                 "Shimmer3 GSR+",
@@ -33,16 +32,12 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Main + Job()
     private var easyBLE: EasyBLE? = null
     private val gsrSensorAddresses = mutableSetOf<String>()
-
     private val _discoveredDevices = MutableLiveData<List<BleDeviceInfo>>()
     val discoveredDevices: LiveData<List<BleDeviceInfo>> = _discoveredDevices
-
     private val _pairedDevices = MutableLiveData<List<BleDeviceInfo>>()
     val pairedDevices: LiveData<List<BleDeviceInfo>> = _pairedDevices
-
     private val _deviceStatus = MutableLiveData<Map<String, DeviceConnectionStatus>>()
     val deviceStatus: LiveData<Map<String, DeviceConnectionStatus>> = _deviceStatus
-
     private val deviceConnections = ConcurrentHashMap<String, Connection>()
     private val deviceInfoMap = ConcurrentHashMap<String, BleDeviceInfo>()
 
@@ -66,15 +61,12 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
     fun initialize(enableNordicBackend: Boolean = true) {
         launch {
             Log.i(TAG, "Initializing BLE Device Manager with Nordic backend: $enableNordicBackend")
-
             easyBLE =
                 EasyBLE.getBuilder()
                     .build().apply {
                         initialize(context.applicationContext as android.app.Application)
                     }
-
             setupDeviceDiscovery()
-
             Log.i(TAG, "BLE Device Manager initialized successfully")
         }
     }
@@ -102,14 +94,11 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                             isGsrSensor = isGsrSensorDevice(device),
                             isPaired = isConnectedBySys,
                         )
-
                     deviceInfoMap[device.address] = deviceInfo
-
                     if (deviceInfo.isGsrSensor) {
                         gsrSensorAddresses.add(device.address)
                         Log.i(TAG, "GSR sensor detected: ${device.name} (${device.address})")
                     }
-
                     updateDiscoveredDevices()
                 }
 
@@ -150,17 +139,14 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
     fun connectToDevice(deviceAddress: String): Boolean {
         return try {
             Log.i(TAG, "Attempting enhanced connection to device: $deviceAddress")
-
             val deviceInfo = deviceInfoMap[deviceAddress]
             if (deviceInfo == null) {
                 Log.e(TAG, "Device info not found for address: $deviceAddress")
                 return false
             }
-
             val config = createOptimalConnectionConfig(deviceInfo.isGsrSensor)
             val observer = createDeviceObserver(deviceAddress)
             val connection = easyBLE?.connect(deviceAddress, config, observer)
-
             if (connection != null) {
                 deviceConnections[deviceAddress] = connection
                 updateDeviceStatus()
@@ -179,12 +165,10 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
     private fun createOptimalConnectionConfig(isGsrSensor: Boolean): ConnectionConfiguration {
         return ConnectionConfiguration().apply {
             if (isGsrSensor) {
-
                 setConnectTimeoutMillis(10000)
                 setAutoReconnect(true)
                 Log.d(TAG, "Applied GSR-optimized connection configuration")
             } else {
-
                 setConnectTimeoutMillis(5000)
                 setAutoReconnect(false)
             }
@@ -200,7 +184,6 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                         TAG,
                         "Device connection state changed: $deviceAddress, state: $connectionState"
                     )
-
                     when (connectionState) {
                         ConnectionState.SERVICE_DISCOVERED -> {
                             val deviceInfo = deviceInfoMap[deviceAddress]?.copy(isPaired = true)
@@ -220,7 +203,6 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                         }
 
                         else -> {
-
                             Log.d(
                                 TAG,
                                 "Connection state: $connectionState for device: $deviceAddress"
@@ -396,18 +378,13 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
     fun release() {
         launch {
             Log.i(TAG, "Releasing BLE Device Manager")
-
             stopDeviceDiscovery()
-
             deviceConnections.values.forEach { connection ->
                 connection.disconnect()
             }
-
             deviceConnections.clear()
             deviceInfoMap.clear()
-
             easyBLE?.release()
-
             Log.i(TAG, "BLE Device Manager released successfully")
         }
     }

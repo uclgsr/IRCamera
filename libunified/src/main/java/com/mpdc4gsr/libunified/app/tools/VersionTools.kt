@@ -4,7 +4,6 @@ import com.elvishew.xlog.XLog
 import java.util.regex.Pattern
 
 object VersionTools {
-
     fun getVersion(str: String): String {
         var versionStr = "1.0"
         if (str.uppercase().contains("V")) {
@@ -16,10 +15,8 @@ object VersionTools {
                 str.toFloat()
                 versionStr = str
             } catch (e: Exception) {
-
             }
         }
-
         return versionStr
     }
 
@@ -31,7 +28,6 @@ object VersionTools {
             val serverV = getVersion(serverVersionStr)
             val localV = getVersion(localVersionStr)
             return serverV.toFloat() > localV.toFloat()
-
         } catch (e: Exception) {
             XLog.e("[ph][ph][ph][ph][ph][ph][ph][ph]: ${e.message}")
             return false

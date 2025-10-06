@@ -1,7 +1,6 @@
 package com.mpdc4gsr.libunified.app.matrix
 
 enum class FirmwareUpgradeResultCode {
-
     SUCCESS("Success", 0),
     FILE_ERROR("File path is null", 1),
     FILE_NOT_EXISTS("File does not exists", 3),

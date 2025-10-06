@@ -22,7 +22,6 @@ import com.mpdc4gsr.libunified.R as LibR
 
 class PdfViewModel : BaseViewModel() {
     val listData = MutableLiveData<ReportData?>()
-
     fun getReportData(
         isTC007: Boolean,
         page: Int,
@@ -50,7 +49,6 @@ class PdfViewModel : BaseViewModel() {
             object : IResponseCallback {
                 override fun onResponse(p0: String?) {
                     result = Gson().fromJson(p0, ReportData::class.java)
-
                     downLatch.countDown()
                 }
 

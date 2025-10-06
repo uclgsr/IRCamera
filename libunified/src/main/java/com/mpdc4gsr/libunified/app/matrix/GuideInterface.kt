@@ -15,7 +15,6 @@ import java.nio.charset.StandardCharsets
 import kotlin.experimental.and
 
 class GuideInterface {
-
     private val TAG = "guidecore"
     private val IR_WIDTH = 256
     private val IR_HEIGHT = 192
@@ -73,7 +72,6 @@ class GuideInterface {
     }
 
     var startTime = 0L
-
     private fun startUsbBufferReadThread() {
         mReadThreadFlag = true
         mUsbBufferReadThread = Thread {
@@ -99,7 +97,6 @@ class GuideInterface {
                         )
                     }
                     mNativeGuideCore!!.toFloatTempMatrix(mTempMatrixFloat, mTempMatrixByte)
-
                     if (mIrDataCallback != null) {
                         mIrDataCallback!!.processIrData(mYuv, mTempMatrixFloat)
                     }

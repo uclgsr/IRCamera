@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class MoreViewModel : BaseViewModel() {
-
     data class SettingsItem(
         val title: String,
         val subtitle: String,
@@ -44,16 +43,12 @@ class MoreViewModel : BaseViewModel() {
 
     private val _settingsItems = MutableStateFlow<List<SettingsItem>>(emptyList())
     val settingsItems: StateFlow<List<SettingsItem>> = _settingsItems.asStateFlow()
-
     private val _quickActions = MutableStateFlow<List<QuickAction>>(emptyList())
     val quickActions: StateFlow<List<QuickAction>> = _quickActions.asStateFlow()
-
     private val _helpResources = MutableStateFlow<List<HelpResource>>(emptyList())
     val helpResources: StateFlow<List<HelpResource>> = _helpResources.asStateFlow()
-
     private val _communityLinks = MutableStateFlow<List<CommunityLink>>(emptyList())
     val communityLinks: StateFlow<List<CommunityLink>> = _communityLinks.asStateFlow()
-
     private val _isUpgradeAvailable = MutableStateFlow(false)
     val isUpgradeAvailable: StateFlow<Boolean> = _isUpgradeAvailable.asStateFlow()
 

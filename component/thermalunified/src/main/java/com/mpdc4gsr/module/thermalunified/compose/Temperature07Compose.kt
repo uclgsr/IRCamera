@@ -38,18 +38,15 @@ fun Temperature07Compose(
     var currentLine by remember { mutableStateOf<Pair<Offset, Offset>?>(null) }
     var currentRect by remember { mutableStateOf<Rect?>(null) }
     var startPoint by remember { mutableStateOf<Offset?>(null) }
-
     Box(
         modifier = modifier
             .fillMaxSize()
             .pointerInput(mode, isEnabled) {
                 if (!isEnabled) return@pointerInput
-
                 detectTapGestures(
                     onPress = { offset ->
                         isTouching = true
                         startPoint = offset
-
                         when (mode) {
                             TemperatureMeasurementMode.POINT -> {
                                 currentPoint = offset
@@ -76,7 +73,6 @@ fun Temperature07Compose(
                                 // Trend mode - could accumulate points over time
                             }
                         }
-
                         tryAwaitRelease()
                         isTouching = false
                     }
@@ -111,7 +107,6 @@ fun Temperature07Compose(
                 }
             }
         }
-
         // Mode indicator
         MeasurementModeIndicator(
             mode = mode,
@@ -138,7 +133,6 @@ private fun DrawScope.drawMeasurementPoint(point: Offset) {
         end = Offset(point.x, point.y + crosshairSize),
         strokeWidth = 2.dp.toPx()
     )
-
     // Draw center point
     drawCircle(
         color = Color.Red,
@@ -154,7 +148,6 @@ private fun DrawScope.drawMeasurementLine(start: Offset, end: Offset) {
         end = end,
         strokeWidth = 3.dp.toPx()
     )
-
     // Draw endpoints
     drawCircle(color = Color.Green, radius = 6.dp.toPx(), center = start)
     drawCircle(color = Color.Green, radius = 6.dp.toPx(), center = end)
@@ -167,7 +160,6 @@ private fun DrawScope.drawMeasurementRect(rect: Rect) {
         size = rect.size,
         style = Stroke(width = 3.dp.toPx())
     )
-
     // Draw corner indicators
     val cornerSize = 8.dp.toPx()
     listOf(
@@ -216,7 +208,6 @@ private fun MeasurementModeIndicator(
                     MaterialTheme.colorScheme.onSurface
                 }
             )
-
             Text(
                 text = mode.displayName,
                 style = MaterialTheme.typography.bodySmall,
@@ -226,7 +217,6 @@ private fun MeasurementModeIndicator(
                     MaterialTheme.colorScheme.onSurface
                 }
             )
-
             if (isActive) {
                 Box(
                     modifier = Modifier
@@ -277,7 +267,6 @@ fun TemperatureModeSelector(
 }
 
 // Data classes and enums
-
 enum class TemperatureMeasurementMode(
     val displayName: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector
@@ -319,7 +308,6 @@ sealed class TemperatureMeasurement {
 fun Temperature07ComposePreview() {
     var selectedMode by remember { mutableStateOf(TemperatureMeasurementMode.POINT) }
     var lastMeasurement by remember { mutableStateOf<TemperatureMeasurement?>(null) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -331,9 +319,7 @@ fun Temperature07ComposePreview() {
             onModeSelected = { selectedMode = it },
             modifier = Modifier.fillMaxWidth()
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -348,7 +334,6 @@ fun Temperature07ComposePreview() {
                 isEnabled = true,
                 modifier = Modifier.fillMaxSize()
             )
-
             Text(
                 text = "Thermal Camera View\n(Tap to measure)",
                 color = Color.White,
@@ -356,9 +341,7 @@ fun Temperature07ComposePreview() {
                 fontSize = 16.sp
             )
         }
-
         Spacer(modifier = Modifier.height(16.dp))
-
         // Show last measurement
         lastMeasurement?.let { measurement ->
             Card(
@@ -372,7 +355,6 @@ fun Temperature07ComposePreview() {
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold
                     )
-
                     when (measurement) {
                         is TemperatureMeasurement.Point -> {
                             Text("Point: ${measurement.temperature}°C at (${measurement.position.x.toInt()}, ${measurement.position.y.toInt()})")

@@ -10,9 +10,7 @@ import kotlinx.coroutines.launch
 
 abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
     protected lateinit var viewModel: VM
-
     abstract fun providerVMClass(): Class<VM>?
-
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -31,7 +29,6 @@ abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
 
     private fun setupObservers() {
         if (!this::viewModel.isInitialized) return
-
         // Observe UI state
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -40,7 +37,6 @@ abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
                 }
             }
         }
-
         // Observe UI events
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -58,7 +54,6 @@ abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
         } else {
             hideLoading()
         }
-
         // Handle error state
         uiState.error?.let { error ->
             showError(error)

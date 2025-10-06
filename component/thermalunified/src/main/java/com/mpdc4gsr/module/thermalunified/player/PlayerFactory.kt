@@ -7,11 +7,9 @@ object PlayerFactory {
 
     @JvmStatic
     fun setPlayManager(playerType: Int) {
-
     }
 
     @JvmStatic
     fun setPlayManager(clazz: Class<*>) {
-
     }
 }

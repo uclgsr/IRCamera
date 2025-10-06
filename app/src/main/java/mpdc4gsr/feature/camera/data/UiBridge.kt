@@ -14,12 +14,10 @@ class UiBridge(private val textureView: TextureView) {
 
     private var previewSurface: Surface? = null
     private var isTextureAvailable = false
-
     var onError: ((String) -> Unit)? = null
     var onProgress: ((String) -> Unit)? = null
     var onModeChanged: ((String) -> Unit)? = null
     var onRecordingStateChanged: ((Boolean, String) -> Unit)? = null
-
     private var isRecording = false
     private var currentMode = "PREVIEW"
 
@@ -28,14 +26,11 @@ class UiBridge(private val textureView: TextureView) {
     }
 
     fun getPreviewSurface(): Surface? = previewSurface
-
     fun isTextureReady(): Boolean = isTextureAvailable
-
     fun updateMode(mode: String) {
         currentMode = mode
         AppLogger.i(TAG, "Mode updated: $mode")
         onModeChanged?.invoke(mode)
-
         onRecordingStateChanged?.invoke(isRecording, mode)
     }
 
@@ -44,10 +39,8 @@ class UiBridge(private val textureView: TextureView) {
         val status = if (recording) "● REC" else "○ STOPPED"
         val fullInfo =
             if (additionalInfo.isNotEmpty()) "$currentMode - $additionalInfo" else currentMode
-
         AppLogger.i(TAG, "Recording state: $status ($fullInfo)")
         onRecordingStateChanged?.invoke(recording, fullInfo)
-
         if (recording) {
             reportProgress(" Recording $currentMode mode")
         } else {
@@ -91,7 +84,6 @@ class UiBridge(private val textureView: TextureView) {
                     previewSurface?.release()
                     previewSurface = Surface(texture)
                     isTextureAvailable = true
-
                     AppLogger.i(TAG, "TextureView surface available: ${width}x$height")
                     reportProgress("Preview surface ready")
                 }
@@ -108,13 +100,11 @@ class UiBridge(private val textureView: TextureView) {
                     previewSurface?.release()
                     previewSurface = null
                     isTextureAvailable = false
-
                     AppLogger.i(TAG, "TextureView surface destroyed")
                     return true
                 }
 
                 override fun onSurfaceTextureUpdated(texture: SurfaceTexture) {
-
                 }
             }
     }

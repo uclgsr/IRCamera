@@ -65,7 +65,6 @@ fun SensorDashboardCompose(
                 onRefresh = onRefresh
             )
         }
-
         items(sensors) { sensor ->
             SensorCard(
                 sensor = sensor,
@@ -107,7 +106,6 @@ private fun DashboardHeader(
                     color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                 )
             }
-
             IconButton(onClick = onRefresh) {
                 Icon(
                     imageVector = Icons.Default.Refresh,
@@ -135,12 +133,10 @@ private fun SensorCard(
         },
         animationSpec = tween(durationMillis = 300)
     )
-
     val scale by animateFloatAsState(
         targetValue = if (sensor.isAnimating) 1.05f else 1.0f,
         animationSpec = tween(durationMillis = 200)
     )
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -164,9 +160,7 @@ private fun SensorCard(
                     .clip(CircleShape)
                     .background(statusColor)
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             // Sensor icon
             Icon(
                 imageVector = sensor.icon,
@@ -174,9 +168,7 @@ private fun SensorCard(
                 modifier = Modifier.size(32.dp),
                 tint = statusColor
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             // Sensor information
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -189,7 +181,6 @@ private fun SensorCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 if (sensor.status == SensorStatus.CONNECTED || sensor.status == SensorStatus.STREAMING) {
                     Row(
                         modifier = Modifier.padding(top = 4.dp),
@@ -213,7 +204,6 @@ private fun SensorCard(
                     }
                 }
             }
-
             // Status badge
             StatusBadge(status = sensor.status)
         }
@@ -230,7 +220,6 @@ private fun StatusBadge(status: SensorStatus) {
         SensorStatus.SIMULATION -> Triple("Simulation", Color(0xFFFFEB3B), Color.Black)
         SensorStatus.DISCONNECTED -> Triple("Disconnected", Color(0xFF9E9E9E), Color.White)
     }
-
     Surface(
         shape = RoundedCornerShape(12.dp),
         color = containerColor
@@ -332,7 +321,6 @@ fun SensorDashboardDemo(
     onRefresh: () -> Unit = {}
 ) {
     val sensors = remember { getSampleSensorData() }
-
     SensorDashboardCompose(
         sensors = sensors,
         modifier = modifier,

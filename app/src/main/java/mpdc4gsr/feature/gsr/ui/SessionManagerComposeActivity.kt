@@ -30,19 +30,7 @@ import mpdc4gsr.feature.gsr.presentation.SessionManagerViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * SessionManagerComposeActivity - Modern Session Management with Compose
- *
- * Comprehensive session management interface with:
- * - Interactive session list with search and filtering
- * - Session details preview with statistics
- * - Batch operations (export, delete, merge)
- * - Advanced session analytics and insights
- * - Modern Material 3 design with thermal imaging colors
- * - Real-time session status updates
- */
 class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewModel>() {
-
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, SessionManagerComposeActivity::class.java))
@@ -59,7 +47,6 @@ class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewMode
         var searchQuery by remember { mutableStateOf("") }
         var selectedSessions by remember { mutableStateOf(setOf<String>()) }
         var showFilterDialog by remember { mutableStateOf(false) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -125,7 +112,6 @@ class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewMode
                 )
             }
         }
-
         if (showFilterDialog) {
             SessionFilterDialog(
                 onDismiss = { showFilterDialog = false },
@@ -155,7 +141,6 @@ private fun SessionManagerContent(
     modifier: Modifier = Modifier
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -187,13 +172,11 @@ private fun SessionManagerContent(
                 }
             )
         )
-
         // Session Statistics Card
         SessionStatisticsCard(
             selectedCount = selectedSessions.size,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -220,7 +203,6 @@ private fun SessionManagerContent(
                     studyName = "Multi-modal Recording"
                 )
             )
-
             items(mockSessions.filter {
                 (it.studyName ?: "").contains(searchQuery, ignoreCase = true)
             }) { session ->
@@ -277,7 +259,6 @@ private fun SessionStatisticsCard(
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
-
             if (selectedCount > 0) {
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
@@ -306,7 +287,6 @@ private fun SessionCard(
     modifier: Modifier = Modifier
 ) {
     val dateFormatter = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
-
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -326,9 +306,7 @@ private fun SessionCard(
                 checked = isSelected,
                 onCheckedChange = onSelectionChange
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = session.studyName ?: session.sessionId,
@@ -340,7 +318,6 @@ private fun SessionCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 // Status chip - determine status from endTime
                 val status = if (session.endTime == null) "active" else "completed"
                 Surface(
@@ -360,7 +337,6 @@ private fun SessionCard(
                     )
                 }
             }
-
             val context = androidx.compose.ui.platform.LocalContext.current
             IconButton(onClick = {
                 // TODO: Show session options menu

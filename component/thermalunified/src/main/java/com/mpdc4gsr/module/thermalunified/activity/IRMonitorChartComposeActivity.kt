@@ -21,7 +21,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 
 class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
@@ -35,7 +34,6 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var minTemp by remember { mutableFloatStateOf(20.0f) }
         var avgTemp by remember { mutableFloatStateOf(22.5f) }
         var showTemperatureOverlay by remember { mutableStateOf(true) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -89,7 +87,6 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         ThermalCameraView(
                             modifier = Modifier.fillMaxSize()
                         )
-
                         // Temperature overlay
                         if (showTemperatureOverlay) {
                             TemperatureOverlay(
@@ -101,7 +98,6 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     .padding(16.dp)
                             )
                         }
-
                         // Recording indicator
                         if (isRecording) {
                             RecordingIndicator(
@@ -112,7 +108,6 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
                     }
-
                     // Control panel and chart data
                     LazyColumn(
                         modifier = Modifier
@@ -132,7 +127,6 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 context = context
                             )
                         }
-
                         // Temperature statistics
                         item {
                             TemperatureStatsCard(
@@ -141,7 +135,6 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 avgTemp = avgTemp
                             )
                         }
-
                         // Chart controls
                         item {
                             ChartControlsCard(context = context)
@@ -150,7 +143,6 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             }
         }
-
         // Recording timer
         LaunchedEffect(isRecording) {
             if (isRecording) {
@@ -216,7 +208,6 @@ private fun TemperatureOverlay(
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
             )
-
             TemperatureItem("Max", maxTemp, Color(0xFFFF4444))
             TemperatureItem("Min", minTemp, Color(0xFF4444FF))
             TemperatureItem("Avg", avgTemp, Color(0xFFFFAA00))
@@ -271,7 +262,6 @@ private fun RecordingIndicator(
                 tint = Color.White,
                 modifier = Modifier.size(16.dp)
             )
-
             val minutes = recordingTime / 60
             val seconds = recordingTime % 60
             Text(
@@ -321,7 +311,6 @@ private fun RecordingControls(
                     fontWeight = FontWeight.Bold
                 )
             }
-
             Button(
                 onClick = {
                     // TODO: Save chart as image
@@ -371,9 +360,7 @@ private fun TemperatureStatsCard(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -428,9 +415,7 @@ private fun ChartControlsCard(context: android.content.Context) {
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -451,7 +436,6 @@ private fun ChartControlsCard(context: android.content.Context) {
                 ) {
                     Text("Export", fontSize = 12.sp)
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Clear monitoring data
@@ -468,7 +452,6 @@ private fun ChartControlsCard(context: android.content.Context) {
                 ) {
                     Text("Clear", fontSize = 12.sp)
                 }
-
                 OutlinedButton(
                     onClick = {
                         // TODO: Open monitoring settings

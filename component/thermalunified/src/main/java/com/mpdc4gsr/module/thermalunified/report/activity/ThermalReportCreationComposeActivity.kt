@@ -25,7 +25,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>() {
-
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, ThermalReportCreationComposeActivity::class.java))
@@ -50,7 +49,6 @@ class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>(
         var selectedTemplate by remember { mutableStateOf<ReportTemplate?>(null) }
         var reportData by remember { mutableStateOf(ReportData()) }
         var showPreview by remember { mutableStateOf(false) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -95,7 +93,6 @@ class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>(
                 )
             }
         }
-
         if (showPreview) {
             ReportPreviewDialog(
                 reportData = reportData,
@@ -131,7 +128,6 @@ private fun ReportCreationContent(
             totalSteps = 4,
             modifier = Modifier.padding(bottom = 24.dp)
         )
-
         // Step content
         when (currentStep) {
             0 -> TemplateSelectionStep(
@@ -158,7 +154,6 @@ private fun ReportCreationContent(
                 modifier = Modifier.weight(1f)
             )
         }
-
         // Navigation buttons
         ReportNavigationButtons(
             currentStep = currentStep,
@@ -231,7 +226,6 @@ private fun ReportCreationProgress(
                 }
             }
         }
-
         LinearProgressIndicator(
             progress = { (currentStep + 1).toFloat() / totalSteps },
             modifier = Modifier
@@ -256,7 +250,6 @@ private fun TemplateSelectionStep(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         val templates = getReportTemplates()
         templates.forEach { template ->
             ReportTemplateCard(
@@ -297,9 +290,7 @@ private fun ReportTemplateCard(
                 modifier = Modifier.size(32.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = template.name,
@@ -312,7 +303,6 @@ private fun ReportTemplateCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             if (isSelected) {
                 Icon(
                     Icons.Default.CheckCircle,
@@ -339,7 +329,6 @@ private fun ReportInfoStep(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         OutlinedTextField(
             value = reportData.title,
             onValueChange = { onReportDataChange(reportData.copy(title = it)) },
@@ -348,7 +337,6 @@ private fun ReportInfoStep(
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         )
-
         OutlinedTextField(
             value = reportData.author,
             onValueChange = { onReportDataChange(reportData.copy(author = it)) },
@@ -357,7 +345,6 @@ private fun ReportInfoStep(
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         )
-
         OutlinedTextField(
             value = reportData.description,
             onValueChange = { onReportDataChange(reportData.copy(description = it)) },
@@ -367,7 +354,6 @@ private fun ReportInfoStep(
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         )
-
         OutlinedTextField(
             value = reportData.location,
             onValueChange = { onReportDataChange(reportData.copy(location = it)) },
@@ -394,7 +380,6 @@ private fun ThermalDataStep(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -409,7 +394,6 @@ private fun ThermalDataStep(
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
-
                 val context = androidx.compose.ui.platform.LocalContext.current
                 Button(
                     onClick = {
@@ -432,7 +416,6 @@ private fun ThermalDataStep(
                 }
             }
         }
-
         if (reportData.thermalImages.isNotEmpty()) {
             Text(
                 text = "Analysis Settings",
@@ -440,7 +423,6 @@ private fun ThermalDataStep(
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-
             Card {
                 Column(
                     modifier = Modifier.padding(16.dp)
@@ -457,7 +439,6 @@ private fun ThermalDataStep(
                         )
                         Text("Include temperature analysis")
                     }
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
@@ -470,7 +451,6 @@ private fun ThermalDataStep(
                         )
                         Text("Include hotspot detection")
                     }
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
@@ -504,7 +484,6 @@ private fun ReviewStep(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -519,7 +498,6 @@ private fun ReviewStep(
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-
                 ReportSummaryItem("Template", template?.name ?: "None selected")
                 ReportSummaryItem("Title", reportData.title)
                 ReportSummaryItem("Author", reportData.author)
@@ -527,7 +505,6 @@ private fun ReviewStep(
                 ReportSummaryItem("Location", reportData.location.ifEmpty { "Not specified" })
             }
         }
-
         Card {
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -538,11 +515,10 @@ private fun ReviewStep(
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-
                 val exportFormats = listOf("PDF", "Word", "HTML")
                 exportFormats.forEach { format ->
                     TextButton(
-                        onClick = { /* Generate and export report */ },
+                        onClick = { },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(
@@ -615,7 +591,6 @@ private fun ReportNavigationButtons(
         } else {
             Spacer(modifier = Modifier.width(1.dp))
         }
-
         if (currentStep < 3) {
             Button(
                 onClick = { onStepChange(currentStep + 1) },

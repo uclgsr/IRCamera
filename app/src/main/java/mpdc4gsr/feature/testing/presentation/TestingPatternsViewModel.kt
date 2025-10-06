@@ -5,19 +5,12 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-/**
- * TestingPatternsViewModel - Demonstrates comprehensive testing patterns for modern MVVM
- * This ViewModel showcases how to implement testable patterns with StateFlow and Repository
- */
 class TestingPatternsViewModel : BaseViewModel() {
-
     // StateFlow for various testing scenarios
     private val _testExecutionState = MutableStateFlow<TestExecutionState>(TestExecutionState.Idle)
     val testExecutionState: StateFlow<TestExecutionState> = _testExecutionState.asStateFlow()
-
     private val _testResults = MutableStateFlow<List<TestResult>>(emptyList())
     val testResults: StateFlow<List<TestResult>> = _testResults.asStateFlow()
-
     private val _currentTest = MutableStateFlow<TestCase?>(null)
     val currentTest: StateFlow<TestCase?> = _currentTest.asStateFlow()
 
@@ -103,7 +96,6 @@ class TestingPatternsViewModel : BaseViewModel() {
                 val passedTests = results.count { it.status == TestStatus.PASSED }
                 val failedTests = results.count { it.status == TestStatus.FAILED }
                 val skippedTests = results.count { it.status == TestStatus.SKIPPED }
-
                 TestSuiteState(
                     totalTests = totalTests,
                     completedTests = completedTests,
@@ -120,9 +112,6 @@ class TestingPatternsViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Run a comprehensive test suite
-     */
     fun runTestSuite(categories: List<TestCategory> = TestCategory.values().toList()) {
         launchWithErrorHandling {
             if (_testExecutionState.value is TestExecutionState.Running) {
@@ -134,28 +123,20 @@ class TestingPatternsViewModel : BaseViewModel() {
                 )
                 return@launchWithErrorHandling
             }
-
             _testExecutionState.value = TestExecutionState.Running
             _testResults.value = emptyList()
-
             val testCases = getAvailableTestCases().filter { it.category in categories }
             val startTime = System.currentTimeMillis()
-
             for (testCase in testCases) {
                 _currentTest.value = testCase
                 _testEvents.emit(TestEvent.TestStarted(testCase))
-
                 val result = executeTestCase(testCase)
-
                 val updatedResults = _testResults.value + result
                 _testResults.value = updatedResults
-
                 _testEvents.emit(TestEvent.TestCompleted(result))
             }
-
             val endTime = System.currentTimeMillis()
             val totalDuration = endTime - startTime
-
             val summary = TestSummary(
                 totalDuration = totalDuration,
                 totalTests = testCases.size,
@@ -163,19 +144,14 @@ class TestingPatternsViewModel : BaseViewModel() {
                 failedTests = _testResults.value.count { it.status == TestStatus.FAILED },
                 coverage = calculateCoverage()
             )
-
             _testExecutionState.value = TestExecutionState.Completed
             _currentTest.value = null
             _testEvents.emit(TestEvent.SuiteCompleted(summary))
         }
     }
 
-    /**
-     * Execute a specific test case
-     */
     private suspend fun executeTestCase(testCase: TestCase): TestResult {
         val startTime = System.currentTimeMillis()
-
         return try {
             when (testCase.category) {
                 TestCategory.UNIT -> executeUnitTest(testCase)
@@ -199,13 +175,10 @@ class TestingPatternsViewModel : BaseViewModel() {
 
     private suspend fun executeUnitTest(testCase: TestCase): TestResult {
         val startTime = System.currentTimeMillis()
-
         // Simulate unit test execution
         kotlinx.coroutines.delay(testCase.estimatedDuration)
-
         val duration = System.currentTimeMillis() - startTime
         val passed = Math.random() > 0.1 // 90% pass rate
-
         return TestResult(
             testId = testCase.id,
             testName = testCase.name,
@@ -220,7 +193,6 @@ class TestingPatternsViewModel : BaseViewModel() {
         kotlinx.coroutines.delay(testCase.estimatedDuration)
         val duration = System.currentTimeMillis() - startTime
         val result = Math.random() > 0.2 // 80% pass rate
-
         return TestResult(
             testId = testCase.id,
             testName = testCase.name,
@@ -235,7 +207,6 @@ class TestingPatternsViewModel : BaseViewModel() {
         kotlinx.coroutines.delay(testCase.estimatedDuration)
         val duration = System.currentTimeMillis() - startTime
         val passed = Math.random() > 0.15 // 85% pass rate for UI tests
-
         return TestResult(
             testId = testCase.id,
             testName = testCase.name,
@@ -250,7 +221,6 @@ class TestingPatternsViewModel : BaseViewModel() {
         kotlinx.coroutines.delay(testCase.estimatedDuration)
         val duration = System.currentTimeMillis() - startTime
         val performanceThresholdMet = duration < testCase.estimatedDuration * 1.2
-
         return TestResult(
             testId = testCase.id,
             testName = testCase.name,
@@ -267,7 +237,6 @@ class TestingPatternsViewModel : BaseViewModel() {
         kotlinx.coroutines.delay(testCase.estimatedDuration)
         val duration = System.currentTimeMillis() - startTime
         val stressTestPassed = Math.random() > 0.2 // 80% pass rate for stress tests
-
         return TestResult(
             testId = testCase.id,
             testName = testCase.name,
@@ -282,7 +251,6 @@ class TestingPatternsViewModel : BaseViewModel() {
         kotlinx.coroutines.delay(testCase.estimatedDuration)
         val duration = System.currentTimeMillis() - startTime
         val regressionPassed = Math.random() > 0.05 // 95% pass rate for regression tests
-
         return TestResult(
             testId = testCase.id,
             testName = testCase.name,
@@ -379,9 +347,6 @@ class TestingPatternsViewModel : BaseViewModel() {
         return 0.85f + (Math.random() * 0.1).toFloat()
     }
 
-    /**
-     * Generate test report
-     */
     fun generateTestReport() {
         launchWithErrorHandling {
             val reportPath = "/tmp/test_report_${System.currentTimeMillis()}.html"
@@ -390,9 +355,6 @@ class TestingPatternsViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Reset test results
-     */
     fun resetTests() {
         _testResults.value = emptyList()
         _testExecutionState.value = TestExecutionState.Idle

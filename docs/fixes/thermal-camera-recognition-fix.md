@@ -2,19 +2,25 @@
 
 ## Problem Statement
 
-The app was not recognizing the thermal camera when it was already connected during app startup. Users would see the app enter simulation mode even though a physical Topdon TC001 thermal camera was connected via USB.
+The app was not recognizing the thermal camera when it was already connected during app startup. Users would see the app
+enter simulation mode even though a physical Topdon TC001 thermal camera was connected via USB.
 
 ## Root Cause Analysis
 
 The issue had multiple contributing factors:
 
-1. **USB Enumeration Timing**: When the app initializes, the USB system might not have fully enumerated all connected devices yet. The initial scan in `ThermalCameraRecorder.initialize()` could happen before the USB system is ready.
+1. **USB Enumeration Timing**: When the app initializes, the USB system might not have fully enumerated all connected
+   devices yet. The initial scan in `ThermalCameraRecorder.initialize()` could happen before the USB system is ready.
 
-2. **No Initial Device Detection**: The Android USB system only broadcasts `ACTION_USB_DEVICE_ATTACHED` intents when a device is **physically attached while the app is running**. If a device is already connected when the app starts, no broadcast is sent.
+2. **No Initial Device Detection**: The Android USB system only broadcasts `ACTION_USB_DEVICE_ATTACHED` intents when a
+   device is **physically attached while the app is running**. If a device is already connected when the app starts, no
+   broadcast is sent.
 
-3. **Missing Retry Logic**: The original code scanned once for USB devices and immediately fell back to simulation mode if nothing was found, with no retry mechanism.
+3. **Missing Retry Logic**: The original code scanned once for USB devices and immediately fell back to simulation mode
+   if nothing was found, with no retry mechanism.
 
-4. **Permission Request Bug**: In `onDevicePermissionRequested()`, when permission was not yet granted, the code would set simulation mode and emit an error instead of actually requesting the USB permission.
+4. **Permission Request Bug**: In `onDevicePermissionRequested()`, when permission was not yet granted, the code would
+   set simulation mode and emit an error instead of actually requesting the USB permission.
 
 ## Solution
 
@@ -57,6 +63,7 @@ suspend fun rescanForThermalCamera(): Boolean {
 ```
 
 This method:
+
 - Iterates through all connected USB devices
 - Identifies thermal cameras using `device.isTcTsDevice()`
 - Checks for USB permissions
@@ -107,6 +114,7 @@ LaunchedEffect(Unit) {
 ```
 
 This handles the case where:
+
 - The app starts with camera already connected
 - The user navigates to the thermal camera screen
 - After 1 second, it checks again for connected cameras
@@ -154,28 +162,29 @@ This handles the case where:
 ### Manual Testing Steps
 
 1. **Test 1: Camera Already Connected**
-   - Connect thermal camera to device
-   - Start the app
-   - Navigate to Thermal Camera screen
-   - Verify: Camera should be detected within 1-2 seconds
+    - Connect thermal camera to device
+    - Start the app
+    - Navigate to Thermal Camera screen
+    - Verify: Camera should be detected within 1-2 seconds
 
 2. **Test 2: Hot Plug**
-   - Start app without camera
-   - Navigate to Thermal Camera screen (simulation mode)
-   - Plug in thermal camera
-   - Verify: Camera should be detected and initialized
-   - Verify: UI should switch from simulation to real camera
+    - Start app without camera
+    - Navigate to Thermal Camera screen (simulation mode)
+    - Plug in thermal camera
+    - Verify: Camera should be detected and initialized
+    - Verify: UI should switch from simulation to real camera
 
 3. **Test 3: Permission Flow**
-   - Connect camera for first time
-   - Start app
-   - Verify: USB permission dialog appears
-   - Grant permission
-   - Verify: Camera initializes successfully
+    - Connect camera for first time
+    - Start app
+    - Verify: USB permission dialog appears
+    - Grant permission
+    - Verify: Camera initializes successfully
 
 ### Expected Log Messages
 
 Successful initialization:
+
 ```
 ThermalCameraRecorder: Initializing thermal camera for sensor thermal_camera_1
 ThermalCameraRecorder: Found 3 USB devices, scanning for thermal cameras
@@ -185,6 +194,7 @@ ThermalCameraRecorder: Real thermal camera initialized successfully
 ```
 
 Retry successful:
+
 ```
 ThermalCameraRecorder: No thermal cameras found on initial scan, will retry after delay
 ThermalCameraRecorder: Found 3 USB devices during rescan
@@ -195,15 +205,15 @@ ThermalCameraRecorder: Successfully initialized thermal camera from rescan
 ## Files Modified
 
 1. `app/src/main/java/mpdc4gsr/feature/thermal/ui/ThermalCameraRecorder.kt`
-   - Added `rescanForThermalCamera()` method
-   - Added retry logic in `initialize()`
-   - Fixed `onDevicePermissionRequested()` to request permission
+    - Added `rescanForThermalCamera()` method
+    - Added retry logic in `initialize()`
+    - Fixed `onDevicePermissionRequested()` to request permission
 
 2. `app/src/main/java/mpdc4gsr/feature/thermal/presentation/ThermalCameraViewModel.kt`
-   - Added `rescanForThermalCamera()` method
+    - Added `rescanForThermalCamera()` method
 
 3. `app/src/main/java/mpdc4gsr/feature/thermal/ui/ThermalMonitorScreen.kt`
-   - Added `LaunchedEffect` for automatic rescan
+    - Added `LaunchedEffect` for automatic rescan
 
 ## Impact
 

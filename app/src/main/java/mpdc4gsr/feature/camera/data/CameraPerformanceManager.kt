@@ -12,19 +12,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 
-/**
- * Manages camera performance optimization including memory usage,
- * frame capture pipeline efficiency, and resource monitoring.
- *
- * CRITICAL ANR FIX: All frame processing is now done on a background thread
- * to prevent blocking the main UI thread. This resolves the ANR issue where
- * the main thread was blocked for 10+ seconds due to synchronous processing.
- *
- * The frame processing queue uses a dedicated single-thread executor to ensure
- * sequential processing without blocking the main thread or causing race conditions.
- */
 class CameraPerformanceManager(private val context: Context) {
-
     companion object {
         private const val TAG = "CameraPerformanceManager"
         private const val MEMORY_CHECK_INTERVAL_MS = 5000L
@@ -76,34 +64,22 @@ class CameraPerformanceManager(private val context: Context) {
     var onPerformanceUpdate: ((PerformanceMetrics) -> Unit)? = null
     var onMemoryPressure: ((MemoryPressureLevel) -> Unit)? = null
 
-    /**
-     * Start performance monitoring
-     */
     fun startMonitoring() {
         if (isMonitoring) return
-
         isMonitoring = true
         resetMetrics()
         startMemoryMonitoring()
-
         AppLogger.i(TAG, "Performance monitoring started")
     }
 
-    /**
-     * Stop performance monitoring
-     */
     fun stopMonitoring() {
         isMonitoring = false
         memoryCheckHandler.removeCallbacksAndMessages(null)
         frameProcessingQueue.clear()
         frameProcessingExecutor.shutdownNow()
-
         AppLogger.i(TAG, "Performance monitoring stopped")
     }
 
-    /**
-     * Process frame with backpressure handling
-     */
     fun processFrame(
         frameData: ByteArray,
         timestamp: Long,
@@ -113,9 +89,7 @@ class CameraPerformanceManager(private val context: Context) {
             onComplete(false)
             return false
         }
-
         val startTime = System.currentTimeMillis()
-
         // Check if we're under memory pressure
         val memoryPressure = getCurrentMemoryPressure()
         if (memoryPressure == MemoryPressureLevel.CRITICAL) {
@@ -124,7 +98,6 @@ class CameraPerformanceManager(private val context: Context) {
             AppLogger.w(TAG, "Frame dropped due to critical memory pressure")
             return false
         }
-
         // Check pending operations for backpressure
         val currentPending = pendingOperations.get()
         if (currentPending >= MAX_PENDING_FRAMES) {
@@ -133,45 +106,33 @@ class CameraPerformanceManager(private val context: Context) {
             AppLogger.w(TAG, "Frame dropped due to backpressure (pending: $currentPending)")
             return false
         }
-
         pendingOperations.incrementAndGet()
-
         // Add to processing queue
         val task = FrameProcessingTask(frameData, timestamp) { success ->
             val endTime = System.currentTimeMillis()
             val captureTime = endTime - startTime
-
             pendingOperations.decrementAndGet()
-
             if (success) {
                 framesCaptured.incrementAndGet()
                 updateAverageCaptureTime(captureTime)
             } else {
                 framesDropped.incrementAndGet()
             }
-
             onComplete(success)
         }
-
         frameProcessingQueue.offer(task)
-
         // Process the task on a background thread to avoid blocking main thread
         frameProcessingExecutor.execute {
             processNextFrame()
         }
-
         return true
     }
 
-    /**
-     * Get current performance metrics
-     */
     fun getCurrentMetrics(): PerformanceMetrics {
         val captured = framesCaptured.get()
         val dropped = framesDropped.get()
         val total = captured + dropped
         val dropRate = if (total > 0) (dropped.toFloat() / total.toFloat()) * 100f else 0f
-
         return PerformanceMetrics(
             framesCaptured = captured,
             framesDropped = dropped,
@@ -183,13 +144,9 @@ class CameraPerformanceManager(private val context: Context) {
         )
     }
 
-    /**
-     * Optimize settings based on current performance
-     */
     fun getOptimizedSettings(currentConfig: CameraConfigurationManager.CameraConfiguration): Map<String, Any> {
         val metrics = getCurrentMetrics()
         val recommendations = mutableMapOf<String, Any>()
-
         // Adjust based on drop rate
         when {
             metrics.dropRate > 20f -> {
@@ -203,7 +160,6 @@ class CameraPerformanceManager(private val context: Context) {
                 recommendations["reason"] = "Moderate frame drop rate detected"
             }
         }
-
         // Adjust based on memory pressure
         when (metrics.memoryPressure) {
             MemoryPressureLevel.HIGH, MemoryPressureLevel.CRITICAL -> {
@@ -222,7 +178,6 @@ class CameraPerformanceManager(private val context: Context) {
                 // No changes needed
             }
         }
-
         // Performance suggestions
         val suggestions = mutableListOf<String>()
         if (metrics.averageCaptureTimeMs > 100) {
@@ -234,9 +189,7 @@ class CameraPerformanceManager(private val context: Context) {
         if (metrics.memoryPressure != MemoryPressureLevel.LOW) {
             suggestions.add("Close other apps to free memory")
         }
-
         recommendations["suggestions"] = suggestions
-
         return recommendations
     }
 
@@ -244,26 +197,21 @@ class CameraPerformanceManager(private val context: Context) {
         val memoryCheck = object : Runnable {
             override fun run() {
                 if (!isMonitoring) return
-
                 val metrics = getCurrentMetrics()
                 onPerformanceUpdate?.invoke(metrics)
-
                 // Check for memory pressure changes
                 val currentPressure = metrics.memoryPressure
                 if (currentPressure != MemoryPressureLevel.LOW) {
                     onMemoryPressure?.invoke(currentPressure)
                 }
-
                 memoryCheckHandler.postDelayed(this, MEMORY_CHECK_INTERVAL_MS)
             }
         }
-
         memoryCheckHandler.post(memoryCheck)
     }
 
     private fun processNextFrame() {
         val task = frameProcessingQueue.poll() ?: return
-
         // Process frame data on background thread to avoid blocking main thread
         try {
             // Note: Minimal delay removed as it was artificial
@@ -292,7 +240,6 @@ class CameraPerformanceManager(private val context: Context) {
 
     private fun getCurrentMemoryPressure(): MemoryPressureLevel {
         val availableMB = getAvailableMemoryMB()
-
         return when {
             availableMB < CRITICAL_MEMORY_THRESHOLD_MB -> MemoryPressureLevel.CRITICAL
             availableMB < LOW_MEMORY_THRESHOLD_MB -> MemoryPressureLevel.HIGH
@@ -308,12 +255,8 @@ class CameraPerformanceManager(private val context: Context) {
         pendingOperations.set(0)
     }
 
-    /**
-     * Get device-specific optimizations
-     */
     fun getDeviceOptimizations(): Map<String, Any> {
         val optimizations = mutableMapOf<String, Any>()
-
         // Device-specific optimizations
         when {
             Build.MANUFACTURER.equals("samsung", ignoreCase = true) -> {
@@ -333,7 +276,6 @@ class CameraPerformanceManager(private val context: Context) {
                 optimizations["conservative_settings"] = true
             }
         }
-
         // Memory-based optimizations
         val totalMemoryMB = Runtime.getRuntime().maxMemory() / (1024 * 1024)
         when {
@@ -355,7 +297,6 @@ class CameraPerformanceManager(private val context: Context) {
                 optimizations["enable_all_features"] = true
             }
         }
-
         return optimizations
     }
 }

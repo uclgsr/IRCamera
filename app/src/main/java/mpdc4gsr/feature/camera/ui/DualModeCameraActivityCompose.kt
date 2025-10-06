@@ -31,19 +31,8 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.feature.camera.presentation.DualModeCameraViewModel
 import mpdc4gsr.feature.main.ui.MainComposeActivity
 
-/**
- * Dual Mode Camera Activity - Compose Implementation
- *
- * Modern Compose implementation of dual-mode camera functionality:
- * - Uses existing DualModeCameraViewModel for business logic
- * - Maintains compatibility with existing navigation patterns
- * - Follows MVVM architecture with Compose UI
- * - Preserves all camera permissions and recording functionality
- */
 class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewModel>() {
-
     private val cameraVM: DualModeCameraViewModel by viewModels()
-
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -60,13 +49,10 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val initialMode = intent.getStringExtra("INITIAL_MODE") ?: "VIDEO_4K"
         val enableSamsungOptimizations =
             intent.getBooleanExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)
-
         cameraVM.initialize(initialMode, enableSamsungOptimizations)
-
         checkCameraPermission()
     }
 
@@ -74,14 +60,12 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
     @Composable
     override fun Content(viewModel: DualModeCameraViewModel) {
         val context = LocalContext.current
-
         // Collect state
         val permissionState by viewModel.permissionState.collectAsState()
         val cameraState by viewModel.cameraState.collectAsState()
         val cameraMode by viewModel.cameraMode.collectAsState()
         val recordingState by viewModel.recordingState.collectAsState()
         val cameraScreenState by viewModel.cameraScreenState.collectAsState()
-
         // Handle events
         LaunchedEffect(viewModel) {
             viewModel.events.collect { event ->
@@ -113,18 +97,15 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                     DualModeCameraViewModel.CameraEvent.NavigateToGallery -> {
                         // Navigate to gallery
                     }
-
                     // is DualModeCameraViewModel.CameraEvent.NavigateToSettings -> {
                     //     context.startActivity(Intent(context, SettingsComposeActivity::class.java))
                     // }
-
                     // is DualModeCameraViewModel.CameraEvent.NavigateBack -> {
                     //     finish()
                     // }
                 }
             }
         }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -170,7 +151,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             viewModel.switchCameraMode(mode)
                         }
                     )
-
                     // Camera Preview Card
                     CameraPreviewCard(
                         cameraState = cameraState,
@@ -186,14 +166,12 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             }
                         }
                     )
-
                     // Recording Controls Card
                     RecordingControlsCard(
                         recordingState = recordingState,
                         onStartRecording = { viewModel.startRecording() },
                         onStopRecording = { viewModel.stopRecording() }
                     )
-
                     // Camera Status Card
                     CameraStatusCard(
                         cameraState = cameraState,
@@ -222,7 +200,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -260,7 +237,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                 when (permissionState) {
                     DualModeCameraViewModel.PermissionState.GRANTED -> {
                         var previewView: PreviewView? by remember { mutableStateOf(null) }
-
                         AndroidView(
                             factory = { context ->
                                 PreviewView(context).also {
@@ -270,7 +246,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             },
                             modifier = Modifier.fillMaxSize()
                         )
-
                         if (cameraScreenState.showProgress) {
                             Box(
                                 modifier = Modifier
@@ -332,7 +307,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -360,7 +334,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                         }
                     }
                 }
-
                 if (recordingState.isRecording) {
                     LinearProgressIndicator(
                         modifier = Modifier.fillMaxWidth()
@@ -393,7 +366,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -407,7 +379,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             MaterialTheme.colorScheme.error
                     )
                 }
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -421,7 +392,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             MaterialTheme.colorScheme.error
                     )
                 }
-
                 if (cameraScreenState.displayMessage.isNotEmpty()) {
                     Text(
                         text = cameraScreenState.displayMessage,

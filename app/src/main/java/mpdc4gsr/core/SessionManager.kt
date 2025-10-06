@@ -20,7 +20,6 @@ class SessionManager(
 ) {
     companion object {
         private const val TAG = "SessionManager"
-
         private const val SESSION_HEARTBEAT_INTERVAL_MS = 10000L
         private const val SESSION_TIMEOUT_MS = 60000L
         private const val MAX_DEVICES_PER_SESSION = 10
@@ -39,13 +38,10 @@ class SessionManager(
     private val sessionJob = AtomicReference<Job?>(null)
     private val sessionId = AtomicReference<String?>(null)
     private val sessionStartTime = AtomicLong(0L)
-
     private val _sessionWorkflowState = MutableStateFlow(SessionWorkflowState.IDLE)
     val sessionWorkflowState: StateFlow<SessionWorkflowState> = _sessionWorkflowState.asStateFlow()
-
     private val workflowSteps = mutableListOf<WorkflowStep>()
     private var currentStepIndex = 0
-
     private val sessionScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     enum class SessionWorkflowState {
@@ -128,14 +124,11 @@ class SessionManager(
             AppLogger.w(TAG, "Session manager already running")
             return
         }
-
         this.onSessionStateChanged = onSessionStateChanged
         this.onDeviceJoined = onDeviceJoined
         this.onDeviceLeft = onDeviceLeft
         this.onSyncRequired = onSyncRequired
-
         isRunning.set(true)
-
         sessionJob.set(
             sessionScope.launch {
                 logger.log(
@@ -144,14 +137,11 @@ class SessionManager(
                     "service_started",
                     emptyMap()
                 )
-
                 try {
-
                     while (isRunning.get()) {
                         updateSessionState()
                         checkDeviceHeartbeats()
                         performStateSynchronization()
-
                         delay(SESSION_HEARTBEAT_INTERVAL_MS)
                     }
                 } catch (e: CancellationException) {
@@ -169,25 +159,20 @@ class SessionManager(
                 }
             },
         )
-
         AppLogger.i(TAG, "Session management service started")
     }
 
     fun stop() {
         if (!isRunning.get()) return
-
         val session = currentSession.get()
         if (session != null && session.state != SessionState.ENDED) {
             endSession(session.id, "Service stopping")
         }
-
         isRunning.set(false)
         sessionJob.get()?.cancel()
         sessionJob.set(null)
-
         // Cancel the sessionScope to cleanup all coroutines
         sessionScope.cancel()
-
         logger.log(StructuredLogger.LogLevel.INFO, "SessionManager", "service_stopped", emptyMap())
         AppLogger.i(TAG, "Session management service stopped")
     }
@@ -195,7 +180,6 @@ class SessionManager(
     fun createSession(metadata: Map<String, Any> = emptyMap()): String {
         val id = generateSessionId()
         val startTime = System.currentTimeMillis()
-
         val session =
             SessionInfo(
                 id = id,
@@ -204,14 +188,11 @@ class SessionManager(
                 participants = emptyList(),
                 metadata = metadata,
             )
-
         currentSession.set(session)
         sessionId.set(id)
         sessionStartTime.set(startTime)
         sessionHistory[id] = session
-
         updateSessionState(SessionState.ACTIVE)
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "SessionManager",
@@ -221,7 +202,6 @@ class SessionManager(
                 "metadata_keys" to metadata.keys.joinToString(","),
             ),
         )
-
         return id
     }
 
@@ -231,12 +211,10 @@ class SessionManager(
         capabilities: Set<String>,
     ): Boolean {
         val session = currentSession.get() ?: return false
-
         if (connectedDevices.size >= MAX_DEVICES_PER_SESSION) {
             AppLogger.w(TAG, "Maximum devices reached for session ${session.id}")
             return false
         }
-
         val deviceInfo =
             DeviceInfo(
                 deviceId = deviceId,
@@ -247,13 +225,9 @@ class SessionManager(
                 syncOffset = 0L,
                 connectionQuality = ConnectionQuality.GOOD,
             )
-
         connectedDevices[deviceId] = deviceInfo
-
         updateSessionParticipants()
-
         onDeviceJoined?.invoke(deviceInfo)
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "SessionManager",
@@ -266,7 +240,6 @@ class SessionManager(
                 "total_devices" to connectedDevices.size.toString(),
             ),
         )
-
         return true
     }
 
@@ -278,7 +251,6 @@ class SessionManager(
         if (deviceInfo != null) {
             updateSessionParticipants()
             onDeviceLeft?.invoke(deviceInfo)
-
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 "SessionManager",
@@ -295,32 +267,24 @@ class SessionManager(
     fun startSyncRecording(): Boolean {
         val session = currentSession.get() ?: return false
         val devices = connectedDevices.values.toList()
-
         if (devices.isEmpty()) {
             AppLogger.w(TAG, "No devices available for synchronized recording")
             return false
         }
-
         val recordingCapableDevices = devices.filter { "recording" in it.capabilities }
         if (recordingCapableDevices.isEmpty()) {
             AppLogger.w(TAG, "No recording-capable devices in session")
             return false
         }
-
         updateSessionState(SessionState.SYNCING)
-
         onSyncRequired?.invoke(recordingCapableDevices)
-
         sessionScope.launch {
             delay(SYNC_TO_RECORDING_DELAY_MS)
-
             if (currentSession.get()?.state == SessionState.SYNCING) {
                 updateSessionState(SessionState.RECORDING)
-
                 recordingCapableDevices.forEach { device ->
                     connectedDevices[device.deviceId] = device.copy(isRecording = true)
                 }
-
                 logger.log(
                     StructuredLogger.LogLevel.INFO,
                     "SessionManager",
@@ -332,22 +296,18 @@ class SessionManager(
                 )
             }
         }
-
         return true
     }
 
     fun stopSyncRecording() {
         val session = currentSession.get() ?: return
-
         connectedDevices.keys.forEach { deviceId ->
             val device = connectedDevices[deviceId]
             if (device != null && device.isRecording) {
                 connectedDevices[deviceId] = device.copy(isRecording = false)
             }
         }
-
         updateSessionState(SessionState.ACTIVE)
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "SessionManager",
@@ -364,29 +324,22 @@ class SessionManager(
     ) {
         val session = currentSession.get()
         if (session == null || session.id != sessionId) return
-
         updateSessionState(SessionState.ENDING)
-
         if (session.state == SessionState.RECORDING) {
             stopSyncRecording()
         }
-
         connectedDevices.clear()
-
         val endedSession =
             session.copy(
                 endTime = System.currentTimeMillis(),
                 state = SessionState.ENDED,
                 participants = emptyList(),
             )
-
         sessionHistory[session.id] = endedSession
         currentSession.set(null)
         this.sessionId.set(null)
         sessionStartTime.set(0L)
-
         updateSessionState(SessionState.IDLE)
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "SessionManager",
@@ -416,11 +369,8 @@ class SessionManager(
     }
 
     fun getCurrentSession(): SessionInfo? = currentSession.get()
-
     fun getConnectedDevices(): List<DeviceInfo> = connectedDevices.values.toList()
-
     fun getSessionHistory(): List<SessionInfo> = sessionHistory.values.toList()
-
     fun getDiagnostics(): JSONObject {
         val session = currentSession.get()
         return JSONObject().apply {
@@ -443,16 +393,12 @@ class SessionManager(
 
     private fun updateSessionState(newState: SessionState? = null) {
         val session = currentSession.get() ?: return
-
         val updatedState = newState ?: determineSessionState(session)
-
         if (session.state != updatedState) {
             val updatedSession = session.copy(state = updatedState)
             currentSession.set(updatedSession)
             sessionHistory[session.id] = updatedSession
-
             onSessionStateChanged?.invoke(updatedState)
-
             logger.log(
                 StructuredLogger.LogLevel.DEBUG,
                 "SessionManager",
@@ -477,7 +423,6 @@ class SessionManager(
     private fun updateSessionParticipants() {
         val session = currentSession.get() ?: return
         val participants = connectedDevices.values.toList()
-
         val updatedSession = session.copy(participants = participants)
         currentSession.set(updatedSession)
         sessionHistory[session.id] = updatedSession
@@ -486,13 +431,11 @@ class SessionManager(
     private fun checkDeviceHeartbeats() {
         val currentTime = System.currentTimeMillis()
         val staleDevices = mutableListOf<String>()
-
         connectedDevices.forEach { (deviceId, device) ->
             if (currentTime - device.lastSeen > SESSION_TIMEOUT_MS) {
                 staleDevices.add(deviceId)
             }
         }
-
         staleDevices.forEach { deviceId ->
             removeDevice(deviceId, "Heartbeat timeout")
         }
@@ -501,16 +444,13 @@ class SessionManager(
     private fun performStateSynchronization() {
         val session = currentSession.get() ?: return
         val devices = connectedDevices.values.toList()
-
         if (devices.isEmpty()) return
-
         val needsSync =
             devices.any { device ->
                 device.connectionQuality == ConnectionQuality.POOR ||
                         device.connectionQuality == ConnectionQuality.UNSTABLE ||
                         kotlin.math.abs(device.syncOffset) > 5_000_000L
             }
-
         if (needsSync && session.state == SessionState.ACTIVE) {
             logger.log(
                 StructuredLogger.LogLevel.DEBUG,
@@ -521,7 +461,6 @@ class SessionManager(
                     "device_count" to devices.size.toString(),
                 ),
             )
-
             onSyncRequired?.invoke(devices)
         }
     }
@@ -538,11 +477,8 @@ class SessionManager(
                 mapOf("session_id" to sessionConfig.sessionId)
             )
             _sessionWorkflowState.value = SessionWorkflowState.INITIALIZING
-
             setupWorkflowSteps(sessionConfig, permissionController)
-
             executeWorkflow()
-
         } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
@@ -561,7 +497,6 @@ class SessionManager(
     ) {
         workflowSteps.clear()
         currentStepIndex = 0
-
         workflowSteps.add(
             WorkflowStep(
                 name = "Permission Check",
@@ -572,7 +507,6 @@ class SessionManager(
                 timeout = 15000L
             )
         )
-
         workflowSteps.add(
             WorkflowStep(
                 name = "Device Discovery",
@@ -583,7 +517,6 @@ class SessionManager(
                 timeout = 20000L
             )
         )
-
         workflowSteps.add(
             WorkflowStep(
                 name = "Device Connection",
@@ -594,7 +527,6 @@ class SessionManager(
                 timeout = 30000L
             )
         )
-
         workflowSteps.add(
             WorkflowStep(
                 name = "Time Synchronization",
@@ -605,7 +537,6 @@ class SessionManager(
                 timeout = 15000L
             )
         )
-
         workflowSteps.add(
             WorkflowStep(
                 name = "Recording Setup",
@@ -616,7 +547,6 @@ class SessionManager(
                 timeout = 10000L
             )
         )
-
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "SessionManager",
@@ -637,16 +567,13 @@ class SessionManager(
                     "index" to "${index + 1}/${workflowSteps.size}"
                 )
             )
-
             try {
                 val success = withContext(Dispatchers.IO) {
                     kotlinx.coroutines.withTimeout(step.timeout) {
                         step.action()
                     }
                 }
-
                 onWorkflowStepCompleted?.invoke(step.name, success)
-
                 if (!success && step.required) {
                     logger.log(
                         StructuredLogger.LogLevel.ERROR,
@@ -664,14 +591,12 @@ class SessionManager(
                         mapOf("step" to step.name, "required" to "false")
                     )
                 }
-
                 logger.log(
                     StructuredLogger.LogLevel.INFO,
                     "SessionManager",
                     "workflow_step_success",
                     mapOf("step" to step.name)
                 )
-
             } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
                 logger.log(
                     StructuredLogger.LogLevel.ERROR,
@@ -680,7 +605,6 @@ class SessionManager(
                     mapOf("step" to step.name, "timeout" to step.timeout.toString())
                 )
                 onWorkflowStepCompleted?.invoke(step.name, false)
-
                 if (step.required) {
                     _sessionWorkflowState.value = SessionWorkflowState.ERROR
                     return false
@@ -693,14 +617,12 @@ class SessionManager(
                     mapOf("step" to step.name, "error" to (e.message ?: "Unknown"))
                 )
                 onWorkflowStepCompleted?.invoke(step.name, false)
-
                 if (step.required) {
                     _sessionWorkflowState.value = SessionWorkflowState.ERROR
                     return false
                 }
             }
         }
-
         _sessionWorkflowState.value = SessionWorkflowState.RECORDING_ACTIVE
         logger.log(
             StructuredLogger.LogLevel.INFO,
@@ -712,7 +634,6 @@ class SessionManager(
     }
 
     private suspend fun discoverDevices(expectedDevices: List<String>): Boolean {
-
         delay(DEVICE_DISCOVERY_DELAY_MS)
         logger.log(
             StructuredLogger.LogLevel.INFO,
@@ -724,7 +645,6 @@ class SessionManager(
     }
 
     private suspend fun connectToDevices(): Boolean {
-
         delay(DEVICE_CONNECTION_DELAY_MS)
         logger.log(
             StructuredLogger.LogLevel.INFO,
@@ -736,7 +656,6 @@ class SessionManager(
     }
 
     private suspend fun performTimeSynchronization(): Boolean {
-
         delay(TIME_SYNC_DELAY_MS)
         logger.log(
             StructuredLogger.LogLevel.INFO,
@@ -748,7 +667,6 @@ class SessionManager(
     }
 
     private suspend fun setupRecording(config: SessionConfig): Boolean {
-
         delay(RECORDING_SETUP_DELAY_MS)
         logger.log(
             StructuredLogger.LogLevel.INFO,

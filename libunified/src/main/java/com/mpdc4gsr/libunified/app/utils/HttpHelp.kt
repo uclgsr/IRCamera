@@ -8,7 +8,6 @@ import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtils
 import com.mpdc4gsr.libunified.app.lms.xutils.http.RequestParams
 
 object HttpHelp {
-
     fun getFirstReportData(
         isTC007: Boolean,
         pageNumber: Int,
@@ -27,5 +26,4 @@ object HttpHelp {
         params.addBodyParameter("size", 20)
         instant.post(url, true, params, iResponseCallback)
     }
-
 }

@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
@@ -49,13 +48,11 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 LogEntry("2024-10-01 10:15:00", 26.1f, "Location A", "Follow-up check"),
             )
         }
-
         var showFilterDialog by remember { mutableStateOf(false) }
         var showAddLogDialog by remember { mutableStateOf(false) }
         val snackbarHostState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
         val context = LocalContext.current
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -92,7 +89,6 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                                     appendLine("${entry.timestamp},${entry.temperature},${entry.location},${entry.notes}")
                                                 }
                                             }
-
                                             // Create file in Downloads directory
                                             val contentValues = android.content.ContentValues().apply {
                                                 put(
@@ -105,7 +101,6 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                                     android.os.Environment.DIRECTORY_DOWNLOADS
                                                 )
                                             }
-
                                             val uri = context.contentResolver.insert(
                                                 android.provider.MediaStore.Files.getContentUri("external"),
                                                 contentValues
@@ -187,13 +182,11 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 }
             }
-
             // Add Log Entry Dialog
             if (showAddLogDialog) {
                 var newTemp by remember { mutableStateOf("25.0") }
                 var newLocation by remember { mutableStateOf("") }
                 var newNotes by remember { mutableStateOf("") }
-
                 AlertDialog(
                     onDismissRequest = { showAddLogDialog = false },
                     title = { Text("Add Log Entry") },
@@ -288,7 +281,6 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
                     }
-
                     // Temperature badge
                     Card(
                         colors = CardDefaults.cardColors(
@@ -309,7 +301,6 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         )
                     }
                 }
-
                 // Notes section
                 if (entry.notes.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(8.dp))

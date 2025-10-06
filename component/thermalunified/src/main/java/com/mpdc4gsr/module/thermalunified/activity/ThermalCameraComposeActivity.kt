@@ -16,7 +16,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
 class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewModel>() {
-
     override fun createViewModel(): ThermalFragmentViewModel {
         return viewModels<ThermalFragmentViewModel>().value
     }
@@ -99,7 +98,6 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Capture")
                 }
-
                 Button(
                     onClick = {
                         // TODO: Implement thermal video recording

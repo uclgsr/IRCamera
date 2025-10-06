@@ -6,12 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-/**
- * GSR Data Repository - Complete Repository Pattern Implementation
- * Manages GSR sensor data with real-time streaming, caching, and historical data
- */
 class GSRDataRepository : BaseRepository() {
-
     data class GSRReading(
         val timestamp: Long,
         val conductance: Float, // microsiemens
@@ -22,7 +17,6 @@ class GSRDataRepository : BaseRepository() {
     )
 
     enum class SignalQuality { EXCELLENT, GOOD, FAIR, POOR, DISCONNECTED }
-
     data class GSRSession(
         val sessionId: String,
         val startTime: Long,
@@ -43,7 +37,6 @@ class GSRDataRepository : BaseRepository() {
             var counter = 0
             while (true) {
                 delay(100) // 10Hz sampling rate
-
                 val reading = generateGSRReading(deviceId, counter++)
                 emit(BaseRepository.Result.Success(reading))
             }
@@ -90,7 +83,6 @@ class GSRDataRepository : BaseRepository() {
         val variation = (Math.sin(counter * 0.01) * 10 + Math.random() * 5).toFloat()
         val resistance = (baselineResistance + variation).coerceAtLeast(1.0f)
         val conductance = 1000.0f / resistance // Convert to microsiemens
-
         return GSRReading(
             timestamp = System.currentTimeMillis(),
             conductance = conductance,
@@ -108,10 +100,8 @@ class GSRDataRepository : BaseRepository() {
     ): List<GSRReading> {
         val readings = mutableListOf<GSRReading>()
         val interval = 100L // 100ms intervals (10Hz)
-
         var currentTime = startTime
         var counter = 0
-
         while (currentTime <= endTime) {
             readings.add(
                 generateGSRReading("device_001", counter++).copy(
@@ -121,7 +111,6 @@ class GSRDataRepository : BaseRepository() {
             )
             currentTime += interval
         }
-
         return readings
     }
 

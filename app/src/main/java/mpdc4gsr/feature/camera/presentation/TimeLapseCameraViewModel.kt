@@ -8,9 +8,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 
-/**
- * Time-lapse capture mode
- */
 enum class TimeLapseMode(val displayName: String) {
     MANUAL("Manual Interval"),
     AUTO("Auto Optimize"),
@@ -19,14 +16,9 @@ enum class TimeLapseMode(val displayName: String) {
     PRESET_SLOW("Slow (10s)")
 }
 
-/**
- * ViewModel for Time-Lapse Camera Screen
- * Manages time-lapse recording with configurable intervals
- */
 class TimeLapseCameraViewModel(
     @Suppress("UNUSED_PARAMETER") context: Context
 ) : AppBaseViewModel() {
-
     companion object {
         private const val DEFAULT_PLAYBACK_FPS = 30
     }
@@ -46,7 +38,6 @@ class TimeLapseCameraViewModel(
 
     private val _timeLapseState = MutableStateFlow(TimeLapseState())
     val timeLapseState: StateFlow<TimeLapseState> = _timeLapseState.asStateFlow()
-
     fun startTimeLapse() {
         launchWithErrorHandling {
             _timeLapseState.value = _timeLapseState.value.copy(
@@ -97,9 +88,6 @@ class TimeLapseCameraViewModel(
     }
 }
 
-/**
- * Factory for creating TimeLapseCameraViewModel
- */
 class TimeLapseCameraViewModelFactory(
     private val context: Context
 ) : androidx.lifecycle.ViewModelProvider.Factory {

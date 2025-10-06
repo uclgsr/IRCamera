@@ -21,7 +21,6 @@ class StructuredLogger private constructor(private val context: Context) {
 
         @Volatile
         private var instance: StructuredLogger? = null
-
         fun getInstance(context: Context): StructuredLogger {
             return instance ?: synchronized(this) {
                 instance ?: StructuredLogger(context.applicationContext).also { instance = it }
@@ -73,13 +72,11 @@ class StructuredLogger private constructor(private val context: Context) {
             context.contentResolver,
             android.provider.Settings.Secure.ANDROID_ID,
         )
-
     private val logQueue = ConcurrentLinkedQueue<JSONObject>()
     private val logExecutor =
         Executors.newSingleThreadExecutor { r ->
             Thread(r, "StructuredLogger").apply { isDaemon = true }
         }
-
     private var currentLogFile: File? = null
     private var currentLogWriter: BufferedWriter? = null
     private var currentLogSize = 0L
@@ -88,9 +85,7 @@ class StructuredLogger private constructor(private val context: Context) {
         SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
             timeZone = TimeZone.getTimeZone("UTC")
         }
-
     private var messageIdCounter = 0L
-
     private val logScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     init {
@@ -104,11 +99,8 @@ class StructuredLogger private constructor(private val context: Context) {
             if (!logDir.exists()) {
                 logDir.mkdirs()
             }
-
             cleanupOldLogs(logDir)
-
             createNewLogFile(logDir)
-
             log(
                 LogLevel.INFO,
                 "StructuredLogger",
@@ -127,16 +119,13 @@ class StructuredLogger private constructor(private val context: Context) {
         synchronized(writerLock) {
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
             currentLogFile = File(logDir, "pc_to_phone_$timestamp.jsonl")
-
             try {
                 currentLogWriter?.close()
             } catch (e: Exception) {
                 Log.w(TAG, "Error closing previous log writer", e)
             }
-
             currentLogWriter = BufferedWriter(FileWriter(currentLogFile, true))
             currentLogSize = currentLogFile?.length() ?: 0L
-
             Log.i(TAG, "Created new log file: ${currentLogFile?.name}")
         }
     }
@@ -147,7 +136,6 @@ class StructuredLogger private constructor(private val context: Context) {
                 logDir.listFiles { _, name ->
                     name.startsWith("pc_to_phone_") && name.endsWith(".jsonl")
                 }?.sortedByDescending { it.lastModified() }
-
             if (logFiles != null && logFiles.size > MAX_LOG_FILES) {
                 logFiles.drop(MAX_LOG_FILES).forEach { file ->
                     if (file.delete()) {
@@ -171,7 +159,6 @@ class StructuredLogger private constructor(private val context: Context) {
         try {
             val timestamp = dateFormatter.format(Date())
             val msgId = messageId ?: generateMessageId()
-
             val logEntry =
                 JSONObject().apply {
                     put("ts", timestamp)
@@ -181,14 +168,11 @@ class StructuredLogger private constructor(private val context: Context) {
                     put("conn_id", connectionId ?: "")
                     put("msg_id", msgId)
                     put("event", event)
-
                     details.forEach { (key, value) ->
                         put(key, value)
                     }
                 }
-
             logQueue.offer(logEntry)
-
             val logMessage = "$component: $event ${if (details.isNotEmpty()) details else ""}"
             when (level) {
                 LogLevel.DEBUG -> Log.d(TAG, logMessage)
@@ -237,7 +221,6 @@ class StructuredLogger private constructor(private val context: Context) {
                 flushLogs()
             }
         }
-
         logScope.launch {
             while (isActive) {
                 try {
@@ -253,19 +236,16 @@ class StructuredLogger private constructor(private val context: Context) {
     private fun processLogQueue() {
         while (true) {
             val logEntry = logQueue.poll() ?: break
-
             synchronized(writerLock) {
                 val writer = currentLogWriter
                 if (writer == null) {
                     Log.w(TAG, "Log writer is null, skipping log entry")
                     return@synchronized
                 }
-
                 try {
                     writer.write(logEntry.toString())
                     writer.newLine()
                     currentLogSize += logEntry.toString().length + 1
-
                     if (currentLogSize > MAX_LOG_SIZE_MB * 1024 * 1024) {
                         rotateLogFile()
                     }
@@ -291,7 +271,6 @@ class StructuredLogger private constructor(private val context: Context) {
             } catch (e: Exception) {
                 Log.w(TAG, "Error closing corrupted log writer", e)
             }
-
             val logFile = currentLogFile
             if (logFile != null) {
                 currentLogWriter = BufferedWriter(FileWriter(logFile, true))
@@ -317,11 +296,9 @@ class StructuredLogger private constructor(private val context: Context) {
         synchronized(writerLock) {
             try {
                 currentLogWriter?.close()
-
                 val logDir = File(context.getExternalFilesDir(null), LOG_DIRECTORY)
                 createNewLogFile(logDir)
                 cleanupOldLogs(logDir)
-
                 log(
                     LogLevel.INFO,
                     "StructuredLogger",
@@ -354,7 +331,6 @@ class StructuredLogger private constructor(private val context: Context) {
     fun exportRecentLogs(maxLines: Int = 100): String {
         return try {
             val logFile = currentLogFile ?: return "No log file available"
-
             val lines = mutableListOf<String>()
             BufferedReader(FileReader(logFile)).use { reader ->
                 var line: String?
@@ -362,7 +338,6 @@ class StructuredLogger private constructor(private val context: Context) {
                     line?.let { lines.add(it) }
                 }
             }
-
             lines.takeLast(maxLines).joinToString("\n")
         } catch (e: Exception) {
             Log.e(TAG, "Error exporting logs", e)
@@ -374,15 +349,12 @@ class StructuredLogger private constructor(private val context: Context) {
         try {
             logScope.cancel()
             flushLogs()
-
             synchronized(writerLock) {
                 currentLogWriter?.close()
                 currentLogWriter = null
             }
-
             logExecutor.shutdown()
             logExecutor.awaitTermination(5, TimeUnit.SECONDS)
-
             Log.i(TAG, "Structured logging cleanup completed")
         } catch (e: Exception) {
             Log.e(TAG, "Error during logging cleanup", e)

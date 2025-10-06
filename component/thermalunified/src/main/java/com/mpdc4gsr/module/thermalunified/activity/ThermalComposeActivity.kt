@@ -27,7 +27,6 @@ import com.mpdc4gsr.module.thermalunified.fragment.ThermalComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 
 class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
@@ -38,7 +37,6 @@ class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var selectedTabIndex by remember { mutableIntStateOf(0) }
         var selectedToolIndex by remember { mutableIntStateOf(-1) }
         var showToolbar by remember { mutableStateOf(false) }
-
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -78,7 +76,6 @@ class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             .fillMaxWidth()
                             .weight(1f)
                     )
-
                     // Tool selection menu (shown when tab is selected)
                     if (showToolbar) {
                         ThermalToolsMenu(
@@ -93,7 +90,6 @@ class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 .padding(horizontal = 16.dp, vertical = 8.dp)
                         )
                     }
-
                     // Main navigation tabs
                     ThermalNavigationTabs(
                         selectedIndex = selectedTabIndex,
@@ -135,7 +131,6 @@ private fun ThermalNavigationTabs(
     modifier: Modifier = Modifier
 ) {
     val tabs = getThermalTabs()
-
     LazyRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -192,7 +187,6 @@ private fun ThermalToolsMenu(
     modifier: Modifier = Modifier
 ) {
     val tools = getThermalTools(selectedTabIndex)
-
     if (tools.isNotEmpty()) {
         Card(
             modifier = modifier,

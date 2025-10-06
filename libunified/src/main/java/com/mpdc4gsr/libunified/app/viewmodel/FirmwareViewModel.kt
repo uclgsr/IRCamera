@@ -26,19 +26,12 @@ import java.util.concurrent.CountDownLatch
 
 class FirmwareViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
-
         private const val TS004_SOFT_CODE = "TS004_FirmwareSW_Scope"
-
         private const val TC007_SOFT_CODE = "TC007_FirmwareSW_Wireless"
-
         private const val TS004_FIRMWARE_VERSION = "V1.70"
-
         private const val TS004_FIRMWARE_NAME = "TS004V1.70.zip"
-
         private const val TC007_FIRMWARE_VERSION = "V4.06"
-
         private const val TC007_FIRMWARE_NAME = "TC007V4.06.zip"
-
         private const val USE_DEBUG_SN = false
         private const val TS004_DEBUG_SN = "1D003655A10016"
         private const val TS004_DEBUG_RANDOM_NUM = "8D2N01"
@@ -48,9 +41,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
     @Volatile
     private var isRequest = false
-
     val firmwareDataLD: MutableLiveData<FirmwareData?> = MutableLiveData()
-
     val failLD: MutableLiveData<Boolean> = MutableLiveData()
 
     data class FirmwareData(
@@ -72,7 +63,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     ) {
         val apkVersionStr = if (isTS004) TS004_FIRMWARE_VERSION else TC007_FIRMWARE_VERSION
         val apkFirmwareName = if (isTS004) TS004_FIRMWARE_NAME else TC007_FIRMWARE_NAME
-
         val newVersion: Double = getVersionFromStr(apkVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
         XLog.d("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - current[ph][ph]：$currentVersion apk[ph][ph][ph][ph]：$newVersion")
@@ -81,7 +71,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             isRequest = false
             return
         }
-
         val firmwareFile = FileConfig.getFirmwareFile(apkFirmwareName)
         try {
             val application: Application = getApplication()
@@ -101,9 +90,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             isRequest = false
             return
         }
-
         val tipsStr = getApplication<Application>().getString(R.string.fireware_update_tips)
-
         firmwareDataLD.postValue(
             FirmwareData(
                 apkVersionStr,
@@ -121,7 +108,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         randomNum: String,
         firmware: String,
     ) {
-
         val bindCode = bindDevice(sn, randomNum)
         if (bindCode != LMS.SUCCESS.toInt() && bindCode != 15109) {
             XLog.w("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph]! sn: $sn")
@@ -129,7 +115,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             isRequest = false
             return
         }
-
         val packageData: PackageData? =
             querySoftPackage(sn, if (isTS004) TS004_SOFT_CODE else TC007_SOFT_CODE)
         if (packageData == null) {
@@ -138,7 +123,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             isRequest = false
             return
         }
-
         val record: PackageData.Record? = packageData.getFirstRecord()
         val newVersionStr: String? = record?.maxUpdateVersion
         if (record == null || newVersionStr == null) {
@@ -147,7 +131,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             isRequest = false
             return
         }
-
         val newVersion: Double = getVersionFromStr(newVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
         XLog.d("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - current[ph][ph]：$currentVersion [ph][ph][ph][ph][ph]：$newVersion")
@@ -156,7 +139,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             isRequest = false
             return
         }
-
         val downloadData = queryDownloadUrl(sn, record.maxUpdateVersionSoftId)
         if (downloadData?.responseCode == LMS.SUCCESS.toInt()) {
             firmwareDataLD.postValue(
@@ -204,7 +186,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         withContext(Dispatchers.IO) {
             var packageData: PackageData? = null
             val countDownLatch = CountDownLatch(1)
-
             val url = UrlConstants.BASE_URL + "api/v1/user/deviceSoftOut/page"
             val params = RequestParams()
             params.addBodyParameter("sn", sn)
@@ -237,7 +218,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                     }
                 },
             )
-
             countDownLatch.await()
             return@withContext packageData
         }
@@ -297,9 +277,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
     private class PackageData {
         var records: List<Record>? = null
-
         fun getFirstRecord(): Record? = if (records?.isNotEmpty() == true) records?.get(0) else null
-
         data class Record(
             var maxUpdateVersion: String?,
             var maxUpdateVersionSoftId: Int,

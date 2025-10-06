@@ -34,7 +34,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
-
     override fun createViewModel(): IRGalleryViewModel {
         return viewModels<IRGalleryViewModel>().value
     }
@@ -43,7 +42,6 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
     @Composable
     override fun Content(viewModel: IRGalleryViewModel) {
         val context = LocalContext.current
-
         // Observe ViewModel state
         val galleryItems by viewModel.galleryItems.collectAsStateWithLifecycle()
         val currentDirType by viewModel.currentDirType.collectAsStateWithLifecycle()
@@ -51,7 +49,6 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
         val selectedItems by viewModel.selectedItems.collectAsStateWithLifecycle()
         val isSelectionMode by viewModel.isSelectionMode.collectAsStateWithLifecycle()
         val isGridView by viewModel.isGridView.collectAsStateWithLifecycle()
-
         LibUnifiedTheme {
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -70,7 +67,6 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                     onDeleteSelected = { viewModel.deleteSelectedItems() },
                     onShareSelected = { viewModel.shareSelectedItems() }
                 )
-
                 // Main content
                 Box(
                     modifier = Modifier.fillMaxSize()
@@ -156,7 +152,6 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                 } else {
                     // Directory selector dropdown
                     var expanded by remember { mutableStateOf(false) }
-
                     Box {
                         TextButton(onClick = { expanded = true }) {
                             Text(
@@ -169,7 +164,6 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                             )
                             Icon(Icons.Default.ArrowDropDown, contentDescription = null)
                         }
-
                         DropdownMenu(
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
@@ -258,19 +252,16 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = "No Files Found",
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Text(
                     text = "Capture thermal images with your ${getDirTypeName(dirType)} to see them here",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Button(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -372,7 +363,6 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
-
                 // Selection indicator
                 if (isSelectionMode && isSelected) {
                     Box(
@@ -393,7 +383,6 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                         )
                     }
                 }
-
                 // File info overlay
                 Card(
                     modifier = Modifier
@@ -460,7 +449,6 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
-
                 // File info
                 Column(
                     modifier = Modifier.weight(1f)
@@ -482,7 +470,6 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
                 // Selection indicator
                 if (isSelectionMode) {
                     Checkbox(
@@ -504,12 +491,10 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()
         var unitIndex = 0
-
         while (size >= 1024 && unitIndex < units.size - 1) {
             size /= 1024
             unitIndex++
         }
-
         return "%.1f %s".format(size, units[unitIndex])
     }
 }

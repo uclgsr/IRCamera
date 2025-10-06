@@ -27,7 +27,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureViewModel>() {
-
     override fun createViewModel(): IRMonitorCaptureViewModel {
         return viewModels<IRMonitorCaptureViewModel>().value
     }
@@ -40,7 +39,6 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
         val temperatureData by viewModel.temperatureData.collectAsStateWithLifecycle()
         val captureHistory by viewModel.captureHistory.collectAsStateWithLifecycle()
         val deviceConnectionState by viewModel.deviceConnectionState.collectAsStateWithLifecycle()
-
         LibUnifiedTheme {
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -51,7 +49,6 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
                     deviceConnectionState = deviceConnectionState,
                     onToggleCapture = { viewModel.toggleCapture() }
                 )
-
                 // Main capture interface
                 Row(
                     modifier = Modifier
@@ -69,13 +66,11 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
                             temperatureData = temperatureData,
                             deviceConnectionState = deviceConnectionState
                         )
-
                         // Temperature overlay
                         TemperatureCaptureOverlay(
                             temperatureData = temperatureData,
                             modifier = Modifier.align(Alignment.TopEnd)
                         )
-
                         // Capture controls overlay
                         CaptureControlsOverlay(
                             captureState = captureState,
@@ -84,7 +79,6 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
                             modifier = Modifier.align(Alignment.BottomCenter)
                         )
                     }
-
                     // Capture history and controls panel
                     CaptureHistoryPanel(
                         captureState = captureState,
@@ -147,7 +141,6 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
                         )
                     }
                 }
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -260,13 +253,11 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
                     temperature = "${data.centerTemp}°C",
                     isMain = true
                 )
-
                 CaptureTemperatureCard(
                     label = "Max",
                     temperature = "${data.maxTemp}°C",
                     color = Color.Red
                 )
-
                 CaptureTemperatureCard(
                     label = "Min",
                     temperature = "${data.minTemp}°C",
@@ -346,7 +337,6 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
                         modifier = Modifier.size(24.dp)
                     )
                 }
-
                 // Continuous capture toggle
                 FilterChip(
                     onClick = onContinuousToggle,
@@ -399,16 +389,13 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-
                     Text(
                         text = "${captureHistory.size} captures",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
                 HorizontalDivider()
-
                 // Capture list
                 if (captureHistory.isEmpty()) {
                     Box(
@@ -447,7 +434,6 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
                         }
                     }
                 }
-
                 // Action buttons
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -461,7 +447,6 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Export All")
                     }
-
                     OutlinedButton(
                         onClick = onClearHistory,
                         modifier = Modifier.fillMaxWidth(),
@@ -515,7 +500,6 @@ class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureView
                         fontWeight = FontWeight.Bold
                     )
                 }
-
                 IconButton(
                     onClick = onDeleteCapture,
                     modifier = Modifier.size(32.dp)

@@ -9,25 +9,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
 class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
-
     var wholeLeft: Float? = null
-
     var wholeRight: Float? = null
-
     var wholeTop: Float? = null
-
     var wholeBottom: Float? = null
-
     var itemLeft: Float? = null
-
     var itemRight: Float? = null
-
     var itemTop: Float? = null
-
     var itemBottom: Float? = null
-
     private val density: Float = context.resources.displayMetrics.density
-
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -35,11 +25,9 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         state: RecyclerView.State
     ) {
         super.getItemOffsets(outRect, view, parent, state)
-
         val itemCount = parent.adapter?.itemCount ?: return
         val position = parent.getChildAdapterPosition(view)
         val layoutManager = parent.layoutManager
-
         when (layoutManager) {
             is GridLayoutManager -> {
                 if (layoutManager.orientation == LinearLayoutManager.VERTICAL) {
@@ -106,7 +94,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         val totalRow = itemCount / spanCount + if (itemCount % spanCount == 0) 0 else 1 //
         val rowPosition = position / spanCount    // position [0, totalRow)
         val columnPosition = position % spanCount // position [0, spanCount)
-
         val left: Int = dp2px(
             if (columnPosition == 0) wholeLeft ?: ((itemLeft ?: 0f) * 2) else (itemLeft ?: 0f)
         )
@@ -134,7 +121,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     ) {
         val totalRow = itemCount / spanCount + if (itemCount % spanCount == 0) 0 else 1 //
         val rowPosition = position / spanCount //position[0, totalRow)
-
         val left: Int =
             dp2px(if (spanIndex == 0) wholeLeft ?: ((itemLeft ?: 0f) * 2) else (itemLeft ?: 0f))
         val right: Int =
@@ -157,7 +143,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         // Can be enhanced when horizontal multi-row requirements are clarified
         val column = position % spanCount
         val row = position / spanCount
-
         val left: Int =
             dp2px(if (column == 0) wholeLeft ?: ((itemLeft ?: 0f) * 2) else (itemLeft ?: 0f))
         val right: Int =

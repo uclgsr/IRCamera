@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.matrix
 import android.util.Log
 
 class UsbBuffer {
-
     private val TAG = "UsbBuffer"
     private var mRingBuffer: RingBuffer
     private var mFrameSize = 0
@@ -28,7 +27,6 @@ class UsbBuffer {
 
     private var findHeadFrame = false
     private var findHeadFramePos = -1
-
     private fun getMark(buf: ByteArray, offset: Int): Int {
         return (buf[offset].toUByte().toInt().shl(0) or ((buf[offset + 1].toUByte()).toInt()
             .shl(8)))
@@ -38,7 +36,6 @@ class UsbBuffer {
         var i = 0
         while (i < frame.size - 1) {
             if (getMark(frame, i) == mark1) {
-
                 return true
             }
             i += 2
@@ -50,7 +47,6 @@ class UsbBuffer {
         var i = 0
         while (i < frame.size - 1) {
             if (getMark(frame, i) == mark1) {
-
                 return i
             }
             i += 2
@@ -72,13 +68,10 @@ class UsbBuffer {
                 break
             }
         }
-
 //        Log.d(TAG, "1 findHeadFrame=" + findHeadFrame);
         if (findHeadFramePos != -1) {
             //Log.d(TAG, "1: " + BaseDataTypeConvertUtils.Companion.byteArr2HexString(mPakagebuffer));
-
             mRingBuffer.moveBack(mPacketSize - findHeadFramePos)
-
             mRingBuffer.moveForward(mFrameSize)
             mRingBuffer.read(mPakagebuffer, 0, mPacketSize)
             //Log.d(TAG, "2: " + BaseDataTypeConvertUtils.Companion.byteArr2HexString(mPakagebuffer));

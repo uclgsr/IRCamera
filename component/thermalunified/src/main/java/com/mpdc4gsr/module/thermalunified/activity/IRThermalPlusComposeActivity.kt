@@ -20,7 +20,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>() {
-
     override fun createViewModel(): IRThermalPlusViewModel {
         return IRThermalPlusViewModel()
     }
@@ -59,7 +58,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Show Plus settings */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
                             }
                         },
@@ -88,7 +87,6 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
         var currentTemp by remember { mutableStateOf(28.7f) }
         var maxTemp by remember { mutableStateOf(45.2f) }
         var minTemp by remember { mutableStateOf(18.3f) }
-
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -129,7 +127,6 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                     }
                 }
             }
-
             // Temperature readings
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -158,7 +155,6 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                         )
                     }
                 }
-
                 Card(
                     modifier = Modifier.weight(1f),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
@@ -182,7 +178,6 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                         )
                     }
                 }
-
                 Card(
                     modifier = Modifier.weight(1f),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
@@ -207,7 +202,6 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                     }
                 }
             }
-
             // Premium thermal view
             Card(
                 modifier = Modifier
@@ -245,7 +239,6 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                     }
                 }
             }
-
             // AI enhancement controls
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -275,7 +268,6 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                             )
                         )
                     }
-
                     // Processing mode selection
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -293,7 +285,6 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                             )
                         }
                     }
-
                     // Enhancement level
                     if (aiEnhancement) {
                         Column {
@@ -315,14 +306,13 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                     }
                 }
             }
-
             // Premium action buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Capture with AI enhancement */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFFFFD700)
@@ -335,9 +325,8 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("AI Capture")
                 }
-
                 Button(
-                    onClick = { /* Run premium analysis */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFFD700),

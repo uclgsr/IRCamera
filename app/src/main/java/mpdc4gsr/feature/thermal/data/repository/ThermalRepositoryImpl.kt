@@ -9,7 +9,6 @@ import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
 class ThermalRepositoryImpl(
     private val topdonDataSource: TopdonDataSource
 ) : ThermalRepository {
-
     override suspend fun connectCamera(): Result<Unit> {
         return topdonDataSource.connectDevice()
     }

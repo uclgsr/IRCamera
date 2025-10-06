@@ -12,7 +12,6 @@ import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
 import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 
 class ThermalUsbReceiver : BroadcastReceiver() {
-
     companion object {
         private const val TAG = "ThermalUsbReceiver"
         private const val USB_PERMISSION_ACTION = "mpdc4gsr.USB_PERMISSION"
@@ -20,7 +19,6 @@ class ThermalUsbReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context == null || intent == null) return
-
         try {
             when (intent.action) {
                 UsbManager.ACTION_USB_DEVICE_ATTACHED -> {
@@ -48,7 +46,6 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 @Suppress("DEPRECATION")
                 intent.getParcelableExtra(UsbManager.EXTRA_DEVICE) as? UsbDevice
             }
-
         if (device != null) {
             Log.i(
                 TAG,
@@ -56,19 +53,14 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                     device.productId.toString(16)
                 })"
             )
-
             if (device.isTcTsDevice()) {
                 AppLogger.i(TAG, "Topdon thermal camera detected: ${device.productName}")
-
                 val usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
                 val hasPermission = usbManager.hasPermission(device)
-
                 if (hasPermission) {
-
                     AppLogger.i(TAG, "Thermal camera attached with existing permission")
                     DeviceEventManager.emitDeviceConnectionSync(true, device)
                 } else {
-
                     AppLogger.i(TAG, "Thermal camera attached, requesting USB permission")
                     DeviceEventManager.emitDevicePermissionRequestSync(device)
                 }
@@ -86,7 +78,6 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 @Suppress("DEPRECATION")
                 intent.getParcelableExtra(UsbManager.EXTRA_DEVICE) as? UsbDevice
             }
-
         if (device != null) {
             Log.i(
                 TAG,
@@ -94,10 +85,8 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                     device.productId.toString(16)
                 })"
             )
-
             if (device.isTcTsDevice()) {
                 AppLogger.w(TAG, "Topdon thermal camera disconnected: ${device.productName}")
-
                 DeviceEventManager.emitDeviceConnectionSync(false, device)
             }
         }
@@ -111,20 +100,15 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 @Suppress("DEPRECATION")
                 intent.getParcelableExtra(UsbManager.EXTRA_DEVICE) as? UsbDevice
             }
-
         val granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
-
         if (device != null) {
             AppLogger.i(TAG, "USB permission result for ${device.productName}: granted=$granted")
-
             if (device.isTcTsDevice()) {
                 if (granted) {
                     AppLogger.i(TAG, "USB permission granted for thermal camera")
-
                     DeviceEventManager.emitDeviceConnectionSync(true, device)
                 } else {
                     AppLogger.w(TAG, "USB permission denied for thermal camera")
-
                     DeviceEventManager.emitDevicePermissionRequestSync(device)
                 }
             }

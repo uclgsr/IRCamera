@@ -11,13 +11,6 @@ import com.mpdc4gsr.libunified.app.compose.utils.safeClickableDeferred as libSaf
 import com.mpdc4gsr.libunified.app.compose.utils.safeClickableNoRipple as libSafeClickableNoRipple
 import com.mpdc4gsr.libunified.app.compose.utils.safeClickableWithRipple as libSafeClickableWithRipple
 
-/**
- * Re-export of SafeRippleModifier utilities from libunified for backward compatibility.
- *
- * All implementations have been moved to libunified to allow sharing between app and component modules.
- * This file maintains the original package path to avoid breaking existing imports in the app module.
- */
-
 @Composable
 fun Modifier.safeClickable(
     enabled: Boolean = true,

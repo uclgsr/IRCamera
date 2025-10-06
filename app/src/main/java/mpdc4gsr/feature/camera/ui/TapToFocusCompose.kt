@@ -20,10 +20,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * Compose replacement for TapToFocusPreviewView
- * Camera preview with tap-to-focus functionality and visual feedback
- */
 @Composable
 fun TapToFocusPreview(
     onTapToFocus: (normalizedX: Float, normalizedY: Float) -> Unit,
@@ -34,7 +30,6 @@ fun TapToFocusPreview(
     var focusPoint by remember { mutableStateOf<Offset?>(null) }
     var showFocusIndicator by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-
     Box(modifier = modifier.fillMaxSize()) {
         // Camera PreviewView
         AndroidView(
@@ -49,13 +44,10 @@ fun TapToFocusPreview(
                     detectTapGestures { offset ->
                         val normalizedX = offset.x / size.width
                         val normalizedY = offset.y / size.height
-
                         focusPoint = offset
                         showFocusIndicator = true
-
                         // Call the focus callback
                         onTapToFocus(normalizedX, normalizedY)
-
                         // Auto-hide focus indicator after delay
                         coroutineScope.launch {
                             delay(2000)
@@ -64,7 +56,6 @@ fun TapToFocusPreview(
                     }
                 }
         )
-
         // Focus indicator overlay
         if (showFocusIndicator && focusPoint != null) {
             FocusIndicator(focusPoint = focusPoint!!)
@@ -76,7 +67,6 @@ fun TapToFocusPreview(
 private fun FocusIndicator(focusPoint: Offset) {
     val density = LocalDensity.current
     val circleRadius = with(density) { 60.dp.toPx() }
-
     // Animate the focus indicator
     val infiniteTransition = rememberInfiniteTransition(label = "focus")
     val alpha by infiniteTransition.animateFloat(
@@ -88,7 +78,6 @@ private fun FocusIndicator(focusPoint: Offset) {
         ),
         label = "focusAlpha"
     )
-
     Canvas(modifier = Modifier.fillMaxSize()) {
         // Outer circle
         drawCircle(
@@ -97,7 +86,6 @@ private fun FocusIndicator(focusPoint: Offset) {
             center = focusPoint,
             style = Stroke(width = 4f, cap = StrokeCap.Round)
         )
-
         // Inner crosshair
         val crossSize = circleRadius * 0.3f
         drawLine(
@@ -117,9 +105,6 @@ private fun FocusIndicator(focusPoint: Offset) {
     }
 }
 
-/**
- * Alternative version with customizable focus indicator style
- */
 @Composable
 fun TapToFocusPreviewWithCustomIndicator(
     onTapToFocus: (normalizedX: Float, normalizedY: Float) -> Unit,
@@ -134,7 +119,6 @@ fun TapToFocusPreviewWithCustomIndicator(
     val coroutineScope = rememberCoroutineScope()
     val density = LocalDensity.current
     val radiusPx = with(density) { focusIndicatorRadius.dp.toPx() }
-
     Box(modifier = modifier.fillMaxSize()) {
         AndroidView(
             factory = { ctx -> PreviewView(ctx).apply { previewViewConfig(this) } },
@@ -144,11 +128,9 @@ fun TapToFocusPreviewWithCustomIndicator(
                     detectTapGestures { offset ->
                         val normalizedX = offset.x / size.width
                         val normalizedY = offset.y / size.height
-
                         focusPoint = offset
                         showFocusIndicator = true
                         onTapToFocus(normalizedX, normalizedY)
-
                         coroutineScope.launch {
                             delay(autoHideDelay)
                             showFocusIndicator = false
@@ -156,7 +138,6 @@ fun TapToFocusPreviewWithCustomIndicator(
                     }
                 }
         )
-
         if (showFocusIndicator && focusPoint != null) {
             CustomFocusIndicator(
                 focusPoint = focusPoint!!,
@@ -183,7 +164,6 @@ private fun CustomFocusIndicator(
         ),
         label = "alpha"
     )
-
     val animatedScale by infiniteTransition.animateFloat(
         initialValue = 1f,
         targetValue = 0.8f,
@@ -193,10 +173,8 @@ private fun CustomFocusIndicator(
         ),
         label = "scale"
     )
-
     Canvas(modifier = Modifier.fillMaxSize()) {
         val scaledRadius = radius * animatedScale
-
         // Animated circle
         drawCircle(
             color = color.copy(alpha = animatedAlpha),
@@ -204,11 +182,9 @@ private fun CustomFocusIndicator(
             center = focusPoint,
             style = Stroke(width = 4f)
         )
-
         // Corner brackets
         val bracketSize = scaledRadius * 0.3f
         val offset = scaledRadius - bracketSize
-
         // Top-left bracket
         drawLine(
             color = color.copy(alpha = animatedAlpha),
@@ -222,7 +198,6 @@ private fun CustomFocusIndicator(
             end = Offset(focusPoint.x - offset + bracketSize, focusPoint.y - offset),
             strokeWidth = 3f
         )
-
         // Top-right bracket
         drawLine(
             color = color.copy(alpha = animatedAlpha),
@@ -236,7 +211,6 @@ private fun CustomFocusIndicator(
             end = Offset(focusPoint.x + offset, focusPoint.y - offset + bracketSize),
             strokeWidth = 3f
         )
-
         // Bottom-left bracket
         drawLine(
             color = color.copy(alpha = animatedAlpha),
@@ -250,7 +224,6 @@ private fun CustomFocusIndicator(
             end = Offset(focusPoint.x - offset + bracketSize, focusPoint.y + offset),
             strokeWidth = 3f
         )
-
         // Bottom-right bracket
         drawLine(
             color = color.copy(alpha = animatedAlpha),

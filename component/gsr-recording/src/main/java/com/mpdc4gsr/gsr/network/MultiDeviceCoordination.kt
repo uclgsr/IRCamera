@@ -22,11 +22,9 @@ class MultiDeviceCoordination(
 
     private val coordinationJob = SupervisorJob()
     private val coordinationScope = CoroutineScope(Dispatchers.IO + coordinationJob)
-
     private val connectedDevices = ConcurrentHashMap<String, DeviceInfo>()
     private val syncEvents = ConcurrentHashMap<String, SyncEvent>()
     private val isCoordinating = AtomicBoolean(false)
-
     private var deviceId: String =
         android.provider.Settings.Secure.getString(
             context.contentResolver,
@@ -68,13 +66,9 @@ class MultiDeviceCoordination(
         withContext(Dispatchers.IO) {
             currentSessionId = sessionId
             isCoordinating.set(true)
-
             startDeviceDiscovery()
-
             initiateLeaderElection()
-
             startSynchronizationLoop()
-
             Log.d(TAG, "Multi-device coordination initialized for session: $sessionId")
         }
 
@@ -88,13 +82,10 @@ class MultiDeviceCoordination(
                 put("session_id", currentSessionId)
                 put("timestamp", System.currentTimeMillis())
             }
-
         networkClient.broadcastMessage(discoveryMessage)
-
         networkClient.setMessageHandler("device_discovery_response") { message ->
             handleDeviceDiscoveryResponse(message)
         }
-
         networkClient.setMessageHandler("device_discovery") { message ->
             handleDeviceDiscoveryRequest(message)
         }
@@ -103,7 +94,6 @@ class MultiDeviceCoordination(
     private fun handleDeviceDiscoveryResponse(message: JSONObject) {
         val remoteDeviceId = message.optString("device_id")
         if (remoteDeviceId.isEmpty() || remoteDeviceId == deviceId) return
-
         val deviceInfo =
             DeviceInfo(
                 deviceId = remoteDeviceId,
@@ -113,7 +103,6 @@ class MultiDeviceCoordination(
                 clockOffset = message.optLong("clock_offset", 0L),
                 batteryLevel = message.optInt("battery_level", 100),
             )
-
         connectedDevices[remoteDeviceId] = deviceInfo
         Log.d(TAG, "Discovered device: $remoteDeviceId (${deviceInfo.deviceName})")
     }
@@ -130,7 +119,6 @@ class MultiDeviceCoordination(
                 put("battery_level", getBatteryLevel())
                 put("timestamp", System.currentTimeMillis())
             }
-
         coordinationScope.launch {
             networkClient.sendMessage(response)
         }
@@ -144,12 +132,9 @@ class MultiDeviceCoordination(
                 put("priority", calculateLeadershipPriority())
                 put("timestamp", System.currentTimeMillis())
             }
-
         networkClient.broadcastMessage(electionMessage)
-
         delay(LEADER_ELECTION_TIMEOUT)
         determineLeader()
-
         networkClient.setMessageHandler("leader_election") { message ->
             handleLeaderElection(message)
         }
@@ -157,13 +142,9 @@ class MultiDeviceCoordination(
 
     private fun calculateLeadershipPriority(): Int {
         var priority = 100
-
         priority += getBatteryLevel()
-
         priority += 50
-
         if (networkClient.isConnected()) priority += 25
-
         return priority
     }
 
@@ -171,11 +152,9 @@ class MultiDeviceCoordination(
         val remoteDeviceId = message.optString("device_id")
         val remotePriority = message.optInt("priority", 0)
         val myPriority = calculateLeadershipPriority()
-
         if (remotePriority > myPriority ||
             (remotePriority == myPriority && remoteDeviceId < deviceId)
         ) {
-
             isLeader.set(false)
         }
     }
@@ -193,13 +172,9 @@ class MultiDeviceCoordination(
     private fun startLeadershipDuties() {
         coordinationScope.launch {
             while (isCoordinating.get() && isLeader.get()) {
-
                 broadcastSyncSignal()
-
                 checkDeviceHealth()
-
                 processScheduledEvents()
-
                 delay(SYNC_INTERVAL_MS)
             }
         }
@@ -209,7 +184,6 @@ class MultiDeviceCoordination(
         networkClient.setMessageHandler("sync_signal") { message ->
             handleSyncSignal(message)
         }
-
         networkClient.setMessageHandler("coordination_event") { message ->
             handleCoordinationEvent(message)
         }
@@ -224,7 +198,6 @@ class MultiDeviceCoordination(
                 put("sync_timestamp", System.currentTimeMillis())
                 put("device_count", connectedDevices.size + 1)
             }
-
         networkClient.broadcastMessage(syncMessage)
     }
 
@@ -232,15 +205,12 @@ class MultiDeviceCoordination(
         val leaderTimestamp = message.optLong("sync_timestamp")
         val currentTime = System.currentTimeMillis()
         val drift = Math.abs(currentTime - leaderTimestamp)
-
         if (drift > MAX_SYNC_DRIFT_MS) {
             Log.w(TAG, "Time drift detected: ${drift}ms")
-
             coordinationScope.launch {
                 requestTimeResync()
             }
         }
-
         sendHeartbeat()
     }
 
@@ -253,7 +223,6 @@ class MultiDeviceCoordination(
                 put("battery_level", getBatteryLevel())
                 put("is_recording", isDeviceRecording())
             }
-
         coordinationScope.launch {
             networkClient.sendMessage(heartbeatMessage)
         }
@@ -266,16 +235,13 @@ class MultiDeviceCoordination(
         withContext(Dispatchers.IO) {
             val eventId = generateEventId(eventType.eventType)
             val scheduledTime = System.currentTimeMillis() + delayMs
-
             val syncEvent =
                 SyncEvent(
                     eventId = eventId,
                     eventType = eventType.eventType,
                     scheduledTime = scheduledTime,
                 )
-
             syncEvents[eventId] = syncEvent
-
             val eventMessage =
                 JSONObject().apply {
                     put("type", "coordination_event")
@@ -284,9 +250,7 @@ class MultiDeviceCoordination(
                     put("scheduled_time", scheduledTime)
                     put("session_id", currentSessionId)
                 }
-
             networkClient.broadcastMessage(eventMessage)
-
             Log.d(TAG, "Scheduled coordinated event: ${eventType.eventType} at $scheduledTime")
             eventId
         }
@@ -295,13 +259,11 @@ class MultiDeviceCoordination(
         val eventId = message.optString("event_id")
         val eventType = message.optString("event_type")
         val scheduledTime = message.optLong("scheduled_time")
-
         coordinationScope.launch {
             val delay = scheduledTime - System.currentTimeMillis()
             if (delay > 0) {
                 delay(delay)
             }
-
             executeCoordinatedEvent(eventType, eventId)
             sendEventConfirmation(eventId)
         }
@@ -312,7 +274,6 @@ class MultiDeviceCoordination(
         eventId: String,
     ) {
         Log.d(TAG, "Executing coordinated event: $eventType")
-
         when (eventType) {
             "session_start" -> handleSessionStart()
             "session_stop" -> handleSessionStop()
@@ -332,7 +293,6 @@ class MultiDeviceCoordination(
                 put("device_id", deviceId)
                 put("execution_timestamp", System.currentTimeMillis())
             }
-
         networkClient.sendMessage(confirmationMessage)
     }
 
@@ -343,9 +303,7 @@ class MultiDeviceCoordination(
     }
 
     private suspend fun handleSyncFlash() {
-
         Log.d(TAG, "Executing sync flash at ${System.currentTimeMillis()}")
-
         val flashIntent = android.content.Intent("com.mpdc4gsr.gsr.SYNC_FLASH")
         flashIntent.putExtra("timestamp", System.currentTimeMillis())
         context.sendBroadcast(flashIntent)
@@ -392,12 +350,10 @@ class MultiDeviceCoordination(
     }
 
     private fun isDeviceRecording(): Boolean {
-
         return false // Placeholder
     }
 
     private suspend fun requestTimeResync() {
-
         Log.d(TAG, "Requesting time resynchronization")
     }
 
@@ -437,7 +393,6 @@ class MultiDeviceCoordination(
     }
 
     private fun processScheduledEvents() {
-
         syncEvents.entries.removeAll { (_, event) ->
             event.isCompleted
         }
@@ -462,7 +417,6 @@ class MultiDeviceCoordination(
         connectedDevices.clear()
         syncEvents.clear()
         coordinationJob.cancel()
-
         Log.d(TAG, "Multi-device coordination stopped")
     }
 }

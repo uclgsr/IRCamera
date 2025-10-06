@@ -7,28 +7,19 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.network.data.NetworkClient
 
-/**
- * Modernized DevicePairingViewModel using StateFlow and Repository pattern
- * Manages network device discovery and pairing with reactive state management
- */
 class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventListener {
-
     // StateFlow for reactive state management
     private val _discoveredControllers =
         MutableStateFlow<List<NetworkClient.ControllerInfo>>(emptyList())
     val discoveredControllers: StateFlow<List<NetworkClient.ControllerInfo>> =
         _discoveredControllers.asStateFlow()
-
     private val _connectedController = MutableStateFlow<NetworkClient.ControllerInfo?>(null)
     val connectedController: StateFlow<NetworkClient.ControllerInfo?> =
         _connectedController.asStateFlow()
-
     private val _pairingConnectionState = MutableStateFlow(ConnectionState.DISCONNECTED)
     val pairingConnectionState: StateFlow<ConnectionState> = _pairingConnectionState.asStateFlow()
-
     private val _scanState = MutableStateFlow(ScanState.IDLE)
     val scanState: StateFlow<ScanState> = _scanState.asStateFlow()
-
     private val _statusMessage = MutableStateFlow("")
     val statusMessage: StateFlow<String> = _statusMessage.asStateFlow()
 
@@ -43,7 +34,6 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
     // Combined state for complex UI scenarios
     private val _pairingScreenState = MutableStateFlow(PairingScreenState())
     val pairingScreenState: StateFlow<PairingScreenState> = _pairingScreenState.asStateFlow()
-
     private lateinit var networkClient: NetworkClient
     private val controllers = mutableListOf<NetworkClient.ControllerInfo>()
 
@@ -116,12 +106,10 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
         launchWithErrorHandling {
             networkClient = NetworkClient(context)
             networkClient.setEventListener(this@DevicePairingViewModel)
-
             _pairingConnectionState.value = ConnectionState.DISCONNECTED
             _scanState.value = ScanState.IDLE
             _statusMessage.value = "Ready to scan for PC Controllers"
             _discoveredControllers.value = emptyList()
-
             _events.emit(PairingEvent.ShowSuccess("Network client initialized successfully"))
         }
     }
@@ -132,36 +120,29 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
             if (currentScanState == ScanState.SCANNING) {
                 return@launchWithErrorHandling // Already scanning
             }
-
             _scanState.value = ScanState.SCANNING
             _statusMessage.value = "Scanning for PC Controllers..."
-
             if (forceRefresh) {
                 controllers.clear()
                 _discoveredControllers.value = emptyList()
             }
-
             try {
                 val foundControllers = networkClient.discoverControllers()
                 controllers.clear()
                 controllers.addAll(foundControllers)
                 _discoveredControllers.value = controllers.toList()
-
                 val message = if (foundControllers.isNotEmpty()) {
                     "Found ${foundControllers.size} PC Controller(s)"
                 } else {
                     "No PC Controllers found. Make sure you're on the same network."
                 }
-
                 _statusMessage.value = message
                 _scanState.value = ScanState.COMPLETED
-
                 if (foundControllers.isNotEmpty()) {
                     _events.emit(PairingEvent.ShowSuccess(message))
                 } else {
                     _events.emit(PairingEvent.ShowError("No controllers found"))
                 }
-
             } catch (e: Exception) {
                 val errorMessage = "Scan failed: ${e.message}"
                 _statusMessage.value = errorMessage
@@ -177,19 +158,15 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
             if (currentConnectionState == ConnectionState.CONNECTING) {
                 return@launchWithLoading // Already connecting
             }
-
             try {
                 _pairingConnectionState.value = ConnectionState.CONNECTING
                 _statusMessage.value = "Connecting to ${controller.deviceName}..."
-
                 // Show connection dialog
                 _events.emit(PairingEvent.ShowConnectionDialog(controller))
-
                 val success = networkClient.connectToController(
                     ipAddress = controller.ipAddress,
                     port = controller.port
                 )
-
                 if (success) {
                     _connectedController.value = controller
                     _pairingConnectionState.value = ConnectionState.CONNECTED
@@ -200,7 +177,6 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
                     _statusMessage.value = "Failed to connect to ${controller.deviceName}"
                     _events.emit(PairingEvent.ShowError("Connection failed"))
                 }
-
             } catch (e: Exception) {
                 _pairingConnectionState.value = ConnectionState.CONNECTION_FAILED
                 _statusMessage.value = "Connection error: ${e.message}"
