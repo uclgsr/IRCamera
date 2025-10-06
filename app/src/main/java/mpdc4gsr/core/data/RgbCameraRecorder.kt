@@ -846,29 +846,76 @@ class RgbCameraRecorder(
     }
 
     private suspend fun checkAndRequestPermissions(): Boolean {
-        if (hasCameraPermission()) return true
+        AppLogger.d(TAG, "Checking camera and storage permissions for RGB recording")
+        
+        val hasCameraPermission = hasCameraPermission()
+        val hasStoragePermission = hasStoragePermission()
+        
+        if (hasCameraPermission && hasStoragePermission) {
+            AppLogger.i(TAG, "All required permissions already granted")
+            return true
+        }
 
-        _cameraStatus.value = "Camera Permission Required"
+        if (!hasCameraPermission) {
+            AppLogger.w(TAG, "Camera permission not granted")
+            _cameraStatus.value = "Camera Permission Required"
+        } else if (!hasStoragePermission) {
+            AppLogger.w(TAG, "Storage permission not granted - required for saving frames and RAW capture")
+            _cameraStatus.value = "Storage Permission Required"
+        }
 
         return permissionManager?.let { permissionManager ->
             try {
+                AppLogger.i(TAG, "Requesting camera and storage permissions")
                 val granted = permissionManager.requestCameraPermissions()
                 if (granted) {
-                    _cameraStatus.value = "Permissions Granted"
-                    true
+                    val recheckCamera = hasCameraPermission()
+                    val recheckStorage = hasStoragePermission()
+                    
+                    AppLogger.i(TAG, "Permission request completed - Camera: $recheckCamera, Storage: $recheckStorage")
+                    
+                    if (recheckCamera && recheckStorage) {
+                        _cameraStatus.value = "Permissions Granted"
+                        AppLogger.i(TAG, "All required permissions granted successfully")
+                        true
+                    } else {
+                        val missing = mutableListOf<String>()
+                        if (!recheckCamera) missing.add("Camera")
+                        if (!recheckStorage) missing.add("Storage")
+                        
+                        _cameraStatus.value = "Missing Permissions: ${missing.joinToString()}"
+                        AppLogger.e(TAG, "Still missing permissions after request: ${missing.joinToString()}")
+                        emitError(
+                            ErrorType.PERMISSION_DENIED, 
+                            "Required permissions denied: ${missing.joinToString()}. Please grant permissions in Settings."
+                        )
+                        false
+                    }
                 } else {
                     _cameraStatus.value = "Camera Permission Denied"
-                    emitError(ErrorType.PERMISSION_DENIED, "Camera permission denied")
+                    AppLogger.e(TAG, "Camera permission request denied by user")
+                    emitError(
+                        ErrorType.PERMISSION_DENIED, 
+                        "Camera permission denied. Required for video recording and frame capture."
+                    )
                     false
                 }
             } catch (e: Exception) {
                 _cameraStatus.value = "Permission Request Failed"
-                emitError(ErrorType.PERMISSION_DENIED, "Permission request failed: ${e.message}")
+                AppLogger.e(TAG, "Exception during permission request", e)
+                emitError(
+                    ErrorType.PERMISSION_DENIED, 
+                    "Permission request failed: ${e.message}. Please grant permissions manually in Settings."
+                )
                 false
             }
         } ?: run {
             _cameraStatus.value = "Permission Required - Check Settings"
-            emitError(ErrorType.PERMISSION_DENIED, "Camera permission required")
+            AppLogger.e(TAG, "PermissionManager not available - cannot request permissions")
+            emitError(
+                ErrorType.PERMISSION_DENIED, 
+                "Camera and storage permissions required. Please enable them in device Settings."
+            )
             false
         }
     }
@@ -1012,6 +1059,19 @@ class RgbCameraRecorder(
                         return@withContext false
                     }
                 }
+            }
+
+            if (!hasStoragePermission()) {
+                AppLogger.e(TAG, "Cannot start recording - storage permission not granted")
+                emitError(
+                    ErrorType.PERMISSION_DENIED,
+                    "Storage permission required for saving recordings and frames"
+                )
+                return false
+            }
+            
+            if (deviceSupportsRAW && ENABLE_RAW_CAPTURE) {
+                AppLogger.i(TAG, "RAW capture enabled - will save DNG files alongside JPEG frames")
             }
 
             setupOutputFiles()
@@ -1289,7 +1349,11 @@ class RgbCameraRecorder(
                             }
 
                             if (rawFile != null && deviceSupportsRAW && ENABLE_RAW_CAPTURE) {
-                                captureRawFrameAsync(rawFile, timestampRecord, frameNumber)
+                                if (hasStoragePermission()) {
+                                    captureRawFrameAsync(rawFile, timestampRecord, frameNumber)
+                                } else {
+                                    AppLogger.w(TAG, "Skipping RAW capture - storage permission not granted")
+                                }
                             }
 
                             onComplete()
@@ -1327,6 +1391,11 @@ class RgbCameraRecorder(
         frameNumber: Long
     ) {
         try {
+            if (!hasStoragePermission()) {
+                AppLogger.e(TAG, "Cannot capture RAW frame - storage permission not granted")
+                return
+            }
+            
             AppLogger.d(TAG, "Capturing Stage 3/Level 3 DNG frame $frameNumber - ${rawFile.name}")
 
             val useStage3 = deviceSupportsRAW && ENABLE_RAW_CAPTURE &&
@@ -2073,8 +2142,57 @@ class RgbCameraRecorder(
     }
 
     fun hasCameraPermission(): Boolean {
-        return context.checkSelfPermission(android.Manifest.permission.CAMERA) ==
+        val hasCamera = context.checkSelfPermission(android.Manifest.permission.CAMERA) ==
                 android.content.pm.PackageManager.PERMISSION_GRANTED
+        val hasAudio = context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) ==
+                android.content.pm.PackageManager.PERMISSION_GRANTED
+        
+        if (!hasCamera) {
+            AppLogger.w(TAG, "Camera permission not granted")
+        }
+        if (!hasAudio) {
+            AppLogger.w(TAG, "Audio recording permission not granted")
+        }
+        
+        return hasCamera && hasAudio
+    }
+    
+    fun hasStoragePermission(): Boolean {
+        val hasPermission = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            val hasImages = context.checkSelfPermission(android.Manifest.permission.READ_MEDIA_IMAGES) ==
+                    android.content.pm.PackageManager.PERMISSION_GRANTED
+            val hasVideo = context.checkSelfPermission(android.Manifest.permission.READ_MEDIA_VIDEO) ==
+                    android.content.pm.PackageManager.PERMISSION_GRANTED
+            
+            if (!hasImages) {
+                AppLogger.w(TAG, "READ_MEDIA_IMAGES permission not granted (Android 13+)")
+            }
+            if (!hasVideo) {
+                AppLogger.w(TAG, "READ_MEDIA_VIDEO permission not granted (Android 13+)")
+            }
+            
+            hasImages && hasVideo
+        } else {
+            val hasWrite = context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                    android.content.pm.PackageManager.PERMISSION_GRANTED
+            val hasRead = context.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    android.content.pm.PackageManager.PERMISSION_GRANTED
+            
+            if (!hasWrite) {
+                AppLogger.w(TAG, "WRITE_EXTERNAL_STORAGE permission not granted")
+            }
+            if (!hasRead) {
+                AppLogger.w(TAG, "READ_EXTERNAL_STORAGE permission not granted")
+            }
+            
+            hasWrite && hasRead
+        }
+        
+        if (!hasPermission) {
+            AppLogger.w(TAG, "Storage permission not granted - RAW capture and frame saving will fail")
+        }
+        
+        return hasPermission
     }
 
     fun supportsHighResolution(): Boolean {
