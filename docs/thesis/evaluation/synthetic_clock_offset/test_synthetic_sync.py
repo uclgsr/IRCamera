@@ -12,15 +12,15 @@ Subsystem: Time synchronization module
 Thesis Chapters: Chapter 5 (sync accuracy results), Chapter 6 (timing alignment)
 """
 
-import sys
-import os
-import time
 import csv
+import os
 import random
 import statistics
-from typing import List, Dict
+import sys
+import time
 from datetime import datetime
 from pathlib import Path
+from typing import List, Dict
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'pc-controller'))
 

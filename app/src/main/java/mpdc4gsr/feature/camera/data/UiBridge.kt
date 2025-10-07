@@ -1,11 +1,9 @@
 package mpdc4gsr.feature.camera.data
 
 import android.graphics.SurfaceTexture
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import android.view.Surface
 import android.view.TextureView
+import mpdc4gsr.core.utils.AppLogger
 
 class UiBridge(private val textureView: TextureView) {
     companion object {

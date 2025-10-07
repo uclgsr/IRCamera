@@ -21,6 +21,7 @@ Expected Sampling Rates:
 
 import pytest
 from datetime import datetime
+
 from .test_utils import (
     SensorDataGenerator,
     SessionDurationAnalyzer,

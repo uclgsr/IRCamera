@@ -19,8 +19,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.CountDownLatch
 
 class UpReportViewModel : BaseViewModel() {

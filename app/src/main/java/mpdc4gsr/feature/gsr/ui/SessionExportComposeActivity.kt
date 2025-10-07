@@ -18,11 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.gsr.presentation.ExportDestination
-import mpdc4gsr.feature.gsr.presentation.ExportFormat
+import mpdc4gsr.feature.gsr.presentation.*
 import mpdc4gsr.feature.gsr.presentation.GSRSession
-import mpdc4gsr.feature.gsr.presentation.SessionExportViewModel
-import mpdc4gsr.feature.gsr.presentation.SessionExportViewModelFactory
 
 class SessionExportComposeActivity : BaseComposeActivity<SessionExportViewModel>() {
     override fun createViewModel(): SessionExportViewModel =

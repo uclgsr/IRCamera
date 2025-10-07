@@ -1,11 +1,11 @@
 package com.mpdc4gsr.libunified.app.utils
 
-import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.network.HttpProxy.Companion.instant
 import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
 import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtils
 import com.mpdc4gsr.libunified.app.lms.xutils.http.RequestParams
+import com.mpdc4gsr.libunified.compat.ContextProvider
 
 object HttpHelp {
     fun getFirstReportData(

@@ -4,8 +4,6 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.mpdc4gsr.gsr.model.GSRSample
@@ -23,6 +21,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import mpdc4gsr.core.data.*
+import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.network.data.RecordingController
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong

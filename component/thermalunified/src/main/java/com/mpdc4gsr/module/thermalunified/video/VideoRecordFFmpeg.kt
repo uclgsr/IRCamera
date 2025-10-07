@@ -23,9 +23,6 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
-import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
-import com.mpdc4gsr.module.thermalunified.compat.dpToPx
-import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import com.elvishew.xlog.XLog
 import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.app.comm.view.TempLayout
@@ -39,15 +36,13 @@ import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.ui.camera.CameraPreView
 import com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout
 import com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView
+import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
+import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import com.mpdc4gsr.module.thermalunified.view.HikSurfaceView
 import com.mpdc4gsr.module.thermalunified.view.TemperatureHikView
 import com.mpdc4gsr.module.thermalunified.view.compass.LinearCompassView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.bytedeco.ffmpeg.global.avcodec
 import org.bytedeco.javacv.FFmpegFrameRecorder
 import org.bytedeco.javacv.Frame
@@ -58,7 +53,6 @@ import java.nio.ByteBuffer
 import java.nio.ShortBuffer
 import java.util.*
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 import com.mpdc4gsr.libunified.R as LibcoreR
 

@@ -2,8 +2,6 @@ package mpdc4gsr.feature.main.presentation
 
 import android.app.Application
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.SessionInfo
@@ -14,6 +12,7 @@ import kotlinx.coroutines.withContext
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.core.SessionManager
 import mpdc4gsr.core.data.UnifiedGSRRecorder
+import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.network.data.NetworkClient
 import mpdc4gsr.feature.network.data.NetworkController

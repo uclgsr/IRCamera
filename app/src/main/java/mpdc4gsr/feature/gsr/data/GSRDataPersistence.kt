@@ -2,8 +2,6 @@ package mpdc4gsr.feature.gsr.data
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,6 +11,7 @@ import mpdc4gsr.core.data.TimestampManager
 import mpdc4gsr.core.data.TimestampRecord
 import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
+import mpdc4gsr.core.utils.AppLogger
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*

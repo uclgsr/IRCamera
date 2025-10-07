@@ -1,13 +1,13 @@
 package com.mpdc4gsr.module.thermalunified.frame
 
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
-import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
-import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import com.mpdc4gsr.libunified.app.bean.CustomPseudoBean
 import com.mpdc4gsr.libunified.app.bean.WatermarkBean
 import com.mpdc4gsr.libunified.app.common.ProductType.PRODUCT_NAME_TC007
 import com.mpdc4gsr.libunified.app.utils.ByteUtils
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.toBytes
+import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
+import com.mpdc4gsr.module.thermalunified.compat.spToPx
 
 class FrameStruct() {
     companion object {

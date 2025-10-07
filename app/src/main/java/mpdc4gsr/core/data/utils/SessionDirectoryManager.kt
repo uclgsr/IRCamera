@@ -3,9 +3,7 @@ package mpdc4gsr.core.data.utils
 import android.content.Context
 import android.os.Build
 import android.os.StatFs
-import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat

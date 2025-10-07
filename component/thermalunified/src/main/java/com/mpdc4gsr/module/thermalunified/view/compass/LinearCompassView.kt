@@ -8,19 +8,13 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.view.drawToBitmap
-import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import com.mpdc4gsr.module.thermalunified.utils.getPixelLinear
 import com.mpdc4gsr.module.thermalunified.utils.getValuesBetween
 import com.mpdc4gsr.module.thermalunified.utils.realX
 import com.mpdc4gsr.module.thermalunified.utils.realY
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlin.coroutines.EmptyCoroutineContext
+import kotlinx.coroutines.*
 
 class LinearCompassView : View {
     private val paint = Paint()

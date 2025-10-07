@@ -2,11 +2,9 @@ package mpdc4gsr.feature.network.data
 
 import android.net.TrafficStats
 import android.os.Process
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import mpdc4gsr.core.data.model.GSRSample
+import mpdc4gsr.core.utils.AppLogger
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader

@@ -3,12 +3,10 @@ package mpdc4gsr.core.data
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.libunified.app.security.CertificateManager
 import kotlinx.coroutines.*
 import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.core.utils.AppLogger
 import org.json.JSONObject
 import java.security.KeyStore
 import java.security.SecureRandom

@@ -1,13 +1,8 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import mpdc4gsr.core.StructuredLogger
 import org.json.JSONObject
 import java.io.File

@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.settings.presentation
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Environment

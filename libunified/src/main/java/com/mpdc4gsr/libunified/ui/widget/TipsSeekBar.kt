@@ -7,9 +7,8 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.mpdc4gsr.libunified.compat.dpToPx
-import com.mpdc4gsr.libunified.compat.spToPx
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.compat.dpToPx
 
 class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
     private val tipsPercent: Float

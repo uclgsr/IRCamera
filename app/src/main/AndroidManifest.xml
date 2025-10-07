@@ -3,52 +3,82 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permissions -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <!-- Bluetooth (API ≤ 30 use legacy; API 31+ use new runtime perms) -->
-    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30"/>
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
     <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation"
-        tools:targetApi="31"/>
+        tools:targetApi="31" />
     <uses-permission
         android:name="android.permission.BLUETOOTH_CONNECT"
-        tools:targetApi="31"/>
+        tools:targetApi="31" />
     <!-- <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" tools:targetApi="31"/> -->
 
     <!-- Location only for BLE scan on API ≤ 30 -->
     <uses-permission
         android:name="android.permission.ACCESS_FINE_LOCATION"
-        android:maxSdkVersion="30"/>
+        android:maxSdkVersion="30" />
 
     <!-- Scoped media (API 33+) -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" tools:targetApi="33"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"  tools:targetApi="33"/>
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_IMAGES"
+        tools:targetApi="33" />
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_VIDEO"
+        tools:targetApi="33" />
 
     <!-- Legacy external storage only for API ≤ 32 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"  android:maxSdkVersion="32"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <!-- Notifications (API 33+) -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" tools:targetApi="33"/>
+    <uses-permission
+        android:name="android.permission.POST_NOTIFICATIONS"
+        tools:targetApi="33" />
 
     <!-- Foreground service permissions -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA"           tools:targetApi="34"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"        tools:targetApi="34"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" tools:targetApi="34"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_CAMERA"
+        tools:targetApi="34" />
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"
+        tools:targetApi="34" />
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE"
+        tools:targetApi="34" />
     <!-- If your FGS records audio, also add:
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" tools:targetApi="34"/> -->
 
     <!-- Hardware features -->
-    <uses-feature android:name="android.hardware.camera.any" android:required="true"/>
-    <uses-feature android:name="android.hardware.microphone" android:required="true"/>
-    <uses-feature android:name="android.hardware.bluetooth" android:required="true"/>
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
-    <uses-feature android:name="android.hardware.usb.host" android:required="true"/>
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="true" />
 
     <application
         android:name="mpdc4gsr.core.App"
@@ -64,27 +94,27 @@
         -->
 
         <!-- Jetpack Compose Activities -->
-        <activity android:name="mpdc4gsr.feature.settings.ui.PolicyComposeActivity"/>
-        <activity android:name="mpdc4gsr.feature.settings.ui.VersionComposeActivity"/>
+        <activity android:name="mpdc4gsr.feature.settings.ui.PolicyComposeActivity" />
+        <activity android:name="mpdc4gsr.feature.settings.ui.VersionComposeActivity" />
 
         <activity
             android:name="mpdc4gsr.feature.settings.ui.SettingsComposeActivity"
             android:exported="false"
             android:label="Settings"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
 
         <!-- USB Receiver -->
         <receiver
             android:name="mpdc4gsr.feature.thermal.ui.ThermalUsbReceiver"
             android:exported="false">
             <intent-filter android:priority="1000">
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"/>
-                <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED"/>
-                <action android:name="mpdc4gsr.USB_PERMISSION"/>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
+                <action android:name="mpdc4gsr.USB_PERMISSION" />
             </intent-filter>
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/ir_device_filter"/>
+                android:resource="@xml/ir_device_filter" />
         </receiver>
 
         <activity
@@ -92,93 +122,93 @@
             android:exported="false"
             android:label="Network Configuration"
             android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.MultiModalRecordingComposeActivity"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.GSRQuickRecordingActivity"
             android:exported="false"
-            android:label="@string/gsr_quick_access"/>
+            android:label="@string/gsr_quick_access" />
 
         <activity
             android:name="mpdc4gsr.feature.testing.ui.FaultTolerantRecordingComposeActivity"
             android:exported="false"
-            android:label="@string/enhanced_recording_label"/>
+            android:label="@string/enhanced_recording_label" />
 
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.SessionManagerComposeActivity"
             android:exported="false"
-            android:label="Session Manager"/>
+            android:label="Session Manager" />
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.ResearchTemplateComposeActivity"
             android:exported="false"
-            android:label="Research Templates"/>
+            android:label="Research Templates" />
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.SessionDetailComposeActivity"
             android:exported="false"
-            android:label="Session Details"/>
+            android:label="Session Details" />
 
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.GSRPlotComposeActivity"
             android:exported="false"
             android:label="GSR Data Analysis"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.GSRDataViewComposeActivity"
             android:exported="false"
             android:label="GSR Data Viewer"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.GSRVideoPlayerComposeActivity"
             android:exported="false"
             android:label="GSR Video Player"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.SessionExportComposeActivity"
             android:exported="false"
-            android:label="Export Session"/>
+            android:label="Export Session" />
 
         <activity
             android:name="mpdc4gsr.sensors.HubSpokeIntegrationActivity"
             android:exported="false"
-            android:label="Hub-Spoke Recording"/>
+            android:label="Hub-Spoke Recording" />
 
         <activity
             android:name="mpdc4gsr.feature.network.ui.DevicePairingComposeActivity"
             android:exported="false"
-            android:label="Device Pairing"/>
+            android:label="Device Pairing" />
 
         <activity
             android:name="mpdc4gsr.core.ui.PermissionRequestComposeActivity"
             android:exported="false"
-            android:label="Enhanced Permission System Test"/>
+            android:label="Enhanced Permission System Test" />
 
         <activity
             android:name="mpdc4gsr.camera.integration.DualModeCameraComposeActivity"
             android:exported="false"
             android:label="Dual Mode Camera"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.GSRDeviceManagementComposeActivity"
             android:exported="false"
             android:label="GSR Device Management"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.GSRRawImageViewComposeActivity"
             android:exported="false"
-            android:label="GSR Raw Image Viewer"/>
+            android:label="GSR Raw Image Viewer" />
 
         <activity
             android:name="mpdc4gsr.feature.gsr.ui.ShimmerConfigComposeActivity"
             android:exported="false"
-            android:label="Shimmer Configuration"/>
+            android:label="Shimmer Configuration" />
 
         <!-- Main Launcher Activity -->
         <activity
@@ -187,8 +217,8 @@
             android:label="MPDC4GSR"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -197,88 +227,88 @@
             android:name="mpdc4gsr.compose.navigation.IRCameraNavHost"
             android:exported="false"
             android:label="IR Camera Navigation Demo"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <!-- Navigation Test Activity -->
         <activity
             android:name="mpdc4gsr.feature.testing.ui.NavigationTestActivity"
             android:exported="true"
             android:label="Navigation Test"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <!-- Comprehensive Integration Test Activity -->
         <activity
             android:name="mpdc4gsr.feature.testing.ui.ComprehensiveIntegrationTestActivity"
             android:exported="true"
             android:label="Integration Test Suite"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <!-- Test Activities - Migrated to Compose -->
         <activity
             android:name="mpdc4gsr.compose.testing.GSRBenchTestComposeActivity"
             android:exported="false"
-            android:label="GSR Benchmark Test"/>
+            android:label="GSR Benchmark Test" />
         <activity
             android:name="mpdc4gsr.compose.testing.GSRDataIntegrityTestComposeActivity"
             android:exported="false"
-            android:label="GSR Data Integrity Test"/>
+            android:label="GSR Data Integrity Test" />
         <activity
             android:name="mpdc4gsr.compose.testing.GSRReconnectionTestComposeActivity"
             android:exported="false"
-            android:label="GSR Reconnection Test"/>
+            android:label="GSR Reconnection Test" />
         <activity
             android:name="mpdc4gsr.compose.testing.ParallelRecordingTestComposeActivity"
             android:exported="false"
-            android:label="Parallel Recording Test"/>
+            android:label="Parallel Recording Test" />
         <activity
             android:name="mpdc4gsr.compose.testing.SessionLifecycleTestComposeActivity"
             android:exported="false"
-            android:label="Session Lifecycle Test"/>
+            android:label="Session Lifecycle Test" />
 
         <!-- Camera Activities -->
         <activity
             android:name="mpdc4gsr.camera.integration.DualModeCameraActivity"
             android:exported="false"
-            android:label="Dual Mode Camera"/>
+            android:label="Dual Mode Camera" />
 
         <activity
             android:name="mpdc4gsr.feature.camera.ui.DualModeCameraActivityCompose"
             android:exported="false"
-            android:label="Dual Mode Camera"/>
+            android:label="Dual Mode Camera" />
 
         <activity
             android:name="mpdc4gsr.compose.testing.RawCaptureTestComposeActivity"
             android:exported="false"
-            android:label="Raw Capture Test"/>
+            android:label="Raw Capture Test" />
         <activity
             android:name="mpdc4gsr.compose.testing.RgbCameraTestComposeActivity"
             android:exported="false"
-            android:label="RGB Camera Test"/>
+            android:label="RGB Camera Test" />
 
         <!-- Session and Synchronisation Activities -->
         <activity
             android:name="mpdc4gsr.sensors.gsr.CompleteSessionTrialActivity"
             android:exported="false"
-            android:label="Complete Session Trial"/>
+            android:label="Complete Session Trial" />
 
         <activity
             android:name="mpdc4gsr.compose.testing.CrossModalSyncTestComposeActivity"
             android:exported="false"
-            android:label="Cross Modal Sync Test"/>
+            android:label="Cross Modal Sync Test" />
         <activity
             android:name="mpdc4gsr.sensors.gsr.SynchronizationTestActivity"
             android:exported="false"
-            android:label="Synchronization Test"/>
+            android:label="Synchronization Test" />
         <activity
             android:name="mpdc4gsr.compose.testing.TimeSynchronizationTestComposeActivity"
             android:exported="false"
-            android:label="Time Synchronization Test"/>
+            android:label="Time Synchronization Test" />
 
         <!-- BLE and Permission Activities - Migrated to Compose -->
         <activity
             android:name="mpdc4gsr.compose.testing.BLEIntegrationTestComposeActivity"
             android:exported="false"
-            android:label="BLE Integration Test"/>
+            android:label="BLE Integration Test" />
 
         <!-- Jetpack Compose Activities -->
         <activity
@@ -286,7 +316,7 @@
             android:exported="false"
             android:label="Sensor Dashboard"
             android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name="mpdc4gsr.feature.testing.ui.ComposeMigrationLauncherActivity"
@@ -296,7 +326,7 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/ir_device_filter"/>
+                android:resource="@xml/ir_device_filter" />
         </activity>
 
         <!-- Recording Service - PC networking and sensor recording -->
@@ -304,7 +334,7 @@
             android:name="mpdc4gsr.core.RecordingService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="camera|connectedDevice|dataSync"/>
+            android:foregroundServiceType="camera|connectedDevice|dataSync" />
         <!-- If the service records audio, use: camera|connectedDevice|dataSync|microphone -->
 
         <!-- File Provider -->
@@ -317,7 +347,7 @@
             <meta-data
                 android:name="androidx.core.content.FileProvider.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"
-                tools:replace="android:resource"/>
+                tools:replace="android:resource" />
         </provider>
     </application>
 

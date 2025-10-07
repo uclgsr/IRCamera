@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.testing.presentation
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,6 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.core.ui.AppBaseViewModel
+import mpdc4gsr.core.utils.AppLogger
 
 class RgbCameraTestViewModel : AppBaseViewModel() {
     companion object {

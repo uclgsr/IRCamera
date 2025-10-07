@@ -11,9 +11,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.compat.dpToPx
 import com.mpdc4gsr.libunified.compat.spToPx
-import com.mpdc4gsr.libunified.R
 
 class BarPickView : View {
     companion object {

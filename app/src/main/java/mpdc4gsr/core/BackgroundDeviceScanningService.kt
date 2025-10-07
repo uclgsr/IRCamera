@@ -8,12 +8,11 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.core.app.NotificationCompat
 import com.csl.irCamera.R
 import com.mpdc4gsr.module.user.ble.BleDeviceManager
 import kotlinx.coroutines.*
+import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.main.ui.MainComposeActivity
 import kotlin.coroutines.CoroutineContext
 

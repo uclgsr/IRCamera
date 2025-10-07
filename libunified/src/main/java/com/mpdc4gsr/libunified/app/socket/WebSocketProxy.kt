@@ -11,12 +11,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.postDelayed
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import com.mpdc4gsr.libunified.app.security.CertificateManager
 import com.mpdc4gsr.libunified.app.utils.WifiUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import okhttp3.*
 import okio.ByteString
 

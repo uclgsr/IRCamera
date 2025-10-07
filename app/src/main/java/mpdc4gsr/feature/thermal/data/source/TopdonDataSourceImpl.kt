@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.hardware.usb.UsbDevice
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.energy.iruvc.ircmd.ConcreteIRCMDBuilder
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.ircmd.IRCMDType
@@ -24,10 +22,10 @@ import com.mpdc4gsr.libunified.ir.extension.setMirror
 import com.mpdc4gsr.libunified.ir.extension.setPropDdeLevel
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withTimeoutOrNull
+import mpdc4gsr.core.utils.AppLogger
 import java.io.File
 import java.io.FileOutputStream
 

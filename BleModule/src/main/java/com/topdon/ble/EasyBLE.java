@@ -15,10 +15,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.core.content.ContextCompat;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.topdon.ble.callback.ScanListener;
 import com.topdon.ble.util.DefaultLogger;

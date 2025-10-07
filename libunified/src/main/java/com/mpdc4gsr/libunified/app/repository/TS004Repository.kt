@@ -1,19 +1,17 @@
 package com.mpdc4gsr.libunified.app.repository
 
 import android.net.Network
-import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.http.HttpClient
 import kotlinx.coroutines.Dispatchers
-import java.security.MessageDigest
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.security.MessageDigest
 import java.util.*
 
 object TS004Repository {

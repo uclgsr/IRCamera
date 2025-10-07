@@ -4,7 +4,6 @@ import android.hardware.usb.UsbDevice;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.mpdc4gsr.libunified.compat.ContextProvider;
 import com.energy.iruvc.ircmd.ConcreteIRCMDBuilder;
 import com.energy.iruvc.ircmd.IRCMD;
 import com.energy.iruvc.ircmd.IRCMDType;
@@ -15,6 +14,7 @@ import com.energy.iruvc.uvc.CameraSize;
 import com.energy.iruvc.uvc.ConcreateUVCBuilder;
 import com.energy.iruvc.uvc.UVCCamera;
 import com.energy.iruvc.uvc.UVCType;
+import com.mpdc4gsr.libunified.compat.ContextProvider;
 import com.mpdc4gsr.libunified.ir.usbdual.Const;
 import com.mpdc4gsr.libunified.ir.usbdual.inf.OnUSBConnectListener;
 

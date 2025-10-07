@@ -7,8 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mpdc4gsr.libunified.app.db.dao.*
-import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.app.db.entity.*
+import com.mpdc4gsr.libunified.compat.ContextProvider
 
 @Database(
     entities = [

@@ -22,7 +22,6 @@ import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.db.AppDatabase
 import com.mpdc4gsr.libunified.app.socket.SocketCmdUtils
 import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
-import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
 import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.utils.WifiUtils
@@ -34,7 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.util.Locale
+import java.util.*
 
 abstract class BaseApplication : Application() {
     companion object {

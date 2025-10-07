@@ -11,12 +11,12 @@ Usage:
 """
 
 import argparse
-import json
 import csv
-from pathlib import Path
-from datetime import datetime
-from typing import Dict, List, Any, Optional
+import json
 import logging
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Any, Optional
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

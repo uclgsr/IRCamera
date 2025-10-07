@@ -5,14 +5,13 @@ import android.net.TrafficStats
 import android.net.wifi.WifiManager
 import android.os.Process
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.libunified.app.discovery.NetworkDiscoveryService
 import com.mpdc4gsr.libunified.app.messaging.ReliableMessageService
 import com.mpdc4gsr.libunified.app.security.CertificateManager
 import com.mpdc4gsr.libunified.app.sync.TimeSyncService
 import kotlinx.coroutines.*
+import mpdc4gsr.core.utils.AppLogger
 import org.json.JSONObject
 import java.io.DataInputStream
 import java.io.DataOutputStream

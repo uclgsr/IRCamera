@@ -1,8 +1,6 @@
 package mpdc4gsr.feature.camera.data
 
-import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 
 class ModeManager {
     companion object {

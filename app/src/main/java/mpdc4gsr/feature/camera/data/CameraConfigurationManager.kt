@@ -2,8 +2,6 @@ package mpdc4gsr.feature.camera.data
 
 import android.os.Build
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import android.util.Size
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
@@ -11,6 +9,7 @@ import androidx.camera.video.FallbackStrategy
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
 import androidx.camera.video.Recorder
+import mpdc4gsr.core.utils.AppLogger
 
 class CameraConfigurationManager {
     companion object {

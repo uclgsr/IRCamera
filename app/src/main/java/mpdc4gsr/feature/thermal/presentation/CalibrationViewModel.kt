@@ -3,9 +3,6 @@ package mpdc4gsr.feature.thermal.presentation
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
+import mpdc4gsr.core.utils.AppLogger
 import java.text.SimpleDateFormat
 import java.util.*
 

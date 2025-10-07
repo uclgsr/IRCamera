@@ -1,7 +1,6 @@
 package mpdc4gsr.feature.settings.presentation
 
 import android.Manifest
-import android.app.Application
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context

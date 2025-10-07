@@ -24,8 +24,10 @@ fun ConnectScreen(
 ) {
     val context = LocalContext.current
 
-    val deviceConnectionState = com.mpdc4gsr.libunified.app.event.DeviceEventManager.deviceConnectionState.collectAsState()
-    val socketConnectionState = com.mpdc4gsr.libunified.app.event.DeviceEventManager.socketConnectionState.collectAsState()
+    val deviceConnectionState =
+        com.mpdc4gsr.libunified.app.event.DeviceEventManager.deviceConnectionState.collectAsState()
+    val socketConnectionState =
+        com.mpdc4gsr.libunified.app.event.DeviceEventManager.socketConnectionState.collectAsState()
 
     val deviceTypes = remember(deviceConnectionState.value, socketConnectionState.value) {
         val tc001Status = try {
@@ -38,18 +40,18 @@ fun ConnectScreen(
         } catch (e: Exception) {
             null
         }
-        
+
         val tc007Status: Boolean? = null
-        
+
         listOf(
             ConnectedDevice(
-                "TC001", 
-                "TOPDON TC001 Thermal Camera", 
+                "TC001",
+                "TOPDON TC001 Thermal Camera",
                 tc001Status
             ),
             ConnectedDevice(
-                "TC007", 
-                "TOPDON TC007 Thermal Camera", 
+                "TC007",
+                "TOPDON TC007 Thermal Camera",
                 tc007Status
             )
         )

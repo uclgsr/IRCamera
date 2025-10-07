@@ -2,10 +2,9 @@ package mpdc4gsr.feature.gsr.data
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.gsr.model.GSRSample
 import kotlinx.coroutines.*
+import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.network.data.NetworkClient
 import mpdc4gsr.feature.network.data.RecordingController
 import org.json.JSONObject

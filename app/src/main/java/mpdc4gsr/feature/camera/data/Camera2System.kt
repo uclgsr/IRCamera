@@ -7,11 +7,10 @@ import android.hardware.camera2.CaptureRequest
 import android.hardware.camera2.TotalCaptureResult
 import android.os.Build
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import android.util.Size
 import android.view.TextureView
 import kotlinx.coroutines.*
+import mpdc4gsr.core.utils.AppLogger
 import java.io.File
 
 class Camera2System(

@@ -13,16 +13,16 @@ Subsystem: Multi-sensor timing coordination
 Thesis Chapters: Chapter 5 (timing alignment), Chapter 6 (startup delays)
 """
 
-import sys
-import os
-import time
 import csv
 import json
+import os
 import random
 import statistics
+import sys
+import time
+from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Dict, Optional
-from dataclasses import dataclass
 
 
 @dataclass

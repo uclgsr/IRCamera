@@ -1,12 +1,7 @@
 package com.mpdc4gsr.libunified.app.event
 
 import android.hardware.usb.UsbDevice
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 
 object DeviceEventManager {
     data class DeviceConnectionState(

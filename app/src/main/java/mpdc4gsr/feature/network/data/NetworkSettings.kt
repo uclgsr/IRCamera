@@ -3,11 +3,9 @@ package mpdc4gsr.feature.network.data
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import mpdc4gsr.core.utils.AppLogger
 
 class NetworkSettings(private val context: Context) {
     companion object {

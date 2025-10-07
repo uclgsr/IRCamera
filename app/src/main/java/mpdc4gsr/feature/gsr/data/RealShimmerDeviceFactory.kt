@@ -4,8 +4,6 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.LifecycleOwner
 import com.mpdc4gsr.gsr.service.ShimmerDataCluster
 import com.mpdc4gsr.gsr.service.ShimmerDeviceFactory
@@ -13,6 +11,7 @@ import com.mpdc4gsr.gsr.service.ShimmerDeviceInterface
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.ObjectCluster
+import mpdc4gsr.core.utils.AppLogger
 
 class RealShimmerDeviceFactory @JvmOverloads constructor(
     private val context: Context,

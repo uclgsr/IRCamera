@@ -1,8 +1,6 @@
 package mpdc4gsr.core.data
 
-import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*

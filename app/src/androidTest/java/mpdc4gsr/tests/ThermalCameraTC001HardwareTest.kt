@@ -9,7 +9,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test

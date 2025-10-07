@@ -4,10 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import android.view.WindowMetrics;
-
-import androidx.core.view.WindowInsetsCompat;
-
 import com.mpdc4gsr.libunified.app.utils.ScreenUtils;
 
 public class DragCustomerView extends androidx.appcompat.widget.AppCompatImageView {

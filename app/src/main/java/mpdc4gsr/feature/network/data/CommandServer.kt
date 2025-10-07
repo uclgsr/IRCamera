@@ -1,12 +1,10 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import mpdc4gsr.core.data.TimeSyncManager
+import mpdc4gsr.core.utils.AppLogger
 import org.json.JSONObject
 
 class CommandServer(

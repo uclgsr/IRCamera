@@ -5,12 +5,12 @@ Example PC Server with Time Synchronization Support
 This is a complete example showing how to handle SYNC_INIT messages from Android.
 """
 
+import logging
 import socket
 import sys
 import time
-import logging
-from sync_handler import SyncHandler
 from protocol_adapter import ProtocolAdapter
+from sync_handler import SyncHandler
 
 logging.basicConfig(
     level=logging.INFO,

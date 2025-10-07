@@ -25,12 +25,8 @@ import com.mpdc4gsr.libunified.app.lms.LMS
 import com.mpdc4gsr.libunified.app.lms.bean.CommonBean
 import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
 import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import java.io.File
 
 abstract class BaseActivity : AppCompatActivity() {

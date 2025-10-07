@@ -1,8 +1,8 @@
 package com.mpdc4gsr.libunified.app.db.entity
 
 import androidx.room.*
-import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.compat.ContextProvider
 
 open class DirBase {
     @PrimaryKey(autoGenerate = true)

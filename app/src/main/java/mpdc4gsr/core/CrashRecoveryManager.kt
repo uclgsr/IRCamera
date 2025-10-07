@@ -2,11 +2,9 @@ package mpdc4gsr.core
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File

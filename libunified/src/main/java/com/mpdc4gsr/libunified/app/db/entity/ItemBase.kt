@@ -2,8 +2,8 @@ package com.mpdc4gsr.libunified.app.db.entity
 
 import android.content.Context
 import androidx.room.*
-import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.compat.ContextProvider
 
 open class ItemBase {
     @PrimaryKey(autoGenerate = true)

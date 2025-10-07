@@ -11,13 +11,12 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import mpdc4gsr.core.utils.AppLogger
 
 class PermissionController(private val activity: ComponentActivity) {
     private val usbManager: UsbManager =

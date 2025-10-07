@@ -2,9 +2,7 @@ package mpdc4gsr.core.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 
 object FeatureFlags {
     private const val TAG = "FeatureFlags"

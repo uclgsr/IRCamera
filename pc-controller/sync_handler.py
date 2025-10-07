@@ -6,8 +6,8 @@ This module implements the SYNC_INIT -> SYNC_REQUEST -> SYNC_RESPONSE -> SYNC_RE
 protocol flow as specified in docs/time_sync_implementation.md
 """
 
-import time
 import logging
+import time
 from typing import Optional, Dict, Any
 
 logger = logging.getLogger(__name__)

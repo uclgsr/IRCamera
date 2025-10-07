@@ -3,14 +3,17 @@ package mpdc4gsr.tests
 import android.content.Context
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
-import io.mockk.*
-import java.io.File
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import mpdc4gsr.core.ui.PermissionController
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
+import java.io.File
 
 @Ignore("All tests disabled")
 class ThermalCameraUsbIntegrationTest {

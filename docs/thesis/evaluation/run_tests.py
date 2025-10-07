@@ -4,8 +4,8 @@ Test runner for thesis evaluation tests
 Runs all multi-sensor data consistency tests and generates reports
 """
 
-import sys
 import os
+import sys
 from pathlib import Path
 
 try:

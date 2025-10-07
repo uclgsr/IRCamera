@@ -13,6 +13,7 @@ Chapters: Chapter 5 (synchronized sensor behavior) and Chapter 6 (cross-modal sy
 
 import pytest
 from datetime import datetime
+
 from .test_utils import (
     SensorDataGenerator,
     SynchronizationValidator,

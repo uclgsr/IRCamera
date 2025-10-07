@@ -3,10 +3,9 @@ package mpdc4gsr.feature.network.data
 import android.graphics.Bitmap
 import android.util.Base64
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import kotlinx.coroutines.*
+import mpdc4gsr.core.utils.AppLogger
 import org.json.JSONObject
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference

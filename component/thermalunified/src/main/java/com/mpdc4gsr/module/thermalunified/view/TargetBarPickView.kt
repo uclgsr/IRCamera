@@ -11,9 +11,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.compat.spToPx
-import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 
 class TargetBarPickView : View {
     companion object {

@@ -4,10 +4,7 @@ import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,9 +17,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.feature.gsr.ui.SensorDashboardComposeActivity
-import mpdc4gsr.feature.settings.ui.SettingsComposeActivity
 import mpdc4gsr.feature.main.ui.MainComposeActivity
 import mpdc4gsr.feature.settings.ui.AboutScreen
+import mpdc4gsr.feature.settings.ui.SettingsComposeActivity
 
 sealed class IRCameraScreen(val route: String) {
     object Main : IRCameraScreen("main")

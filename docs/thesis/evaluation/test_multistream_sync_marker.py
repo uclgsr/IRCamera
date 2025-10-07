@@ -12,6 +12,7 @@ Chapters: Chapter 5 (sensor data correlation) and Chapter 6 (timeline alignment 
 
 import pytest
 from datetime import datetime
+
 from .test_utils import (
     SensorDataGenerator,
     SynchronizationValidator,

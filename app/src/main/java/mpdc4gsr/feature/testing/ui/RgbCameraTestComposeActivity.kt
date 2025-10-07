@@ -3,9 +3,6 @@ package mpdc4gsr.feature.testing.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
@@ -28,13 +25,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.core.ui.PermissionManager
+import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.testing.presentation.RgbCameraTestViewModel
 import java.io.File
 import kotlin.system.measureTimeMillis

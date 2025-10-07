@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.ImageFormat
 import android.os.Build
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import android.util.Range
 import android.util.Size
 import androidx.camera.core.*
@@ -20,6 +18,7 @@ import kotlinx.coroutines.flow.*
 import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import mpdc4gsr.core.ui.PermissionManager
+import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.camera.data.CameraConfigurationManager
 import mpdc4gsr.feature.camera.data.CameraControlsManager
 import mpdc4gsr.feature.camera.data.CameraPerformanceManager
@@ -753,7 +752,7 @@ class RgbCameraRecorder(
             try {
                 AppLogger.i(TAG, "Requesting camera and storage permissions via PermissionManager")
                 _cameraStatus.value = "Requesting Permissions..."
-                
+
                 val granted = permissionManager.requestCameraPermissions()
                 if (granted) {
                     val recheckCamera = hasCameraPermission()

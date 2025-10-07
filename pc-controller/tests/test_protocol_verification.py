@@ -18,9 +18,8 @@ import socket
 import threading
 import time
 import unittest
-from typing import Optional, List, Tuple
-
 from protocol_adapter import ProtocolAdapter
+from typing import Optional, List, Tuple
 
 
 class MockAndroidDevice:

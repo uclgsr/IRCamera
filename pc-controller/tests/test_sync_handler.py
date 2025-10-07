@@ -5,11 +5,11 @@ Tests for SyncHandler
 Verifies the time synchronization protocol implementation.
 """
 
-import unittest
-import time
-from unittest.mock import Mock, MagicMock
-import sys
 import os
+import sys
+import time
+import unittest
+from unittest.mock import Mock, MagicMock
 
 # Import from parent package - run tests from pc-controller directory:
 # python3 -m tests.test_sync_handler

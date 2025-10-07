@@ -22,9 +22,7 @@ import mpdc4gsr.core.data.ProtocolVersion
 import mpdc4gsr.core.data.TimeSyncManager
 import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import mpdc4gsr.feature.network.data.*
-import mpdc4gsr.feature.network.data.Protocol
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.DataInputStream

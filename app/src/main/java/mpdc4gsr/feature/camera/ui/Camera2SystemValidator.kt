@@ -3,7 +3,6 @@ package mpdc4gsr.feature.camera.ui
 import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import mpdc4gsr.feature.camera.data.ModeManager
 
 class Camera2SystemValidator(private val context: Context) {

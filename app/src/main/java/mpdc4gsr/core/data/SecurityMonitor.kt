@@ -1,11 +1,9 @@
 package mpdc4gsr.core.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.core.utils.AppLogger
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean

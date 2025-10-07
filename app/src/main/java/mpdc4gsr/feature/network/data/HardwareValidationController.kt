@@ -1,14 +1,12 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.ui.PermissionController
+import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import java.util.concurrent.ConcurrentHashMap

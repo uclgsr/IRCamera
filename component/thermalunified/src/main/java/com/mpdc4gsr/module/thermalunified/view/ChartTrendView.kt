@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
-import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.libunified.ui.charts.LineChart
 import com.mpdc4gsr.libunified.ui.components.Legend
@@ -14,6 +13,7 @@ import com.mpdc4gsr.libunified.ui.data.LineData
 import com.mpdc4gsr.libunified.ui.data.LineDataSet
 import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter
 import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.module.thermalunified.R as ThermalR
 

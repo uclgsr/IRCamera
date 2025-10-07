@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
-import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.libunified.ui.charts.LineChart
 import com.mpdc4gsr.libunified.ui.components.Legend
 import com.mpdc4gsr.libunified.ui.components.XAxis
@@ -22,6 +21,7 @@ import com.mpdc4gsr.libunified.ui.listener.OnChartGestureListener
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.chart.IRMyValueFormatter
 import com.mpdc4gsr.module.thermalunified.chart.YValueFormatter
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.utils.ChartTools
 import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.module.thermalunified.R as ThermalR

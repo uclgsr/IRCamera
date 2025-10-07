@@ -1,13 +1,11 @@
 package mpdc4gsr.feature.gsr.data.source
 
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import mpdc4gsr.core.data.ShimmerDeviceManager
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.GSRSample
+import mpdc4gsr.core.utils.AppLogger
 
 class ShimmerDataSourceImpl(
     private val deviceManager: ShimmerDeviceManager

@@ -11,13 +11,13 @@ This script verifies all implemented features of the PC Controller:
 - Session management
 """
 
+import glob
+import json
 import os
+import re
+import socket
 import sys
 import time
-import socket
-import json
-import glob
-import re
 from pathlib import Path
 
 # Color codes for output

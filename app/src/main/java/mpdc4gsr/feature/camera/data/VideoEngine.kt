@@ -4,9 +4,8 @@ import android.content.Context
 import android.media.MediaRecorder
 import android.os.Build
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import android.util.Size
+import mpdc4gsr.core.utils.AppLogger
 import java.io.File
 
 class VideoEngine(private val context: Context? = null) {

@@ -6,8 +6,8 @@ Validates that the environment is correctly set up to run the thesis evaluation 
 Checks Python version, dependencies, and file structure.
 """
 
-import sys
 import os
+import sys
 from pathlib import Path
 
 

@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -21,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.launch
+import mpdc4gsr.core.utils.AppLogger
 
 class ComposeTestingSuiteActivity : ComponentActivity() {
     companion object {

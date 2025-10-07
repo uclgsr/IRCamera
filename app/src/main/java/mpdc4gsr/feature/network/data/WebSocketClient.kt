@@ -5,8 +5,6 @@ import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.util.Base64
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.libunified.app.sync.TimeSyncService
 import kotlinx.coroutines.*
 import mpdc4gsr.core.SessionManager
@@ -14,6 +12,7 @@ import mpdc4gsr.core.StructuredLogger
 import mpdc4gsr.core.data.AdvancedAuthenticationManager
 import mpdc4gsr.core.data.FeatureFlags
 import mpdc4gsr.core.data.ProtocolVersion
+import mpdc4gsr.core.utils.AppLogger
 import okhttp3.*
 import org.json.JSONObject
 import java.security.cert.X509Certificate

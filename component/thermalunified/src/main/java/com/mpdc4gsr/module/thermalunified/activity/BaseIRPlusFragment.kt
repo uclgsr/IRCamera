@@ -13,7 +13,6 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.sdkisp.LibIRProcess
 import com.energy.iruvc.usb.USBMonitor
@@ -31,6 +30,7 @@ import com.mpdc4gsr.libunified.ir.usbdual.inf.OnUSBConnectListener
 import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
 import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.extension.setAutoShutter
 import com.mpdc4gsr.module.thermalunified.extension.setContrast
 import com.mpdc4gsr.module.thermalunified.extension.setMirror

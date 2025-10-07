@@ -9,8 +9,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.mpdc4gsr.libunified.compat.ContextProvider;
 import com.mpdc4gsr.libunified.app.listener.BitmapViewListener;
+import com.mpdc4gsr.libunified.compat.ContextProvider;
 
 import java.io.*;
 

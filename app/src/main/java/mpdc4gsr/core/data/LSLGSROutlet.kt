@@ -1,10 +1,8 @@
 package mpdc4gsr.core.data
 
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import mpdc4gsr.core.data.model.GSRSample
+import mpdc4gsr.core.utils.AppLogger
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.PrintWriter

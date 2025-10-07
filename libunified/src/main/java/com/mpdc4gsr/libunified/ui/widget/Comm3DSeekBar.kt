@@ -8,9 +8,9 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatSeekBar
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.compat.dpToPx
 import com.mpdc4gsr.libunified.compat.spToPx
-import com.mpdc4gsr.libunified.R
 import kotlin.math.roundToInt
 
 class Comm3DSeekBar : AppCompatSeekBar {

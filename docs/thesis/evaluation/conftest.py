@@ -2,8 +2,8 @@
 Pytest configuration for thesis evaluation tests
 """
 
-import pytest
 import os
+import pytest
 from pathlib import Path
 
 

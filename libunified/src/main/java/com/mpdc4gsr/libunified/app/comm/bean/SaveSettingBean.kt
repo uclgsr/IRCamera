@@ -1,8 +1,6 @@
 package com.mpdc4gsr.libunified.app.comm.bean
 
 import android.util.TypedValue
-import com.mpdc4gsr.libunified.compat.ContextProvider
-import com.mpdc4gsr.libunified.compat.SPUtils
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
@@ -10,6 +8,8 @@ import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtils
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.libunified.compat.ContextProvider
+import com.mpdc4gsr.libunified.compat.SPUtils
 
 class SaveSettingBean(private val isWifi: Boolean = false) {
     private fun getSPUtils(): SPUtils =

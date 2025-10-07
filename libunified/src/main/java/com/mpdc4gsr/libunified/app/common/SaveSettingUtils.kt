@@ -1,14 +1,14 @@
 package com.mpdc4gsr.libunified.app.common
 
 import android.util.TypedValue
-import com.mpdc4gsr.libunified.compat.SPUtils
 import com.google.gson.Gson
-import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.libunified.compat.ContextProvider
+import com.mpdc4gsr.libunified.compat.SPUtils
 
 object SaveSettingUtils {
     private const val SP_NAME = "SaveSettingUtils"

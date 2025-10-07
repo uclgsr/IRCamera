@@ -1,19 +1,13 @@
 package mpdc4gsr.feature.gsr.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RecordingStats
 import mpdc4gsr.core.data.RecordingStatus
 import mpdc4gsr.core.data.SensorError
 import mpdc4gsr.core.data.SessionMetadata
+import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import java.io.File
 import java.io.FileWriter

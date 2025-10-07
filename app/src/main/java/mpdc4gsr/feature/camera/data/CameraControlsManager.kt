@@ -1,12 +1,11 @@
 package mpdc4gsr.feature.camera.data
 
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.camera.core.Camera
 import androidx.camera.core.FocusMeteringAction
 import androidx.camera.view.PreviewView
 import mpdc4gsr.core.data.ErrorType
+import mpdc4gsr.core.utils.AppLogger
 
 class CameraControlsManager(
     private val onError: ((ErrorType, String) -> Unit)?

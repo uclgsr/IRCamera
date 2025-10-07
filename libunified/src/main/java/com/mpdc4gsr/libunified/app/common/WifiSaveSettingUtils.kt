@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.common
 
-import com.mpdc4gsr.libunified.compat.SPUtils
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
@@ -9,6 +8,7 @@ import com.mpdc4gsr.libunified.app.common.SaveSettingUtils.FusionTypeIROnly
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtils.FusionTypeLPYFusion
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.libunified.compat.SPUtils
 
 object WifiSaveSettingUtils {
     private const val SP_NAME = "WifiSaveSettingUtils"

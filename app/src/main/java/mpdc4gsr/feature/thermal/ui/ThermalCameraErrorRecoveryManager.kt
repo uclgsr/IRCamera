@@ -3,11 +3,10 @@ package mpdc4gsr.feature.thermal.ui
 import android.content.Context
 import android.hardware.usb.UsbDevice
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
+import mpdc4gsr.core.utils.AppLogger
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong

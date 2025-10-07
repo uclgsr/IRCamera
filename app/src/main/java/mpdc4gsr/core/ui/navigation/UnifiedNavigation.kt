@@ -1,9 +1,6 @@
 package mpdc4gsr.core.ui.navigation
 
 import android.content.Intent
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -12,16 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.core.ui.model.SensorType
-import mpdc4gsr.feature.camera.ui.CameraDashboardScreen
-import mpdc4gsr.feature.camera.ui.CameraSettingsScreen
-import mpdc4gsr.feature.camera.ui.DualModeCameraScreen
-import mpdc4gsr.feature.camera.ui.RGBCameraScreen
-import mpdc4gsr.feature.camera.ui.TimeLapseCameraScreen
-import mpdc4gsr.feature.gsr.ui.GSRDataViewScreen
-import mpdc4gsr.feature.gsr.ui.GSRPlotScreen
-import mpdc4gsr.feature.gsr.ui.GSRSettingsScreen
-import mpdc4gsr.feature.gsr.ui.ResearchTemplateScreen
-import mpdc4gsr.feature.gsr.ui.SessionDetailScreen
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.feature.camera.ui.*
+import mpdc4gsr.feature.gsr.ui.*
 import mpdc4gsr.feature.main.ui.ComponentShowcaseScreen
 import mpdc4gsr.feature.main.ui.MainScreen
 import mpdc4gsr.feature.main.ui.UnifiedSensorDashboard

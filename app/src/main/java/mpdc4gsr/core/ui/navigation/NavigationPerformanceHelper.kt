@@ -1,12 +1,11 @@
 package mpdc4gsr.core.ui.navigation
 
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import mpdc4gsr.core.ui.ComposePerformanceMonitor
+import mpdc4gsr.core.utils.AppLogger
 
 object NavigationPerformanceHelper {
     private const val TAG = "NavigationPerf"

@@ -1,9 +1,7 @@
 package mpdc4gsr.feature.settings.data
 
 import android.content.Context
-import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 
 object RecordingSettingsValidator {
     private const val TAG = "RecordingSettingsValidator"

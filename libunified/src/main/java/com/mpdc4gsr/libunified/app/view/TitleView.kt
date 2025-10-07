@@ -12,8 +12,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
-import com.mpdc4gsr.libunified.compat.dpToPx
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.compat.dpToPx
 
 open class TitleView : ViewGroup {
     companion object {

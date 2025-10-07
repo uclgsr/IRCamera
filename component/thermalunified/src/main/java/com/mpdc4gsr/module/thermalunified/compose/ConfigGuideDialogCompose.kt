@@ -19,8 +19,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.libunified.app.compose.theme.Spacing
+import com.mpdc4gsr.module.thermalunified.R
 
 @Composable
 fun ConfigGuideDialogCompose(

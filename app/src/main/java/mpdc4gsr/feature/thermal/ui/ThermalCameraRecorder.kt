@@ -5,8 +5,6 @@ import android.graphics.Bitmap
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import android.widget.Toast
 import com.energy.ac020library.IrcamEngine
 import com.energy.ac020library.bean.IIrFrameCallback
@@ -29,6 +27,8 @@ import mpdc4gsr.core.data.utils.BufferedDataWriter
 import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import mpdc4gsr.core.ui.PermissionController
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import mpdc4gsr.feature.network.data.NetworkServer
 import mpdc4gsr.feature.thermal.data.ThermalSettingsRepository
 import org.json.JSONObject

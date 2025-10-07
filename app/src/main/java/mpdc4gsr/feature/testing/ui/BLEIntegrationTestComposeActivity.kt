@@ -1,8 +1,6 @@
 package mpdc4gsr.feature.testing.ui
 
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,13 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.data.ShimmerDeviceManager
 import mpdc4gsr.core.data.Shimmer3GSRRecorder
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.core.data.ShimmerDeviceManager
 import mpdc4gsr.core.ui.PermissionController
+import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.testing.presentation.BLEIntegrationTestViewModel
 import kotlin.io.path.createTempDirectory
 

@@ -2,8 +2,6 @@ package mpdc4gsr.feature.network.data
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.core.data.SensorRecorder
 import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
+import mpdc4gsr.core.utils.AppLogger
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean

@@ -16,7 +16,6 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-
 import com.energy.iruvc.dual.DualUVCCamera;
 import com.energy.iruvc.sdkisp.LibIRTemp;
 import com.energy.iruvc.utils.DualCameraParams;
