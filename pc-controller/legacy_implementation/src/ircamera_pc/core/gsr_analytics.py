@@ -1,5 +1,4 @@
 import asyncio
-import logging
 import numpy as np
 import pandas as pd
 import warnings
@@ -12,8 +11,6 @@ from scipy.ndimage import uniform_filter1d
 from typing import Any, Dict, List, Optional, Tuple
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
-
-logger = logging.getLogger(__name__)
 
 
 class StressLevel(Enum):
@@ -104,11 +101,6 @@ class GSRAnalytics:
 
         self.executor = ThreadPoolExecutor(max_workers=4)
 
-        logger.info(
-            f"GSR Analytics initialized: {window_size_seconds}s windows, "
-            f"{overlap_seconds}s overlap"
-        )
-
     def add_gsr_samples(
             self,
             device_id: None = str,
@@ -152,30 +144,24 @@ class GSRAnalytics:
         ):
 
             try:
-
                 asyncio.create_task(
                     self._analyze_window_async(device_id, session_id, current_time)
                 )
             except RuntimeError:
-
                 self._analyze_window_sync(device_id, session_id, current_time)
 
     async def _analyze_window_async(
             self, device_id: str, session_id: str, current_time: float
     ):
 
-        try:
-
-            loop = asyncio.get_event_loop()
-            await loop.run_in_executor(
-                self.executor,
-                self._analyze_window_sync,
-                device_id,
-                session_id,
-                current_time,
-            )
-        except Exception as e:
-            logger.error(f"Error in async GSR analysis for {device_id}: {e}")
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(
+            self.executor,
+            self._analyze_window_sync,
+            device_id,
+            session_id,
+            current_time,
+        )
 
     def _analyze_window_sync(
             self, device_id: str, session_id: str, current_time: float
@@ -183,38 +169,28 @@ class GSRAnalytics:
 
         device_key = f"{device_id}_{session_id}"
 
-        try:
+        buffer = self.device_buffers[device_key]
+        timestamps = self.device_timestamps[device_key]
 
-            buffer = self.device_buffers[device_key]
-            timestamps = self.device_timestamps[device_key]
+        if len(buffer) < self.window_size_samples:
+            return
 
-            if len(buffer) < self.window_size_samples:
-                return
+        window_data = buffer[-self.window_size_samples:]
+        window_timestamps = timestamps[-self.window_size_samples:]
 
-            window_data = buffer[-self.window_size_samples:]
-            window_timestamps = timestamps[-self.window_size_samples:]
+        features = self._extract_features(
+            device_id, session_id, window_data, window_timestamps
+        )
 
-            features = self._extract_features(
-                device_id, session_id, window_data, window_timestamps
-            )
+        if features:
+            self.feature_history[device_key].append(features)
 
-            if features:
+            if len(self.feature_history[device_key]) > 100:
+                self.feature_history[device_key] = self.feature_history[device_key][
+                    -100:
+                ]
 
-                self.feature_history[device_key].append(features)
-
-                if len(self.feature_history[device_key]) > 100:
-                    self.feature_history[device_key] = self.feature_history[device_key][
-                        -100:
-                    ]
-
-                self.last_analysis[device_key] = current_time
-
-                logger.debug(
-                    f"GSR analysis completed for {device_id}: stress={features.stress_score:.1f}"
-                )
-
-        except Exception as e:
-            logger.error(f"Error in sync GSR analysis for {device_id}: {e}")
+            self.last_analysis[device_key] = current_time
 
     def _extract_features(
             self,
@@ -224,73 +200,68 @@ class GSRAnalytics:
             timestamps: np.ndarray,
     ) -> Optional[GSRFeatures]:
 
-        try:
-            if len(gsr_data) < 10:
-                return None
-
-            gsr_clean = self._clean_gsr_signal(gsr_data)
-
-            mean_gsr = float(np.mean(gsr_clean))
-            std_gsr = float(np.std(gsr_clean))
-            min_gsr = float(np.min(gsr_clean))
-            max_gsr = float(np.max(gsr_clean))
-            range_gsr = max_gsr - min_gsr
-
-            slope, slope_p = self._calculate_trend(gsr_clean)
-
-            peaks = self._detect_peaks(gsr_clean)
-            peak_count = len(peaks)
-            peak_amplitudes = gsr_clean[peaks] if len(peaks) > 0 else np.array([0])
-            peak_amplitude_mean = float(np.mean(peak_amplitudes))
-            peak_amplitude_std = float(np.std(peak_amplitudes))
-            peak_frequency = (
-                    (peak_count / len(gsr_clean)) * self.sampling_rate * 60
-            )
-
-            rising_time = self._calculate_rising_time(gsr_clean)
-            rapid_changes = self._count_rapid_changes(gsr_clean)
-
-            power_bands = self._analyze_frequency_domain(gsr_clean)
-
-            stress_score, stress_level, confidence = self._assess_stress(
-                gsr_clean,
-                mean_gsr,
-                std_gsr,
-                range_gsr,
-                peak_frequency,
-                rising_time,
-                rapid_changes,
-            )
-
-            return GSRFeatures(
-                timestamp=float(timestamps[-1]),
-                device_id=device_id,
-                session_id=session_id,
-                mean_gsr=mean_gsr,
-                std_gsr=std_gsr,
-                min_gsr=min_gsr,
-                max_gsr=max_gsr,
-                range_gsr=range_gsr,
-                slope=float(slope),
-                slope_significance=float(1.0 - slope_p) if slope_p > 0 else 1.0,
-                peak_count=peak_count,
-                peak_amplitude_mean=peak_amplitude_mean,
-                peak_amplitude_std=peak_amplitude_std,
-                peak_frequency=peak_frequency,
-                rising_time=rising_time,
-                rapid_changes=rapid_changes,
-                power_low_freq=power_bands.get("low", 0.0),
-                power_mid_freq=power_bands.get("mid", 0.0),
-                power_high_freq=power_bands.get("high", 0.0),
-                spectral_entropy=power_bands.get("entropy", 0.0),
-                stress_score=stress_score,
-                stress_level=stress_level,
-                confidence=confidence,
-            )
-
-        except Exception as e:
-            logger.error(f"Feature extraction failed: {e}")
+        if len(gsr_data) < 10:
             return None
+
+        gsr_clean = self._clean_gsr_signal(gsr_data)
+
+        mean_gsr = float(np.mean(gsr_clean))
+        std_gsr = float(np.std(gsr_clean))
+        min_gsr = float(np.min(gsr_clean))
+        max_gsr = float(np.max(gsr_clean))
+        range_gsr = max_gsr - min_gsr
+
+        slope, slope_p = self._calculate_trend(gsr_clean)
+
+        peaks = self._detect_peaks(gsr_clean)
+        peak_count = len(peaks)
+        peak_amplitudes = gsr_clean[peaks] if len(peaks) > 0 else np.array([0])
+        peak_amplitude_mean = float(np.mean(peak_amplitudes))
+        peak_amplitude_std = float(np.std(peak_amplitudes))
+        peak_frequency = (
+                (peak_count / len(gsr_clean)) * self.sampling_rate * 60
+        )
+
+        rising_time = self._calculate_rising_time(gsr_clean)
+        rapid_changes = self._count_rapid_changes(gsr_clean)
+
+        power_bands = self._analyze_frequency_domain(gsr_clean)
+
+        stress_score, stress_level, confidence = self._assess_stress(
+            gsr_clean,
+            mean_gsr,
+            std_gsr,
+            range_gsr,
+            peak_frequency,
+            rising_time,
+            rapid_changes,
+        )
+
+        return GSRFeatures(
+            timestamp=float(timestamps[-1]),
+            device_id=device_id,
+            session_id=session_id,
+            mean_gsr=mean_gsr,
+            std_gsr=std_gsr,
+            min_gsr=min_gsr,
+            max_gsr=max_gsr,
+            range_gsr=range_gsr,
+            slope=float(slope),
+            slope_significance=float(1.0 - slope_p) if slope_p > 0 else 1.0,
+            peak_count=peak_count,
+            peak_amplitude_mean=peak_amplitude_mean,
+            peak_amplitude_std=peak_amplitude_std,
+            peak_frequency=peak_frequency,
+            rising_time=rising_time,
+            rapid_changes=rapid_changes,
+            power_low_freq=power_bands.get("low", 0.0),
+            power_mid_freq=power_bands.get("mid", 0.0),
+            power_high_freq=power_bands.get("high", 0.0),
+            spectral_entropy=power_bands.get("entropy", 0.0),
+            stress_score=stress_score,
+            stress_level=stress_level,
+            confidence=confidence,
+        )
 
     def _clean_gsr_signal(self, gsr_data: np.ndarray) -> np.ndarray:
 
@@ -320,99 +291,80 @@ class GSRAnalytics:
 
     def _calculate_trend(self, gsr_data: np.ndarray) -> Tuple[float, float]:
 
-        try:
-            x = np.arange(len(gsr_data))
-            slope, intercept, r_value, p_value, std_err = stats.linregress(x, gsr_data)
-            return slope, p_value
-        except Exception:
-            return 0.0, 1.0
+        x = np.arange(len(gsr_data))
+        slope, intercept, r_value, p_value, std_err = stats.linregress(x, gsr_data)
+        return slope, p_value
 
     def _detect_peaks(self, gsr_data: np.ndarray) -> np.ndarray:
 
-        try:
+        prominence_threshold = np.std(gsr_data) * 0.5
+        min_distance = int(self.sampling_rate * 2)
 
-            prominence_threshold = np.std(gsr_data) * 0.5
-            min_distance = int(self.sampling_rate * 2)
+        peaks, properties = signal.find_peaks(
+            gsr_data, prominence=prominence_threshold, distance=min_distance
+        )
 
-            peaks, properties = signal.find_peaks(
-                gsr_data, prominence=prominence_threshold, distance=min_distance
-            )
-
-            return peaks
-        except Exception:
-            return np.array([])
+        return peaks
 
     def _calculate_rising_time(self, gsr_data: np.ndarray) -> float:
 
-        try:
-            diff = np.diff(gsr_data)
-            rising_samples = np.sum(diff > 0)
-            total_samples = len(diff)
-            return (
-                (rising_samples / total_samples) * 100.0 if total_samples > 0 else 0.0
-            )
-        except Exception:
-            return 0.0
+        diff = np.diff(gsr_data)
+        rising_samples = np.sum(diff > 0)
+        total_samples = len(diff)
+        return (
+            (rising_samples / total_samples) * 100.0 if total_samples > 0 else 0.0
+        )
 
     def _count_rapid_changes(self, gsr_data: np.ndarray) -> int:
 
-        try:
+        diff = np.diff(gsr_data)
+        std_diff = np.std(diff)
 
-            diff = np.diff(gsr_data)
-            std_diff = np.std(diff)
+        rapid_threshold = 2.0 * std_diff
+        rapid_changes = np.sum(np.abs(diff) > rapid_threshold)
 
-            rapid_threshold = 2.0 * std_diff
-            rapid_changes = np.sum(np.abs(diff) > rapid_threshold)
-
-            return int(rapid_changes)
-        except Exception:
-            return 0
+        return int(rapid_changes)
 
     def _analyze_frequency_domain(self, gsr_data: np.ndarray) -> Dict[str, float]:
 
-        try:
+        freqs, psd = signal.welch(
+            gsr_data, fs=self.sampling_rate, nperseg=min(256, len(gsr_data) // 4)
+        )
 
-            freqs, psd = signal.welch(
-                gsr_data, fs=self.sampling_rate, nperseg=min(256, len(gsr_data) // 4)
-            )
+        low_band = (freqs >= 0.01) & (freqs < 0.08)
+        mid_band = (freqs >= 0.08) & (freqs < 0.25)
+        high_band = (freqs >= 0.25) & (freqs < 2.0)
 
-            low_band = (freqs >= 0.01) & (freqs < 0.08)
-            mid_band = (freqs >= 0.08) & (freqs < 0.25)
-            high_band = (freqs >= 0.25) & (freqs < 2.0)
+        power_low = (
+            float(np.trapz(psd[low_band], freqs[low_band]))
+            if np.any(low_band)
+            else 0.0
+        )
+        power_mid = (
+            float(np.trapz(psd[mid_band], freqs[mid_band]))
+            if np.any(mid_band)
+            else 0.0
+        )
+        power_high = (
+            float(np.trapz(psd[high_band], freqs[high_band]))
+            if np.any(high_band)
+            else 0.0
+        )
 
-            power_low = (
-                float(np.trapz(psd[low_band], freqs[low_band]))
-                if np.any(low_band)
-                else 0.0
-            )
-            power_mid = (
-                float(np.trapz(psd[mid_band], freqs[mid_band]))
-                if np.any(mid_band)
-                else 0.0
-            )
-            power_high = (
-                float(np.trapz(psd[high_band], freqs[high_band]))
-                if np.any(high_band)
-                else 0.0
-            )
+        psd_norm = psd / np.sum(psd)
+        psd_norm = psd_norm[psd_norm > 0]
+        spectral_entropy = (
+            float(-np.sum(psd_norm * np.log2(psd_norm)))
+            if len(psd_norm) > 0
+            else 0.0
+        )
 
-            psd_norm = psd / np.sum(psd)
-            psd_norm = psd_norm[psd_norm > 0]
-            spectral_entropy = (
-                float(-np.sum(psd_norm * np.log2(psd_norm)))
-                if len(psd_norm) > 0
-                else 0.0
-            )
-
-            return {
-                "low": power_low,
-                "mid": power_mid,
-                "high": power_high,
-                "entropy": spectral_entropy,
-            }
-
-        except Exception:
-            return {"low": 0.0, "mid": 0.0, "high": 0.0, "entropy": 0.0}
+        return {
+            "low": power_low,
+            "mid": power_mid,
+            "high": power_high,
+            "entropy": spectral_entropy,
+        }
 
     def _assess_stress(
             self,
@@ -425,48 +377,43 @@ class GSRAnalytics:
             rapid_changes: int,
     ) -> Tuple[float, StressLevel, float]:
 
-        try:
+        indicators = []
 
-            indicators = []
+        if mean_gsr > 5.0:
+            indicators.append(min(mean_gsr / 10.0, 1.0) * 25)
 
-            if mean_gsr > 5.0:
-                indicators.append(min(mean_gsr / 10.0, 1.0) * 25)
+        if std_gsr > 1.0:
+            indicators.append(min(std_gsr / 5.0, 1.0) * 20)
 
-            if std_gsr > 1.0:
-                indicators.append(min(std_gsr / 5.0, 1.0) * 20)
+        if range_gsr > 2.0:
+            indicators.append(min(range_gsr / 10.0, 1.0) * 15)
 
-            if range_gsr > 2.0:
-                indicators.append(min(range_gsr / 10.0, 1.0) * 15)
+        if peak_frequency > 5.0:
+            indicators.append(min(peak_frequency / 20.0, 1.0) * 20)
 
-            if peak_frequency > 5.0:
-                indicators.append(min(peak_frequency / 20.0, 1.0) * 20)
+        if rising_time > 60.0:
+            indicators.append(min((rising_time - 50) / 30.0, 1.0) * 10)
 
-            if rising_time > 60.0:
-                indicators.append(min((rising_time - 50) / 30.0, 1.0) * 10)
+        if rapid_changes > 10:
+            indicators.append(min(rapid_changes / 50.0, 1.0) * 10)
 
-            if rapid_changes > 10:
-                indicators.append(min(rapid_changes / 50.0, 1.0) * 10)
+        stress_score = float(np.sum(indicators))
+        stress_score = max(0.0, min(100.0, stress_score))
 
-            stress_score = float(np.sum(indicators))
-            stress_score = max(0.0, min(100.0, stress_score))
+        if stress_score < 20:
+            stress_level = StressLevel.VERY_LOW
+        elif stress_score < 40:
+            stress_level = StressLevel.LOW
+        elif stress_score < 60:
+            stress_level = StressLevel.MODERATE
+        elif stress_score < 80:
+            stress_level = StressLevel.HIGH
+        else:
+            stress_level = StressLevel.VERY_HIGH
 
-            if stress_score < 20:
-                stress_level = StressLevel.VERY_LOW
-            elif stress_score < 40:
-                stress_level = StressLevel.LOW
-            elif stress_score < 60:
-                stress_level = StressLevel.MODERATE
-            elif stress_score < 80:
-                stress_level = StressLevel.HIGH
-            else:
-                stress_level = StressLevel.VERY_HIGH
+        confidence = min(1.0, len(gsr_data) / self.window_size_samples) * 100.0
 
-            confidence = min(1.0, len(gsr_data) / self.window_size_samples) * 100.0
-
-            return stress_score, stress_level, confidence
-
-        except Exception:
-            return 0.0, StressLevel.VERY_LOW, 0.0
+        return stress_score, stress_level, confidence
 
     def get_real_time_features(
             self, device_id: str, session_id: str
@@ -489,71 +436,64 @@ class GSRAnalytics:
                 device_key not in self.feature_history
                 or not self.feature_history[device_key]
         ):
-            logger.warning(f"No feature history found for {device_key}")
             return None
 
         features = self.feature_history[device_key]
 
-        try:
+        start_time = datetime.fromtimestamp(features[0].timestamp)
+        end_time = datetime.fromtimestamp(features[-1].timestamp)
+        duration_minutes = (end_time - start_time).total_seconds() / 60.0
 
-            start_time = datetime.fromtimestamp(features[0].timestamp)
-            end_time = datetime.fromtimestamp(features[-1].timestamp)
-            duration_minutes = (end_time - start_time).total_seconds() / 60.0
+        stress_scores = [f.stress_score for f in features]
+        average_stress = float(np.mean(stress_scores))
+        peak_stress = float(np.max(stress_scores))
 
-            stress_scores = [f.stress_score for f in features]
-            average_stress = float(np.mean(stress_scores))
-            peak_stress = float(np.max(stress_scores))
+        stress_levels = [f.stress_level.value for f in features]
+        stress_distribution = {}
+        for level in StressLevel:
+            count = stress_levels.count(level.value)
+            stress_distribution[level.value] = (count / len(stress_levels)) * 100.0
 
-            stress_levels = [f.stress_level.value for f in features]
-            stress_distribution = {}
-            for level in StressLevel:
-                count = stress_levels.count(level.value)
-                stress_distribution[level.value] = (count / len(stress_levels)) * 100.0
+        if len(stress_scores) >= 3:
+            x = np.arange(len(stress_scores))
+            slope, _, _, p_value, _ = stats.linregress(x, stress_scores)
 
-            if len(stress_scores) >= 3:
-                x = np.arange(len(stress_scores))
-                slope, _, _, p_value, _ = stats.linregress(x, stress_scores)
-
-                if p_value < 0.05:
-                    if slope > 0.1:
-                        stress_trend = "increasing"
-                    elif slope < -0.1:
-                        stress_trend = "decreasing"
-                    else:
-                        stress_trend = "stable"
-                    trend_confidence = (1.0 - p_value) * 100.0
+            if p_value < 0.05:
+                if slope > 0.1:
+                    stress_trend = "increasing"
+                elif slope < -0.1:
+                    stress_trend = "decreasing"
                 else:
                     stress_trend = "stable"
-                    trend_confidence = 50.0
+                trend_confidence = (1.0 - p_value) * 100.0
             else:
-                stress_trend = "insufficient_data"
-                trend_confidence = 0.0
+                stress_trend = "stable"
+                trend_confidence = 50.0
+        else:
+            stress_trend = "insufficient_data"
+            trend_confidence = 0.0
 
-            recommendations = self._generate_recommendations(
-                average_stress, peak_stress, stress_trend, stress_distribution
-            )
+        recommendations = self._generate_recommendations(
+            average_stress, peak_stress, stress_trend, stress_distribution
+        )
 
-            return GSRAnalysisReport(
-                session_id=session_id,
-                device_id=device_id,
-                start_time=start_time,
-                end_time=end_time,
-                duration_minutes=duration_minutes,
-                total_samples=len(features) * self.window_size_samples,
-                sampling_rate=self.sampling_rate,
-                data_quality=float(np.mean([f.confidence for f in features])),
-                features=features,
-                average_stress_score=average_stress,
-                peak_stress_score=peak_stress,
-                stress_distribution=stress_distribution,
-                stress_trend=stress_trend,
-                trend_confidence=trend_confidence,
-                recommendations=recommendations,
-            )
-
-        except Exception as e:
-            logger.error(f"Failed to generate session report: {e}")
-            return None
+        return GSRAnalysisReport(
+            session_id=session_id,
+            device_id=device_id,
+            start_time=start_time,
+            end_time=end_time,
+            duration_minutes=duration_minutes,
+            total_samples=len(features) * self.window_size_samples,
+            sampling_rate=self.sampling_rate,
+            data_quality=float(np.mean([f.confidence for f in features])),
+            features=features,
+            average_stress_score=average_stress,
+            peak_stress_score=peak_stress,
+            stress_distribution=stress_distribution,
+            stress_trend=stress_trend,
+            trend_confidence=trend_confidence,
+            recommendations=recommendations,
+        )
 
     def _generate_recommendations(
             self,
@@ -616,47 +556,41 @@ class GSRAnalytics:
         ):
             return False
 
-        try:
-            features = self.feature_history[device_key]
+        features = self.feature_history[device_key]
 
-            data = []
-            for f in features:
-                data.append(
-                    {
-                        "timestamp": f.timestamp,
-                        "device_id": f.device_id,
-                        "session_id": f.session_id,
-                        "mean_gsr": f.mean_gsr,
-                        "std_gsr": f.std_gsr,
-                        "min_gsr": f.min_gsr,
-                        "max_gsr": f.max_gsr,
-                        "range_gsr": f.range_gsr,
-                        "slope": f.slope,
-                        "slope_significance": f.slope_significance,
-                        "peak_count": f.peak_count,
-                        "peak_amplitude_mean": f.peak_amplitude_mean,
-                        "peak_amplitude_std": f.peak_amplitude_std,
-                        "peak_frequency": f.peak_frequency,
-                        "rising_time": f.rising_time,
-                        "rapid_changes": f.rapid_changes,
-                        "power_low_freq": f.power_low_freq,
-                        "power_mid_freq": f.power_mid_freq,
-                        "power_high_freq": f.power_high_freq,
-                        "spectral_entropy": f.spectral_entropy,
-                        "stress_score": f.stress_score,
-                        "stress_level": f.stress_level.value,
-                        "confidence": f.confidence,
-                    }
-                )
+        data = []
+        for f in features:
+            data.append(
+                {
+                    "timestamp": f.timestamp,
+                    "device_id": f.device_id,
+                    "session_id": f.session_id,
+                    "mean_gsr": f.mean_gsr,
+                    "std_gsr": f.std_gsr,
+                    "min_gsr": f.min_gsr,
+                    "max_gsr": f.max_gsr,
+                    "range_gsr": f.range_gsr,
+                    "slope": f.slope,
+                    "slope_significance": f.slope_significance,
+                    "peak_count": f.peak_count,
+                    "peak_amplitude_mean": f.peak_amplitude_mean,
+                    "peak_amplitude_std": f.peak_amplitude_std,
+                    "peak_frequency": f.peak_frequency,
+                    "rising_time": f.rising_time,
+                    "rapid_changes": f.rapid_changes,
+                    "power_low_freq": f.power_low_freq,
+                    "power_mid_freq": f.power_mid_freq,
+                    "power_high_freq": f.power_high_freq,
+                    "spectral_entropy": f.spectral_entropy,
+                    "stress_score": f.stress_score,
+                    "stress_level": f.stress_level.value,
+                    "confidence": f.confidence,
+                }
+            )
 
-            df = pd.DataFrame(data)
-            df.to_csv(filename, index=False)
-            logger.info(f"Exported {len(features)} feature windows to {filename}")
-            return True
-
-        except Exception as e:
-            logger.error(f"Failed to export features: {e}")
-            return False
+        df = pd.DataFrame(data)
+        df.to_csv(filename, index=False)
+        return True
 
     def cleanup_device_session(
             self, device_id: Any = str, session_id: Any = str
@@ -670,8 +604,6 @@ class GSRAnalytics:
             del self.device_timestamps[device_key]
         if device_key in self.last_analysis:
             del self.last_analysis[device_key]
-
-        logger.debug(f"Cleaned up GSR analytics for {device_key}")
 
     def get_stress_summary(self) -> Dict[str, Any]:
 
