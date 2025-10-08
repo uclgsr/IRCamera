@@ -4,11 +4,11 @@ import java.util.*
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt")
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
-    kotlin("kapt")
 }
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
@@ -259,7 +259,6 @@ android {
         }
     }
     
-    // Kapt configuration for Hilt
     kapt {
         correctErrorTypes = true
     }
