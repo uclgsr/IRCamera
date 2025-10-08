@@ -20,23 +20,25 @@ class GSRRepositoryImpl @Inject constructor(
     private val _deviceStatus = MutableStateFlow("")
     private val _connectionQuality = MutableStateFlow(0f)
     
-    private var unifiedGSRRecorder: UnifiedGSRRecorder? = null
+    private val unifiedGSRRecorder: UnifiedGSRRecorder by lazy { 
+        UnifiedGSRRecorder(context) 
+    }
     
     override suspend fun initialize(): Boolean {
         _connectionState.value = GSRConnectionState.CONNECTING
-        return unifiedGSRRecorder?.initialize() ?: false
+        return unifiedGSRRecorder.initialize()
     }
     
     override suspend fun startDeviceDiscovery(): Boolean {
         _connectionState.value = GSRConnectionState.DISCOVERING
-        return unifiedGSRRecorder?.startDeviceDiscovery() ?: false
+        return unifiedGSRRecorder.startDeviceDiscovery()
     }
     
     override suspend fun connectToDevice(deviceAddress: String): Boolean {
-        val devices = unifiedGSRRecorder?.getDiscoveredDevices() ?: return false
+        val devices = unifiedGSRRecorder.getDiscoveredDevices()
         val device = devices.find { it.address == deviceAddress } ?: return false
         
-        val connected = unifiedGSRRecorder?.connectToDevice(device) ?: false
+        val connected = unifiedGSRRecorder.connectToDevice(device)
         if (connected) {
             _connectionState.value = GSRConnectionState.CONNECTED
         } else {
@@ -46,7 +48,7 @@ class GSRRepositoryImpl @Inject constructor(
     }
     
     override suspend fun disconnect() {
-        unifiedGSRRecorder?.disconnect()
+        unifiedGSRRecorder.disconnect()
         _connectionState.value = GSRConnectionState.DISCONNECTED
     }
     
