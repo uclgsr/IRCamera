@@ -52,11 +52,20 @@ class ShimmerDataSourceImpl @Inject constructor(
     }
 
     override suspend fun startStreaming(deviceAddress: String): Flow<GSRSample> {
-        return flow {        }
+        return flow {
+            val shimmer = deviceManager.shimmerBluetoothManager?.getShimmerDeviceBtConnectedFromMac(deviceAddress)
+            shimmer?.let {
+                it.startStreaming()
+            }
+        }
     }
 
     override suspend fun stopStreaming(deviceAddress: String) {
-        try {        } catch (e: Exception) {        }
+        try {
+            val shimmer = deviceManager.shimmerBluetoothManager?.getShimmerDeviceBtConnectedFromMac(deviceAddress)
+            shimmer?.stopStreaming()
+        } catch (e: Exception) {
+        }
     }
 
     override fun isConnected(deviceAddress: String): Boolean {
@@ -70,10 +79,20 @@ class ShimmerDataSourceImpl @Inject constructor(
     override suspend fun getBatteryLevel(deviceAddress: String): Int? {
         return try {
             val shimmer = deviceManager.shimmerBluetoothManager?.getShimmerDeviceBtConnectedFromMac(deviceAddress)
-            if (shimmer != null) {                null
-            } else {                null
+            shimmer?.let {
+                val batteryVoltage = it.batteryVoltage
+                val batteryPercentage = calculateBatteryPercentage(batteryVoltage)
+                batteryPercentage
             }
-        } catch (e: Exception) {            null
+        } catch (e: Exception) {
+            null
         }
+    }
+
+    private fun calculateBatteryPercentage(voltage: Double): Int {
+        val minVoltage = 3.0
+        val maxVoltage = 4.2
+        val percentage = ((voltage - minVoltage) / (maxVoltage - minVoltage) * 100.0).coerceIn(0.0, 100.0)
+        return percentage.toInt()
     }
 }

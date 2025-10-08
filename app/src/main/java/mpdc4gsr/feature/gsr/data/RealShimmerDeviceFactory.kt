@@ -1,15 +1,19 @@
 package mpdc4gsr.feature.gsr.data
-// Import removed - ShimmerMsg constants may not be available in this version
+
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.os.Message
 import androidx.lifecycle.LifecycleOwner
 import com.mpdc4gsr.gsr.service.ShimmerDataCluster
 import com.mpdc4gsr.gsr.service.ShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.ShimmerDeviceInterface
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
+import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
+import com.shimmerresearch.driver.Configuration
 import com.shimmerresearch.driver.ObjectCluster
+import com.shimmerresearch.driver.ShimmerMsg
 
 class RealShimmerDeviceFactory @JvmOverloads constructor(
     private val context: Context,
@@ -40,37 +44,41 @@ class RealShimmerDevice(
     private var shimmerHandler: Handler? = null
 
     init {
-        // Defer Handler creation until connect is called to avoid Looper issues    }
+    }
 
     override fun connect(address: String, name: String): Boolean {
         return try {
-            // Initialize Handler and ShimmerManager if not already done
             if (shimmerHandler == null) {
                 shimmerHandler = object : Handler(Looper.getMainLooper()) {
-                    override fun handleMessage(msg: android.os.Message) {
+                    override fun handleMessage(msg: Message) {
                         when (msg.what) {
-                            0 -> handleStateChange(msg)
-                            2 -> handleDataPacket(msg)
-                            4 ->                            5 ->                            9 ->                            11 ->                            999 ->                            else ->                        }
+                            ShimmerMsg.MESSAGE_STATE_CHANGE -> handleStateChange(msg)
+                            ShimmerMsg.MESSAGE_READ -> handleDataPacket(msg)
+                            ShimmerMsg.MESSAGE_ACK_RECEIVED -> {}
+                            ShimmerMsg.MESSAGE_DEVICE_NAME -> {}
+                            ShimmerMsg.MESSAGE_TOAST -> {}
+                            ShimmerMsg.MESSAGE_SAMPLING_RATE_RECEIVED -> {}
+                            ShimmerMsg.MESSAGE_LOG_AND_STREAM_STATUS_CHANGED -> {}
+                            else -> {}
+                        }
                     }
                 }
-                shimmerManager = ShimmerBluetoothManagerAndroid(context, shimmerHandler)            }
+                shimmerManager = ShimmerBluetoothManagerAndroid(context, shimmerHandler)
+            }
+            
             shimmer = Shimmer(shimmerHandler, context)
             shimmer?.let { device ->
-                // Set up data handler to forward data to registered callback
-                try {
-                    // Use Handler message pattern instead of direct lambda
-                    // The Shimmer SDK typically uses Handler patterns for callbacks                } catch (e: Exception) {                }
-                // Set up connection state handler for proper state tracking
-                try {
-                    // Use Handler message pattern for state changes                } catch (e: Exception) {                }
-                // Connection is asynchronous - actual status will be updated via handlers
-                try {
-                    device.connect(address, name)
-                } catch (e: Exception) {                    false
-                }
+                device.enableGSROnTheFlyGSRRange(Configuration.Shimmer3.SENSOR_GSR, 4)
+                device.setSamplingRateShimmer(128.0)
+                device.setLowPowerMag(true)
+                device.setLowPowerAccel(true)
+                device.setLowPowerGyro(true)
+                
+                device.connect(address, name)
+                true
             } ?: false
-        } catch (e: Exception) {            isConnected = false
+        } catch (e: Exception) {
+            isConnected = false
             connectionCallback?.invoke("CONNECTION_FAILED")
             false
         }
@@ -79,18 +87,22 @@ class RealShimmerDevice(
     override fun startStreaming(): Boolean {
         return try {
             shimmer?.let { device ->
-                device.startStreaming()                true
+                device.startStreaming()
+                true
             } ?: false
-        } catch (e: Exception) {            false
+        } catch (e: Exception) {
+            false
         }
     }
 
     override fun stopStreaming(): Boolean {
         return try {
             shimmer?.let { device ->
-                device.stopStreaming()                true
+                device.stopStreaming()
+                true
             } ?: false
-        } catch (e: Exception) {            false
+        } catch (e: Exception) {
+            false
         }
     }
 
@@ -101,9 +113,11 @@ class RealShimmerDevice(
                 isConnected = false
                 connectionCallback?.invoke("DISCONNECTED")
                 dataCallback = null
-                connectionCallback = null                true
+                connectionCallback = null
+                true
             } ?: false
-        } catch (e: Exception) {            false
+        } catch (e: Exception) {
+            false
         }
     }
 
@@ -119,113 +133,105 @@ class RealShimmerDevice(
         this.connectionCallback = callback
     }
 
-    private fun handleStateChange(msg: android.os.Message) {
+    private fun handleStateChange(msg: Message) {
         try {
-            val state = msg.arg1            when (state) {
-                2 -> {                    isConnected = true
+            val state = msg.arg1
+            when (state) {
+                BT_STATE.CONNECTED.ordinal -> {
+                    isConnected = true
                     connectionCallback?.invoke("CONNECTED")
                 }
-
-                1 -> {                    connectionCallback?.invoke("CONNECTING")
+                BT_STATE.CONNECTING.ordinal -> {
+                    connectionCallback?.invoke("CONNECTING")
                 }
-
-                0 -> {                    isConnected = false
+                BT_STATE.DISCONNECTED.ordinal -> {
+                    isConnected = false
                     connectionCallback?.invoke("DISCONNECTED")
                 }
-
-                3 -> {                    connectionCallback?.invoke("STREAMING")
+                BT_STATE.STREAMING.ordinal -> {
+                    connectionCallback?.invoke("STREAMING")
                 }
-
-                else -> {                }
+                else -> {}
             }
-        } catch (e: Exception) {        }
+        } catch (e: Exception) {
+        }
     }
 
-    private fun handleDataPacket(msg: android.os.Message) {
-        try {            // Try to extract ObjectCluster from the message
-            try {
-                val shimmerMsg = msg.obj as? com.shimmerresearch.driver.ShimmerMsg
-                val objectCluster = shimmerMsg?.let {
-                    try {
-                        it.mB as? ObjectCluster
-                    } catch (e: Exception) {                        null
-                    }
-                }
-                if (objectCluster != null) {
-                    handleShimmerData(objectCluster)
-                } else {                }
-            } catch (e: Exception) {            }
-        } catch (e: Exception) {        }
+    private fun handleDataPacket(msg: Message) {
+        try {
+            val shimmerMsg = msg.obj as? ShimmerMsg
+            val objectCluster = shimmerMsg?.mB as? ObjectCluster
+            if (objectCluster != null) {
+                handleShimmerData(objectCluster)
+            }
+        } catch (e: Exception) {
+        }
     }
 
     private fun handleShimmerData(objectCluster: ObjectCluster) {
         try {
             val shimmerDataCluster = RealShimmerDataCluster(objectCluster)
             dataCallback?.invoke(shimmerDataCluster)
-        } catch (e: Exception) {        }
+        } catch (e: Exception) {
+        }
     }
 
-    private fun handleConnectionStateChange(state: Any) {
-        try {
-            // Convert state to string and update connection status
-            when (state.toString()) {
-                "CONNECTED", "3" -> {
-                    isConnected = true
-                    connectionCallback?.invoke("CONNECTED")                }
-
-                "CONNECTING", "2" -> {
-                    isConnected = false
-                    connectionCallback?.invoke("CONNECTING")                }
-
-                "DISCONNECTED", "NONE", "0" -> {
-                    isConnected = false
-                    connectionCallback?.invoke("DISCONNECTED")                }
-
-                else -> {                }
-            }
-        } catch (e: Exception) {        }
-    }
 }
 
 class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : ShimmerDataCluster {
     companion object {
         private const val TAG = "RealShimmerDataCluster"
-        // Shimmer sensor constants
+        private const val GSR_CHANNEL_NAME = "GSR"
+        private const val GSR_CONDUCTANCE_NAME = "GSR Conductance"
+        private const val PPG_CHANNEL_NAME = "PPG_A13"
+        private const val TIMESTAMP_CHANNEL = "Timestamp"
+        private const val GSR_RAW_FORMAT = "RAW"
+        private const val GSR_CAL_FORMAT = "CAL"
+        private const val MAX_VALID_ADC_VALUE = 4096.0
+        private const val MIN_VALID_ADC_VALUE = 0.0
     }
 
     override fun getGSRRawValue(): Double {
         return try {
-            objectCluster.getFormatClusterValue("GSR", "RAW") ?: 0.0
-        } catch (e: Exception) {            0.0
+            objectCluster.getFormatClusterValue(GSR_CHANNEL_NAME, GSR_RAW_FORMAT) ?: 0.0
+        } catch (e: Exception) {
+            0.0
         }
     }
 
     override fun getGSRCalibratedValue(): Double {
         return try {
-            objectCluster.getFormatClusterValue("GSR Conductance", "CAL") ?: 0.0
-        } catch (e: Exception) {            0.0
+            objectCluster.getFormatClusterValue(GSR_CONDUCTANCE_NAME, GSR_CAL_FORMAT)
+                ?: objectCluster.getFormatClusterValue(GSR_CHANNEL_NAME, GSR_CAL_FORMAT)
+                ?: 0.0
+        } catch (e: Exception) {
+            0.0
         }
     }
 
     override fun getPPGValue(): Double {
         return try {
-            objectCluster.getFormatClusterValue("PPG_A13", "CAL") ?: 0.0
-        } catch (e: Exception) {            0.0
+            objectCluster.getFormatClusterValue(PPG_CHANNEL_NAME, GSR_CAL_FORMAT) ?: 0.0
+        } catch (e: Exception) {
+            0.0
         }
     }
 
     override fun getTimestamp(): Long {
         return try {
-            objectCluster.getFormatClusterValue("Timestamp", "CAL")?.toLong() ?: System.currentTimeMillis()
-        } catch (e: Exception) {            System.currentTimeMillis()
+            objectCluster.getFormatClusterValue(TIMESTAMP_CHANNEL, GSR_CAL_FORMAT)?.toLong()
+                ?: System.currentTimeMillis()
+        } catch (e: Exception) {
+            System.currentTimeMillis()
         }
     }
 
     override fun hasValidGSRData(): Boolean {
         return try {
             val gsrValue = getGSRRawValue()
-            gsrValue > 0 && gsrValue < 4096 // Valid ADC range for Shimmer3 GSR
-        } catch (e: Exception) {            false
+            gsrValue > MIN_VALID_ADC_VALUE && gsrValue < MAX_VALID_ADC_VALUE
+        } catch (e: Exception) {
+            false
         }
     }
 }
