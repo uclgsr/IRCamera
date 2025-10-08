@@ -43,7 +43,7 @@ material = "1.13.0"
 multidex = "2.0.1"
 
 lifecycle = "2.9.4"
-hilt = "2.52"
+hilt = "2.54"
 
 room = "2.8.1"
 work = "2.10.5"
@@ -116,6 +116,8 @@ huaweiAgcp = "1.6.0.300"
 androidGradlePlugin = "8.11.2"
 kotlinGradlePlugin = "2.2.20"
 ksp = "2.2.20-2.0.3"
+hilt = "2.54"
+hilt-navigation-compose = "1.2.0"
 desugarJdkLibs = "2.1.5"
 ktlint = "13.1.0"
 detekt = "1.24.0"
@@ -259,6 +261,10 @@ commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.
 fastble = { group = "com.github.Jasonchenlijian", name = "FastBle", version.ref = "fastBle" }
 easyswipemenulayout = { group = "com.github.anzaizai", name = "EasySwipeMenuLayout", version.ref = "easySwipeMenuLayout" }
 lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycle" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version = "1.2.0" }
 gsy-video-player-thermal = { group = "com.github.CarGuo.GSYVideoPlayer", name = "gsyVideoPlayer-java", version.ref = "gsyVideoPlayerThermal" }
 media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
 media3-exoplayer-dash = { group = "androidx.media3", name = "media3-exoplayer-dash", version.ref = "media3" }
@@ -269,6 +275,11 @@ kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-p
 ksp-gradle-plugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 hilt-android-gradle-plugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "hilt" }
 desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdkLibs" }
+
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
+hilt-gradle-plugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "hilt" }
 
 huawei-agconnect = { group = "com.huawei.agconnect", name = "agcp", version.ref = "huaweiAgcp" }
 identity-jvm = { group = "com.android.identity", name = "identity-jvm", version.ref = "identityJvm" }
@@ -308,6 +319,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinGra
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlinGradlePlugin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinGradlePlugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

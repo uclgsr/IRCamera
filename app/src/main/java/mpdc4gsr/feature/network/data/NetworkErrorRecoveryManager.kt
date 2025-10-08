@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -16,9 +13,7 @@ class NetworkErrorRecoveryManager(
     private val context: Context,
     private val networkClient: NetworkClient,
 ) {
-    companion object {
-        private const val TAG = "NetworkErrorRecovery"
-        private const val MAX_RECONNECTION_ATTEMPTS = 10
+    companion object {        private const val MAX_RECONNECTION_ATTEMPTS = 10
         private const val INITIAL_RETRY_DELAY_MS = 1000L
         private const val MAX_RETRY_DELAY_MS = 30000L
         private const val HEALTH_CHECK_INTERVAL_MS = 15000L
@@ -59,36 +54,24 @@ class NetworkErrorRecoveryManager(
     }
 
     fun enableAutoRecovery() {
-        if (isRecoveryActive.get()) {
-            AppLogger.w(TAG, "Auto recovery already enabled")
-            return
+        if (isRecoveryActive.get()) {            return
         }
-        isRecoveryActive.set(true)
-        AppLogger.i(TAG, "Network error recovery enabled")
-    }
+        isRecoveryActive.set(true)    }
 
     fun disableAutoRecovery() {
-        if (!isRecoveryActive.get()) {
-            AppLogger.w(TAG, "Auto recovery not active")
-            return
+        if (!isRecoveryActive.get()) {            return
         }
-        isRecoveryActive.set(false)
-        AppLogger.i(TAG, "Network error recovery disabled")
-    }
+        isRecoveryActive.set(false)    }
 
     fun recordSuccessfulConnection(controller: NetworkClient.ControllerInfo) {
         lastKnownGoodController = controller
         reconnectionAttempts.set(0)
-        rapidFailureCount.set(0)
-        AppLogger.i(TAG, "Recorded successful connection: ${controller.deviceName}")
-    }
+        rapidFailureCount.set(0)    }
 
     fun handleNetworkError(
         operation: String,
         error: String,
-    ) {
-        AppLogger.w(TAG, "Network error in $operation: $error")
-        val currentTime = System.currentTimeMillis()
+    ) {        val currentTime = System.currentTimeMillis()
         if (currentTime - lastFailureTime < RAPID_FAILURE_WINDOW_MS) {
             rapidFailureCount.incrementAndGet()
         } else {
@@ -131,7 +114,5 @@ class NetworkErrorRecoveryManager(
         isRecoveryActive.set(false)
         healthCheckJob?.cancel()
         recoveryJob.cancel()
-        eventListener = null
-        AppLogger.i(TAG, "Network error recovery manager cleaned up")
-    }
+        eventListener = null    }
 }

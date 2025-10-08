@@ -337,6 +337,7 @@ dependencies {
     implementation(libs.bundles.compose.core)
     implementation(libs.bundles.compose.navigation.bundle)
     implementation(libs.bundles.compose.icons)
+    implementation(libs.hilt.navigation.compose)
     debugImplementation(libs.bundles.compose.debug)
     androidTestImplementation(libs.bundles.compose.test)
     implementation(libs.coil.compose)
@@ -376,6 +377,10 @@ dependencies {
     implementation(libs.nordic.ble.ktx)
     implementation(libs.lifecycle.service)
     implementation(libs.compose.lifecycle.runtime)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 
     implementation(files("libs/shimmerandroidinstrumentdriver-3.2.4_beta.aar"))
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))

@@ -1,7 +1,6 @@
 package mpdc4gsr.core.monitoring
 
 import android.os.SystemClock
-import mpdc4gsr.core.utils.AppLogger
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
@@ -13,7 +12,6 @@ object PerformanceMetrics {
     fun initialize() {
         val appStartTime = SystemClock.elapsedRealtime()
         startTimes["app_cold_start"] = appStartTime
-        AppLogger.d(TAG, "Performance metrics initialized")
     }
 
     fun startMeasurement(operationName: String) {
@@ -28,7 +26,6 @@ object PerformanceMetrics {
     }
 
     fun logMetric(metricName: String, value: Long) {
-        AppLogger.i(TAG, "Metric: $metricName = $value ms")
         // TODO: Send to analytics backend
     }
 
@@ -43,9 +40,7 @@ object PerformanceMetrics {
     fun recordColdStartComplete() {
         val duration = endMeasurement("app_cold_start")
         if (duration > 0) {
-            AppLogger.i(TAG, "Cold start completed in $duration ms (target: < 2000 ms)")
             if (duration > 2000) {
-                AppLogger.w(TAG, "Cold start exceeded target of 2000ms")
             }
         }
     }
@@ -55,7 +50,6 @@ object PerformanceMetrics {
         if (frameTimeMs > 16) {
             incrementCounter("janky_frames")
             if (frameTimeMs > 32) {
-                AppLogger.w(TAG, "Severe frame jank detected: ${frameTimeMs}ms")
             }
         }
         incrementCounter("total_frames")
@@ -69,22 +63,11 @@ object PerformanceMetrics {
     }
 
     fun logSummary() {
-        AppLogger.i(TAG, "=== Performance Metrics Summary ===")
-        AppLogger.i(TAG, "Total frames: ${getCounter("total_frames")}")
-        AppLogger.i(
-            TAG,
-            "Janky frames: ${getCounter("janky_frames")} (${String.format("%.2f", getJankyFramePercentage())}%)"
-        )
-        AppLogger.i(TAG, "Recording sessions: ${getCounter("recording_sessions")}")
-        AppLogger.i(TAG, "Successful recordings: ${getCounter("successful_recordings")}")
-        AppLogger.i(TAG, "Failed recordings: ${getCounter("failed_recordings")}")
-        AppLogger.i(TAG, "===================================")
     }
 
     fun reset() {
         startTimes.clear()
         metrics.clear()
-        AppLogger.d(TAG, "All metrics reset")
     }
 }
 

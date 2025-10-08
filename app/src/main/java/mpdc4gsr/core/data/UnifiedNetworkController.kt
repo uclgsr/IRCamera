@@ -7,8 +7,6 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.wifi.WifiManager
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
@@ -72,14 +70,11 @@ class UnifiedNetworkController(
     private var monitoringJob: Job? = null
     private var reconnectionJob: Job? = null
     suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
-        AppLogger.i(TAG, "Initializing Unified Network Controller")
         try {
             if (isInitialized.get()) {
-                AppLogger.i(TAG, "Network controller already initialized")
                 return@withContext true
             }
             if (!hasNetworkPermissions()) {
-                AppLogger.e(TAG, "Missing network permissions")
                 _networkStatus.value = NetworkStatus.PERMISSION_DENIED
                 return@withContext false
             }
@@ -87,23 +82,18 @@ class UnifiedNetworkController(
             startNetworkMonitoring()
             updateNetworkStatus()
             isInitialized.set(true)
-            AppLogger.i(TAG, "Network controller initialized successfully")
             return@withContext true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize network controller", e)
             _networkStatus.value = NetworkStatus.ERROR
             return@withContext false
         }
     }
 
     suspend fun startDiscovery(): Boolean = withContext(Dispatchers.IO) {
-        AppLogger.i(TAG, "Starting PC controller discovery via mDNS")
         if (!isInitialized.get()) {
-            AppLogger.e(TAG, "Network controller not initialized")
             return@withContext false
         }
         if (isDiscovering.get()) {
-            AppLogger.i(TAG, "Discovery already in progress")
             return@withContext true
         }
         try {
@@ -126,18 +116,15 @@ class UnifiedNetworkController(
             jmDNS = JmDNS.create(inetAddress)
             serviceListener = object : ServiceListener {
                 override fun serviceAdded(event: ServiceEvent) {
-                    AppLogger.d(TAG, "mDNS service added: ${event.name}")
                     jmDNS?.requestServiceInfo(event.type, event.name)
                 }
 
                 override fun serviceRemoved(event: ServiceEvent) {
-                    AppLogger.d(TAG, "mDNS service removed: ${event.name}")
                     discoveredControllers.remove(event.name)
                     updateDiscoveredControllers()
                 }
 
                 override fun serviceResolved(event: ServiceEvent) {
-                    AppLogger.i(TAG, "mDNS service resolved: ${event.info}")
                     val serviceInfo = event.info
                     val controllerInfo = PCControllerInfo(
                         name = serviceInfo.name,
@@ -165,10 +152,8 @@ class UnifiedNetworkController(
                 delay(DISCOVERY_TIMEOUT_MS)
                 stopDiscovery()
             }
-            AppLogger.i(TAG, "PC controller discovery started")
             return@withContext true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to start discovery", e)
             _networkStatus.value = NetworkStatus.ERROR
             isDiscovering.set(false)
             return@withContext false
@@ -176,7 +161,6 @@ class UnifiedNetworkController(
     }
 
     suspend fun stopDiscovery(): Boolean = withContext(Dispatchers.IO) {
-        AppLogger.i(TAG, "Stopping PC controller discovery")
         try {
             isDiscovering.set(false)
             discoveryJob?.cancel()
@@ -191,20 +175,16 @@ class UnifiedNetworkController(
             } else {
                 _networkStatus.value = NetworkStatus.NO_CONTROLLERS_FOUND
             }
-            AppLogger.i(TAG, "Discovery stopped - found ${discoveredControllers.size} controllers")
             return@withContext true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error stopping discovery", e)
             return@withContext false
         }
     }
 
     suspend fun connectToController(controllerInfo: PCControllerInfo): Boolean =
         withContext(Dispatchers.IO) {
-            AppLogger.i(TAG, "Connecting to PC controller: ${controllerInfo.name}")
             try {
                 if (activeConnections.containsKey(controllerInfo.name)) {
-                    AppLogger.i(TAG, "Already connected to ${controllerInfo.name}")
                     return@withContext true
                 }
                 _networkStatus.value = NetworkStatus.CONNECTING
@@ -216,15 +196,12 @@ class UnifiedNetworkController(
                     activeConnections[controllerInfo.name] = webSocketClient
                     _networkStatus.value = NetworkStatus.CONNECTED
                     startHeartbeatMonitoring(controllerInfo.name)
-                    AppLogger.i(TAG, "Successfully connected to ${controllerInfo.name}")
                     return@withContext true
                 } else {
-                    AppLogger.w(TAG, "Failed to connect to ${controllerInfo.name}")
                     _networkStatus.value = NetworkStatus.CONNECTION_FAILED
                     return@withContext false
                 }
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error connecting to controller", e)
                 _networkStatus.value = NetworkStatus.ERROR
                 return@withContext false
             }
@@ -232,22 +209,18 @@ class UnifiedNetworkController(
 
     suspend fun disconnectFromController(controllerName: String): Boolean =
         withContext(Dispatchers.IO) {
-            AppLogger.i(TAG, "Disconnecting from PC controller: $controllerName")
             try {
                 activeConnections.remove(controllerName)
                 if (activeConnections.isEmpty()) {
                     _networkStatus.value = NetworkStatus.READY
                 }
-                AppLogger.i(TAG, "Disconnected from $controllerName")
                 return@withContext true
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error disconnecting from controller", e)
                 return@withContext false
             }
         }
 
     suspend fun broadcastMessage(messageType: String, data: JSONObject): Boolean {
-        AppLogger.d(TAG, "Broadcasting message: $messageType to ${activeConnections.size} controllers")
         val message = JSONObject().apply {
             put("type", messageType)
             put("data", data)
@@ -258,7 +231,6 @@ class UnifiedNetworkController(
             try {
                 client.sendMessage(message)
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error sending message to controller", e)
                 success = false
             }
         }
@@ -270,10 +242,8 @@ class UnifiedNetworkController(
         messageType: String,
         data: JSONObject
     ): Boolean {
-        AppLogger.d(TAG, "Sending message: $messageType to $controllerName")
         val client = activeConnections[controllerName]
         if (client == null) {
-            AppLogger.w(TAG, "No connection to controller: $controllerName")
             return false
         }
         return try {
@@ -285,7 +255,6 @@ class UnifiedNetworkController(
             client.sendMessage(message)
             true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error sending message to $controllerName", e)
             false
         }
     }
@@ -366,7 +335,6 @@ class UnifiedNetworkController(
 
     private fun incrementReconnectionCount() {
         reconnectionAttempts++
-        AppLogger.i(TAG, "Reconnection attempts: $reconnectionAttempts")
     }
 
     fun getCurrentSyncQuality(): Double {
@@ -375,7 +343,6 @@ class UnifiedNetworkController(
     }
 
     suspend fun cleanup(): Boolean = withContext(Dispatchers.IO) {
-        AppLogger.i(TAG, "Cleaning up network controller")
         try {
             stopDiscovery()
             activeConnections.keys.toList().forEach { controllerName ->
@@ -391,10 +358,8 @@ class UnifiedNetworkController(
             serviceListener = null
             isInitialized.set(false)
             _networkStatus.value = NetworkStatus.DISCONNECTED
-            AppLogger.i(TAG, "Network controller cleanup completed")
             return@withContext true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error during cleanup", e)
             return@withContext false
         }
     }
@@ -414,12 +379,10 @@ class UnifiedNetworkController(
             .build()
         networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
-                AppLogger.d(TAG, "Wi-Fi network available")
                 updateNetworkStatus()
             }
 
             override fun onLost(network: Network) {
-                AppLogger.d(TAG, "Wi-Fi network lost")
                 _networkStatus.value = NetworkStatus.NETWORK_LOST
                 if (activeConnections.isNotEmpty()) {
                     startAutomaticReconnection()
@@ -430,7 +393,6 @@ class UnifiedNetworkController(
                 network: Network,
                 networkCapabilities: NetworkCapabilities
             ) {
-                AppLogger.d(TAG, "Wi-Fi network capabilities changed")
                 updateNetworkStatus()
             }
         }
@@ -472,7 +434,6 @@ class UnifiedNetworkController(
             val wifiInfo = wifiManager.connectionInfo
             _wifiSignalStrength.value = wifiInfo.rssi
         } catch (e: Exception) {
-            AppLogger.w(TAG, "Error getting Wi-Fi signal strength", e)
         }
     }
 
@@ -497,24 +458,19 @@ class UnifiedNetworkController(
     private fun createWebSocketEventListener(controllerInfo: PCControllerInfo): WebSocketClient.WebSocketEventListener {
         return object : WebSocketClient.WebSocketEventListener {
             override fun onServerDiscovered(serverInfo: WebSocketClient.ServerInfo) {
-                AppLogger.d(TAG, "Server discovered: ${serverInfo.name}")
             }
 
             override fun onConnecting(serverInfo: WebSocketClient.ServerInfo) {
-                AppLogger.d(TAG, "Connecting to: ${serverInfo.name}")
             }
 
             override fun onConnected(serverInfo: WebSocketClient.ServerInfo) {
-                AppLogger.i(TAG, "Connected to: ${serverInfo.name}")
                 _networkStatus.value = NetworkStatus.CONNECTED
             }
 
             override fun onAuthenticated() {
-                AppLogger.i(TAG, "Authenticated with: ${controllerInfo.name}")
             }
 
             override fun onDisconnected(reason: String) {
-                AppLogger.i(TAG, "Disconnected from: ${controllerInfo.name} - $reason")
                 activeConnections.remove(controllerInfo.name)
                 if (activeConnections.isEmpty()) {
                     _networkStatus.value = NetworkStatus.READY
@@ -525,16 +481,13 @@ class UnifiedNetworkController(
             }
 
             override fun onMessage(messageType: String, message: JSONObject) {
-                AppLogger.d(TAG, "Received message: $messageType from ${controllerInfo.name}")
                 handleIncomingMessage(controllerInfo.name, messageType, message)
             }
 
             override fun onError(error: String, exception: Throwable?) {
-                AppLogger.e(TAG, "WebSocket error from ${controllerInfo.name}: $error", exception)
             }
 
             override fun onHeartbeatReceived() {
-                AppLogger.d(TAG, "Heartbeat received from: ${controllerInfo.name}")
             }
         }
     }
@@ -545,7 +498,6 @@ class UnifiedNetworkController(
                 try {
                     delay(HEARTBEAT_INTERVAL_MS)
                 } catch (e: Exception) {
-                    AppLogger.w(TAG, "Heartbeat error for $controllerName", e)
                     break
                 }
             }
@@ -561,18 +513,15 @@ class UnifiedNetworkController(
             while (_networkStatus.value == NetworkStatus.NETWORK_LOST ||
                 _networkStatus.value == NetworkStatus.CONNECTION_FAILED
             ) {
-                AppLogger.i(TAG, "Attempting automatic reconnection in ${delay}ms")
                 delay(delay)
                 discoveredControllers.values.forEach { controllerInfo ->
                     if (!activeConnections.containsKey(controllerInfo.name)) {
-                        AppLogger.i(TAG, "Trying to reconnect to ${controllerInfo.name}")
                         incrementReconnectionCount()
                         launch { connectToController(controllerInfo) }
                     }
                 }
                 delay = minOf(delay * 2, MAX_RECONNECTION_DELAY_MS)
                 if (activeConnections.isNotEmpty()) {
-                    AppLogger.i(TAG, "Automatic reconnection successful")
                     break
                 }
             }
@@ -584,7 +533,6 @@ class UnifiedNetworkController(
         messageType: String,
         message: JSONObject
     ) {
-        AppLogger.d(TAG, "Processing message type: $messageType from $controllerName")
         when (messageType) {
             "ping" -> {
                 lifecycleOwner.lifecycleScope.launch {
@@ -594,16 +542,13 @@ class UnifiedNetworkController(
 
             "session_control" -> {
                 val action = message.optString("action")
-                AppLogger.i(TAG, "Session control: $action from $controllerName")
             }
 
             "sync_marker" -> {
                 val markerType = message.optString("marker_type")
-                AppLogger.i(TAG, "Sync marker: $markerType from $controllerName")
             }
 
             else -> {
-                AppLogger.d(TAG, "Unknown message type: $messageType")
             }
         }
     }

@@ -4,24 +4,34 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
+import mpdc4gsr.core.utils.AppLogger
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class CalibrationViewModel : AppBaseViewModel() {
-    private lateinit var prefs: SharedPreferences
+@HiltViewModel
+class CalibrationViewModel @Inject constructor(
+    @ApplicationContext private val appContext: Context
+) : AppBaseViewModel() {
+    private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
     private val _calibrationSettings = MutableStateFlow(CalibrationSettings())
     val calibrationSettings: StateFlow<CalibrationSettings> = _calibrationSettings.asStateFlow()
     private val _calibrationInfo = MutableStateFlow(CalibrationInfo())
     val calibrationInfo: StateFlow<CalibrationInfo> = _calibrationInfo.asStateFlow()
+    
+    init {
+        loadSettings()
+        loadCalibrationInfo()
+    }
 
     data class CalibrationSettings(
         val autoCalibration: Boolean = true
@@ -42,11 +52,7 @@ class CalibrationViewModel : AppBaseViewModel() {
         private const val TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss"
     }
 
-    fun initialize(context: Context) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        loadSettings()
-        loadCalibrationInfo()
-    }
+
 
     private fun loadSettings() {
         _calibrationSettings.value = CalibrationSettings(

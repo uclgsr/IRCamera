@@ -2,8 +2,6 @@ package mpdc4gsr.core.data
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import mpdc4gsr.core.StructuredLogger
 import org.json.JSONObject
@@ -99,7 +97,6 @@ class SecurityMonitor(
     private var securityListener: SecurityEventListener? = null
     fun initialize(): Boolean {
         return try {
-            AppLogger.i(TAG, "Initializing security monitoring system")
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 TAG,
@@ -112,7 +109,6 @@ class SecurityMonitor(
             )
             true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize security monitor", e)
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
@@ -131,7 +127,6 @@ class SecurityMonitor(
 
     fun startMonitoring() {
         if (isMonitoring.get()) {
-            AppLogger.w(TAG, "Security monitoring already started")
             return
         }
         isMonitoring.set(true)
@@ -141,7 +136,6 @@ class SecurityMonitor(
                     performSecurityCheck()
                     delay(MONITORING_INTERVAL_MS)
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "Error in security monitoring loop", e)
                 }
             }
         }
@@ -151,11 +145,9 @@ class SecurityMonitor(
                     performCleanup()
                     delay(CLEANUP_INTERVAL_MS)
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "Error in cleanup task", e)
                 }
             }
         }
-        AppLogger.i(TAG, "Security monitoring started")
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
@@ -169,7 +161,6 @@ class SecurityMonitor(
     fun stopMonitoring() {
         isMonitoring.set(false)
         scope.cancel()
-        AppLogger.i(TAG, "Security monitoring stopped")
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,

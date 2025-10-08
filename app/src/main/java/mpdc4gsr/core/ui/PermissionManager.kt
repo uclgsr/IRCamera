@@ -1,8 +1,6 @@
 package mpdc4gsr.core.ui
 
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
@@ -16,25 +14,20 @@ class PermissionManager(
     }
 
     suspend fun requestAllCriticalPermissions(): Boolean {
-        AppLogger.i(TAG, "Requesting all critical permissions")
         return requestPermissionsWithController()
     }
 
     suspend fun requestCameraPermissions(): Boolean {
         if (permissionController.hasCameraPermissions()) {
-            AppLogger.i(TAG, "Camera permissions already granted")
             return true
         }
-        AppLogger.i(TAG, "Requesting camera permissions")
         return requestPermissionsWithController()
     }
 
     suspend fun requestBluetoothPermissions(): Boolean {
         if (permissionController.canConnectToShimmer()) {
-            AppLogger.i(TAG, "Bluetooth permissions already granted")
             return true
         }
-        AppLogger.i(TAG, "Requesting bluetooth permissions for GSR sensor access")
         return requestPermissionsWithController()
     }
 
@@ -43,7 +36,6 @@ class PermissionManager(
             permissionController.ensureAll { isGranted, denied ->
                 if (continuation.isActive) {
                     if (!isGranted) {
-                        AppLogger.w(TAG, "Permissions denied: ${denied.joinToString()}")
                     }
                     continuation.resume(isGranted)
                 }

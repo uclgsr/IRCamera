@@ -22,16 +22,12 @@ import mpdc4gsr.core.ui.components.settings.SettingsCard
 import mpdc4gsr.core.ui.components.settings.SettingsRow
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.device.presentation.DiagnosticsViewModel
-import mpdc4gsr.feature.device.presentation.DiagnosticsViewModelFactory
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun DiagnosticsScreen(
     onBackClick: (() -> Unit)? = null,
-    viewModel: DiagnosticsViewModel = viewModel(
-        factory = DiagnosticsViewModelFactory(
-            LocalContext.current.applicationContext
-        )
-    ),
+    viewModel: DiagnosticsViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current

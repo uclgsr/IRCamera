@@ -1,8 +1,6 @@
 package mpdc4gsr.core.data
 
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import mpdc4gsr.core.data.model.GSRSample
 import org.json.JSONArray
@@ -65,10 +63,8 @@ class LSLGSROutlet(
                 serverJob = networkScope.launch {
                     acceptConnections()
                 }
-                AppLogger.i(TAG, "LSL outlet opened: ${streamInfo.name} on port $serverPort")
                 true
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to open LSL outlet: ${e.message}")
                 false
             }
         }
@@ -85,7 +81,6 @@ class LSLGSROutlet(
                         }
                         // Send stream info to new client
                         sendStreamInfo(socket)
-                        AppLogger.i(TAG, "LSL client connected: ${socket.remoteSocketAddress}")
                         // Handle client disconnection monitoring
                         networkScope.launch {
                             try {
@@ -97,13 +92,11 @@ class LSLGSROutlet(
                                     connectedClients.remove(socket)
                                 }
                                 socket.close()
-                                AppLogger.i(TAG, "LSL client disconnected")
                             }
                         }
                     }
                 } catch (e: Exception) {
                     if (isActive.get()) {
-                        AppLogger.e(TAG, "Error accepting LSL connections", e)
                         delay(1000) // Brief pause before retrying
                     }
                 }
@@ -132,7 +125,6 @@ class LSLGSROutlet(
                 }
                 writer.println(streamInfoJson.toString())
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to send stream info to client", e)
             }
         }
 
@@ -167,7 +159,6 @@ class LSLGSROutlet(
                 }
                 true
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to push LSL sample", e)
                 false
             }
         }
@@ -208,7 +199,6 @@ class LSLGSROutlet(
                 sampleCount.addAndGet(samples.size.toLong())
                 true
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to push LSL chunk", e)
                 false
             }
         }
@@ -223,7 +213,6 @@ class LSLGSROutlet(
             // Close server socket
             serverSocket?.close()
             serverJob?.cancel()
-            AppLogger.i(TAG, "LSL outlet closed")
         }
 
         fun getSampleCount(): Long = sampleCount.get()
@@ -257,13 +246,11 @@ class LSLGSROutlet(
                 streamingJob = networkScope.launch {
                     streamingLoop()
                 }
-                AppLogger.i(TAG, "LSL GSR streaming started")
                 true
             } else {
                 false
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to start LSL streaming", e)
             false
         }
     }
@@ -295,7 +282,6 @@ class LSLGSROutlet(
                 }
                 delay(50) // 20 Hz streaming rate
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error in LSL streaming loop", e)
                 delay(1000)
             }
         }
@@ -330,7 +316,6 @@ class LSLGSROutlet(
         outlet = null
         sampleBuffer.clear()
         qualityHistory.clear()
-        AppLogger.i(TAG, "LSL GSR streaming stopped")
     }
 
     fun getStreamingStatistics(): Map<String, Any> {

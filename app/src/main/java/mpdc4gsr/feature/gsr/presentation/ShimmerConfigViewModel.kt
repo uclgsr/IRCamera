@@ -5,13 +5,16 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.gsr.domain.usecase.*
+import javax.inject.Inject
 
-class ShimmerConfigViewModel(
+@HiltViewModel
+class ShimmerConfigViewModel @Inject constructor(
     private val scanDevicesUseCase: ScanShimmerDevicesUseCase,
     private val connectDeviceUseCase: ConnectShimmerDeviceUseCase,
     private val disconnectDeviceUseCase: DisconnectShimmerDeviceUseCase,

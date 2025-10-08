@@ -11,8 +11,6 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,34 +26,27 @@ class PermissionController(private val activity: ComponentActivity) {
         activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
             val denied = grants.filter { !it.value }.keys.toList()
             if (denied.isEmpty()) {
-                AppLogger.i(TAG, "All requested permissions were granted.")
                 onPermissionsResult?.invoke(true, emptyList())
             } else {
-                AppLogger.w(TAG, "Some permissions were denied: ${denied.joinToString()}")
                 handleDeniedPermissions(denied)
                 onPermissionsResult?.invoke(false, denied)
             }
         }
     private val batteryOptimizationLauncher: ActivityResultLauncher<Intent> =
         activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            AppLogger.i(TAG, "Returned from battery optimization settings.")
         }
 
     fun ensureAll(callback: (isGranted: Boolean, denied: List<String>) -> Unit) {
         this.onPermissionsResult = callback
         val missing = getMissingPermissions()
         if (missing.isEmpty()) {
-            AppLogger.i(TAG, "All required permissions are already granted.")
             callback(true, emptyList())
             return
         }
-        AppLogger.i(TAG, "Found ${missing.size} missing permissions. Showing rationale.")
         showPermissionRationaleDialog(missing) { userAccepted ->
             if (userAccepted) {
-                AppLogger.i(TAG, "User accepted rationale. Launching permission request.")
                 permissionLauncher.launch(missing.toTypedArray())
             } else {
-                AppLogger.w(TAG, "User declined permission rationale.")
                 callback(false, missing)
             }
         }
@@ -66,7 +57,6 @@ class PermissionController(private val activity: ComponentActivity) {
         callback: (isGranted: Boolean, device: UsbDevice?) -> Unit
     ) {
         if (usbManager.hasPermission(device)) {
-            AppLogger.i(TAG, "USB permission already granted for device ${device.productName}")
             callback(true, device)
             return
         }
@@ -85,13 +75,10 @@ class PermissionController(private val activity: ComponentActivity) {
                         flags
                     )
                     usbManager.requestPermission(device, permissionIntent)
-                    AppLogger.i(TAG, "USB permission request sent for ${device.productName}.")
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "Failed to request USB permission", e)
                     callback(false, null)
                 }
             } else {
-                AppLogger.w(TAG, "User declined USB permission rationale.")
                 callback(false, null)
             }
         }
@@ -99,7 +86,6 @@ class PermissionController(private val activity: ComponentActivity) {
 
     fun requestBatteryOptimizationExemption() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || isBatteryOptimizationDisabled()) {
-            AppLogger.i(TAG, "Battery optimization exemption not needed or already granted.")
             return
         }
         showBatteryOptimizationRationaleDialog { userAccepted ->
@@ -111,10 +97,8 @@ class PermissionController(private val activity: ComponentActivity) {
                         }
                     batteryOptimizationLauncher.launch(intent)
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "Failed to launch battery optimization settings.", e)
                 }
             } else {
-                AppLogger.w(TAG, "User declined battery optimization exemption.")
             }
         }
     }
@@ -201,7 +185,6 @@ class PermissionController(private val activity: ComponentActivity) {
         if (permanentlyDenied.isNotEmpty()) {
             showPermanentlyDeniedDialog(permanentlyDenied)
         } else {
-            AppLogger.w(TAG, "User temporarily denied: ${denied.joinToString()}")
         }
     }
 
@@ -285,7 +268,6 @@ class PermissionController(private val activity: ComponentActivity) {
             }
             activity.startActivity(intent)
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to open app settings", e)
         }
     }
 
@@ -301,7 +283,6 @@ class PermissionController(private val activity: ComponentActivity) {
     fun initialize() {
         // This method is called for initialization purposes
         // Currently no specific initialization required
-        AppLogger.i(TAG, "PermissionController initialized")
     }
 
     fun onRequestPermissionsResult(
@@ -311,7 +292,6 @@ class PermissionController(private val activity: ComponentActivity) {
     ) {
         // Handle legacy permission results if needed
         // Modern implementation uses ActivityResultLauncher
-        AppLogger.i(TAG, "Legacy onRequestPermissionsResult called with requestCode: $requestCode")
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int) {
@@ -325,7 +305,6 @@ class PermissionController(private val activity: ComponentActivity) {
 
     fun requestBatteryOptimizationExemption(callback: (Boolean) -> Unit) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || isBatteryOptimizationDisabled()) {
-            AppLogger.i(TAG, "Battery optimization exemption not needed or already granted.")
             callback(true)
             return
         }
@@ -339,11 +318,9 @@ class PermissionController(private val activity: ComponentActivity) {
                     batteryOptimizationLauncher.launch(intent)
                     callback(true)
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "Failed to launch battery optimization settings.", e)
                     callback(false)
                 }
             } else {
-                AppLogger.w(TAG, "User declined battery optimization exemption.")
                 callback(false)
             }
         }
@@ -355,7 +332,6 @@ class PermissionController(private val activity: ComponentActivity) {
                 try {
                     dialog.dismiss()
                 } catch (e: Exception) {
-                    AppLogger.w(TAG, "Failed to dismiss dialog: ${e.message}")
                 }
             }
             currentDialog = null
