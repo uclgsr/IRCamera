@@ -1,8 +1,6 @@
 package mpdc4gsr.core.data
 
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -27,7 +25,6 @@ class TimeSynchronizationService {
     fun initializeSession(sessionDirectory: String): SessionTimestampReference {
         this.sessionDirectory = sessionDirectory
         sessionReference = TimestampManager.startSession()
-        AppLogger.i(TAG, "Session initialized with unified timestamp reference")
         writeSessionSyncMetadata()
         serviceScope.launch {
             logSessionStartSyncEvent()
@@ -44,9 +41,7 @@ class TimeSynchronizationService {
                     "cross_device_sync" to "available"
                 )
             )
-            AppLogger.i(TAG, "SessionStart sync event logged for cross-sensor alignment verification")
         } catch (e: java.io.IOException) {
-            AppLogger.w(TAG, "Failed to log SessionStart sync event", e)
         }
     }
 
@@ -72,14 +67,12 @@ class TimeSynchronizationService {
             metadata = metadata
         )
         _syncEvents.emit(syncEvent)
-        AppLogger.i(TAG, "Sync event emitted: $eventType at ${timestampRecord.systemTimeMs}ms")
     }
 
     fun finalizeSession(): Long {
         val sessionDuration = TimestampManager.endSession()
         sessionReference = null
         sessionDirectory = null
-        AppLogger.i(TAG, "Session finalized. Duration: ${sessionDuration}ms")
         return sessionDuration
     }
 
@@ -98,9 +91,7 @@ class TimeSynchronizationService {
                 writer.write("\n")
                 writer.write("sync_event_type,system_nanos,system_time_ms,session_relative_ms,metadata\n")
             }
-            AppLogger.i(TAG, "Session sync metadata written to: ${metadataFile.absolutePath}")
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to write session sync metadata", e)
         }
     }
 
@@ -115,7 +106,6 @@ class TimeSynchronizationService {
             }
             emitSyncEvent(eventType, metadata)
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to log sync event", e)
         }
     }
 
@@ -134,14 +124,12 @@ class TimeSynchronizationService {
                 val driftMs = driftNs / 1_000_000.0
                 driftMetadata["drift_ns"] = driftNs.toString()
                 driftMetadata["drift_ms"] = String.format("%.3f", driftMs)
-                AppLogger.v(TAG, "Timestamp drift analysis for $sensorId: ${driftMs}ms")
             } ?: run {
                 driftMetadata["device_timestamp_ns"] = "unavailable"
                 driftMetadata["drift_analysis"] = "no_device_timestamp"
             }
             logSyncEvent("DRIFT_ANALYSIS", driftMetadata)
         } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to log drift analysis for $sensorId", e)
         }
     }
 

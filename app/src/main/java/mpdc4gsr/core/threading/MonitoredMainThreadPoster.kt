@@ -3,9 +3,6 @@ package mpdc4gsr.core.threading
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
-
 object MonitoredMainThreadPoster {
     private const val TAG = "MonitoredMainThread"
     private const val WARNING_THRESHOLD_MS = 100L
@@ -58,7 +55,6 @@ object MonitoredMainThreadPoster {
             try {
                 wrapped.run()
             } catch (e: Exception) {
-                AppLogger.e(TAG, "[$componentName] Exception in main thread runnable", e)
                 throw e
             } finally {
                 val executionTime = (System.nanoTime() - startTime) / 1_000_000
