@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.gsr.presentation
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.service.SessionManager
 import kotlinx.coroutines.Dispatchers
@@ -80,9 +77,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
                 val cleanedSessions = withContext(Dispatchers.IO) {
                     sessionDirectoryManager.cleanupFailedSessions()
                 }
-                if (cleanedSessions.isNotEmpty()) {
-                    AppLogger.i(TAG, "Cleaned up ${cleanedSessions.size} failed sessions")
-                    _sessionEvents.emit(SessionEvent.ShowToast("Cleaned up ${cleanedSessions.size} failed sessions"))
+                if (cleanedSessions.isNotEmpty()) {                    _sessionEvents.emit(SessionEvent.ShowToast("Cleaned up ${cleanedSessions.size} failed sessions"))
                 }
                 // Load sessions
                 val loadedSessions = withContext(Dispatchers.IO) {
@@ -96,11 +91,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
                 _sessionUiState.value = _sessionUiState.value.copy(
                     isLoading = false,
                     sessionCount = sortedSessions.size
-                )
-                AppLogger.i(TAG, "Loaded ${sortedSessions.size} sessions")
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to load sessions", e)
-                _sessionEvents.emit(SessionEvent.ShowError("Failed to load sessions: ${e.message}"))
+                )            } catch (e: Exception) {                _sessionEvents.emit(SessionEvent.ShowError("Failed to load sessions: ${e.message}"))
                 _sessionUiState.value = _sessionUiState.value.copy(isLoading = false)
             }
         }
@@ -114,9 +105,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
                 usagePercentage = storageStatus.usagePercentage,
                 isLowStorage = storageStatus.isLowStorage
             )
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to get storage info", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     private suspend fun loadHistoricalSessions(context: Context): List<SessionInfo> {
@@ -130,15 +119,11 @@ class SessionManagerViewModel : AppBaseViewModel() {
                             try {
                                 val sessionInfo = parseSessionFromDirectory(sessionDir)
                                 historicalSessions.add(sessionInfo)
-                            } catch (e: Exception) {
-                                AppLogger.w(TAG, "Failed to parse session from ${sessionDir.name}", e)
-                            }
+                            } catch (e: Exception) {                            }
                         }
                     }
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to load historical sessions", e)
-            }
+            } catch (e: Exception) {            }
             historicalSessions
         }
     }
@@ -168,9 +153,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
                         }
                     }
                 }
-            } catch (e: Exception) {
-                AppLogger.w(TAG, "Failed to parse metadata for ${sessionInfo.sessionId}", e)
-            }
+            } catch (e: Exception) {            }
         }
         // Calculate data file counts and sizes
         calculateSessionDataInfo(sessionDir, sessionInfo)
@@ -197,9 +180,7 @@ class SessionManagerViewModel : AppBaseViewModel() {
             sessionInfo.metadata["gsrFileCount"] = gsrFileCount.toString()
             sessionInfo.metadata["thermalFileCount"] = thermalFileCount.toString()
             sessionInfo.metadata["rgbFileCount"] = rgbFileCount.toString()
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to calculate data info for ${sessionInfo.sessionId}", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     fun filterSessions(query: String?) {

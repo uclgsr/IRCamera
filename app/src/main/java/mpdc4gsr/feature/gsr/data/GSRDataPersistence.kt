@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.gsr.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,25 +36,18 @@ class GSRDataPersistence(
     private val scope = CoroutineScope(Dispatchers.IO)
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault())
     suspend fun initialize(): Boolean {
-        return try {
-            val sessionDir = createSessionDirectory()
-            csvFile = createCsvFile(sessionDir)
-            val headers = createCsvHeaders()
-            csvBufferedWriter = CSVBufferedWriter(
-                outputFile = csvFile!!,
-                headers = headers,
-                bufferSize = 4096,
-                flushIntervalMs = FLUSH_INTERVAL_MS
-            )
-            csvBufferedWriter?.startWithHeaders()
-            AppLogger.i(TAG, "GSR data persistence initialized for session: $sessionId")
-            AppLogger.i(TAG, "CSV file: ${csvFile!!.absolutePath}")
-            startBatchWriter()
-            true
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize GSR data persistence", e)
-            false
-        }
+        val sessionDir = createSessionDirectory()
+        csvFile = createCsvFile(sessionDir)
+        val headers = createCsvHeaders()
+        csvBufferedWriter = CSVBufferedWriter(
+            outputFile = csvFile!!,
+            headers = headers,
+            bufferSize = 4096,
+            flushIntervalMs = FLUSH_INTERVAL_MS
+        )
+        csvBufferedWriter?.startWithHeaders()
+        startBatchWriter()
+        return true
     }
 
     private fun createSessionDirectory(): File {
@@ -112,12 +102,8 @@ class GSRDataPersistence(
     private fun startBatchWriter() {
         scope.launch {
             while (isWriting.get() || dataQueue.isNotEmpty()) {
-                try {
-                    writeBatch()
-                    kotlinx.coroutines.delay(FLUSH_INTERVAL_MS)
-                } catch (e: Exception) {
-                    AppLogger.e(TAG, "Error in batch writer", e)
-                }
+                writeBatch()
+                kotlinx.coroutines.delay(FLUSH_INTERVAL_MS)
             }
         }
     }
@@ -130,26 +116,17 @@ class GSRDataPersistence(
         }
         if (batch.isEmpty()) return
         writeMutex.withLock {
-            try {
-                batch.forEach { record ->
-                    val csvRow = record.toCsvRow()
-                    csvBufferedWriter?.writeRow(csvRow)
-                }
-                samplesWritten.addAndGet(batch.size.toLong())
-                Log.d(
-                    TAG,
-                    "Wrote batch of ${batch.size} GSR samples. Total: ${samplesWritten.get()}"
-                )
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to write GSR data batch", e)
+            batch.forEach { record ->
+                val csvRow = record.toCsvRow()
+                csvBufferedWriter?.writeRow(csvRow)
             }
+            samplesWritten.addAndGet(batch.size.toLong())
         }
     }
 
     fun startPersistence() {
         isWriting.set(true)
         TimestampManager.startSession()
-        AppLogger.i(TAG, "GSR data persistence started")
     }
 
     suspend fun stopPersistence() {
@@ -158,19 +135,13 @@ class GSRDataPersistence(
             writeBatch()
         }
         TimestampManager.endSession()
-        AppLogger.i(TAG, "GSR data persistence stopped. Total samples written: ${samplesWritten.get()}")
     }
 
     suspend fun cleanup() {
         stopPersistence()
         writeMutex.withLock {
-            try {
-                csvBufferedWriter?.stop()
-                csvBufferedWriter = null
-                AppLogger.i(TAG, "GSR data persistence cleanup completed")
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error during cleanup", e)
-            }
+            csvBufferedWriter?.stop()
+            csvBufferedWriter = null
         }
     }
 
