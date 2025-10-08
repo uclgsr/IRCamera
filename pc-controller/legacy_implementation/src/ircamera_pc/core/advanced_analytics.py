@@ -349,35 +349,23 @@ class AdvancedAnalyticsEngine:
             return {}
 
     def _extract_thermal_features(self, thermal_readings: List[SensorReading]) -> Dict[str, float]:
+        features = {}
+        values = np.array(
+            [r.processed_value for r in thermal_readings[-180:]])
 
-        if not thermal_readings:
-            return {}
+        features['mean_temp'] = float(np.mean(values))
+        features['std_temp'] = float(np.std(values))
+        features['temp_range'] = float(np.max(values) - np.min(values))
 
-        try:
-            features = {}
-            values = np.array(
-                [r.processed_value for r in thermal_readings[-180:]])
+        if len(values) > 10:
+            diff = np.diff(values)
+            features['thermal_variability'] = float(np.std(diff))
+            features['thermal_trend'] = float(np.mean(diff))
 
-            if len(values) < 5:
-                return {}
+        features['temp_stability'] = 1.0 / (
+                1.0 + features['std_temp']) if 'std_temp' in features else 0.0
 
-            features['mean_temp'] = float(np.mean(values))
-            features['std_temp'] = float(np.std(values))
-            features['temp_range'] = float(np.max(values) - np.min(values))
-
-            if len(values) > 10:
-                diff = np.diff(values)
-                features['thermal_variability'] = float(np.std(diff))
-                features['thermal_trend'] = float(np.mean(diff))
-
-            features['temp_stability'] = 1.0 / (
-                    1.0 + features['std_temp']) if 'std_temp' in features else 0.0
-
-            return features
-
-        except Exception as e:
-            logger.error(f"Thermal feature extraction error: {e}")
-            return {}
+        return features
 
     def _extract_facial_features(self, facial_readings: List[SensorReading]) -> Dict[str, float]:
 
