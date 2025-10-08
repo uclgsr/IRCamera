@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
-import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory
+import mpdc4gsr.feature.gsr.data.GSRDeviceFactory
 import javax.inject.Inject
 
 @HiltViewModel
@@ -178,7 +178,7 @@ class MultiModalRecordingViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 // Initialize GSR Recorder
-                gsrRecorder = GSRRecorder(context, RealShimmerDeviceFactory(context))
+                gsrRecorder = GSRRecorder(context, GSRDeviceFactory(context))
                 gsrRecorder.addListener(createGSRListener())
                 _statusMessage.value = "Initializing multimodal recording system..."
                 // Set initial states

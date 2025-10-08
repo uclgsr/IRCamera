@@ -24,7 +24,7 @@ import mpdc4gsr.feature.network.data.RecordingController
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import com.mpdc4gsr.gsr.service.GSRRecorder as LegacyGSRRecorder
-import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory as GSRRealShimmerDeviceFactory
+import mpdc4gsr.feature.gsr.data.GSRDeviceFactory
 
 class GSRSensorRecorder(
     private val context: Context,
@@ -181,7 +181,7 @@ class GSRSensorRecorder(
                 realShimmerGSRRecorder =
                     ShimmerGSRRecorder(
                         context,
-                        GSRRealShimmerDeviceFactory(context),
+                        GSRDeviceFactory(context),
                         effectiveSamplingRate.toInt()
                     )
                 val shimmerRecorder = realShimmerGSRRecorder
@@ -195,7 +195,7 @@ class GSRSensorRecorder(
                     }
                 }
                 legacyGSRRecorder =
-                    LegacyGSRRecorder(context, GSRRealShimmerDeviceFactory(context), effectiveSamplingRate.toInt())
+                    LegacyGSRRecorder(context, GSRDeviceFactory(context), effectiveSamplingRate.toInt())
                 if (isNetworkStreamingEnabled) {
                     try {                    } catch (e: Exception) {                        isNetworkStreamingEnabled = false
                     }

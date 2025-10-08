@@ -7,11 +7,11 @@ import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.GSRSample
 import javax.inject.Inject
 
-class ShimmerDataSourceImpl @Inject constructor(
+class GSRDeviceDataSourceImpl @Inject constructor(
     private val deviceManager: ShimmerDeviceManager
-) : ShimmerDataSource {
+) : GSRDeviceDataSource {
     companion object {
-        private const val TAG = "ShimmerDataSourceImpl"
+        private const val TAG = "GSRDeviceDataSourceImpl"
         private const val DEFAULT_DEVICE_NAME = "Shimmer3"
         private const val DEFAULT_DEVICE_TYPE = "Shimmer3-GSR"
         private const val DEFAULT_RSSI = -50

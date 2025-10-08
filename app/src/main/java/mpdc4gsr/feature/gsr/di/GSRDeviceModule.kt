@@ -9,7 +9,8 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import mpdc4gsr.core.data.ShimmerDeviceManager
 import mpdc4gsr.feature.gsr.data.repository.GSRDeviceRepositoryImpl
-import mpdc4gsr.feature.gsr.data.source.ShimmerDataSourceImpl
+import mpdc4gsr.feature.gsr.data.source.GSRDeviceDataSource
+import mpdc4gsr.feature.gsr.data.source.GSRDeviceDataSourceImpl
 import mpdc4gsr.feature.gsr.domain.repository.GSRDeviceRepository
 import mpdc4gsr.feature.gsr.domain.usecase.*
 
@@ -23,6 +24,12 @@ abstract class GSRDeviceModule {
         gsrDeviceRepositoryImpl: GSRDeviceRepositoryImpl
     ): GSRDeviceRepository
 
+    @Binds
+    @ViewModelScoped
+    abstract fun bindGSRDeviceDataSource(
+        gsrDeviceDataSourceImpl: GSRDeviceDataSourceImpl
+    ): GSRDeviceDataSource
+
     companion object {
         @Provides
         @ViewModelScoped
@@ -30,14 +37,6 @@ abstract class GSRDeviceModule {
             application: Application
         ): ShimmerDeviceManager {
             return ShimmerDeviceManager(application, null)
-        }
-
-        @Provides
-        @ViewModelScoped
-        fun provideShimmerDataSource(
-            shimmerDeviceManager: ShimmerDeviceManager
-        ): ShimmerDataSourceImpl {
-            return ShimmerDataSourceImpl(shimmerDeviceManager)
         }
     }
 
