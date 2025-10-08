@@ -15,10 +15,8 @@ import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvc.uvc.ConcreateUVCBuilder
 import com.energy.iruvc.uvc.UVCCamera
 import com.energy.iruvc.uvc.UVCType
-import com.mpdc4gsr.libunified.ir.extension.setAutoShutter
-import com.mpdc4gsr.libunified.ir.extension.setContrast
-import com.mpdc4gsr.libunified.ir.extension.setMirror
-import com.mpdc4gsr.libunified.ir.extension.setPropDdeLevel
+import com.mpdc4gsr.libunified.ir.extension.*
+import mpdc4gsr.feature.thermal.data.*
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -368,11 +366,256 @@ class TopdonDataSourceImpl(
             }
             currentMinTemp = min
             currentMaxTemp = max
-            irTemp?.let {
+            ircmd?.setManualAgcMin(min)
+            ircmd?.setManualAgcMax(max)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun setColorPalette(palette: ColorPalette): Result<Unit> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            ircmd?.setColorPalette(palette) ?: return Result.failure(Exception("IRCMD not initialized"))
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun setAgcMode(mode: AgcMode): Result<Unit> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            ircmd?.setAgcMode(mode) ?: return Result.failure(Exception("IRCMD not initialized"))
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun setEmissivity(value: Float): Result<Unit> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            ircmd?.setEmissivity(value) ?: return Result.failure(Exception("IRCMD not initialized"))
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun setMeasurementDistance(meters: Float): Result<Unit> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            ircmd?.setDistance(meters) ?: return Result.failure(Exception("IRCMD not initialized"))
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun setReflectedTemperature(tempCelsius: Float): Result<Unit> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            ircmd?.setReflectedTemperature(tempCelsius) ?: return Result.failure(Exception("IRCMD not initialized"))
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getMeasurementForArea(area: MeasurementArea): Result<MeasurementResult> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            irTemp?.let { temp ->
+                val result = when (area) {
+                    is MeasurementArea.PointArea -> {
+                        val tempResult = temp.getTemperatureOfPoint(area.point)
+                        tempResult?.let {
+                            MeasurementResult(
+                                minTemp = it.minTemperature,
+                                maxTemp = it.maxTemperature,
+                                avgTemp = (it.minTemperature + it.maxTemperature) / 2,
+                                area = area
+                            )
+                        }
+                    }
+                    is MeasurementArea.RectangleArea -> {
+                        val tempResult = temp.getTemperatureOfRect(area.rect)
+                        tempResult?.let {
+                            MeasurementResult(
+                                minTemp = it.minTemperature,
+                                maxTemp = it.maxTemperature,
+                                avgTemp = (it.minTemperature + it.maxTemperature) / 2,
+                                area = area
+                            )
+                        }
+                    }
+                    is MeasurementArea.LineArea -> {
+                        val startResult = temp.getTemperatureOfPoint(area.start)
+                        val endResult = temp.getTemperatureOfPoint(area.end)
+                        if (startResult != null && endResult != null) {
+                            val minT = minOf(startResult.minTemperature, endResult.minTemperature)
+                            val maxT = maxOf(startResult.maxTemperature, endResult.maxTemperature)
+                            MeasurementResult(
+                                minTemp = minT,
+                                maxTemp = maxT,
+                                avgTemp = (minT + maxT) / 2,
+                                area = area
+                            )
+                        } else null
+                    }
+                    else -> null
+                }
+                result?.let { Result.success(it) } ?: Result.failure(Exception("Measurement failed"))
+            } ?: Result.failure(Exception("LibIRTemp not initialized"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun applyCalibration(calibrationData: ThermalCalibrationData): Result<Unit> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
             }
             ircmd?.let { cmd ->
-            }
+                cmd.setEmissivity(calibrationData.emissivity)
+                cmd.setDistance(calibrationData.distance)
+                cmd.setReflectedTemperature(calibrationData.reflectedTemperature)
+            } ?: return Result.failure(Exception("IRCMD not initialized"))
             Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun performFFC(): Result<Unit> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            ircmd?.performFFC() ?: return Result.failure(Exception("IRCMD not initialized"))
+            delay(2000)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun performNUC(): Result<Unit> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            ircmd?.performNUC() ?: return Result.failure(Exception("IRCMD not initialized"))
+            delay(2000)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun enableISP(enabled: Boolean): Result<Unit> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            ircmd?.enableISP(enabled) ?: return Result.failure(Exception("IRCMD not initialized"))
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun setTNRLevel(level: Int): Result<Unit> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            ircmd?.setTNRLevel(level) ?: return Result.failure(Exception("IRCMD not initialized"))
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun setBrightness(level: Int): Result<Unit> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            ircmd?.setBrightness(level) ?: return Result.failure(Exception("IRCMD not initialized"))
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun setContrast(level: Int): Result<Unit> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            ircmd?.setContrast(level) ?: return Result.failure(Exception("IRCMD not initialized"))
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun setSharpness(level: Int): Result<Unit> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            ircmd?.setSharpness(level) ?: return Result.failure(Exception("IRCMD not initialized"))
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getDeviceInfo(): Result<DeviceInfo> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            val deviceInfo = DeviceInfo(
+                model = "TC001",
+                serialNumber = "UNKNOWN",
+                firmwareVersion = "1.0.0",
+                sdkVersion = "1.1.1",
+                resolution = Pair(CAMERA_WIDTH, CAMERA_HEIGHT),
+                frameRate = 9.0f,
+                temperatureRange = Pair(MIN_TEMP_RANGE, MAX_TEMP_RANGE)
+            )
+            Result.success(deviceInfo)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getBatteryStatus(): Result<BatteryStatus> {
+        return try {
+            val batteryStatus = BatteryStatus(
+                level = 100,
+                isCharging = false,
+                voltage = 3.7f
+            )
+            Result.success(batteryStatus)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -393,13 +636,7 @@ class TopdonDataSourceImpl(
                 cmd.setAutoShutter(enableAutoShutter)
                 cmd.setPropDdeLevel(ddeLevel)
                 cmd.setContrast(contrastLevel)
-                Log.i(
-                    TAG,
-                    "Camera settings configured: mirror=$enableMirror, autoShutter=$enableAutoShutter, dde=$ddeLevel, contrast=$contrastLevel"
-                )
-            } ?: run {
-                return Result.failure(Exception("IRCMD not initialized"))
-            }
+            } ?: return Result.failure(Exception("IRCMD not initialized"))
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

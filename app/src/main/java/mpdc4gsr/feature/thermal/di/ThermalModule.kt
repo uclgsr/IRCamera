@@ -50,6 +50,23 @@ object ThermalModule {
             checkConnection = CheckCameraConnectionUseCase(repository)
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideThermalSDKUseCases(
+        repository: ThermalRepository
+    ): mpdc4gsr.feature.thermal.domain.ThermalSDKUseCases {
+        return mpdc4gsr.feature.thermal.domain.ThermalSDKUseCases(
+            setColorPalette = mpdc4gsr.feature.thermal.domain.SetColorPaletteUseCase(repository),
+            setAgcMode = mpdc4gsr.feature.thermal.domain.SetAgcModeUseCase(repository),
+            configureAccuracy = mpdc4gsr.feature.thermal.domain.ConfigureAccuracyUseCase(repository),
+            measureArea = mpdc4gsr.feature.thermal.domain.MeasureAreaUseCase(repository),
+            performCalibration = mpdc4gsr.feature.thermal.domain.PerformCalibrationUseCase(repository),
+            configureImageEnhancement = mpdc4gsr.feature.thermal.domain.ConfigureImageEnhancementUseCase(repository),
+            getDeviceInfo = mpdc4gsr.feature.thermal.domain.GetDeviceInfoUseCase(repository),
+            getBatteryStatus = mpdc4gsr.feature.thermal.domain.GetBatteryStatusUseCase(repository)
+        )
+    }
 }
 
 data class ThermalUseCases(
