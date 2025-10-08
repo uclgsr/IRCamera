@@ -13,7 +13,7 @@ buildscript {
         classpath(libs.android.gradle.plugin)
         classpath(libs.kotlin.gradle.plugin)
         classpath(libs.ksp.gradle.plugin)
-        classpath(libs.hilt.gradle.plugin)
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.54")
         classpath(libs.huawei.agconnect)
     }
 }

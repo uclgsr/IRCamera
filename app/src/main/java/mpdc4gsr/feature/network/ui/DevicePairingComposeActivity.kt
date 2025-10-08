@@ -3,6 +3,7 @@ package mpdc4gsr.feature.network.ui
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,25 +22,26 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import dagger.hilt.android.AndroidEntryPoint
-import mpdc4gsr.core.ui.HiltComposeActivity
 import mpdc4gsr.feature.network.presentation.DevicePairingViewModel
 import mpdc4gsr.core.ui.deferAction
 
 @AndroidEntryPoint
-class DevicePairingComposeActivity : HiltComposeActivity() {
+class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>() {
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, DevicePairingComposeActivity::class.java))
         }
     }
 
-    private val viewModel: DevicePairingViewModel by viewModels()
+    override fun createViewModel(): DevicePairingViewModel {
+        return viewModels<DevicePairingViewModel>().value
+    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content() {
+    override fun Content(viewModel: DevicePairingViewModel) {
         var isScanning by remember { mutableStateOf(false) }
         var selectedDevice by remember { mutableStateOf<BluetoothDeviceInfo?>(null) }
         var showPairingDialog by remember { mutableStateOf(false) }

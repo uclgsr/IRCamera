@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -14,9 +11,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
 class NetworkController(private val context: Context) {
-    companion object {
-        private const val TAG = "NetworkController"
-        const val DEFAULT_PORT = 8080
+    companion object {        const val DEFAULT_PORT = 8080
         private const val SOCKET_TIMEOUT = 30000
         private const val BUFFER_SIZE = 4096
     }
@@ -60,23 +55,15 @@ class NetworkController(private val context: Context) {
     }
 
     suspend fun start(port: Int = DEFAULT_PORT): Boolean = withContext(Dispatchers.IO) {
-        if (isRunning.get()) {
-            AppLogger.w(TAG, "NetworkController already running")
-            return@withContext false
+        if (isRunning.get()) {            return@withContext false
         }
         try {
             // First check if the port is available
             val actualPort = if (NetworkUtils.isPortAvailable(port)) {
                 port
-            } else {
-                AppLogger.w(TAG, "Port $port is not available, searching for alternative port")
-                try {
-                    val availablePort = NetworkUtils.findAvailablePort(port)
-                    AppLogger.i(TAG, "Using alternative port: $availablePort")
-                    availablePort
-                } catch (e: IllegalStateException) {
-                    AppLogger.e(TAG, "Could not find available port starting from $port")
-                    eventListener?.onError(
+            } else {                try {
+                    val availablePort = NetworkUtils.findAvailablePort(port)                    availablePort
+                } catch (e: IllegalStateException) {                    eventListener?.onError(
                         "start_server",
                         "Port $port is already in use and no alternative ports available. Please ensure no other services are using ports ${port} to ${port + 9}."
                     )
@@ -88,30 +75,22 @@ class NetworkController(private val context: Context) {
                 bind(InetSocketAddress(actualPort))
                 soTimeout = SOCKET_TIMEOUT
             }
-            isRunning.set(true)
-            AppLogger.i(TAG, "NetworkController started on port $actualPort")
-            controllerScope.launch {
+            isRunning.set(true)            controllerScope.launch {
                 acceptConnections()
             }
             return@withContext true
-        } catch (e: java.net.BindException) {
-            AppLogger.e(TAG, "Failed to start NetworkController - port $port already in use", e)
-            eventListener?.onError(
+        } catch (e: java.net.BindException) {            eventListener?.onError(
                 "start_server",
                 "Port $port is already in use. Please ensure no other services are using this port."
             )
             return@withContext false
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to start NetworkController", e)
-            eventListener?.onError("start_server", e.message ?: "Unknown error")
+        } catch (e: Exception) {            eventListener?.onError("start_server", e.message ?: "Unknown error")
             return@withContext false
         }
     }
 
     suspend fun stop() = withContext(Dispatchers.IO) {
-        if (!isRunning.get()) {
-            AppLogger.w(TAG, "NetworkController is not running")
-            return@withContext
+        if (!isRunning.get()) {            return@withContext
         }
         isRunning.set(false)
         try {
@@ -122,12 +101,7 @@ class NetworkController(private val context: Context) {
                     connection.outputStream.close()
                     connection.inputStream.close()
                     connection.socket.close()
-                } catch (e: Exception) {
-                    Log.w(
-                        TAG,
-                        "Error closing client connection ${connection.clientId}: ${e.message}"
-                    )
-                }
+                } catch (e: Exception) {                }
             }
             clientConnections.clear()
             // Close server socket
@@ -136,19 +110,13 @@ class NetworkController(private val context: Context) {
                     if (!socket.isClosed) {
                         socket.close()
                     }
-                } catch (e: Exception) {
-                    AppLogger.w(TAG, "Error closing server socket: ${e.message}")
-                }
+                } catch (e: Exception) {                }
             }
             serverSocket = null
             // Cancel coroutine scope
             controllerScope.cancel()
             // Small delay to allow cleanup to complete
-            delay(100)
-            AppLogger.i(TAG, "NetworkController stopped")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error stopping NetworkController", e)
-        }
+            delay(100)        } catch (e: Exception) {        }
     }
 
     private suspend fun acceptConnections() = withContext(Dispatchers.IO) {
@@ -161,9 +129,7 @@ class NetworkController(private val context: Context) {
             } catch (e: SocketTimeoutException) {
                 continue
             } catch (e: Exception) {
-                if (isRunning.get()) {
-                    AppLogger.e(TAG, "Error accepting client connection", e)
-                    eventListener?.onError("accept_connection", e.message ?: "Unknown error")
+                if (isRunning.get()) {                    eventListener?.onError("accept_connection", e.message ?: "Unknown error")
                 }
                 break
             }
@@ -182,15 +148,11 @@ class NetworkController(private val context: Context) {
                 outputStream = outputStream
             )
             clientConnections[clientId] = connection
-            eventListener?.onClientConnected(clientId, "PC Controller")
-            AppLogger.i(TAG, "New client connected: $clientId")
-            sendResponse(connection, createResponse("welcome", "Connected to IRCamera Android"))
+            eventListener?.onClientConnected(clientId, "PC Controller")            sendResponse(connection, createResponse("welcome", "Connected to IRCamera Android"))
             controllerScope.launch {
                 handleClientMessages(connection)
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling new client", e)
-            try {
+        } catch (e: Exception) {            try {
                 clientSocket.close()
             } catch (ignored: Exception) {
             }
@@ -203,34 +165,19 @@ class NetworkController(private val context: Context) {
                 while (isRunning.get() && !connection.socket.isClosed) {
                     val message = connection.inputStream.readLine()
                     if (message == null) {
-                        // Client disconnected gracefully
-                        AppLogger.d(TAG, "Client ${connection.clientId} disconnected gracefully")
-                        break
-                    }
-                    AppLogger.d(TAG, "Received message from ${connection.clientId}: $message")
-                    handleCommand(connection, message)
+                        // Client disconnected gracefully                        break
+                    }                    handleCommand(connection, message)
                 }
             } catch (e: SocketException) {
                 // Handle connection reset and other socket exceptions gracefully
                 when {
-                    e.message?.contains("Connection reset") == true -> {
-                        AppLogger.d(TAG, "Client ${connection.clientId} connection reset")
-                    }
+                    e.message?.contains("Connection reset") == true -> {                    }
 
-                    e.message?.contains("Socket closed") == true -> {
-                        AppLogger.d(TAG, "Client ${connection.clientId} socket closed")
-                    }
+                    e.message?.contains("Socket closed") == true -> {                    }
 
-                    else -> {
-                        Log.w(
-                            TAG,
-                            "Socket exception for client ${connection.clientId}: ${e.message}"
-                        )
-                    }
+                    else -> {                    }
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error handling client messages (${e.javaClass.simpleName})", e)
-            } finally {
+            } catch (e: Exception) {            } finally {
                 // Always disconnect the client to clean up resources
                 disconnectClient(connection.clientId, "Connection closed")
             }
@@ -239,24 +186,18 @@ class NetworkController(private val context: Context) {
     private suspend fun handleCommand(connection: ClientConnection, message: String) {
         try {
             val json = JSONObject(message)
-            val command = json.getString("command")
-            AppLogger.i(TAG, "Processing command: $command")
-            when (command) {
+            val command = json.getString("command")            when (command) {
                 "start_recording" -> handleStartRecordingCommand(connection, json)
                 "stop_recording" -> handleStopRecordingCommand(connection, json)
                 "ping" -> handlePingCommand(connection, json)
                 "get_status" -> handleGetStatusCommand(connection, json)
-                else -> {
-                    AppLogger.w(TAG, "Unknown command: $command")
-                    sendResponse(
+                else -> {                    sendResponse(
                         connection,
                         createErrorResponse("unknown_command", "Unknown command: $command")
                     )
                 }
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error parsing command", e)
-            sendResponse(
+        } catch (e: Exception) {            sendResponse(
                 connection,
                 createErrorResponse("parse_error", "Failed to parse command: ${e.message}")
             )
@@ -289,9 +230,7 @@ class NetworkController(private val context: Context) {
             }
             json.optString("studyName", "").let {
                 if (it.isNotEmpty()) options["studyName"] = it
-            }
-            AppLogger.i(TAG, "Start recording command: sessionId=$sessionId, modalities=$modalities")
-            eventListener?.onStartRecordingCommand(sessionId, modalities, options)
+            }            eventListener?.onStartRecordingCommand(sessionId, modalities, options)
             sendResponse(
                 connection, createResponse(
                     "recording_started", "Recording session started", mapOf(
@@ -300,9 +239,7 @@ class NetworkController(private val context: Context) {
                     )
                 )
             )
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling start_recording command", e)
-            sendResponse(
+        } catch (e: Exception) {            sendResponse(
                 connection,
                 createErrorResponse("start_recording_error", e.message ?: "Unknown error")
             )
@@ -310,16 +247,12 @@ class NetworkController(private val context: Context) {
     }
 
     private suspend fun handleStopRecordingCommand(connection: ClientConnection, json: JSONObject) {
-        try {
-            AppLogger.i(TAG, "Stop recording command received")
-            eventListener?.onStopRecordingCommand()
+        try {            eventListener?.onStopRecordingCommand()
             sendResponse(
                 connection,
                 createResponse("recording_stopped", "Recording session stopped")
             )
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling stop_recording command", e)
-            sendResponse(
+        } catch (e: Exception) {            sendResponse(
                 connection,
                 createErrorResponse("stop_recording_error", e.message ?: "Unknown error")
             )
@@ -341,11 +274,7 @@ class NetworkController(private val context: Context) {
 
     private fun sendResponse(connection: ClientConnection, response: String) {
         try {
-            connection.outputStream.println(response)
-            AppLogger.d(TAG, "Sent response to ${connection.clientId}: $response")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error sending response to ${connection.clientId}", e)
-        }
+            connection.outputStream.println(response)        } catch (e: Exception) {        }
     }
 
     private fun createResponse(
@@ -379,9 +308,7 @@ class NetworkController(private val context: Context) {
             } catch (ignored: Exception) {
             }
             clientConnections.remove(clientId)
-            eventListener?.onClientDisconnected(clientId, reason)
-            AppLogger.i(TAG, "Client disconnected: $clientId - $reason")
-        }
+            eventListener?.onClientDisconnected(clientId, reason)        }
     }
 
     fun getConnectedClientsCount(): Int = clientConnections.size

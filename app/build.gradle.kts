@@ -4,7 +4,6 @@ import java.util.*
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt")
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
@@ -327,6 +326,7 @@ dependencies {
     implementation(libs.bundles.compose.core)
     implementation(libs.bundles.compose.navigation.bundle)
     implementation(libs.bundles.compose.icons)
+    implementation(libs.hilt.navigation.compose)
     debugImplementation(libs.bundles.compose.debug)
     androidTestImplementation(libs.bundles.compose.test)
     implementation(libs.coil.compose)
@@ -369,8 +369,7 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
+    ksp(libs.hilt.compiler)
 
     implementation(files("libs/shimmerandroidinstrumentdriver-3.2.4_beta.aar"))
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))

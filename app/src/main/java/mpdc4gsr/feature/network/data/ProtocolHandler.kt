@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import mpdc4gsr.core.data.TimeSyncManager
 import mpdc4gsr.core.data.utils.TimeManager
 
@@ -11,9 +8,7 @@ class ProtocolHandler(
     private val context: Context,
     private val networkServer: NetworkServer
 ) {
-    companion object {
-        private const val TAG = "ProtocolHandler"
-    }
+    companion object {    }
 
     private val timeManager = TimeManager.getInstance(context)
     private var timeSyncManager: TimeSyncManager? = null
@@ -53,16 +48,12 @@ class ProtocolHandler(
         timeSyncManager = syncManager
     }
 
-    suspend fun processMessage(message: Protocol.ProtocolMessage): String? {
-        AppLogger.d(TAG, "Processing protocol message: ${message.type}")
-        return when (message.type) {
+    suspend fun processMessage(message: Protocol.ProtocolMessage): String? {        return when (message.type) {
             Protocol.MSG_SYNC_REQUEST -> handleSyncRequest(message)
             Protocol.MSG_SYNC_RESULT -> handleSyncResult(message)
             Protocol.MSG_START_RECORD -> handleStartRecord(message)
             Protocol.MSG_STOP_RECORD -> handleStopRecord(message)
-            else -> {
-                AppLogger.w(TAG, "Unknown message type: ${message.type}")
-                Protocol.createErrorMessage(message.type, Protocol.ERR_FAIL, "Unknown command")
+            else -> {                Protocol.createErrorMessage(message.type, Protocol.ERR_FAIL, "Unknown command")
             }
         }
     }
@@ -91,9 +82,7 @@ class ProtocolHandler(
                                 "Sync failed"
                             )
                         }
-                    } catch (e: Exception) {
-                        AppLogger.w(TAG, "TimeSyncManager performSyncResponse failed", e)
-                        Protocol.createErrorMessage(
+                    } catch (e: Exception) {                        Protocol.createErrorMessage(
                             Protocol.MSG_SYNC_REQUEST,
                             Protocol.ERR_FAIL,
                             "Sync manager error"
@@ -124,9 +113,7 @@ class ProtocolHandler(
                     }
                 }
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling sync request", e)
-            Protocol.createErrorMessage(
+        } catch (e: Exception) {            Protocol.createErrorMessage(
                 Protocol.MSG_SYNC_REQUEST,
                 Protocol.ERR_FAIL,
                 "Sync error: ${e.message}"
@@ -137,30 +124,20 @@ class ProtocolHandler(
     private suspend fun handleSyncResult(message: Protocol.ProtocolMessage): String? {
         return try {
             val syncManager = timeSyncManager
-            if (syncManager == null) {
-                AppLogger.w(TAG, "No TimeSyncManager available for SYNC_RESULT")
-                return null // No response needed for SYNC_RESULT
+            if (syncManager == null) {                return null // No response needed for SYNC_RESULT
             }
             val t1 = message.parameters["t1"]?.toLong()
             val t2 = message.parameters["t2"]?.toLong()
             val t3 = message.parameters["t3"]?.toLong()
             val offset = message.parameters["offset"]?.toLong()
             val rtt = message.parameters["rtt"]?.toLong()
-            if (t1 == null || t2 == null || t3 == null || offset == null || rtt == null) {
-                AppLogger.w(TAG, "SYNC_RESULT missing required parameters")
-                return null
+            if (t1 == null || t2 == null || t3 == null || offset == null || rtt == null) {                return null
             }
             // Complete the sync calculation with data from PC
             try {
-                syncManager.completeSyncCalculation(t1, t2, t3, offset, rtt, 0)
-                AppLogger.d(TAG, "SYNC_RESULT processed: offset=${offset}ms, rtt=${rtt}ms")
-            } catch (e: Exception) {
-                AppLogger.w(TAG, "TimeSyncManager completeSyncCalculation failed", e)
-            }
+                syncManager.completeSyncCalculation(t1, t2, t3, offset, rtt, 0)            } catch (e: Exception) {            }
             null // No response needed for SYNC_RESULT
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling sync result", e)
-            null
+        } catch (e: Exception) {            null
         }
     }
 
@@ -197,9 +174,7 @@ class ProtocolHandler(
                     )
                 }
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling start record", e)
-            Protocol.createErrorMessage(
+        } catch (e: Exception) {            Protocol.createErrorMessage(
                 Protocol.MSG_START_RECORD,
                 Protocol.ERR_FAIL,
                 "Start error: ${e.message}"
@@ -240,9 +215,7 @@ class ProtocolHandler(
                     )
                 }
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling stop record", e)
-            Protocol.createErrorMessage(
+        } catch (e: Exception) {            Protocol.createErrorMessage(
                 Protocol.MSG_STOP_RECORD,
                 Protocol.ERR_FAIL,
                 "Stop error: ${e.message}"
@@ -262,11 +235,7 @@ class ProtocolHandler(
 
     suspend fun enablePreviewStreaming() {
         // Note: This would integrate with existing preview streaming infrastructure
-        // For now, log that protocol-based streaming is enabled
-        AppLogger.i(TAG, "Protocol-based preview streaming enabled")
-    }
+        // For now, log that protocol-based streaming is enabled    }
 
-    suspend fun disablePreviewStreaming() {
-        AppLogger.i(TAG, "Protocol-based preview streaming disabled")
-    }
+    suspend fun disablePreviewStreaming() {    }
 }
