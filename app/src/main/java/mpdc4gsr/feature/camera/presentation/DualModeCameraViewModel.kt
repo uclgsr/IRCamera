@@ -353,8 +353,4 @@ class DualModeCameraViewModel @Inject constructor() : AppBaseViewModel() {
         }
         super.onCleared()
     }
-
-    companion object {
-        private const val TAG = "DualModeCameraViewModel"
-    }
 }
