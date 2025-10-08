@@ -13,7 +13,7 @@ import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
 import javax.inject.Inject
 
 @HiltViewModel
-class DualModeCameraViewModel @Inject constructor() : AppBaseViewModel() {
+class DualModeCameraViewModel @Inject constructor(@ApplicationContext private val application: Context) : AppBaseViewModel() {
     // Enhanced data classes
     data class CameraState(
         val isInitialized: Boolean = false,
