@@ -271,32 +271,26 @@ class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
     }
 
     private fun openWifiSettings() {
-        try {
             val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
             startActivity(intent)
-        } catch (e: Exception) {
             showSettingsError("WiFi settings")
         }
     }
 
     private fun openNetworkSettings() {
-        try {
             val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY)
             } else {
                 Intent(Settings.ACTION_WIRELESS_SETTINGS)
             }
             startActivity(intent)
-        } catch (e: Exception) {
             showSettingsError("Network settings")
         }
     }
 
     private fun openBluetoothSettings() {
-        try {
             val intent = Intent(Settings.ACTION_BLUETOOTH_SETTINGS)
             startActivity(intent)
-        } catch (e: Exception) {
             showSettingsError("Bluetooth settings")
         }
     }

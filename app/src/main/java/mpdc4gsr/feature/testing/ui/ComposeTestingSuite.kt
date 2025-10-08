@@ -1,8 +1,5 @@
 package mpdc4gsr.feature.testing.ui
 
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -36,14 +33,12 @@ enum class TestSeverity {
 
 class ComposeTestingSuite {
     companion object {
-        private const val TAG = "ComposeTestingSuite"
     }
 
     private val testResults = mutableListOf<TestResult>()
 
     suspend fun runAllTests(): List<TestResult> {
         testResults.clear()
-        AppLogger.i(TAG, "Starting comprehensive testing suite...")
         // Performance Tests
         runPerformanceTests()
         // Navigation Tests
@@ -54,12 +49,10 @@ class ComposeTestingSuite {
         runIntegrationTests()
         // User Flow Tests
         runUserFlowTests()
-        AppLogger.i(TAG, "Testing suite completed with ${testResults.size} tests")
         return testResults.toList()
     }
 
     private suspend fun runPerformanceTests() {
-        AppLogger.d(TAG, "Running performance tests...")
         // Test navigation performance
         val navigationTime = measureTimeMillis {
             delay(50) // Simulate navigation
@@ -106,7 +99,6 @@ class ComposeTestingSuite {
     }
 
     private suspend fun runNavigationTests() {
-        AppLogger.d(TAG, "Running navigation tests...")
         val routes = listOf(
             "gsr_settings",
             "gsr_plot/test_session",
@@ -133,7 +125,6 @@ class ComposeTestingSuite {
     }
 
     private suspend fun runMemoryTests() {
-        AppLogger.d(TAG, "Running memory tests...")
         val runtime = Runtime.getRuntime()
         val initialMemory = runtime.totalMemory() - runtime.freeMemory()
         // Simulate heavy operations
@@ -168,7 +159,6 @@ class ComposeTestingSuite {
     }
 
     private suspend fun runIntegrationTests() {
-        AppLogger.d(TAG, "Running integration tests...")
         // Test BaseComposeActivity integration
         testResults.add(
             TestResult(
@@ -202,7 +192,6 @@ class ComposeTestingSuite {
     }
 
     private suspend fun runUserFlowTests() {
-        AppLogger.d(TAG, "Running user flow tests...")
         // Test complete GSR analysis workflow
         val gsrWorkflowTime = measureTimeMillis {
             delay(200) // Simulate complete workflow

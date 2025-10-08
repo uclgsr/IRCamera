@@ -2,12 +2,8 @@ package mpdc4gsr.core.threading
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 
 object MonitoredMainThreadPoster {
-    private const val TAG = "MonitoredMainThread"
     private const val WARNING_THRESHOLD_MS = 100L
     private const val CRITICAL_THRESHOLD_MS = 1000L
     private val handler = Handler(Looper.getMainLooper())
@@ -55,17 +51,11 @@ object MonitoredMainThreadPoster {
         override fun run() {
             val startTime = System.nanoTime()
             totalPosts.incrementAndGet()
-            try {
                 wrapped.run()
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "[$componentName] Exception in main thread runnable", e)
-                throw e
-            } finally {
                 val executionTime = (System.nanoTime() - startTime) / 1_000_000
                 when {
                     executionTime > CRITICAL_THRESHOLD_MS -> {
                         criticalPosts.incrementAndGet()
-                        Log.e(
                             TAG,
                             "[$componentName] CRITICAL ANR RISK: Main thread blocked for ${executionTime}ms! " +
                                     "This WILL cause ANR. Move work to background thread immediately."
@@ -74,7 +64,6 @@ object MonitoredMainThreadPoster {
 
                     executionTime > WARNING_THRESHOLD_MS -> {
                         slowPosts.incrementAndGet()
-                        Log.w(
                             TAG,
                             "[$componentName] WARNING: Main thread operation took ${executionTime}ms. " +
                                     "Consider optimizing or moving to background thread to prevent ANR."

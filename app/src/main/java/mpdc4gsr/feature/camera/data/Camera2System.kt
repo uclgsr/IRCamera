@@ -6,9 +6,6 @@ import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CaptureRequest
 import android.hardware.camera2.TotalCaptureResult
 import android.os.Build
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import android.util.Size
 import android.view.TextureView
 import kotlinx.coroutines.*
@@ -19,7 +16,6 @@ class Camera2System(
     private val textureView: TextureView,
 ) {
     companion object {
-        private const val TAG = "Camera2System"
         private const val DEFAULT_BITRATE = 20_000_000
     }
 
@@ -43,7 +39,6 @@ class Camera2System(
     fun configureStage3Processing(enabled: Boolean) {
         rawEngine.setStage3ProcessingEnabled(enabled)
         val mode = if (enabled) "Stage3/Level3" else "Standard"
-        AppLogger.i(TAG, "Samsung RAW processing mode set to: $mode")
         onProgress?.invoke("RAW processing: $mode")
     }
 
@@ -55,25 +50,18 @@ class Camera2System(
 
     suspend fun initialize(cameraId: String = "0"): Boolean =
         withContext(Dispatchers.Main) {
-            try {
-                AppLogger.i(TAG, "Initializing Camera2System")
                 while (!uiBridge.isTextureReady()) {
                     delay(50)
                 }
                 cameraController.openCamera(cameraId)
                 return@withContext true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to initialize camera system", e)
-                onError?.invoke("Initialization failed: ${e.message}")
                 return@withContext false
             }
         }
 
     suspend fun switchMode(mode: ModeManager.CameraMode): Boolean =
         withContext(Dispatchers.IO) {
-            try {
                 if (!modeManager.canSwitchMode()) {
-                    AppLogger.w(TAG, "Cannot switch mode - switching already in progress")
                     return@withContext false
                 }
                 if (!modeManager.requestModeSwitch(mode)) {
@@ -90,14 +78,10 @@ class Camera2System(
                     modeManager.confirmModeSwitch()
                     uiBridge.updateMode(mode.name)
                     onModeChanged?.invoke(mode)
-                    AppLogger.i(TAG, "Successfully switched to ${mode.name}")
                 } else {
                     modeManager.reportModeSwitchFailed("Session setup failed")
                 }
                 return@withContext success
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Mode switch failed", e)
-                modeManager.reportModeSwitchFailed(e.message ?: "Unknown error")
                 return@withContext false
             }
         }
@@ -105,10 +89,8 @@ class Camera2System(
     suspend fun startRecording(sessionId: String): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording) {
-                AppLogger.w(TAG, "Already recording")
                 return@withContext false
             }
-            try {
                 currentSessionId = sessionId
                 outputDirectory = createOutputDirectory(sessionId)
                 val success =
@@ -124,12 +106,8 @@ class Camera2System(
                     isRecording = true
                     onRecordingStarted?.invoke()
                     uiBridge.updateRecordingState(true, modeManager.getCurrentMode().name)
-                    AppLogger.i(TAG, "Recording started in ${modeManager.getCurrentMode()}")
                 }
                 return@withContext success
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to start recording", e)
-                onError?.invoke("Recording failed: ${e.message}")
                 return@withContext false
             }
         }
@@ -137,10 +115,8 @@ class Camera2System(
     suspend fun stopRecording(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isRecording) {
-                AppLogger.w(TAG, "Not recording")
                 return@withContext false
             }
-            try {
                 when (modeManager.getCurrentMode()) {
                     ModeManager.CameraMode.RAW_50MP -> rawEngine.stopCapture()
                     ModeManager.CameraMode.VIDEO_4K -> videoEngine.stop()
@@ -150,11 +126,7 @@ class Camera2System(
                 isRecording = false
                 onRecordingStopped?.invoke()
                 uiBridge.updateRecordingState(false)
-                AppLogger.i(TAG, "Recording stopped")
                 return@withContext true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to stop recording", e)
-                onError?.invoke("Stop recording failed: ${e.message}")
                 return@withContext false
             }
         }
@@ -176,7 +148,6 @@ class Camera2System(
         uiBridge.release()
         // Cancel the release scope to clean up any remaining coroutines
         releaseScope.cancel()
-        AppLogger.i(TAG, "Camera2System released")
     }
 
     private fun setupCallbacks() {
@@ -202,7 +173,6 @@ class Camera2System(
     @Suppress("DEPRECATION")
     private suspend fun setupRawMode(): Boolean =
         withContext(Dispatchers.IO) {
-            try {
                 val caps = cameraController.getDeviceCaps() ?: return@withContext false
                 val previewSurface = uiBridge.getPreviewSurface() ?: return@withContext false
                 rawEngine.setup(
@@ -223,28 +193,22 @@ class Camera2System(
                                 val requestBuilder =
                                     cameraController.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
                                 requestBuilder?.addTarget(previewSurface)
-                                try {
                                     session.setRepeatingRequest(
                                         requestBuilder!!.build(),
                                         null,
                                         null
                                     )
                                     continuation.resume(true, null)
-                                } catch (e: Exception) {
-                                    AppLogger.e(TAG, "Failed to start preview request", e)
                                     continuation.resume(false, null)
                                 }
                             }
 
                             override fun onConfigureFailed(session: CameraCaptureSession) {
-                                AppLogger.e(TAG, "RAW mode session configuration failed")
                                 continuation.resume(false, null)
                             }
                         },
                     )
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to setup RAW mode", e)
                 return@withContext false
             }
         }
@@ -252,7 +216,6 @@ class Camera2System(
     @Suppress("DEPRECATION")
     private suspend fun setupVideoMode(): Boolean =
         withContext(Dispatchers.IO) {
-            try {
                 val caps = cameraController.getDeviceCaps() ?: return@withContext false
                 val previewSurface = uiBridge.getPreviewSurface() ?: return@withContext false
                 val videoSize = Size(3840, 2160)
@@ -267,28 +230,22 @@ class Camera2System(
                                 val requestBuilder =
                                     cameraController.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
                                 requestBuilder?.addTarget(previewSurface)
-                                try {
                                     session.setRepeatingRequest(
                                         requestBuilder!!.build(),
                                         null,
                                         null
                                     )
                                     continuation.resume(true, null)
-                                } catch (e: Exception) {
-                                    AppLogger.e(TAG, "Failed to start video preview request", e)
                                     continuation.resume(false, null)
                                 }
                             }
 
                             override fun onConfigureFailed(session: CameraCaptureSession) {
-                                AppLogger.e(TAG, "Video mode session configuration failed")
                                 continuation.resume(false, null)
                             }
                         },
                     )
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to setup video mode", e)
                 return@withContext false
             }
         }
@@ -296,7 +253,6 @@ class Camera2System(
     @Suppress("DEPRECATION")
     private suspend fun setupPreviewMode(): Boolean =
         withContext(Dispatchers.IO) {
-            try {
                 val previewSurface = uiBridge.getPreviewSurface() ?: return@withContext false
                 val surfaces = listOf(previewSurface)
                 return@withContext suspendCancellableCoroutine { continuation ->
@@ -308,40 +264,31 @@ class Camera2System(
                                 val requestBuilder =
                                     cameraController.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
                                 requestBuilder?.addTarget(previewSurface)
-                                try {
                                     session.setRepeatingRequest(
                                         requestBuilder!!.build(),
                                         null,
                                         null
                                     )
                                     continuation.resume(true, null)
-                                } catch (e: Exception) {
-                                    AppLogger.e(TAG, "Failed to start preview request", e)
                                     continuation.resume(false, null)
                                 }
                             }
 
                             override fun onConfigureFailed(session: CameraCaptureSession) {
-                                AppLogger.e(TAG, "Preview mode session configuration failed")
                                 continuation.resume(false, null)
                             }
                         },
                     )
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to setup preview mode", e)
                 return@withContext false
             }
         }
 
     private suspend fun startRawRecording(): Boolean =
         withContext(Dispatchers.IO) {
-            try {
                 rawEngine.startCapture()
                 startPeriodicRawCapture()
                 return@withContext true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to start RAW recording", e)
                 return@withContext false
             }
         }
@@ -349,7 +296,6 @@ class Camera2System(
     @Suppress("DEPRECATION")
     private suspend fun startVideoRecording(): Boolean =
         withContext(Dispatchers.IO) {
-            try {
                 val caps = cameraController.getDeviceCaps() ?: return@withContext false
                 val videoFile = createVideoFile()
                 val videoSize = Size(3840, 2160)
@@ -377,7 +323,6 @@ class Camera2System(
                                     cameraController.createCaptureRequest(CameraDevice.TEMPLATE_RECORD)
                                 requestBuilder?.addTarget(previewSurface)
                                 requestBuilder?.addTarget(recorderSurface)
-                                try {
                                     session.setRepeatingRequest(
                                         requestBuilder!!.build(),
                                         null,
@@ -388,21 +333,16 @@ class Camera2System(
                                     } else {
                                         continuation.resume(false, null)
                                     }
-                                } catch (e: Exception) {
-                                    AppLogger.e(TAG, "Failed to start recording request", e)
                                     continuation.resume(false, null)
                                 }
                             }
 
                             override fun onConfigureFailed(session: CameraCaptureSession) {
-                                AppLogger.e(TAG, "Recording session configuration failed")
                                 continuation.resume(false, null)
                             }
                         },
                     )
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to start video recording", e)
                 return@withContext false
             }
         }
@@ -418,7 +358,6 @@ class Camera2System(
     }
 
     private fun captureRawImage() {
-        try {
             val rawSurface = rawEngine.getSurface() ?: return
             val session = cameraController.getCaptureSession() ?: return
             val requestBuilder =
@@ -426,7 +365,6 @@ class Camera2System(
             requestBuilder?.addTarget(rawSurface)
             // Configure Samsung Stage3/Level3 processing options
             if (rawEngine.isStage3ProcessingEnabled()) {
-                try {
                     requestBuilder?.apply {
                         // Samsung Stage3/Level3 specific settings for maximum raw data preservation
                         set(
@@ -456,11 +394,7 @@ class Camera2System(
                             android.hardware.camera2.CameraMetadata.HOT_PIXEL_MODE_OFF
                         )
                     }
-                    AppLogger.d(TAG, "Applied Samsung Stage3/Level3 processing settings")
-                } catch (e: Exception) {
-                    Log.w(
                         TAG,
-                        "Could not apply Stage3/Level3 settings, using defaults: ${e.message}"
                     )
                 }
             }
@@ -478,8 +412,6 @@ class Camera2System(
                 },
                 null,
             )
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to capture RAW image", e)
         }
     }
 
@@ -502,7 +434,7 @@ class Camera2System(
     }
 
     private fun calculateOrientationHint(sensorOrientation: Int): Int {
-        return try {
+        return (
             val windowManager =
                 context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
             val deviceRotation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -524,13 +456,10 @@ class Camera2System(
                 }
             }
             val orientationHint = (sensorOrientation - deviceRotation + 360) % 360
-            Log.d(
                 TAG,
                 "Orientation calculation: device=$deviceRotation, sensor=$sensorOrientation, hint=$orientationHint"
             )
             orientationHint
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to calculate orientation hint", e)
             90
         }
     }

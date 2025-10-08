@@ -1,13 +1,11 @@
 package mpdc4gsr.core
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
+import mpdc4gsr.core.monitoring.StructuredLogger
 import org.json.JSONObject
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -19,7 +17,6 @@ class SessionManager(
     private val logger: StructuredLogger,
 ) {
     companion object {
-        private const val TAG = "SessionManager"
         private const val SESSION_HEARTBEAT_INTERVAL_MS = 10000L
         private const val SESSION_TIMEOUT_MS = 60000L
         private const val MAX_DEVICES_PER_SESSION = 10
@@ -121,7 +118,6 @@ class SessionManager(
         onSyncRequired: (List<DeviceInfo>) -> Unit,
     ) {
         if (isRunning.get()) {
-            AppLogger.w(TAG, "Session manager already running")
             return
         }
         this.onSessionStateChanged = onSessionStateChanged
@@ -137,29 +133,22 @@ class SessionManager(
                     "service_started",
                     emptyMap()
                 )
-                try {
                     while (isRunning.get()) {
                         updateSessionState()
                         checkDeviceHeartbeats()
                         performStateSynchronization()
                         delay(SESSION_HEARTBEAT_INTERVAL_MS)
                     }
-                } catch (e: CancellationException) {
-                    AppLogger.i(TAG, "Session manager cancelled")
-                } catch (e: Exception) {
-                    AppLogger.e(TAG, "Session manager error", e)
                     logger.log(
                         StructuredLogger.LogLevel.ERROR,
                         "SessionManager",
                         "service_error",
                         mapOf(
-                            "error" to e.message.orEmpty(),
                         ),
                     )
                 }
             },
         )
-        AppLogger.i(TAG, "Session management service started")
     }
 
     fun stop() {
@@ -174,7 +163,6 @@ class SessionManager(
         // Cancel the sessionScope to cleanup all coroutines
         sessionScope.cancel()
         logger.log(StructuredLogger.LogLevel.INFO, "SessionManager", "service_stopped", emptyMap())
-        AppLogger.i(TAG, "Session management service stopped")
     }
 
     fun createSession(metadata: Map<String, Any> = emptyMap()): String {
@@ -212,7 +200,6 @@ class SessionManager(
     ): Boolean {
         val session = currentSession.get() ?: return false
         if (connectedDevices.size >= MAX_DEVICES_PER_SESSION) {
-            AppLogger.w(TAG, "Maximum devices reached for session ${session.id}")
             return false
         }
         val deviceInfo =
@@ -268,12 +255,10 @@ class SessionManager(
         val session = currentSession.get() ?: return false
         val devices = connectedDevices.values.toList()
         if (devices.isEmpty()) {
-            AppLogger.w(TAG, "No devices available for synchronized recording")
             return false
         }
         val recordingCapableDevices = devices.filter { "recording" in it.capabilities }
         if (recordingCapableDevices.isEmpty()) {
-            AppLogger.w(TAG, "No recording-capable devices in session")
             return false
         }
         updateSessionState(SessionState.SYNCING)
@@ -469,7 +454,6 @@ class SessionManager(
         sessionConfig: SessionConfig,
         permissionController: mpdc4gsr.core.ui.PermissionController? = null
     ): Boolean = withContext(Dispatchers.IO) {
-        try {
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 "SessionManager",
@@ -479,12 +463,10 @@ class SessionManager(
             _sessionWorkflowState.value = SessionWorkflowState.INITIALIZING
             setupWorkflowSteps(sessionConfig, permissionController)
             executeWorkflow()
-        } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "SessionManager",
                 "workflow_init_failed",
-                mapOf("error" to (e.message ?: "Unknown error"))
             )
             _sessionWorkflowState.value = SessionWorkflowState.ERROR
             false
@@ -567,7 +549,6 @@ class SessionManager(
                     "index" to "${index + 1}/${workflowSteps.size}"
                 )
             )
-            try {
                 val success = withContext(Dispatchers.IO) {
                     kotlinx.coroutines.withTimeout(step.timeout) {
                         step.action()
@@ -597,7 +578,6 @@ class SessionManager(
                     "workflow_step_success",
                     mapOf("step" to step.name)
                 )
-            } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
                 logger.log(
                     StructuredLogger.LogLevel.ERROR,
                     "SessionManager",
@@ -609,12 +589,10 @@ class SessionManager(
                     _sessionWorkflowState.value = SessionWorkflowState.ERROR
                     return false
                 }
-            } catch (e: Exception) {
                 logger.log(
                     StructuredLogger.LogLevel.ERROR,
                     "SessionManager",
                     "workflow_step_exception",
-                    mapOf("step" to step.name, "error" to (e.message ?: "Unknown"))
                 )
                 onWorkflowStepCompleted?.invoke(step.name, false)
                 if (step.required) {

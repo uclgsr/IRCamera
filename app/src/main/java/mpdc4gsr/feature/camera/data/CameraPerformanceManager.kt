@@ -4,9 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
@@ -14,7 +11,6 @@ import java.util.concurrent.atomic.AtomicLong
 
 class CameraPerformanceManager(private val context: Context) {
     companion object {
-        private const val TAG = "CameraPerformanceManager"
         private const val MEMORY_CHECK_INTERVAL_MS = 5000L
         private const val MAX_PENDING_FRAMES = 3
         private const val LOW_MEMORY_THRESHOLD_MB = 100L
@@ -69,7 +65,6 @@ class CameraPerformanceManager(private val context: Context) {
         isMonitoring = true
         resetMetrics()
         startMemoryMonitoring()
-        AppLogger.i(TAG, "Performance monitoring started")
     }
 
     fun stopMonitoring() {
@@ -77,7 +72,6 @@ class CameraPerformanceManager(private val context: Context) {
         memoryCheckHandler.removeCallbacksAndMessages(null)
         frameProcessingQueue.clear()
         frameProcessingExecutor.shutdownNow()
-        AppLogger.i(TAG, "Performance monitoring stopped")
     }
 
     fun processFrame(
@@ -95,7 +89,6 @@ class CameraPerformanceManager(private val context: Context) {
         if (memoryPressure == MemoryPressureLevel.CRITICAL) {
             framesDropped.incrementAndGet()
             onComplete(false)
-            AppLogger.w(TAG, "Frame dropped due to critical memory pressure")
             return false
         }
         // Check pending operations for backpressure
@@ -103,7 +96,6 @@ class CameraPerformanceManager(private val context: Context) {
         if (currentPending >= MAX_PENDING_FRAMES) {
             framesDropped.incrementAndGet()
             onComplete(false)
-            AppLogger.w(TAG, "Frame dropped due to backpressure (pending: $currentPending)")
             return false
         }
         pendingOperations.incrementAndGet()
@@ -213,12 +205,9 @@ class CameraPerformanceManager(private val context: Context) {
     private fun processNextFrame() {
         val task = frameProcessingQueue.poll() ?: return
         // Process frame data on background thread to avoid blocking main thread
-        try {
             // Note: Minimal delay removed as it was artificial
             // Real frame processing happens here without blocking
             task.onComplete(true)
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Frame processing failed", e)
             task.onComplete(false)
         }
     }

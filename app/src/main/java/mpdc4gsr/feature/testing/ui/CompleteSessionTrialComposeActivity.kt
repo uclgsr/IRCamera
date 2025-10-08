@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -30,7 +27,6 @@ import java.util.*
 
 class CompleteSessionTrialComposeActivity : ComponentActivity() {
     companion object {
-        private const val TAG = "CompleteSessionTrialCompose"
         private const val EXTENDED_DURATION_SECONDS = 300 // 5 minutes as per plan
         private const val STATUS_UPDATE_INTERVAL = 10 // Update every 10 seconds
     }
@@ -358,18 +354,12 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
     }
 
     private fun initializeComponents() {
-        try {
             recordingController = RecordingController(this, this)
-            AppLogger.d(TAG, "Recording controller initialized successfully")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize components: ${e.message}")
         }
     }
 
     private suspend fun startCompleteSessionTrial() {
-        AppLogger.i(TAG, "Starting complete session trial")
         trialStartTime = System.currentTimeMillis()
-        try {
             // Initialize session directory
             val sessionName =
                 "trial_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())}"
@@ -377,40 +367,22 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
             trialSessionDir?.mkdirs()
             // Start recording with all sensors
             recordingController?.startRecording()
-            AppLogger.d(TAG, "Complete session trial started successfully")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to start session trial: ${e.message}")
         }
     }
 
     private suspend fun stopCompleteSessionTrial() {
-        AppLogger.i(TAG, "Stopping complete session trial")
         trialEndTime = System.currentTimeMillis()
-        try {
             recordingController?.stopRecording()
-            AppLogger.d(TAG, "Complete session trial stopped successfully")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to stop session trial: ${e.message}")
         }
     }
 
     private suspend fun verifySessionOutput() {
-        AppLogger.d(TAG, "Verifying session output")
-        try {
             delay(2000) // Simulate verification time
-            AppLogger.d(TAG, "Session output verification completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Session output verification failed: ${e.message}")
         }
     }
 
     private suspend fun generateCompleteReport() {
-        AppLogger.d(TAG, "Generating complete report")
-        try {
             delay(3000) // Simulate report generation
-            AppLogger.d(TAG, "Complete report generated successfully")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Report generation failed: ${e.message}")
         }
     }
 
@@ -427,32 +399,17 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
     }
 
     private suspend fun testSessionInitialization() {
-        AppLogger.d(TAG, "Testing session initialization")
-        try {
             delay(3000)
-            AppLogger.d(TAG, "Session initialization test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Session initialization test failed: ${e.message}")
         }
     }
 
     private suspend fun testExtendedRecording() {
-        AppLogger.d(TAG, "Testing extended recording")
-        try {
             delay(5000) // Simulate extended recording test
-            AppLogger.d(TAG, "Extended recording test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Extended recording test failed: ${e.message}")
         }
     }
 
     private suspend fun testSessionCleanup() {
-        AppLogger.d(TAG, "Testing session cleanup")
-        try {
             delay(2000)
-            AppLogger.d(TAG, "Session cleanup test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Session cleanup test failed: ${e.message}")
         }
     }
 }

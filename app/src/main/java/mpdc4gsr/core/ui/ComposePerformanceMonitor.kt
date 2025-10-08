@@ -1,8 +1,5 @@
 package mpdc4gsr.core.ui
 
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -18,7 +15,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlin.system.measureTimeMillis
 
 object ComposePerformanceMonitor {
-    private const val TAG = "ComposePerformance"
 
     // Performance thresholds
     private const val FRAME_BUDGET_MS = 16L // 60fps target
@@ -39,7 +35,6 @@ object ComposePerformanceMonitor {
         LaunchedEffect(Unit) {
             recompositionCount.intValue++
             _recompositionCount.value = _recompositionCount.value + 1
-            AppLogger.d(TAG, "$name recomposed ${recompositionCount.intValue} times")
         }
         content()
     }
@@ -56,7 +51,6 @@ object ComposePerformanceMonitor {
             val duration = endTime - startTime
             _frameTimeMs.value = duration
             recordMetric(name, duration)
-            AppLogger.d(TAG, "$name composition took ${duration}ms")
         }
         return result
     }
@@ -65,14 +59,12 @@ object ComposePerformanceMonitor {
         val runtime = Runtime.getRuntime()
         val usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024
         _memoryUsageMb.value = usedMemory.toFloat()
-        AppLogger.d(TAG, "$operationName memory usage: ${usedMemory}MB")
     }
 
     fun trackNavigation(route: String, startTime: Long) {
         val latency = System.currentTimeMillis() - startTime
         _navigationLatencyMs.value = latency
         recordMetric("navigation_$route", latency)
-        AppLogger.d(TAG, "Navigation to $route took ${latency}ms")
     }
 
     private fun recordMetric(name: String, value: Long) {
@@ -89,7 +81,6 @@ object ComposePerformanceMonitor {
             drawContent()
         }
         if (drawTime > FRAME_BUDGET_MS) {
-            AppLogger.w(TAG, "$name draw took ${drawTime}ms (potential jank)")
         }
     }
 }
@@ -172,7 +163,6 @@ object SensorDataPerformanceTracker {
     private const val NAVIGATION_SLOW_THRESHOLD_MS = 300L
     fun trackGSRDataProcessing(dataPoints: Int, processingTimeMs: Long) {
         val throughput = dataPoints / (processingTimeMs / 1000.0)
-        Log.d(
             "SensorPerformance",
             "GSR processing: $dataPoints points in ${processingTimeMs}ms (${
                 String.format(
@@ -182,7 +172,6 @@ object SensorDataPerformanceTracker {
             } points/sec)"
         )
         if (processingTimeMs > SENSOR_PROCESSING_THRESHOLD_MS) {
-            Log.w(
                 "SensorPerformance",
                 "GSR processing slower than expected: ${processingTimeMs}ms for $dataPoints points"
             )
@@ -190,9 +179,7 @@ object SensorDataPerformanceTracker {
     }
 
     fun trackThermalImageProcessing(imageSize: String, processingTimeMs: Long) {
-        AppLogger.d("SensorPerformance", "Thermal image processing: $imageSize in ${processingTimeMs}ms")
         if (processingTimeMs > SENSOR_PROCESSING_CRITICAL_MS) {
-            Log.w(
                 "SensorPerformance",
                 "Thermal processing slower than expected: ${processingTimeMs}ms"
             )
@@ -200,9 +187,7 @@ object SensorDataPerformanceTracker {
     }
 
     fun trackNavigationPerformance(fromRoute: String, toRoute: String, transitionTimeMs: Long) {
-        AppLogger.d("SensorPerformance", "Navigation from $fromRoute to $toRoute: ${transitionTimeMs}ms")
         if (transitionTimeMs > NAVIGATION_SLOW_THRESHOLD_MS) {
-            AppLogger.w("SensorPerformance", "Navigation slower than expected: ${transitionTimeMs}ms")
         }
     }
 }

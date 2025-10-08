@@ -64,7 +64,6 @@ class PolicyViewModel : AppBaseViewModel() {
     }
 
     suspend fun loadContent(context: android.content.Context) {
-        try {
             _isLoading.value = true
             _showError.value = false
             // Simulate loading delay
@@ -76,7 +75,6 @@ class PolicyViewModel : AppBaseViewModel() {
             }
             _htmlContent.value = content
             _isLoading.value = false
-        } catch (e: Exception) {
             _isLoading.value = false
             _showError.value = true
         }

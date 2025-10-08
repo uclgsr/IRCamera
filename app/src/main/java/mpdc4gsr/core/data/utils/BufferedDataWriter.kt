@@ -1,8 +1,5 @@
 package mpdc4gsr.core.data.utils
 
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import java.io.BufferedWriter
 import java.io.File
@@ -19,7 +16,6 @@ open class BufferedDataWriter(
     private val maxQueueSize: Int = 10000
 ) {
     companion object {
-        private const val TAG = "BufferedDataWriter"
     }
 
     private var writer: BufferedWriter? = null
@@ -32,10 +28,8 @@ open class BufferedDataWriter(
     private val writerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     suspend fun start(): Boolean = withContext(Dispatchers.IO) {
         if (isRunning.get()) {
-            AppLogger.w(TAG, "Writer already running for ${outputFile.name}")
             return@withContext true
         }
-        try {
             outputFile.parentFile?.mkdirs()
             writer = BufferedWriter(FileWriter(outputFile, true), bufferSize)
             isRunning.set(true)
@@ -45,10 +39,7 @@ open class BufferedDataWriter(
             flushJob = writerScope.launch {
                 runFlushLoop()
             }
-            AppLogger.i(TAG, "Started buffered writer for ${outputFile.absolutePath}")
             true
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to start writer for ${outputFile.name}", e)
             cleanup()
             false
         }
@@ -56,12 +47,10 @@ open class BufferedDataWriter(
 
     fun writeLine(line: String): Boolean {
         if (!isRunning.get()) {
-            AppLogger.w(TAG, "Writer not running, cannot write line")
             return false
         }
         val success = writeQueue.offer(line)
         if (!success) {
-            AppLogger.w(TAG, "Write queue full, dropping line for ${outputFile.name}")
         }
         return success
     }
@@ -75,7 +64,6 @@ open class BufferedDataWriter(
             if (writeQueue.offer(line)) {
                 written++
             } else {
-                AppLogger.w(TAG, "Write queue full, stopping batch write")
                 break
             }
         }
@@ -83,10 +71,7 @@ open class BufferedDataWriter(
     }
 
     suspend fun flush() = withContext(Dispatchers.IO) {
-        try {
             writer?.flush()
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to flush writer for ${outputFile.name}", e)
         }
     }
 
@@ -94,9 +79,7 @@ open class BufferedDataWriter(
         if (!isRunning.get()) {
             return@withContext
         }
-        AppLogger.i(TAG, "Stopping buffered writer for ${outputFile.name}")
         isRunning.set(false)
-        try {
             writerJob?.cancel()
             flushJob?.cancel()
             writerJob?.join()
@@ -105,12 +88,9 @@ open class BufferedDataWriter(
             writer?.close()
             writer = null
             val stats = getWriteStats()
-            Log.i(
                 TAG,
                 "Writer stopped for ${outputFile.name}: ${stats.linesWritten} lines, ${stats.bytesWritten} bytes"
             )
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error stopping writer for ${outputFile.name}", e)
         }
     }
 
@@ -125,9 +105,7 @@ open class BufferedDataWriter(
     }
 
     private suspend fun runWriterLoop() {
-        AppLogger.d(TAG, "Starting writer loop for ${outputFile.name}")
         while (isRunning.get()) {
-            try {
                 val line = withContext(Dispatchers.IO) {
                     runInterruptible {
                         writeQueue.poll(100, java.util.concurrent.TimeUnit.MILLISECONDS)
@@ -141,40 +119,30 @@ open class BufferedDataWriter(
                         linesWritten.incrementAndGet()
                     }
                 }
-            } catch (e: InterruptedException) {
-                AppLogger.d(TAG, "Writer loop interrupted for ${outputFile.name}")
                 break
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error in writer loop for ${outputFile.name}", e)
                 if (e is IOException) {
                     break
                 }
             }
         }
-        AppLogger.d(TAG, "Writer loop ended for ${outputFile.name}")
     }
 
     private suspend fun runFlushLoop() {
         while (isRunning.get()) {
-            try {
                 delay(flushIntervalMs)
                 if (isRunning.get()) {
                     writer?.flush()
                 }
-            } catch (e: Exception) {
                 if (e !is CancellationException) {
-                    AppLogger.e(TAG, "Error in flush loop for ${outputFile.name}", e)
                 }
             }
         }
     }
 
     private fun drainQueue() {
-        try {
             val remainingLines = mutableListOf<String>()
             writeQueue.drainTo(remainingLines)
             if (remainingLines.isNotEmpty()) {
-                AppLogger.i(TAG, "Writing ${remainingLines.size} remaining lines for ${outputFile.name}")
                 writer?.let { w ->
                     for (line in remainingLines) {
                         w.write(line)
@@ -184,20 +152,15 @@ open class BufferedDataWriter(
                     }
                 }
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error draining queue for ${outputFile.name}", e)
         }
     }
 
     private fun cleanup() {
-        try {
             isRunning.set(false)
             writerJob?.cancel()
             flushJob?.cancel()
             writer?.close()
             writer = null
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error during cleanup for ${outputFile.name}", e)
         }
     }
 }

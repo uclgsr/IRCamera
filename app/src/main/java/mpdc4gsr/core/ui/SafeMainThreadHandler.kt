@@ -2,14 +2,10 @@ package mpdc4gsr.core.ui
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import java.util.concurrent.atomic.AtomicLong
 
 class SafeMainThreadHandler(private val componentName: String = "Unknown") {
     companion object {
-        private const val TAG = "SafeMainThreadHandler"
         private const val WARNING_THRESHOLD_MS = 100L
         private const val ERROR_THRESHOLD_MS = 1000L
         private val totalOperations = AtomicLong(0)
@@ -45,14 +41,11 @@ class SafeMainThreadHandler(private val componentName: String = "Unknown") {
         override fun run() {
             val startTime = System.nanoTime()
             totalOperations.incrementAndGet()
-            try {
                 wrapped.run()
-            } finally {
                 val executionTime = (System.nanoTime() - startTime) / 1_000_000
                 when {
                     executionTime > ERROR_THRESHOLD_MS -> {
                         verySlowOperations.incrementAndGet()
-                        Log.e(
                             TAG,
                             "[$componentName] CRITICAL: Main thread blocked for ${executionTime}ms! " +
                                     "This may cause ANR. Move work to background thread."
@@ -61,7 +54,6 @@ class SafeMainThreadHandler(private val componentName: String = "Unknown") {
 
                     executionTime > WARNING_THRESHOLD_MS -> {
                         slowOperations.incrementAndGet()
-                        Log.w(
                             TAG,
                             "[$componentName] WARNING: Main thread operation took ${executionTime}ms. " +
                                     "Consider optimizing or moving to background thread."

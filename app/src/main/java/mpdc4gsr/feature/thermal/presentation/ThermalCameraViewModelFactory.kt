@@ -12,6 +12,5 @@ class ThermalCameraViewModelFactory(
         if (modelClass.isAssignableFrom(ThermalCameraViewModel::class.java)) {
             return ThermalCameraViewModel(application) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

@@ -12,6 +12,5 @@ class GSRRawImageViewViewModelFactory(
         if (modelClass.isAssignableFrom(GSRRawImageViewViewModel::class.java)) {
             return GSRRawImageViewViewModel(context) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

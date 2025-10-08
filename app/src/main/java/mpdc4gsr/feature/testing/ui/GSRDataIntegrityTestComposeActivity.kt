@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -30,7 +27,6 @@ import kotlin.math.abs
 
 class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
     companion object {
-        private const val TAG = "GSRDataIntegrityTestCompose"
         private const val TEST_DURATION_SECONDS = 10
         private const val EXPECTED_SAMPLE_RATE = 128.0
         private const val EXPECTED_SAMPLES = (TEST_DURATION_SECONDS * EXPECTED_SAMPLE_RATE).toInt()
@@ -370,13 +366,9 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
     )
 
     private fun initializeComponents() {
-        try {
             val controller = RecordingController(this, this)
             recordingController = controller
             gsrRecorder = GSRSensorRecorder(this, recordingController = controller)
-            AppLogger.d(TAG, "GSR data integrity components initialized successfully")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize components: ${e.message}")
         }
     }
 
@@ -387,10 +379,8 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
         onMetricsUpdate: (Map<String, Any>) -> Unit,
         onComplete: () -> Unit
     ) {
-        AppLogger.i(TAG, "Starting full GSR data integrity test")
         val metrics = mutableMapOf<String, Any>()
         val checks = mutableListOf<IntegrityCheck>()
-        try {
             // Simulate data collection
             var collectedSamples = 0
             val startTime = System.currentTimeMillis()
@@ -443,9 +433,6 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
             metrics["Signal Quality"] = "Excellent"
             metrics["Test Duration"] = "${TEST_DURATION_SECONDS}s"
             onMetricsUpdate(metrics)
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Full integrity test failed: ${e.message}")
-        } finally {
             onComplete()
         }
     }
@@ -455,8 +442,6 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
         onRateUpdate: (Double) -> Unit,
         onChecksUpdate: (List<IntegrityCheck>) -> Unit
     ) {
-        AppLogger.d(TAG, "Running quick integrity check")
-        try {
             // Simulate quick 3-second test
             var collectedSamples = 0
             repeat(30) {
@@ -482,8 +467,6 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                 )
             )
             onChecksUpdate(quickChecks)
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Quick integrity check failed: ${e.message}")
         }
     }
 
@@ -500,52 +483,27 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun testSamplingRate() {
-        AppLogger.d(TAG, "Testing sampling rate")
-        try {
             delay(3000)
-            AppLogger.d(TAG, "Sampling rate test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Sampling rate test failed: ${e.message}")
         }
     }
 
     private suspend fun testDataConsistency() {
-        AppLogger.d(TAG, "Testing data consistency")
-        try {
             delay(4000)
-            AppLogger.d(TAG, "Data consistency test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Data consistency test failed: ${e.message}")
         }
     }
 
     private suspend fun testTimestampAccuracy() {
-        AppLogger.d(TAG, "Testing timestamp accuracy")
-        try {
             delay(2000)
-            AppLogger.d(TAG, "Timestamp accuracy test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Timestamp accuracy test failed: ${e.message}")
         }
     }
 
     private suspend fun testSignalQuality() {
-        AppLogger.d(TAG, "Testing signal quality")
-        try {
             delay(5000)
-            AppLogger.d(TAG, "Signal quality test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Signal quality test failed: ${e.message}")
         }
     }
 
     private suspend fun testRangeValidation() {
-        AppLogger.d(TAG, "Testing range validation")
-        try {
             delay(3000)
-            AppLogger.d(TAG, "Range validation test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Range validation test failed: ${e.message}")
         }
     }
 }

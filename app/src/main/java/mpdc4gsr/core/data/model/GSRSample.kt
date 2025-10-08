@@ -79,7 +79,7 @@ data class GSRSample(
         }
 
         fun fromCsvRow(csvRow: String): GSRSample? {
-            return try {
+            return (
                 val parts = csvRow.split(",")
                 if (parts.size >= 7) {
                     GSRSample(
@@ -92,7 +92,6 @@ data class GSRSample(
                         connectionRssi = parts[6].toInt()
                     )
                 } else null
-            } catch (e: Exception) {
                 null
             }
         }

@@ -33,14 +33,12 @@ class GSRDataRepository : BaseRepository() {
     // Real-time GSR data stream
     fun getGSRDataStream(deviceId: String): Flow<BaseRepository.Result<GSRReading>> = flow {
         emit(BaseRepository.Result.Loading)
-        try {
             var counter = 0
             while (true) {
                 delay(100) // 10Hz sampling rate
                 val reading = generateGSRReading(deviceId, counter++)
                 emit(BaseRepository.Result.Success(reading))
             }
-        } catch (e: Exception) {
             emit(BaseRepository.Result.Error(e))
         }
     }.flowOn(kotlinx.coroutines.Dispatchers.IO)

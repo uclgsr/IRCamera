@@ -6,13 +6,12 @@ import java.net.ServerSocket
 object NetworkUtils {
 
     fun isPortAvailable(port: Int): Boolean {
-        return try {
+        return (
             ServerSocket().use { serverSocket ->
                 serverSocket.reuseAddress = true
                 serverSocket.bind(InetSocketAddress(port))
                 true
             }
-        } catch (e: Exception) {
             false
         }
     }
@@ -24,6 +23,5 @@ object NetworkUtils {
                 return port
             }
         }
-        throw IllegalStateException("Could not find available port starting from $preferredPort")
     }
 }

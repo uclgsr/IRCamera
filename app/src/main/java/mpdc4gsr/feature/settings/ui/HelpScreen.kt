@@ -107,9 +107,7 @@ fun HelpScreen(
                             data = android.net.Uri.parse("mailto:support@uclgsr.ac.uk")
                             putExtra(android.content.Intent.EXTRA_SUBJECT, "IRCamera App Support Request")
                         }
-                        try {
                             context.startActivity(intent)
-                        } catch (e: Exception) {
                             // Email client not available
                         }
                     },

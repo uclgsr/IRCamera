@@ -28,14 +28,13 @@ fun ConnectScreen(
     val socketConnectionState = com.mpdc4gsr.libunified.app.event.DeviceEventManager.socketConnectionState.collectAsState()
 
     val deviceTypes = remember(deviceConnectionState.value, socketConnectionState.value) {
-        val tc001Status = try {
+        val tc001Status = (
             val hasUsbDevice = com.mpdc4gsr.libunified.app.tools.DeviceTools.findUsbDevice() != null
             if (hasUsbDevice) {
                 deviceConnectionState.value?.isConnected ?: false
             } else {
                 null
             }
-        } catch (e: Exception) {
             null
         }
         

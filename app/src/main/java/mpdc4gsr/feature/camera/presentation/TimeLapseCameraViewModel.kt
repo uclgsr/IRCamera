@@ -96,6 +96,5 @@ class TimeLapseCameraViewModelFactory(
         if (modelClass.isAssignableFrom(TimeLapseCameraViewModel::class.java)) {
             return TimeLapseCameraViewModel(context) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

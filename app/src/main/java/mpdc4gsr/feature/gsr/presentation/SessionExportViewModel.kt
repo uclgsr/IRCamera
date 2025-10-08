@@ -72,16 +72,13 @@ class SessionExportViewModel(
     fun loadSessions() {
         viewModelScope.launch {
             _exportState.value = _exportState.value.copy(isLoading = true, error = null)
-            try {
                 val sessions = getAvailableSessions()
                 _exportState.value = _exportState.value.copy(
                     isLoading = false,
                     sessions = sessions
                 )
-            } catch (e: Exception) {
                 _exportState.value = _exportState.value.copy(
                     isLoading = false,
-                    error = e.message ?: "Failed to load sessions"
                 )
             }
         }
@@ -117,7 +114,6 @@ class SessionExportViewModel(
                 exportProgress = 0f,
                 error = null
             )
-            try {
                 val exportFiles = mutableListOf<File>()
                 val totalSessions = selectedSessions.size
                 selectedSessions.forEachIndexed { index, session ->
@@ -134,12 +130,10 @@ class SessionExportViewModel(
                 )
                 // Handle export destination
                 handleExportDestination(exportFiles)
-            } catch (e: Exception) {
                 _exportState.value = _exportState.value.copy(
                     isExporting = false,
                     exportProgress = 0f,
                     currentExportFile = null,
-                    error = "Export failed: ${e.message}"
                 )
             }
         }
@@ -284,7 +278,6 @@ class SessionExportViewModel(
     }
 
     private suspend fun handleExportDestination(exportFiles: List<File>) {
-        try {
             when (_exportState.value.exportDestination) {
                 ExportDestination.DOWNLOADS -> {
                     // Files are already in downloads, just notify completion
@@ -310,16 +303,13 @@ class SessionExportViewModel(
                     emailFiles(exportFiles)
                 }
             }
-        } catch (e: Exception) {
             _exportState.value = _exportState.value.copy(
                 isExporting = false,
-                error = "Export completed but failed to handle destination: ${e.message}"
             )
         }
     }
 
     private fun shareFiles(files: List<File>) {
-        try {
             val context = application.applicationContext
             val uris = files.map { file ->
                 FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
@@ -335,16 +325,13 @@ class SessionExportViewModel(
                 isExporting = false,
                 error = "Export completed! Opening share dialog..."
             )
-        } catch (e: Exception) {
             _exportState.value = _exportState.value.copy(
                 isExporting = false,
-                error = "Export completed but failed to share: ${e.message}"
             )
         }
     }
 
     private fun emailFiles(files: List<File>) {
-        try {
             val context = application.applicationContext
             val uris = files.map { file ->
                 FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
@@ -362,10 +349,8 @@ class SessionExportViewModel(
                 isExporting = false,
                 error = "Export completed! Opening email client..."
             )
-        } catch (e: Exception) {
             _exportState.value = _exportState.value.copy(
                 isExporting = false,
-                error = "Export completed but failed to email: ${e.message}"
             )
         }
     }
@@ -394,11 +379,10 @@ class SessionExportViewModel(
     }
 
     private fun countDataPoints(file: File): Int {
-        return try {
+        return (
             file.readLines().count { line ->
                 line.isNotBlank() && !line.startsWith("#")
             }
-        } catch (e: Exception) {
             0
         }
     }

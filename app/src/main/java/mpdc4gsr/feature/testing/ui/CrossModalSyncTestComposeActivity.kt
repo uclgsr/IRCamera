@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -26,7 +23,6 @@ import kotlin.system.measureTimeMillis
 
 class CrossModalSyncTestComposeActivity : ComponentActivity() {
     companion object {
-        private const val TAG = "CrossModalSyncTestCompose"
         private const val SYNC_TOLERANCE_MS = 50L
     }
 
@@ -314,9 +310,7 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
         onStatusUpdate: (String) -> Unit,
         onComplete: () -> Unit
     ) {
-        AppLogger.i(TAG, "Starting comprehensive cross-modal sync tests")
         val newSyncResults = mutableListOf<SyncResult>()
-        try {
             // Test GSR-Thermal sync
             val gsrThermalSync = testSensorPairSync("GSR", "Thermal")
             newSyncResults.add(gsrThermalSync)
@@ -337,16 +331,12 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
             // Determine overall sync status
             val allSynced = newSyncResults.all { it.isSynchronized }
             onStatusUpdate(if (allSynced) "Synchronized" else "Out of Sync")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Sync tests failed: ${e.message}")
             onStatusUpdate("Test Failed")
-        } finally {
             onComplete()
         }
     }
 
     private suspend fun testSensorPairSync(sensor1: String, sensor2: String): SyncResult {
-        AppLogger.d(TAG, "Testing sync between $sensor1 and $sensor2")
         val testTime = measureTimeMillis {
             // Simulate sensor pair synchronization test
             delay(2000)
@@ -363,7 +353,6 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun testTripleSensorSync(): SyncResult {
-        AppLogger.d(TAG, "Testing triple sensor synchronization")
         val testTime = measureTimeMillis {
             // Simulate triple sensor sync test
             delay(3000)
@@ -380,13 +369,8 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun runRealTimeSync() {
-        AppLogger.d(TAG, "Running real-time synchronization monitoring")
-        try {
             // Simulate real-time sync monitoring
             delay(5000)
-            AppLogger.d(TAG, "Real-time sync monitoring completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Real-time sync test failed: ${e.message}")
         }
     }
 
@@ -404,22 +388,12 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun runTimestampAccuracyTest() {
-        AppLogger.d(TAG, "Testing timestamp accuracy")
-        try {
             delay(2000)
-            AppLogger.d(TAG, "Timestamp accuracy test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Timestamp accuracy test failed: ${e.message}")
         }
     }
 
     private suspend fun runSyncRecoveryTest() {
-        AppLogger.d(TAG, "Testing sync recovery")
-        try {
             delay(4000)
-            AppLogger.d(TAG, "Sync recovery test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Sync recovery test failed: ${e.message}")
         }
     }
 }

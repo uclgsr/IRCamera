@@ -60,14 +60,11 @@ class ShimmerConfigViewModel(
     fun startScan() {
         viewModelScope.launch {
             _shimmerUiState.update { it.copy(isScanning = true, error = null) }
-            try {
                 scanDevicesUseCase().collect { devices ->
                     _discoveredDevices.value = devices
                     _shimmerUiState.update { it.copy(isScanning = false) }
                 }
-            } catch (e: Exception) {
                 _shimmerUiState.update {
-                    it.copy(isScanning = false, error = e.message ?: "Scan failed")
                 }
             }
         }

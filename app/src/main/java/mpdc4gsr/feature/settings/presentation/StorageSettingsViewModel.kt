@@ -69,7 +69,6 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
 
     private fun updateStorageInfo() {
         viewModelScope.launch {
-            try {
                 val currentLocation = _storageSettings.value.storageLocation
                 val path = when (currentLocation) {
                     "SD Card" -> {
@@ -102,7 +101,6 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
                     usedSpace = "%.1f GB".format(used),
                     totalSpace = "%.1f GB".format(total)
                 )
-            } catch (e: Exception) {
                 _storageInfo.value = StorageInfo(
                     availableSpace = "Error",
                     usedSpace = "Error",

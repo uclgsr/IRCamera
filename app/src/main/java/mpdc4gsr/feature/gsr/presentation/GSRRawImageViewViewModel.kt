@@ -34,16 +34,13 @@ class GSRRawImageViewViewModel(
     fun loadImages() {
         viewModelScope.launch {
             _imageViewState.value = _imageViewState.value.copy(isLoading = true, error = null)
-            try {
                 val imageFiles = getGSRImageFiles()
                 _imageViewState.value = _imageViewState.value.copy(
                     isLoading = false,
                     imageFiles = imageFiles
                 )
-            } catch (e: Exception) {
                 _imageViewState.value = _imageViewState.value.copy(
                     isLoading = false,
-                    error = e.message ?: "Failed to load images"
                 )
             }
         }
@@ -51,7 +48,6 @@ class GSRRawImageViewViewModel(
 
     fun openImage(imageFile: File) {
         viewModelScope.launch {
-            try {
                 val context = application.applicationContext
                 val uri = FileProvider.getUriForFile(
                     context,
@@ -64,9 +60,7 @@ class GSRRawImageViewViewModel(
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
                 context.startActivity(intent)
-            } catch (e: Exception) {
                 _imageViewState.value = _imageViewState.value.copy(
-                    error = "Failed to open image: ${e.message}"
                 )
             }
         }
@@ -74,7 +68,6 @@ class GSRRawImageViewViewModel(
 
     fun shareImage(imageFile: File) {
         viewModelScope.launch {
-            try {
                 val context = application.applicationContext
                 val uri = FileProvider.getUriForFile(
                     context,
@@ -88,9 +81,7 @@ class GSRRawImageViewViewModel(
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
                 context.startActivity(Intent.createChooser(intent, "Share Image"))
-            } catch (e: Exception) {
                 _imageViewState.value = _imageViewState.value.copy(
-                    error = "Failed to share image: ${e.message}"
                 )
             }
         }
@@ -98,7 +89,6 @@ class GSRRawImageViewViewModel(
 
     fun deleteImage(imageFile: File) {
         viewModelScope.launch {
-            try {
                 if (imageFile.delete()) {
                     // Reload images after deletion
                     loadImages()
@@ -107,9 +97,7 @@ class GSRRawImageViewViewModel(
                         error = "Failed to delete image"
                     )
                 }
-            } catch (e: Exception) {
                 _imageViewState.value = _imageViewState.value.copy(
-                    error = "Error deleting image: ${e.message}"
                 )
             }
         }
@@ -152,7 +140,6 @@ class GSRRawImageViewViewModel(
 
     fun getImageMetadata(imageFile: File): Map<String, String> {
         val metadata = mutableMapOf<String, String>()
-        try {
             metadata["Name"] = imageFile.name
             metadata["Size"] = formatFileSize(imageFile.length())
             metadata["Modified"] = formatDate(imageFile.lastModified())
@@ -170,8 +157,6 @@ class GSRRawImageViewViewModel(
                     "${options.outWidth} x ${options.outHeight}"
                 metadata["Type"] = options.outMimeType ?: "Unknown"
             }
-        } catch (e: Exception) {
-            metadata["Error"] = "Failed to read metadata: ${e.message}"
         }
         return metadata
     }

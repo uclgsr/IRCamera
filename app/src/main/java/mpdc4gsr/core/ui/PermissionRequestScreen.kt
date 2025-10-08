@@ -412,7 +412,6 @@ private fun LogSection(
                             color = MaterialTheme.colorScheme.outline
                         )
                         Text(
-                            text = logMessage.message,
                             style = MaterialTheme.typography.bodySmall,
                             fontFamily = FontFamily.Monospace,
                             modifier = Modifier.weight(1f)

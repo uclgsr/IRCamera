@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -26,7 +23,6 @@ import kotlin.system.measureTimeMillis
 
 class SessionLifecycleTestComposeActivity : ComponentActivity() {
     companion object {
-        private const val TAG = "SessionLifecycleTestCompose"
     }
 
     data class SessionEvent(
@@ -307,9 +303,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun runFullLifecycleTest() {
-        AppLogger.i(TAG, "Starting full session lifecycle test")
         val testMetrics = mutableMapOf<String, Any>()
-        try {
             // Session Creation Test
             val creationTime = testSessionCreation()
             testMetrics["Creation Time"] = "${creationTime}ms"
@@ -331,16 +325,12 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                 "${sessionEvents.count { it.success } * 100 / sessionEvents.size}%"
             sessionMetrics = testMetrics
             currentSessionState = SessionState.COMPLETED
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Full lifecycle test failed: ${e.message}")
             currentSessionState = SessionState.ERROR
-        } finally {
             isTestRunning = false
         }
     }
 
     private suspend fun testSessionCreation(): Long {
-        AppLogger.d(TAG, "Testing session creation")
         return measureTimeMillis {
             currentSessionState = SessionState.INITIALIZING
             delay(1000) // Simulate session initialization
@@ -355,7 +345,6 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun testMultiSensorStart(): Long {
-        AppLogger.d(TAG, "Testing multi-sensor start")
         return measureTimeMillis {
             // Simulate starting GSR sensor
             delay(500)
@@ -385,7 +374,6 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun testPauseResume(): Long {
-        AppLogger.d(TAG, "Testing pause/resume functionality")
         return measureTimeMillis {
             // Test pause
             currentSessionState = SessionState.PAUSED
@@ -409,7 +397,6 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun testGracefulStop(): Long {
-        AppLogger.d(TAG, "Testing graceful session stop")
         return measureTimeMillis {
             currentSessionState = SessionState.STOPPING
             // Stop each sensor gracefully
@@ -446,7 +433,6 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun simulateSession() {
-        AppLogger.d(TAG, "Simulating quick session")
         currentSessionState = SessionState.INITIALIZING
         delay(1000)
         currentSessionState = SessionState.ACTIVE
@@ -476,8 +462,6 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun testErrorRecovery() {
-        AppLogger.d(TAG, "Testing error recovery")
-        try {
             delay(2000)
             sessionEvents = sessionEvents + SessionEvent(
                 eventType = "Error Recovery Test",
@@ -486,14 +470,10 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                 success = true,
                 details = "Sensor failure recovery tested"
             )
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error recovery test failed: ${e.message}")
         }
     }
 
     private suspend fun testDataIntegrity() {
-        AppLogger.d(TAG, "Testing data integrity")
-        try {
             delay(3000)
             sessionEvents = sessionEvents + SessionEvent(
                 eventType = "Data Integrity Check",
@@ -502,8 +482,6 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                 success = true,
                 details = "Data consistency validated across all sensors"
             )
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Data integrity test failed: ${e.message}")
         }
     }
 }

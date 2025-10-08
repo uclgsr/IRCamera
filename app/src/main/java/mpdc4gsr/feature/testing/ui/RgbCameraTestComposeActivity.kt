@@ -3,9 +3,6 @@ package mpdc4gsr.feature.testing.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
@@ -41,7 +38,6 @@ import kotlin.system.measureTimeMillis
 
 class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>() {
     companion object {
-        private const val TAG = "RgbCameraTestCompose"
     }
 
     private var cameraRecorder: RgbCameraRecorder? = null
@@ -55,7 +51,6 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
         if (allGranted) {
             initializeCamera()
         } else {
-            AppLogger.e(TAG, "Camera permissions required for testing")
         }
     }
 
@@ -224,16 +219,11 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
     }
 
     private fun initializeCamera() {
-        try {
             cameraRecorder = RgbCameraRecorder(this, this)
-            AppLogger.d(TAG, "Camera recorder initialized successfully")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize camera: ${e.message}")
         }
     }
 
     private suspend fun initializeCameraCapabilities() {
-        try {
             // Simulate loading camera capabilities
             delay(1000)
             // This would be populated with real camera capabilities
@@ -245,15 +235,10 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
                 "RAW Support" to "DNG Format",
                 "Video Codecs" to "H.264, H.265"
             )
-            AppLogger.d(TAG, "Camera capabilities loaded: $capabilities")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to load camera capabilities: ${e.message}")
         }
     }
 
     private suspend fun runAllCameraTests() {
-        AppLogger.i(TAG, "Starting comprehensive camera tests")
-        try {
             runPermissionsTest()
             delay(1000)
             runCapabilityTest()
@@ -265,78 +250,45 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
             runManualControlsTest()
             delay(1000)
             runRawCaptureTest()
-            AppLogger.i(TAG, "All camera tests completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Camera tests failed: ${e.message}")
         }
     }
 
     private suspend fun runPermissionsTest() {
-        AppLogger.d(TAG, "Testing camera permissions")
-        try {
             // Check camera permission using Android API
             val hasPermissions = checkSelfPermission(Manifest.permission.CAMERA) ==
                     PackageManager.PERMISSION_GRANTED
-            AppLogger.d(TAG, "Camera permissions check: $hasPermissions")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Permissions test failed: ${e.message}")
         }
     }
 
     private suspend fun runCapabilityTest() {
-        AppLogger.d(TAG, "Testing camera capabilities")
-        try {
             // Test camera capabilities
             delay(2000) // Simulate capability testing
-            AppLogger.d(TAG, "Camera capability test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Capability test failed: ${e.message}")
         }
     }
 
     private suspend fun run4KRecordingTest() {
-        AppLogger.d(TAG, "Testing 4K recording")
-        try {
             val recordingTime = measureTimeMillis {
                 // Start 4K recording test
                 delay(5000) // Simulate 5 second recording
             }
-            AppLogger.d(TAG, "4K recording test completed in ${recordingTime}ms")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "4K recording test failed: ${e.message}")
         }
     }
 
     private suspend fun runTapFocusTest() {
-        AppLogger.d(TAG, "Testing tap-to-focus")
-        try {
             // Test tap-to-focus functionality
             delay(3000) // Simulate focus testing
-            AppLogger.d(TAG, "Tap-to-focus test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Tap-to-focus test failed: ${e.message}")
         }
     }
 
     private suspend fun runManualControlsTest() {
-        AppLogger.d(TAG, "Testing manual controls")
-        try {
             // Test manual exposure and focus controls
             delay(4000) // Simulate manual controls testing
-            AppLogger.d(TAG, "Manual controls test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Manual controls test failed: ${e.message}")
         }
     }
 
     private suspend fun runRawCaptureTest() {
-        AppLogger.d(TAG, "Testing RAW capture")
-        try {
             // Test RAW image capture
             delay(3000) // Simulate RAW capture
-            AppLogger.d(TAG, "RAW capture test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "RAW capture test failed: ${e.message}")
         }
     }
 
@@ -355,19 +307,14 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
 
     private fun startTestRecording() {
         lifecycleScope.launch {
-            try {
                 isRecording = true
                 val externalFilesDir = getExternalFilesDir(null)
                 if (externalFilesDir == null) {
-                    AppLogger.e(TAG, "External files directory is not available. Cannot start recording.")
                     isRecording = false
                     return@launch
                 }
                 val testDir = File(externalFilesDir, "test_recordings").absolutePath
                 cameraRecorder?.startRecording(testDir)
-                AppLogger.d(TAG, "Test recording started")
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to start recording: ${e.message}")
                 isRecording = false
             }
         }
@@ -375,12 +322,8 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
 
     private fun stopRecording() {
         lifecycleScope.launch {
-            try {
                 isRecording = false
                 cameraRecorder?.stopRecording()
-                AppLogger.d(TAG, "Test recording stopped")
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to stop recording: ${e.message}")
             }
         }
     }

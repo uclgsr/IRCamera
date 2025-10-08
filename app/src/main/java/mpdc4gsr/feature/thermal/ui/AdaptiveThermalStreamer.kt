@@ -1,8 +1,5 @@
 package mpdc4gsr.feature.thermal.ui
 
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.util.*
@@ -11,7 +8,6 @@ import kotlin.math.min
 
 class AdaptiveThermalStreamer {
     companion object {
-        private const val TAG = "AdaptiveThermalStreamer"
         private const val MIN_INTERVAL = 1
         private const val MAX_INTERVAL = 5
         private const val EXCELLENT_LATENCY = 50
@@ -64,26 +60,21 @@ class AdaptiveThermalStreamer {
     private var networkClient: mpdc4gsr.feature.network.data.NetworkClient? = null
     fun setNetworkClient(client: mpdc4gsr.feature.network.data.NetworkClient?) {
         networkClient = client
-        Log.i(
             TAG,
             "Network client ${if (client != null) "set" else "cleared"} for thermal streaming"
         )
     }
 
     fun initialize() {
-        AppLogger.i(TAG, "Initializing adaptive thermal streamer")
         startNetworkMonitoring()
-        AppLogger.i(TAG, "Adaptive thermal streamer initialized with interval: $streamingFrameInterval")
     }
 
     fun startStreaming() {
         if (isStreamingEnabled) {
-            AppLogger.w(TAG, "Streaming already enabled")
             return
         }
         isStreamingEnabled = true
         currentFrameCount = 0
-        AppLogger.i(TAG, "Started adaptive thermal streaming")
     }
 
     fun stopStreaming() {
@@ -94,7 +85,6 @@ class AdaptiveThermalStreamer {
         adaptationJob?.cancel()
         frameBuffer.clear()
         logFinalStatistics()
-        AppLogger.i(TAG, "Stopped adaptive thermal streaming")
     }
 
     fun processFrame(frameData: ThermalFrameData): Boolean {
@@ -107,7 +97,6 @@ class AdaptiveThermalStreamer {
         if (shouldStream) {
             return attemptFrameStreaming(frameData)
         } else {
-            AppLogger.v(TAG, "Frame ${frameData.frameIndex} skipped (interval: $streamingFrameInterval)")
             return false
         }
     }
@@ -128,7 +117,6 @@ class AdaptiveThermalStreamer {
                 if (streamFrame(frame)) {
                     framesStreamed++
                     streamed = true
-                    Log.v(
                         TAG,
                         "Streamed frame ${frame.frameIndex} (buffer size: ${frameBuffer.size})"
                     )
@@ -142,7 +130,6 @@ class AdaptiveThermalStreamer {
     }
 
     private fun handleBufferOverflow() {
-        AppLogger.w(TAG, "Frame buffer overflow, dropping frames")
         var droppedCount = 0
         val iterator = frameBuffer.iterator()
         while (iterator.hasNext() && droppedCount < OVERFLOW_DROP_COUNT) {
@@ -155,28 +142,21 @@ class AdaptiveThermalStreamer {
                 framesDropped++
             }
         }
-        AppLogger.w(TAG, "Dropped $droppedCount frames due to buffer overflow")
     }
 
     private fun streamFrame(frame: ThermalFrameData): Boolean {
-        return try {
+        return (
             val startTime = System.currentTimeMillis()
             // Send thermal frame via network client using existing sendMessage API
-            try {
                 val frameMessage = frame.toNetworkMessage()
                 val frameJson = JSONObject(frameMessage)
                 networkClient?.let { client ->
                     // Use coroutine scope since sendMessage is suspend function
                     kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
-                        try {
                             val success = client.sendMessage(frameJson)
                             if (success) {
-                                AppLogger.v(TAG, "Sent thermal frame via NetworkClient")
                             } else {
-                                AppLogger.w(TAG, "Failed to send thermal frame via NetworkClient")
                             }
-                        } catch (e: Exception) {
-                            AppLogger.w(TAG, "Failed to send thermal frame via NetworkClient", e)
                         }
                     }
                 } ?: run {
@@ -185,8 +165,6 @@ class AdaptiveThermalStreamer {
                         simulateNetworkSend(frame)
                     }
                 }
-            } catch (e: Exception) {
-                AppLogger.w(TAG, "Network send failed, using simulation fallback", e)
                 kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
                     simulateNetworkSend(frame)
                 }
@@ -194,10 +172,7 @@ class AdaptiveThermalStreamer {
             val endTime = System.currentTimeMillis()
             val latency = endTime - startTime
             recordNetworkPerformance(latency, isPacketLost = false)
-            AppLogger.v(TAG, "Frame ${frame.frameIndex} streamed successfully (latency: ${latency}ms)")
             true
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to stream frame ${frame.frameIndex}: ${e.message}")
             recordNetworkPerformance(1000L, isPacketLost = true)
             false
         }
@@ -207,7 +182,6 @@ class AdaptiveThermalStreamer {
         val simulatedLatency = (50..200).random()
         delay(simulatedLatency.toLong())
         if (Math.random() < 0.02) {
-            throw RuntimeException("Simulated packet loss")
         }
     }
 
@@ -235,11 +209,8 @@ class AdaptiveThermalStreamer {
     private fun startNetworkMonitoring() {
         adaptationJob = streamingScope.launch {
             while (isActive && isStreamingEnabled) {
-                try {
                     delay(ADAPTATION_INTERVAL_MS)
                     updateStreamingInterval()
-                } catch (e: Exception) {
-                    AppLogger.e(TAG, "Error in network adaptation: ${e.message}")
                 }
             }
         }
@@ -266,7 +237,6 @@ class AdaptiveThermalStreamer {
         }
         streamingFrameInterval = max(MIN_INTERVAL, min(MAX_INTERVAL, newInterval))
         if (oldInterval != streamingFrameInterval) {
-            Log.i(
                 TAG, "Streaming interval updated: $oldInterval -> $streamingFrameInterval " +
                         "(latency: ${averageLatency}ms, loss: ${
                             String.format(
@@ -332,7 +302,6 @@ class AdaptiveThermalStreamer {
 
     private fun logPerformanceStatistics() {
         val stats = getStreamingStatistics()
-        Log.d(
             TAG, "Streaming Performance - Interval: ${stats["streaming_interval"]}, " +
                     "Efficiency: ${String.format("%.1f", stats["streaming_efficiency"])}%, " +
                     "Latency: ${stats["average_latency_ms"]}ms, " +
@@ -342,16 +311,9 @@ class AdaptiveThermalStreamer {
 
     private fun logFinalStatistics() {
         val stats = getStreamingStatistics()
-        AppLogger.i(TAG, "Final Streaming Statistics:")
-        AppLogger.i(TAG, "  Total frames generated: ${stats["total_frames_generated"]}")
-        AppLogger.i(TAG, "  Frames streamed: ${stats["frames_streamed"]}")
-        AppLogger.i(TAG, "  Frames dropped: ${stats["frames_dropped"]}")
-        Log.i(
             TAG,
             "  Streaming efficiency: ${String.format("%.1f", stats["streaming_efficiency"])}%"
         )
-        AppLogger.i(TAG, "  Average latency: ${stats["average_latency_ms"]}ms")
-        Log.i(
             TAG,
             "  Packet loss rate: ${
                 String.format(
@@ -360,7 +322,6 @@ class AdaptiveThermalStreamer {
                 )
             }%"
         )
-        AppLogger.i(TAG, "  Final network quality: ${stats["network_quality"]}")
     }
 
     private fun ThermalFrameData.toNetworkMessage(): String {
@@ -380,6 +341,5 @@ class AdaptiveThermalStreamer {
     fun cleanup() {
         stopStreaming()
         streamingScope.cancel()
-        AppLogger.i(TAG, "Adaptive thermal streamer cleaned up")
     }
 }

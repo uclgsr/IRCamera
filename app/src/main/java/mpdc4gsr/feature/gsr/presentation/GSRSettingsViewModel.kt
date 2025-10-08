@@ -125,7 +125,6 @@ class GSRSettingsViewModel : AppBaseViewModel() {
 
     private fun initializeGSRRecorder(context: Context) {
         launchWithErrorHandling {
-            try {
                 val currentSettings = repository.gsrSettings.value
                 // Create a temporary RecordingController since it's required by the constructor
                 val tempRecordingController = RecordingController(
@@ -145,8 +144,6 @@ class GSRSettingsViewModel : AppBaseViewModel() {
                     isConnected = false,
                     connectionStatus = "Ready"
                 )
-            } catch (e: Exception) {
-                _settingsEvents.emit(SettingsEvent.ShowError("Failed to initialize GSR recorder: ${e.message}"))
             }
         }
     }
@@ -214,15 +211,12 @@ class GSRSettingsViewModel : AppBaseViewModel() {
         if (_scanningState.value == ScanningState.SCANNING) return
         _scanningState.value = ScanningState.SCANNING
         launchWithErrorHandling {
-            try {
                 // Simulate device scanning
                 val devices = scanForDevices()
                 _availableDevices.value = devices
                 _scanningState.value = ScanningState.COMPLETED
                 _settingsEvents.emit(SettingsEvent.DeviceScanCompleted("Found ${devices.size} device(s)"))
-            } catch (e: Exception) {
                 _scanningState.value = ScanningState.FAILED
-                _settingsEvents.emit(SettingsEvent.ShowError("Device scan failed: ${e.message}"))
             }
         }
     }
@@ -238,7 +232,6 @@ class GSRSettingsViewModel : AppBaseViewModel() {
 
     fun connectToDevice(deviceInfo: DeviceInfo) {
         launchWithErrorHandling {
-            try {
                 _deviceConnectionState.value = DeviceConnectionState(
                     isConnected = false,
                     deviceInfo = deviceInfo,
@@ -266,26 +259,21 @@ class GSRSettingsViewModel : AppBaseViewModel() {
                         "Connected to ${deviceInfo.name}"
                     )
                 )
-            } catch (e: Exception) {
                 _deviceConnectionState.value = DeviceConnectionState(
                     isConnected = false,
                     connectionStatus = "Connection failed"
                 )
-                _settingsEvents.emit(SettingsEvent.ShowError("Failed to connect to device: ${e.message}"))
             }
         }
     }
 
     fun disconnectDevice() {
         launchWithErrorHandling {
-            try {
                 _deviceConnectionState.value = DeviceConnectionState(
                     isConnected = false,
                     connectionStatus = "Disconnected"
                 )
                 _settingsEvents.emit(SettingsEvent.DeviceDisconnected("Device disconnected"))
-            } catch (e: Exception) {
-                _settingsEvents.emit(SettingsEvent.ShowError("Failed to disconnect device: ${e.message}"))
             }
         }
     }
@@ -345,7 +333,6 @@ class GSRSettingsViewModel : AppBaseViewModel() {
     fun startCalibration() {
         launchWithErrorHandling {
             _settingsEvents.emit(SettingsEvent.CalibrationStarted("Starting GSR calibration..."))
-            try {
                 // Check if device is connected
                 if (!_deviceConnectionState.value.isConnected) {
                     _settingsEvents.emit(SettingsEvent.ShowError("Cannot calibrate: No device connected"))
@@ -376,8 +363,6 @@ class GSRSettingsViewModel : AppBaseViewModel() {
                         )
                     )
                 }
-            } catch (e: Exception) {
-                _settingsEvents.emit(SettingsEvent.ShowError("Calibration failed: ${e.message}"))
             }
         }
     }
@@ -416,6 +401,5 @@ class GSRSettingsViewModel : AppBaseViewModel() {
     }
 
     companion object {
-        private const val TAG = "GSRSettingsViewModel"
     }
 }

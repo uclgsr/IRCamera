@@ -73,13 +73,12 @@ object Protocol {
     }
 
     fun parseMessage(message: String): ProtocolMessage? {
-        return try {
+        return (
             val parts = message.trim().split(" ", limit = 2)
             if (parts.isEmpty()) return null
             val messageType = parts[0]
             val params = if (parts.size > 1) parseParameters(parts[1]) else emptyMap()
             ProtocolMessage(messageType, params)
-        } catch (e: Exception) {
             null
         }
     }

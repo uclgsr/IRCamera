@@ -12,6 +12,5 @@ class RGBCameraViewModelFactory(
         if (modelClass.isAssignableFrom(RGBCameraViewModel::class.java)) {
             return RGBCameraViewModel(context) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

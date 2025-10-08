@@ -8,7 +8,7 @@ object GSRCalculationUtils {
         if (rawValue < GSRConstants.GSR_UNCAL_LIMIT_LOW || rawValue > GSRConstants.GSR_UNCAL_LIMIT_HIGH) {
             return 0.0
         }
-        return try {
+        return (
             val voltage = (rawValue / GSRConstants.ADC_MAX_VALUE) * GSRConstants.REFERENCE_VOLTAGE
             val gsrResistance =
                 GSRConstants.REFERENCE_RESISTANCE_OHMS * ((GSRConstants.REFERENCE_VOLTAGE / voltage) - 1.0)
@@ -18,7 +18,6 @@ object GSRCalculationUtils {
                 0.0
             }
             conductance.coerceIn(0.0, GSRConstants.GSR_MICROSIEMENS_UPPER_BOUND)
-        } catch (e: Exception) {
             0.0
         }
     }

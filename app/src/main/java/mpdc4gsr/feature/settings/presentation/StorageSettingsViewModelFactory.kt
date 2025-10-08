@@ -12,6 +12,5 @@ class StorageSettingsViewModelFactory(
         if (modelClass.isAssignableFrom(StorageSettingsViewModel::class.java)) {
             return StorageSettingsViewModel(context) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

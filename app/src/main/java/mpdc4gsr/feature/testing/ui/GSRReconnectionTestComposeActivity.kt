@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -29,7 +26,6 @@ import java.util.*
 
 class GSRReconnectionTestComposeActivity : ComponentActivity() {
     companion object {
-        private const val TAG = "GSRReconnectionTestCompose"
         private const val RECONNECTION_TEST_DURATION = 60 // 60 seconds total test
         private const val DISCONNECT_SIMULATION_TIME = 20 // Simulate disconnect at 20s
         private const val RECONNECT_SIMULATION_TIME = 40 // Simulate reconnect at 40s
@@ -436,43 +432,24 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
     }
 
     private fun initializeComponents() {
-        try {
             val controller = RecordingController(this, this)
             recordingController = controller
             gsrRecorder = GSRSensorRecorder(this, recordingController = controller)
-            AppLogger.d(TAG, "GSR reconnection test components initialized successfully")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize components: ${e.message}")
         }
     }
 
     private suspend fun simulateDisconnect() {
-        AppLogger.d(TAG, "Simulating GSR device disconnect")
-        try {
             delay(1000)
-            AppLogger.d(TAG, "GSR device disconnect simulated")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to simulate disconnect: ${e.message}")
         }
     }
 
     private suspend fun simulateReconnect() {
-        AppLogger.d(TAG, "Simulating GSR device reconnect")
-        try {
             delay(2000) // Simulate reconnection time
-            AppLogger.d(TAG, "GSR device reconnect simulated")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to simulate reconnect: ${e.message}")
         }
     }
 
     private suspend fun analyzeDataGaps() {
-        AppLogger.d(TAG, "Analyzing data gaps")
-        try {
             delay(3000) // Simulate gap analysis
-            AppLogger.d(TAG, "Data gap analysis completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Data gap analysis failed: ${e.message}")
         }
     }
 
@@ -490,52 +467,27 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun testConnectionStability() {
-        AppLogger.d(TAG, "Testing connection stability")
-        try {
             delay(5000)
-            AppLogger.d(TAG, "Connection stability test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Connection stability test failed: ${e.message}")
         }
     }
 
     private suspend fun testDisconnectDetection() {
-        AppLogger.d(TAG, "Testing disconnect detection")
-        try {
             delay(3000)
-            AppLogger.d(TAG, "Disconnect detection test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Disconnect detection test failed: ${e.message}")
         }
     }
 
     private suspend fun testReconnectionLogic() {
-        AppLogger.d(TAG, "Testing reconnection logic")
-        try {
             delay(4000)
-            AppLogger.d(TAG, "Reconnection logic test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Reconnection logic test failed: ${e.message}")
         }
     }
 
     private suspend fun testUIIndicators() {
-        AppLogger.d(TAG, "Testing UI indicators")
-        try {
             delay(2000)
-            AppLogger.d(TAG, "UI indicators test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "UI indicators test failed: ${e.message}")
         }
     }
 
     private suspend fun testRecoveryValidation() {
-        AppLogger.d(TAG, "Testing recovery validation")
-        try {
             delay(6000)
-            AppLogger.d(TAG, "Recovery validation test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Recovery validation test failed: ${e.message}")
         }
     }
 }

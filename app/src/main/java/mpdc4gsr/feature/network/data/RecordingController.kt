@@ -2,13 +2,11 @@ package mpdc4gsr.feature.network.data
 
 import android.content.Context
 import android.os.SystemClock
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import mpdc4gsr.core.data.*
+import mpdc4gsr.core.data.model.SessionMetadata
 import mpdc4gsr.core.data.RecordingStats
 import mpdc4gsr.core.data.utils.SessionDirectory
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
@@ -28,7 +26,6 @@ class RecordingController(
     private val lifecycleOwner: LifecycleOwner
 ) {
     companion object {
-        private const val TAG = "RecordingController"
 
         // Reconnection settings
         private const val MAX_RECONNECTION_ATTEMPTS = 3
@@ -62,30 +59,24 @@ class RecordingController(
     private val _syncEventFlow = MutableSharedFlow<SyncEvent>()
     val syncEventFlow: SharedFlow<SyncEvent> = _syncEventFlow.asSharedFlow()
     fun registerSensor(sensorName: String, sensorRecorder: SensorRecorder) {
-        AppLogger.i(TAG, "Registering sensor: $sensorName (${sensorRecorder.sensorType})")
         sensorRecorders[sensorName] = sensorRecorder
     }
 
     fun registerRgbCameraWithPreview(rgbCameraRecorder: RgbCameraRecorder) {
-        AppLogger.i(TAG, "Registering RGB camera with preview integration")
         registerSensor("RGB", rgbCameraRecorder)
     }
 
     fun unregisterSensor(sensorName: String) {
         sensorRecorders.remove(sensorName)?.let { sensor ->
-            AppLogger.i(TAG, "Unregistered sensor: $sensorName")
         }
     }
 
     suspend fun initializeSensors(skipRgbCamera: Boolean = false): Boolean {
         return withContext(Dispatchers.IO) {
-            try {
-                AppLogger.i(TAG, "Initializing sensor recorders with robust error handling")
                 // Only create default RGB camera if not externally provided
                 if (!skipRgbCamera && !sensorRecorders.containsKey("RGB")) {
                     val rgbCamera = RgbCameraRecorder(context, lifecycleOwner, null)
                     registerSensor("RGB", rgbCamera)
-                    AppLogger.i(TAG, "Created default RGB camera recorder without preview")
                 }
                 val thermalCamera = ThermalCameraRecorder(context, "thermal_camera_1")
                 val gsrSensor =
@@ -94,19 +85,14 @@ class RecordingController(
                 registerSensor("Shimmer", gsrSensor)
                 val initJobs = sensorRecorders.map { (sensorName, sensor) ->
                     async {
-                        try {
                             val success = sensor.initialize()
-                            Log.i(
                                 TAG,
                                 "Sensor $sensorName initialization: ${if (success) "SUCCESS" else "FAILED"}"
                             )
                             Triple(sensorName, sensor, success)
-                        } catch (e: Exception) {
-                            AppLogger.w(TAG, "Exception initializing sensor $sensorName", e)
                             emitError(
                                 RecordingControllerError(
                                     errorType = "SENSOR_INIT_EXCEPTION",
-                                    message = "Sensor $sensorName threw exception during initialization: ${e.message}",
                                     sensorId = sensorName,
                                     isRecoverable = true
                                 )
@@ -119,7 +105,6 @@ class RecordingController(
                 val successfulInits = initResults.filter { it.third }
                 val failedInits = initResults.filter { !it.third }
                 failedInits.forEach { (sensorName, _, _) ->
-                    AppLogger.w(TAG, "Removing failed sensor $sensorName from registry")
                     sensorRecorders.remove(sensorName)
                     emitError(
                         RecordingControllerError(
@@ -133,18 +118,13 @@ class RecordingController(
                 startMonitoring()
                 val successCount = successfulInits.size
                 val totalCount = initResults.size
-                Log.i(
                     TAG,
                     "Sensor initialization complete: $successCount/$totalCount sensors ready"
                 )
-                AppLogger.i(TAG, "Available sensors: ${sensorRecorders.keys.joinToString(", ")}")
                 successCount > 0
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to initialize sensors", e)
                 emitError(
                     RecordingControllerError(
                         errorType = "INIT_FAILED",
-                        message = "Sensor initialization failed: ${e.message}",
                         isRecoverable = false
                     )
                 )
@@ -172,31 +152,25 @@ class RecordingController(
         triggerSource: TriggerSource = TriggerSource.LOCAL_UI
     ): Boolean {
         return withContext(Dispatchers.IO) {
-            try {
                 // Enforce single-session operation
                 if (_isRecording.get()) {
-                    AppLogger.w(TAG, "Recording already in progress, ignoring $triggerSource trigger")
                     return@withContext true
                 }
                 // Transition to STARTING state
                 val transitionSuccess =
                     transitionSessionState(SessionState.IDLE, SessionState.STARTING)
                 if (!transitionSuccess) {
-                    AppLogger.w(TAG, "Failed to transition to STARTING state - invalid current state")
                     return@withContext false
                 }
                 lastTriggerSource = triggerSource
                 addSessionEvent("SESSION_START_REQUESTED", triggerSource = triggerSource)
-                Log.i(
                     TAG,
                     " Starting enhanced multi-modal recording with validation (trigger: $triggerSource)"
                 )
                 _recordingStateFlow.value = RecordingState.STARTING
                 // Phase 1: Prerequisite Checks
-                AppLogger.d(TAG, "Phase 1: Validating recording prerequisites...")
                 val validationResult = validateRecordingPrerequisites(enabledSensors)
                 if (!validationResult.isValid) {
-                    AppLogger.e(TAG, " Recording validation failed: ${validationResult.errorMessage}")
                     transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                     _recordingStateFlow.value = RecordingState.ERROR
                     addSessionEvent(
@@ -214,10 +188,8 @@ class RecordingController(
                     return@withContext false
                 }
                 // Phase 2: Storage validation
-                AppLogger.d(TAG, "Phase 2: Validating storage requirements...")
                 val storageStatus = sessionDirectoryManager.checkStorageSpace()
                 if (storageStatus.isLowStorage) {
-                    Log.e(
                         TAG,
                         " Insufficient storage space: ${storageStatus.formattedAvailable} available"
                     )
@@ -242,7 +214,6 @@ class RecordingController(
                     return@withContext false
                 }
                 if (storageStatus.shouldWarn) {
-                    Log.w(
                         TAG,
                         " Low storage warning: ${storageStatus.formattedAvailable} available"
                     )
@@ -258,7 +229,6 @@ class RecordingController(
                         )
                     )
                 }
-                AppLogger.d(TAG, "Phase 3: Setting up session with crash recovery...")
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
                 sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).copy(
@@ -280,21 +250,17 @@ class RecordingController(
                 sessionStartTimestampMs = sessionReference.sessionStartSystemMs
                 sessionStartTimestampNs = sessionReference.sessionStartMonotonicNs
                 recordingStartTime = sessionStartTimestampNs
-                Log.i(
                     TAG,
                     "Session initialized with unified timestamp reference: system=${sessionStartTimestampMs}ms, monotonic=${sessionStartTimestampNs}ns"
                 )
                 activeRecorders.clear()
                 val startJobs = sensorRecorders.map { (sensorName, sensor) ->
                     async(SupervisorJob()) {
-                        try {
-                            AppLogger.i(TAG, "Starting sensor: $sensorName")
                             val sensorDir = resolveSensorDirectory(sessionDir, sensorName)
                             sensorDir.mkdirs()
                             val sensorStartReference = SystemClock.elapsedRealtimeNanos()
                             val currentSessionMetadata = sessionMetadata
                             if (currentSessionMetadata == null) {
-                                Log.w(
                                     TAG,
                                     "sessionMetadata is null when starting sensor: $sensorName"
                                 )
@@ -320,7 +286,6 @@ class RecordingController(
                                 activeRecorders[sensorName] = true
                                 updateSensorHealth(sensorName, true)
                                 addSessionEvent("SENSOR_START_SUCCESS", sensorId = sensorName)
-                                AppLogger.i(TAG, "Sensor $sensorName started successfully")
                                 val relativePath = runCatching {
                                     sensorDir.relativeTo(sessionDir.rootDir).path
                                 }.getOrElse { sensorDir.name }
@@ -352,22 +317,16 @@ class RecordingController(
                                     }
                                 }
                             } else {
-                                AppLogger.w(TAG, "Sensor $sensorName returned false on start")
                             }
                             Triple(sensorName, success, null)
-                        } catch (e: Exception) {
-                            AppLogger.w(TAG, "Exception starting sensor $sensorName", e)
-                            updateSensorHealth(sensorName, false, "Start exception: ${e.message}")
                             addSessionEvent(
                                 "SENSOR_START_EXCEPTION",
                                 sensorId = sensorName,
                                 success = false,
-                                errorMessage = e.message
                             )
                             emitError(
                                 RecordingControllerError(
                                     errorType = "SENSOR_START_EXCEPTION",
-                                    message = "Sensor $sensorName threw exception during start: ${e.message}",
                                     sensorId = sensorName,
                                     isRecoverable = true
                                 )
@@ -381,16 +340,13 @@ class RecordingController(
                 val failedStarts = startResults.filter { !it.second }
                 // Enhanced sensor start result processing
                 successfulStarts.forEach { (sensorName, _, _) ->
-                    AppLogger.i(TAG, " Sensor $sensorName: STARTED")
                     addSessionEvent("SENSOR_STARTED", sensorId = sensorName, success = true)
                 }
                 failedStarts.forEach { (sensorName, _, exception) ->
                     val errorDetails = if (exception != null) {
-                        " (Exception: ${exception.message})"
                     } else {
                         " (Returned false)"
                     }
-                    AppLogger.w(TAG, " Sensor $sensorName: FAILED$errorDetails")
                     updateSensorHealth(sensorName, false, "Start failed$errorDetails")
                     addSessionEvent(
                         "SENSOR_START_FAILED", sensorId = sensorName, success = false,
@@ -426,17 +382,13 @@ class RecordingController(
                     } else {
                         "Partial multi-modal recording session started"
                     }
-                    AppLogger.i(TAG, " $sessionTypeMessage: $successCount/$totalSensors sensors active")
-                    Log.i(
                         TAG,
                         "Active sensors: ${successfulStarts.joinToString(", ") { it.first }}"
                     )
                     if (failedStarts.isNotEmpty()) {
-                        Log.w(
                             TAG,
                             "Failed sensors: ${failedStarts.joinToString(", ") { it.first }}"
                         )
-                        Log.w(
                             TAG,
                             "Recording will continue with available sensors - fault tolerance enabled"
                         )
@@ -463,7 +415,6 @@ class RecordingController(
                             }
                         )
                     }
-                    Log.e(
                         TAG,
                         "All ${startResults.size} sensors failed to start - cannot begin session"
                     )
@@ -477,21 +428,17 @@ class RecordingController(
                     safeStopAll()
                     false
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to start recording session", e)
                 _recordingStateFlow.value = RecordingState.ERROR
                 currentSessionDirectory?.let { sessionDir ->
                     sessionDirectoryManager.updateSessionMetadata(
                         sessionDir,
                         System.currentTimeMillis(),
                         "ERROR",
-                        mapOf("error" to (e.message ?: "Unknown exception"))
                     )
                 }
                 emitError(
                     RecordingControllerError(
                         errorType = "START_FAILED",
-                        message = "Failed to start recording: ${e.message}",
                         isRecoverable = true
                     )
                 )
@@ -502,12 +449,9 @@ class RecordingController(
 
     suspend fun startRecording(sessionDirectory: String): Boolean {
         return withContext(Dispatchers.IO) {
-            try {
                 if (_isRecording.get()) {
-                    AppLogger.w(TAG, "Recording already in progress")
                     return@withContext true
                 }
-                AppLogger.i(TAG, "Starting recording with legacy API")
                 _recordingStateFlow.value = RecordingState.STARTING
                 val sessionDir = File(sessionDirectory)
                 if (!sessionDir.exists()) {
@@ -523,21 +467,13 @@ class RecordingController(
                 currentSessionDirectory = sessionDirWrapper
                 recordingStartTime = System.nanoTime()
                 sessionMetadata = SessionMetadata.createSessionStart(sessionDir.name)
-                AppLogger.i(TAG, "Session created: ${sessionDir.name}")
-                AppLogger.i(TAG, "Session start time: ${sessionMetadata!!.sessionStartIso}")
-                AppLogger.i(TAG, "Wall clock: ${sessionMetadata!!.sessionStartTimestampMs}ms")
-                AppLogger.i(TAG, "Monotonic: ${sessionMetadata!!.sessionStartMonotonicNs}ns")
                 val startJobs = sensorRecorders.values.map { sensor ->
                     async {
-                        try {
                             val success = sensor.startRecording(sessionDirectory, sessionMetadata!!)
                             Triple(sensor.sensorId, success, null)
-                        } catch (e: Exception) {
-                            AppLogger.w(TAG, "Exception starting sensor ${sensor.sensorId}", e)
                             emitError(
                                 RecordingControllerError(
                                     errorType = "SENSOR_START_EXCEPTION",
-                                    message = "Sensor ${sensor.sensorId} threw exception during start: ${e.message}",
                                     sensorId = sensor.sensorId,
                                     isRecoverable = true
                                 )
@@ -550,16 +486,13 @@ class RecordingController(
                 val successfulStarts = startResults.filter { it.second }
                 val failedStarts = startResults.filter { !it.second }
                 successfulStarts.forEach { (sensorId, _, _) ->
-                    AppLogger.i(TAG, "Sensor $sensorId started successfully")
                 }
                 failedStarts.forEach { (sensorId, _, exception) ->
                     val errorDetails = if (exception != null) {
-                        " (Exception: ${exception.message})"
                     } else {
                         " (Returned false)"
                     }
                     if (sensorId.contains("gsr", ignoreCase = true)) {
-                        Log.w(
                             TAG,
                             "GSR sensor $sensorId failed to start$errorDetails - session will continue without GSR data"
                         )
@@ -572,7 +505,6 @@ class RecordingController(
                             )
                         )
                     } else {
-                        AppLogger.w(TAG, "Sensor $sensorId failed to start$errorDetails")
                         emitError(
                             RecordingControllerError(
                                 errorType = "SENSOR_START_FAILED",
@@ -602,7 +534,6 @@ class RecordingController(
                     } else {
                         "Multi-modal recording started with $successCount/$totalSensors sensors"
                     }
-                    Log.i(
                         TAG,
                         "Recording started with legacy API: $successCount/$totalSensors sensors " +
                                 "(successful: ${successfulStarts.map { it.first }}, " +
@@ -611,7 +542,6 @@ class RecordingController(
                     true
                 } else {
                     _recordingStateFlow.value = RecordingState.ERROR
-                    Log.e(
                         TAG,
                         "All ${startResults.size} sensors failed to start - cannot begin session"
                     )
@@ -624,13 +554,10 @@ class RecordingController(
                     )
                     false
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to start recording with legacy API", e)
                 _recordingStateFlow.value = RecordingState.ERROR
                 emitError(
                     RecordingControllerError(
                         errorType = "SESSION_START_FAILED",
-                        message = "Failed to start recording session: ${e.message}",
                         isRecoverable = true
                     )
                 )
@@ -642,22 +569,18 @@ class RecordingController(
 
     suspend fun stopSession(triggerSource: TriggerSource = TriggerSource.LOCAL_UI): Boolean {
         return withContext(Dispatchers.IO) {
-            try {
                 if (!_isRecording.get()) {
-                    AppLogger.w(TAG, "No recording in progress (trigger: $triggerSource)")
                     return@withContext true
                 }
                 // Transition to STOPPING state
                 val transitionSuccess =
                     transitionSessionState(SessionState.RECORDING, SessionState.STOPPING)
                 if (!transitionSuccess) {
-                    Log.w(
                         TAG,
                         "Failed to transition to STOPPING state - current state: ${currentSessionState.get()}"
                     )
                 }
                 addSessionEvent("SESSION_STOP_REQUESTED", triggerSource = triggerSource)
-                AppLogger.i(TAG, "Stopping multi-modal recording session (trigger: $triggerSource)")
                 _recordingStateFlow.value = RecordingState.STOPPING
                 sessionMetadata?.let { metadata ->
                     metadata.addSyncEvent(
@@ -712,33 +635,27 @@ class RecordingController(
                 sessionStartTimestampMs = 0
                 sessionStartTimestampNs = 0
                 currentSessionDirectory = null
-                Log.i(
                     TAG,
                     "Multi-modal recording stopped (duration: ${sessionDurationMs / 1000.0}s)"
                 )
                 true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to stop recording session (trigger: $triggerSource)", e)
                 _recordingStateFlow.value = RecordingState.ERROR
                 transitionSessionState(currentSessionState.get(), SessionState.STOPPED_FAILED)
                 addSessionEvent(
                     "SESSION_STOP_ERROR",
                     triggerSource = triggerSource,
                     success = false,
-                    errorMessage = e.message
                 )
                 currentSessionDirectory?.let { sessionDir ->
                     sessionDirectoryManager.updateSessionMetadata(
                         sessionDir,
                         System.currentTimeMillis(),
                         "STOP_ERROR",
-                        mapOf("stop_error" to (e.message ?: "Unknown exception"))
                     )
                 }
                 emitError(
                     RecordingControllerError(
                         errorType = "SESSION_STOP_FAILED",
-                        message = "Failed to stop recording session: ${e.message}",
                         isRecoverable = true
                     )
                 )
@@ -757,22 +674,15 @@ class RecordingController(
             sensorRecorders[sensorName]?.let { sensor -> sensorName to sensor }
         }
         if (activeRecordersList.isEmpty()) {
-            AppLogger.i(TAG, "No active recorders to stop")
             return@coroutineScope stopResults
         }
         val stopJobs = activeRecordersList.map { (sensorName, sensor) ->
             async(SupervisorJob()) {
-                try {
-                    AppLogger.i(TAG, "Stopping sensor: $sensorName")
                     val success = sensor.stopRecording()
                     if (success) {
-                        AppLogger.i(TAG, " Sensor $sensorName stopped successfully")
                     } else {
-                        AppLogger.w(TAG, " Sensor $sensorName returned false on stop")
                     }
                     Triple(sensorName, success, null)
-                } catch (e: Exception) {
-                    AppLogger.w(TAG, " Exception stopping sensor $sensorName", e)
                     Triple(sensorName, false, e)
                 }
             }
@@ -782,11 +692,9 @@ class RecordingController(
             stopResults[sensorName] = success
             if (!success) {
                 val errorDetails = if (exception != null) {
-                    " (Exception: ${exception.message})"
                 } else {
                     " (Returned false)"
                 }
-                AppLogger.w(TAG, "Sensor $sensorName failed to stop cleanly$errorDetails")
             }
             val stopTimestampNs = SystemClock.elapsedRealtimeNanos()
             val sensor = sensorRecorders[sensorName]
@@ -807,7 +715,6 @@ class RecordingController(
         }
         val successCount = stopResults.count { it.value }
         val totalCount = stopResults.size
-        AppLogger.i(TAG, "Stop operation complete: $successCount/$totalCount sensors stopped cleanly")
         return@coroutineScope stopResults
     }
 
@@ -858,16 +765,11 @@ class RecordingController(
         metadata: Map<String, String> = emptyMap()
     ) {
         controllerScope.launch {
-            try {
-                AppLogger.i(TAG, "Distributing sync marker: $markerType at $timestampNs")
                 timeSynchronizationService.logSyncEvent(markerType, metadata)
                 val syncJobs = sensorRecorders.values.map { sensor ->
                     async {
-                        try {
                             sensor.addSyncMarker(markerType, timestampNs, metadata)
                             sensor.sensorId to true
-                        } catch (e: Exception) {
-                            AppLogger.w(TAG, "Failed to add sync marker to ${sensor.sensorId}", e)
                             sensor.sensorId to false
                         }
                     }
@@ -883,9 +785,6 @@ class RecordingController(
                     totalSensors = totalSensors
                 )
                 _syncEventFlow.emit(syncEvent)
-                AppLogger.i(TAG, "Sync marker distributed: $successfulSyncs/$totalSensors sensors")
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to distribute sync marker", e)
             }
         }
     }
@@ -895,11 +794,8 @@ class RecordingController(
             val testResults = mutableMapOf<String, Boolean>()
             val testJobs = sensorRecorders.map { (sensorId, sensor) ->
                 async {
-                    try {
                         val stats = sensor.getRecordingStats()
                         sensorId to true
-                    } catch (e: Exception) {
-                        AppLogger.w(TAG, "Sensor $sensorId test failed", e)
                         sensorId to false
                     }
                 }
@@ -907,7 +803,6 @@ class RecordingController(
             testJobs.awaitAll().forEach { (sensorId, success) ->
                 testResults[sensorId] = success
             }
-            Log.i(
                 TAG,
                 "Sensor connection test complete: ${testResults.count { it.value }}/${testResults.size} sensors responsive"
             )
@@ -1074,8 +969,6 @@ class RecordingController(
 
     suspend fun cleanup() {
         withContext(Dispatchers.IO) {
-            try {
-                AppLogger.i(TAG, "Cleaning up recording controller")
                 if (_isRecording.get()) {
                     stopRecording()
                 }
@@ -1083,20 +976,13 @@ class RecordingController(
                 errorMonitoringJob?.cancel()
                 val cleanupJobs = sensorRecorders.values.map { sensor ->
                     async {
-                        try {
                             sensor.cleanup()
-                            AppLogger.d(TAG, "Sensor ${sensor.sensorId} cleaned up")
-                        } catch (e: Exception) {
-                            AppLogger.w(TAG, "Failed to cleanup sensor ${sensor.sensorId}", e)
                         }
                     }
                 }
                 cleanupJobs.awaitAll()
                 sensorRecorders.clear()
                 controllerScope.cancel()
-                AppLogger.i(TAG, "Recording controller cleanup complete")
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error during cleanup", e)
             }
         }
     }
@@ -1104,7 +990,6 @@ class RecordingController(
     private fun startMonitoring() {
         statusMonitoringJob = controllerScope.launch {
             while (isActive) {
-                try {
                     val statusList = sensorRecorders.values.map { sensor ->
                         sensor.getRecordingStats().let { stats ->
                             RecordingStatus(
@@ -1119,8 +1004,6 @@ class RecordingController(
                         }
                     }
                     _sensorStatusFlow.emit(statusList)
-                } catch (e: Exception) {
-                    AppLogger.w(TAG, "Status monitoring error", e)
                 }
                 delay(RecordingConstants.STATUS_UPDATE_INTERVAL_MS)
             }
@@ -1137,7 +1020,6 @@ class RecordingController(
     }
 
     private suspend fun handleSensorError(sensor: SensorRecorder, sensorError: SensorError) {
-        AppLogger.w(TAG, "Sensor error detected: ${sensorError.sensorId} - ${sensorError.errorMessage}")
         val controllerError = RecordingControllerError(
             errorType = "SENSOR_ERROR",
             message = sensorError.errorMessage,
@@ -1149,13 +1031,11 @@ class RecordingController(
         if (_isRecording.get()) {
             when (sensorError.errorType) {
                 ErrorType.HARDWARE_DISCONNECTED -> {
-                    Log.w(
                         TAG,
                         "Sensor ${sensorError.sensorId} disconnected during recording - marking as inactive"
                     )
                     activeRecorders.remove(sensorError.sensorId)
                     if (activeRecorders.isEmpty()) {
-                        AppLogger.e(TAG, "All sensors have failed - stopping session")
                         emitError(
                             RecordingControllerError(
                                 errorType = "ALL_SENSORS_LOST",
@@ -1165,7 +1045,6 @@ class RecordingController(
                         )
                         stopSession()
                     } else {
-                        Log.i(
                             TAG,
                             "Session continuing with ${activeRecorders.size} remaining sensors: ${activeRecorders.keys}"
                         )
@@ -1174,10 +1053,8 @@ class RecordingController(
 
                 ErrorType.RECORDING_FAILED -> {
                     if (sensorError.isRecoverable) {
-                        AppLogger.i(TAG, "Attempting recovery for sensor ${sensorError.sensorId}")
                         attemptErrorRecovery(sensor, sensorError)
                     } else {
-                        Log.w(
                             TAG,
                             "Non-recoverable recording error for sensor ${sensorError.sensorId} - removing from active list"
                         )
@@ -1186,7 +1063,6 @@ class RecordingController(
                 }
 
                 ErrorType.STORAGE_FULL, ErrorType.STORAGE_ERROR -> {
-                    AppLogger.e(TAG, "Storage error detected - this may affect the entire session")
                     emitError(
                         RecordingControllerError(
                             errorType = "SESSION_STORAGE_ERROR",
@@ -1203,7 +1079,6 @@ class RecordingController(
                     if (sensorError.isRecoverable) {
                         attemptErrorRecovery(sensor, sensorError)
                     } else {
-                        AppLogger.w(TAG, "Non-recoverable error for sensor ${sensorError.sensorId}")
                         activeRecorders.remove(sensorError.sensorId)
                     }
                 }
@@ -1215,18 +1090,13 @@ class RecordingController(
 
     private suspend fun attemptErrorRecovery(sensor: SensorRecorder, error: SensorError) {
         controllerScope.launch {
-            try {
-                AppLogger.i(TAG, "Attempting error recovery for sensor ${sensor.sensorId}")
                 delay(RecordingConstants.ERROR_RECOVERY_DELAY_MS)
                 val recoverySuccess = sensor.initialize()
                 if (recoverySuccess) {
-                    AppLogger.i(TAG, "Error recovery successful for sensor ${sensor.sensorId}")
                     if (_isRecording.get() && currentSessionDirectory != null) {
-                        try {
                             val restartSuccess =
                                 sensor.startRecording(currentSessionDirectory!!.rootDir.absolutePath)
                             if (restartSuccess) {
-                                Log.i(
                                     TAG,
                                     "Sensor ${sensor.sensorId} successfully restarted during session"
                                 )
@@ -1239,50 +1109,37 @@ class RecordingController(
                                     )
                                 )
                             } else {
-                                Log.w(
                                     TAG,
                                     "Sensor ${sensor.sensorId} recovery failed to restart recording"
                                 )
                             }
-                        } catch (e: Exception) {
-                            AppLogger.w(TAG, "Exception during sensor ${sensor.sensorId} restart", e)
                         }
                     }
                 } else {
-                    AppLogger.w(TAG, "Error recovery failed for sensor ${sensor.sensorId}")
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error during recovery attempt for sensor ${sensor.sensorId}", e)
             }
         }
     }
 
     suspend fun attemptSensorRestart(sensorId: String): Boolean {
         return withContext(Dispatchers.IO) {
-            try {
                 val sensor = sensorRecorders[sensorId]
                 if (sensor == null) {
-                    AppLogger.w(TAG, "Cannot restart sensor $sensorId - not found in active sensors")
                     return@withContext false
                 }
                 if (sensor.isRecording) {
-                    AppLogger.i(TAG, "Sensor $sensorId is already recording")
                     return@withContext true
                 }
                 if (!_isRecording.get() || currentSessionDirectory == null) {
-                    AppLogger.w(TAG, "Cannot restart sensor $sensorId - no active recording session")
                     return@withContext false
                 }
-                AppLogger.i(TAG, "Attempting to restart sensor $sensorId during active session")
                 val initSuccess = sensor.initialize()
                 if (!initSuccess) {
-                    AppLogger.w(TAG, "Sensor $sensorId reinitialization failed")
                     return@withContext false
                 }
                 val startSuccess =
                     sensor.startRecording(currentSessionDirectory!!.rootDir.absolutePath)
                 if (startSuccess) {
-                    AppLogger.i(TAG, "Sensor $sensorId successfully restarted during session")
                     emitError(
                         RecordingControllerError(
                             errorType = "SENSOR_MANUALLY_RESTARTED",
@@ -1293,11 +1150,8 @@ class RecordingController(
                     )
                     return@withContext true
                 } else {
-                    AppLogger.w(TAG, "Sensor $sensorId restart failed - could not start recording")
                     return@withContext false
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Exception during manual sensor restart for $sensorId", e)
                 return@withContext false
             }
         }
@@ -1351,7 +1205,6 @@ class RecordingController(
         val issues = mutableListOf<String>()
         val warnings = mutableListOf<String>()
         val details = mutableMapOf<String, String>()
-        AppLogger.d(TAG, "Validating prerequisites for sensors: ${enabledSensors.joinToString(", ")}")
         for (sensorName in enabledSensors) {
             when (sensorName.uppercase()) {
                 "RGB" -> {
@@ -1379,7 +1232,6 @@ class RecordingController(
                 "THERMAL" -> {
                     val thermalRecorder = sensorRecorders["Thermal"] as? ThermalCameraRecorder
                     if (thermalRecorder != null) {
-                        try {
                             val thermalStatus = thermalRecorder.getThermalSystemStatus()
                             details["thermal_connected"] = thermalStatus.isConnected.toString()
                             details["thermal_usb_permission"] =
@@ -1392,8 +1244,6 @@ class RecordingController(
                             if (!thermalStatus.isConnected) {
                                 warnings.add("Thermal: Camera not connected - will use simulation")
                             }
-                        } catch (e: Exception) {
-                            AppLogger.w(TAG, "Could not get thermal system status", e)
                             warnings.add("Thermal: Status unavailable")
                         }
                     } else {
@@ -1411,7 +1261,6 @@ class RecordingController(
         }
         val isValid = issues.isEmpty()
         val isRecoverable = issues.all { it.contains("permission") }
-        Log.d(
             TAG,
             "Validation result: ${if (isValid) "PASSED" else "FAILED"} with ${issues.size} issues, ${warnings.size} warnings"
         )
@@ -1444,7 +1293,6 @@ class RecordingController(
         enabledSensors: List<String>,
         sessionDir: SessionDirectory
     ) {
-        try {
             val recoveryFile = File(sessionDir.rootDir, ".recovery_marker")
             val recoveryInfo = mapOf(
                 "session_id" to sessionId,
@@ -1453,9 +1301,6 @@ class RecordingController(
                 "controller_pid" to android.os.Process.myPid().toString()
             )
             recoveryFile.writeText(recoveryInfo.entries.joinToString("\n") { "${it.key}=${it.value}" })
-            AppLogger.d(TAG, "Crash recovery marker created for session: $sessionId")
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to create crash recovery marker", e)
         }
     }
 
@@ -1514,7 +1359,6 @@ class RecordingController(
     private fun transitionSessionState(from: SessionState, to: SessionState): Boolean {
         return currentSessionState.compareAndSet(from, to).also { success ->
             if (success) {
-                AppLogger.d(TAG, "Session state transition: $from -> $to")
                 addSessionEvent(
                     "STATE_TRANSITION", metadata = mapOf(
                         "from" to from.toString(),
@@ -1522,7 +1366,6 @@ class RecordingController(
                     )
                 )
             } else {
-                Log.w(
                     TAG,
                     "Failed session state transition: $from -> $to (current: ${currentSessionState.get()})"
                 )
@@ -1548,7 +1391,6 @@ class RecordingController(
             errorMessage = errorMessage
         )
         sessionEvents.add(event)
-        AppLogger.d(TAG, "Session event: $eventType${sensorId?.let { " ($it)" } ?: ""}")
     }
 
     // Enhanced sensor health tracking
@@ -1567,7 +1409,6 @@ class RecordingController(
         )
         sensorHealthStatus[sensorName] = updatedHealth
         if (!isHealthy && updatedHealth.consecutiveFailures >= 3) {
-            Log.w(
                 TAG,
                 "Sensor $sensorName has failed ${updatedHealth.consecutiveFailures} consecutive times"
             )
@@ -1584,12 +1425,10 @@ class RecordingController(
     private suspend fun attemptSensorReconnection(sensorName: String): Boolean {
         val currentAttempts = reconnectionAttempts[sensorName] ?: 0
         if (currentAttempts >= MAX_RECONNECTION_ATTEMPTS) {
-            AppLogger.w(TAG, "Max reconnection attempts reached for $sensorName")
             activeRecorders[sensorName] = false
             addSessionEvent("SENSOR_RECONNECTION_EXHAUSTED", sensorId = sensorName, success = false)
             return false
         }
-        Log.i(
             TAG,
             "Attempting to reconnect sensor $sensorName (attempt ${currentAttempts + 1}/$MAX_RECONNECTION_ATTEMPTS)"
         )
@@ -1602,7 +1441,6 @@ class RecordingController(
         )
         val sensor = sensorRecorders[sensorName]
         if (sensor != null) {
-            try {
                 // Stop and clean up current state
                 sensor.stopRecording()
                 delay(1000)
@@ -1610,30 +1448,21 @@ class RecordingController(
                 val reconnectSuccess = when (sensorName.uppercase()) {
                     "GSR", "SHIMMER" -> {
                         // GSR/Shimmer Bluetooth reconnection
-                        try {
                             sensor.initialize()
-                        } catch (e: Exception) {
-                            AppLogger.w(TAG, "GSR reconnection failed", e)
                             false
                         }
                     }
 
                     "THERMAL" -> {
                         // Thermal camera USB reconnection
-                        try {
                             sensor.initialize()
-                        } catch (e: Exception) {
-                            AppLogger.w(TAG, "Thermal camera reconnection failed", e)
                             false
                         }
                     }
 
                     "RGB" -> {
                         // RGB camera is usually always available
-                        try {
                             sensor.initialize()
-                        } catch (e: Exception) {
-                            AppLogger.w(TAG, "RGB camera reconnection failed", e)
                             false
                         }
                     }
@@ -1641,13 +1470,11 @@ class RecordingController(
                     else -> false
                 }
                 if (reconnectSuccess) {
-                    AppLogger.i(TAG, "Successfully reconnected sensor $sensorName")
                     reconnectionAttempts[sensorName] = 0
                     updateSensorHealth(sensorName, true)
                     addSessionEvent("SENSOR_RECONNECTION_SUCCESS", sensorId = sensorName)
                     return true
                 } else {
-                    AppLogger.w(TAG, "Failed to reconnect sensor $sensorName")
                     updateSensorHealth(sensorName, false, "Reconnection failed")
                     addSessionEvent(
                         "SENSOR_RECONNECTION_FAILED",
@@ -1655,14 +1482,10 @@ class RecordingController(
                         success = false
                     )
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Exception during sensor reconnection for $sensorName", e)
-                updateSensorHealth(sensorName, false, "Reconnection exception: ${e.message}")
                 addSessionEvent(
                     "SENSOR_RECONNECTION_EXCEPTION",
                     sensorId = sensorName,
                     success = false,
-                    errorMessage = e.message
                 )
             }
         }
@@ -1673,19 +1496,16 @@ class RecordingController(
     private fun startSensorHealthMonitoring() {
         statusMonitoringJob = controllerScope.launch {
             while (_isRecording.get() && isActive) {
-                try {
                     // Check health of all active sensors
                     val activeSensorNames = activeRecorders.filter { it.value }.keys.toList()
                     for (sensorName in activeSensorNames) {
                         val sensor = sensorRecorders[sensorName]
                         if (sensor != null) {
-                            try {
                                 // Check if sensor is still recording
                                 val isStillRecording = sensor.isRecording
                                 val healthInfo = sensorHealthStatus[sensorName]
                                 if (!isStillRecording && activeRecorders[sensorName] == true) {
                                     // Sensor stopped unexpectedly - attempt reconnection
-                                    Log.w(
                                         TAG,
                                         "Sensor $sensorName stopped unexpectedly during session"
                                     )
@@ -1719,7 +1539,6 @@ class RecordingController(
                                                         sensorId = sensorName,
                                                         success = true
                                                     )
-                                                    Log.i(
                                                         TAG,
                                                         "Sensor $sensorName resumed recording after reconnection"
                                                     )
@@ -1731,12 +1550,9 @@ class RecordingController(
                                     // Sensor is healthy
                                     updateSensorHealth(sensorName, true)
                                 }
-                            } catch (e: Exception) {
-                                AppLogger.w(TAG, "Error checking health of sensor $sensorName", e)
                                 updateSensorHealth(
                                     sensorName,
                                     false,
-                                    "Health check exception: ${e.message}"
                                 )
                             }
                         }
@@ -1745,8 +1561,6 @@ class RecordingController(
                     updateSensorStatusFlow()
                     // Wait before next health check
                     delay(RecordingConstants.STATUS_UPDATE_INTERVAL_MS)
-                } catch (e: Exception) {
-                    AppLogger.w(TAG, "Error during sensor health monitoring", e)
                     delay(RecordingConstants.ERROR_RECOVERY_DELAY_MS)
                 }
             }

@@ -12,6 +12,5 @@ class SessionExportViewModelFactory(
         if (modelClass.isAssignableFrom(SessionExportViewModel::class.java)) {
             return SessionExportViewModel(context) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

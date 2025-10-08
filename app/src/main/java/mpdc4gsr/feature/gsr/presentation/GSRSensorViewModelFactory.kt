@@ -12,6 +12,5 @@ class GSRSensorViewModelFactory(
         if (modelClass.isAssignableFrom(GSRSensorViewModel::class.java)) {
             return GSRSensorViewModel(context) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

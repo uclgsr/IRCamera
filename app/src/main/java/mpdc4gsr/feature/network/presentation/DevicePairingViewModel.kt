@@ -126,7 +126,6 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
                 controllers.clear()
                 _discoveredControllers.value = emptyList()
             }
-            try {
                 val foundControllers = networkClient.discoverControllers()
                 controllers.clear()
                 controllers.addAll(foundControllers)
@@ -143,11 +142,8 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
                 } else {
                     _events.emit(PairingEvent.ShowError("No controllers found"))
                 }
-            } catch (e: Exception) {
-                val errorMessage = "Scan failed: ${e.message}"
                 _statusMessage.value = errorMessage
                 _scanState.value = ScanState.FAILED
-                _events.emit(PairingEvent.ShowError("Failed to scan for controllers: ${e.message}"))
             }
         }
     }
@@ -158,7 +154,6 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
             if (currentConnectionState == ConnectionState.CONNECTING) {
                 return@launchWithLoading // Already connecting
             }
-            try {
                 _pairingConnectionState.value = ConnectionState.CONNECTING
                 _statusMessage.value = "Connecting to ${controller.deviceName}..."
                 // Show connection dialog
@@ -177,10 +172,7 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
                     _statusMessage.value = "Failed to connect to ${controller.deviceName}"
                     _events.emit(PairingEvent.ShowError("Connection failed"))
                 }
-            } catch (e: Exception) {
                 _pairingConnectionState.value = ConnectionState.CONNECTION_FAILED
-                _statusMessage.value = "Connection error: ${e.message}"
-                _events.emit(PairingEvent.ShowError("Connection error: ${e.message}"))
             }
         }
     }
@@ -189,14 +181,11 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
         launchWithErrorHandling {
             val currentController = _connectedController.value
             if (currentController != null) {
-                try {
                     networkClient.disconnect()
                     _connectedController.value = null
                     _pairingConnectionState.value = ConnectionState.DISCONNECTED
                     _statusMessage.value = "Disconnected from ${currentController.deviceName}"
                     _events.emit(PairingEvent.ShowSuccess("Disconnected successfully"))
-                } catch (e: Exception) {
-                    _events.emit(PairingEvent.ShowError("Disconnect error: ${e.message}"))
                 }
             }
         }
@@ -302,6 +291,5 @@ class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventLis
     }
 
     companion object {
-        private const val TAG = "DevicePairingViewModel"
     }
 }

@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.gsr.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -13,14 +10,13 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RecordingStats
 import mpdc4gsr.core.data.RecordingStatus
 import mpdc4gsr.core.data.SensorError
-import mpdc4gsr.core.data.SessionMetadata
+import mpdc4gsr.core.data.model.SessionMetadata
 import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import java.io.File
 import java.io.FileWriter
 
 class EnhancedThermalRecorder(private val context: Context) {
     companion object {
-        private const val TAG = "EnhancedThermalRecorder"
     }
 
     private val thermalCameraRecorder = ThermalCameraRecorder(context)
@@ -36,7 +32,6 @@ class EnhancedThermalRecorder(private val context: Context) {
         sessionMetadata: SessionMetadata?,
         saveImages: Boolean = false
     ): Boolean {
-        try {
             val externalDir = File(context.getExternalFilesDir(null), "IRCamera/sessions")
             currentSessionDirectory = File(externalDir, sessionId)
             currentSessionDirectory?.mkdirs()
@@ -51,20 +46,16 @@ class EnhancedThermalRecorder(private val context: Context) {
                     thermalCameraRecorder.startRecording(currentSessionDirectory!!.absolutePath)
                 }
                 if (success) {
-                    AppLogger.i(TAG, "Enhanced thermal recording started for session: $sessionId")
                 } else {
-                    AppLogger.e(TAG, "Failed to start thermal recording for session: $sessionId")
                 }
             }
             return true
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to start enhanced thermal recording", e)
             return false
         }
     }
 
     fun stopRecording(): SessionInfo? {
-        return try {
+        return (
             recorderScope.launch {
                 thermalCameraRecorder.stopRecording()
             }
@@ -73,16 +64,12 @@ class EnhancedThermalRecorder(private val context: Context) {
                 sessionDirectory = currentSessionDirectory,
                 sampleCount = thermalCameraRecorder.getRecordingStats().totalSamplesRecorded
             )
-            AppLogger.i(TAG, "Enhanced thermal recording stopped successfully")
             sessionInfo
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to stop enhanced thermal recording", e)
             null
         }
     }
 
     fun triggerSyncEvent(eventType: String, eventData: Map<String, String>) {
-        try {
             val timestamp = System.nanoTime()
             val eventLine = buildString {
                 append(timestamp)
@@ -96,9 +83,6 @@ class EnhancedThermalRecorder(private val context: Context) {
                 writer.write("\n")
                 writer.flush()
             }
-            AppLogger.d(TAG, "Sync event triggered: $eventType")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to trigger sync event: $eventType", e)
         }
     }
 
@@ -107,16 +91,12 @@ class EnhancedThermalRecorder(private val context: Context) {
     }
 
     fun cleanup() {
-        try {
             closeSyncEventsFile()
             recorderScope.launch {
                 thermalCameraRecorder.cleanup()
             }
             recorderScope.cancel()
             currentSessionDirectory = null
-            AppLogger.i(TAG, "Enhanced thermal recorder cleaned up")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error during cleanup", e)
         }
     }
 
@@ -124,24 +104,18 @@ class EnhancedThermalRecorder(private val context: Context) {
     fun getErrorFlow(): Flow<SensorError> = thermalCameraRecorder.getErrorFlow()
     fun getRecordingStats(): RecordingStats = thermalCameraRecorder.getRecordingStats()
     private fun setupSyncEventsFile() {
-        try {
             currentSessionDirectory?.let { dir ->
                 val syncEventsFile = File(dir, "sync_events.csv")
                 syncEventWriter = FileWriter(syncEventsFile, true)
                 syncEventWriter?.write("timestamp_ns,event_type,event_data\n")
                 syncEventWriter?.flush()
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to setup sync events file", e)
         }
     }
 
     private fun closeSyncEventsFile() {
-        try {
             syncEventWriter?.close()
             syncEventWriter = null
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to close sync events file", e)
         }
     }
 

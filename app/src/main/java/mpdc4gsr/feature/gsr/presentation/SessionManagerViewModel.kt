@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.gsr.presentation
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.service.SessionManager
 import kotlinx.coroutines.Dispatchers
@@ -73,7 +70,6 @@ class SessionManagerViewModel : AppBaseViewModel() {
         }
         _sessionUiState.value = _sessionUiState.value.copy(isLoading = true)
         launchWithErrorHandling {
-            try {
                 // Display storage info
                 updateStorageInfo()
                 // Clean up failed sessions
@@ -81,7 +77,6 @@ class SessionManagerViewModel : AppBaseViewModel() {
                     sessionDirectoryManager.cleanupFailedSessions()
                 }
                 if (cleanedSessions.isNotEmpty()) {
-                    AppLogger.i(TAG, "Cleaned up ${cleanedSessions.size} failed sessions")
                     _sessionEvents.emit(SessionEvent.ShowToast("Cleaned up ${cleanedSessions.size} failed sessions"))
                 }
                 // Load sessions
@@ -97,47 +92,34 @@ class SessionManagerViewModel : AppBaseViewModel() {
                     isLoading = false,
                     sessionCount = sortedSessions.size
                 )
-                AppLogger.i(TAG, "Loaded ${sortedSessions.size} sessions")
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to load sessions", e)
-                _sessionEvents.emit(SessionEvent.ShowError("Failed to load sessions: ${e.message}"))
                 _sessionUiState.value = _sessionUiState.value.copy(isLoading = false)
             }
         }
     }
 
     private suspend fun updateStorageInfo() {
-        try {
             val storageStatus = sessionDirectoryManager.checkStorageSpace()
             _storageInfo.value = StorageInfo(
                 formattedAvailable = storageStatus.formattedAvailable,
                 usagePercentage = storageStatus.usagePercentage,
                 isLowStorage = storageStatus.isLowStorage
             )
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to get storage info", e)
         }
     }
 
     private suspend fun loadHistoricalSessions(context: Context): List<SessionInfo> {
         return withContext(Dispatchers.IO) {
             val historicalSessions = mutableListOf<SessionInfo>()
-            try {
                 val baseDir = File(context.getExternalFilesDir(null), "recordings")
                 if (baseDir.exists() && baseDir.isDirectory) {
                     baseDir.listFiles()?.forEach { sessionDir ->
                         if (sessionDir.isDirectory && sessionDir.name.startsWith("session_")) {
-                            try {
                                 val sessionInfo = parseSessionFromDirectory(sessionDir)
                                 historicalSessions.add(sessionInfo)
-                            } catch (e: Exception) {
-                                AppLogger.w(TAG, "Failed to parse session from ${sessionDir.name}", e)
                             }
                         }
                     }
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to load historical sessions", e)
             }
             historicalSessions
         }
@@ -151,7 +133,6 @@ class SessionManagerViewModel : AppBaseViewModel() {
             startTime = sessionDir.lastModified(),
         )
         if (metadataFile.exists()) {
-            try {
                 metadataFile.readLines().forEach { line ->
                     val parts = line.split(":", limit = 2)
                     if (parts.size >= 2) {
@@ -168,8 +149,6 @@ class SessionManagerViewModel : AppBaseViewModel() {
                         }
                     }
                 }
-            } catch (e: Exception) {
-                AppLogger.w(TAG, "Failed to parse metadata for ${sessionInfo.sessionId}", e)
             }
         }
         // Calculate data file counts and sizes
@@ -178,7 +157,6 @@ class SessionManagerViewModel : AppBaseViewModel() {
     }
 
     private fun calculateSessionDataInfo(sessionDir: File, sessionInfo: SessionInfo) {
-        try {
             var totalSize = 0L
             var gsrFileCount = 0
             var thermalFileCount = 0
@@ -197,8 +175,6 @@ class SessionManagerViewModel : AppBaseViewModel() {
             sessionInfo.metadata["gsrFileCount"] = gsrFileCount.toString()
             sessionInfo.metadata["thermalFileCount"] = thermalFileCount.toString()
             sessionInfo.metadata["rgbFileCount"] = rgbFileCount.toString()
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to calculate data info for ${sessionInfo.sessionId}", e)
         }
     }
 
@@ -315,6 +291,5 @@ class SessionManagerViewModel : AppBaseViewModel() {
     }
 
     companion object {
-        private const val TAG = "SessionManagerViewModel"
     }
 }

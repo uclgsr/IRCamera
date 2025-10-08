@@ -55,7 +55,6 @@ class PdfViewModel : AppBaseViewModel() {
     fun loadPdf(isTS001: Boolean, context: android.content.Context) {
         val pdfType = if (isTS001) PdfType.TC001 else PdfType.TS004
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO + exceptionHandler) {
-            try {
                 _isLoading.value = true
                 _error.value = null
                 // Simulate loading delay
@@ -89,8 +88,6 @@ class PdfViewModel : AppBaseViewModel() {
                 )
                 _pdfDocument.value = document
                 _isLoading.value = false
-            } catch (e: Exception) {
-                _error.value = "Failed to load PDF: ${e.message}"
                 _isLoading.value = false
             }
         }
@@ -101,13 +98,11 @@ class PdfViewModel : AppBaseViewModel() {
         fileName: String,
         destinationFile: File
     ) {
-        try {
             val inputStream = context.assets.open("manuals/$fileName")
             val outputStream = FileOutputStream(destinationFile)
             inputStream.copyTo(outputStream)
             inputStream.close()
             outputStream.close()
-        } catch (e: IOException) {
             // PDF file doesn't exist in assets, which is expected for now
             // We'll show a placeholder message
         }
