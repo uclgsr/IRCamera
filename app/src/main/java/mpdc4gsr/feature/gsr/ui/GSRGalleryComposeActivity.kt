@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+import dagger.hilt.android.AndroidEntryPoint
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
+@AndroidEntryPoint
 class GSRGalleryComposeActivity : BaseComposeActivity<GSRGalleryViewModel>() {
     override fun createViewModel(): GSRGalleryViewModel = GSRGalleryViewModel()
 

@@ -176,9 +176,9 @@
             android:label="GSR Raw Image Viewer"/>
 
         <activity
-            android:name="mpdc4gsr.feature.gsr.ui.ShimmerConfigComposeActivity"
+            android:name="mpdc4gsr.feature.gsr.ui.GSRDeviceConfigComposeActivity"
             android:exported="false"
-            android:label="Shimmer Configuration"/>
+            android:label="GSR Device Configuration"/>
 
         <!-- Main Launcher Activity -->
         <activity

@@ -5,17 +5,20 @@ import android.content.Intent
 import android.os.Environment
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 import java.io.File
+import javax.inject.Inject
 
-class GSRRawImageViewViewModel(
-    context: Context
+@HiltViewModel
+class GSRRawImageViewViewModel @Inject constructor(
+    @ApplicationContext private val application: Context
 ) : AppBaseViewModel() {
-    private val application: Context = context.applicationContext
 
     data class GSRImageViewState(
         val isLoading: Boolean = false,

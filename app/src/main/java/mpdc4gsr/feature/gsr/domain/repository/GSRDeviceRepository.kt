@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.GSRSample
 
-interface ShimmerRepository {
+interface GSRDeviceRepository {
 
     suspend fun scanForDevices(): Flow<List<DeviceInfo>>
 
