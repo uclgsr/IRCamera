@@ -73,7 +73,8 @@ class SessionManagerViewModel @Inject constructor(
                 val cleanedSessions = withContext(Dispatchers.IO) {
                     sessionDirectoryManager.cleanupFailedSessions()
                 }
-                if (cleanedSessions.isNotEmpty()) {                    _sessionEvents.emit(SessionEvent.ShowToast("Cleaned up ${cleanedSessions.size} failed sessions"))
+                if (cleanedSessions.isNotEmpty()) {
+                    _sessionEvents.emit(SessionEvent.ShowToast("Cleaned up ${cleanedSessions.size} failed sessions"))
                 }
                 // Load sessions
                 val loadedSessions = withContext(Dispatchers.IO) {
