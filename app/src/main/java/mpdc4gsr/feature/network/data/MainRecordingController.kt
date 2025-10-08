@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,9 +17,7 @@ class MainRecordingController(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner
 ) {
-    companion object {
-        private const val TAG = "MainRecordingController"
-        private const val RGB_SENSOR_NAME = "RGB"
+    companion object {        private const val RGB_SENSOR_NAME = "RGB"
         private const val THERMAL_SENSOR_NAME = "Thermal"
         private const val GSR_SENSOR_NAME = "GSR"
     }
@@ -40,9 +35,7 @@ class MainRecordingController(
         mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context)
 
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
-        sensorRecorders[name] = recorder
-        AppLogger.d(TAG, "Added sensor recorder: $name")
-    }
+        sensorRecorders[name] = recorder    }
 
     suspend fun startRecording(
         sessionId: String? = null,
@@ -50,20 +43,14 @@ class MainRecordingController(
     ): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (_isRecording.get()) {
-                    AppLogger.w(TAG, "Recording already in progress")
-                    return@withContext true
+                if (_isRecording.get()) {                    return@withContext true
                 }
                 val settings = recordingSettingsRepository.getSettings()
                 Log.i(
                     TAG,
                     "Starting recording with settings: simultaneousRecording=${settings.simultaneousRecording}, timestampSync=${settings.timestampSync}"
-                )
-                AppLogger.i(TAG, "Starting simple recording")
-                _recordingStateFlow.value = MainRecordingState.STARTING
-                if (getAvailableSpaceGB() < 1.0) {
-                    AppLogger.e(TAG, "Insufficient storage space")
-                    _recordingStateFlow.value = MainRecordingState.ERROR
+                )                _recordingStateFlow.value = MainRecordingState.STARTING
+                if (getAvailableSpaceGB() < 1.0) {                    _recordingStateFlow.value = MainRecordingState.ERROR
                     return@withContext false
                 }
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
@@ -71,7 +58,7 @@ class MainRecordingController(
                 sessionMetadata = SessionMetadata.createSessionStart(finalSessionId)
                 var sensorsStarted = 0
                 val isSimultaneous = settings.simultaneousRecording
-                AppLogger.i(TAG, "Starting sensors ${if (isSimultaneous) "simultaneously" else "sequentially"}")
+                "simultaneously" else "sequentially"}")
                 for (sensorName in enabledSensors) {
                     val sensor = sensorRecorders[sensorName]
                     if (sensor != null) {
@@ -82,31 +69,21 @@ class MainRecordingController(
                                 val success = sensor.startRecording(sensorDir.absolutePath, meta)
                                 if (success) {
                                     activeRecorders[sensorName] = true
-                                    sensorsStarted++
-                                    AppLogger.i(TAG, "Started sensor: $sensorName")
-                                }
+                                    sensorsStarted++                                }
                             }
                             if (!isSimultaneous && sensorsStarted > 0) {
                                 delay(100)
                             }
-                        } catch (e: Exception) {
-                            AppLogger.w(TAG, "Failed to start sensor $sensorName", e)
-                        }
+                        } catch (e: Exception) {                        }
                     }
                 }
                 if (sensorsStarted > 0) {
                     _isRecording.set(true)
-                    _recordingStateFlow.value = MainRecordingState.RECORDING
-                    AppLogger.i(TAG, "Recording started with $sensorsStarted sensors")
-                    return@withContext true
-                } else {
-                    AppLogger.e(TAG, "No sensors started successfully")
-                    _recordingStateFlow.value = MainRecordingState.ERROR
+                    _recordingStateFlow.value = MainRecordingState.RECORDING                    return@withContext true
+                } else {                    _recordingStateFlow.value = MainRecordingState.ERROR
                     return@withContext false
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to start recording", e)
-                _recordingStateFlow.value = MainRecordingState.ERROR
+            } catch (e: Exception) {                _recordingStateFlow.value = MainRecordingState.ERROR
                 return@withContext false
             }
         }
@@ -117,28 +94,18 @@ class MainRecordingController(
             try {
                 if (!_isRecording.get()) {
                     return@withContext true
-                }
-                AppLogger.i(TAG, "Stopping recording")
-                _recordingStateFlow.value = MainRecordingState.STOPPING
+                }                _recordingStateFlow.value = MainRecordingState.STOPPING
                 _isRecording.set(false)
                 for ((sensorName, isActive) in activeRecorders) {
                     if (isActive) {
                         try {
-                            sensorRecorders[sensorName]?.stopRecording()
-                            AppLogger.i(TAG, "Stopped sensor: $sensorName")
-                        } catch (e: Exception) {
-                            AppLogger.w(TAG, "Error stopping sensor $sensorName", e)
-                        }
+                            sensorRecorders[sensorName]?.stopRecording()                        } catch (e: Exception) {                        }
                     }
                 }
                 activeRecorders.clear()
                 sessionMetadata = null
-                _recordingStateFlow.value = MainRecordingState.IDLE
-                AppLogger.i(TAG, "Recording stopped successfully")
-                return@withContext true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to stop recording", e)
-                return@withContext false
+                _recordingStateFlow.value = MainRecordingState.IDLE                return@withContext true
+            } catch (e: Exception) {                return@withContext false
             }
         }
     }
