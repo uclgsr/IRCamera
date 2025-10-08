@@ -10,97 +10,97 @@ import mpdc4gsr.feature.thermal.data.MeasurementResult
 import mpdc4gsr.feature.thermal.data.ThermalCalibrationData
 import mpdc4gsr.feature.thermal.data.source.ThermalFrameData
 import mpdc4gsr.feature.thermal.data.source.ThermalSnapshot
-import mpdc4gsr.feature.thermal.data.source.TopdonDataSource
+import mpdc4gsr.feature.thermal.data.source.ThermalHardwareDataSource
 import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
 
 class ThermalRepositoryImpl(
-    private val topdonDataSource: TopdonDataSource
+    private val hardwareDataSource: ThermalHardwareDataSource
 ) : ThermalRepository {
     override suspend fun connectCamera(): Result<Unit> {
-        return topdonDataSource.connectDevice()
+        return hardwareDataSource.connectDevice()
     }
 
     override suspend fun disconnectCamera() {
-        topdonDataSource.disconnectDevice()
+        hardwareDataSource.disconnectDevice()
     }
 
     override suspend fun getThermalStream(): Flow<ThermalFrameData> {
-        return topdonDataSource.startStreaming()
+        return hardwareDataSource.startStreaming()
     }
 
     override suspend fun stopStream() {
-        topdonDataSource.stopStreaming()
+        hardwareDataSource.stopStreaming()
     }
 
     override suspend fun captureSnapshot(): Result<ThermalSnapshot> {
-        return topdonDataSource.captureSnapshot()
+        return hardwareDataSource.captureSnapshot()
     }
 
     override suspend fun startRecording(): Result<Unit> {
-        return topdonDataSource.startRecording()
+        return hardwareDataSource.startRecording()
     }
 
     override suspend fun stopRecording(): Result<String> {
-        return topdonDataSource.stopRecording()
+        return hardwareDataSource.stopRecording()
     }
 
     override fun isCameraConnected(): Boolean {
-        return topdonDataSource.isConnected()
+        return hardwareDataSource.isConnected()
     }
 
     override suspend fun setTemperatureRange(minTemp: Float, maxTemp: Float): Result<Unit> {
-        return topdonDataSource.setTemperatureRange(minTemp, maxTemp)
+        return hardwareDataSource.setTemperatureRange(minTemp, maxTemp)
     }
 
     override suspend fun setColorPalette(palette: ColorPalette): Result<Unit> {
-        return topdonDataSource.setColorPalette(palette)
+        return hardwareDataSource.setColorPalette(palette)
     }
 
     override suspend fun setAgcMode(mode: AgcMode): Result<Unit> {
-        return topdonDataSource.setAgcMode(mode)
+        return hardwareDataSource.setAgcMode(mode)
     }
 
     override suspend fun getMeasurementForArea(area: MeasurementArea): Result<MeasurementResult> {
-        return topdonDataSource.getMeasurementForArea(area)
+        return hardwareDataSource.getMeasurementForArea(area)
     }
 
     override suspend fun applyCalibration(calibrationData: ThermalCalibrationData): Result<Unit> {
-        return topdonDataSource.applyCalibration(calibrationData)
+        return hardwareDataSource.applyCalibration(calibrationData)
     }
 
     override suspend fun performFFC(): Result<Unit> {
-        return topdonDataSource.performFFC()
+        return hardwareDataSource.performFFC()
     }
 
     override suspend fun performNUC(): Result<Unit> {
-        return topdonDataSource.performNUC()
+        return hardwareDataSource.performNUC()
     }
 
     override suspend fun enableISP(enabled: Boolean): Result<Unit> {
-        return topdonDataSource.enableISP(enabled)
+        return hardwareDataSource.enableISP(enabled)
     }
 
     override suspend fun setTNRLevel(level: Int): Result<Unit> {
-        return topdonDataSource.setTNRLevel(level)
+        return hardwareDataSource.setTNRLevel(level)
     }
 
     override suspend fun setBrightness(level: Int): Result<Unit> {
-        return topdonDataSource.setBrightness(level)
+        return hardwareDataSource.setBrightness(level)
     }
 
     override suspend fun setContrast(level: Int): Result<Unit> {
-        return topdonDataSource.setContrast(level)
+        return hardwareDataSource.setContrast(level)
     }
 
     override suspend fun setSharpness(level: Int): Result<Unit> {
-        return topdonDataSource.setSharpness(level)
+        return hardwareDataSource.setSharpness(level)
     }
 
     override suspend fun getDeviceInfo(): Result<DeviceInfo> {
-        return topdonDataSource.getDeviceInfo()
+        return hardwareDataSource.getDeviceInfo()
     }
 
     override suspend fun getBatteryStatus(): Result<BatteryStatus> {
-        return topdonDataSource.getBatteryStatus()
+        return hardwareDataSource.getBatteryStatus()
     }
 }

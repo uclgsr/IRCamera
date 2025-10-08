@@ -1,4 +1,4 @@
-package mpdc4gsr.feature.thermal.domain
+package mpdc4gsr.feature.thermal.domain.usecase
 
 import com.mpdc4gsr.libunified.ir.extension.AgcMode
 import com.mpdc4gsr.libunified.ir.extension.ColorPalette
@@ -7,7 +7,7 @@ import mpdc4gsr.feature.thermal.data.DeviceInfo
 import mpdc4gsr.feature.thermal.data.MeasurementArea
 import mpdc4gsr.feature.thermal.data.MeasurementResult
 import mpdc4gsr.feature.thermal.data.ThermalCalibrationData
-import mpdc4gsr.feature.thermal.data.repository.ThermalRepository
+import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
 
 class SetColorPaletteUseCase(private val repository: ThermalRepository) {
     suspend operator fun invoke(palette: ColorPalette): Result<Unit> {
@@ -86,7 +86,7 @@ class GetBatteryStatusUseCase(private val repository: ThermalRepository) {
     }
 }
 
-data class ThermalSDKUseCases(
+data class ThermalHardwareUseCases(
     val setColorPalette: SetColorPaletteUseCase,
     val setAgcMode: SetAgcModeUseCase,
     val configureAccuracy: ConfigureAccuracyUseCase,

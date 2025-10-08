@@ -11,12 +11,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import mpdc4gsr.feature.thermal.di.ThermalUseCases
+import mpdc4gsr.feature.thermal.domain.usecase.ThermalCoreUseCases
 import javax.inject.Inject
 
 @HiltViewModel
 class ThermalCameraViewModel @Inject constructor(
-    private val thermalUseCases: ThermalUseCases
+    private val thermalUseCases: ThermalCoreUseCases
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, exception ->

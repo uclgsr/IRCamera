@@ -53,7 +53,7 @@ private fun ThermalScreenRouter(
             )
         }
         ThermalComposeActivity.SCREEN_CALIBRATION -> {
-            CalibrationScreen(
+            ThermalCalibrationScreen(
                 onBackClick = onBackClick
             )
         }
