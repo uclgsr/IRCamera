@@ -1,26 +1,24 @@
 package mpdc4gsr.feature.main.presentation
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.SessionInfo
-import kotlinx.coroutines.Dispatchers
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import mpdc4gsr.core.RecordingService
-import mpdc4gsr.core.SessionManager
-import mpdc4gsr.core.data.UnifiedGSRRecorder
-import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
+import mpdc4gsr.feature.main.domain.repository.GSRConnectionState
+import mpdc4gsr.feature.main.domain.repository.NetworkConnectionState
+import mpdc4gsr.feature.main.domain.usecase.*
 import mpdc4gsr.feature.network.data.NetworkClient
-import mpdc4gsr.feature.network.data.NetworkController
-import mpdc4gsr.feature.thermal.ui.ThermalRecorder
-import com.mpdc4gsr.gsr.service.SessionManager as GSRSessionManager
+import javax.inject.Inject
 
-class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
-    companion object {
-        private const val TAG = "MainActivityViewModel"
-    }
+@HiltViewModel
+class MainActivityViewModel @Inject constructor(
+    private val startRecordingSessionUseCase: StartRecordingSessionUseCase,
+    private val stopRecordingSessionUseCase: StopRecordingSessionUseCase,
+    private val connectGSRSensorUseCase: ConnectGSRSensorUseCase,
+    private val startNetworkDiscoveryUseCase: StartNetworkDiscoveryUseCase
+) : ViewModel() {
 
     // A single UiState class can be used to hold all UI-related state.
     // However, to align with the existing structure, individual flows are maintained.
@@ -29,7 +27,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         MutableStateFlow(1) // PAGE_MAIN = 1 (0: Gallery, 1: Main, 2: Settings, 3: Mine)
     val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
 
-    // State properties using StateFlow for better coroutine support and lifecycle awareness
     private val _gsrConnectionState = MutableStateFlow(GSRConnectionState.DISCONNECTED)
     val gsrConnectionState: StateFlow<GSRConnectionState> = _gsrConnectionState.asStateFlow()
     private val _gsrBatteryLevel = MutableStateFlow<Int?>(null)
@@ -82,19 +79,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private val _exposureCompensation = MutableStateFlow(0.0f)
     val exposureCompensation: StateFlow<Float> = _exposureCompensation.asStateFlow()
 
-    // --- Component Properties (to be managed by Repositories in a larger app) ---
-    private var serviceBinder: RecordingService.RecordingServiceBinder? = null
-    private var gsrSensorRecorder: GSRSensorRecorder? = null
-    private var unifiedGSRRecorder: UnifiedGSRRecorder? = null
-    private var thermalRecorder: ThermalRecorder? = null
-    private var networkClient: NetworkClient? = null
-    private var networkController: NetworkController? = null
-    private var sessionManager: SessionManager? = null
-    private var gsrSessionManager: GSRSessionManager? = null
-
-    // --- Enums and Data Classes ---
-    enum class GSRConnectionState { DISCONNECTED, DISCOVERING, CONNECTING, CONNECTED, ERROR }
-    enum class NetworkConnectionState { DISCONNECTED, DISCOVERING, CONNECTING, CONNECTED, ERROR }
     enum class SessionState { IDLE, STARTING, RECORDING, PAUSED, STOPPING, ERROR }
     enum class SensorStatus { DISCONNECTED, CONNECTING, CONNECTED, STREAMING, ERROR, SIMULATION }
     data class SensorState(
