@@ -1,0 +1,1299 @@
+// Merged ALL .kt and .java files from the 'libunified\src\main\java\com\mpdc4gsr\libunified\ui\gzuliyujiang\wheelview\widget' directory and its subdirectories.
+// Total files: 2 | Generated on: 2025-10-08 01:42:39
+
+
+// ===== FROM: libunified\src\main\java\com\mpdc4gsr\libunified\ui\gzuliyujiang\wheelview\widget\NumberWheelView.java =====
+
+package com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.widget;
+
+import android.content.Context;
+import android.util.AttributeSet;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class NumberWheelView extends WheelView {
+
+    public NumberWheelView(Context context) {
+        super(context);
+    }
+
+    public NumberWheelView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public NumberWheelView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    @Override
+    protected List<?> generatePreviewData() {
+        List<Integer> data = new ArrayList<>();
+        for (int i = 1; i <= 10; i = i + 1) {
+            data.add(i);
+        }
+        return data;
+    }
+
+    @Deprecated
+    @Override
+    public void setData(List<?> data) {
+        if (isInEditMode()) {
+            super.setData(generatePreviewData());
+        } else {
+            throw new UnsupportedOperationException("Use setRange instead");
+        }
+    }
+
+    public void setRange(int min, int max, int step) {
+        int minValue = Math.min(min, max);
+        int maxValue = Math.max(min, max);
+
+        int capacity = (maxValue - minValue) / step;
+        List<Integer> data = new ArrayList<>(capacity);
+        for (int i = minValue; i <= maxValue; i = i + step) {
+            data.add(i);
+        }
+        super.setData(data);
+    }
+
+    public void setRange(float min, float max, float step) {
+        float minValue = Math.min(min, max);
+        float maxValue = Math.max(min, max);
+
+        int capacity = (int) ((maxValue - minValue) / step);
+        List<Float> data = new ArrayList<>(capacity);
+        for (float i = minValue; i <= maxValue; i = i + step) {
+            data.add(i);
+        }
+        super.setData(data);
+    }
+
+}
+
+
+// ===== FROM: libunified\src\main\java\com\mpdc4gsr\libunified\ui\gzuliyujiang\wheelview\widget\WheelView.java =====
+
+package com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.widget;
+
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.*;
+import android.os.Build;
+import android.os.Handler;
+import android.text.TextUtils;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
+import android.view.View;
+import android.view.ViewConfiguration;
+import android.widget.Scroller;
+
+import androidx.annotation.*;
+
+import com.mpdc4gsr.libunified.R;
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.CurtainCorner;
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.ItemTextAlign;
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.ScrollState;
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.contract.OnWheelChangedListener;
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.contract.TextProvider;
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.contract.WheelFormatter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@SuppressWarnings({"unused"})
+public class WheelView extends View implements Runnable {
+    @Deprecated
+    public static final int SCROLL_STATE_IDLE = ScrollState.IDLE;
+    @Deprecated
+    public static final int SCROLL_STATE_DRAGGING = ScrollState.DRAGGING;
+    @Deprecated
+    public static final int SCROLL_STATE_SCROLLING = ScrollState.SCROLLING;
+    private final Handler handler = new Handler();
+    private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.LINEAR_TEXT_FLAG);
+    private final Scroller scroller;
+    private final Rect rectDrawn = new Rect();
+    private final Rect rectIndicatorHead = new Rect();
+    private final Rect rectIndicatorFoot = new Rect();
+    private final Rect rectCurrentItem = new Rect();
+    private final Camera camera = new Camera();
+    private final Matrix matrixRotate = new Matrix();
+    private final Matrix matrixDepth = new Matrix();
+    private final int minimumVelocity;
+    private final int maximumVelocity;
+    private final int touchSlop;
+    private final AttributeSet attrs;
+    public int itemHeight, halfItemHeight;
+    protected List<?> data = new ArrayList<>();
+    protected WheelFormatter formatter;
+    protected Object defaultItem;
+    protected int visibleItemCount;
+    protected int defaultItemPosition;
+    protected int currentPosition;
+    protected String maxWidthText;
+    protected int textColor, selectedTextColor;
+    protected float textSize, selectedTextSize;
+    protected boolean selectedTextBold;
+    protected float indicatorSize;
+    protected int indicatorColor;
+    protected int curtainColor;
+    protected int curtainCorner;
+    protected float curtainRadius;
+    protected int itemSpace;
+    protected int textAlign;
+    protected boolean sameWidthEnabled;
+    protected boolean indicatorEnabled;
+    protected boolean curtainEnabled;
+    protected boolean atmosphericEnabled;
+    protected boolean cyclicEnabled;
+    protected boolean curvedEnabled;
+    protected int curvedMaxAngle = 90;
+    protected int curvedIndicatorSpace;
+    private VelocityTracker tracker;
+    private OnWheelChangedListener onWheelChangedListener;
+    private int lastScrollPosition;
+    private int drawnItemCount;
+    private int halfDrawnItemCount;
+    private int textMaxWidth, textMaxHeight;
+    private int halfWheelHeight;
+    private int minFlingYCoordinate, maxFlingYCoordinate;
+    private int wheelCenterXCoordinate, wheelCenterYCoordinate;
+    private int drawnCenterXCoordinate, drawnCenterYCoordinate;
+    private int scrollOffsetYCoordinate;
+    private int lastPointYCoordinate;
+    private int downPointYCoordinate;
+    private boolean isClick;
+    private boolean isForceFinishScroll;
+
+    public WheelView(Context context) {
+        this(context, null);
+    }
+
+    public WheelView(Context context, AttributeSet attrs) {
+        this(context, attrs, R.attr.WheelStyle);
+    }
+
+    public WheelView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.attrs = attrs;
+        initAttrs(context, attrs, defStyleAttr, R.style.WheelDefault);
+        initTextPaint();
+        updateVisibleItemCount();
+        scroller = new Scroller(context);
+        ViewConfiguration configuration = ViewConfiguration.get(context);
+        minimumVelocity = configuration.getScaledMinimumFlingVelocity();
+        maximumVelocity = configuration.getScaledMaximumFlingVelocity();
+        touchSlop = configuration.getScaledTouchSlop();
+        if (isInEditMode()) {
+            setData(generatePreviewData());
+        }
+    }
+
+    private void initTextPaint() {
+        paint.setColor(textColor);
+        paint.setTextSize(textSize);
+        paint.setFakeBoldText(false);
+        paint.setStyle(Paint.Style.FILL);
+    }
+
+    public void setStyle(@StyleRes int style) {
+        if (attrs == null) {
+            throw new RuntimeException("Please use " + getClass().getSimpleName() + " in xml");
+        }
+        initAttrs(getContext(), attrs, R.attr.WheelStyle, style);
+        initTextPaint();
+        requestLayout();
+        invalidate();
+    }
+
+    private void initAttrs(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        if (attrs == null) {
+            float density = context.getResources().getDisplayMetrics().density;
+            float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
+            visibleItemCount = 5;
+            defaultItemPosition = 0;
+            sameWidthEnabled = false;
+            maxWidthText = "";
+            textAlign = ItemTextAlign.CENTER;
+            textColor = 0xFF888888;
+            selectedTextColor = 0xFF000000;
+            textSize = 15 * scaledDensity;
+            selectedTextSize = textSize;
+            selectedTextBold = false;
+            itemSpace = (int) (20 * density);
+            cyclicEnabled = false;
+            indicatorEnabled = true;
+            indicatorColor = 0xFFC9C9C9;
+            indicatorSize = 1 * density;
+            curvedIndicatorSpace = (int) (1 * density);
+            curtainEnabled = false;
+            curtainColor = 0xFFFFFFFF;
+            curtainCorner = CurtainCorner.NONE;
+            curtainRadius = 0;
+            atmosphericEnabled = false;
+            curvedEnabled = false;
+            curvedMaxAngle = 90;
+            return;
+        }
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.WheelView,
+                defStyleAttr, defStyleRes);
+        onAttributeSet(context, typedArray);
+        typedArray.recycle();
+    }
+
+    protected void onAttributeSet(@NonNull Context context, @NonNull TypedArray typedArray) {
+        float density = context.getResources().getDisplayMetrics().density;
+        float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
+        visibleItemCount = typedArray.getInt(R.styleable.WheelView_wheel_visibleItemCount, 5);
+        sameWidthEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_sameWidthEnabled, false);
+        maxWidthText = typedArray.getString(R.styleable.WheelView_wheel_maxWidthText);
+        textColor = typedArray.getColor(R.styleable.WheelView_wheel_itemTextColor, 0xFF888888);
+        selectedTextColor = typedArray.getColor(R.styleable.WheelView_wheel_itemTextColorSelected, 0xFF000000);
+        textSize = typedArray.getDimension(R.styleable.WheelView_wheel_itemTextSize, 15 * scaledDensity);
+        selectedTextSize = typedArray.getDimension(R.styleable.WheelView_wheel_itemTextSizeSelected, textSize);
+        selectedTextBold = typedArray.getBoolean(R.styleable.WheelView_wheel_itemTextBoldSelected, false);
+        textAlign = typedArray.getInt(R.styleable.WheelView_wheel_itemTextAlign, ItemTextAlign.CENTER);
+        itemSpace = typedArray.getDimensionPixelSize(R.styleable.WheelView_wheel_itemSpace, (int) (20 * density));
+        cyclicEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_cyclicEnabled, false);
+        indicatorEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_indicatorEnabled, true);
+        indicatorColor = typedArray.getColor(R.styleable.WheelView_wheel_indicatorColor, 0xFFC9C9C9);
+        indicatorSize = typedArray.getDimension(R.styleable.WheelView_wheel_indicatorSize, 1 * density);
+        curvedIndicatorSpace = typedArray.getDimensionPixelSize(R.styleable.WheelView_wheel_curvedIndicatorSpace, (int) (1 * density));
+        curtainEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_curtainEnabled, false);
+        curtainColor = typedArray.getColor(R.styleable.WheelView_wheel_curtainColor, 0xFFFFFFFF);
+        curtainCorner = typedArray.getInt(R.styleable.WheelView_wheel_curtainCorner, CurtainCorner.NONE);
+        curtainRadius = typedArray.getDimension(R.styleable.WheelView_wheel_curtainRadius, 0);
+        atmosphericEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_atmosphericEnabled, false);
+        curvedEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_curvedEnabled, false);
+        curvedMaxAngle = typedArray.getInteger(R.styleable.WheelView_wheel_curvedMaxAngle, 90);
+    }
+
+    protected List<?> generatePreviewData() {
+        List<String> data = new ArrayList<>();
+        data.add("[CHINESE_TEXT]human");
+        data.add("[CHINESE_TEXT]");
+        data.add("[CHINESE_TEXT]");
+        data.add("[CHINESE_TEXT]");
+        data.add("[CHINESE_TEXT]human[CHINESE_TEXT]");
+        data.add("[CHINESE_TEXT]");
+        return data;
+    }
+
+    private void updateVisibleItemCount() {
+        final int minCount = 2;
+        if (visibleItemCount < minCount) {
+            throw new ArithmeticException("Visible item count can not be less than " + minCount);
+        }
+
+        int evenNumberFlag = 2;
+        if (visibleItemCount % evenNumberFlag == 0) {
+            visibleItemCount += 1;
+        }
+        drawnItemCount = visibleItemCount + 2;
+        halfDrawnItemCount = drawnItemCount / 2;
+    }
+
+    private void computeTextWidthAndHeight() {
+        textMaxWidth = textMaxHeight = 0;
+        if (sameWidthEnabled) {
+            textMaxWidth = (int) paint.measureText(formatItem(0));
+        } else if (!TextUtils.isEmpty(maxWidthText)) {
+            textMaxWidth = (int) paint.measureText(maxWidthText);
+        } else {
+
+            int itemCount = getItemCount();
+            for (int i = 0; i < itemCount; ++i) {
+                int width = (int) paint.measureText(formatItem(i));
+                textMaxWidth = Math.max(textMaxWidth, width);
+            }
+        }
+        Paint.FontMetrics metrics = paint.getFontMetrics();
+        textMaxHeight = (int) (metrics.bottom - metrics.top);
+    }
+
+    public int getItemCount() {
+        return data.size();
+    }
+
+    public <T> T getItem(int position) {
+        final int size = data.size();
+        if (size == 0) {
+            return null;
+        }
+        int index = (position + size) % size;
+        if (index >= 0 && index <= size - 1) {
+
+            return (T) data.get(index);
+        }
+        return null;
+    }
+
+    public int getPosition(Object item) {
+        if (item == null) {
+            return 0;
+        }
+        return data.indexOf(item);
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public <T> T getCurrentItem() {
+        return getItem(currentPosition);
+    }
+
+    public int getVisibleItemCount() {
+        return visibleItemCount;
+    }
+
+    public void setVisibleItemCount(@IntRange(from = 2) int count) {
+        visibleItemCount = count;
+        updateVisibleItemCount();
+        requestLayout();
+    }
+
+    public boolean isCyclicEnabled() {
+        return cyclicEnabled;
+    }
+
+    public void setCyclicEnabled(boolean isCyclic) {
+        this.cyclicEnabled = isCyclic;
+        computeFlingLimitYCoordinate();
+        invalidate();
+    }
+
+    public void setOnWheelChangedListener(OnWheelChangedListener listener) {
+        onWheelChangedListener = listener;
+    }
+
+    public void setFormatter(WheelFormatter formatter) {
+        this.formatter = formatter;
+    }
+
+    public List<?> getData() {
+        return data;
+    }
+
+    public void setData(List<?> newData) {
+        if (newData == null) {
+            newData = new ArrayList<>();
+        }
+        data = newData;
+        notifyDataSetChanged(0, false);
+    }
+
+    public void setDefaultValue(Object value) {
+        if (value == null) {
+            return;
+        }
+        boolean found = false;
+        int position = 0;
+        for (Object item : data) {
+            if (item.equals(value)) {
+                found = true;
+                break;
+            }
+            if (formatter != null && formatter.formatItem(item).equals(formatter.formatItem(value))) {
+                found = true;
+                break;
+            }
+            if (item instanceof TextProvider) {
+                String text = ((TextProvider) item).provideText();
+                if (text.equals(value.toString())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (item.toString().equals(value.toString())) {
+                found = true;
+                break;
+            }
+            position++;
+        }
+        if (!found) {
+            position = 0;
+        }
+        setDefaultPosition(position);
+    }
+
+    public void setDefaultPosition(int position) {
+        notifyDataSetChanged(position, false);
+    }
+
+    public boolean isSameWidthEnabled() {
+        return sameWidthEnabled;
+    }
+
+    public void setSameWidthEnabled(boolean sameWidthEnabled) {
+        this.sameWidthEnabled = sameWidthEnabled;
+        computeTextWidthAndHeight();
+        requestLayout();
+        invalidate();
+    }
+
+    public String getMaxWidthText() {
+        return maxWidthText;
+    }
+
+    public void setMaxWidthText(String text) {
+        if (null == text) {
+            throw new NullPointerException("Maximum width text can not be null!");
+        }
+        maxWidthText = text;
+        computeTextWidthAndHeight();
+        requestLayout();
+        invalidate();
+    }
+
+    @ColorInt
+    public int getTextColor() {
+        return textColor;
+    }
+
+    public void setTextColor(@ColorInt int color) {
+        textColor = color;
+        invalidate();
+    }
+
+    @ColorInt
+    public int getSelectedTextColor() {
+        return selectedTextColor;
+    }
+
+    public void setSelectedTextColor(@ColorInt int color) {
+        selectedTextColor = color;
+        computeCurrentItemRect();
+        invalidate();
+    }
+
+    @Px
+    public float getTextSize() {
+        return textSize;
+    }
+
+    public void setTextSize(@Px float size) {
+        textSize = size;
+        computeTextWidthAndHeight();
+        requestLayout();
+        invalidate();
+    }
+
+    @Px
+    public float getSelectedTextSize() {
+        return selectedTextSize;
+    }
+
+    public void setSelectedTextSize(@Px float size) {
+        selectedTextSize = size;
+        computeTextWidthAndHeight();
+        requestLayout();
+        invalidate();
+    }
+
+    public boolean getSelectedTextBold() {
+        return selectedTextBold;
+    }
+
+    public void setSelectedTextBold(boolean bold) {
+        this.selectedTextBold = bold;
+        computeTextWidthAndHeight();
+        requestLayout();
+        invalidate();
+    }
+
+    @Px
+    public int getItemSpace() {
+        return itemSpace;
+    }
+
+    public void setItemSpace(@Px int space) {
+        itemSpace = space;
+        requestLayout();
+        invalidate();
+    }
+
+    public boolean isIndicatorEnabled() {
+        return indicatorEnabled;
+    }
+
+    public void setIndicatorEnabled(boolean indicatorEnabled) {
+        this.indicatorEnabled = indicatorEnabled;
+        computeIndicatorRect();
+        invalidate();
+    }
+
+    @Px
+    public float getIndicatorSize() {
+        return indicatorSize;
+    }
+
+    public void setIndicatorSize(@Px float size) {
+        indicatorSize = size;
+        computeIndicatorRect();
+        invalidate();
+    }
+
+    @ColorInt
+    public int getIndicatorColor() {
+        return indicatorColor;
+    }
+
+    public void setIndicatorColor(@ColorInt int color) {
+        indicatorColor = color;
+        invalidate();
+    }
+
+    @Px
+    public int getCurvedIndicatorSpace() {
+        return curvedIndicatorSpace;
+    }
+
+    public void setCurvedIndicatorSpace(@Px int space) {
+        curvedIndicatorSpace = space;
+        computeIndicatorRect();
+        invalidate();
+    }
+
+    public boolean isCurtainEnabled() {
+        return curtainEnabled;
+    }
+
+    public void setCurtainEnabled(boolean curtainEnabled) {
+        this.curtainEnabled = curtainEnabled;
+        if (curtainEnabled) {
+            indicatorEnabled = false;
+        }
+        computeCurrentItemRect();
+        invalidate();
+    }
+
+    @ColorInt
+    public int getCurtainColor() {
+        return curtainColor;
+    }
+
+    public void setCurtainColor(@ColorInt int color) {
+        curtainColor = color;
+        invalidate();
+    }
+
+    @CurtainCorner
+    public int getCurtainCorner() {
+        return curtainCorner;
+    }
+
+    public void setCurtainCorner(@CurtainCorner int curtainCorner) {
+        this.curtainCorner = curtainCorner;
+        invalidate();
+    }
+
+    @Px
+    public float getCurtainRadius() {
+        return curtainRadius;
+    }
+
+    public void setCurtainRadius(@Px float curtainRadius) {
+        this.curtainRadius = curtainRadius;
+        invalidate();
+    }
+
+    public boolean isAtmosphericEnabled() {
+        return atmosphericEnabled;
+    }
+
+    public void setAtmosphericEnabled(boolean atmosphericEnabled) {
+        this.atmosphericEnabled = atmosphericEnabled;
+        invalidate();
+    }
+
+    public boolean isCurvedEnabled() {
+        return curvedEnabled;
+    }
+
+    public void setCurvedEnabled(boolean isCurved) {
+        this.curvedEnabled = isCurved;
+        requestLayout();
+        invalidate();
+    }
+
+    public int getCurvedMaxAngle() {
+        return curvedMaxAngle;
+    }
+
+    public void setCurvedMaxAngle(int curvedMaxAngle) {
+        this.curvedMaxAngle = curvedMaxAngle;
+        requestLayout();
+        invalidate();
+    }
+
+    @ItemTextAlign
+    public int getTextAlign() {
+        return textAlign;
+    }
+
+    public void setTextAlign(@ItemTextAlign int align) {
+        textAlign = align;
+        updatePaintTextAlign();
+        computeDrawnCenterCoordinate();
+        invalidate();
+    }
+
+    private void updatePaintTextAlign() {
+        switch (textAlign) {
+            case ItemTextAlign.LEFT:
+                paint.setTextAlign(Paint.Align.LEFT);
+                break;
+            case ItemTextAlign.RIGHT:
+                paint.setTextAlign(Paint.Align.RIGHT);
+                break;
+            case ItemTextAlign.CENTER:
+            default:
+                paint.setTextAlign(Paint.Align.CENTER);
+                break;
+        }
+    }
+
+    public Typeface getTypeface() {
+        return paint.getTypeface();
+    }
+
+    public void setTypeface(Typeface typeface) {
+        if (typeface == null) {
+            return;
+        }
+        paint.setTypeface(typeface);
+        computeTextWidthAndHeight();
+        requestLayout();
+        invalidate();
+    }
+
+    private void notifyDataSetChanged(int position, boolean smooth) {
+        position = Math.min(position, getItemCount() - 1);
+        position = Math.max(position, 0);
+        if (smooth) {
+            smoothScrollTo(position);
+        } else {
+            scrollTo(position);
+        }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        final int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
+        final int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
+        final int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
+        final int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
+
+        int resultWidth = textMaxWidth;
+        int resultHeight = textMaxHeight * visibleItemCount + itemSpace * (visibleItemCount - 1);
+
+        if (curvedEnabled) {
+            resultHeight = (int) (2 * resultHeight / Math.PI);
+        }
+
+        resultWidth += getPaddingLeft() + getPaddingRight();
+        resultHeight += getPaddingTop() + getPaddingBottom();
+
+        resultWidth = measureSize(modeWidth, sizeWidth, resultWidth);
+        resultHeight = measureSize(modeHeight, sizeHeight, resultHeight);
+        setMeasuredDimension(resultWidth, resultHeight);
+    }
+
+    private int measureSize(int mode, int sizeExpect, int sizeActual) {
+        int realSize;
+        if (mode == MeasureSpec.EXACTLY) {
+            realSize = sizeExpect;
+        } else {
+            realSize = sizeActual;
+            if (mode == MeasureSpec.AT_MOST) {
+                realSize = Math.min(realSize, sizeExpect);
+            }
+        }
+        return realSize;
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int ow, int oh) {
+
+        rectDrawn.set(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(),
+                getHeight() - getPaddingBottom());
+
+        wheelCenterXCoordinate = rectDrawn.centerX();
+        wheelCenterYCoordinate = rectDrawn.centerY();
+
+        computeDrawnCenterCoordinate();
+        halfWheelHeight = rectDrawn.height() / 2;
+        itemHeight = rectDrawn.height() / visibleItemCount;
+        halfItemHeight = itemHeight / 2;
+
+        computeFlingLimitYCoordinate();
+
+        computeIndicatorRect();
+
+        computeCurrentItemRect();
+    }
+
+    private void computeDrawnCenterCoordinate() {
+        switch (textAlign) {
+            case ItemTextAlign.LEFT:
+                drawnCenterXCoordinate = rectDrawn.left;
+                break;
+            case ItemTextAlign.RIGHT:
+                drawnCenterXCoordinate = rectDrawn.right;
+                break;
+            case ItemTextAlign.CENTER:
+            default:
+                drawnCenterXCoordinate = wheelCenterXCoordinate;
+                break;
+        }
+        drawnCenterYCoordinate = (int) (wheelCenterYCoordinate -
+                ((paint.ascent() + paint.descent()) / 2));
+    }
+
+    private void computeFlingLimitYCoordinate() {
+        int currentItemOffset = defaultItemPosition * itemHeight;
+        minFlingYCoordinate = cyclicEnabled ? Integer.MIN_VALUE
+                : -itemHeight * (getItemCount() - 1) + currentItemOffset;
+        maxFlingYCoordinate = cyclicEnabled ? Integer.MAX_VALUE : currentItemOffset;
+    }
+
+    private void computeIndicatorRect() {
+        if (!indicatorEnabled) {
+            return;
+        }
+        int indicatorSpace = curvedEnabled ? curvedIndicatorSpace : 0;
+        int halfIndicatorSize = (int) (indicatorSize / 2f);
+        int indicatorHeadCenterYCoordinate = wheelCenterYCoordinate + halfItemHeight + indicatorSpace;
+        int indicatorFootCenterYCoordinate = wheelCenterYCoordinate - halfItemHeight - indicatorSpace;
+        rectIndicatorHead.set(rectDrawn.left, indicatorHeadCenterYCoordinate - halfIndicatorSize,
+                rectDrawn.right, indicatorHeadCenterYCoordinate + halfIndicatorSize);
+        rectIndicatorFoot.set(rectDrawn.left, indicatorFootCenterYCoordinate - halfIndicatorSize,
+                rectDrawn.right, indicatorFootCenterYCoordinate + halfIndicatorSize);
+    }
+
+    private void computeCurrentItemRect() {
+        if (!curtainEnabled && selectedTextColor == -1) {
+            return;
+        }
+        rectCurrentItem.set(rectDrawn.left, wheelCenterYCoordinate - halfItemHeight,
+                rectDrawn.right, wheelCenterYCoordinate + halfItemHeight);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (null != onWheelChangedListener) {
+            onWheelChangedListener.onWheelScrolled(this, scrollOffsetYCoordinate);
+        }
+        if (itemHeight - halfDrawnItemCount <= 0) {
+            return;
+        }
+        drawAllItem(canvas);
+        drawCurtain(canvas);
+        drawIndicator(canvas);
+    }
+
+    private void drawAllItem(Canvas canvas) {
+        int drawnDataStartPos = -1 * scrollOffsetYCoordinate / itemHeight - halfDrawnItemCount;
+        for (int drawnDataPosition = drawnDataStartPos + defaultItemPosition,
+             drawnOffsetPos = -1 * halfDrawnItemCount;
+             drawnDataPosition < drawnDataStartPos + defaultItemPosition + drawnItemCount;
+             drawnDataPosition++, drawnOffsetPos++) {
+
+            initTextPaint();
+            boolean isCenterItem = drawnDataPosition == drawnDataStartPos + defaultItemPosition + drawnItemCount / 2;
+
+            int drawnItemCenterYCoordinate = drawnCenterYCoordinate + (drawnOffsetPos * itemHeight)
+                    + scrollOffsetYCoordinate % itemHeight;
+            int centerYCoordinateAbs = Math.abs(drawnCenterYCoordinate - drawnItemCenterYCoordinate);
+
+            float ratio = (drawnCenterYCoordinate - centerYCoordinateAbs - rectDrawn.top) * 1f /
+                    (drawnCenterYCoordinate - rectDrawn.top);
+            float degree = computeDegree(drawnItemCenterYCoordinate, ratio);
+            float distanceToCenter = computeYCoordinateAtAngle(degree);
+
+            if (curvedEnabled) {
+                int transXCoordinate = wheelCenterXCoordinate;
+                switch (textAlign) {
+                    case ItemTextAlign.LEFT:
+                        transXCoordinate = rectDrawn.left;
+                        break;
+                    case ItemTextAlign.RIGHT:
+                        transXCoordinate = rectDrawn.right;
+                        break;
+                    case ItemTextAlign.CENTER:
+                    default:
+                        break;
+                }
+                float transYCoordinate = wheelCenterYCoordinate - distanceToCenter;
+
+                camera.save();
+                camera.rotateX(degree);
+                camera.getMatrix(matrixRotate);
+                camera.restore();
+                matrixRotate.preTranslate(-transXCoordinate, -transYCoordinate);
+                matrixRotate.postTranslate(transXCoordinate, transYCoordinate);
+
+                camera.save();
+                camera.translate(0, 0, computeDepth(degree));
+                camera.getMatrix(matrixDepth);
+                camera.restore();
+                matrixDepth.preTranslate(-transXCoordinate, -transYCoordinate);
+                matrixDepth.postTranslate(transXCoordinate, transYCoordinate);
+                matrixRotate.postConcat(matrixDepth);
+            }
+
+            computeAndSetAtmospheric(centerYCoordinateAbs);
+
+            float drawCenterYCoordinate = curvedEnabled ? drawnCenterYCoordinate - distanceToCenter
+                    : drawnItemCenterYCoordinate;
+            drawItemRect(canvas, drawnDataPosition, isCenterItem, drawCenterYCoordinate);
+        }
+    }
+
+    private void drawItemRect(Canvas canvas, int dataPosition, boolean isCenterItem, float drawCenterYCoordinate) {
+
+        if (selectedTextColor == -1) {
+            canvas.save();
+            canvas.clipRect(rectDrawn);
+            if (curvedEnabled) {
+                canvas.concat(matrixRotate);
+            }
+            drawItemText(canvas, dataPosition, drawCenterYCoordinate);
+            canvas.restore();
+            return;
+        }
+
+        if (textSize == selectedTextSize) {
+            canvas.save();
+            if (curvedEnabled) {
+                canvas.concat(matrixRotate);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                canvas.clipOutRect(rectCurrentItem);
+            } else {
+                canvas.clipRect(rectCurrentItem, Region.Op.DIFFERENCE);
+            }
+            drawItemText(canvas, dataPosition, drawCenterYCoordinate);
+            canvas.restore();
+            paint.setColor(selectedTextColor);
+            canvas.save();
+            if (curvedEnabled) {
+                canvas.concat(matrixRotate);
+            }
+            canvas.clipRect(rectCurrentItem);
+            drawItemText(canvas, dataPosition, drawCenterYCoordinate);
+            canvas.restore();
+            return;
+        }
+
+        if (!isCenterItem) {
+            canvas.save();
+            if (curvedEnabled) {
+                canvas.concat(matrixRotate);
+            }
+            drawItemText(canvas, dataPosition, drawCenterYCoordinate);
+            canvas.restore();
+            return;
+        }
+
+        paint.setColor(selectedTextColor);
+        paint.setTextSize(selectedTextSize);
+        paint.setFakeBoldText(selectedTextBold);
+        canvas.save();
+        if (curvedEnabled) {
+            canvas.concat(matrixRotate);
+        }
+        drawItemText(canvas, dataPosition, drawCenterYCoordinate);
+        canvas.restore();
+    }
+
+    private void drawItemText(Canvas canvas, int dataPosition, float drawCenterYCoordinate) {
+        boolean hasCut = false;
+        String ellipsis = "...";
+        int measuredWidth = getMeasuredWidth();
+        float ellipsisWidth = paint.measureText(ellipsis);
+        String data = obtainItemText(dataPosition);
+        while (paint.measureText(data) + ellipsisWidth - measuredWidth > 0) {
+
+            int length = data.length();
+            if (length > 1) {
+                data = data.substring(0, length - 1);
+                hasCut = true;
+            }
+        }
+        if (hasCut) {
+            data = data + ellipsis;
+        }
+        canvas.drawText(data, drawnCenterXCoordinate, drawCenterYCoordinate, paint);
+    }
+
+    private float computeDegree(int drawnItemCenterYCoordinate, float ratio) {
+
+        int unit = 0;
+        if (drawnItemCenterYCoordinate > drawnCenterYCoordinate) {
+            unit = 1;
+        } else if (drawnItemCenterYCoordinate < drawnCenterYCoordinate) {
+            unit = -1;
+        }
+        return clamp((-(1 - ratio) * curvedMaxAngle * unit), -curvedMaxAngle, curvedMaxAngle);
+    }
+
+    private float clamp(float value, float min, float max) {
+        if (value < min) {
+            return min;
+        }
+        return Math.min(value, max);
+    }
+
+    private String obtainItemText(int drawnDataPosition) {
+        String data = "";
+        final int itemCount = getItemCount();
+        if (cyclicEnabled) {
+            if (itemCount != 0) {
+                int actualPosition = drawnDataPosition % itemCount;
+                actualPosition = actualPosition < 0 ? (actualPosition + itemCount) : actualPosition;
+                data = formatItem(actualPosition);
+            }
+        } else {
+            if (isPositionInRange(drawnDataPosition, itemCount)) {
+                data = formatItem(drawnDataPosition);
+            }
+        }
+        return data;
+    }
+
+    public String formatItem(int position) {
+        return formatItem(getItem(position));
+    }
+
+    public String formatItem(Object item) {
+        if (item == null) {
+            return "";
+        }
+        if (item instanceof TextProvider) {
+            return ((TextProvider) item).provideText();
+        }
+        if (formatter != null) {
+            return formatter.formatItem(item);
+        }
+        return item.toString();
+    }
+
+    private void computeAndSetAtmospheric(int abs) {
+        if (atmosphericEnabled) {
+            int alpha = (int) ((drawnCenterYCoordinate - abs) * 1.0F / drawnCenterYCoordinate * 255);
+            alpha = Math.max(alpha, 0);
+            paint.setAlpha(alpha);
+        }
+    }
+
+    private void drawCurtain(Canvas canvas) {
+
+        if (!curtainEnabled) {
+            return;
+        }
+        int alpha = Color.alpha(curtainColor);
+        int red = Color.red(curtainColor);
+        int green = Color.green(curtainColor);
+        int blue = Color.blue(curtainColor);
+        paint.setColor(0);
+        paint.setStyle(Paint.Style.FILL);
+        if (curtainRadius > 0) {
+            Path path = new Path();
+            float[] radii;
+            switch (curtainCorner) {
+                case CurtainCorner.ALL:
+                    radii = new float[]{
+                            curtainRadius, curtainRadius, curtainRadius, curtainRadius,
+                            curtainRadius, curtainRadius, curtainRadius, curtainRadius
+                    };
+                    break;
+                case CurtainCorner.TOP:
+                    radii = new float[]{
+                            curtainRadius, curtainRadius, curtainRadius, curtainRadius, 0, 0, 0, 0
+                    };
+                    break;
+                case CurtainCorner.BOTTOM:
+                    radii = new float[]{
+                            0, 0, 0, 0, curtainRadius, curtainRadius, curtainRadius, curtainRadius
+                    };
+                    break;
+                case CurtainCorner.LEFT:
+                    radii = new float[]{
+                            curtainRadius, curtainRadius, 0, 0, 0, 0, curtainRadius, curtainRadius
+                    };
+                    break;
+                case CurtainCorner.RIGHT:
+                    radii = new float[]{
+                            0, 0, curtainRadius, curtainRadius, curtainRadius, curtainRadius, 0, 0
+                    };
+                    break;
+                default:
+                    radii = new float[]{0, 0, 0, 0, 0, 0, 0, 0};
+                    break;
+            }
+            path.addRoundRect(new RectF(rectCurrentItem), radii, Path.Direction.CCW);
+            canvas.drawPath(path, paint);
+            return;
+        }
+        canvas.drawRect(rectCurrentItem, paint);
+    }
+
+    private void drawIndicator(Canvas canvas) {
+
+        if (!indicatorEnabled) {
+            return;
+        }
+        paint.setColor(indicatorColor);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(rectIndicatorHead, paint);
+        canvas.drawRect(rectIndicatorFoot, paint);
+    }
+
+    private boolean isPositionInRange(int position, int itemCount) {
+        return position >= 0 && position < itemCount;
+    }
+
+    private float computeYCoordinateAtAngle(float degree) {
+
+        return sinDegree(degree) / sinDegree(curvedMaxAngle) * halfWheelHeight;
+    }
+
+    private float sinDegree(float degree) {
+        return (float) Math.sin(Math.toRadians(degree));
+    }
+
+    private int computeDepth(float degree) {
+        return (int) (halfWheelHeight - Math.cos(Math.toRadians(degree)) * halfWheelHeight);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (isEnabled()) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    handleActionDown(event);
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    handleActionMove(event);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    handleActionUp(event);
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                    handleActionCancel(event);
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (isClick) {
+
+            performClick();
+        }
+        return true;
+    }
+
+    private void handleActionDown(MotionEvent event) {
+        if (null != getParent()) {
+            getParent().requestDisallowInterceptTouchEvent(true);
+        }
+        obtainOrClearTracker();
+        tracker.addMovement(event);
+        if (!scroller.isFinished()) {
+            scroller.abortAnimation();
+            isForceFinishScroll = true;
+        }
+        downPointYCoordinate = lastPointYCoordinate = (int) event.getY();
+    }
+
+    private void handleActionMove(MotionEvent event) {
+        int endPoint = computeDistanceToEndPoint(scroller.getFinalY() % itemHeight);
+        if (Math.abs(downPointYCoordinate - event.getY()) < touchSlop && endPoint > 0) {
+            isClick = true;
+            return;
+        }
+        isClick = false;
+        if (null != tracker) {
+            tracker.addMovement(event);
+        }
+        if (null != onWheelChangedListener) {
+            onWheelChangedListener.onWheelScrollStateChanged(this, ScrollState.DRAGGING);
+        }
+
+        float move = event.getY() - lastPointYCoordinate;
+        if (Math.abs(move) < 1) {
+            return;
+        }
+        scrollOffsetYCoordinate += move;
+        lastPointYCoordinate = (int) event.getY();
+        invalidate();
+    }
+
+    private void handleActionUp(MotionEvent event) {
+        if (null != getParent()) {
+            getParent().requestDisallowInterceptTouchEvent(false);
+        }
+        if (isClick) {
+            return;
+        }
+        int yVelocity = 0;
+        if (null != tracker) {
+            tracker.addMovement(event);
+            tracker.computeCurrentVelocity(1000, maximumVelocity);
+            yVelocity = (int) tracker.getYVelocity();
+        }
+
+        isForceFinishScroll = false;
+        if (Math.abs(yVelocity) > minimumVelocity) {
+            scroller.fling(0, scrollOffsetYCoordinate, 0, yVelocity, 0,
+                    0, minFlingYCoordinate, maxFlingYCoordinate);
+            int endPoint = computeDistanceToEndPoint(scroller.getFinalY() % itemHeight);
+            scroller.setFinalY(scroller.getFinalY() + endPoint);
+        } else {
+            int endPoint = computeDistanceToEndPoint(scrollOffsetYCoordinate % itemHeight);
+            scroller.startScroll(0, scrollOffsetYCoordinate, 0, endPoint);
+        }
+
+        if (!cyclicEnabled) {
+            if (scroller.getFinalY() > maxFlingYCoordinate) {
+                scroller.setFinalY(maxFlingYCoordinate);
+            } else if (scroller.getFinalY() < minFlingYCoordinate) {
+                scroller.setFinalY(minFlingYCoordinate);
+            }
+        }
+        handler.post(this);
+        cancelTracker();
+    }
+
+    private void handleActionCancel(MotionEvent event) {
+        if (null != getParent()) {
+            getParent().requestDisallowInterceptTouchEvent(false);
+        }
+        cancelTracker();
+    }
+
+    private void obtainOrClearTracker() {
+        if (null == tracker) {
+            tracker = VelocityTracker.obtain();
+        } else {
+            tracker.clear();
+        }
+    }
+
+    private void cancelTracker() {
+        if (null != tracker) {
+            tracker.recycle();
+            tracker = null;
+        }
+    }
+
+    @Override
+    public boolean performClick() {
+        return super.performClick();
+    }
+
+    private int computeDistanceToEndPoint(int remainder) {
+        if (Math.abs(remainder) > halfItemHeight) {
+            if (scrollOffsetYCoordinate < 0) {
+                return -itemHeight - remainder;
+            } else {
+                return itemHeight - remainder;
+            }
+        } else {
+            return -1 * remainder;
+        }
+    }
+
+    @Override
+    public void run() {
+        if (itemHeight == 0) {
+            return;
+        }
+        int itemCount = getItemCount();
+        if (itemCount == 0) {
+            if (null != onWheelChangedListener) {
+                onWheelChangedListener.onWheelScrollStateChanged(this, ScrollState.IDLE);
+            }
+            return;
+        }
+        if (scroller.isFinished() && !isForceFinishScroll) {
+            int position = computePosition(itemCount);
+            position = position < 0 ? position + itemCount : position;
+            currentPosition = position;
+            if (null != onWheelChangedListener) {
+                onWheelChangedListener.onWheelSelected(this, position);
+                onWheelChangedListener.onWheelScrollStateChanged(this, ScrollState.IDLE);
+            }
+            postInvalidate();
+            return;
+        }
+
+        if (scroller.computeScrollOffset()) {
+            if (null != onWheelChangedListener) {
+                onWheelChangedListener.onWheelScrollStateChanged(this, ScrollState.SCROLLING);
+            }
+            scrollOffsetYCoordinate = scroller.getCurrY();
+            int position = computePosition(itemCount);
+            if (lastScrollPosition != position) {
+                if (position == 0 && lastScrollPosition == itemCount - 1) {
+                    if (null != onWheelChangedListener) {
+                        onWheelChangedListener.onWheelLoopFinished(this);
+                    }
+                }
+                lastScrollPosition = position;
+            }
+            postInvalidate();
+            handler.postDelayed(this, 20);
+        }
+    }
+
+    private int computePosition(int itemCount) {
+        return (-1 * scrollOffsetYCoordinate / itemHeight + defaultItemPosition) % itemCount;
+    }
+
+    public final void smoothScrollTo(final int position) {
+        if (isInEditMode() || !isAttachedToWindow()) {
+            scrollTo(position);
+            return;
+        }
+        int differencesLines = currentPosition - position;
+        int newScrollOffsetYCoordinate = scrollOffsetYCoordinate + (differencesLines * itemHeight);
+        ValueAnimator animator = ValueAnimator.ofInt(scrollOffsetYCoordinate, newScrollOffsetYCoordinate);
+        animator.setDuration(100);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                scrollOffsetYCoordinate = (int) animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                scrollTo(position);
+            }
+        });
+        if (isAttachedToWindow()) {
+            animator.start();
+        }
+    }
+
+    public void scrollTo(int position) {
+        scrollOffsetYCoordinate = 0;
+        defaultItem = getItem(position);
+        defaultItemPosition = position;
+        currentPosition = position;
+        computeFlingLimitYCoordinate();
+        updatePaintTextAlign();
+        computeTextWidthAndHeight();
+        requestLayout();
+        invalidate();
+    }
+
+}
