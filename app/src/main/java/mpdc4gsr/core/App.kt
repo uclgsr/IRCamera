@@ -21,7 +21,9 @@ import mpdc4gsr.core.ui.InitUtils.initLog
 import mpdc4gsr.core.ui.InitUtils.initReceiver
 import mpdc4gsr.core.ui.InitUtils.initUM
 import mpdc4gsr.core.utils.AppLogger
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class App : BaseApplication() {
     companion object {
         @Deprecated(
