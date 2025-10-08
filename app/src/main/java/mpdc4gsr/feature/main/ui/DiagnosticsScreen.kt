@@ -16,12 +16,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.settings.SettingsCard
 import mpdc4gsr.core.ui.components.settings.SettingsRow
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.device.presentation.DiagnosticsViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun DiagnosticsScreen(
@@ -32,6 +33,9 @@ fun DiagnosticsScreen(
     val context = LocalContext.current
     val systemStatus by viewModel.systemStatus.collectAsState()
     val sensorStatus by viewModel.sensorStatus.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.initialize()
+    }
     Column(
         modifier = modifier
             .fillMaxSize()

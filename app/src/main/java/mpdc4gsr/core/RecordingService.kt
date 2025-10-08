@@ -21,8 +21,6 @@ import mpdc4gsr.core.data.FeatureFlags
 import mpdc4gsr.core.data.ProtocolVersion
 import mpdc4gsr.core.data.TimeSyncManager
 import mpdc4gsr.core.ui.PermissionManager
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import mpdc4gsr.feature.network.data.*
 import mpdc4gsr.feature.network.data.Protocol
 import org.json.JSONArray
@@ -244,7 +242,6 @@ class RecordingService : Service(), CoroutineScope {
 
     override fun onCreate() {
         super.onCreate()
-        AppLogger.i(TAG, "RecordingService created")
         initializePhase0Baseline()
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel()
@@ -275,20 +272,15 @@ class RecordingService : Service(), CoroutineScope {
         timeSyncManager?.setSyncTriggerCallback(object : TimeSyncManager.SyncTriggerCallback {
             override suspend fun onManualSyncRequested(): Boolean {
                 return try {
-                    AppLogger.i(TAG, "Manual sync requested - sending SYNC_INIT to PC")
                     val syncInitMessage = Protocol.createSyncInitMessage()
                     val sent = networkServer.sendMessage(syncInitMessage)
                     if (sent) {
-                        AppLogger.i(TAG, "SYNC_INIT message sent to PC successfully")
                     } else {
-                        AppLogger.w(TAG, "Failed to send SYNC_INIT message to PC (no connection?)")
                     }
                     sent
                 } catch (e: java.io.IOException) {
-                    AppLogger.e(TAG, "Network I/O error during manual sync trigger", e)
                     false
                 } catch (e: IllegalStateException) {
-                    AppLogger.e(TAG, "Invalid state during manual sync trigger", e)
                     false
                 }
             }
@@ -304,7 +296,6 @@ class RecordingService : Service(), CoroutineScope {
         ) {
             launch {
                 try {
-                    AppLogger.i(TAG, "Initializing RecordingService with enhanced fault tolerance")
                     // Check for crashed sessions on startup using session orchestration crash recovery
                     checkForCrashedSessionsOnStartup()
                     val sensorsSuccess = recordingController.initializeSensors()
@@ -332,7 +323,6 @@ class RecordingService : Service(), CoroutineScope {
                             startServerSocket()
                         }
                         if (networkSuccess) {
-                            AppLogger.i(TAG, "Network client initialized successfully")
                             startNetworkDiscovery()
                         } else {
                             Log.w(
@@ -341,7 +331,6 @@ class RecordingService : Service(), CoroutineScope {
                             )
                         }
                     } else {
-                        AppLogger.e(TAG, "No sensors could be initialized - service cannot operate")
                         structuredLogger.log(
                             StructuredLogger.LogLevel.ERROR,
                             "RecordingService",
@@ -374,7 +363,6 @@ class RecordingService : Service(), CoroutineScope {
             timeSyncManager = try {
                 TimeSyncManager(this)
             } catch (e: Exception) {
-                AppLogger.w(TAG, "Failed to initialize TimeSyncManager, continuing without sync", e)
                 null
             }
             structuredLogger.log(
@@ -388,7 +376,6 @@ class RecordingService : Service(), CoroutineScope {
                 )
             )
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize Phase 0 baseline in service", e)
         }
     }
 
@@ -417,7 +404,6 @@ class RecordingService : Service(), CoroutineScope {
                 if (sessionDirectory != null) {
                     startRecordingSession(sessionDirectory)
                 } else {
-                    AppLogger.e(TAG, "No session directory provided for recording")
                 }
             }
 
@@ -504,7 +490,6 @@ class RecordingService : Service(), CoroutineScope {
                 try {
                     manager.cleanup()
                 } catch (e: Exception) {
-                    AppLogger.w(TAG, "TimeSyncManager cleanup failed", e)
                 }
             }
             if (::networkManager.isInitialized) {
@@ -529,7 +514,6 @@ class RecordingService : Service(), CoroutineScope {
             // Cancel all coroutines launched in this service's scope
             serviceJob.cancel()
         }
-        AppLogger.i(TAG, "RecordingService destroyed")
     }
 
     private fun createNotificationChannel() {
@@ -548,7 +532,6 @@ class RecordingService : Service(), CoroutineScope {
 
     private fun startRecordingSession(sessionDirectory: String) {
         if (!isInitialized) {
-            AppLogger.e(TAG, "Service not initialized, cannot start recording")
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "RecordingService",
@@ -569,7 +552,6 @@ class RecordingService : Service(), CoroutineScope {
                 timeSyncManager?.initializeSession(sessionDirectory)
                 // Enable periodic sync for long recording sessions
                 timeSyncManager?.setPeriodicSyncEnabled(true)
-                AppLogger.i(TAG, "Starting recording session: $sessionDirectory")
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
                     "RecordingService",
@@ -590,7 +572,6 @@ class RecordingService : Service(), CoroutineScope {
                     try {
                         timeSyncManager?.performSessionStartSync()
                     } catch (e: Exception) {
-                        AppLogger.w(TAG, "Session start sync failed, continuing without sync", e)
                     }
                 }
                 val success = recordingController.startSession(sessionDirectory)
@@ -613,7 +594,6 @@ class RecordingService : Service(), CoroutineScope {
                         )
                     )
                 } else {
-                    AppLogger.e(TAG, "Failed to start recording session")
                     updateNotification("Recording failed to start")
                     structuredLogger.log(
                         StructuredLogger.LogLevel.ERROR,
@@ -623,7 +603,6 @@ class RecordingService : Service(), CoroutineScope {
                     stopRecordingSession()
                 }
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error starting recording session", e)
                 updateNotification("Recording error occurred")
                 structuredLogger.log(
                     StructuredLogger.LogLevel.ERROR,
@@ -640,7 +619,6 @@ class RecordingService : Service(), CoroutineScope {
         launch {
             try {
                 updateNotification("Stopping recording session...")
-                AppLogger.i(TAG, "Stopping recording session")
                 val success = recordingController.stopSession()
                 if (success) {
                     val sessionDuration = if (recordingStartTime > 0) {
@@ -675,7 +653,6 @@ class RecordingService : Service(), CoroutineScope {
                         stopForeground(true)
                     }
                 } else {
-                    AppLogger.e(TAG, "Failed to stop recording session cleanly")
                     updateNotification("Recording stop failed")
                     structuredLogger.log(
                         StructuredLogger.LogLevel.ERROR,
@@ -689,13 +666,11 @@ class RecordingService : Service(), CoroutineScope {
                 try {
                     timeSyncManager?.finalizeSession()
                 } catch (e: Exception) {
-                    AppLogger.w(TAG, "TimeSyncManager finalize session failed", e)
                 }
                 if (!isServerRunning.get()) {
                     stopSelf()
                 }
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error stopping recording session", e)
                 updateNotification("Recording stop error")
                 structuredLogger.log(
                     StructuredLogger.LogLevel.ERROR,
@@ -713,7 +688,6 @@ class RecordingService : Service(), CoroutineScope {
         triggerSource: TriggerSource
     ): Boolean {
         if (!isInitialized) {
-            AppLogger.e(TAG, "Service not initialized, cannot start recording")
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "RecordingService",
@@ -735,7 +709,6 @@ class RecordingService : Service(), CoroutineScope {
             // Initialize TimeSyncManager for this session
             timeSyncManager?.initializeSession(sessionDirectory)
             timeSyncManager?.setPeriodicSyncEnabled(true)
-            AppLogger.i(TAG, "Starting recording session: $sessionDirectory (trigger: $triggerSource)")
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
                 "RecordingService",
@@ -760,7 +733,6 @@ class RecordingService : Service(), CoroutineScope {
                 triggerSource = triggerSource
             )
             if (success) {
-                AppLogger.i(TAG, "Recording session started successfully via $triggerSource")
                 // Update notification to show recording is active
                 val activeNotificationText = when (triggerSource) {
                     TriggerSource.REMOTE_PC -> "Recording (PC Command) - Tap to stop"
@@ -784,14 +756,12 @@ class RecordingService : Service(), CoroutineScope {
                     )
                 )
             } else {
-                AppLogger.e(TAG, "Failed to start recording session via $triggerSource")
                 updateNotification("Recording start failed")
                 currentSessionDirectory = null
                 recordingStartTime = 0
             }
             success
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Exception starting recording session via $triggerSource", e)
             updateNotification("Recording start error")
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
@@ -811,7 +781,6 @@ class RecordingService : Service(), CoroutineScope {
     private suspend fun stopRecordingSessionWithTrigger(triggerSource: TriggerSource): Boolean {
         return try {
             updateNotification("Stopping recording session...")
-            AppLogger.i(TAG, "Stopping recording session (trigger: $triggerSource)")
             val success = recordingController.stopRecording(triggerSource = triggerSource)
             if (success) {
                 val sessionDuration = if (recordingStartTime > 0) {
@@ -869,7 +838,6 @@ class RecordingService : Service(), CoroutineScope {
                     stopForeground(true)
                 }
             } else {
-                AppLogger.e(TAG, "Failed to stop recording session cleanly (trigger: $triggerSource)")
                 updateNotification("Recording stop failed")
                 structuredLogger.log(
                     StructuredLogger.LogLevel.ERROR,
@@ -884,14 +852,12 @@ class RecordingService : Service(), CoroutineScope {
             try {
                 timeSyncManager?.finalizeSession()
             } catch (e: Exception) {
-                AppLogger.w(TAG, "TimeSyncManager finalize session failed", e)
             }
             if (!isServerRunning.get()) {
                 stopSelf()
             }
             success
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error stopping recording session via $triggerSource", e)
             updateNotification("Recording stop error")
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
@@ -913,7 +879,6 @@ class RecordingService : Service(), CoroutineScope {
                 val manifestFile = File(sessionDir, "session_manifest.json")
                 val gson = com.google.gson.GsonBuilder().setPrettyPrinting().create()
                 manifestFile.writeText(gson.toJson(manifest))
-                AppLogger.i(TAG, "Session manifest saved: ${manifestFile.absolutePath}")
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
                     "RecordingService",
@@ -926,7 +891,6 @@ class RecordingService : Service(), CoroutineScope {
                 )
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to save session manifest", e)
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "RecordingService",
@@ -939,12 +903,9 @@ class RecordingService : Service(), CoroutineScope {
     // Crash recovery integration for session orchestration
     private suspend fun checkForCrashedSessionsOnStartup() {
         try {
-            AppLogger.i(TAG, "Checking for crashed sessions on service startup")
             val crashRecoveryResult = crashRecoveryManager.checkForCrashedSessions()
             if (crashRecoveryResult.hasCrashedSession) {
                 val recoveredSession = crashRecoveryResult.recoveredSession!!
-                AppLogger.w(TAG, "Found crashed session: ${recoveredSession.sessionId}")
-                AppLogger.i(TAG, "Crashed session analysis: ${recoveredSession.analysis.summary}")
                 structuredLogger.log(
                     StructuredLogger.LogLevel.WARNING,
                     "RecordingService",
@@ -964,7 +925,6 @@ class RecordingService : Service(), CoroutineScope {
                         TAG,
                         "Successfully recovered crashed session: ${recoveredSession.sessionId}"
                     )
-                    AppLogger.i(TAG, "Recovery actions performed: ${recoveryResult.recoveryActions.size}")
                     structuredLogger.log(
                         StructuredLogger.LogLevel.INFO,
                         "RecordingService",
@@ -975,7 +935,6 @@ class RecordingService : Service(), CoroutineScope {
                         )
                     )
                 } else {
-                    AppLogger.e(TAG, "Failed to recover crashed session: ${recoveryResult.error}")
                     structuredLogger.log(
                         StructuredLogger.LogLevel.ERROR,
                         "RecordingService",
@@ -987,10 +946,8 @@ class RecordingService : Service(), CoroutineScope {
                     )
                 }
             } else {
-                AppLogger.i(TAG, "No crashed sessions found")
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error during crash recovery check", e)
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "RecordingService",
@@ -1004,7 +961,6 @@ class RecordingService : Service(), CoroutineScope {
         launch {
             try {
                 recordingController.addSyncMarker(markerType, timestampNs)
-                AppLogger.i(TAG, "Sync marker added: $markerType")
                 if (recordingController.isRecording) {
                     val originalText = "Recording in progress"
                     updateNotification("Sync marker: $markerType")
@@ -1012,7 +968,6 @@ class RecordingService : Service(), CoroutineScope {
                     updateNotification(originalText)
                 }
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error adding sync marker", e)
             }
         }
     }
@@ -1049,7 +1004,6 @@ class RecordingService : Service(), CoroutineScope {
         recordingController.errorFlow
             .onEach { error ->
                 error?.let {
-                    AppLogger.w(TAG, "Recording controller error: ${it.message}")
                     if (!it.isRecoverable) {
                         updateNotification("Critical error: ${it.message}")
                         stopRecordingSession()
@@ -1099,7 +1053,6 @@ class RecordingService : Service(), CoroutineScope {
                 notification?.let { notificationManager.notify(NOTIFICATION_ID, it) }
             }
         } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to update notification", e)
         }
     }
 
@@ -1161,11 +1114,9 @@ class RecordingService : Service(), CoroutineScope {
                 if (NetworkUtils.isPortAvailable(SERVER_PORT)) {
                     SERVER_PORT
                 } else {
-                    AppLogger.w(TAG, "Preferred port $SERVER_PORT is in use, finding alternative")
                     NetworkUtils.findAvailablePort(SERVER_PORT + 1, 10)
                 }
             } catch (e: IllegalStateException) {
-                AppLogger.e(TAG, "Could not find available port starting from $SERVER_PORT", e)
                 throw e
             }
             serverSocket = ServerSocket().apply {
@@ -1237,7 +1188,6 @@ class RecordingService : Service(), CoroutineScope {
                     "error" to (e.message ?: "Port already in use")
                 )
             )
-            AppLogger.e(TAG, "Failed to bind to port $SERVER_PORT - address already in use", e)
             isServerRunning.set(false)
             throw e
         } catch (e: Exception) {
@@ -1307,7 +1257,6 @@ class RecordingService : Service(), CoroutineScope {
                     if (clientSocket != null && isServerRunning.get()) {
                         val clientId =
                             "${clientSocket.inetAddress.hostAddress}:${clientSocket.port}"
-                        AppLogger.i(TAG, "PC client connected: $clientId")
                         handleNewClientConnection(clientSocket, clientId)
                         withContext(Dispatchers.Main) {
                             updateNotification("Connected PCs: ${activeConnections.size}")
@@ -1315,17 +1264,14 @@ class RecordingService : Service(), CoroutineScope {
                     }
                 } catch (e: SocketException) {
                     if (isServerRunning.get()) {
-                        AppLogger.w(TAG, "Server socket accept error", e)
                         delay(1000)
                     }
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "Unexpected error in accept loop", e)
                     if (isServerRunning.get()) {
                         delay(5000)
                     }
                 }
             }
-            AppLogger.i(TAG, "Accept loop terminated")
         }
     }
 
@@ -1338,15 +1284,12 @@ class RecordingService : Service(), CoroutineScope {
                 try {
                     handleClientMessages(clientId, inputStream, outputStream)
                 } catch (e: Exception) {
-                    AppLogger.w(TAG, "Client $clientId handler error", e)
                 } finally {
                     activeConnections.remove(clientId)
                     try {
                         clientSocket.close()
                     } catch (e: Exception) {
-                        AppLogger.w(TAG, "Error closing client socket", e)
                     }
-                    AppLogger.i(TAG, "PC client disconnected: $clientId")
                     withContext(Dispatchers.Main) {
                         updateNotification("Connected PCs: ${activeConnections.size}")
                     }
@@ -1361,11 +1304,9 @@ class RecordingService : Service(), CoroutineScope {
             )
             activeConnections[clientId] = connection
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error setting up client connection", e)
             try {
                 clientSocket.close()
             } catch (closeEx: Exception) {
-                AppLogger.w(TAG, "Error closing failed client socket", closeEx)
             }
         }
     }
@@ -1379,7 +1320,6 @@ class RecordingService : Service(), CoroutineScope {
             try {
                 val messageLength = inputStream.readInt()
                 if (messageLength > 1024 * 1024) {
-                    AppLogger.w(TAG, "Message too large from $clientId: $messageLength bytes")
                     break
                 }
                 val messageData = ByteArray(messageLength)
@@ -1389,10 +1329,8 @@ class RecordingService : Service(), CoroutineScope {
             } catch (e: SocketTimeoutException) {
                 sendKeepAlive(outputStream)
             } catch (e: EOFException) {
-                AppLogger.i(TAG, "Client $clientId disconnected normally")
                 break
             } catch (e: Exception) {
-                AppLogger.w(TAG, "Error handling message from $clientId", e)
                 break
             }
         }
@@ -1403,13 +1341,10 @@ class RecordingService : Service(), CoroutineScope {
             val success = networkClient.initialize()
             if (success) {
                 setupNetworkCommandHandlers()
-                AppLogger.i(TAG, "Network client initialized successfully")
             } else {
-                AppLogger.w(TAG, "Network client initialization failed")
             }
             success
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error initializing network client", e)
             false
         }
     }
@@ -1432,7 +1367,6 @@ class RecordingService : Service(), CoroutineScope {
                 handleQueryStatusCommand(message)
             }
         } catch (e: Exception) {
-            AppLogger.w(TAG, "Network client message handlers setup failed: ${e.message}")
         }
     }
 
@@ -1442,18 +1376,15 @@ class RecordingService : Service(), CoroutineScope {
             try {
                 val serverStarted = connectionManager.startServer()
                 if (serverStarted) {
-                    AppLogger.i(TAG, "Network server started automatically, listening on port 8080")
                     withContext(Dispatchers.Main) {
                         updateNotification("Listening for PC Controller on port 8080")
                     }
                 } else {
-                    AppLogger.e(TAG, "Failed to start network server automatically")
                     withContext(Dispatchers.Main) {
                         updateNotification("Network server failed to start")
                     }
                 }
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error setting up network server", e)
                 withContext(Dispatchers.Main) {
                     updateNotification("Network server error: ${e.message}")
                 }
@@ -1464,7 +1395,6 @@ class RecordingService : Service(), CoroutineScope {
                 when (state) {
                     NetworkConnectionManager.ConnectionState.CONNECTED -> {
                         isConnectedToPC = true
-                        AppLogger.i(TAG, "PC Controller connected to network server")
                         withContext(Dispatchers.Main) {
                             updateNotification("PC Controller connected")
                         }
@@ -1474,7 +1404,6 @@ class RecordingService : Service(), CoroutineScope {
 
                     NetworkConnectionManager.ConnectionState.DISCONNECTED -> {
                         isConnectedToPC = false
-                        AppLogger.i(TAG, "PC Controller disconnected, still listening on port 8080")
                         withContext(Dispatchers.Main) {
                             updateNotification("Listening for PC Controller on port 8080")
                         }
@@ -1484,7 +1413,6 @@ class RecordingService : Service(), CoroutineScope {
 
                     NetworkConnectionManager.ConnectionState.ERROR -> {
                         isConnectedToPC = false
-                        AppLogger.e(TAG, "Network connection error")
                         withContext(Dispatchers.Main) {
                             updateNotification("Network connection error")
                         }
@@ -1492,14 +1420,12 @@ class RecordingService : Service(), CoroutineScope {
 
                     NetworkConnectionManager.ConnectionState.RECONNECTING -> {
                         isConnectedToPC = false
-                        AppLogger.i(TAG, "Attempting to reconnect to PC Controller")
                         withContext(Dispatchers.Main) {
                             updateNotification("Reconnecting to PC Controller...")
                         }
                     }
 
                     NetworkConnectionManager.ConnectionState.CONNECTING -> {
-                        AppLogger.i(TAG, "Connecting to PC Controller...")
                         withContext(Dispatchers.Main) {
                             updateNotification("Connecting...")
                         }
@@ -1516,7 +1442,6 @@ class RecordingService : Service(), CoroutineScope {
         protocolHandler.setCommandHandler(object : ProtocolHandler.CommandHandler {
             override suspend fun onStartRecording(sessionId: String): ProtocolHandler.CommandResult {
                 return try {
-                    AppLogger.i(TAG, "Remote start recording command received for session: $sessionId")
                     // Use REMOTE_PC trigger source for session orchestration
                     val success = startRecordingSessionWithTrigger(
                         sessionId,
@@ -1539,7 +1464,6 @@ class RecordingService : Service(), CoroutineScope {
                         )
                     }
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "Failed to start recording via PC command", e)
                     return ProtocolHandler.CommandResult(
                         false,
                         "Start recording failed: ${e.message}"
@@ -1549,7 +1473,6 @@ class RecordingService : Service(), CoroutineScope {
 
             override suspend fun onStopRecording(sessionId: String): ProtocolHandler.CommandResult {
                 return try {
-                    AppLogger.i(TAG, "Remote stop recording command received for session: $sessionId")
                     // Use REMOTE_PC trigger source for session orchestration  
                     val success =
                         stopRecordingSessionWithTrigger(TriggerSource.REMOTE_PC)
@@ -1570,7 +1493,6 @@ class RecordingService : Service(), CoroutineScope {
                         )
                     }
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "Failed to stop recording via PC command", e)
                     return ProtocolHandler.CommandResult(
                         false,
                         "Stop recording failed: ${e.message}"
@@ -1583,7 +1505,6 @@ class RecordingService : Service(), CoroutineScope {
                     val timeManager = mpdc4gsr.core.data.utils.TimeManager.getInstance(this@RecordingService)
                     val phoneTimestamp =
                         timeManager.getCurrentTimestampNs() / 1_000_000 // Convert to ms
-                    AppLogger.d(TAG, "Time sync request: PC=$pcTimestamp, Phone=$phoneTimestamp")
                     // Calculate offset for immediate response (PC time - Phone time)
                     val offsetNs = (pcTimestamp - phoneTimestamp) * 1_000_000 // Convert to ns
                     // Update TimeManager with the calculated offset if needed
@@ -1594,7 +1515,6 @@ class RecordingService : Service(), CoroutineScope {
                         offsetNs = offsetNs
                     )
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "Time sync failed", e)
                     ProtocolHandler.SyncResult(false)
                 }
             }
@@ -1604,17 +1524,13 @@ class RecordingService : Service(), CoroutineScope {
     private fun connectToPC(ipAddress: String, port: Int) {
         launch {
             try {
-                AppLogger.i(TAG, "Attempting connection to PC Controller at $ipAddress:$port")
                 val serverStarted = connectionManager.startServer()
                 if (serverStarted) {
-                    AppLogger.i(TAG, "Network server started, ready for PC Controller connection")
                     updateNotification("Ready for PC Controller connection")
                 } else {
-                    AppLogger.e(TAG, "Failed to start network server")
                     updateNotification("Failed to start network server")
                 }
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error during PC connection attempt", e)
                 updateNotification("Connection error: ${e.message}")
             }
         }
@@ -1628,10 +1544,8 @@ class RecordingService : Service(), CoroutineScope {
                 }
                 connectionManager.stopServer()
                 isConnectedToPC = false
-                AppLogger.i(TAG, "Disconnected from PC Controller")
                 updateNotification("Disconnected from PC Controller")
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error disconnecting from PC", e)
             }
         }
     }
@@ -1888,11 +1802,9 @@ class RecordingService : Service(), CoroutineScope {
                 if (isNetworkInitialized) {
                     startNetworkDiscovery()
                 } else {
-                    AppLogger.i(TAG, "PC Controller discovery requested")
                     updateNotification("Searching for PC Controller...")
                 }
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error starting PC discovery", e)
             }
         }
     }
@@ -1904,7 +1816,6 @@ class RecordingService : Service(), CoroutineScope {
                 networkServer.sendMessage(response)
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error processing protocol message: ${message.type}", e)
             val errorResponse = mpdc4gsr.feature.network.data.Protocol.createErrorMessage(
                 message.type,
                 mpdc4gsr.feature.network.data.Protocol.ERR_FAIL,
@@ -1917,10 +1828,8 @@ class RecordingService : Service(), CoroutineScope {
     private suspend fun handlePCCommand(message: JSONObject) {
         try {
             val messageType = message.optString("message_type")
-            AppLogger.i(TAG, "Processing PC command: $messageType")
             when (messageType) {
                 "enhanced_device_registration" -> {
-                    AppLogger.i(TAG, "PC Controller device registration request")
                     sendResponseToPC(
                         "enhanced_registration_ack",
                         JSONObject().apply {
@@ -1951,7 +1860,6 @@ class RecordingService : Service(), CoroutineScope {
                 }
 
                 "session_stop_command" -> {
-                    AppLogger.i(TAG, "Received remote stop command from PC")
                     stopRecordingSession()
                     sendResponseToPC(
                         "session_stop_response",
@@ -1964,7 +1872,6 @@ class RecordingService : Service(), CoroutineScope {
                     val markerType = message.optString("marker_type")
                     val timestampNs = message.optLong("timestamp_ns", System.nanoTime())
                     if (markerType.isNotEmpty()) {
-                        AppLogger.i(TAG, "Received remote sync marker from PC: $markerType")
                         addSyncMarker(markerType, timestampNs)
                         sendResponseToPC(
                             "sync_marker_response",
@@ -1976,19 +1883,16 @@ class RecordingService : Service(), CoroutineScope {
                 }
 
                 "ping" -> {
-                    AppLogger.d(TAG, "Received ping from PC Controller")
                     sendResponseToPC("pong", JSONObject().apply {
                         put("timestamp_ns", System.nanoTime())
                     })
                 }
 
                 "status_request" -> {
-                    AppLogger.d(TAG, "PC Controller requested status")
                     sendStatusToPC()
                 }
 
                 "start_preview_streaming" -> {
-                    AppLogger.i(TAG, "PC Controller requested to start preview streaming")
                     launch {
                         val success = previewStreamer.startStreaming()
                         sendResponseToPC("preview_streaming_response", JSONObject().apply {
@@ -2002,7 +1906,6 @@ class RecordingService : Service(), CoroutineScope {
                 }
 
                 "stop_preview_streaming" -> {
-                    AppLogger.i(TAG, "PC Controller requested to stop preview streaming")
                     launch {
                         previewStreamer.stopStreaming()
                         sendResponseToPC("preview_streaming_response", JSONObject().apply {
@@ -2013,7 +1916,6 @@ class RecordingService : Service(), CoroutineScope {
                 }
 
                 "configure_preview_streaming" -> {
-                    AppLogger.i(TAG, "PC Controller requested to configure preview streaming")
                     val frameInterval = message.optLong("frame_interval_ms", 1000L)
                     val sensorInterval = message.optLong("sensor_interval_ms", 1000L)
                     val previewWidth = message.optInt("preview_width", 320)
@@ -2037,14 +1939,12 @@ class RecordingService : Service(), CoroutineScope {
                 }
 
                 else -> {
-                    AppLogger.w(TAG, "Unknown command from PC Controller: $messageType")
                     sendResponseToPC("error", JSONObject().apply {
                         put("message", "Unknown command: $messageType")
                     })
                 }
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling PC command", e)
             sendResponseToPC("error", JSONObject().apply {
                 put("message", "Error processing command: ${e.message}")
             })
@@ -2083,13 +1983,10 @@ class RecordingService : Service(), CoroutineScope {
             try {
                 networkClient.startDiscovery { success ->
                     if (success) {
-                        AppLogger.i(TAG, "Network discovery started successfully")
                     } else {
-                        AppLogger.w(TAG, "Network discovery failed to start")
                     }
                 }
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error starting network discovery", e)
             }
         }
     }
@@ -2100,7 +1997,6 @@ class RecordingService : Service(), CoroutineScope {
                 val sessionId =
                     message.optString("session_id", "session_${System.currentTimeMillis()}")
                 val sessionDirectory = "/storage/emulated/0/IRCamera_Sessions/$sessionId"
-                AppLogger.i(TAG, "Received start recording command from PC Controller")
                 startRecordingSession(sessionDirectory)
                 val response = JSONObject().apply {
                     put("message_type", "response")
@@ -2111,7 +2007,6 @@ class RecordingService : Service(), CoroutineScope {
                 }
                 networkClient.sendMessage(response)
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error handling start recording command", e)
                 val response = JSONObject().apply {
                     put("message_type", "response")
                     put("response_to", "start_recording")
@@ -2130,7 +2025,6 @@ class RecordingService : Service(), CoroutineScope {
 
     fun registerNsdService() {
         if (isServiceRegistered) {
-            AppLogger.i(TAG, "NSD service already registered")
             return
         }
         try {
@@ -2144,7 +2038,6 @@ class RecordingService : Service(), CoroutineScope {
                 NsdManager.PROTOCOL_DNS_SD,
                 object : NsdManager.RegistrationListener {
                     override fun onServiceRegistered(registeredServiceInfo: NsdServiceInfo?) {
-                        AppLogger.i(TAG, "NSD service registered: ${registeredServiceInfo?.serviceName}")
                         nsdServiceInfo = registeredServiceInfo
                         isServiceRegistered = true
                     }
@@ -2153,7 +2046,6 @@ class RecordingService : Service(), CoroutineScope {
                         failedServiceInfo: NsdServiceInfo?,
                         errorCode: Int
                     ) {
-                        AppLogger.e(TAG, "NSD service registration failed: $errorCode")
                     }
 
                     override fun onServiceUnregistered(unregisteredServiceInfo: NsdServiceInfo?) {
@@ -2168,11 +2060,9 @@ class RecordingService : Service(), CoroutineScope {
                         failedServiceInfo: NsdServiceInfo?,
                         errorCode: Int
                     ) {
-                        AppLogger.e(TAG, "NSD service unregistration failed: $errorCode")
                     }
                 })
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error registering NSD service", e)
         }
     }
 
@@ -2185,17 +2075,14 @@ class RecordingService : Service(), CoroutineScope {
                 override fun onServiceRegistered(serviceInfo: NsdServiceInfo?) {}
                 override fun onRegistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {}
                 override fun onServiceUnregistered(serviceInfo: NsdServiceInfo?) {
-                    AppLogger.i(TAG, "NSD service unregistered successfully")
                     isServiceRegistered = false
                     nsdServiceInfo = null
                 }
 
                 override fun onUnregistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
-                    AppLogger.e(TAG, "NSD service unregistration failed: $errorCode")
                 }
             })
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error unregistering NSD service", e)
         }
     }
 
@@ -2219,9 +2106,7 @@ class RecordingService : Service(), CoroutineScope {
                 }
             }
             networkServer.sendMessage(response.toString())
-            AppLogger.d(TAG, "Sent response to PC: $messageType")
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error sending response to PC", e)
         }
     }
 
@@ -2236,27 +2121,22 @@ class RecordingService : Service(), CoroutineScope {
                 put("pc_connected", isConnectedToPC)
             }
             sendResponseToPC("status_response", statusData)
-            AppLogger.i(TAG, "Status sent to PC Controller")
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error sending status to PC", e)
         }
     }
 
     private fun handleQueryStatusCommand(message: JSONObject) {
         try {
-            AppLogger.d(TAG, "Handling query status command")
             launch {
                 sendStatusToPC()
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling query status command", e)
         }
     }
 
     private fun handleSyncFlashCommand(message: JSONObject) {
         try {
             val durationMs = message.optInt("duration_ms", 100)
-            AppLogger.d(TAG, "Handling sync flash command: ${durationMs}ms")
             addSyncMarker("pc_sync_flash", System.nanoTime())
             launch {
                 sendResponseToPC("sync_flash_response", JSONObject().apply {
@@ -2265,13 +2145,11 @@ class RecordingService : Service(), CoroutineScope {
                 })
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling sync flash command", e)
         }
     }
 
     private fun handleQueryCapabilitiesCommand(message: JSONObject) {
         try {
-            AppLogger.d(TAG, "Handling query capabilities command")
             val capabilities = JSONObject().apply {
                 put("sensors", JSONArray().apply {
                     put("RGB_Camera")
@@ -2292,13 +2170,11 @@ class RecordingService : Service(), CoroutineScope {
                 sendResponseToPC("capabilities_response", capabilities)
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling query capabilities command", e)
         }
     }
 
     private fun handleStopRecordingCommand(message: JSONObject) {
         try {
-            AppLogger.d(TAG, "Handling stop recording command")
             launch {
                 if (recordingController.isRecording) {
                     stopRecordingSession()
@@ -2313,7 +2189,6 @@ class RecordingService : Service(), CoroutineScope {
                 }
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling stop recording command", e)
         }
     }
 
@@ -2321,20 +2196,16 @@ class RecordingService : Service(), CoroutineScope {
     private fun connectToPCClient(ipAddress: String, port: Int) {
         launch {
             try {
-                AppLogger.i(TAG, "Connecting to PC server as client at $ipAddress:$port")
                 updateNotification("Connecting to PC server...")
                 val success = networkManager.connectWifi(ipAddress, port)
                 if (success) {
-                    AppLogger.i(TAG, "Successfully connected to PC server as client")
                     updateNotification("Connected to PC server")
                     isConnectedToPC = true
                 } else {
-                    AppLogger.e(TAG, "Failed to connect to PC server as client")
                     updateNotification("Failed to connect to PC server")
                     isConnectedToPC = false
                 }
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error during PC client connection", e)
                 updateNotification("Connection error: ${e.message}")
                 isConnectedToPC = false
             }
@@ -2344,20 +2215,16 @@ class RecordingService : Service(), CoroutineScope {
     private fun connectToPCBluetooth(bluetoothDevice: android.bluetooth.BluetoothDevice) {
         launch {
             try {
-                AppLogger.i(TAG, "Connecting to PC via Bluetooth: ${bluetoothDevice.name}")
                 updateNotification("Connecting to PC via Bluetooth...")
                 val success = networkManager.connectBluetooth(bluetoothDevice)
                 if (success) {
-                    AppLogger.i(TAG, "Successfully connected to PC via Bluetooth")
                     updateNotification("Connected to PC via Bluetooth")
                     isConnectedToPC = true
                 } else {
-                    AppLogger.e(TAG, "Failed to connect to PC via Bluetooth")
                     updateNotification("Failed to connect via Bluetooth")
                     isConnectedToPC = false
                 }
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error during Bluetooth connection", e)
                 updateNotification("Bluetooth connection error: ${e.message}")
                 isConnectedToPC = false
             }
@@ -2367,14 +2234,11 @@ class RecordingService : Service(), CoroutineScope {
     private fun disconnectFromPCClient() {
         launch {
             try {
-                AppLogger.i(TAG, "Disconnecting from PC server")
                 updateNotification("Disconnecting from PC...")
                 networkManager.disconnect()
                 isConnectedToPC = false
-                AppLogger.i(TAG, "Disconnected from PC server")
                 updateNotification("Disconnected from PC server")
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error during disconnect", e)
                 updateNotification("Disconnect error: ${e.message}")
             }
         }

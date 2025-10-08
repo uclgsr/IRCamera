@@ -24,10 +24,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.feature.gsr.presentation.ShimmerConfigViewModel
-import mpdc4gsr.feature.gsr.presentation.ShimmerConfigViewModelFactory
 
+@AndroidEntryPoint
 class ShimmerConfigComposeActivity : ComponentActivity() {
     companion object {
         fun startActivity(context: Context) {
@@ -35,9 +36,7 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
         }
     }
 
-    private val viewModel: ShimmerConfigViewModel by viewModels {
-        ShimmerConfigViewModelFactory(application, this)
-    }
+    private val viewModel: ShimmerConfigViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

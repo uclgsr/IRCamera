@@ -15,20 +15,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.gsr.presentation.ExportDestination
 import mpdc4gsr.feature.gsr.presentation.ExportFormat
 import mpdc4gsr.feature.gsr.presentation.GSRSession
 import mpdc4gsr.feature.gsr.presentation.SessionExportViewModel
-import mpdc4gsr.feature.gsr.presentation.SessionExportViewModelFactory
 
+@AndroidEntryPoint
 class SessionExportComposeActivity : BaseComposeActivity<SessionExportViewModel>() {
     override fun createViewModel(): SessionExportViewModel =
-        viewModels<SessionExportViewModel> {
-            SessionExportViewModelFactory(application)
-        }.value
+        viewModels<SessionExportViewModel>().value
 
     @Composable
     override fun Content(viewModel: SessionExportViewModel) {
@@ -44,10 +43,7 @@ class SessionExportComposeActivity : BaseComposeActivity<SessionExportViewModel>
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionExportScreen(
-    viewModel: SessionExportViewModel = viewModel(
-        factory = SessionExportViewModelFactory(
-            androidx.compose.ui.platform.LocalContext.current.applicationContext
-        )
+    viewModel: SessionExportViewModel = hiltViewModel(
     ),
     onNavigateBack: () -> Unit = {}
 ) {

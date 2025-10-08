@@ -1,8 +1,5 @@
 package mpdc4gsr.feature.network.data
 
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,34 +10,26 @@ class SimpleCommandHandler(
     private val recordingController: SimpleRecordingInterface,
     private val networkManager: NetworkManager
 ) {
-    companion object {
-        private const val TAG = "SimpleCommandHandler"
-        private const val STATUS_UPDATE_INTERVAL_MS = 5000L
+    companion object {        private const val STATUS_UPDATE_INTERVAL_MS = 5000L
     }
 
     private val handlerScope = CoroutineScope(Dispatchers.IO)
 
     suspend fun handleCommand(commandLine: String) {
-        try {
-            AppLogger.d(TAG, "Processing command: $commandLine")
-            val response = when {
+        try {            val response = when {
                 commandLine.startsWith("START") -> handleStartCommand()
                 commandLine.startsWith("STOP") -> handleStopCommand()
                 commandLine.startsWith("SYNC") -> handleSyncCommand(commandLine)
                 commandLine.startsWith("PING") -> handlePingCommand()
                 commandLine.startsWith("GET_STATUS") -> handleGetStatusCommand()
                 commandLine.startsWith("{") -> handleJsonCommand(commandLine)
-                else -> {
-                    AppLogger.w(TAG, "Unknown command: $commandLine")
-                    "ERROR cmd=UNKNOWN code=UNKNOWN_COMMAND msg=\"Unknown command: $commandLine\""
+                else -> {                    "ERROR cmd=UNKNOWN code=UNKNOWN_COMMAND msg=\"Unknown command: $commandLine\""
                 }
             }
             if (response.isNotEmpty()) {
                 networkManager.sendResponse(response)
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling command: $commandLine", e)
-            val errorResponse =
+        } catch (e: Exception) {            val errorResponse =
                 "ERROR cmd=UNKNOWN code=HANDLER_ERROR msg=\"Command handler error: ${e.message}\""
             networkManager.sendResponse(errorResponse)
         }
@@ -48,73 +37,40 @@ class SimpleCommandHandler(
 
     private suspend fun handleStartCommand(): String = withContext(Dispatchers.IO) {
         try {
-            if (recordingController.isRecording) {
-                AppLogger.w(TAG, "START command received but already recording")
-                return@withContext "ERROR cmd=START code=ALREADY_RECORDING msg=\"Recording session already active\""
-            }
-            AppLogger.i(TAG, "Executing START command")
-            val success = recordingController.startRecording()
-            if (success) {
-                AppLogger.i(TAG, "Recording started successfully via remote command")
-                val sessionId = "session_${System.currentTimeMillis()}"
+            if (recordingController.isRecording) {                return@withContext "ERROR cmd=START code=ALREADY_RECORDING msg=\"Recording session already active\""
+            }            val success = recordingController.startRecording()
+            if (success) {                val sessionId = "session_${System.currentTimeMillis()}"
                 "START-ACK session_id=$sessionId"
-            } else {
-                AppLogger.e(TAG, "Failed to start recording via remote command")
-                "ERROR cmd=START code=START_FAILED msg=\"Failed to start recording session\""
+            } else {                "ERROR cmd=START code=START_FAILED msg=\"Failed to start recording session\""
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Exception during START command", e)
-            "ERROR cmd=START code=START_EXCEPTION msg=\"Start error: ${e.message}\""
+        } catch (e: Exception) {            "ERROR cmd=START code=START_EXCEPTION msg=\"Start error: ${e.message}\""
         }
     }
 
     private suspend fun handleStopCommand(): String = withContext(Dispatchers.IO) {
         try {
-            if (!recordingController.isRecording) {
-                AppLogger.i(TAG, "STOP command received but not currently recording")
-                return@withContext "STOP-ACK msg=\"No active recording session\""
+            if (!recordingController.isRecording) {                return@withContext "STOP-ACK msg=\"No active recording session\""
+            }            val success = recordingController.stopRecording()
+            if (success) {                "STOP-ACK msg=\"Recording session stopped\""
+            } else {                "ERROR cmd=STOP code=STOP_FAILED msg=\"Failed to stop recording session\""
             }
-            AppLogger.i(TAG, "Executing STOP command")
-            val success = recordingController.stopRecording()
-            if (success) {
-                AppLogger.i(TAG, "Recording stopped successfully via remote command")
-                "STOP-ACK msg=\"Recording session stopped\""
-            } else {
-                AppLogger.e(TAG, "Failed to stop recording via remote command")
-                "ERROR cmd=STOP code=STOP_FAILED msg=\"Failed to stop recording session\""
-            }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Exception during STOP command", e)
-            "ERROR cmd=STOP code=STOP_EXCEPTION msg=\"Stop error: ${e.message}\""
+        } catch (e: Exception) {            "ERROR cmd=STOP code=STOP_EXCEPTION msg=\"Stop error: ${e.message}\""
         }
     }
 
     private suspend fun handleSyncCommand(commandLine: String): String =
         withContext(Dispatchers.IO) {
-            try {
-                AppLogger.i(TAG, "Executing SYNC command")
-                val phoneTimestamp = System.currentTimeMillis()
+            try {                val phoneTimestamp = System.currentTimeMillis()
                 // Extract PC timestamp if provided in the command
                 val pcTimestamp = extractTimestampFromCommand(commandLine)
-                if (pcTimestamp != null) {
-                    Log.d(
-                        TAG,
-                        "Clock sync - PC timestamp: $pcTimestamp, Phone timestamp: $phoneTimestamp"
-                    )
-                    "SYNC-RESP t_pc=$pcTimestamp t_ph=$phoneTimestamp"
-                } else {
-                    AppLogger.d(TAG, "Clock sync - Phone timestamp: $phoneTimestamp")
-                    "SYNC-RESP t_ph=$phoneTimestamp"
+                if (pcTimestamp != null) {                    "SYNC-RESP t_pc=$pcTimestamp t_ph=$phoneTimestamp"
+                } else {                    "SYNC-RESP t_ph=$phoneTimestamp"
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Exception during SYNC command", e)
-                "ERROR cmd=SYNC code=SYNC_EXCEPTION msg=\"Sync error: ${e.message}\""
+            } catch (e: Exception) {                "ERROR cmd=SYNC code=SYNC_EXCEPTION msg=\"Sync error: ${e.message}\""
             }
         }
 
-    private fun handlePingCommand(): String {
-        AppLogger.d(TAG, "Responding to PING")
-        return "PONG"
+    private fun handlePingCommand(): String {        return "PONG"
     }
 
     private suspend fun handleGetStatusCommand(): String = withContext(Dispatchers.IO) {
@@ -125,12 +81,8 @@ class SimpleCommandHandler(
                 statusMap.forEach { (key, value) ->
                     put(key, value)
                 }
-            }
-            AppLogger.d(TAG, "Status query response: $statusJson")
-            "STATUS $statusJson"
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Exception during GET_STATUS command", e)
-            "ERROR cmd=GET_STATUS code=STATUS_EXCEPTION msg=\"Status error: ${e.message}\""
+            }            "STATUS $statusJson"
+        } catch (e: Exception) {            "ERROR cmd=GET_STATUS code=STATUS_EXCEPTION msg=\"Status error: ${e.message}\""
         }
     }
 
@@ -152,9 +104,7 @@ class SimpleCommandHandler(
                     "GET_STATUS" -> handleGetStatusCommand()
                     else -> "ERROR cmd=$command code=UNKNOWN_JSON_COMMAND msg=\"Unknown JSON command: $command\""
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error processing JSON command: $jsonString", e)
-                "ERROR cmd=JSON code=JSON_PARSE_ERROR msg=\"Invalid JSON command: ${e.message}\""
+            } catch (e: Exception) {                "ERROR cmd=JSON code=JSON_PARSE_ERROR msg=\"Invalid JSON command: ${e.message}\""
             }
         }
 
@@ -176,9 +126,7 @@ class SimpleCommandHandler(
                     try {
                         val statusResponse = handleGetStatusCommand()
                         networkManager.sendTelemetry(statusResponse)
-                    } catch (e: Exception) {
-                        AppLogger.e(TAG, "Error sending periodic status update", e)
-                    }
+                    } catch (e: Exception) {                    }
                 }
             }
         }
@@ -191,9 +139,7 @@ class SimpleCommandHandler(
                 val message =
                     "STATUS Recording started at $timestamp, session: $sessionId, sensors: [RGB,Thermal,GSR]"
                 networkManager.sendTelemetry(message)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error sending session started notification", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 
@@ -204,9 +150,7 @@ class SimpleCommandHandler(
                 val message =
                     "STATUS Recording stopped at $timestamp, duration: ${duration}ms, files saved"
                 networkManager.sendTelemetry(message)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error sending session stopped notification", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 
@@ -216,9 +160,7 @@ class SimpleCommandHandler(
                 val timestamp = System.currentTimeMillis()
                 val message = "WARN $errorType at $timestamp: $errorMessage"
                 networkManager.sendTelemetry(message)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error sending error notification", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 }

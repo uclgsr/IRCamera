@@ -31,7 +31,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.feature.camera.presentation.DualModeCameraViewModel
 import mpdc4gsr.feature.main.ui.MainComposeActivity
 
-class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewModel>() {
+class DualModeCameraComposeActivity2 : BaseComposeActivity<DualModeCameraViewModel>() {
     private val cameraVM: DualModeCameraViewModel by viewModels()
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -160,7 +160,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             if (permissionState == DualModeCameraViewModel.PermissionState.GRANTED) {
                                 viewModel.initializeCamera(
                                     context,
-                                    this@DualModeCameraActivityCompose,
+                                    this@DualModeCameraComposeActivity2,
                                     previewView
                                 )
                             }
@@ -418,7 +418,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                 label = { Text("Camera") },
                 selected = true,
                 onClick = {
-                    // Current page - already on DualModeCameraActivityCompose
+                    // Current page - already on DualModeCameraComposeActivity2
                     Toast.makeText(context, "Already viewing dual camera", Toast.LENGTH_SHORT).show()
                 }
             )

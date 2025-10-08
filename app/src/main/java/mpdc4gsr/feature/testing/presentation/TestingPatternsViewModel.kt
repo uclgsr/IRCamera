@@ -2,10 +2,13 @@ package mpdc4gsr.feature.testing.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TestingPatternsViewModel : BaseViewModel() {
+@HiltViewModel
+class TestingPatternsViewModel @Inject constructor() : BaseViewModel() {
     // StateFlow for various testing scenarios
     private val _testExecutionState = MutableStateFlow<TestExecutionState>(TestExecutionState.Idle)
     val testExecutionState: StateFlow<TestExecutionState> = _testExecutionState.asStateFlow()
