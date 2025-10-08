@@ -3,14 +3,17 @@ package mpdc4gsr.feature.gsr.presentation
 import android.content.Context
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.service.SessionManager
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import mpdc4gsr.core.ui.AppBaseViewModel
 import java.io.File
+import javax.inject.Inject
 
-class SessionManagerViewModel : AppBaseViewModel() {
+@HiltViewModel
+class SessionManagerViewModel @Inject constructor() : AppBaseViewModel() {
     // StateFlow for session management
     private val _allSessions = MutableStateFlow<List<SessionInfo>>(emptyList())
     private val _filteredSessions = MutableStateFlow<List<SessionInfo>>(emptyList())

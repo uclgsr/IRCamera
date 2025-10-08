@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+import dagger.hilt.android.AndroidEntryPoint
 
 import android.content.Context
 import android.content.Intent
@@ -25,6 +26,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.feature.gsr.presentation.MultiModalRecordingViewModel
 
+@AndroidEntryPoint
 class MultiModalRecordingComposeActivity : BaseComposeActivity<MultiModalRecordingViewModel>() {
     companion object {
         fun startActivity(context: Context) {

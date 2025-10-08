@@ -48,9 +48,9 @@ data class GSRSession(
     val lastModified: Long = 0L
 )
 
-@dagger.hilt.android.lifecycle.HiltViewModel
-class SessionExportViewModel @javax.inject.Inject constructor(
-    @dagger.hilt.android.qualifiers.ApplicationContext context: Context
+@HiltViewModel
+class SessionExportViewModel @Inject constructor(
+    @ApplicationContext context: Context
 ) : AppBaseViewModel() {
     private val application: Context = context.applicationContext
 

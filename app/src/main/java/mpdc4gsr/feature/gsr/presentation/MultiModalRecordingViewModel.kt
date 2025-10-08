@@ -14,14 +14,20 @@ import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.gsr.util.TimeUtils
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.shimmerresearch.android.Shimmer
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory
+import javax.inject.Inject
 
-class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
+@HiltViewModel
+class MultiModalRecordingViewModel @Inject constructor(
+    @ApplicationContext private val application: Application
+) : BaseViewModel() {
     data class RecordingState(
         val isRecording: Boolean = false,
         val isStartingRecording: Boolean = false,
