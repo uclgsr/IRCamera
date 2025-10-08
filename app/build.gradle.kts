@@ -326,7 +326,7 @@ dependencies {
     
     // Hilt dependency injection
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
     
     implementation(platform(libs.compose.bom))
