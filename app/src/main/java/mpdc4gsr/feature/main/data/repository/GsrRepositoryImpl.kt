@@ -4,18 +4,18 @@ import android.content.Context
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import mpdc4gsr.core.data.UnifiedGSRRecorder
-import mpdc4gsr.feature.main.domain.repository.GSRConnectionState
-import mpdc4gsr.feature.main.domain.repository.GSRRepository
+import mpdc4gsr.feature.main.domain.repository.GsrConnectionState
+import mpdc4gsr.feature.main.domain.repository.GsrRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GSRRepositoryImpl @Inject constructor(
+class GsrRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
-) : GSRRepository {
+) : GsrRepository {
     
-    private val _connectionState = MutableStateFlow(GSRConnectionState.DISCONNECTED)
+    private val _connectionState = MutableStateFlow(GsrConnectionState.DISCONNECTED)
     private val _batteryLevel = MutableStateFlow<Int?>(null)
     private val _deviceStatus = MutableStateFlow("")
     private val _connectionQuality = MutableStateFlow(0f)
@@ -25,12 +25,12 @@ class GSRRepositoryImpl @Inject constructor(
     }
     
     override suspend fun initialize(): Boolean {
-        _connectionState.value = GSRConnectionState.CONNECTING
+        _connectionState.value = GsrConnectionState.CONNECTING
         return unifiedGSRRecorder.initialize()
     }
     
     override suspend fun startDeviceDiscovery(): Boolean {
-        _connectionState.value = GSRConnectionState.DISCOVERING
+        _connectionState.value = GsrConnectionState.DISCOVERING
         return unifiedGSRRecorder.startDeviceDiscovery()
     }
     
@@ -40,19 +40,19 @@ class GSRRepositoryImpl @Inject constructor(
         
         val connected = unifiedGSRRecorder.connectToDevice(device)
         if (connected) {
-            _connectionState.value = GSRConnectionState.CONNECTED
+            _connectionState.value = GsrConnectionState.CONNECTED
         } else {
-            _connectionState.value = GSRConnectionState.ERROR
+            _connectionState.value = GsrConnectionState.ERROR
         }
         return connected
     }
     
     override suspend fun disconnect() {
         unifiedGSRRecorder.disconnect()
-        _connectionState.value = GSRConnectionState.DISCONNECTED
+        _connectionState.value = GsrConnectionState.DISCONNECTED
     }
     
-    override fun getConnectionState(): Flow<GSRConnectionState> = _connectionState
+    override fun getConnectionState(): Flow<GsrConnectionState> = _connectionState
     
     override fun getBatteryLevel(): Flow<Int?> = _batteryLevel
     

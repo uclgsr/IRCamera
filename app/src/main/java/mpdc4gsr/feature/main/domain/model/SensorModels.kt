@@ -15,7 +15,7 @@ data class SensorState(
     val lastUpdate: Long = System.currentTimeMillis()
 )
 
-data class GSRDataState(
+data class GsrDataState(
     val currentValue: Float = 0f,
     val batteryLevel: Int = 0,
     val recentReadings: List<Float> = emptyList(),

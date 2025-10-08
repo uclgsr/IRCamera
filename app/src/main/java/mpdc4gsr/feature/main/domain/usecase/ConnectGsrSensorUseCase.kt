@@ -1,10 +1,10 @@
 package mpdc4gsr.feature.main.domain.usecase
 
-import mpdc4gsr.feature.main.domain.repository.GSRRepository
+import mpdc4gsr.feature.main.domain.repository.GsrRepository
 import javax.inject.Inject
 
-class ConnectGSRSensorUseCase @Inject constructor(
-    private val gsrRepository: GSRRepository
+class ConnectGsrSensorUseCase @Inject constructor(
+    private val gsrRepository: GsrRepository
 ) {
     suspend operator fun invoke(): Boolean {
         val initialized = gsrRepository.initialize()

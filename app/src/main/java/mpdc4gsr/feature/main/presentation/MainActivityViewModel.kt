@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.domain.model.UiEvent
 import mpdc4gsr.feature.main.domain.model.*
-import mpdc4gsr.feature.main.domain.repository.GSRConnectionState
+import mpdc4gsr.feature.main.domain.repository.GsrConnectionState
 import mpdc4gsr.feature.main.domain.repository.NetworkConnectionState
 import mpdc4gsr.feature.main.domain.usecase.*
 import mpdc4gsr.feature.network.data.NetworkClient
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class MainActivityViewModel @Inject constructor(
     private val startRecordingSessionUseCase: StartRecordingSessionUseCase,
     private val stopRecordingSessionUseCase: StopRecordingSessionUseCase,
-    private val connectGSRSensorUseCase: ConnectGSRSensorUseCase,
+    private val connectGsrSensorUseCase: ConnectGsrSensorUseCase,
     private val startNetworkDiscoveryUseCase: StartNetworkDiscoveryUseCase
 ) : ViewModel() {
 
@@ -29,13 +29,13 @@ class MainActivityViewModel @Inject constructor(
         MutableStateFlow(1) // PAGE_MAIN = 1 (0: Gallery, 1: Main, 2: Settings, 3: Mine)
     val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
 
-    private val _gsrConnectionState = MutableStateFlow(GSRConnectionState.DISCONNECTED)
-    val gsrConnectionState: StateFlow<GSRConnectionState> = _gsrConnectionState.asStateFlow()
+    private val _gsrConnectionState = MutableStateFlow(GsrConnectionState.DISCONNECTED)
+    val gsrConnectionState: StateFlow<GsrConnectionState> = _gsrConnectionState.asStateFlow()
     private val _gsrBatteryLevel = MutableStateFlow<Int?>(null)
     val gsrBatteryLevel: StateFlow<Int?> = _gsrBatteryLevel.asStateFlow()
 
-    private val _gsrData = MutableStateFlow(GSRDataState())
-    val gsrData: StateFlow<GSRDataState> = _gsrData.asStateFlow()
+    private val _gsrData = MutableStateFlow(GsrDataState())
+    val gsrData: StateFlow<GsrDataState> = _gsrData.asStateFlow()
     private val _networkConnectionState = MutableStateFlow(NetworkConnectionState.DISCONNECTED)
     val networkConnectionState: StateFlow<NetworkConnectionState> =
         _networkConnectionState.asStateFlow()
@@ -82,15 +82,15 @@ class MainActivityViewModel @Inject constructor(
 
     fun startGSRConnection() {
         viewModelScope.launch {
-            _gsrConnectionState.value = GSRConnectionState.DISCOVERING
+            _gsrConnectionState.value = GsrConnectionState.DISCOVERING
             _events.emit(UiEvent.ShowToast("Searching for GSR sensor..."))
             
-            val success = connectGSRSensorUseCase()
+            val success = connectGsrSensorUseCase()
             if (success) {
-                _gsrConnectionState.value = GSRConnectionState.CONNECTED
+                _gsrConnectionState.value = GsrConnectionState.CONNECTED
                 _events.emit(UiEvent.ShowToast("GSR sensor connected"))
             } else {
-                _gsrConnectionState.value = GSRConnectionState.ERROR
+                _gsrConnectionState.value = GsrConnectionState.ERROR
                 _events.emit(UiEvent.ShowToast("Failed to connect GSR sensor", true))
             }
         }
