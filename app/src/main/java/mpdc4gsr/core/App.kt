@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.csl.irCamera.BuildConfig
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
+import dagger.hilt.android.HiltAndroidApp
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.HttpConfig
 import com.mpdc4gsr.libunified.app.lms.Config
@@ -22,6 +23,7 @@ import mpdc4gsr.core.ui.InitUtils.initReceiver
 import mpdc4gsr.core.ui.InitUtils.initUM
 import mpdc4gsr.core.utils.AppLogger
 
+@HiltAndroidApp
 class App : BaseApplication() {
     companion object {
         @Deprecated(
