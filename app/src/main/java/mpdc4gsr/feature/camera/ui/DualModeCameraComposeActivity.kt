@@ -21,9 +21,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.camera.presentation.DualModeCameraViewModel
 
+@AndroidEntryPoint
 class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewModel>() {
     companion object {
         fun startActivity(context: Context) {

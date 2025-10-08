@@ -2,6 +2,8 @@ package mpdc4gsr.feature.camera.presentation
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,6 +13,7 @@ import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.core.ui.AppBaseViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 enum class FocusMode(val displayName: String) {
     AUTO("Auto"),
@@ -42,10 +45,10 @@ enum class WhiteBalance(val displayName: String) {
     }
 }
 
-class RGBCameraViewModel(
-    context: Context
+@HiltViewModel
+class RGBCameraViewModel @Inject constructor(
+    @ApplicationContext private val application: Context
 ) : AppBaseViewModel() {
-    private val application: Context = context.applicationContext
 
     companion object {
         // Reuse SimpleDateFormat instance for better performance

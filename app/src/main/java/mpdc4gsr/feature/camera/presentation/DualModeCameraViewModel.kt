@@ -4,13 +4,16 @@ import android.content.Context
 import androidx.camera.view.PreviewView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
+import javax.inject.Inject
 
-class DualModeCameraViewModel : AppBaseViewModel() {
+@HiltViewModel
+class DualModeCameraViewModel @Inject constructor() : AppBaseViewModel() {
     // Enhanced data classes
     data class CameraState(
         val isInitialized: Boolean = false,

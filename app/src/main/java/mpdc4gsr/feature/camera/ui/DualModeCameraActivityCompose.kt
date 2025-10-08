@@ -28,9 +28,11 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.feature.camera.presentation.DualModeCameraViewModel
 import mpdc4gsr.feature.main.ui.MainComposeActivity
 
+@AndroidEntryPoint
 class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewModel>() {
     private val cameraVM: DualModeCameraViewModel by viewModels()
     private val requestPermissionLauncher = registerForActivityResult(

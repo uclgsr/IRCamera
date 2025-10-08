@@ -1,12 +1,13 @@
 package mpdc4gsr.feature.camera.presentation
 
-import android.content.Context
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
+import javax.inject.Inject
 
 enum class TimeLapseMode(val displayName: String) {
     MANUAL("Manual Interval"),
@@ -16,8 +17,8 @@ enum class TimeLapseMode(val displayName: String) {
     PRESET_SLOW("Slow (10s)")
 }
 
-class TimeLapseCameraViewModel(
-    @Suppress("UNUSED_PARAMETER") context: Context
+@HiltViewModel
+class TimeLapseCameraViewModel @Inject constructor(
 ) : AppBaseViewModel() {
     companion object {
         private const val DEFAULT_PLAYBACK_FPS = 30
@@ -85,17 +86,5 @@ class TimeLapseCameraViewModel(
                 estimatedVideoLength = (current.capturedFrames + 1) / DEFAULT_PLAYBACK_FPS
             )
         }
-    }
-}
-
-class TimeLapseCameraViewModelFactory(
-    private val context: Context
-) : androidx.lifecycle.ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(TimeLapseCameraViewModel::class.java)) {
-            return TimeLapseCameraViewModel(context) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
