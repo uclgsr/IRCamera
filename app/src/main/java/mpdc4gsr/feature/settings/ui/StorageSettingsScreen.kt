@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.settings.SettingsCard
 import mpdc4gsr.core.ui.components.settings.SettingsDropdown
@@ -25,16 +25,11 @@ import mpdc4gsr.core.ui.components.settings.SettingsRow
 import mpdc4gsr.core.ui.components.settings.SettingsToggle
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.settings.presentation.StorageSettingsViewModel
-import mpdc4gsr.feature.settings.presentation.StorageSettingsViewModelFactory
 
 @Composable
 fun StorageSettingsScreen(
     onBackClick: (() -> Unit)? = null,
-    viewModel: StorageSettingsViewModel = viewModel(
-        factory = StorageSettingsViewModelFactory(
-            LocalContext.current.applicationContext
-        )
-    ),
+    viewModel: StorageSettingsViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
