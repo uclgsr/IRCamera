@@ -184,7 +184,7 @@ private fun ThermalCameraContent(
 // TemperatureUnit and MeasurementMode are imported from mpdc4gsr.feature.thermal.data.ThermalModels.kt
 @Composable
 private fun ThermalPreviewCard(
-    uiState: ThermalCameraViewModel.ThermalCameraUiState,
+    uiState: ThermalUiState.Success,
     selectedPalette: ThermalPalette,
     measurementMode: MeasurementMode,
     temperatureUnit: TemperatureUnit
@@ -328,7 +328,7 @@ private fun ThermalPreviewCard(
 
 @Composable
 private fun TemperatureMeasurementsCard(
-    uiState: ThermalCameraViewModel.ThermalCameraUiState,
+    uiState: ThermalUiState.Success,
     temperatureUnit: TemperatureUnit
 ) {
     Card(
@@ -434,7 +434,7 @@ private fun MeasurementRow(
 
 @Composable
 private fun ThermalCameraControlsCard(
-    uiState: ThermalCameraViewModel.ThermalCameraUiState,
+    uiState: ThermalUiState.Success,
     selectedPalette: ThermalPalette,
     temperatureUnit: TemperatureUnit,
     measurementMode: MeasurementMode,
@@ -678,7 +678,7 @@ private fun ThermalAnalysisToolsCard() {
 
 @Composable
 private fun ThermalCameraStatusCard(
-    uiState: ThermalCameraViewModel.ThermalCameraUiState,
+    uiState: ThermalUiState.Success,
     onConnectCamera: () -> Unit,
     onDisconnectCamera: () -> Unit
 ) {

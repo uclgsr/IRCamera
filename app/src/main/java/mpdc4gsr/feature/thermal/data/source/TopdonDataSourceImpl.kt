@@ -3,9 +3,6 @@ package mpdc4gsr.feature.thermal.data.source
 import android.content.Context
 import android.graphics.Bitmap
 import android.hardware.usb.UsbDevice
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.energy.iruvc.ircmd.ConcreteIRCMDBuilder
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.ircmd.IRCMDType
@@ -64,12 +61,10 @@ class TopdonDataSourceImpl(
     private var connectionDeferred: kotlinx.coroutines.CompletableDeferred<Result<Unit>>? = null
     override suspend fun connectDevice(): Result<Unit> {
         return try {
-            AppLogger.d(TAG, "Initializing Topdon thermal camera with USB SDK")
             connectionDeferred = CompletableDeferred()
             if (usbMonitor == null) {
                 usbMonitor = USBMonitor(context, object : USBMonitor.OnDeviceConnectListener {
                     override fun onAttach(device: UsbDevice?) {
-                        AppLogger.i(TAG, "USB device attached: ${device?.productName}")
                         device?.let {
                             usbMonitor?.requestPermission(it)
                         }
@@ -77,9 +72,7 @@ class TopdonDataSourceImpl(
 
                     override fun onGranted(usbDevice: UsbDevice?, granted: Boolean) {
                         if (granted && usbDevice != null) {
-                            AppLogger.i(TAG, "USB permission granted for device")
                         } else {
-                            AppLogger.w(TAG, "USB permission denied")
                             connectionDeferred?.complete(Result.failure(Exception("USB permission denied")))
                         }
                     }
@@ -89,7 +82,6 @@ class TopdonDataSourceImpl(
                         ctrlBlock: USBMonitor.UsbControlBlock?,
                         createNew: Boolean
                     ) {
-                        AppLogger.i(TAG, "USB device connected, opening UVC camera")
                         ctrlBlock?.let {
                             val result = openCamera(it)
                             if (result) {
@@ -102,35 +94,29 @@ class TopdonDataSourceImpl(
                     }
 
                     override fun onDisconnect(device: UsbDevice?, ctrlBlock: USBMonitor.UsbControlBlock?) {
-                        AppLogger.i(TAG, "USB device disconnected")
                         isConnected = false
                     }
 
                     override fun onDettach(device: UsbDevice?) {
-                        AppLogger.i(TAG, "USB device detached")
                         isConnected = false
                     }
 
                     override fun onCancel(device: UsbDevice?) {
-                        AppLogger.w(TAG, "USB connection cancelled")
                         connectionDeferred?.complete(Result.failure(Exception("USB connection cancelled")))
                     }
                 })
                 usbMonitor?.register()
-                AppLogger.i(TAG, "USBMonitor registered successfully")
             }
             if (uvcCamera == null) {
                 uvcCamera = ConcreateUVCBuilder()
                     .setUVCType(UVCType.USB_UVC)
                     .build()
-                AppLogger.i(TAG, "UVCCamera instance created")
             }
             val timeoutResult = withTimeoutOrNull(10000) {
                 connectionDeferred?.await()
             }
             timeoutResult ?: Result.failure(Exception("Connection timeout"))
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error connecting to thermal camera", e)
             Result.failure(e)
         }
     }
@@ -140,17 +126,14 @@ class TopdonDataSourceImpl(
             uvcCamera?.let { camera ->
                 val result = camera.openUVCCamera(ctrlBlock)
                 if (result == 0) {
-                    AppLogger.i(TAG, "UVC camera opened successfully")
                     initializeIRCMD()
                     initializeLibIRTemp()
                     true
                 } else {
-                    AppLogger.e(TAG, "Failed to open UVC camera, result: $result")
                     false
                 }
             } ?: false
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error opening camera", e)
             false
         }
     }
@@ -162,25 +145,20 @@ class TopdonDataSourceImpl(
                     .setIrcmdType(IRCMDType.USB_IR_256_384)
                     .setIdCamera(camera.nativePtr)
                     .build()
-                AppLogger.i(TAG, "IRCMD initialized for camera commands")
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error initializing IRCMD", e)
         }
     }
 
     private fun initializeLibIRTemp() {
         try {
             irTemp = LibIRTemp()
-            AppLogger.i(TAG, "LibIRTemp initialized for temperature calculations")
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error initializing LibIRTemp", e)
         }
     }
 
     override suspend fun disconnectDevice() {
         try {
-            AppLogger.d(TAG, "Disconnecting thermal camera")
             if (isRecording) {
                 stopRecording()
             }
@@ -195,19 +173,15 @@ class TopdonDataSourceImpl(
             usbMonitor = null
             irTemp = null
             isConnected = false
-            AppLogger.i(TAG, "Thermal camera disconnected and resources released")
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error disconnecting thermal camera", e)
         }
     }
 
     override suspend fun startStreaming(): Flow<ThermalFrameData> {
         return flow {
             if (!isConnected) {
-                AppLogger.e(TAG, "Cannot start streaming - camera not connected")
                 throw IllegalStateException("Camera not connected")
             }
-            AppLogger.d(TAG, "Starting thermal frame streaming with SDK")
             val frameChannel = Channel<ThermalFrameData>(Channel.BUFFERED)
             frameCallback = IFrameCallback { frame ->
                 try {
@@ -218,17 +192,14 @@ class TopdonDataSourceImpl(
                             val thermalFrame = createThermalFrameData(processedData)
                             val sendResult = frameChannel.trySend(thermalFrame)
                             if (sendResult.isFailure) {
-                                AppLogger.w(TAG, "Frame dropped - channel buffer full")
                             }
                         }
                     }
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "Error processing frame in callback", e)
                 }
             }
             uvcCamera?.setFrameCallback(frameCallback)
             isStreaming = true
-            AppLogger.i(TAG, "Thermal streaming started with LibIRProcess frame processing")
             try {
                 while (isStreaming) {
                     val frame = withTimeoutOrNull(FRAME_RECEIVE_TIMEOUT_MS) {
@@ -258,7 +229,6 @@ class TopdonDataSourceImpl(
             )
             rgbBuffer.copyOf()
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error in LibIRProcess.processFrame", e)
             null
         }
     }
@@ -288,7 +258,6 @@ class TopdonDataSourceImpl(
                 }
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error calculating temperatures with LibIRTemp", e)
         }
         val bitmap = createBitmapFromFrame(processedData)
         return ThermalFrameData(
@@ -307,20 +276,16 @@ class TopdonDataSourceImpl(
             bitmap.copyPixelsFromBuffer(java.nio.ByteBuffer.wrap(data))
             bitmap
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error creating bitmap from frame data", e)
             Bitmap.createBitmap(CAMERA_WIDTH, CAMERA_HEIGHT, Bitmap.Config.ARGB_8888)
         }
     }
 
     override suspend fun stopStreaming() {
         try {
-            AppLogger.d(TAG, "Stopping thermal frame streaming")
             uvcCamera?.setFrameCallback(null)
             frameCallback = null
             isStreaming = false
-            AppLogger.i(TAG, "Thermal streaming stopped")
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error stopping thermal streaming", e)
         }
     }
 
@@ -329,7 +294,6 @@ class TopdonDataSourceImpl(
             if (!isConnected) {
                 return Result.failure(IllegalStateException("Camera not connected"))
             }
-            AppLogger.d(TAG, "Capturing thermal snapshot with LibIRProcess and LibIRTemp")
             val frameData = imageBuffer.copyOf()
             val processedData = processFrame(frameData)
             if (processedData == null) {
@@ -358,10 +322,8 @@ class TopdonDataSourceImpl(
                 timestamp = System.currentTimeMillis(),
                 location = null
             )
-            AppLogger.i(TAG, "Thermal snapshot captured with SDK - min: $minTemp, max: $maxTemp")
             Result.success(snapshot)
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error capturing thermal snapshot", e)
             Result.failure(e)
         }
     }
@@ -371,32 +333,26 @@ class TopdonDataSourceImpl(
             if (!isConnected) {
                 return Result.failure(IllegalStateException("Camera not connected"))
             }
-            AppLogger.d(TAG, "Starting thermal recording with frame buffering")
             val recordingDir = File(context.filesDir, "thermal_recordings")
             recordingDir.mkdirs()
             recordingFile = File(recordingDir, "thermal_${System.currentTimeMillis()}.bin")
             recordingOutputStream = FileOutputStream(recordingFile)
             isRecording = true
-            AppLogger.i(TAG, "Thermal recording started, saving to: ${recordingFile?.absolutePath}")
             Result.success(Unit)
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error starting thermal recording", e)
             Result.failure(e)
         }
     }
 
     override suspend fun stopRecording(): Result<String> {
         return try {
-            AppLogger.d(TAG, "Stopping thermal recording and flushing data")
             isRecording = false
             recordingOutputStream?.flush()
             recordingOutputStream?.close()
             recordingOutputStream = null
             val filePath = recordingFile?.absolutePath ?: ""
-            AppLogger.i(TAG, "Thermal recording stopped, saved to: $filePath")
             Result.success(filePath)
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error stopping thermal recording", e)
             Result.failure(e)
         }
     }
@@ -410,18 +366,14 @@ class TopdonDataSourceImpl(
             if (!isConnected) {
                 return Result.failure(IllegalStateException("Camera not connected"))
             }
-            AppLogger.d(TAG, "Setting temperature range with LibIRTemp: min=$min, max=$max")
             currentMinTemp = min
             currentMaxTemp = max
             irTemp?.let {
-                AppLogger.i(TAG, "Temperature range configured in LibIRTemp")
             }
             ircmd?.let { cmd ->
-                AppLogger.d(TAG, "Temperature range settings applied to IRCMD")
             }
             Result.success(Unit)
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error setting temperature range", e)
             Result.failure(e)
         }
     }
@@ -437,7 +389,6 @@ class TopdonDataSourceImpl(
                 return Result.failure(IllegalStateException("Camera not connected"))
             }
             ircmd?.let { cmd ->
-                AppLogger.d(TAG, "Configuring camera settings via IRCMD")
                 cmd.setMirror(enableMirror)
                 cmd.setAutoShutter(enableAutoShutter)
                 cmd.setPropDdeLevel(ddeLevel)
@@ -451,7 +402,6 @@ class TopdonDataSourceImpl(
             }
             Result.success(Unit)
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error configuring camera settings", e)
             Result.failure(e)
         }
     }
