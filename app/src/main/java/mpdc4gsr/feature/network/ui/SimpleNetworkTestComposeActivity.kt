@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.ui
+import dagger.hilt.android.AndroidEntryPoint
 
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -235,6 +236,7 @@ class SimpleNetworkTestViewModel : AppBaseViewModel() {
     }
 }
 
+@AndroidEntryPoint
 class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestViewModel>() {
     override fun createViewModel(): SimpleNetworkTestViewModel =
         viewModels<SimpleNetworkTestViewModel>().value

@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.ui
+import dagger.hilt.android.AndroidEntryPoint
 
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
@@ -17,6 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
+@AndroidEntryPoint
 class NetworkClientTestComposeActivity : BaseComposeActivity<NetworkClientTestViewModel>() {
     override fun createViewModel(): NetworkClientTestViewModel =
         viewModels<NetworkClientTestViewModel>().value

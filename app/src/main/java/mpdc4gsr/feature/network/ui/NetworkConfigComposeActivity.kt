@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.network.ui
+import dagger.hilt.android.AndroidEntryPoint
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
@@ -184,6 +185,7 @@ class NetworkConfigViewModel : AppBaseViewModel() {
     }
 }
 
+@AndroidEntryPoint
 class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>() {
     private lateinit var networkSettings: NetworkSettings
     private lateinit var permissionManager: PermissionManager

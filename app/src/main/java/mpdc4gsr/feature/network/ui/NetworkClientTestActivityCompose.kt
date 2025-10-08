@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
+import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -155,6 +156,7 @@ class NetworkClientTestViewModel : AppBaseViewModel() {
     }
 }
 
+@AndroidEntryPoint
 class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestViewModel>() {
     companion object {
         private const val DEFAULT_PC_IP = "192.168.1.100"
