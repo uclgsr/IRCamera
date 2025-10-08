@@ -12,6 +12,7 @@ hiltNavigationCompose = "1.2.0"
 
 # Jetpack Compose
 compose-bom = "2025.09.01"
+compose-compiler = "1.5.15"
 activity = "1.11.0"
 
 androidxCore = "1.17.0"
