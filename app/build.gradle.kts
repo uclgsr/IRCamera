@@ -7,6 +7,8 @@ plugins {
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
+    kotlin("kapt")
 }
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
@@ -256,6 +258,11 @@ android {
             languageVersion.set(JavaLanguageVersion.of(17))
         }
     }
+    
+    // Kapt configuration for Hilt
+    kapt {
+        correctErrorTypes = true
+    }
 
     buildFeatures {
         buildConfig = true
@@ -321,6 +328,12 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.guava)
+    
+    // Hilt dependency injection
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+    
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose.core)
     implementation(libs.bundles.compose.navigation.bundle)

@@ -1,20 +1,24 @@
 package mpdc4gsr.feature.settings.presentation
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Environment
 import android.os.StatFs
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class StorageSettingsViewModel(context: Context) : BaseViewModel() {
-    private val context: Context = context.applicationContext
+@HiltViewModel
+class StorageSettingsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context
+) : ViewModel() {
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private val _storageSettings = MutableStateFlow(StorageSettings())
     val storageSettings: StateFlow<StorageSettings> = _storageSettings.asStateFlow()
@@ -46,12 +50,6 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
     }
 
     init {
-        loadSettings()
-        updateStorageInfo()
-    }
-
-    fun initialize() {
-        // Kept for compatibility, but initialization now happens in init block
         loadSettings()
         updateStorageInfo()
     }

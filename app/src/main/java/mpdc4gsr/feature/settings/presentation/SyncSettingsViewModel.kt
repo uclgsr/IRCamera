@@ -2,16 +2,22 @@ package mpdc4gsr.feature.settings.presentation
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.AppBaseViewModel
+import javax.inject.Inject
 
-class SyncSettingsViewModel : AppBaseViewModel() {
-    private lateinit var prefs: SharedPreferences
+@HiltViewModel
+class SyncSettingsViewModel @Inject constructor(
+    @ApplicationContext context: Context
+) : ViewModel() {
+    private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private val _syncSettings = MutableStateFlow(SyncSettings())
     val syncSettings: StateFlow<SyncSettings> = _syncSettings.asStateFlow()
 
@@ -33,8 +39,7 @@ class SyncSettingsViewModel : AppBaseViewModel() {
         private const val KEY_LAST_SYNC = "sync_last_sync"
     }
 
-    fun initialize(context: Context) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(context)
+    init {
         loadSettings()
     }
 
