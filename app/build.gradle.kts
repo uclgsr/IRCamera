@@ -7,7 +7,7 @@ plugins {
     kotlin("kapt")
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.hilt)
+    id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 }
 
@@ -270,10 +270,6 @@ android {
         compose = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-
     dependenciesInfo {
         includeInApk = false
         includeInBundle = false
@@ -330,7 +326,7 @@ dependencies {
     
     // Hilt dependency injection
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    kapt(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     
     implementation(platform(libs.compose.bom))
@@ -344,7 +340,7 @@ dependencies {
     
     // Hilt Dependency Injection
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     
     implementation(project(":component:thermalunified"))
@@ -386,12 +382,12 @@ dependencies {
     
     // Hilt Dependency Injection
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
 
     // Hilt
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
 
     implementation(files("libs/shimmerandroidinstrumentdriver-3.2.4_beta.aar"))
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))
