@@ -5,7 +5,7 @@ import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import mpdc4gsr.core.SessionManager
-import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.core.monitoring.StructuredLogger
 import mpdc4gsr.feature.main.domain.repository.SessionRepository
 import com.mpdc4gsr.gsr.service.SessionManager as GSRSessionManager
 import dagger.hilt.android.qualifiers.ApplicationContext

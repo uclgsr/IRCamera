@@ -7,7 +7,7 @@ import android.util.Base64
 import com.mpdc4gsr.libunified.app.sync.TimeSyncService
 import kotlinx.coroutines.*
 import mpdc4gsr.core.SessionManager
-import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.core.monitoring.StructuredLogger
 import mpdc4gsr.core.data.AdvancedAuthenticationManager
 import mpdc4gsr.core.data.FeatureFlags
 import mpdc4gsr.core.data.ProtocolVersion

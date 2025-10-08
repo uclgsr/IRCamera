@@ -3,7 +3,7 @@ package mpdc4gsr.core.data
 import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.*
-import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.core.monitoring.StructuredLogger
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean

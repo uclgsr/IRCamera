@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.core.data.SensorRecorder
-import mpdc4gsr.core.data.SessionMetadata
+import mpdc4gsr.core.data.model.SessionMetadata
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap

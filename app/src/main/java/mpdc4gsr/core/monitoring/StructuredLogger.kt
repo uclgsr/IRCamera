@@ -1,4 +1,4 @@
-package mpdc4gsr.core
+package mpdc4gsr.core.monitoring
 
 import android.content.Context
 import android.util.Log

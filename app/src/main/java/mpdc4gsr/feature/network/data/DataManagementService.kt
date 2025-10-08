@@ -1,7 +1,7 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.core.monitoring.StructuredLogger
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
