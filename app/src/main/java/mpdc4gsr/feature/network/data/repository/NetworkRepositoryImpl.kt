@@ -106,7 +106,7 @@ class NetworkRepositoryImpl @Inject constructor(
             }
         }
 
-        networkClient.setEventListener(listener)
+        dataSource.setEventListener(listener)
         
         awaitClose {
             networkClient.setEventListener(null)
