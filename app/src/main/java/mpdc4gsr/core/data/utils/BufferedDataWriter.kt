@@ -2,7 +2,6 @@ package mpdc4gsr.core.data.utils
 
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import java.io.BufferedWriter
 import java.io.File

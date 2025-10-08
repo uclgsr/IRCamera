@@ -336,14 +336,14 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
                 LauncherCard(
-                    title = "Network Configuration",
-                    subtitle = "Advanced network setup with device discovery",
-                    icon = Icons.Default.NetworkCheck,
+                    title = "Device Pairing",
+                    subtitle = "Bluetooth device discovery and pairing",
+                    icon = Icons.Default.Bluetooth,
                     onClick = {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.feature.network.ui.NetworkConfigComposeActivity::class.java
+                                mpdc4gsr.feature.network.ui.DevicePairingComposeActivity::class.java
                             )
                         )
                     }
@@ -363,13 +363,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                 )
                 LauncherCard(
                     title = "Network Client Test",
-                    subtitle = "Test Wi-Fi and Bluetooth network connections",
+                    subtitle = "Test Wi-Fi and network connections",
                     icon = Icons.Default.NetworkWifi,
                     onClick = {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.feature.network.ui.NetworkClientTestActivityCompose::class.java
+                                mpdc4gsr.feature.network.ui.NetworkClientTestComposeActivity::class.java
                             )
                         )
                     }

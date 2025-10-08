@@ -24,7 +24,7 @@ appsecretTopinfraredCn10 = "F4511AAA6C694E54A3676CF2345A4A8E"
 
 kotlin = "2.2.20"
 agp = "8.11.0"
-hilt = "2.52"
+hilt = "2.54"
 hiltNavigationCompose = "1.2.0"
 
 # Jetpack Compose BOM and core versions
@@ -166,7 +166,8 @@ lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", 
 # Hilt Dependency Injection
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version = "1.2.0" }
 
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }

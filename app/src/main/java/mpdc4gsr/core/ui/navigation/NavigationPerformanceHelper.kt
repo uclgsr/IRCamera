@@ -1,8 +1,6 @@
 package mpdc4gsr.core.ui.navigation
 
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -19,17 +17,14 @@ object NavigationPerformanceHelper {
             val latency = System.currentTimeMillis() - startTime
             ComposePerformanceMonitor.trackNavigation(routeName, startTime)
             if (latency > WARNING_THRESHOLD_MS) {
-                AppLogger.w(TAG, "Slow navigation to $routeName: ${latency}ms (threshold: ${WARNING_THRESHOLD_MS}ms)")
             }
         }
     }
 
     fun logPerformanceSummary() {
         val summary = ComposePerformanceMonitor.getPerformanceSummary()
-        AppLogger.d(TAG, "=== Navigation Performance Summary ===")
         val navigationMetrics = summary.filter { it.key.startsWith("navigation_") }
         if (navigationMetrics.isEmpty()) {
-            AppLogger.d(TAG, "No navigation metrics recorded yet")
             return
         }
         navigationMetrics.forEach { (route, metric) ->
@@ -41,13 +36,10 @@ object NavigationPerformanceHelper {
         }
         val slowRoutes = navigationMetrics.filter { it.value.average > WARNING_THRESHOLD_MS }
         if (slowRoutes.isNotEmpty()) {
-            AppLogger.w(TAG, "=== Routes Exceeding Threshold (${WARNING_THRESHOLD_MS}ms) ===")
             slowRoutes.forEach { (route, metric) ->
                 val routeName = route.removePrefix("navigation_")
-                AppLogger.w(TAG, "$routeName: avg=${String.format("%.1f", metric.average)}ms")
             }
         }
-        AppLogger.d(TAG, "======================================")
     }
 
     fun getSlowRoutes(thresholdMs: Long = WARNING_THRESHOLD_MS): List<Pair<String, Double>> {

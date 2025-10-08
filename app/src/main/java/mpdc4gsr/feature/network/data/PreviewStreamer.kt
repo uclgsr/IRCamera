@@ -2,9 +2,6 @@ package mpdc4gsr.feature.network.data
 
 import android.graphics.Bitmap
 import android.util.Base64
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import kotlinx.coroutines.*
 import org.json.JSONObject
@@ -14,9 +11,7 @@ import java.util.concurrent.atomic.AtomicReference
 class PreviewStreamer(
     private val networkServer: NetworkServer
 ) {
-    companion object {
-        private const val TAG = "PreviewStreamer"
-        private const val DEFAULT_FRAME_INTERVAL_MS = 1000L
+    companion object {        private const val DEFAULT_FRAME_INTERVAL_MS = 1000L
         private const val DEFAULT_SENSOR_INTERVAL_MS = 1000L
         private const val DEFAULT_PREVIEW_WIDTH = 320
         private const val DEFAULT_PREVIEW_HEIGHT = 240
@@ -37,16 +32,10 @@ class PreviewStreamer(
     private val currentGsrValue = AtomicReference<Float?>()
     private val currentRecordingStatus = AtomicReference<String>("IDLE")
     suspend fun startStreaming(): Boolean {
-        if (isStreaming.get()) {
-            AppLogger.w(TAG, "Preview streaming already active")
-            return true
+        if (isStreaming.get()) {            return true
         }
-        if (!networkServer.isClientConnected()) {
-            AppLogger.w(TAG, "No PC client connected, cannot start streaming")
-            return false
-        }
-        AppLogger.i(TAG, "Starting preview streaming to PC")
-        isStreaming.set(true)
+        if (!networkServer.isClientConnected()) {            return false
+        }        isStreaming.set(true)
         frameStreamingJob = scope.launch {
             streamFrames()
         }
@@ -59,9 +48,7 @@ class PreviewStreamer(
     suspend fun stopStreaming() {
         if (!isStreaming.get()) {
             return
-        }
-        AppLogger.i(TAG, "Stopping preview streaming")
-        isStreaming.set(false)
+        }        isStreaming.set(false)
         frameStreamingJob?.cancel()
         sensorStreamingJob?.cancel()
         frameStreamingJob = null
@@ -95,16 +82,9 @@ class PreviewStreamer(
         this.sensorIntervalMs = sensorIntervalMs
         this.previewWidth = previewWidth
         this.previewHeight = previewHeight
-        this.jpegQuality = jpegQuality
-        Log.i(
-            TAG,
-            "Preview streaming configured: ${frameIntervalMs}ms frames, ${sensorIntervalMs}ms sensors, ${previewWidth}x${previewHeight}@${jpegQuality}%"
-        )
-    }
+        this.jpegQuality = jpegQuality    }
 
-    private suspend fun streamFrames() {
-        AppLogger.i(TAG, "Frame streaming started")
-        while (currentCoroutineContext().isActive && isStreaming.get()) {
+    private suspend fun streamFrames() {        while (currentCoroutineContext().isActive && isStreaming.get()) {
             try {
                 currentRgbFrame.get()?.let { rgbBitmap ->
                     streamFrame("rgb", rgbBitmap)
@@ -113,17 +93,11 @@ class PreviewStreamer(
                     streamFrame("thermal", thermalBitmap)
                 }
                 delay(frameIntervalMs)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error in frame streaming", e)
-                if (currentCoroutineContext().isActive) delay(1000)
+            } catch (e: Exception) {                if (currentCoroutineContext().isActive) delay(1000)
             }
-        }
-        AppLogger.i(TAG, "Frame streaming stopped")
-    }
+        }    }
 
-    private suspend fun streamSensorData() {
-        AppLogger.i(TAG, "Sensor data streaming started")
-        while (currentCoroutineContext().isActive && isStreaming.get()) {
+    private suspend fun streamSensorData() {        while (currentCoroutineContext().isActive && isStreaming.get()) {
             try {
                 val gsrValue = currentGsrValue.get()
                 val recordingStatus = currentRecordingStatus.get()
@@ -140,13 +114,9 @@ class PreviewStreamer(
                 }
                 networkServer.sendMessage(sensorMessage.toString())
                 delay(sensorIntervalMs)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error in sensor data streaming", e)
-                if (currentCoroutineContext().isActive) delay(1000)
+            } catch (e: Exception) {                if (currentCoroutineContext().isActive) delay(1000)
             }
-        }
-        AppLogger.i(TAG, "Sensor data streaming stopped")
-    }
+        }    }
 
     private suspend fun streamFrame(frameType: String, bitmap: Bitmap) {
         try {
@@ -156,9 +126,7 @@ class PreviewStreamer(
                 previewHeight.toDouble()
             )
             val jpegBytes = BitmapUtils.bitmapToBytes(scaledBitmap, jpegQuality)
-            if (jpegBytes == null) {
-                AppLogger.w(TAG, "Failed to convert $frameType frame to JPEG")
-                return
+            if (jpegBytes == null) {                return
             }
             val base64Data = Base64.encodeToString(jpegBytes, Base64.NO_WRAP)
             val frameMessage = JSONObject().apply {
@@ -172,17 +140,10 @@ class PreviewStreamer(
                 put("data_base64", base64Data)
                 put("data_size_bytes", jpegBytes.size)
             }
-            networkServer.sendMessage(frameMessage.toString())
-            Log.d(
-                TAG,
-                "Streamed $frameType frame: ${scaledBitmap.width}x${scaledBitmap.height}, ${jpegBytes.size} bytes"
-            )
-            if (scaledBitmap != bitmap && !scaledBitmap.isRecycled) {
+            networkServer.sendMessage(frameMessage.toString())            if (scaledBitmap != bitmap && !scaledBitmap.isRecycled) {
                 scaledBitmap.recycle()
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error streaming $frameType frame", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     fun isStreaming(): Boolean = isStreaming.get()
@@ -190,7 +151,5 @@ class PreviewStreamer(
         scope.launch {
             stopStreaming()
         }
-        scope.coroutineContext.job.cancel()
-        AppLogger.i(TAG, "PreviewStreamer cleaned up")
-    }
+        scope.coroutineContext.job.cancel()    }
 }

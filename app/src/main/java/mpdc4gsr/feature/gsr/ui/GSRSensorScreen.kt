@@ -22,20 +22,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.gsr.presentation.GSRSensorViewModel
-import mpdc4gsr.feature.gsr.presentation.GSRSensorViewModelFactory
 
 @Composable
 fun GSRSensorScreen(
-    viewModel: GSRSensorViewModel = viewModel(
-        factory = GSRSensorViewModelFactory(
-            LocalContext.current.applicationContext
-        )
-    ),
+    viewModel: GSRSensorViewModel = hiltViewModel(),
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onSaveData: () -> Unit = {},
