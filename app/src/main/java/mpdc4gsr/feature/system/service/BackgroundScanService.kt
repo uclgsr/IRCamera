@@ -1,4 +1,4 @@
-package mpdc4gsr.core
+package mpdc4gsr.feature.system.service
 
 import android.app.*
 import android.content.Context
@@ -15,7 +15,7 @@ import kotlinx.coroutines.*
 import mpdc4gsr.feature.main.ui.MainComposeActivity
 import kotlin.coroutines.CoroutineContext
 
-class BackgroundDeviceScanningService : Service(), CoroutineScope {
+class BackgroundScanService : Service(), CoroutineScope {
     private val serviceJob = SupervisorJob()
 
     companion object {

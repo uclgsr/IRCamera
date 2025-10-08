@@ -1,4 +1,4 @@
-package mpdc4gsr.core
+package mpdc4gsr.feature.system.service
 
 import android.app.*
 import android.content.Context
