@@ -88,10 +88,15 @@
         </receiver>
 
         <activity
-            android:name="mpdc4gsr.feature.network.ui.NetworkConfigComposeActivity"
+            android:name="mpdc4gsr.feature.network.ui.DevicePairingComposeActivity"
             android:exported="false"
-            android:label="Network Configuration"
-            android:screenOrientation="userPortrait"
+            android:label="Device Pairing"
+            android:theme="@style/AppTheme"/>
+
+        <activity
+            android:name="mpdc4gsr.feature.network.ui.NetworkClientTestComposeActivity"
+            android:exported="false"
+            android:label="Network Test"
             android:theme="@style/AppTheme"/>
 
         <activity
@@ -147,11 +152,6 @@
             android:name="mpdc4gsr.sensors.HubSpokeIntegrationActivity"
             android:exported="false"
             android:label="Hub-Spoke Recording"/>
-
-        <activity
-            android:name="mpdc4gsr.feature.network.ui.DevicePairingComposeActivity"
-            android:exported="false"
-            android:label="Device Pairing"/>
 
         <activity
             android:name="mpdc4gsr.core.ui.PermissionRequestComposeActivity"
@@ -242,7 +242,7 @@
             android:label="Dual Mode Camera"/>
 
         <activity
-            android:name="mpdc4gsr.feature.camera.ui.DualModeCameraActivityCompose"
+            android:name="mpdc4gsr.feature.camera.ui.DualModeCameraComposeActivity2"
             android:exported="false"
             android:label="Dual Mode Camera"/>
 

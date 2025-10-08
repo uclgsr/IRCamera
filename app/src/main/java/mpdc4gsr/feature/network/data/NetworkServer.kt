@@ -3,9 +3,6 @@ package mpdc4gsr.feature.network.data
 import android.content.Context
 import android.net.TrafficStats
 import android.os.Process
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.*
@@ -19,9 +16,7 @@ class NetworkServer(
     private val context: Context,
     private val port: Int = Protocol.DEFAULT_SERVER_PORT,
 ) {
-    companion object {
-        private const val TAG = "NetworkServer"
-    }
+    companion object {    }
 
     private var serverSocket: ServerSocket? = null
     private var clientSocket: Socket? = null
@@ -44,12 +39,8 @@ class NetworkServer(
     suspend fun start(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (isRunning.get()) {
-                    AppLogger.w(TAG, "Server already running")
-                    return@withContext true
-                }
-                AppLogger.i(TAG, "Starting TCP server on port $port")
-                TrafficStats.setThreadStatsTag(Process.myTid())
+                if (isRunning.get()) {                    return@withContext true
+                }                TrafficStats.setThreadStatsTag(Process.myTid())
                 serverSocket = ServerSocket().apply {
                     reuseAddress = true
                     bind(InetSocketAddress(port))
@@ -58,16 +49,10 @@ class NetworkServer(
                 serverJob =
                     serverScope.launch {
                         acceptConnections()
-                    }
-                AppLogger.i(TAG, "TCP server started successfully on port $port")
-                return@withContext true
-            } catch (e: java.net.BindException) {
-                AppLogger.e(TAG, "Failed to start TCP server - port $port already in use", e)
-                isRunning.set(false)
+                    }                return@withContext true
+            } catch (e: java.net.BindException) {                isRunning.set(false)
                 return@withContext false
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to start TCP server", e)
-                isRunning.set(false)
+            } catch (e: Exception) {                isRunning.set(false)
                 return@withContext false
             }
         }
@@ -75,9 +60,7 @@ class NetworkServer(
 
     suspend fun stop() {
         withContext(Dispatchers.IO) {
-            try {
-                AppLogger.i(TAG, "Stopping TCP server")
-                isRunning.set(false)
+            try {                isRunning.set(false)
                 isClientConnected.set(false)
                 _connectionStateFlow.value = false
                 serverJob?.cancel()
@@ -93,28 +76,18 @@ class NetworkServer(
                 inputReader = null
                 binaryOutputStream = null
                 clientSocket = null
-                serverSocket = null
-                AppLogger.i(TAG, "TCP server stopped")
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error stopping TCP server", e)
-            }
+                serverSocket = null            } catch (e: Exception) {            }
         }
     }
 
     suspend fun sendMessage(message: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (!isClientConnected.get() || outputWriter == null) {
-                    AppLogger.w(TAG, "No client connected, cannot send message")
-                    return@withContext false
+                if (!isClientConnected.get() || outputWriter == null) {                    return@withContext false
                 }
                 outputWriter!!.write(message + "\n")
-                outputWriter!!.flush()
-                AppLogger.d(TAG, "Sent message to PC: $message")
-                return@withContext true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error sending message to PC", e)
-                disconnectClient()
+                outputWriter!!.flush()                return@withContext true
+            } catch (e: Exception) {                disconnectClient()
                 return@withContext false
             }
         }
@@ -123,9 +96,7 @@ class NetworkServer(
     suspend fun sendBinaryData(header: String, data: ByteArray): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (!isClientConnected.get() || outputWriter == null || binaryOutputStream == null) {
-                    AppLogger.w(TAG, "No client connected, cannot send binary data")
-                    return@withContext false
+                if (!isClientConnected.get() || outputWriter == null || binaryOutputStream == null) {                    return@withContext false
                 }
                 // Send text header first
                 outputWriter!!.write(header + "\n")
@@ -133,12 +104,8 @@ class NetworkServer(
                 // Send binary data with length prefix
                 binaryOutputStream!!.writeInt(data.size)
                 binaryOutputStream!!.write(data)
-                binaryOutputStream!!.flush()
-                AppLogger.d(TAG, "Sent binary data to PC: ${data.size} bytes")
-                return@withContext true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error sending binary data to PC", e)
-                disconnectClient()
+                binaryOutputStream!!.flush()                return@withContext true
+            } catch (e: Exception) {                disconnectClient()
                 return@withContext false
             }
         }
@@ -146,13 +113,9 @@ class NetworkServer(
 
     private suspend fun acceptConnections() {
         while (isRunning.get() && serverJob?.isCancelled != true) {
-            try {
-                AppLogger.i(TAG, "Waiting for PC Controller connection...")
-                val socket = serverSocket?.accept()
+            try {                val socket = serverSocket?.accept()
                 if (socket != null && isRunning.get()) {
-                    TrafficStats.tagSocket(socket)
-                    AppLogger.i(TAG, "PC Controller connected from ${socket.remoteSocketAddress}")
-                    disconnectClient()
+                    TrafficStats.tagSocket(socket)                    disconnectClient()
                     clientSocket = socket
                     outputWriter =
                         BufferedWriter(OutputStreamWriter(socket.getOutputStream(), Charsets.UTF_8))
@@ -169,15 +132,9 @@ class NetworkServer(
                         }
                 }
             } catch (e: SocketException) {
-                if (isRunning.get()) {
-                    AppLogger.e(TAG, "Socket error accepting connections", e)
-                } else {
-                    AppLogger.i(TAG, "Server socket closed normally")
-                }
+                if (isRunning.get()) {                } else {                }
                 break
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error accepting connection", e)
-                delay(1000)
+            } catch (e: Exception) {                delay(1000)
             }
         }
     }
@@ -190,18 +147,12 @@ class NetworkServer(
                     val protocolMessage = Protocol.parseMessage(messageText)
                     if (protocolMessage != null) {
                         _messageFlow.emit(protocolMessage)
-                    } else {
-                        AppLogger.w(TAG, "Failed to parse protocol message: $messageText")
-                    }
+                    } else {                    }
                 } else {
                     break
                 }
-            } catch (e: SocketException) {
-                AppLogger.i(TAG, "PC Controller disconnected")
-                break
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error receiving message from PC", e)
-                break
+            } catch (e: SocketException) {                break
+            } catch (e: Exception) {                break
             }
         }
         disconnectClient()
@@ -212,21 +163,15 @@ class NetworkServer(
             try {
                 val reader = inputReader ?: return@withContext null
                 val line = reader.readLine()
-                if (line != null) {
-                    AppLogger.d(TAG, "Received message from PC: $line")
-                }
+                if (line != null) {                }
                 return@withContext line
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error receiving message", e)
-                return@withContext null
+            } catch (e: Exception) {                return@withContext null
             }
         }
     }
 
     private fun disconnectClient() {
-        if (isClientConnected.get()) {
-            AppLogger.i(TAG, "Disconnecting PC Controller client")
-            isClientConnected.set(false)
+        if (isClientConnected.get()) {            isClientConnected.set(false)
             _connectionStateFlow.value = false
             messageListenerJob?.cancel()
             try {
@@ -235,9 +180,7 @@ class NetworkServer(
                 inputReader?.close()
                 binaryOutputStream?.close()
                 clientSocket?.close()
-            } catch (e: Exception) {
-                AppLogger.w(TAG, "Error closing client connection", e)
-            }
+            } catch (e: Exception) {            }
             outputWriter = null
             inputReader = null
             binaryOutputStream = null
@@ -249,7 +192,5 @@ class NetworkServer(
     fun isClientConnected(): Boolean = isClientConnected.get()
     suspend fun cleanup() {
         stop()
-        serverScope.cancel()
-        AppLogger.i(TAG, "Network server cleaned up")
-    }
+        serverScope.cancel()    }
 }

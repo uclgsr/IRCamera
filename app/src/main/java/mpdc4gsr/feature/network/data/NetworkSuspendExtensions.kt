@@ -1,11 +1,7 @@
 package mpdc4gsr.feature.network.data
 
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
-
 
 suspend fun NetworkClient.startDiscoveryAsync(): Boolean =
     suspendCancellableCoroutine { continuation ->
@@ -16,8 +12,6 @@ suspend fun NetworkClient.startDiscoveryAsync(): Boolean =
         }
         startDiscovery(callback)
         // Handle cancellation
-        continuation.invokeOnCancellation {
-            AppLogger.d("NetworkSuspendExtensions", "Discovery cancelled")
-            // Cancel any ongoing discovery operations if needed
+        continuation.invokeOnCancellation {            // Cancel any ongoing discovery operations if needed
         }
     }

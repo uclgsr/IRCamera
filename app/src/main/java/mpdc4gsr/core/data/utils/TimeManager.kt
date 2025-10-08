@@ -6,7 +6,6 @@ import android.net.NetworkCapabilities
 import android.os.SystemClock
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import java.util.*
 import java.util.concurrent.atomic.AtomicLong

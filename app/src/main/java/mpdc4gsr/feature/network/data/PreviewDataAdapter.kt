@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.network.data
 
 import android.graphics.Bitmap
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.module.thermalunified.tools.CameraPreviewManager
 import kotlinx.coroutines.*
 import mpdc4gsr.core.RecordingService
@@ -14,9 +11,7 @@ class PreviewDataAdapter(
     private val previewStreamer: PreviewStreamer,
     private val recordingService: RecordingService
 ) {
-    companion object {
-        private const val TAG = "PreviewDataAdapter"
-        private const val POLLING_INTERVAL_MS = 500L
+    companion object {        private const val POLLING_INTERVAL_MS = 500L
     }
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -25,20 +20,14 @@ class PreviewDataAdapter(
     private val thermalCameraManager = AtomicReference<CameraPreviewManager?>()
     private val gsrRecorder = AtomicReference<GSRSensorRecorder?>()
     fun startDataPolling() {
-        if (isRunning) {
-            AppLogger.w(TAG, "Data polling already running")
-            return
-        }
-        AppLogger.i(TAG, "Starting sensor data polling for preview streaming")
-        isRunning = true
+        if (isRunning) {            return
+        }        isRunning = true
         pollingJob = scope.launch {
             while (isActive && isRunning) {
                 try {
                     pollSensorData()
                     delay(POLLING_INTERVAL_MS)
-                } catch (e: Exception) {
-                    AppLogger.e(TAG, "Error in sensor data polling", e)
-                    delay(1000)
+                } catch (e: Exception) {                    delay(1000)
                 }
             }
         }
@@ -47,21 +36,19 @@ class PreviewDataAdapter(
     fun stopDataPolling() {
         if (!isRunning) {
             return
-        }
-        AppLogger.i(TAG, "Stopping sensor data polling")
-        isRunning = false
+        }        isRunning = false
         pollingJob?.cancel()
         pollingJob = null
     }
 
     fun setThermalCameraManager(manager: CameraPreviewManager?) {
         thermalCameraManager.set(manager)
-        AppLogger.d(TAG, "Thermal camera manager ${if (manager != null) "set" else "cleared"}")
+        "set" else "cleared"}")
     }
 
     fun setGsrRecorder(recorder: GSRSensorRecorder?) {
         gsrRecorder.set(recorder)
-        AppLogger.d(TAG, "GSR recorder ${if (recorder != null) "set" else "cleared"}")
+        "set" else "cleared"}")
     }
 
     private suspend fun pollSensorData() {
@@ -76,16 +63,9 @@ class PreviewDataAdapter(
             if (manager != null) {
                 val thermalBitmap = manager.scaledBitmap()
                 if (thermalBitmap != null && !thermalBitmap.isRecycled) {
-                    previewStreamer.updateThermalFrame(thermalBitmap)
-                    Log.v(
-                        TAG,
-                        "Updated thermal frame: ${thermalBitmap.width}x${thermalBitmap.height}"
-                    )
-                }
+                    previewStreamer.updateThermalFrame(thermalBitmap)                }
             }
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Error polling thermal frame", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     private suspend fun pollGsrData() {
@@ -103,12 +83,8 @@ class PreviewDataAdapter(
                 } else {
                     0.0f
                 }
-                previewStreamer.updateGsrValue(gsrValue)
-                AppLogger.v(TAG, "Updated GSR value: $gsrValue µS")
-            }
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Error polling GSR data", e)
-        }
+                previewStreamer.updateGsrValue(gsrValue)            }
+        } catch (e: Exception) {        }
     }
 
     private suspend fun updateRecordingStatus() {
@@ -119,11 +95,7 @@ class PreviewDataAdapter(
                 recordingService.isConnectedToPC -> "CONNECTED"
                 else -> "IDLE"
             }
-            previewStreamer.updateRecordingStatus(status)
-            AppLogger.v(TAG, "Updated recording status: $status")
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Error updating recording status", e)
-        }
+            previewStreamer.updateRecordingStatus(status)        } catch (e: Exception) {        }
     }
 
     fun updateRgbFrame(bitmap: Bitmap) {
@@ -140,7 +112,5 @@ class PreviewDataAdapter(
 
     fun cleanup() {
         stopDataPolling()
-        scope.cancel()
-        AppLogger.i(TAG, "PreviewDataAdapter cleaned up")
-    }
+        scope.cancel()    }
 }

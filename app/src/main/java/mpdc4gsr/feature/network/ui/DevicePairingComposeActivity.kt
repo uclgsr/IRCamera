@@ -3,6 +3,7 @@ package mpdc4gsr.feature.network.ui
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,6 +27,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.feature.network.presentation.DevicePairingViewModel
 import mpdc4gsr.core.ui.deferAction
 
+@AndroidEntryPoint
 class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>() {
     companion object {
         fun startActivity(context: Context) {
