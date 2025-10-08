@@ -199,10 +199,10 @@ class TestingSuiteHubActivity : ComponentActivity() {
                 ),
                 TestingModule(
                     id = "simple_network",
-                    title = "Simple Network Test",
+                    title = "Network Test",
                     description = "Test PC remote control and networking",
                     icon = Icons.Default.NetworkCheck,
-                    composeActivity = SimpleNetworkTestComposeActivity::class.java,
+                    composeActivity = mpdc4gsr.feature.network.ui.NetworkClientTestComposeActivity::class.java,
                     legacyActivity = null,
                     category = TestCategory.NETWORK
                 ),

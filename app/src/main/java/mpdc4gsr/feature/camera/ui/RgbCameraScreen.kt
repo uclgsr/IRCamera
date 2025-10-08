@@ -37,19 +37,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.hilt.navigation.compose.hiltViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.Green
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.theme.Orange
 import mpdc4gsr.core.ui.theme.Purple
-import mpdc4gsr.feature.camera.presentation.RgbCameraViewModel
+import mpdc4gsr.feature.camera.presentation.RGBCameraViewModel
 
 @Composable
-fun RgbCameraScreen(
-    viewModel: RgbCameraViewModel = hiltViewModel(),
+fun RGBCameraScreen(
+    viewModel: RGBCameraViewModel = hiltViewModel(),
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onCapturePhoto: () -> Unit = {},
@@ -450,7 +450,7 @@ private fun FullScreenCameraPreviewSimulated(
 }
 
 @Composable
-private fun RgbCameraPreview(
+private fun RGBCameraPreview(
     isActive: Boolean,
     isRecording: Boolean,
     resolution: String,
@@ -964,8 +964,8 @@ private fun MetricItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun RgbCameraScreenPreview() {
+private fun RGBCameraScreenPreview() {
     IRCameraTheme {
-        RgbCameraScreen()
+        RGBCameraScreen()
     }
 }

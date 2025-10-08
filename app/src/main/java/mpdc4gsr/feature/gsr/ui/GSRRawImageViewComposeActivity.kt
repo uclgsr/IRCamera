@@ -16,20 +16,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.gsr.presentation.GSRRawImageViewViewModel
-import mpdc4gsr.feature.gsr.presentation.GSRRawImageViewViewModelFactory
 import java.io.File
 
+@AndroidEntryPoint
 class GSRRawImageViewComposeActivity : BaseComposeActivity<GSRRawImageViewViewModel>() {
     override fun createViewModel(): GSRRawImageViewViewModel =
-        viewModels<GSRRawImageViewViewModel> {
-            GSRRawImageViewViewModelFactory(application)
-        }.value
+        viewModels<GSRRawImageViewViewModel>().value
 
     @Composable
     override fun Content(viewModel: GSRRawImageViewViewModel) {

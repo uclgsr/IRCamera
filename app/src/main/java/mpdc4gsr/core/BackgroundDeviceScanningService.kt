@@ -8,8 +8,6 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.core.app.NotificationCompat
 import com.csl.irCamera.R
 import com.mpdc4gsr.module.user.ble.BleDeviceManager
@@ -58,7 +56,6 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
 
     override fun onCreate() {
         super.onCreate()
-        AppLogger.i(TAG, "Background Device Scanning Service created")
         initializeBleManager()
         createNotificationChannel()
         acquireWakeLock()
@@ -80,18 +77,14 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
         try {
             bleDeviceManager = BleDeviceManager(applicationContext)
             bleDeviceManager?.initialize(enableNordicBackend = true)
-            AppLogger.d(TAG, "BLE Device Manager initialized for background scanning")
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize BLE Device Manager", e)
         }
     }
 
     private fun startBackgroundScanning() {
         if (isScanning) {
-            AppLogger.d(TAG, "Background scanning already active")
             return
         }
-        AppLogger.i(TAG, "Starting background device scanning service")
         isScanning = true
         isPaused = false
         scanCount = 0
@@ -103,7 +96,6 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
     }
 
     private fun stopBackgroundScanning() {
-        AppLogger.i(TAG, "Stopping background device scanning service")
         isScanning = false
         isPaused = false
         scanningJob?.cancel()
@@ -119,14 +111,12 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
     }
 
     private fun pauseBackgroundScanning() {
-        AppLogger.i(TAG, "Pausing background device scanning")
         isPaused = true
         bleDeviceManager?.stopDeviceDiscovery()
         updateNotification("Background scanning paused")
     }
 
     private fun resumeBackgroundScanning() {
-        AppLogger.i(TAG, "Resuming background device scanning")
         isPaused = false
         updateNotification("Background scanning active")
     }
@@ -147,7 +137,6 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
                 }
                 delay(interval)
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Error during background scanning cycle", e)
                 delay(SCAN_INTERVAL_MS) // Standard interval on error
             }
         }
@@ -157,7 +146,6 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
         try {
             scanCount++
             val scanStartTime = System.currentTimeMillis()
-            AppLogger.d(TAG, "Starting background scan #$scanCount")
             updateNotification("Scanning for devices... (#$scanCount)")
             // Start scanning
             bleDeviceManager?.startDeviceDiscovery()
@@ -175,7 +163,6 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
             )
             updateNotification("Found $deviceCount devices (Scan #$scanCount)")
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error during single background scan", e)
             updateNotification("Scan error occurred")
         }
     }
@@ -286,9 +273,7 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
                 setReferenceCounted(false)
                 acquire(10 * 60 * 1000L)
             }
-            AppLogger.d(TAG, "Wake lock acquired for background scanning")
         } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to acquire wake lock", e)
         }
     }
 
@@ -297,17 +282,14 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
             wakeLock?.let {
                 if (it.isHeld) {
                     it.release()
-                    AppLogger.d(TAG, "Wake lock released")
                 }
             }
             wakeLock = null
         } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to release wake lock", e)
         }
     }
 
     override fun onDestroy() {
-        AppLogger.i(TAG, "Background Device Scanning Service destroyed")
         isScanning = false
         scanningJob?.cancel()
         bleDeviceManager?.stopDeviceDiscovery()

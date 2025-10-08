@@ -4,8 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -86,16 +84,13 @@ class Shimmer3GSRRecorder(
     private val _deviceStatus = MutableStateFlow("Disconnected")
     val deviceStatus: StateFlow<String> = _deviceStatus.asStateFlow()
     override suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
-        AppLogger.i(TAG, "Initializing Shimmer3 GSR+ Recorder with official Android SDK")
         try {
             if (!hasRequiredPermissions(context)) {
-                AppLogger.e(TAG, "Missing required BLE permissions for Shimmer3 GSR recording")
                 _deviceStatus.value = "Missing Permissions"
                 return@withContext false
             }
             deviceManager = ShimmerDeviceManager(context, lifecycleOwner)
             if (!deviceManager!!.initialize()) {
-                AppLogger.e(TAG, "Failed to initialize Shimmer device manager")
                 _deviceStatus.value = "Initialization Failed"
                 return@withContext false
             }
@@ -133,17 +128,14 @@ class Shimmer3GSRRecorder(
                 }
             }
             _deviceStatus.value = "Initialized"
-            AppLogger.i(TAG, "Shimmer3 GSR+ Recorder initialization completed successfully")
             return@withContext true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize Shimmer3 GSR recorder", e)
             _deviceStatus.value = "Initialization Failed"
             return@withContext false
         }
     }
 
     suspend fun startDeviceDiscovery(): Boolean {
-        AppLogger.i(TAG, "Starting Shimmer3 GSR+ device discovery with MAC filtering")
         return deviceManager?.startDeviceScanning() ?: false
     }
 
@@ -157,7 +149,6 @@ class Shimmer3GSRRecorder(
     }
 
     suspend fun connectToDevice(deviceInfo: DeviceInfo): Boolean {
-        AppLogger.i(TAG, "Connecting to Shimmer3 GSR+ device: ${deviceInfo.address} (${deviceInfo.name})")
         selectedDevice = deviceInfo
         return deviceManager?.connectToDevice(deviceInfo) ?: false
     }
@@ -170,33 +161,27 @@ class Shimmer3GSRRecorder(
     }
 
     private suspend fun configureGSRSensor() = withContext(Dispatchers.IO) {
-        AppLogger.i(TAG, "Configuring Shimmer3 GSR+ sensor for research-grade recording")
         val shimmer = connectedShimmer ?: return@withContext
         try {
             shimmer.setSamplingRateShimmer(DEFAULT_SAMPLING_RATE)
             shimmer.writeGSRRange(GSR_RANGE_AUTO)
             shimmer.writeEnabledSensors(Shimmer.SENSOR_GSR.toLong())
-            AppLogger.d(TAG, "Configured sampling rate: ${DEFAULT_SAMPLING_RATE}Hz")
             Log.i(
                 TAG,
                 "GSR sensor configured: ${DEFAULT_SAMPLING_RATE}Hz sampling, autorange, 12-bit ADC"
             )
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error configuring GSR sensor", e)
             throw e
         }
     }
 
     override suspend fun startRecording(sessionDirectory: String): Boolean =
         withContext(Dispatchers.IO) {
-            AppLogger.i(TAG, "Starting Shimmer3 GSR+ recording session")
             if (_isRecording.get()) {
-                AppLogger.w(TAG, "GSR recording already in progress")
                 return@withContext true
             }
             val shimmer = connectedShimmer
             if (shimmer == null) {
-                AppLogger.w(TAG, "No Shimmer3 GSR+ device connected - attempting auto-connection")
                 val deviceManager = this@Shimmer3GSRRecorder.deviceManager
                 if (deviceManager != null) {
                     try {
@@ -207,10 +192,8 @@ class Shimmer3GSRRecorder(
                                 "Auto-connection successful: ${autoConnectionResult.deviceName}"
                             )
                         } else {
-                            AppLogger.w(TAG, "Auto-connection failed: ${autoConnectionResult.reason}")
                         }
                     } catch (e: Exception) {
-                        AppLogger.w(TAG, "Auto-connection attempt failed: ${e.message}")
                     }
                 }
                 if (connectedShimmer == null) {
@@ -242,7 +225,6 @@ class Shimmer3GSRRecorder(
                 val shimmerDevice = connectedShimmer ?: return@withContext false
                 try {
                     configureGSRSensor()
-                    AppLogger.i(TAG, "GSR sensor configured successfully before streaming")
                 } catch (e: Exception) {
                     Log.w(
                         TAG,
@@ -258,7 +240,6 @@ class Shimmer3GSRRecorder(
                 )
                 return@withContext true
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to start GSR recording", e)
                 _isRecording.set(false)
                 csvWriter?.close()
                 csvWriter = null
@@ -276,7 +257,6 @@ class Shimmer3GSRRecorder(
                 val gsrRawData = objectCluster.getFormatClusterValue("GSR", "CAL")
                 gsrRawData?.toString()?.toDoubleOrNull()?.toInt() ?: 0
             } catch (e: Exception) {
-                AppLogger.w(TAG, "Could not extract GSR data from ObjectCluster: ${e.message}")
                 0
             }
             val gsrMicrosiemens = calculateGSRMicrosiemens(gsrRaw)
@@ -311,14 +291,11 @@ class Shimmer3GSRRecorder(
                 )
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error processing GSR data from ObjectCluster", e)
         }
     }
 
     override suspend fun stopRecording(): Boolean = withContext(Dispatchers.IO) {
-        AppLogger.i(TAG, "Stopping Shimmer3 GSR+ recording")
         if (!_isRecording.get()) {
-            AppLogger.w(TAG, "GSR recording not active")
             return@withContext true
         }
         try {
@@ -326,9 +303,7 @@ class Shimmer3GSRRecorder(
             connectedShimmer?.let { shimmer ->
                 try {
                     shimmer.stopStreaming()
-                    AppLogger.i(TAG, "Shimmer streaming stopped")
                 } catch (e: Exception) {
-                    AppLogger.w(TAG, "Error stopping Shimmer streaming: ${e.message}")
                 }
             }
             recordingJob?.cancel()
@@ -340,9 +315,7 @@ class Shimmer3GSRRecorder(
                     writer.write("# Session completed - Total samples: ${recordedSamples.get()}\n")
                     writer.close()
                     csvWriter = null
-                    AppLogger.i(TAG, "CSV file closed successfully")
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "Error closing CSV file: ${e.message}")
                 }
             }
             val totalSamples = recordedSamples.get()
@@ -358,17 +331,14 @@ class Shimmer3GSRRecorder(
             )
             return@withContext true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error stopping GSR recording", e)
             return@withContext false
         }
     }
 
     private fun setupDataProcessingCallback(shimmer: Shimmer) {
         try {
-            AppLogger.i(TAG, "Setting up Shimmer data processing callback for real GSR streaming")
             val manager = deviceManager?.shimmerBluetoothManager
             if (manager != null) {
-                AppLogger.i(TAG, "Using ShimmerBluetoothManagerAndroid for real data processing")
                 recordingJob = lifecycleOwner.lifecycleScope.launch {
                     var sampleCounter = 0
                     var lastRealDataTime = System.currentTimeMillis()
@@ -385,7 +355,6 @@ class Shimmer3GSRRecorder(
                                         lastRealDataTime = currentTime
                                     }
                                 } catch (e: Exception) {
-                                    AppLogger.w(TAG, "Error accessing Shimmer device data: ${e.message}")
                                 }
                             }
                             if (!hasRealData && (currentTime - lastRealDataTime) > 2000) {
@@ -394,19 +363,15 @@ class Shimmer3GSRRecorder(
                                 }
                             }
                         } catch (e: Exception) {
-                            AppLogger.w(TAG, "Error in data processing loop: ${e.message}")
                         }
                         sampleCounter++
                         delay(8)
                     }
                 }
-                AppLogger.i(TAG, "Shimmer data processing setup completed - monitoring for real data")
             } else {
-                AppLogger.w(TAG, "ShimmerBluetoothManagerAndroid not available - using fallback mode")
                 setupFallbackDataGeneration()
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to set up data processing callback", e)
             setupFallbackDataGeneration()
         }
     }
@@ -416,10 +381,8 @@ class Shimmer3GSRRecorder(
             val isStreaming = shimmer.isStreaming() ?: false
             val isConnected =
                 shimmer.isConnected() && shimmer.getBluetoothRadioState() == BT_STATE.CONNECTED
-            AppLogger.d(TAG, "Shimmer state check - Streaming: $isStreaming, Connected: $isConnected")
             isStreaming && isConnected
         } catch (e: Exception) {
-            AppLogger.w(TAG, "Could not check Shimmer data availability: ${e.message}")
             false
         }
     }
@@ -437,7 +400,6 @@ class Shimmer3GSRRecorder(
     }
 
     private fun setupFallbackDataGeneration() {
-        AppLogger.i(TAG, "Setting up fallback data generation mode")
         recordingJob = lifecycleOwner.lifecycleScope.launch {
             var sampleCounter = 0
             while (_isRecording.get() && isActive) {
@@ -447,7 +409,6 @@ class Shimmer3GSRRecorder(
                         generateRealisticFallbackData(currentTime)
                     }
                 } catch (e: Exception) {
-                    AppLogger.w(TAG, "Error in fallback data generation: ${e.message}")
                 }
                 sampleCounter++
                 delay(8)
@@ -488,7 +449,6 @@ class Shimmer3GSRRecorder(
                 )
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error processing simulated GSR data", e)
         }
     }
 
@@ -548,7 +508,6 @@ class Shimmer3GSRRecorder(
 
     private suspend fun attemptIntelligentAutoConnection(deviceManager: ShimmerDeviceManager): AutoConnectionResult {
         return try {
-            AppLogger.i(TAG, "Starting intelligent Shimmer device discovery")
             val scanStarted = deviceManager.startDeviceScanning()
             if (!scanStarted) {
                 return AutoConnectionResult(false, reason = "Failed to start device scanning")
@@ -602,7 +561,6 @@ class Shimmer3GSRRecorder(
                 )
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error during intelligent auto-connection", e)
             return AutoConnectionResult(false, reason = "Exception: ${e.message}")
         }
     }
@@ -664,7 +622,6 @@ class Shimmer3GSRRecorder(
         timestampNs: Long,
         metadata: Map<String, String>
     ) {
-        AppLogger.d(TAG, "Adding sync marker: $markerType at $timestampNs")
         csvWriter?.write("# SYNC_MARKER: $markerType at $timestampNs, metadata: $metadata\n")
         csvWriter?.flush()
     }
@@ -688,14 +645,12 @@ class Shimmer3GSRRecorder(
     }
 
     override suspend fun cleanup(): Unit = withContext(Dispatchers.IO) {
-        AppLogger.i(TAG, "Cleaning up Shimmer3 GSR+ Recorder")
         try {
             stopRecording()
             disconnectDevice()
             deviceManager?.release()
             deviceManager = null
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error during cleanup", e)
         }
     }
 }

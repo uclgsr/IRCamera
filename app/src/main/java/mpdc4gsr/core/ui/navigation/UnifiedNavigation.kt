@@ -2,8 +2,6 @@ package mpdc4gsr.core.ui.navigation
 
 import android.content.Intent
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -208,7 +206,7 @@ fun UnifiedNavHost(
                 try {
                     // Use class reference instead of hard-coded string
                     val activityClass = try {
-                        mpdc4gsr.feature.camera.ui.DualModeCameraActivityCompose::class.java
+                        mpdc4gsr.feature.camera.ui.DualModeCameraComposeActivity2::class.java
                     } catch (e: NoClassDefFoundError) {
                         null
                     }
@@ -236,7 +234,6 @@ fun UnifiedNavHost(
                     try {
                         mpdc4gsr.core.ui.PermissionRequestComposeActivity.startActivity(context)
                     } catch (e: Exception) {
-                        AppLogger.e("UnifiedNavigation", "Failed to start permission request activity", e)
                     }
                 } catch (e: Exception) {
                     // Final fallback - just show loading screen

@@ -25,16 +25,12 @@ import mpdc4gsr.core.ui.components.settings.SettingsRow
 import mpdc4gsr.core.ui.components.settings.SettingsToggle
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.settings.presentation.StorageSettingsViewModel
-import mpdc4gsr.feature.settings.presentation.StorageSettingsViewModelFactory
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun StorageSettingsScreen(
     onBackClick: (() -> Unit)? = null,
-    viewModel: StorageSettingsViewModel = viewModel(
-        factory = StorageSettingsViewModelFactory(
-            LocalContext.current.applicationContext
-        )
-    ),
+    viewModel: StorageSettingsViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current

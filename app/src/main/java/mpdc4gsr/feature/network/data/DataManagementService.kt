@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import mpdc4gsr.core.StructuredLogger
 import org.json.JSONArray
 import org.json.JSONObject
@@ -14,9 +11,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
 class DataManagementService(private val context: Context) {
-    companion object {
-        private const val TAG = "DataManagementService"
-        private const val BASE_DIR = "IRCamera_Data"
+    companion object {        private const val BASE_DIR = "IRCamera_Data"
         private const val SESSIONS_DIR = "sessions"
         private const val TEMP_DIR = "temp"
         private const val ARCHIVE_DIR = "archive"
@@ -885,14 +880,7 @@ class DataManagementService(private val context: Context) {
                 }
                 put("external_files", fileManifest)
             }
-            exportFile.writeText(hdf5Structure.toString(2))
-            Log.i(
-                TAG,
-                "Session exported in HDF5-compatible JSON format: ${exportFile.absolutePath}"
-            )
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to export session as HDF5", e)
-            exportSessionAsJSON(session, exportFile, includeFiles = true)
+            exportFile.writeText(hdf5Structure.toString(2))        } catch (e: Exception) {            exportSessionAsJSON(session, exportFile, includeFiles = true)
         }
     }
 
@@ -947,14 +935,8 @@ class DataManagementService(private val context: Context) {
                             sourceFile.inputStream().use { input ->
                                 input.copyTo(zipOutputStream)
                             }
-                            zipOutputStream.closeEntry()
-                            AppLogger.d(TAG, "Added file to ZIP: ${fileInfo.relativePath}")
-                        } else {
-                            AppLogger.w(TAG, "File not found for ZIP export: ${sourceFile.absolutePath}")
-                        }
-                    } catch (e: Exception) {
-                        AppLogger.e(TAG, "Failed to add file to ZIP: ${fileInfo.relativePath}", e)
-                    }
+                            zipOutputStream.closeEntry()                        } else {                        }
+                    } catch (e: Exception) {                    }
                 }
             }
             val readme = """
@@ -988,15 +970,11 @@ class DataManagementService(private val context: Context) {
             zipOutputStream.putNextEntry(java.util.zip.ZipEntry("README.txt"))
             zipOutputStream.write(readme.toByteArray())
             zipOutputStream.closeEntry()
-            zipOutputStream.close()
-            AppLogger.i(TAG, "Session exported as ZIP archive: ${exportFile.absolutePath}")
-            Log.i(
+            zipOutputStream.close()            Log.i(
                 TAG,
                 "ZIP contains ${session.files.size} files (${if (includeFiles) "with" else "without"} data)"
             )
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to create ZIP export", e)
-            exportSessionAsJSON(session, exportFile, includeFiles)
+        } catch (e: Exception) {            exportSessionAsJSON(session, exportFile, includeFiles)
         }
     }
 
