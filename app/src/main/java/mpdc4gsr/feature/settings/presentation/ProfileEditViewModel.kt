@@ -1,11 +1,13 @@
 package mpdc4gsr.feature.settings.presentation
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.AppBaseViewModel
+import javax.inject.Inject
 
 data class ProfileData(
     val userName: String = "Research Participant",
@@ -19,7 +21,8 @@ data class ProfileData(
     val allowDataSharing: Boolean = false
 )
 
-class ProfileEditViewModel : AppBaseViewModel() {
+@HiltViewModel
+class ProfileEditViewModel @Inject constructor() : ViewModel() {
     private val _profileData = MutableStateFlow(ProfileData())
     val profileData: StateFlow<ProfileData> = _profileData.asStateFlow()
     private val _isSaving = MutableStateFlow(false)
@@ -59,16 +62,11 @@ class ProfileEditViewModel : AppBaseViewModel() {
     fun saveProfile(onSuccess: () -> Unit) {
         viewModelScope.launch {
             _isSaving.value = true
-            try {
-                // TODO: Save to repository or SharedPreferences
-                // For now, just simulate save delay
-                kotlinx.coroutines.delay(500)
-                onSuccess()
-            } catch (e: Exception) {
-                handleError(e)
-            } finally {
-                _isSaving.value = false
-            }
+            // TODO: Save to repository or SharedPreferences
+            // For now, just simulate save delay
+            kotlinx.coroutines.delay(500)
+            onSuccess()
+            _isSaving.value = false
         }
     }
 }

@@ -259,6 +259,10 @@ android {
             languageVersion.set(JavaLanguageVersion.of(17))
         }
     }
+    
+    kapt {
+        correctErrorTypes = true
+    }
 
     buildFeatures {
         buildConfig = true
@@ -324,6 +328,12 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.guava)
+    
+    // Hilt dependency injection
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+    
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose.core)
     implementation(libs.bundles.compose.navigation.bundle)
@@ -333,9 +343,9 @@ dependencies {
     androidTestImplementation(libs.bundles.compose.test)
     implementation(libs.coil.compose)
     
-    // Hilt DI
+    // Hilt Dependency Injection
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
     
     implementation(project(":component:thermalunified"))

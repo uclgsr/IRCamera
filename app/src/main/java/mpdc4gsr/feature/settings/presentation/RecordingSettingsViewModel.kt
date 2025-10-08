@@ -1,16 +1,19 @@
 package mpdc4gsr.feature.settings.presentation
 
-import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.settings.data.RecordingSettingsRepository
+import javax.inject.Inject
 
-class RecordingSettingsViewModel : AppBaseViewModel() {
-    private lateinit var repository: RecordingSettingsRepository
+@HiltViewModel
+class RecordingSettingsViewModel @Inject constructor(
+    private val repository: RecordingSettingsRepository
+) : ViewModel() {
     private val _recordingSettings = MutableStateFlow(RecordingSettings())
     val recordingSettings: StateFlow<RecordingSettings> = _recordingSettings.asStateFlow()
 
@@ -26,8 +29,7 @@ class RecordingSettingsViewModel : AppBaseViewModel() {
         val sensorDataFormat: String = "CSV"
     )
 
-    fun initialize(context: Context) {
-        repository = RecordingSettingsRepository.getInstance(context)
+    init {
         loadSettings()
         viewModelScope.launch {
             repository.settings.collect { repoSettings ->
@@ -47,20 +49,18 @@ class RecordingSettingsViewModel : AppBaseViewModel() {
     }
 
     private fun loadSettings() {
-        if (::repository.isInitialized) {
-            val settings = repository.getSettings()
-            _recordingSettings.value = RecordingSettings(
-                autoRecording = settings.autoRecording,
-                recordingQuality = settings.recordingQuality,
-                videoFrameRate = settings.videoFrameRate,
-                audioEnabled = settings.audioEnabled,
-                simultaneousRecording = settings.simultaneousRecording,
-                timestampSync = settings.timestampSync,
-                videoFormat = settings.videoFormat,
-                audioFormat = settings.audioFormat,
-                sensorDataFormat = settings.sensorDataFormat
-            )
-        }
+        val settings = repository.getSettings()
+        _recordingSettings.value = RecordingSettings(
+            autoRecording = settings.autoRecording,
+            recordingQuality = settings.recordingQuality,
+            videoFrameRate = settings.videoFrameRate,
+            audioEnabled = settings.audioEnabled,
+            simultaneousRecording = settings.simultaneousRecording,
+            timestampSync = settings.timestampSync,
+            videoFormat = settings.videoFormat,
+            audioFormat = settings.audioFormat,
+            sensorDataFormat = settings.sensorDataFormat
+        )
     }
 
     fun updateAutoRecording(enabled: Boolean) {

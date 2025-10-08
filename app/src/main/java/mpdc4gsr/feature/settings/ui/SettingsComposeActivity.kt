@@ -1,5 +1,8 @@
 package mpdc4gsr.feature.settings.ui
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,43 +14,64 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import mpdc4gsr.core.ui.AppBaseViewModel
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import mpdc4gsr.core.ui.components.settings.*
+import mpdc4gsr.core.ui.theme.IRCameraTheme
+import javax.inject.Inject
 
-class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
-    override fun createViewModel(): SettingsViewModel {
-        return viewModels<SettingsViewModel>().value
-    }
+@AndroidEntryPoint
+class SettingsComposeActivity : ComponentActivity() {
+    private val viewModel: SettingsViewModel by viewModels()
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    override fun Content(viewModel: SettingsViewModel) {
-        // Settings state
-        var thermalCameraEnabled by remember { mutableStateOf(true) }
-        var gsrSensorEnabled by remember { mutableStateOf(true) }
-        var autoRecording by remember { mutableStateOf(false) }
-        var recordingQuality by remember { mutableStateOf("High") }
-        var frameRate by remember { mutableFloatStateOf(10f) }
-        var sampleRate by remember { mutableStateOf("51.2Hz") }
-        var darkMode by remember { mutableStateOf(false) }
-        var exportFormat by remember { mutableStateOf("CSV") }
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            "Settings",
-                            fontWeight = FontWeight.Bold
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = { finish() }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                        }
-                    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            IRCameraTheme {
+                SettingsScreen(
+                    viewModel = viewModel,
+                    onBackClick = { finish() }
                 )
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SettingsScreen(
+    viewModel: SettingsViewModel,
+    onBackClick: () -> Unit
+) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    
+    // Settings state
+    var thermalCameraEnabled by remember { mutableStateOf(true) }
+    var gsrSensorEnabled by remember { mutableStateOf(true) }
+    var autoRecording by remember { mutableStateOf(false) }
+    var recordingQuality by remember { mutableStateOf("High") }
+    var frameRate by remember { mutableFloatStateOf(10f) }
+    var sampleRate by remember { mutableStateOf("51.2Hz") }
+    var darkMode by remember { mutableStateOf(false) }
+    var exportFormat by remember { mutableStateOf("CSV") }
+    
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        "Settings",
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        }
         ) { paddingValues ->
             Column(
                 modifier = Modifier
@@ -79,7 +103,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onClick = {
                             // TODO: Open calibration screen
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Opening calibration screen...",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -133,7 +157,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onClick = {
                             // TODO: Open color palette selection dialog
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Color palette selection coming soon",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -146,7 +170,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onClick = {
                             // TODO: Open temperature unit selection dialog
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Temperature unit selection coming soon",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -159,7 +183,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onClick = {
                             // TODO: Open resolution settings dialog
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Resolution settings coming soon",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -181,7 +205,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onClick = {
                             // TODO: Open export location selection dialog
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Export location selection coming soon",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -195,7 +219,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onAction = {
                             // TODO: Export all sensor data
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Exporting all data...",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -210,7 +234,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onClick = {
                             // TODO: Open network configuration screen
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Opening network configuration...",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -223,7 +247,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onClick = {
                             // TODO: Toggle network discovery
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Network discovery toggle coming soon",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -237,7 +261,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onAction = {
                             // TODO: Test network connection
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Testing connection...",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -252,7 +276,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onClick = {
                             // TODO: Open developer options screen
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Opening developer options...",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -265,7 +289,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onClick = {
                             // TODO: Open logging settings screen
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Opening logging settings...",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -279,7 +303,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onAction = {
                             // TODO: Show confirmation dialog and reset settings
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Reset all settings confirmation dialog",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -294,7 +318,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onAction = {
                             // TODO: Show confirmation dialog and clear data
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Clear all data confirmation dialog",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -310,7 +334,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onClick = {
                             // TODO: Show version details dialog
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Version details coming soon",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -323,7 +347,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onClick = {
                             // TODO: Open privacy policy screen
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Opening privacy policy...",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -336,7 +360,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         onClick = {
                             // TODO: Open help and support screen
                             android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
+                                context,
                                 "Opening help & support...",
                                 android.widget.Toast.LENGTH_SHORT
                             ).show()
@@ -348,7 +372,8 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
     }
 }
 
-class SettingsViewModel : AppBaseViewModel() {
+@HiltViewModel
+class SettingsViewModel @Inject constructor() : ViewModel() {
     // Settings-specific state management
     private val _settingsState = mutableStateOf(SettingsState())
     val settingsState: State<SettingsState> = _settingsState
@@ -358,4 +383,5 @@ class SettingsViewModel : AppBaseViewModel() {
         val networkDiscoveryEnabled: Boolean = true,
         val autoSaveEnabled: Boolean = true
     )
+}
 }

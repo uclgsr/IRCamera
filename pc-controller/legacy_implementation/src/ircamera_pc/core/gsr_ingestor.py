@@ -5,7 +5,6 @@ import struct
 import time
 from dataclasses import asdict, dataclass
 from enum import Enum
-from loguru import logger
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -66,139 +65,93 @@ class GSRIngestor:
         self.active_sessions: Dict[str, GSRDataSet] = {}
         self.completed_sessions: Dict[str, GSRDataSet] = {}
 
-        logger.info(f"GSR Ingestor initialized with data directory: {self.data_dir}")
-
     async def start_session(
             self, session_id: str, device_id: str, mode: GSRMode
     ) -> bool:
 
-        try:
-            if session_id in self.active_sessions:
-                logger.warning(f"GSR session {session_id} already active")
-                return False
-
-            dataset = GSRDataSet(
-                session_id=session_id,
-                device_id=device_id,
-                mode=mode,
-                start_time=time.time(),
-                end_time=0.0,
-                samples=[],
-                sample_rate=0.0,
-                quality_stats={"min": 100, "max": 0, "mean": 0},
-            )
-
-            self.active_sessions[session_id] = dataset
-            logger.info(
-                f"Started GSR session {session_id} for device"
-                "{device_id} in {mode.value} mode"
-            )
-            return True
-
-        except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to start GSR session {session_id}: {e}")
+        if session_id in self.active_sessions:
             return False
+
+        dataset = GSRDataSet(
+            session_id=session_id,
+            device_id=device_id,
+            mode=mode,
+            start_time=time.time(),
+            end_time=0.0,
+            samples=[],
+            sample_rate=0.0,
+            quality_stats={"min": 100, "max": 0, "mean": 0},
+        )
+
+        self.active_sessions[session_id] = dataset
+        return True
 
     async def ingest_sample(self, session_id: str, sample_data: bytes) -> bool:
 
-        try:
-            if session_id not in self.active_sessions:
-                logger.warning(
-                    f"GSR sample received for inactive session: {session_id}"
-                )
-                return False
-
-            dataset = self.active_sessions[session_id]
-
-            if len(sample_data) < 16:
-                logger.warning(f"Invalid GSR sample data length: {len(sample_data)}")
-                return False
-
-            timestamp, value, quality = struct.unpack("<dfi", sample_data[:16])
-
-            sample = GSRSample(
-                timestamp=timestamp,
-                value=value,
-                quality=quality,
-                device_id=dataset.device_id,
-            )
-
-            if not self._validate_sample(sample, dataset):
-                return False
-
-            dataset.samples.append(sample)
-            self._update_quality_stats(dataset, sample)
-
-            return True
-
-        except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to ingest GSR sample for session {session_id}: {e}")
+        if session_id not in self.active_sessions:
             return False
+
+        dataset = self.active_sessions[session_id]
+
+        if len(sample_data) < 16:
+            return False
+
+        timestamp, value, quality = struct.unpack("<dfi", sample_data[:16])
+
+        sample = GSRSample(
+            timestamp=timestamp,
+            value=value,
+            quality=quality,
+            device_id=dataset.device_id,
+        )
+
+        if not self._validate_sample(sample, dataset):
+            return False
+
+        dataset.samples.append(sample)
+        self._update_quality_stats(dataset, sample)
+
+        return True
 
     async def end_session(self, session_id: str) -> Optional[GSRDataSet]:
 
-        try:
-            if session_id not in self.active_sessions:
-                logger.warning(f"Cannot end inactive GSR session: {session_id}")
-                return None
-
-            dataset = self.active_sessions[session_id]
-            dataset.end_time = time.time()
-
-            if len(dataset.samples) > 1:
-                duration = dataset.end_time - dataset.start_time
-                dataset.sample_rate = (
-                    len(dataset.samples) / duration if duration > 0 else 0.0
-                )
-
-            if dataset.samples:
-                qualities = [sample.quality for sample in dataset.samples]
-                dataset.quality_stats = {
-                    "min": min(qualities),
-                    "max": max(qualities),
-                    "mean": sum(qualities) / len(qualities),
-                }
-
-            self.completed_sessions[session_id] = dataset
-            del self.active_sessions[session_id]
-
-            await self._save_dataset(dataset)
-
-            logger.info(
-                f"Ended GSR session {session_id} with" "{len(dataset.samples)} samples"
-            )
-            logger.info(
-                f"Sample rate: {dataset.sample_rate:.1f} Hz, Quality:"
-                "{dataset.quality_stats['mean']:.1f}"
-            )
-
-            return dataset
-
-        except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to end GSR session {session_id}: {e}")
+        if session_id not in self.active_sessions:
             return None
+
+        dataset = self.active_sessions[session_id]
+        dataset.end_time = time.time()
+
+        if len(dataset.samples) > 1:
+            duration = dataset.end_time - dataset.start_time
+            dataset.sample_rate = (
+                len(dataset.samples) / duration if duration > 0 else 0.0
+            )
+
+        if dataset.samples:
+            qualities = [sample.quality for sample in dataset.samples]
+            dataset.quality_stats = {
+                "min": min(qualities),
+                "max": max(qualities),
+                "mean": sum(qualities) / len(qualities),
+            }
+
+        self.completed_sessions[session_id] = dataset
+        del self.active_sessions[session_id]
+
+        await self._save_dataset(dataset)
+
+        return dataset
 
     def _validate_sample(self, sample: GSRSample, dataset: GSRDataSet) -> bool:
 
         if sample.quality < self.quality_threshold:
-            logger.debug(
-                f"GSR sample below quality threshold: {sample.quality}"
-                "< {self.quality_threshold}"
-            )
             return False
 
         if not (10.0 <= sample.value <= 1000000.0):
-            logger.warning(f"GSR value out of range: {sample.value} ohms")
             return False
 
         if dataset.samples and sample.timestamp <= dataset.samples[-1].timestamp:
-            logger.warning(f"GSR sample timestamp not monotonic: {sample.timestamp}")
             return False
-
-        if dataset.samples:
-            gap = sample.timestamp - dataset.samples[-1].timestamp
-            if gap > self.max_gap_duration:
-                logger.warning(f"Large gap in GSR data: {gap:.2f}s")
 
         return True
 
@@ -216,52 +169,39 @@ class GSRIngestor:
 
     async def _save_dataset(self, dataset: GSRDataSet):
 
-        try:
-            filename = f"gsr_{dataset.session_id}_{dataset.device_id}.json"
-            filepath = self.data_dir / filename
+        filename = f"gsr_{dataset.session_id}_{dataset.device_id}.json"
+        filepath = self.data_dir / filename
 
-            with open(filepath, "w") as f:
-                json.dump(dataset.to_dict(), f, indent=2)
-
-            logger.info(f"Saved GSR dataset to {filepath}")
-
-        except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to save GSR dataset: {e}")
+        with open(filepath, "w") as f:
+            json.dump(dataset.to_dict(), f, indent=2)
 
     async def load_dataset(
             self, session_id: str, device_id: str
     ) -> Optional[GSRDataSet]:
 
-        try:
-            filename = f"gsr_{session_id}_{device_id}.json"
-            filepath = self.data_dir / filename
+        filename = f"gsr_{session_id}_{device_id}.json"
+        filepath = self.data_dir / filename
 
-            if not filepath.exists():
-                logger.warning(f"GSR dataset file not found: {filepath}")
-                return None
-
-            with open(filepath, "r") as f:
-                data = json.load(f)
-
-            samples = [GSRSample(**sample_data) for sample_data in data["samples"]]
-
-            dataset = GSRDataSet(
-                session_id=data["session_id"],
-                device_id=data["device_id"],
-                mode=GSRMode(data["mode"]),
-                start_time=data["start_time"],
-                end_time=data["end_time"],
-                samples=samples,
-                sample_rate=data["sample_rate"],
-                quality_stats=data["quality_stats"],
-            )
-
-            logger.info(f"Loaded GSR dataset: {len(dataset.samples)} samples")
-            return dataset
-
-        except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to load GSR dataset: {e}")
+        if not filepath.exists():
             return None
+
+        with open(filepath, "r") as f:
+            data = json.load(f)
+
+        samples = [GSRSample(**sample_data) for sample_data in data["samples"]]
+
+        dataset = GSRDataSet(
+            session_id=data["session_id"],
+            device_id=data["device_id"],
+            mode=GSRMode(data["mode"]),
+            start_time=data["start_time"],
+            end_time=data["end_time"],
+            samples=samples,
+            sample_rate=data["sample_rate"],
+            quality_stats=data["quality_stats"],
+        )
+
+        return dataset
 
     def get_session_status(self, session_id: str) -> Optional[Dict[str, Any]]:
 

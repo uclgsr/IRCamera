@@ -4,13 +4,20 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
 import mpdc4gsr.feature.network.data.RecordingController
+import javax.inject.Inject
 
-class GSRSettingsViewModel : AppBaseViewModel() {
+@HiltViewModel
+class GSRSettingsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val repository: GSRSettingsRepository
+) : AppBaseViewModel() {
     data class UIState(
         val gsrSettings: GSRSettingsRepository.GSRSettings = GSRSettingsRepository.GSRSettings(),
         val deviceSettings: GSRSettingsRepository.DeviceSettings = GSRSettingsRepository.DeviceSettings(),
@@ -46,8 +53,12 @@ class GSRSettingsViewModel : AppBaseViewModel() {
         IDLE, SCANNING, COMPLETED, FAILED
     }
 
-    private lateinit var repository: GSRSettingsRepository
     private var gsrSensorRecorder: GSRSensorRecorder? = null
+    
+    init {
+        checkPermissions(context)
+        initializeGSRRecorder(context)
+    }
 
     // StateFlow from Repository
     val gsrSettings: StateFlow<GSRSettingsRepository.GSRSettings> by lazy {
@@ -82,19 +93,15 @@ class GSRSettingsViewModel : AppBaseViewModel() {
     val settingsEvents: SharedFlow<SettingsEvent> = _settingsEvents.asSharedFlow()
 
     // Combined state for UI optimization
-    val settingsUiState: StateFlow<UIState> by lazy {
-        combine(
-            if (::repository.isInitialized) repository.gsrSettings else flowOf(GSRSettingsRepository.GSRSettings()),
-            if (::repository.isInitialized) repository.deviceSettings else flowOf(
-                GSRSettingsRepository.DeviceSettings()
-            ),
-            _permissionState,
-            _deviceConnectionState,
-            _scanningState
-        ) { gsrSettings, deviceSettings, permissions, connection, scanning ->
-            UIState(gsrSettings, deviceSettings, permissions, connection, scanning)
-        }.stateIn(viewModelScope, SharingStarted.Lazily, UIState())
-    }
+    val settingsUiState: StateFlow<UIState> = combine(
+        repository.gsrSettings,
+        repository.deviceSettings,
+        _permissionState,
+        _deviceConnectionState,
+        _scanningState
+    ) { gsrSettings, deviceSettings, permissions, connection, scanning ->
+        UIState(gsrSettings, deviceSettings, permissions, connection, scanning)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, UIState())
 
     // Modern Event-driven architecture with SharedFlow
     sealed class SettingsEvent {
@@ -117,11 +124,7 @@ class GSRSettingsViewModel : AppBaseViewModel() {
         data class ShowError(val message: String) : SettingsEvent()
     }
 
-    fun initialize(context: Context) {
-        repository = GSRSettingsRepository(context)
-        checkPermissions(context)
-        initializeGSRRecorder(context)
-    }
+
 
     private fun initializeGSRRecorder(context: Context) {
         launchWithErrorHandling {

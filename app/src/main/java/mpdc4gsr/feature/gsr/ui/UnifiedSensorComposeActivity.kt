@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+import dagger.hilt.android.AndroidEntryPoint
 
 import androidx.activity.viewModels
 import androidx.camera.view.PreviewView
@@ -158,6 +159,7 @@ class UnifiedSensorViewModel : AppBaseViewModel() {
     }
 }
 
+@AndroidEntryPoint
 class UnifiedSensorComposeActivity : BaseComposeActivity<UnifiedSensorViewModel>() {
     override fun createViewModel(): UnifiedSensorViewModel =
         viewModels<UnifiedSensorViewModel>().value

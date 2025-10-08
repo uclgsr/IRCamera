@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+import dagger.hilt.android.AndroidEntryPoint
 
 import android.content.Context
 import android.content.Intent
@@ -21,6 +22,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.AppBaseViewModel
 
+@AndroidEntryPoint
 class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
     companion object {
         private const val EXTRA_SESSION_ID = "session_id"

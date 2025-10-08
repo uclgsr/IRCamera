@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+import dagger.hilt.android.AndroidEntryPoint
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
@@ -29,6 +30,7 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import kotlin.random.Random
 
+@AndroidEntryPoint
 class GSRQuickRecordingComposeActivity : BaseComposeActivity<GSRQuickRecordingViewModel>() {
     override fun createViewModel(): GSRQuickRecordingViewModel = GSRQuickRecordingViewModel()
 

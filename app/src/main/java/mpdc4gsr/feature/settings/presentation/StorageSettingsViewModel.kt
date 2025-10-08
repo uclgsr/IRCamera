@@ -1,20 +1,24 @@
 package mpdc4gsr.feature.settings.presentation
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Environment
 import android.os.StatFs
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class StorageSettingsViewModel(context: Context) : BaseViewModel() {
-    private val context: Context = context.applicationContext
+@HiltViewModel
+class StorageSettingsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context
+) : ViewModel() {
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private val _storageSettings = MutableStateFlow(StorageSettings())
     val storageSettings: StateFlow<StorageSettings> = _storageSettings.asStateFlow()
@@ -50,12 +54,6 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
         updateStorageInfo()
     }
 
-    fun initialize() {
-        // Kept for compatibility, but initialization now happens in init block
-        loadSettings()
-        updateStorageInfo()
-    }
-
     private fun loadSettings() {
         _storageSettings.value = StorageSettings(
             autoExport = prefs.getBoolean(KEY_AUTO_EXPORT, false),
@@ -69,46 +67,38 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
 
     private fun updateStorageInfo() {
         viewModelScope.launch {
-            try {
-                val currentLocation = _storageSettings.value.storageLocation
-                val path = when (currentLocation) {
-                    "SD Card" -> {
-                        val externalStorage = Environment.getExternalStorageDirectory()
-                        if (externalStorage != null && externalStorage.exists()) {
-                            externalStorage
-                        } else {
-                            Environment.getDataDirectory()
-                        }
-                    }
-
-                    "External USB" -> {
-                        // For External USB, would need to scan removable storage
-                        // Falling back to internal for now
+            val currentLocation = _storageSettings.value.storageLocation
+            val path = when (currentLocation) {
+                "SD Card" -> {
+                    val externalStorage = Environment.getExternalStorageDirectory()
+                    if (externalStorage != null && externalStorage.exists()) {
+                        externalStorage
+                    } else {
                         Environment.getDataDirectory()
                     }
-
-                    else -> Environment.getDataDirectory()
                 }
-                val stat = StatFs(path.path)
-                val blockSize = stat.blockSizeLong
-                val availableBlocks = stat.availableBlocksLong
-                val totalBlocks = stat.blockCountLong
-                val usedBlocks = totalBlocks - availableBlocks
-                val available = (availableBlocks * blockSize) / (1024.0 * 1024 * 1024)
-                val used = (usedBlocks * blockSize) / (1024.0 * 1024 * 1024)
-                val total = (totalBlocks * blockSize) / (1024.0 * 1024 * 1024)
-                _storageInfo.value = StorageInfo(
-                    availableSpace = "%.1f GB".format(available),
-                    usedSpace = "%.1f GB".format(used),
-                    totalSpace = "%.1f GB".format(total)
-                )
-            } catch (e: Exception) {
-                _storageInfo.value = StorageInfo(
-                    availableSpace = "Error",
-                    usedSpace = "Error",
-                    totalSpace = "Error"
-                )
+
+                "External USB" -> {
+                    // For External USB, would need to scan removable storage
+                    // Falling back to internal for now
+                    Environment.getDataDirectory()
+                }
+
+                else -> Environment.getDataDirectory()
             }
+            val stat = StatFs(path.path)
+            val blockSize = stat.blockSizeLong
+            val availableBlocks = stat.availableBlocksLong
+            val totalBlocks = stat.blockCountLong
+            val usedBlocks = totalBlocks - availableBlocks
+            val available = (availableBlocks * blockSize) / (1024.0 * 1024 * 1024)
+            val used = (usedBlocks * blockSize) / (1024.0 * 1024 * 1024)
+            val total = (totalBlocks * blockSize) / (1024.0 * 1024 * 1024)
+            _storageInfo.value = StorageInfo(
+                availableSpace = "%.1f GB".format(available),
+                usedSpace = "%.1f GB".format(used),
+                totalSpace = "%.1f GB".format(total)
+            )
         }
     }
 

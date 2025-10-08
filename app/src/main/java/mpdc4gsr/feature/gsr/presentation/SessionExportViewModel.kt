@@ -1,4 +1,7 @@
 package mpdc4gsr.feature.gsr.presentation
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
 import android.content.Context
 import android.content.Intent
@@ -45,8 +48,9 @@ data class GSRSession(
     val lastModified: Long = 0L
 )
 
-class SessionExportViewModel(
-    context: Context
+@HiltViewModel
+class SessionExportViewModel @Inject constructor(
+    @ApplicationContext context: Context
 ) : AppBaseViewModel() {
     private val application: Context = context.applicationContext
 

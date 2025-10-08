@@ -2,6 +2,8 @@ package mpdc4gsr.feature.settings.ui
 
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,16 +24,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import javax.inject.Inject
 
 enum class PdfType(val fileName: String, val displayName: String) {
     TC001("TC001.pdf", "TC001 Thermal Camera Manual"),
@@ -45,7 +49,8 @@ data class PdfDocument(
     val fileSize: String = ""
 )
 
-class PdfViewModel : AppBaseViewModel() {
+@HiltViewModel
+class PdfViewModel @Inject constructor() : ViewModel() {
     private val _isLoading = mutableStateOf(true)
     val isLoading: State<Boolean> = _isLoading
     private val _pdfDocument = mutableStateOf<PdfDocument?>(null)
@@ -122,37 +127,51 @@ class PdfViewModel : AppBaseViewModel() {
     }
 }
 
-class PdfComposeActivity : BaseComposeActivity<PdfViewModel>() {
-    override fun createViewModel(): PdfViewModel = viewModels<PdfViewModel>().value
+@AndroidEntryPoint
+class PdfComposeActivity : ComponentActivity() {
+    private val viewModel: PdfViewModel by viewModels()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val isTS001 = intent.getBooleanExtra("isTS001", false)
-        viewModels<PdfViewModel>().value.loadPdf(isTS001, this)
+        viewModel.loadPdf(isTS001, this)
+        setContent {
+            IRCameraTheme {
+                PdfScreen(
+                    viewModel = viewModel,
+                    onBackClick = { finish() }
+                )
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
+}
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    override fun Content(viewModel: PdfViewModel) {
-        IRCameraTheme {
-            val context = LocalContext.current
-            val isLoading by viewModel.isLoading
-            val pdfDocument by viewModel.pdfDocument
-            val error by viewModel.error
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFF16131E))
-            ) {
-                TitleBar(
-                    title = pdfDocument?.type?.displayName ?: "Manual Viewer",
-                    onBackClick = { finish() }
-                )
-                Box(
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PdfScreen(
+    viewModel: PdfViewModel,
+    onBackClick: () -> Unit
+) {
+    val context = LocalContext.current
+    val isLoading by viewModel.isLoading
+    val pdfDocument by viewModel.pdfDocument
+    val error by viewModel.error
+    
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF16131E))
+    ) {
+        TitleBar(
+            title = pdfDocument?.type?.displayName ?: "Manual Viewer",
+            onBackClick = onBackClick
+        )
+        Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)
