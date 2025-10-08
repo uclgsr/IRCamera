@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import mpdc4gsr.feature.network.domain.model.ControllerInfo
 import mpdc4gsr.feature.network.domain.usecase.ConnectToControllerUseCase
 import mpdc4gsr.feature.network.domain.usecase.DisconnectUseCase
 import mpdc4gsr.feature.network.domain.usecase.ObserveConnectionStateUseCase
@@ -14,7 +13,7 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 @HiltViewModel
-class NetworkClientTestViewModel @Inject constructor(
+class NetworkTestViewModel @Inject constructor(
     private val connectToControllerUseCase: ConnectToControllerUseCase,
     private val disconnectUseCase: DisconnectUseCase,
     private val sendMessageUseCase: SendMessageUseCase,
@@ -27,11 +26,14 @@ class NetworkClientTestViewModel @Inject constructor(
     private val _port = MutableStateFlow("8080")
     val port: StateFlow<String> = _port.asStateFlow()
 
+    private val _statusMessage = MutableStateFlow("")
+    val statusMessage: StateFlow<String> = _statusMessage.asStateFlow()
+
     private val _connectionInfo = MutableStateFlow("")
     val connectionInfo: StateFlow<String> = _connectionInfo.asStateFlow()
 
-    private val _statusMessage = MutableStateFlow("")
-    val statusMessage: StateFlow<String> = _statusMessage.asStateFlow()
+    private val _isRunning = MutableStateFlow(false)
+    val isRunning: StateFlow<Boolean> = _isRunning.asStateFlow()
 
     val connectionState = observeConnectionStateUseCase()
         .stateIn(
@@ -50,16 +52,39 @@ class NetworkClientTestViewModel @Inject constructor(
 
     fun connect() {
         viewModelScope.launch {
+            _isRunning.value = true
             _statusMessage.value = "Connecting to ${_ipAddress.value}:${_port.value}..."
             
-            val port = _port.value.toIntOrNull() ?: 8080
-            connectToControllerUseCase(_ipAddress.value, port, true)
+            val portNum = _port.value.toIntOrNull() ?: 8080
+            connectToControllerUseCase(_ipAddress.value, portNum, true)
                 .onSuccess {
                     _statusMessage.value = "Connected successfully"
-                    _connectionInfo.value = "Connected to ${_ipAddress.value}:${port}"
+                    _connectionInfo.value = "Connected to ${_ipAddress.value}:$portNum"
                 }
                 .onFailure { error ->
                     _statusMessage.value = "Connection failed: ${error.message}"
+                }
+                .also {
+                    _isRunning.value = false
+                }
+        }
+    }
+
+    fun runConnectionTest(ipAddress: String, port: Int) {
+        viewModelScope.launch {
+            _isRunning.value = true
+            _statusMessage.value = "Testing connection to $ipAddress:$port..."
+
+            connectToControllerUseCase(ipAddress, port, true)
+                .onSuccess {
+                    _statusMessage.value = "Connection test successful!"
+                    _connectionInfo.value = "Connected to $ipAddress:$port"
+                }
+                .onFailure { error ->
+                    _statusMessage.value = "Connection test failed: ${error.message}"
+                }
+                .also {
+                    _isRunning.value = false
                 }
         }
     }
