@@ -48,14 +48,17 @@ class GSRNetworkStreamer(
                 if (!connected) {                    return@withContext false
                 }
                 performTimeSync()
-                registerGSRStream()                true
-            } catch (e: Exception) {                false
+                registerGSRStream()
+                true
+            } catch (e: Exception) {
+                false
             }
         }
     }
 
     suspend fun startStreaming(): Boolean {
-        if (_isStreaming.get()) {            return true
+        if (_isStreaming.get()) {
+            return true
         }
         return try {
             _isStreaming.set(true)
@@ -71,8 +74,10 @@ class GSRNetworkStreamer(
             qualityReportingJob =
                 streamingScope.launch {
                     reportQualityMetrics()
-                }            true
-        } catch (e: Exception) {            _isStreaming.set(false)
+                }
+            true
+        } catch (e: Exception) {
+            _isStreaming.set(false)
             false
         }
     }
@@ -87,8 +92,10 @@ class GSRNetworkStreamer(
             heartbeatJob?.cancel()
             qualityReportingJob?.cancel()
             flushBuffer()
-            sendStreamEndNotification()            true
-        } catch (e: Exception) {            false
+            sendStreamEndNotification()
+            true
+        } catch (e: Exception) {
+            false
         }
     }
 
@@ -103,8 +110,10 @@ class GSRNetworkStreamer(
                 )
             sampleBuffer.offer(syncedSample)
             if (sampleBuffer.size > BUFFER_SIZE) {
-                sampleBuffer.poll()            }
-        } catch (e: Exception) {        }
+                sampleBuffer.poll()
+            }
+        } catch (e: Exception) {
+        }
     }
 
     private suspend fun streamGSRData() {
@@ -117,7 +126,8 @@ class GSRNetworkStreamer(
                     performTimeSync()
                 }
                 delay(STREAM_INTERVAL_MS)
-            } catch (e: Exception) {                networkErrors.incrementAndGet()
+            } catch (e: Exception) {
+                networkErrors.incrementAndGet()
                 delay(1000)
             }
         }
@@ -135,19 +145,19 @@ class GSRNetworkStreamer(
             val batchMessage = createBatchMessage(batch)
             // Send actual network message using NetworkClient
             networkClient?.let { client ->
-                try {
-                    // Convert string message to JSONObject for NetworkClient API
-                    val jsonMessage = JSONObject(batchMessage.toString())
-                    streamingScope.launch {
-                        val success = client.sendMessage(jsonMessage)
+                streamingScope.launch {
+                    try {
+                        val success = client.sendMessage(batchMessage)
                         if (success) {
+                        }
+                    } catch (e: Exception) {
                     }
-                } catch (e: Exception) {                }
-            } ?: run {
-                )
+                }
             }
             samplesSent.addAndGet(batch.size.toLong())
-            bytesTransmitted.addAndGet(batchMessage.toString().length.toLong())        } catch (e: Exception) {            networkErrors.incrementAndGet()
+            bytesTransmitted.addAndGet(batchMessage.toString().length.toLong())
+        } catch (e: Exception) {
+            networkErrors.incrementAndGet()
         }
     }
 
@@ -200,20 +210,26 @@ class GSRNetworkStreamer(
                         val clientReceived = System.nanoTime()
                         val roundTripTime = clientReceived - clientSent
                         clockOffset = 0 // Assume zero offset without server response
-                        lastSyncTime = System.currentTimeMillis()                    } else {                        performLocalTimeSync(clientSent)
+                        lastSyncTime = System.currentTimeMillis()
+                    } else {
+                        performLocalTimeSync(clientSent)
                     }
-                } catch (e: Exception) {                    performLocalTimeSync(clientSent)
+                } catch (e: Exception) {
+                    performLocalTimeSync(clientSent)
                 }
-            } ?: run {                performLocalTimeSync(clientSent)
+            } ?: run {
+                performLocalTimeSync(clientSent)
             }
-        } catch (e: Exception) {        }
+        } catch (e: Exception) {
+        }
     }
 
     private fun performLocalTimeSync(clientSent: Long) {
         val clientReceived = System.nanoTime()
         val roundTripTime = clientReceived - clientSent
         clockOffset = 0 // No server available, assume zero offset
-        lastSyncTime = System.currentTimeMillis()    }
+        lastSyncTime = System.currentTimeMillis()
+    }
 
     private suspend fun sendHeartbeats() {
         while (_isStreaming.get()) {
@@ -231,10 +247,14 @@ class GSRNetworkStreamer(
                         try {
                             val success = client.sendMessage(heartbeat)
                             if (success) {
-                        } catch (e: Exception) {                        }
+                            }
+                        } catch (e: Exception) {
+                        }
                     }
-                } ?: run {                }
-            } catch (e: Exception) {            }
+                } ?: run {
+                }
+            } catch (e: Exception) {
+            }
             delay(HEARTBEAT_INTERVAL_MS)
         }
     }
@@ -260,10 +280,14 @@ class GSRNetworkStreamer(
                         try {
                             val success = client.sendMessage(metrics)
                             if (success) {
-                        } catch (e: Exception) {                        }
+                            }
+                        } catch (e: Exception) {
+                        }
                     }
-                } ?: run {                }
-            } catch (e: Exception) {            }
+                } ?: run {
+                }
+            } catch (e: Exception) {
+            }
             delay(QUALITY_REPORTING_INTERVAL_MS)
         }
     }
@@ -290,11 +314,16 @@ class GSRNetworkStreamer(
                 streamingScope.launch {
                     try {
                         val success = client.sendMessage(registration)
-                        if (success) {                        } else {                        }
-                    } catch (e: Exception) {                    }
+                        if (success) {
+                        } else {
+                        }
+                    } catch (e: Exception) {
+                    }
                 }
-            } ?: run {            }
-        } catch (e: Exception) {        }
+            } ?: run {
+            }
+        } catch (e: Exception) {
+        }
     }
 
     private suspend fun sendStreamEndNotification() {
@@ -313,10 +342,16 @@ class GSRNetworkStreamer(
                 streamingScope.launch {
                     try {
                         val success = client.sendMessage(endNotification)
-                        if (success) {                        } else {                        }
-                    } catch (e: Exception) {                    }
+                        if (success) {
+                        } else {
+                        }
+                    } catch (e: Exception) {
+                    }
                 }
             } ?: run {
+            }
+        } catch (e: Exception) {
+        }
     }
 
     private suspend fun flushBuffer() {

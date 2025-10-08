@@ -33,15 +33,6 @@ abstract class GSRDeviceModule {
     companion object {
         @Provides
         @ViewModelScoped
-        fun provideShimmerDeviceManager(
-            application: Application
-        ): ShimmerDeviceManager {
-            return ShimmerDeviceManager(application, null)
-        }
-    }
-
-        @Provides
-        @ViewModelScoped
         fun provideScanDevicesUseCase(
             gsrDeviceRepository: GSRDeviceRepository
         ): ScanGSRDevicesUseCase {
@@ -80,4 +71,5 @@ abstract class GSRDeviceModule {
             return CheckGSRDeviceConnectionUseCase(gsrDeviceRepository)
         }
     }
+}
 }
