@@ -1,5 +1,4 @@
 [versions]
-
 compileSdk = "36"
 minSdk = "26"
 targetSdk = "35"
@@ -7,39 +6,19 @@ versionCode = "1100"
 versionName = "1.10.000"
 ndkVersion = "21.3.6528147"
 
-softcodeTopinfrared = "TC001_DisplaySW_Topinfrared_Adr"
-softcodeTopinfrared10 = "TC001_DisplaySW_TopinfraredAndroid10_Adr"
-softcodeTopinfraredCn = "TC001_DisplaySW_Topinfrared_GB_Adr"
-softcodeTopinfraredCn10 = "TC001_DisplaySW_TopinfraredAndroid10_GB_Adr"
-
-appkeyTopinfrared = "5B2F6F1FD80844FCB6E50BCA19222E76"
-appkeyTopinfrared10 = "AD782A05757B458391BFD695A3967EDD"
-appkeyTopinfraredCn = "19F791D993B042E2B22D42A974DE92E8"
-appkeyTopinfraredCn10 = "058F710E6D3545168F3D19010320F8C3"
-
-appsecretTopinfrared = "A4A2EE33347A4D7885C26689515567EC"
-appsecretTopinfrared10 = "2870276D969B45C1B4A312B336274079"
-appsecretTopinfraredCn = "9D33C48FD7CE4440B7D922FBF9B6DE2A"
-appsecretTopinfraredCn10 = "F4511AAA6C694E54A3676CF2345A4A8E"
-
 kotlin = "2.2.20"
-agp = "8.11.0"
 hilt = "2.54"
 hiltNavigationCompose = "1.2.0"
 
-# Jetpack Compose BOM and core versions
-compose-bom = "2025.01.01"
-compose-compiler = "1.5.15"
-compose-activity = "1.11.0"
-compose-navigation = "2.9.5"
-coil = "2.7.0"
+# Jetpack Compose
+compose-bom = "2025.09.01"
+activity = "1.11.0"
 
 androidxCore = "1.17.0"
 androidxAppcompat = "1.7.1"
 androidxRecyclerview = "1.3.2"
 
 fragmentKtx = "1.8.9"
-androidxActivity = "1.11.0"
 androidxPreference = "1.2.1"
 material = "1.13.0"
 multidex = "2.0.1"
@@ -52,6 +31,9 @@ camerax = "1.5.0"
 coroutines = "1.10.2"
 kotlinxSerialization = "1.9.0"
 
+coil = "2.7.0"
+compose-navigation = "2.9.5"
+
 jsbridge = "1.0.4"
 okhttp = "5.1.0"
 rxjava = "2.2.21"
@@ -60,7 +42,6 @@ rxlifecycle3 = "3.1.0"
 ucrop = "2.2.11-native"
 playAppUpdate = "2.1.0"
 smartRefreshLayout = "2.1.1"
-# NOTE: V3.0.0-alpha available but using stable 2.x versions for production reliability
 brvah = "3.0.11"
 colorpickerview = "2.3.0"
 photoview = "2.3.0"
@@ -124,8 +105,7 @@ spotless = "8.0.0"
 identityJvm = "202411.1"
 
 [libraries]
-
-# Jetpack Compose BOM and components
+# Compose BOM-scoped
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
@@ -137,14 +117,12 @@ compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-material3-window-size = { group = "androidx.compose.material3", name = "material3-window-size-class" }
 compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
-compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
+compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
 compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
 compose-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
 compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "compose-navigation" }
 compose-animation = { group = "androidx.compose.animation", name = "animation" }
-
-# Coil for image loading
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
@@ -153,7 +131,7 @@ androidx-documentfile = { group = "androidx.documentfile", name = "documentfile"
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidxRecyclerview" }
 
 fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
-androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidxActivity" }
+androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "androidxPreference" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
@@ -163,21 +141,17 @@ lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-view
 lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycle" }
 
-# Hilt Dependency Injection
+# Hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version = "1.2.0" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version = "1.2.0" }
-
+# Room/Work
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-
 work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
 
+# Kotlin
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -185,6 +159,7 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
+# Network/Rx/etc.
 jsbridge = { group = "com.github.lzyzsd", name = "jsbridge", version.ref = "jsbridge" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
@@ -195,11 +170,13 @@ rxlifecycle-android = { group = "com.trello.rxlifecycle3", name = "rxlifecycle-a
 rxlifecycle-components = { group = "com.trello.rxlifecycle3", name = "rxlifecycle-components", version.ref = "rxlifecycle3" }
 rxlifecycle-ktx = { group = "com.trello.rxlifecycle3", name = "rxlifecycle-kotlin", version.ref = "rxlifecycle3" }
 rxlifecycle-android-lifecycle-ktx = { group = "com.trello.rxlifecycle3", name = "rxlifecycle-android-lifecycle-kotlin", version.ref = "rxlifecycle3" }
+
 ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "ucrop" }
 play-app-update = { group = "com.google.android.play", name = "app-update", version.ref = "playAppUpdate" }
 refresh-layout-kernel = { group = "io.github.scwang90", name = "refresh-layout-kernel", version.ref = "smartRefreshLayout" }
 refresh-header-classics = { group = "io.github.scwang90", name = "refresh-header-classics", version.ref = "smartRefreshLayout" }
 refresh-header-material = { group = "io.github.scwang90", name = "refresh-header-material", version.ref = "smartRefreshLayout" }
+
 brvah = { group = "com.github.CymChad", name = "BaseRecyclerViewAdapterHelper", version.ref = "brvah" }
 colorpickerview = { group = "com.github.skydoves", name = "colorpickerview", version.ref = "colorpickerview" }
 photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
@@ -207,30 +184,41 @@ nifty = { group = "com.nineoldandroids", name = "library", version.ref = "nifty"
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
 mn-image-browser = { group = "com.github.maning0303", name = "MNImageBrowser", version.ref = "mnImageBrowser" }
+
+# CameraX/Media3
 camerax-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
 camerax-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
 camerax-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
 camerax-video = { group = "androidx.camera", name = "camera-video", version.ref = "camerax" }
 camerax-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
 camerax-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax" }
+
 nordic-ble-ktx = { group = "no.nordicsemi.android", name = "ble-ktx", version.ref = "nordicBle" }
+nordic-ble = { group = "no.nordicsemi.android", name = "ble", version.ref = "nordicBle" }
+
 utilcode = { group = "com.blankj", name = "utilcodex", version.ref = "utilcodex" }
 xlog = { group = "com.elvishew", name = "xlog", version.ref = "xlog" }
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
 eventbus = { group = "org.greenrobot", name = "eventbus", version.ref = "eventbus" }
+
 andromeda-core = { group = "com.kylecorry.andromeda", name = "core", version.ref = "andromeda" }
 andromeda-sense = { group = "com.kylecorry.andromeda", name = "sense", version.ref = "andromeda" }
 andromeda-views = { group = "com.kylecorry.andromeda", name = "views", version.ref = "andromeda" }
+
 javacv = { group = "org.bytedeco", name = "javacv", version.ref = "javacv" }
 javacpp = { group = "org.bytedeco", name = "javacpp", version.ref = "javacv" }
 ir-layout = { group = "com.github.CoderCaiSL", name = "jitpackMvn", version = "+" }
+
 ffmpeg-android-arm64 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 ffmpeg-android-arm = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 ffmpeg-android-x86-64 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 ffmpeg-android-x86 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
+
 umeng-common = { group = "com.umeng.umsdk", name = "common", version.ref = "umengCommon" }
 umeng-asms = { group = "com.umeng.umsdk", name = "asms", version.ref = "umengAsms" }
 umeng-analytics = { group = "com.umeng.umsdk", name = "analytics", version.ref = "umengAnalytics" }
+
+# Test
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 hamcrest = { group = "org.hamcrest", name = "hamcrest", version.ref = "hamcrest" }
@@ -253,11 +241,11 @@ benchmark-junit4 = { group = "androidx.benchmark", name = "benchmark-junit4", ve
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 test-core = { group = "androidx.test", name = "core", version.ref = "testCore" }
 javafaker = { group = "com.github.javafaker", name = "javafaker", version.ref = "javafaker" }
+
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 opencsv = { group = "com.opencsv", name = "opencsv", version.ref = "opencsv" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 jmdns = { group = "org.jmdns", name = "jmdns", version.ref = "jmdns" }
-nordic-ble = { group = "no.nordicsemi.android", name = "ble", version.ref = "nordicBle" }
 apache-poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "apachePoi" }
 xmlbeans = { group = "org.apache.xmlbeans", name = "xmlbeans", version.ref = "xmlbeans" }
 stax-api = { group = "javax.xml.stream", name = "stax-api", version.ref = "staxApi" }
@@ -266,6 +254,7 @@ vecmath = { group = "java3d", name = "vecmath", version.ref = "vecmath" }
 commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commonsLang3" }
 fastble = { group = "com.github.Jasonchenlijian", name = "FastBle", version.ref = "fastBle" }
 easyswipemenulayout = { group = "com.github.anzaizai", name = "EasySwipeMenuLayout", version.ref = "easySwipeMenuLayout" }
+
 gsy-video-player-thermal = { group = "com.github.CarGuo.GSYVideoPlayer", name = "gsyVideoPlayer-java", version.ref = "gsyVideoPlayerThermal" }
 media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
 media3-exoplayer-dash = { group = "androidx.media3", name = "media3-exoplayer-dash", version.ref = "media3" }
@@ -281,20 +270,17 @@ huawei-agconnect = { group = "com.huawei.agconnect", name = "agcp", version.ref 
 identity-jvm = { group = "com.android.identity", name = "identity-jvm", version.ref = "identityJvm" }
 
 [bundles]
-# Jetpack Compose bundles
 compose-core = ["compose-ui", "compose-ui-tooling-preview", "compose-foundation", "compose-material3", "compose-activity", "compose-viewmodel", "compose-runtime-livedata"]
 compose-navigation-bundle = ["compose-navigation", "compose-animation"]
 compose-icons = ["compose-material-icons-core", "compose-material-icons-extended"]
 compose-debug = ["compose-ui-tooling", "compose-ui-test-manifest"]
 compose-test = ["compose-ui-test-junit4"]
 
-# Existing bundles
 androidx-lifecycle = ["lifecycle-runtime-ktx", "lifecycle-viewmodel-ktx", "lifecycle-livedata-ktx"]
 rx-lifecycle = ["rxlifecycle", "rxlifecycle-android", "rxlifecycle-components", "rxlifecycle-ktx", "rxlifecycle-android-lifecycle-ktx"]
 smart-refresh = ["refresh-layout-kernel", "refresh-header-classics", "refresh-header-material"]
 
 ui-common = ["androidx-core-ktx", "androidx-appcompat", "material"]
-
 thermal-common = ["androidx-core-ktx", "androidx-appcompat", "material", "eventbus"]
 
 camerax = ["camerax-core", "camerax-camera2", "camerax-lifecycle", "camerax-video", "camerax-view", "camerax-extensions"]
