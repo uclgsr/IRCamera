@@ -6,6 +6,8 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -30,13 +32,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import com.csl.irCamera.R
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState
 import com.mpdc4gsr.libunified.app.utils.Constants
-import mpdc4gsr.core.ui.AppBaseViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import javax.inject.Inject
 
 data class HelpStep(
     val icon: ImageVector,
@@ -47,11 +51,13 @@ data class HelpStep(
     val action: (() -> Unit)? = null
 )
 
-class MoreHelpViewModel : AppBaseViewModel() {
+@HiltViewModel
+class MoreHelpViewModel @Inject constructor() : ViewModel() {
     private val _connectionType = mutableStateOf(0)
     val connectionType: State<Int> = _connectionType
     private val _helpSteps = mutableStateOf<List<HelpStep>>(emptyList())
     val helpSteps: State<List<HelpStep>> = _helpSteps
+    
     fun setConnectionType(type: Int) {
         _connectionType.value = type
         updateHelpSteps(type)
@@ -132,30 +138,44 @@ class MoreHelpViewModel : AppBaseViewModel() {
     }
 }
 
-class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
+@AndroidEntryPoint
+class MoreHelpComposeActivity : ComponentActivity() {
     private lateinit var wifiManager: WifiManager
-    override fun createViewModel(): MoreHelpViewModel = viewModels<MoreHelpViewModel>().value
+    private val viewModel: MoreHelpViewModel by viewModels()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
         val connectionType = intent.getIntExtra(Constants.SETTING_CONNECTION_TYPE, 0)
-        viewModels<MoreHelpViewModel>().value.setConnectionType(connectionType)
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    override fun Content(viewModel: MoreHelpViewModel) {
-        IRCameraTheme {
-            val context = LocalContext.current
-            val connectionType by viewModel.connectionType
-            val helpSteps by viewModel.helpSteps
-            val title = if (connectionType == Constants.SETTING_CONNECTION) {
-                stringResource(R.string.connection_help)
-            } else {
-                stringResource(R.string.disconnection_troubleshooting)
+        viewModel.setConnectionType(connectionType)
+        setContent {
+            IRCameraTheme {
+                MoreHelpScreen(
+                    viewModel = viewModel,
+                    onBackClick = { finish() }
+                )
             }
-            Column(
-                modifier = Modifier
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MoreHelpScreen(
+    viewModel: MoreHelpViewModel,
+    onBackClick: () -> Unit
+) {
+    val context = LocalContext.current
+    val connectionType by viewModel.connectionType
+    val helpSteps by viewModel.helpSteps
+    val title = if (connectionType == Constants.SETTING_CONNECTION) {
+        stringResource(R.string.connection_help)
+    } else {
+        stringResource(R.string.disconnection_troubleshooting)
+    }
+    
+    Column(
+        modifier = Modifier
                     .fillMaxSize()
                     .background(Color(0xFF16131E))
             ) {

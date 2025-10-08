@@ -2,6 +2,8 @@ package mpdc4gsr.feature.settings.ui
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,16 +25,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.R
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.utils.UnifiedVersionUtils
-import mpdc4gsr.core.ui.AppBaseViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import java.util.*
+import javax.inject.Inject
 
-class VersionViewModel : AppBaseViewModel() {
+@HiltViewModel
+class VersionViewModel @Inject constructor() : ViewModel() {
     companion object {
         private const val DEFAULT_VERSION = "1.0.0"
     }
@@ -64,25 +69,39 @@ class VersionViewModel : AppBaseViewModel() {
     }
 }
 
-class VersionComposeActivity : BaseComposeActivity<VersionViewModel>() {
-    override fun createViewModel(): VersionViewModel = viewModels<VersionViewModel>().value
+@AndroidEntryPoint
+class VersionComposeActivity : ComponentActivity() {
+    private val viewModel: VersionViewModel by viewModels()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModels<VersionViewModel>().value.updateVersionInfo(this)
+        viewModel.updateVersionInfo(this)
+        setContent {
+            IRCameraTheme {
+                VersionScreen(
+                    viewModel = viewModel,
+                    onBackClick = { finish() }
+                )
+            }
+        }
     }
+}
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    override fun Content(viewModel: VersionViewModel) {
-        IRCameraTheme {
-            val context = LocalContext.current
-            val versionInfo by viewModel.versionInfo
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFF16131E))
-            ) {
-                TitleBar(
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun VersionScreen(
+    viewModel: VersionViewModel,
+    onBackClick: () -> Unit
+) {
+    val context = LocalContext.current
+    val versionInfo by viewModel.versionInfo
+    
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF16131E))
+    ) {
+        TitleBar(
                     title = stringResource(R.string.version_info),
                     onBackClick = { finish() }
                 )

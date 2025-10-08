@@ -6,6 +6,8 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,17 +23,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.ViewModel
 import com.csl.irCamera.R
 import com.github.lzyzsd.jsbridge.BridgeWebView
 import com.github.lzyzsd.jsbridge.BridgeWebViewClient
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import javax.inject.Inject
 
-class PolicyViewModel : AppBaseViewModel() {
+@HiltViewModel
+class PolicyViewModel @Inject constructor() : ViewModel() {
     enum class PolicyType(val title: String, val contentRes: Int) {
         USER_AGREEMENT("User Services Agreement", R.string.user_services_agreement),
         PRIVACY_POLICY("Privacy Policy", R.string.privacy_policy),
@@ -377,37 +382,51 @@ class PolicyViewModel : AppBaseViewModel() {
     """.trimIndent()
 }
 
-class PolicyComposeActivity : BaseComposeActivity<PolicyViewModel>() {
+@AndroidEntryPoint
+class PolicyComposeActivity : ComponentActivity() {
     companion object {
         const val KEY_THEME_TYPE = "key_theme_type"
         const val KEY_USE_TYPE = "key_use_type"
     }
 
-    override fun createViewModel(): PolicyViewModel = viewModels<PolicyViewModel>().value
+    private val viewModel: PolicyViewModel by viewModels()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val themeType = intent.getIntExtra(KEY_THEME_TYPE, 1)
-        val viewModel = viewModels<PolicyViewModel>().value
         viewModel.setPolicyType(themeType)
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    override fun Content(viewModel: PolicyViewModel) {
-        IRCameraTheme {
-            val context = LocalContext.current
-            val policyType by viewModel.policyType
-            val isLoading by viewModel.isLoading
-            val showError by viewModel.showError
-            val htmlContent by viewModel.htmlContent
-            LaunchedEffect(policyType) {
-                viewModel.loadContent(context)
+        setContent {
+            IRCameraTheme {
+                PolicyScreen(
+                    viewModel = viewModel,
+                    onBackClick = { finish() }
+                )
             }
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFF16131E))
-            ) {
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PolicyScreen(
+    viewModel: PolicyViewModel,
+    onBackClick: () -> Unit
+) {
+    val context = LocalContext.current
+    val policyType by viewModel.policyType
+    val isLoading by viewModel.isLoading
+    val showError by viewModel.showError
+    val htmlContent by viewModel.htmlContent
+    
+    LaunchedEffect(policyType) {
+        viewModel.loadContent(context)
+    }
+    
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF16131E))
+    ) {
                 TitleBar(
                     title = policyType.title,
                     onBackClick = { finish() }
