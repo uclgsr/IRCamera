@@ -17,20 +17,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.camera.presentation.TimeLapseCameraViewModel
-import mpdc4gsr.feature.camera.presentation.TimeLapseCameraViewModelFactory
 import mpdc4gsr.feature.camera.presentation.TimeLapseMode
 
 @Composable
 fun TimeLapseCameraScreen(
-    viewModel: TimeLapseCameraViewModel = viewModel(
-        factory = TimeLapseCameraViewModelFactory(
-            LocalContext.current.applicationContext
-        )
-    ),
+    viewModel: TimeLapseCameraViewModel = hiltViewModel(),
     onBackClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {

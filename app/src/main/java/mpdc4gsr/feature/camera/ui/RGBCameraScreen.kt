@@ -37,8 +37,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.Green
@@ -46,15 +46,10 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.theme.Orange
 import mpdc4gsr.core.ui.theme.Purple
 import mpdc4gsr.feature.camera.presentation.RGBCameraViewModel
-import mpdc4gsr.feature.camera.presentation.RGBCameraViewModelFactory
 
 @Composable
 fun RGBCameraScreen(
-    viewModel: RGBCameraViewModel = viewModel(
-        factory = RGBCameraViewModelFactory(
-            LocalContext.current.applicationContext
-        )
-    ),
+    viewModel: RGBCameraViewModel = hiltViewModel(),
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onCapturePhoto: () -> Unit = {},
