@@ -47,9 +47,6 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
     buildToolsVersion = "35.0.0"
 
     testOptions {

@@ -270,10 +270,6 @@ android {
         compose = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-
     dependenciesInfo {
         includeInApk = false
         includeInBundle = false
@@ -330,7 +326,7 @@ dependencies {
     
     // Hilt dependency injection
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    kapt(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     
     implementation(platform(libs.compose.bom))
