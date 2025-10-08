@@ -87,7 +87,9 @@ class SessionManagerViewModel @Inject constructor(
                 _sessionUiState.value = _sessionUiState.value.copy(
                     isLoading = false,
                     sessionCount = sortedSessions.size
-                )            } catch (e: Exception) {                _sessionEvents.emit(SessionEvent.ShowError("Failed to load sessions: ${e.message}"))
+                )
+            } catch (e: Exception) {
+                _sessionEvents.emit(SessionEvent.ShowError("Failed to load sessions: ${e.message}"))
                 _sessionUiState.value = _sessionUiState.value.copy(isLoading = false)
             }
         }
