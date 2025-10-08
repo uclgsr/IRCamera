@@ -3,18 +3,18 @@ package mpdc4gsr.feature.gsr.domain.usecase
 import kotlinx.coroutines.flow.Flow
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.GSRSample
-import mpdc4gsr.feature.gsr.domain.repository.ShimmerRepository
+import mpdc4gsr.feature.gsr.domain.repository.GSRDeviceRepository
 
-class ScanShimmerDevicesUseCase(
-    private val repository: ShimmerRepository
+class ScanGSRDevicesUseCase(
+    private val repository: GSRDeviceRepository
 ) {
     suspend operator fun invoke(): Flow<List<DeviceInfo>> {
         return repository.scanForDevices()
     }
 }
 
-class ConnectShimmerDeviceUseCase(
-    private val repository: ShimmerRepository
+class ConnectGSRDeviceUseCase(
+    private val repository: GSRDeviceRepository
 ) {
     suspend operator fun invoke(deviceAddress: String): Result<Unit> {
         if (deviceAddress.isBlank()) {
@@ -24,8 +24,8 @@ class ConnectShimmerDeviceUseCase(
     }
 }
 
-class DisconnectShimmerDeviceUseCase(
-    private val repository: ShimmerRepository
+class DisconnectGSRDeviceUseCase(
+    private val repository: GSRDeviceRepository
 ) {
     suspend operator fun invoke(deviceAddress: String) {
         repository.disconnectDevice(deviceAddress)
@@ -33,7 +33,7 @@ class DisconnectShimmerDeviceUseCase(
 }
 
 class StartGSRStreamingUseCase(
-    private val repository: ShimmerRepository
+    private val repository: GSRDeviceRepository
 ) {
     suspend operator fun invoke(deviceAddress: String): Flow<GSRSample> {
         if (!repository.isDeviceConnected(deviceAddress)) {
@@ -44,23 +44,23 @@ class StartGSRStreamingUseCase(
 }
 
 class StopGSRStreamingUseCase(
-    private val repository: ShimmerRepository
+    private val repository: GSRDeviceRepository
 ) {
     suspend operator fun invoke(deviceAddress: String) {
         repository.stopStreaming(deviceAddress)
     }
 }
 
-class CheckDeviceConnectionUseCase(
-    private val repository: ShimmerRepository
+class CheckGSRDeviceConnectionUseCase(
+    private val repository: GSRDeviceRepository
 ) {
     operator fun invoke(deviceAddress: String): Boolean {
         return repository.isDeviceConnected(deviceAddress)
     }
 }
 
-class GetDeviceBatteryUseCase(
-    private val repository: ShimmerRepository
+class GetGSRDeviceBatteryUseCase(
+    private val repository: GSRDeviceRepository
 ) {
     suspend operator fun invoke(deviceAddress: String): Int? {
         return repository.getDeviceBatteryLevel(deviceAddress)

@@ -3,37 +3,38 @@ package mpdc4gsr.feature.gsr.data.repository
 import kotlinx.coroutines.flow.Flow
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.GSRSample
-import mpdc4gsr.feature.gsr.data.source.ShimmerDataSource
-import mpdc4gsr.feature.gsr.domain.repository.ShimmerRepository
+import mpdc4gsr.feature.gsr.data.source.GSRDeviceDataSource
+import mpdc4gsr.feature.gsr.domain.repository.GSRDeviceRepository
+import javax.inject.Inject
 
-class ShimmerRepositoryImpl(
-    private val shimmerDataSource: ShimmerDataSource
-) : ShimmerRepository {
+class GSRDeviceRepositoryImpl @Inject constructor(
+    private val gsrDeviceDataSource: GSRDeviceDataSource
+) : GSRDeviceRepository {
     override suspend fun scanForDevices(): Flow<List<DeviceInfo>> {
-        return shimmerDataSource.scanForDevices()
+        return gsrDeviceDataSource.scanForDevices()
     }
 
     override suspend fun connectDevice(deviceAddress: String): Result<Unit> {
-        return shimmerDataSource.connect(deviceAddress)
+        return gsrDeviceDataSource.connect(deviceAddress)
     }
 
     override suspend fun disconnectDevice(deviceAddress: String) {
-        shimmerDataSource.disconnect(deviceAddress)
+        gsrDeviceDataSource.disconnect(deviceAddress)
     }
 
     override suspend fun streamGSRData(deviceAddress: String): Flow<GSRSample> {
-        return shimmerDataSource.startStreaming(deviceAddress)
+        return gsrDeviceDataSource.startStreaming(deviceAddress)
     }
 
     override suspend fun stopStreaming(deviceAddress: String) {
-        shimmerDataSource.stopStreaming(deviceAddress)
+        gsrDeviceDataSource.stopStreaming(deviceAddress)
     }
 
     override fun isDeviceConnected(deviceAddress: String): Boolean {
-        return shimmerDataSource.isConnected(deviceAddress)
+        return gsrDeviceDataSource.isConnected(deviceAddress)
     }
 
     override suspend fun getDeviceBatteryLevel(deviceAddress: String): Int? {
-        return shimmerDataSource.getBatteryLevel(deviceAddress)
+        return gsrDeviceDataSource.getBatteryLevel(deviceAddress)
     }
 }

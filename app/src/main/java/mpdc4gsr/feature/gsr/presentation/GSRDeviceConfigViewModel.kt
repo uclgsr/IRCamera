@@ -14,12 +14,12 @@ import mpdc4gsr.feature.gsr.domain.usecase.*
 import javax.inject.Inject
 
 @HiltViewModel
-class ShimmerConfigViewModel @Inject constructor(
-    private val scanDevicesUseCase: ScanShimmerDevicesUseCase,
-    private val connectDeviceUseCase: ConnectShimmerDeviceUseCase,
-    private val disconnectDeviceUseCase: DisconnectShimmerDeviceUseCase,
-    private val getBatteryLevelUseCase: GetDeviceBatteryUseCase,
-    private val checkConnectionUseCase: CheckDeviceConnectionUseCase
+class GSRDeviceConfigViewModel @Inject constructor(
+    private val scanDevicesUseCase: ScanGSRDevicesUseCase,
+    private val connectDeviceUseCase: ConnectGSRDeviceUseCase,
+    private val disconnectDeviceUseCase: DisconnectGSRDeviceUseCase,
+    private val getBatteryLevelUseCase: GetGSRDeviceBatteryUseCase,
+    private val checkConnectionUseCase: CheckGSRDeviceConnectionUseCase
 ) : AppBaseViewModel() {
     companion object {
         private val REQUIRED_PERMISSIONS =
@@ -39,8 +39,8 @@ class ShimmerConfigViewModel @Inject constructor(
     }
 
     // StateFlow for UI state management
-    private val _shimmerUiState = MutableStateFlow(ShimmerConfigUiState())
-    val shimmerUiState: StateFlow<ShimmerConfigUiState> = _shimmerUiState.asStateFlow()
+    private val _shimmerUiState = MutableStateFlow(GSRDeviceConfigUiState())
+    val shimmerUiState: StateFlow<GSRDeviceConfigUiState> = _shimmerUiState.asStateFlow()
 
     // Device management StateFlows
     private val _discoveredDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())
@@ -131,7 +131,7 @@ class ShimmerConfigViewModel @Inject constructor(
     }
 }
 
-data class ShimmerConfigUiState(
+data class GSRDeviceConfigUiState(
     val isScanning: Boolean = false,
     val batteryLevel: Int? = null,
     val error: String? = null

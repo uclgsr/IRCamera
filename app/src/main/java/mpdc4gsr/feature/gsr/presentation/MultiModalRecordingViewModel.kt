@@ -14,14 +14,21 @@ import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.gsr.util.TimeUtils
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.shimmerresearch.android.Shimmer
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
-import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory
+import mpdc4gsr.feature.gsr.data.GSRDeviceFactory
+import javax.inject.Inject
 
-class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
+@HiltViewModel
+class MultiModalRecordingViewModel @Inject constructor(
+    @ApplicationContext private val application: Application,
+    private val sessionManager: SessionManager
+) : BaseViewModel() {
     data class RecordingState(
         val isRecording: Boolean = false,
         val isStartingRecording: Boolean = false,
@@ -100,7 +107,6 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
 
     private val context: Context = application.applicationContext
     private lateinit var gsrRecorder: GSRRecorder
-    private lateinit var sessionManager: SessionManager
     private var rgbCameraRecorder: RgbCameraRecorder? = null
     private var networkClient: NetworkClient? = null
 
@@ -172,10 +178,8 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
         viewModelScope.launch {
             try {
                 // Initialize GSR Recorder
-                gsrRecorder = GSRRecorder(context, RealShimmerDeviceFactory(context))
+                gsrRecorder = GSRRecorder(context, GSRDeviceFactory(context))
                 gsrRecorder.addListener(createGSRListener())
-                // Initialize Session Manager
-                sessionManager = SessionManager.getInstance(context)
                 _statusMessage.value = "Initializing multimodal recording system..."
                 // Set initial states
                 _recordingState.value = RecordingState()

@@ -331,6 +331,12 @@ dependencies {
     debugImplementation(libs.bundles.compose.debug)
     androidTestImplementation(libs.bundles.compose.test)
     implementation(libs.coil.compose)
+    
+    // Hilt Dependency Injection
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+    
     implementation(project(":component:thermalunified"))
     implementation(project(":component:gsr-recording"))
     implementation(project(":component:user"))

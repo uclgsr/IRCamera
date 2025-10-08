@@ -6,8 +6,10 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.feature.gsr.presentation.GSRSettingsViewModel
 
+@AndroidEntryPoint
 class GSRSettingsComposeActivity : BaseComposeActivity<GSRSettingsViewModel>() {
     companion object {
         private const val TAG = "GSRSettingsComposeActivity"

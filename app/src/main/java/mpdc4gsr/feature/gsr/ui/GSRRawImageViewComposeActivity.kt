@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+import dagger.hilt.android.AndroidEntryPoint
 
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
@@ -44,11 +45,7 @@ class GSRRawImageViewComposeActivity : BaseComposeActivity<GSRRawImageViewViewMo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRRawImageViewScreen(
-    viewModel: GSRRawImageViewViewModel = viewModel(
-        factory = GSRRawImageViewViewModelFactory(
-            LocalContext.current.applicationContext
-        )
-    ),
+    viewModel: GSRRawImageViewViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit = {}
 ) {
     val uiState by viewModel.imageViewState.collectAsState()

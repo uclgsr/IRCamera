@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+import dagger.hilt.android.AndroidEntryPoint
 // Note: MainActivityViewModel was moved to backup during cleanup
 // Using modern Compose ViewModels instead
 import android.os.Bundle
@@ -24,6 +25,7 @@ import mpdc4gsr.core.ui.components.sensors.GSRData
 import mpdc4gsr.core.ui.components.sensors.GSRVisualizationCard
 import mpdc4gsr.feature.main.presentation.MainActivityViewModel
 
+@AndroidEntryPoint
 class SensorDashboardComposeActivity : ComponentActivity() {
     private lateinit var dashboardViewModel: MainActivityViewModel
     override fun onCreate(savedInstanceState: Bundle?) {

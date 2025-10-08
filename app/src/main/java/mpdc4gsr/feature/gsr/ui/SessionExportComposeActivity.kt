@@ -43,8 +43,7 @@ class SessionExportComposeActivity : BaseComposeActivity<SessionExportViewModel>
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionExportScreen(
-    viewModel: SessionExportViewModel = hiltViewModel(
-    ),
+    viewModel: SessionExportViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit = {}
 ) {
     val uiState by viewModel.exportState.collectAsState()
