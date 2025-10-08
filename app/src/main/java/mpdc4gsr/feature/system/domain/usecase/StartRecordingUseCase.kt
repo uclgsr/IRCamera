@@ -10,9 +10,6 @@ class StartRecordingUseCase(
         participantId: String? = null,
         studyName: String? = null
     ): Result<Boolean> {
-        if (sessionId.isBlank()) {
-            return Result.failure(IllegalArgumentException("Session ID cannot be empty"))
-        }
         return repository.startRecording(sessionId, participantId, studyName)
     }
 }
