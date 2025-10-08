@@ -2,13 +2,13 @@ package mpdc4gsr.feature.gsr.data.source
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import mpdc4gsr.core.data.ShimmerDeviceManager
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.GSRSample
+import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import javax.inject.Inject
 
 class GSRDeviceDataSourceImpl @Inject constructor(
-    private val deviceManager: ShimmerDeviceManager
+    private val shimmerManager: ShimmerBluetoothManagerAndroid
 ) : GSRDeviceDataSource {
     companion object {
         private const val TAG = "GSRDeviceDataSourceImpl"
@@ -19,13 +19,16 @@ class GSRDeviceDataSourceImpl @Inject constructor(
 
     private val scannedDevices = mutableMapOf<String, DeviceInfo>()
     override suspend fun scanForDevices(): Flow<List<DeviceInfo>> {
-        deviceManager.initialize()
-        deviceManager.startDeviceScanning()
-        return deviceManager.scanResults
+        // Use Shimmer SDK to scan for devices
+        return flow {
+            emit(scannedDevices.values.toList())
+        }
     }
 
     override suspend fun connect(deviceAddress: String): Result<Unit> {
-        return try {            val deviceInfo = scannedDevices[deviceAddress] ?: run {                DeviceInfo(
+        return try {
+            val deviceInfo = scannedDevices[deviceAddress] ?: run {
+                DeviceInfo(
                     address = deviceAddress,
                     name = DEFAULT_DEVICE_NAME,
                     deviceType = DEFAULT_DEVICE_TYPE,
@@ -33,11 +36,14 @@ class GSRDeviceDataSourceImpl @Inject constructor(
                     isGSRCapable = true
                 )
             }
-            val success = deviceManager.connectToDevice(deviceInfo)
-            if (success) {                Result.success(Unit)
-            } else {                Result.failure(Exception("Connection failed"))
+            val shimmer = shimmerManager.getShimmerDeviceBtConnectedFromMac(deviceAddress)
+            if (shimmer != null) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Connection failed"))
             }
-        } catch (e: Exception) {            Result.failure(e)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 
@@ -49,14 +55,15 @@ class GSRDeviceDataSourceImpl @Inject constructor(
 
     override suspend fun disconnect(deviceAddress: String) {
         try {
-            deviceManager.disconnectDevice(deviceAddress)
+            val shimmer = shimmerManager.getShimmerDeviceBtConnectedFromMac(deviceAddress)
+            shimmer?.disconnect()
         } catch (e: Exception) {
         }
     }
 
     override suspend fun startStreaming(deviceAddress: String): Flow<GSRSample> {
         return flow {
-            val shimmer = deviceManager.shimmerBluetoothManager?.getShimmerDeviceBtConnectedFromMac(deviceAddress)
+            val shimmer = shimmerManager.getShimmerDeviceBtConnectedFromMac(deviceAddress)
             shimmer?.let {
                 it.startStreaming()
             }
@@ -65,24 +72,22 @@ class GSRDeviceDataSourceImpl @Inject constructor(
 
     override suspend fun stopStreaming(deviceAddress: String) {
         try {
-            val shimmer = deviceManager.shimmerBluetoothManager?.getShimmerDeviceBtConnectedFromMac(deviceAddress)
+            val shimmer = shimmerManager.getShimmerDeviceBtConnectedFromMac(deviceAddress)
             shimmer?.stopStreaming()
         } catch (e: Exception) {
         }
     }
 
     override fun isConnected(deviceAddress: String): Boolean {
-        val connected = deviceManager.shimmerBluetoothManager?.let { mgr ->
-            mgr.getShimmerDeviceBtConnectedFromMac(deviceAddress)?.let { shimmer ->
-                shimmer.isConnected
-            }
+        val connected = shimmerManager.getShimmerDeviceBtConnectedFromMac(deviceAddress)?.let { shimmer ->
+            shimmer.isConnected
         } ?: false
         return connected
     }
 
     override suspend fun getBatteryLevel(deviceAddress: String): Int? {
         return try {
-            val shimmer = deviceManager.shimmerBluetoothManager?.getShimmerDeviceBtConnectedFromMac(deviceAddress)
+            val shimmer = shimmerManager.getShimmerDeviceBtConnectedFromMac(deviceAddress)
             shimmer?.let {
                 val batteryVoltage = it.batteryVoltage
                 val batteryPercentage = calculateBatteryPercentage(batteryVoltage)

@@ -169,7 +169,11 @@ class GSRSensorRecorder(
     private var dataMonitoringJob: Job? = null
     override suspend fun initialize(): Boolean =
         withContext(Dispatchers.IO) {
-            try {                if (!hasRequiredPermissions(context)) {                }                if (initializeShimmerBluetoothManager()) {                    startConnectionStateMonitoring()
+            try {
+                if (!hasRequiredPermissions(context)) {
+                }
+                if (initializeShimmerBluetoothManager()) {
+                    startConnectionStateMonitoring()
                 }
                 gsrSettingsRepository = GSRSettingsRepository(context)
                 val gsrSettings = gsrSettingsRepository?.gsrSettings?.value
@@ -188,23 +192,29 @@ class GSRSensorRecorder(
                 if (shimmerRecorder != null) {
                     try {
                         val deviceInitialized = shimmerRecorder.initializeDevice()
-                        if (deviceInitialized) {                            isShimmerConnected = true
-                        } else {                            isShimmerConnected = false
+                        if (deviceInitialized) {
+                            isShimmerConnected = true
+                        } else {
+                            isShimmerConnected = false
                         }
-                    } catch (e: Exception) {                        isShimmerConnected = false
+                    } catch (e: Exception) {
+                        isShimmerConnected = false
                     }
                 }
                 legacyGSRRecorder =
                     LegacyGSRRecorder(context, GSRDeviceFactory(context), effectiveSamplingRate.toInt())
                 if (isNetworkStreamingEnabled) {
-                    try {                    } catch (e: Exception) {                        isNetworkStreamingEnabled = false
+                    try {
+                    } catch (e: Exception) {
+                        isNetworkStreamingEnabled = false
                     }
                 }
                 startDataMonitoring()
                 setupGSRSampleCallback()
                 emitStatus()
                 return@withContext true
-            } catch (e: Exception) {                emitError(
+            } catch (e: Exception) {
+                emitError(
                     ErrorType.INITIALIZATION_FAILED,
                     "GSR initialization failed: ${e.message}"
                 )
@@ -278,9 +288,12 @@ class GSRSensorRecorder(
                 var recordingSuccessful = false
                 if (GSRSensorRecorder.hasBleScanningPermissions(context)) {
                     val shimmerRecorder = realShimmerGSRRecorder
-                    if (shimmerRecorder != null) {                        try {
-                            val connectionSuccess = if (!shimmerRecorder.isDeviceConnected()) {                                shimmerRecorder.initializeDevice()
-                            } else {                                true
+                    if (shimmerRecorder != null) {
+                        try {
+                            val connectionSuccess = if (!shimmerRecorder.isDeviceConnected()) {
+                                shimmerRecorder.initializeDevice()
+                            } else {
+                                true
                             }
                             if (connectionSuccess) {
                                 val sessionId = sessionDirectory.substringAfterLast("/").ifEmpty {
@@ -289,12 +302,18 @@ class GSRSensorRecorder(
                                 val success = shimmerRecorder.startRecording(sessionId)
                                 if (success) {
                                     shimmerRecordingStarted = true
-                                    recordingSuccessful = true                                } else {                                }
-                            } else {                            }
-                        } catch (e: Exception) {                        }
-                    } else {                    }
+                                    recordingSuccessful = true
+                                } else {
+                                }
+                            } else {
+                            }
+                        } catch (e: Exception) {
+                        }
+                    } else {
+                    }
                 }
-                if (!shimmerRecordingStarted) {                    val legacyRecorder = legacyGSRRecorder
+                if (!shimmerRecordingStarted) {
+                    val legacyRecorder = legacyGSRRecorder
                     if (legacyRecorder != null) {
                         try {
                             val sessionId = sessionDirectory.substringAfterLast("/").ifEmpty {
@@ -308,9 +327,13 @@ class GSRSensorRecorder(
                                     studyName = "IRCamera_MultiModal_Study",
                                 )
                                 if (success) {
-                                    recordingSuccessful = true                                } else {                                }
-                            } else {                            }
-                        } catch (e: Exception) {                        }
+                                    recordingSuccessful = true
+                                } else {
+                                }
+                            } else {
+                            }
+                        } catch (e: Exception) {
+                        }
                     }
                 }
                 if (recordingSuccessful) {
@@ -416,24 +439,31 @@ class GSRSensorRecorder(
             gsrNetworkStreamer?.let { streamer ->
                 try {
                     val streamingStopped = streamer.stopStreaming()
-                    if (streamingStopped) {                    } else {                    }
+                    if (streamingStopped) {
+                    } else {
+                    }
                     streamer.cleanup()
                     gsrNetworkStreamer = null
-                } catch (e: Exception) {                }
+                } catch (e: Exception) {
+                }
             }
             gsrDataPersistence?.let { persistence ->
                 try {
                     persistence.stopPersistence()
                     persistence.cleanup()
-                    val stats = persistence.getStatistics()                    gsrDataPersistence = null
+                    val stats = persistence.getStatistics()
+                    gsrDataPersistence = null
                     currentSessionId = null
-                } catch (e: Exception) {                }
+                } catch (e: Exception) {
+                }
             }
             _isRecording.set(false)
             // Close CSV file and ensure all data is written as per plan requirements
-            closeCsvFile()            emitStatus()
+            closeCsvFile()
+            emitStatus()
             return true
-        } catch (e: Exception) {            emitError(
+        } catch (e: Exception) {
+            emitError(
                 ErrorType.RECORDING_FAILED,
                 "Failed to stop real Shimmer GSR recording: ${e.message}"
             )
@@ -442,18 +472,26 @@ class GSRSensorRecorder(
     }
 
     private suspend fun stopEnhancedShimmerRecording(shimmerRecorder: ShimmerGSRRecorder): Boolean {
-        return try {            val sessionInfo = shimmerRecorder.stopRecording()
-            if (sessionInfo != null) {                true
-            } else {                false
+        return try {
+            val sessionInfo = shimmerRecorder.stopRecording()
+            if (sessionInfo != null) {
+                true
+            } else {
+                false
             }
-        } catch (e: Exception) {            false
+        } catch (e: Exception) {
+            false
         }
     }
 
     private suspend fun stopLegacyRecording(recorder: LegacyGSRRecorder) {
-        try {            val sessionInfo = recorder.stopRecording()
-            if (sessionInfo != null) {            } else {            }
-        } catch (e: Exception) {        }
+        try {
+            val sessionInfo = recorder.stopRecording()
+            if (sessionInfo != null) {
+            } else {
+            }
+        } catch (e: Exception) {
+        }
     }
 
     override suspend fun addSyncMarker(

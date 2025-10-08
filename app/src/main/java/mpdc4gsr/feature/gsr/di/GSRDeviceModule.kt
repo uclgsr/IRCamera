@@ -7,7 +7,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
-import mpdc4gsr.core.data.ShimmerDeviceManager
 import mpdc4gsr.feature.gsr.data.repository.GSRDeviceRepositoryImpl
 import mpdc4gsr.feature.gsr.data.source.GSRDeviceDataSource
 import mpdc4gsr.feature.gsr.data.source.GSRDeviceDataSourceImpl
@@ -71,5 +70,4 @@ abstract class GSRDeviceModule {
             return CheckGSRDeviceConnectionUseCase(gsrDeviceRepository)
         }
     }
-}
 }
