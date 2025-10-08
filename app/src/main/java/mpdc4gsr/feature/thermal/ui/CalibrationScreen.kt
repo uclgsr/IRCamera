@@ -36,12 +36,8 @@ fun CalibrationScreen(
     viewModel: CalibrationViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     val settings by viewModel.calibrationSettings.collectAsState()
     val calibrationInfo by viewModel.calibrationInfo.collectAsState()
-    LaunchedEffect(Unit) {
-        viewModel.initialize(context)
-    }
     Column(
         modifier = modifier
             .fillMaxSize()
