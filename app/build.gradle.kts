@@ -8,7 +8,7 @@ plugins {
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
-    alias(libs.plugins.hilt)
+    id("com.google.dagger.hilt.android")
 }
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
