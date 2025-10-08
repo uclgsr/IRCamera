@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
-import mpdc4gsr.core.RecordingService
+import mpdc4gsr.feature.system.service.RecordingService
 
 object PreviewIntegration {
     private const val TAG = "PreviewIntegration"

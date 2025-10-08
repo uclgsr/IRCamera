@@ -1,4 +1,4 @@
-package mpdc4gsr.core
+package mpdc4gsr.feature.system.service
 
 import android.app.*
 import android.content.Context
@@ -20,6 +20,8 @@ import kotlinx.coroutines.flow.onEach
 import mpdc4gsr.core.data.FeatureFlags
 import mpdc4gsr.core.data.ProtocolVersion
 import mpdc4gsr.core.data.TimeSyncManager
+import mpdc4gsr.core.CrashRecoveryManager
+import mpdc4gsr.core.CrashSafeSupervisor
 import mpdc4gsr.core.monitoring.StructuredLogger
 import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.core.utils.AppLogger

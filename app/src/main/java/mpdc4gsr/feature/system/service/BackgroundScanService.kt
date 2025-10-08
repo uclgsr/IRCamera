@@ -1,4 +1,4 @@
-package mpdc4gsr.core
+package mpdc4gsr.feature.system.service
 
 import android.app.*
 import android.content.Context
@@ -17,7 +17,7 @@ import kotlinx.coroutines.*
 import mpdc4gsr.feature.main.ui.MainComposeActivity
 import kotlin.coroutines.CoroutineContext
 
-class BackgroundDeviceScanningService : Service(), CoroutineScope {
+class BackgroundScanService : Service(), CoroutineScope {
     private val serviceJob = SupervisorJob()
 
     companion object {
@@ -49,7 +49,7 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
     private val binder = LocalBinder()
 
     inner class LocalBinder : Binder() {
-        fun getService(): BackgroundDeviceScanningService = this@BackgroundDeviceScanningService
+        fun getService(): BackgroundScanService = this@BackgroundScanService
     }
 
     override fun onBind(intent: Intent): IBinder {
@@ -208,7 +208,7 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
             this, 0, intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        val stopIntent = Intent(this, BackgroundDeviceScanningService::class.java).apply {
+        val stopIntent = Intent(this, BackgroundScanService::class.java).apply {
             action = ACTION_STOP_SCANNING
         }
         val stopPendingIntent = PendingIntent.getService(
@@ -216,7 +216,7 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val pauseResumeAction = if (isPaused) {
-            val resumeIntent = Intent(this, BackgroundDeviceScanningService::class.java).apply {
+            val resumeIntent = Intent(this, BackgroundScanService::class.java).apply {
                 action = ACTION_RESUME_SCANNING
             }
             val resumePendingIntent = PendingIntent.getService(
@@ -229,7 +229,7 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
                 resumePendingIntent
             )
         } else {
-            val pauseIntent = Intent(this, BackgroundDeviceScanningService::class.java).apply {
+            val pauseIntent = Intent(this, BackgroundScanService::class.java).apply {
                 action = ACTION_PAUSE_SCANNING
             }
             val pausePendingIntent = PendingIntent.getService(

@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.core.RecordingService
+import mpdc4gsr.feature.system.service.RecordingService
 import mpdc4gsr.core.SessionManager
 import mpdc4gsr.core.data.UnifiedGSRRecorder
 import mpdc4gsr.core.monitoring.StructuredLogger

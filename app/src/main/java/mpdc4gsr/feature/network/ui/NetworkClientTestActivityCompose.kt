@@ -36,7 +36,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.RecordingService
+import mpdc4gsr.feature.system.service.RecordingService
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.network.data.CommandConnection
 import mpdc4gsr.feature.network.data.NetworkManager
