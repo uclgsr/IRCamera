@@ -301,7 +301,7 @@
 
         <!-- Recording Service - PC networking and sensor recording -->
         <service
-            android:name="mpdc4gsr.core.RecordingService"
+            android:name="mpdc4gsr.feature.system.service.RecordingService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="camera|connectedDevice|dataSync"/>

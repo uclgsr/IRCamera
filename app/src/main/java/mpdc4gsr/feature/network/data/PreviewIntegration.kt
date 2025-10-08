@@ -2,7 +2,7 @@ package mpdc4gsr.feature.network.data
 
 import android.content.Context
 import android.graphics.Bitmap
-import mpdc4gsr.core.RecordingService
+import mpdc4gsr.feature.system.service.RecordingService
 
 object PreviewIntegration {    fun updateRgbFrame(context: Context, rgbFrame: Bitmap) {
         try {

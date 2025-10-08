@@ -8,6 +8,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import mpdc4gsr.feature.system.service.BackgroundScanService
 
 class BackgroundScanningManager(
     private val context: Context
@@ -16,15 +17,15 @@ class BackgroundScanningManager(
         private const val TAG = "BackgroundScanningManager"
     }
 
-    private var scanningService: BackgroundDeviceScanningService? = null
+    private var scanningService: BackgroundScanService? = null
     private var isBound = false
     private var isServiceStarted = false
 
     // Callback interface for service status updates
     interface ServiceStatusCallback {
-        fun onServiceConnected(service: BackgroundDeviceScanningService)
+        fun onServiceConnected(service: BackgroundScanService)
         fun onServiceDisconnected()
-        fun onServiceStatusChanged(status: BackgroundDeviceScanningService.ServiceStatus)
+        fun onServiceStatusChanged(status: BackgroundScanService.ServiceStatus)
     }
 
     private var statusCallback: ServiceStatusCallback? = null
@@ -34,8 +35,8 @@ class BackgroundScanningManager(
 
     fun startBackgroundScanning() {
         try {
-            val intent = Intent(context, BackgroundDeviceScanningService::class.java).apply {
-                action = BackgroundDeviceScanningService.ACTION_START_SCANNING
+            val intent = Intent(context, BackgroundScanService::class.java).apply {
+                action = BackgroundScanService.ACTION_START_SCANNING
             }
             context.startForegroundService(intent)
             isServiceStarted = true
@@ -51,8 +52,8 @@ class BackgroundScanningManager(
                 unbindService()
             }
             if (isServiceStarted) {
-                val intent = Intent(context, BackgroundDeviceScanningService::class.java).apply {
-                    action = BackgroundDeviceScanningService.ACTION_STOP_SCANNING
+                val intent = Intent(context, BackgroundScanService::class.java).apply {
+                    action = BackgroundScanService.ACTION_STOP_SCANNING
                 }
                 context.startService(intent)
                 isServiceStarted = false
@@ -63,8 +64,8 @@ class BackgroundScanningManager(
 
     fun pauseBackgroundScanning() {
         try {
-            val intent = Intent(context, BackgroundDeviceScanningService::class.java).apply {
-                action = BackgroundDeviceScanningService.ACTION_PAUSE_SCANNING
+            val intent = Intent(context, BackgroundScanService::class.java).apply {
+                action = BackgroundScanService.ACTION_PAUSE_SCANNING
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -73,8 +74,8 @@ class BackgroundScanningManager(
 
     fun resumeBackgroundScanning() {
         try {
-            val intent = Intent(context, BackgroundDeviceScanningService::class.java).apply {
-                action = BackgroundDeviceScanningService.ACTION_RESUME_SCANNING
+            val intent = Intent(context, BackgroundScanService::class.java).apply {
+                action = BackgroundScanService.ACTION_RESUME_SCANNING
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -83,7 +84,7 @@ class BackgroundScanningManager(
 
     private fun bindService() {
         try {
-            val intent = Intent(context, BackgroundDeviceScanningService::class.java)
+            val intent = Intent(context, BackgroundScanService::class.java)
             context.bindService(intent, this, Context.BIND_AUTO_CREATE)
         } catch (e: Exception) {
         }
@@ -101,7 +102,7 @@ class BackgroundScanningManager(
         }
     }
 
-    fun getServiceStatus(): BackgroundDeviceScanningService.ServiceStatus? {
+    fun getServiceStatus(): BackgroundScanService.ServiceStatus? {
         return scanningService?.getStatus()
     }
 
@@ -111,7 +112,7 @@ class BackgroundScanningManager(
 
     // ServiceConnection implementation
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        val binder = service as BackgroundDeviceScanningService.LocalBinder
+        val binder = service as BackgroundScanService.LocalBinder
         scanningService = binder.getService()
         isBound = true
         statusCallback?.onServiceConnected(scanningService!!)

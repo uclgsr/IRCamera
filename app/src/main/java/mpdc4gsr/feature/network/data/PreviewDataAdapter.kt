@@ -3,7 +3,7 @@ package mpdc4gsr.feature.network.data
 import android.graphics.Bitmap
 import com.mpdc4gsr.module.thermalunified.tools.CameraPreviewManager
 import kotlinx.coroutines.*
-import mpdc4gsr.core.RecordingService
+import mpdc4gsr.feature.system.service.RecordingService
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import java.util.concurrent.atomic.AtomicReference
 

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.core.CrashRecoveryManager
-import mpdc4gsr.core.RecordingService
+import mpdc4gsr.feature.system.service.RecordingService
 import mpdc4gsr.core.data.SensorRecorder
 import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.core.data.utils.SessionDirectory
