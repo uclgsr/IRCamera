@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.onEach
 import mpdc4gsr.core.data.FeatureFlags
 import mpdc4gsr.core.data.ProtocolVersion
 import mpdc4gsr.core.data.TimeSyncManager
+import mpdc4gsr.core.monitoring.StructuredLogger
 import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler

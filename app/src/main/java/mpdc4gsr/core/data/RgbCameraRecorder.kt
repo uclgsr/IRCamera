@@ -17,6 +17,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.opencsv.CSVWriter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import mpdc4gsr.core.data.model.SessionMetadata
 import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import mpdc4gsr.core.ui.PermissionManager

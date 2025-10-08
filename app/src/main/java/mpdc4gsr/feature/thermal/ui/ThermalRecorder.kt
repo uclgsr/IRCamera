@@ -6,7 +6,7 @@ import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
-import mpdc4gsr.core.data.SessionMetadata
+import mpdc4gsr.core.data.model.SessionMetadata
 import mpdc4gsr.core.data.TimestampManager
 import java.io.File
 import java.io.FileOutputStream

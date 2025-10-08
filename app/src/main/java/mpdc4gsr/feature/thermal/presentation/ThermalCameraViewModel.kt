@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.core.data.SessionMetadata
+import mpdc4gsr.core.data.model.SessionMetadata
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import java.util.concurrent.CountDownLatch

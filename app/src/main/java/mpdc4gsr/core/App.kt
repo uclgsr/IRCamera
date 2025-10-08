@@ -20,6 +20,7 @@ import mpdc4gsr.core.ui.InitUtils.initLms
 import mpdc4gsr.core.ui.InitUtils.initLog
 import mpdc4gsr.core.ui.InitUtils.initReceiver
 import mpdc4gsr.core.ui.InitUtils.initUM
+import mpdc4gsr.core.monitoring.StructuredLogger
 import mpdc4gsr.core.utils.AppLogger
 
 class App : BaseApplication() {

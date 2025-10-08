@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
+import mpdc4gsr.core.data.model.SessionMetadata
 import mpdc4gsr.core.ui.AppBaseViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -119,7 +120,7 @@ class RGBCameraViewModel(
                     ?: application.filesDir.absolutePath
                 val currentTimeMs = System.currentTimeMillis()
                 val currentMonotonicNs = System.nanoTime()
-                val metadata = mpdc4gsr.core.data.SessionMetadata(
+                val metadata = SessionMetadata(
                     sessionId = "camera_${currentTimeMs}",
                     sessionStartTimestampMs = currentTimeMs,
                     sessionStartMonotonicNs = currentMonotonicNs,

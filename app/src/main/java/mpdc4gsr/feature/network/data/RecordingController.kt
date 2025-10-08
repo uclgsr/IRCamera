@@ -9,6 +9,7 @@ import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import mpdc4gsr.core.data.*
+import mpdc4gsr.core.data.model.SessionMetadata
 import mpdc4gsr.core.data.RecordingStats
 import mpdc4gsr.core.data.utils.SessionDirectory
 import mpdc4gsr.core.data.utils.SessionDirectoryManager

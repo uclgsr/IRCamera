@@ -21,6 +21,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.GSRSample
+import mpdc4gsr.core.data.model.SessionMetadata
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat

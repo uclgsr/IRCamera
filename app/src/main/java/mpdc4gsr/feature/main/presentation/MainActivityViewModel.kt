@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.core.SessionManager
 import mpdc4gsr.core.data.UnifiedGSRRecorder
+import mpdc4gsr.core.monitoring.StructuredLogger
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.network.data.NetworkClient
 import mpdc4gsr.feature.network.data.NetworkController
@@ -355,7 +356,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         try {
             sessionManager = SessionManager(
                 getApplication(),
-                mpdc4gsr.core.StructuredLogger.getInstance(getApplication())
+                StructuredLogger.getInstance(getApplication())
             )
             _sessionState.value = SessionState.IDLE
             AppLogger.d(TAG, "Session components initialized")

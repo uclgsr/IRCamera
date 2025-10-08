@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.UnifiedGSRRecorder
+import mpdc4gsr.core.data.model.SessionMetadata
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
 import java.text.SimpleDateFormat
@@ -198,7 +199,7 @@ class GSRSensorViewModel(
                     ?: application.filesDir.absolutePath
                 val currentTimeMs = System.currentTimeMillis()
                 val currentMonotonicNs = System.nanoTime()
-                val metadata = mpdc4gsr.core.data.SessionMetadata(
+                val metadata = SessionMetadata(
                     sessionId = "gsr_${currentTimeMs}",
                     sessionStartTimestampMs = currentTimeMs,
                     sessionStartMonotonicNs = currentMonotonicNs,
