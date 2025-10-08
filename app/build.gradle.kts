@@ -4,10 +4,10 @@ import java.util.*
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt")
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt.android)
 }
 
