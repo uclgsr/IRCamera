@@ -26,9 +26,9 @@ import kotlinx.coroutines.withTimeoutOrNull
 import java.io.File
 import java.io.FileOutputStream
 
-class TopdonDataSourceImpl(
+class ThermalHardwareDataSourceImpl(
     private val context: Context
-) : TopdonDataSource {
+) : ThermalHardwareDataSource {
     companion object {
         private const val TAG = "TopdonDataSourceImpl"
         private const val CAMERA_WIDTH = 256
@@ -477,7 +477,34 @@ class TopdonDataSourceImpl(
                             )
                         } else null
                     }
-                    else -> null
+                    is MeasurementArea.EllipseArea -> {
+                        // TODO: Implement ellipse area measurement
+                        // SDK currently does not provide native ellipse measurement
+                        // Approximate using bounding rectangle for now
+                        val tempResult = temp.getTemperatureOfRect(area.boundingRect)
+                        tempResult?.let {
+                            MeasurementResult(
+                                minTemp = it.minTemperature,
+                                maxTemp = it.maxTemperature,
+                                avgTemp = (it.minTemperature + it.maxTemperature) / 2,
+                                area = area
+                            )
+                        }
+                    }
+                    is MeasurementArea.PolygonArea -> {
+                        // TODO: Implement polygon area measurement
+                        // SDK currently does not provide native polygon measurement
+                        // Approximate using bounding rectangle for now
+                        val tempResult = temp.getTemperatureOfRect(area.boundingRect)
+                        tempResult?.let {
+                            MeasurementResult(
+                                minTemp = it.minTemperature,
+                                maxTemp = it.maxTemperature,
+                                avgTemp = (it.minTemperature + it.maxTemperature) / 2,
+                                area = area
+                            )
+                        }
+                    }
                 }
                 result?.let { Result.success(it) } ?: Result.failure(Exception("Measurement failed"))
             } ?: Result.failure(Exception("LibIRTemp not initialized"))
@@ -508,7 +535,9 @@ class TopdonDataSourceImpl(
                 return Result.failure(IllegalStateException("Camera not connected"))
             }
             ircmd?.performFFC() ?: return Result.failure(Exception("IRCMD not initialized"))
-            delay(2000)
+            // TODO: Replace fixed delay with SDK callback/status check when available
+            // Current approach waits for FFC operation to complete based on typical hardware timing
+            delay(FFC_CALIBRATION_DELAY_MS)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -521,7 +550,9 @@ class TopdonDataSourceImpl(
                 return Result.failure(IllegalStateException("Camera not connected"))
             }
             ircmd?.performNUC() ?: return Result.failure(Exception("IRCMD not initialized"))
-            delay(2000)
+            // TODO: Replace fixed delay with SDK callback/status check when available
+            // Current approach waits for NUC operation to complete based on typical hardware timing
+            delay(NUC_CALIBRATION_DELAY_MS)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -593,11 +624,13 @@ class TopdonDataSourceImpl(
             if (!isConnected) {
                 return Result.failure(IllegalStateException("Camera not connected"))
             }
+            // TODO: Replace hardcoded values with actual SDK calls when API becomes available
+            // Current SDK does not expose device info query methods
             val deviceInfo = DeviceInfo(
                 model = "TC001",
-                serialNumber = "UNKNOWN",
-                firmwareVersion = "1.0.0",
-                sdkVersion = "1.1.1",
+                serialNumber = "UNKNOWN",  // TODO: Fetch from SDK
+                firmwareVersion = "1.0.0",  // TODO: Fetch from SDK
+                sdkVersion = "1.1.1",  // TODO: Fetch from SDK
                 resolution = Pair(CAMERA_WIDTH, CAMERA_HEIGHT),
                 frameRate = 9.0f,
                 temperatureRange = Pair(MIN_TEMP_RANGE, MAX_TEMP_RANGE)

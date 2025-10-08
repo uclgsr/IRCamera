@@ -10,7 +10,7 @@ import mpdc4gsr.feature.thermal.data.MeasurementArea
 import mpdc4gsr.feature.thermal.data.MeasurementResult
 import mpdc4gsr.feature.thermal.data.ThermalCalibrationData
 
-interface TopdonDataSource {
+interface ThermalHardwareDataSource {
 
     suspend fun connectDevice(): Result<Unit>
 
