@@ -88,10 +88,15 @@
         </receiver>
 
         <activity
-            android:name="mpdc4gsr.feature.network.ui.NetworkConfigComposeActivity"
+            android:name="mpdc4gsr.feature.network.ui.DevicePairingComposeActivity"
             android:exported="false"
-            android:label="Network Configuration"
-            android:screenOrientation="userPortrait"
+            android:label="Device Pairing"
+            android:theme="@style/AppTheme"/>
+
+        <activity
+            android:name="mpdc4gsr.feature.network.ui.NetworkClientTestComposeActivity"
+            android:exported="false"
+            android:label="Network Test"
             android:theme="@style/AppTheme"/>
 
         <activity
