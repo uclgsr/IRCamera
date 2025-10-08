@@ -59,16 +59,11 @@ class ProfileEditViewModel : AppBaseViewModel() {
     fun saveProfile(onSuccess: () -> Unit) {
         viewModelScope.launch {
             _isSaving.value = true
-            try {
-                // TODO: Save to repository or SharedPreferences
-                // For now, just simulate save delay
-                kotlinx.coroutines.delay(500)
-                onSuccess()
-            } catch (e: Exception) {
-                handleError(e)
-            } finally {
-                _isSaving.value = false
-            }
+            // TODO: Save to repository or SharedPreferences
+            // For now, just simulate save delay
+            kotlinx.coroutines.delay(500)
+            onSuccess()
+            _isSaving.value = false
         }
     }
 }

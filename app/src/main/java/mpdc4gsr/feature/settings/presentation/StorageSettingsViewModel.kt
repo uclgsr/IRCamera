@@ -69,46 +69,38 @@ class StorageSettingsViewModel(context: Context) : BaseViewModel() {
 
     private fun updateStorageInfo() {
         viewModelScope.launch {
-            try {
-                val currentLocation = _storageSettings.value.storageLocation
-                val path = when (currentLocation) {
-                    "SD Card" -> {
-                        val externalStorage = Environment.getExternalStorageDirectory()
-                        if (externalStorage != null && externalStorage.exists()) {
-                            externalStorage
-                        } else {
-                            Environment.getDataDirectory()
-                        }
-                    }
-
-                    "External USB" -> {
-                        // For External USB, would need to scan removable storage
-                        // Falling back to internal for now
+            val currentLocation = _storageSettings.value.storageLocation
+            val path = when (currentLocation) {
+                "SD Card" -> {
+                    val externalStorage = Environment.getExternalStorageDirectory()
+                    if (externalStorage != null && externalStorage.exists()) {
+                        externalStorage
+                    } else {
                         Environment.getDataDirectory()
                     }
-
-                    else -> Environment.getDataDirectory()
                 }
-                val stat = StatFs(path.path)
-                val blockSize = stat.blockSizeLong
-                val availableBlocks = stat.availableBlocksLong
-                val totalBlocks = stat.blockCountLong
-                val usedBlocks = totalBlocks - availableBlocks
-                val available = (availableBlocks * blockSize) / (1024.0 * 1024 * 1024)
-                val used = (usedBlocks * blockSize) / (1024.0 * 1024 * 1024)
-                val total = (totalBlocks * blockSize) / (1024.0 * 1024 * 1024)
-                _storageInfo.value = StorageInfo(
-                    availableSpace = "%.1f GB".format(available),
-                    usedSpace = "%.1f GB".format(used),
-                    totalSpace = "%.1f GB".format(total)
-                )
-            } catch (e: Exception) {
-                _storageInfo.value = StorageInfo(
-                    availableSpace = "Error",
-                    usedSpace = "Error",
-                    totalSpace = "Error"
-                )
+
+                "External USB" -> {
+                    // For External USB, would need to scan removable storage
+                    // Falling back to internal for now
+                    Environment.getDataDirectory()
+                }
+
+                else -> Environment.getDataDirectory()
             }
+            val stat = StatFs(path.path)
+            val blockSize = stat.blockSizeLong
+            val availableBlocks = stat.availableBlocksLong
+            val totalBlocks = stat.blockCountLong
+            val usedBlocks = totalBlocks - availableBlocks
+            val available = (availableBlocks * blockSize) / (1024.0 * 1024 * 1024)
+            val used = (usedBlocks * blockSize) / (1024.0 * 1024 * 1024)
+            val total = (totalBlocks * blockSize) / (1024.0 * 1024 * 1024)
+            _storageInfo.value = StorageInfo(
+                availableSpace = "%.1f GB".format(available),
+                usedSpace = "%.1f GB".format(used),
+                totalSpace = "%.1f GB".format(total)
+            )
         }
     }
 
