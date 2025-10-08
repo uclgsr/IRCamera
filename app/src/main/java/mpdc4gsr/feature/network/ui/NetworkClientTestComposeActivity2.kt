@@ -157,9 +157,9 @@ class NetworkClientTestViewModel : AppBaseViewModel() {
     }
 }
 
-class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestViewModel>() {
+class NetworkClientTestComposeActivity2 : BaseComposeActivity<NetworkClientTestViewModel>() {
     companion object {
-        private const val TAG = "NetworkClientTestActivityCompose"
+        private const val TAG = "NetworkClientTestComposeActivity2"
         private const val DEFAULT_PC_IP = "192.168.1.100"
         private const val DEFAULT_PC_PORT = 8080
     }
