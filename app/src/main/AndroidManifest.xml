@@ -154,11 +154,6 @@
             android:label="Hub-Spoke Recording"/>
 
         <activity
-            android:name="mpdc4gsr.feature.network.ui.DevicePairingComposeActivity"
-            android:exported="false"
-            android:label="Device Pairing"/>
-
-        <activity
             android:name="mpdc4gsr.core.ui.PermissionRequestComposeActivity"
             android:exported="false"
             android:label="Enhanced Permission System Test"/>

@@ -1,8 +1,8 @@
 package mpdc4gsr.feature.network.data.repository
 
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import mpdc4gsr.feature.network.data.NetworkClient
 import mpdc4gsr.feature.network.data.datasource.NetworkDataSource
 import mpdc4gsr.feature.network.domain.model.ConnectionState
@@ -17,6 +17,13 @@ import javax.inject.Singleton
 class NetworkRepositoryImpl @Inject constructor(
     private val dataSource: NetworkDataSource
 ) : NetworkRepository {
+    
+    private val _connectionState = MutableSharedFlow<ConnectionState>(replay = 1)
+    private val _discoveredControllers = MutableSharedFlow<List<ControllerInfo>>(replay = 1)
+    
+    init {
+        setupEventListener()
+    }
 
     override suspend fun discoverControllers(): Result<List<ControllerInfo>> {
         return try {
@@ -79,16 +86,18 @@ class NetworkRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun observeConnectionState(): Flow<ConnectionState> = callbackFlow {
+    private fun setupEventListener() {
         val listener = object : NetworkClient.NetworkEventListener {
-            override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {}
+            override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
+                _discoveredControllers.tryEmit(dataSource.getDiscoveredControllers().map { it.toDomainModel() })
+            }
 
             override fun onConnected(controller: NetworkClient.ControllerInfo) {
-                trySend(ConnectionState.Connected(controller.toDomainModel()))
+                _connectionState.tryEmit(ConnectionState.Connected(controller.toDomainModel()))
             }
 
             override fun onDisconnected(reason: String) {
-                trySend(ConnectionState.Disconnected)
+                _connectionState.tryEmit(ConnectionState.Disconnected)
             }
 
             override fun onRemoteMeasurementRequest(sessionInfo: com.mpdc4gsr.gsr.model.SessionInfo) {}
@@ -102,39 +111,16 @@ class NetworkRepositoryImpl @Inject constructor(
             override fun onDataStreamingStopped() {}
 
             override fun onError(operation: String, error: String) {
-                trySend(ConnectionState.Error(NetworkError.Unknown(error)))
+                _connectionState.tryEmit(ConnectionState.Error(NetworkError.Unknown(error)))
             }
         }
 
         dataSource.setEventListener(listener)
-        
-        awaitClose {
-            networkClient.setEventListener(null)
-        }
     }
 
-    override fun observeDiscoveredControllers(): Flow<List<ControllerInfo>> = callbackFlow {
-        val listener = object : NetworkClient.NetworkEventListener {
-            override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
-                trySend(dataSource.getDiscoveredControllers().map { it.toDomainModel() })
-            }
+    override fun observeConnectionState(): Flow<ConnectionState> = _connectionState.asSharedFlow()
 
-            override fun onConnected(controller: NetworkClient.ControllerInfo) {}
-            override fun onDisconnected(reason: String) {}
-            override fun onRemoteMeasurementRequest(sessionInfo: com.mpdc4gsr.gsr.model.SessionInfo) {}
-            override fun onSyncFlash(durationMs: Int) {}
-            override fun onTimeSynchronized(offsetNanoseconds: Long) {}
-            override fun onDataStreamingStarted() {}
-            override fun onDataStreamingStopped() {}
-            override fun onError(operation: String, error: String) {}
-        }
-
-        dataSource.setEventListener(listener)
-        
-        awaitClose {
-            dataSource.setEventListener(null)
-        }
-    }
+    override fun observeDiscoveredControllers(): Flow<List<ControllerInfo>> = _discoveredControllers.asSharedFlow()
 
     override fun isConnected(): Boolean = dataSource.isConnected()
 
