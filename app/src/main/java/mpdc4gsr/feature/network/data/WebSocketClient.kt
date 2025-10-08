@@ -4,9 +4,6 @@ import android.content.Context
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.util.Base64
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.libunified.app.sync.TimeSyncService
 import kotlinx.coroutines.*
 import mpdc4gsr.core.SessionManager
@@ -27,9 +24,7 @@ import kotlin.math.min
 import kotlin.random.Random
 
 class WebSocketClient(private val context: Context) {
-    companion object {
-        private const val TAG = "WebSocketClient"
-        private const val DEFAULT_PC_PORT = 8443
+    companion object {        private const val DEFAULT_PC_PORT = 8443
         private const val CONNECTION_TIMEOUT_MS = 10000L
         private const val READ_TIMEOUT_MS = 30000L
         private const val WRITE_TIMEOUT_MS = 10000L
@@ -154,18 +149,12 @@ class WebSocketClient(private val context: Context) {
     }
 
     fun start() {
-        if (isConnected.get()) {
-            AppLogger.w(TAG, "WebSocket client already connected")
-            return
-        }
-        AppLogger.i(TAG, "Starting WebSocket client")
-        logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "start_requested", emptyMap())
+        if (isConnected.get()) {            return
+        }        logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "start_requested", emptyMap())
         startServerDiscovery()
     }
 
-    fun stop() {
-        AppLogger.i(TAG, "Stopping WebSocket client")
-        logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "stop_requested", emptyMap())
+    fun stop() {        logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "stop_requested", emptyMap())
         heartbeatJob?.cancel()
         reconnectJob?.cancel()
         discoveryJob?.cancel()
@@ -184,15 +173,11 @@ class WebSocketClient(private val context: Context) {
     }
 
     private fun startServerDiscovery() {
-        if (!FeatureFlags.MDNS_ENABLE) {
-            AppLogger.w(TAG, "mDNS discovery disabled, trying manual connection")
-            return
+        if (!FeatureFlags.MDNS_ENABLE) {            return
         }
         discoveryJob =
             scope.launch {
-                try {
-                    AppLogger.i(TAG, "Starting NSD discovery for $SERVICE_TYPE")
-                    logger.log(
+                try {                    logger.log(
                         StructuredLogger.LogLevel.INFO, "WebSocketClient", "discovery_started",
                         mapOf(
                             "service_type" to SERVICE_TYPE,
@@ -203,9 +188,7 @@ class WebSocketClient(private val context: Context) {
                             override fun onStartDiscoveryFailed(
                                 serviceType: String,
                                 errorCode: Int,
-                            ) {
-                                AppLogger.e(TAG, "Discovery start failed: $errorCode")
-                                logger.log(
+                            ) {                                logger.log(
                                     StructuredLogger.LogLevel.ERROR,
                                     "WebSocketClient",
                                     "discovery_start_failed",
@@ -218,26 +201,16 @@ class WebSocketClient(private val context: Context) {
                             override fun onStopDiscoveryFailed(
                                 serviceType: String,
                                 errorCode: Int,
-                            ) {
-                                AppLogger.e(TAG, "Discovery stop failed: $errorCode")
+                            ) {                            }
+
+                            override fun onDiscoveryStarted(serviceType: String) {                            }
+
+                            override fun onDiscoveryStopped(serviceType: String) {                            }
+
+                            override fun onServiceFound(serviceInfo: NsdServiceInfo) {                                resolveService(serviceInfo)
                             }
 
-                            override fun onDiscoveryStarted(serviceType: String) {
-                                AppLogger.i(TAG, "Discovery started for $serviceType")
-                            }
-
-                            override fun onDiscoveryStopped(serviceType: String) {
-                                AppLogger.i(TAG, "Discovery stopped for $serviceType")
-                            }
-
-                            override fun onServiceFound(serviceInfo: NsdServiceInfo) {
-                                AppLogger.i(TAG, "Service found: ${serviceInfo.serviceName}")
-                                resolveService(serviceInfo)
-                            }
-
-                            override fun onServiceLost(serviceInfo: NsdServiceInfo) {
-                                AppLogger.i(TAG, "Service lost: ${serviceInfo.serviceName}")
-                                discoveredServers.remove(serviceInfo.serviceName)
+                            override fun onServiceLost(serviceInfo: NsdServiceInfo) {                                discoveredServers.remove(serviceInfo.serviceName)
                             }
                         }
                     nsdManager.discoverServices(
@@ -246,19 +219,13 @@ class WebSocketClient(private val context: Context) {
                         discoveryListener
                     )
                     delay(DISCOVERY_TIMEOUT_MS)
-                    if (discoveredServers.isEmpty()) {
-                        AppLogger.w(TAG, "No servers discovered via mDNS, trying manual connection")
-                        tryManualConnection()
+                    if (discoveredServers.isEmpty()) {                        tryManualConnection()
                     }
-                } catch (e: kotlinx.coroutines.CancellationException) {
-                    AppLogger.i(TAG, "Server discovery cancelled")
-                    logger.log(
+                } catch (e: kotlinx.coroutines.CancellationException) {                    logger.log(
                         StructuredLogger.LogLevel.INFO, "WebSocketClient", "discovery_cancelled",
                         emptyMap(),
                     )
-                } catch (e: Exception) {
-                    AppLogger.e(TAG, "Error in server discovery", e)
-                    logger.log(
+                } catch (e: Exception) {                    logger.log(
                         StructuredLogger.LogLevel.ERROR, "WebSocketClient", "discovery_error",
                         mapOf(
                             "error" to (e.message ?: "Unknown error"),
@@ -274,18 +241,11 @@ class WebSocketClient(private val context: Context) {
                 override fun onResolveFailed(
                     serviceInfo: NsdServiceInfo,
                     errorCode: Int,
-                ) {
-                    AppLogger.e(TAG, "Resolve failed for ${serviceInfo.serviceName}: $errorCode")
-                }
+                ) {                }
 
                 override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
                     @Suppress("DEPRECATION")
-                    val hostAddress = serviceInfo.host.hostAddress ?: "unknown"
-                    Log.i(
-                        TAG,
-                        "Service resolved: ${serviceInfo.serviceName} at $hostAddress:${serviceInfo.port}"
-                    )
-                    val attributes = serviceInfo.attributes
+                    val hostAddress = serviceInfo.host.hostAddress ?: "unknown"                    val attributes = serviceInfo.attributes
                     val protocolVersion = String(attributes["proto"] ?: "v1".toByteArray())
                     val usesTLS = String(attributes["tls"] ?: "1".toByteArray()) == "1"
                     val capabilities =
@@ -333,24 +293,18 @@ class WebSocketClient(private val context: Context) {
                         usesTLS = FeatureFlags.TLS_ENABLE,
                         protocolVersion = "v1",
                         capabilities = emptySet(),
-                    )
-                AppLogger.i(TAG, "Trying manual connection to $address:$DEFAULT_PC_PORT")
-                connectToServer(serverInfo)
+                    )                connectToServer(serverInfo)
                 delay(MANUAL_CONNECTION_DELAY_MS)
             }
         }
     }
 
     private fun connectToServer(serverInfo: ServerInfo) {
-        if (isConnected.get()) {
-            AppLogger.w(TAG, "Already connected")
-            return
+        if (isConnected.get()) {            return
         }
         currentServerInfo.set(serverInfo)
         connectionStartTime = System.currentTimeMillis()
-        connectionAttempts++
-        AppLogger.i(TAG, "Connecting to ${serverInfo.name} at ${serverInfo.host}:${serverInfo.port}")
-        logger.log(
+        connectionAttempts++        logger.log(
             StructuredLogger.LogLevel.INFO,
             "WebSocketClient",
             "connection_attempt",
@@ -373,9 +327,7 @@ class WebSocketClient(private val context: Context) {
                 override fun onOpen(
                     webSocket: WebSocket,
                     response: Response,
-                ) {
-                    AppLogger.i(TAG, "WebSocket connection opened")
-                    isConnected.set(true)
+                ) {                    isConnected.set(true)
                     this@WebSocketClient.webSocket.set(webSocket)
                     logger.log(
                         StructuredLogger.LogLevel.INFO,
@@ -405,26 +357,20 @@ class WebSocketClient(private val context: Context) {
                     webSocket: WebSocket,
                     code: Int,
                     reason: String,
-                ) {
-                    AppLogger.i(TAG, "WebSocket connection closing: $code $reason")
-                }
+                ) {                }
 
                 override fun onClosed(
                     webSocket: WebSocket,
                     code: Int,
                     reason: String,
-                ) {
-                    AppLogger.i(TAG, "WebSocket connection closed: $code $reason")
-                    handleDisconnection("Connection closed: $reason")
+                ) {                    handleDisconnection("Connection closed: $reason")
                 }
 
                 override fun onFailure(
                     webSocket: WebSocket,
                     t: Throwable,
                     response: Response?,
-                ) {
-                    AppLogger.e(TAG, "WebSocket connection failed", t)
-                    handleDisconnection("Connection failed: ${t.message}")
+                ) {                    handleDisconnection("Connection failed: ${t.message}")
                 }
             }
         okHttpClient.newWebSocket(request, webSocketListener)
@@ -433,25 +379,19 @@ class WebSocketClient(private val context: Context) {
     private suspend fun performHandshake() {
         try {
             val handshakeMessage = ProtocolVersion.createHandshakeMessage(getDeviceId())
-            sendMessage(handshakeMessage)
-            AppLogger.i(TAG, "Protocol handshake sent")
-            logger.log(
+            sendMessage(handshakeMessage)            logger.log(
                 StructuredLogger.LogLevel.INFO,
                 "WebSocketClient",
                 "handshake_sent",
                 emptyMap()
             )
-        } catch (e: java.io.IOException) {
-            AppLogger.e(TAG, "Network I/O error during handshake", e)
-            logger.log(
+        } catch (e: java.io.IOException) {            logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "WebSocketClient",
                 "handshake_io_error",
                 mapOf("error" to e.message.orEmpty())
             )
-        } catch (e: org.json.JSONException) {
-            AppLogger.e(TAG, "JSON error during handshake", e)
-            logger.log(
+        } catch (e: org.json.JSONException) {            logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "WebSocketClient",
                 "handshake_json_error",
@@ -474,12 +414,8 @@ class WebSocketClient(private val context: Context) {
                         put("credentials", encodedCredentials)
                     },
                 )
-            sendMessage(authMessage)
-            AppLogger.i(TAG, "Authentication request sent")
-            logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "auth_sent", emptyMap())
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error performing authentication", e)
-            isAuthenticating.set(false)
+            sendMessage(authMessage)            logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "auth_sent", emptyMap())
+        } catch (e: Exception) {            isAuthenticating.set(false)
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "WebSocketClient",
@@ -495,12 +431,8 @@ class WebSocketClient(private val context: Context) {
         try {
             val message = JSONObject(text)
             val messageType = message.optString("message_type", "")
-            if (!ProtocolVersion.validateMessageVersion(message)) {
-                AppLogger.w(TAG, "Received message with invalid protocol version")
-                return
-            }
-            AppLogger.d(TAG, "Received message: $messageType")
-            when (messageType) {
+            if (!ProtocolVersion.validateMessageVersion(message)) {                return
+            }            when (messageType) {
                 "protocol_handshake_response" -> handleHandshakeResponse(message)
                 "auth_response" -> handleAuthResponse(message)
                 "ping" -> handlePing(message)
@@ -509,22 +441,16 @@ class WebSocketClient(private val context: Context) {
                 "session_start_response" -> handleSessionResponse(message)
                 "session_stop_response" -> handleSessionResponse(message)
                 "error" -> handleError(message)
-                else -> {
-                    AppLogger.w(TAG, "Unknown message type: $messageType")
-                    eventListener?.onMessage(messageType, message)
+                else -> {                    eventListener?.onMessage(messageType, message)
                 }
             }
-        } catch (e: org.json.JSONException) {
-            AppLogger.e(TAG, "JSON parsing error handling message", e)
-            logger.log(
+        } catch (e: org.json.JSONException) {            logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "WebSocketClient",
                 "message_json_error",
                 mapOf("error" to e.message.orEmpty())
             )
-        } catch (e: IllegalStateException) {
-            AppLogger.e(TAG, "Invalid state error handling message", e)
-            logger.log(
+        } catch (e: IllegalStateException) {            logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "WebSocketClient",
                 "message_state_error",
@@ -545,9 +471,7 @@ class WebSocketClient(private val context: Context) {
     private suspend fun handleAuthResponse(message: JSONObject) {
         isAuthenticating.set(false)
         val success = message.optBoolean("success", false)
-        if (success) {
-            AppLogger.i(TAG, "Authentication successful")
-            isAuthenticated.set(true)
+        if (success) {            isAuthenticated.set(true)
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 "WebSocketClient",
@@ -560,9 +484,7 @@ class WebSocketClient(private val context: Context) {
             eventListener?.onAuthenticated()
             startHeartbeat()
         } else {
-            val error = message.optString("error_message", "Authentication failed")
-            AppLogger.e(TAG, "Authentication failed: $error")
-            logger.log(
+            val error = message.optString("error_message", "Authentication failed")            logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "WebSocketClient",
                 "auth_failed",
@@ -601,9 +523,7 @@ class WebSocketClient(private val context: Context) {
 
     private suspend fun handleError(message: JSONObject) {
         val errorType = message.optString("error_type", "unknown")
-        val errorMessage = message.optString("error_message", "Unknown error")
-        AppLogger.e(TAG, "Server error: $errorType - $errorMessage")
-        logger.log(
+        val errorMessage = message.optString("error_message", "Unknown error")        logger.log(
             StructuredLogger.LogLevel.ERROR,
             "WebSocketClient",
             "server_error",
@@ -623,9 +543,7 @@ class WebSocketClient(private val context: Context) {
                 while (isConnected.get() && isAuthenticated.get()) {
                     try {
                         val currentTime = System.currentTimeMillis()
-                        if (lastHeartbeatTime > 0 && (currentTime - lastHeartbeatTime) > HEARTBEAT_TIMEOUT_MS) {
-                            AppLogger.w(TAG, "Heartbeat timeout, disconnecting")
-                            webSocket.get()?.close(4000, "Heartbeat timeout")
+                        if (lastHeartbeatTime > 0 && (currentTime - lastHeartbeatTime) > HEARTBEAT_TIMEOUT_MS) {                            webSocket.get()?.close(4000, "Heartbeat timeout")
                             break
                         }
                         val heartbeatMessage =
@@ -637,9 +555,7 @@ class WebSocketClient(private val context: Context) {
                             )
                         sendMessage(heartbeatMessage)
                         delay(HEARTBEAT_INTERVAL_MS)
-                    } catch (e: Exception) {
-                        AppLogger.e(TAG, "Error in heartbeat", e)
-                        break
+                    } catch (e: Exception) {                        break
                     }
                 }
             }
@@ -680,9 +596,7 @@ class WebSocketClient(private val context: Context) {
                             RECONNECT_MAX_DELAY_MS
                         )
                         val jitter = Random.nextLong(-RECONNECT_JITTER_MS, RECONNECT_JITTER_MS)
-                        val delay = baseDelay + jitter
-                        AppLogger.i(TAG, "Reconnection attempt $attempt in ${delay}ms")
-                        logger.log(
+                        val delay = baseDelay + jitter                        logger.log(
                             StructuredLogger.LogLevel.INFO, "WebSocketClient", "reconnect_attempt",
                             mapOf(
                                 "attempt" to attempt,
@@ -696,9 +610,7 @@ class WebSocketClient(private val context: Context) {
                             startServerDiscovery()
                         }
                         attempt++
-                    } catch (e: Exception) {
-                        AppLogger.e(TAG, "Error in reconnection", e)
-                        break
+                    } catch (e: Exception) {                        break
                     }
                 }
                 isReconnecting.set(false)
@@ -708,23 +620,17 @@ class WebSocketClient(private val context: Context) {
     private fun stopServerDiscovery() {
         try {
             discoveryJob?.cancel()
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error stopping server discovery", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     suspend fun sendMessage(message: JSONObject) {
         try {
             val webSocket = this.webSocket.get()
-            if (webSocket == null) {
-                AppLogger.w(TAG, "Cannot send message - not connected")
-                return
+            if (webSocket == null) {                return
             }
             val jsonString = message.toString()
             val success = webSocket.send(jsonString)
-            if (!success) {
-                AppLogger.w(TAG, "Failed to send message")
-                logger.log(
+            if (!success) {                logger.log(
                     StructuredLogger.LogLevel.WARNING,
                     "WebSocketClient",
                     "send_failed",
@@ -733,9 +639,7 @@ class WebSocketClient(private val context: Context) {
                     ),
                 )
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error sending message", e)
-            logger.log(
+        } catch (e: Exception) {            logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "WebSocketClient",
                 "send_error",
@@ -797,12 +701,7 @@ class WebSocketClient(private val context: Context) {
         timeSyncService = TimeSyncService().apply {
             setListener(object : TimeSyncService.TimeSyncListener {
                 override fun onSyncCompleted(result: TimeSyncService.SyncResult) {
-                    if (result.isSuccess) {
-                        Log.i(
-                            TAG,
-                            "Time sync completed: offset=${result.clockOffsetMs}ms, accuracy=±${result.accuracyMs}ms"
-                        )
-                        logger.log(
+                    if (result.isSuccess) {                        logger.log(
                             StructuredLogger.LogLevel.INFO,
                             "WebSocketClient",
                             "sync_completed",
@@ -812,9 +711,7 @@ class WebSocketClient(private val context: Context) {
                                 "accuracy_ms" to result.accuracyMs.toString(),
                             ),
                         )
-                    } else {
-                        AppLogger.w(TAG, "Time sync failed: ${result.errorMessage}")
-                        logger.log(
+                    } else {                        logger.log(
                             StructuredLogger.LogLevel.WARNING,
                             "WebSocketClient",
                             "sync_failed",
@@ -823,21 +720,15 @@ class WebSocketClient(private val context: Context) {
                     }
                 }
 
-                override fun onSyncStarted(targetHost: String) {
-                    AppLogger.i(TAG, "Time sync started with $targetHost")
-                }
+                override fun onSyncStarted(targetHost: String) {                }
 
-                override fun onSyncError(error: String) {
-                    AppLogger.e(TAG, "Time sync error: $error")
-                }
+                override fun onSyncError(error: String) {                }
             })
         }
         sessionManager =
             SessionManager(context, logger).apply {
                 start(
-                    onSessionStateChanged = { state ->
-                        AppLogger.i(TAG, "Session state changed: $state")
-                        logger.log(
+                    onSessionStateChanged = { state ->                        logger.log(
                             StructuredLogger.LogLevel.INFO,
                             "WebSocketClient",
                             "session_state_changed",
@@ -859,35 +750,24 @@ class WebSocketClient(private val context: Context) {
                             ),
                         )
                     },
-                    onDeviceLeft = { device ->
-                        AppLogger.i(TAG, "Device left session: ${device.deviceId}")
-                        logger.log(
+                    onDeviceLeft = { device ->                        logger.log(
                             StructuredLogger.LogLevel.INFO, "WebSocketClient", "device_left",
                             mapOf(
                                 "device_id" to device.deviceId,
                             ),
                         )
                     },
-                    onSyncRequired = { devices ->
-                        Log.i(
-                            TAG,
-                            "Cross-device synchronization required for ${devices.size} devices"
-                        )
-                        performCrossDeviceSync(devices)
+                    onSyncRequired = { devices ->                        performCrossDeviceSync(devices)
                     },
                 )
-            }
-        AppLogger.i(TAG, "Phase 2 services initialized: Enhanced Time Sync + Session Management")
-    }
+            }    }
 
     private fun stopPhase2Services() {
         timeSyncService?.stopPeriodicSync()
         timeSyncService?.cleanup()
         timeSyncService = null
         sessionManager?.stop()
-        sessionManager = null
-        AppLogger.i(TAG, "Phase 2 services stopped")
-    }
+        sessionManager = null    }
 
     private fun initializePhase3Services() {
         fileUploadService =
@@ -897,9 +777,7 @@ class WebSocketClient(private val context: Context) {
         dataManagementService =
             DataManagementService(context).apply {
                 initialize(fileUploadService)
-            }
-        AppLogger.i(TAG, "Phase 3 services initialized: File Transfer + Data Management")
-        logger.log(
+            }        logger.log(
             StructuredLogger.LogLevel.INFO,
             "WebSocketClient",
             "phase3_services_initialized",
@@ -914,9 +792,7 @@ class WebSocketClient(private val context: Context) {
     private fun stopPhase3Services() {
         fileUploadService?.shutdown()
         fileUploadService = null
-        dataManagementService = null
-        AppLogger.i(TAG, "Phase 3 services stopped")
-    }
+        dataManagementService = null    }
 
     private fun performCrossDeviceSync(devices: List<SessionManager.DeviceInfo>) {
         scope.launch {
@@ -952,9 +828,7 @@ class WebSocketClient(private val context: Context) {
                     "cross_device_sync_completed",
                     emptyMap()
                 )
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Cross-device sync error", e)
-                logger.log(
+            } catch (e: Exception) {                logger.log(
                     StructuredLogger.LogLevel.ERROR,
                     "WebSocketClient",
                     "cross_device_sync_error",
@@ -1085,9 +959,7 @@ class WebSocketClient(private val context: Context) {
             val exportFormat =
                 DataManagementService.Companion.ExportFormat.valueOf(format.uppercase())
             dataManagementService?.exportSession(sessionId, exportFormat, includeFiles)
-        } catch (e: IllegalArgumentException) {
-            AppLogger.w(TAG, "Invalid export format: $format, defaulting to JSON")
-            dataManagementService?.exportSession(
+        } catch (e: IllegalArgumentException) {            dataManagementService?.exportSession(
                 sessionId,
                 DataManagementService.Companion.ExportFormat.JSON,
                 includeFiles
@@ -1132,12 +1004,7 @@ class WebSocketClient(private val context: Context) {
                 if (initialize()) {
                     setAuthenticationListener(
                         object : AdvancedAuthenticationManager.AuthenticationListener {
-                            override fun onAuthenticationSuccess(context: AdvancedAuthenticationManager.AuthenticationContext) {
-                                Log.i(
-                                    TAG,
-                                    "Advanced authentication successful: role=${context.role.name}"
-                                )
-                                logger.log(
+                            override fun onAuthenticationSuccess(context: AdvancedAuthenticationManager.AuthenticationContext) {                                logger.log(
                                     StructuredLogger.LogLevel.INFO, TAG, "advanced_auth_success",
                                     mapOf(
                                         "device_id" to context.deviceId,
@@ -1151,12 +1018,7 @@ class WebSocketClient(private val context: Context) {
                             override fun onAuthenticationFailure(
                                 reason: AdvancedAuthenticationManager.AuthenticationResult,
                                 attemptsRemaining: Int,
-                            ) {
-                                Log.w(
-                                    TAG,
-                                    "Advanced authentication failed: $reason, attempts remaining: $attemptsRemaining"
-                                )
-                                logger.log(
+                            ) {                                logger.log(
                                     StructuredLogger.LogLevel.WARNING, TAG, "advanced_auth_failure",
                                     mapOf(
                                         "reason" to reason.name,
@@ -1165,9 +1027,7 @@ class WebSocketClient(private val context: Context) {
                                 )
                             }
 
-                            override fun onSessionExpired() {
-                                AppLogger.w(TAG, "Advanced authentication session expired")
-                                logger.log(
+                            override fun onSessionExpired() {                                logger.log(
                                     StructuredLogger.LogLevel.WARNING,
                                     TAG,
                                     "advanced_session_expired",
@@ -1181,9 +1041,7 @@ class WebSocketClient(private val context: Context) {
                             override fun onSecurityAlert(
                                 alertType: String,
                                 details: Map<String, Any>,
-                            ) {
-                                AppLogger.w(TAG, "Security alert: $alertType")
-                                logger.log(
+                            ) {                                logger.log(
                                     StructuredLogger.LogLevel.WARNING, TAG, "security_alert",
                                     mapOf(
                                         "alert_type" to alertType,
@@ -1198,9 +1056,7 @@ class WebSocketClient(private val context: Context) {
                             override fun onRoleChanged(
                                 newRole: AdvancedAuthenticationManager.DeviceRole,
                                 permissions: Set<String>,
-                            ) {
-                                AppLogger.i(TAG, "Role changed to: ${newRole.name}")
-                                logger.log(
+                            ) {                                logger.log(
                                     StructuredLogger.LogLevel.INFO, TAG, "role_changed",
                                     mapOf(
                                         "new_role" to newRole.name,
@@ -1211,9 +1067,7 @@ class WebSocketClient(private val context: Context) {
                         },
                     )
                 }
-            }
-        AppLogger.i(TAG, "Phase 4 services initialized: Advanced Authentication & Security")
-        logger.log(
+            }        logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
             "phase4_services_initialized",
@@ -1228,9 +1082,7 @@ class WebSocketClient(private val context: Context) {
 
     private fun stopPhase4Services() {
         advancedAuthManager?.shutdown()
-        advancedAuthManager = null
-        AppLogger.i(TAG, "Phase 4 services stopped")
-    }
+        advancedAuthManager = null    }
 
     suspend fun performEnhancedAuthentication(
         authLevel: Int,
@@ -1245,19 +1097,13 @@ class WebSocketClient(private val context: Context) {
                     credentials = credentials,
                 )
             when (result) {
-                AdvancedAuthenticationManager.AuthenticationResult.SUCCESS -> {
-                    AppLogger.i(TAG, "Enhanced authentication successful at level $authLevel")
-                    true
+                AdvancedAuthenticationManager.AuthenticationResult.SUCCESS -> {                    true
                 }
 
-                else -> {
-                    AppLogger.w(TAG, "Enhanced authentication failed: $result")
-                    false
+                else -> {                    false
                 }
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Enhanced authentication error", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -1270,9 +1116,7 @@ class WebSocketClient(private val context: Context) {
                         AdvancedAuthenticationManager.AUTH_LEVEL_CERTIFICATE,
                         certificateCredentials,
                     )
-                if (success) {
-                    AppLogger.i(TAG, "Certificate-based reauthentication successful")
-                    return
+                if (success) {                    return
                 }
             }
             val tokenCredentials = getTokenCredentials()
@@ -1282,9 +1126,7 @@ class WebSocketClient(private val context: Context) {
                         AdvancedAuthenticationManager.AUTH_LEVEL_TOKEN,
                         tokenCredentials,
                     )
-                if (success) {
-                    AppLogger.i(TAG, "Token-based reauthentication successful")
-                    return
+                if (success) {                    return
                 }
             }
             val basicCredentials = getBasicCredentials()
@@ -1293,14 +1135,8 @@ class WebSocketClient(private val context: Context) {
                     AdvancedAuthenticationManager.AUTH_LEVEL_BASIC,
                     basicCredentials,
                 )
-            if (success) {
-                AppLogger.i(TAG, "Basic reauthentication successful")
-            } else {
-                AppLogger.w(TAG, "All reauthentication attempts failed")
-            }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error during reauthentication", e)
-        }
+            if (success) {            } else {            }
+        } catch (e: Exception) {        }
     }
 
     private fun getCertificateCredentials(): Map<String, Any> {
@@ -1369,9 +1205,7 @@ class WebSocketClient(private val context: Context) {
                     },
                 )
             sendMessage(alertMessage)
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to send security alert", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     private fun determineSeverity(alertType: String): String {
@@ -1427,9 +1261,7 @@ class WebSocketClient(private val context: Context) {
             results.put("permission_system_test", hasAdvancedPermission("view_status"))
             results.put("overall_status", "Phase 4 security system operational")
             results.put("test_timestamp", System.currentTimeMillis())
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Security self-test failed", e)
-            results.put("error", e.message)
+        } catch (e: Exception) {            results.put("error", e.message)
             results.put("overall_status", "Phase 4 security system error")
         }
         return results
