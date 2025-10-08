@@ -21,25 +21,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import dagger.hilt.android.AndroidEntryPoint
+import mpdc4gsr.core.ui.HiltComposeActivity
 import mpdc4gsr.feature.network.presentation.DevicePairingViewModel
 import mpdc4gsr.core.ui.deferAction
 
-class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>() {
+@AndroidEntryPoint
+class DevicePairingComposeActivity : HiltComposeActivity() {
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, DevicePairingComposeActivity::class.java))
         }
     }
 
-    override fun createViewModel(): DevicePairingViewModel {
-        return viewModels<DevicePairingViewModel>().value
-    }
+    private val viewModel: DevicePairingViewModel by viewModels()
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: DevicePairingViewModel) {
+    override fun Content() {
         var isScanning by remember { mutableStateOf(false) }
         var selectedDevice by remember { mutableStateOf<BluetoothDeviceInfo?>(null) }
         var showPairingDialog by remember { mutableStateOf(false) }

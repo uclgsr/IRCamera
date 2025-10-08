@@ -2,12 +2,15 @@ package mpdc4gsr.feature.network.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.SessionInfo
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.network.data.NetworkClient
+import javax.inject.Inject
 
-class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventListener {
+@HiltViewModel
+class DevicePairingViewModel @Inject constructor() : AppBaseViewModel(), NetworkClient.NetworkEventListener {
     // StateFlow for reactive state management
     private val _discoveredControllers =
         MutableStateFlow<List<NetworkClient.ControllerInfo>>(emptyList())
