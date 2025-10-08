@@ -75,10 +75,6 @@ android {
         compose = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-
     sourceSets {
         getByName("main") {
             jniLibs.srcDirs("src/main/jniLibs")
