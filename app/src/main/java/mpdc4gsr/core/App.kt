@@ -15,11 +15,14 @@ import com.mpdc4gsr.libunified.app.lms.Config
 import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
 import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
+import dagger.hilt.android.HiltAndroidApp
 import mpdc4gsr.core.ui.InitUtils.initJPush
 import mpdc4gsr.core.ui.InitUtils.initLms
 import mpdc4gsr.core.ui.InitUtils.initLog
 import mpdc4gsr.core.ui.InitUtils.initReceiver
 import mpdc4gsr.core.ui.InitUtils.initUM
+
+@HiltAndroidApp
 class App : BaseApplication() {
     companion object {
         @Deprecated(

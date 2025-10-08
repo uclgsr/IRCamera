@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class ShimmerDeviceManager(
     private val context: Context,
-    private val lifecycleOwner: LifecycleOwner
+    private val lifecycleOwner: LifecycleOwner? = null
 ) {
     companion object {
         private const val TAG = "ShimmerDeviceManager"
@@ -46,6 +46,10 @@ class ShimmerDeviceManager(
         private val SHIMMER_MAC_PREFIXES = listOf("00:06:66", "d0:39:72", "00:80:98")
         private val SHIMMER_NAME_PATTERNS = listOf("shimmer", "gsr", "rn4", "shimmer3")
     }
+
+    private val managerScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val coroutineScope: CoroutineScope
+        get() = lifecycleOwner?.lifecycleScope ?: managerScope
 
     private var shimmerManager: ShimmerBluetoothManagerAndroid? = null
     var bluetoothManager: BluetoothManager? = null
@@ -96,7 +100,7 @@ class ShimmerDeviceManager(
 
     private fun startConnectionMonitoring() {
         connectionMonitorJob?.cancel()
-        connectionMonitorJob = lifecycleOwner.lifecycleScope.launch {
+        connectionMonitorJob = coroutineScope.launch {
             while (isActive) {
                 delay(5000)
                 val disconnectedDevices = connectedDevices.filter { (address, shimmer) ->
@@ -142,7 +146,7 @@ class ShimmerDeviceManager(
             }
             _scanResults.emit(discoveredDevices.values.toList())
             performEnhancedBluetoothLeScanning()
-            lifecycleOwner.lifecycleScope.launch {
+            coroutineScope.launch {
                 delay(SCAN_TIMEOUT_MS)
                 if (isScanning.get()) {
                     stopDeviceScanning()
@@ -256,7 +260,7 @@ class ShimmerDeviceManager(
                 isGSRCapable = true
             )
             discoveredDevices[device.address] = deviceInfo
-            lifecycleOwner.lifecycleScope.launch {
+            coroutineScope.launch {
                 _scanResults.emit(discoveredDevices.values.toList())
             }
         } else if (discoveredDevices.containsKey(device.address)) {
