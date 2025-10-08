@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.thermal.presentation
 
-import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,48 +19,48 @@ class ThermalCameraViewModel @Inject constructor(
     private val thermalUseCases: ThermalUseCases
 ) : ViewModel() {
 
-    companion object {
-        private const val TAG = "ThermalCameraViewModel"
-    }
-
     private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
-        _uiState.update { it.copy(errorMessage = "Error: ${exception.message}") }
+        _uiState.value = ThermalUiState.Error(
+            message = exception.message ?: "Unknown error occurred",
+            isRecoverable = true
+        )
     }
 
-    data class ThermalCameraUiState(
-        val isConnected: Boolean = false,
-        val isRecording: Boolean = false,
-        val currentTemperature: Float? = null,
-        val minTemperature: Float = 0f,
-        val maxTemperature: Float = 100f,
-        val avgTemperature: Float = 0f,
-        val centerTemperature: Float = 0f,
-        val isPaused: Boolean = false,
-        val recordingDuration: Long = 0L,
-        val errorMessage: String? = null,
-        val previewBitmap: Bitmap? = null,
-        val isSimulationMode: Boolean = false,
-        val frameCount: Long = 0L
-    )
-
-    private val _uiState = MutableStateFlow(ThermalCameraUiState())
-    val uiState: StateFlow<ThermalCameraUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<ThermalUiState>(ThermalUiState.Loading)
+    val uiState: StateFlow<ThermalUiState> = _uiState.asStateFlow()
     private var recordingStartTime: Long = 0L
 
     init {
-        connectToCamera()
-        startThermalStream()
+        onEvent(ThermalUiEvent.ConnectCamera)
+    }
+
+    fun onEvent(event: ThermalUiEvent) {
+        when (event) {
+            ThermalUiEvent.ConnectCamera -> connectToCamera()
+            ThermalUiEvent.DisconnectCamera -> disconnectFromCamera()
+            ThermalUiEvent.StartRecording -> startRecording()
+            ThermalUiEvent.StopRecording -> stopRecording()
+            ThermalUiEvent.CaptureSnapshot -> captureSnapshot()
+            ThermalUiEvent.PauseRecording -> pauseRecording()
+            ThermalUiEvent.ResumeRecording -> resumeRecording()
+            ThermalUiEvent.ClearError -> clearError()
+            is ThermalUiEvent.SetTemperatureRange -> setTemperatureRange(event.minTemp, event.maxTemp)
+        }
     }
 
     private fun startThermalStream() {
         viewModelScope.launch(exceptionHandler) {
             thermalUseCases.startStreaming()
                 .catch { e ->
-                    _uiState.update { it.copy(errorMessage = "Stream error: ${e.message}") }
+                    _uiState.value = ThermalUiState.Error(
+                        message = "Stream error: ${e.message}",
+                        isRecoverable = true
+                    )
                 }
                 .collect { frameData ->
-                    _uiState.update { currentState ->
-                        currentState.copy(
+                    val currentState = _uiState.value
+                    if (currentState is ThermalUiState.Success) {
+                        _uiState.value = currentState.copy(
                             minTemperature = frameData.minTemp,
                             maxTemperature = frameData.maxTemp,
                             avgTemperature = frameData.avgTemp,
@@ -74,92 +73,118 @@ class ThermalCameraViewModel @Inject constructor(
         }
     }
 
-    fun connectToCamera() {
+    private fun connectToCamera() {
         viewModelScope.launch(exceptionHandler) {
             thermalUseCases.connectCamera()
                 .onSuccess {
-                    _uiState.update { it.copy(isConnected = true, errorMessage = null) }
+                    _uiState.value = ThermalUiState.Success(isConnected = true)
+                    startThermalStream()
                 }
                 .onFailure { e ->
-                    _uiState.update { 
-                        it.copy(
-                            isConnected = false, 
-                            errorMessage = "Connection failed: ${e.message}"
-                        ) 
-                    }
+                    _uiState.value = ThermalUiState.Error(
+                        message = "Connection failed: ${e.message}",
+                        isRecoverable = true
+                    )
                 }
         }
     }
 
-    fun disconnectFromCamera() {
+    private fun disconnectFromCamera() {
         viewModelScope.launch(exceptionHandler) {
+            thermalUseCases.stopStreaming()
             thermalUseCases.disconnectCamera()
-            _uiState.update { it.copy(isConnected = false) }
+            val currentState = _uiState.value
+            if (currentState is ThermalUiState.Success) {
+                _uiState.value = currentState.copy(isConnected = false)
+            }
         }
     }
 
-    fun startRecording() {
+    private fun startRecording() {
         viewModelScope.launch(exceptionHandler) {
             thermalUseCases.startRecording()
                 .onSuccess {
                     recordingStartTime = System.currentTimeMillis()
-                    _uiState.update {
-                        it.copy(
+                    val currentState = _uiState.value
+                    if (currentState is ThermalUiState.Success) {
+                        _uiState.value = currentState.copy(
                             isRecording = true,
-                            recordingDuration = 0L,
-                            errorMessage = null
+                            recordingDuration = 0L
                         )
                     }
                 }
                 .onFailure { e ->
-                    _uiState.update {
-                        it.copy(errorMessage = "Recording start failed: ${e.message}")
-                    }
+                    _uiState.value = ThermalUiState.Error(
+                        message = "Recording start failed: ${e.message}",
+                        isRecoverable = true
+                    )
                 }
         }
     }
 
-    fun stopRecording() {
+    private fun stopRecording() {
         viewModelScope.launch(exceptionHandler) {
             thermalUseCases.stopRecording()
-                .onSuccess { filePath ->
-                    _uiState.update {
-                        it.copy(
+                .onSuccess {
+                    val currentState = _uiState.value
+                    if (currentState is ThermalUiState.Success) {
+                        _uiState.value = currentState.copy(
                             isRecording = false,
-                            recordingDuration = 0L,
-                            errorMessage = null
+                            recordingDuration = 0L
                         )
                     }
                 }
                 .onFailure { e ->
-                    _uiState.update {
-                        it.copy(errorMessage = "Recording stop failed: ${e.message}")
-                    }
+                    _uiState.value = ThermalUiState.Error(
+                        message = "Recording stop failed: ${e.message}",
+                        isRecoverable = true
+                    )
                 }
         }
     }
 
-    fun captureSnapshot() {
+    private fun captureSnapshot() {
         viewModelScope.launch(exceptionHandler) {
             thermalUseCases.captureSnapshot()
-                .onSuccess { snapshot ->
-                    // Handle successful snapshot capture
-                    _uiState.update { it.copy(errorMessage = null) }
-                }
                 .onFailure { e ->
-                    _uiState.update {
-                        it.copy(errorMessage = "Snapshot failed: ${e.message}")
-                    }
+                    _uiState.value = ThermalUiState.Error(
+                        message = "Snapshot failed: ${e.message}",
+                        isRecoverable = true
+                    )
                 }
         }
     }
 
-    fun updateRecordingDuration() {
-        if (_uiState.value.isRecording) {
-            val duration = System.currentTimeMillis() - recordingStartTime
-            _uiState.update {
-                it.copy(recordingDuration = duration)
-            }
+    private fun pauseRecording() {
+        val currentState = _uiState.value
+        if (currentState is ThermalUiState.Success && currentState.isRecording) {
+            _uiState.value = currentState.copy(isPaused = true)
+        }
+    }
+
+    private fun resumeRecording() {
+        val currentState = _uiState.value
+        if (currentState is ThermalUiState.Success && currentState.isRecording) {
+            _uiState.value = currentState.copy(isPaused = false)
+        }
+    }
+
+    private fun clearError() {
+        val currentState = _uiState.value
+        if (currentState is ThermalUiState.Error && currentState.isRecoverable) {
+            _uiState.value = ThermalUiState.Success()
+        }
+    }
+
+    private fun setTemperatureRange(minTemp: Float, maxTemp: Float) {
+        viewModelScope.launch(exceptionHandler) {
+            thermalUseCases.setTemperatureRange(minTemp, maxTemp)
+                .onFailure { e ->
+                    _uiState.value = ThermalUiState.Error(
+                        message = "Failed to set temperature range: ${e.message}",
+                        isRecoverable = true
+                    )
+                }
         }
     }
 

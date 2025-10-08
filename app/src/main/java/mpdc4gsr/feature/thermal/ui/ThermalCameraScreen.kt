@@ -23,6 +23,8 @@ import mpdc4gsr.feature.thermal.data.MeasurementMode
 import mpdc4gsr.feature.thermal.data.TemperatureUnit
 import mpdc4gsr.feature.thermal.data.ThermalPalette
 import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel
+import mpdc4gsr.feature.thermal.presentation.ThermalUiState
+import mpdc4gsr.feature.thermal.presentation.ThermalUiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,27 +63,74 @@ fun ThermalCameraScreen(
                 )
             }
         ) { paddingValues ->
-            ThermalCameraContent(
-                uiState = uiState,
-                onConnectCamera = viewModel::connectToCamera,
-                onDisconnectCamera = viewModel::disconnectFromCamera,
-                onStartRecording = viewModel::startRecording,
-                onStopRecording = viewModel::stopRecording,
-                onCaptureSnapshot = viewModel::captureSnapshot,
-                modifier = Modifier.padding(paddingValues)
-            )
+            when (uiState) {
+                is ThermalUiState.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+                is ThermalUiState.Error -> {
+                    ThermalErrorContent(
+                        error = uiState as ThermalUiState.Error,
+                        onRetry = { viewModel.onEvent(ThermalUiEvent.ClearError) },
+                        modifier = Modifier.padding(paddingValues)
+                    )
+                }
+                is ThermalUiState.Success -> {
+                    ThermalCameraContent(
+                        uiState = uiState as ThermalUiState.Success,
+                        onEvent = viewModel::onEvent,
+                        modifier = Modifier.padding(paddingValues)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ThermalErrorContent(
+    error: ThermalUiState.Error,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            Icons.Default.Error,
+            contentDescription = "Error",
+            tint = MaterialTheme.colorScheme.error,
+            modifier = Modifier.size(64.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = error.message,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.error
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        if (error.isRecoverable) {
+            Button(onClick = onRetry) {
+                Text("Retry")
+            }
         }
     }
 }
 
 @Composable
 private fun ThermalCameraContent(
-    uiState: ThermalCameraViewModel.ThermalCameraUiState,
-    onConnectCamera: () -> Unit,
-    onDisconnectCamera: () -> Unit,
-    onStartRecording: () -> Unit,
-    onStopRecording: () -> Unit,
-    onCaptureSnapshot: () -> Unit,
+    uiState: ThermalUiState.Success,
+    onEvent: (ThermalUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedPalette by remember { mutableStateOf(ThermalPalette.IRON) }
@@ -95,20 +144,6 @@ private fun ThermalCameraContent(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Show error message if any
-        uiState.errorMessage?.let { error ->
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
-            ) {
-                Text(
-                    text = error,
-                    color = MaterialTheme.colorScheme.onErrorContainer,
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
-        }
-        
         // Thermal Preview Area
         ThermalPreviewCard(
             uiState = uiState,
@@ -129,9 +164,9 @@ private fun ThermalCameraContent(
             measurementMode = measurementMode,
             onPaletteChange = { selectedPalette = it },
             onTemperatureUnitChange = { temperatureUnit = it },
-            onStartRecording = onStartRecording,
-            onStopRecording = onStopRecording,
-            onCaptureSnapshot = onCaptureSnapshot,
+            onStartRecording = { onEvent(ThermalUiEvent.StartRecording) },
+            onStopRecording = { onEvent(ThermalUiEvent.StopRecording) },
+            onCaptureSnapshot = { onEvent(ThermalUiEvent.CaptureSnapshot) },
             onMeasurementModeChange = { measurementMode = it }
         )
         // Analysis Tools
@@ -139,8 +174,8 @@ private fun ThermalCameraContent(
         // Camera Status
         ThermalCameraStatusCard(
             uiState = uiState,
-            onConnectCamera = onConnectCamera,
-            onDisconnectCamera = onDisconnectCamera
+            onConnectCamera = { onEvent(ThermalUiEvent.ConnectCamera) },
+            onDisconnectCamera = { onEvent(ThermalUiEvent.DisconnectCamera) }
         )
     }
 }
