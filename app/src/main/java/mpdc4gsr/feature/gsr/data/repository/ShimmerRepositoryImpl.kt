@@ -5,8 +5,9 @@ import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.GSRSample
 import mpdc4gsr.feature.gsr.data.source.ShimmerDataSource
 import mpdc4gsr.feature.gsr.domain.repository.ShimmerRepository
+import javax.inject.Inject
 
-class ShimmerRepositoryImpl(
+class ShimmerRepositoryImpl @Inject constructor(
     private val shimmerDataSource: ShimmerDataSource
 ) : ShimmerRepository {
     override suspend fun scanForDevices(): Flow<List<DeviceInfo>> {

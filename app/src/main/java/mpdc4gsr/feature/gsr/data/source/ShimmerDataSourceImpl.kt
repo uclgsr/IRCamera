@@ -5,8 +5,9 @@ import kotlinx.coroutines.flow.flow
 import mpdc4gsr.core.data.ShimmerDeviceManager
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.GSRSample
+import javax.inject.Inject
 
-class ShimmerDataSourceImpl(
+class ShimmerDataSourceImpl @Inject constructor(
     private val deviceManager: ShimmerDeviceManager
 ) : ShimmerDataSource {
     companion object {
