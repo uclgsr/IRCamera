@@ -6,6 +6,7 @@ import com.mpdc4gsr.gsr.model.SessionInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import mpdc4gsr.feature.main.domain.model.*
 import mpdc4gsr.feature.main.domain.repository.GSRConnectionState
 import mpdc4gsr.feature.main.domain.repository.NetworkConnectionState
 import mpdc4gsr.feature.main.domain.usecase.*
@@ -32,16 +33,6 @@ class MainActivityViewModel @Inject constructor(
     private val _gsrBatteryLevel = MutableStateFlow<Int?>(null)
     val gsrBatteryLevel: StateFlow<Int?> = _gsrBatteryLevel.asStateFlow()
 
-    // GSR Data StateFlow for real-time sensor values
-    data class GSRDataState(
-        val currentValue: Float = 0f,
-        val batteryLevel: Int = 0,
-        val recentReadings: List<Float> = emptyList(),
-        val averageValue: Float = 0f,
-        val minValue: Float = 0f,
-        val maxValue: Float = 0f
-    )
-
     private val _gsrData = MutableStateFlow(GSRDataState())
     val gsrData: StateFlow<GSRDataState> = _gsrData.asStateFlow()
     private val _networkConnectionState = MutableStateFlow(NetworkConnectionState.DISCONNECTED)
@@ -55,9 +46,8 @@ class MainActivityViewModel @Inject constructor(
     private val _currentSession = MutableStateFlow<SessionInfo?>(null)
     val currentSession: StateFlow<SessionInfo?> = _currentSession.asStateFlow()
 
-    // Use SharedFlow for one-time events like showing dialogs or toasts.
-    private val _events = MutableSharedFlow<Event>()
-    val events: SharedFlow<Event> = _events.asSharedFlow()
+    private val _events = MutableSharedFlow<UiEvent>()
+    val events: SharedFlow<UiEvent> = _events.asSharedFlow()
 
     // Sensor state tracking with StateFlow
     private val _rgbCameraState = MutableStateFlow(SensorState())
@@ -79,68 +69,28 @@ class MainActivityViewModel @Inject constructor(
     private val _exposureCompensation = MutableStateFlow(0.0f)
     val exposureCompensation: StateFlow<Float> = _exposureCompensation.asStateFlow()
 
-    enum class SessionState { IDLE, STARTING, RECORDING, PAUSED, STOPPING, ERROR }
-    enum class SensorStatus { DISCONNECTED, CONNECTING, CONNECTED, STREAMING, ERROR, SIMULATION }
-    data class SensorState(
-        val status: SensorStatus = SensorStatus.DISCONNECTED,
-        val message: String? = null,
-        val isRecording: Boolean = false,
-        val lastUpdate: Long = System.currentTimeMillis()
-    )
-
-    data class StatusMessage(
-        val message: String,
-        val level: Level,
-        val timestampMs: Long = System.currentTimeMillis()
-    ) {
-        enum class Level { INFO, WARNING, ERROR }
-    }
-
-    sealed class Event {
-        object ShowExitDialog : Event()
-        data class ShowToast(val message: String, val isLong: Boolean = false) : Event()
-        // Add other events for navigation, specific dialogs etc.
-    }
-
-    data class SessionConfig(
-        val sessionId: String? = null,
-        val participantId: String? = null,
-        val studyName: String? = null,
-        val metadata: Map<String, String> = emptyMap(),
-        val modalities: List<String> = listOf("thermal", "GSR"),
-        val saveImages: Boolean = false
-    )
-
-    init {
-        initializeComponents()
-    }
-
-    // --- Event Handlers from UI ---
     fun onNavigationItemSelected(index: Int) {
         _currentPage.value = index
     }
 
     fun onBackPressed() {
         viewModelScope.launch {
-            _events.emit(Event.ShowExitDialog)
+            _events.emit(UiEvent.ShowExitDialog)
         }
-    }
-
-    fun onPermissionsGranted() {
     }
 
     fun startGSRConnection() {
         viewModelScope.launch {
             _gsrConnectionState.value = GSRConnectionState.DISCOVERING
-            _events.emit(Event.ShowToast("Searching for GSR sensor..."))
+            _events.emit(UiEvent.ShowToast("Searching for GSR sensor..."))
             
             val success = connectGSRSensorUseCase()
             if (success) {
                 _gsrConnectionState.value = GSRConnectionState.CONNECTED
-                _events.emit(Event.ShowToast("GSR sensor connected"))
+                _events.emit(UiEvent.ShowToast("GSR sensor connected"))
             } else {
                 _gsrConnectionState.value = GSRConnectionState.ERROR
-                _events.emit(Event.ShowToast("Failed to connect GSR sensor", true))
+                _events.emit(UiEvent.ShowToast("Failed to connect GSR sensor", true))
             }
         }
     }
@@ -148,16 +98,16 @@ class MainActivityViewModel @Inject constructor(
     fun startNetworkDiscovery() {
         viewModelScope.launch {
             _networkConnectionState.value = NetworkConnectionState.DISCOVERING
-            _events.emit(Event.ShowToast("Searching for PC controllers..."))
+            _events.emit(UiEvent.ShowToast("Searching for PC controllers..."))
             
             val controllers = startNetworkDiscoveryUseCase()
             if (controllers.isNotEmpty()) {
                 _connectedControllerInfo.value = controllers.first()
                 _networkConnectionState.value = NetworkConnectionState.CONNECTED
-                _events.emit(Event.ShowToast("Connected to PC controller"))
+                _events.emit(UiEvent.ShowToast("Connected to PC controller"))
             } else {
                 _networkConnectionState.value = NetworkConnectionState.DISCONNECTED
-                _events.emit(Event.ShowToast("No PC controllers found"))
+                _events.emit(UiEvent.ShowToast("No PC controllers found"))
             }
         }
     }
@@ -168,7 +118,7 @@ class MainActivityViewModel @Inject constructor(
                 return@launch
             }
             _sessionState.value = SessionState.STARTING
-            _events.emit(Event.ShowToast("Starting recording session..."))
+            _events.emit(UiEvent.ShowToast("Starting recording session..."))
             
             val session = startRecordingSessionUseCase(
                 sessionId = sessionConfig.sessionId,
@@ -178,7 +128,7 @@ class MainActivityViewModel @Inject constructor(
             )
             _currentSession.value = session
             _sessionState.value = SessionState.RECORDING
-            _events.emit(Event.ShowToast("Recording session started: ${session.sessionId}"))
+            _events.emit(UiEvent.ShowToast("Recording session started: ${session.sessionId}"))
         }
     }
 
@@ -186,12 +136,12 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch {
             _currentSession.value?.let { session ->
                 _sessionState.value = SessionState.STOPPING
-                _events.emit(Event.ShowToast("Stopping recording session..."))
+                _events.emit(UiEvent.ShowToast("Stopping recording session..."))
                 
                 stopRecordingSessionUseCase(session.sessionId)
                 _currentSession.value = null
                 _sessionState.value = SessionState.IDLE
-                _events.emit(Event.ShowToast("Recording session stopped"))
+                _events.emit(UiEvent.ShowToast("Recording session stopped"))
             }
         }
     }
