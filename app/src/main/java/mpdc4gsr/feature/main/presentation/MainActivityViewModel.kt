@@ -129,246 +129,18 @@ class MainActivityViewModel @Inject constructor(
     fun onPermissionsGranted() {
     }
 
-    fun onServiceConnected(binder: RecordingService.RecordingServiceBinder) {
-        this.serviceBinder = binder
-        this.networkClient = binder.getNetworkClient()
-    }
-
-    fun onServiceDisconnected() {
-        this.serviceBinder = null
-        this.networkClient = null
-    }
-
-    fun initializeComponents() {
-        viewModelScope.launch {
-            initializeGSRComponents()
-            initializeThermalComponents()
-            initializeNetworkComponents()
-            initializeSessionComponents()
-        }
-    }
-
-    private suspend fun initializeGSRComponents() = withContext(Dispatchers.IO) {
-        gsrSessionManager = GSRSessionManager.getInstance(getApplication())
-        _gsrConnectionState.value = GSRConnectionState.DISCONNECTED
-    }
-
-    private suspend fun initializeThermalComponents() = withContext(Dispatchers.IO) {
-        thermalRecorder = ThermalRecorder(getApplication())
-        thermalRecorder?.setFrameListener(object : ThermalRecorder.ThermalFrameListener {
-            override fun onFrameProcessed(stats: ThermalRecorder.ThermalFrameStats) {
-            }
-
-            override fun onError(error: String) {
-                viewModelScope.launch {
-                    _events.emit(Event.ShowToast("Thermal recording error: $error", true))
-                }
-            }
-        })
-    }
-
-    private suspend fun initializeNetworkComponents() = withContext(Dispatchers.IO) {
-        networkClient = NetworkClient(getApplication())
-        networkController = NetworkController(getApplication())
-        networkController?.setEventListener(object :
-            NetworkController.NetworkControllerListener {
-            override fun onStartRecordingCommand(
-                sessionId: String,
-                modalities: List<String>,
-                options: Map<String, Any>
-            ) {
-                val config = SessionConfig(
-                    sessionId = sessionId,
-                    participantId = options["participantId"] as? String,
-                    studyName = options["studyName"] as? String,
-                    modalities = modalities,
-                    saveImages = options["saveImages"] as? Boolean ?: false
-                )
-                viewModelScope.launch {
-                    startRecordingSession(config)
-                }
-            }
-
-            override fun onStopRecordingCommand() {
-                viewModelScope.launch {
-                    stopRecordingSession()
-                }
-            }
-
-            override fun onClientConnected(clientId: String, clientInfo: String) {
-                viewModelScope.launch { _events.emit(Event.ShowToast("PC client connected: $clientInfo")) }
-            }
-
-            override fun onClientDisconnected(clientId: String, reason: String) {
-                viewModelScope.launch { _events.emit(Event.ShowToast("PC client disconnected: $reason")) }
-            }
-
-            override fun onError(operation: String, error: String) {
-                viewModelScope.launch {
-                    _events.emit(
-                        Event.ShowToast(
-                            "PC control error: $error",
-                            true
-                        )
-                    )
-                }
-            }
-        })
-        viewModelScope.launch {
-            val serverStarted = networkController?.start()
-            if (serverStarted == true) {
-                val actualPort =
-                    networkController?.getServerPort() ?: NetworkController.DEFAULT_PORT
-                _events.emit(Event.ShowToast("PC remote control ready on port $actualPort"))
-            } else {
-                _events.emit(Event.ShowToast("Failed to start PC remote control server", true))
-            }
-        }
-        networkClient?.setEventListener(object : NetworkClient.NetworkEventListener {
-            override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
-                _networkConnectionState.value = NetworkConnectionState.DISCOVERING
-            }
-
-            override fun onConnected(controller: NetworkClient.ControllerInfo) {
-                _networkConnectionState.value = NetworkConnectionState.CONNECTED
-                _connectedControllerInfo.value = controller
-                viewModelScope.launch { _events.emit(Event.ShowToast("Connected to PC: ${controller.deviceName}")) }
-            }
-
-            override fun onDisconnected(reason: String) {
-                _networkConnectionState.value = NetworkConnectionState.DISCONNECTED
-                _connectedControllerInfo.value = null
-                viewModelScope.launch { _events.emit(Event.ShowToast("Disconnected from PC: $reason")) }
-            }
-
-            override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
-                handleRemoteRecordingRequest(sessionInfo)
-            }
-
-            override fun onSyncFlash(durationMs: Int) {
-            }
-
-            override fun onTimeSynchronized(offsetNanoseconds: Long) {
-            }
-
-            override fun onDataStreamingStarted() {
-            }
-
-            override fun onDataStreamingStopped() {
-            }
-
-            override fun onError(operation: String, error: String) {
-                viewModelScope.launch {
-                    _events.emit(
-                        Event.ShowToast(
-                            "Network error in $operation: $error",
-                            true
-                        )
-                    )
-                }
-            }
-        })
-        _networkConnectionState.value = NetworkConnectionState.DISCONNECTED
-    }
-
-    private suspend fun initializeSessionComponents() = withContext(Dispatchers.IO) {
-        sessionManager = SessionManager(
-            getApplication(),
-            mpdc4gsr.core.StructuredLogger.getInstance(getApplication())
-        )
-        _sessionState.value = SessionState.IDLE
-    }
-
     fun startGSRConnection() {
         viewModelScope.launch {
             _gsrConnectionState.value = GSRConnectionState.DISCOVERING
             _events.emit(Event.ShowToast("Searching for GSR sensor..."))
-            withContext(Dispatchers.IO) {
-                if (unifiedGSRRecorder == null) {
-                    _gsrConnectionState.value = GSRConnectionState.CONNECTING
-                    viewModelScope.launch { _events.emit(Event.ShowToast("Connecting to GSR sensor...")) }
-                    kotlinx.coroutines.delay(2000)
-                    _gsrConnectionState.value = GSRConnectionState.CONNECTED
-                    viewModelScope.launch { _events.emit(Event.ShowToast("GSR sensor connected (simulated)")) }
-                    return@withContext
-                }
-                val recorder = unifiedGSRRecorder!!
-                val initSuccess = recorder.initialize()
-                if (!initSuccess) {
-                    _gsrConnectionState.value = GSRConnectionState.ERROR
-                    viewModelScope.launch {
-                        _events.emit(
-                            Event.ShowToast(
-                                "Failed to initialize GSR recorder",
-                                true
-                            )
-                        )
-                    }
-                    return@withContext
-                }
-                _gsrConnectionState.value = GSRConnectionState.CONNECTING
-                viewModelScope.launch { _events.emit(Event.ShowToast("Starting device discovery...")) }
-                val discoverySuccess = recorder.startDeviceDiscovery()
-                if (!discoverySuccess) {
-                    _gsrConnectionState.value = GSRConnectionState.ERROR
-                    viewModelScope.launch {
-                        _events.emit(
-                            Event.ShowToast(
-                                "No GSR devices found",
-                                true
-                            )
-                        )
-                    }
-                    return@withContext
-                }
-                val devices = recorder.getDiscoveredDevices()
-                if (devices.isEmpty()) {
-                    _gsrConnectionState.value = GSRConnectionState.ERROR
-                    viewModelScope.launch {
-                        _events.emit(
-                            Event.ShowToast(
-                                "No compatible GSR devices detected",
-                                true
-                            )
-                        )
-                    }
-                    return@withContext
-                }
-                val targetDevice = devices.first()
-                viewModelScope.launch { _events.emit(Event.ShowToast("Connecting to ${targetDevice.name}...")) }
-                val connectionSuccess = recorder.connectToDevice(targetDevice)
-                if (connectionSuccess) {
-                    _gsrConnectionState.value = GSRConnectionState.CONNECTED
-                    viewModelScope.launch { _events.emit(Event.ShowToast("Connected to ${targetDevice.name}")) }
-                    monitorGSRStatus(recorder)
-                } else {
-                    _gsrConnectionState.value = GSRConnectionState.ERROR
-                    viewModelScope.launch {
-                        _events.emit(
-                            Event.ShowToast(
-                                "Failed to connect to ${targetDevice.name}",
-                                true
-                            )
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    private fun monitorGSRStatus(recorder: UnifiedGSRRecorder) {
-        viewModelScope.launch {
-            recorder.deviceStatus.collect { status ->
-                if (status.contains("Connected")) {
-                    _gsrBatteryLevel.value = 85
-                }
-            }
-        }
-        viewModelScope.launch {
-            recorder.connectionQuality.collect { quality ->
-                if (quality < 0.3) {
-                    _events.emit(Event.ShowToast("GSR connection quality low"))
-                }
+            
+            val success = connectGSRSensorUseCase()
+            if (success) {
+                _gsrConnectionState.value = GSRConnectionState.CONNECTED
+                _events.emit(Event.ShowToast("GSR sensor connected"))
+            } else {
+                _gsrConnectionState.value = GSRConnectionState.ERROR
+                _events.emit(Event.ShowToast("Failed to connect GSR sensor", true))
             }
         }
     }
@@ -377,22 +149,15 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch {
             _networkConnectionState.value = NetworkConnectionState.DISCOVERING
             _events.emit(Event.ShowToast("Searching for PC controllers..."))
-            withContext(Dispatchers.IO) {
-                networkClient?.let { client ->
-                    val controllers = client.discoverControllers()
-                    if (controllers.isNotEmpty()) {
-                        val controller = controllers.first()
-                        val connected =
-                            client.connectToController(controller.ipAddress, controller.port)
-                        if (connected) {
-                            _networkConnectionState.value = NetworkConnectionState.CONNECTED
-                            _connectedControllerInfo.value = controller
-                        }
-                    } else {
-                        _networkConnectionState.value = NetworkConnectionState.DISCONNECTED
-                        viewModelScope.launch { _events.emit(Event.ShowToast("No PC controllers found")) }
-                    }
-                }
+            
+            val controllers = startNetworkDiscoveryUseCase()
+            if (controllers.isNotEmpty()) {
+                _connectedControllerInfo.value = controllers.first()
+                _networkConnectionState.value = NetworkConnectionState.CONNECTED
+                _events.emit(Event.ShowToast("Connected to PC controller"))
+            } else {
+                _networkConnectionState.value = NetworkConnectionState.DISCONNECTED
+                _events.emit(Event.ShowToast("No PC controllers found"))
             }
         }
     }
@@ -404,83 +169,34 @@ class MainActivityViewModel @Inject constructor(
             }
             _sessionState.value = SessionState.STARTING
             _events.emit(Event.ShowToast("Starting recording session..."))
-            withContext(Dispatchers.IO) {
-                gsrSessionManager?.let { manager ->
-                    val session = manager.createSession(
-                        sessionId = sessionConfig.sessionId,
-                        participantId = sessionConfig.participantId,
-                        studyName = sessionConfig.studyName,
-                        metadata = sessionConfig.metadata
-                    )
-                    if (sessionConfig.modalities.contains("thermal")) {
-                        val sessionDir =
-                            "/storage/emulated/0/IRCamera/Sessions/${session.sessionId}"
-                        thermalRecorder?.startRecording(
-                            sessionDir,
-                            sessionConfig.saveImages
-                        )
-                    }
-                    if (sessionConfig.modalities.contains("GSR")) {
-                        gsrSensorRecorder?.initialize()
-                    }
-                    _currentSession.value = session
-                    _sessionState.value = SessionState.RECORDING
-                    viewModelScope.launch { _events.emit(Event.ShowToast("Recording session started: ${session.sessionId}")) }
-                }
-            }
+            
+            val session = startRecordingSessionUseCase(
+                sessionId = sessionConfig.sessionId,
+                participantId = sessionConfig.participantId,
+                studyName = sessionConfig.studyName,
+                metadata = sessionConfig.metadata
+            )
+            _currentSession.value = session
+            _sessionState.value = SessionState.RECORDING
+            _events.emit(Event.ShowToast("Recording session started: ${session.sessionId}"))
         }
     }
 
     fun stopRecordingSession() {
         viewModelScope.launch {
-            if (_sessionState.value != SessionState.RECORDING) {
-                return@launch
-            }
-            _sessionState.value = SessionState.STOPPING
-            _events.emit(Event.ShowToast("Stopping recording session..."))
-            withContext(Dispatchers.IO) {
-                _currentSession.value?.let { session ->
-                    thermalRecorder?.stopRecording()
-                    gsrSessionManager?.completeSession(session.sessionId)
-                    _currentSession.value = null
-                    _sessionState.value = SessionState.IDLE
-                    viewModelScope.launch { _events.emit(Event.ShowToast("Recording session stopped")) }
-                }
+            _currentSession.value?.let { session ->
+                _sessionState.value = SessionState.STOPPING
+                _events.emit(Event.ShowToast("Stopping recording session..."))
+                
+                stopRecordingSessionUseCase(session.sessionId)
+                _currentSession.value = null
+                _sessionState.value = SessionState.IDLE
+                _events.emit(Event.ShowToast("Recording session stopped"))
             }
         }
     }
 
-    private fun handleRemoteRecordingRequest(sessionInfo: SessionInfo) {
-        viewModelScope.launch {
-            val config = SessionConfig(
-                sessionId = sessionInfo.sessionId,
-                participantId = sessionInfo.participantId,
-                studyName = sessionInfo.studyName,
-                metadata = sessionInfo.metadata
-            )
-            startRecordingSession(config)
-        }
-    }
-
-    fun processThermalFrame(
-        frameData: ByteArray,
-        width: Int,
-        height: Int,
-        minTempRange: Float,
-        maxTempRange: Float,
-        timestampNs: Long = System.nanoTime()
-    ) {
-        thermalRecorder?.processFrameFromIntensity(
-            frameData,
-            width,
-            height,
-            minTempRange,
-            maxTempRange,
-            timestampNs
-        )
-    }
-
-    // Enhanced sensor state management methods
+    // Sensor state management
     fun updateRGBCameraState(
         status: SensorStatus,
         message: String? = null,
@@ -532,10 +248,4 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch { _events.emit(Event.ShowToast("Camera controls reset to auto")) }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        viewModelScope.launch {
-            networkController?.stop()
-        }
-    }
 }
