@@ -2,8 +2,6 @@ package mpdc4gsr.core.data
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import mpdc4gsr.core.StructuredLogger
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
@@ -127,7 +125,6 @@ class RoleBasedAccessControl(
 
     fun initialize(): Boolean {
         return try {
-            AppLogger.i(TAG, "Initializing Role-Based Access Control")
             loadRoleAssignments()
             initializeDefaultMappings()
             logger.log(
@@ -142,7 +139,6 @@ class RoleBasedAccessControl(
             )
             true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize RBAC", e)
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
@@ -177,7 +173,6 @@ class RoleBasedAccessControl(
             saveRoleAssignments()
             true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to assign role to device $deviceId", e)
             false
         }
     }
@@ -389,15 +384,12 @@ class RoleBasedAccessControl(
     }
 
     private fun loadRoleAssignments() {
-        AppLogger.i(TAG, "Role assignments loaded (placeholder implementation)")
     }
 
     private fun saveRoleAssignments() {
-        AppLogger.d(TAG, "Role assignments saved (placeholder implementation)")
     }
 
     private fun initializeDefaultMappings() {
-        AppLogger.i(TAG, "Default device type mappings initialized")
     }
 
     fun getRole(deviceId: String): Role {
@@ -429,7 +421,6 @@ class RoleBasedAccessControl(
         return if (hasPermission(deviceId, permission)) {
             action()
         } else {
-            AppLogger.w(TAG, "Permission denied for device $deviceId: $permission")
             null
         }
     }

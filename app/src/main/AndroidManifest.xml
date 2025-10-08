@@ -242,7 +242,7 @@
             android:label="Dual Mode Camera"/>
 
         <activity
-            android:name="mpdc4gsr.feature.camera.ui.DualModeCameraActivityCompose"
+            android:name="mpdc4gsr.feature.camera.ui.DualModeCameraComposeActivity2"
             android:exported="false"
             android:label="Dual Mode Camera"/>
 

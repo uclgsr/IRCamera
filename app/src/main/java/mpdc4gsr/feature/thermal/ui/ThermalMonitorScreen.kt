@@ -46,23 +46,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import android.app.Application
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel
-import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModelFactory
 
 private const val CAMERA_RESCAN_DELAY_MS = 500L
 
 @Composable
 fun ThermalMonitorScreen(
-    viewModel: ThermalCameraViewModel = viewModel(
-        factory = ThermalCameraViewModelFactory(
-            LocalContext.current.applicationContext as Application
-        )
-    ),
+    viewModel: ThermalCameraViewModel = hiltViewModel(),
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onRecordClick: () -> Unit = {},

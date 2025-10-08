@@ -2,8 +2,6 @@ package mpdc4gsr.core
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
@@ -74,7 +72,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
 
     fun initialize() {
         if (isRunning.getAndSet(true)) {
-            AppLogger.i(TAG, "Crash-safe supervisor already running")
             return
         }
         logger.log(
@@ -84,7 +81,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             mapOf("max_restart_attempts" to maxRestartAttempts),
         )
         startHealthMonitoring()
-        AppLogger.i(TAG, "Crash-safe supervisor initialized")
     }
 
     fun registerJob(
@@ -212,7 +208,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             "supervisor_exception",
             mapOf("error" to (exception.message ?: "Unknown error")),
         )
-        AppLogger.e(TAG, "Supervisor exception", exception)
     }
 
     private fun handleCriticalJobFailure(
@@ -230,7 +225,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                 "error" to (exception.message ?: "Unknown error"),
             ),
         )
-        AppLogger.e(TAG, "Critical job failure: $name ($id)", exception)
     }
 
     private fun scheduleJobRestart(
@@ -399,6 +393,5 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             "CrashSafeSupervisor",
             "supervisor_shutdown_completed",
         )
-        AppLogger.i(TAG, "Crash-safe supervisor shutdown completed")
     }
 }

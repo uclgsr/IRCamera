@@ -4,8 +4,6 @@ import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.libunified.app.security.CertificateManager
 import kotlinx.coroutines.*
 import mpdc4gsr.core.StructuredLogger
@@ -119,7 +117,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
     private var authListener: AuthenticationListener? = null
     fun initialize(): Boolean {
         return try {
-            AppLogger.i(TAG, "Initializing advanced authentication system")
             certificateManager =
                 CertificateManager(context).apply {
                     initialize()
@@ -147,7 +144,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
             )
             true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize advanced authentication", e)
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
@@ -188,7 +184,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
             }
             return result
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Authentication error for device $deviceId", e)
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
@@ -233,7 +228,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
         return withContext(Dispatchers.IO) {
             try {
                 if (certificateManager == null) {
-                    AppLogger.w(TAG, "Certificate manager not initialized")
                     return@withContext AuthenticationResult.HARDWARE_UNAVAILABLE
                 }
                 // Parse certificate from byte array
@@ -242,21 +236,17 @@ class AdvancedAuthenticationManager(private val context: Context) {
                     java.io.ByteArrayInputStream(certificate)
                 ) as? java.security.cert.X509Certificate
                 if (x509Certificate == null) {
-                    AppLogger.w(TAG, "Failed to parse certificate")
                     return@withContext AuthenticationResult.CERTIFICATE_INVALID
                 }
                 // Validate the certificate using the certificate manager
                 val isValid = certificateManager!!.validateDeviceCertificate(x509Certificate)
                 if (!isValid) {
-                    AppLogger.w(TAG, "Certificate validation failed for device: $deviceId")
                     return@withContext AuthenticationResult.CERTIFICATE_INVALID
                 }
                 // TODO: Validate signature and challenge when cryptographic signature verification is implemented
                 // For now, we accept valid certificates as sufficient authentication
-                AppLogger.i(TAG, "Certificate authentication successful for device: $deviceId")
                 AuthenticationResult.SUCCESS
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Certificate authentication error for device $deviceId", e)
                 AuthenticationResult.CERTIFICATE_INVALID
             }
         }
@@ -431,7 +421,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
                 android.util.Base64.encodeToString(mac.doFinal(data), android.util.Base64.NO_WRAP)
             calculatedHmac == providedHmac
         } catch (e: Exception) {
-            AppLogger.e(TAG, "HMAC verification failed", e)
             false
         }
     }
@@ -453,7 +442,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
             signature_verifier.update(hardwareKey)
             signature_verifier.verify(signature)
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Hardware key verification failed", e)
             false
         }
     }
@@ -484,9 +472,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             generateDeviceKey()
             generateSessionKey()
             generateHmacKey()
-            AppLogger.i(TAG, "Android Keystore initialized successfully")
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize keystore", e)
         }
     }
 
@@ -611,6 +597,5 @@ class AdvancedAuthenticationManager(private val context: Context) {
         roleManager = null
         securityMonitor = null
         authListener = null
-        AppLogger.i(TAG, "Advanced authentication manager shutdown complete")
     }
 }
