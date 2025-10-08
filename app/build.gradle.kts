@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
 }
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
