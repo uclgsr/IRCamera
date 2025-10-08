@@ -2,6 +2,8 @@ package mpdc4gsr.feature.gsr.presentation
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,11 +15,13 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class GSRSensorViewModel(
-    context: Context
+@HiltViewModel
+class GSRSensorViewModel @Inject constructor(
+    @ApplicationContext private val application: Context,
+    private val gsrSettingsRepository: GSRSettingsRepository
 ) : AppBaseViewModel() {
-    private val application: Context = context.applicationContext
 
     companion object {
         // Reuse SimpleDateFormat instance for better performance
@@ -60,25 +64,19 @@ class GSRSensorViewModel(
     private var reconnectionConfig = ReconnectionConfig()
     private var lastConnectedDeviceAddress: String? = null
     private var wasRecordingBeforeDisconnect = false
-    private var settingsRepository: GSRSettingsRepository? = null
 
     // Expose recorder for lifecycle management from UI layer
     var gsrRecorder: UnifiedGSRRecorder? = null
         private set
 
     fun initializeRecorder(
-        context: Context,
         lifecycleOwner: androidx.lifecycle.LifecycleOwner,
         reconnectionConfig: ReconnectionConfig? = null
     ) {
         viewModelScope.launch {
-                // Initialize settings repository and load reconnection config
-                if (settingsRepository == null) {
-                    settingsRepository = GSRSettingsRepository(context)
-                }
                 // Load reconnection config from settings if not provided
                 val configToUse =
-                    reconnectionConfig ?: settingsRepository?.deviceSettings?.value?.let { deviceSettings ->
+                    reconnectionConfig ?: gsrSettingsRepository.deviceSettings.value?.let { deviceSettings ->
                         ReconnectionConfig(
                             maxAttempts = deviceSettings.reconnectionAttempts,
                             baseDelayMs = deviceSettings.reconnectionBaseDelayMs,
@@ -87,7 +85,7 @@ class GSRSensorViewModel(
                     } ?: ReconnectionConfig()
                 this@GSRSensorViewModel.reconnectionConfig = configToUse
                 gsrRecorder = UnifiedGSRRecorder(
-                    context = context,
+                    context = application,
                     lifecycleOwner = lifecycleOwner
                 )
                 val initialized = gsrRecorder?.initialize() ?: false
