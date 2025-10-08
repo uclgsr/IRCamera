@@ -3,10 +3,10 @@ package mpdc4gsr.feature.settings.data
 import android.content.Context
 
 object RecordingSettingsValidator {
+    @Deprecated("This method no longer performs validation or logging", ReplaceWith(""))
     fun validateAndLogSettings(context: Context) {
-        val repository = RecordingSettingsRepository.getInstance(context)
-        val settings = repository.getSettings()
-        val qualityConfig = repository.getQualityConfig(settings.recordingQuality)
+        // No-op: Method retained for API compatibility only
+        // Validation and logging have been removed per refactoring goals
     }
 
     fun verifySettingsApplied(

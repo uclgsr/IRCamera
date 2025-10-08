@@ -103,7 +103,7 @@ fun VersionScreen(
     ) {
         TitleBar(
                     title = stringResource(R.string.version_info),
-                    onBackClick = { finish() }
+                    onBackClick = onBackClick
                 )
                 Column(
                     modifier = Modifier

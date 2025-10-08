@@ -171,8 +171,7 @@ fun PdfScreen(
             title = pdfDocument?.type?.displayName ?: "Manual Viewer",
             onBackClick = onBackClick
         )
-                )
-                Box(
+        Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)

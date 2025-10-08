@@ -181,7 +181,7 @@ fun MoreHelpScreen(
             ) {
                 TitleBar(
                     title = title,
-                    onBackClick = { finish() }
+                    onBackClick = onBackClick
                 )
                 Column(
                     modifier = Modifier

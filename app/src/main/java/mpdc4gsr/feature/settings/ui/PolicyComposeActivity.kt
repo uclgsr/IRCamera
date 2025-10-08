@@ -429,7 +429,7 @@ fun PolicyScreen(
     ) {
                 TitleBar(
                     title = policyType.title,
-                    onBackClick = { finish() }
+                    onBackClick = onBackClick
                 )
                 Box(
                     modifier = Modifier
