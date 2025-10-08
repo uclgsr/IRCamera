@@ -88,3 +88,15 @@ class CheckCameraConnectionUseCase(
         return repository.isCameraConnected()
     }
 }
+
+data class ThermalCoreUseCases(
+    val connectCamera: ConnectThermalCameraUseCase,
+    val disconnectCamera: DisconnectThermalCameraUseCase,
+    val startStreaming: StartThermalStreamingUseCase,
+    val stopStreaming: StopThermalStreamingUseCase,
+    val captureSnapshot: CaptureThermalSnapshotUseCase,
+    val startRecording: StartThermalRecordingUseCase,
+    val stopRecording: StopThermalRecordingUseCase,
+    val setTemperatureRange: SetTemperatureRangeUseCase,
+    val checkConnection: CheckCameraConnectionUseCase
+)

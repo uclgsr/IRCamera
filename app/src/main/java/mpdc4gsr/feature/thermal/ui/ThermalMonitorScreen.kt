@@ -47,13 +47,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import android.app.Application
+import androidx.compose.runtime.LaunchedEffect
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel
-
-private const val CAMERA_RESCAN_DELAY_MS = 500L
+import mpdc4gsr.feature.thermal.presentation.ThermalUiState
 
 @Composable
 fun ThermalMonitorScreen(
@@ -67,87 +66,102 @@ fun ThermalMonitorScreen(
     val uiState by viewModel.uiState.collectAsState()
     var showControls by remember { mutableStateOf(true) }
     var showAdvancedControls by remember { mutableStateOf(false) }
-    // Trigger immediate rescan when screen appears to catch already-connected devices
-    LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(CAMERA_RESCAN_DELAY_MS)
-        viewModel.rescanForThermalCamera()
-    }
-    // Update recording duration periodically
-    LaunchedEffect(uiState.isRecording) {
-        if (uiState.isRecording) {
-            while (uiState.isRecording) {
-                kotlinx.coroutines.delay(1000)
-                viewModel.updateRecordingDuration()
+    
+    // TODO: Replace obsolete method calls with event-driven architecture
+    // The ViewModel automatically connects via init block: onEvent(ThermalUiEvent.ConnectCamera)
+    // Recording duration is now part of ThermalUiState.Success.recordingDuration
+    
+    when (val state = uiState) {
+        is ThermalUiState.Loading -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
         }
-    }
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.Black)
-            .windowInsetsPadding(WindowInsets.systemBars)
-    ) {
-        // Full-screen thermal camera preview with actual bitmap from ThermalCameraRecorder
-        ThermalCameraPreview(
-            bitmap = uiState.previewBitmap,
-            modifier = Modifier.fillMaxSize()
-        )
-        // Temperature overlay always visible on preview
-        TemperatureOverlay(
-            currentTemp = uiState.currentTemperature ?: uiState.centerTemperature,
-            maxTemp = uiState.maxTemperature,
-            minTemp = uiState.minTemperature,
-            avgTemp = uiState.avgTemperature,
-            modifier = Modifier.fillMaxSize()
-        )
-        // Top overlay with back button and status
-        AnimatedVisibility(
-            visible = showControls,
-            enter = fadeIn() + slideInVertically(),
-            exit = fadeOut() + slideOutVertically(),
-            modifier = Modifier.align(Alignment.TopCenter)
-        ) {
-            ThermalTopBar(
-                isConnected = uiState.isConnected,
-                isRecording = uiState.isRecording,
-                isSimulationMode = uiState.isSimulationMode,
-                onBackClick = onBackClick,
-                onSettingsClick = onSettingsClick
-            )
+        is ThermalUiState.Error -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = state.message,
+                    color = Color.White,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         }
-        // Bottom overlay with recording controls
-        AnimatedVisibility(
-            visible = showControls,
-            enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
-            exit = fadeOut() + slideOutVertically(targetOffsetY = { it }),
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) {
-            ThermalBottomControls(
-                isRecording = uiState.isRecording,
-                isConnected = uiState.isConnected,
-                recordingDuration = uiState.recordingDuration,
-                onRecordClick = {
-                    onRecordClick()
-                },
-                onAdvancedClick = { showAdvancedControls = !showAdvancedControls }
-            )
-        }
-        // Toggle controls visibility with tap
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
+        is ThermalUiState.Success -> {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .windowInsetsPadding(WindowInsets.systemBars)
+            ) {
+                // Full-screen thermal camera preview with actual bitmap from ThermalCameraRecorder
+                ThermalCameraPreview(
+                    bitmap = state.previewBitmap,
+                    modifier = Modifier.fillMaxSize()
+                )
+                // Temperature overlay always visible on preview
+                TemperatureOverlay(
+                    currentTemp = state.currentTemperature ?: state.centerTemperature,
+                    maxTemp = state.maxTemperature,
+                    minTemp = state.minTemperature,
+                    avgTemp = state.avgTemperature,
+                    modifier = Modifier.fillMaxSize()
+                )
+                // Top overlay with back button and status
+                AnimatedVisibility(
+                    visible = showControls,
+                    enter = fadeIn() + slideInVertically(),
+                    exit = fadeOut() + slideOutVertically(),
+                    modifier = Modifier.align(Alignment.TopCenter)
                 ) {
-                    showControls = !showControls
+                    ThermalTopBar(
+                        isConnected = state.isConnected,
+                        isRecording = state.isRecording,
+                        isSimulationMode = state.isSimulationMode,
+                        onBackClick = onBackClick,
+                        onSettingsClick = onSettingsClick
+                    )
                 }
-        )
-        // Advanced controls overlay
-        if (showAdvancedControls) {
-            AdvancedControlsPanel(
-                onDismiss = { showAdvancedControls = false }
-            )
+                // Bottom overlay with recording controls
+                AnimatedVisibility(
+                    visible = showControls,
+                    enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+                    exit = fadeOut() + slideOutVertically(targetOffsetY = { it }),
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                ) {
+                    ThermalBottomControls(
+                        isRecording = state.isRecording,
+                        isConnected = state.isConnected,
+                        recordingDuration = state.recordingDuration,
+                        onRecordClick = {
+                            onRecordClick()
+                        },
+                        onAdvancedClick = { showAdvancedControls = !showAdvancedControls }
+                    )
+                }
+                // Toggle controls visibility with tap
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            showControls = !showControls
+                        }
+                )
+                // Advanced controls overlay
+                if (showAdvancedControls) {
+                    AdvancedControlsPanel(
+                        onDismiss = { showAdvancedControls = false }
+                    )
+                }
+            }
         }
     }
 }
