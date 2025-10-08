@@ -48,7 +48,10 @@ class GSRDeviceDataSourceImpl @Inject constructor(
     }
 
     override suspend fun disconnect(deviceAddress: String) {
-        try {            deviceManager.disconnectDevice(deviceAddress)        } catch (e: Exception) {        }
+        try {
+            deviceManager.disconnectDevice(deviceAddress)
+        } catch (e: Exception) {
+        }
     }
 
     override suspend fun startStreaming(deviceAddress: String): Flow<GSRSample> {
