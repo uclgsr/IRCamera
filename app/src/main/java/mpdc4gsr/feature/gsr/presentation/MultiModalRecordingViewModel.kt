@@ -26,7 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MultiModalRecordingViewModel @Inject constructor(
-    @ApplicationContext private val application: Application
+    @ApplicationContext private val application: Application,
+    private val sessionManager: SessionManager
 ) : BaseViewModel() {
     data class RecordingState(
         val isRecording: Boolean = false,
@@ -106,7 +107,6 @@ class MultiModalRecordingViewModel @Inject constructor(
 
     private val context: Context = application.applicationContext
     private lateinit var gsrRecorder: GSRRecorder
-    private lateinit var sessionManager: SessionManager
     private var rgbCameraRecorder: RgbCameraRecorder? = null
     private var networkClient: NetworkClient? = null
 
@@ -180,8 +180,6 @@ class MultiModalRecordingViewModel @Inject constructor(
                 // Initialize GSR Recorder
                 gsrRecorder = GSRRecorder(context, RealShimmerDeviceFactory(context))
                 gsrRecorder.addListener(createGSRListener())
-                // Initialize Session Manager
-                sessionManager = SessionManager.getInstance(context)
                 _statusMessage.value = "Initializing multimodal recording system..."
                 // Set initial states
                 _recordingState.value = RecordingState()

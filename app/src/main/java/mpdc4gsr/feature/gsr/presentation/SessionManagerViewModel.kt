@@ -13,7 +13,10 @@ import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
-class SessionManagerViewModel @Inject constructor() : AppBaseViewModel() {
+class SessionManagerViewModel @Inject constructor(
+    private val sessionManager: SessionManager,
+    private val sessionDirectoryManager: SessionDirectoryManager
+) : AppBaseViewModel() {
     // StateFlow for session management
     private val _allSessions = MutableStateFlow<List<SessionInfo>>(emptyList())
     private val _filteredSessions = MutableStateFlow<List<SessionInfo>>(emptyList())
@@ -28,8 +31,6 @@ class SessionManagerViewModel @Inject constructor() : AppBaseViewModel() {
     // UI State
     private val _sessionUiState = MutableStateFlow(SessionManagerUiState())
     val sessionUiState: StateFlow<SessionManagerUiState> = _sessionUiState.asStateFlow()
-    private lateinit var sessionManager: SessionManager
-    private lateinit var sessionDirectoryManager: SessionDirectoryManager
     private var currentFilter: FilterType = FilterType.ALL
     private var currentSearchQuery: String = ""
 
@@ -62,15 +63,7 @@ class SessionManagerViewModel @Inject constructor() : AppBaseViewModel() {
         ALL, RECENT, COMPLETED, WITH_DATA
     }
 
-    fun initialize(context: Context) {
-        sessionManager = SessionManager.getInstance(context)
-        sessionDirectoryManager = SessionDirectoryManager(context)
-    }
-
     fun loadSessions(context: Context) {
-        if (!::sessionManager.isInitialized) {
-            initialize(context)
-        }
         _sessionUiState.value = _sessionUiState.value.copy(isLoading = true)
         launchWithErrorHandling {
             try {
