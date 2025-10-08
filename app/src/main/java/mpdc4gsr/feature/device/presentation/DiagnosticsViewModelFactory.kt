@@ -1,22 +1,18 @@
 package mpdc4gsr.feature.device.presentation
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
 @Deprecated(
-    message = "Use Hilt @HiltViewModel instead. DiagnosticsViewModel now uses constructor injection.",
+    message = "Use Hilt @HiltViewModel instead. DiagnosticsViewModel now uses constructor injection via Hilt.",
     replaceWith = ReplaceWith("hiltViewModel()", "androidx.hilt.navigation.compose.hiltViewModel"),
-    level = DeprecationLevel.WARNING
+    level = DeprecationLevel.ERROR
 )
-class DiagnosticsViewModelFactory(
-    private val context: Context
-) : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
+class DiagnosticsViewModelFactory : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST", "DEPRECATION")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(DiagnosticsViewModel::class.java)) {
-            return DiagnosticsViewModel(context) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+        throw UnsupportedOperationException(
+            "DiagnosticsViewModelFactory is deprecated. Use hiltViewModel() composable function instead."
+        )
     }
 }
