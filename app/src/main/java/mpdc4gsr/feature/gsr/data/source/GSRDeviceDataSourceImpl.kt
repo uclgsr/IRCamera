@@ -76,7 +76,8 @@ class GSRDeviceDataSourceImpl @Inject constructor(
             mgr.getShimmerDeviceBtConnectedFromMac(deviceAddress)?.let { shimmer ->
                 shimmer.isConnected
             }
-        } ?: false        return connected
+        } ?: false
+        return connected
     }
 
     override suspend fun getBatteryLevel(deviceAddress: String): Int? {
