@@ -184,7 +184,7 @@ private fun CameraPreviewSection(
                                 .align(Alignment.TopEnd)
                                 .padding(16.dp)
                         ) {
-                            RGBCameraPreview(
+                            RgbCameraPreview(
                                 modifier = Modifier.fillMaxSize()
                             )
                         }
@@ -206,7 +206,7 @@ private fun CameraPreviewSection(
             }
 
             "RGB" -> {
-                RGBCameraPreview(
+                RgbCameraPreview(
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -220,7 +220,7 @@ private fun CameraPreviewSection(
                             .weight(1f)
                             .fillMaxHeight()
                     )
-                    RGBCameraPreview(
+                    RgbCameraPreview(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight()
@@ -437,7 +437,7 @@ private fun ThermalCameraPreview(
 }
 
 @Composable
-private fun RGBCameraPreview(
+private fun RgbCameraPreview(
     modifier: Modifier = Modifier
 ) {
     // Placeholder for RGB camera preview

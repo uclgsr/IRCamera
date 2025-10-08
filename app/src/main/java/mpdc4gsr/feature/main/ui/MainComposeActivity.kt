@@ -11,7 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.core.ui.model.SensorType
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.camera.ui.CameraSettingsScreen
-import mpdc4gsr.feature.camera.ui.RGBCameraScreen
+import mpdc4gsr.feature.camera.ui.RgbCameraScreen
 import mpdc4gsr.feature.gsr.ui.GSRSettingsScreen
 import mpdc4gsr.feature.network.ui.ConnectScreen
 import mpdc4gsr.feature.network.ui.NetworkSettingsScreen
@@ -103,7 +103,7 @@ fun MainApp() {
             )
         }
         composable(MainNavRoutes.RGB_CAMERA) {
-            RGBCameraScreen(
+            RgbCameraScreen(
                 onBackClick = { navController.popBackStack() },
                 onSettingsClick = { navController.navigate(MainNavRoutes.CAMERA_SETTINGS) },
                 onCapturePhoto = {

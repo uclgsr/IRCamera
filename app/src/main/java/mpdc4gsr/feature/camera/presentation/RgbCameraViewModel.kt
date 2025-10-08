@@ -46,7 +46,7 @@ enum class WhiteBalance(val displayName: String) {
 }
 
 @HiltViewModel
-class RGBCameraViewModel @Inject constructor(
+class RgbCameraViewModel @Inject constructor(
     @ApplicationContext private val application: Context
 ) : AppBaseViewModel() {
 
@@ -157,7 +157,7 @@ class RGBCameraViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 // Photo capture functionality would be implemented here
-                android.util.Log.d("RGBCameraViewModel", "Photo capture requested")
+                android.util.Log.d("RgbCameraViewModel", "Photo capture requested")
             } catch (e: Exception) {
                 _cameraState.update { it.copy(error = "Photo capture failed: ${e.message}") }
             }
@@ -276,7 +276,7 @@ class RGBCameraViewModel @Inject constructor(
                 _cameraRecorder.value?.stopRecording()
                 _cameraRecorder.value?.cleanup()
             } catch (e: Exception) {
-                android.util.Log.e("RGBCameraViewModel", "Error during cleanup", e)
+                android.util.Log.e("RgbCameraViewModel", "Error during cleanup", e)
             }
         }
     }

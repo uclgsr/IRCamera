@@ -45,11 +45,11 @@ import mpdc4gsr.core.ui.theme.Green
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.theme.Orange
 import mpdc4gsr.core.ui.theme.Purple
-import mpdc4gsr.feature.camera.presentation.RGBCameraViewModel
+import mpdc4gsr.feature.camera.presentation.RgbCameraViewModel
 
 @Composable
-fun RGBCameraScreen(
-    viewModel: RGBCameraViewModel = hiltViewModel(),
+fun RgbCameraScreen(
+    viewModel: RgbCameraViewModel = hiltViewModel(),
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onCapturePhoto: () -> Unit = {},
@@ -450,7 +450,7 @@ private fun FullScreenCameraPreviewSimulated(
 }
 
 @Composable
-private fun RGBCameraPreview(
+private fun RgbCameraPreview(
     isActive: Boolean,
     isRecording: Boolean,
     resolution: String,
@@ -964,8 +964,8 @@ private fun MetricItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun RGBCameraScreenPreview() {
+private fun RgbCameraScreenPreview() {
     IRCameraTheme {
-        RGBCameraScreen()
+        RgbCameraScreen()
     }
 }

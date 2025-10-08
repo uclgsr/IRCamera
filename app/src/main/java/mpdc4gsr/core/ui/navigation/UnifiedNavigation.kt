@@ -15,7 +15,7 @@ import mpdc4gsr.core.ui.model.SensorType
 import mpdc4gsr.feature.camera.ui.CameraDashboardScreen
 import mpdc4gsr.feature.camera.ui.CameraSettingsScreen
 import mpdc4gsr.feature.camera.ui.DualModeCameraScreen
-import mpdc4gsr.feature.camera.ui.RGBCameraScreen
+import mpdc4gsr.feature.camera.ui.RgbCameraScreen
 import mpdc4gsr.feature.camera.ui.TimeLapseCameraScreen
 import mpdc4gsr.feature.gsr.ui.GSRDataViewScreen
 import mpdc4gsr.feature.gsr.ui.GSRPlotScreen
@@ -191,7 +191,7 @@ fun UnifiedNavHost(
             )
         }
         composable(UnifiedRoute.RGBCamera.route) {
-            RGBCameraScreen(
+            RgbCameraScreen(
                 onBackClick = { navController.popBackStack() },
                 onSettingsClick = { navController.navigate(UnifiedRoute.CameraSettings.route) },
                 onCapturePhoto = { }
