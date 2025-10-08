@@ -22,7 +22,9 @@ import mpdc4gsr.core.ui.InitUtils.initReceiver
 import mpdc4gsr.core.ui.InitUtils.initUM
 import mpdc4gsr.core.monitoring.StructuredLogger
 import mpdc4gsr.feature.system.service.RecordingService
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class App : BaseApplication() {
     companion object {
         @Deprecated(

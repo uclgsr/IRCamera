@@ -120,6 +120,8 @@ ktlint = "13.1.0"
 detekt = "1.24.0"
 spotless = "8.0.0"
 identityJvm = "202411.1"
+hilt = "2.54"
+hiltNavigationCompose = "1.3.0"
 
 [libraries]
 
@@ -254,6 +256,9 @@ commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.
 fastble = { group = "com.github.Jasonchenlijian", name = "FastBle", version.ref = "fastBle" }
 easyswipemenulayout = { group = "com.github.anzaizai", name = "EasySwipeMenuLayout", version.ref = "easySwipeMenuLayout" }
 lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycle" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 gsy-video-player-thermal = { group = "com.github.CarGuo.GSYVideoPlayer", name = "gsyVideoPlayer-java", version.ref = "gsyVideoPlayerThermal" }
 media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
 media3-exoplayer-dash = { group = "androidx.media3", name = "media3-exoplayer-dash", version.ref = "media3" }
@@ -302,6 +307,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinGra
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlinGradlePlugin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinGradlePlugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

@@ -1,7 +1,7 @@
 package mpdc4gsr.feature.system.presentation
 
-import android.content.Context
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,6 +14,7 @@ import mpdc4gsr.feature.system.domain.usecase.DiscoverControllersUseCase
 import mpdc4gsr.feature.system.domain.usecase.StartRecordingUseCase
 import mpdc4gsr.feature.system.domain.usecase.StopRecordingUseCase
 import mpdc4gsr.feature.system.domain.usecase.SyncClocksUseCase
+import javax.inject.Inject
 
 data class SystemUiState(
     val isRecording: Boolean = false,
@@ -29,8 +30,8 @@ data class SystemUiState(
     val sessionMetadata: SessionMetadata? = null
 )
 
-class SystemViewModel(
-    private val context: Context,
+@HiltViewModel
+class SystemViewModel @Inject constructor(
     private val startRecordingUseCase: StartRecordingUseCase,
     private val stopRecordingUseCase: StopRecordingUseCase,
     private val discoverControllersUseCase: DiscoverControllersUseCase,

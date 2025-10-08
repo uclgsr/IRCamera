@@ -7,6 +7,7 @@ plugins {
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
+    alias(libs.plugins.hilt)
 }
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
@@ -364,6 +365,11 @@ dependencies {
     implementation(libs.nordic.ble.ktx)
     implementation(libs.lifecycle.service)
     implementation(libs.compose.lifecycle.runtime)
+
+    // Hilt Dependency Injection
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.hilt.navigation.compose)
 
     implementation(files("libs/shimmerandroidinstrumentdriver-3.2.4_beta.aar"))
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))
