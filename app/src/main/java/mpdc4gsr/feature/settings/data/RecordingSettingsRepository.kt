@@ -3,11 +3,17 @@ package mpdc4gsr.feature.settings.data
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class RecordingSettingsRepository(context: Context) {
+@Singleton
+class RecordingSettingsRepository @Inject constructor(
+    @ApplicationContext context: Context
+) {
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private val _settings = MutableStateFlow(loadSettings())
     val settings: StateFlow<RecordingSettings> = _settings.asStateFlow()
@@ -32,8 +38,11 @@ class RecordingSettingsRepository(context: Context) {
         private const val KEY_SIMULTANEOUS = "recording_simultaneous"
         private const val KEY_TIMESTAMP_SYNC = "recording_timestamp_sync"
 
+        @Deprecated("Use dependency injection instead", ReplaceWith("Inject RecordingSettingsRepository"))
         @Volatile
         private var instance: RecordingSettingsRepository? = null
+        
+        @Deprecated("Use dependency injection instead", ReplaceWith("Inject RecordingSettingsRepository"))
         fun getInstance(context: Context): RecordingSettingsRepository {
             return instance ?: synchronized(this) {
                 instance ?: RecordingSettingsRepository(context.applicationContext).also {

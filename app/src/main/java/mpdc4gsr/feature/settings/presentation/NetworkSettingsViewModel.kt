@@ -1,7 +1,6 @@
 package mpdc4gsr.feature.settings.presentation
 
 import android.Manifest
-import android.app.Application
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
@@ -9,17 +8,22 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.wifi.WifiManager
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.ShimmerDeviceManager
+import javax.inject.Inject
 
-class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
-    private val context: Context = context.applicationContext
+@HiltViewModel
+class NetworkSettingsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context
+) : ViewModel() {
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var wifiManager: WifiManager? = null
@@ -64,13 +68,6 @@ class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
         val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         bluetoothAdapter = bluetoothManager?.adapter
         wifiManager = context.getSystemService(Context.WIFI_SERVICE) as? WifiManager
-        loadSettings()
-        updateNetworkInfo()
-        loadPairedDevices()
-    }
-
-    fun initialize() {
-        // Kept for compatibility, but initialization now happens in init block
         loadSettings()
         updateNetworkInfo()
         loadPairedDevices()

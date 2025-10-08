@@ -6,6 +6,8 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,22 +23,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.ViewModel
 import com.csl.irCamera.R
 import com.github.lzyzsd.jsbridge.BridgeWebView
 import com.github.lzyzsd.jsbridge.BridgeWebViewClient
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
-import mpdc4gsr.core.ui.AppBaseViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import javax.inject.Inject
 
-class WebViewViewModel : AppBaseViewModel() {
+@HiltViewModel
+class WebViewViewModel @Inject constructor() : ViewModel() {
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
     private val _showError = mutableStateOf(false)
     val showError: State<Boolean> = _showError
     private val _url = mutableStateOf("")
     val url: State<String> = _url
+    
     fun setUrl(url: String) {
         _url.value = url
     }
@@ -55,31 +61,45 @@ class WebViewViewModel : AppBaseViewModel() {
     }
 }
 
-class WebViewComposeActivity : BaseComposeActivity<WebViewViewModel>() {
-    override fun createViewModel(): WebViewViewModel = viewModels<WebViewViewModel>().value
+@AndroidEntryPoint
+class WebViewComposeActivity : ComponentActivity() {
+    private val viewModel: WebViewViewModel by viewModels()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val url = intent.extras?.getString(ExtraKeyConfig.URL) ?: ""
-        viewModels<WebViewViewModel>().value.setUrl(url)
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    override fun Content(viewModel: WebViewViewModel) {
-        IRCameraTheme {
-            val context = LocalContext.current
-            val url by viewModel.url
-            val isLoading by viewModel.isLoading
-            val showError by viewModel.showError
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFF16131E))
-            ) {
-                TitleBar(
-                    title = stringResource(R.string.web_content),
+        viewModel.setUrl(url)
+        setContent {
+            IRCameraTheme {
+                WebViewScreen(
+                    viewModel = viewModel,
                     onBackClick = { finish() }
                 )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WebViewScreen(
+    viewModel: WebViewViewModel,
+    onBackClick: () -> Unit
+) {
+    val context = LocalContext.current
+    val url by viewModel.url
+    val isLoading by viewModel.isLoading
+    val showError by viewModel.showError
+    
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF16131E))
+    ) {
+        TitleBar(
+            title = stringResource(R.string.web_content),
+            onBackClick = onBackClick
+        )
                 Box(
                     modifier = Modifier
                         .fillMaxSize()

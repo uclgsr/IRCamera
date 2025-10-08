@@ -4,6 +4,7 @@ import java.util.*
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt")
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
@@ -258,6 +259,10 @@ android {
             languageVersion.set(JavaLanguageVersion.of(17))
         }
     }
+    
+    kapt {
+        correctErrorTypes = true
+    }
 
     buildFeatures {
         buildConfig = true
@@ -323,6 +328,12 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.guava)
+    
+    // Hilt dependency injection
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+    
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose.core)
     implementation(libs.bundles.compose.navigation.bundle)

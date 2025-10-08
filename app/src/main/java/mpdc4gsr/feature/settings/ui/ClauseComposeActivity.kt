@@ -1,5 +1,8 @@
 package mpdc4gsr.feature.settings.ui
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,76 +20,85 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.csl.irCamera.R
 import com.mpdc4gsr.libunified.app.BaseApplication
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtils
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import java.util.*
+import javax.inject.Inject
 
-class ClauseViewModel : AppBaseViewModel() {
+@HiltViewModel
+class ClauseViewModel @Inject constructor() : ViewModel() {
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
     private val _currentYear = mutableStateOf(Calendar.getInstance().get(Calendar.YEAR))
     val currentYear: State<Int> = _currentYear
     private val _agreementAccepted = mutableStateOf(false)
     val agreementAccepted: State<Boolean> = _agreementAccepted
+    
     fun setAgreementAccepted(accepted: Boolean) {
         _agreementAccepted.value = accepted
     }
 
     suspend fun confirmInitApp(context: android.content.Context): Boolean {
-        return try {
-            _isLoading.value = true
-            // Simulate initialization process
-            delay(2000)
-            // Initialize app components
-            if (BaseApplication.instance.isDomestic()) {
-                // SharedManager.setAppName(context.getString(R.string.app_name))
-                // SharedManager.setVersionName(UnifiedVersionUtils.getVersion())
-                // Set network status
-                val networkStatus =
-                    if (NetworkUtils.isNetworkAvailable()) "Connected" else "Disconnected"
-                // SharedManager.setNetworkStatus(networkStatus)
+        _isLoading.value = true
+        delay(2000)
+        if (BaseApplication.instance.isDomestic()) {
+            val networkStatus =
+                if (NetworkUtils.isNetworkAvailable()) "Connected" else "Disconnected"
+        }
+        _isLoading.value = false
+        return true
+    }
+}
+
+@AndroidEntryPoint
+class ClauseComposeActivity : ComponentActivity() {
+    private val viewModel: ClauseViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            IRCameraTheme {
+                ClauseScreen(
+                    viewModel = viewModel,
+                    onBackClick = { finish() }
+                )
             }
-            _isLoading.value = false
-            true
-        } catch (e: Exception) {
-            _isLoading.value = false
-            false
         }
     }
 }
 
-class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
-    private val clauseVM: ClauseViewModel by viewModels()
-    override fun createViewModel(): ClauseViewModel = clauseVM
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    override fun Content(viewModel: ClauseViewModel) {
-        IRCameraTheme {
-            val context = LocalContext.current
-            val scope = rememberCoroutineScope()
-            val isLoading by viewModel.isLoading
-            val currentYear by viewModel.currentYear
-            val agreementAccepted by viewModel.agreementAccepted
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFF16131E))
-            ) {
-                TitleBar(
-                    title = stringResource(R.string.terms_and_conditions),
-                    onBackClick = { finish() }
-                )
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ClauseScreen(
+    viewModel: ClauseViewModel,
+    onBackClick: () -> Unit
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val isLoading by viewModel.isLoading
+    val currentYear by viewModel.currentYear
+    val agreementAccepted by viewModel.agreementAccepted
+    
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF16131E))
+    ) {
+        TitleBar(
+            title = stringResource(R.string.terms_and_conditions),
+            onBackClick = onBackClick
+        )
                 Box(
                     modifier = Modifier.fillMaxSize()
                 ) {
