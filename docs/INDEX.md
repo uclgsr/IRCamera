@@ -7,6 +7,17 @@ Complete index of all documentation in the IRCamera repository.
 This repository contains documentation for the IRCamera multi-sensor recording system, including Android application, PC
 controller, thesis content, and maintenance records.
 
+## 🆕 Architecture Documentation (NEW)
+
+**Clean Architecture Reorganization** - Complete guide to the new Android app structure:
+
+- **[ARCHITECTURE_DIAGRAM.md](ARCHITECTURE_DIAGRAM.md)** - Visual diagrams and layer breakdown
+- **[NEW_ARCHITECTURE_GUIDE.md](NEW_ARCHITECTURE_GUIDE.md)** - Complete developer guide (13.6KB)
+- **[ARCHITECTURE_REORGANIZATION.md](ARCHITECTURE_REORGANIZATION.md)** - Migration plan and strategy (11KB)
+- **[ARCHITECTURE_MIGRATION_STATUS.md](ARCHITECTURE_MIGRATION_STATUS.md)** - Current status and progress
+
+**Key Changes**: Reorganized from core/feature split (295 files) to Clean Architecture with domain, data, presentation, infrastructure, ui, and di layers (190 files organized).
+
 ## Documentation Categories
 
 ### 1. Android Application ([android/](android/))
@@ -16,6 +27,7 @@ Documentation for the Android application component.
 - PC-Android networking protocols
 - Time synchronization
 - Implementation details
+- **NEW**: Clean Architecture structure (see Architecture Documentation above)
 
 ### 2. Developer Guides ([developer-guides/](developer-guides/))
 
