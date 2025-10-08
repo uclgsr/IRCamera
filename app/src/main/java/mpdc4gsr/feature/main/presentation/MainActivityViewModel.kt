@@ -6,6 +6,7 @@ import com.mpdc4gsr.gsr.model.SessionInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import mpdc4gsr.core.domain.model.UiEvent
 import mpdc4gsr.feature.main.domain.model.*
 import mpdc4gsr.feature.main.domain.repository.GSRConnectionState
 import mpdc4gsr.feature.main.domain.repository.NetworkConnectionState

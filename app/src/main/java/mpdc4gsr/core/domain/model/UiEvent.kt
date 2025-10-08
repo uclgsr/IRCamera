@@ -1,4 +1,4 @@
-package mpdc4gsr.feature.main.domain.model
+package mpdc4gsr.core.domain.model
 
 sealed class UiEvent {
     object ShowExitDialog : UiEvent()
