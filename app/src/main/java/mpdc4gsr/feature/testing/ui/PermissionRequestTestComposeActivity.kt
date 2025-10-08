@@ -4,8 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
@@ -24,19 +22,24 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.HiltComposeActivity
 import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.core.ui.PermissionManager
+import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.testing.presentation.PermissionRequestTestViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionRequestTestViewModel>() {
+@AndroidEntryPoint
+class PermissionRequestTestComposeActivity : HiltComposeActivity() {
     companion object {
         private const val TAG = "PermissionRequestTestCompose"
     }
+    
+    private val viewModel: PermissionRequestTestViewModel by viewModels()
 
     enum class PermissionStatus {
         GRANTED, DENIED, NOT_REQUESTED, REQUESTING
@@ -67,17 +70,13 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
         handlePermissionResults(permissions)
     }
 
-    override fun createViewModel(): PermissionRequestTestViewModel {
-        return viewModels<PermissionRequestTestViewModel>().value
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializePermissionSystem()
     }
 
     @Composable
-    override fun Content(viewModel: PermissionRequestTestViewModel) {
+    override fun Content() {
         LibUnifiedTheme {
             PermissionRequestTestScreen()
         }

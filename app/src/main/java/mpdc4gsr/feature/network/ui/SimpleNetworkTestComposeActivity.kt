@@ -50,7 +50,8 @@ data class TestResult(
     val timestamp: Long
 )
 
-class SimpleNetworkTestViewModel : AppBaseViewModel() {
+@dagger.hilt.android.lifecycle.HiltViewModel
+class SimpleNetworkTestViewModel @javax.inject.Inject constructor() : AppBaseViewModel() {
     private val _connectionStatus = mutableStateOf(NetworkConnectionStatus.DISCONNECTED)
     val connectionStatus: State<NetworkConnectionStatus> = _connectionStatus
     private val _ipAddress = mutableStateOf("192.168.1.100")
@@ -235,13 +236,13 @@ class SimpleNetworkTestViewModel : AppBaseViewModel() {
     }
 }
 
-class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestViewModel>() {
-    override fun createViewModel(): SimpleNetworkTestViewModel =
-        viewModels<SimpleNetworkTestViewModel>().value
+@dagger.hilt.android.AndroidEntryPoint
+class SimpleNetworkTestActivityCompose : mpdc4gsr.core.ui.HiltComposeActivity() {
+    private val viewModel: SimpleNetworkTestViewModel by viewModels()
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: SimpleNetworkTestViewModel) {
+    override fun Content() {
         IRCameraTheme {
             val context = LocalContext.current
             val keyboardController = LocalSoftwareKeyboardController.current
