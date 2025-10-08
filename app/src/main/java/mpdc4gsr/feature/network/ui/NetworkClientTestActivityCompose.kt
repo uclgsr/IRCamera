@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -155,7 +156,8 @@ class NetworkClientTestViewModel : AppBaseViewModel() {
 }
 
 class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestViewModel>() {
-    companion object {        private const val DEFAULT_PC_IP = "192.168.1.100"
+    companion object {
+        private const val DEFAULT_PC_IP = "192.168.1.100"
         private const val DEFAULT_PC_PORT = 8080
     }
 
@@ -164,14 +166,16 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
     private var networkManager: NetworkManager? = null
     private var isBound = false
     private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {            val binder = service as RecordingService.RecordingServiceBinder
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as RecordingService.RecordingServiceBinder
             recordingService = binder.getService()
             networkManager = binder.getNetworkManager()
             isBound = true
             observeConnectionState()
         }
 
-        override fun onServiceDisconnected(name: ComponentName?) {            recordingService = null
+        override fun onServiceDisconnected(name: ComponentName?) {
+            recordingService = null
             networkManager = null
             isBound = false
         }
@@ -200,7 +204,8 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
     private fun observeConnectionState() {
         networkManager?.let { manager ->
             lifecycleScope.launch {
-                manager.connectionState.collect { state ->                    testViewModel.updateConnectionState(state)
+                manager.connectionState.collect { state ->
+                    testViewModel.updateConnectionState(state)
                     updateConnectionInfo()
                 }
             }
@@ -232,7 +237,8 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
         lifecycleScope.launch {
             try {
                 networkManager?.connectWifi(ip, port)
-            } catch (e: Exception) {                testViewModel.updateConnectionState(CommandConnection.ConnectionState.ERROR)
+            } catch (e: Exception) {
+                testViewModel.updateConnectionState(CommandConnection.ConnectionState.ERROR)
             }
         }
     }
@@ -241,12 +247,14 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
         lifecycleScope.launch {
             try {
                 networkManager?.sendResponse("ping")
-            } catch (e: Exception) {            }
+            } catch (e: Exception) {
+            }
         }
     }
 
     private fun testBluetoothConnection() {
-        // Placeholder for Bluetooth connection logic    }
+        // Placeholder for Bluetooth connection logic
+    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
