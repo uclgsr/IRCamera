@@ -2,7 +2,7 @@ package mpdc4gsr.tests
 
 import android.util.Log
 import io.mockk.*
-import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.core.monitoring.StructuredLogger
 import mpdc4gsr.core.utils.AppLogger
 import org.junit.After
 import org.junit.Before
