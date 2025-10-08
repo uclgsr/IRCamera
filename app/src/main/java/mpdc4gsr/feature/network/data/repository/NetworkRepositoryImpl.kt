@@ -1,11 +1,10 @@
 package mpdc4gsr.feature.network.data.repository
 
-import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import mpdc4gsr.feature.network.data.NetworkClient
+import mpdc4gsr.feature.network.data.datasource.NetworkDataSource
 import mpdc4gsr.feature.network.domain.model.ConnectionState
 import mpdc4gsr.feature.network.domain.model.ControllerInfo
 import mpdc4gsr.feature.network.domain.model.NetworkError
@@ -16,18 +15,12 @@ import javax.inject.Singleton
 
 @Singleton
 class NetworkRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val dataSource: NetworkDataSource
 ) : NetworkRepository {
-
-    private val networkClient = NetworkClient(context)
-
-    init {
-        networkClient.initialize()
-    }
 
     override suspend fun discoverControllers(): Result<List<ControllerInfo>> {
         return try {
-            val controllers = networkClient.discoverControllers()
+            val controllers = dataSource.discoverControllers()
             Result.success(controllers.map { it.toDomainModel() })
         } catch (e: Exception) {
             Result.failure(e)
@@ -40,7 +33,7 @@ class NetworkRepositoryImpl @Inject constructor(
         useSecure: Boolean
     ): Result<Unit> {
         return try {
-            val success = networkClient.connectToController(ipAddress, port, useSecure)
+            val success = dataSource.connectToController(ipAddress, port, useSecure)
             if (success) {
                 Result.success(Unit)
             } else {
@@ -53,7 +46,7 @@ class NetworkRepositoryImpl @Inject constructor(
 
     override suspend fun disconnect(): Result<Unit> {
         return try {
-            networkClient.disconnect()
+            dataSource.disconnect()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -62,7 +55,7 @@ class NetworkRepositoryImpl @Inject constructor(
 
     override suspend fun sendMessage(message: JSONObject): Result<Unit> {
         return try {
-            val success = networkClient.sendMessage(message)
+            val success = dataSource.sendMessage(message)
             if (success) {
                 Result.success(Unit)
             } else {
@@ -75,7 +68,7 @@ class NetworkRepositoryImpl @Inject constructor(
 
     override suspend fun sendMeasurementData(sessionId: String, data: JSONObject): Result<Unit> {
         return try {
-            val success = networkClient.sendMeasurementData(sessionId, data)
+            val success = dataSource.sendMeasurementData(sessionId, data)
             if (success) {
                 Result.success(Unit)
             } else {
@@ -123,7 +116,7 @@ class NetworkRepositoryImpl @Inject constructor(
     override fun observeDiscoveredControllers(): Flow<List<ControllerInfo>> = callbackFlow {
         val listener = object : NetworkClient.NetworkEventListener {
             override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
-                trySend(networkClient.getDiscoveredControllers().map { it.toDomainModel() })
+                trySend(dataSource.getDiscoveredControllers().map { it.toDomainModel() })
             }
 
             override fun onConnected(controller: NetworkClient.ControllerInfo) {}
@@ -136,16 +129,16 @@ class NetworkRepositoryImpl @Inject constructor(
             override fun onError(operation: String, error: String) {}
         }
 
-        networkClient.setEventListener(listener)
+        dataSource.setEventListener(listener)
         
         awaitClose {
-            networkClient.setEventListener(null)
+            dataSource.setEventListener(null)
         }
     }
 
-    override fun isConnected(): Boolean = networkClient.isConnected()
+    override fun isConnected(): Boolean = dataSource.isConnected()
 
-    override fun isSecureConnection(): Boolean = networkClient.isSecureConnection()
+    override fun isSecureConnection(): Boolean = dataSource.isSecureConnection()
 
     private fun NetworkClient.ControllerInfo.toDomainModel() = ControllerInfo(
         ipAddress = ipAddress,
