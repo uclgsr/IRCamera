@@ -22,12 +22,12 @@ appsecretTopinfrared10 = "2870276D969B45C1B4A312B336274079"
 appsecretTopinfraredCn = "9D33C48FD7CE4440B7D922FBF9B6DE2A"
 appsecretTopinfraredCn10 = "F4511AAA6C694E54A3676CF2345A4A8E"
 
-kotlin = "1.9.24"
+kotlin = "2.2.20"
 agp = "8.11.0"
 
 # Jetpack Compose BOM and core versions
 compose-bom = "2025.01.01"
-compose-compiler = "1.5.14"
+compose-compiler = "1.5.15"
 compose-activity = "1.11.0"
 compose-navigation = "2.9.5"
 coil = "2.7.0"
@@ -43,7 +43,7 @@ material = "1.13.0"
 multidex = "2.0.1"
 
 lifecycle = "2.9.4"
-hilt = "2.51"
+hilt = "2.52"
 
 room = "2.8.1"
 work = "2.10.5"
