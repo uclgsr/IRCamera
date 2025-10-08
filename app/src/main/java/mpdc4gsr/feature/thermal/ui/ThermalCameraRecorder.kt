@@ -93,6 +93,7 @@ class ThermalCameraRecorder(
                 .getMethod(
                     "isTempReplacedWithTNREnabled",
                     Class.forName("com.infisense.iruvc.utils.DeviceType")
+                )
             return true
         }
 
@@ -118,6 +119,7 @@ class ThermalCameraRecorder(
         val relativeHumidity: Float = 50.0f,
         val distance: Float = 1.0f,
         val temperatureRange: Pair<Float, Float> = Pair(-20.0f, 400.0f)
+    )
 
     data class ThermalPerformanceMetrics(
         val averageFrameTime: Double,
@@ -263,6 +265,8 @@ class ThermalCameraRecorder(
         this.frameListener = listener
     }
 
+    override fun getErrorFlow(): Flow<SensorError> = _errorFlow.asSharedFlow()
+
     fun enableNetworkStreaming(networkServer: NetworkServer) {
         this.networkServer = networkServer
         this.enableNetworkStreaming = true
@@ -394,10 +398,9 @@ class ThermalCameraRecorder(
                         isIRCameraConnected = true
                         if (uvcCamera != null) {
                             recordingScope.launch {
-                                try {
+                                
                                     initializeIrcamEngineWithHandle(uvcCamera)
-                                } catch (e: Exception) {
-                                }
+                                
                                 emitStatus()
                             }
                         } else {
@@ -459,6 +462,8 @@ class ThermalCameraRecorder(
                         recordingScope.launch {
                             emitError(
                                 ErrorType.PERMISSION_DENIED,
+                                "USB permission cancelled"
+                            )
                         }
                     }
                 }
@@ -475,10 +480,14 @@ class ThermalCameraRecorder(
                 } catch (e: UnsatisfiedLinkError) {
                     emitError(
                         ErrorType.INITIALIZATION_FAILED,
+                        "Thermal camera library error"
+                    )
                     return@withContext false
                 } catch (e: Exception) {
                     emitError(
                         ErrorType.INITIALIZATION_FAILED,
+                        "Thermal camera initialization failed"
+                    )
                     return@withContext false
                 }
                 iruvctc?.setIFrameCallBackListener(object : IFrameCallBackListener {
@@ -488,14 +497,13 @@ class ThermalCameraRecorder(
                     }
                 })
                 iruvctc?.let { iruvctcInstance ->
-                    try {
+                    
                         val imageDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
                         val temperatureDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
                         iruvctcInstance.setImageSrc(imageDataBuffer)
                         iruvctcInstance.setTemperatureSrc(temperatureDataBuffer)
                         iruvctcInstance.setRotate(0)
-                    } catch (e: Exception) {
-                    }
+                    
                 }
                 try {
                     iruvctc?.registerUSB()
@@ -569,10 +577,9 @@ class ThermalCameraRecorder(
                                 }
                             val granted =
                                 intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
-                            try {
+                            
                                 context?.unregisterReceiver(this)
-                            } catch (e: Exception) {
-                            }
+                            
                             resultReceived.complete(granted)
                         }
                     }
@@ -587,10 +594,9 @@ class ThermalCameraRecorder(
                         resultReceived.await()
                     }
                 } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
-                    try {
+                    
                         context.unregisterReceiver(permissionReceiver)
-                    } catch (ex: Exception) {
-                    }
+                    
                     permissionResult = false
                 }
                 permissionResult
@@ -638,6 +644,8 @@ class ThermalCameraRecorder(
             recordingScope.launch {
                 emitError(
                     ErrorType.DEVICE_ERROR,
+                    "USB permission request failed"
+                )
             }
         }
     }
@@ -694,10 +702,9 @@ class ThermalCameraRecorder(
                         // Initialize IrcamEngine with the UVC handle now that camera is open
                         if (p0 != null) {
                             recordingScope.launch {
-                                try {
+                                
                                     initializeIrcamEngineWithHandle(p0)
-                                } catch (e: Exception) {
-                                }
+                                
                                 emitStatus()
                             }
                         } else {
@@ -789,7 +796,7 @@ class ThermalCameraRecorder(
                 })
                 // Configure IRUVCTC settings equivalent to reference implementation
                 iruvctc?.let { iruvctcInstance ->
-                    try {
+                    
                         // Set up image and temperature data sources (equivalent to reference)
                         val imageDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
                         val temperatureDataBuffer =
@@ -798,8 +805,7 @@ class ThermalCameraRecorder(
                         iruvctcInstance.setTemperatureSrc(temperatureDataBuffer)
                         // Set rotation angle (equivalent to reference - typically 0 for TC001)
                         iruvctcInstance.setRotate(0)
-                    } catch (e: Exception) {
-                    }
+                    
                 }
                 try {
                     iruvctc?.registerUSB()
@@ -833,10 +839,9 @@ class ThermalCameraRecorder(
     private suspend fun initializeIrcamEngineWithHandle(uvcCamera: UVCCamera) = withContext(Dispatchers.IO) {
         try {
             // Load native library first
-            try {
+            
                 System.loadLibrary("ircamera-native")
-            } catch (e: UnsatisfiedLinkError) {
-            }
+            
             // Create UvcHandleParam - the SDK should get handle internally from IRUVCTC
             val handleParam = UvcHandleParam()
             ircamEngine = IrcamEngine.Builder()
@@ -1376,9 +1381,10 @@ class ThermalCameraRecorder(
                 emitStatus()
                 return@withContext true
             } catch (e: Exception) {
-                // Ensure other sensors continue recording
                 emitError(
                     ErrorType.RECORDING_FAILED,
+                    "Failed to start thermal recording"
+                )
                 return@withContext false
             }
         }
@@ -1412,8 +1418,6 @@ class ThermalCameraRecorder(
                     delay(frameInterval)
                 } catch (e: Exception) {
                     consecutiveFailures++
-                        "Error generating simulated thermal frame (failure #$consecutiveFailures)",
-                        e
                     if (consecutiveFailures >= maxConsecutiveFailures) {
                         emitError(
                             ErrorType.DEVICE_ERROR,
@@ -1701,7 +1705,7 @@ class ThermalCameraRecorder(
                     lastFrameTime = currentTime
                     if (_isRecording.get() && frame != null) {
                         recordingScope.launch {
-                            try {
+                            
                                 val timestamp = System.nanoTime()
                                 val frameNumber = frameCount.incrementAndGet()
                                 val thermalData =
@@ -1712,13 +1716,12 @@ class ThermalCameraRecorder(
                                     thermalData,
                                     frameNumber,
                                     timestampRecord
-                            } catch (e: Exception) {
-                            }
+                            
                         }
                     }
                     if (previewCallback != null && frame != null && frameCount.get() % PREVIEW_UPDATE_FRAME_INTERVAL.toLong() == 0L) {
                         recordingScope.launch {
-                            try {
+                            
                                 val thermalData =
                                     processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
                                 val previewBitmap =
@@ -1727,8 +1730,7 @@ class ThermalCameraRecorder(
                                         IR_CAMERA_WIDTH,
                                         IR_CAMERA_HEIGHT
                                 previewCallback?.onThermalFrame(previewBitmap, thermalData)
-                            } catch (e: Exception) {
-                            }
+                            
                         }
                     }
                 }
@@ -2122,11 +2124,10 @@ class ThermalCameraRecorder(
     }
 
     private fun loadThermalSettings() {
-        try {
+        
             val settings = thermalSettingsRepository.getSettings()
             emissivity = settings.emissivity.toDouble()
-        } catch (e: Exception) {
-        }
+        
     }
 
     private fun observeSettingsChanges() {
@@ -2248,10 +2249,9 @@ class ThermalCameraRecorder(
                     isIRCameraConnected = false
                     recordingScope.launch {
                         if (isIRCameraConnected && iruvctc != null) {
-                            try {
+                            
                                 iruvctc?.stopPreview()
-                            } catch (e: Exception) {
-                            }
+                            
                         }
                         isSimulationMode = true
                         isIRCameraConnected = false
@@ -2262,6 +2262,8 @@ class ThermalCameraRecorder(
                         }
                         emitError(
                             ErrorType.DEVICE_ERROR,
+                            "Thermal camera disconnected"
+                        )
                         emitStatus()
                     }
                 }
@@ -2546,15 +2548,14 @@ class ThermalCameraRecorder(
                         }
                         val values = line.split(",")
                         if (values.size >= 6) {
-                            try {
+                            
                                 timestamps.add(values[0].toLong())
                                 frameIndices.add(values[1].toLong())
                                 minTemps.add(values[2].toFloat())
                                 maxTemps.add(values[3].toFloat())
                                 avgTemps.add(values[4].toFloat())
                                 centerTemps.add(values[5].toFloat())
-                            } catch (e: NumberFormatException) {
-                            }
+                            
                         }
                     }
                 }
