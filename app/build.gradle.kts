@@ -7,6 +7,7 @@ plugins {
     kotlin("kapt")
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt)
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
@@ -377,6 +378,11 @@ dependencies {
     implementation(libs.nordic.ble.ktx)
     implementation(libs.lifecycle.service)
     implementation(libs.compose.lifecycle.runtime)
+    
+    // Hilt Dependency Injection
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 
     // Hilt
     implementation(libs.hilt.android)
