@@ -13,22 +13,21 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.settings.SettingsCard
 import mpdc4gsr.core.ui.components.settings.SettingsRow
 import mpdc4gsr.core.ui.components.settings.SettingsToggle
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.thermal.presentation.CalibrationViewModel
+import mpdc4gsr.feature.thermal.ui.components.ThermalScaffold
 
 @Composable
 fun CalibrationScreen(
@@ -36,8 +35,8 @@ fun CalibrationScreen(
     viewModel: CalibrationViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
-    val settings by viewModel.calibrationSettings.collectAsState()
-    val calibrationInfo by viewModel.calibrationInfo.collectAsState()
+    val settings by viewModel.calibrationSettings.collectAsStateWithLifecycle()
+    val calibrationInfo by viewModel.calibrationInfo.collectAsStateWithLifecycle()
     Column(
         modifier = modifier
             .fillMaxSize()

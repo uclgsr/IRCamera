@@ -6,7 +6,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ShowChart
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -16,60 +15,86 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.feature.thermal.data.MeasurementMode
 import mpdc4gsr.feature.thermal.data.TemperatureUnit
 import mpdc4gsr.feature.thermal.data.ThermalPalette
+import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel
+import mpdc4gsr.feature.thermal.presentation.ThermalUiState
+import mpdc4gsr.feature.thermal.presentation.ThermalUiEvent
+import mpdc4gsr.feature.thermal.ui.components.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThermalCameraScreen(
     onBackClick: () -> Unit,
     onNavigateToSettings: () -> Unit,
     onNavigateToGallery: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ThermalCameraViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    
     LibUnifiedTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            "Thermal Imaging",
-                            fontWeight = FontWeight.Bold
+        ThermalScaffold(
+            title = "Thermal Imaging",
+            onBackClick = onBackClick,
+            actions = {
+                ThermalActions(
+                    listOf(
+                        ThermalAction(
+                            Icons.Default.PhotoLibrary,
+                            "Gallery",
+                            onNavigateToGallery
+                        ),
+                        ThermalAction(
+                            Icons.Default.Settings,
+                            "Settings",
+                            onNavigateToSettings
                         )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = onBackClick) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = onNavigateToGallery) {
-                            Icon(Icons.Default.PhotoLibrary, contentDescription = "Gallery")
-                        }
-                        IconButton(onClick = onNavigateToSettings) {
-                            Icon(Icons.Default.Settings, contentDescription = "Settings")
-                        }
-                    }
+                    )
                 )
-            }
+            },
+            modifier = modifier
         ) { paddingValues ->
-            ThermalCameraContent(
-                modifier = Modifier.padding(paddingValues)
-            )
+            when (uiState) {
+                is ThermalUiState.Loading -> {
+                    ThermalLoadingContent(
+                        message = "Connecting to thermal camera...",
+                        modifier = Modifier.padding(paddingValues)
+                    )
+                }
+                is ThermalUiState.Error -> {
+                    ThermalErrorContent(
+                        message = (uiState as ThermalUiState.Error).message,
+                        isRecoverable = (uiState as ThermalUiState.Error).isRecoverable,
+                        onRetry = { viewModel.onEvent(ThermalUiEvent.ClearError) },
+                        modifier = Modifier.padding(paddingValues)
+                    )
+                }
+                is ThermalUiState.Success -> {
+                    ThermalCameraContent(
+                        uiState = uiState as ThermalUiState.Success,
+                        onEvent = viewModel::onEvent,
+                        modifier = Modifier.padding(paddingValues)
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
 private fun ThermalCameraContent(
+    uiState: ThermalUiState.Success,
+    onEvent: (ThermalUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedPalette by remember { mutableStateOf(ThermalPalette.IRON) }
     var temperatureUnit by remember { mutableStateOf(TemperatureUnit.CELSIUS) }
-    var isRecording by remember { mutableStateOf(false) }
     var measurementMode by remember { mutableStateOf(MeasurementMode.SPOT) }
+    
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -79,29 +104,37 @@ private fun ThermalCameraContent(
     ) {
         // Thermal Preview Area
         ThermalPreviewCard(
+            uiState = uiState,
             selectedPalette = selectedPalette,
             measurementMode = measurementMode,
             temperatureUnit = temperatureUnit
         )
         // Temperature Measurements
         TemperatureMeasurementsCard(
+            uiState = uiState,
             temperatureUnit = temperatureUnit
         )
         // Camera Controls
         ThermalCameraControlsCard(
+            uiState = uiState,
             selectedPalette = selectedPalette,
             temperatureUnit = temperatureUnit,
-            isRecording = isRecording,
             measurementMode = measurementMode,
             onPaletteChange = { selectedPalette = it },
             onTemperatureUnitChange = { temperatureUnit = it },
-            onRecordingToggle = { isRecording = it },
+            onStartRecording = { onEvent(ThermalUiEvent.StartRecording) },
+            onStopRecording = { onEvent(ThermalUiEvent.StopRecording) },
+            onCaptureSnapshot = { onEvent(ThermalUiEvent.CaptureSnapshot) },
             onMeasurementModeChange = { measurementMode = it }
         )
         // Analysis Tools
         ThermalAnalysisToolsCard()
         // Camera Status
-        ThermalCameraStatusCard()
+        ThermalCameraStatusCard(
+            uiState = uiState,
+            onConnectCamera = { onEvent(ThermalUiEvent.ConnectCamera) },
+            onDisconnectCamera = { onEvent(ThermalUiEvent.DisconnectCamera) }
+        )
     }
 }
 
@@ -109,6 +142,7 @@ private fun ThermalCameraContent(
 // TemperatureUnit and MeasurementMode are imported from mpdc4gsr.feature.thermal.data.ThermalModels.kt
 @Composable
 private fun ThermalPreviewCard(
+    uiState: ThermalUiState.Success,
     selectedPalette: ThermalPalette,
     measurementMode: MeasurementMode,
     temperatureUnit: TemperatureUnit
@@ -252,6 +286,7 @@ private fun ThermalPreviewCard(
 
 @Composable
 private fun TemperatureMeasurementsCard(
+    uiState: ThermalUiState.Success,
     temperatureUnit: TemperatureUnit
 ) {
     Card(
@@ -269,10 +304,10 @@ private fun TemperatureMeasurementsCard(
             )
             HorizontalDivider()
             // Current measurements
-            MeasurementRow("Hot Spot", 35.8f, temperatureUnit, Icons.Default.LocalFireDepartment)
-            MeasurementRow("Cold Spot", 18.2f, temperatureUnit, Icons.Default.AcUnit)
-            MeasurementRow("Center Point", 25.6f, temperatureUnit, Icons.Default.CenterFocusStrong)
-            MeasurementRow("Average", 27.1f, temperatureUnit, Icons.Default.Analytics)
+            MeasurementRow("Hot Spot", uiState.maxTemperature, temperatureUnit, Icons.Default.LocalFireDepartment)
+            MeasurementRow("Cold Spot", uiState.minTemperature, temperatureUnit, Icons.Default.AcUnit)
+            MeasurementRow("Center Point", uiState.centerTemperature, temperatureUnit, Icons.Default.CenterFocusStrong)
+            MeasurementRow("Average", uiState.avgTemperature, temperatureUnit, Icons.Default.Analytics)
             HorizontalDivider()
             // Measurement controls
             Row(
@@ -357,13 +392,15 @@ private fun MeasurementRow(
 
 @Composable
 private fun ThermalCameraControlsCard(
+    uiState: ThermalUiState.Success,
     selectedPalette: ThermalPalette,
     temperatureUnit: TemperatureUnit,
-    isRecording: Boolean,
     measurementMode: MeasurementMode,
     onPaletteChange: (ThermalPalette) -> Unit,
     onTemperatureUnitChange: (TemperatureUnit) -> Unit,
-    onRecordingToggle: (Boolean) -> Unit,
+    onStartRecording: () -> Unit,
+    onStopRecording: () -> Unit,
+    onCaptureSnapshot: () -> Unit,
     onMeasurementModeChange: (MeasurementMode) -> Unit
 ) {
     Card(
@@ -469,9 +506,9 @@ private fun ThermalCameraControlsCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                if (isRecording) {
+                if (uiState.isRecording) {
                     Button(
-                        onClick = { onRecordingToggle(false) },
+                        onClick = onStopRecording,
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.error
@@ -483,25 +520,19 @@ private fun ThermalCameraControlsCard(
                     }
                 } else {
                     Button(
-                        onClick = { onRecordingToggle(true) },
-                        modifier = Modifier.weight(1f)
+                        onClick = onStartRecording,
+                        modifier = Modifier.weight(1f),
+                        enabled = uiState.isConnected
                     ) {
                         Icon(Icons.Default.FiberManualRecord, contentDescription = "Start Recording")
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Record")
                     }
                 }
-                val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
-                    onClick = {
-                        // TODO: Capture thermal snapshot
-                        android.widget.Toast.makeText(
-                            context,
-                            "Snapshot captured",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f)
+                    onClick = onCaptureSnapshot,
+                    modifier = Modifier.weight(1f),
+                    enabled = uiState.isConnected
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = "Capture Snapshot")
                     Spacer(modifier = Modifier.width(4.dp))
@@ -604,7 +635,11 @@ private fun ThermalAnalysisToolsCard() {
 }
 
 @Composable
-private fun ThermalCameraStatusCard() {
+private fun ThermalCameraStatusCard(
+    uiState: ThermalUiState.Success,
+    onConnectCamera: () -> Unit,
+    onDisconnectCamera: () -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -619,41 +654,56 @@ private fun ThermalCameraStatusCard() {
                 fontWeight = FontWeight.Bold
             )
             HorizontalDivider()
-            StatusRow("Connection", "Connected", Icons.Default.CheckCircle, true)
-            StatusRow("Temperature", "Calibrated", Icons.Default.Thermostat, true)
-            StatusRow("Image Quality", "Excellent", Icons.Default.HighQuality, true)
-            StatusRow("Battery", "87%", Icons.Default.Battery4Bar, true)
-            StatusRow("Storage", "2.1 GB Free", Icons.Default.Storage, true)
+            StatusRow(
+                "Connection", 
+                if (uiState.isConnected) "Connected" else "Disconnected", 
+                Icons.Default.CheckCircle, 
+                uiState.isConnected
+            )
+            StatusRow(
+                "Mode", 
+                if (uiState.isSimulationMode) "Simulation" else "Hardware", 
+                Icons.Default.Thermostat, 
+                !uiState.isSimulationMode
+            )
+            StatusRow(
+                "Recording", 
+                if (uiState.isRecording) "Active" else "Inactive", 
+                Icons.Default.FiberManualRecord, 
+                uiState.isRecording
+            )
+            StatusRow(
+                "Frames", 
+                "${uiState.frameCount}", 
+                Icons.Default.PhotoLibrary, 
+                true
+            )
             HorizontalDivider()
-            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                OutlinedButton(
-                    onClick = {
-                        // TODO: Start camera calibration
-                        android.widget.Toast.makeText(
-                            context,
-                            "Camera calibration feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Icon(Icons.Default.Tune, contentDescription = "Calibrate Camera")
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Calibrate")
+                if (uiState.isConnected) {
+                    OutlinedButton(
+                        onClick = onDisconnectCamera,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(Icons.Default.LinkOff, contentDescription = "Disconnect Camera")
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Disconnect")
+                    }
+                } else {
+                    Button(
+                        onClick = onConnectCamera,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(Icons.Default.Link, contentDescription = "Connect Camera")
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Connect")
+                    }
                 }
                 OutlinedButton(
                     onClick = {
-                        // TODO: Run diagnostic test
-                        android.widget.Toast.makeText(
-                            context,
-                            "Diagnostic test feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.BugReport, contentDescription = "Run Diagnostic")

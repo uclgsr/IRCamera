@@ -1,20 +1,26 @@
 package mpdc4gsr.feature.thermal.presentation
 
 import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.thermal.data.ThermalSettingsRepository
+import javax.inject.Inject
 
-class ThermalSettingsViewModel : AppBaseViewModel() {
-    private lateinit var repository: ThermalSettingsRepository
+@HiltViewModel
+class ThermalSettingsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context
+) : ViewModel() {
+    private val repository: ThermalSettingsRepository = ThermalSettingsRepository.getInstance(context)
     private val _thermalSettings = MutableStateFlow(ThermalSettingsRepository.ThermalSettings())
     val thermalSettings: StateFlow<ThermalSettingsRepository.ThermalSettings> = _thermalSettings.asStateFlow()
-    fun initialize(context: Context) {
-        repository = ThermalSettingsRepository.getInstance(context)
+
+    init {
         loadSettings()
         viewModelScope.launch {
             repository.thermalSettings.collect { repoSettings ->
@@ -24,9 +30,7 @@ class ThermalSettingsViewModel : AppBaseViewModel() {
     }
 
     private fun loadSettings() {
-        if (::repository.isInitialized) {
-            _thermalSettings.value = repository.getSettings()
-        }
+        _thermalSettings.value = repository.getSettings()
     }
 
     fun updateFrameRate(frameRate: Int) {

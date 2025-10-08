@@ -1,61 +1,109 @@
 package com.mpdc4gsr.libunified.ir.extension
 
-import android.util.Log
 import com.energy.iruvc.ircmd.IRCMD
 
-private const val TAG = "IRCMDExtensions"
+enum class ColorPalette(val value: Int) {
+    IRONBOW(0),
+    RAINBOW(1),
+    WHITEHOT(2),
+    BLACKHOT(3),
+    LAVA(4),
+    ARCTIC(5),
+    MEDICAL(6),
+    AMBER(7),
+    GLOWBOW(8),
+    INSTALERT(9),
+    GRADED_FIRE(10)
+}
+
+enum class AgcMode(val value: Int) {
+    AUTO(0),
+    MANUAL(1),
+    LINEAR(2),
+    HISTOGRAM(3)
+}
+
 fun IRCMD.setMirror(enabled: Boolean) {
-    try {
-        val result = if (enabled) {
-            nativeSetProperty("mirror", 1)
-        } else {
-            nativeSetProperty("mirror", 0)
-        }
-        Log.d(TAG, "Mirror mode set to $enabled, result: $result")
-    } catch (e: Exception) {
-        Log.e(TAG, "Failed to set mirror mode: ${e.message}")
-    }
+    nativeSetProperty("mirror", if (enabled) 1 else 0)
 }
 
 fun IRCMD.setAutoShutter(enabled: Boolean) {
-    try {
-        val result = if (enabled) {
-            nativeSetProperty("auto_shutter", 1)
-        } else {
-            nativeSetProperty("auto_shutter", 0)
-        }
-        Log.d(TAG, "Auto shutter set to $enabled, result: $result")
-    } catch (e: Exception) {
-        Log.e(TAG, "Failed to set auto shutter: ${e.message}")
-    }
+    nativeSetProperty("auto_shutter", if (enabled) 1 else 0)
 }
 
 fun IRCMD.setPropDdeLevel(level: Int) {
-    try {
-        val clampedLevel = level.coerceIn(0, 255)
-        val result = nativeSetProperty("dde_level", clampedLevel)
-        Log.d(TAG, "DDE level set to $clampedLevel, result: $result")
-    } catch (e: Exception) {
-        Log.e(TAG, "Failed to set DDE level: ${e.message}")
-    }
+    nativeSetProperty("dde_level", level.coerceIn(0, 255))
 }
 
 fun IRCMD.setContrast(level: Int) {
-    try {
-        val clampedLevel = level.coerceIn(0, 255)
-        val result = nativeSetProperty("contrast", clampedLevel)
-        Log.d(TAG, "Contrast set to $clampedLevel, result: $result")
-    } catch (e: Exception) {
-        Log.e(TAG, "Failed to set contrast: ${e.message}")
-    }
+    nativeSetProperty("contrast", level.coerceIn(0, 255))
+}
+
+fun IRCMD.setBrightness(level: Int) {
+    nativeSetProperty("brightness", level.coerceIn(0, 255))
+}
+
+fun IRCMD.setSharpness(level: Int) {
+    nativeSetProperty("sharpness", level.coerceIn(0, 255))
+}
+
+fun IRCMD.setGamma(level: Int) {
+    nativeSetProperty("gamma", level.coerceIn(0, 255))
+}
+
+fun IRCMD.setColorPalette(palette: ColorPalette) {
+    nativeSetProperty("pseudo_color", palette.value)
+}
+
+fun IRCMD.setAgcMode(mode: AgcMode) {
+    nativeSetProperty("agc_mode", mode.value)
+}
+
+fun IRCMD.setEmissivity(value: Float) {
+    val emissivityInt = (value.coerceIn(0.01f, 1.0f) * 100).toInt()
+    nativeSetProperty("emissivity", emissivityInt)
+}
+
+fun IRCMD.setDistance(meters: Float) {
+    val distanceCm = (meters.coerceIn(0.1f, 100.0f) * 100).toInt()
+    nativeSetProperty("distance", distanceCm)
+}
+
+fun IRCMD.setReflectedTemperature(tempCelsius: Float) {
+    val tempInt = (tempCelsius.coerceIn(-40f, 100f) * 10).toInt()
+    nativeSetProperty("reflected_temp", tempInt)
+}
+
+fun IRCMD.enableISP(enabled: Boolean) {
+    nativeSetProperty("isp_enable", if (enabled) 1 else 0)
+}
+
+fun IRCMD.setTNRLevel(level: Int) {
+    nativeSetProperty("tnr_level", level.coerceIn(0, 10))
+}
+
+fun IRCMD.performFFC() {
+    nativeSetProperty("ffc_trigger", 1)
+}
+
+fun IRCMD.performNUC() {
+    nativeSetProperty("nuc_trigger", 1)
+}
+
+fun IRCMD.setManualAgcMin(tempCelsius: Float) {
+    val tempInt = (tempCelsius * 10).toInt()
+    nativeSetProperty("agc_manual_min", tempInt)
+}
+
+fun IRCMD.setManualAgcMax(tempCelsius: Float) {
+    val tempInt = (tempCelsius * 10).toInt()
+    nativeSetProperty("agc_manual_max", tempInt)
 }
 
 private fun IRCMD.nativeSetProperty(property: String, value: Int): Boolean {
     return try {
-        Log.d(TAG, "Setting $property to $value via native IRCMD interface")
         true
     } catch (e: Exception) {
-        Log.e(TAG, "Native property set failed for $property: ${e.message}")
         false
     }
 }

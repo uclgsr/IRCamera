@@ -396,7 +396,7 @@ fun UnifiedNavHost(
             )
         }
         composable(UnifiedRoute.Calibration.route) {
-            mpdc4gsr.feature.thermal.ui.CalibrationScreen(
+            mpdc4gsr.feature.thermal.ui.ThermalCalibrationScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
