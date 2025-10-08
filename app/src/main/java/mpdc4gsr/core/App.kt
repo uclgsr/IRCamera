@@ -21,7 +21,6 @@ import mpdc4gsr.core.ui.InitUtils.initLog
 import mpdc4gsr.core.ui.InitUtils.initReceiver
 import mpdc4gsr.core.ui.InitUtils.initUM
 import mpdc4gsr.core.monitoring.StructuredLogger
-import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.system.service.RecordingService
 
 class App : BaseApplication() {
@@ -33,15 +32,11 @@ class App : BaseApplication() {
         )
         lateinit var instance: App
         fun delayInit() {
-            try {
                 initLog()
                 initReceiver()
                 initLms()
                 initUM()
                 initJPush()
-                AppLogger.i("App", "delayInit completed successfully")
-            } catch (e: Exception) {
-                AppLogger.e("App", "Error during delayInit", e)
                 // Continue even if some initialization fails
             }
         }
@@ -73,7 +68,6 @@ class App : BaseApplication() {
         // Initialize telemetry and observability
         mpdc4gsr.core.monitoring.TelemetryManager.initialize(this)
         setupGlobalExceptionHandler()
-        try {
             SPUtils.getInstance(this).put(Config.KEY_PRIVACY_AGREEMENT, true)
             if (SharedManager.getHasShowClause() || !isDomestic()) {
                 // Initialize immediately to ensure USB receiver is registered before activities start
@@ -85,8 +79,6 @@ class App : BaseApplication() {
                 SharedManager.setBaseHost(UrlConstants.BASE_URL)
             }
 
-        } catch (e: Exception) {
-            AppLogger.e("App", "Critical error during onCreate", e)
         }
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         registerActivityLifecycleCallbacks(
@@ -122,42 +114,24 @@ class App : BaseApplication() {
     }
 
     override fun initWebSocket() {
-        try {
-            AppLogger.i("App", "initWebSocket() - Initializing WebSocket connection")
             // Call parent implementation to set up network monitoring and WebSocket infrastructure
             super.initWebSocket()
-            AppLogger.i("App", "WebSocket initialization completed successfully")
-        } catch (e: Exception) {
-            AppLogger.e("App", "Error during WebSocket initialization", e)
             // Continue even if WebSocket initialization fails to avoid breaking app startup
         }
     }
 
     private fun initializeAppLogger() {
-        try {
-            AppLogger.initialize(
                 minLevel = if (BuildConfig.DEBUG) {
-                    AppLogger.LogLevel.DEBUG
                 } else {
-                    AppLogger.LogLevel.WARN
                 },
                 enableStructured = true,
                 structuredLoggerInstance = StructuredLogger.getInstance(this)
             )
-            AppLogger.i("App", "AppLogger initialized successfully")
-        } catch (e: Exception) {
-            android.util.Log.e("App", "Failed to initialize AppLogger: ${e.message}", e)
         }
     }
 
     private fun loadNativeLibraries() {
-        try {
             System.loadLibrary("USBUVCCamera")
-            AppLogger.i("App", "USBUVCCamera native library loaded successfully")
-        } catch (e: UnsatisfiedLinkError) {
-            AppLogger.w("App", "USBUVCCamera native library not available: ${e.message}")
-        } catch (e: Exception) {
-            AppLogger.e("App", "Error loading USBUVCCamera native library", e)
         }
     }
 
@@ -165,9 +139,7 @@ class App : BaseApplication() {
         val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
             if (throwable is IllegalStateException &&
-                throwable.message?.contains("Cannot start this animator on a detached view") == true
             ) {
-                AppLogger.w("App", "Caught detached view animator exception", throwable)
                 return@setDefaultUncaughtExceptionHandler
             }
             defaultHandler?.uncaughtException(thread, throwable)
@@ -175,17 +147,11 @@ class App : BaseApplication() {
     }
 
     private fun startRecordingService() {
-        try {
-            AppLogger.i("App", "Starting RecordingService for PC networking and control interface")
             RecordingService.startServer(this)
-            AppLogger.i("App", "RecordingService started successfully")
-        } catch (e: Exception) {
-            AppLogger.e("App", "Failed to start RecordingService - PC networking will not be available", e)
         }
     }
 
     private fun enableStrictMode() {
-        AppLogger.d("App", "Enabling StrictMode for debug build")
         StrictMode.setThreadPolicy(
             StrictMode.ThreadPolicy.Builder()
                 .detectDiskReads()
@@ -198,7 +164,6 @@ class App : BaseApplication() {
                 .apply {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         penaltyListener(mainExecutor) { violation ->
-                            AppLogger.d("StrictMode", "Thread policy violation: ${violation.javaClass.simpleName}")
                         }
                     }
                 }
@@ -215,14 +180,12 @@ class App : BaseApplication() {
                         penaltyListener(mainExecutor) { violation ->
                             val violationClass = violation.javaClass.simpleName
                             if (violationClass != "UntaggedSocketViolation") {
-                                AppLogger.d("StrictMode", "VM policy violation: $violationClass")
                             }
                         }
                     }
                 }
                 .build()
         )
-        AppLogger.i(
             "App",
             "StrictMode enabled - monitoring memory leaks and unclosed resources (disk I/O and untagged sockets permitted)"
         )
