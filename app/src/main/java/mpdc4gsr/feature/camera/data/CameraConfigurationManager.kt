@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.camera.data
 
 import android.os.Build
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import android.util.Size
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
@@ -14,7 +11,6 @@ import androidx.camera.video.Recorder
 
 class CameraConfigurationManager {
     companion object {
-        private const val TAG = "CameraConfigManager"
 
         // Video configuration constants
         private const val VIDEO_WIDTH_4K = 3840
@@ -48,7 +44,7 @@ class CameraConfigurationManager {
     )
 
     fun detectDeviceCapabilities(): Triple<Boolean, Boolean, Boolean> {
-        return try {
+        return (
             val deviceModel = Build.MODEL
             val manufacturer = Build.MANUFACTURER.lowercase()
             val deviceSupports4K = when {
@@ -72,14 +68,10 @@ class CameraConfigurationManager {
 
                 else -> false
             }
-            Log.i(
                 TAG,
                 "Device capabilities - 4K: $deviceSupports4K, RAW: $deviceSupportsRAW, 60fps: $supports60fps"
             )
-            AppLogger.i(TAG, "Device: $manufacturer $deviceModel")
             Triple(deviceSupports4K, deviceSupportsRAW, supports60fps)
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Error detecting device capabilities, using safe defaults", e)
             Triple(false, false, false)
         }
     }
@@ -110,15 +102,13 @@ class CameraConfigurationManager {
     }
 
     fun createOptimizedRecorder(configuration: CameraConfiguration): Recorder {
-        return try {
+        return (
             val qualitySelector = if (configuration.supports4K) {
-                AppLogger.i(TAG, "Creating 4K UHD quality selector with fallback strategy")
                 QualitySelector.from(
                     Quality.UHD,
                     FallbackStrategy.lowerQualityThan(Quality.UHD)
                 )
             } else {
-                AppLogger.i(TAG, "Creating FHD quality selector with fallback strategy")
                 QualitySelector.from(
                     Quality.FHD,
                     FallbackStrategy.lowerQualityThan(Quality.FHD)
@@ -127,8 +117,6 @@ class CameraConfigurationManager {
             Recorder.Builder()
                 .setQualitySelector(qualitySelector)
                 .build()
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error creating optimized recorder, using conservative fallback", e)
             Recorder.Builder()
                 .setQualitySelector(
                     QualitySelector.from(
@@ -145,7 +133,6 @@ class CameraConfigurationManager {
             val previewSize = Size(configuration.videoWidth, configuration.videoHeight)
             @Suppress("DEPRECATION")
             setTargetResolution(previewSize)
-            AppLogger.i(TAG, "Preview configured: ${previewSize.width}x${previewSize.height}")
         }.build()
     }
 
@@ -157,15 +144,11 @@ class CameraConfigurationManager {
             setJpegQuality(JPEG_QUALITY)
             setFlashMode(ImageCapture.FLASH_MODE_AUTO)
             if (configuration.supportsRAW) {
-                try {
                     androidx.camera.camera2.interop.Camera2Interop.Extender(this)
                         .setCaptureRequestOption(
                             android.hardware.camera2.CaptureRequest.CONTROL_MODE,
                             android.hardware.camera2.CameraMetadata.CONTROL_MODE_USE_SCENE_MODE
                         )
-                    AppLogger.i(TAG, "RAW/DNG capture enabled for supported device")
-                } catch (e: Exception) {
-                    AppLogger.w(TAG, "Could not enable RAW capture: ${e.message}")
                 }
             }
         }.build()

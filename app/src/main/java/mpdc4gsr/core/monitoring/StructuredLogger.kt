@@ -1,7 +1,6 @@
 package mpdc4gsr.core.monitoring
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.*
@@ -13,7 +12,6 @@ import java.util.concurrent.TimeUnit
 
 class StructuredLogger private constructor(private val context: Context) {
     companion object {
-        private const val TAG = "StructuredLogger"
         private const val LOG_DIRECTORY = "pc_to_phone_logs"
         private const val MAX_LOG_FILES = 10
         private const val MAX_LOG_SIZE_MB = 10
@@ -94,7 +92,6 @@ class StructuredLogger private constructor(private val context: Context) {
     }
 
     private fun initializeLogging() {
-        try {
             val logDir = File(context.getExternalFilesDir(null), LOG_DIRECTORY)
             if (!logDir.exists()) {
                 logDir.mkdirs()
@@ -110,8 +107,6 @@ class StructuredLogger private constructor(private val context: Context) {
                     "device_id" to deviceId,
                 ),
             )
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize structured logging", e)
         }
     }
 
@@ -119,19 +114,14 @@ class StructuredLogger private constructor(private val context: Context) {
         synchronized(writerLock) {
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
             currentLogFile = File(logDir, "pc_to_phone_$timestamp.jsonl")
-            try {
                 currentLogWriter?.close()
-            } catch (e: Exception) {
-                Log.w(TAG, "Error closing previous log writer", e)
             }
             currentLogWriter = BufferedWriter(FileWriter(currentLogFile, true))
             currentLogSize = currentLogFile?.length() ?: 0L
-            Log.i(TAG, "Created new log file: ${currentLogFile?.name}")
         }
     }
 
     private fun cleanupOldLogs(logDir: File) {
-        try {
             val logFiles =
                 logDir.listFiles { _, name ->
                     name.startsWith("pc_to_phone_") && name.endsWith(".jsonl")
@@ -139,12 +129,9 @@ class StructuredLogger private constructor(private val context: Context) {
             if (logFiles != null && logFiles.size > MAX_LOG_FILES) {
                 logFiles.drop(MAX_LOG_FILES).forEach { file ->
                     if (file.delete()) {
-                        Log.i(TAG, "Deleted old log file: ${file.name}")
                     }
                 }
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "Error cleaning up old logs", e)
         }
     }
 
@@ -156,7 +143,6 @@ class StructuredLogger private constructor(private val context: Context) {
         connectionId: String? = null,
         messageId: String? = null,
     ) {
-        try {
             val timestamp = dateFormatter.format(Date())
             val msgId = messageId ?: generateMessageId()
             val logEntry =
@@ -180,8 +166,6 @@ class StructuredLogger private constructor(private val context: Context) {
                 LogLevel.WARNING -> Log.w(TAG, logMessage)
                 LogLevel.ERROR -> Log.e(TAG, logMessage)
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error creating log entry", e)
         }
     }
 
@@ -223,11 +207,8 @@ class StructuredLogger private constructor(private val context: Context) {
         }
         logScope.launch {
             while (isActive) {
-                try {
                     processLogQueue()
                     delay(100)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error processing log queue", e)
                 }
             }
         }
@@ -239,24 +220,16 @@ class StructuredLogger private constructor(private val context: Context) {
             synchronized(writerLock) {
                 val writer = currentLogWriter
                 if (writer == null) {
-                    Log.w(TAG, "Log writer is null, skipping log entry")
                     return@synchronized
                 }
-                try {
                     writer.write(logEntry.toString())
                     writer.newLine()
                     currentLogSize += logEntry.toString().length + 1
                     if (currentLogSize > MAX_LOG_SIZE_MB * 1024 * 1024) {
                         rotateLogFile()
                     }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error writing log entry", e)
                     // If write fails, try to recreate the writer
-                    if (e.message?.contains("Stream closed") == true) {
-                        try {
                             recreateLogWriter()
-                        } catch (recreateException: Exception) {
-                            Log.e(TAG, "Failed to recreate log writer", recreateException)
                         }
                     }
                 }
@@ -266,15 +239,11 @@ class StructuredLogger private constructor(private val context: Context) {
 
     private fun recreateLogWriter() {
         synchronized(writerLock) {
-            try {
                 currentLogWriter?.close()
-            } catch (e: Exception) {
-                Log.w(TAG, "Error closing corrupted log writer", e)
             }
             val logFile = currentLogFile
             if (logFile != null) {
                 currentLogWriter = BufferedWriter(FileWriter(logFile, true))
-                Log.i(TAG, "Recreated log writer for: ${logFile.name}")
             } else {
                 val logDir = File(context.getExternalFilesDir(null), LOG_DIRECTORY)
                 createNewLogFile(logDir)
@@ -284,17 +253,13 @@ class StructuredLogger private constructor(private val context: Context) {
 
     private fun flushLogs() {
         synchronized(writerLock) {
-            try {
                 currentLogWriter?.flush()
-            } catch (e: Exception) {
-                Log.e(TAG, "Error flushing logs", e)
             }
         }
     }
 
     private fun rotateLogFile() {
         synchronized(writerLock) {
-            try {
                 currentLogWriter?.close()
                 val logDir = File(context.getExternalFilesDir(null), LOG_DIRECTORY)
                 createNewLogFile(logDir)
@@ -308,8 +273,6 @@ class StructuredLogger private constructor(private val context: Context) {
                         "previous_size_mb" to (currentLogSize / (1024 * 1024)),
                     ),
                 )
-            } catch (e: Exception) {
-                Log.e(TAG, "Error rotating log file", e)
             }
         }
     }
@@ -319,17 +282,15 @@ class StructuredLogger private constructor(private val context: Context) {
     }
 
     fun getLogFiles(): List<String> {
-        return try {
+        return (
             val logDir = File(context.getExternalFilesDir(null), LOG_DIRECTORY)
             logDir.listFiles()?.map { it.name }?.sorted() ?: emptyList()
-        } catch (e: Exception) {
-            Log.e(TAG, "Error getting log files", e)
             emptyList()
         }
     }
 
     fun exportRecentLogs(maxLines: Int = 100): String {
-        return try {
+        return (
             val logFile = currentLogFile ?: return "No log file available"
             val lines = mutableListOf<String>()
             BufferedReader(FileReader(logFile)).use { reader ->
@@ -339,14 +300,10 @@ class StructuredLogger private constructor(private val context: Context) {
                 }
             }
             lines.takeLast(maxLines).joinToString("\n")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error exporting logs", e)
-            "Error exporting logs: ${e.message}"
         }
     }
 
     fun cleanup() {
-        try {
             logScope.cancel()
             flushLogs()
             synchronized(writerLock) {
@@ -355,9 +312,6 @@ class StructuredLogger private constructor(private val context: Context) {
             }
             logExecutor.shutdown()
             logExecutor.awaitTermination(5, TimeUnit.SECONDS)
-            Log.i(TAG, "Structured logging cleanup completed")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during logging cleanup", e)
         }
     }
 }

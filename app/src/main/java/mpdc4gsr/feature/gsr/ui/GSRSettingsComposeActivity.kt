@@ -10,7 +10,6 @@ import mpdc4gsr.feature.gsr.presentation.GSRSettingsViewModel
 
 class GSRSettingsComposeActivity : BaseComposeActivity<GSRSettingsViewModel>() {
     companion object {
-        private const val TAG = "GSRSettingsComposeActivity"
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, GSRSettingsComposeActivity::class.java))
         }

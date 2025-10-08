@@ -1,9 +1,6 @@
 package mpdc4gsr.core.ui.navigation
 
 import android.content.Intent
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -205,11 +202,9 @@ fun UnifiedNavHost(
         }
         composable(UnifiedRoute.DualModeCamera.route) {
             LaunchedEffect(Unit) {
-                try {
                     // Use class reference instead of hard-coded string
-                    val activityClass = try {
+                    val activityClass = (
                         mpdc4gsr.feature.camera.ui.DualModeCameraActivityCompose::class.java
-                    } catch (e: NoClassDefFoundError) {
                         null
                     }
                     if (activityClass != null) {
@@ -217,7 +212,6 @@ fun UnifiedNavHost(
                     } else {
                         navController.navigate("dual_mode_camera_screen")
                     }
-                } catch (e: Exception) {
                     // Fallback to screen
                     navController.navigate("dual_mode_camera_screen")
                 }
@@ -231,14 +225,9 @@ fun UnifiedNavHost(
         }
         composable(UnifiedRoute.DevicePairing.route) {
             LaunchedEffect(Unit) {
-                try {
                     // Try to launch permission request activity if it exists
-                    try {
                         mpdc4gsr.core.ui.PermissionRequestComposeActivity.startActivity(context)
-                    } catch (e: Exception) {
-                        AppLogger.e("UnifiedNavigation", "Failed to start permission request activity", e)
                     }
-                } catch (e: Exception) {
                     // Final fallback - just show loading screen
                 }
             }
@@ -247,17 +236,14 @@ fun UnifiedNavHost(
         // Thermal Camera Routes - ThermalMain removed, use ThermalCamera instead
         composable(UnifiedRoute.ThermalGallery.route) {
             LaunchedEffect(Unit) {
-                try {
                     // Use class reference instead of hard-coded string
-                    val activityClass = try {
+                    val activityClass = (
                         com.mpdc4gsr.module.thermalunified.activity.ThermalGalleryComposeActivity::class.java
-                    } catch (e: NoClassDefFoundError) {
                         null
                     }
                     if (activityClass != null) {
                         context.startActivity(Intent(context, activityClass))
                     }
-                } catch (e: Exception) {
                     // Fallback to placeholder
                 }
             }
@@ -265,17 +251,14 @@ fun UnifiedNavHost(
         }
         composable(UnifiedRoute.ThermalReport.route) {
             LaunchedEffect(Unit) {
-                try {
                     // Use class reference instead of hard-coded string
-                    val activityClass = try {
+                    val activityClass = (
                         com.mpdc4gsr.module.thermalunified.activity.ThermalReportComposeActivity::class.java
-                    } catch (e: NoClassDefFoundError) {
                         null
                     }
                     if (activityClass != null) {
                         context.startActivity(Intent(context, activityClass))
                     }
-                } catch (e: Exception) {
                     // Fallback to placeholder
                 }
             }
@@ -354,17 +337,14 @@ fun UnifiedNavHost(
         // Network & Device Management Routes
         composable(UnifiedRoute.PermissionRequest.route) {
             LaunchedEffect(Unit) {
-                try {
                     // Use class reference instead of hard-coded string
-                    val activityClass = try {
+                    val activityClass = (
                         mpdc4gsr.core.ui.PermissionRequestComposeActivity::class.java
-                    } catch (e: NoClassDefFoundError) {
                         null
                     }
                     if (activityClass != null) {
                         context.startActivity(Intent(context, activityClass))
                     }
-                } catch (e: Exception) {
                     // Fallback - just show loading screen
                 }
             }

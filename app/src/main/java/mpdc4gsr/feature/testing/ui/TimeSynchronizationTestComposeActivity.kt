@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -29,7 +26,6 @@ import kotlin.math.abs
 
 class TimeSynchronizationTestComposeActivity : ComponentActivity() {
     companion object {
-        private const val TAG = "TimeSynchronizationTestCompose"
         private const val SYNC_TOLERANCE_MS = 5L
         private const val FLASH_DURATION_MS = 500L
         private const val TEST_RECORDING_DURATION_MS = 10000L
@@ -423,22 +419,16 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
     }
 
     private fun initializeComponents() {
-        try {
             recordingController = RecordingController(this, this)
             timeSyncService = TimeSynchronizationService()
-            AppLogger.d(TAG, "Time synchronization components initialized successfully")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize components: ${e.message}")
         }
     }
 
     private suspend fun runAllSyncTests() {
-        AppLogger.i(TAG, "Running all time synchronization tests")
         val startTime = System.currentTimeMillis()
         val metrics = mutableMapOf<String, Any>()
         val checks = mutableListOf<TimestampCheck>()
         val events = mutableListOf<SyncEvent>()
-        try {
             // Test unified timestamp system
             val unifiedTest = testUnifiedTimestampSystem()
             checks.addAll(unifiedTest)
@@ -467,18 +457,13 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             _maxDriftMs.value = maxDrift
             _currentSyncStatus.value =
                 if (maxDrift <= SYNC_TOLERANCE_MS) "Synchronized" else "Out of Sync"
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "All sync tests failed: ${e.message}")
-        } finally {
             _isTestRunning.value = false
         }
     }
 
     private suspend fun testUnifiedTimestampSystem(): List<TimestampCheck> {
-        AppLogger.d(TAG, "Testing unified timestamp system")
         val checks = mutableListOf<TimestampCheck>()
         val baseTimestamp = System.currentTimeMillis()
-        try {
             delay(2000) // Simulate test time
             // Simulate timestamp checks for different sensors
             val sensors = listOf("GSR Sensor", "Thermal Camera", "RGB Camera", "Audio Recorder")
@@ -496,16 +481,12 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                 )
                 delay(200)
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Unified timestamp test failed: ${e.message}")
         }
         return checks
     }
 
     private suspend fun testCrossSensorSyncEvents(): List<SyncEvent> {
-        AppLogger.d(TAG, "Testing cross-sensor sync events")
         val events = mutableListOf<SyncEvent>()
-        try {
             delay(3000) // Simulate test time
             // Simulate sync events
             repeat(3) { i ->
@@ -531,39 +512,22 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                 )
                 delay(1000)
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Cross-sensor sync test failed: ${e.message}")
         }
         return events
     }
 
     private suspend fun checkTimestampAccuracy() {
-        AppLogger.d(TAG, "Checking timestamp accuracy")
-        try {
             delay(2000)
-            AppLogger.d(TAG, "Timestamp accuracy check completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Timestamp accuracy check failed: ${e.message}")
         }
     }
 
     private suspend fun measureClockDrift() {
-        AppLogger.d(TAG, "Measuring clock drift")
-        try {
             delay(4000)
-            AppLogger.d(TAG, "Clock drift measurement completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Clock drift measurement failed: ${e.message}")
         }
     }
 
     private suspend fun performFlashSyncTest() {
-        AppLogger.d(TAG, "Performing flash sync test")
-        try {
             delay(3000) // Simulate flash sync test
-            AppLogger.d(TAG, "Flash sync test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Flash sync test failed: ${e.message}")
         }
     }
 
@@ -581,12 +545,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun testSyncRecovery() {
-        AppLogger.d(TAG, "Testing sync recovery")
-        try {
             delay(5000)
-            AppLogger.d(TAG, "Sync recovery test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Sync recovery test failed: ${e.message}")
         }
     }
 }

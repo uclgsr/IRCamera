@@ -170,7 +170,6 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
 
     private fun initializeRecorders() {
         viewModelScope.launch {
-            try {
                 // Initialize GSR Recorder
                 gsrRecorder = GSRRecorder(context, RealShimmerDeviceFactory(context))
                 gsrRecorder.addListener(createGSRListener())
@@ -180,8 +179,6 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
                 // Set initial states
                 _recordingState.value = RecordingState()
                 updateSystemReadiness()
-            } catch (e: Exception) {
-                _error.value = "Failed to initialize recording system: ${e.message}"
             }
         }
     }
@@ -189,7 +186,6 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
     fun initializeCameraRecorder(rgbCameraRecorder: RgbCameraRecorder) {
         this.rgbCameraRecorder = rgbCameraRecorder
         viewModelScope.launch {
-            try {
                 val initialized = rgbCameraRecorder.initialize()
                 _cameraState.value = _cameraState.value.copy(isInitialized = initialized)
                 if (initialized) {
@@ -198,8 +194,6 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
                     _error.value = "Camera initialization failed"
                 }
                 updateSystemReadiness()
-            } catch (e: Exception) {
-                _error.value = "Camera initialization error: ${e.message}"
             }
         }
     }
@@ -221,7 +215,6 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
             return
         }
         viewModelScope.launch {
-            try {
                 _recordingState.value = currentState?.copy(isStartingRecording = true)
                 _statusMessage.value = "Starting multimodal recording..."
                 // Generate session info
@@ -251,16 +244,13 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
                     type = ActionType.RECORDING_STARTED,
                     message = "Recording started for session ${sessionInfo.sessionId}"
                 )
-            } catch (e: Exception) {
                 _recordingState.value = currentState?.copy(isStartingRecording = false)
-                _error.value = "Failed to start recording: ${e.message}"
             }
         }
     }
 
     fun stopRecording() {
         viewModelScope.launch {
-            try {
                 _statusMessage.value = "Stopping multimodal recording..."
                 // Stop GSR recording
                 gsrRecorder.stopRecording()
@@ -280,8 +270,6 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
                     message = "Recording stopped. Session saved.",
                     data = finalSession
                 )
-            } catch (e: Exception) {
-                _error.value = "Failed to stop recording: ${e.message}"
             }
         }
     }
@@ -293,7 +281,6 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
             return
         }
         viewModelScope.launch {
-            try {
                 val timestamp = System.currentTimeMillis()
                 val syncMark = SyncMark(
                     timestamp = timestamp,
@@ -319,29 +306,23 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
                     type = ActionType.SYNC_EVENT_TRIGGERED,
                     message = "Sync event USER_TRIGGER triggered"
                 )
-            } catch (e: Exception) {
-                _error.value = "Failed to trigger sync event: ${e.message}"
             }
         }
     }
 
     fun discoverDevices() {
         viewModelScope.launch {
-            try {
                 _statusMessage.value = "Discovering Shimmer devices..."
                 // Simulate device discovery
                 val devices = discoverShimmerDevices()
                 _discoveredDevices.value = devices
                 _statusMessage.value = "Found ${devices.size} Shimmer device(s)"
-            } catch (e: Exception) {
-                _error.value = "Device discovery failed: ${e.message}"
             }
         }
     }
 
     fun connectToDevice(deviceInfo: ShimmerDeviceInfo) {
         viewModelScope.launch {
-            try {
                 _statusMessage.value = "Connecting to ${deviceInfo.deviceName}..."
                 // Simulate device connection
                 kotlinx.coroutines.delay(2000)
@@ -355,8 +336,6 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
                     message = "Connected to ${deviceInfo.deviceName}"
                 )
                 updateSystemReadiness()
-            } catch (e: Exception) {
-                _error.value = "Failed to connect to device: ${e.message}"
             }
         }
     }
@@ -437,18 +416,15 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
     override fun onCleared() {
         super.onCleared()
         viewModelScope.launch {
-            try {
                 if (_recordingState.value?.isRecording == true) {
                     stopRecording()
                 }
                 rgbCameraRecorder?.cleanup()
-            } catch (e: Exception) {
                 // Ignore cleanup errors
             }
         }
     }
 
     companion object {
-        private const val TAG = "MultiModalRecordingViewModel"
     }
 }

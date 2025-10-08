@@ -55,7 +55,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
 
     private fun updateSystemStatus() {
         viewModelScope.launch {
-            try {
                 val batteryStatus = getBatteryLevel()
                 val memoryInfo = getMemoryInfo()
                 val temperature = getDeviceTemperature()
@@ -65,7 +64,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
                     temperature = temperature,
                     memoryUsage = memoryInfo
                 )
-            } catch (e: Exception) {
                 _systemStatus.value = SystemStatus(
                     systemHealth = "Error",
                     battery = "Error",
@@ -90,7 +88,7 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
     }
 
     private suspend fun checkGSRSensorStatus(): String {
-        return try {
+        return (
             val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
             val bluetoothAdapter = bluetoothManager?.adapter
             if (bluetoothAdapter == null) {
@@ -100,13 +98,11 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             } else {
                 "Ready - Bluetooth Enabled"
             }
-        } catch (e: Exception) {
-            "Error: ${e.message}"
         }
     }
 
     private suspend fun checkThermalCameraStatus(): String {
-        return try {
+        return (
             val usbManager = context.getSystemService(Context.USB_SERVICE) as? android.hardware.usb.UsbManager
             if (usbManager == null) {
                 "Not Available - No USB Support"
@@ -121,13 +117,11 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
                     "Not Connected - No TC001 Device"
                 }
             }
-        } catch (e: Exception) {
-            "Error: ${e.message}"
         }
     }
 
     private suspend fun checkRGBCameraStatus(): String {
-        return try {
+        return (
             val cameraManager =
                 context.getSystemService(Context.CAMERA_SERVICE) as? android.hardware.camera2.CameraManager
             if (cameraManager == null) {
@@ -140,13 +134,11 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
                     "Not Available - No Cameras"
                 }
             }
-        } catch (e: Exception) {
-            "Error: ${e.message}"
         }
     }
 
     private fun getBatteryLevel(): String {
-        return try {
+        return (
             val batteryStatus = context.registerReceiver(
                 null,
                 IntentFilter(Intent.ACTION_BATTERY_CHANGED)
@@ -159,24 +151,22 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             } else {
                 "Unknown"
             }
-        } catch (e: Exception) {
             "Error"
         }
     }
 
     private fun getMemoryInfo(): String {
-        return try {
+        return (
             val runtime = Runtime.getRuntime()
             val usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)
             val totalMemory = runtime.maxMemory() / (1024 * 1024)
             "$usedMemory MB / $totalMemory MB"
-        } catch (e: Exception) {
             "Error"
         }
     }
 
     private fun getDeviceTemperature(): String {
-        return try {
+        return (
             val tempFile = File("/sys/class/thermal/thermal_zone0/temp")
             if (tempFile.exists()) {
                 val temp = tempFile.readText().trim().toIntOrNull()
@@ -188,7 +178,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
             } else {
                 "N/A"
             }
-        } catch (e: Exception) {
             "N/A"
         }
     }
@@ -208,7 +197,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
 
     fun exportDiagnosticLogs() {
         viewModelScope.launch {
-            try {
                 val logFile = File(context.cacheDir, "diagnostics_${System.currentTimeMillis()}.log")
                 logFile.writeText(buildString {
                     appendLine("=== System Diagnostics Report ===")
@@ -231,7 +219,6 @@ class DiagnosticsViewModel(context: Context) : BaseViewModel() {
                     appendLine("  SDK: ${Build.VERSION.SDK_INT}")
                 })
                 android.util.Log.i("DiagnosticsViewModel", "Diagnostic log exported to: ${logFile.absolutePath}")
-            } catch (e: Exception) {
                 android.util.Log.e("DiagnosticsViewModel", "Error exporting diagnostic logs", e)
             }
         }

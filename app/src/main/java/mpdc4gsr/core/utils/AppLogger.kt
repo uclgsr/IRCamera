@@ -1,6 +1,5 @@
 package mpdc4gsr.core.utils
 
-import android.util.Log
 import mpdc4gsr.core.monitoring.StructuredLogger
 
 object AppLogger {

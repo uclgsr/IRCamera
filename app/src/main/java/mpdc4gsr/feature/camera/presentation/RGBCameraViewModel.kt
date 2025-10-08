@@ -77,7 +77,6 @@ class RGBCameraViewModel(
 
     fun initializeCamera(lifecycleOwner: androidx.lifecycle.LifecycleOwner) {
         viewModelScope.launch {
-            try {
                 val recorder = RgbCameraRecorder(
                     context = application,
                     lifecycleOwner = lifecycleOwner
@@ -96,8 +95,6 @@ class RGBCameraViewModel(
                 } else {
                     _cameraState.update { it.copy(error = "Failed to initialize camera") }
                 }
-            } catch (e: Exception) {
-                _cameraState.update { it.copy(error = "Camera initialization error: ${e.message}") }
             }
         }
     }
@@ -110,7 +107,6 @@ class RGBCameraViewModel(
 
     fun startRecording() {
         viewModelScope.launch {
-            try {
                 val recorder = _cameraRecorder.value
                 if (recorder == null) {
                     _cameraState.update { it.copy(error = "Camera not initialized") }
@@ -130,19 +126,14 @@ class RGBCameraViewModel(
                 _cameraState.update { it.copy(isRecording = true, recordingDuration = 0, error = null) }
                 // Start duration tracking
                 trackRecordingDuration()
-            } catch (e: Exception) {
-                _cameraState.update { it.copy(error = "Recording start failed: ${e.message}") }
             }
         }
     }
 
     fun stopRecording() {
         viewModelScope.launch {
-            try {
                 _cameraRecorder.value?.stopRecording()
                 _cameraState.update { it.copy(isRecording = false, error = null) }
-            } catch (e: Exception) {
-                _cameraState.update { it.copy(error = "Recording stop failed: ${e.message}") }
             }
         }
     }
@@ -153,18 +144,14 @@ class RGBCameraViewModel(
 
     fun capturePhoto() {
         viewModelScope.launch {
-            try {
                 // Photo capture functionality would be implemented here
                 android.util.Log.d("RGBCameraViewModel", "Photo capture requested")
-            } catch (e: Exception) {
-                _cameraState.update { it.copy(error = "Photo capture failed: ${e.message}") }
             }
         }
     }
 
     fun switchCamera() {
         viewModelScope.launch {
-            try {
                 val recorder = _cameraRecorder.value
                 if (recorder == null) {
                     _cameraState.update { it.copy(error = "Camera not initialized") }
@@ -198,7 +185,6 @@ class RGBCameraViewModel(
                 } else {
                     _cameraState.update { it.copy(error = "Failed to switch camera") }
                 }
-            } catch (e: Exception) {
                 _cameraState.update { it.copy(error = "An unexpected error occurred while switching cameras.") }
             }
         }
@@ -234,7 +220,6 @@ class RGBCameraViewModel(
 
     fun reinitializeCamera(lifecycleOwner: androidx.lifecycle.LifecycleOwner) {
         viewModelScope.launch {
-            try {
                 // Clean up existing camera first
                 val recorder = _cameraRecorder.value
                 if (recorder != null) {
@@ -247,8 +232,6 @@ class RGBCameraViewModel(
                 _cameraState.update {
                     it.copy(cameraChangeCounter = it.cameraChangeCounter + 1)
                 }
-            } catch (e: Exception) {
-                _cameraState.update { it.copy(error = "Failed to reinitialize camera: ${e.message}") }
             }
         }
     }
@@ -270,10 +253,8 @@ class RGBCameraViewModel(
     override fun onCleared() {
         super.onCleared()
         viewModelScope.launch {
-            try {
                 _cameraRecorder.value?.stopRecording()
                 _cameraRecorder.value?.cleanup()
-            } catch (e: Exception) {
                 android.util.Log.e("RGBCameraViewModel", "Error during cleanup", e)
             }
         }

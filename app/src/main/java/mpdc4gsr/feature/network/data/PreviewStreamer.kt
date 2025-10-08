@@ -2,9 +2,6 @@ package mpdc4gsr.feature.network.data
 
 import android.graphics.Bitmap
 import android.util.Base64
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import kotlinx.coroutines.*
 import org.json.JSONObject
@@ -15,7 +12,6 @@ class PreviewStreamer(
     private val networkServer: NetworkServer
 ) {
     companion object {
-        private const val TAG = "PreviewStreamer"
         private const val DEFAULT_FRAME_INTERVAL_MS = 1000L
         private const val DEFAULT_SENSOR_INTERVAL_MS = 1000L
         private const val DEFAULT_PREVIEW_WIDTH = 320
@@ -38,14 +34,11 @@ class PreviewStreamer(
     private val currentRecordingStatus = AtomicReference<String>("IDLE")
     suspend fun startStreaming(): Boolean {
         if (isStreaming.get()) {
-            AppLogger.w(TAG, "Preview streaming already active")
             return true
         }
         if (!networkServer.isClientConnected()) {
-            AppLogger.w(TAG, "No PC client connected, cannot start streaming")
             return false
         }
-        AppLogger.i(TAG, "Starting preview streaming to PC")
         isStreaming.set(true)
         frameStreamingJob = scope.launch {
             streamFrames()
@@ -60,7 +53,6 @@ class PreviewStreamer(
         if (!isStreaming.get()) {
             return
         }
-        AppLogger.i(TAG, "Stopping preview streaming")
         isStreaming.set(false)
         frameStreamingJob?.cancel()
         sensorStreamingJob?.cancel()
@@ -96,16 +88,13 @@ class PreviewStreamer(
         this.previewWidth = previewWidth
         this.previewHeight = previewHeight
         this.jpegQuality = jpegQuality
-        Log.i(
             TAG,
             "Preview streaming configured: ${frameIntervalMs}ms frames, ${sensorIntervalMs}ms sensors, ${previewWidth}x${previewHeight}@${jpegQuality}%"
         )
     }
 
     private suspend fun streamFrames() {
-        AppLogger.i(TAG, "Frame streaming started")
         while (currentCoroutineContext().isActive && isStreaming.get()) {
-            try {
                 currentRgbFrame.get()?.let { rgbBitmap ->
                     streamFrame("rgb", rgbBitmap)
                 }
@@ -113,18 +102,13 @@ class PreviewStreamer(
                     streamFrame("thermal", thermalBitmap)
                 }
                 delay(frameIntervalMs)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error in frame streaming", e)
                 if (currentCoroutineContext().isActive) delay(1000)
             }
         }
-        AppLogger.i(TAG, "Frame streaming stopped")
     }
 
     private suspend fun streamSensorData() {
-        AppLogger.i(TAG, "Sensor data streaming started")
         while (currentCoroutineContext().isActive && isStreaming.get()) {
-            try {
                 val gsrValue = currentGsrValue.get()
                 val recordingStatus = currentRecordingStatus.get()
                 val sensorMessage = JSONObject().apply {
@@ -140,16 +124,12 @@ class PreviewStreamer(
                 }
                 networkServer.sendMessage(sensorMessage.toString())
                 delay(sensorIntervalMs)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error in sensor data streaming", e)
                 if (currentCoroutineContext().isActive) delay(1000)
             }
         }
-        AppLogger.i(TAG, "Sensor data streaming stopped")
     }
 
     private suspend fun streamFrame(frameType: String, bitmap: Bitmap) {
-        try {
             val scaledBitmap = BitmapUtils.scaleWithWH(
                 bitmap,
                 previewWidth.toDouble(),
@@ -157,7 +137,6 @@ class PreviewStreamer(
             )
             val jpegBytes = BitmapUtils.bitmapToBytes(scaledBitmap, jpegQuality)
             if (jpegBytes == null) {
-                AppLogger.w(TAG, "Failed to convert $frameType frame to JPEG")
                 return
             }
             val base64Data = Base64.encodeToString(jpegBytes, Base64.NO_WRAP)
@@ -173,15 +152,12 @@ class PreviewStreamer(
                 put("data_size_bytes", jpegBytes.size)
             }
             networkServer.sendMessage(frameMessage.toString())
-            Log.d(
                 TAG,
                 "Streamed $frameType frame: ${scaledBitmap.width}x${scaledBitmap.height}, ${jpegBytes.size} bytes"
             )
             if (scaledBitmap != bitmap && !scaledBitmap.isRecycled) {
                 scaledBitmap.recycle()
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error streaming $frameType frame", e)
         }
     }
 
@@ -191,6 +167,5 @@ class PreviewStreamer(
             stopStreaming()
         }
         scope.coroutineContext.job.cancel()
-        AppLogger.i(TAG, "PreviewStreamer cleaned up")
     }
 }

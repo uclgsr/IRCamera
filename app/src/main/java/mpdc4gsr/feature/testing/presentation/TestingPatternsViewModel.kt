@@ -152,7 +152,7 @@ class TestingPatternsViewModel : BaseViewModel() {
 
     private suspend fun executeTestCase(testCase: TestCase): TestResult {
         val startTime = System.currentTimeMillis()
-        return try {
+        return (
             when (testCase.category) {
                 TestCategory.UNIT -> executeUnitTest(testCase)
                 TestCategory.INTEGRATION -> executeIntegrationTest(testCase)
@@ -161,14 +161,12 @@ class TestingPatternsViewModel : BaseViewModel() {
                 TestCategory.STRESS -> executeStressTest(testCase)
                 TestCategory.REGRESSION -> executeRegressionTest(testCase)
             }
-        } catch (e: Exception) {
             val duration = System.currentTimeMillis() - startTime
             TestResult(
                 testId = testCase.id,
                 testName = testCase.name,
                 status = TestStatus.FAILED,
                 duration = duration,
-                message = "Test failed: ${e.message}"
             )
         }
     }
@@ -362,6 +360,5 @@ class TestingPatternsViewModel : BaseViewModel() {
     }
 
     companion object {
-        private const val TAG = "TestingPatternsViewModel"
     }
 }

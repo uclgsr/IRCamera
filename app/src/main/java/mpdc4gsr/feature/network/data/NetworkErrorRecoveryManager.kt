@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -17,7 +14,6 @@ class NetworkErrorRecoveryManager(
     private val networkClient: NetworkClient,
 ) {
     companion object {
-        private const val TAG = "NetworkErrorRecovery"
         private const val MAX_RECONNECTION_ATTEMPTS = 10
         private const val INITIAL_RETRY_DELAY_MS = 1000L
         private const val MAX_RETRY_DELAY_MS = 30000L
@@ -60,34 +56,28 @@ class NetworkErrorRecoveryManager(
 
     fun enableAutoRecovery() {
         if (isRecoveryActive.get()) {
-            AppLogger.w(TAG, "Auto recovery already enabled")
             return
         }
         isRecoveryActive.set(true)
-        AppLogger.i(TAG, "Network error recovery enabled")
     }
 
     fun disableAutoRecovery() {
         if (!isRecoveryActive.get()) {
-            AppLogger.w(TAG, "Auto recovery not active")
             return
         }
         isRecoveryActive.set(false)
-        AppLogger.i(TAG, "Network error recovery disabled")
     }
 
     fun recordSuccessfulConnection(controller: NetworkClient.ControllerInfo) {
         lastKnownGoodController = controller
         reconnectionAttempts.set(0)
         rapidFailureCount.set(0)
-        AppLogger.i(TAG, "Recorded successful connection: ${controller.deviceName}")
     }
 
     fun handleNetworkError(
         operation: String,
         error: String,
     ) {
-        AppLogger.w(TAG, "Network error in $operation: $error")
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastFailureTime < RAPID_FAILURE_WINDOW_MS) {
             rapidFailureCount.incrementAndGet()
@@ -132,6 +122,5 @@ class NetworkErrorRecoveryManager(
         healthCheckJob?.cancel()
         recoveryJob.cancel()
         eventListener = null
-        AppLogger.i(TAG, "Network error recovery manager cleaned up")
     }
 }

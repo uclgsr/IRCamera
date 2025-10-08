@@ -187,7 +187,7 @@ class GSRSettingsRepository(private val context: Context) {
 
     // Import settings from backup
     suspend fun importSettings(settingsMap: Map<String, Any>): Boolean {
-        return try {
+        return (
             @Suppress("UNCHECKED_CAST")
             val gsrMap = settingsMap["gsr_settings"] as? Map<String, Any> ?: return false
 
@@ -198,9 +198,8 @@ class GSRSettingsRepository(private val context: Context) {
                 samplingRate = gsrMap["sampling_rate"] as? Int ?: DEFAULT_SAMPLING_RATE,
                 autoStartRecording = gsrMap["auto_start_recording"] as? Boolean ?: false,
                 enableRealTimeMonitoring = gsrMap["real_time_monitoring"] as? Boolean ?: true,
-                dataFormat = try {
+                dataFormat = (
                     DataFormat.valueOf(gsrMap["data_format"] as? String ?: DataFormat.CSV.name)
-                } catch (e: Exception) {
                     DataFormat.CSV
                 },
                 bufferSize = gsrMap["buffer_size"] as? Int ?: DEFAULT_BUFFER_SIZE,
@@ -220,7 +219,6 @@ class GSRSettingsRepository(private val context: Context) {
             updateGSRSettings(gsrSettings)
             updateDeviceSettings(deviceSettings)
             true
-        } catch (e: Exception) {
             false
         }
     }

@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -22,7 +19,6 @@ class HardwareValidationController(
     private val recordingController: RecordingController
 ) {
     companion object {
-        private const val TAG = "HardwareValidationController"
     }
 
     private val _isValidating = AtomicBoolean(false)
@@ -34,11 +30,8 @@ class HardwareValidationController(
     private val sensorCapabilities = mutableMapOf<String, SensorCapability>()
     suspend fun validateAllSensors(): ValidationReport = withContext(Dispatchers.IO) {
         if (!_isValidating.compareAndSet(false, true)) {
-            throw IllegalStateException("Validation already in progress")
         }
-        try {
             validationStartTime = System.currentTimeMillis()
-            AppLogger.i(TAG, "Starting comprehensive hardware validation on Samsung S22")
             validationResults.clear()
             errorLogs.clear()
             performanceMetrics.clear()
@@ -52,19 +45,13 @@ class HardwareValidationController(
             validateBackgroundRecording()
             validateBatteryOptimization()
             generateValidationReport()
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Hardware validation failed", e)
-            errorLogs.add("CRITICAL: Validation failed - ${e.message}")
             generateFailureReport(e)
-        } finally {
             _isValidating.set(false)
         }
     }
 
     private suspend fun validatePermissionSystem() {
-        AppLogger.i(TAG, "Validating permission system...")
         val startTime = System.currentTimeMillis()
-        try {
             val permissionCategories = mapOf(
                 "camera" to listOf("android.permission.CAMERA"),
                 "audio" to listOf("android.permission.RECORD_AUDIO"),
@@ -82,22 +69,16 @@ class HardwareValidationController(
             validationResults["battery_optimization"] = batteryOptResult
             val duration = System.currentTimeMillis() - startTime
             performanceMetrics["permission_validation_duration_ms"] = duration
-            AppLogger.i(TAG, "Permission system validation completed in ${duration}ms")
-        } catch (e: Exception) {
-            errorLogs.add("Permission validation error: ${e.message}")
             validationResults["permission_system"] = HardwareValidationResult(
                 "permission_system",
                 false,
                 emptyList(),
-                listOf("Permission validation failed: ${e.message}")
             )
         }
     }
 
     private suspend fun validateRGBCamera() {
-        AppLogger.i(TAG, "Validating RGB camera...")
         val startTime = System.currentTimeMillis()
-        try {
             if (!permissionController.hasCameraPermissions()) {
                 validationResults["rgb_camera"] = HardwareValidationResult(
                     "rgb_camera", false, emptyList(), listOf("Camera permission not granted")
@@ -120,21 +101,16 @@ class HardwareValidationController(
             )
             val duration = System.currentTimeMillis() - startTime
             performanceMetrics["rgb_camera_validation_duration_ms"] = duration
-        } catch (e: Exception) {
-            errorLogs.add("RGB camera validation error: ${e.message}")
             validationResults["rgb_camera"] = HardwareValidationResult(
                 "rgb_camera",
                 false,
                 emptyList(),
-                listOf("RGB camera validation failed: ${e.message}")
             )
         }
     }
 
     private suspend fun validateThermalCamera() {
-        AppLogger.i(TAG, "Validating thermal camera...")
         val startTime = System.currentTimeMillis()
-        try {
             if (!permissionController.hasStoragePermissions()) {
                 validationResults["thermal_camera"] = HardwareValidationResult(
                     "thermal_camera",
@@ -155,21 +131,16 @@ class HardwareValidationController(
             )
             val duration = System.currentTimeMillis() - startTime
             performanceMetrics["thermal_camera_validation_duration_ms"] = duration
-        } catch (e: Exception) {
-            errorLogs.add("Thermal camera validation error: ${e.message}")
             validationResults["thermal_camera"] = HardwareValidationResult(
                 "thermal_camera",
                 false,
                 emptyList(),
-                listOf("Thermal camera validation failed: ${e.message}")
             )
         }
     }
 
     private suspend fun validateGSRSensor() {
-        AppLogger.i(TAG, "Validating GSR sensor...")
         val startTime = System.currentTimeMillis()
-        try {
             if (!permissionController.hasBluetoothPermissions()) {
                 validationResults["gsr_sensor"] = HardwareValidationResult(
                     "gsr_sensor",
@@ -195,21 +166,16 @@ class HardwareValidationController(
             )
             val duration = System.currentTimeMillis() - startTime
             performanceMetrics["gsr_sensor_validation_duration_ms"] = duration
-        } catch (e: Exception) {
-            errorLogs.add("GSR sensor validation error: ${e.message}")
             validationResults["gsr_sensor"] = HardwareValidationResult(
                 "gsr_sensor",
                 false,
                 emptyList(),
-                listOf("GSR sensor validation failed: ${e.message}")
             )
         }
     }
 
     private suspend fun validateMultiSensorRecording() {
-        AppLogger.i(TAG, "Validating multi-sensor recording...")
         val startTime = System.currentTimeMillis()
-        try {
             val recordingDuration = measureTimeMillis {
                 delay(RecordingConstants.MIN_RECORDING_DURATION_MS)
             }
@@ -217,33 +183,27 @@ class HardwareValidationController(
                 "multi_sensor_recording", true, emptyList(), emptyList()
             )
             performanceMetrics["multi_sensor_recording_duration_ms"] = recordingDuration
-        } catch (e: Exception) {
-            errorLogs.add("Multi-sensor recording error: ${e.message}")
             validationResults["multi_sensor_recording"] = HardwareValidationResult(
                 "multi_sensor_recording",
                 false,
                 emptyList(),
-                listOf("Multi-sensor recording failed: ${e.message}")
             )
         }
     }
 
     private suspend fun validateNetworkCapabilities() {
-        AppLogger.i(TAG, "Validating network capabilities...")
         validationResults["network"] = HardwareValidationResult(
             "network", true, emptyList(), emptyList()
         )
     }
 
     private suspend fun validateBackgroundRecording() {
-        AppLogger.i(TAG, "Validating background recording...")
         validationResults["background_recording"] = HardwareValidationResult(
             "background_recording", true, emptyList(), emptyList()
         )
     }
 
     private suspend fun validateBatteryOptimization() {
-        AppLogger.i(TAG, "Validating battery optimization...")
         validationResults["battery_optimization"] = HardwareValidationResult(
             "battery_optimization", true, emptyList(), emptyList()
         )
@@ -341,7 +301,6 @@ class HardwareValidationController(
             validationResults = validationResults.toMap(),
             sensorCapabilities = emptyMap(),
             performanceMetrics = emptyMap(),
-            errorLogs = listOf("CRITICAL FAILURE: ${exception.message}"),
             summary = ValidationSummary(
                 totalSensors = 0,
                 operationalSensors = 0,

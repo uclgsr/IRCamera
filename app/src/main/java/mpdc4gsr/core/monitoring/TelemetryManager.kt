@@ -2,12 +2,10 @@ package mpdc4gsr.core.monitoring
 
 import android.content.Context
 import android.os.Build
-import mpdc4gsr.core.utils.AppLogger
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 
 object TelemetryManager {
-    private const val TAG = "TelemetryManager"
     private var isInitialized = false
     private var userId: String? = null
     private var sessionId: String? = null
@@ -15,40 +13,28 @@ object TelemetryManager {
 
     fun initialize(context: Context) {
         if (isInitialized) {
-            AppLogger.w(TAG, "TelemetryManager already initialized")
             return
         }
-        try {
             sessionId = generateSessionId()
             setDeviceProperties(context)
             isInitialized = true
-            AppLogger.i(TAG, "TelemetryManager initialized successfully")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize TelemetryManager", e)
         }
     }
 
     fun setUserId(id: String) {
         userId = id
-        AppLogger.d(TAG, "User ID set")
     }
 
     fun clearUserId() {
         userId = null
-        AppLogger.d(TAG, "User ID cleared")
     }
 
     fun trackEvent(eventName: String, params: Map<String, Any>? = null) {
         if (!isInitialized) {
-            AppLogger.w(TAG, "TelemetryManager not initialized")
             return
         }
-        try {
             val eventData = buildEventData(eventName, params)
-            AppLogger.i(TAG, "Event tracked: $eventName")
             // TODO: Send to analytics backend
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to track event: $eventName", e)
         }
     }
 
@@ -62,8 +48,6 @@ object TelemetryManager {
     }
 
     fun trackError(error: String, exception: Throwable? = null, fatal: Boolean = false) {
-        try {
-            AppLogger.e(TAG, "Error tracked: $error", exception)
             val errorData = mapOf(
                 "error" to error,
                 "fatal" to fatal,
@@ -72,14 +56,10 @@ object TelemetryManager {
             )
             trackEvent(if (fatal) "fatal_error" else "error", errorData)
             // TODO: Send to crash reporting service
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to track error", e)
         }
     }
 
     fun logMetric(metricName: String, value: Number, unit: String? = null) {
-        try {
-            AppLogger.i(TAG, "Metric: $metricName = $value${unit?.let { " $it" } ?: ""}")
             val metricData = mutableMapOf<String, Any>(
                 "metric_name" to metricName,
                 "value" to value
@@ -87,8 +67,6 @@ object TelemetryManager {
             unit?.let { metricData["unit"] = it }
             trackEvent("metric_logged", metricData)
             // TODO: Send to metrics backend
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to log metric: $metricName", e)
         }
     }
 
@@ -170,10 +148,9 @@ object TelemetryManager {
     }
 
     private fun getAppVersion(context: Context): String {
-        return try {
+        return (
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
             packageInfo.versionName ?: "Unknown"
-        } catch (e: Exception) {
             "Unknown"
         }
     }
@@ -186,9 +163,7 @@ object TelemetryManager {
 
 inline fun <T> trackExecutionTime(operationName: String, block: () -> T): T {
     val startTime = System.currentTimeMillis()
-    try {
         return block()
-    } finally {
         val duration = System.currentTimeMillis() - startTime
         TelemetryManager.logMetric("${operationName}_duration", duration, "ms")
     }
@@ -199,9 +174,7 @@ suspend inline fun <T> trackExecutionTimeSuspend(
     crossinline block: suspend () -> T
 ): T {
     val startTime = System.currentTimeMillis()
-    try {
         return block()
-    } finally {
         val duration = System.currentTimeMillis() - startTime
         TelemetryManager.logMetric("${operationName}_duration", duration, "ms")
     }

@@ -106,7 +106,6 @@ fun IRCameraNavHost(
         composable(IRCameraScreen.ThermalCameraCompose.route) {
             // Try to launch thermal activity or show placeholder
             LaunchedEffect(Unit) {
-                try {
                     val intent = Intent().apply {
                         setClassName(
                             context,
@@ -114,7 +113,6 @@ fun IRCameraNavHost(
                         )
                     }
                     context.startActivity(intent)
-                } catch (e: Exception) {
                     // Fallback - stay in compose
                 }
             }
@@ -129,9 +127,7 @@ fun IRCameraNavHost(
         }
         composable(IRCameraScreen.SensorDashboardCompose.route) {
             LaunchedEffect(Unit) {
-                try {
                     context.startActivity(Intent(context, SensorDashboardComposeActivity::class.java))
-                } catch (e: Exception) {
                     // Stay in compose if activity doesn't exist
                 }
             }
@@ -146,9 +142,7 @@ fun IRCameraNavHost(
         }
         composable(IRCameraScreen.SettingsCompose.route) {
             LaunchedEffect(Unit) {
-                try {
                     context.startActivity(Intent(context, SettingsComposeActivity::class.java))
-                } catch (e: Exception) {
                     // Stay in compose if activity doesn't exist
                 }
             }

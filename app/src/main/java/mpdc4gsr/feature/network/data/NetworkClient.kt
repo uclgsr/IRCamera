@@ -4,9 +4,6 @@ import android.content.Context
 import android.net.TrafficStats
 import android.net.wifi.WifiManager
 import android.os.Process
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.libunified.app.discovery.NetworkDiscoveryService
 import com.mpdc4gsr.libunified.app.messaging.ReliableMessageService
@@ -29,7 +26,6 @@ import javax.net.ssl.SSLSocket
 
 class NetworkClient(private val context: Context) {
     companion object {
-        private const val TAG = "NetworkClient"
         private const val PC_CONTROLLER_PORT = 8080
         private const val DISCOVERY_PORT = 8081
         private const val BROADCAST_TIMEOUT = 5000L
@@ -97,10 +93,9 @@ class NetworkClient(private val context: Context) {
     }
 
     fun initialize(): Boolean {
-        return try {
+        return (
             val certInitialized = certificateManager.initialize()
             if (!certInitialized) {
-                AppLogger.w(TAG, "Certificate manager initialization failed, using insecure connections")
             }
             discoveryService.setEventListener(
                 object : NetworkDiscoveryService.DiscoveryEventListener {
@@ -119,22 +114,18 @@ class NetworkClient(private val context: Context) {
                     }
 
                     override fun onDeviceLost(serviceName: String) {
-                        AppLogger.d(TAG, "Device lost: $serviceName")
                     }
 
                     override fun onDiscoveryStarted() {
-                        AppLogger.d(TAG, "Network discovery started")
                     }
 
                     override fun onDiscoveryStopped() {
-                        AppLogger.d(TAG, "Network discovery stopped")
                     }
 
                     override fun onError(
                         operation: String,
                         error: String,
                     ) {
-                        AppLogger.e(TAG, "Discovery error in $operation: $error")
                         eventListener?.onError("discovery_$operation", error)
                     }
                 },
@@ -144,17 +135,14 @@ class NetworkClient(private val context: Context) {
                     override fun onSyncCompleted(result: TimeSyncService.SyncResult) {
                         if (result.isSuccess) {
                             clockOffset = result.clockOffsetMs * 1_000_000
-                            AppLogger.i(TAG, "Time sync completed: offset=${result.clockOffsetMs}ms")
                             eventListener?.onTimeSynchronized(clockOffset)
                         }
                     }
 
                     override fun onSyncStarted(targetHost: String) {
-                        AppLogger.d(TAG, "Time sync started with $targetHost")
                     }
 
                     override fun onSyncError(error: String) {
-                        AppLogger.e(TAG, "Time sync error: $error")
                         eventListener?.onError("time_sync", error)
                     }
                 },
@@ -166,21 +154,16 @@ class NetworkClient(private val context: Context) {
                         port: Int,
                         message: JSONObject,
                     ): Boolean {
-                        return try {
+                        return (
                             sendDirectMessage(message)
                             true
-                        } catch (e: Exception) {
-                            AppLogger.e(TAG, "Failed to send message via transport", e)
                             false
                         }
                     }
                 },
             )
             reliableMessaging.initialize()
-            AppLogger.i(TAG, "Enhanced network client initialized successfully")
             true
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize enhanced network client", e)
             false
         }
     }
@@ -194,7 +177,6 @@ class NetworkClient(private val context: Context) {
         handler: (JSONObject) -> Unit,
     ) {
         messageHandlers[messageType] = handler
-        AppLogger.d(TAG, "Message handler registered for type: $messageType")
     }
 
     private fun setupErrorRecoveryListener() {
@@ -204,8 +186,6 @@ class NetworkClient(private val context: Context) {
     suspend fun discoverControllers(): List<ControllerInfo> =
         withContext(Dispatchers.IO) {
             val controllers = mutableListOf<ControllerInfo>()
-            try {
-                AppLogger.i(TAG, "Starting enhanced controller discovery")
                 discoveryService.startDiscovery()
                 delay(DISCOVERY_WAIT_MS)
                 val discoveredDevices =
@@ -223,14 +203,9 @@ class NetworkClient(private val context: Context) {
                     controllers.add(controller)
                 }
                 if (controllers.isEmpty()) {
-                    AppLogger.i(TAG, "No controllers found via mDNS, falling back to subnet scan")
                     val scanResults = performSubnetScan()
                     controllers.addAll(scanResults)
                 }
-                AppLogger.i(TAG, "Enhanced discovery complete: found ${controllers.size} controllers")
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error during enhanced controller discovery", e)
-                eventListener?.onError("discovery", e.message ?: "Unknown error")
             }
             controllers
         }
@@ -238,24 +213,20 @@ class NetworkClient(private val context: Context) {
     private suspend fun performSubnetScan(): List<ControllerInfo> =
         withContext(Dispatchers.IO) {
             val controllers = mutableListOf<ControllerInfo>()
-            try {
                 val wifiManager =
                     context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
                 @Suppress("DEPRECATION")
                 val dhcpInfo = wifiManager.dhcpInfo
                 if (dhcpInfo.gateway == 0) {
-                    AppLogger.w(TAG, "No gateway found, cannot scan subnet")
                     return@withContext controllers
                 }
                 val gateway = intToIp(dhcpInfo.gateway)
                 val subnet = gateway.substring(0, gateway.lastIndexOf('.'))
-                AppLogger.i(TAG, "Scanning subnet: $subnet.x for PC Controllers")
                 val jobs =
                     (1..254).map { hostNum ->
                         async {
                             val host = "$subnet.$hostNum"
-                            try {
                                 if (isHostReachable(host, PC_CONTROLLER_PORT, 1000)) {
                                     val controller = queryController(host)
                                     if (controller != null) {
@@ -268,16 +239,11 @@ class NetworkClient(private val context: Context) {
                                 } else {
                                     null
                                 }
-                            } catch (e: Exception) {
-                                AppLogger.d(TAG, "Host $host unreachable: ${e.message}")
                                 null
                             }
                         }
                     }
                 jobs.awaitAll().filterNotNull().forEach { controllers.add(it) }
-                AppLogger.i(TAG, "Subnet scan complete: found ${controllers.size} controllers")
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error during subnet scan", e)
             }
             controllers
         }
@@ -288,11 +254,9 @@ class NetworkClient(private val context: Context) {
         useSecure: Boolean = useSecureDefault,
     ): Boolean =
         withContext(Dispatchers.IO) {
-            try {
                 if (isConnected) {
                     disconnect()
                 }
-                AppLogger.i(TAG, "Connecting to PC Controller at $ipAddress:$port (secure: $useSecure)")
                 if (useSecure) {
                     val sslContext = certificateManager.createSSLContext()
                     if (sslContext != null) {
@@ -305,9 +269,7 @@ class NetworkClient(private val context: Context) {
                         outputStream = DataOutputStream(sslSocket?.getOutputStream())
                         inputStream = DataInputStream(sslSocket?.getInputStream())
                         isSecureConnection = true
-                        AppLogger.i(TAG, "Secure SSL connection established")
                     } else {
-                        AppLogger.w(TAG, "SSL context unavailable, falling back to plaintext")
                         return@withContext connectPlaintext(ipAddress, port)
                     }
                 } else {
@@ -329,20 +291,13 @@ class NetworkClient(private val context: Context) {
                     // errorRecoveryManager.recordSuccessfulConnection(controller)
                     // errorRecoveryManager.enableAutoRecovery()
                     eventListener?.onConnected(controller)
-                    AppLogger.i(TAG, "Successfully connected with enhanced security to PC Controller")
                     true
                 } else {
                     disconnect()
                     false
                 }
-            } catch (e: SSLException) {
-                AppLogger.w(TAG, "SSL connection failed, attempting plaintext fallback", e)
                 disconnect()
                 connectPlaintext(ipAddress, port)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to connect to PC Controller", e)
-                // errorRecoveryManager.handleNetworkError("connect", e.message ?: "Connection failed")
-                eventListener?.onError("connect", e.message ?: "Connection failed")
                 disconnect()
                 false
             }
@@ -352,7 +307,7 @@ class NetworkClient(private val context: Context) {
         ipAddress: String,
         port: Int,
     ): Boolean {
-        return try {
+        return (
             TrafficStats.setThreadStatsTag(Process.myTid())
             val newSocket = Socket()
             newSocket.connect(InetSocketAddress(ipAddress, port), CONNECTION_TIMEOUT.toInt())
@@ -371,15 +326,11 @@ class NetworkClient(private val context: Context) {
                     discoveredControllers[ipAddress]
                         ?: ControllerInfo(ipAddress, port, "PC Controller", listOf("recording"))
                 eventListener?.onConnected(controller)
-                AppLogger.i(TAG, "Successfully connected with plaintext to PC Controller")
                 true
             } else {
                 disconnect()
                 false
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Plaintext connection failed", e)
-            eventListener?.onError("connect", e.message ?: "Connection failed")
             disconnect()
             false
         }
@@ -391,7 +342,6 @@ class NetworkClient(private val context: Context) {
         timeSyncService.stopPeriodicSync()
         discoveryService.stopDiscovery()
         // errorRecoveryManager.disableAutoRecovery()
-        try {
             socket?.let { TrafficStats.untagSocket(it) }
             sslSocket?.let { TrafficStats.untagSocket(it) }
             outputStream?.close()
@@ -399,9 +349,6 @@ class NetworkClient(private val context: Context) {
             sslSocket?.close()
             socket?.close()
             TrafficStats.clearThreadStatsTag()
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error during disconnect", e)
-        } finally {
             outputStream = null
             inputStream = null
             sslSocket = null
@@ -409,7 +356,6 @@ class NetworkClient(private val context: Context) {
             isSecureConnection = false
         }
         eventListener?.onDisconnected("User initiated")
-        AppLogger.i(TAG, "Disconnected from PC Controller")
     }
 
     suspend fun sendMeasurementData(
@@ -418,7 +364,6 @@ class NetworkClient(private val context: Context) {
     ): Boolean =
         withContext(Dispatchers.IO) {
             if (!isConnected) return@withContext false
-            try {
                 val message =
                     JSONObject().apply {
                         put("message_type", "measurement_data")
@@ -429,10 +374,6 @@ class NetworkClient(private val context: Context) {
                     }
                 sendMessageInternal(message)
                 true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to send measurement data", e)
-                // errorRecoveryManager.handleNetworkError("send_data", e.message ?: "Send failed")
-                eventListener?.onError("send_data", e.message ?: "Send failed")
                 false
             }
         }
@@ -443,7 +384,6 @@ class NetworkClient(private val context: Context) {
     ): Boolean =
         withContext(Dispatchers.IO) {
             if (!isConnected) return@withContext false
-            try {
                 val message =
                     JSONObject().apply {
                         put("message_type", "device_status")
@@ -457,15 +397,12 @@ class NetworkClient(private val context: Context) {
                     }
                 sendMessageInternal(message)
                 true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to report status", e)
                 false
             }
         }
 
     private suspend fun registerDeviceSecure(): Boolean =
         withContext(Dispatchers.IO) {
-            try {
                 val capabilities =
                     listOf(
                         "gsr",
@@ -490,15 +427,12 @@ class NetworkClient(private val context: Context) {
                 val response = receiveMessage(5000)
                 response?.optString("message_type") == "ack" &&
                         response.optString("ack_for") == "device_register"
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Secure device registration failed", e)
                 false
             }
         }
 
     private suspend fun registerDevice(): Boolean =
         withContext(Dispatchers.IO) {
-            try {
                 val capabilities =
                     listOf(
                         "gsr",
@@ -523,8 +457,6 @@ class NetworkClient(private val context: Context) {
                 val response = receiveMessage(5000)
                 response?.optString("message_type") == "ack" &&
                         response.optString("ack_for") == "device_register"
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Device registration failed", e)
                 false
             }
         }
@@ -532,13 +464,9 @@ class NetworkClient(private val context: Context) {
     private fun startMessageListener() {
         heartbeatScope.launch {
             while (isConnected && isActive) {
-                try {
                     val message = receiveMessage(1000)
                     message?.let { handleIncomingMessage(it) }
-                } catch (e: Exception) {
                     if (isConnected) {
-                        AppLogger.e(TAG, "Message listener error", e)
-                        eventListener?.onError("message_listener", e.message ?: "Listener error")
                     }
                     break
                 }
@@ -549,7 +477,6 @@ class NetworkClient(private val context: Context) {
     private fun startHeartbeat() {
         heartbeatScope.launch {
             while (isConnected && isActive) {
-                try {
                     val heartbeatMessage =
                         JSONObject().apply {
                             put("message_type", "device_heartbeat")
@@ -558,9 +485,7 @@ class NetworkClient(private val context: Context) {
                         }
                     sendMessageInternal(heartbeatMessage)
                     delay(HEARTBEAT_INTERVAL)
-                } catch (e: Exception) {
                     if (isConnected) {
-                        AppLogger.e(TAG, "Heartbeat failed", e)
                     }
                     break
                 }
@@ -570,13 +495,8 @@ class NetworkClient(private val context: Context) {
 
     private fun handleIncomingMessage(message: JSONObject) {
         val messageType = message.optString("message_type")
-        AppLogger.d(TAG, "Received message: $messageType")
         messageHandlers[messageType]?.let { handler ->
-            try {
-                AppLogger.d(TAG, "Calling registered handler for message type: $messageType")
                 handler(message)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error in message handler for type $messageType", e)
             }
         }
         when (messageType) {
@@ -599,21 +519,17 @@ class NetworkClient(private val context: Context) {
             }
 
             "session_stop" -> {
-                AppLogger.i(TAG, "Remote session stop requested")
             }
 
             "ack" -> {
-                AppLogger.d(TAG, "Received ACK for: ${message.optString("ack_for")}")
             }
 
             "error" -> {
                 val errorMsg = message.optString("error_message", "Unknown error")
-                AppLogger.w(TAG, "Received error from PC Controller: $errorMsg")
                 eventListener?.onError("pc_controller", errorMsg)
             }
 
             else -> {
-                AppLogger.w(TAG, "Unknown message type: $messageType")
             }
         }
     }
@@ -636,22 +552,17 @@ class NetworkClient(private val context: Context) {
     private suspend fun receiveMessage(timeoutMs: Long): JSONObject? =
         withContext(Dispatchers.IO) {
             val input = inputStream ?: return@withContext null
-            try {
                 val socketToUse = sslSocket ?: socket
                 val originalTimeout = socketToUse?.soTimeout
                 socketToUse?.soTimeout = timeoutMs.toInt()
                 val messageLength = input.readInt()
                 if (messageLength > MAX_MESSAGE_SIZE) {
-                    throw IOException("Message too large: $messageLength bytes")
                 }
                 val messageData = ByteArray(messageLength)
                 input.readFully(messageData)
                 socketToUse?.soTimeout = originalTimeout ?: CONNECTION_TIMEOUT.toInt()
                 JSONObject(String(messageData, Charsets.UTF_8))
-            } catch (e: SocketTimeoutException) {
                 null
-            } catch (e: Exception) {
-                throw e
             }
         }
 
@@ -661,20 +572,14 @@ class NetworkClient(private val context: Context) {
 
     suspend fun sendMessage(message: JSONObject): Boolean =
         withContext(Dispatchers.IO) {
-            try {
                 if (!isConnected) {
-                    AppLogger.w(TAG, "Cannot send message - not connected to PC Controller")
                     return@withContext false
                 }
                 sendMessageInternal(message)
-                Log.d(
                     TAG,
                     "Message sent successfully: ${message.optString("message_type", "unknown")}"
                 )
                 true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to send message", e)
-                // errorRecoveryManager.handleNetworkError("send_message", e.message ?: "Send failed")
                 false
             }
         }
@@ -682,7 +587,6 @@ class NetworkClient(private val context: Context) {
     suspend fun startDataStreaming(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isConnected) return@withContext false
-            try {
                 val message =
                     JSONObject().apply {
                         put("message_type", "start_data_stream")
@@ -691,10 +595,7 @@ class NetworkClient(private val context: Context) {
                     }
                 sendMessageInternal(message)
                 eventListener?.onDataStreamingStarted()
-                AppLogger.i(TAG, "Data streaming started")
                 true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to start data streaming", e)
                 false
             }
         }
@@ -702,7 +603,6 @@ class NetworkClient(private val context: Context) {
     suspend fun stopDataStreaming(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isConnected) return@withContext false
-            try {
                 val message =
                     JSONObject().apply {
                         put("message_type", "stop_data_stream")
@@ -711,17 +611,13 @@ class NetworkClient(private val context: Context) {
                     }
                 sendMessageInternal(message)
                 eventListener?.onDataStreamingStopped()
-                AppLogger.i(TAG, "Data streaming stopped")
                 true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to stop data streaming", e)
                 false
             }
         }
 
     private suspend fun queryController(host: String): ControllerInfo? =
         withContext(Dispatchers.IO) {
-            try {
                 TrafficStats.setThreadStatsTag(Process.myTid())
                 Socket().use { socket ->
                     TrafficStats.tagSocket(socket)
@@ -739,7 +635,6 @@ class NetworkClient(private val context: Context) {
                             output.flush()
                             val responseLength = input.readInt()
                             if (responseLength < 0 || responseLength > MAX_MESSAGE_SIZE) { // Max 1MB response
-                                AppLogger.w(TAG, "Invalid response length: $responseLength bytes from $host")
                                 return@withContext null
                             }
                             val responseData = ByteArray(responseLength)
@@ -761,10 +656,7 @@ class NetworkClient(private val context: Context) {
                         }
                     }
                 }
-            } catch (e: Exception) {
-                AppLogger.d(TAG, "Controller query failed for $host: ${e.message}")
                 null
-            } finally {
                 TrafficStats.clearThreadStatsTag()
             }
         }
@@ -775,16 +667,13 @@ class NetworkClient(private val context: Context) {
         timeoutMs: Int,
     ): Boolean =
         withContext(Dispatchers.IO) {
-            try {
                 TrafficStats.setThreadStatsTag(Process.myTid())
                 Socket().use { socket ->
                     TrafficStats.tagSocket(socket)
                     socket.connect(InetSocketAddress(host, port), timeoutMs)
                     true
                 }
-            } catch (e: Exception) {
                 false
-            } finally {
                 TrafficStats.clearThreadStatsTag()
             }
         }
@@ -804,15 +693,12 @@ class NetworkClient(private val context: Context) {
     }
 
     private fun getLocalIpAddress(): String {
-        try {
             val wifiManager =
                 context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
             @Suppress("DEPRECATION")
             val dhcpInfo = wifiManager.dhcpInfo
             return intToIp(dhcpInfo.ipAddress)
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to get local IP address", e)
             return "127.0.0.1"
         }
     }
@@ -831,22 +717,17 @@ class NetworkClient(private val context: Context) {
     fun isConnected(): Boolean = isConnected
     fun setSecureConnectionDefault(enabled: Boolean) {
         if (isConnected) {
-            AppLogger.w(TAG, "Cannot change security setting while connected")
             return
         }
         useSecureDefault = enabled
-        AppLogger.i(TAG, "Secure connection default ${if (enabled) "enabled" else "disabled"}")
     }
 
     // Stub: NetworkErrorRecoveryManager not available
     // fun getErrorRecoveryManager(): NetworkErrorRecoveryManager = errorRecoveryManager
     fun startDiscovery(callback: (Boolean) -> Unit) {
         heartbeatScope.launch {
-            try {
                 discoverControllers()
                 callback(true)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Discovery failed", e)
                 callback(false)
             }
         }
@@ -858,11 +739,8 @@ class NetworkClient(private val context: Context) {
         callback: (Boolean) -> Unit,
     ) {
         heartbeatScope.launch {
-            try {
                 val result = connectToController(address, port, useSecureDefault)
                 callback(result)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Connection failed", e)
                 callback(false)
             }
         }

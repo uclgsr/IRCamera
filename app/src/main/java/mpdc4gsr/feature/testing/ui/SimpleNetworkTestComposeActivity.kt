@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -31,7 +28,6 @@ import mpdc4gsr.feature.network.data.TcpClient
 
 class SimpleNetworkTestComposeActivity : ComponentActivity() {
     companion object {
-        private const val TAG = "SimpleNetworkTestCompose"
         private const val DEFAULT_PC_IP = "192.168.1.100"
         private const val DEFAULT_PC_PORT = 8080
     }
@@ -410,41 +406,27 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun connectWiFi(ipAddr: String, portNum: String): ConnectionStatus {
-        AppLogger.d(TAG, "Connecting via WiFi to $ipAddr:$portNum")
-        return try {
+        return (
             delay(3000) // Simulate connection time
-            AppLogger.d(TAG, "WiFi connection established")
             ConnectionStatus.CONNECTED
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "WiFi connection failed: ${e.message}")
             ConnectionStatus.ERROR
         }
     }
 
     private suspend fun connectBluetooth(): ConnectionStatus {
-        AppLogger.d(TAG, "Connecting via Bluetooth")
-        return try {
+        return (
             delay(4000) // Simulate BT connection time (longer)
-            AppLogger.d(TAG, "Bluetooth connection established")
             ConnectionStatus.CONNECTED
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Bluetooth connection failed: ${e.message}")
             ConnectionStatus.ERROR
         }
     }
 
     private suspend fun disconnect() {
-        AppLogger.d(TAG, "Disconnecting from PC")
-        try {
             delay(1000)
-            AppLogger.d(TAG, "Disconnected successfully")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Disconnect failed: ${e.message}")
         }
     }
 
     private suspend fun testCommands() {
-        AppLogger.d(TAG, "Testing network commands")
         val commands = listOf(
             NetworkCommand("PING", "Test connection latency", "PONG", true),
             NetworkCommand("GET_STATUS", "Get PC system status", "OK:READY", true),
@@ -461,9 +443,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun runAllNetworkTests() {
-        AppLogger.i(TAG, "Running all network tests")
         val metrics = mutableMapOf<String, Any>()
-        try {
             // Test WiFi connection
             testWiFiConnection()
             delay(2000)
@@ -487,50 +467,27 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             metrics["Average Latency"] = "45ms"
             metrics["Connection Uptime"] = "99.8%"
             _networkMetrics.value = metrics
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Network tests failed: ${e.message}")
-        } finally {
             _isTestRunning.value = false
         }
     }
 
     private suspend fun testWiFiConnection() {
-        AppLogger.d(TAG, "Testing WiFi connection")
-        try {
             delay(3000)
-            AppLogger.d(TAG, "WiFi connection test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "WiFi connection test failed: ${e.message}")
         }
     }
 
     private suspend fun testCommandExecution() {
-        AppLogger.d(TAG, "Testing command execution")
-        try {
             delay(4000)
-            AppLogger.d(TAG, "Command execution test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Command execution test failed: ${e.message}")
         }
     }
 
     private suspend fun testBidirectionalTelemetry() {
-        AppLogger.d(TAG, "Testing bidirectional telemetry")
-        try {
             delay(5000)
-            AppLogger.d(TAG, "Bidirectional telemetry test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Bidirectional telemetry test failed: ${e.message}")
         }
     }
 
     private suspend fun testConnectionStability() {
-        AppLogger.d(TAG, "Testing connection stability")
-        try {
             delay(6000)
-            AppLogger.d(TAG, "Connection stability test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Connection stability test failed: ${e.message}")
         }
     }
 

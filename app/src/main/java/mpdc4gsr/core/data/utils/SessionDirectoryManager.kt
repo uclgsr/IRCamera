@@ -3,9 +3,6 @@ package mpdc4gsr.core.data.utils
 import android.content.Context
 import android.os.Build
 import android.os.StatFs
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
@@ -13,7 +10,6 @@ import java.util.*
 
 class SessionDirectoryManager(private val context: Context) {
     companion object {
-        private const val TAG = "SessionDirectoryManager"
         private const val SESSIONS_ROOT_DIR = "sessions"
         private const val RGB_SUBDIR = "RGB"
         private const val THERMAL_SUBDIR = "Thermal"
@@ -45,12 +41,10 @@ class SessionDirectoryManager(private val context: Context) {
     fun createSessionDirectory(sessionId: String): SessionDirectory {
         val sessionDir = File(baseDirectory, sessionId)
         if (!sessionDir.mkdirs() && !sessionDir.exists()) {
-            throw IllegalStateException("Failed to create session directory: ${sessionDir.absolutePath}")
         }
         val rgbDir = File(sessionDir, RGB_SUBDIR).also { it.mkdirs() }
         val thermalDir = File(sessionDir, THERMAL_SUBDIR).also { it.mkdirs() }
         val shimmerDir = File(sessionDir, SHIMMER_SUBDIR).also { it.mkdirs() }
-        AppLogger.i(TAG, "Created session directory structure: $sessionId")
         return SessionDirectory(
             sessionId = sessionId,
             rootDir = sessionDir,
@@ -75,7 +69,6 @@ class SessionDirectoryManager(private val context: Context) {
             put("metadata", JSONObject(metadata.customMetadata))
         }
         metadataFile.writeText(jsonMetadata.toString(2))
-        AppLogger.i(TAG, "Created session metadata: ${metadataFile.absolutePath}")
         return metadataFile
     }
 
@@ -87,7 +80,6 @@ class SessionDirectoryManager(private val context: Context) {
     ) {
         val metadataFile = File(sessionDir.rootDir, SESSION_METADATA_FILE)
         if (metadataFile.exists()) {
-            try {
                 val jsonMetadata = JSONObject(metadataFile.readText())
                 jsonMetadata.put("end_time", endTime)
                 jsonMetadata.put("status", status)
@@ -98,9 +90,6 @@ class SessionDirectoryManager(private val context: Context) {
                 val filesInfo = getSessionFilesInfo(sessionDir)
                 jsonMetadata.put("files", JSONObject(filesInfo))
                 metadataFile.writeText(jsonMetadata.toString(2))
-                AppLogger.i(TAG, "Updated session metadata: ${sessionDir.sessionId}")
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to update session metadata", e)
             }
         }
     }
@@ -122,12 +111,8 @@ class SessionDirectoryManager(private val context: Context) {
         val cleanedSessions = mutableListOf<String>()
         baseDirectory.listFiles()?.forEach { sessionDir ->
             if (sessionDir.isDirectory && isFailedSession(sessionDir)) {
-                try {
                     sessionDir.deleteRecursively()
                     cleanedSessions.add(sessionDir.name)
-                    AppLogger.i(TAG, "Cleaned up failed session: ${sessionDir.name}")
-                } catch (e: Exception) {
-                    AppLogger.w(TAG, "Failed to cleanup session: ${sessionDir.name}", e)
                 }
             }
         }
@@ -169,7 +154,6 @@ class SessionDirectoryManager(private val context: Context) {
             val totalSize = sessionDir.walkTopDown().filter { it.isFile }.map { it.length() }.sum()
             return totalSize < 1024
         }
-        try {
             val metadata = JSONObject(metadataFile.readText())
             val status = metadata.optString("status", "")
             if (status == "FAILED" || status == "ERROR") {
@@ -178,18 +162,15 @@ class SessionDirectoryManager(private val context: Context) {
                     .any { it.length() > 10240 }
                 return !hasDataFiles
             }
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to parse metadata for session ${sessionDir.name}", e)
             return false
         }
         return false
     }
 
     private fun getAppVersion(): String {
-        return try {
+        return (
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
             packageInfo.versionName ?: "unknown"
-        } catch (e: Exception) {
             "unknown"
         }
     }
@@ -205,38 +186,30 @@ class SessionDirectoryManager(private val context: Context) {
     }
 
     fun deleteSession(sessionId: String): Boolean {
-        return try {
+        return (
             val sessionDir = File(baseDirectory, sessionId)
             val legacyDir = File(context.getExternalFilesDir(null), "recordings/$sessionId")
             var deleted = false
             if (sessionDir.exists()) {
                 deleted = sessionDir.deleteRecursively()
-                AppLogger.i(TAG, "Deleted session directory: $sessionId")
             }
             if (legacyDir.exists()) {
                 deleted = legacyDir.deleteRecursively() || deleted
-                AppLogger.i(TAG, "Deleted legacy session directory: $sessionId")
             }
             deleted
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to delete session: $sessionId", e)
             false
         }
     }
 
     fun exportSession(sessionId: String): Boolean {
-        return try {
+        return (
             val sessionDir = File(baseDirectory, sessionId)
             if (!sessionDir.exists()) {
-                AppLogger.w(TAG, "Session directory not found for export: $sessionId")
                 return false
             }
             // Export functionality is not implemented yet
-            AppLogger.w(TAG, "Export functionality not implemented for session: $sessionId")
             // Return false to indicate the feature is not implemented
             false
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to export session: $sessionId", e)
             false
         }
     }

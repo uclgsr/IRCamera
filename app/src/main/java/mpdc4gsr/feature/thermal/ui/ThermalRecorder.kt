@@ -2,9 +2,6 @@ package mpdc4gsr.feature.thermal.ui
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import mpdc4gsr.core.data.model.SessionMetadata
 import mpdc4gsr.core.data.TimestampManager
@@ -21,7 +18,6 @@ import kotlin.math.min
 
 class ThermalRecorder(private val context: Context) {
     companion object {
-        private const val TAG = "ThermalRecorder"
         private const val CSV_HEADER =
             "timestamp_ns,frame_sequence,min_temp_c,avg_temp_c,max_temp_c,pixel_count"
     }
@@ -66,14 +62,11 @@ class ThermalRecorder(private val context: Context) {
     ): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording.get()) {
-                AppLogger.w(TAG, "Thermal recording already in progress")
                 return@withContext false
             }
-            try {
                 val thermalSettingsRepo = mpdc4gsr.feature.thermal.data.ThermalSettingsRepository.getInstance(context)
                 thermalSettings = thermalSettingsRepo.getSettings()
                 val effectiveSaveImages = saveImages || (thermalSettings?.saveRawImages ?: false)
-                Log.i(
                     TAG,
                     "Thermal settings loaded: frameRate=${thermalSettings?.frameRate}fps, saveImages=$effectiveSaveImages, palette=${thermalSettings?.palette}"
                 )
@@ -109,21 +102,14 @@ class ThermalRecorder(private val context: Context) {
                     )
                 )
                 isRecording.set(true)
-                AppLogger.i(TAG, "Thermal recording started with session timing: ${csvFile.absolutePath}")
-                AppLogger.i(TAG, "Session start: ${sessionMetadata.sessionStartIso}")
-                AppLogger.i(TAG, "Thermal recording SessionSync event logged for alignment verification")
                 if (saveImages) {
                     sessionDirectory?.let { dir ->
-                        Log.i(
                             TAG,
                             "Thermal frame images will be saved to: ${dir.absolutePath}"
                         )
                     }
                 }
                 return@withContext true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to start thermal recording", e)
-                frameListener?.onError("Failed to start thermal recording: ${e.message}")
                 return@withContext false
             }
         }
@@ -131,10 +117,8 @@ class ThermalRecorder(private val context: Context) {
     suspend fun startRecording(sessionDir: String, saveImages: Boolean = false): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording.get()) {
-                AppLogger.w(TAG, "Thermal recording already in progress")
                 return@withContext false
             }
-            try {
                 this@ThermalRecorder.saveImages = saveImages
                 sessionDirectory = File(sessionDir)
                 sessionDirectory?.let { dir ->
@@ -154,38 +138,28 @@ class ThermalRecorder(private val context: Context) {
                 }
                 frameSequence.set(0)
                 isRecording.set(true)
-                AppLogger.i(TAG, "Thermal recording started (legacy mode): ${csvFile.absolutePath}")
                 if (saveImages) {
                     sessionDirectory?.let { dir ->
-                        Log.i(
                             TAG,
                             "Thermal frame images will be saved to: ${dir.absolutePath}"
                         )
                     }
                 }
                 return@withContext true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to start thermal recording", e)
-                frameListener?.onError("Failed to start thermal recording: ${e.message}")
                 return@withContext false
             }
         }
 
     suspend fun stopRecording(): Boolean = withContext(Dispatchers.IO) {
         if (!isRecording.get()) {
-            AppLogger.w(TAG, "No thermal recording in progress")
             return@withContext false
         }
-        try {
             isRecording.set(false)
             // Close the writer properly
             csvWriter?.flush()
             csvWriter?.close()
             csvWriter = null
-            AppLogger.i(TAG, "Thermal recording stopped. Processed ${frameSequence.get()} frames")
             return@withContext true
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error stopping thermal recording", e)
             return@withContext false
         }
     }
@@ -200,16 +174,12 @@ class ThermalRecorder(private val context: Context) {
             return
         }
         recordingScope.launch {
-            try {
                 val stats = calculateFrameStats(frameData, width, height, timestampNs)
                 logFrameStats(stats)
                 if (saveImages) {
                     saveFrameImage(frameData, width, height, stats.frameSequence)
                 }
                 frameListener?.onFrameProcessed(stats)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error processing thermal frame", e)
-                frameListener?.onError("Error processing frame: ${e.message}")
             }
         }
     }
@@ -226,7 +196,6 @@ class ThermalRecorder(private val context: Context) {
             return
         }
         recordingScope.launch {
-            try {
                 val tempData = FloatArray(width * height)
                 val tempRange = maxTempRange - minTempRange
                 for (i in intensityData.indices) {
@@ -239,9 +208,6 @@ class ThermalRecorder(private val context: Context) {
                     saveFrameImageFromIntensity(intensityData, width, height, stats.frameSequence)
                 }
                 frameListener?.onFrameProcessed(stats)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error processing thermal frame from intensity", e)
-                frameListener?.onError("Error processing frame from intensity: ${e.message}")
             }
         }
     }
@@ -255,7 +221,6 @@ class ThermalRecorder(private val context: Context) {
         val pixelCount = width * height
         val expectedSize = pixelCount * 4
         if (frameData.size < expectedSize) {
-            AppLogger.w(TAG, "Frame data size mismatch: expected $expectedSize, got ${frameData.size}")
         }
         var minTemp = Float.MAX_VALUE
         var maxTemp = Float.MIN_VALUE
@@ -315,7 +280,6 @@ class ThermalRecorder(private val context: Context) {
     }
 
     private suspend fun logFrameStats(stats: ThermalFrameStats) = withContext(Dispatchers.IO) {
-        try {
             csvWriter?.let { writer ->
                 val csvLine = sessionMetadata?.let { sm ->
                     val wallClockMs = sm.monotonicToWallClock(stats.timestampNs)
@@ -358,13 +322,10 @@ class ThermalRecorder(private val context: Context) {
                 writer.write(csvLine)
                 writer.write("\n")
                 writer.flush()
-                Log.d(
                     TAG,
                     "Frame ${stats.frameSequence}: T=${stats.minTemp}°C to ${stats.maxTemp}°C (avg=${stats.avgTemp}°C)"
                 )
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error writing thermal stats to CSV", e)
         }
     }
 
@@ -374,7 +335,6 @@ class ThermalRecorder(private val context: Context) {
         height: Int,
         frameSequence: Long
     ) = withContext(Dispatchers.IO) {
-        try {
             sessionDirectory?.let { dir ->
                 val imageFile =
                     File(
@@ -384,10 +344,7 @@ class ThermalRecorder(private val context: Context) {
                 FileOutputStream(imageFile).use { output ->
                     output.write(frameData)
                 }
-                AppLogger.d(TAG, "Saved thermal frame image: ${imageFile.name}")
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error saving thermal frame image", e)
         }
     }
 
@@ -397,7 +354,6 @@ class ThermalRecorder(private val context: Context) {
         height: Int,
         frameSequence: Long
     ) = withContext(Dispatchers.IO) {
-        try {
             sessionDirectory?.let { dir ->
                 val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                 val pixels = IntArray(width * height)
@@ -417,10 +373,7 @@ class ThermalRecorder(private val context: Context) {
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
                 }
                 bitmap.recycle()
-                AppLogger.d(TAG, "Saved thermal frame PNG: ${imageFile.name}")
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error saving thermal frame PNG", e)
         }
     }
 

@@ -173,7 +173,6 @@ class DualModeCameraViewModel : AppBaseViewModel() {
         previewView: PreviewView
     ) {
         launchWithLoading {
-            try {
                 appContext = context.applicationContext
                 rgbCameraRecorder = RgbCameraRecorder(
                     context = context,
@@ -188,8 +187,6 @@ class DualModeCameraViewModel : AppBaseViewModel() {
                     frameRate = 30
                 )
                 _events.emit(CameraEvent.ShowSuccess("Dual-mode camera system initialized"))
-            } catch (e: Exception) {
-                _events.emit(CameraEvent.ShowError("Failed to initialize camera: ${e.message}"))
             }
         }
     }
@@ -276,7 +273,6 @@ class DualModeCameraViewModel : AppBaseViewModel() {
                 _events.emit(CameraEvent.ShowError("Already recording"))
                 return@launchWithErrorHandling
             }
-            try {
                 val fileName = "recording_${System.currentTimeMillis()}"
                 val sessionDir = appContext?.getExternalFilesDir("recordings")?.absolutePath ?: ""
                 rgbCameraRecorder?.startRecording(sessionDir)
@@ -287,8 +283,6 @@ class DualModeCameraViewModel : AppBaseViewModel() {
                 _cameraState.value = _cameraState.value.copy(isRecording = true)
                 _events.emit(CameraEvent.RecordingStarted(fileName))
                 _events.emit(CameraEvent.ShowSuccess("Recording started"))
-            } catch (e: Exception) {
-                _events.emit(CameraEvent.ShowError("Failed to start recording: ${e.message}"))
             }
         }
     }
@@ -299,7 +293,6 @@ class DualModeCameraViewModel : AppBaseViewModel() {
                 _events.emit(CameraEvent.ShowError("Not currently recording"))
                 return@launchWithErrorHandling
             }
-            try {
                 val duration = _recordingState.value.recordingDuration
                 rgbCameraRecorder?.stopRecording()
                 _recordingState.value = _recordingState.value.copy(
@@ -310,8 +303,6 @@ class DualModeCameraViewModel : AppBaseViewModel() {
                 val filePath = "recording_path" // Would be actual path in real implementation
                 _events.emit(CameraEvent.RecordingStopped(filePath, duration))
                 _events.emit(CameraEvent.ShowSuccess("Recording stopped"))
-            } catch (e: Exception) {
-                _events.emit(CameraEvent.ShowError("Failed to stop recording: ${e.message}"))
             }
         }
     }
@@ -352,6 +343,5 @@ class DualModeCameraViewModel : AppBaseViewModel() {
     }
 
     companion object {
-        private const val TAG = "DualModeCameraViewModel"
     }
 }

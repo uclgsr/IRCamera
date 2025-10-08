@@ -26,7 +26,6 @@ class StartThermalStreamingUseCase(
 ) {
     suspend operator fun invoke(): Flow<ThermalFrameData> {
         if (!repository.isCameraConnected()) {
-            throw IllegalStateException("Thermal camera not connected")
         }
         return repository.getThermalStream()
     }

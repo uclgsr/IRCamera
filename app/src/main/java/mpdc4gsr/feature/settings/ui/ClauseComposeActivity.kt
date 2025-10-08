@@ -43,7 +43,7 @@ class ClauseViewModel : AppBaseViewModel() {
     }
 
     suspend fun confirmInitApp(context: android.content.Context): Boolean {
-        return try {
+        return (
             _isLoading.value = true
             // Simulate initialization process
             delay(2000)
@@ -58,7 +58,6 @@ class ClauseViewModel : AppBaseViewModel() {
             }
             _isLoading.value = false
             true
-        } catch (e: Exception) {
             _isLoading.value = false
             false
         }

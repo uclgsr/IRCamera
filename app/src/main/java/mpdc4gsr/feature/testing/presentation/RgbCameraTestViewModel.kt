@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.testing.presentation
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +11,6 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 
 class RgbCameraTestViewModel : AppBaseViewModel() {
     companion object {
-        private const val TAG = "RgbCameraTestViewModel"
     }
 
     data class TestCase(
@@ -75,11 +71,8 @@ class RgbCameraTestViewModel : AppBaseViewModel() {
 
     fun initializeCameraRecorder(context: Context, lifecycleOwner: androidx.lifecycle.LifecycleOwner) {
         viewModelScope.launch {
-            try {
                 cameraRecorder = RgbCameraRecorder(context, lifecycleOwner)
                 _recordingStatus.value = "Camera Initialized"
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to initialize camera recorder", e)
                 _recordingStatus.value = "Initialization Failed"
             }
         }
@@ -107,10 +100,7 @@ class RgbCameraTestViewModel : AppBaseViewModel() {
     override fun onCleared() {
         super.onCleared()
         viewModelScope.launch {
-            try {
                 cameraRecorder?.cleanup()
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error during cleanup", e)
             }
         }
     }

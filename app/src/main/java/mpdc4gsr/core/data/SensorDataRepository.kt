@@ -70,12 +70,10 @@ class SensorDataRepository(
     }
 
     fun getGSRDataStream(deviceId: String): Flow<BaseRepository.Result<GSRSensorData>> = safeFlow {
-        throw NotImplementedError("GSR data stream requires actual sensor connection. Simulation removed.")
     }
 
     fun getThermalDataStream(deviceId: String): Flow<BaseRepository.Result<ThermalSensorData>> =
         safeFlow {
-            throw NotImplementedError("Thermal data stream requires actual sensor connection. Simulation removed.")
         }
 
     fun getDeviceStatus(deviceId: String): Flow<BaseRepository.Result<DeviceStatus>> = safeFlow {

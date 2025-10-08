@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import mpdc4gsr.core.monitoring.StructuredLogger
 import org.json.JSONArray
 import org.json.JSONObject
@@ -15,7 +12,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class DataManagementService(private val context: Context) {
     companion object {
-        private const val TAG = "DataManagementService"
         private const val BASE_DIR = "IRCamera_Data"
         private const val SESSIONS_DIR = "sessions"
         private const val TEMP_DIR = "temp"
@@ -201,7 +197,6 @@ class DataManagementService(private val context: Context) {
         fileType: String,
         customMetadata: Map<String, Any> = emptyMap(),
     ): FileMetadata? {
-        try {
             val file = File(filePath)
             if (!file.exists()) {
                 logger.log(
@@ -249,14 +244,12 @@ class DataManagementService(private val context: Context) {
                 ),
             )
             return metadata
-        } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "file_registration_error",
                 details = mapOf(
                     "file_path" to filePath,
-                    "error" to (e.message ?: "Unknown error"),
                 ),
             )
             return null
@@ -271,7 +264,6 @@ class DataManagementService(private val context: Context) {
             if (fileMetadata.uploadStatus == FileUploadService.UploadStatus.COMPLETED) {
                 continue
             }
-            try {
                 val uploadFileType =
                     when (fileMetadata.fileName.substringAfterLast(".", "").lowercase()) {
                         "mp4" -> FileUploadService.FileType.VISUAL_VIDEO
@@ -290,14 +282,12 @@ class DataManagementService(private val context: Context) {
                 fileMetadata.uploadJobId = jobId
                 fileMetadata.uploadStatus = FileUploadService.UploadStatus.PENDING
                 uploadJobIds.add(jobId)
-            } catch (e: Exception) {
                 logger.log(
                     StructuredLogger.LogLevel.ERROR,
                     TAG,
                     "upload_queue_error",
                     details = mapOf(
                         "file_id" to fileMetadata.fileId,
-                        "error" to (e.message ?: "Unknown error"),
                     ),
                 )
             }
@@ -321,7 +311,6 @@ class DataManagementService(private val context: Context) {
         includeFiles: Boolean = false,
     ): String? {
         val session = activeSessions[sessionId] ?: return null
-        try {
             val exportDir = File(exportsDirectory, sessionId)
             exportDir.mkdirs()
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.UK).format(Date())
@@ -348,7 +337,6 @@ class DataManagementService(private val context: Context) {
                 ),
             )
             return exportFile.absolutePath
-        } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
@@ -356,7 +344,6 @@ class DataManagementService(private val context: Context) {
                 details = mapOf(
                     "session_id" to sessionId,
                     "format" to format.name,
-                    "error" to (e.message ?: "Unknown error"),
                 ),
             )
             return null
@@ -436,7 +423,6 @@ class DataManagementService(private val context: Context) {
     private fun archiveSession(sessionId: String): Boolean {
         val session = activeSessions[sessionId] ?: return false
         val sessionDir = File(sessionsDirectory, sessionId)
-        try {
             val archiveSessionDir = File(archiveDirectory, sessionId)
             archiveSessionDir.mkdirs()
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.UK).format(Date())
@@ -458,14 +444,12 @@ class DataManagementService(private val context: Context) {
                 ),
             )
             return true
-        } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "session_archive_error",
                 details = mapOf(
                     "session_id" to sessionId,
-                    "error" to (e.message ?: "Unknown error"),
                 ),
             )
             return false
@@ -487,7 +471,6 @@ class DataManagementService(private val context: Context) {
     }
 
     private fun loadExistingSessions() {
-        try {
             val sessionDirs = sessionsDirectory.listFiles { file -> file.isDirectory } ?: return
             for (sessionDir in sessionDirs) {
                 val metadataFile = File(sessionDir, METADATA_FILE)
@@ -495,18 +478,15 @@ class DataManagementService(private val context: Context) {
                     loadSessionFromMetadata(metadataFile)
                 }
             }
-        } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "load_sessions_error",
-                details = mapOf("error" to (e.message ?: "Unknown error")),
             )
         }
     }
 
     private fun loadSessionFromMetadata(metadataFile: File) {
-        try {
             val jsonContent = metadataFile.readText()
             val json = JSONObject(jsonContent)
             val sessionId = json.getString("session_id")
@@ -538,21 +518,18 @@ class DataManagementService(private val context: Context) {
             }
             activeSessions[sessionId] = session
             loadFileManifest(session)
-        } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "load_session_metadata_error",
                 details = mapOf(
                     "metadata_file" to metadataFile.absolutePath,
-                    "error" to (e.message ?: "Unknown error"),
                 ),
             )
         }
     }
 
     private fun loadFileManifest(session: SessionData) {
-        try {
             val sessionDir = File(sessionsDirectory, session.sessionId)
             val manifestFile = File(sessionDir, MANIFEST_FILE)
             if (!manifestFile.exists()) return
@@ -583,21 +560,18 @@ class DataManagementService(private val context: Context) {
                 session.files.add(fileMetadata)
                 fileRegistry[fileMetadata.fileId] = fileMetadata
             }
-        } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "load_file_manifest_error",
                 details = mapOf(
                     "session_id" to session.sessionId,
-                    "error" to (e.message ?: "Unknown error"),
                 ),
             )
         }
     }
 
     private fun saveSessionMetadata(session: SessionData) {
-        try {
             val sessionDir = File(sessionsDirectory, session.sessionId)
             sessionDir.mkdirs()
             val metadataFile = File(sessionDir, METADATA_FILE)
@@ -618,21 +592,18 @@ class DataManagementService(private val context: Context) {
                     put("conditions", conditionsJson)
                 }
             metadataFile.writeText(json.toString(2))
-        } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "save_session_metadata_error",
                 details = mapOf(
                     "session_id" to session.sessionId,
-                    "error" to (e.message ?: "Unknown error"),
                 ),
             )
         }
     }
 
     private fun createFileManifest(session: SessionData) {
-        try {
             val sessionDir = File(sessionsDirectory, session.sessionId)
             val manifestFile = File(sessionDir, MANIFEST_FILE)
             val json =
@@ -669,14 +640,12 @@ class DataManagementService(private val context: Context) {
                     put("files", filesJson)
                 }
             manifestFile.writeText(json.toString(2))
-        } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "create_file_manifest_error",
                 details = mapOf(
                     "session_id" to session.sessionId,
-                    "error" to (e.message ?: "Unknown error"),
                 ),
             )
         }
@@ -733,7 +702,6 @@ class DataManagementService(private val context: Context) {
     }
 
     private fun exportSessionAsHDF5(session: SessionData, exportFile: File) {
-        try {
             val hdf5Structure = JSONObject().apply {
                 put("format", "HDF5-Compatible JSON")
                 put("version", "1.0")
@@ -886,12 +854,9 @@ class DataManagementService(private val context: Context) {
                 put("external_files", fileManifest)
             }
             exportFile.writeText(hdf5Structure.toString(2))
-            Log.i(
                 TAG,
                 "Session exported in HDF5-compatible JSON format: ${exportFile.absolutePath}"
             )
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to export session as HDF5", e)
             exportSessionAsJSON(session, exportFile, includeFiles = true)
         }
     }
@@ -901,7 +866,6 @@ class DataManagementService(private val context: Context) {
         exportFile: File,
         includeFiles: Boolean,
     ) {
-        try {
             val zipOutputStream = java.util.zip.ZipOutputStream(exportFile.outputStream())
             val sessionMetadata = JSONObject().apply {
                 put("session_id", session.sessionId)
@@ -940,7 +904,6 @@ class DataManagementService(private val context: Context) {
             zipOutputStream.closeEntry()
             if (includeFiles) {
                 session.files.forEach { fileInfo ->
-                    try {
                         val sourceFile = File(fileInfo.absolutePath)
                         if (sourceFile.exists() && sourceFile.isFile) {
                             zipOutputStream.putNextEntry(java.util.zip.ZipEntry("data/${fileInfo.relativePath}"))
@@ -948,12 +911,8 @@ class DataManagementService(private val context: Context) {
                                 input.copyTo(zipOutputStream)
                             }
                             zipOutputStream.closeEntry()
-                            AppLogger.d(TAG, "Added file to ZIP: ${fileInfo.relativePath}")
                         } else {
-                            AppLogger.w(TAG, "File not found for ZIP export: ${sourceFile.absolutePath}")
                         }
-                    } catch (e: Exception) {
-                        AppLogger.e(TAG, "Failed to add file to ZIP: ${fileInfo.relativePath}", e)
                     }
                 }
             }
@@ -989,19 +948,15 @@ class DataManagementService(private val context: Context) {
             zipOutputStream.write(readme.toByteArray())
             zipOutputStream.closeEntry()
             zipOutputStream.close()
-            AppLogger.i(TAG, "Session exported as ZIP archive: ${exportFile.absolutePath}")
-            Log.i(
                 TAG,
                 "ZIP contains ${session.files.size} files (${if (includeFiles) "with" else "without"} data)"
             )
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to create ZIP export", e)
             exportSessionAsJSON(session, exportFile, includeFiles)
         }
     }
 
     private fun calculateFileChecksum(file: File): String {
-        return try {
+        return (
             val digest = java.security.MessageDigest.getInstance("SHA-256")
             file.inputStream().use { inputStream ->
                 val buffer = ByteArray(8192)
@@ -1011,7 +966,6 @@ class DataManagementService(private val context: Context) {
                 }
             }
             digest.digest().joinToString("") { "%02x".format(it) }
-        } catch (e: Exception) {
             "error_calculating_checksum"
         }
     }

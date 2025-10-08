@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.gsr.model.GSRSample
 import kotlinx.coroutines.*
 import mpdc4gsr.core.data.TimestampManager
@@ -22,7 +19,6 @@ class UnifiedDataStreamingService(
     private val context: Context
 ) {
     companion object {
-        private const val TAG = "UnifiedStreaming"
         private const val DEFAULT_PORT = 8888
         private const val BATCH_SIZE = 25
         private const val BATCH_TIMEOUT_MS = 50L
@@ -42,12 +38,9 @@ class UnifiedDataStreamingService(
     private val streamStartTime = AtomicLong(0)
     suspend fun startStreaming(sessionId: String, port: Int = DEFAULT_PORT): Boolean {
         return withContext(Dispatchers.IO) {
-            try {
                 if (isStreaming.get()) {
-                    AppLogger.w(TAG, "Streaming already active")
                     return@withContext true
                 }
-                AppLogger.i(TAG, "Starting unified data streaming service on port $port")
                 currentSessionId = sessionId
                 sessionStartReference = TimestampManager.createTimestampRecord()
                 streamStartTime.set(System.currentTimeMillis())
@@ -65,7 +58,6 @@ class UnifiedDataStreamingService(
                 streamingScope.launch {
                     distributeHeartbeats()
                 }
-                AppLogger.i(TAG, " Unified streaming service started on port $port")
                 broadcastSessionSyncEvent(
                     "session_start", mapOf(
                         "session_id" to sessionId,
@@ -73,8 +65,6 @@ class UnifiedDataStreamingService(
                     )
                 )
                 true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to start streaming service", e)
                 stopStreaming()
                 false
             }
@@ -83,8 +73,6 @@ class UnifiedDataStreamingService(
 
     suspend fun stopStreaming() {
         withContext(Dispatchers.IO) {
-            try {
-                AppLogger.i(TAG, "Stopping unified streaming service")
                 currentSessionId?.let { sessionId ->
                     broadcastSessionSyncEvent(
                         "session_end", mapOf(
@@ -104,9 +92,6 @@ class UnifiedDataStreamingService(
                 serverSocket?.close()
                 serverSocket = null
                 dataQueue.clear()
-                AppLogger.i(TAG, "Unified streaming service stopped")
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error stopping streaming service", e)
             }
         }
     }
@@ -182,7 +167,6 @@ class UnifiedDataStreamingService(
             put("metadata", JSONObject(metadata))
         }
         broadcastToClients(syncPacket.toString())
-        AppLogger.d(TAG, "Broadcasted sync marker: $markerType")
     }
 
     fun getStreamingStats(): StreamingStats {
@@ -201,7 +185,6 @@ class UnifiedDataStreamingService(
 
     private suspend fun acceptClients() {
         while (isStreaming.get()) {
-            try {
                 val socket = serverSocket?.accept()
                 if (socket != null) {
                     val clientHandler = ClientHandler(socket)
@@ -209,20 +192,16 @@ class UnifiedDataStreamingService(
                         if (connectedClients.size < MAX_CLIENTS) {
                             connectedClients.add(clientHandler)
                             clientsConnected.incrementAndGet()
-                            Log.i(
                                 TAG,
                                 "Client connected: ${socket.remoteSocketAddress} (${connectedClients.size} total)"
                             )
                             clientHandler.sendSessionInfo()
                         } else {
-                            AppLogger.w(TAG, "Max clients reached, rejecting connection")
                             socket.close()
                         }
                     }
                 }
-            } catch (e: Exception) {
                 if (isStreaming.get()) {
-                    AppLogger.e(TAG, "Error accepting client connection", e)
                 }
             }
         }
@@ -231,7 +210,6 @@ class UnifiedDataStreamingService(
     private suspend fun processStreamingData() {
         val batch = mutableListOf<StreamingDataPacket>()
         while (isStreaming.get()) {
-            try {
                 val startTime = System.currentTimeMillis()
                 while (batch.size < BATCH_SIZE &&
                     (System.currentTimeMillis() - startTime) < BATCH_TIMEOUT_MS
@@ -263,8 +241,6 @@ class UnifiedDataStreamingService(
                     batch.clear()
                 }
                 delay(1)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error processing streaming data", e)
                 delay(100)
             }
         }
@@ -272,7 +248,6 @@ class UnifiedDataStreamingService(
 
     private suspend fun distributeHeartbeats() {
         while (isStreaming.get()) {
-            try {
                 val heartbeat = JSONObject().apply {
                     put("type", "HEARTBEAT")
                     put("timestamp", TimestampManager.createTimestampRecord().toCsvFormat())
@@ -286,8 +261,6 @@ class UnifiedDataStreamingService(
                 }
                 broadcastToClients(heartbeat.toString())
                 delay(HEARTBEAT_INTERVAL_MS)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error sending heartbeat", e)
                 delay(HEARTBEAT_INTERVAL_MS)
             }
         }
@@ -315,7 +288,6 @@ class UnifiedDataStreamingService(
             disconnectedClients.forEach { client ->
                 connectedClients.remove(client)
                 client.disconnect()
-                AppLogger.i(TAG, "Client disconnected (${connectedClients.size} remaining)")
             }
         }
     }
@@ -324,15 +296,13 @@ class UnifiedDataStreamingService(
         private val writer: PrintWriter = PrintWriter(socket.getOutputStream(), true)
         private val isConnected = AtomicBoolean(true)
         fun sendMessage(message: String): Boolean {
-            return try {
+            return (
                 if (isConnected.get() && !socket.isClosed) {
                     writer.println(message)
                     !writer.checkError()
                 } else {
                     false
                 }
-            } catch (e: Exception) {
-                AppLogger.w(TAG, "Failed to send message to client", e)
                 false
             }
         }
@@ -349,11 +319,8 @@ class UnifiedDataStreamingService(
 
         fun disconnect() {
             isConnected.set(false)
-            try {
                 writer.close()
                 socket.close()
-            } catch (e: Exception) {
-                AppLogger.w(TAG, "Error closing client connection", e)
             }
         }
     }

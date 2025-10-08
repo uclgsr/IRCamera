@@ -3,9 +3,6 @@ package mpdc4gsr.feature.network.data
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +13,6 @@ class NetworkManager(
     private val recordingController: ComprehensiveRecordingController
 ) {
     companion object {
-        private const val TAG = "NetworkManager"
         private const val DEFAULT_PC_PORT = 8080
         private const val RECONNECT_DELAY_MS = 5000L
         private const val TELEMETRY_INTERVAL_MS = 5000L
@@ -59,7 +55,6 @@ class NetworkManager(
 
     suspend fun connectUsingSavedSettings(): Boolean {
         if (!networkSettings.isConfigured()) {
-            AppLogger.w(TAG, "No connection settings configured")
             _lastError.value = "No connection settings configured"
             return false
         }
@@ -74,37 +69,29 @@ class NetworkManager(
             }
 
             NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM -> {
-                try {
                     val (address, _) = networkSettings.getSavedBluetoothDeviceInfo()
                     if (address != null) {
                         val bluetoothManager =
                             context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
                         val bluetoothAdapter = bluetoothManager?.adapter
                         if (bluetoothAdapter?.isEnabled == true) {
-                            try {
                                 val device = bluetoothAdapter.getRemoteDevice(address)
                                 lastConnectionConfig = ConnectionConfig(
                                     NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM,
                                     bluetoothDevice = device
                                 )
                                 connectBluetooth(device)
-                            } catch (e: Exception) {
-                                AppLogger.e(TAG, "Error getting Bluetooth device: $address", e)
                                 _lastError.value = "Bluetooth device not available"
                                 false
                             }
                         } else {
-                            AppLogger.e(TAG, "Bluetooth adapter not available or disabled")
                             _lastError.value = "Bluetooth not available"
                             false
                         }
                     } else {
-                        AppLogger.e(TAG, "No saved Bluetooth device")
                         _lastError.value = "No Bluetooth device configured"
                         false
                     }
-                } catch (e: Exception) {
-                    AppLogger.e(TAG, "Error getting saved Bluetooth device info", e)
                     _lastError.value = "Error accessing Bluetooth settings"
                     false
                 }
@@ -115,15 +102,12 @@ class NetworkManager(
     fun setAutoReconnectEnabled(enabled: Boolean) {
         isAutoReconnectEnabled = enabled
         networkSettings.autoReconnect = enabled
-        AppLogger.i(TAG, "Auto-reconnect ${if (enabled) "enabled" else "disabled"}")
     }
 
     suspend fun connectWifi(host: String, port: Int = DEFAULT_PC_PORT): Boolean {
         if (activeConnection != null) {
-            AppLogger.w(TAG, "Disconnecting existing connection before connecting via Wi-Fi")
             disconnect()
         }
-        AppLogger.i(TAG, "Attempting Wi-Fi connection to $host:$port")
         // Save settings
         networkSettings.pcIpAddress = host
         networkSettings.pcPort = port
@@ -136,10 +120,8 @@ class NetworkManager(
 
     suspend fun connectBluetooth(bluetoothDevice: BluetoothDevice): Boolean {
         if (activeConnection != null) {
-            AppLogger.w(TAG, "Disconnecting existing connection before connecting via Bluetooth")
             disconnect()
         }
-        Log.i(
             TAG,
             "Attempting Bluetooth connection to ${bluetoothDevice.name} (${bluetoothDevice.address})"
         )
@@ -162,7 +144,6 @@ class NetworkManager(
         client: CommandConnection,
         connectionType: String
     ): Boolean {
-        try {
             // Set up callbacks before connecting
             client.setMessageCallback { message ->
                 handleIncomingMessage(message)
@@ -176,10 +157,8 @@ class NetworkManager(
             if (success) {
                 activeConnection = client
                 currentReconnectAttempts = 0  // Reset attempts on successful connection
-                AppLogger.i(TAG, "Successfully connected via $connectionType")
                 return true
             } else {
-                AppLogger.e(TAG, "Failed to connect via $connectionType")
                 client.cleanup()
                 // Attempt reconnection if enabled
                 if (isAutoReconnectEnabled && currentReconnectAttempts < networkSettings.reconnectAttempts) {
@@ -187,23 +166,16 @@ class NetworkManager(
                 }
                 return false
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Exception during $connectionType connection", e)
-            _lastError.value = "$connectionType connection failed: ${e.message}"
             client.cleanup()
             return false
         }
     }
 
     suspend fun disconnect() {
-        AppLogger.i(TAG, "Disconnecting from PC server")
         stopPeriodicUpdates()
         activeConnection?.let { connection ->
             // Send disconnection notice if possible
-            try {
                 connection.sendMessage("BYE")
-            } catch (e: Exception) {
-                AppLogger.w(TAG, "Could not send BYE message", e)
             }
             connection.disconnect()
             connection.cleanup()
@@ -255,17 +227,13 @@ class NetworkManager(
 
     private fun handleIncomingMessage(message: String) {
         managerScope.launch {
-            try {
                 commandHandler?.handleCommand(message)
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error handling incoming message: $message", e)
             }
         }
     }
 
     private fun sendInitialHandshake() {
         managerScope.launch {
-            try {
                 // Send HELLO message to register with PC
                 val deviceId = android.provider.Settings.Secure.getString(
                     context.contentResolver,
@@ -277,9 +245,7 @@ class NetworkManager(
                 if (connection != null) {
                     val success = connection.sendMessage(helloMessage)
                     if (success) {
-                        AppLogger.i(TAG, "Sent initial handshake: $helloMessage")
                     } else {
-                        AppLogger.w(TAG, "Failed to send initial handshake message")
                         val error = NetworkErrorCodes.NetworkError(
                             NetworkErrorCodes.ERROR_PROTOCOL_VIOLATION,
                             details = "Failed to send handshake message"
@@ -288,12 +254,8 @@ class NetworkManager(
                         _lastErrorCode.value = error
                     }
                 } else {
-                    AppLogger.w(TAG, "No active connection for handshake")
                     _lastError.value = "No connection available"
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error sending initial handshake", e)
-                _lastError.value = "Handshake error: ${e.message}"
             }
         }
     }
@@ -327,7 +289,6 @@ class NetworkManager(
     ) {
         when (state) {
             CommandConnection.ConnectionState.CONNECTED -> {
-                AppLogger.i(TAG, "$connectionType connection established")
                 _lastError.value = null
                 currentReconnectAttempts = 0
                 connectionMetrics.recordConnectionStart()
@@ -337,7 +298,6 @@ class NetworkManager(
             }
 
             CommandConnection.ConnectionState.DISCONNECTED -> {
-                AppLogger.i(TAG, "$connectionType connection closed")
                 connectionMetrics.recordConnectionEnd()
                 stopPeriodicUpdates()
                 stopTelemetryUpdates()
@@ -348,7 +308,6 @@ class NetworkManager(
             }
 
             CommandConnection.ConnectionState.ERROR -> {
-                AppLogger.w(TAG, "$connectionType connection error")
                 _lastError.value = "$connectionType connection error"
                 connectionMetrics.recordConnectionEnd()
                 stopPeriodicUpdates()
@@ -366,7 +325,6 @@ class NetworkManager(
 
     private fun scheduleReconnection() {
         if (currentReconnectAttempts >= networkSettings.reconnectAttempts) {
-            Log.w(
                 TAG,
                 "Maximum reconnection attempts reached (${networkSettings.reconnectAttempts})"
             )
@@ -376,7 +334,6 @@ class NetworkManager(
         }
         currentReconnectAttempts++
         connectionMetrics.recordReconnectAttempt()
-        Log.i(
             TAG,
             "Scheduling reconnection attempt $currentReconnectAttempts/${networkSettings.reconnectAttempts}"
         )
@@ -389,7 +346,6 @@ class NetworkManager(
 
     private suspend fun attemptReconnection() {
         lastConnectionConfig?.let { config ->
-            AppLogger.i(TAG, "Attempting reconnection...")
             _connectionState.value = CommandConnection.ConnectionState.CONNECTING
             val success = when (config.type) {
                 NetworkSettings.ConnectionType.WIFI_TCP -> {
@@ -407,7 +363,6 @@ class NetworkManager(
                 }
             }
             if (!success) {
-                AppLogger.w(TAG, "Reconnection attempt $currentReconnectAttempts failed")
                 if (currentReconnectAttempts < networkSettings.reconnectAttempts) {
                     scheduleReconnection()
                 }
@@ -419,7 +374,6 @@ class NetworkManager(
         telemetryJob?.cancel()
         telemetryJob = managerScope.launch {
             while (isConnected()) {
-                try {
                     if (recordingController.isRecording) {
                         val statusResponse = commandHandler?.let { handler ->
                             // Create a basic status update
@@ -430,8 +384,6 @@ class NetworkManager(
                         statusResponse?.let { sendTelemetry(it) }
                     }
                     delay(TELEMETRY_INTERVAL_MS)
-                } catch (e: Exception) {
-                    AppLogger.e(TAG, "Error sending telemetry update", e)
                     break
                 }
             }

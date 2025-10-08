@@ -1,8 +1,5 @@
 package mpdc4gsr.core.data
 
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import mpdc4gsr.core.data.model.GSRSample
 import org.json.JSONArray
@@ -22,7 +19,6 @@ class LSLGSROutlet(
     private val serverPort: Int = 9001
 ) {
     companion object {
-        private const val TAG = "LSLGSROutlet"
         private const val STREAM_TYPE = "GSR"
         private const val CHANNEL_COUNT = 4 // Raw GSR, Calibrated GSR, PPG, Timestamp
         private const val SAMPLE_RATE = 128.0
@@ -53,7 +49,7 @@ class LSLGSROutlet(
         private val networkScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         private var serverJob: Job? = null
         fun open(): Boolean {
-            return try {
+            return (
                 startTime = System.currentTimeMillis()
                 // Start TCP server for LSL streaming
                 serverSocket = ServerSocket().apply {
@@ -65,17 +61,13 @@ class LSLGSROutlet(
                 serverJob = networkScope.launch {
                     acceptConnections()
                 }
-                AppLogger.i(TAG, "LSL outlet opened: ${streamInfo.name} on port $serverPort")
                 true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to open LSL outlet: ${e.message}")
                 false
             }
         }
 
         private suspend fun acceptConnections() {
             while (isActive.get()) {
-                try {
                     val clientSocket = withContext(Dispatchers.IO) {
                         serverSocket?.accept()
                     }
@@ -85,25 +77,18 @@ class LSLGSROutlet(
                         }
                         // Send stream info to new client
                         sendStreamInfo(socket)
-                        AppLogger.i(TAG, "LSL client connected: ${socket.remoteSocketAddress}")
                         // Handle client disconnection monitoring
                         networkScope.launch {
-                            try {
                                 socket.inputStream.read() // Block until client disconnects
-                            } catch (e: Exception) {
                                 // Client disconnected
-                            } finally {
                                 synchronized(connectedClients) {
                                     connectedClients.remove(socket)
                                 }
                                 socket.close()
-                                AppLogger.i(TAG, "LSL client disconnected")
                             }
                         }
                     }
-                } catch (e: Exception) {
                     if (isActive.get()) {
-                        AppLogger.e(TAG, "Error accepting LSL connections", e)
                         delay(1000) // Brief pause before retrying
                     }
                 }
@@ -111,7 +96,6 @@ class LSLGSROutlet(
         }
 
         private fun sendStreamInfo(socket: Socket) {
-            try {
                 val writer = PrintWriter(socket.outputStream, true)
                 val streamInfoJson = JSONObject().apply {
                     put("type", "stream_info")
@@ -131,8 +115,6 @@ class LSLGSROutlet(
                     })
                 }
                 writer.println(streamInfoJson.toString())
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to send stream info to client", e)
             }
         }
 
@@ -140,7 +122,7 @@ class LSLGSROutlet(
             if (!isActive.get() || sample.size != streamInfo.channelCount) {
                 return false
             }
-            return try {
+            return (
                 val timestamp = System.currentTimeMillis()
                 val lslSample = JSONObject().apply {
                     put("type", "sample")
@@ -155,10 +137,8 @@ class LSLGSROutlet(
                     val iterator = connectedClients.iterator()
                     while (iterator.hasNext()) {
                         val client = iterator.next()
-                        try {
                             val writer = PrintWriter(client.outputStream, true)
                             writer.println(lslSample.toString())
-                        } catch (e: Exception) {
                             // Remove disconnected client
                             iterator.remove()
                             client.close()
@@ -166,8 +146,6 @@ class LSLGSROutlet(
                     }
                 }
                 true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to push LSL sample", e)
                 false
             }
         }
@@ -176,7 +154,7 @@ class LSLGSROutlet(
             if (!isActive.get()) {
                 return false
             }
-            return try {
+            return (
                 val timestamp = System.currentTimeMillis()
                 val lslChunk = JSONObject().apply {
                     put("type", "chunk")
@@ -195,10 +173,8 @@ class LSLGSROutlet(
                     val iterator = connectedClients.iterator()
                     while (iterator.hasNext()) {
                         val client = iterator.next()
-                        try {
                             val writer = PrintWriter(client.outputStream, true)
                             writer.println(lslChunk.toString())
-                        } catch (e: Exception) {
                             // Remove disconnected client
                             iterator.remove()
                             client.close()
@@ -207,8 +183,6 @@ class LSLGSROutlet(
                 }
                 sampleCount.addAndGet(samples.size.toLong())
                 true
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to push LSL chunk", e)
                 false
             }
         }
@@ -223,7 +197,6 @@ class LSLGSROutlet(
             // Close server socket
             serverSocket?.close()
             serverJob?.cancel()
-            AppLogger.i(TAG, "LSL outlet closed")
         }
 
         fun getSampleCount(): Long = sampleCount.get()
@@ -249,7 +222,7 @@ class LSLGSROutlet(
     private val networkScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var streamingJob: Job? = null
     fun startStreaming(): Boolean {
-        return try {
+        return (
             outlet = LSLStreamOutlet(streamInfo)
             if (outlet?.open() == true) {
                 isStreaming.set(true)
@@ -257,20 +230,16 @@ class LSLGSROutlet(
                 streamingJob = networkScope.launch {
                     streamingLoop()
                 }
-                AppLogger.i(TAG, "LSL GSR streaming started")
                 true
             } else {
                 false
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to start LSL streaming", e)
             false
         }
     }
 
     private suspend fun streamingLoop() {
         while (isStreaming.get()) {
-            try {
                 val samplesToSend = mutableListOf<GSRSample>()
                 // Collect batch of samples
                 repeat(BATCH_SIZE) {
@@ -294,8 +263,6 @@ class LSLGSROutlet(
                     }
                 }
                 delay(50) // 20 Hz streaming rate
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error in LSL streaming loop", e)
                 delay(1000)
             }
         }
@@ -330,7 +297,6 @@ class LSLGSROutlet(
         outlet = null
         sampleBuffer.clear()
         qualityHistory.clear()
-        AppLogger.i(TAG, "LSL GSR streaming stopped")
     }
 
     fun getStreamingStatistics(): Map<String, Any> {

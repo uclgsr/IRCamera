@@ -12,6 +12,5 @@ class NetworkSettingsViewModelFactory(
         if (modelClass.isAssignableFrom(NetworkSettingsViewModel::class.java)) {
             return NetworkSettingsViewModel(context) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

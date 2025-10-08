@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -24,7 +21,6 @@ import kotlinx.coroutines.launch
 
 class ComposeTestingSuiteActivity : ComponentActivity() {
     companion object {
-        private const val TAG = "ComposeTestingSuiteActivity"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -146,8 +142,6 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
     private suspend fun runComprehensiveTests(
         onProgress: (Float, List<TestResult>) -> Unit
     ) {
-        AppLogger.i(TAG, "Starting comprehensive testing suite")
-        try {
             val testingSuite = ComposeTestingSuite()
             val results = mutableListOf<TestResult>()
             // Simulate progressive testing with updates
@@ -155,15 +149,11 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
             val finalResults = testingSuite.runAllTests()
             results.addAll(finalResults)
             onProgress(1f, results)
-            AppLogger.i(TAG, "Comprehensive tests completed: ${results.size} tests executed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Comprehensive tests failed: ${e.message}")
             // Add error result
             val errorResult = TestResult(
                 testName = "Test Suite Error",
                 passed = false,
                 executionTimeMs = 0,
-                details = "Test suite failed: ${e.message}",
                 severity = TestSeverity.ERROR
             )
             onProgress(1f, listOf(errorResult))

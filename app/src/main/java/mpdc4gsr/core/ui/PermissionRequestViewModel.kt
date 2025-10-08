@@ -102,7 +102,6 @@ class PermissionRequestViewModel : BaseViewModel() {
         launchWithLoading {
             addLog("Requesting camera permissions...")
             _screenState.value = _screenState.value.copy(isRequestingPermissions = true)
-            try {
                 val granted = permissionManager.requestCameraPermissions()
                 addLog(if (granted) "Camera permissions granted" else "Camera permissions denied")
                 updatePermissionStatus()
@@ -111,7 +110,6 @@ class PermissionRequestViewModel : BaseViewModel() {
                 } else {
                     _events.emit(PermissionEvent.ShowError("Camera permissions denied"))
                 }
-            } finally {
                 _screenState.value = _screenState.value.copy(isRequestingPermissions = false)
             }
         }
@@ -121,7 +119,6 @@ class PermissionRequestViewModel : BaseViewModel() {
         launchWithLoading {
             addLog("Requesting Bluetooth permissions...")
             _screenState.value = _screenState.value.copy(isRequestingPermissions = true)
-            try {
                 val granted = permissionManager.requestBluetoothPermissions()
                 addLog(if (granted) "Bluetooth permissions granted" else "Bluetooth permissions denied")
                 updatePermissionStatus()
@@ -130,7 +127,6 @@ class PermissionRequestViewModel : BaseViewModel() {
                 } else {
                     _events.emit(PermissionEvent.ShowError("Bluetooth permissions denied"))
                 }
-            } finally {
                 _screenState.value = _screenState.value.copy(isRequestingPermissions = false)
             }
         }
@@ -140,7 +136,6 @@ class PermissionRequestViewModel : BaseViewModel() {
         launchWithLoading {
             addLog("Starting comprehensive permission request...")
             _screenState.value = _screenState.value.copy(isRequestingPermissions = true)
-            try {
                 val granted = permissionManager.requestAllCriticalPermissions()
                 addLog(if (granted) "Critical permissions granted" else "Some permissions were denied")
                 updatePermissionStatus()
@@ -149,7 +144,6 @@ class PermissionRequestViewModel : BaseViewModel() {
                 } else {
                     _events.emit(PermissionEvent.ShowError("Some permissions were denied"))
                 }
-            } finally {
                 _screenState.value = _screenState.value.copy(isRequestingPermissions = false)
             }
         }
@@ -159,7 +153,6 @@ class PermissionRequestViewModel : BaseViewModel() {
         launchWithLoading {
             addLog("Requesting location permissions...")
             _screenState.value = _screenState.value.copy(isRequestingPermissions = true)
-            try {
                 val granted = permissionManager.requestBluetoothPermissions() // Bluetooth requires location
                 addLog(if (granted) "Location permissions granted" else "Location permissions denied")
                 updatePermissionStatus()
@@ -168,7 +161,6 @@ class PermissionRequestViewModel : BaseViewModel() {
                 } else {
                     _events.emit(PermissionEvent.ShowError("Location permissions denied"))
                 }
-            } finally {
                 _screenState.value = _screenState.value.copy(isRequestingPermissions = false)
             }
         }
@@ -178,7 +170,6 @@ class PermissionRequestViewModel : BaseViewModel() {
         launchWithLoading {
             addLog("Requesting storage permissions...")
             _screenState.value = _screenState.value.copy(isRequestingPermissions = true)
-            try {
                 val granted = permissionManager.requestAllCriticalPermissions()
                 addLog(if (granted) "Storage permissions granted" else "Storage permissions denied")
                 updatePermissionStatus()
@@ -187,7 +178,6 @@ class PermissionRequestViewModel : BaseViewModel() {
                 } else {
                     _events.emit(PermissionEvent.ShowError("Storage permissions denied"))
                 }
-            } finally {
                 _screenState.value = _screenState.value.copy(isRequestingPermissions = false)
             }
         }
@@ -254,6 +244,5 @@ class PermissionRequestViewModel : BaseViewModel() {
     }
 
     companion object {
-        private const val TAG = "PermissionRequestViewModel"
     }
 }

@@ -1,9 +1,6 @@
 package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -30,7 +27,6 @@ import kotlin.system.measureTimeMillis
 
 class GSRBenchTestComposeActivity : ComponentActivity() {
     companion object {
-        private const val TAG = "GSRBenchTestCompose"
         private const val TEST_DURATION_SECONDS = 10
         private const val SAMPLE_TOLERANCE = 50
     }
@@ -198,21 +194,15 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
     }
 
     private fun initializeComponents() {
-        try {
             val controller = RecordingController(this, this)
             recordingController = controller
             gsrRecorder = GSRSensorRecorder(this, recordingController = controller)
-            AppLogger.d(TAG, "GSR components initialized successfully")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize GSR components: ${e.message}")
         }
     }
 
     private suspend fun runComprehensiveBenchTest() {
-        AppLogger.i(TAG, "Starting comprehensive GSR bench test")
         val overallStartTime = System.currentTimeMillis()
         val testMetrics = mutableMapOf<String, Any>()
-        try {
             // Connection Test
             val connectionTime = measureTimeMillis {
                 runConnectionTest()
@@ -236,54 +226,34 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
             val totalTime = System.currentTimeMillis() - overallStartTime
             testMetrics["Total Test Time"] = "${totalTime}ms"
             // Update state (this would be done with proper state management in real implementation)
-            AppLogger.d(TAG, "Benchmark completed with metrics: $testMetrics")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Comprehensive bench test failed: ${e.message}")
         }
     }
 
     private suspend fun runConnectionTest() {
-        AppLogger.d(TAG, "Testing GSR connection")
-        try {
             // Simulate connection test logic
             delay(2000) // Simulate connection time
-            AppLogger.d(TAG, "GSR connection test completed successfully")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Connection test failed: ${e.message}")
         }
     }
 
     private suspend fun runCalibrationTest() {
-        AppLogger.d(TAG, "Testing GSR calibration")
-        try {
             // Simulate calibration test
             delay(3000) // Simulate calibration time
-            AppLogger.d(TAG, "GSR calibration test completed")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Calibration test failed: ${e.message}")
         }
     }
 
     private suspend fun runDataQualityTest(): Map<String, Any> {
-        AppLogger.d(TAG, "Running GSR data quality test")
         val qualityMetrics = mutableMapOf<String, Any>()
-        try {
             // Simulate data quality analysis
             delay(2000)
             qualityMetrics["Sample Rate"] = "128 Hz"
             qualityMetrics["Data Integrity"] = "99.8%"
             qualityMetrics["Signal Quality"] = "Excellent"
-            AppLogger.d(TAG, "Data quality test completed: $qualityMetrics")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Data quality test failed: ${e.message}")
         }
         return qualityMetrics
     }
 
     private suspend fun runPerformanceBenchmark(): Map<String, Any> {
-        AppLogger.d(TAG, "Running GSR performance benchmark")
         val performanceMetrics = mutableMapOf<String, Any>()
-        try {
             // Simulate performance testing
             val processingTime = measureTimeMillis {
                 // Simulate GSR data processing
@@ -295,9 +265,6 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
             performanceMetrics["Processing Speed"] = "${processingTime}ms/1000 samples"
             performanceMetrics["Memory Usage"] = "~15MB"
             performanceMetrics["CPU Usage"] = "~12%"
-            AppLogger.d(TAG, "Performance benchmark completed: $performanceMetrics")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Performance benchmark failed: ${e.message}")
         }
         return performanceMetrics
     }
@@ -315,13 +282,8 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun runStressTest() {
-        AppLogger.d(TAG, "Running GSR stress test")
-        try {
             // Extended testing for 30 seconds
             delay(30000)
-            AppLogger.d(TAG, "GSR stress test completed successfully")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Stress test failed: ${e.message}")
         }
     }
 }

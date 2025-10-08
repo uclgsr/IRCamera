@@ -39,7 +39,6 @@ class FileUploadService(private val context: Context) {
     }
 
     companion object {
-        private const val TAG = "FileUploadService"
         private const val BYTES_PER_MB = 1024 * 1024
         private const val DEFAULT_CHUNK_SIZE = BYTES_PER_MB
         private const val MAX_CONCURRENT_UPLOADS = 3
@@ -116,10 +115,8 @@ class FileUploadService(private val context: Context) {
         deviceId: String,
         fileType: FileType,
     ): String {
-        try {
             val file = File(filePath)
             if (!file.exists() || !file.canRead()) {
-                throw IllegalArgumentException("File does not exist or is not readable: $filePath")
             }
             val jobId = generateJobId(sessionId, deviceId, file.name)
             val checksum = calculateSHA256(file)
@@ -166,7 +163,6 @@ class FileUploadService(private val context: Context) {
                     ),
             )
             return jobId
-        } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
@@ -174,10 +170,8 @@ class FileUploadService(private val context: Context) {
                 details =
                     mapOf(
                         "file_path" to filePath,
-                        "error" to (e.message ?: "unknown"),
                     ),
             )
-            throw e
         }
     }
 
@@ -262,7 +256,6 @@ class FileUploadService(private val context: Context) {
     private fun startUploadProcessor() {
         serviceScope.launch {
             while (this@FileUploadService.isActive.get()) {
-                try {
                     val jobId = uploadQueue.receive()
                     if (concurrentUploads.get() >= maxConcurrent) {
                         uploadQueue.send(jobId)
@@ -276,12 +269,10 @@ class FileUploadService(private val context: Context) {
                     launch {
                         executeUpload(job)
                     }
-                } catch (e: Exception) {
                     logger.log(
                         StructuredLogger.LogLevel.ERROR,
                         TAG,
                         "upload_processor_error",
-                        details = mapOf("error" to (e.message ?: "Unknown error")),
                     )
                     delay(ERROR_RETRY_DELAY_MS)
                 }
@@ -291,7 +282,6 @@ class FileUploadService(private val context: Context) {
 
     private suspend fun executeUpload(job: UploadJob) {
         concurrentUploads.incrementAndGet()
-        try {
             job.status = UploadStatus.IN_PROGRESS
             job.startTime = System.currentTimeMillis()
             logger.log(
@@ -308,12 +298,10 @@ class FileUploadService(private val context: Context) {
             )
             val initResponse = initiateUpload(job)
             if (!initResponse) {
-                throw Exception("Failed to initiate upload with PC controller")
             }
             uploadFileChunks(job)
             val verifyResponse = verifyUploadCompletion(job)
             if (!verifyResponse) {
-                throw Exception("Upload verification failed")
             }
             job.status = UploadStatus.COMPLETED
             job.endTime = System.currentTimeMillis()
@@ -334,10 +322,8 @@ class FileUploadService(private val context: Context) {
                         ),
                     ),
             )
-        } catch (e: Exception) {
             job.status = UploadStatus.FAILED
             job.endTime = System.currentTimeMillis()
-            job.errorMessage = e.message
             job.retryCount++
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
@@ -347,7 +333,6 @@ class FileUploadService(private val context: Context) {
                     mapOf(
                         "job_id" to job.jobId,
                         "file_name" to job.fileName,
-                        "error" to (e.message ?: "Unknown error"),
                         "retry_count" to job.retryCount,
                     ),
             )
@@ -367,13 +352,12 @@ class FileUploadService(private val context: Context) {
                         ),
                 )
             }
-        } finally {
             concurrentUploads.decrementAndGet()
         }
     }
 
     private suspend fun initiateUpload(job: UploadJob): Boolean {
-        return try {
+        return (
             val initMessage =
                 JSONObject().apply {
                     put("type", "upload_initiate")
@@ -389,7 +373,6 @@ class FileUploadService(private val context: Context) {
                 }
             webSocketClient?.sendMessage(initMessage)
             true
-        } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
@@ -397,7 +380,6 @@ class FileUploadService(private val context: Context) {
                 details =
                     mapOf(
                         "job_id" to job.jobId,
-                        "error" to (e.message ?: "Unknown error"),
                     ),
             )
             false
@@ -439,7 +421,7 @@ class FileUploadService(private val context: Context) {
     }
 
     private suspend fun verifyUploadCompletion(job: UploadJob): Boolean {
-        return try {
+        return (
             val verifyMessage =
                 JSONObject().apply {
                     put("type", "upload_verify")
@@ -449,7 +431,6 @@ class FileUploadService(private val context: Context) {
                 }
             webSocketClient?.sendMessage(verifyMessage)
             true
-        } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
@@ -457,7 +438,6 @@ class FileUploadService(private val context: Context) {
                 details =
                     mapOf(
                         "job_id" to job.jobId,
-                        "error" to (e.message ?: "Unknown error"),
                     ),
             )
             false
@@ -465,7 +445,7 @@ class FileUploadService(private val context: Context) {
     }
 
     private suspend fun checkExistingUpload(job: UploadJob): Long {
-        return try {
+        return (
             val checkMessage =
                 JSONObject().apply {
                     put("type", "upload_check_existing")
@@ -475,7 +455,6 @@ class FileUploadService(private val context: Context) {
                     put("device_id", job.deviceId)
                 }
             0L
-        } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
@@ -483,7 +462,6 @@ class FileUploadService(private val context: Context) {
                 details =
                     mapOf(
                         "job_id" to job.jobId,
-                        "error" to (e.message ?: "Unknown error"),
                     ),
             )
             0L

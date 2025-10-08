@@ -1,9 +1,6 @@
 package mpdc4gsr.core.data
 
 import android.content.Context
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import mpdc4gsr.core.monitoring.StructuredLogger
 import org.json.JSONObject
@@ -16,7 +13,6 @@ class SecurityMonitor(
     private val logger: StructuredLogger,
 ) {
     companion object {
-        private const val TAG = "SecurityMonitor"
         private const val MAX_FAILED_LOGINS_PER_HOUR = 10
         private const val MAX_CONNECTIONS_PER_DEVICE = 5
         private const val SUSPICIOUS_ACTIVITY_THRESHOLD = 5
@@ -98,8 +94,7 @@ class SecurityMonitor(
 
     private var securityListener: SecurityEventListener? = null
     fun initialize(): Boolean {
-        return try {
-            AppLogger.i(TAG, "Initializing security monitoring system")
+        return (
             logger.log(
                 StructuredLogger.LogLevel.INFO,
                 TAG,
@@ -111,14 +106,11 @@ class SecurityMonitor(
                 ),
             )
             true
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to initialize security monitor", e)
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "init_failed",
                 mapOf(
-                    "error" to e.message.orEmpty(),
                 ),
             )
             false
@@ -131,31 +123,23 @@ class SecurityMonitor(
 
     fun startMonitoring() {
         if (isMonitoring.get()) {
-            AppLogger.w(TAG, "Security monitoring already started")
             return
         }
         isMonitoring.set(true)
         scope.launch {
             while (isMonitoring.get()) {
-                try {
                     performSecurityCheck()
                     delay(MONITORING_INTERVAL_MS)
-                } catch (e: Exception) {
-                    AppLogger.e(TAG, "Error in security monitoring loop", e)
                 }
             }
         }
         scope.launch {
             while (isMonitoring.get()) {
-                try {
                     performCleanup()
                     delay(CLEANUP_INTERVAL_MS)
-                } catch (e: Exception) {
-                    AppLogger.e(TAG, "Error in cleanup task", e)
                 }
             }
         }
-        AppLogger.i(TAG, "Security monitoring started")
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
@@ -169,7 +153,6 @@ class SecurityMonitor(
     fun stopMonitoring() {
         isMonitoring.set(false)
         scope.cancel()
-        AppLogger.i(TAG, "Security monitoring stopped")
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,

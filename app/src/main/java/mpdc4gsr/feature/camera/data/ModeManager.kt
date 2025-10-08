@@ -1,12 +1,8 @@
 package mpdc4gsr.feature.camera.data
 
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 
 class ModeManager {
     companion object {
-        private const val TAG = "ModeManager"
     }
 
     enum class CameraMode {
@@ -30,35 +26,29 @@ class ModeManager {
     var onError: ((String) -> Unit)? = null
     fun initialize(caps: DeviceCaps) {
         deviceCaps = caps
-        AppLogger.i(TAG, "Mode manager initialized with device capabilities")
     }
 
     fun requestModeSwitch(targetMode: CameraMode): Boolean {
         if (currentState == State.SWITCHING) {
-            AppLogger.w(TAG, "Mode switch already in progress")
             return false
         }
         if (currentMode == targetMode) {
-            AppLogger.i(TAG, "Already in target mode: $targetMode")
             return true
         }
         if (!isModeSupported(targetMode)) {
             val error = "Mode $targetMode not supported on this device"
-            AppLogger.e(TAG, error)
             onError?.invoke(error)
             return false
         }
         currentState = State.SWITCHING
         val previousMode = currentMode
         currentMode = targetMode
-        AppLogger.i(TAG, "Mode switch: $previousMode -> $targetMode")
         onModeChanged?.invoke(currentMode, currentState)
         return true
     }
 
     fun confirmModeSwitch() {
         if (currentState != State.SWITCHING) {
-            AppLogger.w(TAG, "No mode switch in progress to confirm")
             return
         }
         currentState =
@@ -67,16 +57,13 @@ class ModeManager {
                 CameraMode.VIDEO_4K -> State.VIDEO_ACTIVE
                 CameraMode.PREVIEW_ONLY -> State.PREVIEW_ACTIVE
             }
-        AppLogger.i(TAG, "Mode switch confirmed: $currentMode active")
         onModeChanged?.invoke(currentMode, currentState)
     }
 
     fun reportModeSwitchFailed(error: String) {
         if (currentState != State.SWITCHING) {
-            AppLogger.w(TAG, "No mode switch in progress to fail")
             return
         }
-        AppLogger.e(TAG, "Mode switch failed: $error")
         currentState = State.IDLE
         onError?.invoke("Mode switch failed: $error")
     }

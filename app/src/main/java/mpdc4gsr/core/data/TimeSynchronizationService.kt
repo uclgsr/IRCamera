@@ -1,8 +1,5 @@
 package mpdc4gsr.core.data
 
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -15,7 +12,6 @@ import java.io.FileWriter
 
 class TimeSynchronizationService {
     companion object {
-        private const val TAG = "TimeSynchronizationService"
         private const val SYNC_METADATA_FILENAME = "session_sync_metadata.csv"
     }
 
@@ -27,7 +23,6 @@ class TimeSynchronizationService {
     fun initializeSession(sessionDirectory: String): SessionTimestampReference {
         this.sessionDirectory = sessionDirectory
         sessionReference = TimestampManager.startSession()
-        AppLogger.i(TAG, "Session initialized with unified timestamp reference")
         writeSessionSyncMetadata()
         serviceScope.launch {
             logSessionStartSyncEvent()
@@ -36,7 +31,6 @@ class TimeSynchronizationService {
     }
 
     private suspend fun logSessionStartSyncEvent() {
-        try {
             logSyncEvent(
                 "SessionStart", mapOf(
                     "session_start_source" to "TimeSynchronizationService",
@@ -44,9 +38,6 @@ class TimeSynchronizationService {
                     "cross_device_sync" to "available"
                 )
             )
-            AppLogger.i(TAG, "SessionStart sync event logged for cross-sensor alignment verification")
-        } catch (e: java.io.IOException) {
-            AppLogger.w(TAG, "Failed to log SessionStart sync event", e)
         }
     }
 
@@ -57,7 +48,6 @@ class TimeSynchronizationService {
 
     fun convertDeviceTimestamp(deviceTimestamp: Long, sensorId: String): TimestampRecord {
         val unifiedTimestamp = TimestampManager.createTimestampRecord()
-        Log.v(
             TAG,
             "Converted device timestamp for $sensorId: device=$deviceTimestamp, unified=${unifiedTimestamp.systemNanos}"
         )
@@ -72,21 +62,18 @@ class TimeSynchronizationService {
             metadata = metadata
         )
         _syncEvents.emit(syncEvent)
-        AppLogger.i(TAG, "Sync event emitted: $eventType at ${timestampRecord.systemTimeMs}ms")
     }
 
     fun finalizeSession(): Long {
         val sessionDuration = TimestampManager.endSession()
         sessionReference = null
         sessionDirectory = null
-        AppLogger.i(TAG, "Session finalized. Duration: ${sessionDuration}ms")
         return sessionDuration
     }
 
     private fun writeSessionSyncMetadata() {
         val reference = sessionReference ?: return
         val sessionDir = sessionDirectory ?: return
-        try {
             val metadataFile = File(sessionDir, SYNC_METADATA_FILENAME)
             FileWriter(metadataFile).use { writer ->
                 writer.write(reference.toCsvMetadata())
@@ -98,24 +85,18 @@ class TimeSynchronizationService {
                 writer.write("\n")
                 writer.write("sync_event_type,system_nanos,system_time_ms,session_relative_ms,metadata\n")
             }
-            AppLogger.i(TAG, "Session sync metadata written to: ${metadataFile.absolutePath}")
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to write session sync metadata", e)
         }
     }
 
     suspend fun logSyncEvent(eventType: String, metadata: Map<String, String> = emptyMap()) {
         val timestampRecord = createSynchronizedTimestamp()
         val sessionDir = sessionDirectory ?: return
-        try {
             val metadataFile = File(sessionDir, SYNC_METADATA_FILENAME)
             FileWriter(metadataFile, true).use { writer ->
                 val metadataStr = metadata.entries.joinToString(";") { "${it.key}=${it.value}" }
                 writer.write("$eventType,${timestampRecord.systemNanos},${timestampRecord.systemTimeMs},${timestampRecord.sessionRelativeMs},\"$metadataStr\"\n")
             }
             emitSyncEvent(eventType, metadata)
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to log sync event", e)
         }
     }
 
@@ -124,7 +105,6 @@ class TimeSynchronizationService {
         deviceTimestamp: Long?,
         phoneTimestamp: Long = createSynchronizedTimestamp().systemNanos
     ) {
-        try {
             val driftMetadata = mutableMapOf<String, String>()
             driftMetadata["sensor_id"] = sensorId
             driftMetadata["phone_timestamp_ns"] = phoneTimestamp.toString()
@@ -134,14 +114,11 @@ class TimeSynchronizationService {
                 val driftMs = driftNs / 1_000_000.0
                 driftMetadata["drift_ns"] = driftNs.toString()
                 driftMetadata["drift_ms"] = String.format("%.3f", driftMs)
-                AppLogger.v(TAG, "Timestamp drift analysis for $sensorId: ${driftMs}ms")
             } ?: run {
                 driftMetadata["device_timestamp_ns"] = "unavailable"
                 driftMetadata["drift_analysis"] = "no_device_timestamp"
             }
             logSyncEvent("DRIFT_ANALYSIS", driftMetadata)
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to log drift analysis for $sensorId", e)
         }
     }
 

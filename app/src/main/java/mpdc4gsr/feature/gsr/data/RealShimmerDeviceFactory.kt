@@ -3,9 +3,6 @@ package mpdc4gsr.feature.gsr.data
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.LifecycleOwner
 import com.mpdc4gsr.gsr.service.ShimmerDataCluster
 import com.mpdc4gsr.gsr.service.ShimmerDeviceFactory
@@ -19,7 +16,6 @@ class RealShimmerDeviceFactory @JvmOverloads constructor(
     private val lifecycleOwner: LifecycleOwner? = null
 ) : ShimmerDeviceFactory {
     companion object {
-        private const val TAG = "RealShimmerDeviceFactory"
     }
 
     override fun createShimmerDevice(): ShimmerDeviceInterface {
@@ -32,7 +28,6 @@ class RealShimmerDevice(
     private val lifecycleOwner: LifecycleOwner? = null
 ) : ShimmerDeviceInterface {
     companion object {
-        private const val TAG = "RealShimmerDevice"
     }
 
     private var shimmer: Shimmer? = null
@@ -44,11 +39,10 @@ class RealShimmerDevice(
 
     init {
         // Defer Handler creation until connect is called to avoid Looper issues
-        AppLogger.d(TAG, "RealShimmerDevice created, will initialize Handler on first connect")
     }
 
     override fun connect(address: String, name: String): Boolean {
-        return try {
+        return (
             // Initialize Handler and ShimmerManager if not already done
             if (shimmerHandler == null) {
                 shimmerHandler = object : Handler(Looper.getMainLooper()) {
@@ -56,51 +50,30 @@ class RealShimmerDevice(
                         when (msg.what) {
                             0 -> handleStateChange(msg)
                             2 -> handleDataPacket(msg)
-                            4 -> AppLogger.d(TAG, "ACK received from Shimmer")
-                            5 -> AppLogger.d(TAG, "Device name received")
-                            9 -> AppLogger.d(TAG, "Stop streaming complete")
-                            11 -> AppLogger.w(TAG, "Packet loss detected")
-                            999 -> AppLogger.d(TAG, "Toast message from Shimmer")
-                            else -> AppLogger.d(TAG, "Unknown message type: ${msg.what}")
                         }
                     }
                 }
                 shimmerManager = ShimmerBluetoothManagerAndroid(context, shimmerHandler)
-                AppLogger.i(TAG, "ShimmerBluetoothManagerAndroid initialized successfully")
             }
             shimmer = Shimmer(shimmerHandler, context)
             shimmer?.let { device ->
                 // Set up data handler to forward data to registered callback
-                try {
                     // Use Handler message pattern instead of direct lambda
                     // The Shimmer SDK typically uses Handler patterns for callbacks
-                    AppLogger.d(TAG, "Setting up Shimmer device handlers")
-                } catch (e: Exception) {
-                    AppLogger.w(TAG, "Could not set data handler - method may not be available", e)
                 }
                 // Set up connection state handler for proper state tracking
-                try {
                     // Use Handler message pattern for state changes
-                    AppLogger.d(TAG, "Setting up connection state monitoring")
-                } catch (e: Exception) {
-                    Log.w(
                         TAG,
                         "Could not set connection state handler - method may not be available",
                         e
                     )
                 }
                 // Connection is asynchronous - actual status will be updated via handlers
-                try {
                     device.connect(address, name)
-                    AppLogger.i(TAG, "Connection request sent to Shimmer device: $name ($address)")
                     true
-                } catch (e: Exception) {
-                    AppLogger.e(TAG, "Failed to call connect method", e)
                     false
                 }
             } ?: false
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to connect to Shimmer device", e)
             isConnected = false
             connectionCallback?.invoke("CONNECTION_FAILED")
             false
@@ -108,44 +81,35 @@ class RealShimmerDevice(
     }
 
     override fun startStreaming(): Boolean {
-        return try {
+        return (
             shimmer?.let { device ->
                 device.startStreaming()
-                AppLogger.i(TAG, "Started streaming from Shimmer device")
                 true
             } ?: false
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to start streaming", e)
             false
         }
     }
 
     override fun stopStreaming(): Boolean {
-        return try {
+        return (
             shimmer?.let { device ->
                 device.stopStreaming()
-                AppLogger.i(TAG, "Stopped streaming from Shimmer device")
                 true
             } ?: false
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to stop streaming", e)
             false
         }
     }
 
     override fun disconnect(): Boolean {
-        return try {
+        return (
             shimmer?.let { device ->
                 device.stop()
                 isConnected = false
                 connectionCallback?.invoke("DISCONNECTED")
                 dataCallback = null
                 connectionCallback = null
-                AppLogger.i(TAG, "Disconnected from Shimmer device")
                 true
             } ?: false
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to disconnect from Shimmer device", e)
             false
         }
     }
@@ -163,157 +127,116 @@ class RealShimmerDevice(
     }
 
     private fun handleStateChange(msg: android.os.Message) {
-        try {
             val state = msg.arg1
-            AppLogger.d(TAG, "Shimmer state change: state=$state")
             when (state) {
                 2 -> {
-                    AppLogger.i(TAG, "Shimmer device connected")
                     isConnected = true
                     connectionCallback?.invoke("CONNECTED")
                 }
 
                 1 -> {
-                    AppLogger.i(TAG, "Shimmer device connecting")
                     connectionCallback?.invoke("CONNECTING")
                 }
 
                 0 -> {
-                    AppLogger.i(TAG, "Shimmer device disconnected")
                     isConnected = false
                     connectionCallback?.invoke("DISCONNECTED")
                 }
 
                 3 -> {
-                    AppLogger.i(TAG, "Shimmer device streaming")
                     connectionCallback?.invoke("STREAMING")
                 }
 
                 else -> {
-                    AppLogger.d(TAG, "Unknown Shimmer state: $state")
                 }
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling Shimmer state change", e)
         }
     }
 
     private fun handleDataPacket(msg: android.os.Message) {
-        try {
-            AppLogger.d(TAG, "Shimmer data packet received")
             // Try to extract ObjectCluster from the message
-            try {
                 val shimmerMsg = msg.obj as? com.shimmerresearch.driver.ShimmerMsg
                 val objectCluster = shimmerMsg?.let {
-                    try {
                         it.mB as? ObjectCluster
-                    } catch (e: Exception) {
-                        AppLogger.d(TAG, "Could not extract ObjectCluster from ShimmerMsg", e)
                         null
                     }
                 }
                 if (objectCluster != null) {
                     handleShimmerData(objectCluster)
                 } else {
-                    AppLogger.d(TAG, "No ObjectCluster found in data packet")
                 }
-            } catch (e: Exception) {
-                AppLogger.w(TAG, "Could not process data packet", e)
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling Shimmer data packet", e)
         }
     }
 
     private fun handleShimmerData(objectCluster: ObjectCluster) {
-        try {
             val shimmerDataCluster = RealShimmerDataCluster(objectCluster)
             dataCallback?.invoke(shimmerDataCluster)
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to handle Shimmer data", e)
         }
     }
 
     private fun handleConnectionStateChange(state: Any) {
-        try {
             // Convert state to string and update connection status
             when (state.toString()) {
                 "CONNECTED", "3" -> {
                     isConnected = true
                     connectionCallback?.invoke("CONNECTED")
-                    AppLogger.i(TAG, "Shimmer device connected")
                 }
 
                 "CONNECTING", "2" -> {
                     isConnected = false
                     connectionCallback?.invoke("CONNECTING")
-                    AppLogger.i(TAG, "Shimmer device connecting")
                 }
 
                 "DISCONNECTED", "NONE", "0" -> {
                     isConnected = false
                     connectionCallback?.invoke("DISCONNECTED")
-                    AppLogger.i(TAG, "Shimmer device disconnected")
                 }
 
                 else -> {
-                    AppLogger.d(TAG, "Unknown Shimmer connection state: $state")
                 }
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error handling connection state change", e)
         }
     }
 }
 
 class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : ShimmerDataCluster {
     companion object {
-        private const val TAG = "RealShimmerDataCluster"
         // Shimmer sensor constants
     }
 
     override fun getGSRRawValue(): Double {
-        return try {
+        return (
             objectCluster.getFormatClusterValue("GSR", "RAW") ?: 0.0
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to get GSR raw value", e)
             0.0
         }
     }
 
     override fun getGSRCalibratedValue(): Double {
-        return try {
+        return (
             objectCluster.getFormatClusterValue("GSR Conductance", "CAL") ?: 0.0
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to get GSR calibrated value", e)
             0.0
         }
     }
 
     override fun getPPGValue(): Double {
-        return try {
+        return (
             objectCluster.getFormatClusterValue("PPG_A13", "CAL") ?: 0.0
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to get PPG value", e)
             0.0
         }
     }
 
     override fun getTimestamp(): Long {
-        return try {
+        return (
             objectCluster.getFormatClusterValue("Timestamp", "CAL")?.toLong() ?: System.currentTimeMillis()
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to get timestamp", e)
             System.currentTimeMillis()
         }
     }
 
     override fun hasValidGSRData(): Boolean {
-        return try {
+        return (
             val gsrValue = getGSRRawValue()
             gsrValue > 0 && gsrValue < 4096 // Valid ADC range for Shimmer3 GSR
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Failed to validate GSR data", e)
             false
         }
     }

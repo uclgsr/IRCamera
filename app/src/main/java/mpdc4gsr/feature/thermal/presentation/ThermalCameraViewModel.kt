@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.model.SessionMetadata
-import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -23,12 +22,9 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
     private val context: Context = application.applicationContext
 
     companion object {
-        private const val TAG = "ThermalCameraViewModel"
     }
 
     private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
-        AppLogger.e(TAG, "Coroutine exception in ThermalCameraViewModel", exception)
-        _uiState.update { it.copy(errorMessage = "Error: ${exception.message}") }
     }
 
     data class ThermalCameraUiState(
@@ -58,7 +54,6 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
 
     private fun initializeThermalRecorder() {
         viewModelScope.launch(exceptionHandler) {
-            try {
                 thermalRecorder = ThermalCameraRecorder(context, "thermal_preview_1")
                 // Set preview callback to receive thermal frames
                 thermalRecorder?.setThermalPreviewCallback(object : ThermalCameraRecorder.ThermalPreviewCallback {
@@ -94,17 +89,12 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
                     )
                 }
                 if (success) {
-                    AppLogger.i(TAG, "Thermal camera initialized successfully")
                 } else {
                     _uiState.update {
                         it.copy(errorMessage = "Failed to initialize thermal camera")
                     }
-                    AppLogger.e(TAG, "Failed to initialize thermal camera")
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error initializing thermal recorder", e)
                 _uiState.update {
-                    it.copy(errorMessage = "Error: ${e.message}")
                 }
             }
         }
@@ -124,8 +114,6 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
 
     fun rescanForThermalCamera() {
         viewModelScope.launch(exceptionHandler) {
-            try {
-                AppLogger.i(TAG, "Triggering thermal camera rescan from ViewModel")
                 val found = thermalRecorder?.rescanForThermalCamera() ?: false
                 val status = thermalRecorder?.getThermalSystemStatus()
                 _uiState.update {
@@ -136,14 +124,9 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
                     )
                 }
                 if (found) {
-                    AppLogger.i(TAG, "Thermal camera found during rescan")
                 } else {
-                    AppLogger.w(TAG, "Rescan did not initialize camera: ${status?.statusMessage}")
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error during thermal camera rescan", e)
                 _uiState.update {
-                    it.copy(errorMessage = "Rescan error: ${e.message}")
                 }
             }
         }
@@ -151,7 +134,6 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
 
     fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata) {
         viewModelScope.launch(exceptionHandler) {
-            try {
                 val success = thermalRecorder?.startRecording(sessionDirectory, sessionMetadata) ?: false
                 if (success) {
                     recordingStartTime = System.currentTimeMillis()
@@ -161,16 +143,12 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
                             recordingDuration = 0L
                         )
                     }
-                    AppLogger.i(TAG, "Thermal recording started")
                 } else {
                     _uiState.update {
                         it.copy(errorMessage = "Failed to start recording")
                     }
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error starting recording", e)
                 _uiState.update {
-                    it.copy(errorMessage = "Recording error: ${e.message}")
                 }
             }
         }
@@ -178,7 +156,6 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
 
     fun stopRecording() {
         viewModelScope.launch(exceptionHandler) {
-            try {
                 thermalRecorder?.stopRecording()
                 _uiState.update {
                     it.copy(
@@ -186,9 +163,6 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
                         recordingDuration = 0L
                     )
                 }
-                AppLogger.i(TAG, "Thermal recording stopped")
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error stopping recording", e)
             }
         }
     }
@@ -207,11 +181,7 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
         // Launch async cleanup in viewModelScope before it gets cancelled
         // This ensures proper cleanup without blocking the main thread
         viewModelScope.launch(exceptionHandler + Dispatchers.IO) {
-            try {
                 thermalRecorder?.cleanup()
-                AppLogger.i(TAG, "Thermal recorder cleanup completed")
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error cleaning up thermal recorder", e)
             }
         }
         // Note: viewModelScope will be automatically cancelled after onCleared returns

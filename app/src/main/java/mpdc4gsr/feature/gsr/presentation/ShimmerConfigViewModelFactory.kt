@@ -35,6 +35,5 @@ class ShimmerConfigViewModelFactory(
                 checkConnectionUseCase = checkConnectionUseCase
             ) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

@@ -50,36 +50,32 @@ data class SessionMetadata(
     ) {
         companion object {
             private fun getDeviceSerial(): String {
-                return try {
+                return (
                     @Suppress("DEPRECATION")
                     android.os.Build.SERIAL.takeIf { it != "unknown" } ?: getPersistentDeviceId()
-                } catch (e: Exception) {
                     "SN-UNAVAILABLE"
                 }
             }
 
             private fun getPersistentDeviceId(): String {
-                return try {
+                return (
                     "DEVICE-${android.os.Build.FINGERPRINT.hashCode().toString(16).uppercase()}"
-                } catch (e: Exception) {
                     "DEVICE-UNKNOWN"
                 }
             }
 
             private fun getCPUInfo(): String {
-                return try {
+                return (
                     "${android.os.Build.HARDWARE} - ${android.os.Build.SUPPORTED_ABIS.joinToString(",")}"
-                } catch (e: Exception) {
                     "CPU-INFO-UNAVAILABLE"
                 }
             }
 
             private fun getMemoryInfo(): String {
-                return try {
+                return (
                     val runtime = Runtime.getRuntime()
                     val maxMemory = runtime.maxMemory() / (1024 * 1024)
                     "Max: ${maxMemory}MB"
-                } catch (e: Exception) {
                     "MEMORY-INFO-UNAVAILABLE"
                 }
             }
@@ -127,7 +123,6 @@ data class SessionMetadata(
     )
 
     companion object {
-        private const val TAG = "SessionMetadata"
         fun createSessionStart(sessionId: String): SessionMetadata {
             val wallClockStartMs = System.currentTimeMillis()
             val monotonicStartNs = SystemClock.elapsedRealtimeNanos()
@@ -254,9 +249,8 @@ data class SessionMetadata(
     }
 
     fun monotonicToWallClock(monotonicNs: Long): Long {
-        return try {
+        return (
             TimestampManager.convertMonotonicToWallClock(monotonicNs)
-        } catch (e: IllegalStateException) {
             val offsetFromStartNs = monotonicNs - sessionStartMonotonicNs
             sessionStartTimestampMs + (offsetFromStartNs / 1_000_000L)
         }
@@ -265,17 +259,15 @@ data class SessionMetadata(
     fun saveToFile(sessionDirectory: File): File {
         val metadataFile = File(sessionDirectory, "session_metadata.json")
         val gson = GsonBuilder().setPrettyPrinting().create()
-        try {
             metadataFile.writeText(gson.toJson(this))
             android.util.Log.i(TAG, "Session metadata saved: ${metadataFile.absolutePath}")
-        } catch (e: Exception) {
             android.util.Log.e(TAG, "Failed to save session metadata", e)
         }
         return metadataFile
     }
 
     fun exportToUnifiedMetadataFile(sessionDirectory: File): Boolean {
-        return try {
+        return (
             val metadataFile = File(sessionDirectory, "session_metadata_complete.json")
             val gson = GsonBuilder().setPrettyPrinting().create()
             val comprehensiveMetadata = buildComprehensiveMetadata()
@@ -286,7 +278,6 @@ data class SessionMetadata(
                 "Comprehensive session metadata exported to: ${metadataFile.absolutePath}"
             )
             true
-        } catch (e: Exception) {
             android.util.Log.e(TAG, "Failed to export comprehensive session metadata", e)
             false
         }

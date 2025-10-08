@@ -37,7 +37,6 @@ class StartGSRStreamingUseCase(
 ) {
     suspend operator fun invoke(deviceAddress: String): Flow<GSRSample> {
         if (!repository.isDeviceConnected(deviceAddress)) {
-            throw IllegalStateException("Device not connected: $deviceAddress")
         }
         return repository.streamGSRData(deviceAddress)
     }

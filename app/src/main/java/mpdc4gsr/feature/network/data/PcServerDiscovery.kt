@@ -3,9 +3,6 @@ package mpdc4gsr.feature.network.data
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +11,6 @@ import java.net.*
 
 class PcServerDiscovery(private val context: Context) {
     companion object {
-        private const val TAG = "PcServerDiscovery"
         private const val DISCOVERY_PORT = 8081
         private const val PC_SERVER_PORT = 8080
         private const val BROADCAST_MESSAGE = "IRCamera_Discovery_Request"
@@ -41,10 +37,8 @@ class PcServerDiscovery(private val context: Context) {
 
     suspend fun discoverServers(): List<DiscoveredServer> {
         return withContext(Dispatchers.IO) {
-            AppLogger.i(TAG, "Starting PC server discovery")
             _isDiscovering.value = true
             val servers = mutableListOf<DiscoveredServer>()
-            try {
                 // Method 1: Broadcast discovery
                 servers.addAll(broadcastDiscovery())
                 // Method 2: Network range scanning
@@ -52,27 +46,19 @@ class PcServerDiscovery(private val context: Context) {
                 // Remove duplicates based on IP address
                 val uniqueServers = servers.distinctBy { it.ipAddress }
                 _discoveredServers.value = uniqueServers
-                AppLogger.i(TAG, "Discovery completed. Found ${uniqueServers.size} servers")
                 uniqueServers
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error during server discovery", e)
                 emptyList()
-            } finally {
                 _isDiscovering.value = false
             }
         }
     }
 
     fun startContinuousDiscovery() {
-        AppLogger.i(TAG, "Starting continuous server discovery")
         continuousDiscoveryJob?.cancel()
         continuousDiscoveryJob = discoveryScope.launch {
             while (isActive) {
-                try {
                     discoverServers()
                     delay(SCAN_INTERVAL)
-                } catch (e: Exception) {
-                    AppLogger.e(TAG, "Error in continuous discovery", e)
                     delay(SCAN_INTERVAL)
                 }
             }
@@ -80,14 +66,12 @@ class PcServerDiscovery(private val context: Context) {
     }
 
     fun stopContinuousDiscovery() {
-        AppLogger.i(TAG, "Stopping continuous server discovery")
         continuousDiscoveryJob?.cancel()
         continuousDiscoveryJob = null
     }
 
     private suspend fun broadcastDiscovery(): List<DiscoveredServer> = withContext(Dispatchers.IO) {
         val servers = mutableListOf<DiscoveredServer>()
-        try {
             android.net.TrafficStats.setThreadStatsTag(android.os.Process.myTid())
             val socket = DatagramSocket()
             android.net.TrafficStats.tagDatagramSocket(socket)
@@ -96,7 +80,6 @@ class PcServerDiscovery(private val context: Context) {
             // Get broadcast addresses
             val broadcastAddresses = getBroadcastAddresses()
             for (broadcastAddress in broadcastAddresses) {
-                try {
                     val sendData = BROADCAST_MESSAGE.toByteArray()
                     val sendPacket = DatagramPacket(
                         sendData, sendData.size,
@@ -107,7 +90,6 @@ class PcServerDiscovery(private val context: Context) {
                     // Listen for responses
                     val buffer = ByteArray(1024)
                     val receivePacket = DatagramPacket(buffer, buffer.size)
-                    try {
                         socket.receive(receivePacket)
                         val responseTime = System.currentTimeMillis() - startTime
                         val response = String(receivePacket.data, 0, receivePacket.length)
@@ -119,17 +101,11 @@ class PcServerDiscovery(private val context: Context) {
                             )
                             server?.let { servers.add(it) }
                         }
-                    } catch (e: SocketTimeoutException) {
                         // No response from this broadcast address
                     }
-                } catch (e: Exception) {
-                    AppLogger.w(TAG, "Error broadcasting to $broadcastAddress", e)
                 }
             }
             socket.close()
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error in broadcast discovery", e)
-        } finally {
             android.net.TrafficStats.clearThreadStatsTag()
         }
         servers
@@ -138,7 +114,6 @@ class PcServerDiscovery(private val context: Context) {
     private suspend fun networkRangeScanning(): List<DiscoveredServer> =
         withContext(Dispatchers.IO) {
             val servers = mutableListOf<DiscoveredServer>()
-            try {
                 val localIp = getLocalIpAddress()
                 if (localIp != null) {
                     val ipParts = localIp.split(".")
@@ -155,15 +130,12 @@ class PcServerDiscovery(private val context: Context) {
                         }
                     }
                 }
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error in network range scanning", e)
             }
             servers
         }
 
     private suspend fun testServerConnection(ipAddress: String): DiscoveredServer? =
         withContext(Dispatchers.IO) {
-            try {
                 android.net.TrafficStats.setThreadStatsTag(android.os.Process.myTid())
                 val startTime = System.currentTimeMillis()
                 val socket = Socket()
@@ -191,9 +163,7 @@ class PcServerDiscovery(private val context: Context) {
                         )
                     }
                 }
-            } catch (e: Exception) {
                 // Server not responding or not a PC server
-            } finally {
                 android.net.TrafficStats.clearThreadStatsTag()
             }
             null
@@ -204,7 +174,6 @@ class PcServerDiscovery(private val context: Context) {
         response: String,
         responseTime: Long
     ): DiscoveredServer? {
-        try {
             val parts = response.split(";")
             var deviceName = "PC Controller"
             val capabilities = mutableListOf<String>()
@@ -223,15 +192,12 @@ class PcServerDiscovery(private val context: Context) {
                 capabilities = capabilities,
                 responseTime = responseTime
             )
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Error parsing discovery response: $response", e)
             return null
         }
     }
 
     private fun getBroadcastAddresses(): List<String> {
         val addresses = mutableListOf<String>()
-        try {
             val interfaces = NetworkInterface.getNetworkInterfaces()
             for (networkInterface in interfaces) {
                 if (networkInterface.isLoopback || !networkInterface.isUp) continue
@@ -242,8 +208,6 @@ class PcServerDiscovery(private val context: Context) {
                     }
                 }
             }
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Error getting broadcast addresses", e)
         }
         // Fallback to common broadcast addresses
         if (addresses.isEmpty()) {
@@ -253,7 +217,6 @@ class PcServerDiscovery(private val context: Context) {
     }
 
     private fun getLocalIpAddress(): String? {
-        try {
             val connectivityManager =
                 context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val network = connectivityManager.activeNetwork
@@ -271,8 +234,6 @@ class PcServerDiscovery(private val context: Context) {
                     }
                 }
             }
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Error getting local IP address", e)
         }
         return null
     }

@@ -2,12 +2,8 @@ package mpdc4gsr.core.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
 
 object FeatureFlags {
-    private const val TAG = "FeatureFlags"
     private const val PREFS_NAME = "pc_to_phone_features"
     private const val KEY_COMM_USE_WSS = "COMM_USE_WSS"
     private const val KEY_TLS_ENABLE = "TLS_ENABLE"
@@ -22,7 +18,6 @@ object FeatureFlags {
     private var prefs: SharedPreferences? = null
     fun initialize(context: Context) {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        AppLogger.i(TAG, "Feature flags initialized with defaults")
         logCurrentConfiguration()
     }
 
@@ -41,27 +36,22 @@ object FeatureFlags {
 
     fun setCommUseWSS(enabled: Boolean) {
         prefs?.edit()?.putBoolean(KEY_COMM_USE_WSS, enabled)?.apply()
-        AppLogger.i(TAG, "COMM_USE_WSS set to $enabled")
     }
 
     fun setTlsEnable(enabled: Boolean) {
         prefs?.edit()?.putBoolean(KEY_TLS_ENABLE, enabled)?.apply()
-        AppLogger.i(TAG, "TLS_ENABLE set to $enabled")
     }
 
     fun setMdnsEnable(enabled: Boolean) {
         prefs?.edit()?.putBoolean(KEY_MDNS_ENABLE, enabled)?.apply()
-        AppLogger.i(TAG, "MDNS_ENABLE set to $enabled")
     }
 
     fun setFileUploadProtocol(protocol: String) {
         prefs?.edit()?.putString(KEY_FILE_UPLOAD_PROTOCOL, protocol)?.apply()
-        AppLogger.i(TAG, "FILE_UPLOAD_PROTOCOL set to $protocol")
     }
 
     fun setTimeSyncMode(mode: String) {
         prefs?.edit()?.putString(KEY_TIME_SYNC_MODE, mode)?.apply()
-        AppLogger.i(TAG, "TIME_SYNC_MODE set to $mode")
     }
 
     fun getAllFlags(): Map<String, Any> {
@@ -76,15 +66,12 @@ object FeatureFlags {
 
     fun resetToDefaults() {
         prefs?.edit()?.clear()?.apply()
-        AppLogger.i(TAG, "Feature flags reset to defaults")
         logCurrentConfiguration()
     }
 
     private fun logCurrentConfiguration() {
         val flags = getAllFlags()
-        AppLogger.i(TAG, "Current feature flag configuration:")
         flags.forEach { (key, value) ->
-            AppLogger.i(TAG, "  $key: $value")
         }
     }
 
@@ -101,7 +88,6 @@ object FeatureFlags {
         }
         if (warnings.isNotEmpty()) {
             warnings.forEach { warning ->
-                AppLogger.w(TAG, "Configuration warning: $warning")
             }
         }
         return warnings
