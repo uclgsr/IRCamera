@@ -102,7 +102,7 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                 device = selectedDevice!!,
                 onDismiss = { showDeviceDetails = false },
                 onConfigure = {
-                    ShimmerConfigComposeActivity.startActivity(this@GSRDeviceManagementComposeActivity)
+                    GSRDeviceConfigComposeActivity.startActivity(this@GSRDeviceManagementComposeActivity)
                     showDeviceDetails = false
                 }
             )

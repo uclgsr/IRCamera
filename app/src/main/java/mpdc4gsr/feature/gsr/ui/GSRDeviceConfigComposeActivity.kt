@@ -26,17 +26,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.data.model.DeviceInfo
-import mpdc4gsr.feature.gsr.presentation.ShimmerConfigViewModel
+import mpdc4gsr.feature.gsr.presentation.GSRDeviceConfigViewModel
 
 @AndroidEntryPoint
-class ShimmerConfigComposeActivity : ComponentActivity() {
+class GSRDeviceConfigComposeActivity : ComponentActivity() {
     companion object {
         fun startActivity(context: Context) {
-            context.startActivity(Intent(context, ShimmerConfigComposeActivity::class.java))
+            context.startActivity(Intent(context, GSRDeviceConfigComposeActivity::class.java))
         }
     }
 
-    private val viewModel: ShimmerConfigViewModel by viewModels()
+    private val viewModel: GSRDeviceConfigViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +47,7 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun Content(viewModel: ShimmerConfigViewModel) {
+    fun Content(viewModel: GSRDeviceConfigViewModel) {
         val localContext = androidx.compose.ui.platform.LocalContext.current
         var isScanning by remember { mutableStateOf(false) }
         var selectedDevice by remember { mutableStateOf<DeviceInfo?>(null) }
@@ -89,7 +89,7 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
                     )
                 }
             ) { paddingValues ->
-                ShimmerConfigContent(
+                GSRDeviceConfigContent(
                     isScanning = isScanning,
                     selectedDevice = selectedDevice,
                     onDeviceSelect = { selectedDevice = it },
@@ -113,12 +113,12 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
 }
 
 @Composable
-private fun ShimmerConfigContent(
+private fun GSRDeviceConfigContent(
     isScanning: Boolean,
     selectedDevice: DeviceInfo?,
     onDeviceSelect: (DeviceInfo?) -> Unit,
     onConfigureDevice: () -> Unit,
-    viewModel: ShimmerConfigViewModel,
+    viewModel: GSRDeviceConfigViewModel,
     modifier: Modifier = Modifier
 ) {
     val localContext = androidx.compose.ui.platform.LocalContext.current
