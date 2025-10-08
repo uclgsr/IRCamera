@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.ui.model.SensorType
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.camera.ui.CameraSettingsScreen
@@ -44,6 +45,7 @@ private object MainNavRoutes {
     const val HELP = "help"
 }
 
+@AndroidEntryPoint
 class MainComposeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
