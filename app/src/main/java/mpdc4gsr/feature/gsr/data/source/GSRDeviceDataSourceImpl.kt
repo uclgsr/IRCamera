@@ -48,7 +48,10 @@ class GSRDeviceDataSourceImpl @Inject constructor(
     }
 
     override suspend fun disconnect(deviceAddress: String) {
-        try {            deviceManager.disconnectDevice(deviceAddress)        } catch (e: Exception) {        }
+        try {
+            deviceManager.disconnectDevice(deviceAddress)
+        } catch (e: Exception) {
+        }
     }
 
     override suspend fun startStreaming(deviceAddress: String): Flow<GSRSample> {
@@ -73,7 +76,8 @@ class GSRDeviceDataSourceImpl @Inject constructor(
             mgr.getShimmerDeviceBtConnectedFromMac(deviceAddress)?.let { shimmer ->
                 shimmer.isConnected
             }
-        } ?: false        return connected
+        } ?: false
+        return connected
     }
 
     override suspend fun getBatteryLevel(deviceAddress: String): Int? {
