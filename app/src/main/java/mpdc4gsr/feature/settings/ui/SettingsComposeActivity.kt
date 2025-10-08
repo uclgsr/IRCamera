@@ -384,3 +384,4 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
         val autoSaveEnabled: Boolean = true
     )
 }
+}
