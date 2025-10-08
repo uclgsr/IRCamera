@@ -147,7 +147,7 @@ class GSRNetworkStreamer(
             networkClient?.let { client ->
                 streamingScope.launch {
                     try {
-                        val success = client.sendMessage(batchMessage)
+                        val success = client.sendMessage(batchMessage.toString())
                         if (success) {
                         }
                     } catch (e: Exception) {
