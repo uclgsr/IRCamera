@@ -6,7 +6,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ShowChart
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -25,8 +24,8 @@ import mpdc4gsr.feature.thermal.data.ThermalPalette
 import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel
 import mpdc4gsr.feature.thermal.presentation.ThermalUiState
 import mpdc4gsr.feature.thermal.presentation.ThermalUiEvent
+import mpdc4gsr.feature.thermal.ui.components.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThermalCameraScreen(
     onBackClick: () -> Unit,
@@ -38,45 +37,38 @@ fun ThermalCameraScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     
     LibUnifiedTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            "Thermal Imaging",
-                            fontWeight = FontWeight.Bold
+        ThermalScaffold(
+            title = "Thermal Imaging",
+            onBackClick = onBackClick,
+            actions = {
+                ThermalActions(
+                    listOf(
+                        ThermalAction(
+                            Icons.Default.PhotoLibrary,
+                            "Gallery",
+                            onNavigateToGallery
+                        ),
+                        ThermalAction(
+                            Icons.Default.Settings,
+                            "Settings",
+                            onNavigateToSettings
                         )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = onBackClick) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = onNavigateToGallery) {
-                            Icon(Icons.Default.PhotoLibrary, contentDescription = "Gallery")
-                        }
-                        IconButton(onClick = onNavigateToSettings) {
-                            Icon(Icons.Default.Settings, contentDescription = "Settings")
-                        }
-                    }
+                    )
                 )
-            }
+            },
+            modifier = modifier
         ) { paddingValues ->
             when (uiState) {
                 is ThermalUiState.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
+                    ThermalLoadingContent(
+                        message = "Connecting to thermal camera...",
+                        modifier = Modifier.padding(paddingValues)
+                    )
                 }
                 is ThermalUiState.Error -> {
                     ThermalErrorContent(
-                        error = uiState as ThermalUiState.Error,
+                        message = (uiState as ThermalUiState.Error).message,
+                        isRecoverable = (uiState as ThermalUiState.Error).isRecoverable,
                         onRetry = { viewModel.onEvent(ThermalUiEvent.ClearError) },
                         modifier = Modifier.padding(paddingValues)
                     )
@@ -88,40 +80,6 @@ fun ThermalCameraScreen(
                         modifier = Modifier.padding(paddingValues)
                     )
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ThermalErrorContent(
-    error: ThermalUiState.Error,
-    onRetry: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            Icons.Default.Error,
-            contentDescription = "Error",
-            tint = MaterialTheme.colorScheme.error,
-            modifier = Modifier.size(64.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = error.message,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.error
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        if (error.isRecoverable) {
-            Button(onClick = onRetry) {
-                Text("Retry")
             }
         }
     }

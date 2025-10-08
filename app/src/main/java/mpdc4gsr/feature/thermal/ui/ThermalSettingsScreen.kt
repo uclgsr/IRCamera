@@ -24,6 +24,7 @@ import mpdc4gsr.core.ui.components.settings.SettingsSlider
 import mpdc4gsr.core.ui.components.settings.SettingsToggle
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.thermal.presentation.ThermalSettingsViewModel
+import mpdc4gsr.feature.thermal.ui.components.ThermalScaffold
 
 @Composable
 fun ThermalSettingsScreen(
