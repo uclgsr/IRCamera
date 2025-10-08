@@ -349,9 +349,13 @@ class AdvancedAnalyticsEngine:
             return {}
 
     def _extract_thermal_features(self, thermal_readings: List[SensorReading]) -> Dict[str, float]:
+        if not thermal_readings:
+            return {}
+
         features = {}
         values = np.array(
             [r.processed_value for r in thermal_readings[-180:]])
+
 
         features['mean_temp'] = float(np.mean(values))
         features['std_temp'] = float(np.std(values))
