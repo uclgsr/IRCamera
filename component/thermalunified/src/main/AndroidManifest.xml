@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- Remove invalid permission CONFIGURATION_CHANGED_ACTION -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission
         android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED"
@@ -48,14 +47,13 @@
         <activity android:name=".activity.IRMonitorChartComposeActivity" />
         <activity
             android:name=".lite.activity.ImagePickIRLiteComposeActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="userPortrait" />
         <activity
             android:name=".lite.activity.IRThermalLiteComposeActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:exported="true"
+            android:exported="false"
             android:launchMode="singleTask"
             android:maxAspectRatio="2.4"
-            android:requestLegacyExternalStorage="true"
             android:screenOrientation="userPortrait"
             android:windowSoftInputMode="adjustPan" />
 
@@ -82,19 +80,19 @@
         <activity
             android:name=".activity.IRMainComposeActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
+            android:screenOrientation="userPortrait"
             android:theme="@style/Theme.IRCamera" />
 
         <activity
             android:name=".activity.ThermalGalleryComposeActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
+            android:screenOrientation="userPortrait"
             android:theme="@style/Theme.IRCamera" />
 
         <activity
             android:name=".activity.ThermalReportComposeActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
+            android:screenOrientation="userPortrait"
             android:theme="@style/Theme.IRCamera" />
 
         <!-- New Compose Activities from PR #477 - Complete Migration -->

@@ -12,6 +12,7 @@ hiltNavigationCompose = "1.2.0"
 
 # Jetpack Compose
 compose-bom = "2025.09.01"
+compose-compiler = "1.5.15"
 activity = "1.11.0"
 
 androidxCore = "1.17.0"
@@ -143,10 +144,10 @@ lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", 
 
 # Hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version = "1.2.0" }
 
-# Room/Work
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }

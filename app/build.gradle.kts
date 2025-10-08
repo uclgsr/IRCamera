@@ -333,15 +333,9 @@ dependencies {
     implementation(libs.bundles.compose.core)
     implementation(libs.bundles.compose.navigation.bundle)
     implementation(libs.bundles.compose.icons)
-    implementation(libs.hilt.navigation.compose)
     debugImplementation(libs.bundles.compose.debug)
     androidTestImplementation(libs.bundles.compose.test)
     implementation(libs.coil.compose)
-    
-    // Hilt Dependency Injection
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
-    implementation(libs.hilt.navigation.compose)
     
     implementation(project(":component:thermalunified"))
     implementation(project(":component:gsr-recording"))
@@ -379,15 +373,6 @@ dependencies {
     implementation(libs.nordic.ble.ktx)
     implementation(libs.lifecycle.service)
     implementation(libs.compose.lifecycle.runtime)
-    
-    // Hilt Dependency Injection
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
-    implementation(libs.hilt.navigation.compose)
-
-    // Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
 
     implementation(files("libs/shimmerandroidinstrumentdriver-3.2.4_beta.aar"))
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))

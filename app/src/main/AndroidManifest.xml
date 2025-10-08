@@ -202,14 +202,14 @@
         <!-- Navigation Test Activity -->
         <activity
             android:name="mpdc4gsr.feature.testing.ui.NavigationTestActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="Navigation Test"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <!-- Comprehensive Integration Test Activity -->
         <activity
             android:name="mpdc4gsr.feature.testing.ui.ComprehensiveIntegrationTestActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="Integration Test Suite"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
