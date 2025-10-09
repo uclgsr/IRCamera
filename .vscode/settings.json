@@ -49,6 +49,6 @@
   "editor.suggestSelection": "first",
   "editor.inlineSuggest.enabled": true,
   "editor.tabCompletion": "on",
-  "workbench.colorTheme": "Default Dark+",
+  "workbench.colorTheme": "Visual Studio Light",
   "terminal.integrated.defaultProfile.linux": "bash"
 }
