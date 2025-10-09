@@ -3,6 +3,7 @@ package mpdc4gsr.core.data
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+
 object FeatureFlags {
     private const val TAG = "FeatureFlags"
     private const val PREFS_NAME = "pc_to_phone_features"

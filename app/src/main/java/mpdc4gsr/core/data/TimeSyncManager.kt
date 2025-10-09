@@ -8,6 +8,7 @@ import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
@@ -77,6 +78,7 @@ class TimeSyncManager(private val context: Context) {
     private var syncLogFile: File? = null
     private val periodicSyncEnabled = AtomicBoolean(false)
     private var periodicSyncJob: kotlinx.coroutines.Job? = null
+    private val pendingSyncIndices = ConcurrentHashMap<Long, Int>()
 
     // Configuration for sync behavior
     private var syncConfig = SyncConfiguration()
@@ -218,6 +220,7 @@ class TimeSyncManager(private val context: Context) {
     fun initializeSession(sessionDirectory: String) {
         currentSessionDirectory = sessionDirectory
         sessionStartTime = System.currentTimeMillis()
+        pendingSyncIndices.clear()
         // Create sync log file
         val sessionDir = File(sessionDirectory)
         if (!sessionDir.exists()) {
@@ -277,6 +280,7 @@ class TimeSyncManager(private val context: Context) {
                         "Sync response: t1=$t1PcSendTime, t2=$t2PhoneTimestamp (attempt ${attempt + 1})"
                     )
                     val syncIndex = syncCounter.incrementAndGet().toInt()
+                    pendingSyncIndices[t1PcSendTime] = syncIndex
                     return@withContext SyncResult(
                         success = true,
                         t1 = t1PcSendTime,
@@ -304,6 +308,12 @@ class TimeSyncManager(private val context: Context) {
         rttMs: Long,
         syncIndex: Int
     ) {
+        val resolvedIndex = if (syncIndex != 0) {
+            pendingSyncIndices.remove(t1)
+            syncIndex
+        } else {
+            pendingSyncIndices.remove(t1) ?: 0
+        }
         var retryCount = 0
         repeat(syncConfig.maxSyncRetries) { attempt ->
             try {
@@ -324,7 +334,7 @@ class TimeSyncManager(private val context: Context) {
                     t3 = t3,
                     offsetMs = offsetMs,
                     rttMs = rttMs,
-                    syncIndex = syncIndex,
+                    syncIndex = resolvedIndex,
                     quality = quality,
                     retryCount = retryCount
                 )
@@ -459,6 +469,7 @@ class TimeSyncManager(private val context: Context) {
             currentSessionDirectory = null
             syncLogFile = null
             sessionStartTime = 0L
+            pendingSyncIndices.clear()
         } catch (e: Exception) {
         }
     }
@@ -468,5 +479,6 @@ class TimeSyncManager(private val context: Context) {
         syncScope.cancel()
         finalizeSession()
         syncTriggerCallback = null
+        pendingSyncIndices.clear()
     }
 }

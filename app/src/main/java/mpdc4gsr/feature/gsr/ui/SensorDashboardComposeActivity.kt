@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import dagger.hilt.android.AndroidEntryPoint
 // Note: MainActivityViewModel was moved to backup during cleanup
 // Using modern Compose ViewModels instead
@@ -19,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.AppError
 import mpdc4gsr.core.ui.ConnectionState
-import mpdc4gsr.core.ui.components.SensorStatusCard
+import mpdc4gsr.core.ui.components.sensors.SensorStatusCard
 import mpdc4gsr.core.ui.components.sensors.GSRConnectionState
 import mpdc4gsr.core.ui.components.sensors.GSRData
 import mpdc4gsr.core.ui.components.sensors.GSRVisualizationCard

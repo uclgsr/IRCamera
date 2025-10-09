@@ -21,6 +21,10 @@ import mpdc4gsr.core.data.FeatureFlags
 import mpdc4gsr.core.data.ProtocolVersion
 import mpdc4gsr.core.data.TimeSyncManager
 import mpdc4gsr.core.ui.PermissionManager
+import mpdc4gsr.core.CrashRecoveryManager.RecoveredSession
+import mpdc4gsr.core.CrashRecoveryManager.SessionRecoveryResult
+import mpdc4gsr.core.data.utils.SessionDirectory
+import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import mpdc4gsr.feature.network.data.*
 import mpdc4gsr.feature.network.data.Protocol
 import org.json.JSONArray
@@ -30,6 +34,7 @@ import java.io.DataOutputStream
 import java.io.EOFException
 import java.io.File
 import java.net.*
+import java.util.ArrayList
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.CoroutineContext
@@ -42,6 +47,7 @@ class RecordingService : Service(), CoroutineScope {
     companion object {
         private const val TAG = "RecordingService"
         private const val NOTIFICATION_ID = 1001
+        private const val RECOVERY_NOTIFICATION_ID = 1002
         private const val CHANNEL_ID = "recording_service_channel"
         private const val SERVER_PORT =
             8081  // Use different port to avoid conflicts with NetworkController
@@ -72,6 +78,12 @@ class RecordingService : Service(), CoroutineScope {
             "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.CONNECT_PC_BLUETOOTH"
         const val ACTION_START_DISCOVERY =
             "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_DISCOVERY"
+        const val ACTION_CRASH_RECOVERY_COMPLETED =
+            "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.CRASH_RECOVERY_COMPLETED"
+        const val EXTRA_RECOVERED_SESSION_ID = "recovered_session_id"
+        const val EXTRA_RECOVERY_STATUS = "recovery_status"
+        const val EXTRA_RECOVERY_ERROR = "recovery_error"
+        const val EXTRA_RECOVERY_ACTIONS = "recovery_actions"
         const val EXTRA_SESSION_DIRECTORY = "session_directory"
         const val EXTRA_MARKER_TYPE = "marker_type"
         const val EXTRA_TIMESTAMP_NS = "timestamp_ns"
@@ -171,7 +183,7 @@ class RecordingService : Service(), CoroutineScope {
     }
 
     private val binder = RecordingServiceBinder()
-    private lateinit var recordingController: ComprehensiveRecordingController
+    private lateinit var recordingController: RecordingController
     private var permissionManager: PermissionManager? = null
     private var isInitialized = false
     private lateinit var crashRecoveryManager: CrashRecoveryManager
@@ -198,6 +210,9 @@ class RecordingService : Service(), CoroutineScope {
     private lateinit var structuredLogger: StructuredLogger
     private lateinit var crashSafeSupervisor: CrashSafeSupervisor
     private var timeSyncManager: TimeSyncManager? = null
+    private val sessionDirectoryManager: SessionDirectoryManager by lazy {
+        SessionDirectoryManager(this)
+    }
 
     private data class ClientConnection(
         val socket: Socket,
@@ -209,7 +224,7 @@ class RecordingService : Service(), CoroutineScope {
 
     inner class RecordingServiceBinder : Binder() {
         fun getService(): RecordingService = this@RecordingService
-        fun getRecordingController(): ComprehensiveRecordingController? =
+        fun getRecordingController(): RecordingController? =
             if (::recordingController.isInitialized) recordingController else null
 
         fun getNetworkServer(): NetworkServer? =
@@ -256,10 +271,7 @@ class RecordingService : Service(), CoroutineScope {
             .build()
         startForegroundWithType(NOTIFICATION_ID, notification)
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
-        // Initialize ComprehensiveRecordingController without PermissionManager for service context
-        // PermissionManager requires ComponentActivity which is not available in service context
-        // Note: Second parameter needs LifecycleOwner - passing null for service context
-        recordingController = ComprehensiveRecordingController(this, null, null)
+        recordingController = RecordingController(this)
         // Initialize crash recovery manager for session orchestration
         crashRecoveryManager = CrashRecoveryManager(this)
         networkClient = NetworkClient(this)
@@ -531,152 +543,34 @@ class RecordingService : Service(), CoroutineScope {
     }
 
     private fun startRecordingSession(sessionDirectory: String) {
-        if (!isInitialized) {
-            structuredLogger.log(
-                StructuredLogger.LogLevel.ERROR,
-                "RecordingService",
-                "recording_start_failed",
-                mapOf("reason" to "service_not_initialized")
-            )
-            return
-        }
         launch {
-            try {
-                val sessionDir = File(sessionDirectory)
-                if (!sessionDir.exists()) {
-                    sessionDir.mkdirs()
-                }
-                currentSessionDirectory = sessionDirectory
-                recordingStartTime = System.nanoTime()
-                // Initialize TimeSyncManager for this session
-                timeSyncManager?.initializeSession(sessionDirectory)
-                // Enable periodic sync for long recording sessions
-                timeSyncManager?.setPeriodicSyncEnabled(true)
-                structuredLogger.log(
-                    StructuredLogger.LogLevel.INFO,
-                    "RecordingService",
-                    "recording_session_start",
-                    mapOf(
-                        "session_directory" to sessionDirectory,
-                        "available_sensors" to recordingController.getAvailableSensors()
-                            .map { it.sensorId }
-                    )
-                )
-                startForegroundWithType(
-                    NOTIFICATION_ID,
-                    createRecordingNotification("Starting recording session..."),
-                    forRecording = true
-                )
-                // Perform session start sync
-                launch {
-                    try {
-                        timeSyncManager?.performSessionStartSync()
-                    } catch (e: Exception) {
-                    }
-                }
-                val success = recordingController.startSession(sessionDirectory)
-                if (success) {
-                    val activeSensors = recordingController.getActiveSensorCount()
-                    val totalSensors = recordingController.getAvailableSensors().size
-                    Log.i(
-                        TAG,
-                        "Recording session started successfully with $activeSensors/$totalSensors sensors"
-                    )
-                    updateNotification("Recording: $activeSensors sensors active")
-                    structuredLogger.log(
-                        StructuredLogger.LogLevel.INFO,
-                        "RecordingService",
-                        "recording_session_started",
-                        mapOf(
-                            "active_sensors" to activeSensors,
-                            "total_sensors" to totalSensors,
-                            "session_directory" to sessionDirectory
-                        )
-                    )
-                } else {
-                    updateNotification("Recording failed to start")
-                    structuredLogger.log(
-                        StructuredLogger.LogLevel.ERROR,
-                        "RecordingService",
-                        "recording_session_start_failed"
-                    )
-                    stopRecordingSession()
-                }
-            } catch (e: Exception) {
-                updateNotification("Recording error occurred")
+            val success = startRecordingSessionWithTrigger(
+                sessionDirectory,
+                TriggerSource.LOCAL_NOTIFICATION
+            )
+            if (!success) {
                 structuredLogger.log(
                     StructuredLogger.LogLevel.ERROR,
                     "RecordingService",
-                    "recording_session_start_exception",
-                    mapOf("error" to (e.message ?: "Unknown error"))
+                    "recording_session_start_failed",
+                    mapOf(
+                        "session_directory" to sessionDirectory,
+                        "trigger_source" to TriggerSource.LOCAL_NOTIFICATION.toString()
+                    )
                 )
-                stopRecordingSession()
             }
         }
     }
 
     private fun stopRecordingSession() {
         launch {
-            try {
-                updateNotification("Stopping recording session...")
-                val success = recordingController.stopSession()
-                if (success) {
-                    val sessionDuration = if (recordingStartTime > 0) {
-                        (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
-                    } else 0.0
-                    Log.i(
-                        TAG,
-                        "Recording session stopped successfully (duration: ${
-                            String.format(
-                                "%.1f",
-                                sessionDuration
-                            )
-                        }s)"
-                    )
-                    updateNotification(
-                        "Recording completed (${String.format("%.1f", sessionDuration)}s)"
-                    )
-                    structuredLogger.log(
-                        StructuredLogger.LogLevel.INFO,
-                        "RecordingService",
-                        "recording_session_stopped",
-                        mapOf(
-                            "session_duration_seconds" to sessionDuration,
-                            "session_directory" to (currentSessionDirectory ?: "unknown")
-                        )
-                    )
-                    delay(2000)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        stopForeground(STOP_FOREGROUND_REMOVE)
-                    } else {
-                        @Suppress("DEPRECATION")
-                        stopForeground(true)
-                    }
-                } else {
-                    updateNotification("Recording stop failed")
-                    structuredLogger.log(
-                        StructuredLogger.LogLevel.ERROR,
-                        "RecordingService",
-                        "recording_session_stop_failed"
-                    )
-                }
-                currentSessionDirectory = null
-                recordingStartTime = 0
-                // Finalize TimeSyncManager session
-                try {
-                    timeSyncManager?.finalizeSession()
-                } catch (e: Exception) {
-                }
-                if (!isServerRunning.get()) {
-                    stopSelf()
-                }
-            } catch (e: Exception) {
-                updateNotification("Recording stop error")
+            val success = stopRecordingSessionWithTrigger(TriggerSource.LOCAL_NOTIFICATION)
+            if (!success) {
                 structuredLogger.log(
                     StructuredLogger.LogLevel.ERROR,
                     "RecordingService",
-                    "recording_session_stop_exception",
-                    mapOf("error" to (e.message ?: "Unknown error"))
+                    "recording_session_stop_failed",
+                    mapOf("trigger_source" to TriggerSource.LOCAL_NOTIFICATION.toString())
                 )
             }
         }
@@ -709,6 +603,10 @@ class RecordingService : Service(), CoroutineScope {
             // Initialize TimeSyncManager for this session
             timeSyncManager?.initializeSession(sessionDirectory)
             timeSyncManager?.setPeriodicSyncEnabled(true)
+            try {
+                timeSyncManager?.performSessionStartSync()
+            } catch (e: Exception) {
+            }
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
                 "RecordingService",
@@ -920,6 +818,9 @@ class RecordingService : Service(), CoroutineScope {
                 )
                 // Perform recovery
                 val recoveryResult = crashRecoveryManager.recoverCrashedSession(recoveredSession)
+                persistRecoveredSessionArtifacts(recoveredSession, recoveryResult)
+                notifyCrashRecovery(recoveredSession, recoveryResult)
+                broadcastRecoveryEvent(recoveredSession, recoveryResult)
                 if (recoveryResult.success) {
                     Log.i(
                         TAG,
@@ -955,6 +856,180 @@ class RecordingService : Service(), CoroutineScope {
                 mapOf("error" to (e.message ?: "Unknown error"))
             )
         }
+    }
+
+    private fun persistRecoveredSessionArtifacts(
+        recoveredSession: RecoveredSession,
+        recoveryResult: SessionRecoveryResult
+    ) {
+        try {
+            val sessionRoot = File(recoveredSession.sessionDirectory)
+            if (!sessionRoot.exists()) {
+                return
+            }
+            val sessionDirectory = SessionDirectory(
+                sessionId = recoveredSession.sessionId,
+                rootDir = sessionRoot,
+                rgbDir = File(sessionRoot, "RGB"),
+                thermalDir = File(sessionRoot, "Thermal"),
+                shimmerDir = File(sessionRoot, "Shimmer")
+            )
+            val status = if (recoveryResult.success) "INCOMPLETE" else "FAILED_RECOVERY"
+            val errorMap = if (recoveryResult.success) {
+                emptyMap()
+            } else {
+                mapOf("recovery_error" to (recoveryResult.error ?: "unknown"))
+            }
+            sessionDirectoryManager.updateSessionMetadata(
+                sessionDirectory,
+                System.currentTimeMillis(),
+                status,
+                errorMap
+            )
+            writeRecoveredSessionManifest(sessionRoot, recoveredSession, recoveryResult)
+        } catch (e: Exception) {
+            structuredLogger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "RecordingService",
+                "recovery_metadata_update_failed",
+                mapOf("error" to (e.message ?: "Unknown error"))
+            )
+        }
+    }
+
+    private fun writeRecoveredSessionManifest(
+        sessionRoot: File,
+        recoveredSession: RecoveredSession,
+        recoveryResult: SessionRecoveryResult
+    ) {
+        try {
+            val dataFiles = recoveredSession.analysis.dataFiles
+            val sensors = (recoveredSession.activeSensors + dataFiles.keys).distinct()
+            val sensorActivitySummary = sensors.associateWith { sensorName ->
+                val info = dataFiles[sensorName]
+                val hasData = info?.hasData == true
+                val dropout = DropoutEvent(
+                    sensorId = sensorName,
+                    startTime = recoveredSession.sessionStartTime + recoveredSession.sessionAge,
+                    endTime = null,
+                    timestampMs = System.currentTimeMillis(),
+                    reason = "Crash detected",
+                    recoverable = true
+                )
+                val dropouts = if (hasData) listOf(dropout) else emptyList()
+                val errorMessages = if (hasData) {
+                    listOf("Session interrupted by crash")
+                } else {
+                    listOf("Sensor produced no data before crash")
+                }
+                SensorActivityInfo(
+                    sensorName = sensorName,
+                    wasActive = hasData,
+                    startedSuccessfully = info != null,
+                    finalStatus = if (hasData) "PARTIAL" else "INACTIVE",
+                    errorMessages = errorMessages,
+                    dropouts = dropouts,
+                    reconnections = emptyList()
+                )
+            }
+            val fileReferences = dataFiles.mapValues { (_, info) ->
+                File(sessionRoot, info.sensorName.lowercase()).absolutePath
+            }
+            val manifest = SessionManifest(
+                sessionId = recoveredSession.sessionId,
+                startTime = recoveredSession.sessionStartTime,
+                stopTime = recoveredSession.sessionStartTime + recoveredSession.sessionAge,
+                duration = recoveredSession.sessionAge,
+                triggerSource = RecordingController.TriggerSource.CRASH_RECOVERY,
+                sensorActivitySummary = sensorActivitySummary,
+                events = listOf(
+                    SessionEvent(
+                        eventType = if (recoveryResult.success) "CRASH_RECOVERY_COMPLETED" else "CRASH_RECOVERY_FAILED",
+                        timestampMs = System.currentTimeMillis(),
+                        triggerSource = RecordingController.TriggerSource.CRASH_RECOVERY,
+                        metadata = mapOf(
+                            "actions" to recoveryResult.recoveryActions.joinToString(";")
+                        ),
+                        success = recoveryResult.success,
+                        errorMessage = recoveryResult.error
+                    )
+                ),
+                errors = if (recoveryResult.success) {
+                    emptyList()
+                } else {
+                    listOf(recoveryResult.error ?: "Recovery failed")
+                },
+                warnings = recoveryResult.recoveryActions,
+                fileReferences = fileReferences,
+                sessionState = RecordingController.SessionState.STOPPED_INCOMPLETE
+            )
+            val gson = com.google.gson.GsonBuilder().setPrettyPrinting().create()
+            File(sessionRoot, "session_manifest.json").writeText(gson.toJson(manifest))
+        } catch (e: Exception) {
+            structuredLogger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "RecordingService",
+                "recovery_manifest_write_failed",
+                mapOf("error" to (e.message ?: "Unknown error"))
+            )
+        }
+    }
+
+    private fun notifyCrashRecovery(
+        recoveredSession: RecoveredSession,
+        recoveryResult: SessionRecoveryResult
+    ) {
+        val title = if (recoveryResult.success) {
+            "Recovered incomplete session"
+        } else {
+            "Session recovery failed"
+        }
+        val summaryText = if (recoveryResult.success) {
+            "Partial data preserved for session ${recoveredSession.sessionId}"
+        } else {
+            "Unable to recover session ${recoveredSession.sessionId}"
+        }
+        val bigText = buildString {
+            append(summaryText)
+            if (recoveryResult.recoveryActions.isNotEmpty()) {
+                append("\nActions:")
+                recoveryResult.recoveryActions.forEach { action ->
+                    append("\n• ")
+                    append(action)
+                }
+            }
+            recoveryResult.error?.let {
+                append("\nError: $it")
+            }
+        }
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle(title)
+            .setContentText(summaryText)
+            .setSmallIcon(R.drawable.ic_info)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
+            .setAutoCancel(true)
+            .build()
+        notificationManager.notify(RECOVERY_NOTIFICATION_ID, notification)
+    }
+
+    private fun broadcastRecoveryEvent(
+        recoveredSession: RecoveredSession,
+        recoveryResult: SessionRecoveryResult
+    ) {
+        val intent = Intent(ACTION_CRASH_RECOVERY_COMPLETED).apply {
+            putExtra(EXTRA_RECOVERED_SESSION_ID, recoveredSession.sessionId)
+            putExtra(
+                EXTRA_RECOVERY_STATUS,
+                if (recoveryResult.success) "success" else "error"
+            )
+            putExtra("session_directory", recoveredSession.sessionDirectory)
+            putStringArrayListExtra(
+                EXTRA_RECOVERY_ACTIONS,
+                ArrayList(recoveryResult.recoveryActions)
+            )
+            recoveryResult.error?.let { putExtra(EXTRA_RECOVERY_ERROR, it) }
+        }
+        sendBroadcast(intent)
     }
 
     private fun addSyncMarker(markerType: String, timestampNs: Long) {
@@ -1056,7 +1131,7 @@ class RecordingService : Service(), CoroutineScope {
         }
     }
 
-    fun getRecordingController(): ComprehensiveRecordingController = recordingController
+    fun getRecordingController(): RecordingController = recordingController
     fun isInitialized(): Boolean = isInitialized
     fun getCurrentSession(): SessionInfo? {
         return currentSessionDirectory?.let { directory ->
@@ -1993,28 +2068,26 @@ class RecordingService : Service(), CoroutineScope {
 
     fun handleStartRecordingCommand(message: JSONObject) {
         launch {
-            try {
-                val sessionId =
-                    message.optString("session_id", "session_${System.currentTimeMillis()}")
-                val sessionDirectory = "/storage/emulated/0/IRCamera_Sessions/$sessionId"
-                startRecordingSession(sessionDirectory)
-                val response = JSONObject().apply {
-                    put("message_type", "response")
-                    put("response_to", "start_recording")
+            val sessionId =
+                message.optString("session_id", "session_${System.currentTimeMillis()}")
+            val sessionDirectory = "/storage/emulated/0/IRCamera_Sessions/$sessionId"
+            val success = startRecordingSessionWithTrigger(
+                sessionDirectory,
+                TriggerSource.REMOTE_PC
+            )
+            val response = JSONObject().apply {
+                put("message_type", "response")
+                put("response_to", "start_recording")
+                put("session_id", recordingController.getCurrentSessionId() ?: sessionId)
+                if (success) {
                     put("status", "success")
-                    put("session_id", sessionId)
                     put("message", "Recording started successfully")
-                }
-                networkClient.sendMessage(response)
-            } catch (e: Exception) {
-                val response = JSONObject().apply {
-                    put("message_type", "response")
-                    put("response_to", "start_recording")
+                } else {
                     put("status", "error")
-                    put("message", "Failed to start recording: ${e.message}")
+                    put("message", "Failed to start recording session")
                 }
-                networkClient.sendMessage(response)
             }
+            networkClient.sendMessage(response)
         }
     }
 
@@ -2174,21 +2247,24 @@ class RecordingService : Service(), CoroutineScope {
     }
 
     private fun handleStopRecordingCommand(message: JSONObject) {
-        try {
-            launch {
-                if (recordingController.isRecording) {
-                    stopRecordingSession()
-                    sendResponseToPC("stop_recording_response", JSONObject().apply {
-                        put("status", "stopped")
-                        put("session_directory", currentSessionDirectory ?: "")
-                    })
-                } else {
-                    sendResponseToPC("stop_recording_response", JSONObject().apply {
-                        put("status", "not_recording")
-                    })
+        launch {
+            if (!recordingController.isRecording) {
+                sendResponseToPC(
+                    "stop_recording_response",
+                    JSONObject().apply { put("status", "not_recording") }
+                )
+                return@launch
+            }
+            val sessionDir = currentSessionDirectory
+            val success = stopRecordingSessionWithTrigger(TriggerSource.REMOTE_PC)
+            val responseData = JSONObject().apply {
+                put("status", if (success) "stopped" else "error")
+                put("session_directory", sessionDir ?: "")
+                if (!success) {
+                    put("message", "Failed to stop recording session")
                 }
             }
-        } catch (e: Exception) {
+            sendResponseToPC("stop_recording_response", responseData)
         }
     }
 

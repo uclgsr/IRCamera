@@ -356,7 +356,6 @@ class AdvancedAnalyticsEngine:
         values = np.array(
             [r.processed_value for r in thermal_readings[-180:]])
 
-
         features['mean_temp'] = float(np.mean(values))
         features['std_temp'] = float(np.std(values))
         features['temp_range'] = float(np.max(values) - np.min(values))

@@ -54,7 +54,7 @@ class NetworkTestViewModel @Inject constructor(
         viewModelScope.launch {
             _isRunning.value = true
             _statusMessage.value = "Connecting to ${_ipAddress.value}:${_port.value}..."
-            
+
             val portNum = _port.value.toIntOrNull() ?: 8080
             connectToControllerUseCase(_ipAddress.value, portNum, true)
                 .onSuccess {
@@ -109,7 +109,7 @@ class NetworkTestViewModel @Inject constructor(
                 put("message", message)
                 put("timestamp", System.currentTimeMillis())
             }
-            
+
             sendMessageUseCase(jsonMessage)
                 .onSuccess {
                     _statusMessage.value = "Message sent successfully"

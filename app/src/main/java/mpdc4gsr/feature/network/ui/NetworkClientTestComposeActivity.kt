@@ -45,7 +45,7 @@ fun NetworkClientTestScreen(
     val isRunning by viewModel.isRunning.collectAsState()
     val ipAddress by viewModel.ipAddress.collectAsState()
     val port by viewModel.port.collectAsState()
-    
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -73,7 +73,7 @@ fun NetworkClientTestScreen(
                 titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
-        
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -98,7 +98,7 @@ fun NetworkClientTestScreen(
                     )
                 }
             }
-            
+
             Card(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -114,7 +114,7 @@ fun NetworkClientTestScreen(
                     Text("Port: $port")
                 }
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -133,7 +133,7 @@ fun NetworkClientTestScreen(
                     Text("Disconnect")
                 }
             }
-            
+
             Button(
                 onClick = { viewModel.sendTestMessage("Test message") },
                 modifier = Modifier.fillMaxWidth()

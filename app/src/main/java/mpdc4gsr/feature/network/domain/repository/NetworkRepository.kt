@@ -13,6 +13,7 @@ interface NetworkRepository {
         port: Int,
         useSecure: Boolean
     ): Result<Unit>
+
     suspend fun disconnect(): Result<Unit>
     suspend fun sendMessage(message: JSONObject): Result<Unit>
     suspend fun sendMeasurementData(sessionId: String, data: JSONObject): Result<Unit>

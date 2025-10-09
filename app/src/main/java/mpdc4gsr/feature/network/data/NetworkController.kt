@@ -11,7 +11,8 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
 class NetworkController(private val context: Context) {
-    companion object {        const val DEFAULT_PORT = 8080
+    companion object {
+        const val DEFAULT_PORT = 8080
         private const val SOCKET_TIMEOUT = 30000
         private const val BUFFER_SIZE = 4096
     }
@@ -55,15 +56,18 @@ class NetworkController(private val context: Context) {
     }
 
     suspend fun start(port: Int = DEFAULT_PORT): Boolean = withContext(Dispatchers.IO) {
-        if (isRunning.get()) {            return@withContext false
+        if (isRunning.get()) {
+            return@withContext false
         }
         try {
             // First check if the port is available
             val actualPort = if (NetworkUtils.isPortAvailable(port)) {
                 port
-            } else {                try {
-                    val availablePort = NetworkUtils.findAvailablePort(port)                    availablePort
-                } catch (e: IllegalStateException) {                    eventListener?.onError(
+            } else {
+                try {
+                    val availablePort = NetworkUtils.findAvailablePort(port) availablePort
+                } catch (e: IllegalStateException) {
+                    eventListener?.onError(
                         "start_server",
                         "Port $port is already in use and no alternative ports available. Please ensure no other services are using ports ${port} to ${port + 9}."
                     )
@@ -75,22 +79,25 @@ class NetworkController(private val context: Context) {
                 bind(InetSocketAddress(actualPort))
                 soTimeout = SOCKET_TIMEOUT
             }
-            isRunning.set(true)            controllerScope.launch {
+            isRunning.set(true) controllerScope . launch {
                 acceptConnections()
             }
             return@withContext true
-        } catch (e: java.net.BindException) {            eventListener?.onError(
+        } catch (e: java.net.BindException) {
+            eventListener?.onError(
                 "start_server",
                 "Port $port is already in use. Please ensure no other services are using this port."
             )
             return@withContext false
-        } catch (e: Exception) {            eventListener?.onError("start_server", e.message ?: "Unknown error")
+        } catch (e: Exception) {
+            eventListener?.onError("start_server", e.message ?: "Unknown error")
             return@withContext false
         }
     }
 
     suspend fun stop() = withContext(Dispatchers.IO) {
-        if (!isRunning.get()) {            return@withContext
+        if (!isRunning.get()) {
+            return@withContext
         }
         isRunning.set(false)
         try {
@@ -101,7 +108,8 @@ class NetworkController(private val context: Context) {
                     connection.outputStream.close()
                     connection.inputStream.close()
                     connection.socket.close()
-                } catch (e: Exception) {                }
+                } catch (e: Exception) {
+                }
             }
             clientConnections.clear()
             // Close server socket
@@ -110,13 +118,16 @@ class NetworkController(private val context: Context) {
                     if (!socket.isClosed) {
                         socket.close()
                     }
-                } catch (e: Exception) {                }
+                } catch (e: Exception) {
+                }
             }
             serverSocket = null
             // Cancel coroutine scope
             controllerScope.cancel()
             // Small delay to allow cleanup to complete
-            delay(100)        } catch (e: Exception) {        }
+            delay(100)
+        } catch (e: Exception) {
+        }
     }
 
     private suspend fun acceptConnections() = withContext(Dispatchers.IO) {
@@ -129,7 +140,8 @@ class NetworkController(private val context: Context) {
             } catch (e: SocketTimeoutException) {
                 continue
             } catch (e: Exception) {
-                if (isRunning.get()) {                    eventListener?.onError("accept_connection", e.message ?: "Unknown error")
+                if (isRunning.get()) {
+                    eventListener?.onError("accept_connection", e.message ?: "Unknown error")
                 }
                 break
             }
@@ -148,11 +160,15 @@ class NetworkController(private val context: Context) {
                 outputStream = outputStream
             )
             clientConnections[clientId] = connection
-            eventListener?.onClientConnected(clientId, "PC Controller")            sendResponse(connection, createResponse("welcome", "Connected to IRCamera Android"))
+            eventListener?.onClientConnected(
+                clientId,
+                "PC Controller"
+            ) sendResponse (connection, createResponse("welcome", "Connected to IRCamera Android"))
             controllerScope.launch {
                 handleClientMessages(connection)
             }
-        } catch (e: Exception) {            try {
+        } catch (e: Exception) {
+            try {
                 clientSocket.close()
             } catch (ignored: Exception) {
             }
@@ -166,18 +182,19 @@ class NetworkController(private val context: Context) {
                     val message = connection.inputStream.readLine()
                     if (message == null) {
                         // Client disconnected gracefully                        break
-                    }                    handleCommand(connection, message)
+                    } handleCommand (connection, message)
                 }
             } catch (e: SocketException) {
                 // Handle connection reset and other socket exceptions gracefully
                 when {
-                    e.message?.contains("Connection reset") == true -> {                    }
+                    e.message?.contains("Connection reset") == true -> {}
 
-                    e.message?.contains("Socket closed") == true -> {                    }
+                    e.message?.contains("Socket closed") == true -> {}
 
-                    else -> {                    }
+                    else -> {}
                 }
-            } catch (e: Exception) {            } finally {
+            } catch (e: Exception) {
+            } finally {
                 // Always disconnect the client to clean up resources
                 disconnectClient(connection.clientId, "Connection closed")
             }
@@ -191,13 +208,15 @@ class NetworkController(private val context: Context) {
                 "stop_recording" -> handleStopRecordingCommand(connection, json)
                 "ping" -> handlePingCommand(connection, json)
                 "get_status" -> handleGetStatusCommand(connection, json)
-                else -> {                    sendResponse(
+                else -> {
+                    sendResponse(
                         connection,
                         createErrorResponse("unknown_command", "Unknown command: $command")
                     )
                 }
             }
-        } catch (e: Exception) {            sendResponse(
+        } catch (e: Exception) {
+            sendResponse(
                 connection,
                 createErrorResponse("parse_error", "Failed to parse command: ${e.message}")
             )
@@ -230,7 +249,7 @@ class NetworkController(private val context: Context) {
             }
             json.optString("studyName", "").let {
                 if (it.isNotEmpty()) options["studyName"] = it
-            }            eventListener?.onStartRecordingCommand(sessionId, modalities, options)
+            } eventListener ?. onStartRecordingCommand (sessionId, modalities, options)
             sendResponse(
                 connection, createResponse(
                     "recording_started", "Recording session started", mapOf(
@@ -239,7 +258,8 @@ class NetworkController(private val context: Context) {
                     )
                 )
             )
-        } catch (e: Exception) {            sendResponse(
+        } catch (e: Exception) {
+            sendResponse(
                 connection,
                 createErrorResponse("start_recording_error", e.message ?: "Unknown error")
             )
@@ -247,12 +267,14 @@ class NetworkController(private val context: Context) {
     }
 
     private suspend fun handleStopRecordingCommand(connection: ClientConnection, json: JSONObject) {
-        try {            eventListener?.onStopRecordingCommand()
+        try {
+            eventListener?.onStopRecordingCommand()
             sendResponse(
                 connection,
                 createResponse("recording_stopped", "Recording session stopped")
             )
-        } catch (e: Exception) {            sendResponse(
+        } catch (e: Exception) {
+            sendResponse(
                 connection,
                 createErrorResponse("stop_recording_error", e.message ?: "Unknown error")
             )
@@ -274,7 +296,9 @@ class NetworkController(private val context: Context) {
 
     private fun sendResponse(connection: ClientConnection, response: String) {
         try {
-            connection.outputStream.println(response)        } catch (e: Exception) {        }
+            connection.outputStream.println(response)
+        } catch (e: Exception) {
+        }
     }
 
     private fun createResponse(
@@ -308,7 +332,8 @@ class NetworkController(private val context: Context) {
             } catch (ignored: Exception) {
             }
             clientConnections.remove(clientId)
-            eventListener?.onClientDisconnected(clientId, reason)        }
+            eventListener?.onClientDisconnected(clientId, reason)
+        }
     }
 
     fun getConnectedClientsCount(): Int = clientConnections.size

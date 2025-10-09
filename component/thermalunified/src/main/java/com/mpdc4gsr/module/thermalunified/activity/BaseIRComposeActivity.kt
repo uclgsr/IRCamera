@@ -2,7 +2,16 @@ package com.mpdc4gsr.module.thermalunified.activity
 
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -12,14 +21,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.module.thermalunified.feature.device.ThermalColorPalette
+import com.mpdc4gsr.module.thermalunified.feature.device.ThermalGainMode
+import com.mpdc4gsr.module.thermalunified.feature.device.TopdonThermalDeviceManager
+import com.mpdc4gsr.module.thermalunified.feature.ui.components.ThermalControlPanel
+import com.mpdc4gsr.module.thermalunified.feature.ui.components.ThermalStatusBanner
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.launch
 
 class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
+    private val deviceManager by lazy { TopdonThermalDeviceManager(this, lifecycleScope) }
     override fun createViewModel(): ThermalViewModel {
         return viewModels<ThermalViewModel>().value
     }
@@ -27,167 +45,125 @@ class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
-        var connectionStatus by remember { mutableStateOf("Disconnected") }
-        var cameraReady by remember { mutableStateOf(false) }
-        var thermalMode by remember { mutableIntStateOf(1) }
-        LibUnifiedTheme {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                "Thermal Base Control",
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
+        val deviceStatus by viewModel.deviceStatus.collectAsStateWithLifecycle()
+        val isRecording by viewModel.isRecording.collectAsStateWithLifecycle()
+        var thermalMode by remember { mutableIntStateOf(0) }
+        var paletteIndex by remember { mutableIntStateOf(0) }
+        val palettes = remember {
+            listOf(
+                ThermalColorPalette.Ironbow,
+                ThermalColorPalette.Rainbow,
+                ThermalColorPalette.WhiteHot,
+                ThermalColorPalette.BlackHot
+            )
+        }
+        LaunchedEffect(Unit) {
+            viewModel.attachDeviceManager(deviceManager)
+            viewModel.connectHardware()
+            viewModel.startStream()
+        }
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            "Thermal Base Control",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { finish() }) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
+                                tint = Color.White
                             )
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = { finish() }) {
-                                Icon(
-                                    Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = "Back",
-                                    tint = Color.White
-                                )
-                            }
-                        },
-                        actions = {
-                            IconButton(onClick = {
-                                // TODO: Open thermal camera settings
-                                android.widget.Toast.makeText(
-                                    this@BaseIRComposeActivity,
-                                    "Opening settings...",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(
-                                    Icons.Default.Settings,
-                                    contentDescription = "Settings",
-                                    tint = Color.White
-                                )
-                            }
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Black
-                        )
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = { viewModel.triggerManualCalibration() }) {
+                            Icon(
+                                Icons.Default.Widgets,
+                                contentDescription = "Manual NUC",
+                                tint = Color.White
+                            )
+                        }
+                        IconButton(onClick = {
+                            // Placeholder for future settings screen wiring
+                        }) {
+                            Icon(
+                                Icons.Default.Settings,
+                                contentDescription = "Settings",
+                                tint = Color.White
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Black
                     )
-                },
-                containerColor = Color.Black
-            ) { paddingValues ->
-                Column(
+                )
+            },
+            containerColor = Color.Black
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .background(Color.Black)
+            ) {
+                ThermalStatusBanner(
+                    status = deviceStatus,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color.Black)
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
                 ) {
-                    // Status bar
-                    ThermalStatusBar(
-                        connectionStatus = connectionStatus,
-                        cameraReady = cameraReady,
-                        modifier = Modifier.fillMaxWidth()
+                    ThermalCameraSurface(
+                        modifier = Modifier.fillMaxSize()
                     )
-                    // Main thermal view
-                    Box(
+                    ThermalControlPanel(
+                        selectedModeIndex = thermalMode,
+                        isRecording = isRecording,
+                        onModeSelected = { modeIndex ->
+                            thermalMode = modeIndex
+                            val gainMode = when (modeIndex) {
+                                0 -> ThermalGainMode.High
+                                1 -> ThermalGainMode.Low
+                                else -> ThermalGainMode.Auto
+                            }
+                            viewModel.updateGainMode(gainMode)
+                        },
+                        onCapture = viewModel::captureSnapshot,
+                        onToggleRecording = viewModel::toggleRecording,
+                        onPaletteClick = {
+                            paletteIndex = (paletteIndex + 1) % palettes.size
+                            viewModel.updatePalette(palettes[paletteIndex])
+                        },
+                        onAdjustClick = viewModel::triggerManualCalibration,
                         modifier = Modifier
+                            .align(Alignment.BottomCenter)
                             .fillMaxWidth()
-                            .weight(1f)
-                    ) {
-                        // Thermal camera surface
-                        ThermalCameraSurface(
-                            modifier = Modifier.fillMaxSize()
-                        )
-                        // Control overlay
-                        ThermalControlOverlay(
-                            thermalMode = thermalMode,
-                            onModeChange = { thermalMode = it },
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .fillMaxWidth()
-                        )
-                    }
+                    )
                 }
             }
         }
-        // Initialize camera connection
-        LaunchedEffect(Unit) {
-            kotlinx.coroutines.delay(2000L)
-            connectionStatus = "Connected"
-            cameraReady = true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lifecycleScope.launch {
+            deviceManager.stopStream()
+            deviceManager.disconnect()
         }
     }
 }
 
-@Composable
-private fun ThermalStatusBar(
-    connectionStatus: String,
-    cameraReady: Boolean,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Connection status
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Icon(
-                    if (cameraReady) Icons.Default.CheckCircle else Icons.Default.Error,
-                    contentDescription = "Status",
-                    tint = if (cameraReady) Color(0xFF00FF00) else Color(0xFFFF4444),
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
-                    connectionStatus,
-                    color = Color.White,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
-                )
-            }
-            // Camera info
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                StatusItem("Resolution", "384x288")
-                StatusItem("FPS", "9")
-                StatusItem("Mode", "IR")
-            }
-        }
-    }
-}
-
-@Composable
-private fun StatusItem(
-    label: String,
-    value: String
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            value,
-            color = Color.White,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            label,
-            color = Color(0xFF7D8590),
-            fontSize = 10.sp
-        )
-    }
-}
 
 @Composable
 private fun ThermalCameraSurface(
@@ -230,166 +206,3 @@ private fun ThermalCameraSurface(
     }
 }
 
-@Composable
-private fun ThermalControlOverlay(
-    thermalMode: Int,
-    onModeChange: (Int) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black.copy(alpha = 0.8f)
-        ),
-        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // Mode selector
-            ThermalModeSelector(
-                selectedMode = thermalMode,
-                onModeSelected = onModeChange
-            )
-            // Quick actions
-            QuickActionButtons()
-        }
-    }
-}
-
-@Composable
-private fun ThermalModeSelector(
-    selectedMode: Int,
-    onModeSelected: (Int) -> Unit
-) {
-    val modes = getThermalModes()
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Text(
-            "Thermal Mode",
-            color = Color.White,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            modes.forEachIndexed { index, mode ->
-                FilterChip(
-                    onClick = { onModeSelected(index + 1) },
-                    label = { Text(mode, fontSize = 12.sp) },
-                    selected = selectedMode == index + 1,
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = Color(0xFFFF6B35),
-                        selectedLabelColor = Color.White,
-                        containerColor = Color(0xFF21262D),
-                        labelColor = Color(0xFF7D8590)
-                    )
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun QuickActionButtons() {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        val context = androidx.compose.ui.platform.LocalContext.current
-        QuickActionButton(
-            icon = Icons.Default.CameraAlt,
-            text = "Capture",
-            onClick = {
-                // TODO: Capture thermal image
-                android.widget.Toast.makeText(
-                    context,
-                    "Capturing thermal image...",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            },
-            modifier = Modifier.weight(1f)
-        )
-        QuickActionButton(
-            icon = Icons.Default.Videocam,
-            text = "Record",
-            onClick = {
-                // TODO: Start/stop thermal video recording
-                android.widget.Toast.makeText(
-                    context,
-                    "Recording...",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            },
-            modifier = Modifier.weight(1f)
-        )
-        QuickActionButton(
-            icon = Icons.Default.Palette,
-            text = "Palette",
-            onClick = {
-                // TODO: Change color palette
-                android.widget.Toast.makeText(
-                    context,
-                    "Changing palette...",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            },
-            modifier = Modifier.weight(1f)
-        )
-        QuickActionButton(
-            icon = Icons.Default.Tune,
-            text = "Adjust",
-            onClick = {
-                // TODO: Open thermal adjustments
-                android.widget.Toast.makeText(
-                    context,
-                    "Opening adjustments...",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            },
-            modifier = Modifier.weight(1f)
-        )
-    }
-}
-
-@Composable
-private fun QuickActionButton(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    OutlinedButton(
-        onClick = onClick,
-        modifier = modifier,
-        colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = Color.White
-        ),
-        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF7D8590))
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Icon(
-                icon,
-                contentDescription = text,
-                modifier = Modifier.size(16.dp)
-            )
-            Text(
-                text,
-                fontSize = 10.sp
-            )
-        }
-    }
-}
-
-private fun getThermalModes(): List<String> {
-    return listOf("Standard", "High Gain", "Low Gain", "Manual")
-}

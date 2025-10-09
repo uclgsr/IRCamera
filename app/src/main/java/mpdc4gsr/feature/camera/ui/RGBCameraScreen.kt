@@ -39,8 +39,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.components.TitleBarAction
+import mpdc4gsr.core.ui.components.common.TitleBar
+import mpdc4gsr.core.ui.components.common.TitleBarAction
 import mpdc4gsr.core.ui.theme.Green
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.theme.Orange

@@ -84,7 +84,7 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch {
             _gsrConnectionState.value = GsrConnectionState.DISCOVERING
             _events.emit(UiEvent.ShowToast("Searching for GSR sensor..."))
-            
+
             val success = connectGsrSensorUseCase()
             if (success) {
                 _gsrConnectionState.value = GsrConnectionState.CONNECTED
@@ -100,7 +100,7 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch {
             _networkConnectionState.value = NetworkConnectionState.DISCOVERING
             _events.emit(UiEvent.ShowToast("Searching for PC controllers..."))
-            
+
             val controllers = startNetworkDiscoveryUseCase()
             if (controllers.isNotEmpty()) {
                 _connectedControllerInfo.value = controllers.first()
@@ -120,7 +120,7 @@ class MainActivityViewModel @Inject constructor(
             }
             _sessionState.value = SessionState.STARTING
             _events.emit(UiEvent.ShowToast("Starting recording session..."))
-            
+
             val session = startRecordingSessionUseCase(
                 sessionId = sessionConfig.sessionId,
                 participantId = sessionConfig.participantId,
@@ -138,7 +138,7 @@ class MainActivityViewModel @Inject constructor(
             _currentSession.value?.let { session ->
                 _sessionState.value = SessionState.STOPPING
                 _events.emit(UiEvent.ShowToast("Stopping recording session..."))
-                
+
                 stopRecordingSessionUseCase(session.sessionId)
                 _currentSession.value = null
                 _sessionState.value = SessionState.IDLE

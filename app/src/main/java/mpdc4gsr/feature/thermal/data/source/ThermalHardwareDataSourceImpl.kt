@@ -452,6 +452,7 @@ class ThermalHardwareDataSourceImpl(
                             )
                         }
                     }
+
                     is MeasurementArea.RectangleArea -> {
                         val tempResult = temp.getTemperatureOfRect(area.rect)
                         tempResult?.let {
@@ -463,6 +464,7 @@ class ThermalHardwareDataSourceImpl(
                             )
                         }
                     }
+
                     is MeasurementArea.LineArea -> {
                         val startResult = temp.getTemperatureOfPoint(area.start)
                         val endResult = temp.getTemperatureOfPoint(area.end)
@@ -477,6 +479,7 @@ class ThermalHardwareDataSourceImpl(
                             )
                         } else null
                     }
+
                     is MeasurementArea.EllipseArea -> {
                         // TODO: Implement ellipse area measurement
                         // SDK currently does not provide native ellipse measurement
@@ -491,6 +494,7 @@ class ThermalHardwareDataSourceImpl(
                             )
                         }
                     }
+
                     is MeasurementArea.PolygonArea -> {
                         // TODO: Implement polygon area measurement
                         // SDK currently does not provide native polygon measurement

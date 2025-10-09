@@ -1,4 +1,4 @@
-package mpdc4gsr.core.ui.components
+package mpdc4gsr.core.ui.components.sensors
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape

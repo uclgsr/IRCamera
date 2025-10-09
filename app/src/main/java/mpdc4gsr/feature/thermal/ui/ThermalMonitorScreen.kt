@@ -48,8 +48,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.runtime.LaunchedEffect
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.components.TitleBarAction
+import mpdc4gsr.core.ui.components.common.TitleBar
+import mpdc4gsr.core.ui.components.common.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel
 import mpdc4gsr.feature.thermal.presentation.ThermalUiState
@@ -66,11 +66,11 @@ fun ThermalMonitorScreen(
     val uiState by viewModel.uiState.collectAsState()
     var showControls by remember { mutableStateOf(true) }
     var showAdvancedControls by remember { mutableStateOf(false) }
-    
+
     // TODO: Replace obsolete method calls with event-driven architecture
     // The ViewModel automatically connects via init block: onEvent(ThermalUiEvent.ConnectCamera)
     // Recording duration is now part of ThermalUiState.Success.recordingDuration
-    
+
     when (val state = uiState) {
         is ThermalUiState.Loading -> {
             Box(
@@ -80,6 +80,7 @@ fun ThermalMonitorScreen(
                 CircularProgressIndicator()
             }
         }
+
         is ThermalUiState.Error -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -92,6 +93,7 @@ fun ThermalMonitorScreen(
                 )
             }
         }
+
         is ThermalUiState.Success -> {
             Box(
                 modifier = modifier

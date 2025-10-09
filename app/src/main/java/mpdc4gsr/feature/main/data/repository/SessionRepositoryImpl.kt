@@ -16,12 +16,12 @@ import javax.inject.Singleton
 class SessionRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : SessionRepository {
-    
+
     private val _currentSession = MutableStateFlow<SessionInfo?>(null)
     private val gsrSessionManager: GSRSessionManager by lazy {
         GSRSessionManager.getInstance(context)
     }
-    
+
     override suspend fun createSession(
         sessionId: String?,
         participantId: String?,
@@ -37,11 +37,11 @@ class SessionRepositoryImpl @Inject constructor(
         _currentSession.value = session
         return session
     }
-    
+
     override suspend fun completeSession(sessionId: String) {
         gsrSessionManager.completeSession(sessionId)
         _currentSession.value = null
     }
-    
+
     override fun getCurrentSession(): Flow<SessionInfo?> = _currentSession
 }

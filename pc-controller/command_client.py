@@ -9,7 +9,6 @@ the PC-orchestrated recording sessions.
 import json
 import logging
 import socket
-import threading
 import time
 from datetime import datetime
 from typing import Dict, List, Optional, Any, Tuple
@@ -23,8 +22,26 @@ class CommandClient:
     def __init__(self, timeout: int = 10):
         self.timeout = timeout
         self.connected_devices = {}
-        self.command_log = []
+        self.command_log: List[Dict[str, Any]] = []
         self.command_id_counter = 0
+
+    @staticmethod
+    def _is_ack(response: Any, expected_command: str) -> bool:
+        if response is None:
+            return False
+        if isinstance(response, dict):
+            status = str(response.get('status', '')).lower()
+            if status in {'ok', 'success', 'ack'}:
+                return True
+            command = str(response.get('command', '')).lower()
+            if command == expected_command.lower():
+                return True
+            result = str(response.get('result', '')).lower()
+            if result in {'ok', 'success'}:
+                return True
+            return False
+        response_text = str(response).upper()
+        return expected_command.upper() in response_text or 'ACK' in response_text
 
     def connect_to_device(self, device_ip: str, port: int = 8080) -> bool:
         """Connect to an Android device"""
@@ -63,29 +80,35 @@ class CommandClient:
 
             # Create command message
             self.command_id_counter += 1
-            message = {
+            message: Dict[str, Any] = {
+                'type': 'command',
                 'message_id': f"cmd_{self.command_id_counter}",
                 'command': command,
-                'timestamp': time.time_ns(),
-                'sender': 'pc_controller'
+                'parameters': params or {},
+                'timestamp': time.time(),
+                'sender': 'pc_command_client'
             }
-
             if params:
+                # Preserve backward compatibility for clients expecting top-level fields.
                 message.update(params)
 
             # Send command
             message_json = json.dumps(message)
-            sock.send(message_json.encode() + b'\n')
+            sock.send(message_json.encode('utf-8') + b'\n')
 
-            # Wait for response
-            # Read until newline to ensure complete message
+            # Wait for response (read until newline)
             response_data = b""
             while b'\n' not in response_data:
                 chunk = sock.recv(1024)
                 if not chunk:
                     break
-                response_data += chunk
-            response = response_data.decode().strip()
+            response_data += chunk
+            response_text = response_data.decode().strip()
+
+            try:
+                response = json.loads(response_text)
+            except json.JSONDecodeError:
+                response = response_text
 
             # Log command
             log_entry = {
@@ -94,7 +117,7 @@ class CommandClient:
                 'command': command,
                 'message_id': message['message_id'],
                 'response': response,
-                'params': params
+                'params': params or {}
             }
             self.command_log.append(log_entry)
             device['last_command'] = log_entry
@@ -112,34 +135,35 @@ class CommandClient:
             return None
 
         try:
-            # Record PC timestamps for NTP-style sync
-            t1 = time.time_ns()  # PC send time
-
-            response = self.send_command(device_id, 'SYNC_REQUEST', {
-                'pc_timestamp': t1,
-                'pc_address': self._get_local_ip()
-            })
-
-            t4 = time.time_ns()  # PC receive time
-
-            if response and 'SYNC-ACK' in response:
-                # Parse sync response if available
-                sync_result = {
-                    'device_id': device_id,
-                    'pc_send_time': t1,
-                    'pc_receive_time': t4,
-                    'round_trip_time_ns': t4 - t1,
-                    'response': response,
-                    'timestamp': datetime.now().isoformat()
+            t1 = time.time_ns()
+            response = self.send_command(
+                device_id,
+                'SYNC_REQUEST',
+                {
+                    'pc_timestamp': t1,
+                    'pc_address': self._get_local_ip()
                 }
+            )
+            t4 = time.time_ns()
 
-                logger.info(f"Sync with {device_id} completed: RTT={sync_result['round_trip_time_ns'] / 1e6:.2f}ms")
-                return sync_result
+            if not isinstance(response, dict):
+                logger.error(f"Sync failed for {device_id}: {response}")
+                return None
+
+            sync_result = {
+                'device_id': device_id,
+                'pc_send_time': t1,
+                'pc_receive_time': t4,
+                'round_trip_time_ns': t4 - t1,
+                'response': response,
+                'timestamp': datetime.now().isoformat()
+            }
+            logger.info(f"Sync with {device_id} completed: RTT={sync_result['round_trip_time_ns'] / 1e6:.2f}ms")
+            return sync_result
 
         except Exception as e:
             logger.error(f"Sync command failed for {device_id}: {e}")
-
-        return None
+            return None
 
     def start_recording_session(self, session_id: str, device_ids: List[str] = None,
                                 configuration: Dict[str, Any] = None) -> Dict[str, bool]:
@@ -167,7 +191,7 @@ class CommandClient:
                 'start_timestamp': start_time
             })
 
-            results[device_id] = response is not None and 'START-ACK' in response
+            results[device_id] = self._is_ack(response, 'START_RECORD')
 
         # Log session start
         session_log = {
@@ -201,7 +225,7 @@ class CommandClient:
                 'stop_timestamp': stop_time
             })
 
-            results[device_id] = response is not None and 'STOP-ACK' in response
+            results[device_id] = self._is_ack(response, 'STOP_RECORD')
 
         success_count = sum(1 for success in results.values() if success)
         logger.info(f"Recording session stopped: {success_count}/{len(device_ids)} devices successful")
@@ -212,14 +236,22 @@ class CommandClient:
         """Get current status from a device"""
         response = self.send_command(device_id, 'STATUS_REQUEST')
 
-        if response and 'STATUS-ACK' in response:
-            # In real implementation, would parse JSON response
-            return {
-                'device_id': device_id,
-                'status': 'connected',
-                'response': response,
-                'timestamp': datetime.now().isoformat()
-            }
+        if response:
+            if isinstance(response, dict):
+                return {
+                    'device_id': device_id,
+                    'status': response.get('status', 'unknown'),
+                    'response': response,
+                    'timestamp': datetime.now().isoformat()
+                }
+            if 'STATUS-ACK' in str(response):
+                # Legacy string-based acknowledgement
+                return {
+                    'device_id': device_id,
+                    'status': 'connected',
+                    'response': response,
+                    'timestamp': datetime.now().isoformat()
+                }
 
         return None
 

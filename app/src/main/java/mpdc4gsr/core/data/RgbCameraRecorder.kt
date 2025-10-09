@@ -692,7 +692,7 @@ class RgbCameraRecorder(
         return permissionManager?.let { permissionManager ->
             try {
                 _cameraStatus.value = "Requesting Permissions..."
-                
+
                 val granted = permissionManager.requestCameraPermissions()
                 if (granted) {
                     val recheckCamera = hasCameraPermission()

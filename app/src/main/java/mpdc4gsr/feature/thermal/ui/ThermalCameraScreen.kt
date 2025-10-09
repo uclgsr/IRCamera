@@ -35,7 +35,7 @@ fun ThermalCameraScreen(
     viewModel: ThermalCameraViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    
+
     LibUnifiedTheme {
         ThermalScaffold(
             title = "Thermal Imaging",
@@ -65,6 +65,7 @@ fun ThermalCameraScreen(
                         modifier = Modifier.padding(paddingValues)
                     )
                 }
+
                 is ThermalUiState.Error -> {
                     ThermalErrorContent(
                         message = (uiState as ThermalUiState.Error).message,
@@ -73,6 +74,7 @@ fun ThermalCameraScreen(
                         modifier = Modifier.padding(paddingValues)
                     )
                 }
+
                 is ThermalUiState.Success -> {
                     ThermalCameraContent(
                         uiState = uiState as ThermalUiState.Success,
@@ -94,7 +96,7 @@ private fun ThermalCameraContent(
     var selectedPalette by remember { mutableStateOf(ThermalPalette.IRON) }
     var temperatureUnit by remember { mutableStateOf(TemperatureUnit.CELSIUS) }
     var measurementMode by remember { mutableStateOf(MeasurementMode.SPOT) }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -655,27 +657,27 @@ private fun ThermalCameraStatusCard(
             )
             HorizontalDivider()
             StatusRow(
-                "Connection", 
-                if (uiState.isConnected) "Connected" else "Disconnected", 
-                Icons.Default.CheckCircle, 
+                "Connection",
+                if (uiState.isConnected) "Connected" else "Disconnected",
+                Icons.Default.CheckCircle,
                 uiState.isConnected
             )
             StatusRow(
-                "Mode", 
-                if (uiState.isSimulationMode) "Simulation" else "Hardware", 
-                Icons.Default.Thermostat, 
+                "Mode",
+                if (uiState.isSimulationMode) "Simulation" else "Hardware",
+                Icons.Default.Thermostat,
                 !uiState.isSimulationMode
             )
             StatusRow(
-                "Recording", 
-                if (uiState.isRecording) "Active" else "Inactive", 
-                Icons.Default.FiberManualRecord, 
+                "Recording",
+                if (uiState.isRecording) "Active" else "Inactive",
+                Icons.Default.FiberManualRecord,
                 uiState.isRecording
             )
             StatusRow(
-                "Frames", 
-                "${uiState.frameCount}", 
-                Icons.Default.PhotoLibrary, 
+                "Frames",
+                "${uiState.frameCount}",
+                Icons.Default.PhotoLibrary,
                 true
             )
             HorizontalDivider()
@@ -704,84 +706,84 @@ private fun ThermalCameraStatusCard(
                 }
                 OutlinedButton(
                     onClick = {
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Icon(Icons.Default.BugReport, contentDescription = "Run Diagnostic")
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Diagnostic")
-                }
+                        modifier = Modifier.weight(1f)
+                        ) {
+                        Icon(Icons.Default.BugReport, contentDescription = "Run Diagnostic")
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Diagnostic")
+                    }
+                    }
             }
         }
     }
-}
 
-@Composable
-private fun StatusRow(
-    label: String,
-    status: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    isHealthy: Boolean
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+    @Composable
+    private fun StatusRow(
+        label: String,
+        status: String,
+        icon: androidx.compose.ui.graphics.vector.ImageVector,
+        isHealthy: Boolean
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                icon,
-                contentDescription = label,
-                tint = if (isHealthy) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                modifier = Modifier.size(20.dp)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    icon,
+                    contentDescription = label,
+                    tint = if (isHealthy) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                    modifier = Modifier.size(20.dp)
+                )
+                Text(
+                    label,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
             Text(
-                label,
-                style = MaterialTheme.typography.bodyMedium
+                status,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium,
+                color = if (isHealthy) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
             )
         }
-        Text(
-            status,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium,
-            color = if (isHealthy) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-        )
     }
-}
 
-// Helper functions
-private fun getThermalPreviewColor(palette: ThermalPalette): Color {
-    return when (palette) {
-        ThermalPalette.IRON -> Color(0xFF8B4513)
-        ThermalPalette.RAINBOW -> Color(0xFF4169E1)
-        ThermalPalette.ARCTIC -> Color(0xFF4682B4)
-        ThermalPalette.GRAYSCALE -> Color(0xFF808080)
-        ThermalPalette.HOT -> Color(0xFFFF6600)
-        ThermalPalette.MEDICAL -> Color(0xFF00CED1)
-        ThermalPalette.LAVA -> Color(0xFFDC143C)
-        ThermalPalette.CONTRAST -> Color(0xFF696969)
+    // Helper functions
+    private fun getThermalPreviewColor(palette: ThermalPalette): Color {
+        return when (palette) {
+            ThermalPalette.IRON -> Color(0xFF8B4513)
+            ThermalPalette.RAINBOW -> Color(0xFF4169E1)
+            ThermalPalette.ARCTIC -> Color(0xFF4682B4)
+            ThermalPalette.GRAYSCALE -> Color(0xFF808080)
+            ThermalPalette.HOT -> Color(0xFFFF6600)
+            ThermalPalette.MEDICAL -> Color(0xFF00CED1)
+            ThermalPalette.LAVA -> Color(0xFFDC143C)
+            ThermalPalette.CONTRAST -> Color(0xFF696969)
+        }
     }
-}
 
-private fun getThermalGradient(palette: ThermalPalette): Color {
-    return when (palette) {
-        ThermalPalette.IRON -> Color(0xFFFF4500)
-        ThermalPalette.RAINBOW -> Color(0xFF32CD32)
-        ThermalPalette.ARCTIC -> Color(0xFF00CED1)
-        ThermalPalette.GRAYSCALE -> Color(0xFFFFFFFF)
-        ThermalPalette.HOT -> Color(0xFFFFFF00)
-        ThermalPalette.MEDICAL -> Color(0xFF32CD32)
-        ThermalPalette.LAVA -> Color(0xFFFF0000)
-        ThermalPalette.CONTRAST -> Color(0xFFFFFFFF)
+    private fun getThermalGradient(palette: ThermalPalette): Color {
+        return when (palette) {
+            ThermalPalette.IRON -> Color(0xFFFF4500)
+            ThermalPalette.RAINBOW -> Color(0xFF32CD32)
+            ThermalPalette.ARCTIC -> Color(0xFF00CED1)
+            ThermalPalette.GRAYSCALE -> Color(0xFFFFFFFF)
+            ThermalPalette.HOT -> Color(0xFFFFFF00)
+            ThermalPalette.MEDICAL -> Color(0xFF32CD32)
+            ThermalPalette.LAVA -> Color(0xFFFF0000)
+            ThermalPalette.CONTRAST -> Color(0xFFFFFFFF)
+        }
     }
-}
 
-private fun formatTemperature(temperature: Float, unit: TemperatureUnit): String {
-    return when (unit) {
-        TemperatureUnit.CELSIUS -> "${String.format("%.1f", temperature)}°C"
-        TemperatureUnit.FAHRENHEIT -> "${String.format("%.1f", temperature * 9 / 5 + 32)}°F"
-        TemperatureUnit.KELVIN -> "${String.format("%.1f", temperature + 273.15)}K"
+    private fun formatTemperature(temperature: Float, unit: TemperatureUnit): String {
+        return when (unit) {
+            TemperatureUnit.CELSIUS -> "${String.format("%.1f", temperature)}°C"
+            TemperatureUnit.FAHRENHEIT -> "${String.format("%.1f", temperature * 9 / 5 + 32)}°F"
+            TemperatureUnit.KELVIN -> "${String.format("%.1f", temperature + 273.15)}K"
+        }
     }
-}

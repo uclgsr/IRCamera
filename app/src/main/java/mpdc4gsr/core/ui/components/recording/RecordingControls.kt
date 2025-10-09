@@ -1,4 +1,4 @@
-package mpdc4gsr.core.ui.components
+package mpdc4gsr.core.ui.components.recording
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.RepeatMode
@@ -6,13 +6,49 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Computer
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.FiberManualRecord
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PhoneAndroid
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.Storage
+import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.filled.TouchApp
+import androidx.compose.material.icons.filled.VideoLibrary
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,35 +62,9 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-enum class RecordingState {
-    IDLE,
-    STARTING,
-    RECORDING,
-    STOPPING,
-    ERROR
-}
-
-enum class TriggerSource {
-    LOCAL,
-    REMOTE_PC,
-    REMOTE_MOBILE,
-    SCHEDULED
-}
-
-data class RecordingSession(
-    val state: RecordingState,
-    val triggerSource: TriggerSource,
-    val duration: String = "00:00:00",
-    val sessionId: String = "",
-    val dataSize: String = "0 MB",
-    val frameCount: Int = 0,
-    val errorMessage: String? = null,
-    val startTime: Long = 0L
-)
-
 @Composable
-fun RecordingControlsCompose(
-    session: RecordingSession,
+fun RecordingControls(
+    session: RecordingSessionSummary,
     onStartRecording: () -> Unit,
     onStopRecording: () -> Unit,
     onEmergencyStop: () -> Unit = {},
@@ -65,8 +75,8 @@ fun RecordingControlsCompose(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = when (session.state) {
-                RecordingState.RECORDING -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.1f)
-                RecordingState.ERROR -> MaterialTheme.colorScheme.errorContainer
+                RecordingUiState.Recording -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.1f)
+                RecordingUiState.Error -> MaterialTheme.colorScheme.errorContainer
                 else -> MaterialTheme.colorScheme.surface
             }
         ),
@@ -75,27 +85,45 @@ fun RecordingControlsCompose(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            // Header with status
             RecordingHeader(session = session)
             Spacer(modifier = Modifier.height(16.dp))
-            // Main recording controls
-            RecordingControls(
+            RecordingControlsRow(
                 session = session,
                 onStartRecording = onStartRecording,
                 onStopRecording = onStopRecording,
                 onEmergencyStop = onEmergencyStop
             )
-            if (showAdvancedControls && session.state != RecordingState.IDLE) {
+            if (showAdvancedControls && session.state != RecordingUiState.Idle) {
                 Spacer(modifier = Modifier.height(16.dp))
-                // Session details
                 SessionDetails(session = session)
             }
         }
     }
 }
 
+@Deprecated(
+    message = "Renamed for clarity",
+    replaceWith = ReplaceWith("RecordingControls(session, onStartRecording, onStopRecording, onEmergencyStop, modifier, showAdvancedControls)")
+)
 @Composable
-private fun RecordingHeader(session: RecordingSession) {
+fun RecordingControlsCompose(
+    session: RecordingSessionSummary,
+    onStartRecording: () -> Unit,
+    onStopRecording: () -> Unit,
+    onEmergencyStop: () -> Unit = {},
+    modifier: Modifier = Modifier,
+    showAdvancedControls: Boolean = true
+) = RecordingControls(
+    session = session,
+    onStartRecording = onStartRecording,
+    onStopRecording = onStopRecording,
+    onEmergencyStop = onEmergencyStop,
+    modifier = modifier,
+    showAdvancedControls = showAdvancedControls
+)
+
+@Composable
+private fun RecordingHeader(session: RecordingSessionSummary) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -113,52 +141,65 @@ private fun RecordingHeader(session: RecordingSession) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        // Status indicator
         RecordingStatusIndicator(state = session.state)
     }
 }
 
 @Composable
-private fun RecordingStatusIndicator(state: RecordingState) {
+private fun RecordingStatusIndicator(state: RecordingUiState) {
     val color by animateColorAsState(
         targetValue = when (state) {
-            RecordingState.IDLE -> Color(0xFF9E9E9E)
-            RecordingState.STARTING -> Color(0xFFFF9800)
-            RecordingState.RECORDING -> Color(0xFFF44336)
-            RecordingState.STOPPING -> Color(0xFFFF9800)
-            RecordingState.ERROR -> Color(0xFFF44336)
+            RecordingUiState.Idle -> Color(0xFF9E9E9E)
+            RecordingUiState.Starting -> Color(0xFFFF9800)
+            RecordingUiState.Recording -> Color(0xFFF44336)
+            RecordingUiState.Stopping -> Color(0xFFFF9800)
+            RecordingUiState.Error -> Color(0xFFF44336)
         },
-        animationSpec = tween(durationMillis = 300)
+        label = "recordingIndicator"
     )
     val scale by animateFloatAsState(
-        targetValue = if (state == RecordingState.RECORDING) 1.0f else 0.8f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000),
-            repeatMode = RepeatMode.Reverse
-        )
+        targetValue = if (state == RecordingUiState.Recording) 1.1f else 1f,
+        animationSpec = tween(durationMillis = 500),
+        label = "recordingIndicatorScale"
     )
     Box(
         modifier = Modifier
-            .size(16.dp)
-            .scale(if (state == RecordingState.RECORDING) scale else 1f)
+            .size(36.dp)
             .clip(CircleShape)
-            .background(color)
-    )
+            .background(color.copy(alpha = 0.15f)),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = when (state) {
+                RecordingUiState.Idle -> Icons.Default.Stop
+                RecordingUiState.Starting -> Icons.Default.Refresh
+                RecordingUiState.Recording -> Icons.Default.FiberManualRecord
+                RecordingUiState.Stopping -> Icons.Default.Pause
+                RecordingUiState.Error -> Icons.Default.Error
+            },
+            contentDescription = null,
+            tint = color,
+            modifier = Modifier
+                .size(18.dp)
+                .scale(scale)
+        )
+    }
 }
 
 @Composable
-private fun RecordingControls(
-    session: RecordingSession,
+private fun RecordingControlsRow(
+    session: RecordingSessionSummary,
     onStartRecording: () -> Unit,
     onStopRecording: () -> Unit,
     onEmergencyStop: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         when (session.state) {
-            RecordingState.IDLE -> {
+            RecordingUiState.Idle, RecordingUiState.Error -> {
                 Button(
                     onClick = onStartRecording,
                     modifier = Modifier.weight(1f),
@@ -166,25 +207,20 @@ private fun RecordingControls(
                         containerColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "Start Recording",
-                        modifier = Modifier.size(18.dp)
-                    )
+                    Icon(Icons.Default.PlayArrow, contentDescription = "Start Recording")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Start Recording")
                 }
             }
 
-            RecordingState.STARTING -> {
+            RecordingUiState.Starting -> {
                 Button(
-                    onClick = {}, // Disabled during starting state
+                    onClick = {},
                     modifier = Modifier.weight(1f),
                     enabled = false
                 ) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(16.dp),
-                        color = MaterialTheme.colorScheme.onSurface,
                         strokeWidth = 2.dp
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -192,70 +228,42 @@ private fun RecordingControls(
                 }
             }
 
-            RecordingState.RECORDING -> {
+            RecordingUiState.Recording -> {
                 Button(
                     onClick = onStopRecording,
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.error
+                        containerColor = Color(0xFFF44336)
                     )
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Stop,
-                        contentDescription = "Stop Recording",
-                        modifier = Modifier.size(18.dp)
-                    )
+                    Icon(Icons.Default.Stop, contentDescription = "Stop Recording")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Stop Recording")
                 }
-                OutlinedButton(
-                    onClick = onEmergencyStop,
-                    modifier = Modifier.width(120.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error
-                    )
+
+                IconButton(
+                    onClick = onEmergencyStop
                 ) {
                     Icon(
                         imageVector = Icons.Default.Warning,
-                        contentDescription = "Emergency Stop",
-                        modifier = Modifier.size(16.dp)
+                        contentDescription = "Emergency stop",
+                        tint = MaterialTheme.colorScheme.error
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Emergency", fontSize = 12.sp)
                 }
             }
 
-            RecordingState.STOPPING -> {
+            RecordingUiState.Stopping -> {
                 Button(
-                    onClick = {}, // Disabled during stopping state
+                    onClick = {},
                     modifier = Modifier.weight(1f),
                     enabled = false
                 ) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(16.dp),
-                        color = MaterialTheme.colorScheme.onSurface,
                         strokeWidth = 2.dp
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Stopping...")
-                }
-            }
-
-            RecordingState.ERROR -> {
-                Button(
-                    onClick = onStartRecording,
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.error
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = "Retry Recording",
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Retry")
                 }
             }
         }
@@ -263,33 +271,19 @@ private fun RecordingControls(
 }
 
 @Composable
-private fun SessionDetails(session: RecordingSession) {
+private fun SessionDetails(session: RecordingSessionSummary) {
     Column {
         HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
         Spacer(modifier = Modifier.height(12.dp))
-        // Session info grid
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            SessionDetailItem(
-                label = "Duration",
-                value = session.duration,
-                icon = Icons.Default.Timer
-            )
-            SessionDetailItem(
-                label = "Data Size",
-                value = session.dataSize,
-                icon = Icons.Default.Storage
-            )
-            SessionDetailItem(
-                label = "Frames",
-                value = session.frameCount.toString(),
-                icon = Icons.Default.VideoLibrary
-            )
+            SessionDetailItem("Duration", session.duration, Icons.Default.Timer)
+            SessionDetailItem("Data Size", session.dataSize, Icons.Default.Storage)
+            SessionDetailItem("Frames", session.frameCount.toString(), Icons.Default.VideoLibrary)
         }
         Spacer(modifier = Modifier.height(12.dp))
-        // Trigger source and session ID
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -304,7 +298,6 @@ private fun SessionDetails(session: RecordingSession) {
                 )
             }
         }
-        // Error message if any
         session.errorMessage?.let { error ->
             Spacer(modifier = Modifier.height(8.dp))
             Card(
@@ -345,13 +338,20 @@ private fun SessionDetailItem(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = label,
-            modifier = Modifier.size(20.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.height(4.dp))
+        Surface(
+            modifier = Modifier
+                .size(36.dp)
+                .clip(RoundedCornerShape(12.dp)),
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = value,
             style = MaterialTheme.typography.titleSmall,
@@ -368,12 +368,12 @@ private fun SessionDetailItem(
 }
 
 @Composable
-private fun TriggerSourceChip(triggerSource: TriggerSource) {
+private fun TriggerSourceChip(triggerSource: RecordingTriggerSource) {
     val (text, color) = when (triggerSource) {
-        TriggerSource.LOCAL -> "Local" to MaterialTheme.colorScheme.primary
-        TriggerSource.REMOTE_PC -> "PC Remote" to Color(0xFF2196F3)
-        TriggerSource.REMOTE_MOBILE -> "Mobile Remote" to Color(0xFF4CAF50)
-        TriggerSource.SCHEDULED -> "Scheduled" to Color(0xFFFF9800)
+        RecordingTriggerSource.Local -> "Local" to MaterialTheme.colorScheme.primary
+        RecordingTriggerSource.RemotePc -> "PC Remote" to Color(0xFF2196F3)
+        RecordingTriggerSource.RemoteMobile -> "Mobile Remote" to Color(0xFF4CAF50)
+        RecordingTriggerSource.Scheduled -> "Scheduled" to Color(0xFFFF9800)
     }
     Surface(
         shape = RoundedCornerShape(12.dp),
@@ -383,13 +383,14 @@ private fun TriggerSourceChip(triggerSource: TriggerSource) {
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val icon = when (triggerSource) {
+                RecordingTriggerSource.Local -> Icons.Default.TouchApp
+                RecordingTriggerSource.RemotePc -> Icons.Default.Computer
+                RecordingTriggerSource.RemoteMobile -> Icons.Default.PhoneAndroid
+                RecordingTriggerSource.Scheduled -> Icons.Default.Schedule
+            }
             Icon(
-                imageVector = when (triggerSource) {
-                    TriggerSource.LOCAL -> Icons.Default.TouchApp
-                    TriggerSource.REMOTE_PC -> Icons.Default.Computer
-                    TriggerSource.REMOTE_MOBILE -> Icons.Default.PhoneAndroid
-                    TriggerSource.SCHEDULED -> Icons.Default.Schedule
-                },
+                imageVector = icon,
                 contentDescription = text,
                 modifier = Modifier.size(12.dp),
                 tint = color
@@ -405,17 +406,16 @@ private fun TriggerSourceChip(triggerSource: TriggerSource) {
     }
 }
 
-private fun getStatusMessage(session: RecordingSession): String {
+private fun getStatusMessage(session: RecordingSessionSummary): String {
     return when (session.state) {
-        RecordingState.IDLE -> "Ready to start recording"
-        RecordingState.STARTING -> "Initializing recording systems..."
-        RecordingState.RECORDING -> "Recording in progress - ${session.duration}"
-        RecordingState.STOPPING -> "Finalizing recording..."
-        RecordingState.ERROR -> session.errorMessage ?: "Recording error occurred"
+        RecordingUiState.Idle -> "Ready to start recording"
+        RecordingUiState.Starting -> "Initializing recording systems..."
+        RecordingUiState.Recording -> "Recording in progress - ${session.duration}"
+        RecordingUiState.Stopping -> "Finalizing recording..."
+        RecordingUiState.Error -> session.errorMessage ?: "Recording error occurred"
     }
 }
 
-// Demo component with simulated recording
 @Composable
 fun RecordingControlsDemo(
     modifier: Modifier = Modifier
@@ -423,17 +423,16 @@ fun RecordingControlsDemo(
     val scope = rememberCoroutineScope()
     var session by remember {
         mutableStateOf(
-            RecordingSession(
-                state = RecordingState.IDLE,
-                triggerSource = TriggerSource.LOCAL
+            RecordingSessionSummary(
+                state = RecordingUiState.Idle,
+                triggerSource = RecordingTriggerSource.Local
             )
         )
     }
-    // Simulate recording timer
     LaunchedEffect(session.state) {
-        if (session.state == RecordingState.RECORDING) {
+        if (session.state == RecordingUiState.Recording) {
             val startTime = System.currentTimeMillis()
-            while (session.state == RecordingState.RECORDING) {
+            while (session.state == RecordingUiState.Recording) {
                 delay(1000)
                 val elapsed = System.currentTimeMillis() - startTime
                 val seconds = (elapsed / 1000) % 60
@@ -441,41 +440,39 @@ fun RecordingControlsDemo(
                 val hours = elapsed / 3600000
                 session = session.copy(
                     duration = String.format("%02d:%02d:%02d", hours, minutes, seconds),
-                    dataSize = "${(elapsed / 10000)} MB",
-                    frameCount = (elapsed / 33).toInt() // ~30 FPS
+                    dataSize = "${elapsed / 10000} MB",
+                    frameCount = (elapsed / 33).toInt()
                 )
             }
         }
     }
-    RecordingControlsCompose(
+    RecordingControls(
         session = session,
         onStartRecording = {
             session = session.copy(
-                state = RecordingState.STARTING,
+                state = RecordingUiState.Starting,
                 sessionId = "REC_${System.currentTimeMillis()}",
-                startTime = System.currentTimeMillis()
+                startTimeMillis = System.currentTimeMillis()
             )
-            // Simulate start delay
             scope.launch {
                 delay(2000)
-                session = session.copy(state = RecordingState.RECORDING)
+                session = session.copy(state = RecordingUiState.Recording)
             }
         },
         onStopRecording = {
-            session = session.copy(state = RecordingState.STOPPING)
-            // Simulate stop delay
+            session = session.copy(state = RecordingUiState.Stopping)
             scope.launch {
                 delay(1500)
-                session = RecordingSession(
-                    state = RecordingState.IDLE,
-                    triggerSource = TriggerSource.LOCAL
+                session = RecordingSessionSummary(
+                    state = RecordingUiState.Idle,
+                    triggerSource = RecordingTriggerSource.Local
                 )
             }
         },
         onEmergencyStop = {
-            session = RecordingSession(
-                state = RecordingState.IDLE,
-                triggerSource = TriggerSource.LOCAL
+            session = RecordingSessionSummary(
+                state = RecordingUiState.Idle,
+                triggerSource = RecordingTriggerSource.Local
             )
         },
         modifier = modifier

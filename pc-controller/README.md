@@ -1,324 +1,155 @@
-# IRCamera PC Controller - Complete Guide
+# IRCamera PC Controller
 
-The PC Controller serves as the central **Hub** in the IRCamera Multi-Modal Thermal Sensing
-Platform's Hub-and-Spoke
-architecture, coordinating distributed Android sensor nodes for scientific data collection.
+The PC controller is the desktop companion to the IRCamera Android capture
+application. It receives live telemetry streams (GSR, RGB, thermal), manages
+recording sessions, and provides a PyQt6 dashboard for visualising sensor data
+in real time. The controller can also run in pure CLI mode for headless
+deployments or automated testing.
 
-## Overview
+## Highlights
 
-This comprehensive desktop application orchestrates multi-modal recording sessions with Android
-devices, providing
-real-time data visualization, session management, and high-performance data processing capabilities.
-The implementation
-represents the unified result of multiple controller iterations, combining the best features from
-previous versions.
+- **Network server** – newline delimited JSON protocol with graceful handling
+  of legacy key/value messages; device registration, session events, telemetry,
+  and file transfer messages are supported out of the box.
+- **Real-time dashboard** – PyQt6 + PyQtGraph UI shows connected devices,
+  streaming GSR plots, and the latest RGB/thermal frames. Controls are provided
+  for starting/stopping sessions, triggering synchronisation, and exporting
+  received data.
+- **Session storage & export** – session assets (telemetry CSVs, uploaded
+  artefacts) are written to disk immediately. A one-click export produces a zip
+  archive for analysis.
+- **C++ native backend** – a lightweight PyBind11 module parses Shimmer GSR
+  packets and computes descriptive statistics with minimal overhead.
+- **Robustness** – networking code tolerates malformed packets, disconnects,
+  and devices rejoining a session without crashing the GUI thread.
 
-## Unified Implementation
+## Getting Started
 
-The PC Controller (`pc_controller.py`) is the single, definitive application that consolidates all features:
-
-- **Modern PyQt6 GUI** with professional interface and responsive design
-- **Protocol Compatibility** supporting both legacy text and JSON message formats
-- **Advanced Features** including real-time visualization, SSL/TLS security, and C++ backend integration
-- **Robust Error Handling** with proper exception handling and socket timeouts
-- **Multi-device Support** with simultaneous connections and session coordination
-
-## Architecture
-
-The PC Controller implements a **Hub-and-Spoke Model** where:
-
-- **Hub (PC Controller)**: Central coordinator with PyQt6 GUI
-- **Spokes (Android Nodes)**: Mobile sensor nodes with thermal, GSR, and RGB capabilities
-- **Communication**: JSON-based TCP protocol with mDNS device discovery
-- **Purpose**: Scientific data acquisition and machine learning analysis
-
-## Key Features
-
-### Networking and Device Interface
-
-- **Complete TCP Server/Protocol**: Full JSON-based communication with Android devices
-- **Device Registration**: Automatic discovery and registration system
-- **Session Coordination**: Remote session start/stop control
-- **Live Data Streaming**: Real-time telemetry reception and processing
-- **Error Handling**: Robust reconnection logic and graceful error recovery
-- **Multi-device Support**: Simultaneous connections from multiple Android devices
-
-### High-Performance Data Processing
-
-- **C++ Backend Integration**: PyBind11-based native processing modules (optional)
-- **GSR Data Processing**: Native packet parsing and analysis
-- **Thread-safe Operations**: Lock-free queues and concurrent data structures
-- **Memory Management**: Efficient buffering with configurable limits
-- **Data Export**: CSV, JSON, and HDF5 export capabilities
-
-### Core Functionality
-
-- **Device Management**: Automatic mDNS discovery and manual device addition
-- **Session Lifecycle**: Complete recording session coordination
-- **Multi-Modal Synchronization**: Precise temporal alignment across sensors
-- **Real-Time Communication**: TCP/JSON protocol with command acknowledgments
-- **Professional GUI**: Comprehensive PyQt6 interface for researchers
-
-### Main Application
-
-**File**: `pc_controller.py` (launched via `run_unified_controller.py`)
-
-- Single, definitive PC controller application
-- Complete PyQt6 interface with advanced features
-- Device dashboard with real-time status monitoring
-- Session controls and metadata management
-- Comprehensive logging and error handling
-- Production-ready with proper exception handling
-
-### Additional Tools
-
-**Command Client**: `command_client.py` - CLI tool for sending commands to running controller
-
-**Utility Scripts**: `scripts/` - Testing, validation and demonstration utilities
-
-**Legacy Implementations**: `legacy_implementation/` - Archived MVP versions for reference
-
-## Quick Start
-
-### Prerequisites
+### 1. Install Python requirements
 
 ```bash
-# Required dependencies
-pip install PyQt6 loguru zeroconf numpy pandas h5py pyqtgraph
-
-# Optional for full functionality
-pip install scipy opencv-python bleak psutil
+python -m venv .venv
+. .venv/bin/activate                      # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+pip install pyqtgraph pyqt6               # GUI extras
 ```
 
-### Usage
-
-#### Start the Controller
+### 2. Build the native backend (optional but recommended)
 
 ```bash
-# Launch the PC controller (recommended)
-python run_unified_controller.py
-
-# Or run directly with options
-python pc_controller.py --port 8080 --cli
+cd native_backend
+python -m pip install pybind11 setuptools wheel
+python setup.py build_ext --inplace
 ```
 
-#### Command-Line Options
+The controller falls back to a pure-Python parser if the extension is missing,
+but the native module is significantly faster for high-rate GSR streams.
+
+### 3. Launch
 
 ```bash
-python pc_controller.py --help
-  --port PORT       Server port (default: 8080)
-  --cli             Force CLI mode (no GUI)
-  --ssl             Enable SSL/TLS encryption
+python pc_controller.py            # GUI (PyQt6 required)
+python pc_controller.py --cli      # CLI fallback
 ```
 
-#### Testing and Validation
+Arguments:
 
-```bash
-# Component demonstration
-python scripts/demo_features.py
+| Option              | Description                                                 |
+|---------------------|-------------------------------------------------------------|
+| `--host` / `--port` | Bind address/port (default `0.0.0.0:8080`)                  |
+| `--ssl`             | Enable TLS using `certificates/server.crt` and `server.key` |
+| `--storage-dir`     | Destination for session artefacts (default `pc_data/`)      |
+| `--cli`             | Force CLI mode even if PyQt6 is installed                   |
 
-# Verify installation
-python scripts/verify_installation.py
+## Protocol Snapshot
 
-# Comprehensive verification
-python scripts/verify_pc_controller.py
+Messages are UTF-8 JSON terminated by `\n`. Legacy key/value lines from older
+firmware are converted internally via `ProtocolAdapter`.
 
-# Run tests (note: most tests are currently disabled)
-python -m unittest tests.test_protocol_compatibility
-python -m unittest tests.test_pc_controller_features
+### Device handshake
 
-# Or with pytest if installed
-pytest tests/
+```json
+{"type": "hello", "device_id": "android-01", "sensors": ["GSR", "RGB"]}
 ```
 
-## Project Structure
+The controller replies with:
 
-```
-pc-controller/
-+-- Main Application
-    +-- pc_controller.py           # Single unified PC controller application
-    +-- run_unified_controller.py  # Launcher script (recommended entry point)
-    +-- protocol_adapter.py        # Protocol parsing and compatibility layer
-    +-- sync_handler.py            # Time synchronization handler
-    
-+-- Utilities
-    +-- command_client.py          # CLI command tool for remote control
-    +-- scripts/                   # Testing and validation utilities
-        +-- demo_features.py       # Feature demonstration
-        +-- verify_installation.py # Installation validator
-        +-- verify_pc_controller.py # Comprehensive verification
-        +-- test_android_connection.py # Android connectivity test
-        +-- example_sync_server.py # Time sync example server
-    
-+-- Configuration
-    +-- requirements.txt           # Python dependencies
-    +-- setup.py                   # Package setup and native backend build
-    +-- config.yaml                # Application configuration
-    +-- config/                    # Legacy configuration files
-    
-+-- Testing
-    +-- tests/                     # Test suite directory
-        +-- test_protocol_compatibility.py
-        +-- test_pc_controller_features.py
-        +-- test_comprehensive_integration.py
-        +-- test_protocol_verification.py
-        +-- test_sync_handler.py
-        +-- README.md              # Test documentation
-
-+-- Data and Output
-    +-- data/                      # Session data storage (gitignored)
-    +-- exports/                   # Data exports (gitignored)
-    +-- certificates/              # SSL/TLS certificates (gitignored)
-    
-+-- Documentation
-    +-- docs/                      # Technical documentation
-        +-- README.md              # Documentation index
-        +-- quick_start.md         # Quick start guide
-        +-- implementation.md      # Implementation details
-        +-- protocol.md            # Protocol specification
-    
-+-- Native Backend
-    +-- native_backend/            # C++ performance extensions
-        +-- src/                   # C++ source files
-        +-- include/               # Header files
-        +-- CMakeLists.txt         # Build configuration
-    
-+-- Legacy
-    +-- legacy_implementation/     # Archived MVP implementations
-        +-- README.md              # Legacy documentation
+```json
+{"type": "hello_ack", "server_time": 1736087504.1023, "session_id": null}
 ```
 
-## Device Communication Protocol
+### GSR telemetry
 
-### Command Message Format (Hub -> Spoke)
+Binary packets are base64-encoded and decoded via the native backend:
 
 ```json
 {
-    "command": "start_recording",
-    "session_id": "session_2024-01-15_14-30-00",
-    "parameters": {
-        "thermal_fps": 25,
-        "gsr_sample_rate": 128
-    }
+  "type": "telemetry_gsr",
+  "device_id": "android-01",
+  "packet_b64": "qlUBAAABAAAP..."
 }
 ```
 
-### Response Format (Spoke -> Hub)
+### File transfer (post-session upload)
 
-```json
-{
-    "status": "success",
-    "device_id": "android_001",
-    "session_id": "session_2024-01-15_14-30-00",
-    "timestamp": 1642248600,
-    "data": {...}
-}
+```
+{"type": "file_begin", "session_id": "session_20250101_101000", "filename": "android-01_summary.json"}
+{"type": "file_chunk", "session_id": "...", "filename": "...", "data": "<base64>"}
+{"type": "file_end", "session_id": "...", "filename": "..."}
 ```
 
-## Session Workflow
+## PyQt6 Dashboard Tour
 
-1. **Device Discovery**: Automatic mDNS scanning + manual device addition
-2. **Device Registration**: Capability exchange and status verification
-3. **Session Setup**: Metadata creation and device configuration
-4. **Recording Coordination**: Synchronized start across all devices
-5. **Data Collection**: Real-time monitoring and logging
-6. **Session Finalization**: Data validation and metadata completion
+- **Device list** – shows connection status, sensors, last heartbeat, and
+  whether the device is participating in the active session.
+- **Telemetry tab** – rolling plot of GSR micro-siemens values for each device
+  (colour-coded, auto-updated 4 Hz).
+- **Frames tab** – latest RGB and thermal previews (JPEG-encoded) scaled to fit
+  the panel. The display updates incrementally without blocking the UI.
+- **Log tab** – timestamped event feed for quick debugging (session transitions,
+  file transfers, protocol issues).
+- **Controls** – start/stop session, broadcast sync requests, and export the
+  latest session as a zip archive.
 
-## Performance Status
+## Session Storage Layout
 
-- **Configuration System**: 100% functional
-- **Device Discovery Framework**: 100% functional
-- **Communication Protocol**: 100% functional
-- **GUI Architecture**: 100% functional
-- **Hub-and-Spoke Integration**: 100% functional
-- **Session Management API**: 100% functional
+Each session is written to `<storage-dir>/<session-id>/`:
 
-## Integration with Android Spokes
+- `session.json` – metadata recorded when the session starts.
+- `summary.json` – snapshot captured when the session ends.
+- `<device>_gsr.csv` – rolling GSR samples (timestamp, µS).
+- `<device>/...` – any uploaded files (images, summaries, etc.).
 
-### Expected Android Device Configuration
+Pressing **Export Data** in the GUI creates `<session-id>.zip` alongside the
+storage directory.
 
-- **Network**: Same WiFi network as PC Controller
-- **Services**: mDNS service advertised as `_ircamera._tcp.local.`
-- **Protocol**: TCP communication on configurable port
-- **Capabilities**: JSON capability exchange on connection
-- **Sensors**: Thermal camera, GSR sensor, RGB camera support
+## Testing
 
-### Android App Requirements
+The lightweight unit tests in `tests/test_controller_core.py` validate the
+handshake path, GSR packet parsing (native fallback included), and session CSV
+generation. Run with:
 
-- IRCamera Android application installed and running
-- Proper network permissions configured
-- Sensor hardware validation completed
-- Background processing permissions enabled
+```bash
+python -m unittest discover -s tests
+```
 
-## Development
+## Future Work
 
-### Adding New Features
-
-- Follow the simple MVP pattern in `mvp_simple.py` for core functionality
-- Use the GUI framework in `run_mvp_app.py` for interface enhancements
-- Maintain compatibility with the JSON communication protocol
-
-### Code Organization
-
-- **Core Logic**: Keep business logic separate from GUI code
-- **Configuration**: Use YAML configuration for flexibility
-- **Error Handling**: Implement graceful failure recovery
-- **Testing**: Add tests for new functionality in appropriate test files
+- **End-to-end TLS** – the networking layer can wrap sockets with TLS when
+  `--ssl` is used, but certificate provisioning & client authentication still
+  need to be integrated on the Android side.
+- **Device discovery** – mDNS/ZeroConf integration is planned to eliminate the
+  need to manually enter IP addresses during pairing.
+- **Additional sensors** – the GUI layout leaves room for extra plots (PPG,
+  accelerometer) once the Android spokes surface them.
+- **Automated session exports** – wiring the CLI to trigger exports on session
+  stop would streamline scripted data collection workflows.
 
 ## Troubleshooting
 
-### Common Issues
-
-**Device Discovery Problems**
-
-- Verify devices are on same network
-- Check firewall settings (port 8080 default)
-- Try manual device addition if mDNS fails
-- Confirm Android app is advertising mDNS service
-
-**Connection Issues**
-
-- Check network connectivity between PC and Android devices
-- Verify Android app permissions (network, sensors)
-- Restart both PC Controller and Android applications
-- Review connection logs for specific error messages
-
-**Session Management Problems**
-
-- Ensure adequate disk space for session data
-- Verify device capabilities match session requirements
-- Check device battery levels before long sessions
-- Monitor device heartbeat status during recording
-
-### Debug Mode
-
-```bash
-# Enable verbose logging
-python run_mvp_app.py --debug
-
-# Test component functionality
-python demo_mvp_components.py --verbose
-```
-
-## Status: Production Ready
-
-**Implementation Status**: COMPLETE
-**Quality Grade**: ENTERPRISE  
-**Research Ready**: SCIENTIFIC GRADE
-**Production Status**: DEPLOYMENT READY
-
-The PC Controller Hub is fully functional and ready for scientific research applications with
-multi-modal physiological
-sensing capabilities.
-
-## Additional Documentation
-
-For detailed technical documentation, see:
-
-- **docs/implementation.md** - Complete implementation guide (features, status, integration)
-- **docs/protocol.md** - Protocol documentation (bridge, verification, gap analysis)
-- **docs/verification.md** - Testing and verification reports
-- **docs/code_review.md** - Code quality assessment
-- **docs/README.md** - Technical documentation index
-
-For quick start, see **docs/quick_start.md**.
+- **“PyQt6 not available”** – install PyQt6/pyqtgraph or use `--cli`.
+- **Native backend import error** – double-check you ran the `build_ext`
+  command from `native_backend/` and that Python is loading from the same
+  directory.
+- **Firewall prompts** – Windows may prompt the first time the server listens
+  on `0.0.0.0:8080`. Allow access on the private network used for testing.

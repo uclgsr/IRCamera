@@ -31,7 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.components.common.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import javax.inject.Inject
 
@@ -390,7 +390,7 @@ class PolicyComposeActivity : ComponentActivity() {
     }
 
     private val viewModel: PolicyViewModel by viewModels()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val themeType = intent.getIntExtra(KEY_THEME_TYPE, 1)
@@ -417,107 +417,107 @@ fun PolicyScreen(
     val isLoading by viewModel.isLoading
     val showError by viewModel.showError
     val htmlContent by viewModel.htmlContent
-    
+
     LaunchedEffect(policyType) {
         viewModel.loadContent(context)
     }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF16131E))
     ) {
-                TitleBar(
-                    title = policyType.title,
-                    onBackClick = onBackClick
+        TitleBar(
+            title = policyType.title,
+            onBackClick = onBackClick
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+        ) {
+            if (htmlContent.isNotEmpty() && !isLoading && !showError) {
+                PolicyWebView(
+                    htmlContent = htmlContent,
+                    onError = { viewModel.setError(true) }
                 )
+            }
+            if (isLoading) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .weight(1f)
+                        .background(Color.White),
+                    contentAlignment = Alignment.Center
                 ) {
-                    if (htmlContent.isNotEmpty() && !isLoading && !showError) {
-                        PolicyWebView(
-                            htmlContent = htmlContent,
-                            onError = { viewModel.setError(true) }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Loading ${policyType.title}...",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
-                    if (isLoading) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.White),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                CircularProgressIndicator(
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(modifier = Modifier.height(16.dp))
-                                Text(
-                                    text = "Loading ${policyType.title}...",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        }
-                    }
-                    if (showError) {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                                .align(Alignment.Center),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.errorContainer
+                }
+            }
+            if (showError) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .align(Alignment.Center),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Error,
+                            contentDescription = null,
+                            modifier = Modifier.size(48.dp),
+                            tint = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Failed to load content",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            onClick = {
+                                kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main)
+                                    .launch {
+                                        viewModel.loadContent(context)
+                                    }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary
                             )
                         ) {
-                            Column(
-                                modifier = Modifier.padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Error,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(48.dp),
-                                    tint = MaterialTheme.colorScheme.onErrorContainer
-                                )
-                                Spacer(modifier = Modifier.height(16.dp))
-                                Text(
-                                    text = "Failed to load content",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onErrorContainer,
-                                    textAlign = TextAlign.Center
-                                )
-                                Spacer(modifier = Modifier.height(16.dp))
-                                Button(
-                                    onClick = {
-                                        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main)
-                                            .launch {
-                                                viewModel.loadContent(context)
-                                            }
-                                    },
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.primary
-                                    )
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Refresh,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Retry")
-                                }
-                            }
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Retry")
                         }
                     }
                 }
             }
         }
     }
+}
+}
 }
 
 @SuppressLint("SetJavaScriptEnabled")

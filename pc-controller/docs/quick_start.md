@@ -333,16 +333,19 @@ telnet <PC_IP> 8080
 ### Custom Message Handler
 
 ```python
-from pc_controller import PCController
+from pathlib import Path
 
-controller = PCController(port=8080)
+from pc_controller import ControllerEvent, PCControllerCore
 
-def custom_gsr_handler(device_id, value, timestamp):
-    print(f"Custom handler: {device_id} = {value} μS")
-    # Your custom processing here
+controller = PCControllerCore(Path("pc_data"))
 
-controller.on_gsr_data = custom_gsr_handler
-controller.start_server()
+def on_event(event: ControllerEvent) -> None:
+    if event.type == "telemetry_gsr":
+        value = event.payload["value"]
+        print(f"Custom handler: {event.device_id} = {value:.2f} uS")
+
+controller.register_listener(on_event)
+controller.start_server(port=8080)
 ```
 
 ### Using Native Backend Directly

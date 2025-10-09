@@ -1445,16 +1445,20 @@ python3 pc_controller.py --port 9000
 ### Programmatic Usage
 
 ```python
-from pc_controller import PCController
+from pathlib import Path
 
-controller = PCController(port=8080, use_ssl=False)
-controller.start_server()
+from pc_controller import ControllerEvent, PCControllerCore
 
-# Register callback for GSR data
-def on_gsr_data(device_id, value, timestamp):
-    print(f"GSR from {device_id}: {value} μS at {timestamp}")
+controller = PCControllerCore(Path("pc_data"))
+controller.start_server(port=8080, use_ssl=False)
 
-controller.on_gsr_data = on_gsr_data
+def on_event(event: ControllerEvent) -> None:
+    if event.type == "telemetry_gsr":
+        value = event.payload["value"]
+        timestamp = event.payload.get("timestamp")
+        print(f"GSR from {event.device_id}: {value:.2f} uS at {timestamp}")
+
+controller.register_listener(on_event)
 ```
 
 ## Performance Metrics

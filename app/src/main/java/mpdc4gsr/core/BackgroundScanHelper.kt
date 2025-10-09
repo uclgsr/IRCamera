@@ -3,6 +3,7 @@ package mpdc4gsr.core
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+
 object BackgroundScanHelper {
     private const val TAG = "BackgroundScanHelper"
 

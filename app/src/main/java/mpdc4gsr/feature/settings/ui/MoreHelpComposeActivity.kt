@@ -38,7 +38,7 @@ import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState
 import com.mpdc4gsr.libunified.app.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.components.common.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import javax.inject.Inject
 
@@ -57,7 +57,7 @@ class MoreHelpViewModel @Inject constructor() : ViewModel() {
     val connectionType: State<Int> = _connectionType
     private val _helpSteps = mutableStateOf<List<HelpStep>>(emptyList())
     val helpSteps: State<List<HelpStep>> = _helpSteps
-    
+
     fun setConnectionType(type: Int) {
         _connectionType.value = type
         updateHelpSteps(type)
@@ -142,7 +142,7 @@ class MoreHelpViewModel @Inject constructor() : ViewModel() {
 class MoreHelpComposeActivity : ComponentActivity() {
     private lateinit var wifiManager: WifiManager
     private val viewModel: MoreHelpViewModel by viewModels()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -173,164 +173,164 @@ fun MoreHelpScreen(
     } else {
         stringResource(R.string.disconnection_troubleshooting)
     }
-    
+
     Column(
         modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFF16131E))
+            .fillMaxSize()
+            .background(Color(0xFF16131E))
+    ) {
+        TitleBar(
+            title = title,
+            onBackClick = onBackClick
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+        ) {
+            // Header section
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                TitleBar(
-                    title = title,
-                    onBackClick = onBackClick
-                )
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(16.dp)
+                    modifier = Modifier.padding(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Header section
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 24.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    Icon(
+                        imageVector = if (connectionType == Constants.SETTING_CONNECTION)
+                            Icons.AutoMirrored.Filled.Help else Icons.Default.BugReport,
+                        contentDescription = if (connectionType == Constants.SETTING_CONNECTION)
+                            "Connection Help" else "Troubleshooting",
+                        modifier = Modifier.size(48.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = if (connectionType == Constants.SETTING_CONNECTION)
+                            "Device Connection Guide" else "Troubleshooting Guide",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = if (connectionType == Constants.SETTING_CONNECTION)
+                            "Follow these steps to connect your thermal camera device"
+                        else
+                            "Steps to resolve connection issues",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+            }
+            // Help steps
+            helpSteps.forEachIndexed { index, step ->
+                HelpStepCard(
+                    step = step,
+                    stepNumber = index + 1,
+                    onActionClick = { action ->
+                        when {
+                            step.actionText.contains("WiFi") -> openWifiSettings()
+                            step.actionText.contains("Network") -> openNetworkSettings()
+                            step.actionText.contains("Bluetooth") -> openBluetoothSettings()
+                            else -> action?.invoke()
+                        }
+                    }
+                )
+                if (index < helpSteps.size - 1) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+            // Additional help section
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column(
-                            modifier = Modifier.padding(20.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Icon(
-                                imageVector = if (connectionType == Constants.SETTING_CONNECTION)
-                                    Icons.AutoMirrored.Filled.Help else Icons.Default.BugReport,
-                                contentDescription = if (connectionType == Constants.SETTING_CONNECTION)
-                                    "Connection Help" else "Troubleshooting",
-                                modifier = Modifier.size(48.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Text(
-                                text = if (connectionType == Constants.SETTING_CONNECTION)
-                                    "Device Connection Guide" else "Troubleshooting Guide",
-                                style = MaterialTheme.typography.headlineSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = if (connectionType == Constants.SETTING_CONNECTION)
-                                    "Follow these steps to connect your thermal camera device"
-                                else
-                                    "Steps to resolve connection issues",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(top = 8.dp)
-                            )
-                        }
-                    }
-                    // Help steps
-                    helpSteps.forEachIndexed { index, step ->
-                        HelpStepCard(
-                            step = step,
-                            stepNumber = index + 1,
-                            onActionClick = { action ->
-                                when {
-                                    step.actionText.contains("WiFi") -> openWifiSettings()
-                                    step.actionText.contains("Network") -> openNetworkSettings()
-                                    step.actionText.contains("Bluetooth") -> openBluetoothSettings()
-                                    else -> action?.invoke()
-                                }
-                            }
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ContactSupport,
+                            contentDescription = "Contact Support",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp)
                         )
-                        if (index < helpSteps.size - 1) {
-                            Spacer(modifier = Modifier.height(12.dp))
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
-                    // Additional help section
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Need More Help?",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ContactSupport,
-                                    contentDescription = "Contact Support",
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = "Need More Help?",
-                                    style = MaterialTheme.typography.titleSmall,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "If you're still experiencing issues, check the device manual or contact technical support for additional assistance.",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
                     }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "If you're still experiencing issues, check the device manual or contact technical support for additional assistance.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
         }
     }
+}
+}
 
-    private fun openWifiSettings() {
-        try {
-            val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
-            startActivity(intent)
-        } catch (e: Exception) {
-            showSettingsError("WiFi settings")
+private fun openWifiSettings() {
+    try {
+        val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
+        startActivity(intent)
+    } catch (e: Exception) {
+        showSettingsError("WiFi settings")
+    }
+}
+
+private fun openNetworkSettings() {
+    try {
+        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY)
+        } else {
+            Intent(Settings.ACTION_WIRELESS_SETTINGS)
         }
+        startActivity(intent)
+    } catch (e: Exception) {
+        showSettingsError("Network settings")
     }
+}
 
-    private fun openNetworkSettings() {
-        try {
-            val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY)
-            } else {
-                Intent(Settings.ACTION_WIRELESS_SETTINGS)
-            }
-            startActivity(intent)
-        } catch (e: Exception) {
-            showSettingsError("Network settings")
-        }
+private fun openBluetoothSettings() {
+    try {
+        val intent = Intent(Settings.ACTION_BLUETOOTH_SETTINGS)
+        startActivity(intent)
+    } catch (e: Exception) {
+        showSettingsError("Bluetooth settings")
     }
+}
 
-    private fun openBluetoothSettings() {
-        try {
-            val intent = Intent(Settings.ACTION_BLUETOOTH_SETTINGS)
-            startActivity(intent)
-        } catch (e: Exception) {
-            showSettingsError("Bluetooth settings")
-        }
-    }
-
-    private fun showSettingsError(settingType: String) {
-        val tipDialogState = TipDialogState(this)
-        tipDialogState.show(
-            title = "",
-            message = "Unable to open $settingType. Please access it manually from your device settings.",
-            showCancel = false,
-            positiveText = getString(R.string.app_got_it),
-            onPositive = { }
-        )
-    }
+private fun showSettingsError(settingType: String) {
+    val tipDialogState = TipDialogState(this)
+    tipDialogState.show(
+        title = "",
+        message = "Unable to open $settingType. Please access it manually from your device settings.",
+        showCancel = false,
+        positiveText = getString(R.string.app_got_it),
+        onPositive = { }
+    )
+}
 }
 
 @Composable

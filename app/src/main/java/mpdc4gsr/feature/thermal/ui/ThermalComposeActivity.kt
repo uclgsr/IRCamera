@@ -9,7 +9,7 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 @AndroidEntryPoint
 class ThermalComposeActivity : BaseComposeActivity() {
-    
+
     companion object {
         const val EXTRA_SCREEN_TYPE = "screen_type"
         const val SCREEN_CAMERA = "camera"
@@ -17,12 +17,12 @@ class ThermalComposeActivity : BaseComposeActivity() {
         const val SCREEN_CALIBRATION = "calibration"
         const val SCREEN_GALLERY = "gallery"
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         val screenType = intent.getStringExtra(EXTRA_SCREEN_TYPE) ?: SCREEN_CAMERA
-        
+
         setContent {
             IRCameraTheme {
                 ThermalScreenRouter(
@@ -47,21 +47,25 @@ private fun ThermalScreenRouter(
                 onNavigateToGallery = { /* Navigate to gallery */ }
             )
         }
+
         ThermalComposeActivity.SCREEN_SETTINGS -> {
             ThermalSettingsScreen(
                 onBackClick = onBackClick
             )
         }
+
         ThermalComposeActivity.SCREEN_CALIBRATION -> {
             ThermalCalibrationScreen(
                 onBackClick = onBackClick
             )
         }
+
         ThermalComposeActivity.SCREEN_GALLERY -> {
             ThermalGalleryScreen(
                 onBackClick = onBackClick
             )
         }
+
         else -> {
             ThermalCameraScreen(
                 onBackClick = onBackClick,

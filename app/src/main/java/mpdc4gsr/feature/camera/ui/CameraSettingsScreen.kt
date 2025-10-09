@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.components.common.TitleBar
 import mpdc4gsr.core.ui.components.settings.SettingsCard
 import mpdc4gsr.core.ui.components.settings.SettingsDropdown
 import mpdc4gsr.core.ui.components.settings.SettingsSlider

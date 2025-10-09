@@ -43,7 +43,8 @@ class BluetoothClient(
             val bluetoothManager =
                 context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
             val bluetoothAdapter = bluetoothManager?.adapter
-            if (bluetoothManager == null || bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {                handleConnectionError("Bluetooth not available")
+            if (bluetoothManager == null || bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
+                handleConnectionError("Bluetooth not available")
                 return@withContext false
             }
             Log.i(
@@ -70,11 +71,14 @@ class BluetoothClient(
             } else {
                 throw IOException("Failed to get Bluetooth socket streams")
             }
-        } catch (e: IOException) {            handleConnectionError("Bluetooth connection failed: ${e.message}")
+        } catch (e: IOException) {
+            handleConnectionError("Bluetooth connection failed: ${e.message}")
             return@withContext false
-        } catch (e: SecurityException) {            handleConnectionError("Bluetooth permission denied")
+        } catch (e: SecurityException) {
+            handleConnectionError("Bluetooth permission denied")
             return@withContext false
-        } catch (e: Exception) {            handleConnectionError("Connection failed: ${e.message}")
+        } catch (e: Exception) {
+            handleConnectionError("Connection failed: ${e.message}")
             return@withContext false
         }
     }
@@ -86,42 +90,50 @@ class BluetoothClient(
                 currentWriter.write(message)
                 currentWriter.write("\n")
                 currentWriter.flush()                return@withContext true
-            } else {                return@withContext false
+            } else {
+                return@withContext false
             }
-        } catch (e: IOException) {            handleConnectionError("Send failed: ${e.message}")
+        } catch (e: IOException) {
+            handleConnectionError("Send failed: ${e.message}")
             return@withContext false
         }
     }
 
-    override suspend fun disconnect(): Unit = withContext(Dispatchers.IO) {        // Cancel reader job first to stop any ongoing reads
-        readerJob?.cancel()
-        readerJob = null
-        // Close resources in proper order: writer, reader, then socket
-        try {
-            writer?.let { w ->
-                try {
-                    w.flush()
-                    w.close()
-                } catch (e: IOException) {                }
-            }
-        } catch (e: Exception) {        }
-        try {
-            reader?.close()
-        } catch (e: IOException) {        }
-        try {
-            bluetoothSocket?.let { socket ->
-                if (socket.isConnected) {
-                    socket.close()
+    override suspend fun disconnect(): Unit =
+        withContext(Dispatchers.IO) {        // Cancel reader job first to stop any ongoing reads
+            readerJob?.cancel()
+            readerJob = null
+            // Close resources in proper order: writer, reader, then socket
+            try {
+                writer?.let { w ->
+                    try {
+                        w.flush()
+                        w.close()
+                    } catch (e: IOException) {
+                    }
                 }
+            } catch (e: Exception) {
             }
-        } catch (e: IOException) {        } catch (e: SecurityException) {        }
-        // Clear all references
-        writer = null
-        reader = null
-        bluetoothSocket = null
-        _connectionState.value = CommandConnection.ConnectionState.DISCONNECTED
-        connectionCallback?.invoke(CommandConnection.ConnectionState.DISCONNECTED)
-    }
+            try {
+                reader?.close()
+            } catch (e: IOException) {
+            }
+            try {
+                bluetoothSocket?.let { socket ->
+                    if (socket.isConnected) {
+                        socket.close()
+                    }
+                }
+            } catch (e: IOException) {
+            } catch (e: SecurityException) {
+            }
+            // Clear all references
+            writer = null
+            reader = null
+            bluetoothSocket = null
+            _connectionState.value = CommandConnection.ConnectionState.DISCONNECTED
+            connectionCallback?.invoke(CommandConnection.ConnectionState.DISCONNECTED)
+        }
 
     override fun isConnected(): Boolean {
         return bluetoothSocket?.isConnected == true && _connectionState.value == CommandConnection.ConnectionState.CONNECTED
@@ -151,16 +163,20 @@ class BluetoothClient(
                 while (isActive && isConnected()) {
                     try {
                         val message = currentReader.readLine()
-                        if (message != null) {                            messageCallback?.invoke(message)
-                        } else {                            break
+                        if (message != null) {
+                            messageCallback?.invoke(message)
+                        } else {
+                            break
                         }
                     } catch (e: IOException) {
-                        if (isActive) {                            break
+                        if (isActive) {
+                            break
                         }
                     }
                 }
             } catch (e: Exception) {
-                if (isActive) {                    handleConnectionError("Reader error: ${e.message}")
+                if (isActive) {
+                    handleConnectionError("Reader error: ${e.message}")
                 }
             }
             if (isActive) {
@@ -169,7 +185,8 @@ class BluetoothClient(
         }
     }
 
-    private fun handleConnectionError(errorMessage: String) {        _connectionState.value = CommandConnection.ConnectionState.ERROR
+    private fun handleConnectionError(errorMessage: String) {
+        _connectionState.value = CommandConnection.ConnectionState.ERROR
         connectionCallback?.invoke(CommandConnection.ConnectionState.ERROR)
         clientScope.launch {
             disconnect()

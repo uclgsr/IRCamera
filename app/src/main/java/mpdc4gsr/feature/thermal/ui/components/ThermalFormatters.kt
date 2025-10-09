@@ -30,7 +30,7 @@ fun formatDuration(milliseconds: Long): String {
     val seconds = milliseconds / 1000
     val minutes = seconds / 60
     val hours = minutes / 60
-    
+
     return when {
         hours > 0 -> String.format("%d:%02d:%02d", hours, minutes % 60, seconds % 60)
         minutes > 0 -> String.format("%d:%02d", minutes, seconds % 60)

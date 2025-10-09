@@ -1,4 +1,4 @@
-package mpdc4gsr.core.ui.components
+package mpdc4gsr.core.ui.components.recording
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -23,10 +23,25 @@ import mpdc4gsr.feature.network.data.SensorStatusSummary
 
 @Composable
 fun RecordingStatusIndicator(
+    session: RecordingSessionSummary,
+    activeSensors: Set<String> = emptySet(),
+    modifier: Modifier = Modifier
+) {
+    RecordingStatusIndicator(
+        isRecording = session.state == RecordingUiState.Recording,
+        sessionId = session.sessionId,
+        activeSensors = activeSensors,
+        startTimeMillis = session.startTimeMillis,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun RecordingStatusIndicator(
     isRecording: Boolean,
     sessionId: String = "",
     activeSensors: Set<String> = emptySet(),
-    startTime: Long = 0L,
+    startTimeMillis: Long = 0L,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -44,13 +59,13 @@ fun RecordingStatusIndicator(
             fontWeight = FontWeight.Bold
         )
         // Duration
-        if (isRecording && startTime > 0) {
-            RecordingDuration(startTime)
+        if (isRecording && startTimeMillis > 0) {
+            RecordingDuration(startTimeMillis)
         }
         // Sensors
         if (activeSensors.isNotEmpty()) {
             Text(
-                text = activeSensors.joinToString(" • "),
+                text = activeSensors.joinToString(" | "),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -90,11 +105,11 @@ private fun RecordingStatusIcon(isRecording: Boolean) {
 }
 
 @Composable
-private fun RecordingDuration(startTime: Long) {
+private fun RecordingDuration(startTimeMillis: Long) {
     var duration by remember { mutableLongStateOf(0L) }
-    LaunchedEffect(startTime) {
+    LaunchedEffect(startTimeMillis) {
         while (true) {
-            duration = (System.currentTimeMillis() - startTime) / 1000
+            duration = (System.currentTimeMillis() - startTimeMillis) / 1000
             delay(1000)
         }
     }

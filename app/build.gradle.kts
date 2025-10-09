@@ -9,7 +9,6 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 }
-
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
 val buildTimeStr = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
 
@@ -238,8 +237,6 @@ android {
     kotlin {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
             freeCompilerArgs.addAll(
                 listOf(
                     "-opt-in=kotlin.RequiresOptIn",
@@ -250,6 +247,11 @@ android {
                 )
             )
         }
+    }
+
+    // Ensure KSP-generated sources are included before compilation
+    sourceSets.all {
+        kotlin.srcDir("build/generated/ksp/${this.name}/kotlin")
     }
 
     java {
@@ -318,12 +320,12 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.guava)
-    
+
     // Hilt dependency injection
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
-    
+
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose.core)
     implementation(libs.bundles.compose.navigation.bundle)
@@ -331,7 +333,7 @@ dependencies {
     debugImplementation(libs.bundles.compose.debug)
     androidTestImplementation(libs.bundles.compose.test)
     implementation(libs.coil.compose)
-    
+
     implementation(project(":component:thermalunified"))
     implementation(project(":component:gsr-recording"))
     implementation(project(":component:user"))

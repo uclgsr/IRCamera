@@ -1,83 +1,3 @@
-#pragma once
-
-#include <vector>
-#include <string>
-#include <memory>
-#include <map>
-
-namespace ircamera {
-
-// High-performance data processing utilities
-    class DataProcessor {
-    public:
-        DataProcessor();
-
-        ~DataProcessor();
-
-        // JSON message processing
-        std::map <std::string, std::string> parse_json_message(const std::string &json_str);
-
-        std::string create_json_response(const std::map <std::string, std::string> &fields);
-
-        // Binary data processing
-        std::vector <uint8_t> compress_data(const std::vector <uint8_t> &data);
-
-        std::vector <uint8_t> decompress_data(const std::vector <uint8_t> &compressed_data);
-
-        // Frame processing
-        std::vector <uint8_t>
-        encode_jpeg(const std::vector <uint8_t> &raw_image, int width, int height,
-                    int quality = 90);
-
-        std::vector <uint8_t> decode_jpeg(const std::vector <uint8_t> &jpeg_data);
-
-        // Real-time statistics
-        void update_statistics(double value);
-
-        double get_mean() const;
-
-        double get_variance() const;
-
-        double get_std_deviation() const;
-
-        size_t get_sample_count() const;
-
-        void reset_statistics();
-
-        // Buffer management
-        void add_sample(double timestamp, double value);
-
-        std::vector <std::pair<double, double>>
-        get_recent_samples(double time_window_seconds) const;
-
-        void clear_buffer();
-
-        size_t get_buffer_size() const;
-
-    private:
-        class Impl;
-
-        std::unique_ptr <Impl> pimpl_;
-    };
-
-// Thermal image processing utilities
-    class ThermalProcessor {
-    public:
-        ThermalProcessor();
-
-        ~ThermalProcessor();
-
-        // Temperature conversion
-        std::vector<double>
-        raw_to_celsius(const std::vector <uint16_t> &raw_data, double emissivity = 0.95);
-
-        std::vector <uint8_t>
-        apply_colormap(const std::vector<double> &temp_data, const std::string &colormap = "jet");
-
-        // Image enhancement
-        std::vector<double>
-        apply_gaussian_blur(const std::vector<double> &image, int width, int height, double sigma);
-
         std::vector<double> apply_histogram_equalization(const std::vector<double> &image);
 
         // Analysis
@@ -136,3 +56,61 @@ namespace ircamera {
     };
 
 } // namespace ircamera
+#pragma once
+
+#include <cstdint>
+#include <cstddef>
+#include <vector>
+
+namespace ircamera {
+
+/**
+ * Representation of a decoded GSR packet.
+ *
+ * The parser is intentionally lightweight so it can be invoked from Python
+ * inside a streaming loop without incurring additional allocations.
+ */
+struct GSRPacket {
+    bool valid{false};
+    std::uint32_t timestamp_ms{0};
+    std::uint16_t raw_value{0};
+    double conductance_us{0.0};
+    std::uint16_t sequence{0};
+};
+
+/**
+ * Running statistics computed over a collection of GSR samples.
+ */
+struct GSRStatistics {
+    double mean_us{0.0};
+    double min_us{0.0};
+    double max_us{0.0};
+    double stddev_us{0.0};
+    std::size_t sample_count{0};
+};
+
+/**
+ * Parse a binary packet emitted by the Shimmer GSR device.
+ *
+ * The expected packet layout is:
+ *   Byte 0   : 0xAA (frame header)
+ *   Byte 1   : 0x55 (frame header)
+ *   Bytes 2-3: 16-bit sequence number (big-endian)
+ *   Bytes 4-7: 32-bit timestamp in milliseconds since device boot (big-endian)
+ *   Bytes 8-9: 16-bit raw conductance sample (big-endian)
+ *
+ * The raw conductance value is converted to micro-siemens using a scale factor
+ * of 0.01 µS per LSB, which matches the Shimmer3 GSR+ sensor configuration used
+ * in the project. If the packet fails validation an invalid packet is returned
+ * (valid=false) and an exception is not thrown so callers can decide how to
+ * handle malformed frames.
+ */
+GSRPacket parse_gsr_packet(const std::vector<std::uint8_t>& packet) noexcept;
+
+/**
+ * Compute descriptive statistics (mean, min, max, standard deviation) over a
+ * set of conductance samples (µS).
+ */
+GSRStatistics compute_gsr_statistics(const std::vector<double>& samples);
+
+}  // namespace ircamera

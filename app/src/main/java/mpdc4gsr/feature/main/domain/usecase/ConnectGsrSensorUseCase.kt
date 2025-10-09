@@ -9,10 +9,10 @@ class ConnectGsrSensorUseCase @Inject constructor(
     suspend operator fun invoke(): Boolean {
         val initialized = gsrRepository.initialize()
         if (!initialized) return false
-        
+
         val discovered = gsrRepository.startDeviceDiscovery()
         if (!discovered) return false
-        
+
         return true
     }
 }

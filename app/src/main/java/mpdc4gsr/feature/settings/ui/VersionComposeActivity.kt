@@ -31,7 +31,7 @@ import com.csl.irCamera.R
 import com.mpdc4gsr.libunified.app.utils.UnifiedVersionUtils
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.components.common.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import java.util.*
 import javax.inject.Inject
@@ -72,7 +72,7 @@ class VersionViewModel @Inject constructor() : ViewModel() {
 @AndroidEntryPoint
 class VersionComposeActivity : ComponentActivity() {
     private val viewModel: VersionViewModel by viewModels()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.updateVersionInfo(this)
@@ -95,228 +95,228 @@ fun VersionScreen(
 ) {
     val context = LocalContext.current
     val versionInfo by viewModel.versionInfo
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF16131E))
     ) {
         TitleBar(
-                    title = stringResource(R.string.version_info),
-                    onBackClick = onBackClick
-                )
+            title = stringResource(R.string.version_info),
+            onBackClick = onBackClick
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // App Logo and Name
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(16.dp),
+                    modifier = Modifier.padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // App Logo and Name
-                    Card(
+                    Icon(
+                        imageVector = Icons.Default.CameraAlt,
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = "Thermal & GSR Data Collection Platform",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+            // Version Information
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        text = "Version Information",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                    VersionInfoRow(
+                        label = "App Version",
+                        value = versionInfo.appVersion,
+                        icon = Icons.Default.Apps
+                    )
+                    VersionInfoRow(
+                        label = "Build Code",
+                        value = versionInfo.buildCode,
+                        icon = Icons.Default.Build
+                    )
+                    VersionInfoRow(
+                        label = "Build Type",
+                        value = versionInfo.buildTime,
+                        icon = Icons.Default.Engineering
+                    )
+                    VersionInfoRow(
+                        label = "Unified Module",
+                        value = versionInfo.unifiedVersion,
+                        icon = Icons.Default.IntegrationInstructions
+                    )
+                }
+            }
+            // Module Versions
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        text = "Module Versions",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                    VersionInfoRow(
+                        label = "Thermal Camera",
+                        value = versionInfo.thermalVersion,
+                        icon = Icons.Default.Thermostat
+                    )
+                    VersionInfoRow(
+                        label = "GSR Sensor",
+                        value = versionInfo.gsrVersion,
+                        icon = Icons.Default.Sensors
+                    )
+                }
+            }
+            // System Information
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        text = "System Information",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                    VersionInfoRow(
+                        label = "Android Version",
+                        value = android.os.Build.VERSION.RELEASE,
+                        icon = Icons.Default.Android
+                    )
+                    VersionInfoRow(
+                        label = "API Level",
+                        value = android.os.Build.VERSION.SDK_INT.toString(),
+                        icon = Icons.Default.Api
+                    )
+                    VersionInfoRow(
+                        label = "Device Model",
+                        value = "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}",
+                        icon = Icons.Default.PhoneAndroid
+                    )
+                }
+            }
+            // Copyright and Legal
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Copyright © ${Calendar.getInstance().get(Calendar.YEAR)}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = "MPDC4GSR - Multi-Modal Data Collection Platform",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 24.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                            .padding(top = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.padding(24.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        OutlinedButton(
+                            onClick = {
+                                // Navigate to privacy policy
+                                val intent =
+                                    Intent(context, PolicyComposeActivity::class.java).apply {
+                                        putExtra(PolicyComposeActivity.KEY_THEME_TYPE, 2)
+                                    }
+                                context.startActivity(intent)
+                            },
+                            modifier = Modifier.weight(1f)
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.CameraAlt,
-                                contentDescription = null,
-                                modifier = Modifier.size(64.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Text(
-                                text = stringResource(R.string.app_name),
-                                style = MaterialTheme.typography.headlineMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = "Thermal & GSR Data Collection Platform",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                textAlign = TextAlign.Center
-                            )
+                            Text("Privacy Policy")
                         }
-                    }
-                    // Version Information
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
+                        OutlinedButton(
+                            onClick = {
+                                // Navigate to terms
+                                val intent =
+                                    Intent(context, PolicyComposeActivity::class.java).apply {
+                                        putExtra(PolicyComposeActivity.KEY_THEME_TYPE, 1)
+                                    }
+                                context.startActivity(intent)
+                            },
+                            modifier = Modifier.weight(1f)
                         ) {
-                            Text(
-                                text = "Version Information",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(bottom = 12.dp)
-                            )
-                            VersionInfoRow(
-                                label = "App Version",
-                                value = versionInfo.appVersion,
-                                icon = Icons.Default.Apps
-                            )
-                            VersionInfoRow(
-                                label = "Build Code",
-                                value = versionInfo.buildCode,
-                                icon = Icons.Default.Build
-                            )
-                            VersionInfoRow(
-                                label = "Build Type",
-                                value = versionInfo.buildTime,
-                                icon = Icons.Default.Engineering
-                            )
-                            VersionInfoRow(
-                                label = "Unified Module",
-                                value = versionInfo.unifiedVersion,
-                                icon = Icons.Default.IntegrationInstructions
-                            )
-                        }
-                    }
-                    // Module Versions
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Text(
-                                text = "Module Versions",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(bottom = 12.dp)
-                            )
-                            VersionInfoRow(
-                                label = "Thermal Camera",
-                                value = versionInfo.thermalVersion,
-                                icon = Icons.Default.Thermostat
-                            )
-                            VersionInfoRow(
-                                label = "GSR Sensor",
-                                value = versionInfo.gsrVersion,
-                                icon = Icons.Default.Sensors
-                            )
-                        }
-                    }
-                    // System Information
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Text(
-                                text = "System Information",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(bottom = 12.dp)
-                            )
-                            VersionInfoRow(
-                                label = "Android Version",
-                                value = android.os.Build.VERSION.RELEASE,
-                                icon = Icons.Default.Android
-                            )
-                            VersionInfoRow(
-                                label = "API Level",
-                                value = android.os.Build.VERSION.SDK_INT.toString(),
-                                icon = Icons.Default.Api
-                            )
-                            VersionInfoRow(
-                                label = "Device Model",
-                                value = "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}",
-                                icon = Icons.Default.PhoneAndroid
-                            )
-                        }
-                    }
-                    // Copyright and Legal
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "Copyright © ${Calendar.getInstance().get(Calendar.YEAR)}",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                textAlign = TextAlign.Center
-                            )
-                            Text(
-                                text = "MPDC4GSR - Multi-Modal Data Collection Platform",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                textAlign = TextAlign.Center
-                            )
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 16.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                OutlinedButton(
-                                    onClick = {
-                                        // Navigate to privacy policy
-                                        val intent =
-                                            Intent(context, PolicyComposeActivity::class.java).apply {
-                                                putExtra(PolicyComposeActivity.KEY_THEME_TYPE, 2)
-                                            }
-                                        context.startActivity(intent)
-                                    },
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Text("Privacy Policy")
-                                }
-                                OutlinedButton(
-                                    onClick = {
-                                        // Navigate to terms
-                                        val intent =
-                                            Intent(context, PolicyComposeActivity::class.java).apply {
-                                                putExtra(PolicyComposeActivity.KEY_THEME_TYPE, 1)
-                                            }
-                                        context.startActivity(intent)
-                                    },
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Text("Terms")
-                                }
-                            }
+                            Text("Terms")
                         }
                     }
                 }
             }
         }
     }
+}
+}
 }
 
 @Composable

@@ -1,9 +1,14 @@
-package mpdc4gsr.core.ui.components
+package mpdc4gsr.core.ui.components.common
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +35,7 @@ fun TitleBar(
             Text(
                 text = title,
                 color = Color.White,
-                fontSize = 16.sp, // Match TitleView title size
+                fontSize = 16.sp,
                 textAlign = TextAlign.Start
             )
         },
@@ -39,7 +44,6 @@ fun TitleBar(
                 IconButton(
                     onClick = {
                         onBackClick?.invoke() ?: run {
-                            // Default behavior: finish activity like TitleView
                             (context as? android.app.Activity)?.finish()
                         }
                     }
@@ -54,7 +58,7 @@ fun TitleBar(
         },
         actions = actions,
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent, // Match TitleView transparent background
+            containerColor = Color.Transparent,
             titleContentColor = Color.White,
             navigationIconContentColor = Color.White,
             actionIconContentColor = Color.White
@@ -109,7 +113,6 @@ private fun TitleBarPreview() {
             title = "Connect Device",
             showBackButton = true
         ) {
-            // Sample action icons
             TitleBarAction(
                 icon = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Settings",

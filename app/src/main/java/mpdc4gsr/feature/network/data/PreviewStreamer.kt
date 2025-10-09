@@ -11,7 +11,8 @@ import java.util.concurrent.atomic.AtomicReference
 class PreviewStreamer(
     private val networkServer: NetworkServer
 ) {
-    companion object {        private const val DEFAULT_FRAME_INTERVAL_MS = 1000L
+    companion object {
+        private const val DEFAULT_FRAME_INTERVAL_MS = 1000L
         private const val DEFAULT_SENSOR_INTERVAL_MS = 1000L
         private const val DEFAULT_PREVIEW_WIDTH = 320
         private const val DEFAULT_PREVIEW_HEIGHT = 240
@@ -32,10 +33,12 @@ class PreviewStreamer(
     private val currentGsrValue = AtomicReference<Float?>()
     private val currentRecordingStatus = AtomicReference<String>("IDLE")
     suspend fun startStreaming(): Boolean {
-        if (isStreaming.get()) {            return true
+        if (isStreaming.get()) {
+            return true
         }
-        if (!networkServer.isClientConnected()) {            return false
-        }        isStreaming.set(true)
+        if (!networkServer.isClientConnected()) {
+            return false
+        } isStreaming . set (true)
         frameStreamingJob = scope.launch {
             streamFrames()
         }
@@ -48,7 +51,7 @@ class PreviewStreamer(
     suspend fun stopStreaming() {
         if (!isStreaming.get()) {
             return
-        }        isStreaming.set(false)
+        } isStreaming . set (false)
         frameStreamingJob?.cancel()
         sensorStreamingJob?.cancel()
         frameStreamingJob = null
@@ -82,9 +85,11 @@ class PreviewStreamer(
         this.sensorIntervalMs = sensorIntervalMs
         this.previewWidth = previewWidth
         this.previewHeight = previewHeight
-        this.jpegQuality = jpegQuality    }
+        this.jpegQuality = jpegQuality
+    }
 
-    private suspend fun streamFrames() {        while (currentCoroutineContext().isActive && isStreaming.get()) {
+    private suspend fun streamFrames() {
+        while (currentCoroutineContext().isActive && isStreaming.get()) {
             try {
                 currentRgbFrame.get()?.let { rgbBitmap ->
                     streamFrame("rgb", rgbBitmap)
@@ -93,11 +98,14 @@ class PreviewStreamer(
                     streamFrame("thermal", thermalBitmap)
                 }
                 delay(frameIntervalMs)
-            } catch (e: Exception) {                if (currentCoroutineContext().isActive) delay(1000)
+            } catch (e: Exception) {
+                if (currentCoroutineContext().isActive) delay(1000)
             }
-        }    }
+        }
+    }
 
-    private suspend fun streamSensorData() {        while (currentCoroutineContext().isActive && isStreaming.get()) {
+    private suspend fun streamSensorData() {
+        while (currentCoroutineContext().isActive && isStreaming.get()) {
             try {
                 val gsrValue = currentGsrValue.get()
                 val recordingStatus = currentRecordingStatus.get()
@@ -114,9 +122,11 @@ class PreviewStreamer(
                 }
                 networkServer.sendMessage(sensorMessage.toString())
                 delay(sensorIntervalMs)
-            } catch (e: Exception) {                if (currentCoroutineContext().isActive) delay(1000)
+            } catch (e: Exception) {
+                if (currentCoroutineContext().isActive) delay(1000)
             }
-        }    }
+        }
+    }
 
     private suspend fun streamFrame(frameType: String, bitmap: Bitmap) {
         try {
@@ -126,7 +136,8 @@ class PreviewStreamer(
                 previewHeight.toDouble()
             )
             val jpegBytes = BitmapUtils.bitmapToBytes(scaledBitmap, jpegQuality)
-            if (jpegBytes == null) {                return
+            if (jpegBytes == null) {
+                return
             }
             val base64Data = Base64.encodeToString(jpegBytes, Base64.NO_WRAP)
             val frameMessage = JSONObject().apply {
@@ -143,7 +154,8 @@ class PreviewStreamer(
             networkServer.sendMessage(frameMessage.toString())            if (scaledBitmap != bitmap && !scaledBitmap.isRecycled) {
                 scaledBitmap.recycle()
             }
-        } catch (e: Exception) {        }
+        } catch (e: Exception) {
+        }
     }
 
     fun isStreaming(): Boolean = isStreaming.get()
@@ -151,5 +163,6 @@ class PreviewStreamer(
         scope.launch {
             stopStreaming()
         }
-        scope.coroutineContext.job.cancel()    }
+        scope.coroutineContext.job.cancel()
+    }
 }

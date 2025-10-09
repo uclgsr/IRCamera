@@ -15,26 +15,26 @@ import javax.inject.Singleton
 class NetworkRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : NetworkRepository {
-    
+
     private val _connectionState = MutableStateFlow(NetworkConnectionState.DISCONNECTED)
     private val _connectedController = MutableStateFlow<NetworkClient.ControllerInfo?>(null)
-    
+
     private val networkClient: NetworkClient by lazy { NetworkClient(context) }
     private val networkController: NetworkController by lazy { NetworkController(context) }
-    
+
     override suspend fun startServer(): Boolean {
         return networkController.start() ?: false
     }
-    
+
     override suspend fun stopServer() {
         networkController.stop()
     }
-    
+
     override suspend fun discoverControllers(): List<NetworkClient.ControllerInfo> {
         _connectionState.value = NetworkConnectionState.DISCOVERING
         return networkClient.discoverControllers()
     }
-    
+
     override suspend fun connectToController(ipAddress: String, port: Int): Boolean {
         _connectionState.value = NetworkConnectionState.CONNECTING
         val connected = networkClient.connectToController(ipAddress, port)
@@ -45,8 +45,8 @@ class NetworkRepositoryImpl @Inject constructor(
         }
         return connected
     }
-    
+
     override fun getConnectionState(): Flow<NetworkConnectionState> = _connectionState
-    
+
     override fun getConnectedController(): Flow<NetworkClient.ControllerInfo?> = _connectedController
 }

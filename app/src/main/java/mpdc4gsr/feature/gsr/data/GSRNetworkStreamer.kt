@@ -43,9 +43,11 @@ class GSRNetworkStreamer(
     private val syncInterval = 30000L
     suspend fun initialize(): Boolean {
         return withContext(Dispatchers.IO) {
-            try {                networkClient = NetworkClient(context)
+            try {
+                networkClient = NetworkClient(context)
                 val connected = networkClient?.connectToController("192.168.1.100") ?: false
-                if (!connected) {                    return@withContext false
+                if (!connected) {
+                    return@withContext false
                 }
                 performTimeSync()
                 registerGSRStream()

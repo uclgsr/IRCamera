@@ -104,7 +104,8 @@ class SessionManagerViewModel @Inject constructor(
                 usagePercentage = storageStatus.usagePercentage,
                 isLowStorage = storageStatus.isLowStorage
             )
-        } catch (e: Exception) {        }
+        } catch (e: Exception) {
+        }
     }
 
     private suspend fun loadHistoricalSessions(context: Context): List<SessionInfo> {
@@ -118,11 +119,13 @@ class SessionManagerViewModel @Inject constructor(
                             try {
                                 val sessionInfo = parseSessionFromDirectory(sessionDir)
                                 historicalSessions.add(sessionInfo)
-                            } catch (e: Exception) {                            }
+                            } catch (e: Exception) {
+                            }
                         }
                     }
                 }
-            } catch (e: Exception) {            }
+            } catch (e: Exception) {
+            }
             historicalSessions
         }
     }
@@ -152,7 +155,8 @@ class SessionManagerViewModel @Inject constructor(
                         }
                     }
                 }
-            } catch (e: Exception) {            }
+            } catch (e: Exception) {
+            }
         }
         // Calculate data file counts and sizes
         calculateSessionDataInfo(sessionDir, sessionInfo)
@@ -179,7 +183,8 @@ class SessionManagerViewModel @Inject constructor(
             sessionInfo.metadata["gsrFileCount"] = gsrFileCount.toString()
             sessionInfo.metadata["thermalFileCount"] = thermalFileCount.toString()
             sessionInfo.metadata["rgbFileCount"] = rgbFileCount.toString()
-        } catch (e: Exception) {        }
+        } catch (e: Exception) {
+        }
     }
 
     fun filterSessions(query: String?) {

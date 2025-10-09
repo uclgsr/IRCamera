@@ -137,99 +137,190 @@ class ThermalCameraRecorder(
         val calibrationAccuracy: Double? = null,
         val networkLatencyMs: Double? = null
 
-    data class ThermalFrameData(
-        val temperatureMatrix: Array<FloatArray>,
-        val minTemperature: Float,
-        val maxTemperature: Float,
-        val avgTemperature: Float,
-        val centerTemperature: Float,
-        val ambientTemperature: Float,
-        val emissivity: Float,
-        val reflectedTemperature: Float,
-        val timestamp: Long = System.nanoTime()
-    ) {
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-            other as ThermalFrameData
-            return temperatureMatrix.contentDeepEquals(other.temperatureMatrix) &&
-                    minTemperature == other.minTemperature &&
-                    maxTemperature == other.maxTemperature &&
-                    avgTemperature == other.avgTemperature &&
-                    centerTemperature == other.centerTemperature &&
-                    ambientTemperature == other.ambientTemperature &&
-                    emissivity == other.emissivity &&
-                    reflectedTemperature == other.reflectedTemperature &&
-                    timestamp == other.timestamp
+                data class ThermalFrameData(
+            val temperatureMatrix: Array<FloatArray>,
+            val minTemperature: Float,
+            val maxTemperature: Float,
+            val avgTemperature: Float,
+            val centerTemperature: Float,
+            val ambientTemperature: Float,
+            val emissivity: Float,
+            val reflectedTemperature: Float,
+            val timestamp: Long = System.nanoTime()
+        ) {
+            override fun equals(other: Any?): Boolean {
+                if (this === other) return true
+                if (javaClass != other?.javaClass) return false
+                other as ThermalFrameData
+                return temperatureMatrix.contentDeepEquals(other.temperatureMatrix) &&
+                        minTemperature == other.minTemperature &&
+                        maxTemperature == other.maxTemperature &&
+                        avgTemperature == other.avgTemperature &&
+                        centerTemperature == other.centerTemperature &&
+                        ambientTemperature == other.ambientTemperature &&
+                        emissivity == other.emissivity &&
+                        reflectedTemperature == other.reflectedTemperature &&
+                        timestamp == other.timestamp
+            }
+
+            override fun hashCode(): Int {
+                var result = temperatureMatrix.contentDeepHashCode()
+                result = 31 * result + minTemperature.hashCode()
+                result = 31 * result + maxTemperature.hashCode()
+                result = 31 * result + avgTemperature.hashCode()
+                result = 31 * result + centerTemperature.hashCode()
+                result = 31 * result + ambientTemperature.hashCode()
+                result = 31 * result + emissivity.hashCode()
+                result = 31 * result + reflectedTemperature.hashCode()
+                result = 31 * result + timestamp.hashCode()
+                return result
+            }
         }
 
-        override fun hashCode(): Int {
-            var result = temperatureMatrix.contentDeepHashCode()
-            result = 31 * result + minTemperature.hashCode()
-            result = 31 * result + maxTemperature.hashCode()
-            result = 31 * result + avgTemperature.hashCode()
-            result = 31 * result + centerTemperature.hashCode()
-            result = 31 * result + ambientTemperature.hashCode()
-            result = 31 * result + emissivity.hashCode()
-            result = 31 * result + reflectedTemperature.hashCode()
-            result = 31 * result + timestamp.hashCode()
-            return result
+                enum class ThermalExportFormat {
+            CSV, JSON, HDF5, MATLAB
         }
-    }
 
-    enum class ThermalExportFormat {
-        CSV, JSON, HDF5, MATLAB
-    }
+                override
+                val sensorId: String = sensorIdParam
+                        override
+                        val sensorType: String = "IR Thermal Camera"
+                                override
+                                val samplingRate: Double = thermalFrameRate
+                                        private
+                                        var _isRecording = AtomicBoolean(false)
+                                                override
+                                                val isRecording: Boolean get () = _isRecording.get()
+                                                private
+                                                var iruvctc: IRUVCTC? = null
+                                                        private
+                                                        var uvcCamera: UVCCamera? = null
+                                                                private
+                                                                var ircamEngine: IrcamEngine? = null
+                                                                        internal
+                                                                        var isIRCameraConnected = false
+                                                                                private
+                                                                                var isTopdonSdkInitialized = false
 
-    override val sensorId: String = sensorIdParam
-    override val sensorType: String = "IR Thermal Camera"
-    override val samplingRate: Double = thermalFrameRate
-    private var _isRecording = AtomicBoolean(false)
-    override val isRecording: Boolean get() = _isRecording.get()
-    private var iruvctc: IRUVCTC? = null
-    private var uvcCamera: UVCCamera? = null
-    private var ircamEngine: IrcamEngine? = null
-    internal var isIRCameraConnected = false
-    private var isTopdonSdkInitialized = false
+                                                                                        // Properties for real SDK data extraction
+                                                                                        private
+                                                                                        var lastCapturedFrame: ByteArray? =
+                                                                                            null
+                                                                                                    private
+                                                                                                    var lastFrameTimestamp: Long =
+                                                                                                        0L
 
-    // Properties for real SDK data extraction
-    private var lastCapturedFrame: ByteArray? = null
-    private var lastFrameTimestamp: Long = 0L
+                                                                                                                private
+                                                                                                                var currentBitmap: Bitmap? =
+                                                                                                                    null
+                                                                                                                            private
+                                                                                                                            var currentConfig =
+                                                                                                                                ThermalCameraConfig()
+                                                                                                                                        private
+                                                                                                                                        var performanceMetrics =
+                                                                                                                                            ThermalPerformanceMetrics(
+                                                                                                                                                0.0,
+                                                                                                                                                0.0,
+                                                                                                                                                0.0,
+                                                                                                                                                0.0,
+                                                                                                                                                0.0,
+                                                                                                                                                0.0,
+                                                                                                                                                0.0
+                                                                                                                                            )
+                                                                                                                                                    private
+                                                                                                                                                    val frameProcessingTimes =
+                                                                                                                                                        mutableListOf<Long>()
+                                                                                                                                                                private
+                                                                                                                                                                var lastPerformanceUpdate =
+                                                                                                                                                                    System.nanoTime()
+                                                                                                                                                                            private
+                                                                                                                                                                            var usbManager: UsbManager? =
+                                                                                                                                                                                null
+                                                                                                                                                                                        private
+                                                                                                                                                                                        var thermalCameraDevice: UsbDevice? =
+                                                                                                                                                                                            null
+                                                                                                                                                                                                    internal
+                                                                                                                                                                                                    var hasUsbPermission: Boolean =
+                                                                                                                                                                                                        false
+                                                                                                                                                                                                                internal
+                                                                                                                                                                                                                var isSimulationMode: Boolean =
+                                                                                                                                                                                                                    false
+                                                                                                                                                                                                                            private
+                                                                                                                                                                                                                            val recordingScope =
+                                                                                                                                                                                                                                CoroutineScope(
+                                                                                                                                                                                                                                    Dispatchers.IO + SupervisorJob()
+                                                                                                                                                                                                                                )
+                                                                                                                                                                                                                                        private
+                                                                                                                                                                                                                                        var thermalReconnectionJob: Job? =
+                                                                                                                                                                                                                                            null
+                                                                                                                                                                                                                                                    private
+                                                                                                                                                                                                                                                    var thermalDataWriter: CSVBufferedWriter? =
+                                                                                                                                                                                                                                                        null
+                                                                                                                                                                                                                                                                private
+                                                                                                                                                                                                                                                                var thermalFramesWriter: BufferedDataWriter? =
+                                                                                                                                                                                                                                                                    null
+                                                                                                                                                                                                                                                                            private
+                                                                                                                                                                                                                                                                            val _statusFlow =
+                                                                                                                                                                                                                                                                                MutableSharedFlow<RecordingStatus>()
+                                                                                                                                                                                                                                                                                        private
+                                                                                                                                                                                                                                                                                        val _errorFlow =
+                                                                                                                                                                                                                                                                                            MutableSharedFlow<SensorError>()
+                                                                                                                                                                                                                                                                                                    private
+                                                                                                                                                                                                                                                                                                    var sessionDirectory: String =
+                                                                                                                                                                                                                                                                                                        ""
+                                                                                                                                                                                                                                                                                                                private
+                                                                                                                                                                                                                                                                                                                var sessionMetadata: SessionMetadata? =
+                                                                                                                                                                                                                                                                                                                    null
+                                                                                                                                                                                                                                                                                                                            private
+                                                                                                                                                                                                                                                                                                                            var frameCount =
+                                                                                                                                                                                                                                                                                                                                AtomicLong(
+                                                                                                                                                                                                                                                                                                                                    0
+                                                                                                                                                                                                                                                                                                                                )
+                                                                                                                                                                                                                                                                                                                                        private
+                                                                                                                                                                                                                                                                                                                                        var recordingStartTime: Long =
+                                                                                                                                                                                                                                                                                                                                            0
+                                                                                                                                                                                                                                                                                                                                                    private
+                                                                                                                                                                                                                                                                                                                                                    var thermalDataFile: File? =
+                                                                                                                                                                                                                                                                                                                                                        null
+                                                                                                                                                                                                                                                                                                                                                                private
+                                                                                                                                                                                                                                                                                                                                                                var thermalFramesFile: File? =
+                                                                                                                                                                                                                                                                                                                                                                    null
+                                                                                                                                                                                                                                                                                                                                                                            private
+                                                                                                                                                                                                                                                                                                                                                                            val sessionReferenceTimestampNs =
+                                                                                                                                                                                                                                                                                                                                                                                AtomicLong(
+                                                                                                                                                                                                                                                                                                                                                                                    0
+                                                                                                                                                                                                                                                                                                                                                                                )
+                                                                                                                                                                                                                                                                                                                                                                                        private
+                                                                                                                                                                                                                                                                                                                                                                                        val sessionStartOffsetNs =
+                                                                                                                                                                                                                                                                                                                                                                                            AtomicLong(
+                                                                                                                                                                                                                                                                                                                                                                                                0
+                                                                                                                                                                                                                                                                                                                                                                                            )
 
-    private var currentBitmap: Bitmap? = null
-    private var currentConfig = ThermalCameraConfig()
-    private var performanceMetrics = ThermalPerformanceMetrics(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-    private val frameProcessingTimes = mutableListOf<Long>()
-    private var lastPerformanceUpdate = System.nanoTime()
-    private var usbManager: UsbManager? = null
-    private var thermalCameraDevice: UsbDevice? = null
-    internal var hasUsbPermission: Boolean = false
-    internal var isSimulationMode: Boolean = false
-    private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private var thermalDataWriter: CSVBufferedWriter? = null
-    private var thermalFramesWriter: BufferedDataWriter? = null
-    private val _statusFlow = MutableSharedFlow<RecordingStatus>()
-    private val _errorFlow = MutableSharedFlow<SensorError>()
-    private var sessionDirectory: String = ""
-    private var sessionMetadata: SessionMetadata? = null
-    private var frameCount = AtomicLong(0)
-    private var recordingStartTime: Long = 0
-    private var thermalDataFile: File? = null
-    private var thermalFramesFile: File? = null
-    private val sessionReferenceTimestampNs = AtomicLong(0)
-    private val sessionStartOffsetNs = AtomicLong(0)
+                                                                                                                                                                                                                                                                                                                                                                                                    // Thermal settings - loaded from ThermalSettingsRepository
+                                                                                                                                                                                                                                                                                                                                                                                                    private
+                                                                                                                                                                                                                                                                                                                                                                                                    val thermalSettingsRepository =
+                                                                                                                                                                                                                                                                                                                                                                                                        ThermalSettingsRepository.getInstance(
+                                                                                                                                                                                                                                                                                                                                                                                                            context
+                                                                                                                                                                                                                                                                                                                                                                                                        )
+                                                                                                                                                                                                                                                                                                                                                                                                                private
+                                                                                                                                                                                                                                                                                                                                                                                                                var ambientTemperature =
+                                                                                                                                                                                                                                                                                                                                                                                                                    25.0
+                                                                                                                                                                                                                                                                                                                                                                                                                            private
+                                                                                                                                                                                                                                                                                                                                                                                                                            var emissivity =
+                                                                                                                                                                                                                                                                                                                                                                                                                                0.95
+                                                                                                                                                                                                                                                                                                                                                                                                                                        private
+                                                                                                                                                                                                                                                                                                                                                                                                                                        var reflectedTemperature =
+                                                                                                                                                                                                                                                                                                                                                                                                                                            23.0
 
-    // Thermal settings - loaded from ThermalSettingsRepository
-    private val thermalSettingsRepository = ThermalSettingsRepository.getInstance(context)
-    private var ambientTemperature = 25.0
-    private var emissivity = 0.95
-    private var reflectedTemperature = 23.0
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    // TC001 frame capture settings
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    private
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    var saveFrameImages =
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        false
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                private
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                var thermalImagesDirectory: File? =
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    null
 
-    // TC001 frame capture settings
-    private var saveFrameImages = false
-    private var thermalImagesDirectory: File? = null
-
-    @Volatile
+        @Volatile
     private var networkServer: NetworkServer? = null
 
     @Volatile
@@ -255,7 +346,8 @@ class ThermalCameraRecorder(
         val maxTemp: Float,
         val pixelCount: Int
 
-    interface ThermalFrameListener {
+        interface ThermalFrameListener
+    {
         fun onFrameProcessed(stats: ThermalFrameStats)
         fun onError(error: String)
     }
@@ -346,9 +438,90 @@ class ThermalCameraRecorder(
                 String.format(
                     "%.1f",
                     thermalFrameRate
-            }Hz"
+                    }Hz"
 
-            else -> "Thermal camera ready"
+                else -> "Thermal camera ready"
+                }
+                }
+
+    private fun handleThermalDisconnect(reason: String) {
+        val wasRecording = _isRecording.get()
+        isIRCameraConnected = false
+        hasUsbPermission = false
+        thermalCameraDevice = null
+        isSimulationMode = true
+        thermalReconnectionJob?.cancel()
+        thermalReconnectionJob = null
+        recordingScope.launch {
+            emitError(
+                ErrorType.CONNECTION_LOST,
+                "Thermal camera disconnected ($reason); switching to simulation",
+                isRecoverable = true
+            )
+            if (wasRecording) {
+                startSimulatedThermalRecording()
+            }
+            emitStatus()
+        }
+        if (wasRecording) {
+            scheduleThermalReconnection(reason)
+        }
+    }
+
+    private fun scheduleThermalReconnection(reason: String) {
+        thermalReconnectionJob?.cancel()
+        thermalReconnectionJob = recordingScope.launch {
+            var attemptDelay = 750L
+            var attempt = 0
+            try {
+                while (isActive) {
+                    if (isIRCameraConnected) {
+                        emitStatus()
+                        return@launch
+                    }
+                    delay(attemptDelay)
+                    attempt += 1
+                    val reconnected = rescanForThermalCamera()
+                    if (reconnected) {
+                        val resumed = if (_isRecording.get()) {
+                            val camera = iruvctc
+                            camera != null && startRealIRCameraRecording(camera)
+                        } else true
+                        if (resumed) {
+                            emitError(
+                                ErrorType.CONNECTION_RESTORED,
+                                "Thermal camera reconnected after $attempt attempt(s)",
+                                isRecoverable = true
+                            )
+                            emitStatus()
+                            return@launch
+                        } else {
+                            emitError(
+                                ErrorType.DEVICE_ERROR,
+                                "Thermal camera reconnected but capture could not resume; continuing in simulation",
+                                isRecoverable = true
+                            )
+                            isSimulationMode = true
+                            if (_isRecording.get()) {
+                                startSimulatedThermalRecording()
+                            }
+                        }
+                    } else {
+                        emitError(
+                            ErrorType.CONNECTION_LOST,
+                            "Thermal camera reconnection attempt $attempt failed",
+                            isRecoverable = true
+                        )
+                        attemptDelay = (attemptDelay * 2).coerceAtMost(5000L)
+                        if (!_isRecording.get() && attempt >= 5) {
+                            emitStatus()
+                            return@launch
+                        }
+                    }
+                }
+            } finally {
+                thermalReconnectionJob = null
+            }
         }
     }
 
@@ -362,11 +535,12 @@ class ThermalCameraRecorder(
         val deviceInfo: ThermalDeviceInfo?,
         val statusMessage: String
 
-    data class ThermalDeviceInfo(
-        val productName: String,
-        val vendorId: Int,
-        val productId: Int,
-        val isEnhanced: Boolean
+        data class ThermalDeviceInfo(
+
+    val productName: String,
+    val vendorId: Int,
+    val productId: Int,
+    val isEnhanced: Boolean
 
     override suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
         loadThermalSettings()
@@ -398,9 +572,9 @@ class ThermalCameraRecorder(
                         isIRCameraConnected = true
                         if (uvcCamera != null) {
                             recordingScope.launch {
-                                
-                                    initializeIrcamEngineWithHandle(uvcCamera)
-                                
+
+                                initializeIrcamEngineWithHandle(uvcCamera)
+
                                 emitStatus()
                             }
                         } else {
@@ -416,17 +590,17 @@ class ThermalCameraRecorder(
                                 ircmdInstance.setPropImageParams(
                                     com.energy.iruvc.utils.CommonParams.PropImageParams.IMAGE_PROP_SEL_MIRROR_FLIP,
                                     com.energy.iruvc.utils.CommonParams.PropImageParamsValue.MirrorFlipType.NO_MIRROR_FLIP
-                                val fwBuildVersionInfoBytes = ByteArray(50)
+                                    val fwBuildVersionInfoBytes = ByteArray (50)
                                 ircmdInstance.getDeviceInfo(
                                     com.energy.iruvc.utils.CommonParams.DeviceInfoType.DEV_INFO_FW_BUILD_VERSION_INFO,
                                     fwBuildVersionInfoBytes
-                                val firmwareVersion = String(fwBuildVersionInfoBytes.copyOfRange(0, 8))
+                                    val firmwareVersion = String (fwBuildVersionInfoBytes.copyOfRange(0, 8))
                                 val isTS001Device = firmwareVersion.contains("Mini256", ignoreCase = true)
                                 val gainValue = IntArray(1)
                                 ircmdInstance.getPropTPDParams(
                                     com.energy.iruvc.utils.CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL,
                                     gainValue
-                                val currentGainStatus = if (gainValue[0] == 1) {
+                                    val currentGainStatus = if (gainValue[0] == 1) {
                                     com.energy.iruvc.utils.CommonParams.GainStatus.HIGH_GAIN
                                 } else {
                                     com.energy.iruvc.utils.CommonParams.GainStatus.LOW_GAIN
@@ -438,6 +612,7 @@ class ThermalCameraRecorder(
                 }
                 val usbMonitorCallback = object : USBMonitorCallback {
                     override fun onAttach() {
+                        scheduleThermalReconnection("usb_attach")
                     }
 
                     override fun onGranted() {
@@ -446,15 +621,16 @@ class ThermalCameraRecorder(
 
                     override fun onConnect() {
                         isIRCameraConnected = true
+                        thermalReconnectionJob?.cancel()
+                        recordingScope.launch { emitStatus() }
                     }
 
                     override fun onDisconnect() {
-                        isIRCameraConnected = false
+                        handleThermalDisconnect("usb_disconnect")
                     }
 
                     override fun onDettach() {
-                        isIRCameraConnected = false
-                        isSimulationMode = true
+                        handleThermalDisconnect("usb_dettach")
                     }
 
                     override fun onCancel() {
@@ -497,13 +673,13 @@ class ThermalCameraRecorder(
                     }
                 })
                 iruvctc?.let { iruvctcInstance ->
-                    
-                        val imageDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
-                        val temperatureDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
-                        iruvctcInstance.setImageSrc(imageDataBuffer)
-                        iruvctcInstance.setTemperatureSrc(temperatureDataBuffer)
-                        iruvctcInstance.setRotate(0)
-                    
+
+                    val imageDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
+                    val temperatureDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
+                    iruvctcInstance.setImageSrc(imageDataBuffer)
+                    iruvctcInstance.setTemperatureSrc(temperatureDataBuffer)
+                    iruvctcInstance.setRotate(0)
+
                 }
                 try {
                     iruvctc?.registerUSB()
@@ -523,13 +699,13 @@ class ThermalCameraRecorder(
                 val deviceList = manager.deviceList
                 var foundDevice: UsbDevice? = null
                 for (device in deviceList.values) {
-                        "Checking device: VID=${device.vendorId.toString(16)}, PID=${
-                            device.productId.toString(16)
-                        }, Name=${device.productName}"
+                    "Checking device: VID=${device.vendorId.toString(16)}, PID=${
+                        device.productId.toString(16)
+                    }, Name=${device.productName}"
                     if (device.isTcTsDevice()) {
-                            "Found thermal camera device: ${device.productName} (VID=${
-                                device.vendorId.toString(16)
-                            }, PID=${device.productId.toString(16)})"
+                        "Found thermal camera device: ${device.productName} (VID=${
+                            device.vendorId.toString(16)
+                        }, PID=${device.productId.toString(16)})"
                         foundDevice = device
                         break
                     }
@@ -577,9 +753,9 @@ class ThermalCameraRecorder(
                                 }
                             val granted =
                                 intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
-                            
-                                context?.unregisterReceiver(this)
-                            
+
+                            context?.unregisterReceiver(this)
+
                             resultReceived.complete(granted)
                         }
                     }
@@ -594,9 +770,9 @@ class ThermalCameraRecorder(
                         resultReceived.await()
                     }
                 } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
-                    
-                        context.unregisterReceiver(permissionReceiver)
-                    
+
+                    context.unregisterReceiver(permissionReceiver)
+
                     permissionResult = false
                 }
                 permissionResult
@@ -610,13 +786,13 @@ class ThermalCameraRecorder(
             val manager = usbManager ?: return@withContext false
             val deviceList = manager.deviceList
             for (device in deviceList.values) {
-                    "Checking device: VID=${device.vendorId.toString(16)}, PID=${
-                        device.productId.toString(16)
-                    }, Name=${device.productName}"
+                "Checking device: VID=${device.vendorId.toString(16)}, PID=${
+                    device.productId.toString(16)
+                }, Name=${device.productName}"
                 if (device.isTcTsDevice()) {
-                        "Found thermal camera device: ${device.productName} (VID=${
-                            device.vendorId.toString(16)
-                        }, PID=${device.productId.toString(16)})"
+                    "Found thermal camera device: ${device.productName} (VID=${
+                        device.vendorId.toString(16)
+                    }, PID=${device.productId.toString(16)})"
                     thermalCameraDevice = device
                     return@withContext true
                 }
@@ -675,10 +851,12 @@ class ThermalCameraRecorder(
                 // NOTE: This method is used for manual rescan and recovery scenarios
                 // It shares the same initialization logic as initializeIRUVCTCWithAutomaticPermissions
                 // but is called when we have a specific device already detected
-                    "Initializing real thermal camera with USB device: ${device.productName} (VID=${
-                        device.vendorId.toString(
-                            16
-                    }, PID=${device.productId.toString(16)})"
+                "Initializing real thermal camera with USB device: ${device.productName} (VID=${
+                    device.vendorId.toString(
+                        16
+                        }, PID=${
+                    device.productId.toString(16)
+                })"
                 // Check if IRUVCTC is already initialized to avoid creating duplicate instances
                 // This prevents conflicts from calling both initialization methods
                 if (iruvctc != null) {
@@ -702,9 +880,9 @@ class ThermalCameraRecorder(
                         // Initialize IrcamEngine with the UVC handle now that camera is open
                         if (p0 != null) {
                             recordingScope.launch {
-                                
-                                    initializeIrcamEngineWithHandle(p0)
-                                
+
+                                initializeIrcamEngineWithHandle(p0)
+
                                 emitStatus()
                             }
                         } else {
@@ -722,13 +900,13 @@ class ThermalCameraRecorder(
                                 ircmdInstance.setPropImageParams(
                                     com.energy.iruvc.utils.CommonParams.PropImageParams.IMAGE_PROP_SEL_MIRROR_FLIP,
                                     com.energy.iruvc.utils.CommonParams.PropImageParamsValue.MirrorFlipType.NO_MIRROR_FLIP
-                                // Get device firmware version information (equivalent to reference)
-                                val fwBuildVersionInfoBytes = ByteArray(50)
+                                    // Get device firmware version information (equivalent to reference)
+                                    val fwBuildVersionInfoBytes = ByteArray (50)
                                 ircmdInstance.getDeviceInfo(
                                     com.energy.iruvc.utils.CommonParams.DeviceInfoType.DEV_INFO_FW_BUILD_VERSION_INFO,
                                     fwBuildVersionInfoBytes
-                                val firmwareVersion =
-                                    String(fwBuildVersionInfoBytes.copyOfRange(0, 8))
+                                    val firmwareVersion =
+                                String(fwBuildVersionInfoBytes.copyOfRange(0, 8))
                                 // Check if this is a Mini256 device (TS001) equivalent to reference
                                 val isTS001Device =
                                     firmwareVersion.contains("Mini256", ignoreCase = true)
@@ -737,7 +915,7 @@ class ThermalCameraRecorder(
                                 ircmdInstance.getPropTPDParams(
                                     com.energy.iruvc.utils.CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL,
                                     gainValue
-                                val currentGainStatus = if (gainValue[0] == 1) {
+                                    val currentGainStatus = if (gainValue[0] == 1) {
                                     com.energy.iruvc.utils.CommonParams.GainStatus.HIGH_GAIN
                                 } else {
                                     com.energy.iruvc.utils.CommonParams.GainStatus.LOW_GAIN
@@ -796,16 +974,16 @@ class ThermalCameraRecorder(
                 })
                 // Configure IRUVCTC settings equivalent to reference implementation
                 iruvctc?.let { iruvctcInstance ->
-                    
-                        // Set up image and temperature data sources (equivalent to reference)
-                        val imageDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
-                        val temperatureDataBuffer =
-                            ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
-                        iruvctcInstance.setImageSrc(imageDataBuffer)
-                        iruvctcInstance.setTemperatureSrc(temperatureDataBuffer)
-                        // Set rotation angle (equivalent to reference - typically 0 for TC001)
-                        iruvctcInstance.setRotate(0)
-                    
+
+                    // Set up image and temperature data sources (equivalent to reference)
+                    val imageDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
+                    val temperatureDataBuffer =
+                        ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
+                    iruvctcInstance.setImageSrc(imageDataBuffer)
+                    iruvctcInstance.setTemperatureSrc(temperatureDataBuffer)
+                    // Set rotation angle (equivalent to reference - typically 0 for TC001)
+                    iruvctcInstance.setRotate(0)
+
                 }
                 try {
                     iruvctc?.registerUSB()
@@ -839,9 +1017,9 @@ class ThermalCameraRecorder(
     private suspend fun initializeIrcamEngineWithHandle(uvcCamera: UVCCamera) = withContext(Dispatchers.IO) {
         try {
             // Load native library first
-            
-                System.loadLibrary("ircamera-native")
-            
+
+            System.loadLibrary("ircamera-native")
+
             // Create UvcHandleParam - the SDK should get handle internally from IRUVCTC
             val handleParam = UvcHandleParam()
             ircamEngine = IrcamEngine.Builder()
@@ -869,16 +1047,16 @@ class ThermalCameraRecorder(
                                             frame,
                                             IR_CAMERA_WIDTH,
                                             IR_CAMERA_HEIGHT
-                                    // Create proper timestamp record for processing
-                                    val timestampRecord = TimestampManager.createTimestampRecord()
+                                            // Create proper timestamp record for processing
+                                            val timestampRecord = TimestampManager . createTimestampRecord ()
                                     processRealThermalFrameData(
                                         thermalData,
                                         frameNumber,
                                         timestampRecord
-                                    // Save frame image if configured
-                                    if (saveFrameImages) {
-                                        saveFrameImageToPNG(frame, thermalData, frameNumber)
-                                    }
+                                        // Save frame image if configured
+                                        if (saveFrameImages) {
+                                            saveFrameImageToPNG(frame, thermalData, frameNumber)
+                                        }
                                 } catch (e: Exception) {
                                 }
                             }
@@ -889,12 +1067,13 @@ class ThermalCameraRecorder(
                                             frame,
                                             IR_CAMERA_WIDTH,
                                             IR_CAMERA_HEIGHT
-                                    val previewBitmap =
-                                        generateThermalPreviewBitmap(
-                                            thermalData,
-                                            IR_CAMERA_WIDTH,
-                                            IR_CAMERA_HEIGHT
-                                    previewCallback?.onThermalFrame(previewBitmap, thermalData)
+                                            val previewBitmap =
+                                    generateThermalPreviewBitmap(
+                                        thermalData,
+                                        IR_CAMERA_WIDTH,
+                                        IR_CAMERA_HEIGHT
+                                                previewCallback ?. onThermalFrame (previewBitmap, thermalData
+                                    )
                                 }
                             }
                         }
@@ -1195,8 +1374,8 @@ class ThermalCameraRecorder(
                     "%.2f".format(thermalData.ambientTemperature),
                     "%.3f".format(thermalData.emissivity),
                     "%.2f".format(thermalData.reflectedTemperature),
-                thermalDataWriter?.writeRow(summaryData.toList())
-                val frameData = mutableListOf<Any>().apply {
+                    thermalDataWriter?.writeRow(summaryData.toList())
+                    val frameData = mutableListOf < Any >().apply {
                     add(timestamp)
                     add(alignedNs)
                     add(relativeMs)
@@ -1276,7 +1455,7 @@ class ThermalCameraRecorder(
                     Bitmap.CompressFormat.JPEG,
                     75,
                     outputStream
-                outputStream.toByteArray()
+                            outputStream . toByteArray ()
             }
             val base64Image =
                 android.util.Base64.encodeToString(imageBytes, android.util.Base64.NO_WRAP)
@@ -1410,21 +1589,21 @@ class ThermalCameraRecorder(
                     generateSimulatedThermalFrame()
                     consecutiveFailures = 0
                     if (frameCount.get() % 30 == 0L) {
-                            "Simulation mode: generated ${frameCount.get()} thermal frames (${
-                                "%.1f".format(
-                                    frameCount.get() / (thermalFrameRate * (System.nanoTime() - recordingStartTime) / 1_000_000_000.0)
-                            }s)"
-                    }
-                    delay(frameInterval)
-                } catch (e: Exception) {
+                        "Simulation mode: generated ${frameCount.get()} thermal frames (${
+                            "%.1f".format(
+                                frameCount.get() / (thermalFrameRate * (System.nanoTime() - recordingStartTime) / 1_000_000_000.0)
+                                }s)"
+                            }
+                            delay(frameInterval)
+                            } catch (e: Exception) {
                     consecutiveFailures++
                     if (consecutiveFailures >= maxConsecutiveFailures) {
                         emitError(
                             ErrorType.DEVICE_ERROR,
                             "Simulation mode failed repeatedly - stopping thermal recording",
                             isRecoverable = false
-                        _isRecording.set(false)
-                        break
+                                    _isRecording . set (false)
+                            break
                     }
                     delay(100)
                 }
@@ -1469,18 +1648,19 @@ class ThermalCameraRecorder(
             ambientTemperature = ambientTemperature.toFloat(),
             emissivity = emissivity.toFloat(),
             reflectedTemperature = reflectedTemperature.toFloat()
-        saveRealIRThermalData(TimestampManager.createTimestampRecord(), frameNumber, thermalData)
+                    saveRealIRThermalData (TimestampManager.createTimestampRecord(), frameNumber, thermalData
+        )
         processFrameForPreviewAndNetwork(
             thermalData,
             frameNumber,
             thermalResolution.first,
             thermalResolution.second
-        if (frameNumber % 30 == 0L) {
+            if (frameNumber % 30 == 0L) {
                 "Generated simulated thermal frame #$frameNumber (temp range: ${minTemp.format(2)} - ${
                     maxTemp.format(2)
                 }°C)"
-        }
-        emitStatus()
+            }
+                    emitStatus ()
     }
 
     private suspend fun generateTestThermalFrame(): ThermalFrameData? =
@@ -1574,23 +1754,23 @@ class ThermalCameraRecorder(
             frameNumber,
             thermalResolution.first,
             thermalResolution.second
-        frameListener?.let { listener ->
-            try {
-                val stats = ThermalFrameStats(
-                    timestampNs = timestampRecord.systemNanos,
-                    frameSequence = frameNumber,
-                    minTemp = thermalData.minTemperature,
-                    avgTemp = thermalData.avgTemperature,
-                    maxTemp = thermalData.maxTemperature,
-                    pixelCount = thermalResolution.first * thermalResolution.second
-                listener.onFrameProcessed(stats)
-            } catch (e: Exception) {
-                listener.onError("Frame listener error: ${e.message}")
+                    frameListener ?. let { listener ->
+                try {
+                    val stats = ThermalFrameStats(
+                        timestampNs = timestampRecord.systemNanos,
+                        frameSequence = frameNumber,
+                        minTemp = thermalData.minTemperature,
+                        avgTemp = thermalData.avgTemperature,
+                        maxTemp = thermalData.maxTemperature,
+                        pixelCount = thermalResolution.first * thermalResolution.second
+                                listener . onFrameProcessed (stats)
+                } catch (e: Exception) {
+                    listener.onError("Frame listener error: ${e.message}")
+                }
             }
-        }
-        if (frameNumber % 10 == 0L) {
-            emitStatus()
-        }
+            if (frameNumber % 10 == 0L) {
+                emitStatus()
+            }
     }
 
     private suspend fun processFrameForPreviewAndNetwork(
@@ -1705,32 +1885,33 @@ class ThermalCameraRecorder(
                     lastFrameTime = currentTime
                     if (_isRecording.get() && frame != null) {
                         recordingScope.launch {
-                            
-                                val timestamp = System.nanoTime()
-                                val frameNumber = frameCount.incrementAndGet()
-                                val thermalData =
-                                    processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
-                                // Create proper timestamp record for processing
-                                val timestampRecord = TimestampManager.createTimestampRecord()
-                                processRealThermalFrameData(
-                                    thermalData,
-                                    frameNumber,
-                                    timestampRecord
-                            
+
+                            val timestamp = System.nanoTime()
+                            val frameNumber = frameCount.incrementAndGet()
+                            val thermalData =
+                                processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
+                            // Create proper timestamp record for processing
+                            val timestampRecord = TimestampManager.createTimestampRecord()
+                            processRealThermalFrameData(
+                                thermalData,
+                                frameNumber,
+                                timestampRecord
+
                         }
                     }
                     if (previewCallback != null && frame != null && frameCount.get() % PREVIEW_UPDATE_FRAME_INTERVAL.toLong() == 0L) {
                         recordingScope.launch {
-                            
-                                val thermalData =
-                                    processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
-                                val previewBitmap =
-                                    generateThermalPreviewBitmap(
-                                        thermalData,
-                                        IR_CAMERA_WIDTH,
-                                        IR_CAMERA_HEIGHT
-                                previewCallback?.onThermalFrame(previewBitmap, thermalData)
-                            
+
+                            val thermalData =
+                                processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
+                            val previewBitmap =
+                                generateThermalPreviewBitmap(
+                                    thermalData,
+                                    IR_CAMERA_WIDTH,
+                                    IR_CAMERA_HEIGHT
+                                            previewCallback ?. onThermalFrame (previewBitmap, thermalData
+                                )
+
                         }
                     }
                 }
@@ -1752,13 +1933,15 @@ class ThermalCameraRecorder(
                 if (timeDelta > 0) {
                     val actualFrameRate = (frameDelta * 1000.0) / timeDelta
                     val frameRatePercent = (actualFrameRate / targetFrameRate) * 100
-                        TAG, " Thermal performance: ${String.format("%.1f", actualFrameRate)}Hz " +
+                    TAG, " Thermal performance: ${String.format("%.1f", actualFrameRate)}Hz "+
                     if (frameRatePercent < 80) {
-                            " Thermal frame rate below target: ${
-                                String.format(
-                                    "%.1f",
-                                    actualFrameRate
-                            }Hz vs ${targetFrameRate}Hz"
+                        " Thermal frame rate below target: ${
+                            String.format(
+                                "%.1f",
+                                actualFrameRate
+                                }Hz vs ${
+                            targetFrameRate
+                        }Hz"
                     }
                 }
                 lastMonitorTime = currentTime
@@ -1766,7 +1949,6 @@ class ThermalCameraRecorder(
             }
         }
     }
-
 
 
     override suspend fun stopRecording(): Boolean {
@@ -1800,7 +1982,8 @@ class ThermalCameraRecorder(
         thermalDataFile = File(
             thermalDir,
             SessionDirectoryManager.THERMAL_METADATA_FILE.replace(".csv", "_data.csv")
-        thermalFramesFile = File(thermalDir, SessionDirectoryManager.THERMAL_FRAMES_FILE)
+                    thermalFramesFile = File (thermalDir, SessionDirectoryManager.THERMAL_FRAMES_FILE
+        )
         val thermalDataHeaders = listOf(
             "raw_timestamp_ns",
             "aligned_timestamp_ns",
@@ -1814,23 +1997,23 @@ class ThermalCameraRecorder(
             "ambient_temp_c",
             "emissivity",
             "reflected_temp_c",
-        thermalDataWriter = CSVBufferedWriter(
-            thermalDataFile!!,
-            thermalDataHeaders,
-            bufferSize = 4096,
-            flushIntervalMs = 500L
-        thermalDataWriter?.startWithHeaders()
-        thermalFramesWriter = BufferedDataWriter(
-            thermalFramesFile!!,
-            bufferSize = 16384,
-            flushIntervalMs = 1000L,
-            maxQueueSize = 5000
-        thermalFramesWriter?.start()
-        val framesHeader =
+            thermalDataWriter = CSVBufferedWriter(
+                thermalDataFile!!,
+                thermalDataHeaders,
+                bufferSize = 4096,
+                flushIntervalMs = 500L
+                        thermalDataWriter ?. startWithHeaders ()
+                        thermalFramesWriter = BufferedDataWriter (
+                        thermalFramesFile!!,
+                bufferSize = 16384,
+                flushIntervalMs = 1000L,
+                maxQueueSize = 5000
+                        thermalFramesWriter ?. start ()
+                val framesHeader =
             "raw_timestamp_ns,aligned_timestamp_ns,timestamp_relative_ms,timestamp_wall_ms,frame_number," +
                     (0 until thermalResolution.first * thermalResolution.second).joinToString(",") { "temp_$it" }
-        thermalFramesWriter?.writeLine(framesHeader)
-        writeThermalCalibration()
+                    thermalFramesWriter ?. writeLine (framesHeader)
+                    writeThermalCalibration ()
     }
 
     private fun initializeSessionTiming() {
@@ -1970,11 +2153,11 @@ class ThermalCameraRecorder(
     },
     "usb_device_details": ${
             if (thermalCameraDevice != null) {
-        {
-            "vendor_id": "${thermalCameraDevice!!.vendorId.toString(16)}",
-            "product_id": "${thermalCameraDevice!!.productId.toString(16)}",
-            "product_name": "${thermalCameraDevice!!.productName}",
-        }
+                {
+                    "vendor_id": "${thermalCameraDevice!!.vendorId.toString(16)}",
+                    "product_id": "${thermalCameraDevice!!.productId.toString(16)}",
+                    "product_name": "${thermalCameraDevice!!.productName}",
+                }
             } else "null"
         }
     }
@@ -1998,7 +2181,7 @@ class ThermalCameraRecorder(
                 ambientTemperature.toString(),
                 emissivity.toString(),
                 reflectedTemperature.toString(),
-            thermalDataWriter?.writeRow(syncRow.toList())
+                thermalDataWriter?.writeRow(syncRow.toList())
         } catch (e: Exception) {
             emitError(ErrorType.SYNC_FAILED, "IR thermal sync marker failed: ${e.message}")
         }
@@ -2078,7 +2261,8 @@ class ThermalCameraRecorder(
         val temperatureRangeMax: Float,
         val qualityScore: Double
 
-    suspend fun rescanForThermalCamera(): Boolean {
+        suspend fun rescanForThermalCamera(): Boolean
+    {
         return withContext(Dispatchers.IO) {
             try {
                 // If IRUVCTC is already initialized and connected, no need to rescan
@@ -2093,9 +2277,9 @@ class ThermalCameraRecorder(
                 }
                 val deviceList = manager.deviceList
                 for (device in deviceList.values) {
-                        "Checking device: VID=${device.vendorId.toString(16)}, PID=${
-                            device.productId.toString(16)
-                        }, Name=${device.productName}"
+                    "Checking device: VID=${device.vendorId.toString(16)}, PID=${
+                        device.productId.toString(16)
+                    }, Name=${device.productName}"
                     if (device.isTcTsDevice()) {
                         // Update device reference immediately so status reflects the device
                         thermalCameraDevice = device
@@ -2124,10 +2308,10 @@ class ThermalCameraRecorder(
     }
 
     private fun loadThermalSettings() {
-        
-            val settings = thermalSettingsRepository.getSettings()
-            emissivity = settings.emissivity.toDouble()
-        
+
+        val settings = thermalSettingsRepository.getSettings()
+        emissivity = settings.emissivity.toDouble()
+
     }
 
     private fun observeSettingsChanges() {
@@ -2171,10 +2355,13 @@ class ThermalCameraRecorder(
         val ambientTemperature: Float,
         val reflectedTemperature: Float
 
-    override suspend fun cleanup() {
+        override suspend fun cleanup()
+    {
         if (_isRecording.get()) {
             stopRecording()
         }
+        thermalReconnectionJob?.cancel()
+        thermalReconnectionJob = null
         ircamEngine?.let { engine ->
             engine.closeVideoStream()
             engine.releaseVideoStream()
@@ -2243,30 +2430,7 @@ class ThermalCameraRecorder(
                     }
                 }
             } else {
-                val disconnectedDevice = thermalCameraDevice
-                if (disconnectedDevice != null) {
-                    isSimulationMode = true
-                    isIRCameraConnected = false
-                    recordingScope.launch {
-                        if (isIRCameraConnected && iruvctc != null) {
-                            
-                                iruvctc?.stopPreview()
-                            
-                        }
-                        isSimulationMode = true
-                        isIRCameraConnected = false
-                        hasUsbPermission = false
-                        thermalCameraDevice = null
-                        if (_isRecording.get()) {
-                            startSimulatedThermalRecording()
-                        }
-                        emitError(
-                            ErrorType.DEVICE_ERROR,
-                            "Thermal camera disconnected"
-                        )
-                        emitStatus()
-                    }
-                }
+                handleThermalDisconnect("device_event")
             }
         } catch (e: Exception) {
         }
@@ -2336,7 +2500,7 @@ class ThermalCameraRecorder(
             currentDataRate = samplingRate,
             storageUsedMB = calculateStorageUsed(),
             timestampNs = System.nanoTime()
-        _statusFlow.emit(status)
+                    _statusFlow . emit (status)
     }
 
     private suspend fun emitError(
@@ -2351,7 +2515,7 @@ class ThermalCameraRecorder(
             errorMessage = message,
             timestampNs = System.nanoTime(),
             isRecoverable = isRecoverable
-        _errorFlow.emit(error)
+                    _errorFlow . emit (error)
     }
 
     fun configureThermalDevice(
@@ -2388,9 +2552,9 @@ class ThermalCameraRecorder(
                 config.emissivity.toDouble(),
                 config.temperatureRange,
                 config.atmosphericTemperature.toDouble()
-            if (ircamEngine != null && isTopdonSdkInitialized) {
-            }
-            true
+                if (ircamEngine != null && isTopdonSdkInitialized) {
+                }
+                true
         } catch (e: Exception) {
             false
         }
@@ -2426,7 +2590,7 @@ class ThermalCameraRecorder(
                 thermalDrift = 0.1, // Placeholder
                 calibrationAccuracy = 95.0, // Placeholder
                 networkLatencyMs = 50.0 // Placeholder
-            performanceMetrics
+                        performanceMetrics
         } catch (e: Exception) {
             performanceMetrics
         }
@@ -2481,7 +2645,8 @@ class ThermalCameraRecorder(
             writer.writeNext(
                 arrayOf(
                     "timestamp", "frame_number", "min_temp", "max_temp", "avg_temp",
-            val metadataFile = File(exportDir, "export_metadata.json")
+                    val metadataFile = File (exportDir, "export_metadata.json"
+            )
             val metadata = JSONObject().apply {
                 put("export_timestamp", System.currentTimeMillis())
                 put("device_type", "Topdon TC001")
@@ -2548,14 +2713,14 @@ class ThermalCameraRecorder(
                         }
                         val values = line.split(",")
                         if (values.size >= 6) {
-                            
-                                timestamps.add(values[0].toLong())
-                                frameIndices.add(values[1].toLong())
-                                minTemps.add(values[2].toFloat())
-                                maxTemps.add(values[3].toFloat())
-                                avgTemps.add(values[4].toFloat())
-                                centerTemps.add(values[5].toFloat())
-                            
+
+                            timestamps.add(values[0].toLong())
+                            frameIndices.add(values[1].toLong())
+                            minTemps.add(values[2].toFloat())
+                            maxTemps.add(values[3].toFloat())
+                            avgTemps.add(values[4].toFloat())
+                            centerTemps.add(values[5].toFloat())
+
                         }
                     }
                 }
@@ -2607,13 +2772,13 @@ class ThermalCameraRecorder(
                 "% Generated on ${
                     java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date())
                 }"
-            matContent.appendLine("")
-            matContent.appendLine("thermal_config.emissivity = ${currentConfig.emissivity};")
-            matContent.appendLine("thermal_config.atmospheric_temp = ${currentConfig.atmosphericTemperature};")
-            matContent.appendLine("thermal_config.resolution = [${IR_CAMERA_WIDTH}, ${IR_CAMERA_HEIGHT}];")
-            matContent.appendLine("thermal_config.frame_rate = ${IR_FRAME_RATE_STANDARD};")
-            matFile.writeText(matContent.toString())
-            true
+                        matContent . appendLine ("")
+                        matContent . appendLine ("thermal_config.emissivity = ${currentConfig.emissivity};")
+                        matContent . appendLine ("thermal_config.atmospheric_temp = ${currentConfig.atmosphericTemperature};")
+                        matContent . appendLine ("thermal_config.resolution = [${IR_CAMERA_WIDTH}, ${IR_CAMERA_HEIGHT}];")
+                        matContent . appendLine ("thermal_config.frame_rate = ${IR_FRAME_RATE_STANDARD};")
+                        matFile . writeText (matContent.toString())
+                true
         } catch (e: Exception) {
             false
         }

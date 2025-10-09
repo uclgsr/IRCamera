@@ -30,7 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.components.common.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import java.io.File
 import java.io.FileOutputStream
@@ -130,7 +130,7 @@ class PdfViewModel @Inject constructor() : ViewModel() {
 @AndroidEntryPoint
 class PdfComposeActivity : ComponentActivity() {
     private val viewModel: PdfViewModel by viewModels()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val isTS001 = intent.getBooleanExtra("isTS001", false)
@@ -161,7 +161,7 @@ fun PdfScreen(
     val isLoading by viewModel.isLoading
     val pdfDocument by viewModel.pdfDocument
     val error by viewModel.error
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -172,33 +172,33 @@ fun PdfScreen(
             onBackClick = onBackClick
         )
         Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f)
-                ) {
-                    when {
-                        isLoading -> {
-                            LoadingContent()
-                        }
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+        ) {
+            when {
+                isLoading -> {
+                    LoadingContent()
+                }
 
-                        error != null -> {
-                            ErrorContent(
-                                error = error!!,
-                                onRetry = {
-                                    val isTS001 = intent.getBooleanExtra("isTS001", false)
-                                    viewModel.loadPdf(isTS001, context)
-                                }
-                            )
+                error != null -> {
+                    ErrorContent(
+                        error = error!!,
+                        onRetry = {
+                            val isTS001 = intent.getBooleanExtra("isTS001", false)
+                            viewModel.loadPdf(isTS001, context)
                         }
+                    )
+                }
 
-                        pdfDocument != null -> {
-                            PdfContent(document = pdfDocument!!)
-                        }
-                    }
+                pdfDocument != null -> {
+                    PdfContent(document = pdfDocument!!)
                 }
             }
         }
     }
+}
+}
 }
 
 @Composable

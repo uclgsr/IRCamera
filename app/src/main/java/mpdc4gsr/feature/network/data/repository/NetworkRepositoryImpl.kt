@@ -17,10 +17,10 @@ import javax.inject.Singleton
 class NetworkRepositoryImpl @Inject constructor(
     private val dataSource: NetworkDataSource
 ) : NetworkRepository {
-    
+
     private val _connectionState = MutableSharedFlow<ConnectionState>(replay = 1)
     private val _discoveredControllers = MutableSharedFlow<List<ControllerInfo>>(replay = 1)
-    
+
     init {
         setupEventListener()
     }

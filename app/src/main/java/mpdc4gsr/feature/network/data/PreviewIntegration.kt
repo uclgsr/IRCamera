@@ -4,36 +4,45 @@ import android.content.Context
 import android.graphics.Bitmap
 import mpdc4gsr.core.RecordingService
 
-object PreviewIntegration {    fun updateRgbFrame(context: Context, rgbFrame: Bitmap) {
+object PreviewIntegration {
+    fun updateRgbFrame(context: Context, rgbFrame: Bitmap) {
         try {
             val adapter = getPreviewDataAdapter(context)
-            adapter?.updateRgbFrame(rgbFrame)        } catch (e: Exception) {        }
+            adapter?.updateRgbFrame(rgbFrame)
+        } catch (e: Exception) {
+        }
     }
 
     fun updateThermalFrame(context: Context, thermalFrame: Bitmap) {
         try {
             val adapter = getPreviewDataAdapter(context)
-            adapter?.updateThermalFrameDirect(thermalFrame)        } catch (e: Exception) {        }
+            adapter?.updateThermalFrameDirect(thermalFrame)
+        } catch (e: Exception) {
+        }
     }
 
     fun updateGsrValue(context: Context, gsrValue: Float) {
         try {
             val adapter = getPreviewDataAdapter(context)
-            adapter?.updateGsrValueDirect(gsrValue)        } catch (e: Exception) {        }
+            adapter?.updateGsrValueDirect(gsrValue)
+        } catch (e: Exception) {
+        }
     }
 
     fun isPreviewStreamingActive(context: Context): Boolean {
         return try {
             val streamer = getPreviewStreamer(context)
             streamer?.isStreaming() == true
-        } catch (e: Exception) {            false
+        } catch (e: Exception) {
+            false
         }
     }
 
     fun getStreamingConfig(context: Context): Map<String, Any> {
         return try {
             emptyMap()
-        } catch (e: Exception) {            emptyMap()
+        } catch (e: Exception) {
+            emptyMap()
         }
     }
 
@@ -53,7 +62,9 @@ object PreviewIntegration {    fun updateRgbFrame(context: Context, rgbFrame: Bi
                 previewWidth,
                 previewHeight,
                 jpegQuality
-            )        } catch (e: Exception) {        }
+            )
+        } catch (e: Exception) {
+        }
     }
 
     private fun getPreviewDataAdapter(context: Context): PreviewDataAdapter? {
@@ -66,7 +77,8 @@ object PreviewIntegration {    fun updateRgbFrame(context: Context, rgbFrame: Bi
         return service?.previewStreamer
     }
 
-    private fun getRecordingService(context: Context): RecordingService? {        return null
+    private fun getRecordingService(context: Context): RecordingService? {
+        return null
     }
 }
 
@@ -76,7 +88,8 @@ fun com.mpdc4gsr.module.thermalunified.tools.CameraPreviewManager.updatePreview(
         if (bitmap != null && !bitmap.isRecycled) {
             PreviewIntegration.updateThermalFrame(context, bitmap)
         }
-    } catch (e: Exception) {    }
+    } catch (e: Exception) {
+    }
 }
 
 fun Float.updateGsrPreview(context: Context) {

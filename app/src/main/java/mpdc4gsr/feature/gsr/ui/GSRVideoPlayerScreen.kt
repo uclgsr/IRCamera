@@ -16,8 +16,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.components.TitleBarAction
+import mpdc4gsr.core.ui.components.common.TitleBar
+import mpdc4gsr.core.ui.components.common.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 @Composable

@@ -10,8 +10,8 @@ interface SessionRepository {
         studyName: String?,
         metadata: Map<String, String>
     ): SessionInfo
-    
+
     suspend fun completeSession(sessionId: String)
-    
+
     fun getCurrentSession(): Flow<SessionInfo?>
 }

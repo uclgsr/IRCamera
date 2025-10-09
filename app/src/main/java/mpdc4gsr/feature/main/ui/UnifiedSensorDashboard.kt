@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import mpdc4gsr.core.ui.components.NavigationBreadcrumb
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.components.TitleBarAction
+import mpdc4gsr.core.ui.components.common.NavigationBreadcrumb
+import mpdc4gsr.core.ui.components.common.TitleBar
+import mpdc4gsr.core.ui.components.common.TitleBarAction
 import mpdc4gsr.core.ui.components.sensors.GSRSensorCard
 import mpdc4gsr.core.ui.components.sensors.RGBCameraSensorCard
 import mpdc4gsr.core.ui.components.sensors.ThermalSensorCard

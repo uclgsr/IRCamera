@@ -19,14 +19,14 @@ class DiagnosticsViewModel @Inject constructor(
     private val exportDiagnosticLogsUseCase: ExportDiagnosticLogsUseCase,
     diagnosticsRepository: mpdc4gsr.feature.device.domain.repository.DiagnosticsRepository
 ) : ViewModel() {
-    
+
     val systemStatus: StateFlow<SystemStatus> = diagnosticsRepository.getSystemStatus()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = SystemStatus()
         )
-    
+
     val sensorStatus: StateFlow<SensorStatus> = diagnosticsRepository.getSensorStatus()
         .stateIn(
             scope = viewModelScope,

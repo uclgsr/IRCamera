@@ -1,11 +1,11 @@
 package mpdc4gsr.feature.main.domain.model
 
-enum class SessionState { 
-    IDLE, STARTING, RECORDING, PAUSED, STOPPING, ERROR 
+enum class SessionState {
+    IDLE, STARTING, RECORDING, PAUSED, STOPPING, ERROR
 }
 
-enum class SensorStatus { 
-    DISCONNECTED, CONNECTING, CONNECTED, STREAMING, ERROR, SIMULATION 
+enum class SensorStatus {
+    DISCONNECTED, CONNECTING, CONNECTED, STREAMING, ERROR, SIMULATION
 }
 
 data class SensorState(

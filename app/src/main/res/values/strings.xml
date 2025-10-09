@@ -196,7 +196,7 @@
     <!-- Session Manager -->
     <string name="session_manager_title">Session Manager</string>
     <string name="session_manager_sessions_count">%d sessions</string>
-    <string name="session_manager_sessions_filtered">%d of %d sessions</string>
+    <string name="session_manager_sessions_filtered">%1$d of %2$d sessions</string>
     <string name="session_manager_search_hint">Search sessions...</string>
     <string name="session_manager_statistics_summary">Statistics Summary</string>
     <string name="session_manager_total_sessions">Total Sessions</string>

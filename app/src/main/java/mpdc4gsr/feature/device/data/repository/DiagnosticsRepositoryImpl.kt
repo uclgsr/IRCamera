@@ -22,34 +22,34 @@ import javax.inject.Singleton
 class DiagnosticsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : DiagnosticsRepository {
-    
+
     private val _systemStatus = MutableStateFlow(SystemStatus())
     private val _sensorStatus = MutableStateFlow(SensorStatus())
-    
+
     companion object {
         private const val TC001_VENDOR_ID = 0x0BDA
         private const val TC001_PRODUCT_ID = 0x5830
         private const val TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss"
     }
-    
+
     init {
         updateSystemStatus()
         updateSensorStatus()
     }
-    
+
     override fun getSystemStatus(): Flow<SystemStatus> = _systemStatus
-    
+
     override fun getSensorStatus(): Flow<SensorStatus> = _sensorStatus
-    
+
     override suspend fun runFullDiagnostics() {
         updateSystemStatus()
         updateSensorStatus()
     }
-    
+
     override suspend fun testAllSensors() {
         updateSensorStatus()
     }
-    
+
     override suspend fun exportDiagnosticLogs(): String {
         val logFile = File(context.cacheDir, "diagnostics_${System.currentTimeMillis()}.log")
         logFile.writeText(buildString {
@@ -74,7 +74,7 @@ class DiagnosticsRepositoryImpl @Inject constructor(
         })
         return logFile.absolutePath
     }
-    
+
     private fun updateSystemStatus() {
         val batteryStatus = getBatteryLevel()
         val memoryInfo = getMemoryInfo()
@@ -86,7 +86,7 @@ class DiagnosticsRepositoryImpl @Inject constructor(
             memoryUsage = memoryInfo
         )
     }
-    
+
     private fun updateSensorStatus() {
         val gsrStatus = checkGSRSensorStatus()
         val thermalStatus = checkThermalCameraStatus()
@@ -97,7 +97,7 @@ class DiagnosticsRepositoryImpl @Inject constructor(
             rgbCamera = rgbStatus
         )
     }
-    
+
     private fun checkGSRSensorStatus(): String {
         val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         val bluetoothAdapter = bluetoothManager?.adapter
@@ -109,7 +109,7 @@ class DiagnosticsRepositoryImpl @Inject constructor(
             "Ready - Bluetooth Enabled"
         }
     }
-    
+
     private fun checkThermalCameraStatus(): String {
         val usbManager = context.getSystemService(Context.USB_SERVICE) as? android.hardware.usb.UsbManager
         return if (usbManager == null) {
@@ -126,7 +126,7 @@ class DiagnosticsRepositoryImpl @Inject constructor(
             }
         }
     }
-    
+
     private fun checkRGBCameraStatus(): String {
         val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as? android.hardware.camera2.CameraManager
         return if (cameraManager == null) {
@@ -140,7 +140,7 @@ class DiagnosticsRepositoryImpl @Inject constructor(
             }
         }
     }
-    
+
     private fun getBatteryLevel(): String {
         val batteryStatus = context.registerReceiver(
             null,
@@ -155,14 +155,14 @@ class DiagnosticsRepositoryImpl @Inject constructor(
             "Unknown"
         }
     }
-    
+
     private fun getMemoryInfo(): String {
         val runtime = Runtime.getRuntime()
         val usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)
         val totalMemory = runtime.maxMemory() / (1024 * 1024)
         return "$usedMemory MB / $totalMemory MB"
     }
-    
+
     private fun getDeviceTemperature(): String {
         val tempFile = File("/sys/class/thermal/thermal_zone0/temp")
         return if (tempFile.exists()) {
@@ -176,7 +176,7 @@ class DiagnosticsRepositoryImpl @Inject constructor(
             "N/A"
         }
     }
-    
+
     private fun getCurrentTimestamp(): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             java.time.format.DateTimeFormatter.ofPattern(TIMESTAMP_FORMAT, Locale.US)

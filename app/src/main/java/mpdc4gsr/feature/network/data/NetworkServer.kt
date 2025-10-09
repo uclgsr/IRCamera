@@ -16,7 +16,7 @@ class NetworkServer(
     private val context: Context,
     private val port: Int = Protocol.DEFAULT_SERVER_PORT,
 ) {
-    companion object {    }
+    companion object {}
 
     private var serverSocket: ServerSocket? = null
     private var clientSocket: Socket? = null
@@ -39,8 +39,9 @@ class NetworkServer(
     suspend fun start(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (isRunning.get()) {                    return@withContext true
-                }                TrafficStats.setThreadStatsTag(Process.myTid())
+                if (isRunning.get()) {
+                    return@withContext true
+                } TrafficStats . setThreadStatsTag (Process.myTid())
                 serverSocket = ServerSocket().apply {
                     reuseAddress = true
                     bind(InetSocketAddress(port))
@@ -50,9 +51,11 @@ class NetworkServer(
                     serverScope.launch {
                         acceptConnections()
                     }                return@withContext true
-            } catch (e: java.net.BindException) {                isRunning.set(false)
+            } catch (e: java.net.BindException) {
+                isRunning.set(false)
                 return@withContext false
-            } catch (e: Exception) {                isRunning.set(false)
+            } catch (e: Exception) {
+                isRunning.set(false)
                 return@withContext false
             }
         }
@@ -60,7 +63,8 @@ class NetworkServer(
 
     suspend fun stop() {
         withContext(Dispatchers.IO) {
-            try {                isRunning.set(false)
+            try {
+                isRunning.set(false)
                 isClientConnected.set(false)
                 _connectionStateFlow.value = false
                 serverJob?.cancel()
@@ -76,18 +80,22 @@ class NetworkServer(
                 inputReader = null
                 binaryOutputStream = null
                 clientSocket = null
-                serverSocket = null            } catch (e: Exception) {            }
+                serverSocket = null
+            } catch (e: Exception) {
+            }
         }
     }
 
     suspend fun sendMessage(message: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (!isClientConnected.get() || outputWriter == null) {                    return@withContext false
+                if (!isClientConnected.get() || outputWriter == null) {
+                    return@withContext false
                 }
                 outputWriter!!.write(message + "\n")
                 outputWriter!!.flush()                return@withContext true
-            } catch (e: Exception) {                disconnectClient()
+            } catch (e: Exception) {
+                disconnectClient()
                 return@withContext false
             }
         }
@@ -96,7 +104,8 @@ class NetworkServer(
     suspend fun sendBinaryData(header: String, data: ByteArray): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (!isClientConnected.get() || outputWriter == null || binaryOutputStream == null) {                    return@withContext false
+                if (!isClientConnected.get() || outputWriter == null || binaryOutputStream == null) {
+                    return@withContext false
                 }
                 // Send text header first
                 outputWriter!!.write(header + "\n")
@@ -105,7 +114,8 @@ class NetworkServer(
                 binaryOutputStream!!.writeInt(data.size)
                 binaryOutputStream!!.write(data)
                 binaryOutputStream!!.flush()                return@withContext true
-            } catch (e: Exception) {                disconnectClient()
+            } catch (e: Exception) {
+                disconnectClient()
                 return@withContext false
             }
         }
@@ -113,9 +123,10 @@ class NetworkServer(
 
     private suspend fun acceptConnections() {
         while (isRunning.get() && serverJob?.isCancelled != true) {
-            try {                val socket = serverSocket?.accept()
+            try {
+                val socket = serverSocket?.accept()
                 if (socket != null && isRunning.get()) {
-                    TrafficStats.tagSocket(socket)                    disconnectClient()
+                    TrafficStats.tagSocket(socket) disconnectClient ()
                     clientSocket = socket
                     outputWriter =
                         BufferedWriter(OutputStreamWriter(socket.getOutputStream(), Charsets.UTF_8))
@@ -132,9 +143,12 @@ class NetworkServer(
                         }
                 }
             } catch (e: SocketException) {
-                if (isRunning.get()) {                } else {                }
+                if (isRunning.get()) {
+                } else {
+                }
                 break
-            } catch (e: Exception) {                delay(1000)
+            } catch (e: Exception) {
+                delay(1000)
             }
         }
     }
@@ -147,12 +161,15 @@ class NetworkServer(
                     val protocolMessage = Protocol.parseMessage(messageText)
                     if (protocolMessage != null) {
                         _messageFlow.emit(protocolMessage)
-                    } else {                    }
+                    } else {
+                    }
                 } else {
                     break
                 }
-            } catch (e: SocketException) {                break
-            } catch (e: Exception) {                break
+            } catch (e: SocketException) {
+                break
+            } catch (e: Exception) {
+                break
             }
         }
         disconnectClient()
@@ -163,15 +180,18 @@ class NetworkServer(
             try {
                 val reader = inputReader ?: return@withContext null
                 val line = reader.readLine()
-                if (line != null) {                }
+                if (line != null) {
+                }
                 return@withContext line
-            } catch (e: Exception) {                return@withContext null
+            } catch (e: Exception) {
+                return@withContext null
             }
         }
     }
 
     private fun disconnectClient() {
-        if (isClientConnected.get()) {            isClientConnected.set(false)
+        if (isClientConnected.get()) {
+            isClientConnected.set(false)
             _connectionStateFlow.value = false
             messageListenerJob?.cancel()
             try {
@@ -180,7 +200,8 @@ class NetworkServer(
                 inputReader?.close()
                 binaryOutputStream?.close()
                 clientSocket?.close()
-            } catch (e: Exception) {            }
+            } catch (e: Exception) {
+            }
             outputWriter = null
             inputReader = null
             binaryOutputStream = null
@@ -192,5 +213,6 @@ class NetworkServer(
     fun isClientConnected(): Boolean = isClientConnected.get()
     suspend fun cleanup() {
         stop()
-        serverScope.cancel()    }
+        serverScope.cancel()
+    }
 }

@@ -38,7 +38,8 @@ class FileUploadService(private val context: Context) {
         CALIBRATION("json", "application/json"),
     }
 
-    companion object {        private const val BYTES_PER_MB = 1024 * 1024
+    companion object {
+        private const val BYTES_PER_MB = 1024 * 1024
         private const val DEFAULT_CHUNK_SIZE = BYTES_PER_MB
         private const val MAX_CONCURRENT_UPLOADS = 3
         private const val RETRY_LIMIT = 3

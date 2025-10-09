@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
+
 import dagger.hilt.android.AndroidEntryPoint
 
 import androidx.activity.viewModels
@@ -31,7 +32,7 @@ import mpdc4gsr.core.data.model.SessionQuality
 import mpdc4gsr.core.data.model.SessionStatus
 import mpdc4gsr.core.data.model.SessionType
 import mpdc4gsr.core.ui.AppBaseViewModel
-import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.components.common.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 enum class UnifiedSensorType(

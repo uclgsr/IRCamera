@@ -30,7 +30,7 @@ import com.github.lzyzsd.jsbridge.BridgeWebViewClient
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.components.common.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import javax.inject.Inject
 
@@ -42,7 +42,7 @@ class WebViewViewModel @Inject constructor() : ViewModel() {
     val showError: State<Boolean> = _showError
     private val _url = mutableStateOf("")
     val url: State<String> = _url
-    
+
     fun setUrl(url: String) {
         _url.value = url
     }
@@ -64,7 +64,7 @@ class WebViewViewModel @Inject constructor() : ViewModel() {
 @AndroidEntryPoint
 class WebViewComposeActivity : ComponentActivity() {
     private val viewModel: WebViewViewModel by viewModels()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val url = intent.extras?.getString(ExtraKeyConfig.URL) ?: ""
@@ -90,7 +90,7 @@ fun WebViewScreen(
     val url by viewModel.url
     val isLoading by viewModel.isLoading
     val showError by viewModel.showError
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -100,80 +100,80 @@ fun WebViewScreen(
             title = stringResource(R.string.web_content),
             onBackClick = onBackClick
         )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+        ) {
+            if (url.isNotEmpty()) {
+                ComposeWebView(
+                    url = url,
+                    onLoadStart = { viewModel.setWebViewLoading(true) },
+                    onLoadFinish = {
+                        viewModel.setWebViewLoading(false)
+                        viewModel.setError(false)
+                    },
+                    onError = {
+                        viewModel.setWebViewLoading(false)
+                        viewModel.setError(true)
+                    },
+                    onReload = { viewModel.reload() }
+                )
+            }
+            if (isLoading) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .weight(1f)
+                        .background(Color.Black.copy(alpha = 0.3f)),
+                    contentAlignment = Alignment.Center
                 ) {
-                    if (url.isNotEmpty()) {
-                        ComposeWebView(
-                            url = url,
-                            onLoadStart = { viewModel.setWebViewLoading(true) },
-                            onLoadFinish = {
-                                viewModel.setWebViewLoading(false)
-                                viewModel.setError(false)
-                            },
-                            onError = {
-                                viewModel.setWebViewLoading(false)
-                                viewModel.setError(true)
-                            },
-                            onReload = { viewModel.reload() }
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+            if (showError) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .align(Alignment.Center),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(R.string.network_error),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            textAlign = TextAlign.Center
                         )
-                    }
-                    if (isLoading) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.Black.copy(alpha = 0.3f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-                    if (showError) {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                                .align(Alignment.Center),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.errorContainer
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            onClick = { viewModel.reload() },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary
                             )
                         ) {
-                            Column(
-                                modifier = Modifier.padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.network_error),
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onErrorContainer,
-                                    textAlign = TextAlign.Center
-                                )
-                                Spacer(modifier = Modifier.height(16.dp))
-                                Button(
-                                    onClick = { viewModel.reload() },
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.primary
-                                    )
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Refresh,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(stringResource(R.string.retry))
-                                }
-                            }
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(stringResource(R.string.retry))
                         }
                     }
                 }
             }
         }
     }
+}
+}
 }
 
 @SuppressLint("SetJavaScriptEnabled")

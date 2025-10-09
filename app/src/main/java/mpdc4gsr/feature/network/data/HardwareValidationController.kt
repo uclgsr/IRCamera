@@ -18,7 +18,7 @@ class HardwareValidationController(
     private val permissionController: PermissionController,
     private val recordingController: RecordingController
 ) {
-    companion object {    }
+    companion object {}
 
     private val _isValidating = AtomicBoolean(false)
     val isValidating: Boolean get() = _isValidating.get()
@@ -32,7 +32,7 @@ class HardwareValidationController(
             throw IllegalStateException("Validation already in progress")
         }
         try {
-            validationStartTime = System.currentTimeMillis()            validationResults.clear()
+            validationStartTime = System.currentTimeMillis() validationResults . clear ()
             errorLogs.clear()
             performanceMetrics.clear()
             sensorCapabilities.clear()
@@ -45,14 +45,16 @@ class HardwareValidationController(
             validateBackgroundRecording()
             validateBatteryOptimization()
             generateValidationReport()
-        } catch (e: Exception) {            errorLogs.add("CRITICAL: Validation failed - ${e.message}")
+        } catch (e: Exception) {
+            errorLogs.add("CRITICAL: Validation failed - ${e.message}")
             generateFailureReport(e)
         } finally {
             _isValidating.set(false)
         }
     }
 
-    private suspend fun validatePermissionSystem() {        val startTime = System.currentTimeMillis()
+    private suspend fun validatePermissionSystem() {
+        val startTime = System.currentTimeMillis()
         try {
             val permissionCategories = mapOf(
                 "camera" to listOf("android.permission.CAMERA"),
@@ -70,7 +72,8 @@ class HardwareValidationController(
             val batteryOptResult = validateBatteryOptimizationExemption()
             validationResults["battery_optimization"] = batteryOptResult
             val duration = System.currentTimeMillis() - startTime
-            performanceMetrics["permission_validation_duration_ms"] = duration        } catch (e: Exception) {
+            performanceMetrics["permission_validation_duration_ms"] = duration
+        } catch (e: Exception) {
             errorLogs.add("Permission validation error: ${e.message}")
             validationResults["permission_system"] = HardwareValidationResult(
                 "permission_system",
@@ -81,7 +84,8 @@ class HardwareValidationController(
         }
     }
 
-    private suspend fun validateRGBCamera() {        val startTime = System.currentTimeMillis()
+    private suspend fun validateRGBCamera() {
+        val startTime = System.currentTimeMillis()
         try {
             if (!permissionController.hasCameraPermissions()) {
                 validationResults["rgb_camera"] = HardwareValidationResult(
@@ -116,7 +120,8 @@ class HardwareValidationController(
         }
     }
 
-    private suspend fun validateThermalCamera() {        val startTime = System.currentTimeMillis()
+    private suspend fun validateThermalCamera() {
+        val startTime = System.currentTimeMillis()
         try {
             if (!permissionController.hasStoragePermissions()) {
                 validationResults["thermal_camera"] = HardwareValidationResult(
@@ -149,7 +154,8 @@ class HardwareValidationController(
         }
     }
 
-    private suspend fun validateGSRSensor() {        val startTime = System.currentTimeMillis()
+    private suspend fun validateGSRSensor() {
+        val startTime = System.currentTimeMillis()
         try {
             if (!permissionController.hasBluetoothPermissions()) {
                 validationResults["gsr_sensor"] = HardwareValidationResult(
@@ -187,7 +193,8 @@ class HardwareValidationController(
         }
     }
 
-    private suspend fun validateMultiSensorRecording() {        val startTime = System.currentTimeMillis()
+    private suspend fun validateMultiSensorRecording() {
+        val startTime = System.currentTimeMillis()
         try {
             val recordingDuration = measureTimeMillis {
                 delay(RecordingConstants.MIN_RECORDING_DURATION_MS)
@@ -207,17 +214,20 @@ class HardwareValidationController(
         }
     }
 
-    private suspend fun validateNetworkCapabilities() {        validationResults["network"] = HardwareValidationResult(
+    private suspend fun validateNetworkCapabilities() {
+        validationResults["network"] = HardwareValidationResult(
             "network", true, emptyList(), emptyList()
         )
     }
 
-    private suspend fun validateBackgroundRecording() {        validationResults["background_recording"] = HardwareValidationResult(
+    private suspend fun validateBackgroundRecording() {
+        validationResults["background_recording"] = HardwareValidationResult(
             "background_recording", true, emptyList(), emptyList()
         )
     }
 
-    private suspend fun validateBatteryOptimization() {        validationResults["battery_optimization"] = HardwareValidationResult(
+    private suspend fun validateBatteryOptimization() {
+        validationResults["battery_optimization"] = HardwareValidationResult(
             "battery_optimization", true, emptyList(), emptyList()
         )
     }

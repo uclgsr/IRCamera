@@ -120,7 +120,6 @@ data class SensorStatusInfo(
     val errorCount: Int
 )
 
-// Legacy compatibility for ComprehensiveRecordingController
 data class SensorHealthSummary(
     val sensorId: String,
     val name: String,
@@ -200,4 +199,3 @@ data class SimpleRecordingStatus(
     val totalSensors: Int,
     val state: RecordingState
 )
-typealias MainRecordingState = RecordingState

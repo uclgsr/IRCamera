@@ -10,7 +10,7 @@ class CommandServer(
     private val context: Context,
     private val port: Int = 8080
 ) {
-    companion object {    }
+    companion object {}
 
     // Data classes and enums - defined first to avoid forward reference issues
     sealed class CommandEvent {
@@ -56,7 +56,8 @@ class CommandServer(
 
     private var commandCallback: CommandCallback? = null
 
-    suspend fun start(callback: CommandCallback, syncManager: TimeSyncManager) {        this.commandCallback = callback
+    suspend fun start(callback: CommandCallback, syncManager: TimeSyncManager) {
+        this.commandCallback = callback
         this.timeSyncManager = syncManager
         try {
             // Initialize network components
@@ -78,20 +79,24 @@ class CommandServer(
                             ConnectionStatus.DISCONNECTED
                     }
                 } else {
-                    _serverStatus.value = ServerStatus.ERROR                }
+                    _serverStatus.value = ServerStatus.ERROR
+                }
             }
-        } catch (e: Exception) {            _serverStatus.value = ServerStatus.ERROR
+        } catch (e: Exception) {
+            _serverStatus.value = ServerStatus.ERROR
             throw e
         }
     }
 
-    suspend fun stop() {        serverScope.launch {
+    suspend fun stop() {
+        serverScope.launch {
             networkServer?.stop()
         }.join()
         serverScope.cancel()
         _serverStatus.value = ServerStatus.STOPPED
         _connectionStatus.value = ConnectionStatus.DISCONNECTED
-        commandCallback = null    }
+        commandCallback = null
+    }
 
     suspend fun sendAck(
         originalMessageId: String,
@@ -107,7 +112,9 @@ class CommandServer(
                 put("device_id", android.os.Build.MODEL)
                 data?.let { put("data", it) }
             }
-            networkServer?.sendMessage(ackMessage.toString())        } catch (e: Exception) {        }
+            networkServer?.sendMessage(ackMessage.toString())
+        } catch (e: Exception) {
+        }
     }
 
     suspend fun sendStatusUpdate(status: String, data: JSONObject? = null) {
@@ -119,12 +126,15 @@ class CommandServer(
                 put("device_id", android.os.Build.MODEL)
                 data?.let { put("data", it) }
             }
-            networkServer?.sendMessage(statusMessage.toString())        } catch (e: Exception) {        }
+            networkServer?.sendMessage(statusMessage.toString())
+        } catch (e: Exception) {
+        }
     }
 
     private fun createProtocolCallback(): ProtocolHandler.CommandHandler {
         return object : ProtocolHandler.CommandHandler {
-            override suspend fun onStartRecording(sessionId: String): ProtocolHandler.CommandResult {                return try {
+            override suspend fun onStartRecording(sessionId: String): ProtocolHandler.CommandResult {
+                return try {
                     // Delegate to recording controller
                     commandCallback?.let { callback ->
                         // Pass empty configuration for now - protocol handler should provide full config
@@ -138,14 +148,16 @@ class CommandServer(
                         success = false,
                         message = "Command callback not available"
                     )
-                } catch (e: Exception) {                    ProtocolHandler.CommandResult(
+                } catch (e: Exception) {
+                    ProtocolHandler.CommandResult(
                         success = false,
                         message = "Recording start failed: ${e.message}"
                     )
                 }
             }
 
-            override suspend fun onStopRecording(sessionId: String): ProtocolHandler.CommandResult {                return try {
+            override suspend fun onStopRecording(sessionId: String): ProtocolHandler.CommandResult {
+                return try {
                     commandCallback?.let { callback ->
                         val success = callback.onStopRecording()
                         ProtocolHandler.CommandResult(
@@ -157,14 +169,16 @@ class CommandServer(
                         success = false,
                         message = "Command callback not available"
                     )
-                } catch (e: Exception) {                    ProtocolHandler.CommandResult(
+                } catch (e: Exception) {
+                    ProtocolHandler.CommandResult(
                         success = false,
                         message = "Recording stop failed: ${e.message}"
                     )
                 }
             }
 
-            override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {                return try {
+            override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
+                return try {
                     commandCallback?.let { callback ->
                         // Protocol handler should provide PC address, using empty string for now
                         val success = callback.onSyncRequest("")
@@ -182,7 +196,8 @@ class CommandServer(
                     } ?: ProtocolHandler.SyncResult(
                         success = false
                     )
-                } catch (e: Exception) {                    ProtocolHandler.SyncResult(success = false)
+                } catch (e: Exception) {
+                    ProtocolHandler.SyncResult(success = false)
                 }
             }
         }

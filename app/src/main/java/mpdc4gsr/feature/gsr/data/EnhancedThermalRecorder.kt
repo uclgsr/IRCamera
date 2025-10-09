@@ -47,10 +47,13 @@ class EnhancedThermalRecorder(private val context: Context) {
                 } else {
                     thermalCameraRecorder.startRecording(currentSessionDirectory!!.absolutePath)
                 }
-                if (success) {                } else {                }
+                if (success) {
+                } else {
+                }
             }
             return true
-        } catch (e: Exception) {            return false
+        } catch (e: Exception) {
+            return false
         }
     }
 
@@ -63,8 +66,9 @@ class EnhancedThermalRecorder(private val context: Context) {
             val sessionInfo = SessionInfo(
                 sessionDirectory = currentSessionDirectory,
                 sampleCount = thermalCameraRecorder.getRecordingStats().totalSamplesRecorded
-            )            sessionInfo
-        } catch (e: Exception) {            null
+            ) sessionInfo
+        } catch (e: Exception) {
+            null
         }
     }
 
@@ -82,7 +86,9 @@ class EnhancedThermalRecorder(private val context: Context) {
                 writer.write(eventLine)
                 writer.write("\n")
                 writer.flush()
-            }        } catch (e: Exception) {        }
+            }
+        } catch (e: Exception) {
+        }
     }
 
     fun getSessionDirectory(): File? {
@@ -96,7 +102,9 @@ class EnhancedThermalRecorder(private val context: Context) {
                 thermalCameraRecorder.cleanup()
             }
             recorderScope.cancel()
-            currentSessionDirectory = null        } catch (e: Exception) {        }
+            currentSessionDirectory = null
+        } catch (e: Exception) {
+        }
     }
 
     fun getStatusFlow(): Flow<RecordingStatus> = thermalCameraRecorder.getStatusFlow()
@@ -110,14 +118,16 @@ class EnhancedThermalRecorder(private val context: Context) {
                 syncEventWriter?.write("timestamp_ns,event_type,event_data\n")
                 syncEventWriter?.flush()
             }
-        } catch (e: Exception) {        }
+        } catch (e: Exception) {
+        }
     }
 
     private fun closeSyncEventsFile() {
         try {
             syncEventWriter?.close()
             syncEventWriter = null
-        } catch (e: Exception) {        }
+        } catch (e: Exception) {
+        }
     }
 
     data class SessionInfo(

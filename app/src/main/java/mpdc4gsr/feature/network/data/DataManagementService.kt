@@ -11,7 +11,8 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
 class DataManagementService(private val context: Context) {
-    companion object {        private const val BASE_DIR = "IRCamera_Data"
+    companion object {
+        private const val BASE_DIR = "IRCamera_Data"
         private const val SESSIONS_DIR = "sessions"
         private const val TEMP_DIR = "temp"
         private const val ARCHIVE_DIR = "archive"
@@ -880,7 +881,9 @@ class DataManagementService(private val context: Context) {
                 }
                 put("external_files", fileManifest)
             }
-            exportFile.writeText(hdf5Structure.toString(2))        } catch (e: Exception) {            exportSessionAsJSON(session, exportFile, includeFiles = true)
+            exportFile.writeText(hdf5Structure.toString(2))
+        } catch (e: Exception) {
+            exportSessionAsJSON(session, exportFile, includeFiles = true)
         }
     }
 
@@ -935,8 +938,11 @@ class DataManagementService(private val context: Context) {
                             sourceFile.inputStream().use { input ->
                                 input.copyTo(zipOutputStream)
                             }
-                            zipOutputStream.closeEntry()                        } else {                        }
-                    } catch (e: Exception) {                    }
+                            zipOutputStream.closeEntry()
+                        } else {
+                        }
+                    } catch (e: Exception) {
+                    }
                 }
             }
             val readme = """
@@ -970,11 +976,12 @@ class DataManagementService(private val context: Context) {
             zipOutputStream.putNextEntry(java.util.zip.ZipEntry("README.txt"))
             zipOutputStream.write(readme.toByteArray())
             zipOutputStream.closeEntry()
-            zipOutputStream.close()            Log.i(
-                TAG,
-                "ZIP contains ${session.files.size} files (${if (includeFiles) "with" else "without"} data)"
+            zipOutputStream.close() Log . i (
+                    TAG,
+            "ZIP contains ${session.files.size} files (${if (includeFiles) "with" else "without"} data)"
             )
-        } catch (e: Exception) {            exportSessionAsJSON(session, exportFile, includeFiles)
+        } catch (e: Exception) {
+            exportSessionAsJSON(session, exportFile, includeFiles)
         }
     }
 

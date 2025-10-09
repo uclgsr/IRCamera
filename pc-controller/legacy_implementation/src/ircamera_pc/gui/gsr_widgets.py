@@ -37,8 +37,6 @@ except ImportError as e:
     sys.exit(1)
 
 
-
-
 class GSRDeviceStatusWidget(QWidget):
 
     def __init__(self, parent=None):
@@ -699,7 +697,6 @@ class GSRAnalyticsWidget(QWidget):
             return
 
         try:
-
             stress_summary = self.gsr_receiver.get_stress_summary()
             self.update_stress_table(stress_summary)
 
