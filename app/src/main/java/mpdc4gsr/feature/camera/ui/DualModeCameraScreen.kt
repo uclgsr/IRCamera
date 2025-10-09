@@ -13,9 +13,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import mpdc4gsr.feature.camera.presentation.FocusMode
+import mpdc4gsr.feature.camera.presentation.WhiteBalance
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,6 +75,43 @@ private fun DualModeCameraContent(
     var thermalCameraActive by remember { mutableStateOf(true) }
     var isRecording by remember { mutableStateOf(false) }
     var syncEnabled by remember { mutableStateOf(true) }
+    var resolution by remember { mutableStateOf("1920A-1080") }
+    var frameRate by remember { mutableStateOf(30) }
+    var exposureTime by remember { mutableStateOf("1/60") }
+    var iso by remember { mutableStateOf(200) }
+    var focusMode by remember { mutableStateOf(FocusMode.AUTO) }
+    var whiteBalance by remember { mutableStateOf(WhiteBalance.AUTO) }
+    var recordingDuration by remember { mutableStateOf(0) }
+    var capturedFrames by remember { mutableStateOf(0) }
+    val context = LocalContext.current
+
+    LaunchedEffect(frameRate) {
+        exposureTime = if (frameRate > 30) "1/120" else "1/60"
+        iso = if (frameRate > 30) 400 else 200
+    }
+
+    LaunchedEffect(isRecording, frameRate) {
+        if (!isRecording) {
+            recordingDuration = 0
+            capturedFrames = 0
+            return@LaunchedEffect
+        }
+        recordingDuration = 0
+        capturedFrames = 0
+        while (isActive) {
+            delay(1000)
+            recordingDuration += 1
+            capturedFrames += frameRate
+        }
+    }
+
+    val combinedResolution = when (selectedMode) {
+        CameraMode.RGB_ONLY -> "RGB $resolution"
+        CameraMode.THERMAL_ONLY -> "Thermal 384x288"
+        CameraMode.DUAL_VIEW, CameraMode.OVERLAY -> "RGB $resolution / Thermal 384x288"
+    }
+    val isPreviewActive = rgbCameraActive || thermalCameraActive
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -89,19 +131,66 @@ private fun DualModeCameraContent(
             thermalActive = thermalCameraActive,
             syncEnabled = syncEnabled
         )
+        // Combined status card to visualize metrics from both cameras
+        CameraStatusCard(
+            isPreviewActive = isPreviewActive,
+            isRecording = isRecording,
+            resolution = combinedResolution,
+            frameRate = frameRate,
+            exposureTime = exposureTime,
+            iso = iso,
+            focusMode = focusMode.displayName,
+            whiteBalance = whiteBalance.displayName
+        )
         // Camera Status and Controls
         CameraControlsCard(
             rgbActive = rgbCameraActive,
             thermalActive = thermalCameraActive,
-            isRecording = isRecording,
             syncEnabled = syncEnabled,
             onRGBToggle = { rgbCameraActive = it },
             onThermalToggle = { thermalCameraActive = it },
-            onRecordingToggle = { isRecording = it },
             onSyncToggle = { syncEnabled = it }
         )
-        // Recording Settings
-        RecordingSettingsCard()
+        RecordingControlsCard(
+            isRecording = isRecording,
+            isPreviewActive = isPreviewActive,
+            recordingDuration = recordingDuration,
+            capturedFrames = capturedFrames,
+            onToggleRecording = {
+                if (isPreviewActive) {
+                    isRecording = !isRecording
+                }
+            },
+            onTogglePreview = {
+                if (isPreviewActive) {
+                    isRecording = false
+                    rgbCameraActive = false
+                    thermalCameraActive = false
+                } else {
+                    rgbCameraActive = true
+                    thermalCameraActive = true
+                }
+            },
+            onCapturePhoto = {
+                android.widget.Toast.makeText(
+                    context,
+                    "Snapshot captured",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
+        )
+        CameraSettingsCard(
+            resolution = resolution,
+            frameRate = frameRate,
+            focusMode = focusMode.displayName,
+            whiteBalance = whiteBalance.displayName,
+            currentFocusMode = focusMode,
+            currentWhiteBalance = whiteBalance,
+            onResolutionChange = { resolution = it },
+            onFrameRateChange = { frameRate = it },
+            onFocusModeChange = { focusMode = it },
+            onWhiteBalanceChange = { whiteBalance = it }
+        )
         // Calibration Tools
         CalibrationToolsCard()
     }
@@ -487,11 +576,9 @@ private fun OverlayPreviewArea(
 private fun CameraControlsCard(
     rgbActive: Boolean,
     thermalActive: Boolean,
-    isRecording: Boolean,
     syncEnabled: Boolean,
     onRGBToggle: (Boolean) -> Unit,
     onThermalToggle: (Boolean) -> Unit,
-    onRecordingToggle: (Boolean) -> Unit,
     onSyncToggle: (Boolean) -> Unit
 ) {
     Card(
@@ -556,95 +643,6 @@ private fun CameraControlsCard(
                     checked = syncEnabled,
                     onCheckedChange = onSyncToggle
                 )
-            }
-            HorizontalDivider()
-            // Recording controls
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                if (isRecording) {
-                    Button(
-                        onClick = { onRecordingToggle(false) },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error
-                        )
-                    ) {
-                        Icon(Icons.Default.Stop, contentDescription = "Stop Recording")
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Stop Recording")
-                    }
-                } else {
-                    Button(
-                        onClick = { onRecordingToggle(true) },
-                        modifier = Modifier.weight(1f),
-                        enabled = rgbActive || thermalActive
-                    ) {
-                        Icon(Icons.Default.FiberManualRecord, contentDescription = "Start Recording")
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Start Recording")
-                    }
-                }
-                val context = androidx.compose.ui.platform.LocalContext.current
-                OutlinedButton(
-                    onClick = {
-                        // TODO: Capture snapshot from both cameras
-                        android.widget.Toast.makeText(
-                            context,
-                            "Snapshot captured",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f),
-                    enabled = rgbActive || thermalActive
-                ) {
-                    Icon(Icons.Default.CameraAlt, contentDescription = "Capture Snapshot")
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Snapshot")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun RecordingSettingsCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Text(
-                "Recording Settings",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-            HorizontalDivider()
-            // Quality settings
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("RGB Quality")
-                Text("1080p @ 30fps", fontWeight = FontWeight.Medium)
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("Thermal Quality")
-                Text("384x288 @ 25fps", fontWeight = FontWeight.Medium)
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("Synchronization")
-                Text("Hardware Sync", fontWeight = FontWeight.Medium)
             }
         }
     }
