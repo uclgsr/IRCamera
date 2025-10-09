@@ -10,6 +10,11 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
+ksp {
+    // Exclude new architecture files temporarily to isolate KSP issue
+    arg("excludeClasses", "mpdc4gsr.domain.*,mpdc4gsr.data.*,mpdc4gsr.presentation.*,mpdc4gsr.infrastructure.*,mpdc4gsr.ui.*,mpdc4gsr.di.*")
+}
+
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
 val buildTimeStr = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
 
