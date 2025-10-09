@@ -1,10 +1,12 @@
 package mpdc4gsr.feature.camera.ui
 
-import android.os.Build
+import android.hardware.camera2.CameraCharacteristics
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.components.common.TitleBar
 import mpdc4gsr.core.ui.components.settings.SettingsCard
 import mpdc4gsr.core.ui.components.settings.SettingsDropdown
+import mpdc4gsr.core.ui.components.settings.SettingsRow
 import mpdc4gsr.core.ui.components.settings.SettingsSlider
 import mpdc4gsr.core.ui.components.settings.SettingsToggle
 import mpdc4gsr.core.ui.theme.IRCameraTheme
@@ -33,18 +36,29 @@ fun CameraSettingsScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val configManager = remember { CameraConfigurationManager() }
-    val (supports4K, supportsRAW, supports60fps) = remember {
+    val configManager = remember(context) { CameraConfigurationManager(context) }
+    val capabilities = remember {
         configManager.detectDeviceCapabilities()
     }
-    val availableResolutions = remember {
-        buildList {
-            if (supports4K) {
-                add("3840x2160")
-            }
-            add("1920x1080")
-            add("1280x720")
-            add("640x480")
+    val supports4K = capabilities.supports4K
+    val supportsRAW = capabilities.supportsRaw
+    val supports60fps = capabilities.supports60Fps
+    val lensDescription = remember(capabilities) { describeLensFacing(capabilities.lensFacing) }
+    val hardwareDescription = remember(capabilities) { describeHardwareLevel(capabilities.hardwareLevel) }
+    val resolutionSummary = remember(capabilities) {
+        val sizes = capabilities.supportedVideoSizes
+        if (sizes.isEmpty()) {
+            "Not available"
+        } else {
+            sizes.take(3).joinToString(", ") { size -> "${size.width}x${size.height}" }
+        }
+    }
+    val availableResolutions = remember(capabilities) {
+        val sizes = capabilities.supportedVideoSizes
+        if (sizes.isNotEmpty()) {
+            sizes.map { size -> "${size.width}x${size.height}" }
+        } else {
+            listOf("1920x1080", "1280x720", "640x480")
         }
     }
     val maxFrameRate = if (supports60fps) 60f else 30f
@@ -76,6 +90,19 @@ fun CameraSettingsScreen(
                 title = "Device Capabilities",
                 icon = Icons.Default.Info
             ) {
+                SettingsRow(
+                    label = "Active Lens",
+                    value = lensDescription
+                )
+                SettingsRow(
+                    label = "Hardware Level",
+                    value = hardwareDescription
+                )
+                SettingsRow(
+                    label = "Top Resolutions",
+                    value = resolutionSummary
+                )
+                Spacer(modifier = Modifier.height(8.dp))
                 SettingsToggle(
                     label = "4K Video Support",
                     description = "Device supports 4K video recording",
@@ -162,5 +189,25 @@ fun CameraSettingsScreen(
 private fun CameraSettingsScreenPreview() {
     IRCameraTheme {
         CameraSettingsScreen()
+    }
+}
+
+private fun describeLensFacing(lensFacing: Int?): String {
+    return when (lensFacing) {
+        CameraCharacteristics.LENS_FACING_FRONT -> "Front Lens"
+        CameraCharacteristics.LENS_FACING_BACK -> "Back Lens"
+        CameraCharacteristics.LENS_FACING_EXTERNAL -> "External Lens"
+        else -> "Unknown Lens"
+    }
+}
+
+private fun describeHardwareLevel(level: Int?): String {
+    return when (level) {
+        CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3 -> "Level 3"
+        CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL -> "Level Full"
+        CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED -> "Level Limited"
+        CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY -> "Level Legacy"
+        CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_EXTERNAL -> "Level External"
+        else -> "Level Unknown"
     }
 }

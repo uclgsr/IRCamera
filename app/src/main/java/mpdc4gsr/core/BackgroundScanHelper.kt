@@ -14,6 +14,7 @@ object BackgroundScanHelper {
             }
             context.startForegroundService(intent)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanHelper", "Unexpected Exception in BackgroundScanHelper catch block", e)
         }
     }
 
@@ -24,6 +25,7 @@ object BackgroundScanHelper {
             }
             context.startService(intent)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanHelper", "Unexpected Exception in BackgroundScanHelper catch block", e)
         }
     }
 
@@ -34,6 +36,7 @@ object BackgroundScanHelper {
             }
             context.startService(intent)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanHelper", "Unexpected Exception in BackgroundScanHelper catch block", e)
         }
     }
 
@@ -44,6 +47,7 @@ object BackgroundScanHelper {
             }
             context.startService(intent)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanHelper", "Unexpected Exception in BackgroundScanHelper catch block", e)
         }
     }
 }

@@ -9,20 +9,16 @@ import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.VideoCall
 import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.common.TitleBar
 import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.camera.data.CameraConfigurationManager
 import mpdc4gsr.feature.settings.presentation.RecordingSettingsViewModel
 
 @Composable
@@ -31,16 +27,8 @@ fun RecordingSettingsScreen(
     viewModel: RecordingSettingsViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val settings by viewModel.recordingSettings.collectAsState()
-    val configManager = remember { CameraConfigurationManager() }
-    val (_, _, supports60fps) = remember {
-        configManager.detectDeviceCapabilities()
-    }
-    val maxFrameRate = if (supports60fps) 60f else 30f
-    LaunchedEffect(Unit) {
-        viewModel.initialize(context)
-    }
+    val uiState by viewModel.uiState.collectAsState()
+    val settings = uiState.settings
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -72,15 +60,15 @@ fun RecordingSettingsScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsDropdown(
                     label = "Recording Quality",
-                    value = settings.recordingQuality,
-                    options = listOf("Low", "Medium", "High", "Ultra"),
-                    onValueChange = { viewModel.updateRecordingQuality(it) }
+                    value = settings.recordingQuality.displayName,
+                    options = uiState.qualityOptions.map { it.displayName },
+                    onValueChange = viewModel::updateRecordingQuality
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsSlider(
                     label = "Video Frame Rate",
                     value = settings.videoFrameRate.toFloat(),
-                    valueRange = 15f..maxFrameRate,
+                    valueRange = uiState.frameRateRange,
                     onValueChange = { viewModel.updateVideoFrameRate(it.toInt()) },
                     unit = " fps"
                 )

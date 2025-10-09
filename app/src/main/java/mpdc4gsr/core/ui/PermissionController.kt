@@ -97,6 +97,7 @@ class PermissionController(private val activity: ComponentActivity) {
                         }
                     batteryOptimizationLauncher.launch(intent)
                 } catch (e: Exception) {
+                    mpdc4gsr.core.utils.AppLogger.e("PermissionController", "Unexpected Exception in PermissionController catch block", e)
                 }
             } else {
             }
@@ -268,6 +269,7 @@ class PermissionController(private val activity: ComponentActivity) {
             }
             activity.startActivity(intent)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("PermissionController", "Unexpected Exception in PermissionController catch block", e)
         }
     }
 
@@ -332,6 +334,7 @@ class PermissionController(private val activity: ComponentActivity) {
                 try {
                     dialog.dismiss()
                 } catch (e: Exception) {
+                    mpdc4gsr.core.utils.AppLogger.e("PermissionController", "Unexpected Exception in PermissionController catch block", e)
                 }
             }
             currentDialog = null

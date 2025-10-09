@@ -1,8 +1,8 @@
 package mpdc4gsr.feature.gsr.domain.repository
 
 import kotlinx.coroutines.flow.Flow
-import mpdc4gsr.core.data.model.DeviceInfo
-import mpdc4gsr.core.data.model.GSRSample
+import mpdc4gsr.core.sensors.gsr.model.DeviceInfo
+import mpdc4gsr.core.sensors.gsr.model.GSRSample
 
 interface GSRDeviceRepository {
 

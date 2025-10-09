@@ -2,8 +2,8 @@ package mpdc4gsr.feature.gsr.data.source
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import mpdc4gsr.core.data.model.DeviceInfo
-import mpdc4gsr.core.data.model.GSRSample
+import mpdc4gsr.core.sensors.gsr.model.DeviceInfo
+import mpdc4gsr.core.sensors.gsr.model.GSRSample
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import javax.inject.Inject
 
@@ -58,6 +58,7 @@ class GSRDeviceDataSourceImpl @Inject constructor(
             val shimmer = shimmerManager.getShimmerDeviceBtConnectedFromMac(deviceAddress)
             shimmer?.disconnect()
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("GSRDeviceDataSourceImpl", "Unexpected Exception in GSRDeviceDataSourceImpl catch block", e)
         }
     }
 
@@ -75,6 +76,7 @@ class GSRDeviceDataSourceImpl @Inject constructor(
             val shimmer = shimmerManager.getShimmerDeviceBtConnectedFromMac(deviceAddress)
             shimmer?.stopStreaming()
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("GSRDeviceDataSourceImpl", "Unexpected Exception in GSRDeviceDataSourceImpl catch block", e)
         }
     }
 

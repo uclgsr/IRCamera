@@ -142,6 +142,12 @@ class SessionManager(
                         delay(SESSION_HEARTBEAT_INTERVAL_MS)
                     }
                 } catch (e: CancellationException) {
+                    logger.log(
+                        StructuredLogger.LogLevel.DEBUG,
+                        "SessionManager",
+                        "service_cancelled",
+                        mapOf("reason" to (e.message ?: "cancelled")),
+                    )
                 } catch (e: Exception) {
                     logger.log(
                         StructuredLogger.LogLevel.ERROR,

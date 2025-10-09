@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.data.UnifiedGSRRecorder
+import mpdc4gsr.core.sensors.gsr.DefaultGsrRecorder
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
 import java.text.SimpleDateFormat
@@ -65,7 +65,7 @@ class GSRSensorViewModel @Inject constructor(
     private var wasRecordingBeforeDisconnect = false
 
     // Expose recorder for lifecycle management from UI layer
-    var gsrRecorder: UnifiedGSRRecorder? = null
+    var gsrRecorder: DefaultGsrRecorder? = null
         private set
 
     fun initializeRecorder(
@@ -85,7 +85,7 @@ class GSRSensorViewModel @Inject constructor(
                         )
                     } ?: ReconnectionConfig()
                 this@GSRSensorViewModel.reconnectionConfig = configToUse
-                gsrRecorder = UnifiedGSRRecorder(
+                gsrRecorder = DefaultGsrRecorder(
                     context = context,
                     lifecycleOwner = lifecycleOwner
                 )
@@ -330,6 +330,7 @@ class GSRSensorViewModel @Inject constructor(
                 } else {
                 }
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("GSRSensorViewModel", "Unexpected Exception in GSRSensorViewModel catch block", e)
             }
         }
         // All attempts failed
@@ -363,6 +364,7 @@ class GSRSensorViewModel @Inject constructor(
                 gsrRecorder?.stopRecording()
                 gsrRecorder?.cleanup()
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("GSRSensorViewModel", "Unexpected Exception in GSRSensorViewModel catch block", e)
             }
         }
     }

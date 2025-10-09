@@ -112,10 +112,16 @@ class PcServerDiscovery(private val context: Context) {
                         // No response from this broadcast address
                     }
                 } catch (e: Exception) {
+                    mpdc4gsr.core.utils.AppLogger.e("PcServerDiscovery", "Unexpected Exception in PcServerDiscovery catch block", e)
                 }
             }
             socket.close()
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e(
+                "PcServerDiscovery",
+                "Failed to complete UDP broadcast discovery",
+                e,
+            )
         } finally {
             android.net.TrafficStats.clearThreadStatsTag()
         }
@@ -143,6 +149,7 @@ class PcServerDiscovery(private val context: Context) {
                     }
                 }
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("PcServerDiscovery", "Unexpected Exception in PcServerDiscovery catch block", e)
             }
             servers
         }
@@ -228,6 +235,7 @@ class PcServerDiscovery(private val context: Context) {
                 }
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("PcServerDiscovery", "Unexpected Exception in PcServerDiscovery catch block", e)
         }
         // Fallback to common broadcast addresses
         if (addresses.isEmpty()) {
@@ -256,6 +264,7 @@ class PcServerDiscovery(private val context: Context) {
                 }
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("PcServerDiscovery", "Unexpected Exception in PcServerDiscovery catch block", e)
         }
         return null
     }

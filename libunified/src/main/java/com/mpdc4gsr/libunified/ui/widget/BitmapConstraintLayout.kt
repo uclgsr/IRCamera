@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.drawToBitmap
+import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 
 open class BitmapConstraintLayout : ConstraintLayout {
     constructor(context: Context) : super(context)
@@ -23,7 +24,8 @@ open class BitmapConstraintLayout : ConstraintLayout {
         }
         try {
             viewBitmap = this.drawToBitmap()
-        } catch (_: Exception) {
+        } catch (exception: Exception) {
+            com.mpdc4gsr.libunified.app.utils.LibraryLogger.e("BitmapConstraintLayout", "Unexpected Exception in BitmapConstraintLayout catch block", exception)
         }
     }
 }

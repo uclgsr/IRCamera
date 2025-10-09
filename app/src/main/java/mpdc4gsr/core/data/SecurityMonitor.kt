@@ -136,6 +136,7 @@ class SecurityMonitor(
                     performSecurityCheck()
                     delay(MONITORING_INTERVAL_MS)
                 } catch (e: Exception) {
+                    mpdc4gsr.core.utils.AppLogger.e("SecurityMonitor", "Unexpected Exception in SecurityMonitor catch block", e)
                 }
             }
         }
@@ -145,6 +146,7 @@ class SecurityMonitor(
                     performCleanup()
                     delay(CLEANUP_INTERVAL_MS)
                 } catch (e: Exception) {
+                    mpdc4gsr.core.utils.AppLogger.e("SecurityMonitor", "Unexpected Exception in SecurityMonitor catch block", e)
                 }
             }
         }

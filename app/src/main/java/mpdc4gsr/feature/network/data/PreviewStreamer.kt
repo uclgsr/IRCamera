@@ -155,6 +155,7 @@ class PreviewStreamer(
                 scaledBitmap.recycle()
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("PreviewStreamer", "Unexpected Exception in PreviewStreamer catch block", e)
         }
     }
 

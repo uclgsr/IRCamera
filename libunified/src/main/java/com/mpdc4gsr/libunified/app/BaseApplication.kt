@@ -24,6 +24,7 @@ import com.mpdc4gsr.libunified.app.socket.SocketCmdUtils
 import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
 import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
 import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
+import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.utils.WifiUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
@@ -140,7 +141,8 @@ abstract class BaseApplication : Application() {
                         if (!enable) {
                             autoSaveNewest(true)
                         }
-                    } catch (_: Exception) {
+                    } catch (exception: Exception) {
+                        LibraryLogger.e("BaseApplication", "Unexpected Exception in BaseApplication catch block", exception)
                     }
                 }
             }

@@ -2,127 +2,127 @@ package mpdc4gsr.feature.network.data
 
 import android.graphics.Bitmap
 import com.mpdc4gsr.module.thermalunified.tools.CameraPreviewManager
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.cancel
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import java.util.concurrent.atomic.AtomicReference
 
 class PreviewDataAdapter(
     private val previewStreamer: PreviewStreamer,
-    private val recordingService: RecordingService
+    private val recordingService: RecordingService,
+    private val pollingDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     companion object {
         private const val POLLING_INTERVAL_MS = 500L
     }
 
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private var pollingJob: Job? = null
-    private var isRunning = false
+    private val scope = CoroutineScope(SupervisorJob() + pollingDispatcher)
     private val thermalCameraManager = AtomicReference<CameraPreviewManager?>()
     private val gsrRecorder = AtomicReference<GSRSensorRecorder?>()
+    private var pollingJob: Job? = null
+    @Volatile
+    private var isRunning = false
+
     fun startDataPolling() {
-        if (isRunning) {
-            return
-        } isRunning = true
+        if (isRunning) return
+        isRunning = true
         pollingJob = scope.launch {
             while (isActive && isRunning) {
                 try {
                     pollSensorData()
-                    delay(POLLING_INTERVAL_MS)
-                } catch (e: Exception) {
-                    delay(1000)
+                } catch (_: Throwable) {
+                    delay(POLLING_INTERVAL_MS * 2)
                 }
+                delay(POLLING_INTERVAL_MS)
             }
         }
     }
 
     fun stopDataPolling() {
-        if (!isRunning) {
-            return
-        } isRunning = false
+        if (!isRunning) return
+        isRunning = false
         pollingJob?.cancel()
         pollingJob = null
     }
 
     fun setThermalCameraManager(manager: CameraPreviewManager?) {
         thermalCameraManager.set(manager)
-        "set" else "cleared"
-    }")
-}
+    }
 
-fun setGsrRecorder(recorder: GSRSensorRecorder?) {
-    gsrRecorder.set(recorder)
-    "set" else "cleared"
-}")
-}
+    fun setGsrRecorder(recorder: GSRSensorRecorder?) {
+        gsrRecorder.set(recorder)
+    }
 
-private suspend fun pollSensorData() {
-    pollThermalFrame()
-    pollGsrData()
-    updateRecordingStatus()
-}
+    private suspend fun pollSensorData() {
+        pollThermalFrame()
+        pollGsrData()
+        updateRecordingStatus()
+    }
 
-private suspend fun pollThermalFrame() {
-    try {
-        val manager = thermalCameraManager.get()
-        if (manager != null) {
-            val thermalBitmap = manager.scaledBitmap()
-            if (thermalBitmap != null && !thermalBitmap.isRecycled) {
-                previewStreamer.updateThermalFrame(thermalBitmap)
+    private suspend fun pollThermalFrame() {
+        val manager = thermalCameraManager.get() ?: return
+        try {
+            manager.scaledBitmap()
+                ?.takeUnless { it.isRecycled }
+                ?.let(previewStreamer::updateThermalFrame)
+        } catch (exception: Throwable) {
+            mpdc4gsr.core.utils.AppLogger.e("PreviewDataAdapter", "Unexpected Throwable in PreviewDataAdapter catch block", exception)
+        }
+    }
+
+    private suspend fun pollGsrData() {
+        val recorder = gsrRecorder.get() ?: return
+        if (!recorder.isRecording) return
+        try {
+            val gsrValue =
+                recorder.currentGsrValue()
+                    ?.toFloat()
+                    ?: recorder.latestSample.value?.gsrMicrosiemens?.toFloat()
+                    ?: 0f
+            if (gsrValue > 0f) {
+                previewStreamer.updateGsrValue(gsrValue)
             }
+        } catch (exception: Throwable) {
+            mpdc4gsr.core.utils.AppLogger.e("PreviewDataAdapter", "Unexpected Throwable in PreviewDataAdapter catch block", exception)
         }
-    } catch (e: Exception) {
     }
-}
 
-private suspend fun pollGsrData() {
-    try {
-        val recorder = gsrRecorder.get()
-        if (recorder != null && recorder.isRecording) {
-            val stats = recorder.getRecordingStats()
-            // TODO: GSRSensorRecorder should expose current GSR value via a StateFlow
-            // For now, generate a realistic varying value based on recording activity
-            val gsrValue = if (stats.totalSamplesRecorded > 0) {
-                // Simulate realistic GSR variation (typical range 5-20 µS)
-                val baseValue = 12.0f
-                val variation = (System.currentTimeMillis() % 5000) / 500.0f - 5.0f
-                (baseValue + variation).coerceIn(5.0f, 20.0f)
-            } else {
-                0.0f
+    private suspend fun updateRecordingStatus() {
+        try {
+            val controller = recordingService.getRecordingController()
+            val status = when {
+                controller.isRecording -> "RECORDING"
+                recordingService.isConnectedToPC -> "CONNECTED"
+                else -> "IDLE"
             }
-            previewStreamer.updateGsrValue(gsrValue)
+            previewStreamer.updateRecordingStatus(status)
+        } catch (exception: Throwable) {
+            mpdc4gsr.core.utils.AppLogger.e("PreviewDataAdapter", "Unexpected Throwable in PreviewDataAdapter catch block", exception)
         }
-    } catch (e: Exception) {
     }
-}
 
-private suspend fun updateRecordingStatus() {
-    try {
-        val recordingController = recordingService.getRecordingController()
-        val status = when {
-            recordingController.isRecording -> "RECORDING"
-            recordingService.isConnectedToPC -> "CONNECTED"
-            else -> "IDLE"
-        }
-        previewStreamer.updateRecordingStatus(status)
-    } catch (e: Exception) {
+    fun updateRgbFrame(bitmap: Bitmap) {
+        previewStreamer.updateRgbFrame(bitmap)
     }
-}
 
-fun updateRgbFrame(bitmap: Bitmap) {
-    previewStreamer.updateRgbFrame(bitmap)
-}
+    fun updateThermalFrameDirect(bitmap: Bitmap) {
+        previewStreamer.updateThermalFrame(bitmap)
+    }
 
-fun updateThermalFrameDirect(bitmap: Bitmap) {
-    previewStreamer.updateThermalFrame(bitmap)
-}
+    fun updateGsrValueDirect(gsrValue: Float) {
+        previewStreamer.updateGsrValue(gsrValue)
+    }
 
-fun updateGsrValueDirect(gsrValue: Float) {
-    previewStreamer.updateGsrValue(gsrValue)
-}
-
-fun cleanup() {
-    stopDataPolling()
-    scope.cancel()
-}
+    fun cleanup() {
+        stopDataPolling()
+        scope.cancel()
+    }
 }

@@ -23,7 +23,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.gsr.model.SessionInfo
+import mpdc4gsr.core.session.SessionInfo
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -183,21 +183,21 @@ private fun SessionManagerContent(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             val mockSessions = listOf(
-                com.mpdc4gsr.gsr.model.SessionInfo(
+                mpdc4gsr.core.session.SessionInfo(
                     sessionId = "session_1",
                     startTime = System.currentTimeMillis(),
                     endTime = System.currentTimeMillis(),
                     participantId = "P001",
                     studyName = "GSR Study Session"
                 ),
-                com.mpdc4gsr.gsr.model.SessionInfo(
+                mpdc4gsr.core.session.SessionInfo(
                     sessionId = "session_2",
                     startTime = System.currentTimeMillis() - 86400000,
                     endTime = System.currentTimeMillis() - 82800000,
                     participantId = "P002",
                     studyName = "Thermal Analysis"
                 ),
-                com.mpdc4gsr.gsr.model.SessionInfo(
+                mpdc4gsr.core.session.SessionInfo(
                     sessionId = "session_3",
                     startTime = System.currentTimeMillis() - 172800000,
                     endTime = null,

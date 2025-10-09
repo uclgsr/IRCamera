@@ -110,13 +110,16 @@ class BluetoothClient(
                         w.flush()
                         w.close()
                     } catch (e: IOException) {
+                        mpdc4gsr.core.utils.AppLogger.e("BluetoothClient", "Unexpected IOException in BluetoothClient catch block", e)
                     }
                 }
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("BluetoothClient", "Unexpected Exception in BluetoothClient catch block", e)
             }
             try {
                 reader?.close()
             } catch (e: IOException) {
+                mpdc4gsr.core.utils.AppLogger.e("BluetoothClient", "Unexpected IOException in BluetoothClient catch block", e)
             }
             try {
                 bluetoothSocket?.let { socket ->
@@ -125,7 +128,13 @@ class BluetoothClient(
                     }
                 }
             } catch (e: IOException) {
+                mpdc4gsr.core.utils.AppLogger.e(
+                    "BluetoothClient",
+                    "Failed to close Bluetooth socket cleanly",
+                    e,
+                )
             } catch (e: SecurityException) {
+                mpdc4gsr.core.utils.AppLogger.e("BluetoothClient", "Unexpected SecurityException in BluetoothClient catch block", e)
             }
             // Clear all references
             writer = null

@@ -100,6 +100,11 @@ object TimeUtils {
                 "Samsung S22 ($detectedProcessor) maintains authoritative timing with ${offset}ms PC coordination"
             )
         } catch (e: Exception) {
+            android.util.Log.e(
+                TAG,
+                "Unexpected Exception in TimeUtils catch block: ${e.message}",
+                e
+            )
         }
     }
 

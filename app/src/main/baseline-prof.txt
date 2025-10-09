@@ -19,7 +19,7 @@
 #
 # Example profile entries (these would be auto-generated):
 # Lmpdc4gsr/core/App;->onCreate()V
-# Lmpdc4gsr/feature/camera/ui/DualModeCameraComposeActivity;->onCreate(Landroid/os/Bundle;)V
+# Lmpdc4gsr/feature/camera/ui/DualModeCameraComposeActivity2;->onCreate(Landroid/os/Bundle;)V
 # Lmpdc4gsr/core/RecordingService;->onStartCommand(Landroid/content/Intent;II)I
 #
 # See: https://developer.android.com/topic/performance/baselineprofiles

@@ -18,10 +18,16 @@ import kotlinx.coroutines.flow.*
 import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import mpdc4gsr.core.ui.PermissionManager
+import mpdc4gsr.core.sensors.api.ErrorType
+import mpdc4gsr.core.sensors.api.RecordingStats
+import mpdc4gsr.core.sensors.api.RecordingStatus
+import mpdc4gsr.core.sensors.api.SensorError
+import mpdc4gsr.core.sensors.api.SensorRecorder
 import mpdc4gsr.feature.camera.data.CameraConfigurationManager
 import mpdc4gsr.feature.camera.data.CameraControlsManager
 import mpdc4gsr.feature.camera.data.CameraPerformanceManager
 import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
+import mpdc4gsr.feature.settings.data.RecordingSettings
 import mpdc4gsr.feature.settings.data.RecordingSettingsRepository
 import java.io.File
 import java.io.FileWriter
@@ -108,8 +114,9 @@ class RgbCameraRecorder(
     private var selectedVideoBitrate = VIDEO_BITRATE_1080P
     private var deviceSupports4K = false
     private var deviceSupportsRAW = false
+    private var deviceCapabilities: CameraConfigurationManager.DeviceCapabilities? = null
     private var actualFrameRateAchieved = 0.0
-    private var recordingSettings: RecordingSettingsRepository.RecordingSettings? = null
+    private var recordingSettings: RecordingSettings? = null
     private var cameraProvider: ProcessCameraProvider? = null
     private var preview: Preview? = null
     private var videoCapture: VideoCapture<Recorder>? = null
@@ -117,14 +124,13 @@ class RgbCameraRecorder(
     private var rawImageCapture: ImageCapture? = null
 
     // Extracted managers for better code organization
-    private val configurationManager = CameraConfigurationManager()
+    private val configurationManager = CameraConfigurationManager(context)
     private val controlsManager = CameraControlsManager { errorType, message ->
         recordingScope.launch {
             emitError(errorType, message)
         }
     }
-    private val performanceManager =
-        CameraPerformanceManager(context) // For Stage 3 RAW DNG capture using ImageFormat.RAW_SENSOR
+    private val performanceManager = CameraPerformanceManager(context)
     private var camera: Camera? = null
     private var activeRecording: Recording? = null
     private var cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
@@ -167,7 +173,7 @@ class RgbCameraRecorder(
                 RecordingSettingsRepository.getInstance(context).getSettings()
             Log.d(
                 TAG,
-                "Recording settings loaded: quality=${recordingSettings?.recordingQuality}, fps=${recordingSettings?.videoFrameRate}, audio=${recordingSettings?.audioEnabled}"
+                "Recording settings loaded: quality=${recordingSettings?.recordingQuality?.displayName}, fps=${recordingSettings?.videoFrameRate}, audio=${recordingSettings?.audioEnabled}"
             )
             // Observe settings changes for real-time updates
             observeRecordingSettingsChanges()
@@ -278,43 +284,15 @@ class RgbCameraRecorder(
     }
 
     private fun detectDeviceCapabilities() {
-        try {
-            val deviceModel = android.os.Build.MODEL
-            val deviceManufacturer = android.os.Build.MANUFACTURER
-            deviceSupports4K = KNOWN_4K_DEVICES.contains(deviceModel) ||
-                    (deviceModel.contains("S22", ignoreCase = true) && deviceManufacturer.equals(
-                        "samsung",
-                        ignoreCase = true
-                    ))
-            deviceSupportsRAW = KNOWN_RAW_DEVICES.contains(deviceModel) ||
-                    (deviceModel.contains("S22", ignoreCase = true) && deviceManufacturer.equals(
-                        "samsung",
-                        ignoreCase = true
-                    ))
-            cameraProvider?.let { provider ->
-                val camera = provider.bindToLifecycle(lifecycleOwner, currentCameraSelector)
-                val cameraInfo = camera.cameraInfo
-                deviceSupports4K = deviceSupports4K || checkVideoProfileSupport(cameraInfo)
-                try {
-                    val cameraCharacteristics =
-                        androidx.camera.camera2.interop.Camera2CameraInfo.from(cameraInfo)
-                    val capabilities = cameraCharacteristics.getCameraCharacteristic(
-                        android.hardware.camera2.CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES
-                    )
-                    deviceSupportsRAW = deviceSupportsRAW || capabilities?.contains(
-                        android.hardware.camera2.CameraMetadata.REQUEST_AVAILABLE_CAPABILITIES_RAW
-                    ) == true
-                } catch (e: Exception) {
-                }
-            }
-            Log.i(
-                TAG,
-                "Samsung Galaxy S22 capabilities - 4K: $deviceSupports4K, RAW: $deviceSupportsRAW for $deviceManufacturer $deviceModel"
-            )
-        } catch (e: Exception) {
-            deviceSupports4K = false
-            deviceSupportsRAW = false
-        }
+        val capabilities = configurationManager.detectDeviceCapabilities(isUsingFrontCamera)
+        deviceCapabilities = capabilities
+        deviceSupports4K = capabilities.supports4K || SamsungDeviceCompatibility.supports4kVideo()
+        deviceSupportsRAW = capabilities.supportsRaw || SamsungDeviceCompatibility.supportsRawCapture()
+        Log.i(
+            TAG,
+            "Camera capabilities resolved -> ${capabilities.summary()}, heuristics=" +
+                    "4K=${SamsungDeviceCompatibility.supports4kVideo()} RAW=${SamsungDeviceCompatibility.supportsRawCapture()}"
+        )
     }
 
     private fun checkVideoProfileSupport(cameraInfo: androidx.camera.core.CameraInfo): Boolean {
@@ -407,6 +385,7 @@ class RgbCameraRecorder(
                         TAG,
                         " Successfully switched to ${if (useFrontCamera) "front" else "back"} camera"
                     )
+                    detectDeviceCapabilities()
                     true
                 } else {
                     _cameraStatus.value = "Camera Switch Failed"
@@ -433,6 +412,8 @@ class RgbCameraRecorder(
                 if (deviceSupportsRAW && ENABLE_RAW_CAPTURE) "JPEG+RAW" else "JPEG"
         }
     }
+
+    fun getCurrentCapabilities(): CameraConfigurationManager.DeviceCapabilities? = deviceCapabilities
 
     fun getResolution(): String {
         return "${selectedVideoWidth}x${selectedVideoHeight}"
@@ -524,25 +505,14 @@ class RgbCameraRecorder(
     }
 
     private fun checkDevice60fpsSupport(): Boolean {
-        return try {
-            val deviceModel = Build.MODEL
-            val manufacturer = Build.MANUFACTURER.lowercase()
-            // Samsung S22 series and other high-end devices that support 60fps
-            val supports60fps = manufacturer == "samsung" && (
-                    deviceModel in KNOWN_4K_DEVICES ||
-                            deviceModel.startsWith("SM-S9") || // S22 series
-                            deviceModel.startsWith("SM-S10") || // S23 series
-                            deviceModel.startsWith("SM-G9") || // Note series
-                            deviceModel.startsWith("SM-G99") // S21/S22 Ultra
-                    )
-            Log.i(
-                TAG,
-                "60fps support check - Device: $manufacturer $deviceModel, Supports 60fps: $supports60fps"
-            )
-            supports60fps
-        } catch (e: Exception) {
-            false
-        }
+        val capabilities = configurationManager.detectDeviceCapabilities(isUsingFrontCamera)
+        val supportsHighFrameRate =
+            capabilities.supports60Fps || SamsungDeviceCompatibility.supportsHighFrameRateVideo()
+        Log.i(
+            TAG,
+            "60fps support check - capabilities=${capabilities.summary()}, samsungHighFps=${SamsungDeviceCompatibility.supportsHighFrameRateVideo()}"
+        )
+        return supportsHighFrameRate
     }
 
     private suspend fun setupCameraUseCases() = withContext(Dispatchers.Main) {
@@ -579,6 +549,7 @@ class RgbCameraRecorder(
                                 android.hardware.camera2.CameraMetadata.CONTROL_MODE_USE_SCENE_MODE
                             )
                     } catch (e: Exception) {
+                        mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
                     }
                 }
             }.build()
@@ -606,6 +577,7 @@ class RgbCameraRecorder(
                     // Store the RAW ImageCapture for use in capture operations
                     this@RgbCameraRecorder.rawImageCapture = rawImageCapture
                 } catch (e: Exception) {
+                    mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
                 }
             }
         } catch (e: Exception) {
@@ -785,6 +757,7 @@ class RgbCameraRecorder(
                     "Recording config from settings: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, audio=${recordingSettings?.audioEnabled}"
                 )
                 _isRecording.set(true)
+                performanceManager.reset()
                 sessionStartTime.set(System.currentTimeMillis())
                 sessionReferenceTimestampNs.set(sessionMetadata.sessionStartMonotonicNs)
                 val localStartNs = TimestampManager.getCurrentTimestampNanos()
@@ -799,7 +772,7 @@ class RgbCameraRecorder(
                         "sensor_id" to sensorId,
                         "recording_config" to "${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps",
                         "audio_enabled" to "${recordingSettings?.audioEnabled}",
-                        "recording_quality" to "${recordingSettings?.recordingQuality}",
+                        "recording_quality" to "${recordingSettings?.recordingQuality?.displayName}",
                         "sync_verification" to "enabled"
                     )
                 )
@@ -872,6 +845,7 @@ class RgbCameraRecorder(
             }
             startFrameCapture()
             _isRecording.set(true)
+            performanceManager.reset()
             samplesRecorded.set(0)
             droppedFrames.set(0)
             framesCaptured.set(0)
@@ -1007,6 +981,7 @@ class RgbCameraRecorder(
                     }
                     if (pendingCaptureCount >= MAX_PENDING_CAPTURES) {
                         droppedFrames.incrementAndGet()
+                        performanceManager.recordDroppedFrame()
                         consecutiveDroppedFrames++
                         // Adaptive optimization: increase skip multiplier if dropping many frames
                         if (consecutiveDroppedFrames >= ADAPTIVE_OPTIMIZATION_THRESHOLD) {
@@ -1046,6 +1021,7 @@ class RgbCameraRecorder(
                     val currentTime = System.currentTimeMillis()
                     consecutiveFrameErrors.incrementAndGet()
                     droppedFrames.incrementAndGet()
+                    performanceManager.recordDroppedFrame()
                     pendingCaptureCount = 0
                     delay(1000)
                 }
@@ -1225,6 +1201,7 @@ class RgbCameraRecorder(
                 rawFile.writeText("RAW capture frame $frameNumber - ${timestampRecord.systemNanos}")
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
         }
     }
 
@@ -1254,10 +1231,12 @@ class RgbCameraRecorder(
             val gson = com.google.gson.Gson()
             metadataFile.writeText(gson.toJson(metadata))
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
         }
     }
 
     private fun monitorFrameRate(frameTimestamp: Long) {
+        performanceManager.recordFrame(frameTimestamp)
         synchronized(frameTimestamps) {
             frameTimestamps.add(frameTimestamp)
             val currentTime = System.currentTimeMillis()
@@ -1320,6 +1299,13 @@ class RgbCameraRecorder(
                 TAG,
                 "  Video configuration: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps"
             )
+            val performanceSnapshot = performanceManager.snapshot()
+            Log.i(
+                TAG,
+                "  Capture performance: avg=${String.format(\"%.2f\", performanceSnapshot.averageFps)}fps, " +
+                        "captured=${performanceSnapshot.framesCaptured}, dropped=${performanceSnapshot.droppedFrames}, " +
+                        "disk=${performanceSnapshot.availableDiskMb}MB"
+            )
             val frameRateSuccess = Math.abs(averageFrameRate - CAPTURE_FPS) / CAPTURE_FPS < 0.2
             if (frameRateSuccess) {
             } else {
@@ -1329,6 +1315,7 @@ class RgbCameraRecorder(
                 )
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
         }
     }
 
@@ -1368,6 +1355,7 @@ class RgbCameraRecorder(
             samplesRecorded.incrementAndGet()
             lastFrameTime.set(alignedNs)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
         }
     }
 
@@ -1415,6 +1403,7 @@ class RgbCameraRecorder(
             samplesRecorded.incrementAndGet()
             lastFrameTime.set(alignedNs)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
         }
     }
 
@@ -1460,6 +1449,7 @@ class RgbCameraRecorder(
         val currentTime = System.currentTimeMillis()
         val errorCount = consecutiveFrameErrors.incrementAndGet()
         droppedFrames.incrementAndGet()
+        performanceManager.recordDroppedFrame()
         if (errorCount >= MAX_CONSECUTIVE_FRAME_ERRORS) {
             val timeSinceLastError = currentTime - lastFrameErrorTime.get()
             if (timeSinceLastError < FRAME_ERROR_RESET_INTERVAL) {
@@ -1503,6 +1493,7 @@ class RgbCameraRecorder(
                 try {
                     job.join()
                 } catch (e: Exception) {
+                    mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
                 }
                 frameCaptureJob = null
             }
@@ -1510,6 +1501,7 @@ class RgbCameraRecorder(
                 try {
                     recording.stop()
                 } catch (e: Exception) {
+                    mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
                 }
                 activeRecording = null
             }
@@ -1524,10 +1516,12 @@ class RgbCameraRecorder(
                 }
                 csvBufferedWriter = null
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
             }
             try {
                 cameraProvider?.unbindAll()
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
             }
             val sessionStats = generateSessionStats()
             Log.i(
@@ -1644,6 +1638,7 @@ class RgbCameraRecorder(
                 try {
                     cameraProvider?.unbindAll()
                 } catch (e: Exception) {
+                    mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
                 }
             }
             camera = null
@@ -1659,6 +1654,7 @@ class RgbCameraRecorder(
                 // Recreate executor to allow re-initialization for multiple recording sessions
                 cameraExecutor = Executors.newSingleThreadExecutor()
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
             }
             recordingScope.cancel()
             consecutiveFrameErrors.set(0)
@@ -1875,6 +1871,7 @@ class RgbCameraRecorder(
                 // CameraX doesn't have direct AE lock, but we can implement via Camera2 interop
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
         }
     }
 
@@ -1988,6 +1985,7 @@ class RgbCameraRecorder(
             }
             // Could trigger camera reconfiguration here if needed
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
         }
     }
 

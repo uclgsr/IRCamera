@@ -2,6 +2,7 @@ package com.mpdc4gsr.libunified.app.matrix
 
 import android.util.Log
 import com.mpdc4gsr.libunified.BuildConfig
+import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -96,6 +97,7 @@ object Logger {
             try {
                 file.createNewFile()
             } catch (e: Exception) {
+                LibraryLogger.e("Logger", "Unexpected Exception in Logger catch block", e)
             }
         }
         try {

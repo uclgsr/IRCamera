@@ -104,6 +104,7 @@ class CrashRecoveryManager(private val context: Context) {
                 updateSessionMetadataWithFailure(sessionDirectory, reason)
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("CrashRecoveryManager", "Unexpected Exception in CrashRecoveryManager catch block", e)
         }
         clearCrashRecoveryState()
     }
@@ -296,6 +297,7 @@ class CrashRecoveryManager(private val context: Context) {
             existingMetadata.put("failure_info", failureInfo)
             metadataFile.writeText(existingMetadata.toString(2))
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("CrashRecoveryManager", "Unexpected Exception in CrashRecoveryManager catch block", e)
         }
     }
 

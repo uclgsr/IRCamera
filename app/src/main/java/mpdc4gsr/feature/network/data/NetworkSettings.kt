@@ -111,11 +111,23 @@ class NetworkSettings(private val context: Context) {
             try {
                 val deviceName = device.name
                 editor.putString(KEY_BLUETOOTH_DEVICE_NAME, deviceName)
-            } catch (e: SecurityException) {                // Save address only
+            } catch (e: SecurityException) {
+                // Save address only
+                mpdc4gsr.core.utils.AppLogger.w(
+                    "NetworkSettings",
+                    "Missing permission to read Bluetooth device name",
+                    e,
+                )
             }
             editor.apply()
         } catch (e: SecurityException) {
+            mpdc4gsr.core.utils.AppLogger.w(
+                "NetworkSettings",
+                "Missing permission to persist Bluetooth device metadata",
+                e,
+            )
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("NetworkSettings", "Unexpected Exception in NetworkSettings catch block", e)
         }
     }
 
@@ -134,6 +146,7 @@ class NetworkSettings(private val context: Context) {
         try {
             prefs.edit().clear().apply()
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("NetworkSettings", "Unexpected Exception in NetworkSettings catch block", e)
         }
     }
 

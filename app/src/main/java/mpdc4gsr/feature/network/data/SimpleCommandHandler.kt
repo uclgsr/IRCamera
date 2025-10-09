@@ -148,6 +148,7 @@ class SimpleCommandHandler(
                         val statusResponse = handleGetStatusCommand()
                         networkManager.sendTelemetry(statusResponse)
                     } catch (e: Exception) {
+                        mpdc4gsr.core.utils.AppLogger.e("SimpleCommandHandler", "Unexpected Exception in SimpleCommandHandler catch block", e)
                     }
                 }
             }
@@ -162,6 +163,7 @@ class SimpleCommandHandler(
                     "STATUS Recording started at $timestamp, session: $sessionId, sensors: [RGB,Thermal,GSR]"
                 networkManager.sendTelemetry(message)
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("SimpleCommandHandler", "Unexpected Exception in SimpleCommandHandler catch block", e)
             }
         }
     }
@@ -174,6 +176,7 @@ class SimpleCommandHandler(
                     "STATUS Recording stopped at $timestamp, duration: ${duration}ms, files saved"
                 networkManager.sendTelemetry(message)
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("SimpleCommandHandler", "Unexpected Exception in SimpleCommandHandler catch block", e)
             }
         }
     }
@@ -185,6 +188,7 @@ class SimpleCommandHandler(
                 val message = "WARN $errorType at $timestamp: $errorMessage"
                 networkManager.sendTelemetry(message)
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("SimpleCommandHandler", "Unexpected Exception in SimpleCommandHandler catch block", e)
             }
         }
     }

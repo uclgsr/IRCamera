@@ -82,6 +82,7 @@ class NetworkServer(
                 clientSocket = null
                 serverSocket = null
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("NetworkServer", "Unexpected Exception in NetworkServer catch block", e)
             }
         }
     }
@@ -201,6 +202,7 @@ class NetworkServer(
                 binaryOutputStream?.close()
                 clientSocket?.close()
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("NetworkServer", "Unexpected Exception in NetworkServer catch block", e)
             }
             outputWriter = null
             inputReader = null

@@ -1,6 +1,6 @@
 package mpdc4gsr.feature.main.domain.repository
 
-import com.mpdc4gsr.gsr.model.SessionInfo
+import mpdc4gsr.core.session.SessionInfo
 import kotlinx.coroutines.flow.Flow
 
 interface SessionRepository {

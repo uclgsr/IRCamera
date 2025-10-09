@@ -1,6 +1,7 @@
 package mpdc4gsr.feature.settings.data
 
 import android.content.Context
+import kotlin.math.abs
 
 object RecordingSettingsValidator {
     @Deprecated("This method no longer performs validation or logging", ReplaceWith(""))
@@ -22,8 +23,7 @@ object RecordingSettingsValidator {
         val audioMatch = actualAudioEnabled == settings.audioEnabled
         val resolutionMatch = actualVideoWidth == qualityConfig.videoWidth &&
                 actualVideoHeight == qualityConfig.videoHeight
-        val fpsMatch = actualVideoFps >= (settings.videoFrameRate - 5) &&
-                actualVideoFps <= (settings.videoFrameRate + 5)
+        val fpsMatch = abs(actualVideoFps - settings.videoFrameRate) <= 5
         return audioMatch && resolutionMatch && fpsMatch
     }
 }

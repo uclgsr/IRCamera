@@ -1,6 +1,7 @@
 package com.mpdc4gsr.libunified.app.tools
 
 import com.elvishew.xlog.XLog
+import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import java.util.regex.Pattern
 
 object VersionTools {
@@ -15,6 +16,7 @@ object VersionTools {
                 str.toFloat()
                 versionStr = str
             } catch (e: Exception) {
+            LibraryLogger.e("VersionTools", "Unexpected Exception in VersionTools catch block", e)
             }
         }
         return versionStr

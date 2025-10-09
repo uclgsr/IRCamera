@@ -9,6 +9,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -108,6 +109,11 @@ fun RGBCameraScreen(
                 resolution = resolution,
                 frameRate = frameRate,
                 isRecording = isRecording,
+                lensFacing = cameraState.lensFacingDescription,
+                hardwareLevel = cameraState.hardwareLevelDescription,
+                supports4K = cameraState.supports4K,
+                supportsRaw = cameraState.supportsRaw,
+                supports60Fps = cameraState.supports60Fps,
                 onBackClick = onBackClick,
                 onSettingsClick = onSettingsClick
             )
@@ -205,10 +211,52 @@ private fun CameraTopBar(
     resolution: String,
     frameRate: Int,
     isRecording: Boolean,
+    lensFacing: String,
+    hardwareLevel: String,
+    supports4K: Boolean,
+    supportsRaw: Boolean,
+    supports60Fps: Boolean,
     onBackClick: (() -> Unit)?,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val capabilityBadges = remember(
+        lensFacing,
+        hardwareLevel,
+        supports4K,
+        supportsRaw,
+        supports60Fps
+    ) {
+        buildList {
+            add(
+                CapabilityBadge(
+                    label = lensFacing,
+                    background = Color.Black.copy(alpha = 0.6f),
+                    contentColor = Color.White
+                )
+            )
+            val hardwareKnown = !hardwareLevel.equals("Level Unknown", ignoreCase = true)
+            if (hardwareKnown) {
+                add(
+                    CapabilityBadge(
+                        label = hardwareLevel,
+                        background = Color.Black.copy(alpha = 0.6f),
+                        contentColor = Color.White
+                    )
+                )
+            }
+            if (supports4K) {
+                add(CapabilityBadge(label = "4K", background = Orange, contentColor = Color.Black))
+            }
+            if (supports60Fps) {
+                add(CapabilityBadge(label = "60 FPS", background = Green, contentColor = Color.Black))
+            }
+            if (supportsRaw) {
+                add(CapabilityBadge(label = "RAW", background = Purple))
+            }
+        }
+    }
+
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = Color.Black.copy(alpha = 0.5f)
@@ -229,45 +277,64 @@ private fun CameraTopBar(
                     tint = Color.White
                 )
             }
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                if (isRecording) {
-                    Surface(
-                        color = Color.Red,
-                        shape = RoundedCornerShape(4.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (isRecording) {
+                        Surface(
+                            color = Color.Red,
+                            shape = RoundedCornerShape(4.dp)
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(8.dp)
-                                    .clip(CircleShape)
-                                    .background(Color.White)
-                            )
-                            Text(
-                                text = "REC",
-                                color = Color.White,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold
-                            )
+                            Row(
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(8.dp)
+                                        .clip(CircleShape)
+                                        .background(Color.White)
+                                )
+                                Text(
+                                    text = "REC",
+                                    color = Color.White,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
                     }
+                    Surface(
+                        color = Color.Black.copy(alpha = 0.6f),
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text(
+                            text = "$resolution · ${frameRate}fps",
+                            color = Color.White,
+                            fontSize = 12.sp,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
                 }
-                Surface(
-                    color = Color.Black.copy(alpha = 0.6f),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text(
-                        text = "$resolution • ${frameRate}fps",
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                    )
+                if (capabilityBadges.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier.horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        capabilityBadges.forEach { badge ->
+                            CapabilityChip(badge)
+                        }
+                    }
                 }
             }
             IconButton(
@@ -280,6 +347,31 @@ private fun CameraTopBar(
                 )
             }
         }
+    }
+}
+
+private data class CapabilityBadge(
+    val label: String,
+    val background: Color,
+    val contentColor: Color = Color.White
+)
+
+@Composable
+private fun CapabilityChip(
+    badge: CapabilityBadge,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        color = badge.background,
+        contentColor = badge.contentColor,
+        shape = RoundedCornerShape(6.dp),
+        modifier = modifier
+    ) {
+        Text(
+            text = badge.label,
+            fontSize = 11.sp,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+        )
     }
 }
 

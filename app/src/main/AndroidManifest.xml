@@ -189,12 +189,6 @@
             android:label="Enhanced Permission System Test" />
 
         <activity
-            android:name="mpdc4gsr.camera.integration.DualModeCameraComposeActivity"
-            android:exported="false"
-            android:label="Dual Mode Camera"
-            android:theme="@style/AppTheme" />
-
-        <activity
             android:name="mpdc4gsr.feature.gsr.ui.GSRDeviceManagementComposeActivity"
             android:exported="false"
             android:label="GSR Device Management"
@@ -264,12 +258,6 @@
             android:name="mpdc4gsr.compose.testing.SessionLifecycleTestComposeActivity"
             android:exported="false"
             android:label="Session Lifecycle Test" />
-
-        <!-- Camera Activities -->
-        <activity
-            android:name="mpdc4gsr.camera.integration.DualModeCameraActivity"
-            android:exported="false"
-            android:label="Dual Mode Camera" />
 
         <activity
             android:name="mpdc4gsr.feature.camera.ui.DualModeCameraComposeActivity2"

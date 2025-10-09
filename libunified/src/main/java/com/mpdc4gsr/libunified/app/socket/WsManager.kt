@@ -3,6 +3,7 @@ package com.mpdc4gsr.libunified.app.socket
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import okhttp3.*
 import okio.ByteString
 import java.util.*
@@ -131,7 +132,8 @@ class WsManager(
             } finally {
                 mLock.unlock()
             }
-        } catch (_: InterruptedException) {
+        } catch (exception: InterruptedException) {
+            LibraryLogger.e("WsManager", "Unexpected InterruptedException in WsManager catch block", exception)
         }
     }
 

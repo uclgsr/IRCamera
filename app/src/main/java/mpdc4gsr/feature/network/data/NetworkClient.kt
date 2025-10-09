@@ -4,8 +4,7 @@ import android.content.Context
 import android.net.TrafficStats
 import android.net.wifi.WifiManager
 import android.os.Process
-
-import com.mpdc4gsr.gsr.model.SessionInfo
+import mpdc4gsr.core.session.SessionInfo
 import com.mpdc4gsr.libunified.app.discovery.NetworkDiscoveryService
 import com.mpdc4gsr.libunified.app.messaging.ReliableMessageService
 import com.mpdc4gsr.libunified.app.security.CertificateManager
@@ -347,6 +346,11 @@ class NetworkClient(private val context: Context) {
             socket?.close()
             TrafficStats.clearThreadStatsTag()
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e(
+                "NetworkClient",
+                "Failed to release network client resources",
+                e,
+            )
         } finally {
             outputStream = null
             inputStream = null

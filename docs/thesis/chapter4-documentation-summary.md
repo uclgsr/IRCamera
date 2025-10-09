@@ -36,7 +36,7 @@ figures, tables, and code snippets as specified in the requirements.
 
 **Source Files Referenced**:
 
-- `app/src/main/java/mpdc4gsr/core/data/ShimmerDeviceManager.kt`
+- `app/src/main/java/mpdc4gsr/core/sensors/gsr/GsrDeviceManager.kt`
 - `app/src/main/java/mpdc4gsr/feature/gsr/data/GSRSensorRecorder.kt`
 
 **Content**:
@@ -273,7 +273,7 @@ When updating the codebase:
 All deliverables have been validated:
 
 - ✅ Figure 4.1: Mermaid syntax valid, renders correctly
-- ✅ Code Snippet 4.2: Matches ShimmerDeviceManager.kt and GSRSensorRecorder.kt
+- ✅ Code Snippet 4.2: Matches GsrDeviceManager.kt and GSRSensorRecorder.kt
 - ✅ Code Snippet 4.3: Matches ThermalCameraRecorder.kt and IRUVCTC.java
 - ✅ Code Snippet 4.4: Matches TimeSyncManager.kt and TimeManager.kt
 - ✅ Code Snippet 4.5: Matches CommandServer.kt and ProtocolHandler.kt

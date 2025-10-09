@@ -187,6 +187,7 @@ suspend fun disconnect() {
         try {
             connection.sendMessage("BYE")
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("NetworkManager", "Unexpected Exception in NetworkManager catch block", e)
         }
         connection.disconnect()
         connection.cleanup()
@@ -241,6 +242,7 @@ private fun handleIncomingMessage(message: String) {
         try {
             commandHandler?.handleCommand(message)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("NetworkManager", "Unexpected Exception in NetworkManager catch block", e)
         }
     }
 }

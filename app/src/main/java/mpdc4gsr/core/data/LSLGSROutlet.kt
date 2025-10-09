@@ -2,7 +2,7 @@ package mpdc4gsr.core.data
 
 import android.util.Log
 import kotlinx.coroutines.*
-import mpdc4gsr.core.data.model.GSRSample
+import mpdc4gsr.core.sensors.gsr.model.GSRSample
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.PrintWriter
@@ -125,6 +125,7 @@ class LSLGSROutlet(
                 }
                 writer.println(streamInfoJson.toString())
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("LSLGSROutlet", "Unexpected Exception in LSLGSROutlet catch block", e)
             }
         }
 

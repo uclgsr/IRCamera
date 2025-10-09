@@ -1,7 +1,7 @@
 package mpdc4gsr.feature.gsr.data
 
 import android.content.Context
-import com.mpdc4gsr.gsr.model.GSRSample
+import mpdc4gsr.core.sensors.gsr.model.GSRSample
 import kotlinx.coroutines.*
 import mpdc4gsr.feature.network.data.NetworkClient
 import mpdc4gsr.feature.network.data.RecordingController
@@ -115,6 +115,7 @@ class GSRNetworkStreamer(
                 sampleBuffer.poll()
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("GSRNetworkStreamer", "Unexpected Exception in GSRNetworkStreamer catch block", e)
         }
     }
 
@@ -153,6 +154,7 @@ class GSRNetworkStreamer(
                         if (success) {
                         }
                     } catch (e: Exception) {
+                        mpdc4gsr.core.utils.AppLogger.e("GSRNetworkStreamer", "Unexpected Exception in GSRNetworkStreamer catch block", e)
                     }
                 }
             }
@@ -175,18 +177,21 @@ class GSRNetworkStreamer(
                     batch.forEach { sample ->
                         put(
                             JSONObject().apply {
-                                put("timestamp", sample.timestamp)
-                                put("gsr_value", sample.conductance)
-                                put("raw_value", sample.rawValue)
-                                put("quality", 1.0)
+                                put("timestamp_ns", sample.timestamp)
+                                put("timestamp_iso", sample.timestampIso)
+                                put("gsr_microsiemens", sample.gsrMicrosiemens)
+                                put("gsr_raw", sample.gsrRaw)
+                                put("ppg_raw", sample.ppgRaw)
+                                put("quality", sample.qualityScore)
+                                put("connection_rssi", sample.connectionRssi)
+                                put("resistance_ohms", sample.resistanceOhms)
                                 put(
-                                    "device_id", android.provider.Settings.Secure.getString(
+                                    "device_id",
+                                    android.provider.Settings.Secure.getString(
                                         context.contentResolver,
                                         android.provider.Settings.Secure.ANDROID_ID
                                     )
                                 )
-                                put("resistance", sample.resistance)
-                                put("sample_index", sample.sampleIndex)
                             },
                         )
                     }
@@ -223,6 +228,7 @@ class GSRNetworkStreamer(
                 performLocalTimeSync(clientSent)
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("GSRNetworkStreamer", "Unexpected Exception in GSRNetworkStreamer catch block", e)
         }
     }
 
@@ -251,11 +257,13 @@ class GSRNetworkStreamer(
                             if (success) {
                             }
                         } catch (e: Exception) {
+                            mpdc4gsr.core.utils.AppLogger.e("GSRNetworkStreamer", "Unexpected Exception in GSRNetworkStreamer catch block", e)
                         }
                     }
                 } ?: run {
                 }
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("GSRNetworkStreamer", "Unexpected Exception in GSRNetworkStreamer catch block", e)
             }
             delay(HEARTBEAT_INTERVAL_MS)
         }
@@ -284,11 +292,13 @@ class GSRNetworkStreamer(
                             if (success) {
                             }
                         } catch (e: Exception) {
+                            mpdc4gsr.core.utils.AppLogger.e("GSRNetworkStreamer", "Unexpected Exception in GSRNetworkStreamer catch block", e)
                         }
                     }
                 } ?: run {
                 }
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("GSRNetworkStreamer", "Unexpected Exception in GSRNetworkStreamer catch block", e)
             }
             delay(QUALITY_REPORTING_INTERVAL_MS)
         }
@@ -320,11 +330,13 @@ class GSRNetworkStreamer(
                         } else {
                         }
                     } catch (e: Exception) {
+                        mpdc4gsr.core.utils.AppLogger.e("GSRNetworkStreamer", "Unexpected Exception in GSRNetworkStreamer catch block", e)
                     }
                 }
             } ?: run {
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("GSRNetworkStreamer", "Unexpected Exception in GSRNetworkStreamer catch block", e)
         }
     }
 
@@ -348,11 +360,13 @@ class GSRNetworkStreamer(
                         } else {
                         }
                     } catch (e: Exception) {
+                        mpdc4gsr.core.utils.AppLogger.e("GSRNetworkStreamer", "Unexpected Exception in GSRNetworkStreamer catch block", e)
                     }
                 }
             } ?: run {
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("GSRNetworkStreamer", "Unexpected Exception in GSRNetworkStreamer catch block", e)
         }
     }
 

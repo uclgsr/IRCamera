@@ -21,6 +21,7 @@ object TelemetryManager {
             setDeviceProperties(context)
             isInitialized = true
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("TelemetryManager", "Unexpected Exception in TelemetryManager catch block", e)
         }
     }
 
@@ -40,6 +41,7 @@ object TelemetryManager {
             val eventData = buildEventData(eventName, params)
             // TODO: Send to analytics backend
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("TelemetryManager", "Unexpected Exception in TelemetryManager catch block", e)
         }
     }
 
@@ -63,6 +65,7 @@ object TelemetryManager {
             trackEvent(if (fatal) "fatal_error" else "error", errorData)
             // TODO: Send to crash reporting service
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("TelemetryManager", "Unexpected Exception in TelemetryManager catch block", e)
         }
     }
 
@@ -76,6 +79,7 @@ object TelemetryManager {
             trackEvent("metric_logged", metricData)
             // TODO: Send to metrics backend
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("TelemetryManager", "Unexpected Exception in TelemetryManager catch block", e)
         }
     }
 

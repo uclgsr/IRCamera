@@ -7,9 +7,9 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.data.RecordingStats
-import mpdc4gsr.core.data.RecordingStatus
-import mpdc4gsr.core.data.SensorError
+import mpdc4gsr.core.sensors.api.RecordingStats
+import mpdc4gsr.core.sensors.api.RecordingStatus
+import mpdc4gsr.core.sensors.api.SensorError
 import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import java.io.File
@@ -88,6 +88,7 @@ class EnhancedThermalRecorder(private val context: Context) {
                 writer.flush()
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("EnhancedThermalRecorder", "Unexpected Exception in EnhancedThermalRecorder catch block", e)
         }
     }
 
@@ -104,6 +105,7 @@ class EnhancedThermalRecorder(private val context: Context) {
             recorderScope.cancel()
             currentSessionDirectory = null
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("EnhancedThermalRecorder", "Unexpected Exception in EnhancedThermalRecorder catch block", e)
         }
     }
 
@@ -119,6 +121,7 @@ class EnhancedThermalRecorder(private val context: Context) {
                 syncEventWriter?.flush()
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("EnhancedThermalRecorder", "Unexpected Exception in EnhancedThermalRecorder catch block", e)
         }
     }
 
@@ -127,6 +130,7 @@ class EnhancedThermalRecorder(private val context: Context) {
             syncEventWriter?.close()
             syncEventWriter = null
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("EnhancedThermalRecorder", "Unexpected Exception in EnhancedThermalRecorder catch block", e)
         }
     }
 

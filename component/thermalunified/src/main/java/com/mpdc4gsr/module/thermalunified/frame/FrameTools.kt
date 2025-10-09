@@ -8,6 +8,7 @@ import com.energy.iruvc.sdkisp.LibIRTemp
 import com.energy.iruvc.utils.CommonParams
 import com.example.suplib.wrapper.SupHelp
 import com.mpdc4gsr.libunified.app.bean.CustomPseudoBean
+import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import com.mpdc4gsr.libunified.ir.tools.ImageTools
 import com.mpdc4gsr.libunified.ir.utils.IRImageHelp
 import com.mpdc4gsr.libunified.ir.utils.OpencvTools
@@ -228,13 +229,18 @@ class FrameTool {
                         imageHeight,
                     )!!
             } catch (e: IOException) {
+                LibraryLogger.e("FrameTools", "Unexpected IOException in FrameTools catch block", e)
             }
         }
         argbBytesRotate(argbBytes, dstArgbBytes!!, rotate)
         val dstImageRes = getDstImageRes(rotate)
         var scrBitmap: Bitmap? = null
         if (isAmplify) {
-            val initResult: Any? = SupHelp.getInstance().initA4KCPP()
+            try {
+                SupHelp.getInstance().initA4KCPP()
+            } catch (exception: Exception) {
+                LibraryLogger.e("FrameTools", "initA4KCPP invocation failed", exception)
+            }
             if (SupHelp.getInstance().loadOpenclSuccess) {
                 OpencvTools.supImage(
                     dstArgbBytes,

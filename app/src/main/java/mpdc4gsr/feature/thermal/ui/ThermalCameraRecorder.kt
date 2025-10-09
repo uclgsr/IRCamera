@@ -22,10 +22,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
-import mpdc4gsr.core.data.*
+import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.core.data.utils.BufferedDataWriter
 import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
+import mpdc4gsr.core.sensors.api.ErrorType
+import mpdc4gsr.core.sensors.api.RecordingStats
+import mpdc4gsr.core.sensors.api.RecordingStatus
+import mpdc4gsr.core.sensors.api.SensorError
+import mpdc4gsr.core.sensors.api.SensorRecorder
 import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.feature.network.data.NetworkServer
 import mpdc4gsr.feature.thermal.data.ThermalSettingsRepository
@@ -606,6 +611,7 @@ class ThermalCameraRecorder(
                                     com.energy.iruvc.utils.CommonParams.GainStatus.LOW_GAIN
                                 }
                             } catch (e: Exception) {
+                                mpdc4gsr.core.utils.AppLogger.e("ThermalCameraRecorder", "Unexpected Exception in ThermalCameraRecorder catch block", e)
                             }
                         }
                     }
@@ -921,6 +927,7 @@ class ThermalCameraRecorder(
                                     com.energy.iruvc.utils.CommonParams.GainStatus.LOW_GAIN
                                 }
                             } catch (e: Exception) {
+                                mpdc4gsr.core.utils.AppLogger.e("ThermalCameraRecorder", "Unexpected Exception in ThermalCameraRecorder catch block", e)
                             }
                         }
                     }
@@ -1058,6 +1065,7 @@ class ThermalCameraRecorder(
                                             saveFrameImageToPNG(frame, thermalData, frameNumber)
                                         }
                                 } catch (e: Exception) {
+                                    mpdc4gsr.core.utils.AppLogger.e("ThermalCameraRecorder", "Unexpected Exception in ThermalCameraRecorder catch block", e)
                                 }
                             }
                             if (previewCallback != null) {
@@ -1082,6 +1090,7 @@ class ThermalCameraRecorder(
             } else {
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("ThermalCameraRecorder", "Unexpected Exception in ThermalCameraRecorder catch block", e)
         }
     }
 
@@ -1480,6 +1489,7 @@ class ThermalCameraRecorder(
                 }
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("ThermalCameraRecorder", "Unexpected Exception in ThermalCameraRecorder catch block", e)
         }
     }
 
@@ -1867,6 +1877,7 @@ class ThermalCameraRecorder(
                 }
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("ThermalCameraRecorder", "Unexpected Exception in ThermalCameraRecorder catch block", e)
         }
     }
 
@@ -1917,6 +1928,7 @@ class ThermalCameraRecorder(
                 }
             })
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("ThermalCameraRecorder", "Unexpected Exception in ThermalCameraRecorder catch block", e)
         }
     }
 
@@ -2195,6 +2207,7 @@ class ThermalCameraRecorder(
             } else {
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("ThermalCameraRecorder", "Unexpected Exception in ThermalCameraRecorder catch block", e)
         }
     }
 
@@ -2209,6 +2222,7 @@ class ThermalCameraRecorder(
             } else {
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("ThermalCameraRecorder", "Unexpected Exception in ThermalCameraRecorder catch block", e)
         }
     }
 
@@ -2433,6 +2447,7 @@ class ThermalCameraRecorder(
                 handleThermalDisconnect("device_event")
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("ThermalCameraRecorder", "Unexpected Exception in ThermalCameraRecorder catch block", e)
         }
     }
 
@@ -2460,6 +2475,7 @@ class ThermalCameraRecorder(
                 }
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("ThermalCameraRecorder", "Unexpected Exception in ThermalCameraRecorder catch block", e)
         }
     }
 

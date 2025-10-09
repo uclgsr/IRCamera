@@ -518,7 +518,7 @@ Energy (BLE) and streaming 12-bit ADC data at 128Hz.
 ### Connection Initialization
 
 ```kotlin
-// File: app/src/main/java/mpdc4gsr/core/data/ShimmerDeviceManager.kt
+// File: app/src/main/java/mpdc4gsr/core/data/GsrDeviceManager.kt
 
 /**
  * Initialize Shimmer Bluetooth manager and prepare for device connections
@@ -678,7 +678,7 @@ Detailed class diagram showing the GSR sensor integration structure:
 
 ```mermaid
 classDiagram
-    class ShimmerDeviceManager {
+    class GsrDeviceManager {
         +Context context
         +ShimmerBluetoothManagerAndroid shimmerManager
         +Map~String,Shimmer~ connectedDevices
@@ -755,10 +755,10 @@ classDiagram
         +updateClockOffset(Long)
     }
     
-    ShimmerDeviceManager --> ShimmerBluetoothManagerAndroid
-    ShimmerDeviceManager --> Shimmer
-    ShimmerDeviceManager --> DeviceInfo
-    GSRSensorRecorder --> ShimmerDeviceManager
+    GsrDeviceManager --> ShimmerBluetoothManagerAndroid
+    GsrDeviceManager --> Shimmer
+    GsrDeviceManager --> DeviceInfo
+    GSRSensorRecorder --> GsrDeviceManager
     GSRSensorRecorder --> Shimmer
     GSRSensorRecorder --> TimeManager
     Shimmer --> ObjectCluster

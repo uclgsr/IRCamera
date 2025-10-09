@@ -205,6 +205,7 @@ class TimeSyncManager(private val context: Context) {
                         try {
                             triggerManualSync()
                         } catch (e: Exception) {
+                            mpdc4gsr.core.utils.AppLogger.e("TimeSyncManager", "Unexpected Exception in TimeSyncManager catch block", e)
                         }
                     }
                 }
@@ -234,6 +235,7 @@ class TimeSyncManager(private val context: Context) {
                     writer.write("$CSV_HEADER\n")
                 }
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("TimeSyncManager", "Unexpected Exception in TimeSyncManager catch block", e)
             }
         }
         // Start periodic sync if enabled
@@ -471,6 +473,7 @@ class TimeSyncManager(private val context: Context) {
             sessionStartTime = 0L
             pendingSyncIndices.clear()
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("TimeSyncManager", "Unexpected Exception in TimeSyncManager catch block", e)
         }
     }
 

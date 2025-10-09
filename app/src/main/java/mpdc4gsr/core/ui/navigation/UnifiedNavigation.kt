@@ -234,6 +234,7 @@ fun UnifiedNavHost(
                     try {
                         mpdc4gsr.core.ui.PermissionRequestComposeActivity.startActivity(context)
                     } catch (e: Exception) {
+                        mpdc4gsr.core.utils.AppLogger.e("UnifiedNavigation", "Unexpected Exception in UnifiedNavigation catch block", e)
                     }
                 } catch (e: Exception) {
                     // Final fallback - just show loading screen

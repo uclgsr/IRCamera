@@ -17,6 +17,7 @@ import com.mpdc4gsr.libunified.app.lms.network.ResponseBean
 import com.mpdc4gsr.libunified.app.lms.utils.DateUtils
 import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtils
 import com.mpdc4gsr.libunified.app.lms.xutils.http.RequestParams
+import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.FileOutputStream
@@ -208,7 +209,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                             val commonBean: CommonBean =
                                 Gson().fromJson(response, CommonBean::class.java)
                             packageData = Gson().fromJson(commonBean.data, PackageData::class.java)
-                        } catch (_: Exception) {
+                        } catch (exception: Exception) {
+                        LibraryLogger.e("FirmwareViewModel", "Unexpected Exception in FirmwareViewModel catch block", exception)
                         }
                         countDownLatch.countDown()
                     }
@@ -250,7 +252,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                             } else {
                                 result = DownloadData("", 0, commonBean.code.toInt())
                             }
-                        } catch (_: Exception) {
+                        } catch (exception: Exception) {
+                        LibraryLogger.e("FirmwareViewModel", "Unexpected Exception in FirmwareViewModel catch block", exception)
                         }
                         countDownLatch.countDown()
                     }

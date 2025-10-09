@@ -1,16 +1,14 @@
 package mpdc4gsr.feature.main.data.repository
 
 import android.content.Context
-import com.mpdc4gsr.gsr.model.SessionInfo
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import mpdc4gsr.core.SessionManager
-import mpdc4gsr.core.StructuredLogger
-import mpdc4gsr.feature.main.domain.repository.SessionRepository
-import com.mpdc4gsr.gsr.service.SessionManager as GSRSessionManager
+import mpdc4gsr.core.session.SessionInfo
+import mpdc4gsr.core.session.SessionManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import mpdc4gsr.feature.main.domain.repository.SessionRepository
 
 @Singleton
 class SessionRepositoryImpl @Inject constructor(
@@ -18,8 +16,8 @@ class SessionRepositoryImpl @Inject constructor(
 ) : SessionRepository {
 
     private val _currentSession = MutableStateFlow<SessionInfo?>(null)
-    private val gsrSessionManager: GSRSessionManager by lazy {
-        GSRSessionManager.getInstance(context)
+    private val sessionManager: SessionManager by lazy {
+        sessionManager.getInstance(context)
     }
 
     override suspend fun createSession(
@@ -28,7 +26,7 @@ class SessionRepositoryImpl @Inject constructor(
         studyName: String?,
         metadata: Map<String, String>
     ): SessionInfo {
-        val session = gsrSessionManager.createSession(
+        val session = sessionManager.createSession(
             sessionId = sessionId,
             participantId = participantId,
             studyName = studyName,
@@ -39,7 +37,7 @@ class SessionRepositoryImpl @Inject constructor(
     }
 
     override suspend fun completeSession(sessionId: String) {
-        gsrSessionManager.completeSession(sessionId)
+        sessionManager.completeSession(sessionId)
         _currentSession.value = null
     }
 

@@ -100,7 +100,7 @@ class NetworkRepositoryImpl @Inject constructor(
                 _connectionState.tryEmit(ConnectionState.Disconnected)
             }
 
-            override fun onRemoteMeasurementRequest(sessionInfo: com.mpdc4gsr.gsr.model.SessionInfo) {}
+            override fun onRemoteMeasurementRequest(sessionInfo: mpdc4gsr.core.session.SessionInfo) {}
 
             override fun onSyncFlash(durationMs: Int) {}
 

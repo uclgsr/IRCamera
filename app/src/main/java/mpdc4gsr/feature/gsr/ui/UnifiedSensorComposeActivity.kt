@@ -27,7 +27,7 @@ import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.data.model.DeviceInfo
+import mpdc4gsr.core.sensors.gsr.model.DeviceInfo
 import mpdc4gsr.core.data.model.SessionQuality
 import mpdc4gsr.core.data.model.SessionStatus
 import mpdc4gsr.core.data.model.SessionType

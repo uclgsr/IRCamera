@@ -58,7 +58,7 @@ When adding or modifying documentation:
 
 All code snippets are extracted from actual implementation files:
 
-- **GSR/Bluetooth**: `app/src/main/java/mpdc4gsr/core/data/ShimmerDeviceManager.kt`
+- **GSR/Bluetooth**: `app/src/main/java/mpdc4gsr/core/sensors/gsr/GsrDeviceManager.kt`
 - **GSR Recording**: `app/src/main/java/mpdc4gsr/feature/gsr/data/GSRSensorRecorder.kt`
 - **Thermal Camera**: `app/src/main/java/mpdc4gsr/feature/thermal/ui/ThermalCameraRecorder.kt`
 - **Thermal USB**: `libunified/src/main/java/com/mpdc4gsr/libunified/ir/camera/IRUVCTC.java`

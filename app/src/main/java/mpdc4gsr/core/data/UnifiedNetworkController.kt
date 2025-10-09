@@ -434,6 +434,7 @@ class UnifiedNetworkController(
             val wifiInfo = wifiManager.connectionInfo
             _wifiSignalStrength.value = wifiInfo.rssi
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("UnifiedNetworkController", "Unexpected Exception in UnifiedNetworkController catch block", e)
         }
     }
 

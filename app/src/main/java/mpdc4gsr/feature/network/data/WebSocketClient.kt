@@ -666,6 +666,7 @@ class WebSocketClient(private val context: Context) {
         try {
             discoveryJob?.cancel()
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("WebSocketClient", "Unexpected Exception in WebSocketClient catch block", e)
         }
     }
 
@@ -1229,6 +1230,7 @@ class WebSocketClient(private val context: Context) {
             } else {
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("WebSocketClient", "Unexpected Exception in WebSocketClient catch block", e)
         }
     }
 
@@ -1299,6 +1301,7 @@ class WebSocketClient(private val context: Context) {
                 )
             sendMessage(alertMessage)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("WebSocketClient", "Unexpected Exception in WebSocketClient catch block", e)
         }
     }
 

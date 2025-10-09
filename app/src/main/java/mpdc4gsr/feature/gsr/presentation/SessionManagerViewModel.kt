@@ -1,8 +1,8 @@
 package mpdc4gsr.feature.gsr.presentation
 
 import android.content.Context
-import com.mpdc4gsr.gsr.model.SessionInfo
-import com.mpdc4gsr.gsr.service.SessionManager
+import mpdc4gsr.core.session.SessionInfo
+import mpdc4gsr.core.session.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -105,6 +105,7 @@ class SessionManagerViewModel @Inject constructor(
                 isLowStorage = storageStatus.isLowStorage
             )
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("SessionManagerViewModel", "Unexpected Exception in SessionManagerViewModel catch block", e)
         }
     }
 
@@ -120,11 +121,13 @@ class SessionManagerViewModel @Inject constructor(
                                 val sessionInfo = parseSessionFromDirectory(sessionDir)
                                 historicalSessions.add(sessionInfo)
                             } catch (e: Exception) {
+                                mpdc4gsr.core.utils.AppLogger.e("SessionManagerViewModel", "Unexpected Exception in SessionManagerViewModel catch block", e)
                             }
                         }
                     }
                 }
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("SessionManagerViewModel", "Unexpected Exception in SessionManagerViewModel catch block", e)
             }
             historicalSessions
         }
@@ -156,6 +159,7 @@ class SessionManagerViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("SessionManagerViewModel", "Unexpected Exception in SessionManagerViewModel catch block", e)
             }
         }
         // Calculate data file counts and sizes
@@ -184,6 +188,7 @@ class SessionManagerViewModel @Inject constructor(
             sessionInfo.metadata["thermalFileCount"] = thermalFileCount.toString()
             sessionInfo.metadata["rgbFileCount"] = rgbFileCount.toString()
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("SessionManagerViewModel", "Unexpected Exception in SessionManagerViewModel catch block", e)
         }
     }
 

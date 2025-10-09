@@ -81,6 +81,7 @@ class App : BaseApplication() {
             }
 
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("App", "Unexpected Exception in App catch block", e)
         }
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         registerActivityLifecycleCallbacks(
@@ -129,7 +130,13 @@ class App : BaseApplication() {
         try {
             System.loadLibrary("USBUVCCamera")
         } catch (e: UnsatisfiedLinkError) {
+            mpdc4gsr.core.utils.AppLogger.e(
+                "App",
+                "Failed to load USBUVCCamera native library",
+                e,
+            )
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("App", "Unexpected Exception in App catch block", e)
         }
     }
 
@@ -149,6 +156,7 @@ class App : BaseApplication() {
         try {
             RecordingService.startServer(this)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("App", "Unexpected Exception in App catch block", e)
         }
     }
 

@@ -6,6 +6,7 @@ import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.comm.util.SingletonHolder
 import com.mpdc4gsr.libunified.app.comm.view.TempLayout
+import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 
 class AlarmHelp private constructor(val context: Context) {
     companion object : SingletonHolder<AlarmHelp, Context>(::AlarmHelp)
@@ -65,7 +66,8 @@ class AlarmHelp private constructor(val context: Context) {
                 stopPlayer()
                 mediaPlayer?.release()
                 mediaPlayer = null
-            } catch (_: Exception) {
+            } catch (exception: Exception) {
+            LibraryLogger.e("AlarmHelp", "Unexpected Exception in AlarmHelp catch block", exception)
             }
         } else {
             isTempAlarmRingtoneOpen = true
@@ -73,7 +75,8 @@ class AlarmHelp private constructor(val context: Context) {
                 stopPlayer()
                 mediaPlayer?.release()
                 mediaPlayer = null
-            } catch (_: Exception) {
+            } catch (exception: Exception) {
+            LibraryLogger.e("AlarmHelp", "Unexpected Exception in AlarmHelp catch block", exception)
             }
             when (ringtone) {
                 0 -> mediaPlayer = MediaPlayer.create(context, R.raw.ringtone1)

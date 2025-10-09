@@ -1,6 +1,6 @@
 package mpdc4gsr.feature.main.domain.usecase
 
-import com.mpdc4gsr.gsr.model.SessionInfo
+import mpdc4gsr.core.session.SessionInfo
 import mpdc4gsr.feature.main.domain.repository.SessionRepository
 import javax.inject.Inject
 

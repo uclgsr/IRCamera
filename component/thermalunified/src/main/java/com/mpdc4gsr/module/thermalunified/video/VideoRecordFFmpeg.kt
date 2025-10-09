@@ -32,6 +32,7 @@ import com.mpdc4gsr.libunified.app.comm.view.TempLayout
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState
 import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import com.mpdc4gsr.libunified.app.tools.TimeTools
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
@@ -478,7 +479,8 @@ class VideoRecordFFmpeg(
                 stopAudioRecording()
             }
             this@VideoRecordFFmpeg.openAudioRecord = audioRecord
-        } catch (_: Exception) {
+        } catch (exception: Exception) {
+            LibraryLogger.e("VideoRecordFFmpeg", "Unexpected Exception in VideoRecordFFmpeg catch block", exception)
         }
     }
 
@@ -553,6 +555,7 @@ class VideoRecordFFmpeg(
                         )
                 }
             } catch (e: Exception) {
+                LibraryLogger.e("VideoRecordFFmpeg", "Unexpected Exception in VideoRecordFFmpeg catch block", e)
             }
         }
         if (true == tempBg?.isVisible) {

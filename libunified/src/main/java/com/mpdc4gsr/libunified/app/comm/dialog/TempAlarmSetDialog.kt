@@ -19,6 +19,7 @@ import coil.load
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.tools.ToastTools
+import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 
 class TempAlarmSetDialog(
@@ -227,7 +228,8 @@ class TempAlarmSetDialog(
                 if (inputHigh.isNotEmpty()) UnitTools.showToCValue(inputHigh.toFloat()) else null
             lowValue =
                 if (inputLow.isNotEmpty()) UnitTools.showToCValue(inputLow.toFloat()) else null
-        } catch (_: Exception) {
+        } catch (exception: Exception) {
+            LibraryLogger.e("TempAlarmSetDialog", "Unexpected Exception in TempAlarmSetDialog catch block", exception)
         }
         alarmBean.highTemp = highValue ?: Float.MAX_VALUE
         alarmBean.lowTemp = lowValue ?: Float.MIN_VALUE
@@ -261,7 +263,8 @@ class TempAlarmSetDialog(
             }
             mediaPlayer?.release()
             mediaPlayer = null
-        } catch (_: Exception) {
+        } catch (exception: Exception) {
+            LibraryLogger.e("TempAlarmSetDialog", "Unexpected Exception in TempAlarmSetDialog catch block", exception)
         }
     }
 
@@ -299,7 +302,8 @@ class TempAlarmSetDialog(
                 mediaPlayer?.stop()
                 mediaPlayer?.release()
             }
-        } catch (_: Exception) {
+        } catch (exception: Exception) {
+            LibraryLogger.e("TempAlarmSetDialog", "Unexpected Exception in TempAlarmSetDialog catch block", exception)
         }
         if (position == null) {
             return

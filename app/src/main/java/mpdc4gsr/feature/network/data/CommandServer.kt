@@ -114,6 +114,7 @@ class CommandServer(
             }
             networkServer?.sendMessage(ackMessage.toString())
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("CommandServer", "Unexpected Exception in CommandServer catch block", e)
         }
     }
 
@@ -128,6 +129,7 @@ class CommandServer(
             }
             networkServer?.sendMessage(statusMessage.toString())
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("CommandServer", "Unexpected Exception in CommandServer catch block", e)
         }
     }
 

@@ -109,6 +109,7 @@ class NetworkController(private val context: Context) {
                     connection.inputStream.close()
                     connection.socket.close()
                 } catch (e: Exception) {
+                    mpdc4gsr.core.utils.AppLogger.e("NetworkController", "Unexpected Exception in NetworkController catch block", e)
                 }
             }
             clientConnections.clear()
@@ -119,6 +120,7 @@ class NetworkController(private val context: Context) {
                         socket.close()
                     }
                 } catch (e: Exception) {
+                    mpdc4gsr.core.utils.AppLogger.e("NetworkController", "Unexpected Exception in NetworkController catch block", e)
                 }
             }
             serverSocket = null
@@ -127,6 +129,7 @@ class NetworkController(private val context: Context) {
             // Small delay to allow cleanup to complete
             delay(100)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("NetworkController", "Unexpected Exception in NetworkController catch block", e)
         }
     }
 
@@ -171,6 +174,7 @@ class NetworkController(private val context: Context) {
             try {
                 clientSocket.close()
             } catch (ignored: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("NetworkController", "Unexpected Exception in NetworkController catch block", ignored)
             }
         }
     }
@@ -187,13 +191,36 @@ class NetworkController(private val context: Context) {
             } catch (e: SocketException) {
                 // Handle connection reset and other socket exceptions gracefully
                 when {
-                    e.message?.contains("Connection reset") == true -> {}
+                    e.message?.contains("Connection reset") == true -> {
+                        mpdc4gsr.core.utils.AppLogger.i(
+                            "NetworkController",
+                            "Client connection reset by peer (${connection.clientId})",
+                            e,
+                        )
+                    }
 
-                    e.message?.contains("Socket closed") == true -> {}
+                    e.message?.contains("Socket closed") == true -> {
+                        mpdc4gsr.core.utils.AppLogger.d(
+                            "NetworkController",
+                            "Socket closed for client ${connection.clientId}",
+                            e,
+                        )
+                    }
 
-                    else -> {}
+                    else -> {
+                        mpdc4gsr.core.utils.AppLogger.w(
+                            "NetworkController",
+                            "Socket error for client ${connection.clientId}",
+                            e,
+                        )
+                    }
                 }
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e(
+                    "NetworkController",
+                    "Unhandled error while reading client messages for ${connection.clientId}",
+                    e,
+                )
             } finally {
                 // Always disconnect the client to clean up resources
                 disconnectClient(connection.clientId, "Connection closed")
@@ -298,6 +325,7 @@ class NetworkController(private val context: Context) {
         try {
             connection.outputStream.println(response)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("NetworkController", "Unexpected Exception in NetworkController catch block", e)
         }
     }
 
@@ -330,6 +358,7 @@ class NetworkController(private val context: Context) {
             try {
                 connection.socket.close()
             } catch (ignored: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("NetworkController", "Unexpected Exception in NetworkController catch block", ignored)
             }
             clientConnections.remove(clientId)
             eventListener?.onClientDisconnected(clientId, reason)

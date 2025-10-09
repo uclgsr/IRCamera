@@ -1,7 +1,7 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import com.mpdc4gsr.gsr.model.GSRSample
+import mpdc4gsr.core.sensors.gsr.model.GSRSample
 import kotlinx.coroutines.*
 import mpdc4gsr.core.data.TimestampManager
 import mpdc4gsr.core.data.TimestampRecord
@@ -94,6 +94,7 @@ class UnifiedDataStreamingService(
                 serverSocket = null
                 dataQueue.clear()
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("UnifiedDataStreamingService", "Unexpected Exception in UnifiedDataStreamingService catch block", e)
             }
         }
     }
@@ -333,6 +334,7 @@ class UnifiedDataStreamingService(
                 writer.close()
                 socket.close()
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("UnifiedDataStreamingService", "Unexpected Exception in UnifiedDataStreamingService catch block", e)
             }
         }
     }

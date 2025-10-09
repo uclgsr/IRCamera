@@ -42,6 +42,7 @@ class TimeSynchronizationService {
                 )
             )
         } catch (e: java.io.IOException) {
+            mpdc4gsr.core.utils.AppLogger.e("TimeSynchronizationService", "Unexpected java.io.IOException in TimeSynchronizationService catch block", e)
         }
     }
 
@@ -92,6 +93,7 @@ class TimeSynchronizationService {
                 writer.write("sync_event_type,system_nanos,system_time_ms,session_relative_ms,metadata\n")
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("TimeSynchronizationService", "Unexpected Exception in TimeSynchronizationService catch block", e)
         }
     }
 
@@ -106,6 +108,7 @@ class TimeSynchronizationService {
             }
             emitSyncEvent(eventType, metadata)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("TimeSynchronizationService", "Unexpected Exception in TimeSynchronizationService catch block", e)
         }
     }
 
@@ -130,6 +133,7 @@ class TimeSynchronizationService {
             }
             logSyncEvent("DRIFT_ANALYSIS", driftMetadata)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("TimeSynchronizationService", "Unexpected Exception in TimeSynchronizationService catch block", e)
         }
     }
 

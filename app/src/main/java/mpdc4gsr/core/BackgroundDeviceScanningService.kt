@@ -78,6 +78,7 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
             bleDeviceManager = BleDeviceManager(applicationContext)
             bleDeviceManager?.initialize(enableNordicBackend = true)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("BackgroundDeviceScanningService", "Unexpected Exception in BackgroundDeviceScanningService catch block", e)
         }
     }
 
@@ -274,6 +275,7 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
                 acquire(10 * 60 * 1000L)
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("BackgroundDeviceScanningService", "Unexpected Exception in BackgroundDeviceScanningService catch block", e)
         }
     }
 
@@ -286,6 +288,7 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
             }
             wakeLock = null
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("BackgroundDeviceScanningService", "Unexpected Exception in BackgroundDeviceScanningService catch block", e)
         }
     }
 

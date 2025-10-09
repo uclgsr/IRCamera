@@ -8,8 +8,12 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import mpdc4gsr.core.data.*
-import mpdc4gsr.core.data.RecordingStats
+import mpdc4gsr.core.data.SessionMetadata
+import mpdc4gsr.core.sensors.api.ErrorType
+import mpdc4gsr.core.sensors.api.RecordingStats
+import mpdc4gsr.core.sensors.api.RecordingStatus
+import mpdc4gsr.core.sensors.api.SensorError
+import mpdc4gsr.core.sensors.api.SensorRecorder
 import mpdc4gsr.core.data.utils.SessionDirectory
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import mpdc4gsr.core.data.utils.StorageStatus
@@ -42,6 +46,8 @@ class RecordingController(
     private val controllerLifecycleOwner: LifecycleOwner by lazy {
         lifecycleOwner ?: createFallbackLifecycleOwner()
     }
+    val lifecycleOwner: LifecycleOwner
+        get() = controllerLifecycleOwner
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
     private val sessionDirectoryManager = SessionDirectoryManager(context)
     private val timeSynchronizationService = TimeSynchronizationService()
@@ -805,6 +811,7 @@ suspend fun addSyncMarker(
             )
             _syncEventFlow.emit(syncEvent)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("RecordingController", "Unexpected Exception in RecordingController catch block", e)
         }
     }
 }
@@ -1000,6 +1007,7 @@ suspend fun cleanup() {
                     try {
                         sensor.cleanup()
                     } catch (e: Exception) {
+                        mpdc4gsr.core.utils.AppLogger.e("RecordingController", "Unexpected Exception in RecordingController catch block", e)
                     }
                 }
             }
@@ -1007,6 +1015,7 @@ suspend fun cleanup() {
             sensorRecorders.clear()
             controllerScope.cancel()
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("RecordingController", "Unexpected Exception in RecordingController catch block", e)
         }
     }
 }
@@ -1030,6 +1039,7 @@ private fun startMonitoring() {
                 }
                 _sensorStatusFlow.emit(statusList)
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("RecordingController", "Unexpected Exception in RecordingController catch block", e)
             }
             delay(RecordingConstants.STATUS_UPDATE_INTERVAL_MS)
         }
@@ -1127,11 +1137,13 @@ private suspend fun attemptErrorRecovery(sensor: SensorRecorder, error: SensorEr
                         } else {
                         }
                     } catch (e: Exception) {
+                        mpdc4gsr.core.utils.AppLogger.e("RecordingController", "Unexpected Exception in RecordingController catch block", e)
                     }
                 }
             } else {
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("RecordingController", "Unexpected Exception in RecordingController catch block", e)
         }
     }
 }
@@ -1326,6 +1338,7 @@ private fun createCrashRecoveryMarker(
         )
         recoveryFile.writeText(recoveryInfo.entries.joinToString("\n") { "${it.key}=${it.value}" })
     } catch (e: Exception) {
+        mpdc4gsr.core.utils.AppLogger.e("RecordingController", "Unexpected Exception in RecordingController catch block", e)
     }
 }
 

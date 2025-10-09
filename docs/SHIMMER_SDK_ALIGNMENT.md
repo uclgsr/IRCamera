@@ -137,13 +137,13 @@ G = 1,000,000 / R (microsiemens)
 
 ### Core Integration Files
 
-1. **ShimmerDeviceManager.kt**
-    - Location: `app/src/main/java/mpdc4gsr/core/data/`
+1. **GsrDeviceManager.kt**
+    - Location: `app/src/main/java/mpdc4gsr/core/sensors/gsr/`
     - Purpose: BLE device discovery and connection management
     - Key Features: Multi-device support, reconnection logic
 
-2. **Shimmer3GSRRecorder.kt**
-    - Location: `app/src/main/java/mpdc4gsr/core/data/`
+2. **DefaultGsrRecorder.kt**
+    - Location: `app/src/main/java/mpdc4gsr/core/sensors/gsr/`
     - Purpose: Main GSR recording orchestration
     - Key Features: Session management, CSV output, data quality monitoring
 

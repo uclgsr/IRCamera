@@ -4,6 +4,7 @@ import java.util.*
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt")
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
     id("com.google.dagger.hilt.android")
@@ -316,6 +317,7 @@ configurations.all {
     exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
 }
 
+
 dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
@@ -323,7 +325,7 @@ dependencies {
 
     // Hilt dependency injection
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
+    kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
     implementation(platform(libs.compose.bom))
@@ -435,3 +437,6 @@ fun getDayStr(): String {
 fun getTimeStr(): String {
     return SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
 }
+
+
+

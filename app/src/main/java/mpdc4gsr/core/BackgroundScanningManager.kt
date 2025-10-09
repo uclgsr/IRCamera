@@ -42,6 +42,7 @@ class BackgroundScanningManager(
             // Bind to the service to get status updates
             bindService()
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
         }
     }
 
@@ -58,6 +59,7 @@ class BackgroundScanningManager(
                 isServiceStarted = false
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
         }
     }
 
@@ -68,6 +70,7 @@ class BackgroundScanningManager(
             }
             context.startService(intent)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
         }
     }
 
@@ -78,6 +81,7 @@ class BackgroundScanningManager(
             }
             context.startService(intent)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
         }
     }
 
@@ -86,6 +90,7 @@ class BackgroundScanningManager(
             val intent = Intent(context, BackgroundDeviceScanningService::class.java)
             context.bindService(intent, this, Context.BIND_AUTO_CREATE)
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
         }
     }
 
@@ -98,6 +103,7 @@ class BackgroundScanningManager(
                 statusCallback?.onServiceDisconnected()
             }
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
         }
     }
 

@@ -1,7 +1,16 @@
 package mpdc4gsr.feature.main.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -9,21 +18,87 @@ import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import mpdc4gsr.core.ui.components.common.TitleBar
 import mpdc4gsr.core.ui.components.common.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.feature.main.domain.model.SensorState
+import mpdc4gsr.feature.main.domain.model.SensorStatus
+import mpdc4gsr.feature.main.presentation.MainActivityViewModel
+import mpdc4gsr.feature.main.presentation.MainUiAction
+import mpdc4gsr.feature.main.presentation.MainUiState
+import mpdc4gsr.feature.main.presentation.SensorOverviewState
+import mpdc4gsr.core.domain.model.UiEvent
+
+@Composable
+fun MainRoute(
+    onNavigateToSensors: () -> Unit = {},
+    onNavigateToGallery: () -> Unit = {},
+    onNavigateToSettings: () -> Unit = {},
+    onNavigateToProfile: () -> Unit = {},
+    onNavigateToSensor: (mpdc4gsr.core.ui.model.SensorType) -> Unit = {},
+    onExitRequested: () -> Unit = {},
+    modifier: Modifier = Modifier,
+    viewModel: MainActivityViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    LaunchedEffect(viewModel) {
+        viewModel.events.collect { event ->
+            when (event) {
+                UiEvent.ShowExitDialog -> onExitRequested()
+                is UiEvent.ShowToast -> {
+                    Toast.makeText(
+                        context,
+                        event.message,
+                        if (event.isLong) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    MainScreen(
+        state = uiState,
+        onAction = viewModel::onAction,
+        onNavigateToSensors = onNavigateToSensors,
+        onNavigateToGallery = onNavigateToGallery,
+        onNavigateToSettings = onNavigateToSettings,
+        onNavigateToProfile = onNavigateToProfile,
+        onNavigateToSensor = onNavigateToSensor,
+        modifier = modifier
+    )
+}
 
 @Composable
 fun MainScreen(
+    state: MainUiState,
+    onAction: (MainUiAction) -> Unit,
     onNavigateToSensors: () -> Unit = {},
     onNavigateToGallery: () -> Unit = {},
     onNavigateToSettings: () -> Unit = {},
@@ -31,7 +106,6 @@ fun MainScreen(
     onNavigateToSensor: (mpdc4gsr.core.ui.model.SensorType) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    var selectedTab by remember { mutableIntStateOf(0) }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -54,13 +128,14 @@ fun MainScreen(
                 .fillMaxSize()
                 .weight(1f)
         ) {
-            when (selectedTab) {
-                0 -> SensorDashboardTab(
+            when (state.currentPage) {
+                MainUiState.PAGE_GALLERY -> GalleryTab(onNavigateToGallery = onNavigateToGallery)
+                MainUiState.PAGE_PROFILE -> ProfileTab(onNavigateToProfile = onNavigateToProfile)
+                else -> SensorDashboardTab(
+                    state = state,
+                    onAction = onAction,
                     onSensorClick = onNavigateToSensor
                 )
-
-                1 -> GalleryTab(onNavigateToGallery = onNavigateToGallery)
-                2 -> ProfileTab(onNavigateToProfile = onNavigateToProfile)
             }
         }
         // Bottom navigation
@@ -70,8 +145,8 @@ fun MainScreen(
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Dashboard, contentDescription = "Sensors") },
                 label = { Text("Sensors") },
-                selected = selectedTab == 0,
-                onClick = { selectedTab = 0 },
+                selected = state.currentPage == MainUiState.PAGE_MAIN,
+                onClick = { onAction(MainUiAction.SelectPage(MainUiState.PAGE_MAIN)) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
@@ -82,8 +157,8 @@ fun MainScreen(
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Photo, contentDescription = "Gallery") },
                 label = { Text("Gallery") },
-                selected = selectedTab == 1,
-                onClick = { selectedTab = 1 },
+                selected = state.currentPage == MainUiState.PAGE_GALLERY,
+                onClick = { onAction(MainUiAction.SelectPage(MainUiState.PAGE_GALLERY)) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
@@ -95,7 +170,10 @@ fun MainScreen(
                 icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
                 label = { Text("Settings") },
                 selected = false,
-                onClick = { onNavigateToSettings() },
+                onClick = {
+                    onAction(MainUiAction.SelectPage(MainUiState.PAGE_SETTINGS))
+                    onNavigateToSettings()
+                },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
@@ -106,8 +184,8 @@ fun MainScreen(
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
                 label = { Text("Profile") },
-                selected = selectedTab == 2,
-                onClick = { selectedTab = 2 },
+                selected = state.currentPage == MainUiState.PAGE_PROFILE,
+                onClick = { onAction(MainUiAction.SelectPage(MainUiState.PAGE_PROFILE)) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
@@ -121,70 +199,34 @@ fun MainScreen(
 
 @Composable
 private fun SensorDashboardTab(
+    state: MainUiState,
+    onAction: (MainUiAction) -> Unit,
     onSensorClick: (mpdc4gsr.core.ui.model.SensorType) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    // Use remember for stable state holders to prevent unnecessary recomposition
-    var gsrState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
-    var thermalState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
-    var rgbState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
-    // Memoize action handlers to prevent recreating lambdas on every recomposition
-    val gsrActionHandler = remember {
+    val gsrSensorUiState = remember(state.sensorOverview.gsr.status) {
+        mapSensorStatusToUiState(state.sensorOverview.gsr.status)
+    }
+    val thermalSensorUiState = remember(state.sensorOverview.thermal.status) {
+        mapSensorStatusToUiState(state.sensorOverview.thermal.status)
+    }
+    val rgbSensorUiState = remember(state.sensorOverview.rgb.status) {
+        mapSensorStatusToUiState(state.sensorOverview.rgb.status)
+    }
+
+    val gsrActionHandler = remember(onAction) {
         { action: mpdc4gsr.core.ui.model.GSRAction ->
-            when (action) {
-                is mpdc4gsr.core.ui.model.GSRAction.Connect ->
-                    gsrState = mpdc4gsr.core.ui.model.SensorState.Connecting
-
-                is mpdc4gsr.core.ui.model.GSRAction.Disconnect ->
-                    gsrState = mpdc4gsr.core.ui.model.SensorState.Disconnected
-
-                is mpdc4gsr.core.ui.model.GSRAction.StartStream ->
-                    gsrState = mpdc4gsr.core.ui.model.SensorState.Streaming
-
-                is mpdc4gsr.core.ui.model.GSRAction.StopStream ->
-                    gsrState = mpdc4gsr.core.ui.model.SensorState.Connected
-
-                is mpdc4gsr.core.ui.model.GSRAction.ConfigureDevice -> {}
-            }
+            onAction(MainUiAction.PerformGsrAction(action))
         }
     }
-    val thermalActionHandler = remember {
+    val thermalActionHandler = remember(onAction) {
         { action: mpdc4gsr.core.ui.model.ThermalAction ->
-            when (action) {
-                is mpdc4gsr.core.ui.model.ThermalAction.Connect ->
-                    thermalState = mpdc4gsr.core.ui.model.SensorState.Connecting
-
-                is mpdc4gsr.core.ui.model.ThermalAction.Disconnect ->
-                    thermalState = mpdc4gsr.core.ui.model.SensorState.Disconnected
-
-                is mpdc4gsr.core.ui.model.ThermalAction.StartPreview ->
-                    thermalState = mpdc4gsr.core.ui.model.SensorState.Streaming
-
-                is mpdc4gsr.core.ui.model.ThermalAction.StopPreview ->
-                    thermalState = mpdc4gsr.core.ui.model.SensorState.Connected
-
-                is mpdc4gsr.core.ui.model.ThermalAction.Calibrate -> {}
-                is mpdc4gsr.core.ui.model.ThermalAction.OpenSettings -> {}
-            }
+            onAction(MainUiAction.PerformThermalAction(action))
         }
     }
-    val rgbActionHandler = remember {
+    val rgbActionHandler = remember(onAction) {
         { action: mpdc4gsr.core.ui.model.CameraAction ->
-            when (action) {
-                is mpdc4gsr.core.ui.model.CameraAction.Connect ->
-                    rgbState = mpdc4gsr.core.ui.model.SensorState.Connecting
-
-                is mpdc4gsr.core.ui.model.CameraAction.Disconnect ->
-                    rgbState = mpdc4gsr.core.ui.model.SensorState.Disconnected
-
-                is mpdc4gsr.core.ui.model.CameraAction.StartPreview ->
-                    rgbState = mpdc4gsr.core.ui.model.SensorState.Streaming
-
-                is mpdc4gsr.core.ui.model.CameraAction.StopPreview ->
-                    rgbState = mpdc4gsr.core.ui.model.SensorState.Connected
-
-                is mpdc4gsr.core.ui.model.CameraAction.SetResolution -> {}
-            }
+            onAction(MainUiAction.PerformCameraAction(action))
         }
     }
     Column(
@@ -220,24 +262,24 @@ private fun SensorDashboardTab(
             }
         }
         // System status overview
-        SystemStatusOverview()
+        SystemStatusOverview(sensorOverview = state.sensorOverview)
         // Sensor cards for direct access
         // Using memoized handlers to prevent unnecessary recomposition
         mpdc4gsr.core.ui.components.sensors.GSRSensorCard(
-            state = gsrState,
-            onStateChange = { gsrState = it },
+            state = gsrSensorUiState,
+            onStateChange = {},
             onClick = { onSensorClick(mpdc4gsr.core.ui.model.SensorType.GSR) },
             onAction = gsrActionHandler
         )
         mpdc4gsr.core.ui.components.sensors.ThermalSensorCard(
-            state = thermalState,
-            onStateChange = { thermalState = it },
+            state = thermalSensorUiState,
+            onStateChange = {},
             onClick = { onSensorClick(mpdc4gsr.core.ui.model.SensorType.ThermalIR) },
             onAction = thermalActionHandler
         )
         mpdc4gsr.core.ui.components.sensors.RGBCameraSensorCard(
-            state = rgbState,
-            onStateChange = { rgbState = it },
+            state = rgbSensorUiState,
+            onStateChange = {},
             onClick = { onSensorClick(mpdc4gsr.core.ui.model.SensorType.RGBCamera) },
             onAction = rgbActionHandler
         )
@@ -352,11 +394,9 @@ private fun ProfileTab(
 
 @Composable
 private fun SystemStatusOverview(
+    sensorOverview: SensorOverviewState,
     modifier: Modifier = Modifier
 ) {
-    // Memoize colors to prevent recomposition when theme changes
-    val connectedColor = Color.Green
-    val primaryColor = MaterialTheme.colorScheme.primary
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -377,9 +417,9 @@ private fun SystemStatusOverview(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatusItem("GSR", "Connected", connectedColor)
-                StatusItem("Thermal", "Ready", primaryColor)
-                StatusItem("RGB", "Active", connectedColor)
+                StatusItem("GSR", sensorOverview.gsr)
+                StatusItem("Thermal", sensorOverview.thermal)
+                StatusItem("RGB", sensorOverview.rgb)
             }
         }
     }
@@ -388,10 +428,11 @@ private fun SystemStatusOverview(
 @Composable
 private fun StatusItem(
     label: String,
-    status: String,
-    color: Color,
+    sensorState: SensorState,
     modifier: Modifier = Modifier
 ) {
+    val indicatorColor = sensorState.status.indicatorColor()
+    val subtitle = sensorState.message ?: sensorState.status.displayLabel()
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -399,7 +440,7 @@ private fun StatusItem(
         Surface(
             modifier = Modifier.size(12.dp),
             shape = androidx.compose.foundation.shape.CircleShape,
-            color = color
+            color = indicatorColor
         ) {}
         Spacer(modifier = Modifier.height(4.dp))
         Text(
@@ -409,17 +450,48 @@ private fun StatusItem(
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = status,
+            text = subtitle,
             color = Color.Gray,
             fontSize = 10.sp
         )
     }
 }
 
+private fun mapSensorStatusToUiState(status: SensorStatus): mpdc4gsr.core.ui.model.SensorState =
+    when (status) {
+        SensorStatus.DISCONNECTED -> mpdc4gsr.core.ui.model.SensorState.Disconnected
+        SensorStatus.CONNECTING -> mpdc4gsr.core.ui.model.SensorState.Connecting
+        SensorStatus.CONNECTED -> mpdc4gsr.core.ui.model.SensorState.Connected
+        SensorStatus.STREAMING -> mpdc4gsr.core.ui.model.SensorState.Streaming
+        SensorStatus.ERROR -> mpdc4gsr.core.ui.model.SensorState.Error
+        SensorStatus.SIMULATION -> mpdc4gsr.core.ui.model.SensorState.Simulation
+    }
+
+private fun SensorStatus.displayLabel(): String = when (this) {
+    SensorStatus.DISCONNECTED -> "Disconnected"
+    SensorStatus.CONNECTING -> "Connecting"
+    SensorStatus.CONNECTED -> "Ready"
+    SensorStatus.STREAMING -> "Streaming"
+    SensorStatus.ERROR -> "Error"
+    SensorStatus.SIMULATION -> "Simulation"
+}
+
+private fun SensorStatus.indicatorColor(): Color = when (this) {
+    SensorStatus.DISCONNECTED -> Color.Gray
+    SensorStatus.CONNECTING -> Color(0xFFFFA000) // Amber
+    SensorStatus.CONNECTED -> Color(0xFF4CAF50) // Green
+    SensorStatus.STREAMING -> Color(0xFF00BCD4) // Teal
+    SensorStatus.ERROR -> Color(0xFFF44336) // Red
+    SensorStatus.SIMULATION -> Color(0xFF9C27B0) // Purple
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenPreview() {
     IRCameraTheme {
-        MainScreen()
+        MainScreen(
+            state = MainUiState(),
+            onAction = {}
+        )
     }
 }

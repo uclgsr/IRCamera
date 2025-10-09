@@ -473,6 +473,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             generateSessionKey()
             generateHmacKey()
         } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e("AdvancedAuthenticationManager", "Unexpected Exception in AdvancedAuthenticationManager catch block", e)
         }
     }
 

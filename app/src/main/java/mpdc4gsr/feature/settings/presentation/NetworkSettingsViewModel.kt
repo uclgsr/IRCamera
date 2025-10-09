@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.data.ShimmerDeviceManager
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,7 +26,6 @@ class NetworkSettingsViewModel @Inject constructor(
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var wifiManager: WifiManager? = null
-    private var shimmerDeviceManager: ShimmerDeviceManager? = null
     private val _networkSettings = MutableStateFlow(NetworkSettings())
     val networkSettings: StateFlow<NetworkSettings> = _networkSettings.asStateFlow()
     private val _pairedDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())

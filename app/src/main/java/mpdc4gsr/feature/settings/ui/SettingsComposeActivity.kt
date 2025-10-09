@@ -370,7 +370,6 @@ fun SettingsScreen(
         }
     }
 }
-}
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor() : ViewModel() {
@@ -383,5 +382,4 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
         val networkDiscoveryEnabled: Boolean = true,
         val autoSaveEnabled: Boolean = true
     )
-}
 }

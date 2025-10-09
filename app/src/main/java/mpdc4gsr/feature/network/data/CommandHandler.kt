@@ -162,6 +162,7 @@ class CommandHandler(
                         val statusResponse = handleGetStatusCommand()
                         networkManager.sendTelemetry(statusResponse)
                     } catch (e: Exception) {
+                        mpdc4gsr.core.utils.AppLogger.e("CommandHandler", "Unexpected Exception in CommandHandler catch block", e)
                     }
                 }
             }
@@ -176,6 +177,7 @@ class CommandHandler(
                     "STATUS Recording started at $timestamp, session: $sessionId, sensors: [RGB,Thermal,GSR]"
                 networkManager.sendTelemetry(message)
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("CommandHandler", "Unexpected Exception in CommandHandler catch block", e)
             }
         }
     }
@@ -188,6 +190,7 @@ class CommandHandler(
                     "STATUS Recording stopped at $timestamp, duration: ${duration}ms, files saved"
                 networkManager.sendTelemetry(message)
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("CommandHandler", "Unexpected Exception in CommandHandler catch block", e)
             }
         }
     }
@@ -199,6 +202,7 @@ class CommandHandler(
                 val message = "WARN $errorType at $timestamp: $errorMessage"
                 networkManager.sendTelemetry(message)
             } catch (e: Exception) {
+                mpdc4gsr.core.utils.AppLogger.e("CommandHandler", "Unexpected Exception in CommandHandler catch block", e)
             }
         }
     }

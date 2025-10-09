@@ -20,6 +20,7 @@ import com.energy.iruvc.utils.CommonParams.IRPROCSRCFMTType
 import com.energy.iruvc.utils.Line
 import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper.Companion.correct
 import com.mpdc4gsr.libunified.ir.utils.TempUtils
+import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 
 class TemperatureHikView : TemperatureBaseView {
     @Volatile
@@ -312,7 +313,8 @@ class TemperatureHikView : TemperatureBaseView {
                     val endPoint = Point((it.end.x / xScale).toInt(), (it.end.y / yScale).toInt())
                     try {
                         trendResult = libIRTemp.getTemperatureOfLine(Line(startPoint, endPoint))
-                    } catch (_: IllegalArgumentException) {
+                    } catch (exception: IllegalArgumentException) {
+                        LibraryLogger.e("TemperatureHikView", "Unexpected IllegalArgumentException in TemperatureHikView catch block", exception)
                     }
                     val tempList: List<Float> =
                         TempUtils.getLineTemps(startPoint, endPoint, rotateTempArray, imageWidth)
@@ -326,7 +328,8 @@ class TemperatureHikView : TemperatureBaseView {
                     val sourcePoint = Point((point.x / xScale).toInt(), (point.y / yScale).toInt())
                     try {
                         pointResultList.add(libIRTemp.getTemperatureOfPoint(sourcePoint))
-                    } catch (_: IllegalArgumentException) {
+                    } catch (exception: IllegalArgumentException) {
+                        LibraryLogger.e("TemperatureHikView", "Unexpected IllegalArgumentException in TemperatureHikView catch block", exception)
                     }
                 }
                 val lineList: List<Line> = getLineListSafe()
@@ -339,7 +342,8 @@ class TemperatureHikView : TemperatureBaseView {
                         )
                     try {
                         lineResultList.add(libIRTemp.getTemperatureOfLine(sourceLine))
-                    } catch (_: IllegalArgumentException) {
+                    } catch (exception: IllegalArgumentException) {
+                        LibraryLogger.e("TemperatureHikView", "Unexpected IllegalArgumentException in TemperatureHikView catch block", exception)
                     }
                 }
                 val rectList: List<Rect> = getRectListSafe()
@@ -354,7 +358,8 @@ class TemperatureHikView : TemperatureBaseView {
                         )
                     try {
                         rectResultList.add(libIRTemp.getTemperatureOfRect(sourceRect))
-                    } catch (_: IllegalArgumentException) {
+                    } catch (exception: IllegalArgumentException) {
+                        LibraryLogger.e("TemperatureHikView", "Unexpected IllegalArgumentException in TemperatureHikView catch block", exception)
                     }
                 }
                 tempInfo = TempInfo(

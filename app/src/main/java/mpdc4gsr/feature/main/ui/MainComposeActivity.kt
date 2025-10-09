@@ -67,7 +67,7 @@ fun MainApp() {
     ) {
         // Main screen with bottom navigation
         composable(MainNavRoutes.MAIN) {
-            MainScreen(
+            MainRoute(
                 onNavigateToSensors = { navController.navigate(MainNavRoutes.UNIFIED_DASHBOARD) },
                 onNavigateToGallery = { navController.navigate(MainNavRoutes.GALLERY) },
                 onNavigateToSettings = { navController.navigate(MainNavRoutes.SETTINGS) },

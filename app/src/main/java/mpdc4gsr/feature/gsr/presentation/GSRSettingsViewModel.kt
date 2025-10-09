@@ -6,11 +6,14 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import mpdc4gsr.core.ui.AppBaseViewModel
+import mpdc4gsr.core.sensors.gsr.model.DeviceInfo as RecorderDeviceInfo
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
-import mpdc4gsr.feature.network.data.RecordingController
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,15 +38,16 @@ class GSRSettingsViewModel @Inject constructor(
 
     data class DeviceConnectionState(
         val isConnected: Boolean,
-        val deviceInfo: DeviceInfo? = null,
+        val deviceInfo: UiDeviceInfo? = null,
         val connectionStatus: String = "Disconnected",
         val signalStrength: Int = 0
     )
 
-    data class DeviceInfo(
+    data class UiDeviceInfo(
         val id: String,
         val name: String,
         val address: String,
+        val coreInfo: RecorderDeviceInfo,
         val isConnected: Boolean = false,
         val batteryLevel: Int? = null,
         val signalStrength: Int = 0
@@ -54,6 +58,7 @@ class GSRSettingsViewModel @Inject constructor(
     }
 
     private var gsrSensorRecorder: GSRSensorRecorder? = null
+    private var deviceStatusJob: Job? = null
 
     init {
         checkPermissions(context)
@@ -83,8 +88,8 @@ class GSRSettingsViewModel @Inject constructor(
     private val _deviceConnectionState = MutableStateFlow(DeviceConnectionState(false))
     val deviceConnectionState: StateFlow<DeviceConnectionState> =
         _deviceConnectionState.asStateFlow()
-    private val _availableDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())
-    val availableDevices: StateFlow<List<DeviceInfo>> = _availableDevices.asStateFlow()
+    private val _availableDevices = MutableStateFlow<List<UiDeviceInfo>>(emptyList())
+    val availableDevices: StateFlow<List<UiDeviceInfo>> = _availableDevices.asStateFlow()
     private val _scanningState = MutableStateFlow(ScanningState.IDLE)
     val scanningState: StateFlow<ScanningState> = _scanningState.asStateFlow()
 
@@ -112,7 +117,7 @@ class GSRSettingsViewModel @Inject constructor(
 
         object OpenAppSettings : SettingsEvent()
         data class DeviceScanCompleted(val message: String) : SettingsEvent()
-        data class DeviceConnected(val device: DeviceInfo, val message: String) : SettingsEvent()
+        data class DeviceConnected(val device: UiDeviceInfo, val message: String) : SettingsEvent()
         data class DeviceDisconnected(val message: String) : SettingsEvent()
         data class SettingsExported(val data: Map<String, Any>, val message: String) :
             SettingsEvent()
@@ -129,24 +134,35 @@ class GSRSettingsViewModel @Inject constructor(
         launchWithErrorHandling {
             try {
                 val currentSettings = repository.gsrSettings.value
-                // Create a temporary RecordingController since it's required by the constructor
-                val tempRecordingController = RecordingController(
-                    context,
-                    object : androidx.lifecycle.LifecycleOwner {
-                        override val lifecycle: androidx.lifecycle.Lifecycle
-                            get() = androidx.lifecycle.LifecycleRegistry(this)
-                    }
+                val recorder = GSRSensorRecorder(
+                    context = context,
+                    sensorId = "gsr_settings_${System.currentTimeMillis()}",
+                    samplingRateHz = currentSettings.samplingRate
                 )
-                gsrSensorRecorder = GSRSensorRecorder(
-                    context,
-                    "gsr_settings_${System.currentTimeMillis()}",
-                    currentSettings.samplingRate,
-                    tempRecordingController
-                )
-                _deviceConnectionState.value = DeviceConnectionState(
-                    isConnected = false,
-                    connectionStatus = "Ready"
-                )
+                val initialized = recorder.initialize()
+                if (!initialized) {
+                    _settingsEvents.emit(
+                        SettingsEvent.ShowError("Failed to initialize GSR recorder: recorder returned false")
+                    )
+                    return@launchWithErrorHandling
+                }
+                gsrSensorRecorder = recorder
+                deviceStatusJob?.cancel()
+                deviceStatusJob = viewModelScope.launch {
+                    combine(
+                        recorder.deviceStatusFlow(),
+                        recorder.isConnectedFlow
+                    ) { status, connected -> status to connected }
+                        .collect { (status, connected) ->
+                            val currentState = _deviceConnectionState.value
+                            _deviceConnectionState.value = currentState.copy(
+                                isConnected = connected,
+                                connectionStatus = status
+                            )
+                        }
+                }
+                _deviceConnectionState.value =
+                    DeviceConnectionState(isConnected = recorder.isConnected, connectionStatus = "Ready")
             } catch (e: Exception) {
                 _settingsEvents.emit(SettingsEvent.ShowError("Failed to initialize GSR recorder: ${e.message}"))
             }
@@ -217,7 +233,6 @@ class GSRSettingsViewModel @Inject constructor(
         _scanningState.value = ScanningState.SCANNING
         launchWithErrorHandling {
             try {
-                // Simulate device scanning
                 val devices = scanForDevices()
                 _availableDevices.value = devices
                 _scanningState.value = ScanningState.COMPLETED
@@ -229,42 +244,56 @@ class GSRSettingsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun scanForDevices(): List<DeviceInfo> {
-        // Simulate device discovery
-        return listOf(
-            DeviceInfo("shimmer_001", "Shimmer GSR #001", "00:11:22:AA:BB:CC"),
-            DeviceInfo("shimmer_002", "Shimmer GSR #002", "00:11:22:AA:BB:DD"),
-            DeviceInfo("shimmer_003", "Shimmer GSR #003", "00:11:22:AA:BB:EE")
-        )
+    private suspend fun scanForDevices(): List<UiDeviceInfo> {
+        val recorder = gsrSensorRecorder
+            ?: throw IllegalStateException("GSR recorder not initialized")
+        val discoveryStarted = recorder.startDeviceDiscovery()
+        if (!discoveryStarted) {
+            throw IllegalStateException("Device discovery failed to start")
+        }
+        val discovered = recorder.getDiscoveredDevices()
+        return discovered.map { device ->
+            UiDeviceInfo(
+                id = device.address.ifBlank { device.name.ifBlank { device.deviceType } },
+                name = device.name.ifBlank { device.deviceType },
+                address = device.address,
+                coreInfo = device,
+                signalStrength = device.rssi,
+                batteryLevel = device.batteryLevel
+            )
+        }
     }
 
-    fun connectToDevice(deviceInfo: DeviceInfo) {
+    fun connectToDevice(deviceInfo: UiDeviceInfo) {
         launchWithErrorHandling {
             try {
+                val recorder = gsrSensorRecorder
+                    ?: throw IllegalStateException("GSR recorder not initialized")
                 _deviceConnectionState.value = DeviceConnectionState(
                     isConnected = false,
                     deviceInfo = deviceInfo,
                     connectionStatus = "Connecting..."
                 )
-                // Simulate connection process
-                kotlinx.coroutines.delay(2000)
-                // Update device settings in repository
-                val currentDeviceSettings = repository.deviceSettings.value
+                val connected = recorder.connectToDevice(deviceInfo.coreInfo)
+                if (!connected) {
+                    throw IllegalStateException("Unable to connect to ${deviceInfo.name}")
+                }
                 repository.updateDeviceSettings(
-                    currentDeviceSettings.copy(
+                    repository.deviceSettings.value.copy(
                         selectedDeviceId = deviceInfo.id,
                         deviceName = deviceInfo.name
                     )
                 )
+                val connectedUi = deviceInfo.copy(isConnected = true)
                 _deviceConnectionState.value = DeviceConnectionState(
                     isConnected = true,
-                    deviceInfo = deviceInfo,
+                    deviceInfo = connectedUi,
                     connectionStatus = "Connected",
-                    signalStrength = 85
+                    signalStrength = deviceInfo.signalStrength
                 )
                 _settingsEvents.emit(
                     SettingsEvent.DeviceConnected(
-                        deviceInfo,
+                        connectedUi,
                         "Connected to ${deviceInfo.name}"
                     )
                 )
@@ -281,6 +310,7 @@ class GSRSettingsViewModel @Inject constructor(
     fun disconnectDevice() {
         launchWithErrorHandling {
             try {
+                gsrSensorRecorder?.disconnectDevice()
                 _deviceConnectionState.value = DeviceConnectionState(
                     isConnected = false,
                     connectionStatus = "Disconnected"
@@ -415,6 +445,20 @@ class GSRSettingsViewModel @Inject constructor(
             }
         }
         return missing
+    }
+
+    override fun onCleared() {
+        deviceStatusJob?.cancel()
+        gsrSensorRecorder?.let { recorder ->
+            runBlocking {
+                try {
+                    recorder.cleanup()
+                } catch (exception: Exception) {
+                    mpdc4gsr.core.utils.AppLogger.e("GSRSettingsViewModel", "Unexpected Exception in GSRSettingsViewModel catch block", exception)
+                }
+            }
+        }
+        super.onCleared()
     }
 
     companion object {
