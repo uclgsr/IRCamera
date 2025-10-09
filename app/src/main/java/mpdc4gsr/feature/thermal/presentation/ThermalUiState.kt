@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 
 sealed interface ThermalUiState {
     data object Loading : ThermalUiState
-    
+
     data class Success(
         val isConnected: Boolean = false,
         val isRecording: Boolean = false,
@@ -19,7 +19,7 @@ sealed interface ThermalUiState {
         val isSimulationMode: Boolean = false,
         val frameCount: Long = 0L
     ) : ThermalUiState
-    
+
     data class Error(
         val message: String,
         val isRecoverable: Boolean = true

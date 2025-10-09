@@ -125,7 +125,6 @@ class App : BaseApplication() {
     }
 
 
-
     private fun loadNativeLibraries() {
         try {
             System.loadLibrary("USBUVCCamera")

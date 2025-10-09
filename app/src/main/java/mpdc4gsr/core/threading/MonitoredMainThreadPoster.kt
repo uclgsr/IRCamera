@@ -3,6 +3,7 @@ package mpdc4gsr.core.threading
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+
 object MonitoredMainThreadPoster {
     private const val TAG = "MonitoredMainThread"
     private const val WARNING_THRESHOLD_MS = 100L

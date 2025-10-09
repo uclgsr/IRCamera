@@ -41,7 +41,7 @@ class RecordingSettingsRepository @Inject constructor(
         @Deprecated("Use dependency injection instead", ReplaceWith("Inject RecordingSettingsRepository"))
         @Volatile
         private var instance: RecordingSettingsRepository? = null
-        
+
         @Deprecated("Use dependency injection instead", ReplaceWith("Inject RecordingSettingsRepository"))
         fun getInstance(context: Context): RecordingSettingsRepository {
             return instance ?: synchronized(this) {

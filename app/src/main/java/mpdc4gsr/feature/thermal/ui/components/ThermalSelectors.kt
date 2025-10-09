@@ -17,7 +17,7 @@ fun <T> ThermalDropdown(
     optionToString: (T) -> String = { it.toString() }
 ) {
     var expanded by remember { mutableStateOf(false) }
-    
+
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = it },

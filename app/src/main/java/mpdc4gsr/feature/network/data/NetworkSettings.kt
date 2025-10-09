@@ -7,7 +7,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class NetworkSettings(private val context: Context) {
-    companion object {        private const val PREFS_NAME = "network_settings"
+    companion object {
+        private const val PREFS_NAME = "network_settings"
 
         // Wi-Fi TCP Settings
         private const val KEY_WIFI_ENABLED = "wifi_enabled"
@@ -112,7 +113,10 @@ class NetworkSettings(private val context: Context) {
                 editor.putString(KEY_BLUETOOTH_DEVICE_NAME, deviceName)
             } catch (e: SecurityException) {                // Save address only
             }
-            editor.apply()        } catch (e: SecurityException) {        } catch (e: Exception) {        }
+            editor.apply()
+        } catch (e: SecurityException) {
+        } catch (e: Exception) {
+        }
     }
 
     suspend fun getSavedBluetoothDeviceInfo(): Pair<String?, String?> =
@@ -121,13 +125,16 @@ class NetworkSettings(private val context: Context) {
                 val address = prefs.getString(KEY_BLUETOOTH_DEVICE_ADDRESS, null)
                 val name = prefs.getString(KEY_BLUETOOTH_DEVICE_NAME, null)
                 Pair(address, name)
-            } catch (e: Exception) {                Pair(null, null)
+            } catch (e: Exception) {
+                Pair(null, null)
             }
         }
 
     suspend fun clearSettings() = withContext(Dispatchers.IO) {
         try {
-            prefs.edit().clear().apply()        } catch (e: Exception) {        }
+            prefs.edit().clear().apply()
+        } catch (e: Exception) {
+        }
     }
 
     fun getConnectionSummary(): String {

@@ -13,7 +13,8 @@ class NetworkErrorRecoveryManager(
     private val context: Context,
     private val networkClient: NetworkClient,
 ) {
-    companion object {        private const val MAX_RECONNECTION_ATTEMPTS = 10
+    companion object {
+        private const val MAX_RECONNECTION_ATTEMPTS = 10
         private const val INITIAL_RETRY_DELAY_MS = 1000L
         private const val MAX_RETRY_DELAY_MS = 30000L
         private const val HEALTH_CHECK_INTERVAL_MS = 15000L
@@ -54,24 +55,30 @@ class NetworkErrorRecoveryManager(
     }
 
     fun enableAutoRecovery() {
-        if (isRecoveryActive.get()) {            return
+        if (isRecoveryActive.get()) {
+            return
         }
-        isRecoveryActive.set(true)    }
+        isRecoveryActive.set(true)
+    }
 
     fun disableAutoRecovery() {
-        if (!isRecoveryActive.get()) {            return
+        if (!isRecoveryActive.get()) {
+            return
         }
-        isRecoveryActive.set(false)    }
+        isRecoveryActive.set(false)
+    }
 
     fun recordSuccessfulConnection(controller: NetworkClient.ControllerInfo) {
         lastKnownGoodController = controller
         reconnectionAttempts.set(0)
-        rapidFailureCount.set(0)    }
+        rapidFailureCount.set(0)
+    }
 
     fun handleNetworkError(
         operation: String,
         error: String,
-    ) {        val currentTime = System.currentTimeMillis()
+    ) {
+        val currentTime = System.currentTimeMillis()
         if (currentTime - lastFailureTime < RAPID_FAILURE_WINDOW_MS) {
             rapidFailureCount.incrementAndGet()
         } else {
@@ -114,5 +121,6 @@ class NetworkErrorRecoveryManager(
         isRecoveryActive.set(false)
         healthCheckJob?.cancel()
         recoveryJob.cancel()
-        eventListener = null    }
+        eventListener = null
+    }
 }

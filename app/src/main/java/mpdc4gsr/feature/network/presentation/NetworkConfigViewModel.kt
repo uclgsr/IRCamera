@@ -25,7 +25,7 @@ class NetworkConfigViewModel @Inject constructor(
         viewModelScope.launch {
             _isScanning.value = true
             _connectionStatus.value = "Scanning..."
-            
+
             discoverControllersUseCase()
                 .onSuccess { controllers ->
                     _connectionStatus.value = "Found ${controllers.size} device(s)"

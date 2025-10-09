@@ -18,7 +18,8 @@ import java.util.concurrent.atomic.AtomicLong
 class UnifiedDataStreamingService(
     private val context: Context
 ) {
-    companion object {        private const val DEFAULT_PORT = 8888
+    companion object {
+        private const val DEFAULT_PORT = 8888
         private const val BATCH_SIZE = 25
         private const val BATCH_TIMEOUT_MS = 50L
         private const val MAX_CLIENTS = 10
@@ -38,9 +39,10 @@ class UnifiedDataStreamingService(
     suspend fun startStreaming(sessionId: String, port: Int = DEFAULT_PORT): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (isStreaming.get()) {                    return@withContext true
-                }                currentSessionId = sessionId
-                sessionStartReference = TimestampManager.createTimestampRecord()
+                if (isStreaming.get()) {
+                    return@withContext true
+                } currentSessionId = sessionId
+                        sessionStartReference = TimestampManager.createTimestampRecord()
                 streamStartTime.set(System.currentTimeMillis())
                 serverSocket = ServerSocket().apply {
                     reuseAddress = true
@@ -55,14 +57,15 @@ class UnifiedDataStreamingService(
                 }
                 streamingScope.launch {
                     distributeHeartbeats()
-                }                broadcastSessionSyncEvent(
-                    "session_start", mapOf(
-                        "session_id" to sessionId,
-                        "timestamp_reference" to sessionStartReference!!.toCsvFormat()
-                    )
+                } broadcastSessionSyncEvent (
+                        "session_start", mapOf(
+                "session_id" to sessionId,
+                "timestamp_reference" to sessionStartReference!!.toCsvFormat()
+                )
                 )
                 true
-            } catch (e: Exception) {                stopStreaming()
+            } catch (e: Exception) {
+                stopStreaming()
                 false
             }
         }
@@ -70,7 +73,8 @@ class UnifiedDataStreamingService(
 
     suspend fun stopStreaming() {
         withContext(Dispatchers.IO) {
-            try {                currentSessionId?.let { sessionId ->
+            try {
+                currentSessionId?.let { sessionId ->
                     broadcastSessionSyncEvent(
                         "session_end", mapOf(
                             "session_id" to sessionId,
@@ -88,7 +92,9 @@ class UnifiedDataStreamingService(
                 }
                 serverSocket?.close()
                 serverSocket = null
-                dataQueue.clear()            } catch (e: Exception) {            }
+                dataQueue.clear()
+            } catch (e: Exception) {
+            }
         }
     }
 
@@ -162,7 +168,8 @@ class UnifiedDataStreamingService(
             put("session_id", currentSessionId)
             put("metadata", JSONObject(metadata))
         }
-        broadcastToClients(syncPacket.toString())    }
+        broadcastToClients(syncPacket.toString())
+    }
 
     fun getStreamingStats(): StreamingStats {
         val uptime = if (streamStartTime.get() > 0) {
@@ -193,12 +200,14 @@ class UnifiedDataStreamingService(
                                 "Client connected: ${socket.remoteSocketAddress} (${connectedClients.size} total)"
                             )
                             clientHandler.sendSessionInfo()
-                        } else {                            socket.close()
+                        } else {
+                            socket.close()
                         }
                     }
                 }
             } catch (e: Exception) {
-                if (isStreaming.get()) {                }
+                if (isStreaming.get()) {
+                }
             }
         }
     }
@@ -238,7 +247,8 @@ class UnifiedDataStreamingService(
                     batch.clear()
                 }
                 delay(1)
-            } catch (e: Exception) {                delay(100)
+            } catch (e: Exception) {
+                delay(100)
             }
         }
     }
@@ -259,7 +269,8 @@ class UnifiedDataStreamingService(
                 }
                 broadcastToClients(heartbeat.toString())
                 delay(HEARTBEAT_INTERVAL_MS)
-            } catch (e: Exception) {                delay(HEARTBEAT_INTERVAL_MS)
+            } catch (e: Exception) {
+                delay(HEARTBEAT_INTERVAL_MS)
             }
         }
     }
@@ -285,7 +296,8 @@ class UnifiedDataStreamingService(
             }
             disconnectedClients.forEach { client ->
                 connectedClients.remove(client)
-                client.disconnect()            }
+                client.disconnect()
+            }
         }
     }
 
@@ -300,7 +312,8 @@ class UnifiedDataStreamingService(
                 } else {
                     false
                 }
-            } catch (e: Exception) {                false
+            } catch (e: Exception) {
+                false
             }
         }
 
@@ -319,7 +332,8 @@ class UnifiedDataStreamingService(
             try {
                 writer.close()
                 socket.close()
-            } catch (e: Exception) {            }
+            } catch (e: Exception) {
+            }
         }
     }
 

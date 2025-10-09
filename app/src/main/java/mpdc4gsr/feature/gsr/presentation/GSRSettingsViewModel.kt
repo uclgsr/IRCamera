@@ -54,7 +54,7 @@ class GSRSettingsViewModel @Inject constructor(
     }
 
     private var gsrSensorRecorder: GSRSensorRecorder? = null
-    
+
     init {
         checkPermissions(context)
         initializeGSRRecorder(context)
@@ -123,7 +123,6 @@ class GSRSettingsViewModel @Inject constructor(
         data class ShowToast(val message: String) : SettingsEvent()
         data class ShowError(val message: String) : SettingsEvent()
     }
-
 
 
     private fun initializeGSRRecorder(context: Context) {

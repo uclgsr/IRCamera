@@ -65,7 +65,7 @@ class GSRDevice(
                 }
                 shimmerManager = ShimmerBluetoothManagerAndroid(context, shimmerHandler)
             }
-            
+
             shimmer = Shimmer(shimmerHandler, context)
             shimmer?.let { device ->
                 device.enableGSROnTheFlyGSRRange(Configuration.Shimmer3.SENSOR_GSR, 4)
@@ -73,7 +73,7 @@ class GSRDevice(
                 device.setLowPowerMag(true)
                 device.setLowPowerAccel(true)
                 device.setLowPowerGyro(true)
-                
+
                 device.connect(address, name)
                 true
             } ?: false
@@ -141,16 +141,20 @@ class GSRDevice(
                     isConnected = true
                     connectionCallback?.invoke("CONNECTED")
                 }
+
                 BT_STATE.CONNECTING.ordinal -> {
                     connectionCallback?.invoke("CONNECTING")
                 }
+
                 BT_STATE.DISCONNECTED.ordinal -> {
                     isConnected = false
                     connectionCallback?.invoke("DISCONNECTED")
                 }
+
                 BT_STATE.STREAMING.ordinal -> {
                     connectionCallback?.invoke("STREAMING")
                 }
+
                 else -> {}
             }
         } catch (e: Exception) {
