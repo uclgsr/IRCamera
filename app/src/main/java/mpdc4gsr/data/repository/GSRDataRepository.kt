@@ -61,7 +61,6 @@ class GSRDataRepository : BaseRepository() {
             delay(2000)
             generateHistoricalGSRData(sessionId, startTime, endTime)
         }
-        data
     }
 
     // Session management
@@ -75,7 +74,6 @@ class GSRDataRepository : BaseRepository() {
             delay(1000)
             generateSampleSessions(deviceId)
         }
-        data
     }
 
     private fun generateGSRReading(deviceId: String, counter: Int): GSRReading {

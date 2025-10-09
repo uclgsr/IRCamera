@@ -7,10 +7,13 @@ plugins {
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
     id("com.google.dagger.hilt.android")
-    id("com.google.devtools.ksp")
+    id("kotlin-kapt")  // Reverted from KSP due to pre-existing IllegalStateException
 }
 
-
+kapt {
+    correctErrorTypes = true
+    useBuildCache = true
+}
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
 val buildTimeStr = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
@@ -323,7 +326,7 @@ dependencies {
     
     // Hilt dependency injection
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
+    kapt(libs.hilt.compiler)  // Reverted from KSP due to pre-existing IllegalStateException
     implementation(libs.hilt.navigation.compose)
     
     implementation(platform(libs.compose.bom))
