@@ -148,18 +148,20 @@ dependencies {
     // Combined dependencies from all three libraries
     api(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
 
-    // IR-specific AAR files that need to be compiled
-    api(files("libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
-    api(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
-    api(files("libs/libirutils_1.2.0_2409241055.aar"))
-    api(files("libs/opengl_1.3.2_standard.aar"))
-    api(files("libs/suplib-release.aar"))
-    api(files("libs/ai-upscale-release.aar"))
-    api(files("libs/texturegesture-release.aar"))
-    api(files("libs/jetified-tas_api-1.0.4.0.aar"))
-    api(files("libs/library_1.0.aar"))
-    api(files("libs/topdon.aar"))
-    api(files("../app/libs/libcommon_1.2.0_24052117.aar"))
+    // IR-specific AAR files
+    // Note: Direct local AAR file dependencies cannot be packaged in a library module
+    // Use compileOnly here to allow compilation, and the app module includes them as implementation
+    compileOnly(files("libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
+    compileOnly(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
+    compileOnly(files("libs/libirutils_1.2.0_2409241055.aar"))
+    compileOnly(files("libs/opengl_1.3.2_standard.aar"))
+    compileOnly(files("libs/suplib-release.aar"))
+    compileOnly(files("libs/ai-upscale-release.aar"))
+    compileOnly(files("libs/texturegesture-release.aar"))
+    compileOnly(files("libs/jetified-tas_api-1.0.4.0.aar"))
+    compileOnly(files("libs/library_1.0.aar"))
+    compileOnly(files("libs/topdon.aar"))
+    compileOnly(files("../app/libs/libcommon_1.2.0_24052117.aar"))
 
     api(libs.androidx.appcompat)
     api(libs.androidx.documentfile)

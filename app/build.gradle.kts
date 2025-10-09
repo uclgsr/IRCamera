@@ -352,7 +352,18 @@ dependencies {
         )
     )
 
+    // Local AAR dependencies from libunified (moved here because library modules cannot package AARs)
     implementation(files("../libunified/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
+    implementation(files("../libunified/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
+    implementation(files("../libunified/libs/libirutils_1.2.0_2409241055.aar"))
+    implementation(files("../libunified/libs/opengl_1.3.2_standard.aar"))
+    implementation(files("../libunified/libs/suplib-release.aar"))
+    implementation(files("../libunified/libs/ai-upscale-release.aar"))
+    implementation(files("../libunified/libs/texturegesture-release.aar"))
+    implementation(files("../libunified/libs/jetified-tas_api-1.0.4.0.aar"))
+    implementation(files("../libunified/libs/library_1.0.aar"))
+    implementation(files("../libunified/libs/topdon.aar"))
+    implementation(files("libs/libcommon_1.2.0_24052117.aar"))
 
     implementation(libs.jsbridge)
     implementation(libs.ucrop)
