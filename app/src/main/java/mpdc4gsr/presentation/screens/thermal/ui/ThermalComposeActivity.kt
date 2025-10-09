@@ -5,7 +5,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import dagger.hilt.android.AndroidEntryPoint
-import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.ui.theme.IRCameraTheme
 
 @AndroidEntryPoint
 class ThermalComposeActivity : BaseComposeActivity() {

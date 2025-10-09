@@ -19,10 +19,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.settings.presentation.ProfileData
-import mpdc4gsr.feature.settings.presentation.ProfileEditViewModel
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.theme.IRCameraTheme
+import mpdc4gsr.presentation.screens.settings.ProfileData
+import mpdc4gsr.presentation.screens.settings.ProfileEditViewModel
 
 @Composable
 fun ProfileEditScreen(

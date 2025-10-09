@@ -17,10 +17,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import mpdc4gsr.core.ui.model.*
-import mpdc4gsr.core.ui.model.SensorState
-import mpdc4gsr.core.ui.model.SensorType
-import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.ui.model.*
+import mpdc4gsr.ui.model.SensorState
+import mpdc4gsr.ui.model.SensorType
+import mpdc4gsr.ui.theme.IRCameraTheme
 
 @Composable
 fun UnifiedSensorStatus(

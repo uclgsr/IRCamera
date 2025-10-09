@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
-import mpdc4gsr.core.ui.AppBaseViewModel
+import mpdc4gsr.ui.AppBaseViewModel
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
 import mpdc4gsr.feature.network.data.RecordingController

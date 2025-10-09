@@ -1,6 +1,6 @@
 package mpdc4gsr.domain.usecase
 
-import mpdc4gsr.feature.device.domain.repository.DiagnosticsRepository
+import mpdc4gsr.domain.repository.DiagnosticsRepository
 import javax.inject.Inject
 
 class ExportDiagnosticLogsUseCase @Inject constructor(

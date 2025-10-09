@@ -27,9 +27,9 @@ import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.AppBaseViewModel
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.ui.AppBaseViewModel
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.theme.IRCameraTheme
 
 enum class EditTool(
     val displayName: String,

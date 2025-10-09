@@ -29,9 +29,9 @@ import com.csl.irCamera.R
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
-import mpdc4gsr.core.ui.AppBaseViewModel
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.ui.AppBaseViewModel
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.theme.IRCameraTheme
 
 enum class IRDeviceType(
     val displayName: String,

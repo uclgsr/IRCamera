@@ -24,8 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.feature.network.presentation.DevicePairingViewModel
-import mpdc4gsr.core.ui.deferAction
+import mpdc4gsr.presentation.screens.network.DevicePairingViewModel
+import mpdc4gsr.ui.deferAction
 
 @AndroidEntryPoint
 class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>() {

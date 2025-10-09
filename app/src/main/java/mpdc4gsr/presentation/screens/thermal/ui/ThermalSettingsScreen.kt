@@ -17,14 +17,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.components.settings.SettingsCard
-import mpdc4gsr.core.ui.components.settings.SettingsDropdown
-import mpdc4gsr.core.ui.components.settings.SettingsSlider
-import mpdc4gsr.core.ui.components.settings.SettingsToggle
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.thermal.presentation.ThermalSettingsViewModel
-import mpdc4gsr.feature.thermal.ui.components.ThermalScaffold
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.components.settings.SettingsCard
+import mpdc4gsr.ui.components.settings.SettingsDropdown
+import mpdc4gsr.ui.components.settings.SettingsSlider
+import mpdc4gsr.ui.components.settings.SettingsToggle
+import mpdc4gsr.ui.theme.IRCameraTheme
+import mpdc4gsr.presentation.screens.thermal.ThermalSettingsViewModel
+import mpdc4gsr.presentation.screens.thermal.components.ThermalScaffold
 
 @Composable
 fun ThermalSettingsScreen(

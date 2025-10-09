@@ -19,10 +19,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import mpdc4gsr.feature.gsr.ui.SensorDashboardComposeActivity
-import mpdc4gsr.feature.settings.ui.SettingsComposeActivity
-import mpdc4gsr.feature.main.ui.MainComposeActivity
-import mpdc4gsr.feature.settings.ui.AboutScreen
+import mpdc4gsr.presentation.screens.gsr.SensorDashboardComposeActivity
+import mpdc4gsr.presentation.screens.settings.SettingsComposeActivity
+import mpdc4gsr.presentation.screens.main.MainComposeActivity
+import mpdc4gsr.presentation.screens.settings.AboutScreen
 
 sealed class IRCameraScreen(val route: String) {
     object Main : IRCameraScreen("main")

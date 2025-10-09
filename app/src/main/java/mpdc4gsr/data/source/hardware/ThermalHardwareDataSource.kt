@@ -4,11 +4,11 @@ import android.graphics.Bitmap
 import com.mpdc4gsr.libunified.ir.extension.AgcMode
 import com.mpdc4gsr.libunified.ir.extension.ColorPalette
 import kotlinx.coroutines.flow.Flow
-import mpdc4gsr.feature.thermal.data.BatteryStatus
-import mpdc4gsr.feature.thermal.data.DeviceInfo
-import mpdc4gsr.feature.thermal.data.MeasurementArea
-import mpdc4gsr.feature.thermal.data.MeasurementResult
-import mpdc4gsr.feature.thermal.data.ThermalCalibrationData
+import mpdc4gsr.data.BatteryStatus
+import mpdc4gsr.data.DeviceInfo
+import mpdc4gsr.data.MeasurementArea
+import mpdc4gsr.data.MeasurementResult
+import mpdc4gsr.data.ThermalCalibrationData
 
 interface ThermalHardwareDataSource {
 

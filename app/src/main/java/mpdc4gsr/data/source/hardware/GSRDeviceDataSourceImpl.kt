@@ -2,8 +2,8 @@ package mpdc4gsr.data.source
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import mpdc4gsr.core.data.model.DeviceInfo
-import mpdc4gsr.core.data.model.GSRSample
+import mpdc4gsr.domain.model.DeviceInfo
+import mpdc4gsr.domain.model.GSRSample
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import javax.inject.Inject
 

@@ -17,13 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.core.ui.AppError
-import mpdc4gsr.core.ui.ConnectionState
-import mpdc4gsr.core.ui.components.SensorStatusCard
-import mpdc4gsr.core.ui.components.sensors.GSRConnectionState
-import mpdc4gsr.core.ui.components.sensors.GSRData
-import mpdc4gsr.core.ui.components.sensors.GSRVisualizationCard
-import mpdc4gsr.feature.main.presentation.MainActivityViewModel
+import mpdc4gsr.ui.AppError
+import mpdc4gsr.presentation.common.ConnectionState
+import mpdc4gsr.ui.components.SensorStatusCard
+import mpdc4gsr.ui.components.sensors.GSRConnectionState
+import mpdc4gsr.ui.components.sensors.GSRData
+import mpdc4gsr.ui.components.sensors.GSRVisualizationCard
+import mpdc4gsr.presentation.screens.main.MainActivityViewModel
 
 @AndroidEntryPoint
 class SensorDashboardComposeActivity : ComponentActivity() {

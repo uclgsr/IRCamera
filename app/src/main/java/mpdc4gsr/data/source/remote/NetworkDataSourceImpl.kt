@@ -1,6 +1,6 @@
 package mpdc4gsr.data.datasource
 
-import mpdc4gsr.feature.network.data.NetworkClient
+import mpdc4gsr.data.NetworkClient
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton

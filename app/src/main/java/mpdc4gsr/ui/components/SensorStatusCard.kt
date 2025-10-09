@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import mpdc4gsr.core.ui.ConnectionState
+import mpdc4gsr.ui.ConnectionState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

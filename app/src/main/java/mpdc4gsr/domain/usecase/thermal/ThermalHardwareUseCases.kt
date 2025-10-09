@@ -7,7 +7,7 @@ import mpdc4gsr.feature.thermal.data.DeviceInfo
 import mpdc4gsr.feature.thermal.data.MeasurementArea
 import mpdc4gsr.feature.thermal.data.MeasurementResult
 import mpdc4gsr.feature.thermal.data.ThermalCalibrationData
-import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
+import mpdc4gsr.domain.repository.ThermalRepository
 
 class SetColorPaletteUseCase(private val repository: ThermalRepository) {
     suspend operator fun invoke(palette: ColorPalette): Result<Unit> {

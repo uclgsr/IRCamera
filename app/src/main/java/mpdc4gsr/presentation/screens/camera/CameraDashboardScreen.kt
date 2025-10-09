@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.core.ui.deferAction
+import mpdc4gsr.ui.deferAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

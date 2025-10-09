@@ -25,8 +25,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.core.data.model.DeviceInfo
-import mpdc4gsr.feature.gsr.presentation.GSRDeviceConfigViewModel
+import mpdc4gsr.domain.model.DeviceInfo
+import mpdc4gsr.presentation.screens.gsr.GSRDeviceConfigViewModel
 
 @AndroidEntryPoint
 class GSRDeviceConfigComposeActivity : ComponentActivity() {

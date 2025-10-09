@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.components.TitleBarAction
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.gsr.presentation.GSRSensorViewModel
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.components.TitleBarAction
+import mpdc4gsr.ui.theme.IRCameraTheme
+import mpdc4gsr.presentation.screens.gsr.GSRSensorViewModel
 
 @Composable
 fun GSRSensorScreen(

@@ -6,11 +6,11 @@ import com.mpdc4gsr.gsr.model.SessionInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.domain.model.UiEvent
-import mpdc4gsr.feature.main.domain.model.*
-import mpdc4gsr.feature.main.domain.repository.GsrConnectionState
-import mpdc4gsr.feature.main.domain.repository.NetworkConnectionState
-import mpdc4gsr.feature.main.domain.usecase.*
+import mpdc4gsr.domain.model.UiEvent
+import mpdc4gsr.domain.model.*
+import mpdc4gsr.domain.repository.GsrConnectionState
+import mpdc4gsr.domain.repository.NetworkConnectionState
+import mpdc4gsr.domain.usecase.*
 import mpdc4gsr.feature.network.data.NetworkClient
 import javax.inject.Inject
 

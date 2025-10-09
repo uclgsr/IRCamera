@@ -19,11 +19,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.components.settings.*
-import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.components.settings.*
+import mpdc4gsr.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.camera.data.CameraConfigurationManager
-import mpdc4gsr.feature.settings.presentation.RecordingSettingsViewModel
+import mpdc4gsr.presentation.screens.settings.RecordingSettingsViewModel
 
 @Composable
 fun RecordingSettingsScreen(

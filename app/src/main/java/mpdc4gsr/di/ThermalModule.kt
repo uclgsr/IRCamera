@@ -6,11 +6,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import mpdc4gsr.feature.thermal.data.repository.ThermalRepositoryImpl
-import mpdc4gsr.feature.thermal.data.source.ThermalHardwareDataSource
-import mpdc4gsr.feature.thermal.data.source.ThermalHardwareDataSourceImpl
-import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
-import mpdc4gsr.feature.thermal.domain.usecase.*
+import mpdc4gsr.data.repository.ThermalRepositoryImpl
+import mpdc4gsr.data.source.ThermalHardwareDataSource
+import mpdc4gsr.data.source.ThermalHardwareDataSourceImpl
+import mpdc4gsr.domain.repository.ThermalRepository
+import mpdc4gsr.domain.usecase.*
 import javax.inject.Singleton
 
 @Module

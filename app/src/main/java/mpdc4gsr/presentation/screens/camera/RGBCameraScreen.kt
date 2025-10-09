@@ -39,13 +39,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.components.TitleBarAction
-import mpdc4gsr.core.ui.theme.Green
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.core.ui.theme.Orange
-import mpdc4gsr.core.ui.theme.Purple
-import mpdc4gsr.feature.camera.presentation.RGBCameraViewModel
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.components.TitleBarAction
+import mpdc4gsr.ui.theme.Green
+import mpdc4gsr.ui.theme.IRCameraTheme
+import mpdc4gsr.ui.theme.Orange
+import mpdc4gsr.ui.theme.Purple
+import mpdc4gsr.presentation.screens.camera.RGBCameraViewModel
 
 @Composable
 fun RGBCameraScreen(

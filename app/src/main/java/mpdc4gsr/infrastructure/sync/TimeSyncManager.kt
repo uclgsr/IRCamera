@@ -2,7 +2,7 @@ package mpdc4gsr.infrastructure.data
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.core.data.utils.TimeManager
+import mpdc4gsr.data.utils.TimeManager
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileWriter

@@ -1,9 +1,9 @@
 package mpdc4gsr.domain.usecase
 
 import kotlinx.coroutines.flow.Flow
-import mpdc4gsr.core.data.model.DeviceInfo
-import mpdc4gsr.core.data.model.GSRSample
-import mpdc4gsr.feature.gsr.domain.repository.GSRDeviceRepository
+import mpdc4gsr.domain.model.DeviceInfo
+import mpdc4gsr.domain.model.GSRSample
+import mpdc4gsr.domain.repository.GSRDeviceRepository
 
 class ScanGSRDevicesUseCase(
     private val repository: GSRDeviceRepository

@@ -4,14 +4,14 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import mpdc4gsr.feature.device.data.repository.DiagnosticsRepositoryImpl
-import mpdc4gsr.feature.device.domain.repository.DiagnosticsRepository
-import mpdc4gsr.feature.main.data.repository.GsrRepositoryImpl
-import mpdc4gsr.feature.main.data.repository.NetworkRepositoryImpl
-import mpdc4gsr.feature.main.data.repository.SessionRepositoryImpl
-import mpdc4gsr.feature.main.domain.repository.GsrRepository
-import mpdc4gsr.feature.main.domain.repository.NetworkRepository
-import mpdc4gsr.feature.main.domain.repository.SessionRepository
+import mpdc4gsr.data.repository.DiagnosticsRepositoryImpl
+import mpdc4gsr.domain.repository.DiagnosticsRepository
+import mpdc4gsr.data.repository.GsrRepositoryImpl
+import mpdc4gsr.data.repository.NetworkRepositoryImpl
+import mpdc4gsr.data.repository.SessionRepositoryImpl
+import mpdc4gsr.domain.repository.GsrRepository
+import mpdc4gsr.domain.repository.NetworkRepository
+import mpdc4gsr.domain.repository.SessionRepository
 import javax.inject.Singleton
 
 @Module

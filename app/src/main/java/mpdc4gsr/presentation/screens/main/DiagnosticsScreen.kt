@@ -17,11 +17,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.components.settings.SettingsCard
-import mpdc4gsr.core.ui.components.settings.SettingsRow
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.device.presentation.DiagnosticsViewModel
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.components.settings.SettingsCard
+import mpdc4gsr.ui.components.settings.SettingsRow
+import mpdc4gsr.ui.theme.IRCameraTheme
+import mpdc4gsr.presentation.screens.device.DiagnosticsViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable

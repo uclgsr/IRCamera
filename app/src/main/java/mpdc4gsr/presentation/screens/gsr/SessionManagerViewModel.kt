@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
-import mpdc4gsr.core.ui.AppBaseViewModel
+import mpdc4gsr.ui.AppBaseViewModel
 import java.io.File
 import javax.inject.Inject
 

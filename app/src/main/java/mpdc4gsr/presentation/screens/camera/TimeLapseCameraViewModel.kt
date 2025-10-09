@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.AppBaseViewModel
+import mpdc4gsr.ui.AppBaseViewModel
 
 enum class TimeLapseMode(val displayName: String) {
     MANUAL("Manual Interval"),

@@ -38,8 +38,8 @@ import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState
 import com.mpdc4gsr.libunified.app.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.theme.IRCameraTheme
 import javax.inject.Inject
 
 data class HelpStep(

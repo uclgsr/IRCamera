@@ -22,8 +22,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import dagger.hilt.android.AndroidEntryPoint
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.gsr.presentation.GSRRawImageViewViewModel
+import mpdc4gsr.ui.theme.IRCameraTheme
+import mpdc4gsr.presentation.screens.gsr.GSRRawImageViewViewModel
 import java.io.File
 
 @AndroidEntryPoint

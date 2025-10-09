@@ -21,10 +21,10 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.feature.thermal.data.MeasurementMode
 import mpdc4gsr.feature.thermal.data.TemperatureUnit
 import mpdc4gsr.feature.thermal.data.ThermalPalette
-import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel
-import mpdc4gsr.feature.thermal.presentation.ThermalUiState
-import mpdc4gsr.feature.thermal.presentation.ThermalUiEvent
-import mpdc4gsr.feature.thermal.ui.components.*
+import mpdc4gsr.presentation.screens.thermal.ThermalCameraViewModel
+import mpdc4gsr.presentation.screens.thermal.ThermalUiState
+import mpdc4gsr.presentation.screens.thermal.ThermalUiEvent
+import mpdc4gsr.presentation.screens.thermal.components.*
 
 @Composable
 fun ThermalCameraScreen(

@@ -14,8 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.theme.IRCameraTheme
 
 @Composable
 fun PolicyScreen(

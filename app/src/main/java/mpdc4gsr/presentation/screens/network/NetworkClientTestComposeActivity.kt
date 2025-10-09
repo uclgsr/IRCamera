@@ -16,8 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.network.presentation.NetworkTestViewModel
+import mpdc4gsr.ui.theme.IRCameraTheme
+import mpdc4gsr.presentation.screens.network.NetworkTestViewModel
 
 @AndroidEntryPoint
 class NetworkClientTestComposeActivity : BaseComposeActivity<NetworkTestViewModel>() {

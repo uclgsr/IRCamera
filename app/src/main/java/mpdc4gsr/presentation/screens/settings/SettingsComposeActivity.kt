@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import mpdc4gsr.core.ui.components.settings.*
-import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.ui.components.settings.*
+import mpdc4gsr.ui.theme.IRCameraTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint

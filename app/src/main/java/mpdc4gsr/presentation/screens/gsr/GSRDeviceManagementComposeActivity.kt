@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.core.ui.AppBaseViewModel
+import mpdc4gsr.ui.AppBaseViewModel
 
 @AndroidEntryPoint
 class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>() {

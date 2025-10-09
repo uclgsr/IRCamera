@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import mpdc4gsr.feature.device.domain.repository.SensorStatus
-import mpdc4gsr.feature.device.domain.repository.SystemStatus
-import mpdc4gsr.feature.device.domain.usecase.ExportDiagnosticLogsUseCase
-import mpdc4gsr.feature.device.domain.usecase.RunFullDiagnosticsUseCase
+import mpdc4gsr.domain.repository.SensorStatus
+import mpdc4gsr.domain.repository.SystemStatus
+import mpdc4gsr.domain.usecase.ExportDiagnosticLogsUseCase
+import mpdc4gsr.domain.usecase.RunFullDiagnosticsUseCase
 import javax.inject.Inject
 
 @HiltViewModel

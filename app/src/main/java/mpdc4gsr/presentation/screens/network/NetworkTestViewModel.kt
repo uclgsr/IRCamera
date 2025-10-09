@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import mpdc4gsr.feature.network.domain.usecase.ConnectToControllerUseCase
-import mpdc4gsr.feature.network.domain.usecase.DisconnectUseCase
-import mpdc4gsr.feature.network.domain.usecase.ObserveConnectionStateUseCase
-import mpdc4gsr.feature.network.domain.usecase.SendMessageUseCase
+import mpdc4gsr.domain.usecase.ConnectToControllerUseCase
+import mpdc4gsr.domain.usecase.DisconnectUseCase
+import mpdc4gsr.domain.usecase.ObserveConnectionStateUseCase
+import mpdc4gsr.domain.usecase.SendMessageUseCase
 import org.json.JSONObject
 import javax.inject.Inject
 

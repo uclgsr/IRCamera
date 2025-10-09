@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
-import mpdc4gsr.core.ui.AppBaseViewModel
+import mpdc4gsr.ui.AppBaseViewModel
 import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
 
 class DualModeCameraViewModel : AppBaseViewModel() {

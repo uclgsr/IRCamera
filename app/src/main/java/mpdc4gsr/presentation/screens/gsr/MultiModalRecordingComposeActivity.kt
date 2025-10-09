@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.feature.gsr.presentation.MultiModalRecordingViewModel
+import mpdc4gsr.presentation.screens.gsr.MultiModalRecordingViewModel
 
 @AndroidEntryPoint
 class MultiModalRecordingComposeActivity : BaseComposeActivity<MultiModalRecordingViewModel>() {

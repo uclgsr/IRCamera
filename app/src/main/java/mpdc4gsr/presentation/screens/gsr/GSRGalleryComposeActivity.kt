@@ -25,8 +25,8 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import mpdc4gsr.core.ui.AppBaseViewModel
-import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.ui.AppBaseViewModel
+import mpdc4gsr.ui.theme.IRCameraTheme
 
 @AndroidEntryPoint
 class GSRGalleryComposeActivity : BaseComposeActivity<GSRGalleryViewModel>() {

@@ -21,13 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.components.settings.SettingsCard
-import mpdc4gsr.core.ui.components.settings.SettingsRow
-import mpdc4gsr.core.ui.components.settings.SettingsToggle
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.thermal.presentation.CalibrationViewModel
-import mpdc4gsr.feature.thermal.ui.components.ThermalScaffold
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.components.settings.SettingsCard
+import mpdc4gsr.ui.components.settings.SettingsRow
+import mpdc4gsr.ui.components.settings.SettingsToggle
+import mpdc4gsr.ui.theme.IRCameraTheme
+import mpdc4gsr.presentation.screens.thermal.CalibrationViewModel
+import mpdc4gsr.presentation.screens.thermal.components.ThermalScaffold
 
 @Composable
 fun CalibrationScreen(

@@ -18,10 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.camera.presentation.TimeLapseCameraViewModel
-import mpdc4gsr.feature.camera.presentation.TimeLapseMode
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.theme.IRCameraTheme
+import mpdc4gsr.presentation.screens.camera.TimeLapseCameraViewModel
+import mpdc4gsr.presentation.screens.camera.TimeLapseMode
 
 @Composable
 fun TimeLapseCameraScreen(

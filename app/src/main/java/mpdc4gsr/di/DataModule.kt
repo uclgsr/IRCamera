@@ -7,15 +7,15 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
-import mpdc4gsr.core.data.ShimmerDeviceManager
-import mpdc4gsr.feature.gsr.data.repository.ShimmerRepositoryImpl
-import mpdc4gsr.feature.gsr.data.source.ShimmerDataSource
-import mpdc4gsr.feature.gsr.data.source.ShimmerDataSourceImpl
-import mpdc4gsr.feature.gsr.domain.repository.ShimmerRepository
-import mpdc4gsr.feature.thermal.data.repository.ThermalRepositoryImpl
-import mpdc4gsr.feature.thermal.data.source.TopdonDataSource
-import mpdc4gsr.feature.thermal.data.source.TopdonDataSourceImpl
-import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
+import mpdc4gsr.data.ShimmerDeviceManager
+import mpdc4gsr.data.repository.ShimmerRepositoryImpl
+import mpdc4gsr.data.source.ShimmerDataSource
+import mpdc4gsr.data.source.ShimmerDataSourceImpl
+import mpdc4gsr.domain.repository.ShimmerRepository
+import mpdc4gsr.data.repository.ThermalRepositoryImpl
+import mpdc4gsr.data.source.TopdonDataSource
+import mpdc4gsr.data.source.TopdonDataSourceImpl
+import mpdc4gsr.domain.repository.ThermalRepository
 
 @Module
 @InstallIn(ViewModelComponent::class)

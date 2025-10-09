@@ -28,8 +28,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.feature.camera.presentation.DualModeCameraViewModel
-import mpdc4gsr.feature.main.ui.MainComposeActivity
+import mpdc4gsr.presentation.screens.camera.DualModeCameraViewModel
+import mpdc4gsr.presentation.screens.main.MainComposeActivity
 
 class DualModeCameraComposeActivity2 : BaseComposeActivity<DualModeCameraViewModel>() {
     private val cameraVM: DualModeCameraViewModel by viewModels()

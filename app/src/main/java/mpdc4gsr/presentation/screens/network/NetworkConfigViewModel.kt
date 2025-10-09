@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.feature.network.domain.usecase.DiscoverControllersUseCase
+import mpdc4gsr.domain.usecase.DiscoverControllersUseCase
 import javax.inject.Inject
 
 @HiltViewModel

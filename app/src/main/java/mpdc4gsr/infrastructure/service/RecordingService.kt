@@ -17,9 +17,9 @@ import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import mpdc4gsr.core.data.FeatureFlags
-import mpdc4gsr.core.data.ProtocolVersion
-import mpdc4gsr.core.data.TimeSyncManager
+import mpdc4gsr.data.FeatureFlags
+import mpdc4gsr.data.ProtocolVersion
+import mpdc4gsr.data.TimeSyncManager
 import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.feature.network.data.*
 import mpdc4gsr.feature.network.data.Protocol

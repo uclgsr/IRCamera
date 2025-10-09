@@ -9,15 +9,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import mpdc4gsr.core.ui.model.SensorType
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.camera.ui.CameraSettingsScreen
-import mpdc4gsr.feature.camera.ui.RGBCameraScreen
-import mpdc4gsr.feature.gsr.ui.GSRSettingsScreen
-import mpdc4gsr.feature.network.ui.ConnectScreen
-import mpdc4gsr.feature.network.ui.NetworkSettingsScreen
-import mpdc4gsr.feature.settings.ui.*
-import mpdc4gsr.feature.thermal.ui.*
+import mpdc4gsr.ui.model.SensorType
+import mpdc4gsr.ui.theme.IRCameraTheme
+import mpdc4gsr.presentation.screens.camera.CameraSettingsScreen
+import mpdc4gsr.presentation.screens.camera.RGBCameraScreen
+import mpdc4gsr.presentation.screens.gsr.GSRSettingsScreen
+import mpdc4gsr.presentation.screens.network.ConnectScreen
+import mpdc4gsr.presentation.screens.network.NetworkSettingsScreen
+import mpdc4gsr.presentation.screens.settings.*
+import mpdc4gsr.presentation.screens.thermal.*
 
 private object MainNavRoutes {
     const val MAIN = "main"

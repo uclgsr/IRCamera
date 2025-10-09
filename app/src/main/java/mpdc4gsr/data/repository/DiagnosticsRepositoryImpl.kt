@@ -9,9 +9,9 @@ import android.os.Build
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import mpdc4gsr.feature.device.domain.repository.DiagnosticsRepository
-import mpdc4gsr.feature.device.domain.repository.SensorStatus
-import mpdc4gsr.feature.device.domain.repository.SystemStatus
+import mpdc4gsr.domain.repository.DiagnosticsRepository
+import mpdc4gsr.domain.repository.SensorStatus
+import mpdc4gsr.domain.repository.SystemStatus
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*

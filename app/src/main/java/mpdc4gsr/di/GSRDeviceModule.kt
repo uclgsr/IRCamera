@@ -7,11 +7,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
-import mpdc4gsr.feature.gsr.data.repository.GSRDeviceRepositoryImpl
-import mpdc4gsr.feature.gsr.data.source.GSRDeviceDataSource
-import mpdc4gsr.feature.gsr.data.source.GSRDeviceDataSourceImpl
-import mpdc4gsr.feature.gsr.domain.repository.GSRDeviceRepository
-import mpdc4gsr.feature.gsr.domain.usecase.*
+import mpdc4gsr.data.repository.GSRDeviceRepositoryImpl
+import mpdc4gsr.data.source.GSRDeviceDataSource
+import mpdc4gsr.data.source.GSRDeviceDataSourceImpl
+import mpdc4gsr.domain.repository.GSRDeviceRepository
+import mpdc4gsr.domain.usecase.*
 
 @Module
 @InstallIn(ViewModelComponent::class)

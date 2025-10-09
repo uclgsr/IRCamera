@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import dagger.hilt.android.AndroidEntryPoint
-import mpdc4gsr.feature.gsr.presentation.GSRSettingsViewModel
+import mpdc4gsr.presentation.screens.gsr.GSRSettingsViewModel
 
 @AndroidEntryPoint
 class GSRSettingsComposeActivity : BaseComposeActivity<GSRSettingsViewModel>() {

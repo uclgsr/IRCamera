@@ -7,8 +7,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import mpdc4gsr.core.data.utils.SessionDirectoryManager
-import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
+import mpdc4gsr.data.utils.SessionDirectoryManager
+import mpdc4gsr.data.GSRSettingsRepository
 import javax.inject.Singleton
 
 @Module

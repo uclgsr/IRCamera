@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import mpdc4gsr.feature.thermal.domain.usecase.ThermalCoreUseCases
+import mpdc4gsr.domain.usecase.ThermalCoreUseCases
 import javax.inject.Inject
 
 @HiltViewModel

@@ -26,7 +26,7 @@ import mpdc4gsr.core.data.*
 import mpdc4gsr.core.data.utils.BufferedDataWriter
 import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
-import mpdc4gsr.core.ui.PermissionController
+import mpdc4gsr.ui.PermissionController
 import mpdc4gsr.feature.network.data.NetworkServer
 import mpdc4gsr.feature.thermal.data.ThermalSettingsRepository
 import org.json.JSONObject

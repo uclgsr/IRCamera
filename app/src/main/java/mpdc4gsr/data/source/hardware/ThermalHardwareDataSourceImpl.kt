@@ -16,7 +16,7 @@ import com.energy.iruvc.uvc.ConcreateUVCBuilder
 import com.energy.iruvc.uvc.UVCCamera
 import com.energy.iruvc.uvc.UVCType
 import com.mpdc4gsr.libunified.ir.extension.*
-import mpdc4gsr.feature.thermal.data.*
+import mpdc4gsr.data.*
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay

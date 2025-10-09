@@ -48,11 +48,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.runtime.LaunchedEffect
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.components.TitleBarAction
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel
-import mpdc4gsr.feature.thermal.presentation.ThermalUiState
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.components.TitleBarAction
+import mpdc4gsr.ui.theme.IRCameraTheme
+import mpdc4gsr.presentation.screens.thermal.ThermalCameraViewModel
+import mpdc4gsr.presentation.screens.thermal.ThermalUiState
 
 @Composable
 fun ThermalMonitorScreen(

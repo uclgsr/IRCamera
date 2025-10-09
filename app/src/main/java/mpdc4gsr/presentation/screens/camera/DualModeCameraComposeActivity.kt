@@ -21,8 +21,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.camera.presentation.DualModeCameraViewModel
+import mpdc4gsr.ui.theme.IRCameraTheme
+import mpdc4gsr.presentation.screens.camera.DualModeCameraViewModel
 
 class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewModel>() {
     companion object {

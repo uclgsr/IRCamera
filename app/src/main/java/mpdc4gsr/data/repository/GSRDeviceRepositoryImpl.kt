@@ -1,10 +1,10 @@
 package mpdc4gsr.data.repository
 
 import kotlinx.coroutines.flow.Flow
-import mpdc4gsr.core.data.model.DeviceInfo
-import mpdc4gsr.core.data.model.GSRSample
-import mpdc4gsr.feature.gsr.data.source.GSRDeviceDataSource
-import mpdc4gsr.feature.gsr.domain.repository.GSRDeviceRepository
+import mpdc4gsr.domain.model.DeviceInfo
+import mpdc4gsr.domain.model.GSRSample
+import mpdc4gsr.data.source.GSRDeviceDataSource
+import mpdc4gsr.domain.repository.GSRDeviceRepository
 import javax.inject.Inject
 
 class GSRDeviceRepositoryImpl @Inject constructor(

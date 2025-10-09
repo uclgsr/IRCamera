@@ -27,7 +27,7 @@ import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import dagger.hilt.android.AndroidEntryPoint
-import mpdc4gsr.feature.gsr.presentation.SessionManagerViewModel
+import mpdc4gsr.presentation.screens.gsr.SessionManagerViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 

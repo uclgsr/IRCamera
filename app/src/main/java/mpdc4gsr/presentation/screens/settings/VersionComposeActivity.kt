@@ -31,8 +31,8 @@ import com.csl.irCamera.R
 import com.mpdc4gsr.libunified.app.utils.UnifiedVersionUtils
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.theme.IRCameraTheme
 import java.util.*
 import javax.inject.Inject
 

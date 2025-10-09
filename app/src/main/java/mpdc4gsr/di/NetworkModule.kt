@@ -7,11 +7,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import mpdc4gsr.feature.network.data.NetworkClient
-import mpdc4gsr.feature.network.data.datasource.NetworkDataSource
-import mpdc4gsr.feature.network.data.datasource.NetworkDataSourceImpl
-import mpdc4gsr.feature.network.data.repository.NetworkRepositoryImpl
-import mpdc4gsr.feature.network.domain.repository.NetworkRepository
+import mpdc4gsr.data.NetworkClient
+import mpdc4gsr.data.datasource.NetworkDataSource
+import mpdc4gsr.data.datasource.NetworkDataSourceImpl
+import mpdc4gsr.data.repository.NetworkRepositoryImpl
+import mpdc4gsr.domain.repository.NetworkRepository
 import javax.inject.Singleton
 
 @Module

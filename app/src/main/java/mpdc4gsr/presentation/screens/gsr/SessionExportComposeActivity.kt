@@ -18,11 +18,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import dagger.hilt.android.AndroidEntryPoint
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.gsr.presentation.ExportDestination
-import mpdc4gsr.feature.gsr.presentation.ExportFormat
-import mpdc4gsr.feature.gsr.presentation.GSRSession
-import mpdc4gsr.feature.gsr.presentation.SessionExportViewModel
+import mpdc4gsr.ui.theme.IRCameraTheme
+import mpdc4gsr.presentation.screens.gsr.ExportDestination
+import mpdc4gsr.presentation.screens.gsr.ExportFormat
+import mpdc4gsr.presentation.screens.gsr.GSRSession
+import mpdc4gsr.presentation.screens.gsr.SessionExportViewModel
 
 @AndroidEntryPoint
 class SessionExportComposeActivity : BaseComposeActivity<SessionExportViewModel>() {

@@ -30,8 +30,8 @@ import com.github.lzyzsd.jsbridge.BridgeWebViewClient
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.theme.IRCameraTheme
 import javax.inject.Inject
 
 @HiltViewModel

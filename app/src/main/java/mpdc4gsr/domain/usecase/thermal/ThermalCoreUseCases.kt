@@ -3,7 +3,7 @@ package mpdc4gsr.domain.usecase
 import kotlinx.coroutines.flow.Flow
 import mpdc4gsr.feature.thermal.data.source.ThermalFrameData
 import mpdc4gsr.feature.thermal.data.source.ThermalSnapshot
-import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
+import mpdc4gsr.domain.repository.ThermalRepository
 
 class ConnectThermalCameraUseCase(
     private val repository: ThermalRepository

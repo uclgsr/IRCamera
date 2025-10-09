@@ -26,13 +26,13 @@ import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.data.model.DeviceInfo
-import mpdc4gsr.core.data.model.SessionQuality
-import mpdc4gsr.core.data.model.SessionStatus
-import mpdc4gsr.core.data.model.SessionType
-import mpdc4gsr.core.ui.AppBaseViewModel
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.domain.model.DeviceInfo
+import mpdc4gsr.domain.model.SessionQuality
+import mpdc4gsr.domain.model.SessionStatus
+import mpdc4gsr.domain.model.SessionType
+import mpdc4gsr.ui.AppBaseViewModel
+import mpdc4gsr.ui.components.TitleBar
+import mpdc4gsr.ui.theme.IRCameraTheme
 
 enum class UnifiedSensorType(
     val displayName: String,

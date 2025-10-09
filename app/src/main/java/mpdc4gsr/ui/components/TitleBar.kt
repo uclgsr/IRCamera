@@ -13,7 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.ui.theme.IRCameraTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
