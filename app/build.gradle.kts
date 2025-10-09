@@ -4,7 +4,6 @@ import java.util.*
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt")
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
     id("com.google.dagger.hilt.android")
@@ -258,10 +257,6 @@ android {
             languageVersion.set(JavaLanguageVersion.of(17))
         }
     }
-    
-    kapt {
-        correctErrorTypes = true
-    }
 
     buildFeatures {
         buildConfig = true
@@ -326,7 +321,7 @@ dependencies {
     
     // Hilt dependency injection
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
     
     implementation(platform(libs.compose.bom))
