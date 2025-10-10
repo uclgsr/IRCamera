@@ -11,7 +11,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.core.common.logging.StructuredLogger
 import org.json.JSONObject
 import java.security.KeyStore
 import java.security.SecureRandom
@@ -434,7 +434,7 @@ class AdvancedAuthenticationManager(
             generateSessionKey()
             generateHmacKey()
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e(
+            mpdc4gsr.core.common.AppLogger.e(
                 "AdvancedAuthenticationManager",
                 "Unexpected Exception in AdvancedAuthenticationManager catch block",
                 e,
@@ -563,3 +563,4 @@ class AdvancedAuthenticationManager(
         authListener = null
     }
 }
+

@@ -57,7 +57,7 @@ eliminating all utilcode and RxJava dependencies from the codebase.
 
 **Files Migrated:**
 
-- `app/src/main/java/mpdc4gsr/core/App.kt`
+- `app/src/main/java/mpdc4gsr/app/App.kt`
     - Removed RxJavaPlugins error handler
 - `component/thermalunified/video/VideoRecordMedia.kt`
     - `Observable.interval()` → coroutine `launch` + `delay`
@@ -308,3 +308,11 @@ All migration patterns, guidelines, and remaining work are documented in:
 **Total Effort**: ~16 commits over Phases 1-6
 **Breaking Changes**: None
 **Backward Compatibility**: Maintained
+
+
+
+
+
+
+
+

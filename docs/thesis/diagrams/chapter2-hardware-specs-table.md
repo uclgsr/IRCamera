@@ -84,3 +84,11 @@ The hardware combination provides:
 
 This specification table establishes the technical foundation for understanding system capabilities and constraints
 referenced throughout the thesis.
+
+
+
+
+
+
+
+

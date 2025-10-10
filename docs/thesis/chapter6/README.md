@@ -155,3 +155,11 @@ When adding new evaluation criteria or metrics:
 ## License
 
 Part of the IRCamera Multi-Sensor Recording System thesis project.
+
+
+
+
+
+
+
+

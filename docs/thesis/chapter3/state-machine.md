@@ -590,3 +590,11 @@ If storage becomes full during recording:
 
 This state machine ensures robust operation with clear boundaries, comprehensive error handling, and automatic recovery
 suitable for long-duration research recording sessions.
+
+
+
+
+
+
+
+

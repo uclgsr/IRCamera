@@ -7,7 +7,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.core.common.logging.StructuredLogger
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
@@ -126,7 +126,7 @@ class SecurityMonitor(
                     performSecurityCheck()
                     delay(MONITORING_INTERVAL_MS)
                 } catch (e: Exception) {
-                    mpdc4gsr.core.utils.AppLogger
+                    mpdc4gsr.core.common.AppLogger
                         .e("SecurityMonitor", "Unexpected Exception in SecurityMonitor catch block", e)
                 }
             }
@@ -137,7 +137,7 @@ class SecurityMonitor(
                     performCleanup()
                     delay(CLEANUP_INTERVAL_MS)
                 } catch (e: Exception) {
-                    mpdc4gsr.core.utils.AppLogger
+                    mpdc4gsr.core.common.AppLogger
                         .e("SecurityMonitor", "Unexpected Exception in SecurityMonitor catch block", e)
                 }
             }
@@ -487,3 +487,4 @@ class SecurityMonitor(
             )
         }
 }
+

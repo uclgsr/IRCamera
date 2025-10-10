@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.mpdc4gsr.module.user.R
+import com.mpdc4gsr.module.thermalunified.R
 
 class ListItemView : LinearLayout {
     private lateinit var mIvLeftIcon: ImageView

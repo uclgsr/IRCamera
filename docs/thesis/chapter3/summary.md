@@ -303,3 +303,11 @@ These diagrams and tables provide:
 
 The level of detail supports both understanding the system design and defending architectural choices during thesis
 examination.
+
+
+
+
+
+
+
+

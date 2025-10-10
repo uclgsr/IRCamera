@@ -99,3 +99,11 @@ sequenceDiagram
     PC->>PC: Verify sync window
     Note over PC: t=200ms<br/>Verification complete
 ```
+
+
+
+
+
+
+
+

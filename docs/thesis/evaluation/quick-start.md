@@ -81,3 +81,11 @@ python3 tests/run_all_tests.py --device-ip 192.168.1.100
 python3 tests/test_1_remote_start_stop.py --help
 python3 tests/run_all_tests.py --help
 ```
+
+
+
+
+
+
+
+

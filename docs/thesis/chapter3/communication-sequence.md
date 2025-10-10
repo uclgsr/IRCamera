@@ -766,3 +766,11 @@ sequenceDiagram
 
 This communication protocol ensures reliable, efficient coordination between the PC orchestrator and Android sensor
 nodes with comprehensive error handling and recovery mechanisms.
+
+
+
+
+
+
+
+

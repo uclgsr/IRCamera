@@ -23,7 +23,10 @@ communication. The PC controller provides orchestration, real-time visualisation
 
 ```
 finalgsr/
-  app/                 Android application sources (core services, features, Compose UI)
+  app/
+    src/main/java/mpdc4gsr/app/         Application bootstrap, runtime services, Hilt modules
+    src/main/java/mpdc4gsr/core/        Shared foundations (`common/`, `designsystem/`, `hardware/`, `infrastructure/`, `recording/`)
+    src/main/java/mpdc4gsr/feature/     Feature slices (`dashboard/`, `capture/`, `control/`, `connectivity/`, `recording/`)
   BleModule/           BLE utility module for Shimmer devices
   component/           Additional Android components such as thermal camera bindings
   libunified/          Shared Kotlin library (permission tools, logging, utilities)
@@ -85,7 +88,7 @@ Central documentation lives under `docs/`:
 ## Contributing
 
 - Use Kotlin coroutines with lifecycle-aware scopes; see existing `AppBaseViewModel` patterns.
-- Follow the Compose UI patterns established in `feature/*/ui` and keep view models in `feature/*/presentation`.
+- Follow the Compose UI patterns established in `feature/**/ui` and keep view models in their sibling `presentation` packages.
 - Record new sensors through the `SensorRecorder` interface and register them with the `RecordingService`.
 - Run lint, detekt, unit tests, and relevant Python tests before opening a pull request.
 

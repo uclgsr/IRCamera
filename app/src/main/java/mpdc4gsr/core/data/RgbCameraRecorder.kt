@@ -43,18 +43,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
-import mpdc4gsr.core.sensors.api.ErrorType
-import mpdc4gsr.core.sensors.api.RecordingStats
-import mpdc4gsr.core.sensors.api.RecordingStatus
-import mpdc4gsr.core.sensors.api.SensorError
-import mpdc4gsr.core.sensors.api.SensorRecorder
-import mpdc4gsr.core.ui.PermissionManager
-import mpdc4gsr.feature.camera.data.CameraConfigurationManager
-import mpdc4gsr.feature.camera.data.CameraControlsManager
-import mpdc4gsr.feature.camera.data.CameraPerformanceManager
-import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
-import mpdc4gsr.feature.settings.data.RecordingSettings
-import mpdc4gsr.feature.settings.data.RecordingSettingsRepository
+import mpdc4gsr.core.hardware.api.ErrorType
+import mpdc4gsr.core.hardware.api.RecordingStats
+import mpdc4gsr.core.hardware.api.RecordingStatus
+import mpdc4gsr.core.hardware.api.SensorError
+import mpdc4gsr.core.hardware.api.SensorRecorder
+import mpdc4gsr.core.designsystem.PermissionManager
+import mpdc4gsr.feature.capture.camera.data.CameraConfigurationManager
+import mpdc4gsr.feature.capture.camera.data.CameraControlsManager
+import mpdc4gsr.feature.capture.camera.data.CameraPerformanceManager
+import mpdc4gsr.feature.capture.camera.data.SamsungDeviceCompatibility
+import mpdc4gsr.feature.control.settings.data.RecordingSettings
+import mpdc4gsr.feature.control.settings.data.RecordingSettingsRepository
 import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.ExecutorService
@@ -533,7 +533,7 @@ class RgbCameraRecorder(
                                             android.hardware.camera2.CameraMetadata.CONTROL_MODE_USE_SCENE_MODE,
                                         )
                                 } catch (e: Exception) {
-                                    mpdc4gsr.core.utils.AppLogger
+                                    mpdc4gsr.core.common.AppLogger
                                         .e(
                                             "RgbCameraRecorder",
                                             "Unexpected Exception in RgbCameraRecorder catch block",
@@ -571,7 +571,7 @@ class RgbCameraRecorder(
                         // Store the RAW ImageCapture for use in capture operations
                         this@RgbCameraRecorder.rawImageCapture = rawImageCapture
                     } catch (e: Exception) {
-                        mpdc4gsr.core.utils.AppLogger
+                        mpdc4gsr.core.common.AppLogger
                             .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
                     }
                 }
@@ -743,7 +743,7 @@ class RgbCameraRecorder(
                 if (_isRecording.get()) {
                     return@withContext true
                 }
-                mpdc4gsr.feature.settings.data.RecordingSettingsValidator
+                mpdc4gsr.feature.control.settings.data.RecordingSettingsValidator
                     .validateAndLogSettings(context)
                 _isRecording.set(true)
                 performanceManager.reset()
@@ -1157,7 +1157,7 @@ class RgbCameraRecorder(
                 rawFile.writeText("RAW capture frame $frameNumber - ${timestampRecord.systemNanos}")
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger
+            mpdc4gsr.core.common.AppLogger
                 .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
         }
     }
@@ -1189,7 +1189,7 @@ class RgbCameraRecorder(
             val gson = com.google.gson.Gson()
             metadataFile.writeText(gson.toJson(metadata))
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger
+            mpdc4gsr.core.common.AppLogger
                 .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
         }
     }
@@ -1238,7 +1238,7 @@ class RgbCameraRecorder(
             } else {
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger
+            mpdc4gsr.core.common.AppLogger
                 .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
         }
     }
@@ -1280,7 +1280,7 @@ class RgbCameraRecorder(
             samplesRecorded.incrementAndGet()
             lastFrameTime.set(alignedNs)
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger
+            mpdc4gsr.core.common.AppLogger
                 .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
         }
     }
@@ -1330,7 +1330,7 @@ class RgbCameraRecorder(
             samplesRecorded.incrementAndGet()
             lastFrameTime.set(alignedNs)
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger
+            mpdc4gsr.core.common.AppLogger
                 .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
         }
     }
@@ -1420,7 +1420,7 @@ class RgbCameraRecorder(
                 try {
                     job.join()
                 } catch (e: Exception) {
-                    mpdc4gsr.core.utils.AppLogger
+                    mpdc4gsr.core.common.AppLogger
                         .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
                 }
                 frameCaptureJob = null
@@ -1429,7 +1429,7 @@ class RgbCameraRecorder(
                 try {
                     recording.stop()
                 } catch (e: Exception) {
-                    mpdc4gsr.core.utils.AppLogger
+                    mpdc4gsr.core.common.AppLogger
                         .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
                 }
                 activeRecording = null
@@ -1445,13 +1445,13 @@ class RgbCameraRecorder(
                 }
                 csvBufferedWriter = null
             } catch (e: Exception) {
-                mpdc4gsr.core.utils.AppLogger
+                mpdc4gsr.core.common.AppLogger
                     .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
             }
             try {
                 cameraProvider?.unbindAll()
             } catch (e: Exception) {
-                mpdc4gsr.core.utils.AppLogger
+                mpdc4gsr.core.common.AppLogger
                     .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
             }
             val sessionStats = generateSessionStats()
@@ -1571,7 +1571,7 @@ class RgbCameraRecorder(
                 try {
                     cameraProvider?.unbindAll()
                 } catch (e: Exception) {
-                    mpdc4gsr.core.utils.AppLogger
+                    mpdc4gsr.core.common.AppLogger
                         .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
                 }
             }
@@ -1588,7 +1588,7 @@ class RgbCameraRecorder(
                 // Recreate executor to allow re-initialization for multiple recording sessions
                 cameraExecutor = Executors.newSingleThreadExecutor()
             } catch (e: Exception) {
-                mpdc4gsr.core.utils.AppLogger
+                mpdc4gsr.core.common.AppLogger
                     .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
             }
             recordingScope.cancel()
@@ -1828,7 +1828,7 @@ class RgbCameraRecorder(
                 // CameraX doesn't have direct AE lock, but we can implement via Camera2 interop
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger
+            mpdc4gsr.core.common.AppLogger
                 .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
         }
     }
@@ -1947,7 +1947,7 @@ class RgbCameraRecorder(
             }
             // Could trigger camera reconfiguration here if needed
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger
+            mpdc4gsr.core.common.AppLogger
                 .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
         }
     }
@@ -2070,3 +2070,4 @@ class RgbCameraRecorder(
             "stage3_compatible" to (deviceSupportsRAW && SamsungDeviceCompatibility.isStage3Compatible()),
         )
 }
+

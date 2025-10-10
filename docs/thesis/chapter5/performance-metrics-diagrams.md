@@ -146,3 +146,11 @@ gantt
 | Thermal Camera | 25 fps | 24.5 fps | 98%         | 195KB/s   |
 | RGB Camera     | 30 fps | 29.8 fps | 99%         | 2400KB/s  |
 | GSR Sensor     | 128 Hz | 127.2 Hz | 99%         | 2.5KB/s   |
+
+
+
+
+
+
+
+

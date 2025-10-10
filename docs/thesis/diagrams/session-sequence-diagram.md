@@ -97,3 +97,10 @@ sequenceDiagram
 - **TC001**: Production SDK integration with VID/PID detection
 - **Shimmer3**: Official ShimmerAndroidAPI with 12-bit ADC precision
 - **CameraX**: Android Jetpack camera library for efficient capture
+
+
+
+
+
+
+

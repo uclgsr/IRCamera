@@ -88,3 +88,11 @@ The implementation uses:
 This implementation replaces the previous `registerForActivityResult()` approach which was incorrectly called
 dynamically. The current implementation follows Android best practices by using the standard permission request API that
 doesn't require registration during initialization.
+
+
+
+
+
+
+
+

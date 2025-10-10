@@ -1,6 +1,6 @@
 package mpdc4gsr.core.data.utils
 
-import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.common.AppLogger
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -72,3 +72,4 @@ data class CSVWriteStats(
     val averageRowSize: Double
         get() = if (rowsWritten > 0) baseStats.bytesWritten.toDouble() / rowsWritten else 0.0
 }
+

@@ -6,7 +6,7 @@ import android.net.Uri;
 
 import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtils;
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast;
-import com.mpdc4gsr.module.user.R;
+import com.mpdc4gsr.module.thermalunified.R;
 
 public class ActivityUtils {
 

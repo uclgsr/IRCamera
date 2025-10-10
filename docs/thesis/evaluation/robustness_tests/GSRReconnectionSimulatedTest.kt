@@ -19,9 +19,9 @@ import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
-import mpdc4gsr.feature.network.data.RecordingController
+import mpdc4gsr.core.common.AppLogger
+import mpdc4gsr.feature.capture.gsr.data.GSRSensorRecorder
+import mpdc4gsr.feature.connectivity.data.RecordingController
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -441,3 +441,4 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
         return SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault()).format(Date(timestamp))
     }
 }
+

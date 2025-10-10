@@ -83,7 +83,7 @@
         android:required="true" />
 
     <application
-        android:name="mpdc4gsr.core.App"
+        android:name="mpdc4gsr.app.App"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -96,18 +96,18 @@
         -->
 
         <!-- Jetpack Compose Activities -->
-        <activity android:name="mpdc4gsr.feature.settings.ui.PolicyComposeActivity" />
-        <activity android:name="mpdc4gsr.feature.settings.ui.VersionComposeActivity" />
+        <activity android:name="mpdc4gsr.feature.control.settings.ui.PolicyComposeActivity" />
+        <activity android:name="mpdc4gsr.feature.control.settings.ui.VersionComposeActivity" />
 
         <activity
-            android:name="mpdc4gsr.feature.settings.ui.SettingsComposeActivity"
+            android:name="mpdc4gsr.feature.control.settings.ui.SettingsComposeActivity"
             android:exported="false"
             android:label="Settings"
             android:theme="@style/AppTheme" />
 
         <!-- USB Receiver -->
         <receiver
-            android:name="mpdc4gsr.feature.thermal.ui.ThermalUsbReceiver"
+            android:name="mpdc4gsr.feature.capture.thermal.ui.ThermalUsbReceiver"
             android:exported="false">
             <intent-filter android:priority="1000">
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
@@ -120,23 +120,23 @@
         </receiver>
 
         <activity
-            android:name="mpdc4gsr.feature.network.ui.DevicePairingComposeActivity"
+            android:name="mpdc4gsr.feature.connectivity.ui.DevicePairingComposeActivity"
             android:exported="false"
             android:label="Device Pairing"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name="mpdc4gsr.feature.network.ui.NetworkClientTestComposeActivity"
+            android:name="mpdc4gsr.feature.connectivity.ui.NetworkClientTestComposeActivity"
             android:exported="false"
             android:label="Network Test"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name="mpdc4gsr.feature.gsr.ui.MultiModalRecordingComposeActivity"
+            android:name="mpdc4gsr.feature.capture.gsr.ui.MultiModalRecordingComposeActivity"
             android:exported="false" />
 
         <activity
-            android:name="mpdc4gsr.feature.gsr.ui.GSRQuickRecordingActivity"
+            android:name="mpdc4gsr.feature.capture.gsr.ui.GSRQuickRecordingActivity"
             android:exported="false"
             android:label="@string/gsr_quick_access" />
 
@@ -146,37 +146,37 @@
             android:label="@string/enhanced_recording_label" />
 
         <activity
-            android:name="mpdc4gsr.feature.gsr.ui.SessionManagerComposeActivity"
+            android:name="mpdc4gsr.feature.capture.gsr.ui.SessionManagerComposeActivity"
             android:exported="false"
             android:label="Session Manager" />
         <activity
-            android:name="mpdc4gsr.feature.gsr.ui.ResearchTemplateComposeActivity"
+            android:name="mpdc4gsr.feature.capture.gsr.ui.ResearchTemplateComposeActivity"
             android:exported="false"
             android:label="Research Templates" />
         <activity
-            android:name="mpdc4gsr.feature.gsr.ui.SessionDetailComposeActivity"
+            android:name="mpdc4gsr.feature.capture.gsr.ui.SessionDetailComposeActivity"
             android:exported="false"
             android:label="Session Details" />
 
         <activity
-            android:name="mpdc4gsr.feature.gsr.ui.GSRPlotComposeActivity"
+            android:name="mpdc4gsr.feature.capture.gsr.ui.GSRPlotComposeActivity"
             android:exported="false"
             android:label="GSR Data Analysis"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name="mpdc4gsr.feature.gsr.ui.GSRDataViewComposeActivity"
+            android:name="mpdc4gsr.feature.capture.gsr.ui.GSRDataViewComposeActivity"
             android:exported="false"
             android:label="GSR Data Viewer"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name="mpdc4gsr.feature.gsr.ui.GSRVideoPlayerComposeActivity"
+            android:name="mpdc4gsr.feature.capture.gsr.ui.GSRVideoPlayerComposeActivity"
             android:exported="false"
             android:label="GSR Video Player"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="mpdc4gsr.feature.gsr.ui.SessionExportComposeActivity"
+            android:name="mpdc4gsr.feature.capture.gsr.ui.SessionExportComposeActivity"
             android:exported="false"
             android:label="Export Session" />
 
@@ -186,29 +186,29 @@
             android:label="Hub-Spoke Recording" />
 
         <activity
-            android:name="mpdc4gsr.core.ui.PermissionRequestComposeActivity"
+            android:name="mpdc4gsr.core.designsystem.PermissionRequestComposeActivity"
             android:exported="false"
             android:label="Enhanced Permission System Test" />
 
         <activity
-            android:name="mpdc4gsr.feature.gsr.ui.GSRDeviceManagementComposeActivity"
+            android:name="mpdc4gsr.feature.capture.gsr.ui.GSRDeviceManagementComposeActivity"
             android:exported="false"
             android:label="GSR Device Management"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name="mpdc4gsr.feature.gsr.ui.GSRRawImageViewComposeActivity"
+            android:name="mpdc4gsr.feature.capture.gsr.ui.GSRRawImageViewComposeActivity"
             android:exported="false"
             android:label="GSR Raw Image Viewer" />
 
         <activity
-            android:name="mpdc4gsr.feature.gsr.ui.GSRDeviceConfigComposeActivity"
+            android:name="mpdc4gsr.feature.capture.gsr.ui.GSRDeviceConfigComposeActivity"
             android:exported="false"
             android:label="GSR Device Configuration" />
 
         <!-- Main Launcher Activity -->
         <activity
-            android:name="mpdc4gsr.feature.main.ui.MainComposeActivity"
+            android:name="mpdc4gsr.feature.dashboard.ui.MainComposeActivity"
             android:exported="true"
             android:label="MPDC4GSR"
             android:theme="@style/Theme.AppCompat.NoActionBar">
@@ -297,7 +297,7 @@
 
         <!-- Jetpack Compose Activities -->
         <activity
-            android:name="mpdc4gsr.feature.gsr.ui.SensorDashboardComposeActivity"
+            android:name="mpdc4gsr.feature.capture.gsr.ui.SensorDashboardComposeActivity"
             android:exported="false"
             android:label="Sensor Dashboard"
             android:screenOrientation="userPortrait"
@@ -316,7 +316,7 @@
 
         <!-- Recording Service - PC networking and sensor recording -->
         <service
-            android:name="mpdc4gsr.core.RecordingService"
+            android:name="mpdc4gsr.app.runtime.RecordingService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="camera|connectedDevice|dataSync" />
@@ -337,3 +337,4 @@
     </application>
 
 </manifest>
+

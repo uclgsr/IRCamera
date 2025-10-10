@@ -16,3 +16,11 @@ These guides complement the broader references in:
 - `libunified/PERMISSION_HANDLING.md`
 
 When updating utilities, refresh both the guide and inline code comments to keep them in sync.
+
+
+
+
+
+
+
+

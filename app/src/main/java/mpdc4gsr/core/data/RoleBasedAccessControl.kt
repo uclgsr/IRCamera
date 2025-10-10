@@ -1,7 +1,7 @@
 package mpdc4gsr.core.data
 
 import android.content.Context
-import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.core.common.logging.StructuredLogger
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 
@@ -358,3 +358,4 @@ class RoleBasedAccessControl(
             null
         }
 }
+

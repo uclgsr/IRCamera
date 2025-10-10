@@ -18,7 +18,7 @@
 # from real user journeys using Macrobenchmark.
 #
 # Example profile entries (these would be auto-generated):
-# Lmpdc4gsr/core/App;->onCreate()V
-# Lmpdc4gsr/core/RecordingService;->onStartCommand(Landroid/content/Intent;II)I
+# Lmpdc4gsr/app/App;->onCreate()V
+# Lmpdc4gsr/app/runtime/RecordingService;->onStartCommand(Landroid/content/Intent;II)I
 #
 # See: https://developer.android.com/topic/performance/baselineprofiles

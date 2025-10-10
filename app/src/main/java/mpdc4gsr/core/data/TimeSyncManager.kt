@@ -209,7 +209,7 @@ class TimeSyncManager(
                             try {
                                 triggerManualSync()
                             } catch (e: Exception) {
-                                mpdc4gsr.core.utils.AppLogger
+                                mpdc4gsr.core.common.AppLogger
                                     .e("TimeSyncManager", "Unexpected Exception in TimeSyncManager catch block", e)
                             }
                         }
@@ -240,7 +240,7 @@ class TimeSyncManager(
                     writer.write("$CSV_HEADER\n")
                 }
             } catch (e: Exception) {
-                mpdc4gsr.core.utils.AppLogger
+                mpdc4gsr.core.common.AppLogger
                     .e("TimeSyncManager", "Unexpected Exception in TimeSyncManager catch block", e)
             }
         }
@@ -473,7 +473,7 @@ class TimeSyncManager(
             sessionStartTime = 0L
             pendingSyncIndices.clear()
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger
+            mpdc4gsr.core.common.AppLogger
                 .e("TimeSyncManager", "Unexpected Exception in TimeSyncManager catch block", e)
         }
     }
@@ -486,3 +486,4 @@ class TimeSyncManager(
         pendingSyncIndices.clear()
     }
 }
+

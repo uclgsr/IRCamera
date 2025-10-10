@@ -582,7 +582,7 @@ suspend fun connectToDevice(deviceInfo: DeviceInfo): Boolean = withContext(Dispa
 ### Data Streaming Implementation
 
 ```kotlin
-// File: app/src/main/java/mpdc4gsr/feature/gsr/data/GSRSensorRecorder.kt
+// File: app/src/main/java/mpdc4gsr/feature/capture/gsr/data/GSRSensorRecorder.kt
 
 /**
  * Start streaming GSR data from connected Shimmer device
@@ -836,7 +836,7 @@ temperature calibration.
 ### USB Device Initialization
 
 ```kotlin
-// File: app/src/main/java/mpdc4gsr/feature/thermal/ui/ThermalCameraRecorder.kt
+// File: app/src/main/java/mpdc4gsr/feature/capture/thermal/ui/ThermalCameraRecorder.kt
 
 /**
  * Initialize Topdon TC001 thermal camera via USB OTG
@@ -976,7 +976,7 @@ public IRUVCTC(int cameraWidth, int cameraHeight, Context context,
 ### Temperature Calibration and Processing
 
 ```kotlin
-// File: app/src/main/java/mpdc4gsr/feature/thermal/ui/ThermalCameraRecorder.kt
+// File: app/src/main/java/mpdc4gsr/feature/capture/thermal/ui/ThermalCameraRecorder.kt
 
 /**
  * Process thermal frame with calibration and timestamping
@@ -1743,7 +1743,7 @@ recording sessions.
 ### TCP Server Initialization
 
 ```kotlin
-// File: app/src/main/java/mpdc4gsr/feature/network/data/CommandServer.kt
+// File: app/src/main/java/mpdc4gsr/feature/connectivity/data/CommandServer.kt
 
 /**
  * Initialize and start TCP command server
@@ -1794,7 +1794,7 @@ companion object {
 ### Message Processing Loop
 
 ```kotlin
-// File: app/src/main/java/mpdc4gsr/feature/network/data/NetworkServer.kt
+// File: app/src/main/java/mpdc4gsr/feature/connectivity/data/NetworkServer.kt
 
 /**
  * TCP client connection handling and message reception
@@ -1877,7 +1877,7 @@ private companion object {
 ### Command Parsing and Dispatch
 
 ```kotlin
-// File: app/src/main/java/mpdc4gsr/feature/network/data/ProtocolHandler.kt
+// File: app/src/main/java/mpdc4gsr/feature/connectivity/data/ProtocolHandler.kt
 
 /**
  * Process incoming protocol message and generate response
@@ -2045,7 +2045,7 @@ private suspend fun handleSyncRequest(message: Protocol.ProtocolMessage): String
 ### Protocol Message Format
 
 ```kotlin
-// File: app/src/main/java/mpdc4gsr/feature/network/data/Protocol.kt
+// File: app/src/main/java/mpdc4gsr/feature/connectivity/data/Protocol.kt
 
 object Protocol {
     // Message types
@@ -2457,3 +2457,11 @@ This chapter has presented the core implementation details of the multi-sensor r
 These implementation details demonstrate that the system achieves its design goals of multi-sensor coordination, precise
 time synchronization, and reliable remote control, forming the foundation for the experimental results presented in
 Chapter 5.
+
+
+
+
+
+
+
+

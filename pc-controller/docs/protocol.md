@@ -990,7 +990,7 @@ Errors: 0
 
 ```bash
 # Run Android instrumented tests (requires connected Android device or emulator)
-./gradlew connectedAndroidTest --tests "mpdc4gsr.feature.network.ProtocolIntegrationTest"
+./gradlew connectedAndroidTest --tests "mpdc4gsr.feature.connectivity.ProtocolIntegrationTest"
 ```
 
 ## Using the Example

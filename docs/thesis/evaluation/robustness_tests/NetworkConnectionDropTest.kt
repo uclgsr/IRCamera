@@ -20,8 +20,8 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.UnifiedNetworkController
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.feature.network.data.RecordingController
+import mpdc4gsr.core.common.AppLogger
+import mpdc4gsr.feature.connectivity.data.RecordingController
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -562,3 +562,4 @@ class NetworkConnectionDropTest : ComponentActivity() {
         return String.format("%02d:%02d:%02d", hours, minutes, secs)
     }
 }
+

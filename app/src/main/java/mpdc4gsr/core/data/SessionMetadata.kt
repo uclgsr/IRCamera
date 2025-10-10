@@ -557,3 +557,4 @@ data class SensorSummary(
     var storageUsedMb: Double? = null,
     val metadata: MutableMap<String, String> = mutableMapOf(),
 )
+

@@ -42,7 +42,7 @@ Implemented a multi-layered solution based on best practices:
 
 ### Core Implementation
 
-**File: `app/src/main/java/mpdc4gsr/core/ui/SafeRippleModifier.kt`**
+**File: `app/src/main/java/mpdc4gsr/core/designsystem/SafeRippleModifier.kt`**
 
 - Added `safeClickable()` - Primary modifier with press cancellation
 - Added `safeClickableNoRipple()` - Modifier without ripple indication
@@ -78,7 +78,7 @@ Implemented a multi-layered solution based on best practices:
 ### Pattern 1: IconButton with Activity Finish
 
 ```kotlin
-import mpdc4gsr.core.ui.deferAction
+import mpdc4gsr.core.designsystem.deferAction
 
 IconButton(onClick = deferAction { finish() }) {
     Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -104,7 +104,7 @@ Card(onClick = deferAction { navigateToScreen() }) {
 ### Pattern 4: Custom Clickable
 
 ```kotlin
-import mpdc4gsr.core.ui.safeClickableDeferred
+import mpdc4gsr.core.designsystem.safeClickableDeferred
 
 Modifier.safeClickableDeferred { navigate() }
 ```
@@ -182,3 +182,11 @@ Run: `grep -r "Card.*onClick.*startActivity" --include="*.kt" app/src/main/java`
 - Compose Material3 Documentation
 - Android Compose Foundation Documentation
 - Press Interaction API documentation
+
+
+
+
+
+
+
+

@@ -14,7 +14,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
-import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.common.AppLogger
 import java.util.*
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.abs
@@ -506,3 +506,4 @@ data class SyncMarker(
     val clockOffsetNs: Long,
     val syncQuality: SyncQuality,
 )
+

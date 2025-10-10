@@ -15,3 +15,4 @@ object VersionUtils {
         serverVersion: String,
     ): Boolean = UnifiedVersionUtils.isUpdateNeeded(context, serverVersion)
 }
+

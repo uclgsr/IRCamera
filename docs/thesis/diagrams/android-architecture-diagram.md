@@ -306,3 +306,10 @@ graph TB
 This architecture provides a clean separation of concerns with well-defined interfaces between
 layers, enabling maintainable and testable code while supporting the complex multi-sensor
 coordination requirements of the research platform.
+
+
+
+
+
+
+

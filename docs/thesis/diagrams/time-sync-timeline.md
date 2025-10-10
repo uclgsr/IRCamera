@@ -173,3 +173,10 @@ makestep 0.1 3
 rtcsync
 logdir /var/log/chrony
 ```
+
+
+
+
+
+
+

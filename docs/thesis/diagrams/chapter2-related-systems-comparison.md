@@ -71,3 +71,11 @@ This thesis contributes a **middle-ground solution**:
 
 The platform enables future research to train supervised machine learning models using synchronized multi-modal data,
 advancing the goal of contactless stress monitoring with scientific rigor.
+
+
+
+
+
+
+
+

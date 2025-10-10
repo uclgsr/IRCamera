@@ -286,3 +286,4 @@ data class SensorConfig(
     val isRGB: Boolean
         get() = sensorType.equals("rgb", ignoreCase = true)
 }
+

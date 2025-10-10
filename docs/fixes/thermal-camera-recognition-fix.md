@@ -204,15 +204,15 @@ ThermalCameraRecorder: Successfully initialized thermal camera from rescan
 
 ## Files Modified
 
-1. `app/src/main/java/mpdc4gsr/feature/thermal/ui/ThermalCameraRecorder.kt`
+1. `app/src/main/java/mpdc4gsr/feature/capture/thermal/ui/ThermalCameraRecorder.kt`
     - Added `rescanForThermalCamera()` method
     - Added retry logic in `initialize()`
     - Fixed `onDevicePermissionRequested()` to request permission
 
-2. `app/src/main/java/mpdc4gsr/feature/thermal/presentation/ThermalCameraViewModel.kt`
+2. `app/src/main/java/mpdc4gsr/feature/capture/thermal/presentation/ThermalCameraViewModel.kt`
     - Added `rescanForThermalCamera()` method
 
-3. `app/src/main/java/mpdc4gsr/feature/thermal/ui/ThermalMonitorScreen.kt`
+3. `app/src/main/java/mpdc4gsr/feature/capture/thermal/ui/ThermalMonitorScreen.kt`
     - Added `LaunchedEffect` for automatic rescan
 
 ## Impact
@@ -229,3 +229,11 @@ ThermalCameraRecorder: Successfully initialized thermal camera from rescan
 3. Implement exponential backoff for retry attempts
 4. Add telemetry to track detection success rates
 5. Consider background USB monitoring service for instant detection
+
+
+
+
+
+
+
+

@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.model.NetworkStatus
 import mpdc4gsr.core.data.model.PCControllerInfo
-import mpdc4gsr.feature.network.data.WebSocketClient
+import mpdc4gsr.feature.connectivity.data.WebSocketClient
 import org.json.JSONObject
 import java.net.InetAddress
 import java.util.concurrent.atomic.AtomicBoolean
@@ -446,7 +446,7 @@ class UnifiedNetworkController(
             val wifiInfo = wifiManager.connectionInfo
             _wifiSignalStrength.value = wifiInfo.rssi
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger
+            mpdc4gsr.core.common.AppLogger
                 .e("UnifiedNetworkController", "Unexpected Exception in UnifiedNetworkController catch block", e)
         }
     }
@@ -574,3 +574,4 @@ class UnifiedNetworkController(
         }
     }
 }
+

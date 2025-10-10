@@ -9,7 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
-import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.common.AppLogger
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -227,3 +227,4 @@ data class WriteStats(
                 else -> "$bytesWritten bytes"
             }
 }
+

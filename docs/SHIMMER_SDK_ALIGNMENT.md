@@ -138,22 +138,22 @@ G = 1,000,000 / R (microsiemens)
 ### Core Integration Files
 
 1. **GsrDeviceManager.kt**
-    - Location: `app/src/main/java/mpdc4gsr/core/sensors/gsr/`
+    - Location: `app/src/main/java/mpdc4gsr/core/hardware/gsr/`
     - Purpose: BLE device discovery and connection management
     - Key Features: Multi-device support, reconnection logic
 
 2. **DefaultGsrRecorder.kt**
-    - Location: `app/src/main/java/mpdc4gsr/core/sensors/gsr/`
+    - Location: `app/src/main/java/mpdc4gsr/core/hardware/gsr/`
     - Purpose: Main GSR recording orchestration
     - Key Features: Session management, CSV output, data quality monitoring
 
 3. **GSRSensorRecorder.kt**
-    - Location: `app/src/main/java/mpdc4gsr/feature/gsr/data/`
+    - Location: `app/src/main/java/mpdc4gsr/feature/capture/gsr/data/`
     - Purpose: Sensor-level data recording and processing
     - Key Features: ObjectCluster extraction, network streaming
 
 4. **RealShimmerDeviceFactory.kt**
-    - Location: `app/src/main/java/mpdc4gsr/feature/gsr/data/`
+    - Location: `app/src/main/java/mpdc4gsr/feature/capture/gsr/data/`
     - Purpose: Shimmer device wrapper and data handler
     - Key Features: Handler setup, state management, data callbacks
 
@@ -163,7 +163,7 @@ G = 1,000,000 / R (microsiemens)
     - Key Features: Raw to calibrated conversion, fallback processing
 
 6. **GSRCalculationUtils.kt**
-    - Location: `app/src/main/java/mpdc4gsr/feature/gsr/data/`
+    - Location: `app/src/main/java/mpdc4gsr/feature/capture/gsr/data/`
     - Purpose: GSR calculation utilities
     - Key Features: Signal quality assessment, validation
 
@@ -260,3 +260,11 @@ if (gsrRaw in 1..4095 && gsrConductance > 0) {
 - Message handler constants are hardcoded as the SDK may not export all constants publicly
 - ObjectCluster sensor names and formats must match exactly (case-sensitive)
 - Always test with actual Shimmer3 GSR hardware to validate integration
+
+
+
+
+
+
+
+

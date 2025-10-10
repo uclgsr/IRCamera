@@ -132,11 +132,11 @@
 # ====================================================
 
 # Keep ANR prevention monitoring classes for debugging
--keep class mpdc4gsr.core.threading.MonitoredMainThreadPoster { *; }
--keep class mpdc4gsr.core.threading.MonitoredMainThreadPoster$* { *; }
--keep class mpdc4gsr.core.ui.SafeMainThreadHandler { *; }
--keep class mpdc4gsr.core.ui.SafeMainThreadHandler$* { *; }
+-keep class mpdc4gsr.core.common.threading.MonitoredMainThreadPoster { *; }
+-keep class mpdc4gsr.core.common.threading.MonitoredMainThreadPoster$* { *; }
+-keep class mpdc4gsr.core.designsystem.SafeMainThreadHandler { *; }
+-keep class mpdc4gsr.core.designsystem.SafeMainThreadHandler$* { *; }
 
 # Keep performance manager for monitoring
--keep class mpdc4gsr.feature.camera.data.CameraPerformanceManager { *; }
--keep class mpdc4gsr.feature.camera.data.CameraPerformanceManager$* { *; }
+-keep class mpdc4gsr.feature.capture.camera.data.CameraPerformanceManager { *; }
+-keep class mpdc4gsr.feature.capture.camera.data.CameraPerformanceManager$* { *; }

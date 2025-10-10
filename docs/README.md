@@ -39,3 +39,11 @@ core references above for the current state of the system.
 - Keep new documents in `docs/` and wire them into this index.
 - Prefer ASCII-only markdown for compatibility.
 - Update cross-references when directories move or files are removed.
+
+
+
+
+
+
+
+

@@ -413,3 +413,11 @@ When synchronized properly, the platform enables training models to predict GSR 
 
 This figure establishes what raw sensor data looks like, justifying the design choices for sampling rates, data formats,
 and expected signal characteristics needed for successful multi-modal analysis.
+
+
+
+
+
+
+
+

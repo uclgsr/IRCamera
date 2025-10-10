@@ -145,3 +145,4 @@ class SensorDataRepository(
             firmwareVersion = null,
         )
 }
+

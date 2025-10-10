@@ -51,3 +51,11 @@ requests.
 2. Verify Android and PC controller interoperability on the supported sensors (GSR, RGB, thermal).
 3. Validate session export and crash recovery by simulating app restarts mid-session.
 4. Update documentation if behaviour changes.
+
+
+
+
+
+
+
+

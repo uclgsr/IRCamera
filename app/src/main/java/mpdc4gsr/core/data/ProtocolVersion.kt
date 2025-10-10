@@ -120,3 +120,4 @@ object ProtocolVersion {
         val error: String? = null,
     )
 }
+

@@ -251,3 +251,11 @@ Each Android device operates as an autonomous sensor node:
 3. **Centralized Coordination**: PC manages session state, timing, and aggregation
 4. **Temporal Precision**: Nanosecond timestamps with sub-5ms synchronization accuracy
 5. **Fault Tolerance**: Devices continue recording if network drops, auto-reconnect and sync when restored
+
+
+
+
+
+
+
+

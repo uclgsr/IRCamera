@@ -7,42 +7,42 @@ document summarises how the major components interact and where to find their im
 
 ### Android Device
 
-- **Application bootstrap (`app/src/main/java/mpdc4gsr/core/App.kt`)** sets up StrictMode, telemetry, native libraries,
+- **Application bootstrap (`app/src/main/java/mpdc4gsr/app/App.kt`)** sets up StrictMode, telemetry, native libraries,
   and starts the `RecordingService`.
-- **Recording service (`core/RecordingService.kt`)** runs as a foreground service, manages session lifecycle,
+- **Recording service (`app/src/main/java/mpdc4gsr/app/runtime/RecordingService.kt`)** runs as a foreground service, manages session lifecycle,
   coordinates sensors, exposes a TCP server for the PC controller, and handles crash recovery via
   `CrashRecoveryManager`.
-- **Structured logging and crash safety** are implemented in `core/StructuredLogger.kt`, `CrashSafeSupervisor.kt`, and
-  `CrashRecoveryManager.kt`.
-- **Session management** is provided by `core/session/SessionManager.kt`, `SessionModels.kt`, and
+- **Structured logging and crash safety** are implemented in `core/common/logging/StructuredLogger.kt`, `core/common/crash/CrashSafeSupervisor.kt`, and
+  `core/common/crash/CrashRecoveryManager.kt`.
+- **Session management** is provided by `core/recording/session/SessionManager.kt`, `SessionModels.kt`, and
   `core/data/utils/SessionDirectoryManager.kt`.
 
 ### Sensors and Modalities
 
 - **RGB camera**: `core/data/RgbCameraRecorder` drives CameraX with adaptive frame capture, exports video and frame
-  metadata, and surfaces state via `feature/camera/presentation/RGBCameraViewModel`.
-- **GSR**: `core/sensors/gsr` and `feature/gsr` integrate the Shimmer SDK, manage BLE connections, resampling,
+  metadata, and surfaces state via `feature/capture/camera/presentation/RGBCameraViewModel`.
+- **GSR**: `core/hardware/gsr` and `feature/capture/gsr` integrate the Shimmer SDK, manage BLE connections, resampling,
   statistics, and exports.
-- **Thermal**: `component/thermalunified` and `feature/thermal` wrap the vendor SDK and align thermal frames with
+- **Thermal**: `component/thermalunified` and `feature/capture/thermal` wrap the vendor SDK and align thermal frames with
   session metadata.
-- **Multi-modal coordination** lives in `feature/gsr/presentation/MultiModalRecordingViewModel` which orchestrates
+- **Multi-modal coordination** lives in `feature/capture/gsr/presentation/MultiModalRecordingViewModel` which orchestrates
   simultaneous captures and sync markers.
 
 ### Networking
 
-- **PcControllerServer (`core/network/PcControllerServer.kt`)** hosts the socket server on port 8081, registers with
+- **PcControllerServer (`core/infrastructure/network/PcControllerServer.kt`)** hosts the socket server on port 8081, registers with
   mDNS, handles client command parsing, and delegates actions back to the service.
-- **Feature network module (`feature/network/data`)** provides `NetworkController`, `RecordingController`, streaming
+- **Feature network module (`feature/connectivity/data`)** provides `NetworkController`, `RecordingController`, streaming
   pipelines, TCP/WebSocket clients, file upload services, and error recovery utilities.
 - **Time synchronisation** and protocol definitions live in `core/data/TimeSyncManager.kt` and
-  `feature/network/data/Protocol.kt`.
+  `feature/connectivity/data/Protocol.kt`.
 
 ### User Experience
 
-- Compose navigation is centred in `core/ui/navigation/` with `IRCameraNavigation` and `UnifiedNavigation`.
-- Dashboards such as `feature/camera/ui/CameraDashboardScreen.kt` and `feature/gsr/ui/GSRSensorScreen.kt` surface live
+- Compose navigation is centred in `core/designsystem/navigation/` with `IRCameraNavigation` and `UnifiedNavigation`.
+- Dashboards such as `feature/capture/camera/ui/CameraDashboardScreen.kt` and `feature/capture/gsr/ui/GSRSensorScreen.kt` surface live
   state from their view models.
-- Shared styling and widgets live under `core/ui/`.
+- Shared styling and widgets live under `core/designsystem/`.
 
 ### Desktop Controller
 
@@ -63,15 +63,17 @@ document summarises how the major components interact and where to find their im
 
 ## Module Map
 
-- `app/src/main/java/mpdc4gsr/core/` – Application bootstrap, services, logging, session and directory management,
-  networking primitives.
-- `app/src/main/java/mpdc4gsr/feature/camera/` – Camera repositories, configuration managers, view models, and Compose
+- `app/src/main/java/mpdc4gsr/app/` – Application bootstrap, runtime services, and global Hilt modules.
+- `app/src/main/java/mpdc4gsr/core/` – Shared foundation (`common/`, `designsystem/`, `hardware/`, `infrastructure/`,
+  `recording/`) providing utilities, UI building blocks, and sensor abstractions.
+- `app/src/main/java/mpdc4gsr/feature/capture/camera/` – Camera repositories, configuration managers, view models, and Compose
   screens.
-- `app/src/main/java/mpdc4gsr/feature/gsr/` – GSR domain, repositories, export flow, and Compose UI.
-- `app/src/main/java/mpdc4gsr/feature/thermal/` – Thermal camera integration and UI.
-- `app/src/main/java/mpdc4gsr/feature/network/` – Command/control protocol, streaming, and discovery services.
-- `app/src/main/java/mpdc4gsr/feature/settings/` – Recording and device configuration.
-- `app/src/main/java/mpdc4gsr/feature/main/` – Compose launch activity, dashboards, and navigation entry points.
+- `app/src/main/java/mpdc4gsr/feature/capture/gsr/` – GSR domain, repositories, export flow, and Compose UI.
+- `app/src/main/java/mpdc4gsr/feature/capture/thermal/` – Thermal camera integration and UI.
+- `app/src/main/java/mpdc4gsr/feature/connectivity/` – Command/control protocol, streaming, and discovery services.
+- `app/src/main/java/mpdc4gsr/feature/control/` – Device diagnostics and configuration surfaces.
+- `app/src/main/java/mpdc4gsr/feature/dashboard/` – Compose launch activity, dashboards, and navigation entry points.
+- `app/src/main/java/mpdc4gsr/feature/recording/session/` – Session presentation layer and orchestration helpers.
 - `BleModule/` – BLE helpers compiled as a separate module for Shimmer devices.
 - `component/thermalunified/` and `thermalunified/` – Vendor thermal libraries and glue code.
 - `libunified/` – Shared utilities (permissions, logging, resource helpers).
@@ -90,6 +92,14 @@ document summarises how the major components interact and where to find their im
 - Structured logs are persisted by `StructuredLogger`; metrics are exposed through `TelemetryManager` and
   `PerformanceMetrics`.
 - `CrashSafeSupervisor` performs background health checks, and `CrashRecoveryManager` restores sessions after faults.
-- Network health, reconnection, and backoff strategies live in `feature/network/data/NetworkErrorRecoveryManager.kt`.
+- Network health, reconnection, and backoff strategies live in `feature/connectivity/data/NetworkErrorRecoveryManager.kt`.
 
 Consult the platform-specific guides for deeper dives into implementation details.
+
+
+
+
+
+
+
+

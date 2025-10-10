@@ -121,3 +121,11 @@ The system enables research in:
 - **Human-computer interaction**: User experience measurement
 - **Physiological studies**: Stress, engagement, attention research
 - **Behavioral analysis**: Multi-modal behavior understanding
+
+
+
+
+
+
+
+

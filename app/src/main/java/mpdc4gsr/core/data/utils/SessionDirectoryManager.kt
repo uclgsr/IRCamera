@@ -3,7 +3,7 @@ package mpdc4gsr.core.data.utils
 import android.content.Context
 import android.os.Build
 import android.os.StatFs
-import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.common.AppLogger
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
@@ -292,3 +292,4 @@ data class StorageStatus(
                 "$availableMB MB"
             }
 }
+

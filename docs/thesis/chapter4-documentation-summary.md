@@ -36,8 +36,8 @@ figures, tables, and code snippets as specified in the requirements.
 
 **Source Files Referenced**:
 
-- `app/src/main/java/mpdc4gsr/core/sensors/gsr/GsrDeviceManager.kt`
-- `app/src/main/java/mpdc4gsr/feature/gsr/data/GSRSensorRecorder.kt`
+- `app/src/main/java/mpdc4gsr/core/hardware/gsr/GsrDeviceManager.kt`
+- `app/src/main/java/mpdc4gsr/feature/capture/gsr/data/GSRSensorRecorder.kt`
 
 **Content**:
 
@@ -61,7 +61,7 @@ figures, tables, and code snippets as specified in the requirements.
 
 **Source Files Referenced**:
 
-- `app/src/main/java/mpdc4gsr/feature/thermal/ui/ThermalCameraRecorder.kt`
+- `app/src/main/java/mpdc4gsr/feature/capture/thermal/ui/ThermalCameraRecorder.kt`
 - `libunified/src/main/java/com/mpdc4gsr/libunified/ir/camera/IRUVCTC.java`
 
 **Content**:
@@ -119,10 +119,10 @@ Offset = ((t2 - t1) + (t3 - t4)) / 2
 
 **Source Files Referenced**:
 
-- `app/src/main/java/mpdc4gsr/feature/network/data/CommandServer.kt`
-- `app/src/main/java/mpdc4gsr/feature/network/data/NetworkServer.kt`
-- `app/src/main/java/mpdc4gsr/feature/network/data/ProtocolHandler.kt`
-- `app/src/main/java/mpdc4gsr/feature/network/data/Protocol.kt`
+- `app/src/main/java/mpdc4gsr/feature/connectivity/data/CommandServer.kt`
+- `app/src/main/java/mpdc4gsr/feature/connectivity/data/NetworkServer.kt`
+- `app/src/main/java/mpdc4gsr/feature/connectivity/data/ProtocolHandler.kt`
+- `app/src/main/java/mpdc4gsr/feature/connectivity/data/Protocol.kt`
 
 **Content**:
 
@@ -289,3 +289,11 @@ professional presentation, and clear explanations suitable for inclusion in the 
 
 The documentation follows the project's coding conventions, uses Mermaid for maintainable diagrams, and is synchronized
 with the actual codebase to ensure accuracy and reproducibility.
+
+
+
+
+
+
+
+

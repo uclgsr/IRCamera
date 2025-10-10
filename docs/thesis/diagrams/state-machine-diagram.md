@@ -242,3 +242,10 @@ class AndroidStateMachine {
 
 This state machine design ensures robust operation with clear state boundaries, comprehensive error
 handling, and automatic recovery mechanisms suitable for long-duration research recording sessions.
+
+
+
+
+
+
+

@@ -105,7 +105,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
             }
         var selectedSection by remember { mutableStateOf<String?>(null) }
         var previewMode by remember { mutableStateOf("Full") }
-        var editingSection by remember { mutableStateOf<String?>(null) }
         Column(
             modifier =
                 modifier
@@ -201,16 +200,21 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF1976D2),
                         )
-                        if (selectedSection != null) {
-                            IconButton(
-                                onClick = { editingSection = selectedSection },
-                            ) {
-                                Icon(
-                                    Icons.Default.Edit,
-                                    contentDescription = "Edit Section",
-                                    tint = Color(0xFF1976D2),
-                                )
-                            }
+                        IconButton(
+                            onClick = {
+                                android.widget.Toast
+                                    .makeText(
+                                        this@ReportPreviewSecondComposeActivity,
+                                        "Section editing workflow coming soon",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
+                            },
+                        ) {
+                            Icon(
+                                Icons.Default.Edit,
+                                contentDescription = "Edit Section",
+                                tint = Color(0xFF1976D2),
+                            )
                         }
                     }
                     HorizontalDivider(
@@ -384,13 +388,6 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
-        }
-        editingSection?.let { section ->
-            Text(
-                text = "Editing notes for \"$section\"",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color(0xFF1976D2),
-            )
         }
     }
 }

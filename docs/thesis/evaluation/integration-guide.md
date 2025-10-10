@@ -117,10 +117,10 @@ The test files can be used as:
 
 All tests depend on existing app components:
 
-- `mpdc4gsr.core.utils.AppLogger` - For logging
-- `mpdc4gsr.feature.network.data.RecordingController` - For recording control
-- `mpdc4gsr.feature.gsr.data.GSRSensorRecorder` - For GSR tests
-- `mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder` - For thermal tests
+- `mpdc4gsr.core.common.AppLogger` - For logging
+- `mpdc4gsr.feature.connectivity.data.RecordingController` - For recording control
+- `mpdc4gsr.feature.capture.gsr.data.GSRSensorRecorder` - For GSR tests
+- `mpdc4gsr.feature.capture.thermal.ui.ThermalCameraRecorder` - For thermal tests
 - `mpdc4gsr.core.data.UnifiedNetworkController` - For network tests
 - `com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme` - For UI theme
 
@@ -268,3 +268,11 @@ For questions or issues:
 - Check Android logcat for runtime errors
 - Refer to README.md in docs/thesis-evaluation directory
 - Consult thesis requirements document
+
+
+
+
+
+
+
+
