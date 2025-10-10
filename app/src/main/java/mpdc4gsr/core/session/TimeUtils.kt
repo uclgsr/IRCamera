@@ -2,8 +2,7 @@ package mpdc4gsr.core.session
 
 import android.os.SystemClock
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 object TimeUtils {
     private const val TAG = "TimeUtils"
@@ -46,9 +45,11 @@ object TimeUtils {
             detectedProcessor =
                 when {
                     hardware.contains("qcom", ignoreCase = true) ||
-                        soc.contains("qualcomm", ignoreCase = true) -> "Qualcomm"
+                            soc.contains("qualcomm", ignoreCase = true) -> "Qualcomm"
+
                     hardware.contains("exynos", ignoreCase = true) ||
-                        soc.contains("samsung", ignoreCase = true) -> "Exynos"
+                            soc.contains("samsung", ignoreCase = true) -> "Exynos"
+
                     else -> "Generic_Android_Timer"
                 }
         } catch (e: Exception) {

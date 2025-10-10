@@ -113,7 +113,6 @@ tasks.register("build") {
         ":app:assembleRelease",
         ":BleModule:assembleRelease",
         ":libunified:assembleRelease",
-        ":component:thermalunified:assembleRelease",
-        ":component:user:assembleRelease"
+        ":component:thermalunified:assembleRelease"
     )
 }

@@ -332,6 +332,7 @@ private fun AnalysisOptionItem(
 
 @Composable
 private fun ExportSettingsSection() {
+    var selectedFormat by remember { mutableStateOf(ExportFormat.PDF) }
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
@@ -352,14 +353,14 @@ private fun ExportSettingsSection() {
             ) {
                 ExportFormat.values().forEach { format ->
                     FilterChip(
-                        onClick = { },
+                        onClick = { selectedFormat = format },
                         label = {
                             Text(
                                 format.displayName,
                                 fontSize = 12.sp,
                             )
                         },
-                        selected = format == ExportFormat.PDF,
+                        selected = format == selectedFormat,
                         colors =
                             FilterChipDefaults.filterChipColors(
                                 selectedContainerColor = Color(0xFFFF6B35),
@@ -370,6 +371,11 @@ private fun ExportSettingsSection() {
                     )
                 }
             }
+            Text(
+                text = "Selected format: ${selectedFormat.displayName}",
+                color = Color(0xFF7D8590),
+                fontSize = 12.sp,
+            )
         }
     }
 }

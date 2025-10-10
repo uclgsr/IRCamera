@@ -357,17 +357,40 @@ class ThermalFragmentViewModel(
                     }
                 val usbMonitorCallback =
                     object : USBMonitorCallback {
-                        override fun onAttach() {}
+                        override fun onAttach() {
+                            updateConnectionStatus("Device Attached")
+                        }
 
-                        override fun onGranted() {}
+                        override fun onGranted() {
+                            updateConnectionStatus("Permission Granted")
+                        }
 
-                        override fun onDettach() {}
+                        override fun onDettach() {
+                            updateConnectionStatus(
+                                "Device Detached",
+                                ThermalProcessingAction.ProcessingError("Thermal camera detached"),
+                            )
+                            disconnectCamera()
+                        }
 
-                        override fun onCancel() {}
+                        override fun onCancel() {
+                            updateConnectionStatus(
+                                "Permission Cancelled",
+                                ThermalProcessingAction.ProcessingError("USB permission cancelled"),
+                            )
+                        }
 
-                        override fun onConnect() {}
+                        override fun onConnect() {
+                            updateConnectionStatus("Connected")
+                        }
 
-                        override fun onDisconnect() {}
+                        override fun onDisconnect() {
+                            updateConnectionStatus(
+                                "Disconnected",
+                                ThermalProcessingAction.ProcessingError("Thermal camera disconnected"),
+                            )
+                            disconnectCamera()
+                        }
                     }
                 iruvctc =
                     IRUVCTC(
@@ -675,6 +698,14 @@ class ThermalFragmentViewModel(
 
     fun showSettings() {
         // Placeholder for settings functionality
+    }
+
+    private fun updateConnectionStatus(
+        status: String,
+        action: ThermalProcessingAction? = null,
+    ) {
+        _connectionStatus.value = status
+        action?.let { _thermalProcessingAction.postValue(it) }
     }
 
     override fun onCleared() {

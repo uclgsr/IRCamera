@@ -1,7 +1,14 @@
 package mpdc4gsr.feature.gsr.data
 
 import android.content.Context
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mpdc4gsr.core.sensors.gsr.model.GSRSample
 import mpdc4gsr.feature.network.data.NetworkClient
 import mpdc4gsr.feature.network.data.RecordingController
@@ -395,7 +402,7 @@ class GSRNetworkStreamer(
 
     private fun shouldFlushBuffer(): Boolean =
         sampleBuffer.isNotEmpty() &&
-            (System.currentTimeMillis() % (STREAM_INTERVAL_MS * 5) == 0L)
+                (System.currentTimeMillis() % (STREAM_INTERVAL_MS * 5) == 0L)
 
     fun getStreamingStats(): Map<String, Any> =
         mapOf(

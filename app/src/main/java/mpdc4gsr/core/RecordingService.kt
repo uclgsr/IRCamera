@@ -4,6 +4,8 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.net.nsd.NsdManager
+import android.net.nsd.NsdServiceInfo
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
@@ -13,8 +15,6 @@ import com.csl.irCamera.R
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import mpdc4gsr.core.CrashRecoveryManager.RecoveredSession
-import mpdc4gsr.core.CrashRecoveryManager.SessionRecoveryResult
 import mpdc4gsr.core.data.FeatureFlags
 import mpdc4gsr.core.data.ProtocolVersion
 import mpdc4gsr.core.data.TimeSyncManager
@@ -24,11 +24,9 @@ import mpdc4gsr.core.network.PcControllerServer
 import mpdc4gsr.core.session.SessionInfo
 import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.feature.network.data.*
-import mpdc4gsr.feature.network.data.Protocol
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
-import java.util.ArrayList
 import kotlin.coroutines.CoroutineContext
 
 class RecordingService :
@@ -52,7 +50,7 @@ class RecordingService :
         private val FOREGROUND_SERVICE_TYPES
             get() =
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC or
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
         const val ACTION_START_RECORDING =
             "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_RECORDING"
         const val ACTION_STOP_RECORDING =
@@ -219,6 +217,42 @@ class RecordingService :
     private var isNetworkInitialized = false
     internal var isConnectedToPC = false
     private var currentSessionDirectory: String? = null
+    private var nsdManager: NsdManager? = null
+    private var nsdServiceInfo: NsdServiceInfo? = null
+    private var isServiceRegistered: Boolean = false
+    private val nsdRegistrationListener =
+        object : NsdManager.RegistrationListener {
+            override fun onServiceRegistered(registeredServiceInfo: NsdServiceInfo?) {
+                nsdServiceInfo = registeredServiceInfo
+                isServiceRegistered = true
+                updateNotification(
+                    "PC control service available at ${registeredServiceInfo?.serviceName ?: SERVICE_NAME}",
+                )
+            }
+
+            override fun onRegistrationFailed(
+                failedServiceInfo: NsdServiceInfo?,
+                errorCode: Int,
+            ) {
+                isServiceRegistered = false
+                nsdServiceInfo = null
+                updateNotification("Failed to register PC control service (error $errorCode)")
+            }
+
+            override fun onServiceUnregistered(unregisteredServiceInfo: NsdServiceInfo?) {
+                isServiceRegistered = false
+                nsdServiceInfo = null
+                updateNotification("PC control service stopped")
+            }
+
+            override fun onUnregistrationFailed(
+                failedServiceInfo: NsdServiceInfo?,
+                errorCode: Int,
+            ) {
+                isServiceRegistered = false
+                updateNotification("Failed to unregister PC control service (error $errorCode)")
+            }
+        }
     private var recordingStartTime: Long = 0
     private lateinit var notificationManager: NotificationManager
     private lateinit var pcControllerServer: PcControllerServer
@@ -233,13 +267,15 @@ class RecordingService :
     inner class RecordingServiceBinder : Binder() {
         fun getService(): RecordingService = this@RecordingService
 
-        fun getRecordingController(): RecordingController? = if (::recordingController.isInitialized) recordingController else null
+        fun getRecordingController(): RecordingController? =
+            if (::recordingController.isInitialized) recordingController else null
 
         fun getNetworkServer(): NetworkServer? = if (::networkServer.isInitialized) networkServer else null
 
         fun getPreviewStreamer(): PreviewStreamer? = if (::previewStreamer.isInitialized) previewStreamer else null
 
-        fun getPreviewDataAdapter(): PreviewDataAdapter? = if (::previewDataAdapter.isInitialized) previewDataAdapter else null
+        fun getPreviewDataAdapter(): PreviewDataAdapter? =
+            if (::previewDataAdapter.isInitialized) previewDataAdapter else null
 
         fun isConnectedToPC(): Boolean = this@RecordingService.isConnectedToPC
 
@@ -250,7 +286,8 @@ class RecordingService :
                 "Stopped"
             }
 
-        fun getActualServerPort(): Int = if (::pcControllerServer.isInitialized) pcControllerServer.currentPort() else SERVER_PORT
+        fun getActualServerPort(): Int =
+            if (::pcControllerServer.isInitialized) pcControllerServer.currentPort() else SERVER_PORT
 
         fun getConnectedClients(): List<String> =
             if (::pcControllerServer.isInitialized) {
@@ -408,9 +445,9 @@ class RecordingService :
                             "service_initialized",
                             mapOf(
                                 "available_sensors" to
-                                    recordingController
-                                        .getAvailableSensors()
-                                        .map { it.sensorId },
+                                        recordingController
+                                            .getAvailableSensors()
+                                            .map { it.sensorId },
                                 "sensor_count" to recordingController.getAvailableSensors().size,
                             ),
                         )
@@ -486,7 +523,7 @@ class RecordingService :
                     // When recording, we need camera and data sync types
                     // Note: Microphone type removed - audio recording handled by RgbCameraRecorder
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA or
-                        ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+                            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
                 } else {
                     // For server/networking only, just use dataSync
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
@@ -712,9 +749,9 @@ class RecordingService :
                     "session_directory" to sessionDirectory,
                     "trigger_source" to triggerSource.toString(),
                     "available_sensors" to
-                        recordingController
-                            .getAvailableSensors()
-                            .map { it.sensorId },
+                            recordingController
+                                .getAvailableSensors()
+                                .map { it.sensorId },
                 ),
             )
             // Update notification for different trigger sources
@@ -1198,8 +1235,8 @@ class RecordingService :
                 if (activeSensors > 0) {
                     val statusText =
                         "Recording: $activeSensors sensors, " +
-                            "$totalSamples samples, " +
-                            "${String.format("%.1f", totalStorage)}MB"
+                                "$totalSamples samples, " +
+                                "${String.format("%.1f", totalStorage)}MB"
                     updateNotification(statusText)
                 }
             }.launchIn(this)
@@ -1780,6 +1817,10 @@ class RecordingService :
         if (isServiceRegistered) {
             return
         }
+        if (nsdManager == null) {
+            nsdManager = getSystemService(Context.NSD_SERVICE) as? NsdManager
+        }
+        val manager = nsdManager ?: return
         try {
             val serviceInfo =
                 NsdServiceInfo().apply {
@@ -1787,67 +1828,37 @@ class RecordingService :
                     serviceType = SERVICE_TYPE
                     port = SERVER_PORT
                 }
-            nsdManager?.registerService(
+            manager.registerService(
                 serviceInfo,
                 NsdManager.PROTOCOL_DNS_SD,
-                object : NsdManager.RegistrationListener {
-                    override fun onServiceRegistered(registeredServiceInfo: NsdServiceInfo?) {
-                        nsdServiceInfo = registeredServiceInfo
-                        isServiceRegistered = true
-                    }
-
-                    override fun onRegistrationFailed(
-                        failedServiceInfo: NsdServiceInfo?,
-                        errorCode: Int,
-                    ) {
-                    }
-
-                    override fun onServiceUnregistered(unregisteredServiceInfo: NsdServiceInfo?) {
-                        isServiceRegistered = false
-                    }
-
-                    override fun onUnregistrationFailed(
-                        failedServiceInfo: NsdServiceInfo?,
-                        errorCode: Int,
-                    ) {
-                    }
-                },
+                nsdRegistrationListener,
             )
+        } catch (e: IllegalArgumentException) {
+            isServiceRegistered = false
+            mpdc4gsr.core.utils.AppLogger
+                .e("RecordingService", "Unexpected Exception in RecordingService catch block", e)
         } catch (e: Exception) {
+            isServiceRegistered = false
             mpdc4gsr.core.utils.AppLogger
                 .e("RecordingService", "Unexpected Exception in RecordingService catch block", e)
         }
     }
 
     fun unregisterNsdService() {
-        if (!isServiceRegistered || nsdServiceInfo == null) {
+        if (!isServiceRegistered) {
             return
         }
         try {
-            nsdManager?.unregisterService(
-                object : NsdManager.RegistrationListener {
-                    override fun onServiceRegistered(serviceInfo: NsdServiceInfo?) {}
-
-                    override fun onRegistrationFailed(
-                        serviceInfo: NsdServiceInfo?,
-                        errorCode: Int,
-                    ) {}
-
-                    override fun onServiceUnregistered(serviceInfo: NsdServiceInfo?) {
-                        isServiceRegistered = false
-                        nsdServiceInfo = null
-                    }
-
-                    override fun onUnregistrationFailed(
-                        serviceInfo: NsdServiceInfo?,
-                        errorCode: Int,
-                    ) {
-                    }
-                },
-            )
+            nsdManager?.unregisterService(nsdRegistrationListener)
+        } catch (e: IllegalArgumentException) {
+            mpdc4gsr.core.utils.AppLogger
+                .e("RecordingService", "Unexpected Exception in RecordingService catch block", e)
         } catch (e: Exception) {
             mpdc4gsr.core.utils.AppLogger
                 .e("RecordingService", "Unexpected Exception in RecordingService catch block", e)
+        } finally {
+            isServiceRegistered = false
+            nsdServiceInfo = null
         }
     }
 

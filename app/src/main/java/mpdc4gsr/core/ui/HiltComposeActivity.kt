@@ -1,6 +1,7 @@
 package mpdc4gsr.core.ui
 
 import android.content.Context
+import android.hardware.usb.UsbDevice
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,6 +25,11 @@ abstract class HiltComposeActivity : ComponentActivity() {
     protected open fun onDeviceConnected() {}
 
     protected open fun onDeviceDisconnected() {}
+
+    protected var deviceConnectionActive: Boolean = false
+        private set
+    protected var connectedUsbDevice: UsbDevice? = null
+        private set
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,8 +58,12 @@ abstract class HiltComposeActivity : ComponentActivity() {
                 DeviceEventManager.deviceConnectionState.collectLatest { state ->
                     state?.let {
                         if (it.isConnected) {
+                            deviceConnectionActive = true
+                            connectedUsbDevice = it.device
                             onDeviceConnected()
                         } else {
+                            deviceConnectionActive = false
+                            connectedUsbDevice = null
                             onDeviceDisconnected()
                         }
                     }

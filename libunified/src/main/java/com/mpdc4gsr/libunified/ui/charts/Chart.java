@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.provider.MediaStore.Images;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -140,7 +141,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         mInfoPaint.setTextAlign(Align.CENTER);
         mInfoPaint.setTextSize(Utils.convertDpToPixel(12f));
 
-        if (mLogEnabled)
+        logDebug("Chart initialized");
     }
 
     public void clear() {
@@ -316,8 +317,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
             mIndicesToHighlight = null;
         else {
 
-            if (mLogEnabled)
-
+            logDebug("Resolving highlight " + high);
             e = mData.getEntryForHighlight(high);
             if (e == null) {
                 mIndicesToHighlight = null;
@@ -573,6 +573,12 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         mLogEnabled = enabled;
     }
 
+    protected void logDebug(String message) {
+        if (mLogEnabled) {
+            Log.i(LOG_TAG, message);
+        }
+    }
+
     public void setNoDataText(String text) {
         mNoDataText = text;
     }
@@ -703,7 +709,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
         notifyDataSetChanged();
 
-        if (mLogEnabled)
+        logDebug("Data set updated");
     }
 
     public ViewPortHandler getViewPortHandler() {
@@ -894,13 +900,12 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        if (mLogEnabled)
+        logDebug("onSizeChanged new=(" + w + "," + h + ") old=(" + oldw + "," + oldh + ")");
 
         if (w > 0 && h > 0 && w < 10000 && h < 10000) {
-            if (mLogEnabled)
             mViewPortHandler.setChartDimens(w, h);
         } else {
-            if (mLogEnabled)
+            logDebug("Skipping viewport dimension update due to invalid size bounds.");
         }
 
         notifyDataSetChanged();

@@ -96,4 +96,5 @@
     <string name="report_remark">Report Remark</string>
     <string name="error_no_report_to_share">No report loaded to share</string>
     <string name="error_no_report_to_delete">No report loaded to delete</string>
+    <string name="lms_setting_http_error">Network Error</string>
 </resources>

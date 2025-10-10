@@ -29,6 +29,7 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
     override fun Content(viewModel: ImageColorViewModel) {
         val timestamp by viewModel.timestamp.collectAsState()
         val showData by viewModel.showData.collectAsState()
+        val comparisonResult by viewModel.comparisonResult.collectAsState()
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -154,6 +155,16 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                             )
                         }
                     }
+                    if (showData && comparisonResult.isNotEmpty()) {
+                        Text(
+                            text = comparisonResult,
+                            color = Color.White,
+                            fontSize = 12.sp,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 24.dp, vertical = 8.dp),
+                        )
+                    }
                     // Control buttons
                     Row(
                         modifier =
@@ -173,7 +184,9 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                             Text(if (showData) "Hide Data" else "Show Data")
                         }
                         Button(
-                            onClick = { },
+                            onClick = {
+                                viewModel.compareImages()
+                            },
                             modifier = Modifier.width(120.dp),
                             colors =
                                 ButtonDefaults.buttonColors(

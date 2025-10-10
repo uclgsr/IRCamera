@@ -80,7 +80,11 @@ class NetworkConnectionManager(
             _errorState.value = null
             reconnectAttempts = 0
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("NetworkConnectionManager", "Unexpected Exception in NetworkConnectionManager catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "NetworkConnectionManager",
+                "Unexpected Exception in NetworkConnectionManager catch block",
+                e
+            )
         }
     }
 
@@ -100,7 +104,11 @@ class NetworkConnectionManager(
             try {
                 protocolHandler.enablePreviewStreaming()
             } catch (e: Exception) {
-                mpdc4gsr.core.utils.AppLogger.e("NetworkConnectionManager", "Unexpected Exception in NetworkConnectionManager catch block", e)
+                mpdc4gsr.core.utils.AppLogger.e(
+                    "NetworkConnectionManager",
+                    "Unexpected Exception in NetworkConnectionManager catch block",
+                    e
+                )
             }
         }
     }
@@ -116,7 +124,11 @@ class NetworkConnectionManager(
                 try {
                     protocolHandler.disablePreviewStreaming()
                 } catch (e: Exception) {
-                    mpdc4gsr.core.utils.AppLogger.e("NetworkConnectionManager", "Unexpected Exception in NetworkConnectionManager catch block", e)
+                    mpdc4gsr.core.utils.AppLogger.e(
+                        "NetworkConnectionManager",
+                        "Unexpected Exception in NetworkConnectionManager catch block",
+                        e
+                    )
                 }
             }
             // Attempt reconnection if not at max attempts

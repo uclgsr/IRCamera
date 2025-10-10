@@ -12,36 +12,36 @@ import javax.inject.Singleton
 
 @Singleton
 class SessionRepositoryImpl
-    @Inject
-    constructor(
-        @ApplicationContext private val context: Context,
-    ) : SessionRepository {
-        private val _currentSession = MutableStateFlow<SessionInfo?>(null)
-        private val sessionManager: SessionManager by lazy {
-            sessionManager.getInstance(context)
-        }
-
-        override suspend fun createSession(
-            sessionId: String?,
-            participantId: String?,
-            studyName: String?,
-            metadata: Map<String, String>,
-        ): SessionInfo {
-            val session =
-                sessionManager.createSession(
-                    sessionId = sessionId,
-                    participantId = participantId,
-                    studyName = studyName,
-                    metadata = metadata,
-                )
-            _currentSession.value = session
-            return session
-        }
-
-        override suspend fun completeSession(sessionId: String) {
-            sessionManager.completeSession(sessionId)
-            _currentSession.value = null
-        }
-
-        override fun getCurrentSession(): Flow<SessionInfo?> = _currentSession
+@Inject
+constructor(
+    @ApplicationContext private val context: Context,
+) : SessionRepository {
+    private val _currentSession = MutableStateFlow<SessionInfo?>(null)
+    private val sessionManager: SessionManager by lazy {
+        sessionManager.getInstance(context)
     }
+
+    override suspend fun createSession(
+        sessionId: String?,
+        participantId: String?,
+        studyName: String?,
+        metadata: Map<String, String>,
+    ): SessionInfo {
+        val session =
+            sessionManager.createSession(
+                sessionId = sessionId,
+                participantId = participantId,
+                studyName = studyName,
+                metadata = metadata,
+            )
+        _currentSession.value = session
+        return session
+    }
+
+    override suspend fun completeSession(sessionId: String) {
+        sessionManager.completeSession(sessionId)
+        _currentSession.value = null
+    }
+
+    override fun getCurrentSession(): Flow<SessionInfo?> = _currentSession
+}

@@ -60,7 +60,6 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":BleModule"))
     implementation(project(":libunified"))
-    implementation(project(":component:user"))
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose.core)
     implementation(libs.bundles.compose.icons)

@@ -345,7 +345,6 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation(project(":component:thermalunified"))
-    implementation(project(":component:user"))
     implementation(project(":libunified"))
     implementation(project(":BleModule"))
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))

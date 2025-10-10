@@ -1,19 +1,52 @@
 package mpdc4gsr.core.ui
 
-import androidx.compose.foundation.layout.*
+import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Camera
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.FiberManualRecord
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Storage
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -177,6 +210,7 @@ private fun PermissionStatusChip(
     name: String,
     status: PermissionRequestViewModel.PermissionStatus,
 ) {
+    val context = LocalContext.current
     val color =
         when (status) {
             PermissionRequestViewModel.PermissionStatus.GRANTED -> MaterialTheme.colorScheme.primary
@@ -191,8 +225,22 @@ private fun PermissionStatusChip(
             PermissionRequestViewModel.PermissionStatus.NOT_AVAILABLE -> "N/A"
             PermissionRequestViewModel.PermissionStatus.UNKNOWN -> "?"
         }
+    val statusDescription =
+        when (status) {
+            PermissionRequestViewModel.PermissionStatus.GRANTED -> "Permission granted"
+            PermissionRequestViewModel.PermissionStatus.DENIED -> "Permission required"
+            PermissionRequestViewModel.PermissionStatus.NOT_AVAILABLE -> "Not available on this device"
+            PermissionRequestViewModel.PermissionStatus.UNKNOWN -> "Status unknown"
+        }
     AssistChip(
-        onClick = { },
+        onClick = {
+            Toast
+                .makeText(
+                    context,
+                    "$name: $statusDescription",
+                    Toast.LENGTH_SHORT,
+                ).show()
+        },
         label = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(name, style = MaterialTheme.typography.labelSmall)

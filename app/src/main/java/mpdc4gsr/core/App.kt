@@ -20,6 +20,7 @@ import mpdc4gsr.core.ui.InitUtils.initLms
 import mpdc4gsr.core.ui.InitUtils.initLog
 import mpdc4gsr.core.ui.InitUtils.initReceiver
 import mpdc4gsr.core.ui.InitUtils.initUM
+import java.lang.ref.WeakReference
 
 @HiltAndroidApp
 class App : BaseApplication() {
@@ -49,6 +50,8 @@ class App : BaseApplication() {
     override fun isDomestic(): Boolean = false
 
     val activityNameList: MutableList<String> = mutableListOf()
+    private var foregroundActivityCount: Int = 0
+    private var currentActivityRef: WeakReference<Activity>? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -93,18 +96,55 @@ class App : BaseApplication() {
                     activity: Activity,
                     savedInstanceState: Bundle?,
                 ) {
-                    if (!activityNameList.contains(activity.javaClass.getSimpleName())) {
-                        activityNameList.add(activity.javaClass.getSimpleName())
+                    val activityName = activity.javaClass.simpleName
+                    if (!activityNameList.contains(activityName)) {
+                        activityNameList.add(activityName)
                     }
                 }
 
-                override fun onActivityStarted(activity: Activity) {}
+                override fun onActivityStarted(activity: Activity) {
+                    val activityName = activity.javaClass.simpleName
+                    activityNameList.remove(activityName)
+                    activityNameList.add(activityName)
+                    foregroundActivityCount += 1
+                    currentActivityRef = WeakReference(activity)
+                    if (foregroundActivityCount == 1) {
+                        mpdc4gsr.core.monitoring.TelemetryManager.trackEvent(
+                            "app_foreground",
+                            mapOf("activity" to activityName),
+                        )
+                    }
+                }
 
-                override fun onActivityResumed(activity: Activity) {}
+                override fun onActivityResumed(activity: Activity) {
+                    currentActivityRef = WeakReference(activity)
+                    mpdc4gsr.core.monitoring.TelemetryManager.trackScreenView(
+                        activity.javaClass.simpleName,
+                        activity.javaClass.name,
+                    )
+                }
 
-                override fun onActivityPaused(activity: Activity) {}
+                override fun onActivityPaused(activity: Activity) {
+                    mpdc4gsr.core.monitoring.TelemetryManager.trackEvent(
+                        "activity_paused",
+                        mapOf("activity" to activity.javaClass.simpleName),
+                    )
+                    currentActivityRef?.get()?.let {
+                        if (it === activity) {
+                            currentActivityRef = null
+                        }
+                    }
+                }
 
-                override fun onActivityStopped(activity: Activity) {}
+                override fun onActivityStopped(activity: Activity) {
+                    foregroundActivityCount = (foregroundActivityCount - 1).coerceAtLeast(0)
+                    if (foregroundActivityCount == 0) {
+                        mpdc4gsr.core.monitoring.TelemetryManager.trackEvent(
+                            "app_background",
+                            mapOf("last_activity" to activity.javaClass.simpleName),
+                        )
+                    }
+                }
 
                 override fun onActivitySaveInstanceState(
                     activity: Activity,
@@ -113,7 +153,12 @@ class App : BaseApplication() {
                 }
 
                 override fun onActivityDestroyed(activity: Activity) {
-                    activityNameList.remove(activity.javaClass.getSimpleName())
+                    activityNameList.remove(activity.javaClass.simpleName)
+                    currentActivityRef?.get()?.let {
+                        if (it === activity) {
+                            currentActivityRef = null
+                        }
+                    }
                 }
             },
         )

@@ -1,16 +1,56 @@
 package mpdc4gsr.feature.gsr.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Battery2Bar
+import androidx.compose.material.icons.filled.Battery3Bar
+import androidx.compose.material.icons.filled.Battery6Bar
+import androidx.compose.material.icons.filled.BatteryFull
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.FiberManualRecord
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.PowerOff
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.SignalCellularAlt
+import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,7 +106,7 @@ fun GSRQuickRecordingScreen(
                 // Simulate GSR reading
                 val newValue =
                     12.0 + 4.0 * sin(recordingDuration * 0.01) +
-                        (Math.random() - 0.5) * 2.0
+                            (Math.random() - 0.5) * 2.0
                 currentGSRValue = newValue
                 val newReading =
                     GSRReading(
@@ -174,6 +214,7 @@ fun DeviceStatusCard(
     signalQuality: SignalQuality,
     onConnect: () -> Unit,
 ) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
@@ -333,6 +374,7 @@ fun GSRDisplayCard(
     readings: List<GSRReading>,
     signalQuality: SignalQuality,
 ) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
@@ -403,6 +445,7 @@ fun GSRDisplayCard(
 }
 
 @Composable
+@Composable
 fun RecordingControlsCard(
     recordingState: RecordingState,
     duration: Int,
@@ -411,6 +454,7 @@ fun RecordingControlsCard(
     onResumeRecording: () -> Unit,
     onStopRecording: () -> Unit,
 ) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
@@ -419,7 +463,6 @@ fun RecordingControlsCard(
             modifier = Modifier.padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // Duration Display
             if (recordingState == RecordingState.RECORDING ||
                 recordingState == RecordingState.PAUSED ||
                 recordingState == RecordingState.COMPLETED
@@ -432,7 +475,6 @@ fun RecordingControlsCard(
                     modifier = Modifier.padding(bottom = 16.dp),
                 )
             }
-            // Control Buttons
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
@@ -497,9 +539,15 @@ fun RecordingControlsCard(
                     }
 
                     else -> {
-                        // Show disabled button
                         FloatingActionButton(
-                            onClick = { },
+                            onClick = {
+                                Toast
+                                    .makeText(
+                                        context,
+                                        "Connect a GSR device to start recording",
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                            },
                             containerColor = Color(0xFF404040),
                         ) {
                             Icon(
@@ -511,9 +559,8 @@ fun RecordingControlsCard(
                     }
                 }
             }
-            // Status Text
+            Spacer(modifier = Modifier.height(12.dp))
             if (recordingState != RecordingState.IDLE) {
-                Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text =
                         when (recordingState) {
@@ -528,12 +575,17 @@ fun RecordingControlsCard(
                     fontSize = 14.sp,
                     color = Color(0xFFCCFFFFFF),
                 )
+            } else {
+                Text(
+                    text = "Connect your GSR device to begin recording.",
+                    fontSize = 14.sp,
+                    color = Color(0xFF777777),
+                )
             }
         }
     }
 }
 
-@Composable
 fun SessionSummaryCard(readings: List<GSRReading>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -630,9 +682,9 @@ fun QuickSetupCard(onStartSetup: () -> Unit) {
             Text(
                 text =
                     "1. Turn on your Shimmer3 GSR device\n" +
-                        "2. Ensure Bluetooth is enabled\n" +
-                        "3. Attach GSR electrodes to fingers\n" +
-                        "4. Tap 'Connect Device' to begin",
+                            "2. Ensure Bluetooth is enabled\n" +
+                            "3. Attach GSR electrodes to fingers\n" +
+                            "4. Tap 'Connect Device' to begin",
                 fontSize = 14.sp,
                 color = Color(0xFFCCFFFFFF),
                 lineHeight = 20.sp,

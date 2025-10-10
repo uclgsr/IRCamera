@@ -10,7 +10,11 @@ object PreviewIntegration {
             val adapter = getPreviewDataAdapter(context)
             adapter?.updateRgbFrame(rgbFrame)
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("PreviewIntegration", "Unexpected Exception in PreviewIntegration catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "PreviewIntegration",
+                "Unexpected Exception in PreviewIntegration catch block",
+                e
+            )
         }
     }
 
@@ -19,7 +23,11 @@ object PreviewIntegration {
             val adapter = getPreviewDataAdapter(context)
             adapter?.updateThermalFrameDirect(thermalFrame)
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("PreviewIntegration", "Unexpected Exception in PreviewIntegration catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "PreviewIntegration",
+                "Unexpected Exception in PreviewIntegration catch block",
+                e
+            )
         }
     }
 
@@ -28,7 +36,11 @@ object PreviewIntegration {
             val adapter = getPreviewDataAdapter(context)
             adapter?.updateGsrValueDirect(gsrValue)
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("PreviewIntegration", "Unexpected Exception in PreviewIntegration catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "PreviewIntegration",
+                "Unexpected Exception in PreviewIntegration catch block",
+                e
+            )
         }
     }
 
@@ -67,7 +79,11 @@ object PreviewIntegration {
                 jpegQuality
             )
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("PreviewIntegration", "Unexpected Exception in PreviewIntegration catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "PreviewIntegration",
+                "Unexpected Exception in PreviewIntegration catch block",
+                e
+            )
         }
     }
 
@@ -93,7 +109,11 @@ fun com.mpdc4gsr.module.thermalunified.tools.CameraPreviewManager.updatePreview(
             PreviewIntegration.updateThermalFrame(context, bitmap)
         }
     } catch (e: Exception) {
-        mpdc4gsr.core.utils.AppLogger.e("PreviewIntegration", "Unexpected Exception in PreviewIntegration catch block", e)
+        mpdc4gsr.core.utils.AppLogger.e(
+            "PreviewIntegration",
+            "Unexpected Exception in PreviewIntegration catch block",
+            e
+        )
     }
 }
 

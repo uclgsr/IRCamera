@@ -93,6 +93,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var currentPage by remember { mutableStateOf(1) }
         var totalPages by remember { mutableStateOf(5) }
         var showNavigationBookmarks by remember { mutableStateOf(false) }
+        var isFitToScreen by remember { mutableStateOf(false) }
         Column(
             modifier =
                 modifier
@@ -155,11 +156,11 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 tint = Color.White,
                             )
                         }
-                        IconButton(onClick = { }) {
+                        IconButton(onClick = { isFitToScreen = !isFitToScreen }) {
                             Icon(
                                 Icons.Default.FitScreen,
                                 contentDescription = "Fit to screen",
-                                tint = Color.White,
+                                tint = if (isFitToScreen) Color(0xFFFFA726) else Color.White,
                             )
                         }
                     }
@@ -187,11 +188,12 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 shape = RoundedCornerShape(12.dp),
             ) {
+                val contentPadding = if (isFitToScreen) 12.dp else 24.dp
                 Column(
                     modifier =
                         Modifier
                             .fillMaxSize()
-                            .padding(24.dp)
+                            .padding(contentPadding)
                             .verticalScroll(rememberScrollState()),
                 ) {
                     when (currentPage) {

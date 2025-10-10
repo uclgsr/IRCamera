@@ -49,10 +49,24 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                             }
                         },
                         actions = {
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = {
+                                android.widget.Toast
+                                    .makeText(
+                                        this@ReportPickImgComposeActivity,
+                                        "Search feature coming soon",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
+                            }) {
                                 Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
                             }
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = {
+                                android.widget.Toast
+                                    .makeText(
+                                        this@ReportPickImgComposeActivity,
+                                        "Filter options coming soon",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
+                            }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter", tint = Color.White)
                             }
                         },

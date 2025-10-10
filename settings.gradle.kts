@@ -21,6 +21,5 @@ rootProject.name = "MPDC4GSR"
 include(":app")
 include(":component:thermalunified")
 project(":component:thermalunified").projectDir = file("thermalunified")
-include(":component:user")
 include(":libunified")
 include(":BleModule")

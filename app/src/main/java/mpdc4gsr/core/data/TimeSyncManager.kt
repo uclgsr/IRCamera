@@ -1,7 +1,15 @@
 package mpdc4gsr.core.data
 
 import android.content.Context
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import mpdc4gsr.core.data.utils.TimeManager
 import java.io.File
 import java.io.FileWriter
@@ -446,13 +454,13 @@ class TimeSyncManager(
             "periodic_sync_enabled" to periodicSyncEnabled.get(),
             "sync_quality_metrics" to qualityMetrics,
             "configuration" to
-                mapOf(
-                    "periodic_interval_ms" to syncConfig.periodicSyncIntervalMs,
-                    "max_retries" to syncConfig.maxSyncRetries,
-                    "timeout_ms" to syncConfig.syncTimeoutMs,
-                    "json_logging_enabled" to syncConfig.enableJsonLogging,
-                    "csv_logging_enabled" to syncConfig.enableCsvLogging,
-                ),
+                    mapOf(
+                        "periodic_interval_ms" to syncConfig.periodicSyncIntervalMs,
+                        "max_retries" to syncConfig.maxSyncRetries,
+                        "timeout_ms" to syncConfig.syncTimeoutMs,
+                        "json_logging_enabled" to syncConfig.enableJsonLogging,
+                        "csv_logging_enabled" to syncConfig.enableCsvLogging,
+                    ),
         )
     }
 

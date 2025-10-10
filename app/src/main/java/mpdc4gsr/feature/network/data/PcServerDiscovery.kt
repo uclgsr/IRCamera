@@ -112,7 +112,11 @@ class PcServerDiscovery(private val context: Context) {
                         // No response from this broadcast address
                     }
                 } catch (e: Exception) {
-                    mpdc4gsr.core.utils.AppLogger.e("PcServerDiscovery", "Unexpected Exception in PcServerDiscovery catch block", e)
+                    mpdc4gsr.core.utils.AppLogger.e(
+                        "PcServerDiscovery",
+                        "Unexpected Exception in PcServerDiscovery catch block",
+                        e
+                    )
                 }
             }
             socket.close()
@@ -149,7 +153,11 @@ class PcServerDiscovery(private val context: Context) {
                     }
                 }
             } catch (e: Exception) {
-                mpdc4gsr.core.utils.AppLogger.e("PcServerDiscovery", "Unexpected Exception in PcServerDiscovery catch block", e)
+                mpdc4gsr.core.utils.AppLogger.e(
+                    "PcServerDiscovery",
+                    "Unexpected Exception in PcServerDiscovery catch block",
+                    e
+                )
             }
             servers
         }
@@ -235,7 +243,11 @@ class PcServerDiscovery(private val context: Context) {
                 }
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("PcServerDiscovery", "Unexpected Exception in PcServerDiscovery catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "PcServerDiscovery",
+                "Unexpected Exception in PcServerDiscovery catch block",
+                e
+            )
         }
         // Fallback to common broadcast addresses
         if (addresses.isEmpty()) {
@@ -264,7 +276,11 @@ class PcServerDiscovery(private val context: Context) {
                 }
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("PcServerDiscovery", "Unexpected Exception in PcServerDiscovery catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "PcServerDiscovery",
+                "Unexpected Exception in PcServerDiscovery catch block",
+                e
+            )
         }
         return null
     }

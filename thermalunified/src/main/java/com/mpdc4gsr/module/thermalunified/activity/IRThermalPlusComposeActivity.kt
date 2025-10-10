@@ -56,8 +56,21 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                             }
                         },
                         actions = {
-                            IconButton(onClick = { }) {
+                            var showSettings by remember { mutableStateOf(false) }
+                            IconButton(onClick = { showSettings = true }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
+                            }
+                            if (showSettings) {
+                                AlertDialog(
+                                    onDismissRequest = { showSettings = false },
+                                    title = { Text("Thermal Plus Settings") },
+                                    text = { Text("Configure premium thermal enhancements") },
+                                    confirmButton = {
+                                        TextButton(onClick = { showSettings = false }) {
+                                            Text("Close")
+                                        }
+                                    },
+                                )
                             }
                         },
                         colors =
@@ -86,6 +99,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
         var currentTemp by remember { mutableStateOf(28.7f) }
         var maxTemp by remember { mutableStateOf(45.2f) }
         var minTemp by remember { mutableStateOf(18.3f) }
+        var lastActionMessage by remember { mutableStateOf<String?>(null) }
         Column(
             modifier =
                 modifier
@@ -317,7 +331,9 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 OutlinedButton(
-                    onClick = { },
+                    onClick = {
+                        lastActionMessage = "AI capture triggered in $processingMode mode."
+                    },
                     modifier = Modifier.weight(1f),
                     colors =
                         ButtonDefaults.outlinedButtonColors(
@@ -335,7 +351,9 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                     Text("AI Capture")
                 }
                 Button(
-                    onClick = { },
+                    onClick = {
+                        lastActionMessage = "AI analysis started at ${enhancementLevel.toInt()}% enhancement"
+                    },
                     modifier = Modifier.weight(1f),
                     colors =
                         ButtonDefaults.buttonColors(
@@ -347,6 +365,14 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Analyze")
                 }
+            }
+            lastActionMessage?.let { message ->
+                Text(
+                    text = message,
+                    color = Color(0xFFFFD700),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
         }
     }

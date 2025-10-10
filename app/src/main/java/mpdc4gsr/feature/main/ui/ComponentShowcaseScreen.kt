@@ -187,6 +187,7 @@ private fun InteractiveComponentsShowcase() {
     var sliderValue by remember { mutableFloatStateOf(0.5f) }
     var switchState by remember { mutableStateOf(true) }
     var selectedChip by remember { mutableStateOf("Option 1") }
+    var lastInteraction by remember { mutableStateOf<String?>(null) }
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall),
@@ -207,19 +208,25 @@ private fun InteractiveComponentsShowcase() {
                 horizontalArrangement = Arrangement.spacedBy(Spacing.small),
             ) {
                 Button(
-                    onClick = { },
+                    onClick = {
+                        lastInteraction = "Primary button pressed"
+                    },
                     modifier = Modifier.weight(1f),
                 ) {
                     Text("Button")
                 }
                 OutlinedButton(
-                    onClick = { },
+                    onClick = {
+                        lastInteraction = "Outlined button pressed"
+                    },
                     modifier = Modifier.weight(1f),
                 ) {
                     Text("Outlined")
                 }
                 TextButton(
-                    onClick = { },
+                    onClick = {
+                        lastInteraction = "Text button pressed"
+                    },
                     modifier = Modifier.weight(1f),
                 ) {
                     Text("Text")
@@ -230,7 +237,10 @@ private fun InteractiveComponentsShowcase() {
                 Text("Slider: ${(sliderValue * 100).toInt()}%")
                 Slider(
                     value = sliderValue,
-                    onValueChange = { sliderValue = it },
+                    onValueChange = {
+                        sliderValue = it
+                        lastInteraction = "Slider set to ${(it * 100).toInt()}%"
+                    },
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -243,7 +253,10 @@ private fun InteractiveComponentsShowcase() {
                 Text("Switch Control")
                 Switch(
                     checked = switchState,
-                    onCheckedChange = { switchState = it },
+                    onCheckedChange = {
+                        switchState = it
+                        lastInteraction = if (it) "Switch enabled" else "Switch disabled"
+                    },
                 )
             }
             // Filter Chips
@@ -252,11 +265,21 @@ private fun InteractiveComponentsShowcase() {
             ) {
                 listOf("Option 1", "Option 2", "Option 3").forEach { option ->
                     FilterChip(
-                        onClick = { selectedChip = option },
+                        onClick = {
+                            selectedChip = option
+                            lastInteraction = "$option selected"
+                        },
                         label = { Text(option) },
                         selected = selectedChip == option,
                     )
                 }
+            }
+            lastInteraction?.let { interaction ->
+                Text(
+                    text = "Last interaction: $interaction",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                )
             }
         }
     }
@@ -351,6 +374,7 @@ private fun StatusIcon(
 
 @Composable
 private fun CardLayoutsShowcase() {
+    var cardInteraction by remember { mutableStateOf<String?>(null) }
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall),
@@ -404,7 +428,9 @@ private fun CardLayoutsShowcase() {
             }
             // Action card
             Card(
-                onClick = { },
+                onClick = {
+                    cardInteraction = "Action card tapped"
+                },
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Row(
@@ -440,6 +466,13 @@ private fun CardLayoutsShowcase() {
                         tint = MaterialTheme.colorScheme.outline,
                     )
                 }
+            }
+            cardInteraction?.let { message ->
+                Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                )
             }
         }
     }

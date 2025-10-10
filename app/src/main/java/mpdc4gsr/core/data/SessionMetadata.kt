@@ -290,126 +290,126 @@ data class SessionMetadata(
     private fun buildComprehensiveMetadata(): Map<String, Any> =
         mapOf(
             "session_header" to
-                mapOf(
-                    "session_id" to sessionId,
-                    "session_name" to (sessionName ?: "Unnamed Session"),
-                    "study_name" to (studyName ?: ""),
-                    "participant_id" to (participantId ?: ""),
-                    "user_notes" to (userNotes ?: ""),
-                    "experimental_conditions" to experimentalConditions,
-                ),
+                    mapOf(
+                        "session_id" to sessionId,
+                        "session_name" to (sessionName ?: "Unnamed Session"),
+                        "study_name" to (studyName ?: ""),
+                        "participant_id" to (participantId ?: ""),
+                        "user_notes" to (userNotes ?: ""),
+                        "experimental_conditions" to experimentalConditions,
+                    ),
             "timing_information" to
-                mapOf(
-                    "session_start_utc_ms" to sessionStartTimestampMs,
-                    "session_start_iso" to sessionStartIso,
-                    "session_start_monotonic_ns" to sessionStartMonotonicNs,
-                    "session_end_utc_ms" to sessionEndTimestampMs,
-                    "session_end_iso" to sessionEndIso,
-                    "session_end_monotonic_ns" to sessionEndMonotonicNs,
-                    "recording_duration_ms" to recordingDurationMs,
-                    "timing_source" to timingSource,
-                ),
+                    mapOf(
+                        "session_start_utc_ms" to sessionStartTimestampMs,
+                        "session_start_iso" to sessionStartIso,
+                        "session_start_monotonic_ns" to sessionStartMonotonicNs,
+                        "session_end_utc_ms" to sessionEndTimestampMs,
+                        "session_end_iso" to sessionEndIso,
+                        "session_end_monotonic_ns" to sessionEndMonotonicNs,
+                        "recording_duration_ms" to recordingDurationMs,
+                        "timing_source" to timingSource,
+                    ),
             "device_information" to
-                mapOf(
-                    "primary_device" to deviceInfo,
-                    "software_versions" to softwareVersions,
-                    "environmental_conditions" to environmentalConditions,
-                ),
+                    mapOf(
+                        "primary_device" to deviceInfo,
+                        "software_versions" to softwareVersions,
+                        "environmental_conditions" to environmentalConditions,
+                    ),
             "network_synchronization" to
-                mapOf(
-                    "pc_controller_sync" to networkSyncInfo,
-                    "sync_events" to
-                        syncEvents.map { syncEvent ->
-                            mapOf(
-                                "event_type" to syncEvent.eventType,
-                                "timestamp_ms" to syncEvent.timestampMs,
-                                "monotonic_offset_ns" to syncEvent.monotonicOffsetNs,
-                                "metadata" to syncEvent.metadata,
-                            )
-                        },
-                ),
+                    mapOf(
+                        "pc_controller_sync" to networkSyncInfo,
+                        "sync_events" to
+                                syncEvents.map { syncEvent ->
+                                    mapOf(
+                                        "event_type" to syncEvent.eventType,
+                                        "timestamp_ms" to syncEvent.timestampMs,
+                                        "monotonic_offset_ns" to syncEvent.monotonicOffsetNs,
+                                        "metadata" to syncEvent.metadata,
+                                    )
+                                },
+                    ),
             "sensor_summaries" to
-                sensorSummaries.mapValues { (sensorId, summary) ->
-                    mapOf(
-                        "sensor_id" to summary.sensorId,
-                        "sensor_type" to summary.sensorType,
-                        "timing" to
-                            mapOf(
-                                "start_timestamp_ns" to summary.startTimestampNs,
-                                "start_timestamp_ms" to summary.startTimestampMs,
-                                "relative_start_ms" to summary.relativeStartMs,
-                                "stop_timestamp_ns" to summary.stopTimestampNs,
-                                "stop_timestamp_ms" to summary.stopTimestampMs,
-                                "relative_stop_ms" to summary.relativeStopMs,
-                            ),
-                        "performance" to
-                            mapOf(
-                                "samples_recorded" to summary.samplesRecorded,
-                                "average_data_rate" to summary.averageDataRate,
-                                "dropped_samples" to summary.droppedSamples,
-                                "sync_markers" to summary.syncMarkers,
-                                "storage_used_mb" to summary.storageUsedMb,
-                            ),
-                        "status" to summary.status,
-                        "errors" to summary.errors,
-                        "metadata" to summary.metadata,
-                    )
-                },
+                    sensorSummaries.mapValues { (sensorId, summary) ->
+                        mapOf(
+                            "sensor_id" to summary.sensorId,
+                            "sensor_type" to summary.sensorType,
+                            "timing" to
+                                    mapOf(
+                                        "start_timestamp_ns" to summary.startTimestampNs,
+                                        "start_timestamp_ms" to summary.startTimestampMs,
+                                        "relative_start_ms" to summary.relativeStartMs,
+                                        "stop_timestamp_ns" to summary.stopTimestampNs,
+                                        "stop_timestamp_ms" to summary.stopTimestampMs,
+                                        "relative_stop_ms" to summary.relativeStopMs,
+                                    ),
+                            "performance" to
+                                    mapOf(
+                                        "samples_recorded" to summary.samplesRecorded,
+                                        "average_data_rate" to summary.averageDataRate,
+                                        "dropped_samples" to summary.droppedSamples,
+                                        "sync_markers" to summary.syncMarkers,
+                                        "storage_used_mb" to summary.storageUsedMb,
+                                    ),
+                            "status" to summary.status,
+                            "errors" to summary.errors,
+                            "metadata" to summary.metadata,
+                        )
+                    },
             "calibration_data" to
-                calibrationInfo.mapValues { (sensorType, calibration) ->
-                    mapOf(
-                        "sensor_type" to calibration.sensorType,
-                        "calibration_timestamp" to calibration.calibrationTimestamp,
-                        "parameters" to calibration.calibrationParameters,
-                        "accuracy_metrics" to calibration.accuracyMetrics,
-                        "validation_status" to calibration.validationStatus,
-                        "notes" to calibration.calibrationNotes,
-                    )
-                },
+                    calibrationInfo.mapValues { (sensorType, calibration) ->
+                        mapOf(
+                            "sensor_type" to calibration.sensorType,
+                            "calibration_timestamp" to calibration.calibrationTimestamp,
+                            "parameters" to calibration.calibrationParameters,
+                            "accuracy_metrics" to calibration.accuracyMetrics,
+                            "validation_status" to calibration.validationStatus,
+                            "notes" to calibration.calibrationNotes,
+                        )
+                    },
             "data_files" to
-                mapOf(
-                    "modality_files" to modalityFiles,
-                    "file_schema" to
-                        mapOf(
-                            "thermal_data_csv" to
-                                mpdc4gsr.core.data
-                                    .FileSchemaManager()
-                                    .generateCsvHeader("thermal", includeUnits = false),
-                            "rgb_data_csv" to
-                                mpdc4gsr.core.data
-                                    .FileSchemaManager()
-                                    .generateCsvHeader("rgb", includeUnits = false),
-                            "gsr_data_csv" to
-                                mpdc4gsr.core.data
-                                    .FileSchemaManager()
-                                    .generateCsvHeader("gsr", includeUnits = false),
-                            "audio_data_csv" to
-                                mpdc4gsr.core.data
-                                    .FileSchemaManager()
-                                    .generateCsvHeader("audio", includeUnits = false),
-                        ),
-                ),
+                    mapOf(
+                        "modality_files" to modalityFiles,
+                        "file_schema" to
+                                mapOf(
+                                    "thermal_data_csv" to
+                                            mpdc4gsr.core.data
+                                                .FileSchemaManager()
+                                                .generateCsvHeader("thermal", includeUnits = false),
+                                    "rgb_data_csv" to
+                                            mpdc4gsr.core.data
+                                                .FileSchemaManager()
+                                                .generateCsvHeader("rgb", includeUnits = false),
+                                    "gsr_data_csv" to
+                                            mpdc4gsr.core.data
+                                                .FileSchemaManager()
+                                                .generateCsvHeader("gsr", includeUnits = false),
+                                    "audio_data_csv" to
+                                            mpdc4gsr.core.data
+                                                .FileSchemaManager()
+                                                .generateCsvHeader("audio", includeUnits = false),
+                                ),
+                    ),
             "quality_assurance" to
-                mapOf(
-                    "quality_metrics" to qualityMetrics,
-                    "data_integrity_checks" to dataIntegrityChecks,
-                    "stop_results" to stopResults,
-                    "validation_summary" to
-                        mapOf(
-                            "overall_quality_score" to qualityMetrics.overallQualityScore,
-                            "sync_accuracy_ms" to qualityMetrics.syncAccuracyMs,
-                            "data_completeness_percent" to qualityMetrics.dataCompletenessPercent,
-                            "total_errors" to qualityMetrics.errorCount,
-                            "total_warnings" to qualityMetrics.warningCount,
-                        ),
-                ),
+                    mapOf(
+                        "quality_metrics" to qualityMetrics,
+                        "data_integrity_checks" to dataIntegrityChecks,
+                        "stop_results" to stopResults,
+                        "validation_summary" to
+                                mapOf(
+                                    "overall_quality_score" to qualityMetrics.overallQualityScore,
+                                    "sync_accuracy_ms" to qualityMetrics.syncAccuracyMs,
+                                    "data_completeness_percent" to qualityMetrics.dataCompletenessPercent,
+                                    "total_errors" to qualityMetrics.errorCount,
+                                    "total_warnings" to qualityMetrics.warningCount,
+                                ),
+                    ),
             "export_information" to
-                mapOf(
-                    "export_timestamp" to System.currentTimeMillis(),
-                    "export_version" to "1.2.0",
-                    "format_specification" to "IRCamera Enhanced Metadata v1.2",
-                    "data_completeness" to "Full session metadata with all sensor contributions",
-                ),
+                    mapOf(
+                        "export_timestamp" to System.currentTimeMillis(),
+                        "export_version" to "1.2.0",
+                        "format_specification" to "IRCamera Enhanced Metadata v1.2",
+                        "data_completeness" to "Full session metadata with all sensor contributions",
+                    ),
         )
 
     fun updateQualityMetrics(

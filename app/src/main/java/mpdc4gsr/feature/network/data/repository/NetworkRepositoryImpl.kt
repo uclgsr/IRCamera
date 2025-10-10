@@ -3,6 +3,8 @@ package mpdc4gsr.feature.network.data.repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import mpdc4gsr.core.monitoring.TelemetryManager
+import mpdc4gsr.core.session.SessionInfo
 import mpdc4gsr.feature.network.data.NetworkClient
 import mpdc4gsr.feature.network.data.datasource.NetworkDataSource
 import mpdc4gsr.feature.network.domain.model.ConnectionState
@@ -100,15 +102,31 @@ class NetworkRepositoryImpl @Inject constructor(
                 _connectionState.tryEmit(ConnectionState.Disconnected)
             }
 
-            override fun onRemoteMeasurementRequest(sessionInfo: mpdc4gsr.core.session.SessionInfo) {}
+            override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
+                TelemetryManager.trackEvent(
+                    "remote_measurement_request",
+                    mapOf("session_id" to sessionInfo.sessionId),
+                )
+            }
 
-            override fun onSyncFlash(durationMs: Int) {}
+            override fun onSyncFlash(durationMs: Int) {
+                TelemetryManager.trackEvent(
+                    "sync_flash_requested",
+                    mapOf("duration_ms" to durationMs),
+                )
+            }
 
-            override fun onTimeSynchronized(offsetNanoseconds: Long) {}
+            override fun onTimeSynchronized(offsetNanoseconds: Long) {
+                TelemetryManager.setProperty("network_time_offset_ns", offsetNanoseconds.toString())
+            }
 
-            override fun onDataStreamingStarted() {}
+            override fun onDataStreamingStarted() {
+                TelemetryManager.trackEvent("data_streaming_started")
+            }
 
-            override fun onDataStreamingStopped() {}
+            override fun onDataStreamingStopped() {
+                TelemetryManager.trackEvent("data_streaming_stopped")
+            }
 
             override fun onError(operation: String, error: String) {
                 _connectionState.tryEmit(ConnectionState.Error(NetworkError.Unknown(error)))

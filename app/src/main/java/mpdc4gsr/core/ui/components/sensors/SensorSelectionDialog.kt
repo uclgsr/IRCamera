@@ -291,7 +291,12 @@ private fun SelectionStatusTag(
 ) {
     val (label, container, content) =
         when {
-            !available -> Triple("Unavailable", MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.colorScheme.error)
+            !available -> Triple(
+                "Unavailable",
+                MaterialTheme.colorScheme.surfaceVariant,
+                MaterialTheme.colorScheme.error
+            )
+
             isSelected -> Triple("Selected", MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.onPrimary)
             else ->
                 Triple(

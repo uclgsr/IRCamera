@@ -1,12 +1,20 @@
 package mpdc4gsr.core
 
 import android.content.Context
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
@@ -354,8 +362,8 @@ class SessionManager(
         val needsSync =
             devices.any { device ->
                 device.connectionQuality == ConnectionQuality.POOR ||
-                    device.connectionQuality == ConnectionQuality.UNSTABLE ||
-                    kotlin.math.abs(device.syncOffset) > 5_000_000L
+                        device.connectionQuality == ConnectionQuality.UNSTABLE ||
+                        kotlin.math.abs(device.syncOffset) > 5_000_000L
             }
         if (needsSync && session.state == SessionState.ACTIVE) {
             onSyncRequired?.invoke(devices)

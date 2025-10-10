@@ -117,7 +117,7 @@ private fun TitleBarPreview() {
             TitleBarAction(
                 icon = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Settings",
-                onClick = { },
+                onClick = { println("Settings action tapped") },
             )
         }
     }

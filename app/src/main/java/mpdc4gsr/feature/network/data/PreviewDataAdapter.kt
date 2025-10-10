@@ -7,10 +7,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.cancel
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import java.util.concurrent.atomic.AtomicReference
@@ -28,6 +28,7 @@ class PreviewDataAdapter(
     private val thermalCameraManager = AtomicReference<CameraPreviewManager?>()
     private val gsrRecorder = AtomicReference<GSRSensorRecorder?>()
     private var pollingJob: Job? = null
+
     @Volatile
     private var isRunning = false
 
@@ -74,7 +75,11 @@ class PreviewDataAdapter(
                 ?.takeUnless { it.isRecycled }
                 ?.let(previewStreamer::updateThermalFrame)
         } catch (exception: Throwable) {
-            mpdc4gsr.core.utils.AppLogger.e("PreviewDataAdapter", "Unexpected Throwable in PreviewDataAdapter catch block", exception)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "PreviewDataAdapter",
+                "Unexpected Throwable in PreviewDataAdapter catch block",
+                exception
+            )
         }
     }
 
@@ -91,7 +96,11 @@ class PreviewDataAdapter(
                 previewStreamer.updateGsrValue(gsrValue)
             }
         } catch (exception: Throwable) {
-            mpdc4gsr.core.utils.AppLogger.e("PreviewDataAdapter", "Unexpected Throwable in PreviewDataAdapter catch block", exception)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "PreviewDataAdapter",
+                "Unexpected Throwable in PreviewDataAdapter catch block",
+                exception
+            )
         }
     }
 
@@ -105,7 +114,11 @@ class PreviewDataAdapter(
             }
             previewStreamer.updateRecordingStatus(status)
         } catch (exception: Throwable) {
-            mpdc4gsr.core.utils.AppLogger.e("PreviewDataAdapter", "Unexpected Throwable in PreviewDataAdapter catch block", exception)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "PreviewDataAdapter",
+                "Unexpected Throwable in PreviewDataAdapter catch block",
+                exception
+            )
         }
     }
 

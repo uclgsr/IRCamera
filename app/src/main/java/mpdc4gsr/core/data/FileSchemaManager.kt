@@ -459,12 +459,12 @@ class FileSchemaManager {
         return mapOf(
             "schemas" to allSchemas,
             "global_requirements" to
-                mapOf(
-                    "mandatory_timestamp_column" to MANDATORY_TIMESTAMP_COLUMN,
-                    "timestamp_format" to TIMESTAMP_FORMAT,
-                    "file_naming_pattern" to FILE_NAME_PATTERN,
-                    "required_directories" to REQUIRED_DIRECTORIES,
-                ),
+                    mapOf(
+                        "mandatory_timestamp_column" to MANDATORY_TIMESTAMP_COLUMN,
+                        "timestamp_format" to TIMESTAMP_FORMAT,
+                        "file_naming_pattern" to FILE_NAME_PATTERN,
+                        "required_directories" to REQUIRED_DIRECTORIES,
+                    ),
         )
     }
 }

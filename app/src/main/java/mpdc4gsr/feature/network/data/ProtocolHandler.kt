@@ -143,7 +143,11 @@ class ProtocolHandler(
             try {
                 syncManager.completeSyncCalculation(t1, t2, t3, offset, rtt, 0)
             } catch (e: Exception) {
-                mpdc4gsr.core.utils.AppLogger.e("ProtocolHandler", "Unexpected Exception in ProtocolHandler catch block", e)
+                mpdc4gsr.core.utils.AppLogger.e(
+                    "ProtocolHandler",
+                    "Unexpected Exception in ProtocolHandler catch block",
+                    e
+                )
             }
             null // No response needed for SYNC_RESULT
         } catch (e: Exception) {

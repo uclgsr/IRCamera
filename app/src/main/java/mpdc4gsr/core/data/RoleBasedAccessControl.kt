@@ -67,7 +67,8 @@ class RoleBasedAccessControl(
         ADMINISTRATOR(4, "Administrator", setOf(PERM_ALL)),
         ;
 
-        fun hasPermission(permission: String): Boolean = permissions.contains(PERM_ALL) || permissions.contains(permission)
+        fun hasPermission(permission: String): Boolean =
+            permissions.contains(PERM_ALL) || permissions.contains(permission)
 
         fun hasAllPermissions(requiredPermissions: Set<String>): Boolean {
             if (permissions.contains(PERM_ALL)) return true

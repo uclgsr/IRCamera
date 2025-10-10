@@ -228,8 +228,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     protected void prepareValuePxMatrix() {
 
-        if (mLogEnabled)
-
+        logDebug("Preparing value to pixel matrices");
         mRightAxisTransformer.prepareMatrixValuePx(mXAxis.mAxisMinimum,
                 mXAxis.mAxisRange,
                 mAxisRight.mAxisRange,
@@ -250,10 +249,10 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     public void notifyDataSetChanged() {
 
         if (mData == null) {
-            if (mLogEnabled)
+            logDebug("notifyDataSetChanged skipped: data is null");
             return;
         } else {
-            if (mLogEnabled)
+            logDebug("notifyDataSetChanged executing");
         }
 
         if (mRenderer != null)
@@ -426,8 +425,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
                     Math.max(minOffset, offsetRight),
                     Math.max(minOffset, offsetBottom));
 
-            if (mLogEnabled) {
-            }
+            logDebug("Viewport offsets - L:" + offsetLeft + " T:" + offsetTop + " R:" + offsetRight + " B:" + offsetBottom);
         }
 
         prepareOffsetMatrix();

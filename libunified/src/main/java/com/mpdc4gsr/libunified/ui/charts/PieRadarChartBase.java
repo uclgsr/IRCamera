@@ -218,7 +218,7 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
 
         mViewPortHandler.restrainViewPort(offsetLeft, offsetTop, offsetRight, offsetBottom);
 
-        if (mLogEnabled)
+        logDebug("Pie/Radar viewport offsets - L:" + offsetLeft + " T:" + offsetTop + " R:" + offsetRight + " B:" + offsetBottom);
     }
 
     public float getAngleForPoint(float x, float y) {

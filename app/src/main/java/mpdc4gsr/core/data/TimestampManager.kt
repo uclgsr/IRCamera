@@ -138,10 +138,10 @@ data class SessionTimestampReference(
 ) {
     fun toCsvMetadata(): String =
         "# Session Reference Timestamps\n" +
-            "# session_start_elapsed_ms=$sessionStartElapsedMs\n" +
-            "# session_start_system_ms=$sessionStartSystemMs\n" +
-            "# session_start_monotonic_ns=$sessionStartMonotonicNs\n" +
-            "# boot_time_reference_ms=$bootTimeReferenceMs\n"
+                "# session_start_elapsed_ms=$sessionStartElapsedMs\n" +
+                "# session_start_system_ms=$sessionStartSystemMs\n" +
+                "# session_start_monotonic_ns=$sessionStartMonotonicNs\n" +
+                "# boot_time_reference_ms=$bootTimeReferenceMs\n"
 }
 
 data class TimestampRecord(

@@ -2,11 +2,14 @@ package mpdc4gsr.feature.thermal.ui
 
 import android.content.Context
 import android.graphics.Bitmap
-import mpdc4gsr.core.utils.AppLogger
-import mpdc4gsr.core.utils.ErrorHandler
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.core.data.TimestampManager
+import mpdc4gsr.core.utils.AppLogger
 import java.io.File
 import java.io.FileOutputStream
 import java.io.FileWriter

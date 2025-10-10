@@ -9,7 +9,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,7 +25,14 @@ import mpdc4gsr.core.ui.components.sensors.GSRSensorCard
 import mpdc4gsr.core.ui.components.sensors.RGBCameraSensorCard
 import mpdc4gsr.core.ui.components.sensors.ThermalSensorCard
 import mpdc4gsr.core.ui.components.sensors.UnifiedSensorStatus
-import mpdc4gsr.core.ui.model.*
+import mpdc4gsr.core.ui.model.CameraAction
+import mpdc4gsr.core.ui.model.GSRAction
+import mpdc4gsr.core.ui.model.SensorInfo
+import mpdc4gsr.core.ui.model.SensorState
+import mpdc4gsr.core.ui.model.SensorType
+import mpdc4gsr.core.ui.model.SystemAction
+import mpdc4gsr.core.ui.model.ThermalAction
+import mpdc4gsr.core.ui.model.UnifiedSystemState
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 @Composable

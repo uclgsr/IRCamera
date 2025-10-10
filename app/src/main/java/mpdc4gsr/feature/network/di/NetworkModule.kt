@@ -1,7 +1,6 @@
 package mpdc4gsr.feature.network.di
 
 import android.content.Context
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

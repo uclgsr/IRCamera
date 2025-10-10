@@ -3,7 +3,6 @@ package mpdc4gsr.feature.network.domain.repository
 import kotlinx.coroutines.flow.Flow
 import mpdc4gsr.feature.network.domain.model.ConnectionState
 import mpdc4gsr.feature.network.domain.model.ControllerInfo
-import mpdc4gsr.feature.network.domain.model.NetworkError
 import org.json.JSONObject
 
 interface NetworkRepository {

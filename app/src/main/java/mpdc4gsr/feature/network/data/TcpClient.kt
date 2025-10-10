@@ -92,7 +92,11 @@ class TcpClient(
                         w.flush()
                         w.close()
                     } catch (e: IOException) {
-                        mpdc4gsr.core.utils.AppLogger.e("TcpClient", "Unexpected IOException in TcpClient catch block", e)
+                        mpdc4gsr.core.utils.AppLogger.e(
+                            "TcpClient",
+                            "Unexpected IOException in TcpClient catch block",
+                            e
+                        )
                     }
                 }
             } catch (e: Exception) {

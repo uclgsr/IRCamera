@@ -8,11 +8,15 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
 import android.os.ParcelUuid
+import android.os.Message
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleOwner
@@ -20,7 +24,11 @@ import androidx.lifecycle.lifecycleScope
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
+import com.shimmerresearch.bluetooth.ShimmerBluetooth
+import com.shimmerresearch.driver.CallbackObject
+import com.shimmerresearch.driver.ObjectCluster
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -62,12 +70,25 @@ class GsrDeviceManager(
     private val isScanning = AtomicBoolean(false)
     private var scanJob: Job? = null
     private var currentScanCallback: android.bluetooth.le.ScanCallback? = null
+    private var classicDiscoveryReceiver: BroadcastReceiver? = null
     private var connectionMonitorJob: Job? = null
-    private val _scanResults = MutableSharedFlow<List<DeviceInfo>>()
+    private val _scanResults = MutableSharedFlow<List<DeviceInfo>>(replay = 1, extraBufferCapacity = 4)
     val scanResults: SharedFlow<List<DeviceInfo>> = _scanResults.asSharedFlow()
-    private val _connectionEvents = MutableSharedFlow<ConnectionEvent>()
+    private val _connectionEvents = MutableSharedFlow<ConnectionEvent>(extraBufferCapacity = 4, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val connectionEvents: SharedFlow<ConnectionEvent> = _connectionEvents.asSharedFlow()
+    private val _dataEvents =
+        MutableSharedFlow<Pair<String, ObjectCluster>>(
+            replay = 0,
+            extraBufferCapacity = 64,
+            onBufferOverflow = BufferOverflow.DROP_OLDEST,
+        )
+    val dataEvents: SharedFlow<Pair<String, ObjectCluster>> = _dataEvents.asSharedFlow()
     private val mainHandler = Handler(Looper.getMainLooper())
+    private val shimmerHandler =
+        Handler(Looper.getMainLooper()) { message ->
+            handleShimmerMessage(message)
+            true
+        }
 
     data class ConnectionEvent(
         val deviceAddress: String,
@@ -78,6 +99,208 @@ class GsrDeviceManager(
     enum class ConnectionState {
         CONNECTING, CONNECTED, DISCONNECTED, FAILED, TIMEOUT
     }
+    private fun handleShimmerMessage(message: Message) {
+        when (message.what) {
+            ShimmerBluetooth.MSG_IDENTIFIER_STATE_CHANGE -> handleStateChangePayload(message.obj)
+            ShimmerBluetooth.MSG_IDENTIFIER_DATA_PACKET -> {
+                val cluster = message.obj as? ObjectCluster ?: return
+                val macAddress = cluster.macAddress ?: return
+                _dataEvents.tryEmit(macAddress to cluster)
+            }
+            Shimmer.MESSAGE_TOAST -> {
+                val toastMessage = message.data?.getString(Shimmer.TOAST)
+                if (!toastMessage.isNullOrBlank()) {
+                    Log.i(TAG, "Shimmer message: $toastMessage")
+                }
+            }
+        }
+    }
+
+    private fun handleStateChangePayload(payload: Any?) {
+        val state: BT_STATE?
+        val macAddress: String?
+        when (payload) {
+            is ObjectCluster -> {
+                state = payload.mState
+                macAddress = payload.macAddress
+            }
+            is CallbackObject -> {
+                state = payload.mState
+                macAddress = payload.mBluetoothAddress
+            }
+            else -> return
+        }
+
+        if (state == null || macAddress.isNullOrBlank()) {
+            return
+        }
+
+        when (state) {
+            BT_STATE.CONNECTED -> {
+                val shimmer = runCatching {
+                    shimmerManager?.getShimmerDeviceBtConnectedFromMac(macAddress) as? Shimmer
+                }.getOrNull()
+                if (shimmer != null) {
+                    connectedDevices[macAddress] = shimmer
+                    reconnectionAttempts.remove(macAddress)
+                }
+                emitConnectionEvent(macAddress, ConnectionState.CONNECTED, "Connected to device")
+            }
+
+            BT_STATE.CONNECTING -> emitConnectionEvent(macAddress, ConnectionState.CONNECTING, "Connecting...")
+
+            BT_STATE.DISCONNECTED,
+            BT_STATE.CONNECTION_LOST,
+            BT_STATE.NONE -> {
+                connectedDevices.remove(macAddress)
+                emitConnectionEvent(macAddress, ConnectionState.DISCONNECTED, "Device disconnected")
+            }
+
+            BT_STATE.FAILED_TO_CONNECT -> {
+                connectedDevices.remove(macAddress)
+                emitConnectionEvent(macAddress, ConnectionState.FAILED, "Failed to connect")
+            }
+
+            BT_STATE.CONNECTION_TIMEOUT -> emitConnectionEvent(macAddress, ConnectionState.TIMEOUT, "Connection timeout")
+
+            else -> Unit
+        }
+    }
+
+    private fun emitConnectionEvent(
+        macAddress: String,
+        state: ConnectionState,
+        message: String? = null,
+    ) {
+        coroutineScope.launch {
+            _connectionEvents.emit(
+                ConnectionEvent(
+                    deviceAddress = macAddress,
+                    state = state,
+                    message = message,
+                ),
+            )
+        }
+    }
+
+    private fun startClassicDiscoveryInternal() {
+        mainHandler.post {
+            if (classicDiscoveryReceiver == null) {
+                val filter = IntentFilter().apply {
+                    addAction(BluetoothDevice.ACTION_FOUND)
+                    addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+                }
+                val receiver = object : BroadcastReceiver() {
+                    override fun onReceive(context: Context?, intent: Intent?) {
+                        when (intent?.action) {
+                            BluetoothDevice.ACTION_FOUND -> {
+                                val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                                val rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE).toInt()
+                                if (device != null) {
+                                    handleDiscoveredDevice(device, rssi)
+                                }
+                            }
+                            BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+                                coroutineScope.launch {
+                                    _scanResults.emit(discoveredDevices.values.sortedBy { it.name ?: it.address })
+                                }
+                            }
+                        }
+                    }
+                }
+                runCatching { context.registerReceiver(receiver, filter) }
+                classicDiscoveryReceiver = receiver
+            }
+            try {
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED ||
+                    android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S
+                ) {
+                    bluetoothAdapter?.let { adapter ->
+                        if (adapter.isDiscovering) {
+                            adapter.cancelDiscovery()
+                        }
+                        adapter.startDiscovery()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Unable to start classic discovery", e)
+            }
+        }
+    }
+
+    private fun stopClassicDiscoveryInternal() {
+        mainHandler.post {
+            try {
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED ||
+                    android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S
+                ) {
+                    bluetoothAdapter?.takeIf { it.isDiscovering }?.cancelDiscovery()
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Unable to stop classic discovery", e)
+            }
+            classicDiscoveryReceiver?.let { receiver ->
+                runCatching { context.unregisterReceiver(receiver) }
+            }
+            classicDiscoveryReceiver = null
+        }
+    }
+
+    private fun handleDiscoveredDevice(device: BluetoothDevice, rssi: Int) {
+        if (!isValidShimmerDevice(device)) {
+            return
+        }
+        val normalizedRssi = if (rssi == Short.MIN_VALUE.toInt()) -50 else rssi
+        val name = resolveDeviceName(device) ?: "Unknown Shimmer"
+        val info = DeviceInfo(
+            address = device.address,
+            name = name,
+            rssi = normalizedRssi,
+            deviceType = detectShimmerDeviceType(device),
+            isGSRCapable = true,
+        )
+        discoveredDevices[device.address] = info
+        coroutineScope.launch {
+            _scanResults.emit(discoveredDevices.values.sortedBy { it.name ?: it.address })
+        }
+    }
+
+    private fun stopBleScan() {
+        val callback = currentScanCallback ?: return
+        try {
+            val adapter = bluetoothAdapter ?: bluetoothManager?.adapter
+                ?: (context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter
+            val scanner = adapter?.bluetoothLeScanner
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED ||
+                android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S
+            ) {
+                scanner?.stopScan(callback)
+            }
+        } catch (e: SecurityException) {
+            mpdc4gsr.core.utils.AppLogger.w(TAG, "Missing Bluetooth permissions while stopping scan", e)
+        } catch (e: Exception) {
+            mpdc4gsr.core.utils.AppLogger.e(TAG, "Unexpected error stopping BLE scan", e)
+        } finally {
+            currentScanCallback = null
+        }
+    }
+
+    private fun registerShimmerCallbacks(manager: ShimmerBluetoothManagerAndroid) {
+        val clazz = ShimmerBluetoothManagerAndroid::class.java
+        runCatching {
+            clazz.getMethod("setAllDeviceStatesHandler", Handler::class.java).invoke(manager, shimmerHandler)
+        }
+        runCatching {
+            clazz.getMethod("setDataHandler", Handler::class.java).invoke(manager, shimmerHandler)
+        }
+        runCatching {
+            clazz.getMethod("setAllDeviceObjectClusterHandler", Handler::class.java).invoke(manager, shimmerHandler)
+        }
+        runCatching {
+            clazz.getMethod("setMessageHandler", Handler::class.java).invoke(manager, shimmerHandler)
+        }
+    }
+
 
     suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
         try {
@@ -90,7 +313,9 @@ class GsrDeviceManager(
             if (bluetoothAdapter?.isEnabled != true) {
                 return@withContext false
             }
-            shimmerManager = ShimmerBluetoothManagerAndroid(context, mainHandler)
+            shimmerManager = ShimmerBluetoothManagerAndroid(context, shimmerHandler).also { manager ->
+                registerShimmerCallbacks(manager)
+            }
             startConnectionMonitoring()
             return@withContext true
         } catch (e: Exception) {
@@ -124,38 +349,32 @@ class GsrDeviceManager(
         if (isScanning.get()) {
             return@withContext true
         }
-        val shimmerMgr = shimmerManager ?: run {
-            return@withContext false
-        }
         if (!hasRequiredPermissions()) {
             return@withContext false
         }
         try {
+            val adapter = bluetoothAdapter ?: bluetoothManager?.adapter
+            if (adapter == null || !adapter.isEnabled) {
+                return@withContext false
+            }
             discoveredDevices.clear()
+            getPairedShimmerDevices().forEach { device ->
+                handleDiscoveredDevice(device, -50)
+            }
             isScanning.set(true)
-            val pairedDevices = getPairedShimmerDevices()
-            pairedDevices.forEach { device ->
-                val deviceInfo = DeviceInfo(
-                    address = device.address,
-                    name = device.name ?: "Unknown Shimmer",
-                    rssi = -50,
-                    deviceType = detectShimmerDeviceType(device),
-                    isGSRCapable = true
-                )
-                discoveredDevices[device.address] = deviceInfo
-            }
-            _scanResults.emit(discoveredDevices.values.toList())
+            _scanResults.emit(discoveredDevices.values.sortedBy { it.name ?: it.address })
+            startClassicDiscoveryInternal()
             performEnhancedBluetoothLeScanning()
-            coroutineScope.launch {
+            scanJob?.cancel()
+            scanJob = coroutineScope.launch {
                 delay(SCAN_TIMEOUT_MS)
-                if (isScanning.get()) {
-                    stopDeviceScanning()
-                }
+                stopDeviceScanning()
             }
-            return@withContext true
+            true
         } catch (e: Exception) {
-            isScanning.set(false)
-            return@withContext false
+            Log.e(TAG, "Failed to start GSR scan", e)
+            stopDeviceScanning()
+            false
         }
     }
 
@@ -181,30 +400,12 @@ class GsrDeviceManager(
             return
         }
         // Create scan filters for Shimmer devices
-        val scanFilters = mutableListOf<ScanFilter>().apply {
-            // Filter by Shimmer service UUID
-            add(
+        val scanFilters =
+            listOf(
                 ScanFilter.Builder()
                     .setServiceUuid(ParcelUuid(UUID.fromString(SHIMMER_SERVICE_UUID)))
-                    .build()
+                    .build(),
             )
-            // Filter by device name patterns
-            SHIMMER_NAME_PATTERNS.forEach { pattern ->
-                add(
-                    ScanFilter.Builder()
-                        .setDeviceName(pattern)
-                        .build()
-                )
-            }
-            // Filter by MAC address prefixes if needed
-            SHIMMER_MAC_PREFIXES.forEach { prefix ->
-                add(
-                    ScanFilter.Builder()
-                        .setDeviceAddress(prefix)
-                        .build()
-                )
-            }
-        }
         val scanSettings = ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
             .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
@@ -245,29 +446,7 @@ class GsrDeviceManager(
     }
 
     private fun handleScanResult(result: ScanResult) {
-        val device = result.device
-        val rssi = result.rssi
-        if (isValidShimmerDevice(device) && !discoveredDevices.containsKey(device.address)) {
-            Log.d(
-                TAG,
-                "Discovered new Shimmer device: ${device.name} (${device.address}) RSSI: $rssi"
-            )
-            val deviceInfo = DeviceInfo(
-                address = device.address,
-                name = device.name ?: "Unknown Shimmer",
-                rssi = rssi,
-                deviceType = detectShimmerDeviceType(device),
-                isGSRCapable = true
-            )
-            discoveredDevices[device.address] = deviceInfo
-            coroutineScope.launch {
-                _scanResults.emit(discoveredDevices.values.toList())
-            }
-        } else if (discoveredDevices.containsKey(device.address)) {
-            discoveredDevices[device.address]?.let { existingInfo ->
-                discoveredDevices[device.address] = existingInfo.copy(rssi = rssi)
-            }
-        }
+        handleDiscoveredDevice(result.device, result.rssi)
     }
 
     private fun detectShimmerDeviceType(device: BluetoothDevice): String {
@@ -286,31 +465,14 @@ class GsrDeviceManager(
     }
 
     suspend fun stopDeviceScanning() = withContext(Dispatchers.IO) {
-        if (!isScanning.get()) {
-            return@withContext
-        }
-        try {
-            currentScanCallback?.let { callback ->
-                val bluetoothManager =
-                    context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
-                val bluetoothAdapter = bluetoothManager?.adapter
-                val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
-                try {
-                    bluetoothLeScanner?.stopScan(callback)
-                } catch (e: SecurityException) {
-                    mpdc4gsr.core.utils.AppLogger.w(
-                        "GsrDeviceManager",
-                        "Missing Bluetooth permissions while stopping scan",
-                        e,
-                    )
-                } catch (e: Exception) {
-                    mpdc4gsr.core.utils.AppLogger.e("GsrDeviceManager", "Unexpected Exception in GsrDeviceManager catch block", e)
-                }
+        scanJob?.cancel()
+        scanJob = null
+        stopBleScan()
+        stopClassicDiscoveryInternal()
+        if (isScanning.getAndSet(false)) {
+            runCatching {
+                _scanResults.emit(discoveredDevices.values.sortedBy { it.name ?: it.address })
             }
-            isScanning.set(false)
-            currentScanCallback = null
-        } catch (e: Exception) {
-            isScanning.set(false)
         }
     }
 
@@ -440,6 +602,10 @@ class GsrDeviceManager(
             )
         }
     }
+
+    fun getDeviceInfo(address: String): DeviceInfo? = discoveredDevices[address]
+
+    fun isDeviceConnected(address: String): Boolean = connectedDevices.containsKey(address)
 
     fun getConnectedShimmer(deviceAddress: String): Shimmer? {
         return connectedDevices[deviceAddress]

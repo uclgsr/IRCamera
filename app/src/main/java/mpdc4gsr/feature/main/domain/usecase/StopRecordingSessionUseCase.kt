@@ -4,11 +4,11 @@ import mpdc4gsr.feature.main.domain.repository.SessionRepository
 import javax.inject.Inject
 
 class StopRecordingSessionUseCase
-    @Inject
-    constructor(
-        private val sessionRepository: SessionRepository,
-    ) {
-        suspend operator fun invoke(sessionId: String) {
-            sessionRepository.completeSession(sessionId)
-        }
+@Inject
+constructor(
+    private val sessionRepository: SessionRepository,
+) {
+    suspend operator fun invoke(sessionId: String) {
+        sessionRepository.completeSession(sessionId)
     }
+}

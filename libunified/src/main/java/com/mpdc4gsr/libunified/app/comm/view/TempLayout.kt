@@ -102,9 +102,19 @@ class TempLayout : LinearLayout {
                 }
             }
 
-            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationCancel(animation: Animator) {
+                animatorAlpha = 0f
+                if (isAttachedToWindow) {
+                    alpha = 0f
+                }
+            }
 
-            override fun onAnimationRepeat(animation: Animator) {}
+            override fun onAnimationRepeat(animation: Animator) {
+                val value = (animation as? ValueAnimator)?.animatedValue
+                if (value is Float) {
+                    animatorAlpha = value
+                }
+            }
         }
 
     fun stopAnimation() {

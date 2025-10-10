@@ -10,7 +10,25 @@ import mpdc4gsr.feature.thermal.data.repository.ThermalRepositoryImpl
 import mpdc4gsr.feature.thermal.data.source.ThermalHardwareDataSource
 import mpdc4gsr.feature.thermal.data.source.ThermalHardwareDataSourceImpl
 import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
-import mpdc4gsr.feature.thermal.domain.usecase.*
+import mpdc4gsr.feature.thermal.domain.usecase.CaptureThermalSnapshotUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.CheckCameraConnectionUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.ConfigureAccuracyUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.ConfigureImageEnhancementUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.ConnectThermalCameraUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.DisconnectThermalCameraUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.GetBatteryStatusUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.GetDeviceInfoUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.MeasureAreaUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.PerformCalibrationUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.SetAgcModeUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.SetColorPaletteUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.SetTemperatureRangeUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.StartThermalRecordingUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.StartThermalStreamingUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.StopThermalRecordingUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.StopThermalStreamingUseCase
+import mpdc4gsr.feature.thermal.domain.usecase.ThermalCoreUseCases
+import mpdc4gsr.feature.thermal.domain.usecase.ThermalHardwareUseCases
 import javax.inject.Singleton
 
 @Module

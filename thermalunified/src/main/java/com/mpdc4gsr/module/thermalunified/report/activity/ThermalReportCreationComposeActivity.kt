@@ -17,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -120,6 +121,7 @@ private fun ReportCreationContent(
     onReportDataChange: (ReportData) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     Column(
         modifier =
             modifier
@@ -160,6 +162,14 @@ private fun ReportCreationContent(
                     reportData = reportData,
                     template = selectedTemplate,
                     modifier = Modifier.weight(1f),
+                    onExportReport = { format ->
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Generating $format report...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
+                    },
                 )
         }
         // Navigation buttons
@@ -499,6 +509,7 @@ private fun ReviewStep(
     reportData: ReportData,
     template: ReportTemplate?,
     modifier: Modifier = Modifier,
+    onExportReport: (String) -> Unit,
 ) {
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
@@ -544,7 +555,7 @@ private fun ReviewStep(
                 val exportFormats = listOf("PDF", "Word", "HTML")
                 exportFormats.forEach { format ->
                     TextButton(
-                        onClick = { },
+                        onClick = { onExportReport(format) },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         Icon(

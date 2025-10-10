@@ -105,6 +105,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
             }
         var selectedSection by remember { mutableStateOf<String?>(null) }
         var previewMode by remember { mutableStateOf("Full") }
+        var editingSection by remember { mutableStateOf<String?>(null) }
         Column(
             modifier =
                 modifier
@@ -202,7 +203,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                         )
                         if (selectedSection != null) {
                             IconButton(
-                                onClick = { },
+                                onClick = { editingSection = selectedSection },
                             ) {
                                 Icon(
                                     Icons.Default.Edit,
@@ -383,6 +384,13 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
+        }
+        editingSection?.let { section ->
+            Text(
+                text = "Editing notes for \"$section\"",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF1976D2),
+            )
         }
     }
 }

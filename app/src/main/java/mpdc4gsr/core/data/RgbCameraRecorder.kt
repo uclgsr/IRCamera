@@ -5,15 +5,42 @@ import android.graphics.ImageFormat
 import android.os.Build
 import android.util.Range
 import android.util.Size
-import androidx.camera.core.*
+import androidx.camera.core.Camera
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.FocusMeteringAction
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
+import androidx.camera.core.UseCase
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.*
+import androidx.camera.video.FallbackStrategy
+import androidx.camera.video.FileOutputOptions
+import androidx.camera.video.Quality
+import androidx.camera.video.QualitySelector
+import androidx.camera.video.Recorder
+import androidx.camera.video.Recording
+import androidx.camera.video.VideoCapture
+import androidx.camera.video.VideoRecordEvent
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.opencsv.CSVWriter
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import mpdc4gsr.core.sensors.api.ErrorType
@@ -507,7 +534,11 @@ class RgbCameraRecorder(
                                         )
                                 } catch (e: Exception) {
                                     mpdc4gsr.core.utils.AppLogger
-                                        .e("RgbCameraRecorder", "Unexpected Exception in RgbCameraRecorder catch block", e)
+                                        .e(
+                                            "RgbCameraRecorder",
+                                            "Unexpected Exception in RgbCameraRecorder catch block",
+                                            e
+                                        )
                                 }
                             }
                         }.build()
@@ -1048,8 +1079,8 @@ class RgbCameraRecorder(
             }
             val useStage3 =
                 deviceSupportsRAW &&
-                    ENABLE_RAW_CAPTURE &&
-                    SamsungDeviceCompatibility.isStage3Compatible()
+                        ENABLE_RAW_CAPTURE &&
+                        SamsungDeviceCompatibility.isStage3Compatible()
             if (useStage3 && rawImageCapture != null) {
                 // Create Stage 3/Level 3 DNG file name
                 val stage3File = File(rawFile.parent, rawFile.nameWithoutExtension + "_stage3.dng")
@@ -1669,7 +1700,7 @@ class RgbCameraRecorder(
     fun hasCameraPermission(): Boolean {
         val hasCamera =
             context.checkSelfPermission(android.Manifest.permission.CAMERA) ==
-                android.content.pm.PackageManager.PERMISSION_GRANTED
+                    android.content.pm.PackageManager.PERMISSION_GRANTED
         if (!hasCamera) {
             return false
         }
@@ -1679,7 +1710,7 @@ class RgbCameraRecorder(
         }
         val hasAudio =
             context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) ==
-                android.content.pm.PackageManager.PERMISSION_GRANTED
+                    android.content.pm.PackageManager.PERMISSION_GRANTED
         if (!hasAudio) {
         }
         return hasAudio
@@ -1690,10 +1721,10 @@ class RgbCameraRecorder(
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                 val hasImages =
                     context.checkSelfPermission(android.Manifest.permission.READ_MEDIA_IMAGES) ==
-                        android.content.pm.PackageManager.PERMISSION_GRANTED
+                            android.content.pm.PackageManager.PERMISSION_GRANTED
                 val hasVideo =
                     context.checkSelfPermission(android.Manifest.permission.READ_MEDIA_VIDEO) ==
-                        android.content.pm.PackageManager.PERMISSION_GRANTED
+                            android.content.pm.PackageManager.PERMISSION_GRANTED
                 if (!hasImages) {
                 }
                 if (!hasVideo) {
@@ -1702,10 +1733,10 @@ class RgbCameraRecorder(
             } else {
                 val hasWrite =
                     context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                        android.content.pm.PackageManager.PERMISSION_GRANTED
+                            android.content.pm.PackageManager.PERMISSION_GRANTED
                 val hasRead =
                     context.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                        android.content.pm.PackageManager.PERMISSION_GRANTED
+                            android.content.pm.PackageManager.PERMISSION_GRANTED
                 if (!hasWrite) {
                 }
                 if (!hasRead) {

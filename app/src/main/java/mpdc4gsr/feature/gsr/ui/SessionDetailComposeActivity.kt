@@ -3,7 +3,12 @@ package mpdc4gsr.feature.gsr.ui
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -11,7 +16,21 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Assessment
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.*
+import androidx.compose.material3.Badge
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -349,11 +368,11 @@ private fun SessionTimelineCard() {
             HorizontalDivider()
             Text(
                 " Session started at 14:30:00\n" +
-                    " Device connected at 14:30:15\n" +
-                    " Data recording began at 14:30:30\n" +
-                    " Peak activity detected at 14:45:12\n" +
-                    " Steady state achieved at 14:50:00\n" +
-                    " Recording completed at 15:15:00",
+                        " Device connected at 14:30:15\n" +
+                        " Data recording began at 14:30:30\n" +
+                        " Peak activity detected at 14:45:12\n" +
+                        " Steady state achieved at 14:50:00\n" +
+                        " Recording completed at 15:15:00",
                 style = MaterialTheme.typography.bodyMedium,
                 lineHeight = MaterialTheme.typography.bodyMedium.lineHeight * 1.5,
             )

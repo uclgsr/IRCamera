@@ -106,8 +106,7 @@ public class HorizontalBarChart extends BarChart {
                 Math.max(minOffset, offsetRight),
                 Math.max(minOffset, offsetBottom));
 
-        if (mLogEnabled) {
-        }
+        logDebug("HorizontalBarChart viewport offsets - L:" + offsetLeft + " T:" + offsetTop + " R:" + offsetRight + " B:" + offsetBottom);
 
         prepareOffsetMatrix();
         prepareValuePxMatrix();
@@ -172,7 +171,7 @@ public class HorizontalBarChart extends BarChart {
     public Highlight getHighlightByTouchPoint(float x, float y) {
 
         if (mData == null) {
-            if (mLogEnabled)
+            logDebug("getHighlightByTouchPoint skipped: data is null");
             return null;
         } else
             return getHighlighter().getHighlight(y, x);

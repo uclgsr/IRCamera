@@ -1,7 +1,15 @@
 package mpdc4gsr.core
 
 import android.content.Context
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -25,11 +33,11 @@ class CrashSafeSupervisor private constructor(
     private val supervisorScope =
         CoroutineScope(
             SupervisorJob() +
-                Dispatchers.Default +
-                CoroutineName("CrashSafeSupervisor") +
-                CoroutineExceptionHandler { _, exception ->
-                    handleSupervisorException(exception)
-                },
+                    Dispatchers.Default +
+                    CoroutineName("CrashSafeSupervisor") +
+                    CoroutineExceptionHandler { _, exception ->
+                        handleSupervisorException(exception)
+                    },
         )
     private val managedJobs = ConcurrentHashMap<String, ManagedJob>()
     private val healthChecks = ConcurrentHashMap<String, HealthCheck>()

@@ -68,7 +68,11 @@ class ShimmerNetworkClient(
                     onDisconnected?.invoke()
                 }
             } catch (e: Exception) {
-                mpdc4gsr.core.utils.AppLogger.e("ShimmerNetworkClient", "Unexpected Exception in ShimmerNetworkClient catch block", e)
+                mpdc4gsr.core.utils.AppLogger.e(
+                    "ShimmerNetworkClient",
+                    "Unexpected Exception in ShimmerNetworkClient catch block",
+                    e
+                )
             }
         }
     }
@@ -87,7 +91,11 @@ class ShimmerNetworkClient(
                 }
                 sendMessage(message)
             } catch (e: Exception) {
-                mpdc4gsr.core.utils.AppLogger.e("ShimmerNetworkClient", "Unexpected Exception in ShimmerNetworkClient catch block", e)
+                mpdc4gsr.core.utils.AppLogger.e(
+                    "ShimmerNetworkClient",
+                    "Unexpected Exception in ShimmerNetworkClient catch block",
+                    e
+                )
             }
         }
     }
@@ -102,7 +110,11 @@ class ShimmerNetworkClient(
                 }
                 sendMessage(message)
             } catch (e: Exception) {
-                mpdc4gsr.core.utils.AppLogger.e("ShimmerNetworkClient", "Unexpected Exception in ShimmerNetworkClient catch block", e)
+                mpdc4gsr.core.utils.AppLogger.e(
+                    "ShimmerNetworkClient",
+                    "Unexpected Exception in ShimmerNetworkClient catch block",
+                    e
+                )
             }
         }
     }
@@ -118,7 +130,11 @@ class ShimmerNetworkClient(
                 }
                 sendMessage(message)
             } catch (e: Exception) {
-                mpdc4gsr.core.utils.AppLogger.e("ShimmerNetworkClient", "Unexpected Exception in ShimmerNetworkClient catch block", e)
+                mpdc4gsr.core.utils.AppLogger.e(
+                    "ShimmerNetworkClient",
+                    "Unexpected Exception in ShimmerNetworkClient catch block",
+                    e
+                )
             }
         }
     }
@@ -134,7 +150,11 @@ class ShimmerNetworkClient(
                 }
                 sendMessage(message)
             } catch (e: Exception) {
-                mpdc4gsr.core.utils.AppLogger.e("ShimmerNetworkClient", "Unexpected Exception in ShimmerNetworkClient catch block", e)
+                mpdc4gsr.core.utils.AppLogger.e(
+                    "ShimmerNetworkClient",
+                    "Unexpected Exception in ShimmerNetworkClient catch block",
+                    e
+                )
             }
         }
     }
@@ -202,7 +222,11 @@ class ShimmerNetworkClient(
                 else -> {}
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("ShimmerNetworkClient", "Unexpected Exception in ShimmerNetworkClient catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "ShimmerNetworkClient",
+                "Unexpected Exception in ShimmerNetworkClient catch block",
+                e
+            )
         }
     }
 
@@ -231,7 +255,11 @@ class ShimmerNetworkClient(
             socket?.close()
             TrafficStats.clearThreadStatsTag()
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("ShimmerNetworkClient", "Unexpected Exception in ShimmerNetworkClient catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "ShimmerNetworkClient",
+                "Unexpected Exception in ShimmerNetworkClient catch block",
+                e
+            )
         }
         outputStream = null
         inputStream = null

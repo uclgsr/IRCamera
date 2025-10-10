@@ -766,7 +766,11 @@ class DataManagementService(private val context: Context) {
                         } else {
                         }
                     } catch (e: Exception) {
-                        mpdc4gsr.core.utils.AppLogger.e("DataManagementService", "Unexpected Exception in DataManagementService catch block", e)
+                        mpdc4gsr.core.utils.AppLogger.e(
+                            "DataManagementService",
+                            "Unexpected Exception in DataManagementService catch block",
+                            e
+                        )
                     }
                 }
             }

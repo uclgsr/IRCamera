@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewModel>() {
     override fun createViewModel(): IRThermalNightViewModel = IRThermalNightViewModel()
@@ -106,6 +108,7 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
         var nightMode by remember { mutableStateOf("Enhanced") }
         var sensitivity by remember { mutableStateOf(75f) }
         var currentTemp by remember { mutableStateOf(22.5f) }
+        var lastCapture by remember { mutableStateOf<String?>(null) }
         Column(
             modifier =
                 modifier
@@ -275,7 +278,10 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 OutlinedButton(
-                    onClick = { },
+                    onClick = {
+                        val timestamp = SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(Date())
+                        lastCapture = "Frame captured at $timestamp"
+                    },
                     modifier = Modifier.weight(1f),
                     colors =
                         ButtonDefaults.outlinedButtonColors(
@@ -307,6 +313,14 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(if (isRecording) "Stop" else "Record")
                 }
+            }
+            lastCapture?.let { message ->
+                Text(
+                    text = message,
+                    color = Color(0xFF58A6FF),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
         }
     }

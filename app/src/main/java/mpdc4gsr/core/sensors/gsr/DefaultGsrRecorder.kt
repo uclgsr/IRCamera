@@ -324,12 +324,13 @@ class DefaultGsrRecorder(
                 csvWriter?.write("timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,gsr_microsiemens,gsr_raw_12bit,ppg_raw,quality_score,connection_rssi\n")
                 csvWriter?.flush()
                 recordedSamples.set(0)
+                lastExpectedSampleTime = 0
                 recordingStartTime = sessionMetadata.sessionStartMonotonicNs
                 shimmer.startStreaming()
                 _isRecording.set(true)
                 _deviceStatus.value = "Recording..."
-                recordingJob = lifecycleOwner.lifecycleScope.launch {
-                    processRecordingData()
+                recordingJob = lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                    processRecordingData(selectedDevice?.address)
                 }
                 return@withContext true
             } catch (e: Exception) {
@@ -361,12 +362,13 @@ class DefaultGsrRecorder(
                 csvWriter?.write("# Columns: timestamp_ns,timestamp_iso,gsr_microsiemens,gsr_raw,ppg_raw,quality_score,connection_rssi\n")
                 csvWriter?.flush()
                 recordedSamples.set(0)
+                lastExpectedSampleTime = 0
                 recordingStartTime = System.nanoTime()
                 shimmer.startStreaming()
                 _isRecording.set(true)
                 _deviceStatus.value = "Recording..."
-                recordingJob = lifecycleOwner.lifecycleScope.launch {
-                    processRecordingData()
+                recordingJob = lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                    processRecordingData(selectedDevice?.address)
                 }
                 return@withContext true
             } catch (e: Exception) {
@@ -415,49 +417,64 @@ class DefaultGsrRecorder(
         }
     }
 
-    private suspend fun processRecordingData() = withContext(Dispatchers.IO) {
-        while (_isRecording.get()) {
-            try {
-                val shimmer = connectedShimmer
-                if (shimmer != null && shimmer.isStreaming) {
-                    // Create a mock ObjectCluster for simulation
-                    val objectCluster = createMockObjectCluster()
-                    processGSRData(shimmer, objectCluster)
-                }
-                updateConnectionQuality()
-                delay(100)
-            } catch (e: Exception) {
-                delay(100)
+    private suspend fun processRecordingData(deviceAddress: String?) = withContext(Dispatchers.IO) {
+        val target = deviceAddress?.lowercase(Locale.getDefault())
+        shimmerDeviceManager?.dataEvents
+            ?.filter { (mac, _) -> target == null || mac.equals(target, ignoreCase = true) }
+            ?.collect { (_, cluster) ->
+                val payload = cluster.toGsrSamplePayload() ?: return@collect
+                handleIncomingSample(payload)
             }
+    }
+
+    private suspend fun handleIncomingSample(payload: GsrSamplePayload) {
+        val sample = payload.sample
+        val wallClockMs = payload.wallClockMs
+        val relativeMs =
+            sessionMetadata?.let { metadata ->
+                ((sample.timestamp - metadata.sessionStartMonotonicNs).coerceAtLeast(0)) / 1_000_000L
+            } ?: 0L
+        _latestSample.value = sample
+        gsrDataFlow.emit(sample)
+        _connectionQuality.value = sample.qualityScore.coerceIn(0.0, 1.0)
+        if (_isRecording.get()) {
+            if (lastExpectedSampleTime > 0) {
+                val expectedInterval = sampleInterval
+                val actualInterval = wallClockMs - lastExpectedSampleTime
+                if (actualInterval > expectedInterval * 1.5) {
+                    val estimatedDroppedSamples = ((actualInterval - expectedInterval) / expectedInterval).toLong()
+                    if (estimatedDroppedSamples > 0) {
+                        droppedSamples.addAndGet(estimatedDroppedSamples)
+                    }
+                }
+            }
+            lastExpectedSampleTime = wallClockMs
+            val sampleIndex = recordedSamples.incrementAndGet()
+            writeSampleToCsv(sample, wallClockMs, relativeMs, sampleIndex)
         }
     }
 
-    private fun createMockObjectCluster(): ObjectCluster {
-        // Create a mock ObjectCluster for testing purposes
-        return ObjectCluster()
-    }
-
-    private fun updateConnectionQuality() {
-        val shimmer = connectedShimmer ?: return
+    private fun writeSampleToCsv(
+        sample: GSRSample,
+        wallClockMs: Long,
+        relativeMs: Long,
+        sampleIndex: Long,
+    ) {
         try {
-            val isStreaming = shimmer.isStreaming
-            val quality = when {
-                !isStreaming -> 0.0
-                isStreaming -> {
-                    val baseQuality = 0.9
-                    val sampleRate = recordedSamples.get() / maxOf(
-                        1.0,
-                        (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
-                    )
-                    val rateQuality = minOf(1.0, sampleRate / samplingRate)
-                    baseQuality * rateQuality
-                }
-
-                else -> 0.5
+            if (sessionMetadata != null) {
+                csvWriter?.write(
+                    "$wallClockMs,$relativeMs,${sample.timestamp},${sample.gsrMicrosiemens},${sample.gsrRaw},${sample.ppgRaw},${sample.qualityScore},${sample.connectionRssi}\n",
+                )
+            } else {
+                csvWriter?.write(
+                    "${sample.timestamp},${sample.timestampIso},${sample.gsrMicrosiemens},${sample.gsrRaw},${sample.ppgRaw},${sample.qualityScore},${sample.connectionRssi}\n",
+                )
             }
-            _connectionQuality.value = quality
+            if (sampleIndex % 100L == 0L) {
+                csvWriter?.flush()
+            }
         } catch (e: Exception) {
-            _connectionQuality.value = 0.5
+            mpdc4gsr.core.utils.AppLogger.e(TAG, "Failed to write GSR sample", e)
         }
     }
 
@@ -486,7 +503,11 @@ class DefaultGsrRecorder(
             } else {
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("DefaultGsrRecorder", "Unexpected Exception in DefaultGsrRecorder catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "DefaultGsrRecorder",
+                "Unexpected Exception in DefaultGsrRecorder catch block",
+                e
+            )
         }
     }
 
@@ -563,7 +584,11 @@ class DefaultGsrRecorder(
             csvWriter?.close()
             csvWriter = null
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("DefaultGsrRecorder", "Unexpected Exception in DefaultGsrRecorder catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "DefaultGsrRecorder",
+                "Unexpected Exception in DefaultGsrRecorder catch block",
+                e
+            )
         }
     }
 
@@ -594,67 +619,11 @@ class DefaultGsrRecorder(
             shimmerManager = null
             discoveredDevices.clear()
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("DefaultGsrRecorder", "Unexpected Exception in DefaultGsrRecorder catch block", e)
-        }
-    }
-
-    private suspend fun processGSRData(shimmer: Shimmer, objectCluster: ObjectCluster) {
-        if (!_isRecording.get()) return
-        try {
-            val monotonicNs = android.os.SystemClock.elapsedRealtimeNanos()
-            val wallClockMs = System.currentTimeMillis()
-            val iso = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(
-                Date(wallClockMs)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "DefaultGsrRecorder",
+                "Unexpected Exception in DefaultGsrRecorder catch block",
+                e
             )
-            if (lastExpectedSampleTime > 0) {
-                val expectedInterval = sampleInterval
-                val actualInterval = wallClockMs - lastExpectedSampleTime
-                if (actualInterval > expectedInterval * 1.5) {
-                    val estimatedDroppedSamples =
-                        ((actualInterval - expectedInterval) / expectedInterval).toLong()
-                    droppedSamples.addAndGet(estimatedDroppedSamples)
-                    Log.w(
-                        TAG,
-                        "Detected $estimatedDroppedSamples dropped samples (gap: ${actualInterval}ms, expected: ${expectedInterval}ms)"
-                    )
-                }
-            }
-            lastExpectedSampleTime = wallClockMs
-            val relativeMs = sessionMetadata?.let { metadata ->
-                (monotonicNs - metadata.sessionStartMonotonicNs) / 1_000_000L
-            } ?: 0L
-            val time = System.currentTimeMillis()
-            val baseGSR = 15.0
-            val variation = Math.sin(time / 5000.0) * 3.0 + Math.random() * 2.0 - 1.0
-            val gsrMicrosiemens = baseGSR + variation
-            val gsrRaw = (gsrMicrosiemens * 4095.0 / 100.0).coerceIn(0.0, 4095.0)
-            val ppgRaw = (2048 + Math.sin(time / 1000.0) * 500 + Math.random() * 200 - 100)
-            val gsrRawInt = gsrRaw.toInt()
-            val qualityScore = when {
-                gsrRawInt < 0 || gsrRawInt > ADC_RESOLUTION_12BIT.toInt() -> 0.0
-                gsrMicrosiemens <= 0 -> 0.5
-                else -> _connectionQuality.value
-            }
-            val gsrSample = GSRSample(
-                timestamp = monotonicNs,
-                timestampIso = iso,
-                gsrMicrosiemens = gsrMicrosiemens,
-                gsrRaw = gsrRawInt,
-                ppgRaw = ppgRaw.toInt(),
-                qualityScore = qualityScore,
-                connectionRssi = -50
-            )
-            gsrDataFlow.tryEmit(gsrSample)
-            if (sessionMetadata != null) {
-                csvWriter?.write("${wallClockMs},${relativeMs},${monotonicNs},${gsrMicrosiemens},${gsrRawInt},${ppgRaw.toInt()},${qualityScore},-50\n")
-            } else {
-                csvWriter?.write("${monotonicNs},${iso},${gsrMicrosiemens},${gsrRawInt},${ppgRaw.toInt()},${qualityScore},-50\n")
-            }
-            if (recordedSamples.incrementAndGet() % 100 == 0L) {
-                csvWriter?.flush()
-            }
-        } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("DefaultGsrRecorder", "Unexpected Exception in DefaultGsrRecorder catch block", e)
         }
     }
 }

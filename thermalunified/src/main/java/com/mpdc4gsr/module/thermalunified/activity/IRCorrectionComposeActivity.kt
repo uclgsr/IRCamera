@@ -53,7 +53,11 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = {
+                                selectedCorrection = 0
+                                correctionProgress = 0f
+                                isProcessing = false
+                            }) {
                                 Icon(
                                     Icons.Default.Refresh,
                                     contentDescription = "Reset",

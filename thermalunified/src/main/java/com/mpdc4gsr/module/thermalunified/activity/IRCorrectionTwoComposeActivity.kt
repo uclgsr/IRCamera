@@ -66,6 +66,7 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
         var distortion by remember { mutableStateOf(0f) }
         var rotation by remember { mutableStateOf(0f) }
         var scale by remember { mutableStateOf(1f) }
+        var navigationMessage by remember { mutableStateOf<String?>(null) }
         Column(
             modifier =
                 modifier
@@ -223,7 +224,7 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                     Text("Reset")
                 }
                 Button(
-                    onClick = { },
+                    onClick = { navigationMessage = "Corrections applied. Continue to Step 3." },
                     modifier = Modifier.weight(1f),
                     colors =
                         ButtonDefaults.buttonColors(
@@ -234,6 +235,14 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Apply & Next")
                 }
+            }
+            navigationMessage?.let { message ->
+                Text(
+                    text = message,
+                    color = Color(0xFFFF6B35),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
         }
     }

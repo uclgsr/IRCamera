@@ -7,6 +7,10 @@
     <!-- UI colors -->
     <color name="backgroundColor">#FF16131E</color>
     <color name="font_gray">#999999</color>
+    <color name="lms_color_717171">#717171</color>
+    <color name="color_06AAFF">#FF06AAFF</color>
+    <color name="color_font_five">#FF666666</color>
+    <color name="color_8A898E">#FF8A898E</color>
 
     <!-- Material Design colors -->
     <color name="colorPrimary">#FF1976D2</color>
