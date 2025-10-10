@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -694,15 +693,12 @@ class ConnectionImpl implements Connection, ScanListener {
     }
 
     private void log(int priority, int type, String format, Object... args) {
-        logger.log(priority, type, String.format(Locale.US, format, args));
     }
 
     private void logE(int type, String format, Object... args) {
-        log(Log.ERROR, type, format, args);
     }
 
     private void logD(int type, String format, Object... args) {
-        log(Log.DEBUG, type, format, args);
     }
 
     private void notifyRequestFailed(GenericRequest request, int failType) {
@@ -1121,7 +1117,6 @@ class ConnectionImpl implements Connection, ScanListener {
 
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            Log.e("bcf", "onCharacteristicRead  status: " + status + "  value: " + UnifiedBleUtils.INSTANCE.bytesToHexString(characteristic.getValue()));
             if (originCallback != null) {
                 easyBle.getExecutorService().execute(() -> originCallback.onCharacteristicRead(gatt, characteristic, status));
             }
@@ -1139,7 +1134,6 @@ class ConnectionImpl implements Connection, ScanListener {
 
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-//            Log.e("bcf","onCharacteristicWrite  status: "+status);
             if (originCallback != null) {
                 easyBle.getExecutorService().execute(() -> originCallback.onCharacteristicWrite(gatt, characteristic, status));
             }

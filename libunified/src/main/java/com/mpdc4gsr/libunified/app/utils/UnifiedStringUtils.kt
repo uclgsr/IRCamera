@@ -4,11 +4,13 @@ import android.content.Context
 import java.util.*
 
 object UnifiedStringUtils {
-    fun randomUuid(): String {
-        return UUID.randomUUID().toString().replace("-", "")
-    }
+    fun randomUuid(): String = UUID.randomUUID().toString().replace("-", "")
 
-    fun fillZero(src: String?, targetLen: Int, head: Boolean): String? {
+    fun fillZero(
+        src: String?,
+        targetLen: Int,
+        head: Boolean,
+    ): String? {
         if (src == null) return null
         val sb = StringBuilder(src)
         while (sb.length < targetLen) {
@@ -21,29 +23,23 @@ object UnifiedStringUtils {
         return sb.toString()
     }
 
-    fun getResString(context: Context, resId: Int): String {
-        return try {
+    fun getResString(
+        context: Context,
+        resId: Int,
+    ): String =
+        try {
             context.getString(resId)
         } catch (e: Exception) {
             ""
         }
-    }
 
-    fun isEmpty(str: String?): Boolean {
-        return str == null || str.trim().isEmpty()
-    }
+    fun isEmpty(str: String?): Boolean = str == null || str.trim().isEmpty()
 
-    fun isNotEmpty(str: String?): Boolean {
-        return !isEmpty(str)
-    }
+    fun isNotEmpty(str: String?): Boolean = !isEmpty(str)
 
-    fun isBlank(str: String?): Boolean {
-        return str == null || str.trim().isEmpty()
-    }
+    fun isBlank(str: String?): Boolean = str == null || str.trim().isEmpty()
 
-    fun createFileName(timeStr: String): String {
-        return "_$timeStr"
-    }
+    fun createFileName(timeStr: String): String = "_$timeStr"
 
     fun dateString(date: String): String {
         if (date.length < 8) return date
@@ -53,7 +49,10 @@ object UnifiedStringUtils {
         return "$year-$month-$day"
     }
 
-    fun equals(a: CharSequence?, b: CharSequence?): Boolean {
+    fun equals(
+        a: CharSequence?,
+        b: CharSequence?,
+    ): Boolean {
         if (a === b) return true
         if (a != null && b != null && a.length == b.length) {
             if (a is String && b is String) {

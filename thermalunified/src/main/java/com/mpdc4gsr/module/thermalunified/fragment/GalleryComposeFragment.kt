@@ -35,9 +35,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
-    override fun createViewModel(): GalleryViewModel {
-        return viewModels<GalleryViewModel>().value
-    }
+    override fun createViewModel(): GalleryViewModel = viewModels<GalleryViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -48,7 +46,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             val selectedItems by viewModel.selectedItems.collectAsStateWithLifecycle()
             val isSelectionMode by viewModel.isSelectionMode.collectAsStateWithLifecycle()
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 // Top bar with controls
                 GalleryTopBar(
@@ -58,13 +56,13 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     onToggleView = { viewModel.toggleViewMode() },
                     onCancelSelection = { viewModel.exitSelectionMode() },
                     onDeleteSelected = { viewModel.deleteSelectedItems() },
-                    onShareSelected = { viewModel.shareSelectedItems() }
+                    onShareSelected = { viewModel.shareSelectedItems() },
                 )
                 // Media content
                 when {
                     mediaItems.isEmpty() -> {
                         EmptyGalleryState(
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
                         )
                     }
 
@@ -84,7 +82,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                                 if (!isSelectionMode) {
                                     viewModel.enterSelectionMode(item)
                                 }
-                            }
+                            },
                         )
                     }
 
@@ -104,7 +102,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                                 if (!isSelectionMode) {
                                     viewModel.enterSelectionMode(item)
                                 }
-                            }
+                            },
                         )
                     }
                 }
@@ -121,13 +119,13 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
         onToggleView: () -> Unit,
         onCancelSelection: () -> Unit,
         onDeleteSelected: () -> Unit,
-        onShareSelected: () -> Unit
+        onShareSelected: () -> Unit,
     ) {
         TopAppBar(
             title = {
                 Text(
                     text = if (isSelectionMode) "$selectedCount selected" else "Gallery",
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             },
             actions = {
@@ -139,7 +137,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         Icon(
                             Icons.Default.Delete,
                             contentDescription = "Delete",
-                            tint = MaterialTheme.colorScheme.error
+                            tint = MaterialTheme.colorScheme.error,
                         )
                     }
                     TextButton(onClick = onCancelSelection) {
@@ -149,11 +147,11 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     IconButton(onClick = onToggleView) {
                         Icon(
                             if (isGridView) Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
-                            contentDescription = if (isGridView) "List View" else "Grid View"
+                            contentDescription = if (isGridView) "List View" else "Grid View",
                         )
                     }
                 }
-            }
+            },
         )
     }
 
@@ -163,13 +161,13 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
         selectedItems: Set<String>,
         isSelectionMode: Boolean,
         onItemClick: (GalleryViewModel.MediaItem) -> Unit,
-        onItemLongClick: (GalleryViewModel.MediaItem) -> Unit
+        onItemLongClick: (GalleryViewModel.MediaItem) -> Unit,
     ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(mediaItems) { item ->
                 GridMediaItem(
@@ -177,7 +175,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     isSelected = selectedItems.contains(item.id),
                     isSelectionMode = isSelectionMode,
                     onClick = { onItemClick(item) },
-                    onLongClick = { onItemLongClick(item) }
+                    onLongClick = { onItemLongClick(item) },
                 )
             }
         }
@@ -189,11 +187,11 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
         selectedItems: Set<String>,
         isSelectionMode: Boolean,
         onItemClick: (GalleryViewModel.MediaItem) -> Unit,
-        onItemLongClick: (GalleryViewModel.MediaItem) -> Unit
+        onItemLongClick: (GalleryViewModel.MediaItem) -> Unit,
     ) {
         LazyColumn(
             contentPadding = PaddingValues(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(mediaItems) { item ->
                 ListMediaItem(
@@ -201,7 +199,7 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     isSelected = selectedItems.contains(item.id),
                     isSelectionMode = isSelectionMode,
                     onClick = { onItemClick(item) },
-                    onLongClick = { onItemLongClick(item) }
+                    onLongClick = { onItemLongClick(item) },
                 )
             }
         }
@@ -213,80 +211,93 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
         isSelected: Boolean,
         isSelectionMode: Boolean,
         onClick: () -> Unit,
-        onLongClick: () -> Unit
+        onLongClick: () -> Unit,
     ) {
         Card(
             onClick = onClick,
-            modifier = Modifier
-                .aspectRatio(1f)
-                .fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = if (isSelected)
-                    MaterialTheme.colorScheme.primaryContainer
-                else
-                    MaterialTheme.colorScheme.surface
-            ),
-            border = if (isSelected)
-                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-            else null
+            modifier =
+                Modifier
+                    .aspectRatio(1f)
+                    .fillMaxWidth(),
+            colors =
+                CardDefaults.cardColors(
+                    containerColor =
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.primaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.surface
+                        },
+                ),
+            border =
+                if (isSelected) {
+                    androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+                } else {
+                    null
+                },
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 // Thumbnail image
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(item.thumbnailPath)
-                        .crossfade(true)
-                        .build(),
+                    model =
+                        ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(item.thumbnailPath)
+                            .crossfade(true)
+                            .build(),
                     contentDescription = item.name,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop,
                 )
                 // Selection indicator
                 if (isSelectionMode) {
                     Box(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(8.dp)
+                        modifier =
+                            Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(8.dp),
                     ) {
                         if (isSelected) {
                             Icon(
                                 Icons.Default.Delete, // Using as checkmark substitute
                                 contentDescription = "Selected",
                                 tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier
-                                    .background(
-                                        color = Color.White,
-                                        shape = androidx.compose.foundation.shape.CircleShape
-                                    )
-                                    .padding(4.dp)
+                                modifier =
+                                    Modifier
+                                        .background(
+                                            color = Color.White,
+                                            shape = androidx.compose.foundation.shape.CircleShape,
+                                        ).padding(4.dp),
                             )
                         }
                     }
                 }
                 // Media info overlay
                 Card(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(8.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Black.copy(alpha = 0.7f)
-                    )
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(8.dp),
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = Color.Black.copy(alpha = 0.7f),
+                        ),
                 ) {
                     Column(
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(8.dp),
                     ) {
                         Text(
                             text = item.name,
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White,
-                            maxLines = 1
+                            maxLines = 1,
                         )
                         Text(
                             text = formatFileSize(item.size),
                             style = MaterialTheme.typography.labelSmall,
-                            color = Color.White.copy(alpha = 0.8f)
+                            color = Color.White.copy(alpha = 0.8f),
                         )
                     }
                 }
@@ -300,63 +311,71 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
         isSelected: Boolean,
         isSelectionMode: Boolean,
         onClick: () -> Unit,
-        onLongClick: () -> Unit
+        onLongClick: () -> Unit,
     ) {
         Card(
             onClick = onClick,
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = if (isSelected)
-                    MaterialTheme.colorScheme.primaryContainer
-                else
-                    MaterialTheme.colorScheme.surface
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor =
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.primaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.surface
+                        },
+                ),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Thumbnail
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(item.thumbnailPath)
-                        .crossfade(true)
-                        .build(),
+                    model =
+                        ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(item.thumbnailPath)
+                            .crossfade(true)
+                            .build(),
                     contentDescription = item.name,
-                    modifier = Modifier
-                        .size(60.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                    modifier =
+                        Modifier
+                            .size(60.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop,
                 )
                 // File info
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(
                         text = item.name,
                         style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
                     )
                     Text(
                         text = formatFileSize(item.size),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Text(
-                        text = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
-                            .format(Date(item.dateModified)),
+                        text =
+                            SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
+                                .format(Date(item.dateModified)),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
                 // Selection indicator
                 if (isSelectionMode) {
                     Checkbox(
                         checked = isSelected,
-                        onCheckedChange = null // Handled by card click
+                        onCheckedChange = null, // Handled by card click
                     )
                 }
             }
@@ -364,32 +383,30 @@ class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
     }
 
     @Composable
-    private fun EmptyGalleryState(
-        modifier: Modifier = Modifier
-    ) {
+    private fun EmptyGalleryState(modifier: Modifier = Modifier) {
         Box(
             modifier = modifier,
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
                     Icons.Default.GridView,
                     contentDescription = "Empty gallery",
                     modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "No Media Files",
                     style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "Capture photos or videos with the thermal camera to see them here",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }

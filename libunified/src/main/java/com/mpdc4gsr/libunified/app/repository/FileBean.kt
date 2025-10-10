@@ -37,11 +37,12 @@ open class FileBean(
         hasDownload = File(FileConfig.ts004GalleryDir, fileBean.name).exists(),
     )
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents(): Int = 0
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         dest.writeInt(id)
         dest.writeString(path)
         dest.writeString(thumb)
@@ -52,20 +53,17 @@ open class FileBean(
     }
 
     companion object CREATOR : Parcelable.Creator<FileBean> {
-        override fun createFromParcel(parcel: Parcel): FileBean {
-            return FileBean(
+        override fun createFromParcel(parcel: Parcel): FileBean =
+            FileBean(
                 id = parcel.readInt(),
                 path = parcel.readString() ?: "",
                 thumb = parcel.readString() ?: "",
                 name = parcel.readString() ?: "",
                 duration = parcel.readLong(),
                 timeMillis = parcel.readLong(),
-                hasDownload = parcel.readByte() != 0.toByte()
+                hasDownload = parcel.readByte() != 0.toByte(),
             )
-        }
 
-        override fun newArray(size: Int): Array<FileBean?> {
-            return arrayOfNulls(size)
-        }
+        override fun newArray(size: Int): Array<FileBean?> = arrayOfNulls(size)
     }
 }

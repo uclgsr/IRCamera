@@ -22,22 +22,25 @@ class MonitorThermalViewModel : BaseViewModel() {
     // Monitoring Alerts
     private val _monitoringAlerts = MutableStateFlow<List<MonitoringAlert>>(emptyList())
     val monitoringAlerts: StateFlow<List<MonitoringAlert>> = _monitoringAlerts.asStateFlow()
+
     fun toggleMonitoring() {
         launchWithErrorHandling {
-            _monitoringState.value = when (_monitoringState.value) {
-                MonitoringState.STOPPED -> MonitoringState.ACTIVE
-                MonitoringState.ACTIVE -> MonitoringState.PAUSED
-                MonitoringState.PAUSED -> MonitoringState.ACTIVE
-            }
+            _monitoringState.value =
+                when (_monitoringState.value) {
+                    MonitoringState.STOPPED -> MonitoringState.ACTIVE
+                    MonitoringState.ACTIVE -> MonitoringState.PAUSED
+                    MonitoringState.PAUSED -> MonitoringState.ACTIVE
+                }
         }
     }
 
     fun toggleRecording() {
         launchWithErrorHandling {
-            _recordingStatus.value = when (_recordingStatus.value) {
-                RecordingStatus.IDLE -> RecordingStatus.RECORDING
-                RecordingStatus.RECORDING -> RecordingStatus.IDLE
-            }
+            _recordingStatus.value =
+                when (_recordingStatus.value) {
+                    RecordingStatus.IDLE -> RecordingStatus.RECORDING
+                    RecordingStatus.RECORDING -> RecordingStatus.IDLE
+                }
         }
     }
 
@@ -79,27 +82,43 @@ class MonitorThermalViewModel : BaseViewModel() {
         val sessionDuration: String,
         val sampleCount: Int,
         val alertCount: Int,
-        val dataSize: String
+        val dataSize: String,
     )
 
-    data class FenceData(val data: String)
-    data class TemperatureThreshold(val high: Float, val low: Float)
-    data class AlertSettings(val soundEnabled: Boolean, val vibrationEnabled: Boolean)
+    data class FenceData(
+        val data: String,
+    )
+
+    data class TemperatureThreshold(
+        val high: Float,
+        val low: Float,
+    )
+
+    data class AlertSettings(
+        val soundEnabled: Boolean,
+        val vibrationEnabled: Boolean,
+    )
+
     data class MonitoringAlert(
         val message: String,
         val severity: AlertSeverity,
-        val timestamp: Date
+        val timestamp: Date,
     )
 
     enum class MonitoringState {
-        STOPPED, ACTIVE, PAUSED
+        STOPPED,
+        ACTIVE,
+        PAUSED,
     }
 
     enum class RecordingStatus {
-        IDLE, RECORDING
+        IDLE,
+        RECORDING,
     }
 
     enum class AlertSeverity {
-        LOW, MEDIUM, HIGH
+        LOW,
+        MEDIUM,
+        HIGH,
     }
 }

@@ -2,7 +2,6 @@ package com.mpdc4gsr.module.thermalunified.frame
 
 import android.graphics.Bitmap
 import android.graphics.Rect
-import com.elvishew.xlog.XLog
 import com.energy.iruvc.sdkisp.LibIRProcess
 import com.energy.iruvc.sdkisp.LibIRTemp
 import com.energy.iruvc.utils.CommonParams
@@ -29,24 +28,21 @@ class FrameTool {
     private var irImageHelp = IRImageHelp()
     private val supImageData = ByteArray(imageWidth * imageHeight * 4 * 4)
     private var dstArgbBytes: ByteArray? = null
+
     fun read(bytes: ByteArray) {
         try {
             val frame = ByteArray(bytes.size)
             System.arraycopy(bytes, 0, frame, 0, frame.size)
-            println("bs len: ${frame.size}")
             System.arraycopy(frame, 0, imageBytes, 0, scrImageLen)
             System.arraycopy(
                 frame,
                 scrImageLen,
                 temperatureBytes,
                 0,
-                srcTemperatureLen
+                srcTemperatureLen,
             )
-            println("imageBytes len: ${imageBytes.size}")
-            println("temperatureBytes len: ${temperatureBytes.size}")
         } catch (e: Exception) {
             e.printStackTrace()
-            XLog.e("Failed to read frame raw data: ${e.message}")
         }
     }
 
@@ -112,7 +108,7 @@ class FrameTool {
             tempBytes,
             imgRes,
             CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
-            dstTempBytes
+            dstTempBytes,
         )
         return dstTempBytes
     }
@@ -142,7 +138,7 @@ class FrameTool {
                 imageBytesTemp,
                 pixNum.toLong(),
                 CommonParams.PseudoColorType.PSEUDO_1,
-                argbBytes
+                argbBytes,
             )
             val colorList: IntArray? = customPseudoBean.getColorList(struct.isTC007())
             val places: FloatArray? = customPseudoBean.getPlaceList()
@@ -163,11 +159,11 @@ class FrameTool {
                 while (index < argbBytesLength) {
                     var temperature0: Float =
                         (
-                                (temperatureBytes[j].toInt() and 0xff) + (
-                                        temperatureBytes[j + 1]
-                                            .toInt() and 0xff
-                                        ) * 256
-                                ).toFloat()
+                            (temperatureBytes[j].toInt() and 0xff) + (
+                                temperatureBytes[j + 1]
+                                    .toInt() and 0xff
+                            ) * 256
+                        ).toFloat()
                     temperature0 = (temperature0 / 64 - 273.15).toFloat()
                     if (temperature0 in customMinTemp..customMaxTemp) {
                         val rgb =
@@ -206,14 +202,14 @@ class FrameTool {
                 imageBytesTemp,
                 pixNum.toLong(),
                 pseudoColorMode,
-                argbBytes
+                argbBytes,
             )
             if (!(maxLimit == -273f && minLimit == -273f) && !(maxTemperature == maxLimit && minLimit == minTemperature)) {
                 ImageTools.dualReadFrame(
                     argbBytes,
                     temperatureBytes,
                     maxLimit,
-                    minLimit
+                    minLimit,
                 )
             }
         }
@@ -224,7 +220,8 @@ class FrameTool {
                 argbBytes =
                     irImageHelp.contourDetection(
                         struct.alarmBean,
-                        argbBytes, temperatureBytes,
+                        argbBytes,
+                        temperatureBytes,
                         imageWidth,
                         imageHeight,
                     )!!
@@ -251,14 +248,16 @@ class FrameTool {
                 scrBitmap =
                     Bitmap.createBitmap(
                         dstImageRes.width.code * 2,
-                        dstImageRes.height.code * 2, Bitmap.Config.ARGB_8888,
+                        dstImageRes.height.code * 2,
+                        Bitmap.Config.ARGB_8888,
                     )
                 scrBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(supImageData, 0, argbLen * 4))
             } else {
                 scrBitmap =
                     Bitmap.createBitmap(
                         dstImageRes.width.code,
-                        dstImageRes.height.code, Bitmap.Config.ARGB_8888,
+                        dstImageRes.height.code,
+                        Bitmap.Config.ARGB_8888,
                     )
                 dstArgbBytes?.let {
                     scrBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(it, 0, argbLen))
@@ -268,7 +267,8 @@ class FrameTool {
             scrBitmap =
                 Bitmap.createBitmap(
                     dstImageRes.width.code,
-                    dstImageRes.height.code, Bitmap.Config.ARGB_8888,
+                    dstImageRes.height.code,
+                    Bitmap.Config.ARGB_8888,
                 )
             dstArgbBytes?.let {
                 scrBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(it, 0, argbLen))

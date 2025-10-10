@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 
 import androidx.annotation.CallSuper;
@@ -204,7 +203,6 @@ abstract class AbstractScanner implements Scanner {
             }
         }
         String msg = String.format(Locale.US, "found device! [name: %s, addr: %s]", TextUtils.isEmpty(name) ? "N/A" : name, device.getAddress());
-        logger.log(Log.DEBUG, Logger.TYPE_SCAN_STATE, msg);
     }
 
     @CallSuper
@@ -218,12 +216,10 @@ abstract class AbstractScanner implements Scanner {
                 if (!isLocationEnabled(context)) {
                     String errorMsg = "Unable to scan for Bluetooth devices, the phone's location service is not turned on.";
                     handleScanCallback(false, null, false, ScanListener.ERROR_LOCATION_SERVICE_CLOSED, errorMsg);
-                    logger.log(Log.ERROR, Logger.TYPE_SCAN_STATE, errorMsg);
                     return;
                 } else if (noLocationPermission(context)) {
                     String errorMsg = "Unable to scan for Bluetooth devices, lack location permission.";
                     handleScanCallback(false, null, false, ScanListener.ERROR_LACK_LOCATION_PERMISSION, errorMsg);
-                    logger.log(Log.ERROR, Logger.TYPE_SCAN_STATE, errorMsg);
                     return;
                 }
             }

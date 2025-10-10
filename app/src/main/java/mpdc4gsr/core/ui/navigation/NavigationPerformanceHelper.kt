@@ -1,6 +1,5 @@
 package mpdc4gsr.core.ui.navigation
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -29,10 +28,6 @@ object NavigationPerformanceHelper {
         }
         navigationMetrics.forEach { (route, metric) ->
             val routeName = route.removePrefix("navigation_")
-            Log.d(
-                TAG, "$routeName: avg=${String.format("%.1f", metric.average)}ms, " +
-                        "max=${metric.max}ms, min=${metric.min}ms, count=${metric.count}"
-            )
         }
         val slowRoutes = navigationMetrics.filter { it.value.average > WARNING_THRESHOLD_MS }
         if (slowRoutes.isNotEmpty()) {
@@ -49,8 +44,7 @@ object NavigationPerformanceHelper {
             .filter { it.value.average > thresholdMs }
             .map {
                 it.key.removePrefix("navigation_") to it.value.average
-            }
-            .sortedByDescending { it.second }
+            }.sortedByDescending { it.second }
     }
 
     fun getFastestRoute(): Pair<String, Double>? {

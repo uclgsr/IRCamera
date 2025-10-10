@@ -6,12 +6,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 
 object UnifiedPackageUtils {
-    fun getPackageInfo(context: Context): PackageInfo? {
-        return try {
+    fun getPackageInfo(context: Context): PackageInfo? =
+        try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 context.packageManager.getPackageInfo(
                     context.packageName,
-                    PackageManager.PackageInfoFlags.of(0)
+                    PackageManager.PackageInfoFlags.of(0),
                 )
             } else {
                 @Suppress("DEPRECATION")
@@ -20,11 +20,8 @@ object UnifiedPackageUtils {
         } catch (e: PackageManager.NameNotFoundException) {
             null
         }
-    }
 
-    fun getVersionName(context: Context): String {
-        return getPackageInfo(context)?.versionName ?: "Unknown"
-    }
+    fun getVersionName(context: Context): String = getPackageInfo(context)?.versionName ?: "Unknown"
 
     fun getVersionCode(context: Context): Long {
         val packageInfo = getPackageInfo(context) ?: return 0L
@@ -36,7 +33,10 @@ object UnifiedPackageUtils {
         }
     }
 
-    fun compareVersions(version1: String, version2: String): Int {
+    fun compareVersions(
+        version1: String,
+        version2: String,
+    ): Int {
         val v1Parts = version1.split(".").map { it.toIntOrNull() ?: 0 }
         val v2Parts = version2.split(".").map { it.toIntOrNull() ?: 0 }
         val maxLength = maxOf(v1Parts.size, v2Parts.size)
@@ -51,27 +51,26 @@ object UnifiedPackageUtils {
         return 0
     }
 
-    fun isVersionAtLeast(currentVersion: String, minimumVersion: String): Boolean {
-        return compareVersions(currentVersion, minimumVersion) >= 0
-    }
+    fun isVersionAtLeast(
+        currentVersion: String,
+        minimumVersion: String,
+    ): Boolean = compareVersions(currentVersion, minimumVersion) >= 0
 
-    fun getApplicationLabel(context: Context): String {
-        return try {
+    fun getApplicationLabel(context: Context): String =
+        try {
             val applicationInfo = context.applicationInfo
             context.packageManager.getApplicationLabel(applicationInfo).toString()
         } catch (e: Exception) {
             "Unknown App"
         }
-    }
 
-    fun isDebuggable(context: Context): Boolean {
-        return try {
+    fun isDebuggable(context: Context): Boolean =
+        try {
             val applicationInfo = context.applicationInfo
             (applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
         } catch (e: Exception) {
             false
         }
-    }
 
     data class BuildInfo(
         val versionName: String,
@@ -80,7 +79,7 @@ object UnifiedPackageUtils {
         val isDebuggable: Boolean,
         val targetSdk: Int,
         val minSdk: Int,
-        val buildTime: Long = System.currentTimeMillis()
+        val buildTime: Long = System.currentTimeMillis(),
     )
 
     fun getBuildInfo(context: Context): BuildInfo {
@@ -91,11 +90,12 @@ object UnifiedPackageUtils {
             packageName = context.packageName,
             isDebuggable = isDebuggable(context),
             targetSdk = packageInfo?.applicationInfo?.targetSdkVersion ?: 0,
-            minSdk = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                packageInfo?.applicationInfo?.minSdkVersion ?: 0
-            } else {
-                0
-            }
+            minSdk =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    packageInfo?.applicationInfo?.minSdkVersion ?: 0
+                } else {
+                    0
+                },
         )
     }
 
@@ -119,33 +119,36 @@ object UnifiedPackageUtils {
         if (parts.size < 2) return false
         return parts.all { part ->
             part.isNotEmpty() &&
-                    part.first().isLetter() &&
-                    part.all { it.isLetterOrDigit() || it == '_' }
+                part.first().isLetter() &&
+                part.all { it.isLetterOrDigit() || it == '_' }
         }
     }
 
-    fun getInstalledPackages(context: Context): List<String> {
-        return try {
-            val packages = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                context.packageManager.getInstalledPackages(
-                    PackageManager.PackageInfoFlags.of(0)
-                )
-            } else {
-                @Suppress("DEPRECATION")
-                context.packageManager.getInstalledPackages(0)
-            }
+    fun getInstalledPackages(context: Context): List<String> =
+        try {
+            val packages =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    context.packageManager.getInstalledPackages(
+                        PackageManager.PackageInfoFlags.of(0),
+                    )
+                } else {
+                    @Suppress("DEPRECATION")
+                    context.packageManager.getInstalledPackages(0)
+                }
             packages.map { it.packageName }
         } catch (e: Exception) {
             emptyList()
         }
-    }
 
-    fun isPackageInstalled(context: Context, packageName: String): Boolean {
-        return try {
+    fun isPackageInstalled(
+        context: Context,
+        packageName: String,
+    ): Boolean =
+        try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 context.packageManager.getPackageInfo(
                     packageName,
-                    PackageManager.PackageInfoFlags.of(0)
+                    PackageManager.PackageInfoFlags.of(0),
                 )
             } else {
                 @Suppress("DEPRECATION")
@@ -155,5 +158,4 @@ object UnifiedPackageUtils {
         } catch (e: PackageManager.NameNotFoundException) {
             false
         }
-    }
 }

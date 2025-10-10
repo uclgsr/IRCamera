@@ -30,7 +30,7 @@ fun ThermalSensorCard(
     onClick: () -> Unit,
     onAction: (ThermalAction) -> Unit,
     onSettingsClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     // TODO: Replace with real thermal data from ThermalRecorder via ViewModel
     var centerTemp by remember { mutableFloatStateOf(25.6f) }
@@ -51,56 +51,58 @@ fun ThermalSensorCard(
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF2A2A2A)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF2A2A2A),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             // Header with thermal icon and status
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Icon(
                         imageVector = Icons.Default.Thermostat,
                         contentDescription = "Thermal Camera",
                         tint = getStatusColor(state),
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
                     Column {
                         Text(
                             text = "Thermal IR Camera",
                             color = Color.White,
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
                             text = "TOPDON $deviceType",
                             color = Color.Gray,
-                            fontSize = 12.sp
+                            fontSize = 12.sp,
                         )
                     }
                 }
                 Surface(
                     color = getStatusColor(state).copy(alpha = 0.2f),
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(16.dp),
                 ) {
                     Text(
                         text = state.name,
                         color = getStatusColor(state),
                         fontSize = 12.sp,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     )
                 }
             }
@@ -110,45 +112,45 @@ fun ThermalSensorCard(
                     centerTemp = centerTemp,
                     maxTemp = maxTemp,
                     minTemp = minTemp,
-                    isStreaming = state == SensorState.Streaming
+                    isStreaming = state == SensorState.Streaming,
                 )
             }
             // Temperature metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 MetricItem(
                     label = "Center",
                     value = "${String.format("%.1f", centerTemp)}°C",
-                    color = Color.White
+                    color = Color.White,
                 )
                 MetricItem(
                     label = "Max",
                     value = "${String.format("%.1f", maxTemp)}°C",
-                    color = Color.Red
+                    color = Color.Red,
                 )
                 MetricItem(
                     label = "Min",
                     value = "${String.format("%.1f", minTemp)}°C",
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 MetricItem(
                     label = "Resolution",
                     value = "256×192",
-                    color = Color.Cyan
+                    color = Color.Cyan,
                 )
             }
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 when (state) {
                     SensorState.Disconnected -> {
                         Button(
                             onClick = { onAction(ThermalAction.Connect) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
                         ) {
                             Text("Connect")
                         }
@@ -159,7 +161,7 @@ fun ThermalSensorCard(
                             onClick = {
                                 onClick()
                             },
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         ) {
                             Icon(Icons.Default.PlayArrow, contentDescription = null)
                             Spacer(Modifier.width(4.dp))
@@ -167,7 +169,7 @@ fun ThermalSensorCard(
                         }
                         Button(
                             onClick = { onAction(ThermalAction.Calibrate) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500)),
                         ) {
                             Text("Calibrate")
                         }
@@ -176,7 +178,7 @@ fun ThermalSensorCard(
                     SensorState.Streaming -> {
                         Button(
                             onClick = { onAction(ThermalAction.StopPreview) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                         ) {
                             Icon(Icons.Default.Stop, contentDescription = null)
                             Spacer(Modifier.width(4.dp))
@@ -185,12 +187,12 @@ fun ThermalSensorCard(
                         IconButton(
                             onClick = {
                                 onSettingsClick?.invoke()
-                            }
+                            },
                         ) {
                             Icon(
                                 Icons.Default.Tune,
                                 contentDescription = "Thermal Settings",
-                                tint = Color.White
+                                tint = Color.White,
                             )
                         }
                     }
@@ -198,7 +200,7 @@ fun ThermalSensorCard(
                     SensorState.Error -> {
                         Button(
                             onClick = { onAction(ThermalAction.Connect) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500)),
                         ) {
                             Text("Retry")
                         }
@@ -217,29 +219,30 @@ private fun ThermalPreviewVisualization(
     maxTemp: Float,
     minTemp: Float,
     isStreaming: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(120.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Black.copy(alpha = 0.5f))
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(120.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Black.copy(alpha = 0.5f)),
     ) {
         Box(
-            modifier = Modifier.fillMaxSize().padding(8.dp)
+            modifier = Modifier.fillMaxSize().padding(8.dp),
         ) {
             if (isStreaming) {
                 // Thermal preview simulation
                 Canvas(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     val width = size.width
                     val height = size.height
                     // Draw thermal background pattern
                     drawRect(
                         color = Color(0xFF1A1A2E),
-                        size = size
+                        size = size,
                     )
                     // Draw thermal hotspots based on temperature data
                     val hotspotRadius = 30f
@@ -247,63 +250,66 @@ private fun ThermalPreviewVisualization(
                     drawCircle(
                         color = Color.Red.copy(alpha = 0.8f),
                         radius = hotspotRadius,
-                        center = Offset(width * 0.7f, height * 0.3f)
+                        center = Offset(width * 0.7f, height * 0.3f),
                     )
                     // Min temperature spot (blue)
                     drawCircle(
                         color = primaryColor.copy(alpha = 0.8f),
                         radius = hotspotRadius * 0.7f,
-                        center = Offset(width * 0.3f, height * 0.7f)
+                        center = Offset(width * 0.3f, height * 0.7f),
                     )
                     // Center temperature area (gradient)
-                    val centerColor = when {
-                        centerTemp > 30f -> Color.Yellow
-                        centerTemp > 20f -> Color.Green
-                        else -> Color.Cyan
-                    }
+                    val centerColor =
+                        when {
+                            centerTemp > 30f -> Color.Yellow
+                            centerTemp > 20f -> Color.Green
+                            else -> Color.Cyan
+                        }
                     drawCircle(
                         color = centerColor.copy(alpha = 0.6f),
                         radius = hotspotRadius * 0.8f,
-                        center = Offset(width * 0.5f, height * 0.5f)
+                        center = Offset(width * 0.5f, height * 0.5f),
                     )
                 }
                 // Temperature overlays
                 Box(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     // Max temp indicator
                     Surface(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(8.dp),
+                        modifier =
+                            Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(8.dp),
                         color = Color.Red.copy(alpha = 0.8f),
-                        shape = RoundedCornerShape(4.dp)
+                        shape = RoundedCornerShape(4.dp),
                     ) {
                         Text(
                             text = "${String.format("%.1f", maxTemp)}°C",
                             color = Color.White,
                             fontSize = 10.sp,
-                            modifier = Modifier.padding(4.dp)
+                            modifier = Modifier.padding(4.dp),
                         )
                     }
                     // Min temp indicator
                     Surface(
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(8.dp),
+                        modifier =
+                            Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(8.dp),
                         color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
-                        shape = RoundedCornerShape(4.dp)
+                        shape = RoundedCornerShape(4.dp),
                     ) {
                         Text(
                             text = "${String.format("%.1f", minTemp)}°C",
                             color = Color.White,
                             fontSize = 10.sp,
-                            modifier = Modifier.padding(4.dp)
+                            modifier = Modifier.padding(4.dp),
                         )
                     }
                     // Center crosshair
                     Canvas(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     ) {
                         val centerX = size.width / 2
                         val centerY = size.height / 2
@@ -313,13 +319,13 @@ private fun ThermalPreviewVisualization(
                             color = Color.Yellow,
                             start = Offset(centerX - crosshairSize, centerY),
                             end = Offset(centerX + crosshairSize, centerY),
-                            strokeWidth = 2.dp.toPx()
+                            strokeWidth = 2.dp.toPx(),
                         )
                         drawLine(
                             color = Color.Yellow,
                             start = Offset(centerX, centerY - crosshairSize),
                             end = Offset(centerX, centerY + crosshairSize),
-                            strokeWidth = 2.dp.toPx()
+                            strokeWidth = 2.dp.toPx(),
                         )
                     }
                 }
@@ -327,12 +333,12 @@ private fun ThermalPreviewVisualization(
                 // Static placeholder
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = "Thermal Preview (256×192)",
                         color = Color.Gray,
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
                     )
                 }
             }
@@ -345,29 +351,29 @@ private fun MetricItem(
     label: String,
     value: String,
     color: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             color = color,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Text(
             text = label,
             color = Color.Gray,
-            fontSize = 10.sp
+            fontSize = 10.sp,
         )
     }
 }
 
 @Composable
-private fun getStatusColor(state: SensorState): Color {
-    return when (state) {
+private fun getStatusColor(state: SensorState): Color =
+    when (state) {
         SensorState.Connected -> Color.Green
         SensorState.Streaming -> MaterialTheme.colorScheme.primary
         SensorState.Error -> Color.Red
@@ -375,7 +381,6 @@ private fun getStatusColor(state: SensorState): Color {
         SensorState.Connecting -> Color.Yellow
         SensorState.Simulation -> Color.Magenta
     }
-}
 
 @Preview(showBackground = true)
 @Composable
@@ -386,7 +391,7 @@ private fun ThermalSensorCardPreview() {
             onStateChange = {},
             onClick = {},
             onAction = {},
-            onSettingsClick = {}
+            onSettingsClick = {},
         )
     }
 }

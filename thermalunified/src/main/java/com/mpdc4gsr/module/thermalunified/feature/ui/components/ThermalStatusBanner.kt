@@ -20,20 +20,22 @@ fun ThermalStatusBanner(
     status: ThermalDeviceStatus,
     modifier: Modifier = Modifier,
 ) {
-    val bannerColor = when {
-        status.isStreaming -> Color(0xFF1B5E20)
-        status.isConnected -> Color(0xFF33691E)
-        status.lastError != null -> Color(0xFFB71C1C)
-        else -> Color(0xFF37474F)
-    }
+    val bannerColor =
+        when {
+            status.isStreaming -> Color(0xFF1B5E20)
+            status.isConnected -> Color(0xFF33691E)
+            status.lastError != null -> Color(0xFFB71C1C)
+            else -> Color(0xFF37474F)
+        }
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = bannerColor.copy(alpha = 0.18f)),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
@@ -42,12 +44,13 @@ fun ThermalStatusBanner(
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            val secondary = when {
-                status.lastError != null -> status.lastError
-                status.isStreaming -> "Streaming active - Radiometric capture ready"
-                status.isConnected -> "Hardware linked - Start stream when ready"
-                else -> "Connect the Topdon TC001 to begin"
-            }
+            val secondary =
+                when {
+                    status.lastError != null -> status.lastError
+                    status.isStreaming -> "Streaming active - Radiometric capture ready"
+                    status.isConnected -> "Hardware linked - Start stream when ready"
+                    else -> "Connect the Topdon TC001 to begin"
+                }
             Text(
                 text = secondary ?: "",
                 style = MaterialTheme.typography.bodySmall,
@@ -56,4 +59,3 @@ fun ThermalStatusBanner(
         }
     }
 }
-

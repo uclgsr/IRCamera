@@ -1,8 +1,7 @@
 package mpdc4gsr.core.data.utils
 
-import android.util.Log
-import mpdc4gsr.core.utils.AppLogger
 import kotlinx.coroutines.*
+import mpdc4gsr.core.utils.AppLogger
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -15,7 +14,7 @@ open class BufferedDataWriter(
     private val outputFile: File,
     private val bufferSize: Int = 8192,
     private val flushIntervalMs: Long = 1000L,
-    private val maxQueueSize: Int = 10000
+    private val maxQueueSize: Int = 10000,
 ) {
     companion object {
         private const val TAG = "BufferedDataWriter"
@@ -29,29 +28,33 @@ open class BufferedDataWriter(
     private var writerJob: Job? = null
     private var flushJob: Job? = null
     private val writerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    suspend fun start(): Boolean = withContext(Dispatchers.IO) {
-        if (isRunning.get()) {
-            AppLogger.w(TAG, "Writer already running for ${outputFile.name}")
-            return@withContext true
-        }
-        try {
-            outputFile.parentFile?.mkdirs()
-            writer = BufferedWriter(FileWriter(outputFile, true), bufferSize)
-            isRunning.set(true)
-            writerJob = writerScope.launch {
-                runWriterLoop()
+
+    suspend fun start(): Boolean =
+        withContext(Dispatchers.IO) {
+            if (isRunning.get()) {
+                AppLogger.w(TAG, "Writer already running for ${outputFile.name}")
+                return@withContext true
             }
-            flushJob = writerScope.launch {
-                runFlushLoop()
+            try {
+                outputFile.parentFile?.mkdirs()
+                writer = BufferedWriter(FileWriter(outputFile, true), bufferSize)
+                isRunning.set(true)
+                writerJob =
+                    writerScope.launch {
+                        runWriterLoop()
+                    }
+                flushJob =
+                    writerScope.launch {
+                        runFlushLoop()
+                    }
+                AppLogger.i(TAG, "Started buffered writer for ${outputFile.absolutePath}")
+                true
+            } catch (e: Exception) {
+                AppLogger.e(TAG, "Failed to start writer for ${outputFile.name}", e)
+                cleanup()
+                false
             }
-            AppLogger.i(TAG, "Started buffered writer for ${outputFile.absolutePath}")
-            true
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to start writer for ${outputFile.name}", e)
-            cleanup()
-            false
         }
-    }
 
     fun writeLine(line: String): Boolean {
         if (!isRunning.get()) {
@@ -81,57 +84,55 @@ open class BufferedDataWriter(
         return written
     }
 
-    suspend fun flush() = withContext(Dispatchers.IO) {
-        try {
-            writer?.flush()
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to flush writer for ${outputFile.name}", e)
+    suspend fun flush() =
+        withContext(Dispatchers.IO) {
+            try {
+                writer?.flush()
+            } catch (e: Exception) {
+                AppLogger.e(TAG, "Failed to flush writer for ${outputFile.name}", e)
+            }
         }
-    }
 
-    suspend fun stop() = withContext(Dispatchers.IO) {
-        if (!isRunning.get()) {
-            return@withContext
+    suspend fun stop() =
+        withContext(Dispatchers.IO) {
+            if (!isRunning.get()) {
+                return@withContext
+            }
+            AppLogger.i(TAG, "Stopping buffered writer for ${outputFile.name}")
+            isRunning.set(false)
+            try {
+                writerJob?.cancel()
+                flushJob?.cancel()
+                writerJob?.join()
+                drainQueue()
+                writer?.flush()
+                writer?.close()
+                writer = null
+                val stats = getWriteStats()
+            } catch (e: Exception) {
+                AppLogger.e(TAG, "Error stopping writer for ${outputFile.name}", e)
+            }
         }
-        AppLogger.i(TAG, "Stopping buffered writer for ${outputFile.name}")
-        isRunning.set(false)
-        try {
-            writerJob?.cancel()
-            flushJob?.cancel()
-            writerJob?.join()
-            drainQueue()
-            writer?.flush()
-            writer?.close()
-            writer = null
-            val stats = getWriteStats()
-            Log.i(
-                TAG,
-                "Writer stopped for ${outputFile.name}: ${stats.linesWritten} lines, ${stats.bytesWritten} bytes"
-            )
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error stopping writer for ${outputFile.name}", e)
-        }
-    }
 
-    fun getWriteStats(): WriteStats {
-        return WriteStats(
+    fun getWriteStats(): WriteStats =
+        WriteStats(
             fileName = outputFile.name,
             bytesWritten = bytesWritten.get(),
             linesWritten = linesWritten.get(),
             queueSize = writeQueue.size,
-            isRunning = isRunning.get()
+            isRunning = isRunning.get(),
         )
-    }
 
     private suspend fun runWriterLoop() {
         AppLogger.d(TAG, "Starting writer loop for ${outputFile.name}")
         while (isRunning.get()) {
             try {
-                val line = withContext(Dispatchers.IO) {
-                    runInterruptible {
-                        writeQueue.poll(100, java.util.concurrent.TimeUnit.MILLISECONDS)
+                val line =
+                    withContext(Dispatchers.IO) {
+                        runInterruptible {
+                            writeQueue.poll(100, java.util.concurrent.TimeUnit.MILLISECONDS)
+                        }
                     }
-                }
                 if (line != null) {
                     writer?.let { w ->
                         w.write(line)
@@ -206,14 +207,15 @@ data class WriteStats(
     val bytesWritten: Long,
     val linesWritten: Long,
     val queueSize: Int,
-    val isRunning: Boolean
+    val isRunning: Boolean,
 ) {
     val avgLineSize: Double
         get() = if (linesWritten > 0) bytesWritten.toDouble() / linesWritten else 0.0
     val formattedSize: String
-        get() = when {
-            bytesWritten > 1024 * 1024 -> String.format("%.2f MB", bytesWritten / (1024.0 * 1024.0))
-            bytesWritten > 1024 -> String.format("%.2f KB", bytesWritten / 1024.0)
-            else -> "$bytesWritten bytes"
-        }
+        get() =
+            when {
+                bytesWritten > 1024 * 1024 -> String.format("%.2f MB", bytesWritten / (1024.0 * 1024.0))
+                bytesWritten > 1024 -> String.format("%.2f KB", bytesWritten / 1024.0)
+                else -> "$bytesWritten bytes"
+            }
 }

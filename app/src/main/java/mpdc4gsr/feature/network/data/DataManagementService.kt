@@ -116,16 +116,6 @@ class DataManagementService(private val context: Context) {
         setupStorageDirectories()
         loadExistingSessions()
         isInitialized.set(true)
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            TAG,
-            "service_initialized",
-            details = mapOf(
-                "base_directory" to baseDirectory.absolutePath,
-                "existing_sessions" to activeSessions.size,
-                "registered_files" to fileRegistry.size,
-            )
-        )
     }
 
     fun createSession(
@@ -155,18 +145,6 @@ class DataManagementService(private val context: Context) {
         deviceDir.mkdirs()
         saveSessionMetadata(session)
         activeSessions[sessionId] = session
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            TAG,
-            "session_created",
-            details = mapOf(
-                "session_id" to sessionId,
-                "device_id" to deviceId,
-                "participant_id" to (participantId ?: "anonymous"),
-                "study_id" to (studyId ?: "default"),
-                "conditions" to conditions.joinToString(","),
-            )
-        )
         return session
     }
 
@@ -176,17 +154,6 @@ class DataManagementService(private val context: Context) {
         session.status = SessionStatus.COMPLETED
         saveSessionMetadata(session)
         createFileManifest(session)
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            TAG,
-            "session_ended",
-            details = mapOf(
-                "session_id" to sessionId,
-                "duration_ms" to session.getDurationMs(),
-                "file_count" to session.getFileCount(),
-                "total_size_bytes" to session.getTotalFileSize(),
-            ),
-        )
         return true
     }
 
@@ -200,15 +167,6 @@ class DataManagementService(private val context: Context) {
         try {
             val file = File(filePath)
             if (!file.exists()) {
-                logger.log(
-                    StructuredLogger.LogLevel.WARNING,
-                    TAG,
-                    "file_registration_error",
-                    details = mapOf(
-                        "file_path" to filePath,
-                        "error" to "File does not exist",
-                    ),
-                )
                 return null
             }
             val fileId = generateFileId(sessionId, deviceId, file.name)
@@ -232,29 +190,8 @@ class DataManagementService(private val context: Context) {
             metadata.metadata["file_extension"] = file.extension
             fileRegistry[fileId] = metadata
             activeSessions[sessionId]?.files?.add(metadata)
-            logger.log(
-                StructuredLogger.LogLevel.INFO,
-                TAG,
-                "file_registered",
-                details = mapOf(
-                    "file_id" to fileId,
-                    "file_name" to file.name,
-                    "file_type" to fileType,
-                    "file_size" to file.length(),
-                    "session_id" to sessionId,
-                ),
-            )
             return metadata
         } catch (e: Exception) {
-            logger.log(
-                StructuredLogger.LogLevel.ERROR,
-                TAG,
-                "file_registration_error",
-                details = mapOf(
-                    "file_path" to filePath,
-                    "error" to (e.message ?: "Unknown error"),
-                ),
-            )
             return null
         }
     }
@@ -287,27 +224,8 @@ class DataManagementService(private val context: Context) {
                 fileMetadata.uploadStatus = FileUploadService.UploadStatus.PENDING
                 uploadJobIds.add(jobId)
             } catch (e: Exception) {
-                logger.log(
-                    StructuredLogger.LogLevel.ERROR,
-                    TAG,
-                    "upload_queue_error",
-                    details = mapOf(
-                        "file_id" to fileMetadata.fileId,
-                        "error" to (e.message ?: "Unknown error"),
-                    ),
-                )
             }
         }
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            TAG,
-            "files_queued_for_upload",
-            details = mapOf(
-                "session_id" to sessionId,
-                "queued_files" to uploadJobIds.size,
-                "job_ids" to uploadJobIds.joinToString(","),
-            ),
-        )
         return uploadJobIds
     }
 
@@ -331,30 +249,8 @@ class DataManagementService(private val context: Context) {
             }
             session.status = SessionStatus.EXPORTED
             saveSessionMetadata(session)
-            logger.log(
-                StructuredLogger.LogLevel.INFO,
-                TAG,
-                "session_exported",
-                details = mapOf(
-                    "session_id" to sessionId,
-                    "export_format" to format.name,
-                    "export_file" to exportFile.absolutePath,
-                    "include_files" to includeFiles,
-                    "export_size" to exportFile.length(),
-                ),
-            )
             return exportFile.absolutePath
         } catch (e: Exception) {
-            logger.log(
-                StructuredLogger.LogLevel.ERROR,
-                TAG,
-                "session_export_error",
-                details = mapOf(
-                    "session_id" to sessionId,
-                    "format" to format.name,
-                    "error" to (e.message ?: "Unknown error"),
-                ),
-            )
             return null
         }
     }
@@ -416,17 +312,6 @@ class DataManagementService(private val context: Context) {
                 file.delete()
             }
         }
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            TAG,
-            "cleanup_completed",
-            details = mapOf(
-                "cleaned_sessions" to cleanedSessions,
-                "cleaned_files" to cleanedFiles,
-                "freed_bytes" to freedBytes,
-                "freed_mb" to String.format("%.2f", freedBytes / (1024.0 * 1024.0)),
-            ),
-        )
     }
 
     private fun archiveSession(sessionId: String): Boolean {
@@ -443,27 +328,8 @@ class DataManagementService(private val context: Context) {
             session.files.forEach { file ->
                 fileRegistry.remove(file.fileId)
             }
-            logger.log(
-                StructuredLogger.LogLevel.INFO,
-                TAG,
-                "session_archived",
-                details = mapOf(
-                    "session_id" to sessionId,
-                    "archive_file" to archiveFile.absolutePath,
-                    "archive_size" to archiveFile.length(),
-                ),
-            )
             return true
         } catch (e: Exception) {
-            logger.log(
-                StructuredLogger.LogLevel.ERROR,
-                TAG,
-                "session_archive_error",
-                details = mapOf(
-                    "session_id" to sessionId,
-                    "error" to (e.message ?: "Unknown error"),
-                ),
-            )
             return false
         }
     }
@@ -492,12 +358,6 @@ class DataManagementService(private val context: Context) {
                 }
             }
         } catch (e: Exception) {
-            logger.log(
-                StructuredLogger.LogLevel.ERROR,
-                TAG,
-                "load_sessions_error",
-                details = mapOf("error" to (e.message ?: "Unknown error")),
-            )
         }
     }
 
@@ -535,15 +395,6 @@ class DataManagementService(private val context: Context) {
             activeSessions[sessionId] = session
             loadFileManifest(session)
         } catch (e: Exception) {
-            logger.log(
-                StructuredLogger.LogLevel.ERROR,
-                TAG,
-                "load_session_metadata_error",
-                details = mapOf(
-                    "metadata_file" to metadataFile.absolutePath,
-                    "error" to (e.message ?: "Unknown error"),
-                ),
-            )
         }
     }
 
@@ -580,15 +431,6 @@ class DataManagementService(private val context: Context) {
                 fileRegistry[fileMetadata.fileId] = fileMetadata
             }
         } catch (e: Exception) {
-            logger.log(
-                StructuredLogger.LogLevel.ERROR,
-                TAG,
-                "load_file_manifest_error",
-                details = mapOf(
-                    "session_id" to session.sessionId,
-                    "error" to (e.message ?: "Unknown error"),
-                ),
-            )
         }
     }
 
@@ -615,15 +457,6 @@ class DataManagementService(private val context: Context) {
                 }
             metadataFile.writeText(json.toString(2))
         } catch (e: Exception) {
-            logger.log(
-                StructuredLogger.LogLevel.ERROR,
-                TAG,
-                "save_session_metadata_error",
-                details = mapOf(
-                    "session_id" to session.sessionId,
-                    "error" to (e.message ?: "Unknown error"),
-                ),
-            )
         }
     }
 
@@ -666,15 +499,6 @@ class DataManagementService(private val context: Context) {
                 }
             manifestFile.writeText(json.toString(2))
         } catch (e: Exception) {
-            logger.log(
-                StructuredLogger.LogLevel.ERROR,
-                TAG,
-                "create_file_manifest_error",
-                details = mapOf(
-                    "session_id" to session.sessionId,
-                    "error" to (e.message ?: "Unknown error"),
-                ),
-            )
         }
     }
 

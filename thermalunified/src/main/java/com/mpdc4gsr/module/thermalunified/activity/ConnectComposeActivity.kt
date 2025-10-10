@@ -26,9 +26,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -44,7 +42,7 @@ class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             Text(
                                 "Device Connection",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -52,31 +50,33 @@ class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Black
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Black,
+                            ),
                     )
                 },
-                containerColor = Color.Black
+                containerColor = Color.Black,
             ) { paddingValues ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color.Black)
-                        .padding(16.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color.Black)
+                            .padding(16.dp),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     // Connection Status Card
                     ConnectionStatusCard(
                         isConnected = isConnected,
                         isConnecting = isConnecting,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(modifier = Modifier.height(32.dp))
                     // Connection Controls
@@ -95,13 +95,13 @@ class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         onDisconnect = {
                             isConnected = false
                             isConnecting = false
-                        }
+                        },
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     // Device Information
                     if (isConnected) {
                         DeviceInfoCard(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
                 }
@@ -114,27 +114,29 @@ class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 private fun ConnectionStatusCard(
     isConnected: Boolean,
     isConnecting: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             // Status Icon
             when {
                 isConnecting -> {
                     CircularProgressIndicator(
                         color = Color(0xFFFF6B35),
-                        modifier = Modifier.size(48.dp)
+                        modifier = Modifier.size(48.dp),
                     )
                 }
 
@@ -143,7 +145,7 @@ private fun ConnectionStatusCard(
                         Icons.Default.CheckCircle,
                         contentDescription = "Connected",
                         tint = Color(0xFF00FF00),
-                        modifier = Modifier.size(48.dp)
+                        modifier = Modifier.size(48.dp),
                     )
                 }
 
@@ -152,7 +154,7 @@ private fun ConnectionStatusCard(
                         Icons.Default.Error,
                         contentDescription = "Disconnected",
                         tint = Color(0xFFFF4444),
-                        modifier = Modifier.size(48.dp)
+                        modifier = Modifier.size(48.dp),
                     )
                 }
             }
@@ -166,7 +168,7 @@ private fun ConnectionStatusCard(
                 },
                 color = Color.White,
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -176,7 +178,7 @@ private fun ConnectionStatusCard(
                     else -> "Please connect your thermal camera device"
                 },
                 color = Color(0xFF7D8590),
-                fontSize = 14.sp
+                fontSize = 14.sp,
             )
         }
     }
@@ -187,35 +189,37 @@ private fun ConnectionControls(
     isConnected: Boolean,
     isConnecting: Boolean,
     onConnect: () -> Unit,
-    onDisconnect: () -> Unit
+    onDisconnect: () -> Unit,
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         if (!isConnected && !isConnecting) {
             Button(
                 onClick = onConnect,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFF6B35)
-                ),
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFFF6B35),
+                    ),
                 shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .weight(1f)
-                    .height(56.dp)
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .height(56.dp),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Icon(
                         Icons.Default.Bluetooth,
                         contentDescription = "Connect",
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
                     )
                     Text(
                         "Connect Device",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 }
             }
@@ -223,28 +227,30 @@ private fun ConnectionControls(
         if (isConnected) {
             OutlinedButton(
                 onClick = onDisconnect,
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = Color(0xFFFF4444)
-                ),
+                colors =
+                    ButtonDefaults.outlinedButtonColors(
+                        contentColor = Color(0xFFFF4444),
+                    ),
                 border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFFF4444)),
                 shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .weight(1f)
-                    .height(56.dp)
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .height(56.dp),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Icon(
                         Icons.Default.Close,
                         contentDescription = "Disconnect",
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
                     )
                     Text(
                         "Disconnect",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 }
             }
@@ -253,26 +259,26 @@ private fun ConnectionControls(
 }
 
 @Composable
-private fun DeviceInfoCard(
-    modifier: Modifier = Modifier
-) {
+private fun DeviceInfoCard(modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Text(
                 "Device Information",
                 color = Color.White,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(12.dp))
             DeviceInfoItem("Model", "TC007 Thermal Camera")
@@ -287,24 +293,25 @@ private fun DeviceInfoCard(
 @Composable
 private fun DeviceInfoItem(
     label: String,
-    value: String
+    value: String,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             label,
             color = Color(0xFF7D8590),
-            fontSize = 14.sp
+            fontSize = 14.sp,
         )
         Text(
             value,
             color = Color.White,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
     }
 }

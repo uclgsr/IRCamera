@@ -25,29 +25,28 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     data class LogEntry(
         val timestamp: String,
         val temperature: Float,
         val location: String,
-        val notes: String = ""
+        val notes: String = "",
     )
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
         // Sample log data
-        val logEntries = remember {
-            mutableStateListOf(
-                LogEntry("2024-10-01 10:30:00", 25.5f, "Location A", "Normal reading"),
-                LogEntry("2024-10-01 10:25:00", 27.2f, "Location B", "Elevated temperature"),
-                LogEntry("2024-10-01 10:20:00", 24.8f, "Location C", ""),
-                LogEntry("2024-10-01 10:15:00", 26.1f, "Location A", "Follow-up check"),
-            )
-        }
+        val logEntries =
+            remember {
+                mutableStateListOf(
+                    LogEntry("2024-10-01 10:30:00", 25.5f, "Location A", "Normal reading"),
+                    LogEntry("2024-10-01 10:25:00", 27.2f, "Location B", "Elevated temperature"),
+                    LogEntry("2024-10-01 10:20:00", 24.8f, "Location C", ""),
+                    LogEntry("2024-10-01 10:15:00", 26.1f, "Location A", "Follow-up check"),
+                )
+            }
         var showFilterDialog by remember { mutableStateOf(false) }
         var showAddLogDialog by remember { mutableStateOf(false) }
         val snackbarHostState = remember { SnackbarHostState() }
@@ -61,7 +60,7 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             Text(
                                 "Monitor Log",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -69,7 +68,7 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -83,28 +82,34 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                         // Perform heavy IO operations on background thread
                                         withContext(Dispatchers.IO) {
                                             // Export logs to CSV file
-                                            val csv = buildString {
-                                                appendLine("Timestamp,Temperature,Location,Notes")
-                                                logEntries.forEach { entry ->
-                                                    appendLine("${entry.timestamp},${entry.temperature},${entry.location},${entry.notes}")
+                                            val csv =
+                                                buildString {
+                                                    appendLine("Timestamp,Temperature,Location,Notes")
+                                                    logEntries.forEach { entry ->
+                                                        appendLine(
+                                                            "${entry.timestamp},${entry.temperature},${entry.location},${entry.notes}",
+                                                        )
+                                                    }
                                                 }
-                                            }
                                             // Create file in Downloads directory
-                                            val contentValues = android.content.ContentValues().apply {
-                                                put(
-                                                    android.provider.MediaStore.Files.FileColumns.DISPLAY_NAME,
-                                                    "monitor_log_${System.currentTimeMillis()}.csv"
+                                            val contentValues =
+                                                android.content.ContentValues().apply {
+                                                    put(
+                                                        android.provider.MediaStore.Files.FileColumns.DISPLAY_NAME,
+                                                        "monitor_log_${System.currentTimeMillis()}.csv",
+                                                    )
+                                                    put(android.provider.MediaStore.Files.FileColumns.MIME_TYPE, "text/csv")
+                                                    put(
+                                                        android.provider.MediaStore.Files.FileColumns.RELATIVE_PATH,
+                                                        android.os.Environment.DIRECTORY_DOWNLOADS,
+                                                    )
+                                                }
+                                            val uri =
+                                                context.contentResolver.insert(
+                                                    android.provider.MediaStore.Files
+                                                        .getContentUri("external"),
+                                                    contentValues,
                                                 )
-                                                put(android.provider.MediaStore.Files.FileColumns.MIME_TYPE, "text/csv")
-                                                put(
-                                                    android.provider.MediaStore.Files.FileColumns.RELATIVE_PATH,
-                                                    android.os.Environment.DIRECTORY_DOWNLOADS
-                                                )
-                                            }
-                                            val uri = context.contentResolver.insert(
-                                                android.provider.MediaStore.Files.getContentUri("external"),
-                                                contentValues
-                                            )
                                             uri?.let {
                                                 context.contentResolver.openOutputStream(it)?.use { outputStream ->
                                                     outputStream.write(csv.toByteArray())
@@ -121,60 +126,63 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(Icons.Default.Download, contentDescription = "Export", tint = Color.White)
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Black
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Black,
+                            ),
                     )
                 },
                 floatingActionButton = {
                     FloatingActionButton(
                         onClick = { showAddLogDialog = true },
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = MaterialTheme.colorScheme.primary,
                     ) {
                         Icon(Icons.Default.Add, contentDescription = "Add Log")
                     }
                 },
                 snackbarHost = { SnackbarHost(snackbarHostState) },
-                containerColor = Color(0xFF16131E)
+                containerColor = Color(0xFF16131E),
             ) { paddingValues ->
                 if (logEntries.isEmpty()) {
                     // Empty state
                     Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues),
-                        contentAlignment = Alignment.Center
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues),
+                        contentAlignment = Alignment.Center,
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
                         ) {
                             Icon(
                                 Icons.Default.Description,
                                 contentDescription = "No log entries",
                                 modifier = Modifier.size(64.dp),
-                                tint = Color.White.copy(alpha = 0.3f)
+                                tint = Color.White.copy(alpha = 0.3f),
                             )
                             Text(
                                 "No log entries",
                                 color = Color.White.copy(alpha = 0.6f),
-                                fontSize = 16.sp
+                                fontSize = 16.sp,
                             )
                             Text(
                                 "Start monitoring to create logs",
                                 color = Color.White.copy(alpha = 0.4f),
-                                fontSize = 14.sp
+                                fontSize = 14.sp,
                             )
                         }
                     }
                 } else {
                     // Log list
                     LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues),
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues),
                         contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         items(logEntries) { entry ->
                             LogEntryCard(entry)
@@ -196,20 +204,20 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 value = newTemp,
                                 onValueChange = { newTemp = it },
                                 label = { Text("Temperature (°C)") },
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
                             )
                             OutlinedTextField(
                                 value = newLocation,
                                 onValueChange = { newLocation = it },
                                 label = { Text("Location") },
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
                             )
                             OutlinedTextField(
                                 value = newNotes,
                                 onValueChange = { newNotes = it },
                                 label = { Text("Notes (optional)") },
                                 modifier = Modifier.fillMaxWidth(),
-                                maxLines = 3
+                                maxLines = 3,
                             )
                         }
                     },
@@ -217,7 +225,8 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         TextButton(onClick = {
                             val temp = newTemp.toFloatOrNull() ?: 25.0f
                             val timestamp =
-                                java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault())
+                                java.text
+                                    .SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault())
                                     .format(java.util.Date())
                             logEntries.add(0, LogEntry(timestamp, temp, newLocation, newNotes))
                             showAddLogDialog = false
@@ -232,7 +241,7 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         TextButton(onClick = { showAddLogDialog = false }) {
                             Text("Cancel")
                         }
-                    }
+                    },
                 )
             }
         }
@@ -242,28 +251,30 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     fun LogEntryCard(entry: LogEntry) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = Color(0xFF1A1A1A)
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = Color(0xFF1A1A1A),
+                ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
             ) {
                 // Header row with timestamp and temperature
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top
+                    verticalAlignment = Alignment.Top,
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             entry.timestamp,
                             color = Color.White,
                             fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -271,33 +282,35 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icons.Default.LocationOn,
                                 contentDescription = "Location",
                                 modifier = Modifier.size(16.dp),
-                                tint = Color.White.copy(alpha = 0.6f)
+                                tint = Color.White.copy(alpha = 0.6f),
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 entry.location,
                                 color = Color.White.copy(alpha = 0.6f),
-                                fontSize = 12.sp
+                                fontSize = 12.sp,
                             )
                         }
                     }
                     // Temperature badge
                     Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = when {
-                                entry.temperature > 30f -> Color(0xFFFF4747)
-                                entry.temperature > 26f -> Color(0xFFFFA500)
-                                else -> Color(0xFF06AAFF)
-                            }
-                        ),
-                        shape = RoundedCornerShape(12.dp)
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor =
+                                    when {
+                                        entry.temperature > 30f -> Color(0xFFFF4747)
+                                        entry.temperature > 26f -> Color(0xFFFFA500)
+                                        else -> Color(0xFF06AAFF)
+                                    },
+                            ),
+                        shape = RoundedCornerShape(12.dp),
                     ) {
                         Text(
                             "%.1f°C".format(entry.temperature),
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                             color = Color.White,
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 }
@@ -309,7 +322,7 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     Text(
                         entry.notes,
                         color = Color.White.copy(alpha = 0.8f),
-                        fontSize = 13.sp
+                        fontSize = 13.sp,
                     )
                 }
             }

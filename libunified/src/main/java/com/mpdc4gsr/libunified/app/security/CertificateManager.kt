@@ -1,7 +1,6 @@
 package com.mpdc4gsr.libunified.app.security
 
 import android.content.Context
-import android.util.Log
 import java.io.ByteArrayInputStream
 import java.security.KeyStore
 import java.security.SecureRandom
@@ -10,7 +9,9 @@ import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import javax.net.ssl.*
 
-class CertificateManager(private val context: Context) {
+class CertificateManager(
+    private val context: Context,
+) {
     companion object {
         private const val TAG = "CertificateManager"
         private const val TRUST_STORE_ALIAS = "topdon_devices"
@@ -21,62 +22,52 @@ class CertificateManager(private val context: Context) {
     private var trustManager: X509TrustManager? = null
     private var keyManager: X509KeyManager? = null
     private var deviceKeyStore: KeyStore? = null
-    fun initialize(): Boolean {
-        return try {
+
+    fun initialize(): Boolean =
+        try {
             deviceKeyStore = KeyStore.getInstance(KEY_STORE_TYPE)
             deviceKeyStore?.load(null, null)
             trustManager = createCustomTrustManager()
             keyManager = createKeyManager()
-            Log.i(TAG, "Certificate manager initialized successfully")
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize certificate manager", e)
             false
         }
-    }
 
-    fun createSSLContext(): SSLContext? {
-        return try {
+    fun createSSLContext(): SSLContext? =
+        try {
             val sslContext = SSLContext.getInstance(TLS_PROTOCOL)
             sslContext.init(
                 keyManager?.let { arrayOf(it) },
                 trustManager?.let { arrayOf(it) },
                 SecureRandom(),
             )
-            Log.d(TAG, "SSL context created successfully")
             sslContext
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to create SSL context", e)
             null
         }
-    }
 
-    fun createSSLSocketFactory(): SSLSocketFactory? {
-        return createSSLContext()?.socketFactory
-    }
+    fun createSSLSocketFactory(): SSLSocketFactory? = createSSLContext()?.socketFactory
 
     fun getTrustManager(): X509TrustManager? = trustManager
+
     fun validateDeviceCertificate(certificate: X509Certificate): Boolean {
         return try {
             val subject = certificate.subjectDN.name
             val issuer = certificate.issuerDN.name
             val isValidDevice =
                 subject.contains("CN=TOPDON") ||
-                        subject.contains("CN=TC001") ||
-                        subject.contains("CN=TS004") ||
-                        subject.contains("CN=TC007")
+                    subject.contains("CN=TC001") ||
+                    subject.contains("CN=TS004") ||
+                    subject.contains("CN=TC007")
             if (!isValidDevice) {
-                Log.w(TAG, "Invalid device certificate subject: $subject")
                 return false
             }
             certificate.checkValidity()
-            Log.d(TAG, "Device certificate validated: $subject")
             true
         } catch (e: CertificateException) {
-            Log.e(TAG, "Certificate validation failed", e)
             false
         } catch (e: Exception) {
-            Log.e(TAG, "Unexpected error during certificate validation", e)
             false
         }
     }
@@ -92,20 +83,17 @@ class CertificateManager(private val context: Context) {
                     ByteArrayInputStream(certificateData),
                 ) as X509Certificate
             if (!validateDeviceCertificate(certificate)) {
-                Log.w(TAG, "Refusing to install invalid certificate")
                 return false
             }
             deviceKeyStore?.setCertificateEntry(alias, certificate)
-            Log.i(TAG, "Device certificate installed: $alias")
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to install device certificate", e)
             false
         }
     }
 
-    private fun createCustomTrustManager(): X509TrustManager {
-        return object : X509TrustManager {
+    private fun createCustomTrustManager(): X509TrustManager =
+        object : X509TrustManager {
             override fun checkClientTrusted(
                 chain: Array<X509Certificate>,
                 authType: String,
@@ -120,8 +108,8 @@ class CertificateManager(private val context: Context) {
                 validateCertificateChain(chain, "server")
             }
 
-            override fun getAcceptedIssuers(): Array<X509Certificate> {
-                return deviceKeyStore?.let { ks ->
+            override fun getAcceptedIssuers(): Array<X509Certificate> =
+                deviceKeyStore?.let { ks ->
                     val aliases = ks.aliases()
                     val certificates = mutableListOf<X509Certificate>()
                     while (aliases.hasMoreElements()) {
@@ -131,7 +119,6 @@ class CertificateManager(private val context: Context) {
                     }
                     certificates.toTypedArray()
                 } ?: emptyArray()
-            }
 
             private fun validateCertificateChain(
                 chain: Array<X509Certificate>,
@@ -144,22 +131,18 @@ class CertificateManager(private val context: Context) {
                 if (!validateDeviceCertificate(leafCertificate)) {
                     throw CertificateException("Invalid $type certificate")
                 }
-                Log.d(TAG, "Certificate chain validated for $type")
             }
         }
-    }
 
-    private fun createKeyManager(): X509KeyManager? {
-        return try {
+    private fun createKeyManager(): X509KeyManager? =
+        try {
             null
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to create key manager", e)
             null
         }
-    }
 
-    fun createHostnameVerifier(): HostnameVerifier {
-        return HostnameVerifier { hostname, session ->
+    fun createHostnameVerifier(): HostnameVerifier =
+        HostnameVerifier { hostname, session ->
             val validHosts =
                 setOf(
                     "192.168.40.1",
@@ -168,13 +151,11 @@ class CertificateManager(private val context: Context) {
                 )
             val isValid =
                 validHosts.contains(hostname) ||
-                        hostname.matches(Regex("192\\.168\\.\\d+\\.\\d+"))
+                    hostname.matches(Regex("192\\.168\\.\\d+\\.\\d+"))
             if (!isValid) {
-                Log.w(TAG, "Hostname verification failed for: $hostname")
             }
             isValid
         }
-    }
 
     fun generateAuthToken(): String {
         val deviceId =
@@ -199,19 +180,15 @@ class CertificateManager(private val context: Context) {
             val timestamp = parts[1].toLong()
             val currentTime = System.currentTimeMillis()
             if (currentTime - timestamp > maxAgeMs) {
-                Log.w(TAG, "Auth token expired")
                 return false
             }
             val payload = "${parts[0]}:${parts[1]}:${parts[2]}"
             val expectedHash = payload.hashCode().toString(16)
             if (parts[3] != expectedHash) {
-                Log.w(TAG, "Auth token hash mismatch")
                 return false
             }
-            Log.d(TAG, "Auth token validated successfully")
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Auth token validation failed", e)
             false
         }
     }

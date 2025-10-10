@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.util.Log;
 
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
@@ -182,7 +181,6 @@ public class ImageColorTools {
                 }
             }
         }
-        Log.e("Execution Time：", System.currentTimeMillis() - time + "//");
 
         Bitmap outputBitmap = Bitmap.createBitmap(imageColor.cols(), imageColor.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(imageColor, outputBitmap);
@@ -232,7 +230,6 @@ public class ImageColorTools {
         double srcValue = 0.1f;
         long time = System.currentTimeMillis();
 
-        Log.e("Execution Time：", System.currentTimeMillis() - time + "//");
 
         Bitmap outputBitmap = Bitmap.createBitmap(imageMat.cols(), imageMat.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(imageMat, outputBitmap, true);

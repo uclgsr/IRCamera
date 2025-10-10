@@ -29,27 +29,28 @@ fun CompassCompose(
     bearing: Float,
     declination: Float = 0f,
     size: androidx.compose.ui.unit.Dp = 120.dp,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val adjustedBearing = (bearing + declination) % 360f
     Card(
         modifier = modifier.size(size),
         shape = CircleShape,
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.8f))
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.8f)),
         ) {
             Canvas(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 drawCompass(
                     bearing = adjustedBearing,
                     center = this.center,
-                    radius = this.size.minDimension / 2f - 20.dp.toPx()
+                    radius = this.size.minDimension / 2f - 20.dp.toPx(),
                 )
             }
             // Bearing text
@@ -58,14 +59,14 @@ fun CompassCompose(
                 color = Color.White,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.offset(y = (size * 0.25f))
+                modifier = Modifier.offset(y = (size * 0.25f)),
             )
             // Cardinal direction
             Text(
                 text = getCardinalDirection(adjustedBearing),
                 color = Color.White,
                 fontSize = 10.sp,
-                modifier = Modifier.offset(y = (size * 0.35f))
+                modifier = Modifier.offset(y = (size * 0.35f)),
             )
         }
     }
@@ -75,35 +76,38 @@ fun CompassCompose(
 fun LinearCompassCompose(
     bearing: Float,
     declination: Float = 0f,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val adjustedBearing = (bearing + declination) % 360f
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(60.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(60.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.8f))
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.8f)),
         ) {
             Canvas(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 drawLinearCompass(
                     bearing = adjustedBearing,
-                    centerY = size.height / 2f
+                    centerY = size.height / 2f,
                 )
             }
             // Center indicator
             Box(
-                modifier = Modifier
-                    .width(2.dp)
-                    .height(40.dp)
-                    .background(Color.Red)
-                    .align(Alignment.Center)
+                modifier =
+                    Modifier
+                        .width(2.dp)
+                        .height(40.dp)
+                        .background(Color.Red)
+                        .align(Alignment.Center),
             )
             // Bearing text
             Text(
@@ -111,9 +115,10 @@ fun LinearCompassCompose(
                 color = Color.White,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 4.dp)
+                modifier =
+                    Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 4.dp),
             )
         }
     }
@@ -122,14 +127,14 @@ fun LinearCompassCompose(
 private fun DrawScope.drawCompass(
     bearing: Float,
     center: Offset,
-    radius: Float
+    radius: Float,
 ) {
     // Draw compass circle
     drawCircle(
         color = Color.White,
         radius = radius,
         center = center,
-        style = Stroke(width = 2.dp.toPx())
+        style = Stroke(width = 2.dp.toPx()),
     )
     // Draw cardinal directions
     val cardinalDirections = listOf("N", "E", "S", "W")
@@ -139,17 +144,18 @@ private fun DrawScope.drawCompass(
         val textRadius = radius + 15.dp.toPx()
         val x = center.x + cos(Math.toRadians(angle - 90.0)).toFloat() * textRadius
         val y = center.y + sin(Math.toRadians(angle - 90.0)).toFloat() * textRadius
-        val textPaint = android.graphics.Paint().apply {
-            color = Color.White.value.toInt()
-            textSize = 16.sp.toPx()
-            textAlign = android.graphics.Paint.Align.CENTER
-            isAntiAlias = true
-        }
+        val textPaint =
+            android.graphics.Paint().apply {
+                color = Color.White.value.toInt()
+                textSize = 16.sp.toPx()
+                textAlign = android.graphics.Paint.Align.CENTER
+                isAntiAlias = true
+            }
         drawContext.canvas.nativeCanvas.drawText(
             direction,
             x,
             y + 6.dp.toPx(),
-            textPaint
+            textPaint,
         )
     }
     // Draw tick marks
@@ -165,7 +171,7 @@ private fun DrawScope.drawCompass(
             color = Color.White,
             start = Offset(startX, startY),
             end = Offset(endX, endY),
-            strokeWidth = 1.dp.toPx()
+            strokeWidth = 1.dp.toPx(),
         )
     }
     // Draw bearing needle
@@ -175,20 +181,20 @@ private fun DrawScope.drawCompass(
             color = Color.Red,
             start = center,
             end = Offset(center.x, center.y - needleLength),
-            strokeWidth = 3.dp.toPx()
+            strokeWidth = 3.dp.toPx(),
         )
         // Draw needle tip
         drawCircle(
             color = Color.Red,
             radius = 4.dp.toPx(),
-            center = Offset(center.x, center.y - needleLength)
+            center = Offset(center.x, center.y - needleLength),
         )
     }
 }
 
 private fun DrawScope.drawLinearCompass(
     bearing: Float,
-    centerY: Float
+    centerY: Float,
 ) {
     val width = size.width
     val tickSpacing = width / 12f // Show about 12 ticks across the width
@@ -206,22 +212,23 @@ private fun DrawScope.drawLinearCompass(
                 color = Color.White,
                 start = Offset(x, centerY - tickHeight / 2),
                 end = Offset(x, centerY + tickHeight / 2),
-                strokeWidth = 1.dp.toPx()
+                strokeWidth = 1.dp.toPx(),
             )
             // Draw degree label for major ticks
             if (tickBearing % 90f == 0f) {
-                val textPaint = android.graphics.Paint().apply {
-                    color = Color.White.value.toInt()
-                    textSize = 10.sp.toPx()
-                    textAlign = android.graphics.Paint.Align.CENTER
-                    isAntiAlias = true
-                }
+                val textPaint =
+                    android.graphics.Paint().apply {
+                        color = Color.White.value.toInt()
+                        textSize = 10.sp.toPx()
+                        textAlign = android.graphics.Paint.Align.CENTER
+                        isAntiAlias = true
+                    }
                 val label = getCardinalDirection(tickBearing)
                 drawContext.canvas.nativeCanvas.drawText(
                     label,
                     x,
                     centerY + 25.dp.toPx(),
-                    textPaint
+                    textPaint,
                 )
             }
         }
@@ -248,31 +255,32 @@ fun CompassStatusCompose(
     bearing: Float,
     quality: CompassQuality = CompassQuality.GOOD,
     isCalibrating: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Icon(
             imageVector = Icons.Default.Navigation,
             contentDescription = "Compass",
             tint = quality.color,
-            modifier = Modifier
-                .size(20.dp)
-                .rotate(bearing)
+            modifier =
+                Modifier
+                    .size(20.dp)
+                    .rotate(bearing),
         )
         Column {
             Text(
                 text = "${bearing.roundToInt()}° ${getCardinalDirection(bearing)}",
                 style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 text = if (isCalibrating) "Calibrating..." else quality.displayName,
                 style = MaterialTheme.typography.bodySmall,
-                color = quality.color
+                color = quality.color,
             )
         }
     }
@@ -280,46 +288,47 @@ fun CompassStatusCompose(
 
 enum class CompassQuality(
     val displayName: String,
-    val color: Color
+    val color: Color,
 ) {
     EXCELLENT("Excellent", Color.Green),
     GOOD("Good", Color.Green),
     FAIR("Fair", Color.Yellow),
     POOR("Poor", Color(0xFFFF6600)),
-    UNRELIABLE("Unreliable", Color.Red)
+    UNRELIABLE("Unreliable", Color.Red),
 }
 
 @Composable
 fun CompassComposePreview() {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         var bearing by remember { mutableFloatStateOf(45f) }
         CompassCompose(
             bearing = bearing,
-            size = 150.dp
+            size = 150.dp,
         )
         LinearCompassCompose(
-            bearing = bearing
+            bearing = bearing,
         )
         CompassStatusCompose(
             bearing = bearing,
-            quality = CompassQuality.GOOD
+            quality = CompassQuality.GOOD,
         )
         Slider(
             value = bearing,
             onValueChange = { bearing = it },
             valueRange = 0f..360f,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         Text(
             text = "Bearing: ${bearing.roundToInt()}°",
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }

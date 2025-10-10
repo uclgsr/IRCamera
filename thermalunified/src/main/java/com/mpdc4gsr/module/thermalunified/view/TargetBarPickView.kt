@@ -11,9 +11,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.compat.spToPx
-import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 
 class TargetBarPickView : View {
     companion object {
@@ -73,14 +73,14 @@ class TargetBarPickView : View {
         context,
         attrs,
         defStyleAttr,
-        0
+        0,
     )
 
     constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : super(
         context,
         attrs,
@@ -92,25 +92,29 @@ class TargetBarPickView : View {
                 attrs,
                 com.mpdc4gsr.libunified.R.styleable.BarPickView,
                 0,
-                0
+                0,
             )
         max = typedArray.getInt(com.mpdc4gsr.libunified.R.styleable.BarPickView_android_max, 100)
         min = typedArray.getInt(com.mpdc4gsr.libunified.R.styleable.BarPickView_barMin, 0)
         progress =
-            typedArray.getInt(com.mpdc4gsr.libunified.R.styleable.BarPickView_android_progress, min)
-                .coerceAtMost(max).coerceAtLeast(min)
-        barSize = typedArray.getInt(
-            com.mpdc4gsr.libunified.R.styleable.BarPickView_barSize,
-            4.dpToPx(context)
-        )
+            typedArray
+                .getInt(com.mpdc4gsr.libunified.R.styleable.BarPickView_android_progress, min)
+                .coerceAtMost(max)
+                .coerceAtLeast(min)
+        barSize =
+            typedArray.getInt(
+                com.mpdc4gsr.libunified.R.styleable.BarPickView_barSize,
+                4.dpToPx(context),
+            )
         rotate =
             typedArray.getInt(com.mpdc4gsr.libunified.R.styleable.BarPickView_barOrientation, 0)
         labelText =
             typedArray.getString(com.mpdc4gsr.libunified.R.styleable.BarPickView_barLabel) ?: ""
-        val textSize = typedArray.getDimensionPixelSize(
-            com.mpdc4gsr.libunified.R.styleable.BarPickView_android_textSize,
-            13.spToPx(context)
-        )
+        val textSize =
+            typedArray.getDimensionPixelSize(
+                com.mpdc4gsr.libunified.R.styleable.BarPickView_android_textSize,
+                13.spToPx(context),
+            )
         typedArray.recycle()
         paint.isAntiAlias = true
         paint.textSize = textSize.toFloat()
@@ -205,8 +209,16 @@ class TargetBarPickView : View {
         val thumbWidth = computeThumbWidth()
         val thumbHeight = textHeight + 4.dpToPx(context)
         if (rotate == 0 || rotate == 180) {
-            val labelTextSpace = if (labelText.isEmpty()) 0 else (paint.measureText(labelText)
-                .toInt() + 6.dpToPx(context))
+            val labelTextSpace =
+                if (labelText.isEmpty()) {
+                    0
+                } else {
+                    (
+                        paint
+                            .measureText(labelText)
+                            .toInt() + 6.dpToPx(context)
+                    )
+                }
             val leftText = valueFormatListener.invoke(if (rotate == 0) min else max)
             val rightText = valueFormatListener.invoke(if (rotate == 0) max else min)
             val leftTextWidth = paint.measureText(leftText).toInt()
@@ -251,8 +263,15 @@ class TargetBarPickView : View {
             val left = paddingStart
             val right = measuredWidth - paddingEnd
             val top =
-                (if (rotate == 90) (barRect.top + progressHeight - thumbHeight / 2) else (barRect.bottom - progressHeight - thumbHeight / 2))
-                    .toInt()
+                (
+                    if (rotate ==
+                        90
+                    ) {
+                        (barRect.top + progressHeight - thumbHeight / 2)
+                    } else {
+                        (barRect.bottom - progressHeight - thumbHeight / 2)
+                    }
+                ).toInt()
                     .coerceAtLeast(barRect.top.toInt())
                     .coerceAtMost(barRect.bottom.toInt() - thumbHeight)
             val bottom = top + thumbHeight
@@ -304,7 +323,7 @@ class TargetBarPickView : View {
                     top,
                     right,
                     bottom,
-                    paint
+                    paint,
                 )
             } else {
                 canvas.drawRect(
@@ -312,7 +331,7 @@ class TargetBarPickView : View {
                     top,
                     (left + bgWidth - thumbWidth / 2).coerceAtMost(right - thumbWidth),
                     bottom,
-                    paint
+                    paint,
                 )
             }
         } else {
@@ -328,7 +347,7 @@ class TargetBarPickView : View {
                     (bottom - bgHeight + thumbHeight / 2).coerceAtLeast(top + thumbHeight),
                     right,
                     bottom,
-                    paint
+                    paint,
                 )
             } else {
                 canvas.drawRect(
@@ -336,7 +355,7 @@ class TargetBarPickView : View {
                     top,
                     right,
                     (top + bgHeight - thumbHeight / 2).coerceAtMost(bottom - thumbHeight),
-                    paint
+                    paint,
                 )
             }
         }
@@ -360,7 +379,7 @@ class TargetBarPickView : View {
                     top,
                     (left + progressWidth - thumbWidth / 2).coerceAtMost(right - thumbWidth),
                     bottom,
-                    paint
+                    paint,
                 )
             } else {
                 canvas.drawRect(
@@ -368,7 +387,7 @@ class TargetBarPickView : View {
                     top,
                     right,
                     bottom,
-                    paint
+                    paint,
                 )
             }
         } else {
@@ -385,7 +404,7 @@ class TargetBarPickView : View {
                     top,
                     right,
                     (top + progressHeight - thumbHeight / 2).coerceAtMost(bottom - thumbHeight),
-                    paint
+                    paint,
                 )
             } else {
                 canvas.drawRect(
@@ -393,7 +412,7 @@ class TargetBarPickView : View {
                     (bottom - progressHeight + thumbHeight / 2).coerceAtLeast(top + thumbHeight),
                     right,
                     bottom,
-                    paint
+                    paint,
                 )
             }
         }

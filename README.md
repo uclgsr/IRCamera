@@ -1,177 +1,85 @@
-# IRCamera - Multi-Sensor Recording System
+# MPDC4GSR Multi-Sensor Recording Platform
 
-IRCamera is a comprehensive multi-sensor recording system for synchronized data capture from GSR (Galvanic Skin
-Response), thermal camera, and RGB camera sensors. The system consists of an Android application for mobile recording
-and a PC controller for remote orchestration.
+MPDC4GSR combines an Android capture application and a desktop PC controller to record synchronised galvanic skin response (GSR), thermal, and RGB data. The Android app manages sensor lifecycles, high throughput recording, and network communication. The PC controller provides orchestration, real-time visualisation, and long-form session storage.
 
-## Key Features
+## Feature Highlights
 
-- **Multi-Sensor Synchronization**: Coordinated recording from GSR, thermal, and RGB sensors
-- **Time Synchronization**: Precise timestamp alignment across all sensors
-- **PC-Android Communication**: Remote control via TCP/IP networking
-- **Session Management**: Complete recording session lifecycle management
-- **Data Export**: Structured CSV and JSON data output
-- **Real-time Visualization**: Live sensor data plotting (PC controller)
+- Android foreground recording service with crash recovery, session tracking, and a TCP server (`PcControllerServer`) that exposes remote controls and telemetry on port 8081 with optional mDNS discovery.
+- Camera subsystem built on CameraX with the `RgbCameraRecorder`, dashboards, and Compose-based UI for manual controls, sensor diagnostics, and live preview.
+- GSR pipeline using the Shimmer SDK with background scanning, reconnection logic, low-level packet parsing, and export utilities.
+- Thermal capture via the `thermalunified` component and coordinated multi-modal recording orchestrated by `MultiModalRecordingViewModel`.
+- Python PC controller (`pc_controller.py`) with PyQt6 dashboard, CLI mode, recording automation, native packet parsing, and end-to-end protocol compatibility with the Android service.
+- Structured logging, telemetry, StrictMode policies, and crash-safe supervisors that keep long running sessions observable and recoverable.
 
-## System Architecture
+## Repository Layout
 
 ```
-┌─────────────────┐         Network         ┌──────────────────┐
-│   PC Controller │ ◄─────────────────────► │  Android Device  │
-│                 │    (TCP/IP Protocol)     │                  │
-│  - Orchestrator │                          │  - GSR Sensor    │
-│  - Visualizer   │                          │  - Thermal Cam   │
-│  - Data Manager │                          │  - RGB Camera    │
-└─────────────────┘                          └──────────────────┘
+finalgsr/
+  app/                 Android application sources (core services, features, Compose UI)
+  BleModule/           BLE utility module for Shimmer devices
+  component/           Additional Android components such as thermal camera bindings
+  libunified/          Shared Kotlin library (permission tools, logging, utilities)
+  pc-controller/       Desktop controller application and documentation
+  docs/                Project documentation (see docs/README.md)
+  thermalunified/      Vendor thermal SDK wrapper
 ```
 
-## Quick Start
+## Getting Started
 
 ### Android Application
 
-```bash
-# Open in Android Studio
-./gradlew build
+1. Install Android Studio Jellyfish (or later) with JDK 17.
+2. Open the project or run from the command line:
 
-# Or build from command line
-./gradlew assembleDebug
+```bash
+./gradlew clean assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
+
+The application starts the `RecordingService` automatically which exposes the PC control server and prepares sensor subsystems.
 
 ### PC Controller
 
 ```bash
 cd pc-controller
+python -m venv .venv
+. .venv/Scripts/activate   # Windows
+# or: source .venv/bin/activate
 pip install -r requirements.txt
-python run_unified_controller.py
+python pc_controller.py
+# CLI mode
+python pc_controller.py --cli
 ```
+
+Optional: build the native analytics module in `pc-controller/native_backend` for high-rate GSR parsing.
+
+## Testing & Quality
+
+- Android unit tests: `./gradlew testDebugUnitTest`
+- Android instrumentation tests: `./gradlew connectedAndroidTest`
+- Static analysis: `./gradlew lint detekt`
+- PC controller tests: `python -m pytest pc-controller/tests`
+
+CI automation for the Android app lives in `.github/workflows/android-quality-gates.yml`.
 
 ## Documentation
 
-All documentation is organized in the `docs/` directory:
+Central documentation lives under `docs/`:
 
-### 📱 Android Application
-
-- [Android Documentation](docs/android/) - PC-Android communication, time sync
-- [Code Quality](docs/anti-patterns-readme.md) - Anti-patterns analysis and best practices
-- [Performance](docs/anr-prevention-guide.md) - ANR prevention guidelines
-
-### 💻 PC Controller
-
-- [PC Controller Documentation](pc-controller/docs/) - Complete PC controller reference
-- [Quick Start](pc-controller/docs/quick-start.md) - Getting started guide
-- [Protocol Guide](pc-controller/docs/protocol-bridge-guide.md) - Communication protocol
-
-### 📚 Thesis Content
-
-- [Thesis Documentation](docs/thesis/) - Complete thesis content
-    - System design (Chapter 3)
-    - Experimental evaluation (Chapter 5)
-    - Requirements evaluation (Chapter 6)
-    - Diagrams and figures
-    - Evaluation test suite
-
-### 🔧 Maintenance & Summaries
-
-- [Implementation Summaries](docs/summaries/) - Feature implementations
-- [Maintenance Records](docs/maintenance/) - Migrations and fixes
-- [Complete Documentation Index](docs/INDEX.md) - Full documentation index
-
-## Project Structure
-
-```
-IRCamera/
-├── app/                      # Android application
-│   └── src/main/java/mpdc4gsr/
-├── component/                # Sensor components
-│   ├── gsr-recording/
-│   └── thermalunified/
-├── pc-controller/            # PC controller application
-│   ├── docs/                 # PC controller documentation
-│   ├── src/                  # Python source code
-│   └── tests/                # Test suite
-├── docs/                     # Complete documentation
-│   ├── android/              # Android docs
-│   ├── thesis/               # Thesis content
-│   ├── summaries/            # Implementation summaries
-│   └── maintenance/          # Maintenance records
-└── libunified/               # Shared libraries
-```
-
-## Development
-
-### Requirements
-
-- Android Studio Arctic Fox or later
-- Kotlin 1.9+
-- Python 3.8+ (for PC controller)
-- Gradle 8.0+
-
-### Building
-
-```bash
-# Build all modules
-./gradlew build
-
-# Run tests
-./gradlew test
-
-# Build release APK
-./gradlew assembleRelease
-```
-
-### Code Quality
-
-- Follow [Kotlin coding conventions](https://kotlinlang.org/docs/coding-conventions.html)
-- Review [anti-patterns checklist](docs/anti-patterns-checklist.md) before commits
-- Run lint: `./gradlew lint`
-- Check [ANR prevention guide](docs/anr-prevention-guide.md) for performance
-
-## Testing
-
-### Android Tests
-
-```bash
-# Unit tests
-./gradlew test
-
-# Instrumented tests
-./gradlew connectedAndroidTest
-```
-
-### PC Controller Tests
-
-```bash
-cd pc-controller
-python -m pytest tests/
-```
-
-### Thesis Evaluation Tests
-
-```bash
-cd docs/thesis/evaluation
-python run_tests.py
-```
+- [docs/system-overview.md](docs/system-overview.md) – architecture, data flow, and module map
+- [docs/android-platform.md](docs/android-platform.md) – Android-specific subsystems and developer notes
+- [docs/pc-controller.md](docs/pc-controller.md) – desktop application overview
+- [docs/testing-and-quality.md](docs/testing-and-quality.md) – testing, analysis, and observability checklists
+- [docs/developer-guides/](docs/developer-guides/) – targeted deep dives (permissions, logging, UI utilities)
+- [pc-controller/docs/](pc-controller/docs/) – comprehensive PC controller manual
 
 ## Contributing
 
-1. Review [documentation index](docs/INDEX.md)
-2. Follow [coding standards](docs/anti-patterns-checklist.md)
-3. Ensure tests pass
-4. Update documentation as needed
+- Use Kotlin coroutines with lifecycle-aware scopes; see existing `AppBaseViewModel` patterns.
+- Follow the Compose UI patterns established in `feature/*/ui` and keep view models in `feature/*/presentation`.
+- Record new sensors through the `SensorRecorder` interface and register them with the `RecordingService`.
+- Run lint, detekt, unit tests, and relevant Python tests before opening a pull request.
 
 ## License
 
-[Add license information here]
-
-## Contact
-
-- Project: UCL GSR (University College London)
-- Repository: https://github.com/uclgsr/IRCamera
-
-## Documentation Links
-
-- [Complete Documentation](docs/INDEX.md)
-- [Android App](docs/android/)
-- [PC Controller](pc-controller/docs/)
-- [Thesis Content](docs/thesis/)
-- [Code Quality](docs/anti-patterns-readme.md)
+The repository currently has no published license. Add licensing information before producing releases.

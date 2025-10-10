@@ -28,18 +28,21 @@ data class MonitorOption(
     val name: String,
     val description: String,
     val icon: ImageVector,
-    val isEnabled: Boolean = true
+    val isEnabled: Boolean = true,
 )
 
 data class TipDialogData(
     val title: String,
     val message: String,
     val icon: ImageVector,
-    val type: TipType = TipType.INFO
+    val type: TipType = TipType.INFO,
 )
 
 enum class TipType {
-    INFO, WARNING, ERROR, SUCCESS
+    INFO,
+    WARNING,
+    ERROR,
+    SUCCESS,
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,40 +53,42 @@ fun MonitorSelectDialogCompose(
     selectedOption: MonitorOption?,
     onOptionSelected: (MonitorOption) -> Unit,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     if (showDialog) {
         Dialog(
             onDismissRequest = onDismiss,
-            properties = DialogProperties(usePlatformDefaultWidth = false)
+            properties = DialogProperties(usePlatformDefaultWidth = false),
         ) {
             Card(
-                modifier = modifier
-                    .fillMaxWidth(0.9f)
-                    .wrapContentHeight(),
+                modifier =
+                    modifier
+                        .fillMaxWidth(0.9f)
+                        .wrapContentHeight(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
             ) {
                 Column(
-                    modifier = Modifier.padding(24.dp)
+                    modifier = Modifier.padding(24.dp),
                 ) {
                     // Dialog title
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = "Select Monitor",
                             style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         IconButton(onClick = onDismiss) {
                             Icon(
                                 Icons.Default.Close,
-                                contentDescription = "Close"
+                                contentDescription = "Close",
                             )
                         }
                     }
@@ -91,13 +96,13 @@ fun MonitorSelectDialogCompose(
                     // Options list
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         items(options) { option ->
                             MonitorOptionItem(
                                 option = option,
                                 isSelected = option.id == selectedOption?.id,
-                                onSelected = { onOptionSelected(option) }
+                                onSelected = { onOptionSelected(option) },
                             )
                         }
                     }
@@ -105,7 +110,7 @@ fun MonitorSelectDialogCompose(
                     // Action buttons
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
+                        horizontalArrangement = Arrangement.End,
                     ) {
                         TextButton(onClick = onDismiss) {
                             Text("Cancel")
@@ -116,7 +121,7 @@ fun MonitorSelectDialogCompose(
                                 selectedOption?.let { onOptionSelected(it) }
                                 onDismiss()
                             },
-                            enabled = selectedOption != null
+                            enabled = selectedOption != null,
                         ) {
                             Text("Select")
                         }
@@ -132,54 +137,65 @@ private fun MonitorOptionItem(
     option: MonitorOption,
     isSelected: Boolean,
     onSelected: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(enabled = option.isEnabled) { onSelected() },
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) {
-                MaterialTheme.colorScheme.primaryContainer
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable(enabled = option.isEnabled) { onSelected() },
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.surfaceVariant
+                    },
+            ),
+        border =
+            if (isSelected) {
+                BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
             } else {
-                MaterialTheme.colorScheme.surfaceVariant
-            }
-        ),
-        border = if (isSelected) {
-            BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-        } else null
+                null
+            },
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = option.icon,
                 contentDescription = option.name,
-                tint = if (option.isEnabled) {
-                    if (isSelected) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.onSurfaceVariant
-                } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                },
-                modifier = Modifier.size(24.dp)
+                tint =
+                    if (option.isEnabled) {
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        }
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    },
+                modifier = Modifier.size(24.dp),
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = option.name,
                     style = MaterialTheme.typography.titleMedium,
-                    color = if (option.isEnabled) {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                    }
+                    color =
+                        if (option.isEnabled) {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                        },
                 )
                 if (option.description.isNotEmpty()) {
                     Text(
                         text = option.description,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                     )
                 }
             }
@@ -188,7 +204,7 @@ private fun MonitorOptionItem(
                     Icons.Default.CheckCircle,
                     contentDescription = "Selected",
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
             }
         }
@@ -201,7 +217,7 @@ fun TipDialogCompose(
     tipData: TipDialogData,
     onDismiss: () -> Unit,
     onConfirm: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     if (showDialog) {
         AlertDialog(
@@ -210,27 +226,28 @@ fun TipDialogCompose(
                 Icon(
                     imageVector = tipData.icon,
                     contentDescription = tipData.type.name,
-                    tint = when (tipData.type) {
-                        TipType.INFO -> MaterialTheme.colorScheme.primary
-                        TipType.WARNING -> MaterialTheme.colorScheme.error
-                        TipType.ERROR -> MaterialTheme.colorScheme.error
-                        TipType.SUCCESS -> Color(0xFF4CAF50)
-                    },
-                    modifier = Modifier.size(32.dp)
+                    tint =
+                        when (tipData.type) {
+                            TipType.INFO -> MaterialTheme.colorScheme.primary
+                            TipType.WARNING -> MaterialTheme.colorScheme.error
+                            TipType.ERROR -> MaterialTheme.colorScheme.error
+                            TipType.SUCCESS -> Color(0xFF4CAF50)
+                        },
+                    modifier = Modifier.size(32.dp),
                 )
             },
             title = {
                 Text(
                     text = tipData.title,
                     style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             },
             text = {
                 Text(
                     text = tipData.message,
                     style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             },
             confirmButton = {
@@ -238,19 +255,22 @@ fun TipDialogCompose(
                     onClick = {
                         onConfirm?.invoke()
                         onDismiss()
-                    }
+                    },
                 ) {
                     Text(if (onConfirm != null) "OK" else "Dismiss")
                 }
             },
-            dismissButton = if (onConfirm != null) {
-                {
-                    TextButton(onClick = onDismiss) {
-                        Text("Cancel")
+            dismissButton =
+                if (onConfirm != null) {
+                    {
+                        TextButton(onClick = onDismiss) {
+                            Text("Cancel")
+                        }
                     }
-                }
-            } else null,
-            modifier = modifier
+                } else {
+                    null
+                },
+            modifier = modifier,
         )
     }
 }
@@ -260,17 +280,17 @@ fun FenceViewsCompose(
     fences: List<FenceData>,
     onFenceSelected: (FenceData) -> Unit,
     onFenceDeleted: (FenceData) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(fences) { fence ->
             FenceItemCompose(
                 fence = fence,
                 onSelected = { onFenceSelected(fence) },
-                onDeleted = { onFenceDeleted(fence) }
+                onDeleted = { onFenceDeleted(fence) },
             )
         }
     }
@@ -281,44 +301,46 @@ private fun FenceItemCompose(
     fence: FenceData,
     onSelected: () -> Unit,
     onDeleted: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onSelected() },
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable { onSelected() },
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            ),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 Icons.Default.CropFree,
                 contentDescription = "Fence",
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = fence.name,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 Text(
                     text = "Points: ${fence.points.size} | Temp: ${fence.temperature}°C",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                 )
             }
             IconButton(onClick = onDeleted) {
                 Icon(
                     Icons.Default.Delete,
                     contentDescription = "Delete fence",
-                    tint = MaterialTheme.colorScheme.error
+                    tint = MaterialTheme.colorScheme.error,
                 )
             }
         }
@@ -331,22 +353,23 @@ fun GuideStubsCompose(
     currentStep: Int,
     onStepChanged: (Int) -> Unit,
     onGuideCompleted: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            ),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             // Progress indicator
             LinearProgressIndicator(
                 progress = { (currentStep + 1f) / guideSteps.size },
                 modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.height(16.dp))
             // Current step content
@@ -355,30 +378,30 @@ fun GuideStubsCompose(
                 Text(
                     text = "Step ${currentStep + 1} of ${guideSteps.size}",
                     style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = step.title,
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = step.description,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 // Navigation buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     TextButton(
                         onClick = {
                             if (currentStep > 0) onStepChanged(currentStep - 1)
                         },
-                        enabled = currentStep > 0
+                        enabled = currentStep > 0,
                     ) {
                         Text("Previous")
                     }
@@ -389,7 +412,7 @@ fun GuideStubsCompose(
                             } else {
                                 onGuideCompleted()
                             }
-                        }
+                        },
                     ) {
                         Text(if (currentStep < guideSteps.size - 1) "Next" else "Complete")
                     }
@@ -402,11 +425,11 @@ fun GuideStubsCompose(
 @Composable
 fun UIWidgetsCompose(
     widgets: List<WidgetData>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(widgets) { widget ->
             WidgetItemCompose(widget = widget)
@@ -417,31 +440,32 @@ fun UIWidgetsCompose(
 @Composable
 private fun WidgetItemCompose(
     widget: WidgetData,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
                     imageVector = widget.icon,
                     contentDescription = widget.title,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     text = widget.title,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
             }
             if (widget.description.isNotEmpty()) {
@@ -449,7 +473,7 @@ private fun WidgetItemCompose(
                 Text(
                     text = widget.description,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                 )
             }
         }
@@ -461,20 +485,20 @@ data class FenceData(
     val id: Int,
     val name: String,
     val points: List<Pair<Float, Float>>,
-    val temperature: Float
+    val temperature: Float,
 )
 
 data class GuideStep(
     val title: String,
     val description: String,
-    val imageRes: Int? = null
+    val imageRes: Int? = null,
 )
 
 data class WidgetData(
     val id: Int,
     val title: String,
     val description: String,
-    val icon: ImageVector
+    val icon: ImageVector,
 )
 
 // Preview functions
@@ -482,17 +506,18 @@ data class WidgetData(
 @Composable
 private fun MonitorSelectDialogPreview() {
     LibUnifiedTheme {
-        val sampleOptions = listOf(
-            MonitorOption(1, "Temperature Monitor", "Real-time temperature tracking", Icons.Default.Thermostat),
-            MonitorOption(2, "Pressure Monitor", "Pressure level monitoring", Icons.Default.Speed),
-            MonitorOption(3, "Humidity Monitor", "Humidity level tracking", Icons.Default.WaterDrop, false)
-        )
+        val sampleOptions =
+            listOf(
+                MonitorOption(1, "Temperature Monitor", "Real-time temperature tracking", Icons.Default.Thermostat),
+                MonitorOption(2, "Pressure Monitor", "Pressure level monitoring", Icons.Default.Speed),
+                MonitorOption(3, "Humidity Monitor", "Humidity level tracking", Icons.Default.WaterDrop, false),
+            )
         MonitorSelectDialogCompose(
             showDialog = true,
             options = sampleOptions,
             selectedOption = sampleOptions[0],
             onOptionSelected = {},
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }
@@ -503,14 +528,15 @@ private fun TipDialogPreview() {
     LibUnifiedTheme {
         TipDialogCompose(
             showDialog = true,
-            tipData = TipDialogData(
-                title = "Calibration Required",
-                message = "Please calibrate the thermal sensor before proceeding with measurements.",
-                icon = Icons.Default.Warning,
-                type = TipType.WARNING
-            ),
+            tipData =
+                TipDialogData(
+                    title = "Calibration Required",
+                    message = "Please calibrate the thermal sensor before proceeding with measurements.",
+                    icon = Icons.Default.Warning,
+                    type = TipType.WARNING,
+                ),
             onDismiss = {},
-            onConfirm = {}
+            onConfirm = {},
         )
     }
 }
@@ -519,14 +545,15 @@ private fun TipDialogPreview() {
 @Composable
 private fun FenceViewsPreview() {
     LibUnifiedTheme {
-        val sampleFences = listOf(
-            FenceData(1, "Temperature Zone 1", listOf(0f to 0f, 100f to 100f), 25.5f),
-            FenceData(2, "Critical Area", listOf(50f to 50f, 150f to 150f), 85.2f)
-        )
+        val sampleFences =
+            listOf(
+                FenceData(1, "Temperature Zone 1", listOf(0f to 0f, 100f to 100f), 25.5f),
+                FenceData(2, "Critical Area", listOf(50f to 50f, 150f to 150f), 85.2f),
+            )
         FenceViewsCompose(
             fences = sampleFences,
             onFenceSelected = {},
-            onFenceDeleted = {}
+            onFenceDeleted = {},
         )
     }
 }

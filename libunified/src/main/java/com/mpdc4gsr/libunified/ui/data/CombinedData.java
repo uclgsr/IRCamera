@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.ui.data;
 
-import android.util.Log;
 
 import com.mpdc4gsr.libunified.ui.highlight.Highlight;
 import com.mpdc4gsr.libunified.ui.interfaces.datasets.IBarLineScatterCandleBubbleDataSet;
@@ -216,21 +215,18 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
     @Deprecated
     @Override
     public boolean removeDataSet(int index) {
-        Log.e("MPAndroidChart", "removeDataSet(int index) not supported for CombinedData");
         return false;
     }
 
     @Deprecated
     @Override
     public boolean removeEntry(Entry e, int dataSetIndex) {
-        Log.e("MPAndroidChart", "removeEntry(...) not supported for CombinedData");
         return false;
     }
 
     @Deprecated
     @Override
     public boolean removeEntry(float xValue, int dataSetIndex) {
-        Log.e("MPAndroidChart", "removeEntry(...) not supported for CombinedData");
         return false;
     }
 }

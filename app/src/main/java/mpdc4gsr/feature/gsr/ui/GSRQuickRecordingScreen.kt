@@ -25,14 +25,14 @@ import kotlin.math.sqrt
 data class GSRReading(
     val timestamp: Long,
     val value: Double, // in microsiemens
-    val quality: SignalQuality = SignalQuality.GOOD
+    val quality: SignalQuality = SignalQuality.GOOD,
 )
 
 enum class SignalQuality {
     EXCELLENT,
     GOOD,
     FAIR,
-    POOR
+    POOR,
 }
 
 enum class RecordingState {
@@ -42,14 +42,14 @@ enum class RecordingState {
     RECORDING,
     PAUSED,
     COMPLETED,
-    ERROR
+    ERROR,
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRQuickRecordingScreen(
     onNavigateBack: () -> Unit = {},
-    onSaveRecording: () -> Unit = {}
+    onSaveRecording: () -> Unit = {},
 ) {
     var recordingState by remember { mutableStateOf(RecordingState.IDLE) }
     var recordingDuration by remember { mutableStateOf(0) } // in seconds
@@ -64,28 +64,31 @@ fun GSRQuickRecordingScreen(
                 delay(100) // Update every 100ms
                 recordingDuration += 1
                 // Simulate GSR reading
-                val newValue = 12.0 + 4.0 * sin(recordingDuration * 0.01) +
+                val newValue =
+                    12.0 + 4.0 * sin(recordingDuration * 0.01) +
                         (Math.random() - 0.5) * 2.0
                 currentGSRValue = newValue
-                val newReading = GSRReading(
-                    timestamp = System.currentTimeMillis(),
-                    value = newValue,
-                    quality = signalQuality
-                )
+                val newReading =
+                    GSRReading(
+                        timestamp = System.currentTimeMillis(),
+                        value = newValue,
+                        quality = signalQuality,
+                    )
                 gsrReadings = (gsrReadings + newReading).takeLast(200) // Keep last 200 readings
             }
         }
     }
     IRCameraTheme {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .systemBarsPadding()
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .systemBarsPadding(),
         ) {
             TitleBar(
                 title = "Quick GSR Recording",
                 showBackButton = true,
-                onBackClick = onNavigateBack
+                onBackClick = onNavigateBack,
             ) {
                 TitleBarAction(
                     icon = Icons.Default.Save,
@@ -94,21 +97,22 @@ fun GSRQuickRecordingScreen(
                         if (recordingState == RecordingState.COMPLETED && gsrReadings.isNotEmpty()) {
                             onSaveRecording()
                         }
-                    }
+                    },
                 )
             }
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 // Device Status Card
                 DeviceStatusCard(
                     recordingState = recordingState,
                     batteryLevel = batteryLevel,
                     signalQuality = signalQuality,
-                    onConnect = { recordingState = RecordingState.CONNECTING }
+                    onConnect = { recordingState = RecordingState.CONNECTING },
                 )
                 // Real-time GSR Display
                 if (recordingState == RecordingState.CONNECTED ||
@@ -118,7 +122,7 @@ fun GSRQuickRecordingScreen(
                     GSRDisplayCard(
                         currentValue = currentGSRValue,
                         readings = gsrReadings,
-                        signalQuality = signalQuality
+                        signalQuality = signalQuality,
                     )
                 }
                 // Recording Controls
@@ -146,7 +150,7 @@ fun GSRQuickRecordingScreen(
                         ) {
                             recordingState = RecordingState.COMPLETED
                         }
-                    }
+                    },
                 )
                 // Session Summary (when completed)
                 if (recordingState == RecordingState.COMPLETED && gsrReadings.isNotEmpty()) {
@@ -155,7 +159,7 @@ fun GSRQuickRecordingScreen(
                 // Quick Setup Instructions
                 if (recordingState == RecordingState.IDLE) {
                     QuickSetupCard(
-                        onStartSetup = { recordingState = RecordingState.CONNECTING }
+                        onStartSetup = { recordingState = RecordingState.CONNECTING },
                     )
                 }
             }
@@ -168,25 +172,25 @@ fun DeviceStatusCard(
     recordingState: RecordingState,
     batteryLevel: Int,
     signalQuality: SignalQuality,
-    onConnect: () -> Unit
+    onConnect: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "Shimmer3 GSR Device",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = Color.White,
                 )
                 RecordingStateBadge(state = recordingState)
             }
@@ -194,66 +198,71 @@ fun DeviceStatusCard(
             if (recordingState != RecordingState.IDLE) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     // Battery Level
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
-                            imageVector = when {
-                                batteryLevel > 75 -> Icons.Default.BatteryFull
-                                batteryLevel > 50 -> Icons.Default.Battery6Bar
-                                batteryLevel > 25 -> Icons.Default.Battery3Bar
-                                else -> Icons.Default.Battery2Bar
-                            },
+                            imageVector =
+                                when {
+                                    batteryLevel > 75 -> Icons.Default.BatteryFull
+                                    batteryLevel > 50 -> Icons.Default.Battery6Bar
+                                    batteryLevel > 25 -> Icons.Default.Battery3Bar
+                                    else -> Icons.Default.Battery2Bar
+                                },
                             contentDescription = "Battery",
                             tint = if (batteryLevel > 25) Color(0xFF4ECDC4) else Color(0xFFFF6B6B),
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "${batteryLevel}%",
+                            text = "$batteryLevel%",
                             fontSize = 14.sp,
-                            color = Color.White
+                            color = Color.White,
                         )
                     }
                     // Signal Quality
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
                             imageVector = Icons.Default.SignalCellularAlt,
                             contentDescription = "Signal",
-                            tint = when (signalQuality) {
-                                SignalQuality.EXCELLENT -> Color(0xFF4ECDC4)
-                                SignalQuality.GOOD -> Color(0xFF4ECDC4)
-                                SignalQuality.FAIR -> Color(0xFFFFB74D)
-                                SignalQuality.POOR -> Color(0xFFFF6B6B)
-                            },
-                            modifier = Modifier.size(20.dp)
+                            tint =
+                                when (signalQuality) {
+                                    SignalQuality.EXCELLENT -> Color(0xFF4ECDC4)
+                                    SignalQuality.GOOD -> Color(0xFF4ECDC4)
+                                    SignalQuality.FAIR -> Color(0xFFFFB74D)
+                                    SignalQuality.POOR -> Color(0xFFFF6B6B)
+                                },
+                            modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = signalQuality.name.lowercase()
-                                .replaceFirstChar { it.uppercase() },
+                            text =
+                                signalQuality.name
+                                    .lowercase()
+                                    .replaceFirstChar { it.uppercase() },
                             fontSize = 14.sp,
-                            color = Color.White
+                            color = Color.White,
                         )
                     }
                 }
             } else {
                 Button(
                     onClick = onConnect,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6B73FF)
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF6B73FF),
+                        ),
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(
                         imageVector = Icons.Default.Bluetooth,
                         contentDescription = null,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Connect Device")
@@ -265,50 +274,54 @@ fun DeviceStatusCard(
 
 @Composable
 fun RecordingStateBadge(state: RecordingState) {
-    val (color, text, icon) = when (state) {
-        RecordingState.IDLE -> Triple(Color(0xFF9E9E9E), "Idle", Icons.Default.PowerOff)
-        RecordingState.CONNECTING -> Triple(
-            Color(0xFFFFB74D),
-            "Connecting",
-            Icons.Default.Bluetooth
-        )
+    val (color, text, icon) =
+        when (state) {
+            RecordingState.IDLE -> Triple(Color(0xFF9E9E9E), "Idle", Icons.Default.PowerOff)
+            RecordingState.CONNECTING ->
+                Triple(
+                    Color(0xFFFFB74D),
+                    "Connecting",
+                    Icons.Default.Bluetooth,
+                )
 
-        RecordingState.CONNECTED -> Triple(
-            Color(0xFF4ECDC4),
-            "Connected",
-            Icons.Default.CheckCircle
-        )
+            RecordingState.CONNECTED ->
+                Triple(
+                    Color(0xFF4ECDC4),
+                    "Connected",
+                    Icons.Default.CheckCircle,
+                )
 
-        RecordingState.RECORDING -> Triple(
-            Color(0xFFFF6B6B),
-            "Recording",
-            Icons.Default.FiberManualRecord
-        )
+            RecordingState.RECORDING ->
+                Triple(
+                    Color(0xFFFF6B6B),
+                    "Recording",
+                    Icons.Default.FiberManualRecord,
+                )
 
-        RecordingState.PAUSED -> Triple(Color(0xFFFFB74D), "Paused", Icons.Default.Pause)
-        RecordingState.COMPLETED -> Triple(Color(0xFF4ECDC4), "Completed", Icons.Default.Done)
-        RecordingState.ERROR -> Triple(Color(0xFFFF6B6B), "Error", Icons.Default.Error)
-    }
+            RecordingState.PAUSED -> Triple(Color(0xFFFFB74D), "Paused", Icons.Default.Pause)
+            RecordingState.COMPLETED -> Triple(Color(0xFF4ECDC4), "Completed", Icons.Default.Done)
+            RecordingState.ERROR -> Triple(Color(0xFFFF6B6B), "Error", Icons.Default.Error)
+        }
     Surface(
         color = color.copy(alpha = 0.2f),
-        shape = MaterialTheme.shapes.small
+        shape = MaterialTheme.shapes.small,
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = color,
-                modifier = Modifier.size(12.dp)
+                modifier = Modifier.size(12.dp),
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = text,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Medium,
-                color = color
+                color = color,
             )
         }
     }
@@ -318,48 +331,49 @@ fun RecordingStateBadge(state: RecordingState) {
 fun GSRDisplayCard(
     currentValue: Double,
     readings: List<GSRReading>,
-    signalQuality: SignalQuality
+    signalQuality: SignalQuality,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = "Live GSR Reading",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             // Current Value Display
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = String.format("%.2f", currentValue),
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF4ECDC4)
+                    color = Color(0xFF4ECDC4),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "μS",
                     fontSize = 16.sp,
-                    color = Color(0xFFCCFFFFFF)
+                    color = Color(0xFFCCFFFFFF),
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
             // Waveform Display
             if (readings.isNotEmpty()) {
                 Canvas(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(120.dp),
                 ) {
                     val path = Path()
                     val width = size.width
@@ -380,7 +394,7 @@ fun GSRDisplayCard(
                     drawPath(
                         path = path,
                         color = Color(0xFF4ECDC4),
-                        style = Stroke(width = 2.dp.toPx())
+                        style = Stroke(width = 2.dp.toPx()),
                     )
                 }
             }
@@ -395,15 +409,15 @@ fun RecordingControlsCard(
     onStartRecording: () -> Unit,
     onPauseRecording: () -> Unit,
     onResumeRecording: () -> Unit,
-    onStopRecording: () -> Unit
+    onStopRecording: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
             modifier = Modifier.padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             // Duration Display
             if (recordingState == RecordingState.RECORDING ||
@@ -415,23 +429,23 @@ fun RecordingControlsCard(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
                 )
             }
             // Control Buttons
             Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 when (recordingState) {
                     RecordingState.CONNECTED -> {
                         FloatingActionButton(
                             onClick = onStartRecording,
-                            containerColor = Color(0xFFFF6B6B)
+                            containerColor = Color(0xFFFF6B6B),
                         ) {
                             Icon(
                                 imageVector = Icons.Default.FiberManualRecord,
                                 contentDescription = "Start recording",
-                                tint = Color.White
+                                tint = Color.White,
                             )
                         }
                     }
@@ -439,22 +453,22 @@ fun RecordingControlsCard(
                     RecordingState.RECORDING -> {
                         FloatingActionButton(
                             onClick = onPauseRecording,
-                            containerColor = Color(0xFFFFB74D)
+                            containerColor = Color(0xFFFFB74D),
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Pause,
                                 contentDescription = "Pause recording",
-                                tint = Color.White
+                                tint = Color.White,
                             )
                         }
                         FloatingActionButton(
                             onClick = onStopRecording,
-                            containerColor = Color(0xFF4ECDC4)
+                            containerColor = Color(0xFF4ECDC4),
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Stop,
                                 contentDescription = "Stop recording",
-                                tint = Color.White
+                                tint = Color.White,
                             )
                         }
                     }
@@ -462,22 +476,22 @@ fun RecordingControlsCard(
                     RecordingState.PAUSED -> {
                         FloatingActionButton(
                             onClick = onResumeRecording,
-                            containerColor = Color(0xFF6B73FF)
+                            containerColor = Color(0xFF6B73FF),
                         ) {
                             Icon(
                                 imageVector = Icons.Default.PlayArrow,
                                 contentDescription = "Resume recording",
-                                tint = Color.White
+                                tint = Color.White,
                             )
                         }
                         FloatingActionButton(
                             onClick = onStopRecording,
-                            containerColor = Color(0xFF4ECDC4)
+                            containerColor = Color(0xFF4ECDC4),
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Stop,
                                 contentDescription = "Stop recording",
-                                tint = Color.White
+                                tint = Color.White,
                             )
                         }
                     }
@@ -486,12 +500,12 @@ fun RecordingControlsCard(
                         // Show disabled button
                         FloatingActionButton(
                             onClick = { },
-                            containerColor = Color(0xFF404040)
+                            containerColor = Color(0xFF404040),
                         ) {
                             Icon(
                                 imageVector = Icons.Default.FiberManualRecord,
                                 contentDescription = "Record (disabled)",
-                                tint = Color(0xFF6B6B6B)
+                                tint = Color(0xFF6B6B6B),
                             )
                         }
                     }
@@ -501,17 +515,18 @@ fun RecordingControlsCard(
             if (recordingState != RecordingState.IDLE) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = when (recordingState) {
-                        RecordingState.CONNECTING -> "Connecting to device..."
-                        RecordingState.CONNECTED -> "Ready to record"
-                        RecordingState.RECORDING -> "Recording in progress"
-                        RecordingState.PAUSED -> "Recording paused"
-                        RecordingState.COMPLETED -> "Recording completed"
-                        RecordingState.ERROR -> "Connection error"
-                        else -> ""
-                    },
+                    text =
+                        when (recordingState) {
+                            RecordingState.CONNECTING -> "Connecting to device..."
+                            RecordingState.CONNECTED -> "Ready to record"
+                            RecordingState.RECORDING -> "Recording in progress"
+                            RecordingState.PAUSED -> "Recording paused"
+                            RecordingState.COMPLETED -> "Recording completed"
+                            RecordingState.ERROR -> "Connection error"
+                            else -> ""
+                        },
                     fontSize = 14.sp,
-                    color = Color(0xFFCCFFFFFF)
+                    color = Color(0xFFCCFFFFFF),
                 )
             }
         }
@@ -522,17 +537,17 @@ fun RecordingControlsCard(
 fun SessionSummaryCard(readings: List<GSRReading>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = "Session Summary",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             val meanValue = readings.map { it.value }.average()
             val minValue = readings.minOf { it.value }
@@ -540,34 +555,34 @@ fun SessionSummaryCard(readings: List<GSRReading>) {
             val stdDev = calculateStandardDeviation(readings.map { it.value })
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 SummaryMetric(
                     label = "Mean",
                     value = "${String.format("%.2f", meanValue)} μS",
-                    color = Color(0xFF4ECDC4)
+                    color = Color(0xFF4ECDC4),
                 )
                 SummaryMetric(
                     label = "Min",
                     value = "${String.format("%.2f", minValue)} μS",
-                    color = Color(0xFF6B73FF)
+                    color = Color(0xFF6B73FF),
                 )
                 SummaryMetric(
                     label = "Max",
                     value = "${String.format("%.2f", maxValue)} μS",
-                    color = Color(0xFFFF6B6B)
+                    color = Color(0xFFFF6B6B),
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = "Data points: ${readings.size}",
                 fontSize = 14.sp,
-                color = Color(0xFFCCFFFFFF)
+                color = Color(0xFFCCFFFFFF),
             )
             Text(
                 text = "Standard deviation: ${String.format("%.2f", stdDev)} μS",
                 fontSize = 14.sp,
-                color = Color(0xFFCCFFFFFF)
+                color = Color(0xFFCCFFFFFF),
             )
         }
     }
@@ -577,21 +592,21 @@ fun SessionSummaryCard(readings: List<GSRReading>) {
 fun SummaryMetric(
     label: String,
     value: String,
-    color: Color
+    color: Color,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
-            color = color
+            color = color,
         )
         Text(
             text = label,
             fontSize = 12.sp,
-            color = Color(0xFFCCFFFFFF)
+            color = Color(0xFFCCFFFFFF),
         )
     }
 }
@@ -600,34 +615,36 @@ fun SummaryMetric(
 fun QuickSetupCard(onStartSetup: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = "Quick Setup",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             Text(
-                text = "1. Turn on your Shimmer3 GSR device\n" +
+                text =
+                    "1. Turn on your Shimmer3 GSR device\n" +
                         "2. Ensure Bluetooth is enabled\n" +
                         "3. Attach GSR electrodes to fingers\n" +
                         "4. Tap 'Connect Device' to begin",
                 fontSize = 14.sp,
                 color = Color(0xFFCCFFFFFF),
                 lineHeight = 20.sp,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             Button(
                 onClick = onStartSetup,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF6B73FF)
-                ),
-                modifier = Modifier.fillMaxWidth()
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF6B73FF),
+                    ),
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Text("Start Quick Recording")
             }

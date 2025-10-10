@@ -12,7 +12,6 @@ import android.os.Build;
 
 import androidx.core.content.FileProvider;
 
-import com.elvishew.xlog.XLog;
 
 import java.io.File;
 import java.util.List;
@@ -39,7 +38,6 @@ public enum AppUtils {
         resolveIntent.setPackage(pi.packageName);
         List<ResolveInfo> apps = context.getPackageManager().queryIntentActivities(resolveIntent, 0);
         if (null == apps || 0 >= apps.size()) {
-//            LLog.e("bcf","");
             return;
         }
         ResolveInfo ri = apps.iterator().next();
@@ -76,7 +74,6 @@ public enum AppUtils {
             return false;
         }
         for (ActivityManager.RunningServiceInfo serviceInfo : runningServiceInfos) {
-            XLog.w("bcf", "=" + serviceInfo.service.getClassName());
             if (serviceInfo.process.equals(serviceName)) {
                 return true;
             }
@@ -91,7 +88,6 @@ public enum AppUtils {
             return false;
         }
         for (ActivityManager.RunningServiceInfo serviceInfo : runningServiceInfos) {
-            XLog.w("bcf", "=" + serviceInfo.service.getClassName());
             if (serviceInfo.service.getClassName().equals(serviceName)) {
                 return true;
             }

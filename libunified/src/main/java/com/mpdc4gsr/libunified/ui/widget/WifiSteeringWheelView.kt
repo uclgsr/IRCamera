@@ -9,7 +9,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.mpdc4gsr.libunified.R
 
-class WifiSteeringWheelView : LinearLayout, OnClickListener {
+class WifiSteeringWheelView :
+    LinearLayout,
+    OnClickListener {
     private lateinit var tvConfirm: TextView
     private lateinit var steeringWheelStartBtn: ImageView
     private lateinit var steeringWheelCenterBtn: ImageView
@@ -40,7 +42,7 @@ class WifiSteeringWheelView : LinearLayout, OnClickListener {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     )
 
     private fun initView() {
@@ -66,6 +68,7 @@ class WifiSteeringWheelView : LinearLayout, OnClickListener {
     }
 
     val moveI = 2
+
     override fun onClick(v: View?) {
         when (v) {
             steeringWheelStartBtn -> {

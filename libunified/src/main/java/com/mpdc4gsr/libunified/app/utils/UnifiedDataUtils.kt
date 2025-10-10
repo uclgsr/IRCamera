@@ -9,15 +9,13 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 object UnifiedDataUtils {
-    fun inputStreamToByteArray(inputStream: InputStream): ByteArray {
-        return inputStream.use { it.readBytes() }
-    }
+    fun inputStreamToByteArray(inputStream: InputStream): ByteArray = inputStream.use { it.readBytes() }
 
     @JvmStatic
     fun bitmapToByteArray(
         bitmap: Bitmap,
         format: Bitmap.CompressFormat = Bitmap.CompressFormat.PNG,
-        quality: Int = 100
+        quality: Int = 100,
     ): ByteArray {
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(format, quality, outputStream)
@@ -81,17 +79,11 @@ object UnifiedDataUtils {
         return shortArray
     }
 
-    inline fun <reified T> listToArray(list: List<T>): Array<T> {
-        return list.toTypedArray()
-    }
+    inline fun <reified T> listToArray(list: List<T>): Array<T> = list.toTypedArray()
 
-    fun <T> arrayToList(array: Array<T>): List<T> {
-        return array.toList()
-    }
+    fun <T> arrayToList(array: Array<T>): List<T> = array.toList()
 
-    fun deepCopyByteArray(original: ByteArray): ByteArray {
-        return original.copyOf()
-    }
+    fun deepCopyByteArray(original: ByteArray): ByteArray = original.copyOf()
 
     fun concatenateByteArrays(vararg arrays: ByteArray): ByteArray {
         val totalLength = arrays.sumOf { it.size }
@@ -104,7 +96,10 @@ object UnifiedDataUtils {
         return result
     }
 
-    fun splitByteArray(array: ByteArray, chunkSize: Int): List<ByteArray> {
+    fun splitByteArray(
+        array: ByteArray,
+        chunkSize: Int,
+    ): List<ByteArray> {
         val chunks = mutableListOf<ByteArray>()
         var offset = 0
         while (offset < array.size) {
@@ -117,13 +112,12 @@ object UnifiedDataUtils {
         return chunks
     }
 
-    fun reverseByteArray(array: ByteArray): ByteArray {
-        return array.reversedArray()
-    }
+    fun reverseByteArray(array: ByteArray): ByteArray = array.reversedArray()
 
-    fun byteArraysEqual(array1: ByteArray, array2: ByteArray): Boolean {
-        return array1.contentEquals(array2)
-    }
+    fun byteArraysEqual(
+        array1: ByteArray,
+        array2: ByteArray,
+    ): Boolean = array1.contentEquals(array2)
 
     fun formatDataSize(bytes: Long): String {
         val units = arrayOf("B", "KB", "MB", "GB", "TB")
@@ -137,7 +131,11 @@ object UnifiedDataUtils {
     }
 
     @JvmStatic
-    fun scaleWithWH(bitmap: Bitmap?, targetWidth: Int, targetHeight: Int): Bitmap? {
+    fun scaleWithWH(
+        bitmap: Bitmap?,
+        targetWidth: Int,
+        targetHeight: Int,
+    ): Bitmap? {
         if (bitmap == null || bitmap.isRecycled) return null
         val scaleX = targetWidth.toFloat() / bitmap.width
         val scaleY = targetHeight.toFloat() / bitmap.height
@@ -152,12 +150,11 @@ object UnifiedDataUtils {
     }
 
     @JvmStatic
-    fun byteArrayToBitmap(byteArray: ByteArray): Bitmap? {
-        return try {
+    fun byteArrayToBitmap(byteArray: ByteArray): Bitmap? =
+        try {
             BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
         } catch (e: Exception) {
             e.printStackTrace()
             null
         }
-    }
 }

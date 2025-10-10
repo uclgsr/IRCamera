@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -84,7 +83,6 @@ public class ExcelUtils {
                     }
                     DocumentFile documentFile = DocumentFile.fromSingleUri(ContextProvider.getContext(), uri);
                     String filePath = uri.toString();
-                    Log.w("", filePath);
                     return filePath;
                 } else {
                     return null;
@@ -209,14 +207,12 @@ public class ExcelUtils {
                     }
                     DocumentFile documentFile = DocumentFile.fromSingleUri(ContextProvider.getContext(), uri);
                     String filePath = documentFile != null ? documentFile.getName() : uri.toString();
-                    Log.w("", filePath);
                     return filePath;
                 } else {
                     return null;
                 }
             }
         } catch (IOException e) {
-            Log.e("ExpressExcle", "exportExcel", e);
             return null;
         }
 

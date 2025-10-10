@@ -20,6 +20,7 @@ class IRMonitorChartLiteViewModel : BaseViewModel() {
     val lowTemp: StateFlow<Float> = _lowTemp.asStateFlow()
     private val _isMonitoring = MutableStateFlow(false)
     val isMonitoring: StateFlow<Boolean> = _isMonitoring.asStateFlow()
+
     fun toggleRecording() {
         launchWithErrorHandling {
             _isRecording.value = !_isRecording.value
@@ -35,7 +36,11 @@ class IRMonitorChartLiteViewModel : BaseViewModel() {
         }
     }
 
-    fun updateTemperature(current: Float, high: Float, low: Float) {
+    fun updateTemperature(
+        current: Float,
+        high: Float,
+        low: Float,
+    ) {
         launchWithErrorHandling {
             _currentTemp.value = current
             _highTemp.value = high

@@ -18,11 +18,11 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 abstract class HiltComposeActivity : ComponentActivity() {
-
     @Composable
     protected abstract fun Content()
 
     protected open fun onDeviceConnected() {}
+
     protected open fun onDeviceDisconnected() {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,8 +40,8 @@ abstract class HiltComposeActivity : ComponentActivity() {
         super.attachBaseContext(
             AppLanguageUtils.attachBaseContext(
                 newBase,
-                ConstantLanguages.ENGLISH
-            )
+                ConstantLanguages.ENGLISH,
+            ),
         )
     }
 

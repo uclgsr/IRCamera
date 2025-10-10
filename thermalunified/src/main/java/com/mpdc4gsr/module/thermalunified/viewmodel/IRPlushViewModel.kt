@@ -21,14 +21,15 @@ class IRPlushViewModel : BaseViewModel() {
     val dualViewState: StateFlow<DualViewState> = _dualViewState.asStateFlow()
 
     // Temperature data management
-    private val _temperatureData = MutableStateFlow(
-        TemperatureData(
-            irCenterTemp = 0.0f,
-            irMaxTemp = 0.0f,
-            irMinTemp = 0.0f,
-            ambientTemp = 0.0f
+    private val _temperatureData =
+        MutableStateFlow(
+            TemperatureData(
+                irCenterTemp = 0.0f,
+                irMaxTemp = 0.0f,
+                irMinTemp = 0.0f,
+                ambientTemp = 0.0f,
+            ),
         )
-    )
     val temperatureData: StateFlow<TemperatureData> = _temperatureData.asStateFlow()
 
     // Processing mode management
@@ -38,6 +39,7 @@ class IRPlushViewModel : BaseViewModel() {
     // Recording state management
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
+
     fun toggleRecording() {
         _isRecording.value = !_isRecording.value
     }
@@ -63,26 +65,28 @@ class IRPlushViewModel : BaseViewModel() {
     fun resetSettings() {
         _processingMode.value = ProcessingMode.STANDARD
         _isRecording.value = false
-        _temperatureData.value = TemperatureData(
-            irCenterTemp = 0.0f,
-            irMaxTemp = 0.0f,
-            irMinTemp = 0.0f,
-            ambientTemp = 0.0f
-        )
+        _temperatureData.value =
+            TemperatureData(
+                irCenterTemp = 0.0f,
+                irMaxTemp = 0.0f,
+                irMinTemp = 0.0f,
+                ambientTemp = 0.0f,
+            )
     }
 
     fun updateTemperatureData(
         centerTemp: Float,
         maxTemp: Float,
         minTemp: Float,
-        ambientTemp: Float
+        ambientTemp: Float,
     ) {
-        _temperatureData.value = TemperatureData(
-            irCenterTemp = centerTemp,
-            irMaxTemp = maxTemp,
-            irMinTemp = minTemp,
-            ambientTemp = ambientTemp
-        )
+        _temperatureData.value =
+            TemperatureData(
+                irCenterTemp = centerTemp,
+                irMaxTemp = maxTemp,
+                irMinTemp = minTemp,
+                ambientTemp = ambientTemp,
+            )
     }
 
     // Data class definitions
@@ -90,18 +94,24 @@ class IRPlushViewModel : BaseViewModel() {
         val irCenterTemp: Float,
         val irMaxTemp: Float,
         val irMinTemp: Float,
-        val ambientTemp: Float
+        val ambientTemp: Float,
     )
 
     enum class DualViewState {
-        INACTIVE, ACTIVE, CALIBRATING, ERROR
+        INACTIVE,
+        ACTIVE,
+        CALIBRATING,
+        ERROR,
     }
 
-    enum class ProcessingMode(val displayName: String, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
+    enum class ProcessingMode(
+        val displayName: String,
+        val icon: androidx.compose.ui.graphics.vector.ImageVector,
+    ) {
         STANDARD("Standard", Icons.Default.CameraAlt),
         ENHANCED("Enhanced", Icons.Default.AutoAwesome),
         PROFESSIONAL("Professional", Icons.Default.WorkspacePremium),
-        FUSION("Fusion", Icons.Default.Merge)
+        FUSION("Fusion", Icons.Default.Merge),
     }
 
     fun showAdvancedSettings() {

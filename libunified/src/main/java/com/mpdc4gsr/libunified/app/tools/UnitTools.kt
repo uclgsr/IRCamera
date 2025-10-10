@@ -125,13 +125,9 @@ object UnitTools {
         return str.toFloat()
     }
 
-    fun toF(value: Float): Float {
-        return value * 1.8000f + 32.00f
-    }
+    fun toF(value: Float): Float = value * 1.8000f + 32.00f
 
-    fun toC(value: Float): Float {
-        return (value - 32.0f) / 1.8000f
-    }
+    fun toC(value: Float): Float = (value - 32.0f) / 1.8000f
 
     @JvmStatic
     fun showNoUnit(float: Float): String {

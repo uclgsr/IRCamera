@@ -17,28 +17,19 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AppRepositoryModule {
+    @Binds
+    @Singleton
+    abstract fun bindSessionRepository(sessionRepositoryImpl: SessionRepositoryImpl): SessionRepository
 
     @Binds
     @Singleton
-    abstract fun bindSessionRepository(
-        sessionRepositoryImpl: SessionRepositoryImpl
-    ): SessionRepository
+    abstract fun bindNetworkRepository(networkRepositoryImpl: NetworkRepositoryImpl): NetworkRepository
 
     @Binds
     @Singleton
-    abstract fun bindNetworkRepository(
-        networkRepositoryImpl: NetworkRepositoryImpl
-    ): NetworkRepository
+    abstract fun bindGsrRepository(gsrRepositoryImpl: GsrRepositoryImpl): GsrRepository
 
     @Binds
     @Singleton
-    abstract fun bindGsrRepository(
-        gsrRepositoryImpl: GsrRepositoryImpl
-    ): GsrRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindDiagnosticsRepository(
-        diagnosticsRepositoryImpl: DiagnosticsRepositoryImpl
-    ): DiagnosticsRepository
+    abstract fun bindDiagnosticsRepository(diagnosticsRepositoryImpl: DiagnosticsRepositoryImpl): DiagnosticsRepository
 }

@@ -22,9 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -43,14 +41,14 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                                     Icons.Default.AutoAwesome,
                                     contentDescription = "Plus",
                                     tint = Color(0xFFFFD700),
-                                    modifier = Modifier.size(20.dp)
+                                    modifier = Modifier.size(20.dp),
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     "Image Picker Plus",
                                     color = Color.White,
                                     fontSize = 20.sp,
-                                    fontWeight = FontWeight.Medium
+                                    fontWeight = FontWeight.Medium,
                                 )
                             }
                         },
@@ -59,13 +57,14 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF0D1117)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF0D1117),
+                            ),
                     )
                 },
                 floatingActionButton = {
@@ -74,16 +73,16 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                             showAIDialog = true
                         },
                         containerColor = Color(0xFFFFD700),
-                        contentColor = Color.Black
+                        contentColor = Color.Black,
                     ) {
                         Icon(Icons.Default.AutoAwesome, contentDescription = "AI Capture")
                     }
-                }
+                },
             ) { paddingValues ->
                 ImagePickerPlusContent(
                     modifier = Modifier.padding(paddingValues),
                     scope = scope,
-                    snackbarHostState = snackbarHostState
+                    snackbarHostState = snackbarHostState,
                 )
             }
             // AI Enhancement Dialog
@@ -99,7 +98,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                                 "Auto Enhance",
                                 "Noise Reduction",
                                 "Detail Enhancement",
-                                "Color Correction"
+                                "Color Correction",
                             ).forEach { mode ->
                                 TextButton(
                                     onClick = {
@@ -108,7 +107,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                                         }
                                         showAIDialog = false
                                     },
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth(),
                                 ) {
                                     Text(mode)
                                 }
@@ -120,7 +119,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                         TextButton(onClick = { showAIDialog = false }) {
                             Text("Cancel")
                         }
-                    }
+                    },
                 )
             }
         }
@@ -130,109 +129,114 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
     private fun ImagePickerPlusContent(
         modifier: Modifier = Modifier,
         scope: CoroutineScope,
-        snackbarHostState: SnackbarHostState
+        snackbarHostState: SnackbarHostState,
     ) {
         var captureMode by remember { mutableStateOf("Smart") }
         var aiEnhancement by remember { mutableStateOf(true) }
         var qualityFilter by remember { mutableStateOf(85) }
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .background(Color(0xFF0D1117))
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF0D1117))
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // AI Recommendations Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFFFD700).copy(alpha = 0.1f)
-                ),
-                shape = RoundedCornerShape(12.dp)
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = Color(0xFFFFD700).copy(alpha = 0.1f),
+                    ),
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
                             Icons.Default.Psychology,
                             contentDescription = "AI",
                             tint = Color(0xFFFFD700),
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(24.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             "AI Recommendations",
                             color = Color.White,
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         "• Best quality images detected automatically",
                         color = Color(0xFF7D8590),
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
                     )
                     Text(
                         "• Optimal thermal range suggestions",
                         color = Color(0xFF7D8590),
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
                     )
                     Text(
                         "• Smart batch processing available",
                         color = Color(0xFF7D8590),
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
                     )
                 }
             }
             // Live Preview Area
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
                             Icons.Default.CameraEnhance,
                             contentDescription = "Enhanced Preview",
                             tint = Color(0xFFFFD700),
-                            modifier = Modifier.size(64.dp)
+                            modifier = Modifier.size(64.dp),
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             "AI-Enhanced Live Preview",
                             color = Color.White,
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
                             "Real-time quality scoring and recommendations",
                             color = Color(0xFF7D8590),
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         // Quality Score Display
                         Card(
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color(0xFFFFD700).copy(alpha = 0.2f)
-                            ),
-                            shape = RoundedCornerShape(8.dp)
+                            colors =
+                                CardDefaults.cardColors(
+                                    containerColor = Color(0xFFFFD700).copy(alpha = 0.2f),
+                                ),
+                            shape = RoundedCornerShape(8.dp),
                         ) {
                             Text(
                                 "Quality Score: 94%",
                                 color = Color(0xFFFFD700),
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(12.dp)
+                                modifier = Modifier.padding(12.dp),
                             )
                         }
                     }
@@ -242,49 +246,51 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         "Plus Features",
                         color = Color.White,
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
                             "AI Enhancement",
                             color = Color(0xFF7D8590),
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
                         )
                         Switch(
                             checked = aiEnhancement,
                             onCheckedChange = { aiEnhancement = it },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = Color(0xFFFFD700),
-                                checkedTrackColor = Color(0xFFFFD700).copy(alpha = 0.5f)
-                            )
+                            colors =
+                                SwitchDefaults.colors(
+                                    checkedThumbColor = Color(0xFFFFD700),
+                                    checkedTrackColor = Color(0xFFFFD700).copy(alpha = 0.5f),
+                                ),
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        "Quality Filter: ${qualityFilter}%",
+                        "Quality Filter: $qualityFilter%",
                         color = Color(0xFF7D8590),
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
                     )
                     Slider(
                         value = qualityFilter.toFloat(),
                         onValueChange = { qualityFilter = it.toInt() },
                         valueRange = 0f..100f,
-                        colors = SliderDefaults.colors(
-                            thumbColor = Color(0xFFFFD700),
-                            activeTrackColor = Color(0xFFFFD700)
-                        )
+                        colors =
+                            SliderDefaults.colors(
+                                thumbColor = Color(0xFFFFD700),
+                                activeTrackColor = Color(0xFFFFD700),
+                            ),
                     )
                 }
             }
@@ -292,19 +298,19 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         "Capture Mode",
                         color = Color.White,
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         CaptureModeChip("Smart", captureMode == "Smart") { captureMode = "Smart" }
                         CaptureModeChip("Batch", captureMode == "Batch") { captureMode = "Batch" }
@@ -316,7 +322,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
             // Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 OutlinedButton(
                     onClick = {
@@ -325,9 +331,10 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                         }
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color(0xFF7D8590)
-                    )
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color(0xFF7D8590),
+                        ),
                 ) {
                     Icon(Icons.Default.History, contentDescription = "Recent")
                     Spacer(modifier = Modifier.width(8.dp))
@@ -340,10 +347,11 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                         }
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFFD700),
-                        contentColor = Color.Black
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFFFD700),
+                            contentColor = Color.Black,
+                        ),
                 ) {
                     Icon(Icons.Default.AutoFixHigh, contentDescription = "AI Process")
                     Spacer(modifier = Modifier.width(8.dp))
@@ -357,18 +365,19 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
     private fun CaptureModeChip(
         label: String,
         selected: Boolean,
-        onClick: () -> Unit
+        onClick: () -> Unit,
     ) {
         FilterChip(
             onClick = onClick,
             label = { Text(label) },
             selected = selected,
-            colors = FilterChipDefaults.filterChipColors(
-                selectedContainerColor = Color(0xFFFFD700),
-                selectedLabelColor = Color.Black,
-                containerColor = Color(0xFF0D1117),
-                labelColor = Color(0xFF7D8590)
-            )
+            colors =
+                FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = Color(0xFFFFD700),
+                    selectedLabelColor = Color.Black,
+                    containerColor = Color(0xFF0D1117),
+                    labelColor = Color(0xFF7D8590),
+                ),
         )
     }
 }

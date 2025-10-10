@@ -5,13 +5,25 @@ import mpdc4gsr.feature.network.data.NetworkClient
 
 interface NetworkRepository {
     suspend fun startServer(): Boolean
+
     suspend fun stopServer()
+
     suspend fun discoverControllers(): List<NetworkClient.ControllerInfo>
-    suspend fun connectToController(ipAddress: String, port: Int): Boolean
+
+    suspend fun connectToController(
+        ipAddress: String,
+        port: Int,
+    ): Boolean
+
     fun getConnectionState(): Flow<NetworkConnectionState>
+
     fun getConnectedController(): Flow<NetworkClient.ControllerInfo?>
 }
 
 enum class NetworkConnectionState {
-    DISCONNECTED, DISCOVERING, CONNECTING, CONNECTED, ERROR
+    DISCONNECTED,
+    DISCOVERING,
+    CONNECTING,
+    CONNECTED,
+    ERROR,
 }

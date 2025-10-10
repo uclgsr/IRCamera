@@ -7,7 +7,10 @@ android {
     namespace = "com.mpdc4gsr.ble"
     compileSdk = 36
     defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
+        minSdk =
+            libs.versions.minSdk
+                .get()
+                .toInt()
     }
     buildTypes {
         release {

@@ -1,7 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.utils
 
 import android.graphics.Point
-import android.util.Log
 import com.mpdc4gsr.libunified.ui.charts.LineChart
 import kotlin.math.abs
 
@@ -59,15 +58,14 @@ object ChartTools {
         return tempList
     }
 
-    fun scale(type: Int): Long {
-        return when (type) {
+    fun scale(type: Int): Long =
+        when (type) {
             1 -> 1 * 1000
             2 -> 60 * 1000
             3 -> 60 * 60 * 1000
             4 -> 24 * 60 * 60 * 1000
             else -> 1
         }
-    }
 
     fun getMinimum(type: Int): Float {
         val min =
@@ -81,9 +79,7 @@ object ChartTools {
         return min
     }
 
-    fun getMaximum(type: Int): Float {
-        return getMinimum(type) * 50f
-    }
+    fun getMaximum(type: Int): Float = getMinimum(type) * 50f
 
     fun setY(chart: LineChart) {
         var maxVol = 0f
@@ -128,7 +124,6 @@ object ChartTools {
                 chart.axisLeft.axisMinimum = minVol - (maxVol - minVol) * 0.15f
             }
         }
-        Log.w("chart", "yAxis max:${chart.axisLeft.axisMaximum}, min:${chart.axisLeft.axisMinimum}")
     }
 
     fun setX(
@@ -139,21 +134,18 @@ object ChartTools {
         chart.xAxis.setLabelCount(getLabCount(xLen.toInt()), xLen <= 3)
     }
 
-    private fun getLabCount(count: Int): Int {
-        return when {
+    private fun getLabCount(count: Int): Int =
+        when {
             count <= 2 -> 1
             count in 3..4 -> 2
             count in 5..7 -> 3
             count >= 8 -> 4
             else -> count
         }
-    }
 
     fun getChartX(
         x: Long,
         startTime: Long,
         type: Int,
-    ): Long {
-        return (x - startTime) / scale(type)
-    }
+    ): Long = (x - startTime) / scale(type)
 }

@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import androidx.annotation.NonNull;
 
-import com.mpdc4gsr.libunified.ui.gzuliyujiang.dialog.DialogLog;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.annotation.EthnicSpec;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.EthnicEntity;
 
@@ -129,7 +128,6 @@ public class EthnicPicker extends OptionPicker {
                 data.add(entity);
             }
         } catch (JSONException e) {
-            DialogLog.print(e);
         }
         switch (ethnicSpec) {
             case EthnicSpec.DEFAULT:

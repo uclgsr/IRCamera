@@ -38,7 +38,7 @@ data class ReportData(
     val modifiedDate: String,
     val images: List<String>,
     val measurements: List<MeasurementData>,
-    val metadata: ReportMetadata
+    val metadata: ReportMetadata,
 )
 
 data class MeasurementData(
@@ -47,7 +47,7 @@ data class MeasurementData(
     val value: String,
     val unit: String,
     val type: MeasurementType,
-    val isEditable: Boolean = true
+    val isEditable: Boolean = true,
 )
 
 data class ReportMetadata(
@@ -55,11 +55,15 @@ data class ReportMetadata(
     val location: String,
     val equipment: String,
     val conditions: String,
-    val notes: String
+    val notes: String,
 )
 
 enum class MeasurementType {
-    TEMPERATURE, HUMIDITY, PRESSURE, DISTANCE, EMISSIVITY
+    TEMPERATURE,
+    HUMIDITY,
+    PRESSURE,
+    DISTANCE,
+    EMISSIVITY,
 }
 
 data class WatermarkData(
@@ -67,11 +71,15 @@ data class WatermarkData(
     val position: WatermarkPosition,
     val opacity: Float = 0.3f,
     val fontSize: Float = 14f,
-    val color: Color = Color.Gray
+    val color: Color = Color.Gray,
 )
 
 enum class WatermarkPosition {
-    TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, CENTER
+    TOP_LEFT,
+    TOP_RIGHT,
+    BOTTOM_LEFT,
+    BOTTOM_RIGHT,
+    CENTER,
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,17 +89,18 @@ fun ReportIRInputCompose(
     onReportUpdated: (ReportData) -> Unit,
     onImageAdded: (String) -> Unit,
     onImageRemoved: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var currentReport by remember { mutableStateOf(reportData) }
     LaunchedEffect(reportData) {
         currentReport = reportData
     }
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         // Report header
         item {
@@ -104,7 +113,7 @@ fun ReportIRInputCompose(
                 onDescriptionChanged = { newDescription ->
                     currentReport = currentReport.copy(description = newDescription)
                     onReportUpdated(currentReport)
-                }
+                },
             )
         }
         // Images section
@@ -112,7 +121,7 @@ fun ReportIRInputCompose(
             ReportImagesCompose(
                 images = currentReport.images,
                 onImageAdded = onImageAdded,
-                onImageRemoved = onImageRemoved
+                onImageRemoved = onImageRemoved,
             )
         }
         // Measurements section
@@ -120,12 +129,13 @@ fun ReportIRInputCompose(
             ReportMeasurementsCompose(
                 measurements = currentReport.measurements,
                 onMeasurementUpdated = { updatedMeasurement ->
-                    val updatedMeasurements = currentReport.measurements.map { measurement ->
-                        if (measurement.id == updatedMeasurement.id) updatedMeasurement else measurement
-                    }
+                    val updatedMeasurements =
+                        currentReport.measurements.map { measurement ->
+                            if (measurement.id == updatedMeasurement.id) updatedMeasurement else measurement
+                        }
                     currentReport = currentReport.copy(measurements = updatedMeasurements)
                     onReportUpdated(currentReport)
-                }
+                },
             )
         }
         // Metadata section
@@ -135,7 +145,7 @@ fun ReportIRInputCompose(
                 onMetadataUpdated = { updatedMetadata ->
                     currentReport = currentReport.copy(metadata = updatedMetadata)
                     onReportUpdated(currentReport)
-                }
+                },
             )
         }
     }
@@ -146,23 +156,24 @@ private fun ReportHeaderCompose(
     report: ReportData,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+            ),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             OutlinedTextField(
                 value = report.title,
                 onValueChange = onTitleChanged,
                 label = { Text("Report Title") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
             )
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedTextField(
@@ -171,22 +182,22 @@ private fun ReportHeaderCompose(
                 label = { Text("Description") },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 3,
-                maxLines = 5
+                maxLines = 5,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = "Created: ${report.createdDate}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
                 )
                 Text(
                     text = "Modified: ${report.modifiedDate}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
                 )
             }
         }
@@ -198,73 +209,74 @@ private fun ReportImagesCompose(
     images: List<String>,
     onImageAdded: (String) -> Unit,
     onImageRemoved: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            ),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "Images (${images.size})",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 IconButton(onClick = { onImageAdded("") }) {
                     Icon(
                         Icons.Default.Add,
                         contentDescription = "Add image",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                 }
             }
             if (images.isNotEmpty()) {
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     items(images) { imagePath ->
                         ReportImageItem(
                             imagePath = imagePath,
-                            onRemoved = { onImageRemoved(imagePath) }
+                            onRemoved = { onImageRemoved(imagePath) },
                         )
                     }
                 }
             } else {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp)
-                        .background(
-                            MaterialTheme.colorScheme.surface,
-                            RoundedCornerShape(8.dp)
-                        )
-                        .clickable { onImageAdded("") },
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(120.dp)
+                            .background(
+                                MaterialTheme.colorScheme.surface,
+                                RoundedCornerShape(8.dp),
+                            ).clickable { onImageAdded("") },
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Icon(
                             Icons.Default.ImageSearch,
                             contentDescription = "Add images",
                             modifier = Modifier.size(32.dp),
-                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Tap to add images",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         )
                     }
                 }
@@ -277,36 +289,39 @@ private fun ReportImagesCompose(
 private fun ReportImageItem(
     imagePath: String,
     onRemoved: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier.size(100.dp)
+        modifier = modifier.size(100.dp),
     ) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(imagePath)
-                .crossfade(true)
-                .build(),
+            model =
+                ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(imagePath)
+                    .crossfade(true)
+                    .build(),
             contentDescription = "Report image",
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(RoundedCornerShape(8.dp)),
-            contentScale = ContentScale.Crop
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop,
         )
         IconButton(
             onClick = onRemoved,
-            modifier = Modifier.align(Alignment.TopEnd)
+            modifier = Modifier.align(Alignment.TopEnd),
         ) {
             Icon(
                 Icons.Default.Close,
                 contentDescription = "Remove image",
                 tint = Color.White,
-                modifier = Modifier
-                    .background(
-                        Color.Black.copy(alpha = 0.5f),
-                        RoundedCornerShape(50)
-                    )
-                    .padding(4.dp)
+                modifier =
+                    Modifier
+                        .background(
+                            Color.Black.copy(alpha = 0.5f),
+                            RoundedCornerShape(50),
+                        ).padding(4.dp),
             )
         }
     }
@@ -316,27 +331,28 @@ private fun ReportImageItem(
 private fun ReportMeasurementsCompose(
     measurements: List<MeasurementData>,
     onMeasurementUpdated: (MeasurementData) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            ),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = "Measurements",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
             Spacer(modifier = Modifier.height(12.dp))
             measurements.forEach { measurement ->
                 MeasurementItemCompose(
                     measurement = measurement,
-                    onUpdated = onMeasurementUpdated
+                    onUpdated = onMeasurementUpdated,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -348,30 +364,31 @@ private fun ReportMeasurementsCompose(
 private fun MeasurementItemCompose(
     measurement: MeasurementData,
     onUpdated: (MeasurementData) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var value by remember { mutableStateOf(measurement.value) }
     Row(
         modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            imageVector = when (measurement.type) {
-                MeasurementType.TEMPERATURE -> Icons.Default.Thermostat
-                MeasurementType.HUMIDITY -> Icons.Default.WaterDrop
-                MeasurementType.PRESSURE -> Icons.Default.Speed
-                MeasurementType.DISTANCE -> Icons.Default.Straighten
-                MeasurementType.EMISSIVITY -> Icons.Default.Opacity
-            },
+            imageVector =
+                when (measurement.type) {
+                    MeasurementType.TEMPERATURE -> Icons.Default.Thermostat
+                    MeasurementType.HUMIDITY -> Icons.Default.WaterDrop
+                    MeasurementType.PRESSURE -> Icons.Default.Speed
+                    MeasurementType.DISTANCE -> Icons.Default.Straighten
+                    MeasurementType.EMISSIVITY -> Icons.Default.Opacity
+                },
             contentDescription = measurement.type.name,
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(20.dp),
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = measurement.name,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         if (measurement.isEditable) {
             OutlinedTextField(
@@ -382,20 +399,20 @@ private fun MeasurementItemCompose(
                 },
                 modifier = Modifier.width(100.dp),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                singleLine = true
+                singleLine = true,
             )
         } else {
             Text(
                 text = value,
                 style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = measurement.unit,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
         )
     }
 }
@@ -404,7 +421,7 @@ private fun MeasurementItemCompose(
 private fun ReportMetadataCompose(
     metadata: ReportMetadata,
     onMetadataUpdated: (ReportMetadata) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var currentMetadata by remember { mutableStateOf(metadata) }
     LaunchedEffect(metadata) {
@@ -412,18 +429,19 @@ private fun ReportMetadataCompose(
     }
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            ),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 text = "Report Metadata",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
             OutlinedTextField(
                 value = currentMetadata.author,
@@ -435,7 +453,7 @@ private fun ReportMetadataCompose(
                 modifier = Modifier.fillMaxWidth(),
                 leadingIcon = {
                     Icon(Icons.Default.Person, contentDescription = "Author")
-                }
+                },
             )
             OutlinedTextField(
                 value = currentMetadata.location,
@@ -447,7 +465,7 @@ private fun ReportMetadataCompose(
                 modifier = Modifier.fillMaxWidth(),
                 leadingIcon = {
                     Icon(Icons.Default.LocationOn, contentDescription = "Location")
-                }
+                },
             )
             OutlinedTextField(
                 value = currentMetadata.equipment,
@@ -459,7 +477,7 @@ private fun ReportMetadataCompose(
                 modifier = Modifier.fillMaxWidth(),
                 leadingIcon = {
                     Icon(Icons.Default.Build, contentDescription = "Equipment")
-                }
+                },
             )
             OutlinedTextField(
                 value = currentMetadata.conditions,
@@ -471,7 +489,7 @@ private fun ReportMetadataCompose(
                 modifier = Modifier.fillMaxWidth(),
                 leadingIcon = {
                     Icon(Icons.Default.Cloud, contentDescription = "Conditions")
-                }
+                },
             )
             OutlinedTextField(
                 value = currentMetadata.notes,
@@ -485,7 +503,7 @@ private fun ReportMetadataCompose(
                 maxLines = 4,
                 leadingIcon = {
                     Icon(Icons.AutoMirrored.Filled.Notes, contentDescription = "Notes")
-                }
+                },
             )
         }
     }
@@ -494,49 +512,51 @@ private fun ReportMetadataCompose(
 @Composable
 fun ReportIRShowCompose(
     reportData: ReportData,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         // Report header (read-only)
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    ),
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
                 ) {
                     Text(
                         text = reportData.title,
                         style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = reportData.description,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
                             text = "Created: ${reportData.createdDate}",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
                         )
                         Text(
                             text = "Modified: ${reportData.modifiedDate}",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
                         )
                     }
                 }
@@ -547,33 +567,37 @@ fun ReportIRShowCompose(
             if (reportData.images.isNotEmpty()) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant
-                    )
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        ),
                 ) {
                     Column(
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(16.dp),
                     ) {
                         Text(
                             text = "Images (${reportData.images.size})",
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         LazyRow(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             items(reportData.images) { imagePath ->
                                 AsyncImage(
-                                    model = ImageRequest.Builder(LocalContext.current)
-                                        .data(imagePath)
-                                        .crossfade(true)
-                                        .build(),
+                                    model =
+                                        ImageRequest
+                                            .Builder(LocalContext.current)
+                                            .data(imagePath)
+                                            .crossfade(true)
+                                            .build(),
                                     contentDescription = "Report image",
-                                    modifier = Modifier
-                                        .size(120.dp)
-                                        .clip(RoundedCornerShape(8.dp)),
-                                    contentScale = ContentScale.Crop
+                                    modifier =
+                                        Modifier
+                                            .size(120.dp)
+                                            .clip(RoundedCornerShape(8.dp)),
+                                    contentScale = ContentScale.Crop,
                                 )
                             }
                         }
@@ -585,46 +609,48 @@ fun ReportIRShowCompose(
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    ),
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
                 ) {
                     Text(
                         text = "Measurements",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     reportData.measurements.forEach { measurement ->
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Icon(
-                                imageVector = when (measurement.type) {
-                                    MeasurementType.TEMPERATURE -> Icons.Default.Thermostat
-                                    MeasurementType.HUMIDITY -> Icons.Default.WaterDrop
-                                    MeasurementType.PRESSURE -> Icons.Default.Speed
-                                    MeasurementType.DISTANCE -> Icons.Default.Straighten
-                                    MeasurementType.EMISSIVITY -> Icons.Default.Opacity
-                                },
+                                imageVector =
+                                    when (measurement.type) {
+                                        MeasurementType.TEMPERATURE -> Icons.Default.Thermostat
+                                        MeasurementType.HUMIDITY -> Icons.Default.WaterDrop
+                                        MeasurementType.PRESSURE -> Icons.Default.Speed
+                                        MeasurementType.DISTANCE -> Icons.Default.Straighten
+                                        MeasurementType.EMISSIVITY -> Icons.Default.Opacity
+                                    },
                                 contentDescription = measurement.type.name,
                                 tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(20.dp)
+                                modifier = Modifier.size(20.dp),
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = measurement.name,
                                 style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
                             )
                             Text(
                                 text = "${measurement.value} ${measurement.unit}",
                                 style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.Medium,
                             )
                         }
                         Spacer(modifier = Modifier.height(8.dp))
@@ -636,18 +662,19 @@ fun ReportIRShowCompose(
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    ),
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(
                         text = "Report Information",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
                     )
                     MetadataRow("Author", reportData.metadata.author, Icons.Default.Person)
                     MetadataRow("Location", reportData.metadata.location, Icons.Default.LocationOn)
@@ -656,25 +683,25 @@ fun ReportIRShowCompose(
                     if (reportData.metadata.notes.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(4.dp))
                         Row(
-                            verticalAlignment = Alignment.Top
+                            verticalAlignment = Alignment.Top,
                         ) {
                             Icon(
                                 Icons.AutoMirrored.Filled.Notes,
                                 contentDescription = "Notes",
                                 tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(20.dp)
+                                modifier = Modifier.size(20.dp),
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Column {
                                 Text(
                                     text = "Notes",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = FontWeight.Medium
+                                    fontWeight = FontWeight.Medium,
                                 )
                                 Text(
                                     text = reportData.metadata.notes,
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                                 )
                             }
                         }
@@ -690,23 +717,23 @@ private fun MetadataRow(
     label: String,
     value: String,
     icon: ImageVector,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     if (value.isNotEmpty()) {
         Row(
             modifier = modifier,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = label,
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(20.dp),
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "$label: $value",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
     }
@@ -715,23 +742,24 @@ private fun MetadataRow(
 @Composable
 fun WatermarkCompose(
     watermarkData: WatermarkData,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = when (watermarkData.position) {
-            WatermarkPosition.TOP_LEFT -> Alignment.TopStart
-            WatermarkPosition.TOP_RIGHT -> Alignment.TopEnd
-            WatermarkPosition.BOTTOM_LEFT -> Alignment.BottomStart
-            WatermarkPosition.BOTTOM_RIGHT -> Alignment.BottomEnd
-            WatermarkPosition.CENTER -> Alignment.Center
-        }
+        contentAlignment =
+            when (watermarkData.position) {
+                WatermarkPosition.TOP_LEFT -> Alignment.TopStart
+                WatermarkPosition.TOP_RIGHT -> Alignment.TopEnd
+                WatermarkPosition.BOTTOM_LEFT -> Alignment.BottomStart
+                WatermarkPosition.BOTTOM_RIGHT -> Alignment.BottomEnd
+                WatermarkPosition.CENTER -> Alignment.Center
+            },
     ) {
         Text(
             text = watermarkData.text,
             color = watermarkData.color.copy(alpha = watermarkData.opacity),
             fontSize = watermarkData.fontSize.sp,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         )
     }
 }
@@ -741,30 +769,33 @@ fun WatermarkCompose(
 @Composable
 private fun ReportIRInputPreview() {
     LibUnifiedTheme {
-        val sampleReport = ReportData(
-            id = "1",
-            title = "Thermal Analysis Report",
-            description = "Comprehensive thermal analysis of equipment",
-            createdDate = "2023-12-01",
-            modifiedDate = "2023-12-02",
-            images = listOf("image1.jpg", "image2.jpg"),
-            measurements = listOf(
-                MeasurementData(1, "Max Temperature", "85.5", "°C", MeasurementType.TEMPERATURE),
-                MeasurementData(2, "Humidity", "45", "%", MeasurementType.HUMIDITY)
-            ),
-            metadata = ReportMetadata(
-                author = "John Doe",
-                location = "Factory Floor A",
-                equipment = "FLIR T640",
-                conditions = "Ambient 20°C",
-                notes = "Regular inspection"
+        val sampleReport =
+            ReportData(
+                id = "1",
+                title = "Thermal Analysis Report",
+                description = "Comprehensive thermal analysis of equipment",
+                createdDate = "2023-12-01",
+                modifiedDate = "2023-12-02",
+                images = listOf("image1.jpg", "image2.jpg"),
+                measurements =
+                    listOf(
+                        MeasurementData(1, "Max Temperature", "85.5", "°C", MeasurementType.TEMPERATURE),
+                        MeasurementData(2, "Humidity", "45", "%", MeasurementType.HUMIDITY),
+                    ),
+                metadata =
+                    ReportMetadata(
+                        author = "John Doe",
+                        location = "Factory Floor A",
+                        equipment = "FLIR T640",
+                        conditions = "Ambient 20°C",
+                        notes = "Regular inspection",
+                    ),
             )
-        )
         ReportIRInputCompose(
             reportData = sampleReport,
             onReportUpdated = {},
             onImageAdded = {},
-            onImageRemoved = {}
+            onImageRemoved = {},
         )
     }
 }

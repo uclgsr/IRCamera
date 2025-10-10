@@ -13,30 +13,31 @@ import com.mpdc4gsr.libunified.app.bean.TargetColorBean
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.libunified.R as LibR
 
-class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TargetItemAdapter(
+    val context: Context,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
     private var selected = -1
+
     fun selected(index: Int) {
         selected = index
         notifyDataSetChanged()
     }
 
-    fun getSelected(): Int {
-        return selected
-    }
+    fun getSelected(): Int = selected
 
     private val secondBean =
         arrayListOf(
             TargetColorBean(
                 LibR.drawable.ic_menu_thermal6002,
                 "",
-                ObserveBean.TYPE_TARGET_HORIZONTAL
+                ObserveBean.TYPE_TARGET_HORIZONTAL,
             ),
             TargetColorBean(
                 LibR.drawable.ic_menu_thermal6001,
                 "",
-                ObserveBean.TYPE_TARGET_VERTICAL
+                ObserveBean.TYPE_TARGET_VERTICAL,
             ),
             TargetColorBean(LibR.drawable.ic_menu_thermal6003, "", ObserveBean.TYPE_TARGET_CIRCLE),
         )
@@ -74,11 +75,11 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    override fun getItemCount(): Int {
-        return secondBean.size
-    }
+    override fun getItemCount(): Int = secondBean.size
 
-    inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ItemView(
+        itemView: View,
+    ) : RecyclerView.ViewHolder(itemView) {
         val lay: View = itemView.findViewById(R.id.item_menu_tab_lay)
         val img: ImageView = itemView.findViewById(R.id.item_menu_tab_img)
         val name: TextView = itemView.findViewById(R.id.item_menu_tab_text)

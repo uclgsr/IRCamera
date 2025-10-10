@@ -22,9 +22,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ImageColorViewModel
 
 class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
-    override fun createViewModel(): ImageColorViewModel {
-        return viewModels<ImageColorViewModel>().value
-    }
+    override fun createViewModel(): ImageColorViewModel = viewModels<ImageColorViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -39,7 +37,7 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                             Text(
                                 "Image Color",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -47,68 +45,75 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Black
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Black,
+                            ),
                     )
                 },
-                containerColor = Color.Black
+                containerColor = Color.Black,
             ) { paddingValues ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
                 ) {
                     // Horizontal scrollable image comparison
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .horizontalScroll(rememberScrollState())
-                            .background(Color.Black),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .horizontalScroll(rememberScrollState())
+                                .background(Color.Black),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         // First image
                         Card(
-                            modifier = Modifier
-                                .width(250.dp)
-                                .fillMaxHeight(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color(0xFF1A1A1A)
-                            )
+                            modifier =
+                                Modifier
+                                    .width(250.dp)
+                                    .fillMaxHeight(),
+                            colors =
+                                CardDefaults.cardColors(
+                                    containerColor = Color(0xFF1A1A1A),
+                                ),
                         ) {
                             Box(
                                 modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
+                                contentAlignment = Alignment.Center,
                             ) {
                                 Text(
                                     "Thermal Image 1",
                                     color = Color.White,
-                                    fontSize = 14.sp
+                                    fontSize = 14.sp,
                                 )
                             }
                         }
                         // Second image
                         Card(
-                            modifier = Modifier
-                                .width(250.dp)
-                                .fillMaxHeight(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color(0xFF1A1A1A)
-                            )
+                            modifier =
+                                Modifier
+                                    .width(250.dp)
+                                    .fillMaxHeight(),
+                            colors =
+                                CardDefaults.cardColors(
+                                    containerColor = Color(0xFF1A1A1A),
+                                ),
                         ) {
                             Box(
                                 modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
+                                contentAlignment = Alignment.Center,
                             ) {
                                 Text(
                                     "Thermal Image 2",
                                     color = Color.White,
-                                    fontSize = 14.sp
+                                    fontSize = 14.sp,
                                 )
                             }
                         }
@@ -117,57 +122,63 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                     if (timestamp.isNotEmpty()) {
                         Text(
                             text = timestamp,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(20.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(20.dp),
                             color = Color.White,
                             fontSize = 14.sp,
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                         )
                     }
                     // ARGB image display
                     Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .padding(8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF1A1A1A)
-                        )
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .padding(8.dp),
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = Color(0xFF1A1A1A),
+                            ),
                     ) {
                         Box(
                             modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.Center,
                         ) {
                             Text(
                                 "ARGB Image",
                                 color = Color.White,
-                                fontSize = 14.sp
+                                fontSize = 14.sp,
                             )
                         }
                     }
                     // Control buttons
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Button(
                             onClick = { viewModel.toggleDataDisplay() },
                             modifier = Modifier.width(120.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primary
-                            )
+                            colors =
+                                ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                ),
                         ) {
                             Text(if (showData) "Hide Data" else "Show Data")
                         }
                         Button(
                             onClick = { },
                             modifier = Modifier.width(120.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.secondary
-                            )
+                            colors =
+                                ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.secondary,
+                                ),
                         ) {
                             Text("Process U4")
                         }

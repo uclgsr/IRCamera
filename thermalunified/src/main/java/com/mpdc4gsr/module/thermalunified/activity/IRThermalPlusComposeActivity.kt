@@ -20,9 +20,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>() {
-    override fun createViewModel(): IRThermalPlusViewModel {
-        return IRThermalPlusViewModel()
-    }
+    override fun createViewModel(): IRThermalPlusViewModel = IRThermalPlusViewModel()
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -33,18 +31,18 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                     TopAppBar(
                         title = {
                             Row(
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Icon(
                                     Icons.Default.Stars,
                                     contentDescription = "Plus Features",
-                                    tint = Color(0xFFFFD700)
+                                    tint = Color(0xFFFFD700),
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     "Thermal Plus",
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.White
+                                    color = Color.White,
                                 )
                             }
                         },
@@ -53,7 +51,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -62,15 +60,16 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                                 Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF1A1A1A) // Premium dark theme
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF1A1A1A), // Premium dark theme
+                            ),
                     )
-                }
+                },
             ) { paddingValues ->
                 IRThermalPlusContent(
                     viewModel = viewModel,
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
         }
@@ -79,7 +78,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
     @Composable
     private fun IRThermalPlusContent(
         viewModel: IRThermalPlusViewModel,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         var aiEnhancement by remember { mutableStateOf(true) }
         var processingMode by remember { mutableStateOf("Premium") }
@@ -88,28 +87,30 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
         var maxTemp by remember { mutableStateOf(45.2f) }
         var minTemp by remember { mutableStateOf(18.3f) }
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Plus status
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         Icons.Default.Stars,
                         contentDescription = "Premium Features",
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
@@ -117,12 +118,12 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                             "Premium Plus Mode Active",
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
                             "AI-powered thermal enhancement enabled",
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                 }
@@ -130,111 +131,112 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
             // Temperature readings
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Card(
                     modifier = Modifier.weight(1f),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
                 ) {
                     Column(
                         modifier = Modifier.padding(12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(
                             "MAX",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onErrorContainer,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
-                            "${maxTemp}°C",
+                            "$maxTemp°C",
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.error,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 }
                 Card(
                     modifier = Modifier.weight(1f),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
                 ) {
                     Column(
                         modifier = Modifier.padding(12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(
                             "CENTER",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSecondaryContainer,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
-                            "${currentTemp}°C",
+                            "$currentTemp°C",
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.secondary,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 }
                 Card(
                     modifier = Modifier.weight(1f),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
                 ) {
                     Column(
                         modifier = Modifier.padding(12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(
                             "MIN",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onTertiaryContainer,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
-                            "${minTemp}°C",
+                            "$minTemp°C",
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.tertiary,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 }
             }
             // Premium thermal view
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.Center,
                     ) {
                         Icon(
                             Icons.Default.AutoAwesome,
                             contentDescription = "Plus Mode Active",
                             tint = Color(0xFFFFD700),
-                            modifier = Modifier.size(48.dp)
+                            modifier = Modifier.size(48.dp),
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             "AI-Enhanced Thermal Feed",
                             color = Color(0xFFFFD700),
                             style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
                             "Premium thermal processing with AI enhancement",
                             color = Color(0xFF9E9E9E),
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                 }
@@ -243,34 +245,35 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F9FA)),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             "AI Enhancement",
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Switch(
                             checked = aiEnhancement,
                             onCheckedChange = { aiEnhancement = it },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = Color(0xFFFFD700),
-                                checkedTrackColor = Color(0xFFFFD700).copy(alpha = 0.5f)
-                            )
+                            colors =
+                                SwitchDefaults.colors(
+                                    checkedThumbColor = Color(0xFFFFD700),
+                                    checkedTrackColor = Color(0xFFFFD700).copy(alpha = 0.5f),
+                                ),
                         )
                     }
                     // Processing mode selection
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         val modes = listOf("Standard", "Premium", "Ultra")
                         modes.forEach { mode ->
@@ -278,10 +281,11 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                                 onClick = { processingMode = mode },
                                 label = { Text(mode) },
                                 selected = processingMode == mode,
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = Color(0xFFFFD700),
-                                    selectedLabelColor = Color.Black
-                                )
+                                colors =
+                                    FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = Color(0xFFFFD700),
+                                        selectedLabelColor = Color.Black,
+                                    ),
                             )
                         }
                     }
@@ -291,16 +295,17 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                             Text(
                                 "Enhancement Level: ${enhancementLevel.toInt()}%",
                                 style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.Medium,
                             )
                             Slider(
                                 value = enhancementLevel,
                                 onValueChange = { enhancementLevel = it },
                                 valueRange = 10f..100f,
-                                colors = SliderDefaults.colors(
-                                    thumbColor = Color(0xFFFFD700),
-                                    activeTrackColor = Color(0xFFFFD700)
-                                )
+                                colors =
+                                    SliderDefaults.colors(
+                                        thumbColor = Color(0xFFFFD700),
+                                        activeTrackColor = Color(0xFFFFD700),
+                                    ),
                             )
                         }
                     }
@@ -309,17 +314,21 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
             // Premium action buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 OutlinedButton(
                     onClick = { },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color(0xFFFFD700)
-                    ),
-                    border = ButtonDefaults.outlinedButtonBorder(enabled = true).copy(
-                        brush = androidx.compose.ui.graphics.SolidColor(Color(0xFFFFD700))
-                    )
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color(0xFFFFD700),
+                        ),
+                    border =
+                        ButtonDefaults.outlinedButtonBorder(enabled = true).copy(
+                            brush =
+                                androidx.compose.ui.graphics
+                                    .SolidColor(Color(0xFFFFD700)),
+                        ),
                 ) {
                     Icon(Icons.Default.Camera, contentDescription = "AI Capture")
                     Spacer(modifier = Modifier.width(8.dp))
@@ -328,10 +337,11 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                 Button(
                     onClick = { },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFFD700),
-                        contentColor = Color.Black
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFFFD700),
+                            contentColor = Color.Black,
+                        ),
                 ) {
                     Icon(Icons.Default.AutoAwesome, contentDescription = "Analyze")
                     Spacer(modifier = Modifier.width(8.dp))

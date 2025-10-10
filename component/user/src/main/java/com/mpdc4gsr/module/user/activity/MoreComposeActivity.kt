@@ -25,9 +25,7 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.viewmodel.MoreViewModel
 
 class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
-    override fun createViewModel(): MoreViewModel {
-        return viewModels<MoreViewModel>().value
-    }
+    override fun createViewModel(): MoreViewModel = viewModels<MoreViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -44,29 +42,30 @@ class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
                     title = {
                         Text(
                             text = "More Settings",
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     },
                     navigationIcon = {
                         IconButton(onClick = { finish() }) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
-                    }
+                    },
                 )
-            }
+            },
         ) { paddingValues ->
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 items(settingsItems) { item ->
                     SettingsMenuItem(
                         item = item,
                         hasUpgrade = isUpgradeAvailable && item.action == MoreViewModel.SettingsAction.VERSION,
-                        onClick = { handleSettingsClick(item.action) }
+                        onClick = { handleSettingsClick(item.action) },
                     )
                 }
             }
@@ -83,31 +82,36 @@ class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
             MoreViewModel.SettingsAction.TISR -> {
                 // Navigate to TISR Compose Activity (would need to be registered in router)
                 // For now, use the original activity
-                NavigationManager.getInstance()
+                NavigationManager
+                    .getInstance()
                     .build(RouterConfig.TISR)
                     .navigation(this)
             }
 
             MoreViewModel.SettingsAction.STORAGE_SPACE -> {
-                NavigationManager.getInstance()
+                NavigationManager
+                    .getInstance()
                     .build(RouterConfig.STORAGE_SPACE)
                     .navigation(this)
             }
 
             MoreViewModel.SettingsAction.AUTO_SAVE -> {
-                NavigationManager.getInstance()
+                NavigationManager
+                    .getInstance()
                     .build(RouterConfig.AUTO_SAVE)
                     .navigation(this)
             }
 
             MoreViewModel.SettingsAction.UNIT -> {
-                NavigationManager.getInstance()
+                NavigationManager
+                    .getInstance()
                     .build(RouterConfig.UNIT)
                     .navigation(this)
             }
 
             MoreViewModel.SettingsAction.VERSION -> {
-                NavigationManager.getInstance()
+                NavigationManager
+                    .getInstance()
                     .build(RouterConfig.VERSION)
                     .navigation(this)
             }
@@ -130,33 +134,35 @@ private fun SettingsMenuItem(
     item: MoreViewModel.SettingsItem,
     hasUpgrade: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Row(
                 modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
                     imageVector = getIconForAction(item.action),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
@@ -164,34 +170,34 @@ private fun SettingsMenuItem(
                         text = item.title,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                     Text(
                         text = item.subtitle,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                     )
                 }
             }
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (hasUpgrade) {
                     Badge(
                         modifier = Modifier.padding(end = 8.dp),
-                        containerColor = MaterialTheme.colorScheme.error
+                        containerColor = MaterialTheme.colorScheme.error,
                     ) {
                         Text(
                             text = "!",
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onError
+                            color = MaterialTheme.colorScheme.onError,
                         )
                     }
                 }
                 Icon(
                     Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = "Navigate",
-                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 )
             }
         }
@@ -199,8 +205,8 @@ private fun SettingsMenuItem(
 }
 
 @Composable
-private fun getIconForAction(action: MoreViewModel.SettingsAction): ImageVector {
-    return when (action) {
+private fun getIconForAction(action: MoreViewModel.SettingsAction): ImageVector =
+    when (action) {
         MoreViewModel.SettingsAction.DEVICE_INFORMATION -> Icons.Default.Info
         MoreViewModel.SettingsAction.TISR -> Icons.Default.Settings
         MoreViewModel.SettingsAction.STORAGE_SPACE -> Icons.Default.Build
@@ -210,4 +216,3 @@ private fun getIconForAction(action: MoreViewModel.SettingsAction): ImageVector 
         MoreViewModel.SettingsAction.DISCONNECT -> Icons.Default.Close
         MoreViewModel.SettingsAction.RESET -> Icons.Default.Refresh
     }
-}

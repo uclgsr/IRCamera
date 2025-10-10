@@ -1,6 +1,5 @@
 package mpdc4gsr.core.data.utils
 
-import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
@@ -9,13 +8,14 @@ class CSVBufferedWriter(
     outputFile: File,
     private val headers: List<String>,
     bufferSize: Int = 8192,
-    flushIntervalMs: Long = 1000L
+    flushIntervalMs: Long = 1000L,
 ) : BufferedDataWriter(outputFile, bufferSize, flushIntervalMs) {
     companion object {
         private const val TAG = "CSVBufferedWriter"
     }
 
     private val headerWritten = AtomicBoolean(false)
+
     suspend fun startWithHeaders(): Boolean {
         val started = start()
         if (started && !headerWritten.get()) {
@@ -33,22 +33,22 @@ class CSVBufferedWriter(
     }
 
     fun writeRow(values: List<Any>): Boolean {
-        val csvLine = values.joinToString(",") { value ->
-            when (value) {
-                is String -> escapeCSVValue(value)
-                else -> value.toString()
+        val csvLine =
+            values.joinToString(",") { value ->
+                when (value) {
+                    is String -> escapeCSVValue(value)
+                    else -> value.toString()
+                }
             }
-        }
         return writeLine(csvLine)
     }
 
-    private fun escapeCSVValue(value: String): String {
-        return if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
+    private fun escapeCSVValue(value: String): String =
+        if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
             "\"${value.replace("\"", "\"\"")}\""
         } else {
             value
         }
-    }
 
     fun getCSVStats(): CSVWriteStats {
         val stats = getWriteStats()
@@ -56,7 +56,7 @@ class CSVBufferedWriter(
             baseStats = stats,
             headerWritten = headerWritten.get(),
             columnCount = headers.size,
-            headers = headers
+            headers = headers,
         )
     }
 }
@@ -65,7 +65,7 @@ data class CSVWriteStats(
     val baseStats: WriteStats,
     val headerWritten: Boolean,
     val columnCount: Int,
-    val headers: List<String>
+    val headers: List<String>,
 ) {
     val rowsWritten: Long
         get() = if (headerWritten) baseStats.linesWritten - 1 else baseStats.linesWritten

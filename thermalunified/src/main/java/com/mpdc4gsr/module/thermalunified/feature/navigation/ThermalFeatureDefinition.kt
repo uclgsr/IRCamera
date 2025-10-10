@@ -6,8 +6,13 @@ import androidx.fragment.app.Fragment
 import java.util.concurrent.ConcurrentHashMap
 
 sealed interface ThermalFeatureContent {
-    class Compose(val body: @Composable () -> Unit) : ThermalFeatureContent
-    class FragmentHost(val factory: () -> Fragment) : ThermalFeatureContent
+    class Compose(
+        val body: @Composable () -> Unit,
+    ) : ThermalFeatureContent
+
+    class FragmentHost(
+        val factory: () -> Fragment,
+    ) : ThermalFeatureContent
 }
 
 @Immutable
@@ -30,12 +35,11 @@ class ThermalFeatureRegistry {
         descriptorList.forEach(::register)
     }
 
-    fun available(): List<ThermalFeatureDescriptor> {
-        return descriptors.values.sortedWith(
+    fun available(): List<ThermalFeatureDescriptor> =
+        descriptors.values.sortedWith(
             compareByDescending<ThermalFeatureDescriptor> { it.priority }
-                .thenBy { it.title }
+                .thenBy { it.title },
         )
-    }
 
     fun findById(id: String): ThermalFeatureDescriptor? = descriptors[id]
 

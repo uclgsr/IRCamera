@@ -23,9 +23,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ReportPreviewViewModel
 
 class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewModel>() {
-    override fun createViewModel(): ReportPreviewViewModel {
-        return viewModels<ReportPreviewViewModel>().value
-    }
+    override fun createViewModel(): ReportPreviewViewModel = viewModels<ReportPreviewViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -40,7 +38,7 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                             Text(
                                 "Report Preview",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -48,7 +46,7 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -56,96 +54,106 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                             TextButton(
                                 onClick = {
                                     // TODO: Proceed to next report creation step
-                                    android.widget.Toast.makeText(
-                                        this@ReportPreviewFirstComposeActivity,
-                                        "Proceeding to next step...",
-                                        android.widget.Toast.LENGTH_SHORT
-                                    ).show()
-                                }
+                                    android.widget.Toast
+                                        .makeText(
+                                            this@ReportPreviewFirstComposeActivity,
+                                            "Proceeding to next step...",
+                                            android.widget.Toast.LENGTH_SHORT,
+                                        ).show()
+                                },
                             ) {
                                 Text("Next", color = Color.White)
                                 Icon(
                                     Icons.Default.ChevronRight,
                                     contentDescription = "Next",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF16131E)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
                     )
                 },
-                containerColor = Color(0xFF16131E)
+                containerColor = Color(0xFF16131E),
             ) { paddingValues ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .verticalScroll(rememberScrollState())
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .verticalScroll(rememberScrollState())
+                            .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     // Preview area
                     Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF1A1A1A)
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = Color(0xFF1A1A1A),
+                            ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     ) {
                         Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
+                            modifier =
+                                Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp),
+                            contentAlignment = Alignment.Center,
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(16.dp)
+                                verticalArrangement = Arrangement.spacedBy(16.dp),
                             ) {
                                 Icon(
                                     Icons.Default.Description,
                                     contentDescription = "Report Preview",
                                     modifier = Modifier.size(64.dp),
-                                    tint = Color.White.copy(alpha = 0.3f)
+                                    tint = Color.White.copy(alpha = 0.3f),
                                 )
                                 Text(
                                     "Report Preview",
                                     color = Color.White,
                                     fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
                                 )
                                 Text(
                                     "Layout ${selectedLayout + 1}",
                                     color = Color.White.copy(alpha = 0.6f),
-                                    fontSize = 16.sp
+                                    fontSize = 16.sp,
                                 )
                                 Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth(0.8f)
-                                        .padding(top = 16.dp),
-                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth(0.8f)
+                                            .padding(top = 16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
                                 ) {
                                     Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(120.dp)
-                                            .background(Color(0xFF2A2A2A), RoundedCornerShape(8.dp))
+                                        modifier =
+                                            Modifier
+                                                .fillMaxWidth()
+                                                .height(120.dp)
+                                                .background(Color(0xFF2A2A2A), RoundedCornerShape(8.dp)),
                                     )
                                     Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth(0.7f)
-                                            .height(16.dp)
-                                            .background(Color(0xFF2A2A2A), RoundedCornerShape(4.dp))
+                                        modifier =
+                                            Modifier
+                                                .fillMaxWidth(0.7f)
+                                                .height(16.dp)
+                                                .background(Color(0xFF2A2A2A), RoundedCornerShape(4.dp)),
                                     )
                                     Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth(0.9f)
-                                            .height(16.dp)
-                                            .background(Color(0xFF2A2A2A), RoundedCornerShape(4.dp))
+                                        modifier =
+                                            Modifier
+                                                .fillMaxWidth(0.9f)
+                                                .height(16.dp)
+                                                .background(Color(0xFF2A2A2A), RoundedCornerShape(4.dp)),
                                     )
                                 }
                             }
@@ -154,32 +162,34 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                     // Layout selection
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF1A1A1A)
-                        )
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = Color(0xFF1A1A1A),
+                            ),
                     ) {
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             Text(
                                 "Select Layout",
                                 color = Color.White,
                                 fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 repeat(3) { index ->
                                     LayoutOption(
                                         index = index,
                                         selected = selectedLayout == index,
                                         onClick = { selectedLayout = index },
-                                        modifier = Modifier.weight(1f)
+                                        modifier = Modifier.weight(1f),
                                     )
                                 }
                             }
@@ -188,21 +198,23 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                     // Options
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF1A1A1A)
-                        )
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = Color(0xFF1A1A1A),
+                            ),
                     ) {
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             Text(
                                 "Preview Options",
                                 color = Color.White,
                                 fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                             var showImages by remember { mutableStateOf(true) }
                             var showMetadata by remember { mutableStateOf(true) }
@@ -210,34 +222,34 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text("Show Images", color = Color.White, fontSize = 14.sp)
                                 Switch(
                                     checked = showImages,
-                                    onCheckedChange = { showImages = it }
+                                    onCheckedChange = { showImages = it },
                                 )
                             }
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text("Show Metadata", color = Color.White, fontSize = 14.sp)
                                 Switch(
                                     checked = showMetadata,
-                                    onCheckedChange = { showMetadata = it }
+                                    onCheckedChange = { showMetadata = it },
                                 )
                             }
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text("Add Watermark", color = Color.White, fontSize = 14.sp)
                                 Switch(
                                     checked = showWatermark,
-                                    onCheckedChange = { showWatermark = it }
+                                    onCheckedChange = { showWatermark = it },
                                 )
                             }
                         }
@@ -252,35 +264,42 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
         index: Int,
         selected: Boolean,
         onClick: () -> Unit,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         Card(
             modifier = modifier,
             onClick = onClick,
-            colors = CardDefaults.cardColors(
-                containerColor = if (selected) MaterialTheme.colorScheme.primary else Color(0xFF2A2A2A)
-            ),
-            border = if (selected) null else androidx.compose.foundation.BorderStroke(
-                1.dp,
-                Color.White.copy(alpha = 0.2f)
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = if (selected) MaterialTheme.colorScheme.primary else Color(0xFF2A2A2A),
+                ),
+            border =
+                if (selected) {
+                    null
+                } else {
+                    androidx.compose.foundation.BorderStroke(
+                        1.dp,
+                        Color.White.copy(alpha = 0.2f),
+                    )
+                },
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Icon(
                     Icons.Default.Description,
                     contentDescription = "Layout ${index + 1}",
-                    tint = if (selected) Color.White else Color.White.copy(alpha = 0.5f)
+                    tint = if (selected) Color.White else Color.White.copy(alpha = 0.5f),
                 )
                 Text(
                     "Layout ${index + 1}",
                     color = if (selected) Color.White else Color.White.copy(alpha = 0.5f),
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
                 )
             }
         }

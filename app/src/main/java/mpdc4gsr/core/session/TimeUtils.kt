@@ -1,7 +1,6 @@
 package mpdc4gsr.core.session
 
 import android.os.SystemClock
-import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -30,9 +29,6 @@ object TimeUtils {
                 0L
             }
         try {
-            Log.d(TAG, "Ground truth timestamp initialised: $deviceGroundTruthBase")
-            Log.d(TAG, "Device model: $deviceModel, processor: $detectedProcessor")
-            Log.d(TAG, "Boot reference: $bootTimeReference")
         } catch (ignored: Exception) {
         }
     }
@@ -64,12 +60,12 @@ object TimeUtils {
     fun setPcTimeOffset(offset: Long) {
         pcTimeOffset = offset
         try {
-            Log.d(TAG, "PC time offset set to: ${offset}ms")
         } catch (ignored: Exception) {
         }
     }
 
     fun getPcTimeOffset(): Long = pcTimeOffset
+
     fun getGroundTruthBase(): Long = deviceGroundTruthBase
 
     fun systemToUtc(systemTime: Long): Long {
@@ -77,31 +73,27 @@ object TimeUtils {
         return deviceGroundTruthBase + deviceOffset + pcTimeOffset
     }
 
-    fun utcToSystem(utcTime: Long): Long {
-        return utcTime - pcTimeOffset - (deviceGroundTruthBase - System.currentTimeMillis())
-    }
+    fun utcToSystem(utcTime: Long): Long = utcTime - pcTimeOffset - (deviceGroundTruthBase - System.currentTimeMillis())
 
     fun getSynchronizedTimestamp(): Long = getUtcTimestamp()
 
-    fun getHighPrecisionTimestamp(): Long {
-        return try {
+    fun getHighPrecisionTimestamp(): Long =
+        try {
             val nanoOffset = (System.nanoTime() / 1_000_000L) - bootTimeReference
             deviceGroundTruthBase + nanoOffset + pcTimeOffset
         } catch (e: Exception) {
             getSynchronizedTimestamp()
         }
-    }
 
-    fun formatTimestamp(timestamp: Long): String {
-        return try {
+    fun formatTimestamp(timestamp: Long): String =
+        try {
             SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US).format(Date(timestamp))
         } catch (e: Exception) {
             timestamp.toString()
         }
-    }
 
-    fun generateSessionId(prefix: String = "GSR"): String {
-        return try {
+    fun generateSessionId(prefix: String = "GSR"): String =
+        try {
             val timestamp =
                 SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
                     .format(Date(getSynchronizedTimestamp()))
@@ -109,28 +101,23 @@ object TimeUtils {
         } catch (e: Exception) {
             "${prefix}_${getSynchronizedTimestamp()}"
         }
-    }
 
-    fun getTimingMetadata(): Map<String, String> {
-        return mapOf(
+    fun getTimingMetadata(): Map<String, String> =
+        mapOf(
             "ground_truth_base" to deviceGroundTruthBase.toString(),
             "pc_offset_ms" to pcTimeOffset.toString(),
             "device_model" to deviceModel,
             "device_processor" to detectedProcessor,
         )
-    }
 
-    fun getMonotonicTimestampNs(): Long {
-        return try {
+    fun getMonotonicTimestampNs(): Long =
+        try {
             SystemClock.elapsedRealtimeNanos()
         } catch (e: Exception) {
             System.nanoTime()
         }
-    }
 
     fun getMonotonicTimestampMs(): Long = getMonotonicTimestampNs() / 1_000_000L
 
-    fun getElapsedTimeMs(startMonotonicNs: Long): Long {
-        return (getMonotonicTimestampNs() - startMonotonicNs) / 1_000_000L
-    }
+    fun getElapsedTimeMs(startMonotonicNs: Long): Long = (getMonotonicTimestampNs() - startMonotonicNs) / 1_000_000L
 }

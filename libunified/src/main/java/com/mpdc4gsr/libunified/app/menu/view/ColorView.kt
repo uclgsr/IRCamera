@@ -10,9 +10,8 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
-import com.mpdc4gsr.libunified.compat.dpToPx
-import com.mpdc4gsr.libunified.compat.spToPx
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.compat.dpToPx
 
 class ColorView : View {
     var colors: IntArray = intArrayOf(0xfffbda00.toInt(), 0xffea0e0e.toInt(), 0xff6907af.toInt())
@@ -30,14 +29,14 @@ class ColorView : View {
         context,
         attrs,
         defStyleAttr,
-        0
+        0,
     )
 
     constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : super(
         context,
         attrs,
@@ -76,7 +75,7 @@ class ColorView : View {
             (width - triangleSize) / 2,
             barHeight + margin,
             (width - triangleSize) / 2 + triangleSize,
-            height
+            height,
         )
     }
 
@@ -96,7 +95,7 @@ class ColorView : View {
                 barHeight.toFloat(),
                 radius,
                 radius,
-                paint
+                paint,
             )
             paint.shader = shaderSelectYes
             canvas.drawRoundRect(
@@ -106,7 +105,7 @@ class ColorView : View {
                 strokeSize + selectBarHeight,
                 radius,
                 radius,
-                paint
+                paint,
             )
             triangleDrawable.draw(canvas)
         } else {
@@ -123,7 +122,7 @@ class ColorView : View {
                 top + normalBarHeight,
                 radius,
                 radius,
-                paint
+                paint,
             )
         }
     }
@@ -143,27 +142,29 @@ class ColorView : View {
         val barHeight: Int =
             (measuredWidth * 73f / 62).toInt() // 62 and 73 from UI design - selected state with border color block aspect ratio 62:73
         val selectBarHeight: Int = (barHeight - strokeSize * 2).toInt()
-        shaderSelectYes = LinearGradient(
-            0f,
-            strokeSize,
-            0f,
-            strokeSize + selectBarHeight,
-            colors,
-            positions,
-            Shader.TileMode.CLAMP
-        )
+        shaderSelectYes =
+            LinearGradient(
+                0f,
+                strokeSize,
+                0f,
+                strokeSize + selectBarHeight,
+                colors,
+                positions,
+                Shader.TileMode.CLAMP,
+            )
         val normalBarWidth: Int =
             (measuredWidth * 50f / 62).toInt() // Unselected width 50, total width 62
         val normalBarHeight: Int = (normalBarWidth * 60f / 50).toInt() // Aspect ratio 50:60
         val top: Float = ((barHeight - normalBarHeight) / 2).toFloat()
-        shaderSelectNot = LinearGradient(
-            0f,
-            top,
-            0f,
-            top + normalBarHeight,
-            colors,
-            positions,
-            Shader.TileMode.CLAMP
-        )
+        shaderSelectNot =
+            LinearGradient(
+                0f,
+                top,
+                0f,
+                top + normalBarHeight,
+                colors,
+                positions,
+                Shader.TileMode.CLAMP,
+            )
     }
 }

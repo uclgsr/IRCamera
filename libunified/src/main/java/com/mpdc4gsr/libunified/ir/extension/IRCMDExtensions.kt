@@ -2,7 +2,9 @@ package com.mpdc4gsr.libunified.ir.extension
 
 import com.energy.iruvc.ircmd.IRCMD
 
-enum class ColorPalette(val value: Int) {
+enum class ColorPalette(
+    val value: Int,
+) {
     IRONBOW(0),
     RAINBOW(1),
     WHITEHOT(2),
@@ -13,14 +15,16 @@ enum class ColorPalette(val value: Int) {
     AMBER(7),
     GLOWBOW(8),
     INSTALERT(9),
-    GRADED_FIRE(10)
+    GRADED_FIRE(10),
 }
 
-enum class AgcMode(val value: Int) {
+enum class AgcMode(
+    val value: Int,
+) {
     AUTO(0),
     MANUAL(1),
     LINEAR(2),
-    HISTOGRAM(3)
+    HISTOGRAM(3),
 }
 
 fun IRCMD.setMirror(enabled: Boolean) {
@@ -100,10 +104,12 @@ fun IRCMD.setManualAgcMax(tempCelsius: Float) {
     nativeSetProperty("agc_manual_max", tempInt)
 }
 
-private fun IRCMD.nativeSetProperty(property: String, value: Int): Boolean {
-    return try {
+private fun IRCMD.nativeSetProperty(
+    property: String,
+    value: Int,
+): Boolean =
+    try {
         true
     } catch (e: Exception) {
         false
     }
-}

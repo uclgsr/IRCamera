@@ -30,17 +30,19 @@ class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>(
             context.startActivity(Intent(context, ThermalReportCreationComposeActivity::class.java))
         }
 
-        fun startWithImage(context: Context, imagePath: String) {
-            val intent = Intent(context, ThermalReportCreationComposeActivity::class.java).apply {
-                putExtra("image_path", imagePath)
-            }
+        fun startWithImage(
+            context: Context,
+            imagePath: String,
+        ) {
+            val intent =
+                Intent(context, ThermalReportCreationComposeActivity::class.java).apply {
+                    putExtra("image_path", imagePath)
+                }
             context.startActivity(intent)
         }
     }
 
-    override fun createViewModel(): BaseViewModel {
-        return viewModels<BaseViewModel>().value
-    }
+    override fun createViewModel(): BaseViewModel = viewModels<BaseViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -56,7 +58,7 @@ class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>(
                         title = {
                             Text(
                                 "Create Thermal Report",
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                         },
                         navigationIcon = {
@@ -70,17 +72,18 @@ class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>(
                             }
                             IconButton(onClick = {
                                 // TODO: Save current report as draft
-                                android.widget.Toast.makeText(
-                                    this@ThermalReportCreationComposeActivity,
-                                    "Saving draft...",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
+                                android.widget.Toast
+                                    .makeText(
+                                        this@ThermalReportCreationComposeActivity,
+                                        "Saving draft...",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
                             }) {
                                 Icon(Icons.Default.Save, contentDescription = "Save Draft")
                             }
-                        }
+                        },
                     )
-                }
+                },
             ) { paddingValues ->
                 ReportCreationContent(
                     currentStep = currentStep,
@@ -89,7 +92,7 @@ class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>(
                     onTemplateSelect = { selectedTemplate = it },
                     reportData = reportData,
                     onReportDataChange = { reportData = it },
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
         }
@@ -101,7 +104,7 @@ class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>(
                 onGenerate = { format ->
                     // Generate report in specified format
                     showPreview = false
-                }
+                },
             )
         }
     }
@@ -115,57 +118,63 @@ private fun ReportCreationContent(
     onTemplateSelect: (ReportTemplate) -> Unit,
     reportData: ReportData,
     onReportDataChange: (ReportData) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp),
     ) {
         // Progress indicator
         ReportCreationProgress(
             currentStep = currentStep,
             totalSteps = 4,
-            modifier = Modifier.padding(bottom = 24.dp)
+            modifier = Modifier.padding(bottom = 24.dp),
         )
         // Step content
         when (currentStep) {
-            0 -> TemplateSelectionStep(
-                selectedTemplate = selectedTemplate,
-                onTemplateSelect = onTemplateSelect,
-                modifier = Modifier.weight(1f)
-            )
+            0 ->
+                TemplateSelectionStep(
+                    selectedTemplate = selectedTemplate,
+                    onTemplateSelect = onTemplateSelect,
+                    modifier = Modifier.weight(1f),
+                )
 
-            1 -> ReportInfoStep(
-                reportData = reportData,
-                onReportDataChange = onReportDataChange,
-                modifier = Modifier.weight(1f)
-            )
+            1 ->
+                ReportInfoStep(
+                    reportData = reportData,
+                    onReportDataChange = onReportDataChange,
+                    modifier = Modifier.weight(1f),
+                )
 
-            2 -> ThermalDataStep(
-                reportData = reportData,
-                onReportDataChange = onReportDataChange,
-                modifier = Modifier.weight(1f)
-            )
+            2 ->
+                ThermalDataStep(
+                    reportData = reportData,
+                    onReportDataChange = onReportDataChange,
+                    modifier = Modifier.weight(1f),
+                )
 
-            3 -> ReviewStep(
-                reportData = reportData,
-                template = selectedTemplate,
-                modifier = Modifier.weight(1f)
-            )
+            3 ->
+                ReviewStep(
+                    reportData = reportData,
+                    template = selectedTemplate,
+                    modifier = Modifier.weight(1f),
+                )
         }
         // Navigation buttons
         ReportNavigationButtons(
             currentStep = currentStep,
             onStepChange = onStepChange,
-            canProceed = when (currentStep) {
-                0 -> selectedTemplate != null
-                1 -> reportData.title.isNotEmpty()
-                2 -> reportData.thermalImages.isNotEmpty()
-                3 -> true
-                else -> false
-            },
-            modifier = Modifier.padding(top = 16.dp)
+            canProceed =
+                when (currentStep) {
+                    0 -> selectedTemplate != null
+                    1 -> reportData.title.isNotEmpty()
+                    2 -> reportData.thermalImages.isNotEmpty()
+                    3 -> true
+                    else -> false
+                },
+            modifier = Modifier.padding(top = 16.dp),
         )
     }
 }
@@ -174,63 +183,69 @@ private fun ReportCreationContent(
 private fun ReportCreationProgress(
     currentStep: Int,
     totalSteps: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             val steps = listOf("Template", "Info", "Data", "Review")
             steps.forEachIndexed { index, stepName ->
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Box(
-                        modifier = Modifier
-                            .size(32.dp)
-                            .background(
-                                color = if (index <= currentStep)
-                                    MaterialTheme.colorScheme.primary
-                                else
-                                    MaterialTheme.colorScheme.outline,
-                                shape = RoundedCornerShape(16.dp)
-                            ),
-                        contentAlignment = Alignment.Center
+                        modifier =
+                            Modifier
+                                .size(32.dp)
+                                .background(
+                                    color =
+                                        if (index <= currentStep) {
+                                            MaterialTheme.colorScheme.primary
+                                        } else {
+                                            MaterialTheme.colorScheme.outline
+                                        },
+                                    shape = RoundedCornerShape(16.dp),
+                                ),
+                        contentAlignment = Alignment.Center,
                     ) {
                         if (index < currentStep) {
                             Icon(
                                 Icons.Default.Check,
                                 contentDescription = "Completed",
                                 tint = Color.White,
-                                modifier = Modifier.size(16.dp)
+                                modifier = Modifier.size(16.dp),
                             )
                         } else {
                             Text(
                                 text = "${index + 1}",
                                 style = MaterialTheme.typography.labelMedium,
                                 color = Color.White,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                         }
                     }
                     Text(
                         text = stepName,
                         style = MaterialTheme.typography.labelSmall,
-                        color = if (index <= currentStep)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 4.dp)
+                        color =
+                            if (index <= currentStep) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            },
+                        modifier = Modifier.padding(top = 4.dp),
                     )
                 }
             }
         }
         LinearProgressIndicator(
             progress = { (currentStep + 1).toFloat() / totalSteps },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
         )
     }
 }
@@ -239,16 +254,16 @@ private fun ReportCreationProgress(
 private fun TemplateSelectionStep(
     selectedTemplate: ReportTemplate?,
     onTemplateSelect: (ReportTemplate) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.verticalScroll(rememberScrollState())
+        modifier = modifier.verticalScroll(rememberScrollState()),
     ) {
         Text(
             text = "Choose Report Template",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
         )
         val templates = getReportTemplates()
         templates.forEach { template ->
@@ -256,7 +271,7 @@ private fun TemplateSelectionStep(
                 template = template,
                 isSelected = selectedTemplate?.id == template.id,
                 onSelect = { onTemplateSelect(template) },
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = 12.dp),
             )
         }
     }
@@ -267,47 +282,51 @@ private fun ReportTemplateCard(
     template: ReportTemplate,
     isSelected: Boolean,
     onSelect: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected)
-                MaterialTheme.colorScheme.primaryContainer
-            else
-                MaterialTheme.colorScheme.surface
-        ),
-        onClick = onSelect
+        modifier =
+            modifier
+                .fillMaxWidth(),
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.surface
+                    },
+            ),
+        onClick = onSelect,
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = getTemplateIcon(template.type),
                 contentDescription = template.type,
                 modifier = Modifier.size(32.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = template.name,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 Text(
                     text = template.description,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
             if (isSelected) {
                 Icon(
                     Icons.Default.CheckCircle,
                     contentDescription = "Selected",
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             }
         }
@@ -318,49 +337,53 @@ private fun ReportTemplateCard(
 private fun ReportInfoStep(
     reportData: ReportData,
     onReportDataChange: (ReportData) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.verticalScroll(rememberScrollState())
+        modifier = modifier.verticalScroll(rememberScrollState()),
     ) {
         Text(
             text = "Report Information",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
         )
         OutlinedTextField(
             value = reportData.title,
             onValueChange = { onReportDataChange(reportData.copy(title = it)) },
             label = { Text("Report Title") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
         )
         OutlinedTextField(
             value = reportData.author,
             onValueChange = { onReportDataChange(reportData.copy(author = it)) },
             label = { Text("Author") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
         )
         OutlinedTextField(
             value = reportData.description,
             onValueChange = { onReportDataChange(reportData.copy(description = it)) },
             label = { Text("Description") },
             maxLines = 4,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
         )
         OutlinedTextField(
             value = reportData.location,
             onValueChange = { onReportDataChange(reportData.copy(location = it)) },
             label = { Text("Location") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
         )
     }
 }
@@ -369,47 +392,49 @@ private fun ReportInfoStep(
 private fun ThermalDataStep(
     reportData: ReportData,
     onReportDataChange: (ReportData) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.verticalScroll(rememberScrollState())
+        modifier = modifier.verticalScroll(rememberScrollState()),
     ) {
         Text(
             text = "Thermal Data Selection",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
         )
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             ) {
                 Text(
                     text = "Selected Images: ${reportData.thermalImages.size}",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp),
                 )
                 val context = androidx.compose.ui.platform.LocalContext.current
                 Button(
                     onClick = {
                         // TODO: Open thermal image selector
-                        android.widget.Toast.makeText(
-                            context,
-                            "Select thermal images...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Select thermal images...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(
                         Icons.Default.Add,
                         contentDescription = "Add Images",
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(18.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Add Thermal Images")
@@ -421,45 +446,45 @@ private fun ThermalDataStep(
                 text = "Analysis Settings",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = 12.dp),
             )
             Card {
                 Column(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Checkbox(
                             checked = reportData.includeTemperatureAnalysis,
                             onCheckedChange = {
                                 onReportDataChange(reportData.copy(includeTemperatureAnalysis = it))
-                            }
+                            },
                         )
                         Text("Include temperature analysis")
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Checkbox(
                             checked = reportData.includeHotspotDetection,
                             onCheckedChange = {
                                 onReportDataChange(reportData.copy(includeHotspotDetection = it))
-                            }
+                            },
                         )
                         Text("Include hotspot detection")
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Checkbox(
                             checked = reportData.includeStatistics,
                             onCheckedChange = {
                                 onReportDataChange(reportData.copy(includeStatistics = it))
-                            }
+                            },
                         )
                         Text("Include statistical analysis")
                     }
@@ -473,30 +498,31 @@ private fun ThermalDataStep(
 private fun ReviewStep(
     reportData: ReportData,
     template: ReportTemplate?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.verticalScroll(rememberScrollState())
+        modifier = modifier.verticalScroll(rememberScrollState()),
     ) {
         Text(
             text = "Review & Generate",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
         )
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             ) {
                 Text(
                     text = "Report Summary",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    modifier = Modifier.padding(bottom = 12.dp),
                 )
                 ReportSummaryItem("Template", template?.name ?: "None selected")
                 ReportSummaryItem("Title", reportData.title)
@@ -507,19 +533,19 @@ private fun ReviewStep(
         }
         Card {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             ) {
                 Text(
                     text = "Export Options",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    modifier = Modifier.padding(bottom = 12.dp),
                 )
                 val exportFormats = listOf("PDF", "Word", "HTML")
                 exportFormats.forEach { format ->
                     TextButton(
                         onClick = { },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         Icon(
                             when (format) {
@@ -529,7 +555,7 @@ private fun ReviewStep(
                                 else -> Icons.Default.FileDownload
                             },
                             contentDescription = format,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Generate $format Report")
@@ -544,23 +570,24 @@ private fun ReviewStep(
 private fun ReportSummaryItem(
     label: String,
     value: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "$label:",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
     }
 }
@@ -570,20 +597,20 @@ private fun ReportNavigationButtons(
     currentStep: Int,
     onStepChange: (Int) -> Unit,
     canProceed: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         if (currentStep > 0) {
             OutlinedButton(
-                onClick = { onStepChange(currentStep - 1) }
+                onClick = { onStepChange(currentStep - 1) },
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Previous",
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(18.dp),
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text("Previous")
@@ -594,14 +621,14 @@ private fun ReportNavigationButtons(
         if (currentStep < 3) {
             Button(
                 onClick = { onStepChange(currentStep + 1) },
-                enabled = canProceed
+                enabled = canProceed,
             ) {
                 Text("Next")
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = "Next",
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(18.dp),
                 )
             }
         } else {
@@ -609,13 +636,14 @@ private fun ReportNavigationButtons(
             Button(
                 onClick = {
                     // TODO: Generate final report
-                    android.widget.Toast.makeText(
-                        context,
-                        "Generating report...",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
+                    android.widget.Toast
+                        .makeText(
+                            context,
+                            "Generating report...",
+                            android.widget.Toast.LENGTH_SHORT,
+                        ).show()
                 },
-                enabled = canProceed
+                enabled = canProceed,
             ) {
                 Text("Generate Report")
             }
@@ -628,7 +656,7 @@ private fun ReportPreviewDialog(
     reportData: ReportData,
     template: ReportTemplate?,
     onDismiss: () -> Unit,
-    onGenerate: (String) -> Unit
+    onGenerate: (String) -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -639,12 +667,12 @@ private fun ReportPreviewDialog(
                     Text(
                         text = "Template: ${template.name}",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
                     )
                     Text(
                         text = template.description,
                         fontSize = 14.sp,
-                        color = Color.Gray
+                        color = Color.Gray,
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -671,23 +699,24 @@ private fun ReportPreviewDialog(
             TextButton(onClick = onDismiss) {
                 Text("Close")
             }
-        }
+        },
     )
 }
 
-private fun getTemplateIcon(type: String) = when (type) {
-    "inspection" -> Icons.Default.Search
-    "maintenance" -> Icons.Default.Build
-    "research" -> Icons.Default.Science
-    "compliance" -> Icons.Default.Verified
-    else -> Icons.Default.Description
-}
+private fun getTemplateIcon(type: String) =
+    when (type) {
+        "inspection" -> Icons.Default.Search
+        "maintenance" -> Icons.Default.Build
+        "research" -> Icons.Default.Science
+        "compliance" -> Icons.Default.Verified
+        else -> Icons.Default.Description
+    }
 
 data class ReportTemplate(
     val id: String,
     val name: String,
     val description: String,
-    val type: String
+    val type: String,
 )
 
 data class ReportData(
@@ -698,22 +727,23 @@ data class ReportData(
     val thermalImages: List<String> = emptyList(),
     val includeTemperatureAnalysis: Boolean = true,
     val includeHotspotDetection: Boolean = true,
-    val includeStatistics: Boolean = true
+    val includeStatistics: Boolean = true,
 )
 
-private fun getReportTemplates() = listOf(
-    ReportTemplate(
-        "inspection",
-        "Building Inspection",
-        "Comprehensive building thermal inspection template",
-        "inspection"
-    ),
-    ReportTemplate(
-        "maintenance",
-        "Maintenance Report",
-        "Equipment maintenance and thermal analysis template",
-        "maintenance"
-    ),
-    ReportTemplate("research", "Research Study", "Academic research and analysis template", "research"),
-    ReportTemplate("compliance", "Compliance Report", "Regulatory compliance and audit template", "compliance")
-)
+private fun getReportTemplates() =
+    listOf(
+        ReportTemplate(
+            "inspection",
+            "Building Inspection",
+            "Comprehensive building thermal inspection template",
+            "inspection",
+        ),
+        ReportTemplate(
+            "maintenance",
+            "Maintenance Report",
+            "Equipment maintenance and thermal analysis template",
+            "maintenance",
+        ),
+        ReportTemplate("research", "Research Study", "Academic research and analysis template", "research"),
+        ReportTemplate("compliance", "Compliance Report", "Regulatory compliance and audit template", "compliance"),
+    )

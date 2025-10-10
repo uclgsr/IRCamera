@@ -36,7 +36,7 @@ fun TargetBarPickCompose(
     valueFormatter: (progress: Int) -> String = { it.toString() },
     progressColor: Color = Color.White,
     backgroundColor: Color = Color.Black.copy(alpha = 0.5f),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
     var isDragging by remember { mutableStateOf(false) }
@@ -45,61 +45,65 @@ fun TargetBarPickCompose(
     val thumbSize = 24.dp
     val trackHeight = 8.dp
     Box(
-        modifier = modifier
-            .then(
-                if (isVertical) {
-                    Modifier
-                        .height(barSizeDp)
-                        .width(thumbSize + 16.dp)
-                } else {
-                    Modifier
-                        .width(barSizeDp)
-                        .height(thumbSize + 16.dp)
-                }
-            )
-            .pointerInput(min, max) {
-                detectDragGestures(
-                    onDragStart = { offset ->
-                        isDragging = true
-                        val newProgress = calculateProgressFromOffset(
-                            offset = offset,
-                            size = Size(size.width.toFloat(), size.height.toFloat()),
-                            isVertical = isVertical,
-                            min = min,
-                            max = max,
-                            thumbSize = thumbSize.toPx()
-                        )
-                        currentProgress = newProgress
-                        onStartTrackingTouch(newProgress, max)
-                        onProgressChanged(newProgress, max)
+        modifier =
+            modifier
+                .then(
+                    if (isVertical) {
+                        Modifier
+                            .height(barSizeDp)
+                            .width(thumbSize + 16.dp)
+                    } else {
+                        Modifier
+                            .width(barSizeDp)
+                            .height(thumbSize + 16.dp)
                     },
-                    onDrag = { _, dragAmount ->
-                        val totalSize = if (isVertical) size.height else size.width
-                        val thumbSizePx = thumbSize.toPx()
-                        val availableSize = totalSize - thumbSizePx
-                        val progressChange = if (isVertical) {
-                            -dragAmount.y / availableSize * (max - min)
-                        } else {
-                            dragAmount.x / availableSize * (max - min)
-                        }
-                        val newProgress = (currentProgress + progressChange).roundToInt()
-                            .coerceIn(min, max)
-                        if (newProgress != currentProgress) {
+                ).pointerInput(min, max) {
+                    detectDragGestures(
+                        onDragStart = { offset ->
+                            isDragging = true
+                            val newProgress =
+                                calculateProgressFromOffset(
+                                    offset = offset,
+                                    size = Size(size.width.toFloat(), size.height.toFloat()),
+                                    isVertical = isVertical,
+                                    min = min,
+                                    max = max,
+                                    thumbSize = thumbSize.toPx(),
+                                )
                             currentProgress = newProgress
+                            onStartTrackingTouch(newProgress, max)
                             onProgressChanged(newProgress, max)
-                        }
-                    },
-                    onDragEnd = {
-                        isDragging = false
-                        onStopTrackingTouch(currentProgress, max)
-                    }
-                )
-            },
-        contentAlignment = Alignment.Center
+                        },
+                        onDrag = { _, dragAmount ->
+                            val totalSize = if (isVertical) size.height else size.width
+                            val thumbSizePx = thumbSize.toPx()
+                            val availableSize = totalSize - thumbSizePx
+                            val progressChange =
+                                if (isVertical) {
+                                    -dragAmount.y / availableSize * (max - min)
+                                } else {
+                                    dragAmount.x / availableSize * (max - min)
+                                }
+                            val newProgress =
+                                (currentProgress + progressChange)
+                                    .roundToInt()
+                                    .coerceIn(min, max)
+                            if (newProgress != currentProgress) {
+                                currentProgress = newProgress
+                                onProgressChanged(newProgress, max)
+                            }
+                        },
+                        onDragEnd = {
+                            isDragging = false
+                            onStopTrackingTouch(currentProgress, max)
+                        },
+                    )
+                },
+        contentAlignment = Alignment.Center,
     ) {
         // Draw track and thumb
         Canvas(
-            modifier = Modifier.matchParentSize()
+            modifier = Modifier.matchParentSize(),
         ) {
             drawTargetBar(
                 progress = currentProgress,
@@ -110,37 +114,40 @@ fun TargetBarPickCompose(
                 thumbSize = thumbSize.toPx(),
                 progressColor = progressColor,
                 backgroundColor = backgroundColor,
-                isDragging = isDragging
+                isDragging = isDragging,
             )
         }
         // Value display
         if (label.isNotEmpty() || valueFormatter(currentProgress).isNotEmpty()) {
-            val displayText = if (label.isNotEmpty()) {
-                "$label: ${valueFormatter(currentProgress)}"
-            } else {
-                valueFormatter(currentProgress)
-            }
+            val displayText =
+                if (label.isNotEmpty()) {
+                    "$label: ${valueFormatter(currentProgress)}"
+                } else {
+                    valueFormatter(currentProgress)
+                }
             Card(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .then(
-                        if (isVertical) {
-                            Modifier.offset(x = 40.dp)
-                        } else {
-                            Modifier.offset(y = (-40).dp)
-                        }
+                modifier =
+                    Modifier
+                        .padding(8.dp)
+                        .then(
+                            if (isVertical) {
+                                Modifier.offset(x = 40.dp)
+                            } else {
+                                Modifier.offset(y = (-40).dp)
+                            },
+                        ),
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
                     ),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             ) {
                 Text(
                     text = displayText,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
         }
@@ -156,7 +163,7 @@ private fun DrawScope.drawTargetBar(
     thumbSize: Float,
     progressColor: Color,
     backgroundColor: Color,
-    isDragging: Boolean
+    isDragging: Boolean,
 ) {
     val totalRange = max - min
     if (totalRange <= 0) return
@@ -168,7 +175,7 @@ private fun DrawScope.drawTargetBar(
             thumbSize = thumbSize,
             progressColor = progressColor,
             backgroundColor = backgroundColor,
-            isDragging = isDragging
+            isDragging = isDragging,
         )
     } else {
         drawHorizontalBar(
@@ -177,7 +184,7 @@ private fun DrawScope.drawTargetBar(
             thumbSize = thumbSize,
             progressColor = progressColor,
             backgroundColor = backgroundColor,
-            isDragging = isDragging
+            isDragging = isDragging,
         )
     }
 }
@@ -188,7 +195,7 @@ private fun DrawScope.drawHorizontalBar(
     thumbSize: Float,
     progressColor: Color,
     backgroundColor: Color,
-    isDragging: Boolean
+    isDragging: Boolean,
 ) {
     val centerY = size.height / 2f
     val trackTop = centerY - trackHeight / 2f
@@ -200,7 +207,7 @@ private fun DrawScope.drawHorizontalBar(
         color = backgroundColor,
         topLeft = Offset(thumbSize / 2f, trackTop),
         size = Size(availableWidth, trackHeight),
-        cornerRadius = CornerRadius(trackHeight / 2f)
+        cornerRadius = CornerRadius(trackHeight / 2f),
     )
     // Draw progress track
     if (progressRatio > 0) {
@@ -208,7 +215,7 @@ private fun DrawScope.drawHorizontalBar(
             color = progressColor,
             topLeft = Offset(thumbSize / 2f, trackTop),
             size = Size(availableWidth * progressRatio, trackHeight),
-            cornerRadius = CornerRadius(trackHeight / 2f)
+            cornerRadius = CornerRadius(trackHeight / 2f),
         )
     }
     // Draw thumb
@@ -217,14 +224,14 @@ private fun DrawScope.drawHorizontalBar(
     drawCircle(
         color = thumbColor,
         radius = thumbRadius,
-        center = Offset(thumbCenterX, centerY)
+        center = Offset(thumbCenterX, centerY),
     )
     // Draw thumb border
     drawCircle(
         color = Color.White,
         radius = thumbRadius,
         center = Offset(thumbCenterX, centerY),
-        style = Stroke(width = 2.dp.toPx())
+        style = Stroke(width = 2.dp.toPx()),
     )
 }
 
@@ -234,7 +241,7 @@ private fun DrawScope.drawVerticalBar(
     thumbSize: Float,
     progressColor: Color,
     backgroundColor: Color,
-    isDragging: Boolean
+    isDragging: Boolean,
 ) {
     val centerX = size.width / 2f
     val trackLeft = centerX - trackHeight / 2f
@@ -247,7 +254,7 @@ private fun DrawScope.drawVerticalBar(
         color = backgroundColor,
         topLeft = Offset(trackLeft, thumbSize / 2f),
         size = Size(trackHeight, availableHeight),
-        cornerRadius = CornerRadius(trackHeight / 2f)
+        cornerRadius = CornerRadius(trackHeight / 2f),
     )
     // Draw progress track (from bottom up)
     if (progressRatio > 0) {
@@ -256,7 +263,7 @@ private fun DrawScope.drawVerticalBar(
             color = progressColor,
             topLeft = Offset(trackLeft, size.height - thumbSize / 2f - progressHeight),
             size = Size(trackHeight, progressHeight),
-            cornerRadius = CornerRadius(trackHeight / 2f)
+            cornerRadius = CornerRadius(trackHeight / 2f),
         )
     }
     // Draw thumb
@@ -265,14 +272,14 @@ private fun DrawScope.drawVerticalBar(
     drawCircle(
         color = thumbColor,
         radius = thumbRadius,
-        center = Offset(centerX, thumbCenterY)
+        center = Offset(centerX, thumbCenterY),
     )
     // Draw thumb border
     drawCircle(
         color = Color.White,
         radius = thumbRadius,
         center = Offset(centerX, thumbCenterY),
-        style = Stroke(width = 2.dp.toPx())
+        style = Stroke(width = 2.dp.toPx()),
     )
 }
 
@@ -282,19 +289,20 @@ private fun calculateProgressFromOffset(
     isVertical: Boolean,
     min: Int,
     max: Int,
-    thumbSize: Float
+    thumbSize: Float,
 ): Int {
     val totalRange = max - min
     if (totalRange <= 0) return min
-    val ratio = if (isVertical) {
-        val availableHeight = size.height - thumbSize
-        val adjustedY = size.height - offset.y - thumbSize / 2f
-        (adjustedY / availableHeight).coerceIn(0f, 1f)
-    } else {
-        val availableWidth = size.width - thumbSize
-        val adjustedX = offset.x - thumbSize / 2f
-        (adjustedX / availableWidth).coerceIn(0f, 1f)
-    }
+    val ratio =
+        if (isVertical) {
+            val availableHeight = size.height - thumbSize
+            val adjustedY = size.height - offset.y - thumbSize / 2f
+            (adjustedY / availableHeight).coerceIn(0f, 1f)
+        } else {
+            val availableWidth = size.width - thumbSize
+            val adjustedX = offset.x - thumbSize / 2f
+            (adjustedX / availableWidth).coerceIn(0f, 1f)
+        }
     return (min + ratio * totalRange).roundToInt().coerceIn(min, max)
 }
 
@@ -305,17 +313,17 @@ fun SimpleTargetBarCompose(
     valueRange: ClosedFloatingPointRange<Float> = 0f..100f,
     steps: Int = 0,
     label: String = "",
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (label.isNotEmpty()) {
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp),
             )
         }
         Slider(
@@ -323,12 +331,12 @@ fun SimpleTargetBarCompose(
             onValueChange = onValueChange,
             valueRange = valueRange,
             steps = steps,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         Text(
             text = String.format("%.1f", value),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -339,26 +347,27 @@ fun TargetBarPickComposePreview() {
     var verticalProgress by remember { mutableIntStateOf(75) }
     var sliderValue by remember { mutableFloatStateOf(25f) }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(32.dp)
+        verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
         Text(
             text = "Target Bar Components",
             style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         // Horizontal bar
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = "Horizontal Target Bar",
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             TargetBarPickCompose(
                 progress = horizontalProgress,
@@ -370,21 +379,21 @@ fun TargetBarPickComposePreview() {
                 onProgressChanged = { progress, _ ->
                     horizontalProgress = progress
                 },
-                valueFormatter = { "$it°C" }
+                valueFormatter = { "$it°C" },
             )
         }
         // Vertical bar
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(32.dp)
+            horizontalArrangement = Arrangement.spacedBy(32.dp),
         ) {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = "Vertical",
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
                 )
                 TargetBarPickCompose(
                     progress = verticalProgress,
@@ -397,38 +406,38 @@ fun TargetBarPickComposePreview() {
                         verticalProgress = progress
                     },
                     valueFormatter = { "$it%" },
-                    progressColor = Color.Green
+                    progressColor = Color.Green,
                 )
             }
             // Simple slider for comparison
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = "Simple Slider",
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
                 )
                 SimpleTargetBarCompose(
                     value = sliderValue,
                     onValueChange = { sliderValue = it },
                     valueRange = 0f..100f,
                     label = "Opacity",
-                    modifier = Modifier.width(200.dp)
+                    modifier = Modifier.width(200.dp),
                 )
             }
         }
         // Display values
         Card(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             ) {
                 Text(
                     text = "Current Values",
                     style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text("Horizontal: $horizontalProgress°C")

@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
-import android.util.Log
-import com.elvishew.xlog.XLog
 import org.bytedeco.javacv.FFmpegFrameRecorder
 import java.lang.ref.WeakReference
 import java.nio.ShortBuffer
@@ -47,8 +45,11 @@ class AudioRecordHelp private constructor() {
         if (audioRecord == null) {
             audioRecord =
                 AudioRecord(
-                    MediaRecorder.AudioSource.MIC, VideoRecordFFmpeg.SAMPLE_AUDIO_RETE_INHZ,
-                    AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize,
+                    MediaRecorder.AudioSource.MIC,
+                    VideoRecordFFmpeg.SAMPLE_AUDIO_RETE_INHZ,
+                    AudioFormat.CHANNEL_IN_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT,
+                    bufferSize,
                 )
         }
         try {
@@ -65,7 +66,9 @@ class AudioRecordHelp private constructor() {
         runAudioThread = true
     }
 
-    internal inner class AudioRecordRunnable(recorder: FFmpegFrameRecorder) : Runnable {
+    internal inner class AudioRecordRunnable(
+        recorder: FFmpegFrameRecorder,
+    ) : Runnable {
         private val recorder: WeakReference<FFmpegFrameRecorder> = WeakReference(recorder)
 
         @SuppressLint("MissingPermission")
@@ -84,10 +87,6 @@ class AudioRecordHelp private constructor() {
                     if (recordingAudio) {
                         if (bufferReadResult > 0) {
                             audioData?.limit(bufferReadResult)
-                            Log.w(
-                                "[ph][ph][ph][ph]",
-                                bufferReadResult.toString() + "//" + bufferReadResult
-                            )
                             recorder?.get()?.recordSamples(
                                 VideoRecordFFmpeg.SAMPLE_AUDIO_RETE_INHZ,
                                 VideoRecordFFmpeg.AUDIO_CHANNELS,
@@ -107,7 +106,6 @@ class AudioRecordHelp private constructor() {
                     }
                 }
             } catch (e: Exception) {
-                XLog.e("[ph][ph][ph][ph][ph][ph]")
             }
         }
     }
@@ -143,8 +141,7 @@ class AudioRecordHelp private constructor() {
 
     companion object {
         private val LOG_TAG = AudioRecordHelp::class.java.name
-        fun getInstance(): AudioRecordHelp {
-            return AudioUtilHolder.INSTANCE
-        }
+
+        fun getInstance(): AudioRecordHelp = AudioUtilHolder.INSTANCE
     }
 }

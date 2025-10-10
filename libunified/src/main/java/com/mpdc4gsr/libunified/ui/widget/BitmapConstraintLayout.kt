@@ -13,11 +13,12 @@ open class BitmapConstraintLayout : ConstraintLayout {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     )
 
     @Volatile
     var viewBitmap: Bitmap? = null
+
     fun updateBitmap() {
         if (!isShown) {
             return
@@ -25,7 +26,11 @@ open class BitmapConstraintLayout : ConstraintLayout {
         try {
             viewBitmap = this.drawToBitmap()
         } catch (exception: Exception) {
-            com.mpdc4gsr.libunified.app.utils.LibraryLogger.e("BitmapConstraintLayout", "Unexpected Exception in BitmapConstraintLayout catch block", exception)
+            com.mpdc4gsr.libunified.app.utils.LibraryLogger.e(
+                "BitmapConstraintLayout",
+                "Unexpected Exception in BitmapConstraintLayout catch block",
+                exception,
+            )
         }
     }
 }

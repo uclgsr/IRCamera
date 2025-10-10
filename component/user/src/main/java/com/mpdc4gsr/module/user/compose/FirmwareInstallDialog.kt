@@ -16,36 +16,40 @@ import androidx.compose.ui.window.DialogProperties
 fun FirmwareInstallDialog(
     isVisible: Boolean,
     message: String = "Installing firmware...",
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
     if (isVisible) {
         Dialog(
             onDismissRequest = {},
-            properties = DialogProperties(
-                dismissOnBackPress = false,
-                dismissOnClickOutside = false
-            )
+            properties =
+                DialogProperties(
+                    dismissOnBackPress = false,
+                    dismissOnClickOutside = false,
+                ),
         ) {
             Card(
-                modifier = Modifier
-                    .size(120.dp),
+                modifier =
+                    Modifier
+                        .size(120.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
+                    ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
             ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
                 ) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(32.dp),
                         color = MaterialTheme.colorScheme.primary,
-                        strokeWidth = 3.dp
+                        strokeWidth = 3.dp,
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
@@ -54,7 +58,7 @@ fun FirmwareInstallDialog(
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center,
-                        maxLines = 2
+                        maxLines = 2,
                     )
                 }
             }

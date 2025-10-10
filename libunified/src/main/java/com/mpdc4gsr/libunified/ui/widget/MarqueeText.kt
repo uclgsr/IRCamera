@@ -10,10 +10,8 @@ class MarqueeText : AppCompatTextView {
     constructor (context: Context, attrs: AttributeSet, defStyle: Int) : super(
         context,
         attrs,
-        defStyle
+        defStyle,
     )
 
-    override fun isFocused(): Boolean {
-        return true
-    }
+    override fun isFocused(): Boolean = true
 }

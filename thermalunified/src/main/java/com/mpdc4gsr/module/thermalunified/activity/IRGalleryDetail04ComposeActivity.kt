@@ -21,9 +21,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 
 class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -37,7 +35,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                                 "Gallery Detail",
                                 color = Color.White,
                                 fontSize = 20.sp,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.Medium,
                             )
                         },
                         navigationIcon = {
@@ -45,97 +43,102 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
                         actions = {
                             IconButton(onClick = {
                                 // TODO: Share thermal image
-                                android.widget.Toast.makeText(
-                                    this@IRGalleryDetail04ComposeActivity,
-                                    "Share image feature coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
+                                android.widget.Toast
+                                    .makeText(
+                                        this@IRGalleryDetail04ComposeActivity,
+                                        "Share image feature coming soon",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
                             }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.White)
                             }
                             IconButton(onClick = {
                                 // TODO: Show more options
-                                android.widget.Toast.makeText(
-                                    this@IRGalleryDetail04ComposeActivity,
-                                    "More options coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
+                                android.widget.Toast
+                                    .makeText(
+                                        this@IRGalleryDetail04ComposeActivity,
+                                        "More options coming soon",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
                             }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More", tint = Color.White)
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF0D1117)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF0D1117),
+                            ),
                     )
-                }
+                },
             ) { paddingValues ->
                 GalleryDetailContent(
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
         }
     }
 
     @Composable
-    private fun GalleryDetailContent(
-        modifier: Modifier = Modifier
-    ) {
+    private fun GalleryDetailContent(modifier: Modifier = Modifier) {
         var showAnalysis by remember { mutableStateOf(true) }
         var showAnnotations by remember { mutableStateOf(false) }
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .background(Color(0xFF0D1117))
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF0D1117))
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Image Display Area
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
                             Icons.Default.ThermostatAuto,
                             contentDescription = "Thermal Image",
                             tint = Color(0xFFFF6B35),
-                            modifier = Modifier.size(64.dp)
+                            modifier = Modifier.size(64.dp),
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             "Thermal Image Analysis",
                             color = Color.White,
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         if (showAnalysis) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Card(
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color(0xFFFF6B35).copy(alpha = 0.1f)
-                                ),
-                                shape = RoundedCornerShape(8.dp)
+                                colors =
+                                    CardDefaults.cardColors(
+                                        containerColor = Color(0xFFFF6B35).copy(alpha = 0.1f),
+                                    ),
+                                shape = RoundedCornerShape(8.dp),
                             ) {
                                 Column(
                                     modifier = Modifier.padding(12.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally
+                                    horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
                                     Text("Max: 42.5°C", color = Color(0xFFFF6B35), fontSize = 14.sp)
                                     Text("Min: 18.2°C", color = Color(0xFF4A90E2), fontSize = 14.sp)
@@ -150,19 +153,19 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         "Analysis Tools",
                         color = Color.White,
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        horizontalArrangement = Arrangement.SpaceEvenly,
                     ) {
                         AnalysisButton(Icons.Default.CropFree, "Crop", false)
                         AnalysisButton(Icons.AutoMirrored.Filled.RotateLeft, "Rotate", false)
@@ -178,14 +181,14 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         "Image Information",
                         color = Color.White,
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     InfoRow("Resolution", "384 x 288")
@@ -199,21 +202,23 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
             val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 OutlinedButton(
                     onClick = {
                         // TODO: Export thermal image
-                        android.widget.Toast.makeText(
-                            context,
-                            "Exporting image...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Exporting image...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color(0xFF7D8590)
-                    )
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color(0xFF7D8590),
+                        ),
                 ) {
                     Icon(Icons.Default.FileDownload, contentDescription = "Export")
                     Spacer(modifier = Modifier.width(8.dp))
@@ -222,16 +227,18 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                 Button(
                     onClick = {
                         // TODO: Generate thermal analysis report
-                        android.widget.Toast.makeText(
-                            context,
-                            "Generating report...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Generating report...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFF6B35)
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFFF6B35),
+                        ),
                 ) {
                     Icon(Icons.Default.Description, contentDescription = "Report")
                     Spacer(modifier = Modifier.width(8.dp))
@@ -240,15 +247,17 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                 IconButton(
                     onClick = {
                         // TODO: Delete thermal image with confirmation
-                        android.widget.Toast.makeText(
-                            context,
-                            "Delete confirmation",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Delete confirmation",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = Color(0xFFDC2626)
-                    )
+                    colors =
+                        IconButtonDefaults.iconButtonColors(
+                            containerColor = Color(0xFFDC2626),
+                        ),
                 ) {
                     Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.White)
                 }
@@ -261,27 +270,29 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
         icon: androidx.compose.ui.graphics.vector.ImageVector,
         label: String,
         isActive: Boolean,
-        onClick: () -> Unit = {}
+        onClick: () -> Unit = {},
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.then(
-                if (isActive) Modifier else Modifier
-            )
+            modifier =
+                Modifier.then(
+                    if (isActive) Modifier else Modifier,
+                ),
         ) {
             IconButton(
                 onClick = onClick,
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = if (isActive) Color(0xFFFF6B35) else Color(0xFF161B22),
-                    contentColor = if (isActive) Color.White else Color(0xFF7D8590)
-                )
+                colors =
+                    IconButtonDefaults.iconButtonColors(
+                        containerColor = if (isActive) Color(0xFFFF6B35) else Color(0xFF161B22),
+                        contentColor = if (isActive) Color.White else Color(0xFF7D8590),
+                    ),
             ) {
                 Icon(icon, contentDescription = label)
             }
             Text(
                 label,
                 color = if (isActive) Color(0xFFFF6B35) else Color(0xFF7D8590),
-                fontSize = 12.sp
+                fontSize = 12.sp,
             )
         }
     }
@@ -289,24 +300,25 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
     @Composable
     private fun InfoRow(
         label: String,
-        value: String
+        value: String,
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 label,
                 color = Color(0xFF7D8590),
-                fontSize = 14.sp
+                fontSize = 14.sp,
             )
             Text(
                 value,
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
     }

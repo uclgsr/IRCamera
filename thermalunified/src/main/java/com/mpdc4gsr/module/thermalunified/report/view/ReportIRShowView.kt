@@ -45,7 +45,7 @@ class ReportIRShowView : LinearLayout {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ) {
         inflate(context, R.layout.view_report_ir_show, this)
         initViews()
@@ -168,8 +168,13 @@ class ReportIRShowView : LinearLayout {
         val ivImage = findViewById<View>(R.id.iv_image)
         val isLand = (drawable?.intrinsicWidth ?: 0) > (drawable?.intrinsicHeight ?: 0)
         val width = (ScreenUtils.getScreenWidth(context) * (if (isLand) 234 else 175) / 375f).toInt()
-        val height = (width * (drawable?.intrinsicHeight ?: 0).toFloat() / (drawable?.intrinsicWidth
-            ?: 1)).toInt()
+        val height =
+            (
+                width * (drawable?.intrinsicHeight ?: 0).toFloat() / (
+                    drawable?.intrinsicWidth
+                        ?: 1
+                )
+            ).toInt()
         val layoutParams = ivImage.layoutParams
         layoutParams.width = width
         layoutParams.height = height
@@ -208,7 +213,10 @@ class ReportIRShowView : LinearLayout {
         tvTitlePoint3.isVisible = !clPoint1.isVisible && !clPoint2.isVisible
         tvTitlePoint4.isVisible = !clPoint1.isVisible && !clPoint2.isVisible && !clPoint3.isVisible
         tvTitlePoint5.isVisible =
-            !clPoint1.isVisible && !clPoint2.isVisible && !clPoint3.isVisible && !clPoint4.isVisible
+            !clPoint1.isVisible &&
+            !clPoint2.isVisible &&
+            !clPoint3.isVisible &&
+            !clPoint4.isVisible
         val lineList = reportIRBean.line_data
         for (i in lineList.indices) {
             when (i) {
@@ -227,7 +235,10 @@ class ReportIRShowView : LinearLayout {
         tvTitleLine3.isVisible = !clLine1.isVisible && !clLine2.isVisible
         tvTitleLine4.isVisible = !clLine1.isVisible && !clLine2.isVisible && !clLine3.isVisible
         tvTitleLine5.isVisible =
-            !clLine1.isVisible && !clLine2.isVisible && !clLine3.isVisible && !clLine4.isVisible
+            !clLine1.isVisible &&
+            !clLine2.isVisible &&
+            !clLine3.isVisible &&
+            !clLine4.isVisible
         val rectList = reportIRBean.surface_data
         for (i in rectList.indices) {
             when (i) {
@@ -246,7 +257,10 @@ class ReportIRShowView : LinearLayout {
         tvTitleRect3.isVisible = !clRect1.isVisible && !clRect2.isVisible
         tvTitleRect4.isVisible = !clRect1.isVisible && !clRect2.isVisible && !clRect3.isVisible
         tvTitleRect5.isVisible =
-            !clRect1.isVisible && !clRect2.isVisible && !clRect3.isVisible && !clRect4.isVisible
+            !clRect1.isVisible &&
+            !clRect2.isVisible &&
+            !clRect3.isVisible &&
+            !clRect4.isVisible
         if (rectList.isNotEmpty()) {
             when (rectList.size) {
                 1 -> hideLastLine(isLast, clRect1, rectList[0], TYPE_RECT)
@@ -331,15 +345,16 @@ class ReportIRShowView : LinearLayout {
                         else -> ""
                     }
                 prefix +
-                        if (tempBean.isMinOpen() && tempBean.isMaxOpen()) {
-                            context.getString(LibR.string.chart_temperature_low) + "-" + context.getString(
-                                LibR.string.chart_temperature_high
+                    if (tempBean.isMinOpen() && tempBean.isMaxOpen()) {
+                        context.getString(LibR.string.chart_temperature_low) + "-" +
+                            context.getString(
+                                LibR.string.chart_temperature_high,
                             )
-                        } else if (tempBean.isMinOpen()) {
-                            context.getString(LibR.string.chart_temperature_low)
-                        } else {
-                            context.getString(LibR.string.chart_temperature_high)
-                        }
+                    } else if (tempBean.isMinOpen()) {
+                        context.getString(LibR.string.chart_temperature_low)
+                    } else {
+                        context.getString(LibR.string.chart_temperature_high)
+                    }
             }
         val rangeValue =
             if (type == TYPE_POINT) {

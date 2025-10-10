@@ -1,14 +1,17 @@
 package mpdc4gsr.core.utils
 
 object ErrorHandler {
-    inline fun <T> runSafely(tag: String, operation: String, block: () -> T): Result<T> {
-        return try {
+    inline fun <T> runSafely(
+        tag: String,
+        operation: String,
+        block: () -> T,
+    ): Result<T> =
+        try {
             Result.success(block())
         } catch (e: Exception) {
             AppLogger.e(tag, "Failed to $operation: ${e.message}", e)
             Result.failure(e)
         }
-    }
 
     inline fun <T> runSafelyWithDefault(
         tag: String,
@@ -17,7 +20,11 @@ object ErrorHandler {
         block: () -> T,
     ): T = runSafely(tag, operation, block).getOrDefault(defaultValue)
 
-    inline fun runSafelyIgnoreResult(tag: String, operation: String, block: () -> Unit) {
+    inline fun runSafelyIgnoreResult(
+        tag: String,
+        operation: String,
+        block: () -> Unit,
+    ) {
         runSafely(tag, operation, block)
     }
 
@@ -25,14 +32,13 @@ object ErrorHandler {
         tag: String,
         operation: String,
         block: suspend () -> T,
-    ): Result<T> {
-        return try {
+    ): Result<T> =
+        try {
             Result.success(block())
         } catch (e: Exception) {
             AppLogger.e(tag, "Failed to $operation: ${e.message}", e)
             Result.failure(e)
         }
-    }
 
     suspend inline fun <T> runSafelySuspendWithDefault(
         tag: String,

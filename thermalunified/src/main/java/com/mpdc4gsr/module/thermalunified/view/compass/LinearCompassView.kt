@@ -8,8 +8,8 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.view.drawToBitmap
-import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import com.mpdc4gsr.module.thermalunified.utils.getPixelLinear
 import com.mpdc4gsr.module.thermalunified.utils.getValuesBetween
 import com.mpdc4gsr.module.thermalunified.utils.realX
@@ -20,7 +20,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlin.coroutines.EmptyCoroutineContext
 
 class LinearCompassView : View {
     private val paint = Paint()
@@ -138,8 +137,11 @@ class LinearCompassView : View {
     private var azimuth = 0f
     private var range = 180f
     private var text: String = ""
+
     private fun getRawMinimum() = azimuth - range / 2
+
     private fun getRawMaximum() = azimuth + range / 2
+
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
         this.canvas = canvas
@@ -161,7 +163,7 @@ class LinearCompassView : View {
             text,
             realX(text, endWidth, textPaint),
             realY(text, endHeight, textPaint),
-            textPaint
+            textPaint,
         )
     }
 
@@ -194,31 +196,33 @@ class LinearCompassView : View {
     }
 
     private fun drawCompass() {
-        getValuesBetween(getRawMinimum(), getRawMaximum(), 5f).map {
-            it.toInt()
-        }.toMutableList().forEach {
-            val x = toPixel(it.toFloat())
-            val lineHeight =
+        getValuesBetween(getRawMinimum(), getRawMaximum(), 5f)
+            .map {
+                it.toInt()
+            }.toMutableList()
+            .forEach {
+                val x = toPixel(it.toFloat())
+                val lineHeight =
+                    when {
+                        it % 90 == 0 -> (3 / 10f) * height
+                        it % 15 == 0 -> (4 / 10f) * height
+                        else -> (5 / 10f) * height
+                    }
+                val bottomHeight = height * 7 / 10f
                 when {
-                    it % 90 == 0 -> (3 / 10f) * height
-                    it % 15 == 0 -> (4 / 10f) * height
-                    else -> (5 / 10f) * height
+                    it % 90 == 0 -> canvas.drawLine(x, lineHeight, x, bottomHeight, longLinePaint)
+                    else -> canvas.drawLine(x, lineHeight, x, bottomHeight, shortLinePaint)
                 }
-            val bottomHeight = height * 7 / 10f
-            when {
-                it % 90 == 0 -> canvas.drawLine(x, lineHeight, x, bottomHeight, longLinePaint)
-                else -> canvas.drawLine(x, lineHeight, x, bottomHeight, shortLinePaint)
+                if (it % 45 == 0) {
+                    val coord = getPositionText(it)
+                    canvas.drawText(
+                        coord,
+                        realX(coord, x, positionPaint),
+                        realY(coord, height - 2f, positionPaint),
+                        positionPaint,
+                    )
+                }
             }
-            if (it % 45 == 0) {
-                val coord = getPositionText(it)
-                canvas.drawText(
-                    coord,
-                    realX(coord, x, positionPaint),
-                    realY(coord, height - 2f, positionPaint),
-                    positionPaint
-                )
-            }
-        }
     }
 
     private fun getPositionText(position: Int): String =
@@ -234,14 +238,13 @@ class LinearCompassView : View {
             else -> ""
         }
 
-    private fun toPixel(bearing: Float): Float {
-        return getPixelLinear(
+    private fun toPixel(bearing: Float): Float =
+        getPixelLinear(
             bearing,
             azimuth,
             width.toFloat(),
             range,
         )
-    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

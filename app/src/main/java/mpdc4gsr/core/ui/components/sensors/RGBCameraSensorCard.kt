@@ -31,7 +31,7 @@ fun RGBCameraSensorCard(
     onClick: () -> Unit,
     onAction: (CameraAction) -> Unit,
     onSettingsClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
     // TODO: Replace with real camera parameters from Camera API via ViewModel
@@ -42,56 +42,58 @@ fun RGBCameraSensorCard(
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF2A2A2A)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF2A2A2A),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             // Header with camera icon and status
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Icon(
                         imageVector = Icons.Default.Camera,
                         contentDescription = "RGB Camera",
                         tint = getStatusColor(state),
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
                     Column {
                         Text(
                             text = "RGB Camera",
                             color = Color.White,
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
                             text = "Built-in Camera",
                             color = Color.Gray,
-                            fontSize = 12.sp
+                            fontSize = 12.sp,
                         )
                     }
                 }
                 Surface(
                     color = getStatusColor(state).copy(alpha = 0.2f),
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(16.dp),
                 ) {
                     Text(
                         text = state.name,
                         color = getStatusColor(state),
                         fontSize = 12.sp,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     )
                 }
             }
@@ -100,45 +102,45 @@ fun RGBCameraSensorCard(
                 RGBPreviewVisualization(
                     resolution = resolution,
                     frameRate = frameRate,
-                    isStreaming = state == SensorState.Streaming
+                    isStreaming = state == SensorState.Streaming,
                 )
             }
             // Camera metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 MetricItem(
                     label = "Resolution",
                     value = resolution,
-                    color = Color.White
+                    color = Color.White,
                 )
                 MetricItem(
                     label = "Frame Rate",
-                    value = "${frameRate} fps",
-                    color = Color.Green
+                    value = "$frameRate fps",
+                    color = Color.Green,
                 )
                 MetricItem(
                     label = "Exposure",
                     value = exposureTime,
-                    color = Color.Yellow
+                    color = Color.Yellow,
                 )
                 MetricItem(
                     label = "ISO",
                     value = iso.toString(),
-                    color = Color.Cyan
+                    color = Color.Cyan,
                 )
             }
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 when (state) {
                     SensorState.Disconnected -> {
                         Button(
                             onClick = { onAction(CameraAction.Connect) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
                         ) {
                             Text("Connect")
                         }
@@ -149,7 +151,7 @@ fun RGBCameraSensorCard(
                             onClick = {
                                 onClick()
                             },
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         ) {
                             Icon(Icons.Default.PlayArrow, contentDescription = null)
                             Spacer(Modifier.width(4.dp))
@@ -159,7 +161,7 @@ fun RGBCameraSensorCard(
                             onClick = {
                                 onSettingsClick?.invoke()
                             },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
                         ) {
                             Text("Settings")
                         }
@@ -168,7 +170,7 @@ fun RGBCameraSensorCard(
                     SensorState.Streaming -> {
                         Button(
                             onClick = { onAction(CameraAction.StopPreview) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                         ) {
                             Icon(Icons.Default.Stop, contentDescription = null)
                             Spacer(Modifier.width(4.dp))
@@ -178,17 +180,18 @@ fun RGBCameraSensorCard(
                             onClick = {
                                 // TODO: Implement photo capture functionality
                                 // Should trigger camera capture and save to gallery
-                                android.widget.Toast.makeText(
-                                    context,
-                                    "Capturing photo...",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                                android.widget.Toast
+                                    .makeText(
+                                        context,
+                                        "Capturing photo...",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
+                            },
                         ) {
                             Icon(
                                 Icons.Default.CameraAlt,
                                 contentDescription = "Capture",
-                                tint = Color.White
+                                tint = Color.White,
                             )
                         }
                     }
@@ -196,7 +199,7 @@ fun RGBCameraSensorCard(
                     SensorState.Error -> {
                         Button(
                             onClick = { onAction(CameraAction.Connect) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500)),
                         ) {
                             Text("Retry")
                         }
@@ -214,46 +217,47 @@ private fun RGBPreviewVisualization(
     resolution: String,
     frameRate: Int,
     isStreaming: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(120.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Black.copy(alpha = 0.3f))
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(120.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Black.copy(alpha = 0.3f)),
     ) {
         Box(
-            modifier = Modifier.fillMaxSize().padding(8.dp)
+            modifier = Modifier.fillMaxSize().padding(8.dp),
         ) {
             if (isStreaming) {
                 // RGB camera preview simulation
                 Canvas(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     val width = size.width
                     val height = size.height
                     // Draw camera viewfinder background
                     drawRect(
                         color = Color(0xFF2E2E2E),
-                        size = size
+                        size = size,
                     )
                     // Draw sample scene elements
                     // Background gradient
                     drawRect(
                         color = Color(0xFF4A4A4A),
                         topLeft = Offset(0f, height * 0.6f),
-                        size = Size(width, height * 0.4f)
+                        size = Size(width, height * 0.4f),
                     )
                     // Simulated objects in scene
                     drawCircle(
                         color = Color(0xFF6A6A6A),
                         radius = 20f,
-                        center = Offset(width * 0.3f, height * 0.4f)
+                        center = Offset(width * 0.3f, height * 0.4f),
                     )
                     drawRect(
                         color = Color(0xFF5A5A5A),
                         topLeft = Offset(width * 0.6f, height * 0.3f),
-                        size = Size(width * 0.2f, height * 0.3f)
+                        size = Size(width * 0.2f, height * 0.3f),
                     )
                     // Viewfinder grid lines
                     val strokeWidth = 1.dp.toPx()
@@ -263,65 +267,67 @@ private fun RGBPreviewVisualization(
                         color = gridColor,
                         start = Offset(width / 3f, 0f),
                         end = Offset(width / 3f, height),
-                        strokeWidth = strokeWidth
+                        strokeWidth = strokeWidth,
                     )
                     drawLine(
                         color = gridColor,
                         start = Offset(width * 2f / 3f, 0f),
                         end = Offset(width * 2f / 3f, height),
-                        strokeWidth = strokeWidth
+                        strokeWidth = strokeWidth,
                     )
                     // Horizontal lines
                     drawLine(
                         color = gridColor,
                         start = Offset(0f, height / 3f),
                         end = Offset(width, height / 3f),
-                        strokeWidth = strokeWidth
+                        strokeWidth = strokeWidth,
                     )
                     drawLine(
                         color = gridColor,
                         start = Offset(0f, height * 2f / 3f),
                         end = Offset(width, height * 2f / 3f),
-                        strokeWidth = strokeWidth
+                        strokeWidth = strokeWidth,
                     )
                 }
                 // Camera info overlay
                 Column(
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(8.dp)
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopStart)
+                            .padding(8.dp),
                 ) {
                     Surface(
                         color = Color.Black.copy(alpha = 0.7f),
-                        shape = RoundedCornerShape(4.dp)
+                        shape = RoundedCornerShape(4.dp),
                     ) {
                         Text(
                             text = "LIVE",
                             color = Color.Red,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                         )
                     }
                 }
                 // Frame rate indicator
                 Surface(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(8.dp),
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(8.dp),
                     color = Color.Black.copy(alpha = 0.7f),
-                    shape = RoundedCornerShape(4.dp)
+                    shape = RoundedCornerShape(4.dp),
                 ) {
                     Text(
                         text = "${frameRate}fps",
                         color = Color.Green,
                         fontSize = 10.sp,
-                        modifier = Modifier.padding(4.dp)
+                        modifier = Modifier.padding(4.dp),
                     )
                 }
                 // Focus indicator (center)
                 Canvas(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     val centerX = size.width / 2
                     val centerY = size.height / 2
@@ -331,34 +337,36 @@ private fun RGBPreviewVisualization(
                         color = Color.White,
                         topLeft = Offset(centerX - focusSize / 2, centerY - focusSize / 2),
                         size = Size(focusSize, focusSize),
-                        style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx())
+                        style =
+                            androidx.compose.ui.graphics.drawscope
+                                .Stroke(width = 2.dp.toPx()),
                     )
                 }
             } else {
                 // Static placeholder
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Icon(
                             imageVector = Icons.Default.Camera,
                             contentDescription = null,
                             tint = Color.Gray,
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(32.dp),
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Camera Preview",
                             color = Color.Gray,
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
                         )
                         Text(
                             text = resolution,
                             color = Color.Gray,
-                            fontSize = 12.sp
+                            fontSize = 12.sp,
                         )
                     }
                 }
@@ -372,29 +380,29 @@ private fun MetricItem(
     label: String,
     value: String,
     color: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             color = color,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Text(
             text = label,
             color = Color.Gray,
-            fontSize = 10.sp
+            fontSize = 10.sp,
         )
     }
 }
 
 @Composable
-private fun getStatusColor(state: SensorState): Color {
-    return when (state) {
+private fun getStatusColor(state: SensorState): Color =
+    when (state) {
         SensorState.Connected -> Color.Green
         SensorState.Streaming -> MaterialTheme.colorScheme.primary
         SensorState.Error -> Color.Red
@@ -402,7 +410,6 @@ private fun getStatusColor(state: SensorState): Color {
         SensorState.Connecting -> Color.Yellow
         SensorState.Simulation -> Color.Magenta
     }
-}
 
 @Preview(showBackground = true)
 @Composable
@@ -413,7 +420,7 @@ private fun RGBCameraSensorCardPreview() {
             onStateChange = {},
             onClick = {},
             onAction = {},
-            onSettingsClick = {}
+            onSettingsClick = {},
         )
     }
 }

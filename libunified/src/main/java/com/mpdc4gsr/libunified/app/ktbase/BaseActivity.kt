@@ -5,13 +5,11 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.BaseApplication
@@ -35,12 +33,19 @@ import java.io.File
 
 abstract class BaseActivity : AppCompatActivity() {
     val TAG = this.javaClass.simpleName
+
     protected abstract fun initContentView(): Int
+
     protected abstract fun initView()
+
     protected abstract fun initData()
+
     protected var savedInstanceState: Bundle? = null
+
     protected open fun isLockPortrait(): Boolean = true
+
     private val activityScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BaseApplication.instance.activitys.add(this)
@@ -61,8 +66,8 @@ abstract class BaseActivity : AppCompatActivity() {
         super.attachBaseContext(
             AppLanguageUtils.attachBaseContext(
                 newBase,
-                ConstantLanguages.ENGLISH
-            )
+                ConstantLanguages.ENGLISH,
+            ),
         )
     }
 
@@ -100,7 +105,6 @@ abstract class BaseActivity : AppCompatActivity() {
         activityScope.launch {
             DeviceEventManager.socketConnectionState.collectLatest { state ->
                 state?.let {
-                    Log.d("onSocketConnectState", "${it.isConnected}")
                     if (it.isConnected) {
                         onSocketConnected(it.isTS004)
                     } else {
@@ -124,6 +128,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private val loadingDialogState by lazy { LoadingDialogState(this) }
+
     fun showLoadingDialog(
         @StringRes resId: Int = R.string.tip_loading,
     ) {
@@ -139,17 +144,17 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private val cameraDialogState by lazy { ProgressDialogState(this) }
+
     fun showCameraLoading() {
         try {
             if (!(isFinishing && isDestroyed)) {
                 cameraDialogState.show(
                     message = getString(R.string.tip_loading),
                     progress = -1f,
-                    cancelable = false
+                    cancelable = false,
                 )
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error showing camera loading: ${e.message}")
         }
     }
 
@@ -174,7 +179,6 @@ abstract class BaseActivity : AppCompatActivity() {
                         headUrl = infoData.avatar,
                     )
                 } catch (e: Exception) {
-                    XLog.e("login error:${e.message}")
                 }
             }
         } else {
@@ -186,6 +190,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected class TakePhotoResult : ActivityResultContract<File, File?>() {
         private lateinit var file: File
+
         override fun createIntent(
             context: Context,
             input: File,

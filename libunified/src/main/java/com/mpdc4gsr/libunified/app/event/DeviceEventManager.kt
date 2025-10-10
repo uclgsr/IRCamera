@@ -11,12 +11,12 @@ import kotlinx.coroutines.flow.asStateFlow
 object DeviceEventManager {
     data class DeviceConnectionState(
         val isConnected: Boolean,
-        val device: UsbDevice?
+        val device: UsbDevice?,
     )
 
     data class SocketConnectionState(
         val isConnected: Boolean,
-        val isTS004: Boolean = false
+        val isTS004: Boolean = false,
     )
 
     private val _deviceConnectionState = MutableStateFlow<DeviceConnectionState?>(null)
@@ -25,11 +25,18 @@ object DeviceEventManager {
     val socketConnectionState: StateFlow<SocketConnectionState?> = _socketConnectionState.asStateFlow()
     private val _devicePermissionRequested = MutableSharedFlow<UsbDevice>()
     val devicePermissionRequested: SharedFlow<UsbDevice> = _devicePermissionRequested.asSharedFlow()
-    suspend fun emitDeviceConnection(isConnected: Boolean, device: UsbDevice?) {
+
+    suspend fun emitDeviceConnection(
+        isConnected: Boolean,
+        device: UsbDevice?,
+    ) {
         _deviceConnectionState.emit(DeviceConnectionState(isConnected, device))
     }
 
-    suspend fun emitSocketConnection(isConnected: Boolean, isTS004: Boolean = false) {
+    suspend fun emitSocketConnection(
+        isConnected: Boolean,
+        isTS004: Boolean = false,
+    ) {
         _socketConnectionState.emit(SocketConnectionState(isConnected, isTS004))
     }
 
@@ -37,15 +44,19 @@ object DeviceEventManager {
         _devicePermissionRequested.emit(device)
     }
 
-    fun emitDeviceConnectionSync(isConnected: Boolean, device: UsbDevice?) {
+    fun emitDeviceConnectionSync(
+        isConnected: Boolean,
+        device: UsbDevice?,
+    ) {
         _deviceConnectionState.value = DeviceConnectionState(isConnected, device)
     }
 
-    fun emitSocketConnectionSync(isConnected: Boolean, isTS004: Boolean = false) {
+    fun emitSocketConnectionSync(
+        isConnected: Boolean,
+        isTS004: Boolean = false,
+    ) {
         _socketConnectionState.value = SocketConnectionState(isConnected, isTS004)
     }
 
-    fun emitDevicePermissionRequestSync(device: UsbDevice): Boolean {
-        return _devicePermissionRequested.tryEmit(device)
-    }
+    fun emitDevicePermissionRequestSync(device: UsbDevice): Boolean = _devicePermissionRequested.tryEmit(device)
 }

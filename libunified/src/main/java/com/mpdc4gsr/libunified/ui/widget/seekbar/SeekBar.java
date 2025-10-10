@@ -9,7 +9,6 @@ import android.content.res.TypedArray;
 import android.graphics.*;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
@@ -281,7 +280,6 @@ public class SeekBar {
                 canvas.drawPath(indicatorArrowPath, paint);
                 indicatorRect.bottom -= indicatorArrowSize;
                 indicatorRect.top -= indicatorArrowSize;
-                Log.w("pseudo colorrefresh", "///");
             }
 
             int defaultPaddingOffset = Utils.dp2px(getContext(), 1);
@@ -327,7 +325,6 @@ public class SeekBar {
             paint.setColor(indicatorTextColor);
             canvas.drawText(text2Draw, tx, ty, paint);
         } catch (Exception e) {
-            Log.w("", e.getMessage() + "");
         }
     }
 
@@ -380,7 +377,6 @@ public class SeekBar {
         try {
             anim.start();
         } catch (IllegalStateException e) {
-            Log.w("SeekBar", "Failed to start material restore animation: " + e.getMessage());
         }
     }
 

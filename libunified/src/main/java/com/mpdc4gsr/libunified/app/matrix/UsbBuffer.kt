@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.matrix
 
-import android.util.Log
 
 class UsbBuffer {
     private val TAG = "UsbBuffer"
@@ -21,16 +20,28 @@ class UsbBuffer {
         this.mark1 = mark1
     }
 
-    fun write(buffer: ByteArray?, offset: Int, length: Int) {
+    fun write(
+        buffer: ByteArray?,
+        offset: Int,
+        length: Int,
+    ) {
         mRingBuffer.write(buffer, offset, length)
     }
 
     private var findHeadFrame = false
     private var findHeadFramePos = -1
-    private fun getMark(buf: ByteArray, offset: Int): Int {
-        return (buf[offset].toUByte().toInt().shl(0) or ((buf[offset + 1].toUByte()).toInt()
-            .shl(8)))
-    }
+
+    private fun getMark(
+        buf: ByteArray,
+        offset: Int,
+    ): Int =
+        (
+            buf[offset].toUByte().toInt().shl(0) or (
+                (buf[offset + 1].toUByte())
+                    .toInt()
+                    .shl(8)
+            )
+        )
 
     private fun isValidFrame(frame: ByteArray): Boolean {
         var i = 0
@@ -61,25 +72,24 @@ class UsbBuffer {
         }
         while (findHeadFramePos == -1 && mRingBuffer.getUnReadLength() > mFrameSize * 2) {
             mRingBuffer.read(mPakagebuffer, 0, mPakagebuffer.size)
-            findHeadFramePos = if (mPacketSize == mPakagebuffer.size) {
-                //findHeadFrame = isValidFrame(mPakagebuffer);
-                isValidFrameInt(mPakagebuffer)
-            } else {
-                break
-            }
+            findHeadFramePos =
+                if (mPacketSize == mPakagebuffer.size) {
+                    // findHeadFrame = isValidFrame(mPakagebuffer);
+                    isValidFrameInt(mPakagebuffer)
+                } else {
+                    break
+                }
         }
-//        Log.d(TAG, "1 findHeadFrame=" + findHeadFrame);
         if (findHeadFramePos != -1) {
-            //Log.d(TAG, "1: " + BaseDataTypeConvertUtils.Companion.byteArr2HexString(mPakagebuffer));
             mRingBuffer.moveBack(mPacketSize - findHeadFramePos)
             mRingBuffer.moveForward(mFrameSize)
             mRingBuffer.read(mPakagebuffer, 0, mPacketSize)
-            //Log.d(TAG, "2: " + BaseDataTypeConvertUtils.Companion.byteArr2HexString(mPakagebuffer));
-            findHeadFrame = if (mPacketSize == mPakagebuffer.size) {
-                isValidFrame(mPakagebuffer)
-            } else {
-                false
-            }
+            findHeadFrame =
+                if (mPacketSize == mPakagebuffer.size) {
+                    isValidFrame(mPakagebuffer)
+                } else {
+                    false
+                }
             mRingBuffer.moveBack(mFrameSize + if (findHeadFrame) mPacketSize else 0)
             findHeadFramePos = -1
         }
@@ -90,7 +100,6 @@ class UsbBuffer {
         while (mRingBuffer.getUnReadLength() < mFrameSize * 2) {
             try {
                 synchronized(this) {
-                    Log.d(TAG, "wait(100)")
                     lock.wait(100)
                 }
             } catch (e: InterruptedException) {

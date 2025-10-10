@@ -9,7 +9,6 @@ import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -27,7 +26,6 @@ class LeScanner extends AbstractScanner {
         @Override
         public void onScanFailed(int errorCode) {
             handleScanCallback(false, null, false, ScanListener.ERROR_SCAN_FAILED, "onScanFailed. errorCode = " + errorCode);
-            logger.log(Log.ERROR, Logger.TYPE_SCAN_STATE, "onScanFailed. errorCode = " + errorCode);
             stopScan(true);
         }
     };
@@ -64,7 +62,6 @@ class LeScanner extends AbstractScanner {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             Context context = getEasyBle().getContext();
             if (context == null || ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-                logger.log(Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing BLUETOOTH_SCAN permission for LE scan");
                 return;
             }
         }
@@ -72,7 +69,6 @@ class LeScanner extends AbstractScanner {
         try {
             bleScanner.startScan(configuration.filters, settings, scanCallback);
         } catch (SecurityException e) {
-            logger.log(Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permission to start LE scan: " + e.getMessage());
         }
     }
 
@@ -82,7 +78,6 @@ class LeScanner extends AbstractScanner {
             try {
                 bleScanner.stopScan(scanCallback);
             } catch (SecurityException e) {
-                logger.log(android.util.Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permission to stop LE scan: " + e.getMessage());
             }
         }
     }

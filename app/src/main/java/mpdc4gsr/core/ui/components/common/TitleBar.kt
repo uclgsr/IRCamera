@@ -27,7 +27,7 @@ fun TitleBar(
     modifier: Modifier = Modifier,
     showBackButton: Boolean = true,
     onBackClick: (() -> Unit)? = null,
-    actions: @Composable RowScope.() -> Unit = {}
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     val context = LocalContext.current
     TopAppBar(
@@ -36,7 +36,7 @@ fun TitleBar(
                 text = title,
                 color = Color.White,
                 fontSize = 16.sp,
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
             )
         },
         navigationIcon = {
@@ -46,24 +46,25 @@ fun TitleBar(
                         onBackClick?.invoke() ?: run {
                             (context as? android.app.Activity)?.finish()
                         }
-                    }
+                    },
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Navigate back",
-                        tint = Color.White
+                        tint = Color.White,
                     )
                 }
             }
         },
         actions = actions,
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent,
-            titleContentColor = Color.White,
-            navigationIconContentColor = Color.White,
-            actionIconContentColor = Color.White
-        ),
-        modifier = modifier
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent,
+                titleContentColor = Color.White,
+                navigationIconContentColor = Color.White,
+                actionIconContentColor = Color.White,
+            ),
+        modifier = modifier,
     )
 }
 
@@ -72,16 +73,16 @@ fun TitleBarAction(
     icon: ImageVector,
     contentDescription: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     IconButton(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
-            tint = Color.White
+            tint = Color.White,
         )
     }
 }
@@ -91,16 +92,16 @@ fun TitleBarAction(
     iconRes: Int,
     contentDescription: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     IconButton(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Icon(
             painter = painterResource(id = iconRes),
             contentDescription = contentDescription,
-            tint = Color.White
+            tint = Color.White,
         )
     }
 }
@@ -111,12 +112,12 @@ private fun TitleBarPreview() {
     IRCameraTheme {
         TitleBar(
             title = "Connect Device",
-            showBackButton = true
+            showBackButton = true,
         ) {
             TitleBarAction(
                 icon = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Settings",
-                onClick = { }
+                onClick = { },
             )
         }
     }

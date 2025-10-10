@@ -12,13 +12,9 @@ class NoScrollViewPager : ViewPager {
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
     }
 
-    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        return isCanScroll && super.onInterceptTouchEvent(ev)
-    }
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean = isCanScroll && super.onInterceptTouchEvent(ev)
 
-    override fun onTouchEvent(ev: MotionEvent?): Boolean {
-        return isCanScroll && super.onTouchEvent(ev)
-    }
+    override fun onTouchEvent(ev: MotionEvent?): Boolean = isCanScroll && super.onTouchEvent(ev)
 
     override fun setCurrentItem(item: Int) {
         //

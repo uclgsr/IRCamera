@@ -17,34 +17,23 @@ import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
 @Module
 @InstallIn(ViewModelComponent::class)
 object DataModule {
-
     @Provides
     @ViewModelScoped
     fun provideGsrDeviceManager(
-        @ApplicationContext context: Context
-    ): GsrDeviceManager {
-        return GsrDeviceManager(context, null)
-    }
+        @ApplicationContext context: Context,
+    ): GsrDeviceManager = GsrDeviceManager(context, null)
 
     @Provides
     @ViewModelScoped
-    fun provideGsrDataRepository(): GsrDataRepository {
-        return GsrDataRepository()
-    }
+    fun provideGsrDataRepository(): GsrDataRepository = GsrDataRepository()
 
     @Provides
     @ViewModelScoped
     fun provideTopdonDataSource(
-        @ApplicationContext context: Context
-    ): TopdonDataSource {
-        return TopdonDataSourceImpl(context)
-    }
+        @ApplicationContext context: Context,
+    ): TopdonDataSource = TopdonDataSourceImpl(context)
 
     @Provides
     @ViewModelScoped
-    fun provideThermalRepository(
-        topdonDataSource: TopdonDataSource
-    ): ThermalRepository {
-        return ThermalRepositoryImpl(topdonDataSource)
-    }
+    fun provideThermalRepository(topdonDataSource: TopdonDataSource): ThermalRepository = ThermalRepositoryImpl(topdonDataSource)
 }

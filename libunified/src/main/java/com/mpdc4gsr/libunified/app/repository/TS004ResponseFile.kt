@@ -24,7 +24,7 @@ data class PipBean(
 )
 
 data class BrightnessBean(
-    val brightness: Int
+    val brightness: Int,
 )
 
 data class ZoomBean(

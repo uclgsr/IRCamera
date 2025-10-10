@@ -16,16 +16,23 @@ class TempDrawHelper {
         private val POINT_SIZE: Int by lazy { 16f.dpToPx(ContextProvider.getContext()).toInt() }
         private val CIRCLE_RADIUS: Int by lazy { 3f.dpToPx(ContextProvider.getContext()).toInt() }
         private val TEMP_TEXT_OFFSET: Int by lazy { 6f.dpToPx(ContextProvider.getContext()).toInt() }
-        fun Float.correctPoint(max: Int): Int = this.toInt()
-            .coerceAtLeast(POINT_SIZE / 2)
-            .coerceAtMost(max - POINT_SIZE / 2)
 
-        fun Float.correct(max: Int): Int = this.toInt()
-            .coerceAtLeast(CIRCLE_RADIUS)
-            .coerceAtMost(max - CIRCLE_RADIUS)
+        fun Float.correctPoint(max: Int): Int =
+            this
+                .toInt()
+                .coerceAtLeast(POINT_SIZE / 2)
+                .coerceAtMost(max - POINT_SIZE / 2)
 
-        fun getRect(width: Int, height: Int): Rect =
-            Rect(CIRCLE_RADIUS, CIRCLE_RADIUS, width - CIRCLE_RADIUS, height - CIRCLE_RADIUS)
+        fun Float.correct(max: Int): Int =
+            this
+                .toInt()
+                .coerceAtLeast(CIRCLE_RADIUS)
+                .coerceAtMost(max - CIRCLE_RADIUS)
+
+        fun getRect(
+            width: Int,
+            height: Int,
+        ): Rect = Rect(CIRCLE_RADIUS, CIRCLE_RADIUS, width - CIRCLE_RADIUS, height - CIRCLE_RADIUS)
     }
 
     var textSize: Int
@@ -35,7 +42,9 @@ class TempDrawHelper {
         }
     var textColor: Int
         @ColorInt get() = textPaint.color
-        set(@ColorInt value) {
+        set(
+            @ColorInt value
+        ) {
             textPaint.color = value
         }
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -49,15 +58,20 @@ class TempDrawHelper {
         bluePaint.color = Color.BLUE
         redPaint.color = Color.RED
         val context = ContextProvider.getContext()
-        textPaint.textSize = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_SP,
-            14f,
-            context.resources.displayMetrics
-        )
+        textPaint.textSize =
+            TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
+                14f,
+                context.resources.displayMetrics,
+            )
         textPaint.color = Color.WHITE
     }
 
-    fun drawPoint(canvas: Canvas, x: Int, y: Int) {
+    fun drawPoint(
+        canvas: Canvas,
+        x: Int,
+        y: Int,
+    ) {
         val left: Float = x - POINT_SIZE / 2f
         val top: Float = y - POINT_SIZE / 2f
         val right: Float = x + POINT_SIZE / 2f
@@ -66,60 +80,84 @@ class TempDrawHelper {
         canvas.drawLine(x.toFloat(), top, x.toFloat(), bottom, linePaint) //
     }
 
-    fun drawLine(canvas: Canvas, startX: Int, startY: Int, stopX: Int, stopY: Int) {
+    fun drawLine(
+        canvas: Canvas,
+        startX: Int,
+        startY: Int,
+        stopX: Int,
+        stopY: Int,
+    ) {
         canvas.drawLine(
             startX.toFloat(),
             startY.toFloat(),
             stopX.toFloat(),
             stopY.toFloat(),
-            linePaint
+            linePaint,
         )
     }
 
-    fun drawRect(canvas: Canvas, left: Int, top: Int, right: Int, bottom: Int) {
+    fun drawRect(
+        canvas: Canvas,
+        left: Int,
+        top: Int,
+        right: Int,
+        bottom: Int,
+    ) {
         val leftF: Float = left.toFloat()
         val topF: Float = top.toFloat()
         val rightF: Float = right.toFloat()
         val bottomF: Float = bottom.toFloat()
-        val points = floatArrayOf(
-            leftF,
-            topF,
-            rightF,
-            topF,
-            rightF,
-            topF,
-            rightF,
-            bottomF,
-            rightF,
-            bottomF,
-            leftF,
-            bottomF,
-            leftF,
-            bottomF,
-            leftF,
-            topF
-        )
+        val points =
+            floatArrayOf(
+                leftF,
+                topF,
+                rightF,
+                topF,
+                rightF,
+                topF,
+                rightF,
+                bottomF,
+                rightF,
+                bottomF,
+                leftF,
+                bottomF,
+                leftF,
+                bottomF,
+                leftF,
+                topF,
+            )
         canvas.drawLines(points, linePaint)
     }
 
-    fun drawCircle(canvas: Canvas, x: Int, y: Int, isMax: Boolean) {
+    fun drawCircle(
+        canvas: Canvas,
+        x: Int,
+        y: Int,
+        isMax: Boolean,
+    ) {
         canvas.drawCircle(
             x.toFloat(),
             y.toFloat(),
             CIRCLE_RADIUS.toFloat(),
-            if (isMax) redPaint else bluePaint
+            if (isMax) redPaint else bluePaint,
         )
     }
 
-    fun drawTempText(canvas: Canvas, text: String, width: Int, x: Int, y: Int) {
+    fun drawTempText(
+        canvas: Canvas,
+        text: String,
+        width: Int,
+        x: Int,
+        y: Int,
+    ) {
         var textX: Float = (x + TEMP_TEXT_OFFSET).toFloat()
         var textY: Float = (y - TEMP_TEXT_OFFSET).toFloat()
         val textWidth: Float = textPaint.measureText(text)
-        if (x > width - textWidth - TEMP_TEXT_OFFSET) {//，
+        if (x > width - textWidth - TEMP_TEXT_OFFSET) { // ，
             textX = x - TEMP_TEXT_OFFSET - textWidth
         }
         val textFontTop: Float = -textPaint.getFontMetrics().top
-        if (y < textFontTop + TEMP_TEXT_OFFSET / 2) {//，
+        if (y < textFontTop + TEMP_TEXT_OFFSET / 2) { // ，
             textY = y + TEMP_TEXT_OFFSET / 2 + textFontTop
         }
         canvas.drawText(text, textX, textY, textPaint)
@@ -132,7 +170,7 @@ class TempDrawHelper {
         startX: Int,
         startY: Int,
         stopX: Int,
-        stopY: Int
+        stopY: Int,
     ) {
         val fontMetrics: Paint.FontMetrics = textPaint.getFontMetrics()
         val textWidth: Float = textPaint.measureText("A")
@@ -150,18 +188,25 @@ class TempDrawHelper {
         canvas.drawText("B", rightX, if (k >= 0) bottomY else topY, textPaint)
     }
 
-    fun drawPointName(canvas: Canvas, name: String, width: Int, height: Int, x: Int, y: Int) {
+    fun drawPointName(
+        canvas: Canvas,
+        name: String,
+        width: Int,
+        height: Int,
+        x: Int,
+        y: Int,
+    ) {
         val textWidth: Float = textPaint.measureText(name)
         val textHeight: Float = -textPaint.getFontMetrics().top
         var textX = x - textWidth / 2
         var textY = y + POINT_SIZE / 2 + textHeight
-        if (textX < 0) {//x
+        if (textX < 0) { // x
             textX = 0f
         }
-        if (textX + textWidth > width) {//x
+        if (textX + textWidth > width) { // x
             textX = width - textWidth
         }
-        if (textY > height) {//，
+        if (textY > height) { // ，
             textY = y - POINT_SIZE / 2 - textPaint.fontMetrics.bottom
         }
         canvas.drawText(name, textX, textY, textPaint)
@@ -175,7 +220,7 @@ class TempDrawHelper {
         left: Int,
         top: Int,
         right: Int,
-        bottom: Int
+        bottom: Int,
     ) {
         val fontMetrics: Paint.FontMetrics = textPaint.getFontMetrics()
         val textWidth: Float = textPaint.measureText(name)
@@ -185,19 +230,18 @@ class TempDrawHelper {
         val offset: Float = (-fontMetrics.ascent + fontMetrics.descent) / 2 - fontMetrics.descent
         var textX: Float = centerX - textWidth / 2
         var textY: Float = centerY + offset
-        if (textX < 0) {//x
+        if (textX < 0) { // x
             textX = 0f
         }
-        if (textX + textWidth > width) {//x
+        if (textX + textWidth > width) { // x
             textX = width - textWidth
         }
-        if (textY < textHeight) {//y
+        if (textY < textHeight) { // y
             textY = textHeight
         }
-        if (textY > height) {//y
+        if (textY > height) { // y
             textY = height.toFloat()
         }
         canvas.drawText(name, textX, textY, textPaint)
     }
-
 }

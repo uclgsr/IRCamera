@@ -12,8 +12,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
-import com.mpdc4gsr.libunified.compat.dpToPx
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.compat.dpToPx
 
 open class TitleView : ViewGroup {
     companion object {
@@ -34,14 +34,14 @@ open class TitleView : ViewGroup {
         context,
         attrs,
         defStyleAttr,
-        0
+        0,
     )
 
     constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : super(
         context,
         attrs,
@@ -115,9 +115,7 @@ open class TitleView : ViewGroup {
         return textView
     }
 
-    fun addTextView(context: Context): MyTextView {
-        return addTextView(context, 12f, 24f)
-    }
+    fun addTextView(context: Context): MyTextView = addTextView(context, 12f, 24f)
 
     override fun onMeasure(
         widthMeasureSpec: Int,
@@ -139,7 +137,7 @@ open class TitleView : ViewGroup {
                     MeasureSpec.makeMeasureSpec(childView.measuredWidth, MeasureSpec.EXACTLY)
                 childView.measure(
                     widthSpec,
-                    MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY)
+                    MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY),
                 )
             }
         }
@@ -165,10 +163,22 @@ open class TitleView : ViewGroup {
             tvTitle?.measure(widthSpec, MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY))
         } else {
             var titleWidth = measuredWidth
-            titleWidth -= if (tvLeft?.isVisible == true) tvLeft?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context)
-                .toInt()
-            titleWidth -= if (tvRight1?.isVisible == true) tvRight1?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context)
-                .toInt()
+            titleWidth -=
+                if (tvLeft?.isVisible == true) {
+                    tvLeft?.measuredWidth ?: 0
+                } else {
+                    ICON_SIZE
+                        .dpToPx(context)
+                        .toInt()
+                }
+            titleWidth -=
+                if (tvRight1?.isVisible == true) {
+                    tvRight1?.measuredWidth ?: 0
+                } else {
+                    ICON_SIZE
+                        .dpToPx(context)
+                        .toInt()
+                }
             if (tvRight2?.isVisible == true) {
                 titleWidth -= tvRight2?.measuredWidth ?: 0
             }
@@ -196,12 +206,13 @@ open class TitleView : ViewGroup {
             val childWidth = child.measuredWidth
             when (child) {
                 tvLeft -> child.layout(0, 0, childWidth, measuredHeight)
-                tvRight1 -> child.layout(
-                    measuredWidth - childWidth,
-                    0,
-                    measuredWidth,
-                    measuredHeight
-                )
+                tvRight1 ->
+                    child.layout(
+                        measuredWidth - childWidth,
+                        0,
+                        measuredWidth,
+                        measuredHeight,
+                    )
 
                 tvRight2 -> {
                     val right = measuredWidth - tvRight1!!.measuredWidth
@@ -219,8 +230,13 @@ open class TitleView : ViewGroup {
                         child.layout(margin, 0, margin + childWidth, measuredHeight)
                     } else {
                         val left =
-                            if (tvLeft?.isVisible == true) tvLeft?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context)
-                                .toInt()
+                            if (tvLeft?.isVisible == true) {
+                                tvLeft?.measuredWidth ?: 0
+                            } else {
+                                ICON_SIZE
+                                    .dpToPx(context)
+                                    .toInt()
+                            }
                         child.layout(left, 0, left + childWidth, measuredHeight)
                     }
                 }

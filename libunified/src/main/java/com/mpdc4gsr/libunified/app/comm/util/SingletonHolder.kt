@@ -1,8 +1,11 @@
 package com.mpdc4gsr.libunified.app.comm.util
 
-open class SingletonHolder<out T, in A>(private val creator: (A) -> T) {
+open class SingletonHolder<out T, in A>(
+    private val creator: (A) -> T,
+) {
     @Volatile
     private var instance: T? = null
+
     fun getInstance(arg: A): T {
         // First check without synchronization for performance
         return instance ?: synchronized(this) {

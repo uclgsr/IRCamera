@@ -1,8 +1,6 @@
 package com.mpdc4gsr.libunified.app.comm.bean
 
 import android.util.TypedValue
-import com.mpdc4gsr.libunified.compat.ContextProvider
-import com.mpdc4gsr.libunified.compat.SPUtils
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
@@ -10,10 +8,13 @@ import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtils
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.libunified.compat.ContextProvider
+import com.mpdc4gsr.libunified.compat.SPUtils
 
-class SaveSettingBean(private val isWifi: Boolean = false) {
-    private fun getSPUtils(): SPUtils =
-        SPUtils.getInstance(if (isWifi) "WifiSaveSettingUtils" else "SaveSettingUtils")
+class SaveSettingBean(
+    private val isWifi: Boolean = false,
+) {
+    private fun getSPUtils(): SPUtils = SPUtils.getInstance(if (isWifi) "WifiSaveSettingUtils" else "SaveSettingUtils")
 
     var isSaveSetting: Boolean = getSPUtils().getBoolean("isSaveSetting", true)
         set(value) {
@@ -157,6 +158,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
         }
 
     fun isRotatePortrait(): Boolean = rotateAngle == 90 || rotateAngle == 270
+
     var isOpenMirror: Boolean =
         if (isSaveSetting) getSPUtils().getBoolean("isOpenMirror", false) else false
         set(value) {
@@ -173,25 +175,33 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
                 getSPUtils().put("isOpenCompass", value)
             }
         }
-    var tempTextColor: Int = if (isSaveSetting) getSPUtils().getInt(
-        "tempTextColor",
-        0xffffffff.toInt()
-    ) else 0xffffffff.toInt()
+    var tempTextColor: Int =
+        if (isSaveSetting) {
+            getSPUtils().getInt(
+                "tempTextColor",
+                0xffffffff.toInt(),
+            )
+        } else {
+            0xffffffff.toInt()
+        }
         set(value) {
             field = value
             if (isSaveSetting) {
                 getSPUtils().put("tempTextColor", value)
             }
         }
-    var tempTextSize: Int = run {
-        val context = ContextProvider.getContext()
-        val defaultSize = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_SP,
-            14f,
-            context.resources.displayMetrics
-        ).toInt()
-        if (isSaveSetting) getSPUtils().getInt("tempTextSize", defaultSize) else defaultSize
-    }
+    var tempTextSize: Int =
+        run {
+            val context = ContextProvider.getContext()
+            val defaultSize =
+                TypedValue
+                    .applyDimension(
+                        TypedValue.COMPLEX_UNIT_SP,
+                        14f,
+                        context.resources.displayMetrics,
+                    ).toInt()
+            if (isSaveSetting) getSPUtils().getInt("tempTextSize", defaultSize) else defaultSize
+        }
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -201,11 +211,13 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
 
     fun isTempTextDefault(): Boolean {
         val context = ContextProvider.getContext()
-        val defaultSize = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_SP,
-            14f,
-            context.resources.displayMetrics
-        ).toInt()
+        val defaultSize =
+            TypedValue
+                .applyDimension(
+                    TypedValue.COMPLEX_UNIT_SP,
+                    14f,
+                    context.resources.displayMetrics,
+                ).toInt()
         return tempTextColor == 0xffffffff.toInt() && tempTextSize == defaultSize
     }
 
@@ -240,10 +252,15 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
                 getSPUtils().put("isOpenLowPoint", value)
             }
         }
-    var aiTraceType: Int = if (isSaveSetting) getSPUtils().getInt(
-        "aiTraceType",
-        ObserveBean.TYPE_NONE
-    ) else ObserveBean.TYPE_NONE
+    var aiTraceType: Int =
+        if (isSaveSetting) {
+            getSPUtils().getInt(
+                "aiTraceType",
+                ObserveBean.TYPE_NONE,
+            )
+        } else {
+            ObserveBean.TYPE_NONE
+        }
         set(value) {
             field = value
             if (isSaveSetting) {

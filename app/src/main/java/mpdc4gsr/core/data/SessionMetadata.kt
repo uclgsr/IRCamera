@@ -34,7 +34,7 @@ data class SessionMetadata(
     val softwareVersions: Map<String, String> = emptyMap(),
     val calibrationInfo: Map<String, CalibrationData> = emptyMap(),
     val qualityMetrics: QualityMetrics = QualityMetrics(),
-    val dataIntegrityChecks: Map<String, Boolean> = emptyMap()
+    val dataIntegrityChecks: Map<String, Boolean> = emptyMap(),
 ) {
     data class DeviceInfo(
         val model: String = android.os.Build.MODEL,
@@ -44,43 +44,40 @@ data class SessionMetadata(
         val serialNumber: String = getDeviceSerial(),
         val hardwareCapabilities: Map<String, Boolean> = emptyMap(),
         val cpuInfo: String = getCPUInfo(),
-        val memoryInfo: String = getMemoryInfo()
+        val memoryInfo: String = getMemoryInfo(),
     ) {
         companion object {
-            private fun getDeviceSerial(): String {
-                return try {
+            private fun getDeviceSerial(): String =
+                try {
                     @Suppress("DEPRECATION")
-                    android.os.Build.SERIAL.takeIf { it != "unknown" } ?: getPersistentDeviceId()
+                    android.os.Build.SERIAL
+                        .takeIf { it != "unknown" } ?: getPersistentDeviceId()
                 } catch (e: Exception) {
                     "SN-UNAVAILABLE"
                 }
-            }
 
-            private fun getPersistentDeviceId(): String {
-                return try {
+            private fun getPersistentDeviceId(): String =
+                try {
                     "DEVICE-${android.os.Build.FINGERPRINT.hashCode().toString(16).uppercase()}"
                 } catch (e: Exception) {
                     "DEVICE-UNKNOWN"
                 }
-            }
 
-            private fun getCPUInfo(): String {
-                return try {
+            private fun getCPUInfo(): String =
+                try {
                     "${android.os.Build.HARDWARE} - ${android.os.Build.SUPPORTED_ABIS.joinToString(",")}"
                 } catch (e: Exception) {
                     "CPU-INFO-UNAVAILABLE"
                 }
-            }
 
-            private fun getMemoryInfo(): String {
-                return try {
+            private fun getMemoryInfo(): String =
+                try {
                     val runtime = Runtime.getRuntime()
                     val maxMemory = runtime.maxMemory() / (1024 * 1024)
                     "Max: ${maxMemory}MB"
                 } catch (e: Exception) {
                     "MEMORY-INFO-UNAVAILABLE"
                 }
-            }
         }
     }
 
@@ -91,7 +88,7 @@ data class SessionMetadata(
         val noiseLevel: String? = null,
         val locationDescription: String? = null,
         val weatherConditions: String? = null,
-        val roomConditions: Map<String, Any> = emptyMap()
+        val roomConditions: Map<String, Any> = emptyMap(),
     )
 
     data class NetworkSyncInfo(
@@ -101,7 +98,7 @@ data class SessionMetadata(
         val syncQuality: Double = 0.0,
         val syncAttempts: Int = 0,
         val lastSyncTime: Long = 0,
-        val driftMeasurements: List<Long> = emptyList()
+        val driftMeasurements: List<Long> = emptyList(),
     )
 
     data class CalibrationData(
@@ -110,7 +107,7 @@ data class SessionMetadata(
         val calibrationParameters: Map<String, Double>,
         val accuracyMetrics: Map<String, Double>,
         val validationStatus: String,
-        val calibrationNotes: String? = null
+        val calibrationNotes: String? = null,
     )
 
     data class QualityMetrics(
@@ -121,11 +118,12 @@ data class SessionMetadata(
         val errorCount: Int = 0,
         val warningCount: Int = 0,
         val validationsPassed: Int = 0,
-        val validationsFailed: Int = 0
+        val validationsFailed: Int = 0,
     )
 
     companion object {
         private const val TAG = "SessionMetadata"
+
         fun createSessionStart(sessionId: String): SessionMetadata {
             val wallClockStartMs = System.currentTimeMillis()
             val monotonicStartNs = SystemClock.elapsedRealtimeNanos()
@@ -135,7 +133,7 @@ data class SessionMetadata(
                 sessionId = sessionId,
                 sessionStartTimestampMs = wallClockStartMs,
                 sessionStartMonotonicNs = monotonicStartNs,
-                sessionStartIso = isoFormatter.format(Date(wallClockStartMs))
+                sessionStartIso = isoFormatter.format(Date(wallClockStartMs)),
             )
         }
     }
@@ -150,27 +148,35 @@ data class SessionMetadata(
             sessionEndTimestampMs = wallClockEndMs,
             sessionEndMonotonicNs = monotonicEndNs,
             sessionEndIso = isoFormatter.format(Date(wallClockEndMs)),
-            recordingDurationMs = durationMs
+            recordingDurationMs = durationMs,
         )
     }
 
-    fun addModalityFile(modalityType: String, fileName: String, startOffsetMs: Long = 0) {
+    fun addModalityFile(
+        modalityType: String,
+        fileName: String,
+        startOffsetMs: Long = 0,
+    ) {
         modalityFiles[modalityType] = fileName
         syncEvents.add(
             SessionSyncEvent(
                 eventType = "${modalityType}_START",
                 timestampMs = sessionStartTimestampMs + startOffsetMs,
                 monotonicOffsetNs = startOffsetMs * 1_000_000L,
-                metadata = mapOf(
-                    "modality" to modalityType,
-                    "file" to fileName,
-                    "offset_ms" to startOffsetMs.toString()
-                )
-            )
+                metadata =
+                    mapOf(
+                        "modality" to modalityType,
+                        "file" to fileName,
+                        "offset_ms" to startOffsetMs.toString(),
+                    ),
+            ),
         )
     }
 
-    fun addSyncEvent(eventType: String, metadata: Map<String, String> = emptyMap()) {
+    fun addSyncEvent(
+        eventType: String,
+        metadata: Map<String, String> = emptyMap(),
+    ) {
         val currentWallMs = System.currentTimeMillis()
         val currentMonotonicNs = SystemClock.elapsedRealtimeNanos()
         val offsetFromStartNs = currentMonotonicNs - sessionStartMonotonicNs
@@ -179,29 +185,28 @@ data class SessionMetadata(
                 eventType = eventType,
                 timestampMs = currentWallMs,
                 monotonicOffsetNs = offsetFromStartNs,
-                metadata = metadata
-            )
+                metadata = metadata,
+            ),
         )
     }
 
-    private fun relativeMillis(monotonicNs: Long): Long {
-        return (monotonicNs - sessionStartMonotonicNs) / 1_000_000L
-    }
+    private fun relativeMillis(monotonicNs: Long): Long = (monotonicNs - sessionStartMonotonicNs) / 1_000_000L
 
     fun markSensorStart(
         sensorName: String,
         sensorId: String,
         sensorType: String,
         startMonotonicNs: Long,
-        metadata: Map<String, String> = emptyMap()
+        metadata: Map<String, String> = emptyMap(),
     ) {
-        val summary = SensorSummary(
-            sensorId = sensorId,
-            sensorType = sensorType,
-            startTimestampNs = startMonotonicNs,
-            startTimestampMs = monotonicToWallClock(startMonotonicNs),
-            relativeStartMs = relativeMillis(startMonotonicNs)
-        )
+        val summary =
+            SensorSummary(
+                sensorId = sensorId,
+                sensorType = sensorType,
+                startTimestampNs = startMonotonicNs,
+                startTimestampMs = monotonicToWallClock(startMonotonicNs),
+                relativeStartMs = relativeMillis(startMonotonicNs),
+            )
         summary.metadata.putAll(metadata)
         sensorSummaries[sensorName] = summary
     }
@@ -214,15 +219,16 @@ data class SessionMetadata(
         metadata: Map<String, String> = emptyMap(),
         errorMessage: String? = null,
         sensorId: String? = null,
-        sensorType: String? = null
+        sensorType: String? = null,
     ) {
-        val summary = sensorSummaries[sensorName] ?: SensorSummary(
-            sensorId = sensorId ?: sensorName,
-            sensorType = sensorType ?: "unknown",
-            startTimestampNs = sessionStartMonotonicNs,
-            startTimestampMs = sessionStartTimestampMs,
-            relativeStartMs = 0L
-        )
+        val summary =
+            sensorSummaries[sensorName] ?: SensorSummary(
+                sensorId = sensorId ?: sensorName,
+                sensorType = sensorType ?: "unknown",
+                startTimestampNs = sessionStartMonotonicNs,
+                startTimestampMs = sessionStartTimestampMs,
+                relativeStartMs = 0L,
+            )
         summary.stopTimestampNs = stopMonotonicNs
         summary.stopTimestampMs = monotonicToWallClock(stopMonotonicNs)
         summary.relativeStopMs = relativeMillis(stopMonotonicNs)
@@ -251,171 +257,187 @@ data class SessionMetadata(
         return (currentMonotonicNs - sessionStartMonotonicNs) / 1_000_000L
     }
 
-    fun monotonicToWallClock(monotonicNs: Long): Long {
-        return try {
+    fun monotonicToWallClock(monotonicNs: Long): Long =
+        try {
             TimestampManager.convertMonotonicToWallClock(monotonicNs)
         } catch (e: IllegalStateException) {
             val offsetFromStartNs = monotonicNs - sessionStartMonotonicNs
             sessionStartTimestampMs + (offsetFromStartNs / 1_000_000L)
         }
-    }
 
     fun saveToFile(sessionDirectory: File): File {
         val metadataFile = File(sessionDirectory, "session_metadata.json")
         val gson = GsonBuilder().setPrettyPrinting().create()
         try {
             metadataFile.writeText(gson.toJson(this))
-            android.util.Log.i(TAG, "Session metadata saved: ${metadataFile.absolutePath}")
         } catch (e: Exception) {
-            android.util.Log.e(TAG, "Failed to save session metadata", e)
         }
         return metadataFile
     }
 
-    fun exportToUnifiedMetadataFile(sessionDirectory: File): Boolean {
-        return try {
+    fun exportToUnifiedMetadataFile(sessionDirectory: File): Boolean =
+        try {
             val metadataFile = File(sessionDirectory, "session_metadata_complete.json")
             val gson = GsonBuilder().setPrettyPrinting().create()
             val comprehensiveMetadata = buildComprehensiveMetadata()
             val jsonContent = gson.toJson(comprehensiveMetadata)
             metadataFile.writeText(jsonContent)
-            android.util.Log.i(
-                TAG,
-                "Comprehensive session metadata exported to: ${metadataFile.absolutePath}"
-            )
             true
         } catch (e: Exception) {
-            android.util.Log.e(TAG, "Failed to export comprehensive session metadata", e)
             false
         }
-    }
 
-    private fun buildComprehensiveMetadata(): Map<String, Any> {
-        return mapOf(
-            "session_header" to mapOf(
-                "session_id" to sessionId,
-                "session_name" to (sessionName ?: "Unnamed Session"),
-                "study_name" to (studyName ?: ""),
-                "participant_id" to (participantId ?: ""),
-                "user_notes" to (userNotes ?: ""),
-                "experimental_conditions" to experimentalConditions
-            ),
-            "timing_information" to mapOf(
-                "session_start_utc_ms" to sessionStartTimestampMs,
-                "session_start_iso" to sessionStartIso,
-                "session_start_monotonic_ns" to sessionStartMonotonicNs,
-                "session_end_utc_ms" to sessionEndTimestampMs,
-                "session_end_iso" to sessionEndIso,
-                "session_end_monotonic_ns" to sessionEndMonotonicNs,
-                "recording_duration_ms" to recordingDurationMs,
-                "timing_source" to timingSource
-            ),
-            "device_information" to mapOf(
-                "primary_device" to deviceInfo,
-                "software_versions" to softwareVersions,
-                "environmental_conditions" to environmentalConditions
-            ),
-            "network_synchronization" to mapOf(
-                "pc_controller_sync" to networkSyncInfo,
-                "sync_events" to syncEvents.map { syncEvent ->
+    private fun buildComprehensiveMetadata(): Map<String, Any> =
+        mapOf(
+            "session_header" to
+                mapOf(
+                    "session_id" to sessionId,
+                    "session_name" to (sessionName ?: "Unnamed Session"),
+                    "study_name" to (studyName ?: ""),
+                    "participant_id" to (participantId ?: ""),
+                    "user_notes" to (userNotes ?: ""),
+                    "experimental_conditions" to experimentalConditions,
+                ),
+            "timing_information" to
+                mapOf(
+                    "session_start_utc_ms" to sessionStartTimestampMs,
+                    "session_start_iso" to sessionStartIso,
+                    "session_start_monotonic_ns" to sessionStartMonotonicNs,
+                    "session_end_utc_ms" to sessionEndTimestampMs,
+                    "session_end_iso" to sessionEndIso,
+                    "session_end_monotonic_ns" to sessionEndMonotonicNs,
+                    "recording_duration_ms" to recordingDurationMs,
+                    "timing_source" to timingSource,
+                ),
+            "device_information" to
+                mapOf(
+                    "primary_device" to deviceInfo,
+                    "software_versions" to softwareVersions,
+                    "environmental_conditions" to environmentalConditions,
+                ),
+            "network_synchronization" to
+                mapOf(
+                    "pc_controller_sync" to networkSyncInfo,
+                    "sync_events" to
+                        syncEvents.map { syncEvent ->
+                            mapOf(
+                                "event_type" to syncEvent.eventType,
+                                "timestamp_ms" to syncEvent.timestampMs,
+                                "monotonic_offset_ns" to syncEvent.monotonicOffsetNs,
+                                "metadata" to syncEvent.metadata,
+                            )
+                        },
+                ),
+            "sensor_summaries" to
+                sensorSummaries.mapValues { (sensorId, summary) ->
                     mapOf(
-                        "event_type" to syncEvent.eventType,
-                        "timestamp_ms" to syncEvent.timestampMs,
-                        "monotonic_offset_ns" to syncEvent.monotonicOffsetNs,
-                        "metadata" to syncEvent.metadata
+                        "sensor_id" to summary.sensorId,
+                        "sensor_type" to summary.sensorType,
+                        "timing" to
+                            mapOf(
+                                "start_timestamp_ns" to summary.startTimestampNs,
+                                "start_timestamp_ms" to summary.startTimestampMs,
+                                "relative_start_ms" to summary.relativeStartMs,
+                                "stop_timestamp_ns" to summary.stopTimestampNs,
+                                "stop_timestamp_ms" to summary.stopTimestampMs,
+                                "relative_stop_ms" to summary.relativeStopMs,
+                            ),
+                        "performance" to
+                            mapOf(
+                                "samples_recorded" to summary.samplesRecorded,
+                                "average_data_rate" to summary.averageDataRate,
+                                "dropped_samples" to summary.droppedSamples,
+                                "sync_markers" to summary.syncMarkers,
+                                "storage_used_mb" to summary.storageUsedMb,
+                            ),
+                        "status" to summary.status,
+                        "errors" to summary.errors,
+                        "metadata" to summary.metadata,
                     )
-                }
-            ),
-            "sensor_summaries" to sensorSummaries.mapValues { (sensorId, summary) ->
+                },
+            "calibration_data" to
+                calibrationInfo.mapValues { (sensorType, calibration) ->
+                    mapOf(
+                        "sensor_type" to calibration.sensorType,
+                        "calibration_timestamp" to calibration.calibrationTimestamp,
+                        "parameters" to calibration.calibrationParameters,
+                        "accuracy_metrics" to calibration.accuracyMetrics,
+                        "validation_status" to calibration.validationStatus,
+                        "notes" to calibration.calibrationNotes,
+                    )
+                },
+            "data_files" to
                 mapOf(
-                    "sensor_id" to summary.sensorId,
-                    "sensor_type" to summary.sensorType,
-                    "timing" to mapOf(
-                        "start_timestamp_ns" to summary.startTimestampNs,
-                        "start_timestamp_ms" to summary.startTimestampMs,
-                        "relative_start_ms" to summary.relativeStartMs,
-                        "stop_timestamp_ns" to summary.stopTimestampNs,
-                        "stop_timestamp_ms" to summary.stopTimestampMs,
-                        "relative_stop_ms" to summary.relativeStopMs
-                    ),
-                    "performance" to mapOf(
-                        "samples_recorded" to summary.samplesRecorded,
-                        "average_data_rate" to summary.averageDataRate,
-                        "dropped_samples" to summary.droppedSamples,
-                        "sync_markers" to summary.syncMarkers,
-                        "storage_used_mb" to summary.storageUsedMb
-                    ),
-                    "status" to summary.status,
-                    "errors" to summary.errors,
-                    "metadata" to summary.metadata
-                )
-            },
-            "calibration_data" to calibrationInfo.mapValues { (sensorType, calibration) ->
+                    "modality_files" to modalityFiles,
+                    "file_schema" to
+                        mapOf(
+                            "thermal_data_csv" to
+                                mpdc4gsr.core.data
+                                    .FileSchemaManager()
+                                    .generateCsvHeader("thermal", includeUnits = false),
+                            "rgb_data_csv" to
+                                mpdc4gsr.core.data
+                                    .FileSchemaManager()
+                                    .generateCsvHeader("rgb", includeUnits = false),
+                            "gsr_data_csv" to
+                                mpdc4gsr.core.data
+                                    .FileSchemaManager()
+                                    .generateCsvHeader("gsr", includeUnits = false),
+                            "audio_data_csv" to
+                                mpdc4gsr.core.data
+                                    .FileSchemaManager()
+                                    .generateCsvHeader("audio", includeUnits = false),
+                        ),
+                ),
+            "quality_assurance" to
                 mapOf(
-                    "sensor_type" to calibration.sensorType,
-                    "calibration_timestamp" to calibration.calibrationTimestamp,
-                    "parameters" to calibration.calibrationParameters,
-                    "accuracy_metrics" to calibration.accuracyMetrics,
-                    "validation_status" to calibration.validationStatus,
-                    "notes" to calibration.calibrationNotes
-                )
-            },
-            "data_files" to mapOf(
-                "modality_files" to modalityFiles,
-                "file_schema" to mapOf(
-                    "thermal_data_csv" to mpdc4gsr.core.data.FileSchemaManager()
-                        .generateCsvHeader("thermal", includeUnits = false),
-                    "rgb_data_csv" to mpdc4gsr.core.data.FileSchemaManager()
-                        .generateCsvHeader("rgb", includeUnits = false),
-                    "gsr_data_csv" to mpdc4gsr.core.data.FileSchemaManager()
-                        .generateCsvHeader("gsr", includeUnits = false),
-                    "audio_data_csv" to mpdc4gsr.core.data.FileSchemaManager()
-                        .generateCsvHeader("audio", includeUnits = false)
-                )
-            ),
-            "quality_assurance" to mapOf(
-                "quality_metrics" to qualityMetrics,
-                "data_integrity_checks" to dataIntegrityChecks,
-                "stop_results" to stopResults,
-                "validation_summary" to mapOf(
-                    "overall_quality_score" to qualityMetrics.overallQualityScore,
-                    "sync_accuracy_ms" to qualityMetrics.syncAccuracyMs,
-                    "data_completeness_percent" to qualityMetrics.dataCompletenessPercent,
-                    "total_errors" to qualityMetrics.errorCount,
-                    "total_warnings" to qualityMetrics.warningCount
-                )
-            ),
-            "export_information" to mapOf(
-                "export_timestamp" to System.currentTimeMillis(),
-                "export_version" to "1.2.0",
-                "format_specification" to "IRCamera Enhanced Metadata v1.2",
-                "data_completeness" to "Full session metadata with all sensor contributions"
-            )
+                    "quality_metrics" to qualityMetrics,
+                    "data_integrity_checks" to dataIntegrityChecks,
+                    "stop_results" to stopResults,
+                    "validation_summary" to
+                        mapOf(
+                            "overall_quality_score" to qualityMetrics.overallQualityScore,
+                            "sync_accuracy_ms" to qualityMetrics.syncAccuracyMs,
+                            "data_completeness_percent" to qualityMetrics.dataCompletenessPercent,
+                            "total_errors" to qualityMetrics.errorCount,
+                            "total_warnings" to qualityMetrics.warningCount,
+                        ),
+                ),
+            "export_information" to
+                mapOf(
+                    "export_timestamp" to System.currentTimeMillis(),
+                    "export_version" to "1.2.0",
+                    "format_specification" to "IRCamera Enhanced Metadata v1.2",
+                    "data_completeness" to "Full session metadata with all sensor contributions",
+                ),
         )
-    }
 
     fun updateQualityMetrics(
         sensorQualityScores: Map<String, Double>,
         syncAccuracy: Double,
         dataCompleteness: Double,
         errorCount: Int,
-        warningCount: Int
+        warningCount: Int,
     ): SessionMetadata {
         val overallScore = sensorQualityScores.values.average()
-        val updatedQualityMetrics = qualityMetrics.copy(
-            overallQualityScore = overallScore,
-            sensorQualityScores = sensorQualityScores,
-            syncAccuracyMs = syncAccuracy,
-            dataCompletenessPercent = dataCompleteness,
-            errorCount = errorCount,
-            warningCount = warningCount,
-            validationsPassed = sensorQualityScores.values.count { it >= 0.7 },
-            validationsFailed = sensorQualityScores.values.count { it < 0.7 }
-        )
+        val updatedQualityMetrics =
+            qualityMetrics.copy(
+                overallQualityScore = overallScore,
+                sensorQualityScores = sensorQualityScores,
+                syncAccuracyMs = syncAccuracy,
+                dataCompletenessPercent = dataCompleteness,
+                errorCount = errorCount,
+                warningCount = warningCount,
+                validationsPassed = sensorQualityScores.values.count { it >= 0.7 },
+                validationsFailed = sensorQualityScores.values.count { it < 0.7 },
+            )
         return this.copy(qualityMetrics = updatedQualityMetrics)
     }
 
-    fun addCalibrationInfo(sensorType: String, calibrationData: CalibrationData): SessionMetadata {
+    fun addCalibrationInfo(
+        sensorType: String,
+        calibrationData: CalibrationData,
+    ): SessionMetadata {
         val updatedCalibrationInfo = calibrationInfo.toMutableMap()
         updatedCalibrationInfo[sensorType] = calibrationData
         return this.copy(calibrationInfo = updatedCalibrationInfo)
@@ -425,21 +447,22 @@ data class SessionMetadata(
         pcAddress: String?,
         clockOffset: Long,
         latency: Long,
-        quality: Double
+        quality: Double,
     ): SessionMetadata {
-        val updatedNetworkSyncInfo = networkSyncInfo.copy(
-            pcControllerAddress = pcAddress,
-            clockOffsetMs = clockOffset,
-            networkLatencyMs = latency,
-            syncQuality = quality,
-            syncAttempts = networkSyncInfo.syncAttempts + 1,
-            lastSyncTime = System.currentTimeMillis()
-        )
+        val updatedNetworkSyncInfo =
+            networkSyncInfo.copy(
+                pcControllerAddress = pcAddress,
+                clockOffsetMs = clockOffset,
+                networkLatencyMs = latency,
+                syncQuality = quality,
+                syncAttempts = networkSyncInfo.syncAttempts + 1,
+                lastSyncTime = System.currentTimeMillis(),
+            )
         return this.copy(networkSyncInfo = updatedNetworkSyncInfo)
     }
 
-    fun generateSessionSummaryText(): String {
-        return buildString {
+    fun generateSessionSummaryText(): String =
+        buildString {
             appendLine("=== IRCamera Session Summary ===")
             appendLine("Session ID: $sessionId")
             appendLine("Session Name: ${sessionName ?: "Unnamed"}")
@@ -469,18 +492,18 @@ data class SessionMetadata(
                 "  Overall Score: ${
                     String.format(
                         "%.2f",
-                        qualityMetrics.overallQualityScore
+                        qualityMetrics.overallQualityScore,
                     )
-                }"
+                }",
             )
             appendLine("  Sync Accuracy: ${qualityMetrics.syncAccuracyMs}ms")
             appendLine(
                 "  Data Completeness: ${
                     String.format(
                         "%.1f%%",
-                        qualityMetrics.dataCompletenessPercent
+                        qualityMetrics.dataCompletenessPercent,
                     )
-                }"
+                }",
             )
             appendLine("  Errors: ${qualityMetrics.errorCount}")
             appendLine("  Warnings: ${qualityMetrics.warningCount}")
@@ -491,10 +514,9 @@ data class SessionMetadata(
             }
             appendLine("=== End Summary ===")
         }
-    }
 
-    fun createTimingHeader(): String {
-        return buildString {
+    fun createTimingHeader(): String =
+        buildString {
             appendLine("# Multi-Modal Recording Session Timing Information")
             appendLine("# Session ID: $sessionId")
             appendLine("# Session Start: $sessionStartIso (${sessionStartTimestampMs}ms UTC)")
@@ -508,14 +530,13 @@ data class SessionMetadata(
             appendLine("#   - Monotonic: nanoseconds since boot (for interval calculation)")
             appendLine("#")
         }
-    }
 }
 
 data class SessionSyncEvent(
     val eventType: String,
     val timestampMs: Long,
     val monotonicOffsetNs: Long,
-    val metadata: Map<String, String> = emptyMap()
+    val metadata: Map<String, String> = emptyMap(),
 )
 
 data class SensorSummary(
@@ -534,5 +555,5 @@ data class SensorSummary(
     var droppedSamples: Long? = null,
     var syncMarkers: Int? = null,
     var storageUsedMb: Double? = null,
-    val metadata: MutableMap<String, String> = mutableMapOf()
+    val metadata: MutableMap<String, String> = mutableMapOf(),
 )

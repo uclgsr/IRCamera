@@ -28,9 +28,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 
 class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -50,7 +48,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             Text(
                                 "Thermal Gallery",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -58,7 +56,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -67,7 +65,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.Default.Search,
                                     contentDescription = "Search",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                             IconButton(onClick = {
@@ -76,13 +74,14 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     if (selectedView == "grid") Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
                                     contentDescription = "Toggle View",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF16131E)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
                     )
                 },
                 floatingActionButton = {
@@ -90,22 +89,23 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         onClick = {
                             startActivity(Intent(this, ImagePickIRComposeActivity::class.java))
                         },
-                        containerColor = Color(0xFFFF6B35)
+                        containerColor = Color(0xFFFF6B35),
                     ) {
                         Icon(
                             Icons.Default.Add,
                             contentDescription = "New Capture",
-                            tint = Color.White
+                            tint = Color.White,
                         )
                     }
                 },
-                containerColor = Color(0xFF16131E)
+                containerColor = Color(0xFF16131E),
             ) { paddingValues ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color(0xFF16131E))
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color(0xFF16131E)),
                 ) {
                     // Filter and sort controls
                     GalleryControls(
@@ -113,7 +113,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         filterBy = filterBy,
                         onSortChange = { sortBy = it },
                         onFilterChange = { filterBy = it },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                     // Gallery grid/list
                     if (selectedView == "grid") {
@@ -121,34 +121,36 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             items = galleryItems,
                             modifier = Modifier.fillMaxSize(),
                             onItemClick = { item ->
-                                val intent = Intent(
-                                    this@IRGalleryHomeComposeActivity,
-                                    IRGalleryDetail01ComposeActivity::class.java
-                                )
+                                val intent =
+                                    Intent(
+                                        this@IRGalleryHomeComposeActivity,
+                                        IRGalleryDetail01ComposeActivity::class.java,
+                                    )
                                 intent.putExtra("item_id", item.id)
                                 startActivity(intent)
                             },
                             onItemMoreClick = { item ->
                                 selectedItemForOptions = item
                                 showMoreOptionsDialog = true
-                            }
+                            },
                         )
                     } else {
                         GalleryList(
                             items = galleryItems,
                             modifier = Modifier.fillMaxSize(),
                             onItemClick = { item ->
-                                val intent = Intent(
-                                    this@IRGalleryHomeComposeActivity,
-                                    IRGalleryDetail01ComposeActivity::class.java
-                                )
+                                val intent =
+                                    Intent(
+                                        this@IRGalleryHomeComposeActivity,
+                                        IRGalleryDetail01ComposeActivity::class.java,
+                                    )
                                 intent.putExtra("item_id", item.id)
                                 startActivity(intent)
                             },
                             onItemMoreClick = { item ->
                                 selectedItemForOptions = item
                                 showMoreOptionsDialog = true
-                            }
+                            },
                         )
                     }
                 }
@@ -160,7 +162,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     onSearch = { query ->
                         // TODO: Apply search filter
                         showSearchDialog = false
-                    }
+                    },
                 )
             }
             // More Options Dialog
@@ -182,7 +184,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     onExport = {
                         // TODO: Export item
                         showMoreOptionsDialog = false
-                    }
+                    },
                 )
             }
         }
@@ -195,32 +197,34 @@ private fun GalleryControls(
     filterBy: String,
     onSortChange: (String) -> Unit,
     onFilterChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             // Sort options
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     "Sort:",
                     color = Color.White,
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 val sortOptions = listOf("date", "name", "size", "temperature")
                 sortOptions.forEach { option ->
@@ -228,12 +232,13 @@ private fun GalleryControls(
                         onClick = { onSortChange(option) },
                         label = { Text(option.replaceFirstChar { it.uppercase() }, fontSize = 12.sp) },
                         selected = sortBy == option,
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Color(0xFFFF6B35),
-                            selectedLabelColor = Color.White,
-                            containerColor = Color(0xFF16131E),
-                            labelColor = Color(0xFF7D8590)
-                        )
+                        colors =
+                            FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Color(0xFFFF6B35),
+                                selectedLabelColor = Color.White,
+                                containerColor = Color(0xFF16131E),
+                                labelColor = Color(0xFF7D8590),
+                            ),
                     )
                 }
             }
@@ -241,13 +246,13 @@ private fun GalleryControls(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     "Filter:",
                     color = Color.White,
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 val filterOptions = listOf("all", "images", "videos", "recent")
                 filterOptions.forEach { option ->
@@ -255,12 +260,13 @@ private fun GalleryControls(
                         onClick = { onFilterChange(option) },
                         label = { Text(option.replaceFirstChar { it.uppercase() }, fontSize = 12.sp) },
                         selected = filterBy == option,
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Color(0xFFFF6B35),
-                            selectedLabelColor = Color.White,
-                            containerColor = Color(0xFF16131E),
-                            labelColor = Color(0xFF7D8590)
-                        )
+                        colors =
+                            FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Color(0xFFFF6B35),
+                                selectedLabelColor = Color.White,
+                                containerColor = Color(0xFF16131E),
+                                labelColor = Color(0xFF7D8590),
+                            ),
                     )
                 }
             }
@@ -273,19 +279,19 @@ private fun GalleryGrid(
     items: List<GalleryItem>,
     modifier: Modifier = Modifier,
     onItemClick: (GalleryItem) -> Unit = {},
-    onItemMoreClick: (GalleryItem) -> Unit = {}
+    onItemMoreClick: (GalleryItem) -> Unit = {},
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier,
         contentPadding = PaddingValues(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(items) { item ->
             GalleryGridItem(
                 item = item,
-                onClick = { onItemClick(item) }
+                onClick = { onItemClick(item) },
             )
         }
     }
@@ -294,77 +300,80 @@ private fun GalleryGrid(
 @Composable
 private fun GalleryGridItem(
     item: GalleryItem,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
         onClick = onClick,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             // Thumbnail
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .background(
-                        Color(0xFF16131E),
-                        RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
-                    ),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(120.dp)
+                        .background(
+                            Color(0xFF16131E),
+                            RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+                        ),
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     if (item.isVideo) Icons.Default.PlayCircle else Icons.Default.Image,
                     contentDescription = if (item.isVideo) "Video" else "Image",
                     tint = Color(0xFFFF6B35),
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(32.dp),
                 )
                 // Temperature overlay
                 Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(8.dp)
-                        .background(
-                            Color.Black.copy(alpha = 0.7f),
-                            RoundedCornerShape(4.dp)
-                        )
-                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(8.dp)
+                            .background(
+                                Color.Black.copy(alpha = 0.7f),
+                                RoundedCornerShape(4.dp),
+                            ).padding(horizontal = 6.dp, vertical = 2.dp),
                 ) {
                     Text(
                         "${item.maxTemp}°C",
                         color = Color.White,
                         fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 }
             }
             // Item info
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Text(
                     item.name,
                     color = Color.White,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
-                    maxLines = 1
+                    maxLines = 1,
                 )
                 Text(
                     item.date,
                     color = Color(0xFF7D8590),
-                    fontSize = 10.sp
+                    fontSize = 10.sp,
                 )
                 Text(
                     item.size,
                     color = Color(0xFF7D8590),
-                    fontSize = 10.sp
+                    fontSize = 10.sp,
                 )
             }
         }
@@ -376,18 +385,18 @@ private fun GalleryList(
     items: List<GalleryItem>,
     modifier: Modifier = Modifier,
     onItemClick: (GalleryItem) -> Unit = {},
-    onItemMoreClick: (GalleryItem) -> Unit = {}
+    onItemMoreClick: (GalleryItem) -> Unit = {},
 ) {
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(items) { item ->
             GalleryListItem(
                 item = item,
                 onClick = { onItemClick(item) },
-                onMoreClick = { onItemMoreClick(item) }
+                onMoreClick = { onItemMoreClick(item) },
             )
         }
     }
@@ -397,79 +406,82 @@ private fun GalleryList(
 private fun GalleryListItem(
     item: GalleryItem,
     onClick: () -> Unit,
-    onMoreClick: () -> Unit = {}
+    onMoreClick: () -> Unit = {},
 ) {
     Card(
         onClick = onClick,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             // Thumbnail
             Box(
-                modifier = Modifier
-                    .size(60.dp)
-                    .background(
-                        Color(0xFF16131E),
-                        RoundedCornerShape(8.dp)
-                    ),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .size(60.dp)
+                        .background(
+                            Color(0xFF16131E),
+                            RoundedCornerShape(8.dp),
+                        ),
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     if (item.isVideo) Icons.Default.PlayCircle else Icons.Default.Image,
                     contentDescription = if (item.isVideo) "Video" else "Image",
                     tint = Color(0xFFFF6B35),
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
             }
             // Item details
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
+                verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
                 Text(
                     item.name,
                     color = Color.White,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
-                    maxLines = 1
+                    maxLines = 1,
                 )
                 Text(
                     item.date,
                     color = Color(0xFF7D8590),
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
                 )
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(
                         item.size,
                         color = Color(0xFF7D8590),
-                        fontSize = 11.sp
+                        fontSize = 11.sp,
                     )
                     Text(
                         "Max: ${item.maxTemp}°C",
                         color = Color(0xFFFF6B35),
-                        fontSize = 11.sp
+                        fontSize = 11.sp,
                     )
                 }
             }
             // Actions
             IconButton(
-                onClick = onMoreClick
+                onClick = onMoreClick,
             ) {
                 Icon(
                     Icons.Default.MoreVert,
                     contentDescription = "More",
-                    tint = Color(0xFF7D8590)
+                    tint = Color(0xFF7D8590),
                 )
             }
         }
@@ -483,13 +495,13 @@ data class GalleryItem(
     val date: String,
     val size: String,
     val maxTemp: Float,
-    val isVideo: Boolean
+    val isVideo: Boolean,
 )
 
 @Composable
 private fun GallerySearchDialog(
     onDismiss: () -> Unit,
-    onSearch: (String) -> Unit
+    onSearch: (String) -> Unit,
 ) {
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
     AlertDialog(
@@ -503,18 +515,19 @@ private fun GallerySearchDialog(
                     label = { Text("Search by name or date") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedBorderColor = Color(0xFFFF6B35),
-                        unfocusedBorderColor = Color(0xFF7D8590)
-                    )
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White,
+                            focusedBorderColor = Color(0xFFFF6B35),
+                            unfocusedBorderColor = Color(0xFF7D8590),
+                        ),
                 )
             }
         },
         confirmButton = {
             TextButton(
-                onClick = { onSearch(searchText.text) }
+                onClick = { onSearch(searchText.text) },
             ) {
                 Text("Search", color = Color(0xFFFF6B35))
             }
@@ -524,7 +537,7 @@ private fun GallerySearchDialog(
                 Text("Cancel", color = Color(0xFF7D8590))
             }
         },
-        containerColor = Color(0xFF21262D)
+        containerColor = Color(0xFF21262D),
     )
 }
 
@@ -534,7 +547,7 @@ private fun GalleryItemOptionsDialog(
     onDismiss: () -> Unit,
     onShare: () -> Unit,
     onDelete: () -> Unit,
-    onExport: () -> Unit
+    onExport: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -544,11 +557,11 @@ private fun GalleryItemOptionsDialog(
                 Text("${item.name}", color = Color(0xFF7D8590), fontSize = 14.sp)
                 TextButton(
                     onClick = onShare,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(Icons.Default.Share, "Share", tint = Color.White)
                         Text("Share", color = Color.White)
@@ -556,11 +569,11 @@ private fun GalleryItemOptionsDialog(
                 }
                 TextButton(
                     onClick = onExport,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(Icons.Default.Download, "Export", tint = Color.White)
                         Text("Export", color = Color.White)
@@ -568,11 +581,11 @@ private fun GalleryItemOptionsDialog(
                 }
                 TextButton(
                     onClick = onDelete,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(Icons.Default.Delete, "Delete", tint = Color(0xFFFF6B35))
                         Text("Delete", color = Color(0xFFFF6B35))
@@ -585,12 +598,12 @@ private fun GalleryItemOptionsDialog(
                 Text("Close", color = Color(0xFF7D8590))
             }
         },
-        containerColor = Color(0xFF21262D)
+        containerColor = Color(0xFF21262D),
     )
 }
 
-private fun getGalleryItems(): List<GalleryItem> {
-    return listOf(
+private fun getGalleryItems(): List<GalleryItem> =
+    listOf(
         GalleryItem("1", "thermal_001.jpg", "2024-01-15 14:30", "2.1 MB", 45.2f, false),
         GalleryItem("2", "thermal_002.mp4", "2024-01-15 14:25", "15.3 MB", 38.7f, true),
         GalleryItem("3", "thermal_003.jpg", "2024-01-15 14:20", "1.8 MB", 52.1f, false),
@@ -598,6 +611,5 @@ private fun getGalleryItems(): List<GalleryItem> {
         GalleryItem("5", "thermal_005.mp4", "2024-01-15 14:10", "22.1 MB", 47.8f, true),
         GalleryItem("6", "thermal_006.jpg", "2024-01-15 14:05", "1.9 MB", 35.2f, false),
         GalleryItem("7", "thermal_007.jpg", "2024-01-15 14:00", "2.0 MB", 49.3f, false),
-        GalleryItem("8", "thermal_008.mp4", "2024-01-15 13:55", "18.7 MB", 43.6f, true)
+        GalleryItem("8", "thermal_008.mp4", "2024-01-15 13:55", "18.7 MB", 43.6f, true),
     )
-}

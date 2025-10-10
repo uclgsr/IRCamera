@@ -1,7 +1,6 @@
 package com.mpdc4gsr.libunified.ui.renderer;
 
 import android.graphics.Canvas;
-import android.util.Log;
 
 import com.mpdc4gsr.libunified.ui.animation.ChartAnimator;
 import com.mpdc4gsr.libunified.ui.charts.Chart;
@@ -82,7 +81,6 @@ public class CombinedChartRenderer extends DataRenderer {
 
     @Override
     public void drawValue(Canvas c, String valueText, float x, float y, int color) {
-        Log.e("MPAndroidChart", "Erroneous call to drawValue() in CombinedChartRenderer!");
     }
 
     @Override

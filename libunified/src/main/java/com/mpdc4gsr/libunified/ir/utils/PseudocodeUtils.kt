@@ -3,8 +3,8 @@ package com.mpdc4gsr.libunified.ir.utils
 import com.energy.iruvc.utils.CommonParams
 
 object PseudocodeUtils {
-    fun changeDualPseudocodeModelByOld(oldPseudocodeMode: Int): CommonParams.PseudoColorUsbDualType {
-        return when (oldPseudocodeMode) {
+    fun changeDualPseudocodeModelByOld(oldPseudocodeMode: Int): CommonParams.PseudoColorUsbDualType =
+        when (oldPseudocodeMode) {
             1 -> {
                 CommonParams.PseudoColorUsbDualType.WHITE_HOT_MODE
             }
@@ -49,10 +49,9 @@ object PseudocodeUtils {
                 CommonParams.PseudoColorUsbDualType.IRONBOW_MODE
             }
         }
-    }
 
-    fun changePseudocodeModeByOld(oldPseudocodeMode: Int): CommonParams.PseudoColorType {
-        return when (oldPseudocodeMode) {
+    fun changePseudocodeModeByOld(oldPseudocodeMode: Int): CommonParams.PseudoColorType =
+        when (oldPseudocodeMode) {
             1 -> {
                 CommonParams.PseudoColorType.PSEUDO_1
             }
@@ -97,10 +96,9 @@ object PseudocodeUtils {
                 CommonParams.PseudoColorType.PSEUDO_1
             }
         }
-    }
 
-    fun changePseudocodeModeByNew(pseudoColorType: CommonParams.PseudoColorType): Int {
-        return when (pseudoColorType) {
+    fun changePseudocodeModeByNew(pseudoColorType: CommonParams.PseudoColorType): Int =
+        when (pseudoColorType) {
             CommonParams.PseudoColorType.PSEUDO_1 -> {
                 1
             }
@@ -145,5 +143,4 @@ object PseudocodeUtils {
                 1
             }
         }
-    }
 } // The file should end here.

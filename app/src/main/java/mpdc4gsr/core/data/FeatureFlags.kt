@@ -2,7 +2,6 @@ package mpdc4gsr.core.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 
 object FeatureFlags {
     private const val TAG = "FeatureFlags"
@@ -18,6 +17,7 @@ object FeatureFlags {
     private const val DEFAULT_FILE_UPLOAD_PROTOCOL = "tcp"
     private const val DEFAULT_TIME_SYNC_MODE = "ntp"
     private var prefs: SharedPreferences? = null
+
     fun initialize(context: Context) {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         logCurrentConfiguration()
@@ -30,11 +30,13 @@ object FeatureFlags {
     val MDNS_ENABLE: Boolean
         get() = prefs?.getBoolean(KEY_MDNS_ENABLE, DEFAULT_MDNS_ENABLE) ?: DEFAULT_MDNS_ENABLE
     val FILE_UPLOAD_PROTOCOL: String
-        get() = prefs?.getString(KEY_FILE_UPLOAD_PROTOCOL, DEFAULT_FILE_UPLOAD_PROTOCOL)
-            ?: DEFAULT_FILE_UPLOAD_PROTOCOL
+        get() =
+            prefs?.getString(KEY_FILE_UPLOAD_PROTOCOL, DEFAULT_FILE_UPLOAD_PROTOCOL)
+                ?: DEFAULT_FILE_UPLOAD_PROTOCOL
     val TIME_SYNC_MODE: String
-        get() = prefs?.getString(KEY_TIME_SYNC_MODE, DEFAULT_TIME_SYNC_MODE)
-            ?: DEFAULT_TIME_SYNC_MODE
+        get() =
+            prefs?.getString(KEY_TIME_SYNC_MODE, DEFAULT_TIME_SYNC_MODE)
+                ?: DEFAULT_TIME_SYNC_MODE
 
     fun setCommUseWSS(enabled: Boolean) {
         prefs?.edit()?.putBoolean(KEY_COMM_USE_WSS, enabled)?.apply()
@@ -56,15 +58,14 @@ object FeatureFlags {
         prefs?.edit()?.putString(KEY_TIME_SYNC_MODE, mode)?.apply()
     }
 
-    fun getAllFlags(): Map<String, Any> {
-        return mapOf(
+    fun getAllFlags(): Map<String, Any> =
+        mapOf(
             KEY_COMM_USE_WSS to COMM_USE_WSS,
             KEY_TLS_ENABLE to TLS_ENABLE,
             KEY_MDNS_ENABLE to MDNS_ENABLE,
             KEY_FILE_UPLOAD_PROTOCOL to FILE_UPLOAD_PROTOCOL,
             KEY_TIME_SYNC_MODE to TIME_SYNC_MODE,
         )
-    }
 
     fun resetToDefaults() {
         prefs?.edit()?.clear()?.apply()

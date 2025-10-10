@@ -27,40 +27,45 @@ fun ObserveDialog(
     cancelText: String = "Cancel",
     onConfirm: () -> Unit,
     onCancel: () -> Unit = {},
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.75f else 0.5f
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = false
-        )
+        properties =
+            DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = false,
+            ),
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth(widthFraction)
-                .wrapContentHeight(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(widthFraction)
+                    .wrapContentHeight(),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = Color.White,
+                ),
         ) {
             Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier =
+                    Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 if (iconRes != null) {
                     Image(
                         painter = painterResource(id = iconRes),
                         contentDescription = title,
-                        modifier = Modifier
-                            .size(64.dp)
-                            .padding(bottom = 16.dp)
+                        modifier =
+                            Modifier
+                                .size(64.dp)
+                                .padding(bottom = 16.dp),
                     )
                 }
                 Text(
@@ -68,19 +73,19 @@ fun ObserveDialog(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    modifier = Modifier.padding(bottom = 12.dp),
                 )
                 Text(
                     text = message,
                     fontSize = 14.sp,
                     color = Color.DarkGray,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     OutlinedButton(
                         onClick = {
@@ -88,7 +93,7 @@ fun ObserveDialog(
                             onDismiss()
                         },
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(text = cancelText, fontSize = 16.sp)
                     }
@@ -98,7 +103,7 @@ fun ObserveDialog(
                             onDismiss()
                         },
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(text = confirmText, fontSize = 16.sp)
                     }
@@ -115,48 +120,58 @@ fun ShutterDialog(
     isCalibrating: Boolean = false,
     onConfirm: () -> Unit,
     onCancel: () -> Unit = {},
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.72f else 0.5f
     @Suppress("UNCHECKED_CAST")
     Dialog(
-        onDismissRequest = (if (!isCalibrating) onDismiss else {
-        }) as () -> Unit,
-        properties = DialogProperties(
-            dismissOnBackPress = !isCalibrating,
-            dismissOnClickOutside = false
-        )
+        onDismissRequest =
+            (
+                if (!isCalibrating) {
+                    onDismiss
+                } else {
+                }
+            ) as () -> Unit,
+        properties =
+            DialogProperties(
+                dismissOnBackPress = !isCalibrating,
+                dismissOnClickOutside = false,
+            ),
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth(widthFraction)
-                .wrapContentHeight(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(widthFraction)
+                    .wrapContentHeight(),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = Color.White,
+                ),
         ) {
             Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier =
+                    Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = title,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
                 )
                 if (isCalibrating) {
                     CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .padding(vertical = 16.dp),
-                        color = MaterialTheme.colorScheme.primary
+                        modifier =
+                            Modifier
+                                .size(48.dp)
+                                .padding(vertical = 16.dp),
+                        color = MaterialTheme.colorScheme.primary,
                     )
                 }
                 Text(
@@ -164,13 +179,13 @@ fun ShutterDialog(
                     fontSize = 14.sp,
                     color = Color.DarkGray,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 if (!isCalibrating) {
                     Spacer(modifier = Modifier.height(20.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         OutlinedButton(
                             onClick = {
@@ -178,7 +193,7 @@ fun ShutterDialog(
                                 onDismiss()
                             },
                             modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(8.dp)
+                            shape = RoundedCornerShape(8.dp),
                         ) {
                             Text(text = "Cancel", fontSize = 16.sp)
                         }
@@ -187,7 +202,7 @@ fun ShutterDialog(
                                 onConfirm()
                             },
                             modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(8.dp)
+                            shape = RoundedCornerShape(8.dp),
                         ) {
                             Text(text = "Start", fontSize = 16.sp)
                         }
@@ -206,7 +221,7 @@ fun OtgDialog(
     showCheckbox: Boolean = true,
     checkboxLabel: String = "Don't show again",
     onConfirm: (dontShowAgain: Boolean) -> Unit,
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
     var isChecked by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
@@ -214,33 +229,38 @@ fun OtgDialog(
     val widthFraction = if (isPortrait) 0.75f else 0.5f
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = false
-        )
+        properties =
+            DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = false,
+            ),
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth(widthFraction)
-                .wrapContentHeight(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(widthFraction)
+                    .wrapContentHeight(),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = Color.White,
+                ),
         ) {
             Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier =
+                    Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 if (iconRes != null) {
                     Image(
                         painter = painterResource(id = iconRes),
                         contentDescription = title,
-                        modifier = Modifier
-                            .size(64.dp)
-                            .padding(bottom = 16.dp)
+                        modifier =
+                            Modifier
+                                .size(64.dp)
+                                .padding(bottom = 16.dp),
                     )
                 }
                 Text(
@@ -248,30 +268,30 @@ fun OtgDialog(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    modifier = Modifier.padding(bottom = 12.dp),
                 )
                 Text(
                     text = message,
                     fontSize = 14.sp,
                     color = Color.DarkGray,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 if (showCheckbox) {
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.Center,
                     ) {
                         Checkbox(
                             checked = isChecked,
-                            onCheckedChange = { isChecked = it }
+                            onCheckedChange = { isChecked = it },
                         )
                         Text(
                             text = checkboxLabel,
                             fontSize = 14.sp,
-                            color = Color.Black
+                            color = Color.Black,
                         )
                     }
                 }
@@ -282,7 +302,7 @@ fun OtgDialog(
                         onDismiss()
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
                 ) {
                     Text(text = "OK", fontSize = 16.sp)
                 }
@@ -299,7 +319,7 @@ fun WaterMarkDialog(
     onWatermarkChange: (Boolean) -> Unit,
     onDateTimeChange: (Boolean) -> Unit,
     onConfirm: () -> Unit,
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
     var watermarkEnabled by remember { mutableStateOf(enableWatermark) }
     var dateTimeEnabled by remember { mutableStateOf(enableDateTime) }
@@ -308,82 +328,88 @@ fun WaterMarkDialog(
     val widthFraction = if (isPortrait) 0.75f else 0.5f
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = false
-        )
+        properties =
+            DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = false,
+            ),
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth(widthFraction)
-                .wrapContentHeight(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(widthFraction)
+                    .wrapContentHeight(),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = Color.White,
+                ),
         ) {
             Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier =
+                    Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = title,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
-                    modifier = Modifier.padding(bottom = 20.dp)
+                    modifier = Modifier.padding(bottom = 20.dp),
                 )
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
                         text = "Enable Watermark",
                         fontSize = 16.sp,
-                        color = Color.Black
+                        color = Color.Black,
                     )
                     Switch(
                         checked = watermarkEnabled,
                         onCheckedChange = {
                             watermarkEnabled = it
                             onWatermarkChange(it)
-                        }
+                        },
                     )
                 }
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
                         text = "Show Date & Time",
                         fontSize = 16.sp,
-                        color = Color.Black
+                        color = Color.Black,
                     )
                     Switch(
                         checked = dateTimeEnabled,
                         onCheckedChange = {
                             dateTimeEnabled = it
                             onDateTimeChange(it)
-                        }
+                        },
                     )
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     OutlinedButton(
                         onClick = onDismiss,
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(text = "Cancel", fontSize = 16.sp)
                     }
@@ -393,7 +419,7 @@ fun WaterMarkDialog(
                             onDismiss()
                         },
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(text = "Save", fontSize = 16.sp)
                     }
@@ -409,7 +435,7 @@ fun ChangeDeviceDialog(
     currentDevice: String,
     availableDevices: List<String>,
     onDeviceSelected: (String) -> Unit,
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
     var selectedDevice by remember { mutableStateOf(currentDevice) }
     val configuration = LocalConfiguration.current
@@ -417,61 +443,66 @@ fun ChangeDeviceDialog(
     val widthFraction = if (isPortrait) 0.75f else 0.5f
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = false
-        )
+        properties =
+            DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = false,
+            ),
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth(widthFraction)
-                .wrapContentHeight(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(widthFraction)
+                    .wrapContentHeight(),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = Color.White,
+                ),
         ) {
             Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier =
+                    Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = title,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
-                    modifier = Modifier.padding(bottom = 20.dp)
+                    modifier = Modifier.padding(bottom = 20.dp),
                 )
                 availableDevices.forEach { device ->
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         RadioButton(
                             selected = selectedDevice == device,
-                            onClick = { selectedDevice = device }
+                            onClick = { selectedDevice = device },
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = device,
                             fontSize = 16.sp,
-                            color = Color.Black
+                            color = Color.Black,
                         )
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     OutlinedButton(
                         onClick = onDismiss,
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(text = "Cancel", fontSize = 16.sp)
                     }
@@ -481,7 +512,7 @@ fun ChangeDeviceDialog(
                             onDismiss()
                         },
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(text = "Confirm", fontSize = 16.sp)
                     }

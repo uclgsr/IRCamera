@@ -25,9 +25,7 @@ import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
 class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
-    override fun createViewModel(): ThermalFragmentViewModel {
-        return viewModels<ThermalFragmentViewModel>().value
-    }
+    override fun createViewModel(): ThermalFragmentViewModel = viewModels<ThermalFragmentViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -39,33 +37,35 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
             val connectionStatus by viewModel.connectionStatus.collectAsStateWithLifecycle()
             val processingMode by viewModel.processingMode.collectAsStateWithLifecycle()
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background),
             ) {
                 // Status bar with connection and recording status
                 StatusBar(
                     connectionStatus = connectionStatus,
                     isRecording = isRecording,
-                    processingMode = processingMode
+                    processingMode = processingMode,
                 )
                 // Main thermal camera view
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .padding(8.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(8.dp),
                 ) {
                     ThermalCameraView(
                         modifier = Modifier.fillMaxSize(),
                         onSurfaceReady = { surfaceView ->
                             viewModel.initializeThermalCamera(surfaceView)
-                        }
+                        },
                     )
                     // Temperature overlays
                     TemperatureOverlays(
                         temperatureData = temperatureData,
-                        modifier = Modifier.align(Alignment.TopEnd)
+                        modifier = Modifier.align(Alignment.TopEnd),
                     )
                 }
                 // Control panel
@@ -74,9 +74,10 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
                     onCapturePhoto = { viewModel.capturePhoto() },
                     onToggleRecording = { viewModel.toggleRecording() },
                     onOpenSettings = { viewModel.openSettings() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
                 )
             }
         }
@@ -86,41 +87,46 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
     private fun StatusBar(
         connectionStatus: String,
         isRecording: Boolean,
-        processingMode: String
+        processingMode: String,
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = when {
-                    isRecording -> MaterialTheme.colorScheme.errorContainer
-                    connectionStatus == "Connected" -> MaterialTheme.colorScheme.primaryContainer
-                    else -> MaterialTheme.colorScheme.surfaceVariant
-                }
-            )
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+            colors =
+                CardDefaults.cardColors(
+                    containerColor =
+                        when {
+                            isRecording -> MaterialTheme.colorScheme.errorContainer
+                            connectionStatus == "Connected" -> MaterialTheme.colorScheme.primaryContainer
+                            else -> MaterialTheme.colorScheme.surfaceVariant
+                        },
+                ),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column {
                     Text(
                         text = "TC001 Thermal Camera",
                         style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Text(
                         text = connectionStatus,
                         style = MaterialTheme.typography.bodySmall,
-                        color = when (connectionStatus) {
-                            "Connected" -> Color.Green
-                            "Connecting" -> Color(0xFFFFA500)
-                            else -> Color.Red
-                        }
+                        color =
+                            when (connectionStatus) {
+                                "Connected" -> Color.Green
+                                "Connecting" -> Color(0xFFFFA500)
+                                else -> Color.Red
+                            },
                     )
                 }
                 Column(horizontalAlignment = Alignment.End) {
@@ -129,13 +135,13 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
                             text = "RECORDING",
                             style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.error,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                     Text(
                         text = "Mode: $processingMode",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -145,7 +151,7 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
     @Composable
     private fun ThermalCameraView(
         modifier: Modifier = Modifier,
-        onSurfaceReady: (IrSurfaceView) -> Unit
+        onSurfaceReady: (IrSurfaceView) -> Unit,
     ) {
         AndroidView(
             factory = { context ->
@@ -153,46 +159,47 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
                     onSurfaceReady(this)
                 }
             },
-            modifier = modifier
-                .clip(RoundedCornerShape(12.dp))
-                .background(Color.Black)
+            modifier =
+                modifier
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.Black),
         )
     }
 
     @Composable
     private fun TemperatureOverlays(
         temperatureData: ThermalFragmentViewModel.TemperatureData?,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         Column(
             modifier = modifier.padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             temperatureData?.let { data ->
                 // Center temperature
                 TemperatureCard(
                     label = "Center",
                     temperature = data.centerTemp,
-                    isMain = true
+                    isMain = true,
                 )
                 // Max temperature
                 TemperatureCard(
                     label = "Max",
                     temperature = data.maxTemp,
-                    color = Color.Red
+                    color = Color.Red,
                 )
                 // Min temperature
                 TemperatureCard(
                     label = "Min",
                     temperature = data.minTemp,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
             } ?: run {
                 // Placeholder when no data
                 TemperatureCard(
                     label = "Center",
                     temperature = "--°C",
-                    isMain = true
+                    isMain = true,
                 )
             }
         }
@@ -203,37 +210,44 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
         label: String,
         temperature: String,
         isMain: Boolean = false,
-        color: Color = Color.White
+        color: Color = Color.White,
     ) {
         Card(
-            colors = CardDefaults.cardColors(
-                containerColor = if (isMain)
-                    MaterialTheme.colorScheme.primaryContainer
-                else
-                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f)
-            ),
-            shape = RoundedCornerShape(8.dp)
+            colors =
+                CardDefaults.cardColors(
+                    containerColor =
+                        if (isMain) {
+                            MaterialTheme.colorScheme.primaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f)
+                        },
+                ),
+            shape = RoundedCornerShape(8.dp),
         ) {
             Column(
                 modifier = Modifier.padding(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = label,
-                    style = if (isMain)
-                        MaterialTheme.typography.labelMedium
-                    else
-                        MaterialTheme.typography.labelSmall,
-                    color = color
+                    style =
+                        if (isMain) {
+                            MaterialTheme.typography.labelMedium
+                        } else {
+                            MaterialTheme.typography.labelSmall
+                        },
+                    color = color,
                 )
                 Text(
                     text = temperature,
-                    style = if (isMain)
-                        MaterialTheme.typography.titleMedium
-                    else
-                        MaterialTheme.typography.bodyMedium,
+                    style =
+                        if (isMain) {
+                            MaterialTheme.typography.titleMedium
+                        } else {
+                            MaterialTheme.typography.bodyMedium
+                        },
                     fontWeight = FontWeight.Bold,
-                    color = color
+                    color = color,
                 )
             }
         }
@@ -245,26 +259,29 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
         onCapturePhoto: () -> Unit,
         onToggleRecording: () -> Unit,
         onOpenSettings: () -> Unit,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         Card(
             modifier = modifier,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 // Capture photo button
                 Button(
                     onClick = onCapturePhoto,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                        ),
                 ) {
                     Icon(Icons.Default.Camera, contentDescription = "Capture")
                     Spacer(modifier = Modifier.width(8.dp))
@@ -273,12 +290,15 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
                 // Recording toggle button
                 Button(
                     onClick = onToggleRecording,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isRecording)
-                            MaterialTheme.colorScheme.error
-                        else
-                            MaterialTheme.colorScheme.primary
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor =
+                                if (isRecording) {
+                                    MaterialTheme.colorScheme.error
+                                } else {
+                                    MaterialTheme.colorScheme.primary
+                                },
+                        ),
                 ) {
                     Icon(Icons.Default.Videocam, contentDescription = "Record")
                     Spacer(modifier = Modifier.width(8.dp))
@@ -286,7 +306,7 @@ class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
                 }
                 // Settings button
                 OutlinedButton(
-                    onClick = onOpenSettings
+                    onClick = onOpenSettings,
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = "Settings")
                     Spacer(modifier = Modifier.width(8.dp))

@@ -5,11 +5,9 @@ import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 import com.mpdc4gsr.libunified.ui.charts.LineChart
 import com.mpdc4gsr.libunified.ui.components.Legend
@@ -65,10 +63,11 @@ class ChartLogView : LineChart {
     private val axisChartColors by lazy {
         ContextCompat.getColor(
             context,
-            LibcoreR.color.chart_axis
+            LibcoreR.color.chart_axis,
         )
     }
     private val axisLine by lazy { ContextCompat.getColor(context, LibcoreR.color.circle_white) }
+
     private fun initChart() {
         synchronized(this) {
             this.setTouchEnabled(true)
@@ -130,24 +129,19 @@ class ChartLogView : LineChart {
         synchronized(this) {
             val lifecycleOwner = findViewTreeLifecycleOwner()
             if (lifecycleOwner == null) {
-                Log.e("ChartLogView", "No lifecycle owner found, cannot initialize chart")
                 return
             }
             lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 try {
                     clearEntity(data.size == 0)
                 } catch (e: Exception) {
-                    Log.e("chart", "clearEntity error: ${e.message}")
                 }
-                Log.w("chart", "clearEntity finish")
                 if (data.size == 0) {
                     return@launch
                 }
-                Log.w("chart", "update chart start")
                 val lineData: LineData = this@ChartLogView.data
                 val startTime = data[0].createTime / 1000 * 1000
                 xAxis.valueFormatter = IRMyValueFormatter(startTime = startTime, type = type)
-                XLog.w("chart init startTime:$startTime")
                 when (data[0].type) {
                     "point" -> {
                         var set = lineData.getDataSetByIndex(0)
@@ -155,19 +149,18 @@ class ChartLogView : LineChart {
                             set = createSet(0, "point temp")
                             lineData.addDataSet(set)
                         }
-                        Log.w("123", "")
                         data.forEach {
                             val x =
-                                ChartTools.getChartX(
-                                    x = it.createTime,
-                                    startTime = startTime,
-                                    type = type,
-                                ).toFloat()
+                                ChartTools
+                                    .getChartX(
+                                        x = it.createTime,
+                                        startTime = startTime,
+                                        type = type,
+                                    ).toFloat()
                             val entity = Entry(x, it.thermal)
                             entity.data = it
                             set.addEntry(entity)
                         }
-                        XLog.w("DataSet:${set.entryCount}")
                     }
 
                     "line" -> {
@@ -179,14 +172,14 @@ class ChartLogView : LineChart {
                         if (minDataSet == null) {
                             minDataSet = createSet(1, "line min temp")
                         }
-                        Log.w("123", "")
                         data.forEach {
                             val x =
-                                ChartTools.getChartX(
-                                    x = it.createTime,
-                                    startTime = startTime,
-                                    type = type,
-                                ).toFloat()
+                                ChartTools
+                                    .getChartX(
+                                        x = it.createTime,
+                                        startTime = startTime,
+                                        type = type,
+                                    ).toFloat()
                             val entity = Entry(x, it.thermalMax)
                             entity.data = it
                             maxDataSet.addEntry(entity)
@@ -196,7 +189,6 @@ class ChartLogView : LineChart {
                         }
                         lineData.addDataSet(maxDataSet)
                         lineData.addDataSet(minDataSet)
-                        XLog.w("DataSet:${maxDataSet.entryCount}")
                     }
 
                     else -> {
@@ -210,14 +202,14 @@ class ChartLogView : LineChart {
                             centerTempDataSet = createSet(1, "fence min temp")
                             lineData.addDataSet(centerTempDataSet)
                         }
-                        Log.w("123", "")
                         data.forEach {
                             val x =
-                                ChartTools.getChartX(
-                                    x = it.createTime,
-                                    startTime = startTime,
-                                    type = type,
-                                ).toFloat()
+                                ChartTools
+                                    .getChartX(
+                                        x = it.createTime,
+                                        startTime = startTime,
+                                        type = type,
+                                    ).toFloat()
                             val entityMax = Entry(x, it.thermalMax)
                             entityMax.data = it
                             maxTempDataSet.addEntry(entityMax)
@@ -225,7 +217,6 @@ class ChartLogView : LineChart {
                             entity.data = it
                             centerTempDataSet.addEntry(entity)
                         }
-                        XLog.w("DataSet:${centerTempDataSet.entryCount}")
                     }
                 }
                 lineData.notifyDataChanged()
@@ -235,7 +226,6 @@ class ChartLogView : LineChart {
                 setVisibleXRangeMaximum(ChartTools.getMaximum(type = type))
                 zoom(1f, 1f, xChartMin, 0f)
                 ChartTools.setX(this@ChartLogView, type)
-                Log.w("chart", "update chart finish")
             }
         }
     }

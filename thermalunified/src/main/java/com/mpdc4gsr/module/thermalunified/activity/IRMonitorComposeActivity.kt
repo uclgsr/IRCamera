@@ -23,9 +23,7 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorViewModel
 
 class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
-    override fun createViewModel(): IRMonitorViewModel {
-        return viewModels<IRMonitorViewModel>().value
-    }
+    override fun createViewModel(): IRMonitorViewModel = viewModels<IRMonitorViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -43,7 +41,7 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                             Text(
                                 "IR Monitor",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -51,25 +49,27 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Black
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Black,
+                            ),
                     )
                 },
-                containerColor = Color.Black
+                containerColor = Color.Black,
             ) { paddingValues ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color.Black)
-                        .padding(16.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color.Black)
+                            .padding(16.dp),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     // Monitor Status Card
                     MonitorStatusCard(
@@ -77,7 +77,7 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                         selectedType = selectedType,
                         isMonitoring = isMonitoring,
                         monitoringTime = monitoringTime,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(modifier = Modifier.height(32.dp))
                     // Control Buttons
@@ -88,18 +88,20 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                                 onClick = {
                                     monitorState = 1
                                 },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFFFF6B35)
-                                ),
+                                colors =
+                                    ButtonDefaults.buttonColors(
+                                        containerColor = Color(0xFFFF6B35),
+                                    ),
                                 shape = RoundedCornerShape(12.dp),
-                                modifier = Modifier
-                                    .fillMaxWidth(0.8f)
-                                    .height(56.dp)
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth(0.8f)
+                                        .height(56.dp),
                             ) {
                                 Text(
                                     "Create Monitor Chart",
                                     fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
                                 )
                             }
                         }
@@ -112,12 +114,13 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                                     selectedType = type
                                     monitorState = 2
                                     // Thermal action tracking
-                                    val action = when (type) {
-                                        1 -> 2001 // Point monitoring
-                                        2 -> 2002 // Line monitoring
-                                        else -> 2003 // Area monitoring
-                                    }
-                                }
+                                    val action =
+                                        when (type) {
+                                            1 -> 2001 // Point monitoring
+                                            2 -> 2002 // Line monitoring
+                                            else -> 2003 // Area monitoring
+                                        }
+                                },
                             )
                         }
 
@@ -125,24 +128,27 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                             // Ready to start monitoring
                             Button(
                                 onClick = {
-                                    NavigationManager.getInstance()
+                                    NavigationManager
+                                        .getInstance()
                                         .build(RouterConfig.MONITOR_CHART)
                                         .withInt("type", selectedType)
                                         .navigation(context)
                                     finish()
                                 },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFFFF6B35)
-                                ),
+                                colors =
+                                    ButtonDefaults.buttonColors(
+                                        containerColor = Color(0xFFFF6B35),
+                                    ),
                                 shape = RoundedCornerShape(12.dp),
-                                modifier = Modifier
-                                    .fillMaxWidth(0.8f)
-                                    .height(56.dp)
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth(0.8f)
+                                        .height(56.dp),
                             ) {
                                 Text(
                                     "Start Monitoring",
                                     fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
                                 )
                             }
                         }
@@ -168,26 +174,28 @@ private fun MonitorStatusCard(
     selectedType: Int,
     isMonitoring: Boolean,
     monitoringTime: Long,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Icon(
                 Icons.Default.MonitorHeart,
                 contentDescription = "Monitor Status",
                 tint = Color(0xFFFF6B35),
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(48.dp),
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
@@ -199,19 +207,20 @@ private fun MonitorStatusCard(
                 },
                 color = Color.White,
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             if (monitorState >= 2) {
                 Spacer(modifier = Modifier.height(8.dp))
-                val typeText = when (selectedType) {
-                    1 -> "Point Monitoring"
-                    2 -> "Line Monitoring"
-                    else -> "Area Monitoring"
-                }
+                val typeText =
+                    when (selectedType) {
+                        1 -> "Point Monitoring"
+                        2 -> "Line Monitoring"
+                        else -> "Area Monitoring"
+                    }
                 Text(
                     typeText,
                     color = Color(0xFF7D8590),
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
                 )
             }
             if (isMonitoring && monitoringTime > 0) {
@@ -222,7 +231,7 @@ private fun MonitorStatusCard(
                     String.format("%02d:%02d", minutes, seconds),
                     color = Color(0xFFFF6B35),
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }
@@ -232,44 +241,45 @@ private fun MonitorStatusCard(
 @Composable
 private fun MonitorTypeSelection(
     selectedType: Int,
-    onTypeSelected: (Int) -> Unit
+    onTypeSelected: (Int) -> Unit,
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 "Select Monitor Type",
                 color = Color.White,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             MonitorTypeButton(
                 text = "Point Monitoring",
                 description = "Monitor temperature at specific points",
                 icon = Icons.Default.Place,
                 isSelected = selectedType == 1,
-                onClick = { onTypeSelected(1) }
+                onClick = { onTypeSelected(1) },
             )
             MonitorTypeButton(
                 text = "Line Monitoring",
                 description = "Monitor temperature along a line",
                 icon = Icons.Default.Timeline,
                 isSelected = selectedType == 2,
-                onClick = { onTypeSelected(2) }
+                onClick = { onTypeSelected(2) },
             )
             MonitorTypeButton(
                 text = "Area Monitoring",
                 description = "Monitor temperature in a region",
                 icon = Icons.Default.CropFree,
                 isSelected = selectedType == 3,
-                onClick = { onTypeSelected(3) }
+                onClick = { onTypeSelected(3) },
             )
         }
     }
@@ -281,31 +291,37 @@ private fun MonitorTypeButton(
     description: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) Color(0xFF2D1B69) else Color(0xFF16131E)
-        ),
+        modifier =
+            Modifier
+                .fillMaxWidth(),
+        colors =
+            CardDefaults.cardColors(
+                containerColor = if (isSelected) Color(0xFF2D1B69) else Color(0xFF16131E),
+            ),
         shape = RoundedCornerShape(8.dp),
-        border = if (isSelected) {
-            androidx.compose.foundation.BorderStroke(2.dp, Color(0xFFFF6B35))
-        } else null
+        border =
+            if (isSelected) {
+                androidx.compose.foundation.BorderStroke(2.dp, Color(0xFFFF6B35))
+            } else {
+                null
+            },
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onClick) {
                 Icon(
                     icon,
                     contentDescription = text,
                     tint = if (isSelected) Color(0xFFFF6B35) else Color(0xFF7D8590),
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
@@ -313,12 +329,12 @@ private fun MonitorTypeButton(
                     text,
                     color = Color.White,
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 Text(
                     description,
                     color = Color(0xFF7D8590),
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
                 )
             }
             if (isSelected) {
@@ -326,7 +342,7 @@ private fun MonitorTypeButton(
                     Icons.Default.Check,
                     contentDescription = "Selected",
                     tint = Color(0xFFFF6B35),
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
             }
         }

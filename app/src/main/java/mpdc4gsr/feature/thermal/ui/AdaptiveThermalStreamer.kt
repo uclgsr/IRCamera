@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.thermal.ui
 
-import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
@@ -64,10 +63,6 @@ class AdaptiveThermalStreamer {
     private var networkClient: mpdc4gsr.feature.network.data.NetworkClient? = null
     fun setNetworkClient(client: mpdc4gsr.feature.network.data.NetworkClient?) {
         networkClient = client
-        Log.i(
-            TAG,
-            "Network client ${if (client != null) "set" else "cleared"} for thermal streaming"
-        )
     }
 
     fun initialize() {
@@ -128,10 +123,6 @@ class AdaptiveThermalStreamer {
                 if (streamFrame(frame)) {
                     framesStreamed++
                     streamed = true
-                    Log.v(
-                        TAG,
-                        "Streamed frame ${frame.frameIndex} (buffer size: ${frameBuffer.size})"
-                    )
                 } else {
                     frameBuffer.offerFirst(frame)
                     break
@@ -266,15 +257,6 @@ class AdaptiveThermalStreamer {
         }
         streamingFrameInterval = max(MIN_INTERVAL, min(MAX_INTERVAL, newInterval))
         if (oldInterval != streamingFrameInterval) {
-            Log.i(
-                TAG, "Streaming interval updated: $oldInterval -> $streamingFrameInterval " +
-                        "(latency: ${averageLatency}ms, loss: ${
-                            String.format(
-                                "%.1f",
-                                packetLossRate * 100
-                            )
-                        }%)"
-            )
         }
         logPerformanceStatistics()
     }
@@ -332,12 +314,6 @@ class AdaptiveThermalStreamer {
 
     private fun logPerformanceStatistics() {
         val stats = getStreamingStatistics()
-        Log.d(
-            TAG, "Streaming Performance - Interval: ${stats["streaming_interval"]}, " +
-                    "Efficiency: ${String.format("%.1f", stats["streaming_efficiency"])}%, " +
-                    "Latency: ${stats["average_latency_ms"]}ms, " +
-                    "Quality: ${stats["network_quality"]}"
-        )
     }
 
     private fun logFinalStatistics() {
@@ -346,20 +322,7 @@ class AdaptiveThermalStreamer {
         AppLogger.i(TAG, "  Total frames generated: ${stats["total_frames_generated"]}")
         AppLogger.i(TAG, "  Frames streamed: ${stats["frames_streamed"]}")
         AppLogger.i(TAG, "  Frames dropped: ${stats["frames_dropped"]}")
-        Log.i(
-            TAG,
-            "  Streaming efficiency: ${String.format("%.1f", stats["streaming_efficiency"])}%"
-        )
         AppLogger.i(TAG, "  Average latency: ${stats["average_latency_ms"]}ms")
-        Log.i(
-            TAG,
-            "  Packet loss rate: ${
-                String.format(
-                    "%.2f",
-                    stats["packet_loss_rate"] as Double * 100
-                )
-            }%"
-        )
         AppLogger.i(TAG, "  Final network quality: ${stats["network_quality"]}")
     }
 

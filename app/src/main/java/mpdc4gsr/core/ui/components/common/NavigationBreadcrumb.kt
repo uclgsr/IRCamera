@@ -22,49 +22,52 @@ import androidx.compose.ui.unit.sp
 fun NavigationBreadcrumb(
     currentScreen: String,
     previousScreen: String? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
+        horizontalArrangement = Arrangement.Start,
     ) {
         Icon(
             imageVector = Icons.Default.Home,
             contentDescription = "Home",
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(14.dp)
+            modifier = Modifier.size(14.dp),
         )
         if (previousScreen != null) {
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = "Separator",
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier
-                    .size(16.dp)
-                    .padding(horizontal = 4.dp)
+                modifier =
+                    Modifier
+                        .size(16.dp)
+                        .padding(horizontal = 4.dp),
             )
             Text(
                 text = previousScreen,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 12.sp
+                fontSize = 12.sp,
             )
         }
         Icon(
             imageVector = Icons.Default.ChevronRight,
             contentDescription = "Separator",
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier
-                .size(16.dp)
-                .padding(horizontal = 4.dp)
+            modifier =
+                Modifier
+                    .size(16.dp)
+                    .padding(horizontal = 4.dp),
         )
         Text(
             text = currentScreen,
             color = MaterialTheme.colorScheme.primary,
             fontSize = 12.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
     }
 }

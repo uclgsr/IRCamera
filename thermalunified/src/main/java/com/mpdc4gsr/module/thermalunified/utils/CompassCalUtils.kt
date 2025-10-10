@@ -19,18 +19,15 @@ fun realY(
 fun textWidth(
     text: String,
     paint: Paint,
-): Float {
-    return textDimensions(text, paint).first
-}
+): Float = textDimensions(text, paint).first
 
 fun textHeight(
     text: String,
     paint: Paint,
-): Float {
-    return textDimensions(text, paint).second
-}
+): Float = textDimensions(text, paint).second
 
 val measurementRect = Rect()
+
 fun textDimensions(
     text: String,
     paint: Paint,
@@ -56,9 +53,7 @@ fun getValuesBetween(
     return values
 }
 
-fun Float.roundNearest(nearest: Float): Float {
-    return (this / nearest).roundToLong() * nearest
-}
+fun Float.roundNearest(nearest: Float): Float = (this / nearest).roundToLong() * nearest
 
 fun getPixelLinear(
     bearing: Float,
@@ -84,17 +79,13 @@ fun deltaAngle(
     }
 }
 
-fun normalizeAngle(angle: Float): Float {
-    return wrap(angle, 0f, 360f) % 360
-}
+fun normalizeAngle(angle: Float): Float = wrap(angle, 0f, 360f) % 360
 
 fun wrap(
     value: Float,
     min: Float,
     max: Float,
-): Float {
-    return wrap(value.toDouble(), min.toDouble(), max.toDouble()).toFloat()
-}
+): Float = wrap(value.toDouble(), min.toDouble(), max.toDouble()).toFloat()
 
 fun wrap(
     value: Double,

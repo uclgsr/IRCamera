@@ -1,6 +1,5 @@
 package com.topdon.ble.util;
 
-import android.util.Log;
 
 public class DefaultLogger implements Logger {
     private final String tag;
@@ -22,19 +21,9 @@ public class DefaultLogger implements Logger {
 
     @Override
     public void log(int priority, int type, String msg) {
-        if (isEnabled) {
-            Log.println(priority, tag, msg);
-        }
     }
 
     @Override
     public void log(int priority, int type, String msg, Throwable th) {
-        if (isEnabled) {
-            if (msg != null) {
-                log(priority, type, msg + "\n" + Log.getStackTraceString(th));
-            } else {
-                log(priority, type, Log.getStackTraceString(th));
-            }
-        }
     }
 }

@@ -1,7 +1,6 @@
 package com.mpdc4gsr.libunified.app.http.repository
 
 import android.text.TextUtils
-import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mpdc4gsr.libunified.app.bean.base.Resp
@@ -28,7 +27,6 @@ object LmsRepository {
                         Gson().fromJson(responseBean.data.toString(), CheckVersionJson::class.java)
                 }
             } catch (e: Exception) {
-                XLog.e("version json[ph][ph][ph][ph]: ${e.message}")
             }
             downLatch.countDown()
         }
@@ -52,14 +50,12 @@ object LmsRepository {
                             result = json.data
                         }
                     } catch (e: Exception) {
-                        XLog.e("json[ph][ph][ph][ph]: ${e.message}")
                     }
                     downLatch.countDown()
                 }
 
                 override fun onFail(p0: Exception?) {
                     downLatch.countDown()
-                    XLog.w("onFail: $result")
                 }
 
                 override fun onFail(
@@ -68,12 +64,13 @@ object LmsRepository {
                 ) {
                     super.onFail(failMsg, errorCode)
                     try {
-                        StringUtils.getResString(
-                            LMS.mContext,
-                            if (TextUtils.isEmpty(errorCode)) -500 else errorCode.toInt(),
-                        ).let {
-                            TToast.shortToast(LMS.mContext, it)
-                        }
+                        StringUtils
+                            .getResString(
+                                LMS.mContext,
+                                if (TextUtils.isEmpty(errorCode)) -500 else errorCode.toInt(),
+                            ).let {
+                                TToast.shortToast(LMS.mContext, it)
+                            }
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

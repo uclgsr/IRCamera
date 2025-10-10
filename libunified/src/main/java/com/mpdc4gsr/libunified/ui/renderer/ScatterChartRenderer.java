@@ -2,7 +2,6 @@ package com.mpdc4gsr.libunified.ui.renderer;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.mpdc4gsr.libunified.ui.animation.ChartAnimator;
 import com.mpdc4gsr.libunified.ui.data.Entry;
@@ -55,7 +54,6 @@ public class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
 
         IShapeRenderer renderer = dataSet.getShapeRenderer();
         if (renderer == null) {
-            Log.i("MISSING", "There's no IShapeRenderer specified for ScatterDataSet");
             return;
         }
 

@@ -27,7 +27,7 @@ import kotlin.random.Random
 @Composable
 fun MultiModalRecordingScreen(
     onBackClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var isRecording by remember { mutableStateOf(false) }
     var recordingDuration by remember { mutableIntStateOf(0) }
@@ -45,14 +45,15 @@ fun MultiModalRecordingScreen(
         }
     }
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFF16131e))
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color(0xFF16131e)),
     ) {
         TitleBar(
             title = "Multi-Modal Recording",
             showBackButton = true,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
         ) {
             TitleBarAction(
                 icon = Icons.Default.Settings,
@@ -60,21 +61,22 @@ fun MultiModalRecordingScreen(
                 onClick = {
                     // TODO: Implement recording settings screen
                     // Open settings for multi-modal recording configuration
-                }
+                },
             )
         }
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Recording Status Card
             RecordingStatusCard(
                 isRecording = isRecording,
                 duration = recordingDuration,
-                syncStatus = syncStatus
+                syncStatus = syncStatus,
             )
             // Sensor Status Cards
             SensorStatusSection(
@@ -84,7 +86,7 @@ fun MultiModalRecordingScreen(
                 onGsrToggle = { gsrEnabled = it },
                 onThermalToggle = { thermalEnabled = it },
                 onRgbToggle = { rgbEnabled = it },
-                isRecording = isRecording
+                isRecording = isRecording,
             )
             // Live Data Preview
             if (isRecording) {
@@ -97,7 +99,7 @@ fun MultiModalRecordingScreen(
                     isRecording = !isRecording
                     if (!isRecording) recordingDuration = 0
                 },
-                canRecord = gsrEnabled || thermalEnabled || rgbEnabled
+                canRecord = gsrEnabled || thermalEnabled || rgbEnabled,
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -108,51 +110,53 @@ fun MultiModalRecordingScreen(
 private fun RecordingStatusCard(
     isRecording: Boolean,
     duration: Int,
-    syncStatus: SyncStatus
+    syncStatus: SyncStatus,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isRecording) Color.Red.copy(alpha = 0.1f) else Color(0xFF2A2A2A)
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = if (isRecording) Color.Red.copy(alpha = 0.1f) else Color(0xFF2A2A2A),
+            ),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = if (isRecording) "RECORDING" else "READY",
                     color = if (isRecording) Color.Red else Color.White,
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 if (isRecording) {
                     Box(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .background(Color.Red, androidx.compose.foundation.shape.CircleShape)
+                        modifier =
+                            Modifier
+                                .size(12.dp)
+                                .background(Color.Red, androidx.compose.foundation.shape.CircleShape),
                     )
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = "Duration: ${formatDuration(duration)}",
                     color = Color.Gray,
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
                 )
                 Text(
                     text = "Sync: ${syncStatus.displayName}",
                     color = syncStatus.color,
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }
@@ -167,21 +171,21 @@ private fun SensorStatusSection(
     onGsrToggle: (Boolean) -> Unit,
     onThermalToggle: (Boolean) -> Unit,
     onRgbToggle: (Boolean) -> Unit,
-    isRecording: Boolean
+    isRecording: Boolean,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = "Sensor Configuration",
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             SensorToggleItem(
                 name = "GSR Sensor",
@@ -190,7 +194,7 @@ private fun SensorStatusSection(
                 onToggle = onGsrToggle,
                 color = Color.Cyan,
                 isRecording = isRecording,
-                status = "Connected • 128 Hz"
+                status = "Connected • 128 Hz",
             )
             SensorToggleItem(
                 name = "Thermal Camera",
@@ -199,7 +203,7 @@ private fun SensorStatusSection(
                 onToggle = onThermalToggle,
                 color = Color.Red,
                 isRecording = isRecording,
-                status = "Connected • 256×192"
+                status = "Connected • 256×192",
             )
             SensorToggleItem(
                 name = "RGB Camera",
@@ -208,7 +212,7 @@ private fun SensorStatusSection(
                 onToggle = onRgbToggle,
                 color = Color.White,
                 isRecording = isRecording,
-                status = "Ready • 1080p@30fps"
+                status = "Ready • 1080p@30fps",
             )
         }
     }
@@ -222,55 +226,61 @@ private fun SensorToggleItem(
     onToggle: (Boolean) -> Unit,
     color: Color,
     isRecording: Boolean,
-    status: String
+    status: String,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            modifier = Modifier
-                .size(12.dp)
-                .background(
-                    if (enabled) color else Color.Gray,
-                    androidx.compose.foundation.shape.CircleShape
-                )
+            modifier =
+                Modifier
+                    .size(12.dp)
+                    .background(
+                        if (enabled) color else Color.Gray,
+                        androidx.compose.foundation.shape.CircleShape,
+                    ),
         )
         Spacer(modifier = Modifier.width(12.dp))
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Text(
                 text = name,
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 text = description,
                 color = Color.Gray,
-                fontSize = 12.sp
+                fontSize = 12.sp,
             )
             Text(
                 text = status,
                 color = if (enabled) color else Color.Gray,
-                fontSize = 11.sp
+                fontSize = 11.sp,
             )
         }
         Switch(
             checked = enabled,
-            onCheckedChange = if (!isRecording) onToggle else {
-                {}
-            },
+            onCheckedChange =
+                if (!isRecording) {
+                    onToggle
+                } else {
+                    {}
+                },
             enabled = !isRecording,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = color,
-                uncheckedThumbColor = Color.Gray,
-                checkedTrackColor = color.copy(alpha = 0.3f),
-                uncheckedTrackColor = Color.Gray.copy(alpha = 0.3f)
-            )
+            colors =
+                SwitchDefaults.colors(
+                    checkedThumbColor = color,
+                    uncheckedThumbColor = Color.Gray,
+                    checkedTrackColor = color.copy(alpha = 0.3f),
+                    uncheckedTrackColor = Color.Gray.copy(alpha = 0.3f),
+                ),
         )
     }
 }
@@ -279,17 +289,17 @@ private fun SensorToggleItem(
 private fun LiveDataPreviewSection() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = "Live Data Preview",
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             // GSR Waveform
             Text(
@@ -297,18 +307,19 @@ private fun LiveDataPreviewSection() {
                 color = Color.Cyan,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp),
             )
             LiveGSRWaveform(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(80.dp),
             )
             Spacer(modifier = Modifier.height(16.dp))
             // Sensor Metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 LiveMetricItem("GSR", "0.42 μS", Color.Cyan)
                 LiveMetricItem("Thermal", "36.8°C", Color.Red)
@@ -332,17 +343,18 @@ private fun LiveGSRWaveform(modifier: Modifier = Modifier) {
         val height = size.height
         val centerY = height / 2
         val amplitude = height * 0.3f
-        val points = (0..100).map { i ->
-            val x = (i / 100f) * width
-            val y = centerY + amplitude * sin((i * 0.2f) + phase + Random.nextFloat() * 0.1f)
-            Offset(x, y)
-        }
+        val points =
+            (0..100).map { i ->
+                val x = (i / 100f) * width
+                val y = centerY + amplitude * sin((i * 0.2f) + phase + Random.nextFloat() * 0.1f)
+                Offset(x, y)
+            }
         for (i in 0 until points.size - 1) {
             drawLine(
                 color = Color.Cyan,
                 start = points[i],
                 end = points[i + 1],
-                strokeWidth = 2.dp.toPx()
+                strokeWidth = 2.dp.toPx(),
             )
         }
         // Grid lines
@@ -352,7 +364,7 @@ private fun LiveGSRWaveform(modifier: Modifier = Modifier) {
                 color = Color.Gray.copy(alpha = 0.3f),
                 start = Offset(0f, y),
                 end = Offset(width, y),
-                strokeWidth = 1.dp.toPx()
+                strokeWidth = 1.dp.toPx(),
             )
         }
     }
@@ -362,21 +374,21 @@ private fun LiveGSRWaveform(modifier: Modifier = Modifier) {
 private fun LiveMetricItem(
     label: String,
     value: String,
-    color: Color
+    color: Color,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             color = color,
             fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Text(
             text = label,
             color = Color.Gray,
-            fontSize = 12.sp
+            fontSize = 12.sp,
         )
     }
 }
@@ -385,34 +397,34 @@ private fun LiveMetricItem(
 private fun RecordingControlsSection(
     isRecording: Boolean,
     onStartStop: () -> Unit,
-    canRecord: Boolean
+    canRecord: Boolean,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = "Recording Controls",
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             // Main Record Button
             FloatingActionButton(
                 onClick = onStartStop,
                 modifier = Modifier.size(80.dp),
                 containerColor = if (isRecording) Color.Red else MaterialTheme.colorScheme.primary,
-                contentColor = Color.White
+                contentColor = Color.White,
             ) {
                 Icon(
                     imageVector = if (isRecording) Icons.Default.Stop else Icons.Default.FiberManualRecord,
                     contentDescription = if (isRecording) "Stop Recording" else "Start Recording",
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(32.dp),
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -420,25 +432,25 @@ private fun RecordingControlsSection(
                 text = if (isRecording) "Tap to stop recording" else "Tap to start synchronized recording",
                 color = Color.Gray,
                 fontSize = 14.sp,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             if (!canRecord && !isRecording) {
                 Text(
                     text = "Enable at least one sensor to record",
                     color = Color.Red,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
                 )
             }
             // Additional Controls
             Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 OutlinedButton(
                     onClick = {
                         // TODO: Implement pause recording functionality
                         // Pause the multi-modal recording
                     },
-                    enabled = isRecording
+                    enabled = isRecording,
                 ) {
                     Icon(Icons.Default.Pause, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -449,7 +461,7 @@ private fun RecordingControlsSection(
                         // TODO: Implement add marker functionality
                         // Add timestamp marker to recording
                     },
-                    enabled = isRecording
+                    enabled = isRecording,
                 ) {
                     Icon(Icons.Default.Flag, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -460,11 +472,14 @@ private fun RecordingControlsSection(
     }
 }
 
-enum class SyncStatus(val displayName: String, val color: Color) {
+enum class SyncStatus(
+    val displayName: String,
+    val color: Color,
+) {
     SYNCED("Synced", Color.Green),
     SYNCING("Syncing", Color.Yellow),
     OUT_OF_SYNC("Out of Sync", Color.Red),
-    DISABLED("Disabled", Color.Gray)
+    DISABLED("Disabled", Color.Gray),
 }
 
 private fun formatDuration(seconds: Int): String {

@@ -9,7 +9,7 @@ data class SessionConfig(
     val enabledSensors: List<String>,
     val sessionType: SessionType = SessionType.LOCAL,
     val maxDuration: Long? = null,
-    val metadata: Map<String, Any> = emptyMap()
+    val metadata: Map<String, Any> = emptyMap(),
 ) {
     companion object {
         fun fromJson(json: JSONObject): SessionConfig {
@@ -32,7 +32,7 @@ data class SessionConfig(
                 enabledSensors = enabledSensors,
                 sessionType = SessionType.valueOf(json.optString("session_type", "LOCAL")),
                 maxDuration = if (json.has("max_duration")) json.getLong("max_duration") else null,
-                metadata = metadata
+                metadata = metadata,
             )
         }
     }
@@ -49,19 +49,20 @@ data class SessionInfo(
     val createdAt: Long,
     val startedAt: Long? = null,
     val completedAt: Long? = null,
-    val metadata: Map<String, Any> = emptyMap()
+    val metadata: Map<String, Any> = emptyMap(),
 ) {
     val duration: Long
-        get() = when {
-            completedAt != null && startedAt != null -> completedAt - startedAt
-            startedAt != null -> System.currentTimeMillis() - startedAt
-            else -> 0L
-        }
+        get() =
+            when {
+                completedAt != null && startedAt != null -> completedAt - startedAt
+                startedAt != null -> System.currentTimeMillis() - startedAt
+                else -> 0L
+            }
     val isActive: Boolean
         get() = startedAt != null && completedAt == null
 
-    fun toJson(): JSONObject {
-        return JSONObject().apply {
+    fun toJson(): JSONObject =
+        JSONObject().apply {
             put("session_id", sessionId)
             put("session_name", sessionName)
             put("study_name", studyName)
@@ -76,17 +77,18 @@ data class SessionInfo(
             put("is_active", isActive)
             put("metadata", JSONObject(metadata))
         }
-    }
 }
 
 enum class SessionType {
     LOCAL,
     REMOTE,
     HYBRID,
-    RESEARCH
+    RESEARCH,
 }
 
-enum class SessionStatus(val displayName: String) {
+enum class SessionStatus(
+    val displayName: String,
+) {
     IDLE("Idle"),
     CREATED("Created"),
     STARTING("Starting"),
@@ -94,7 +96,8 @@ enum class SessionStatus(val displayName: String) {
     PAUSED("Paused"),
     STOPPING("Stopping"),
     COMPLETED("Completed"),
-    ERROR("Error");
+    ERROR("Error"),
+    ;
 
     val isActive: Boolean
         get() = this == RECORDING || this == PAUSED
@@ -115,23 +118,24 @@ data class SessionQuality(
     val rgbFrameCount: Long = 0L,
     val syncMarkerCount: Long = 0L,
     val errorCount: Long = 0L,
-    val lastUpdated: Long = System.currentTimeMillis()
+    val lastUpdated: Long = System.currentTimeMillis(),
 ) {
     val qualityLevel: QualityLevel
-        get() = when {
-            overallQuality >= 0.9 -> QualityLevel.EXCELLENT
-            overallQuality >= 0.7 -> QualityLevel.GOOD
-            overallQuality >= 0.5 -> QualityLevel.FAIR
-            overallQuality >= 0.3 -> QualityLevel.POOR
-            else -> QualityLevel.CRITICAL
-        }
+        get() =
+            when {
+                overallQuality >= 0.9 -> QualityLevel.EXCELLENT
+                overallQuality >= 0.7 -> QualityLevel.GOOD
+                overallQuality >= 0.5 -> QualityLevel.FAIR
+                overallQuality >= 0.3 -> QualityLevel.POOR
+                else -> QualityLevel.CRITICAL
+            }
     val totalSamples: Long
         get() = gsrSampleCount + thermalFrameCount + rgbFrameCount
     val isAcceptableQuality: Boolean
         get() = overallQuality >= 0.6 && errorCount < 10
 
-    fun toMap(): Map<String, Any> {
-        return mapOf(
+    fun toMap(): Map<String, Any> =
+        mapOf(
             "overall_quality" to overallQuality,
             "network_quality" to networkQuality,
             "gsr_quality" to gsrQuality,
@@ -145,16 +149,15 @@ data class SessionQuality(
             "total_samples" to totalSamples,
             "quality_level" to qualityLevel.name,
             "is_acceptable_quality" to isAcceptableQuality,
-            "last_updated" to lastUpdated
+            "last_updated" to lastUpdated,
         )
-    }
 
     enum class QualityLevel {
         CRITICAL,
         POOR,
         FAIR,
         GOOD,
-        EXCELLENT
+        EXCELLENT,
     }
 }
 
@@ -170,25 +173,29 @@ data class SessionStatistics(
     val thermalFrames: Long,
     val rgbFrames: Long,
     val syncMarkers: Long,
-    val errors: Long
+    val errors: Long,
 ) {
     val totalDataPoints: Long
         get() = gsrSamples + thermalFrames + rgbFrames + syncMarkers
     val averageSamplingRate: Double
-        get() = if (duration > 0) {
-            (totalDataPoints * 1000.0) / duration
-        } else 0.0
+        get() =
+            if (duration > 0) {
+                (totalDataPoints * 1000.0) / duration
+            } else {
+                0.0
+            }
     val qualityStatus: String
-        get() = when {
-            dataQuality >= 0.9 -> "Excellent"
-            dataQuality >= 0.7 -> "Good"
-            dataQuality >= 0.5 -> "Fair"
-            dataQuality >= 0.3 -> "Poor"
-            else -> "Critical"
-        }
+        get() =
+            when {
+                dataQuality >= 0.9 -> "Excellent"
+                dataQuality >= 0.7 -> "Good"
+                dataQuality >= 0.5 -> "Fair"
+                dataQuality >= 0.3 -> "Poor"
+                else -> "Critical"
+            }
 
-    fun toMap(): Map<String, Any?> {
-        return mapOf(
+    fun toMap(): Map<String, Any?> =
+        mapOf(
             "session_id" to sessionId,
             "is_active" to isActive,
             "duration" to duration,
@@ -204,9 +211,8 @@ data class SessionStatistics(
             "errors" to errors,
             "total_data_points" to totalDataPoints,
             "average_sampling_rate" to averageSamplingRate,
-            "quality_status" to qualityStatus
+            "quality_status" to qualityStatus,
         )
-    }
 
     private fun formatDuration(durationMs: Long): String {
         val seconds = durationMs / 1000
@@ -228,17 +234,20 @@ data class SessionSummary(
     val completedSuccessfully: Boolean,
     val errorCount: Long,
     val dataSize: Long,
-    val metadata: Map<String, Any> = emptyMap()
+    val metadata: Map<String, Any> = emptyMap(),
 ) {
     val dataSizeFormatted: String
         get() = formatBytes(dataSize)
     val successRate: Double
-        get() = if (totalSamples > 0) {
-            ((totalSamples - errorCount).toDouble() / totalSamples.toDouble()) * 100.0
-        } else 0.0
+        get() =
+            if (totalSamples > 0) {
+                ((totalSamples - errorCount).toDouble() / totalSamples.toDouble()) * 100.0
+            } else {
+                0.0
+            }
 
-    fun toMap(): Map<String, Any> {
-        return mapOf(
+    fun toMap(): Map<String, Any> =
+        mapOf(
             "session_id" to sessionId,
             "duration" to duration,
             "total_samples" to totalSamples,
@@ -248,9 +257,8 @@ data class SessionSummary(
             "data_size" to dataSize,
             "data_size_formatted" to dataSizeFormatted,
             "success_rate" to successRate,
-            "metadata" to metadata
+            "metadata" to metadata,
         )
-    }
 
     private fun formatBytes(bytes: Long): String {
         val kb = bytes / 1024.0
@@ -269,7 +277,7 @@ data class SensorConfig(
     val sensorType: String,
     val enabled: Boolean,
     val samplingRate: Double? = null,
-    val configuration: Map<String, Any> = emptyMap()
+    val configuration: Map<String, Any> = emptyMap(),
 ) {
     val isGSR: Boolean
         get() = sensorType.equals("gsr", ignoreCase = true)

@@ -37,5 +37,6 @@ class UnitViewModel : BaseViewModel() {
     }
 
     fun isCelsiusSelected(): Boolean = _selectedUnit.value == CELSIUS
+
     fun isFahrenheitSelected(): Boolean = _selectedUnit.value == FAHRENHEIT
 }

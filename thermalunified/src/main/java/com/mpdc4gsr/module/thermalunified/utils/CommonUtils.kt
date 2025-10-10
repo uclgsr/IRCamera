@@ -5,9 +5,11 @@ import java.io.IOException
 
 object CommonUtils {
     @Throws(IOException::class)
-    fun getAssetData(context: Context, assetPath: String): ByteArray {
-        return context.assets.open(assetPath).use { inputStream ->
+    fun getAssetData(
+        context: Context,
+        assetPath: String,
+    ): ByteArray =
+        context.assets.open(assetPath).use { inputStream ->
             inputStream.readBytes()
         }
-    }
 }

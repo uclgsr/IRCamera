@@ -25,6 +25,7 @@ class MyGSYVideoPlayer : FrameLayout {
     }
 
     fun getLayoutId(): Int = R.layout.view_my_gsy_video_player
+
     fun updateStartImage() {
         if (mStartButton is ImageView) {
             val imageView = mStartButton as ImageView

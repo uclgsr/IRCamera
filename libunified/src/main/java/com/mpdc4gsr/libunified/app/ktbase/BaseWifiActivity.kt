@@ -29,11 +29,13 @@ abstract class BaseWifiActivity : BaseActivity() {
             NetWorkUtils.switchNetwork(true)
         }
         super.onCreate(savedInstanceState)
-        PreferenceManager.getDefaultSharedPreferences(this@BaseWifiActivity)
+        PreferenceManager
+            .getDefaultSharedPreferences(this@BaseWifiActivity)
             .edit()
             .putBoolean("use-sw-codec", true)
             .apply()
-        PreferenceManager.getDefaultSharedPreferences(this@BaseWifiActivity)
+        PreferenceManager
+            .getDefaultSharedPreferences(this@BaseWifiActivity)
             .getBoolean("auto_audio", false)
     }
 

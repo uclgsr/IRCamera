@@ -18,19 +18,18 @@ class ReportPreviewAlbumAdapter(
     private var dataList: List<HouseRepPreviewAlbumItemBean>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var jumpListener: ((item: HouseRepPreviewAlbumItemBean, position: Int) -> Unit)? = null
-    override fun getItemViewType(position: Int): Int {
-        return position
-    }
+
+    override fun getItemViewType(position: Int): Int = position
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder {
-        return ItemView(
-            LayoutInflater.from(parent.context)
+    ): RecyclerView.ViewHolder =
+        ItemView(
+            LayoutInflater
+                .from(parent.context)
                 .inflate(R.layout.item_report_album_child, parent, false),
         )
-    }
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
@@ -46,11 +45,11 @@ class ReportPreviewAlbumAdapter(
         }
     }
 
-    override fun getItemCount(): Int {
-        return dataList.size
-    }
+    override fun getItemCount(): Int = dataList.size
 
-    inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ItemView(
+        itemView: View,
+    ) : RecyclerView.ViewHolder(itemView) {
         val rivPhoto: ImageView = itemView.findViewById(R.id.riv_photo)
         val tvName: TextView = itemView.findViewById(R.id.tv_name)
     }

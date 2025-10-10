@@ -1,17 +1,18 @@
 package com.mpdc4gsr.module.thermalunified.frame
 
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
-import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
-import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import com.mpdc4gsr.libunified.app.bean.CustomPseudoBean
 import com.mpdc4gsr.libunified.app.bean.WatermarkBean
 import com.mpdc4gsr.libunified.app.common.ProductType.PRODUCT_NAME_TC007
 import com.mpdc4gsr.libunified.app.utils.ByteUtils
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.toBytes
+import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
+import com.mpdc4gsr.module.thermalunified.compat.spToPx
 
 class FrameStruct() {
     companion object {
         private const val SIZE = 1024
+
         fun toCode(
             name: String,
             width: Int,
@@ -37,14 +38,17 @@ class FrameStruct() {
             resultArray[1] = SIZE.toByte()
             val nameBytes = name.toBytes(16)
             System.arraycopy(nameBytes, 0, resultArray, 2, nameBytes.size)
-            val versionName = try {
-                val packageInfo = ContextProvider.getContext().packageManager.getPackageInfo(
-                    ContextProvider.getContext().packageName, 0
-                )
-                packageInfo.versionName ?: ""
-            } catch (e: Exception) {
-                ""
-            }
+            val versionName =
+                try {
+                    val packageInfo =
+                        ContextProvider.getContext().packageManager.getPackageInfo(
+                            ContextProvider.getContext().packageName,
+                            0,
+                        )
+                    packageInfo.versionName ?: ""
+                } catch (e: Exception) {
+                    ""
+                }
             val verBytes = versionName.toBytes(8)
             System.arraycopy(verBytes, 0, resultArray, 18, verBytes.size)
             resultArray[26] = (width ushr 8).toByte()
@@ -73,9 +77,21 @@ class FrameStruct() {
             resultArray[657] = gainStatus.toByte()
             resultArray[658] = (textSize ushr 8).toByte()
             resultArray[659] = textSize.toByte()
-            val envBytes = java.nio.ByteBuffer.allocate(4).putFloat(environment).array()
-            val distanceBytes = java.nio.ByteBuffer.allocate(4).putFloat(distance).array()
-            val radiationBytes = java.nio.ByteBuffer.allocate(4).putFloat(radiation).array()
+            val envBytes =
+                java.nio.ByteBuffer
+                    .allocate(4)
+                    .putFloat(environment)
+                    .array()
+            val distanceBytes =
+                java.nio.ByteBuffer
+                    .allocate(4)
+                    .putFloat(distance)
+                    .array()
+            val radiationBytes =
+                java.nio.ByteBuffer
+                    .allocate(4)
+                    .putFloat(radiation)
+                    .array()
             System.arraycopy(envBytes, 0, resultArray, 660, 4)
             System.arraycopy(distanceBytes, 0, resultArray, 664, 4)
             System.arraycopy(radiationBytes, 0, resultArray, 668, 4)
@@ -148,9 +164,18 @@ class FrameStruct() {
         val envBytes = data.copyOfRange(660, 664)
         val distanceBytes = data.copyOfRange(664, 668)
         val radiationBytes = data.copyOfRange(668, 672)
-        environment = java.nio.ByteBuffer.wrap(envBytes).float
-        distance = java.nio.ByteBuffer.wrap(distanceBytes).float
-        radiation = java.nio.ByteBuffer.wrap(radiationBytes).float
+        environment =
+            java.nio.ByteBuffer
+                .wrap(envBytes)
+                .float
+        distance =
+            java.nio.ByteBuffer
+                .wrap(distanceBytes)
+                .float
+        radiation =
+            java.nio.ByteBuffer
+                .wrap(radiationBytes)
+                .float
         isAmplify = data[672].toInt() == 1
     }
 

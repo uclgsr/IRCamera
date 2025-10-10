@@ -1,5 +1,6 @@
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 plugins {
     id("com.android.application")
@@ -19,9 +20,18 @@ android {
 
     defaultConfig {
         applicationId = "com.csl.irCamera"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = libs.versions.versionCode.get().toInt()
+        minSdk =
+            libs.versions.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.targetSdk
+                .get()
+                .toInt()
+        versionCode =
+            libs.versions.versionCode
+                .get()
+                .toInt()
         versionName = libs.versions.versionName.get()
         ndkVersion = libs.versions.ndkVersion.get()
 
@@ -93,23 +103,26 @@ android {
 
         baseline = file("lint-baseline.xml")
 
-        disable += listOf(
-            "MissingTranslation"
-        )
+        disable +=
+            listOf(
+                "MissingTranslation",
+            )
 
-        warning += listOf(
-            "StringFormatInvalid",
-            "StringFormatMatches",
-            "StringFormatCount",
-            "ResourceType",
-            "ObsoleteSdkInt"
-        )
+        warning +=
+            listOf(
+                "StringFormatInvalid",
+                "StringFormatMatches",
+                "StringFormatCount",
+                "ResourceType",
+                "ObsoleteSdkInt",
+            )
 
-        error += listOf(
-            "StopShip",
-            "NewApi",
-            "InlinedApi"
-        )
+        error +=
+            listOf(
+                "StopShip",
+                "NewApi",
+                "InlinedApi",
+            )
     }
 
     androidResources {
@@ -132,29 +145,25 @@ android {
                     "META-INF/LICENSE.md",
                     "META-INF/LICENSE-notice.md",
                 )
-            excludes += listOf(
-                "META-INF/DEPENDENCIES",
-                "META-INF/LICENSE",
-                "META-INF/LICENSE.txt",
-                "META-INF/license.txt",
-                "META-INF/NOTICE",
-                "META-INF/NOTICE.txt",
-                "META-INF/notice.txt",
-                "META-INF/ASL2.0",
-                "META-INF/versions/9/OSGI-INF/MANIFEST.MF",
-
-                "META-INF/com.android.art/baseline.prof",
-                "META-INF/com.android.art/baseline.profm",
-
-                "**/it/gerdavax/easybluetooth/**",
-
-                "**/android/bluetooth/IBluetoothDeviceCallback*",
-
-                "**/com/androidplot/**",
-
-                "**/com/shimmerresearch/biophysicalprocessing/**",
-                "**/com/shimmerresearch/utilityfunctions/**",
-            )
+            excludes +=
+                listOf(
+                    "META-INF/DEPENDENCIES",
+                    "META-INF/LICENSE",
+                    "META-INF/LICENSE.txt",
+                    "META-INF/license.txt",
+                    "META-INF/NOTICE",
+                    "META-INF/NOTICE.txt",
+                    "META-INF/notice.txt",
+                    "META-INF/ASL2.0",
+                    "META-INF/versions/9/OSGI-INF/MANIFEST.MF",
+                    "META-INF/com.android.art/baseline.prof",
+                    "META-INF/com.android.art/baseline.profm",
+                    "**/it/gerdavax/easybluetooth/**",
+                    "**/android/bluetooth/IBluetoothDeviceCallback*",
+                    "**/com/androidplot/**",
+                    "**/com/shimmerresearch/biophysicalprocessing/**",
+                    "**/com/shimmerresearch/utilityfunctions/**",
+                )
         }
         jniLibs {
             useLegacyPackaging = true
@@ -245,7 +254,7 @@ android {
                     "-opt-in=kotlinx.coroutines.FlowPreview",
                     "-Xjvm-default=all",
                     "-Xnested-type-aliases",
-                )
+                ),
             )
         }
     }
@@ -317,7 +326,6 @@ configurations.all {
     exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
 }
 
-
 dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
@@ -350,9 +358,9 @@ dependencies {
         fileTree(
             mapOf(
                 "include" to listOf("*.aar"),
-                "dir" to "libir/libs"
-            )
-        )
+                "dir" to "libir/libs",
+            ),
+        ),
     )
 
     implementation(files("../libunified/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
@@ -377,7 +385,7 @@ dependencies {
     implementation(files("libs/shimmerdriverpc-0.11.5_beta.jar"))
     implementation(files("libs/shimmerbluetoothmanager-0.11.5_beta.jar"))
 
-    // Testing dependencies  
+    // Testing dependencies
     testImplementation(libs.junit)
     testImplementation(libs.kotlin.test)
     testImplementation(libs.robolectric)
@@ -425,17 +433,8 @@ dependencies {
     testImplementation(libs.javafaker)
 }
 
-fun getYearStr(): String {
-    return SimpleDateFormat("yy", Locale.getDefault()).format(Date())
-}
+fun getYearStr(): String = SimpleDateFormat("yy", Locale.getDefault()).format(Date())
 
-fun getDayStr(): String {
-    return SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
-}
+fun getDayStr(): String = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
 
-fun getTimeStr(): String {
-    return SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
-}
-
-
-
+fun getTimeStr(): String = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())

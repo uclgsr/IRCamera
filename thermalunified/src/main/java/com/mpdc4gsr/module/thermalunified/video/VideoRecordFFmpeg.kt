@@ -15,7 +15,6 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.TextUtils
-import android.util.Log
 import android.view.TextureView
 import android.view.View
 import android.view.View.VISIBLE
@@ -23,23 +22,22 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
-import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
-import com.mpdc4gsr.module.thermalunified.compat.dpToPx
-import com.mpdc4gsr.module.thermalunified.compat.spToPx
-import com.elvishew.xlog.XLog
 import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.app.comm.view.TempLayout
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState
 import com.mpdc4gsr.libunified.app.config.FileConfig
-import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import com.mpdc4gsr.libunified.app.tools.TimeTools
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
+import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.ui.camera.CameraPreView
 import com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout
 import com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView
+import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
+import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import com.mpdc4gsr.module.thermalunified.view.HikSurfaceView
 import com.mpdc4gsr.module.thermalunified.view.TemperatureHikView
 import com.mpdc4gsr.module.thermalunified.view.compass.LinearCompassView
@@ -59,7 +57,6 @@ import java.nio.ByteBuffer
 import java.nio.ShortBuffer
 import java.util.*
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 import com.mpdc4gsr.libunified.R as LibcoreR
 
@@ -76,7 +73,7 @@ class VideoRecordFFmpeg(
     private val isTC007: Boolean = false,
     private val carView: View? = null,
     private var customFrameRate: Int = 25,
-    private var customBitrate: Int = 1500000
+    private var customBitrate: Int = 1500000,
 ) : VideoRecord() {
     companion object {
         const val TAG = "VideoRecordFFmpeg"
@@ -87,6 +84,7 @@ class VideoRecordFFmpeg(
         const val SAMPLE_AUDIO_RETE_INHZ = 44100
         const val AUDIO_CHANNELS = 1
         private const val MAX_RECORDING_DURATION_MS = 60L * 60 * 1000 // One hour in milliseconds
+
         fun canStartVideoRecord(
             context: Context,
             videoFile: File? = null,
@@ -102,7 +100,7 @@ class VideoRecordFFmpeg(
                         showCancel = false,
                         positiveText = context.getString(LibcoreR.string.app_confirm),
                         cancelable = true,
-                        onPositive = { }
+                        onPositive = { },
                     )
                 }
             }
@@ -146,9 +144,7 @@ class VideoRecordFFmpeg(
     private val bufferRef: AtomicReference<ByteBuffer> =
         AtomicReference(ByteBuffer.allocate(pixArray.size))
 
-    private fun readByteBuffer(): ByteBuffer? {
-        return bufferRef.get()?.duplicate()
-    }
+    private fun readByteBuffer(): ByteBuffer? = bufferRef.get()?.duplicate()
 
     private fun setBitmap(bitmap: Bitmap) {
         val byteCount = bitmap.byteCount
@@ -159,15 +155,12 @@ class VideoRecordFFmpeg(
         bufferRef.set(newPixels)
     }
 
-    private fun getVideoCodec(): Int {
-        return if (Build.BRAND == "motorola" && Build.MODEL == "XT2201-2") {
-            XLog.i("[ph][ph][ph][ph][ph][ph]AV_CODEC_ID_H264")
+    private fun getVideoCodec(): Int =
+        if (Build.BRAND == "motorola" && Build.MODEL == "XT2201-2") {
             avcodec.AV_CODEC_ID_H264
         } else {
-            XLog.i("[ph][ph][ph][ph][ph][ph]AV_CODEC_ID_MPEG4")
             avcodec.AV_CODEC_ID_MPEG4
         }
-    }
 
     init {
         if ((cameraView.parent as ViewGroup).height > (cameraView.parent as ViewGroup).width) {
@@ -186,12 +179,16 @@ class VideoRecordFFmpeg(
         bufferSize =
             AudioRecord.getMinBufferSize(
                 SAMPLE_AUDIO_RETE_INHZ,
-                AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT,
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT,
             )
         audioRecord =
             AudioRecord(
-                MediaRecorder.AudioSource.MIC, SAMPLE_AUDIO_RETE_INHZ,
-                AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize,
+                MediaRecorder.AudioSource.MIC,
+                SAMPLE_AUDIO_RETE_INHZ,
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                bufferSize,
             )
         paint.color = Color.WHITE
         paint.textSize = 6f.spToPx(ContextProvider.getContext()).toFloat()
@@ -201,11 +198,12 @@ class VideoRecordFFmpeg(
             "[ph][ph][ph][ph][ph][ph]",
             0,
             "[ph][ph][ph][ph][ph][ph]".length,
-            rectText
+            rectText,
         )
     }
 
     var startTime: Long = 0L
+
     override fun startRecord() {
         startRecord(FileConfig.lineGalleryDir)
     }
@@ -218,14 +216,15 @@ class VideoRecordFFmpeg(
             }
             recorder =
                 FFmpegFrameRecorder(
-                    exportedFile!!.absolutePath, width, height,
+                    exportedFile!!.absolutePath,
+                    width,
+                    height,
                     AUDIO_CHANNELS,
                 )
             recorder!!.format = FORMAT
             recorder!!.frameRate = customFrameRate.toDouble()
             recorder!!.videoBitrate = customBitrate
             recorder!!.videoCodec = VIDEO_CODEC
-            Log.i(TAG, "Thermal video recorder configured: ${customFrameRate}fps, ${customBitrate}bps")
             recorder!!.sampleRate = SAMPLE_AUDIO_RETE_INHZ
             recorder!!.timestamp = 0L
             recorder!!.start()
@@ -248,104 +247,110 @@ class VideoRecordFFmpeg(
             }
             setBitmap(createBitmapFromView())
             val fTime = 1000L / RATE
-            bitmapJob = recordScope.launch(Dispatchers.IO) {
-                while (isActive && isRunning) {
-                    try {
-                        val tmp = createBitmapFromView()
-                        tmp?.let {
-                            setBitmap(it)
+            bitmapJob =
+                recordScope.launch(Dispatchers.IO) {
+                    while (isActive && isRunning) {
+                        try {
+                            val tmp = createBitmapFromView()
+                            tmp?.let {
+                                setBitmap(it)
+                            }
+                        } catch (e: Exception) {
                         }
-                    } catch (e: Exception) {
-                        Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", "${e.message}")
+                        delay(fTime)
                     }
-                    delay(fTime)
                 }
-            }
             if (audioRecord == null) {
                 audioRecord =
                     AudioRecord(
-                        MediaRecorder.AudioSource.MIC, SAMPLE_AUDIO_RETE_INHZ,
-                        AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize,
+                        MediaRecorder.AudioSource.MIC,
+                        SAMPLE_AUDIO_RETE_INHZ,
+                        AudioFormat.CHANNEL_IN_MONO,
+                        AudioFormat.ENCODING_PCM_16BIT,
+                        bufferSize,
                     )
             }
             startTime = System.currentTimeMillis()
-            exportJob = recordScope.launch(Dispatchers.IO) {
-                while (isActive && isRunning) {
-                    try {
-                        val currentTimestamp =
-                            1000L * (System.currentTimeMillis() - startTime)
-                        val frame = Frame(width, height, Frame.DEPTH_BYTE, 4)
-                        frame.image[0] = readByteBuffer()
-                        val t = 1000L * (System.currentTimeMillis() - startTime)
-                        if (t > (recorder?.timestamp ?: 0)) {
-                            recorder!!.timestamp = t
-                        }
-                        recorder!!.record(frame)
-                        frame.close()
-                        if (System.currentTimeMillis() - queTime > 60 * 1000) {
-                            if (!canStartVideoRecord(cameraView.context, exportedFile)) {
+            exportJob =
+                recordScope.launch(Dispatchers.IO) {
+                    while (isActive && isRunning) {
+                        try {
+                            val currentTimestamp =
+                                1000L * (System.currentTimeMillis() - startTime)
+                            val frame = Frame(width, height, Frame.DEPTH_BYTE, 4)
+                            frame.image[0] = readByteBuffer()
+                            val t = 1000L * (System.currentTimeMillis() - startTime)
+                            if (t > (recorder?.timestamp ?: 0)) {
+                                recorder!!.timestamp = t
+                            }
+                            recorder!!.record(frame)
+                            frame.close()
+                            if (System.currentTimeMillis() - queTime > 60 * 1000) {
+                                if (!canStartVideoRecord(cameraView.context, exportedFile)) {
+                                    exportJob?.cancel()
+                                    stopVideoRecordListener?.invoke(false)
+                                    break
+                                }
+                                queTime = System.currentTimeMillis()
+                            }
+                            val timestamp = recorder?.timestamp
+                            if (timestamp != null && timestamp / 1000 > MAX_RECORDING_DURATION_MS) {
                                 exportJob?.cancel()
-                                stopVideoRecordListener?.invoke(false)
+                                stopVideoRecordListener?.invoke(true)
                                 break
                             }
-                            queTime = System.currentTimeMillis()
-                        }
-                        val timestamp = recorder?.timestamp
-                        if (timestamp != null && timestamp / 1000 > MAX_RECORDING_DURATION_MS) {
-                            exportJob?.cancel()
-                            stopVideoRecordListener?.invoke(true)
-                            break
-                        }
-                        if (audioRecord != null) {
-                            val audioTime = System.currentTimeMillis()
-                            if (openAudioRecord) {
-                                bufferReadResult =
-                                    audioRecord?.read(
-                                        audioData!!.array(),
-                                        0,
-                                        audioData!!.capacity()
-                                    )
-                                        ?: 0
-                                if (bufferReadResult > 0) {
-                                    audioData?.limit(bufferReadResult)
+                            if (audioRecord != null) {
+                                val audioTime = System.currentTimeMillis()
+                                if (openAudioRecord) {
+                                    bufferReadResult =
+                                        audioRecord?.read(
+                                            audioData!!.array(),
+                                            0,
+                                            audioData!!.capacity(),
+                                        )
+                                            ?: 0
+                                    if (bufferReadResult > 0) {
+                                        audioData?.limit(bufferReadResult)
+                                        if (currentTimestamp > (recorder?.timestamp ?: 0)) {
+                                            recorder!!.timestamp = currentTimestamp
+                                        }
+                                        recorder?.recordSamples(
+                                            SAMPLE_AUDIO_RETE_INHZ,
+                                            AUDIO_CHANNELS,
+                                            audioData,
+                                        )
+                                    }
+                                } else {
+                                    for (i in 0 until tmpAudioData!!.capacity()) {
+                                        tmpAudioData!!.put(i, 1.toShort())
+                                    }
                                     if (currentTimestamp > (recorder?.timestamp ?: 0)) {
                                         recorder!!.timestamp = currentTimestamp
                                     }
                                     recorder?.recordSamples(
                                         SAMPLE_AUDIO_RETE_INHZ,
-                                        AUDIO_CHANNELS, audioData,
+                                        AUDIO_CHANNELS,
+                                        tmpAudioData,
                                     )
                                 }
-                            } else {
-                                for (i in 0 until tmpAudioData!!.capacity()) {
-                                    tmpAudioData!!.put(i, 1.toShort())
-                                }
-                                if (currentTimestamp > (recorder?.timestamp ?: 0)) {
-                                    recorder!!.timestamp = currentTimestamp
-                                }
-                                recorder?.recordSamples(
-                                    SAMPLE_AUDIO_RETE_INHZ,
-                                    AUDIO_CHANNELS, tmpAudioData,
-                                )
                             }
+                        } catch (e: Exception) {
                         }
-                    } catch (e: Exception) {
-                        Log.e("[ph][ph][ph][ph]", "Caught an exception: " + e.message)
+                        delay(fTime)
                     }
-                    delay(fTime)
                 }
-            }
         } catch (e: Exception) {
             exportJob?.cancel()
             stopVideoRecordListener?.invoke(false)
-            XLog.e("[ph][ph][ph][ph]")
             e.printStackTrace()
         }
     }
 
-    private class FrameInterpolationFilter(private val interpolationFactor: Int) :
-        FrameFilter() {
+    private class FrameInterpolationFilter(
+        private val interpolationFactor: Int,
+    ) : FrameFilter() {
         private var previousFrame: Frame? = null
+
         override fun start() {
             previousFrame = null
         }
@@ -373,16 +378,17 @@ class VideoRecordFFmpeg(
         fun filter(
             image: IplImage?,
             image2: IplImage?,
-        ): IplImage? {
-            return null
-        }
+        ): IplImage? = null
     }
 
     fun startAudioRecording() {
         audioRecord =
             AudioRecord(
-                MediaRecorder.AudioSource.MIC, SAMPLE_AUDIO_RETE_INHZ,
-                AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize,
+                MediaRecorder.AudioSource.MIC,
+                SAMPLE_AUDIO_RETE_INHZ,
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                bufferSize,
             )
         audioRecord!!.startRecording()
     }
@@ -394,12 +400,14 @@ class VideoRecordFFmpeg(
                 audioRecord?.release()
                 audioRecord =
                     AudioRecord(
-                        MediaRecorder.AudioSource.MIC, SAMPLE_AUDIO_RETE_INHZ,
-                        AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize,
+                        MediaRecorder.AudioSource.MIC,
+                        SAMPLE_AUDIO_RETE_INHZ,
+                        AudioFormat.CHANNEL_IN_MONO,
+                        AudioFormat.ENCODING_PCM_16BIT,
+                        bufferSize,
                     )
             }
         } catch (e: Exception) {
-            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", "${e.message}")
         }
     }
 
@@ -415,7 +423,7 @@ class VideoRecordFFmpeg(
                     showCancel = false,
                     positiveText = cameraView.context.getString(LibcoreR.string.app_confirm),
                     cancelable = true,
-                    onPositive = { }
+                    onPositive = { },
                 )
             }
         }
@@ -423,6 +431,7 @@ class VideoRecordFFmpeg(
     }
 
     var queTime = 0L
+
     override fun stopRecord() {
         CoroutineScope(Dispatchers.IO).launch {
             if (isRunning) {
@@ -446,7 +455,6 @@ class VideoRecordFFmpeg(
                     delay(300)
                     refreshAlbum()
                 } catch (e: Exception) {
-                    XLog.e("[ph][ph][ph][ph][ph][ph][ph][ph]" + e.message)
                 }
             }
             isRunning = false
@@ -487,54 +495,60 @@ class VideoRecordFFmpeg(
     private fun createBitmapFromView(): Bitmap {
         var cameraViewBitmap: Bitmap
         when (cameraView) {
-            is CameraView -> cameraViewBitmap =
-                if (dualView == null) {
-                    cameraView.getScaledBitmap()
-                        ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
-                } else {
-                    dualView.scaledBitmap
-                        ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
-                }
+            is CameraView ->
+                cameraViewBitmap =
+                    if (dualView == null) {
+                        cameraView.getScaledBitmap()
+                            ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+                    } else {
+                        dualView.scaledBitmap
+                            ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+                    }
 
             is TextureView -> {
-                cameraViewBitmap = Bitmap.createBitmap(
-                    cameraView.width,
-                    cameraView.height,
-                    Bitmap.Config.ARGB_8888
-                )
+                cameraViewBitmap =
+                    Bitmap.createBitmap(
+                        cameraView.width,
+                        cameraView.height,
+                        Bitmap.Config.ARGB_8888,
+                    )
                 cameraView.getBitmap(cameraViewBitmap)
             }
 
-            is LiteSurfaceView -> cameraViewBitmap =
-                cameraView.scaleBitmap() ?: Bitmap.createBitmap(
-                    cameraView.width,
-                    cameraView.height,
-                    Bitmap.Config.ARGB_8888
-                )
+            is LiteSurfaceView ->
+                cameraViewBitmap =
+                    cameraView.scaleBitmap() ?: Bitmap.createBitmap(
+                        cameraView.width,
+                        cameraView.height,
+                        Bitmap.Config.ARGB_8888,
+                    )
 
             is HikSurfaceView -> cameraViewBitmap = cameraView.getScaleBitmap()
-            else -> cameraViewBitmap =
-                Bitmap.createBitmap(cameraView.width, cameraView.height, Bitmap.Config.ARGB_8888)
+            else ->
+                cameraViewBitmap =
+                    Bitmap.createBitmap(cameraView.width, cameraView.height, Bitmap.Config.ARGB_8888)
         }
         when (temperatureView) {
             is TemperatureView -> {
                 if (isRecordTemp) {
                     if (temperatureView.temperatureRegionMode != TemperatureView.REGION_MODE_CLEAN) {
-                        cameraViewBitmap = BitmapUtils.mergeBitmap(
-                            cameraViewBitmap,
-                            temperatureView.regionBitmap,
-                            0,
-                            0
-                        )
+                        cameraViewBitmap =
+                            BitmapUtils.mergeBitmap(
+                                cameraViewBitmap,
+                                temperatureView.regionBitmap,
+                                0,
+                                0,
+                            )
                     }
                 } else {
                     if (temperatureView.temperatureRegionMode == TemperatureView.REGION_MODE_RESET) {
-                        cameraViewBitmap = BitmapUtils.mergeBitmap(
-                            cameraViewBitmap,
-                            temperatureView.regionBitmap,
-                            0,
-                            0
-                        )
+                        cameraViewBitmap =
+                            BitmapUtils.mergeBitmap(
+                                cameraViewBitmap,
+                                temperatureView.regionBitmap,
+                                0,
+                                0,
+                            )
                     }
                 }
             }
@@ -566,7 +580,8 @@ class VideoRecordFFmpeg(
             cameraViewBitmap =
                 BitmapUtils.mergeBitmapAlpha(
                     cameraViewBitmap,
-                    tempBg!!.drawToBitmap(), alphaPaint,
+                    tempBg!!.drawToBitmap(),
+                    alphaPaint,
                     0,
                     0,
                 )
@@ -575,7 +590,9 @@ class VideoRecordFFmpeg(
             cameraViewBitmap =
                 BitmapUtils.mergeBitmap(
                     cameraViewBitmap,
-                    carView?.drawToBitmap(), 0, 0,
+                    carView?.drawToBitmap(),
+                    0,
+                    0,
                 )
         }
         compassView?.let {
@@ -590,7 +607,6 @@ class VideoRecordFFmpeg(
                             20f.dpToPx(ContextProvider.getContext()).toInt(),
                         )
                 } catch (e: Exception) {
-                    Log.e(TAG, "[ph][ph][ph][ph][ph][ph][ph][ph] exception:${e.message}")
                 }
             }
         }
@@ -628,6 +644,7 @@ class VideoRecordFFmpeg(
 
     private var cameraBitmap: Bitmap? = null
     private var tempBitmap: Bitmap? = null
+
     fun drawCenterLable(
         bmp: Bitmap,
         title: String,
@@ -644,7 +661,7 @@ class VideoRecordFFmpeg(
             "[ph][ph][ph][ph][ph][ph]",
             0,
             "[ph][ph][ph][ph][ph][ph]".length,
-            rectText
+            rectText,
         )
         if (!TextUtils.isEmpty(time)) {
             beginY = beginY - (rectText.bottom - rectText.top)
@@ -655,30 +672,31 @@ class VideoRecordFFmpeg(
             val textHeight = (rectText.bottom - rectText.top)
             paint.getTextBounds(address, 0, address.length, rectText)
             if (rectText.width() > bmp.width - pix20) {
-                val staticLayout = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    StaticLayout.Builder.obtain(
-                        address,
-                        0,
-                        address.length,
-                        paint,
-                        bmp.width - pix20.toInt()
-                    )
-                        .setAlignment(Layout.Alignment.ALIGN_NORMAL)
-                        .setLineSpacing(0.0f, 1.0f)
-                        .setIncludePad(false)
-                        .build()
-                } else {
-                    @Suppress("DEPRECATION")
-                    StaticLayout(
-                        address,
-                        paint,
-                        bmp.width - pix20.toInt(),
-                        Layout.Alignment.ALIGN_NORMAL,
-                        1.0f,
-                        0.0f,
-                        false,
-                    )
-                }
+                val staticLayout =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        StaticLayout.Builder
+                            .obtain(
+                                address,
+                                0,
+                                address.length,
+                                paint,
+                                bmp.width - pix20.toInt(),
+                            ).setAlignment(Layout.Alignment.ALIGN_NORMAL)
+                            .setLineSpacing(0.0f, 1.0f)
+                            .setIncludePad(false)
+                            .build()
+                    } else {
+                        @Suppress("DEPRECATION")
+                        StaticLayout(
+                            address,
+                            paint,
+                            bmp.width - pix20.toInt(),
+                            Layout.Alignment.ALIGN_NORMAL,
+                            1.0f,
+                            0.0f,
+                            false,
+                        )
+                    }
                 beginY = beginY - (textHeight + 1f.dpToPx(ContextProvider.getContext())) * staticLayout.lineCount
                 canvas.save()
                 canvas.translate(beginX.toInt().toFloat(), (beginY.toInt() - textHeight).toFloat())
@@ -694,30 +712,31 @@ class VideoRecordFFmpeg(
             val textHeight = rectText.bottom - rectText.top
             paint.getTextBounds(title, 0, title.length, rectText)
             if (rectText.width() > bmp.width - pix20) {
-                val staticLayout = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    StaticLayout.Builder.obtain(
-                        title,
-                        0,
-                        title.length,
-                        paint,
-                        bmp.width - pix20.toInt()
-                    )
-                        .setAlignment(Layout.Alignment.ALIGN_NORMAL)
-                        .setLineSpacing(0.0f, 1.0f)
-                        .setIncludePad(false)
-                        .build()
-                } else {
-                    @Suppress("DEPRECATION")
-                    StaticLayout(
-                        title,
-                        paint,
-                        bmp.width - pix20.toInt(),
-                        Layout.Alignment.ALIGN_NORMAL,
-                        1.0f,
-                        0.0f,
-                        false,
-                    )
-                }
+                val staticLayout =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        StaticLayout.Builder
+                            .obtain(
+                                title,
+                                0,
+                                title.length,
+                                paint,
+                                bmp.width - pix20.toInt(),
+                            ).setAlignment(Layout.Alignment.ALIGN_NORMAL)
+                            .setLineSpacing(0.0f, 1.0f)
+                            .setIncludePad(false)
+                            .build()
+                    } else {
+                        @Suppress("DEPRECATION")
+                        StaticLayout(
+                            title,
+                            paint,
+                            bmp.width - pix20.toInt(),
+                            Layout.Alignment.ALIGN_NORMAL,
+                            1.0f,
+                            0.0f,
+                            false,
+                        )
+                    }
                 beginY = beginY - textHeight * staticLayout.lineCount
                 canvas.save()
                 canvas.translate(beginX.toInt().toFloat(), (beginY.toInt() - textHeight).toFloat())

@@ -12,7 +12,7 @@ object UnifiedTemperatureUtils {
         point2: Point,
         temperatureArray: ByteArray,
         width: Int,
-        height: Int
+        height: Int,
     ): List<Float> {
         if (point1 == point2) {
             return emptyList()
@@ -35,7 +35,7 @@ object UnifiedTemperatureUtils {
         bottomRight: Point,
         temperatureArray: ByteArray,
         width: Int,
-        height: Int
+        height: Int,
     ): List<Float> {
         val temperatures = mutableListOf<Float>()
         val minX = max(0, min(topLeft.x, bottomRight.x))
@@ -57,7 +57,7 @@ object UnifiedTemperatureUtils {
         point: Point,
         temperatureArray: ByteArray,
         width: Int,
-        height: Int
+        height: Int,
     ): Float? {
         if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height) {
             return null
@@ -70,24 +70,18 @@ object UnifiedTemperatureUtils {
         }
     }
 
-    fun findMaxTemperature(temperatures: List<Float>): Float? {
-        return temperatures.maxOrNull()
-    }
+    fun findMaxTemperature(temperatures: List<Float>): Float? = temperatures.maxOrNull()
 
-    fun findMinTemperature(temperatures: List<Float>): Float? {
-        return temperatures.minOrNull()
-    }
+    fun findMinTemperature(temperatures: List<Float>): Float? = temperatures.minOrNull()
 
-    fun calculateAverageTemperature(temperatures: List<Float>): Float {
-        return if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
-    }
+    fun calculateAverageTemperature(temperatures: List<Float>): Float = if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
 
     fun findHotspot(
         topLeft: Point,
         bottomRight: Point,
         temperatureArray: ByteArray,
         width: Int,
-        height: Int
+        height: Int,
     ): Pair<Point, Float>? {
         var maxTemp = Float.MIN_VALUE
         var hotspotPoint: Point? = null
@@ -115,7 +109,7 @@ object UnifiedTemperatureUtils {
         bottomRight: Point,
         temperatureArray: ByteArray,
         width: Int,
-        height: Int
+        height: Int,
     ): Pair<Point, Float>? {
         var minTemp = Float.MAX_VALUE
         var coldspotPoint: Point? = null
@@ -138,36 +132,29 @@ object UnifiedTemperatureUtils {
         return coldspotPoint?.let { Pair(it, minTemp) }
     }
 
-    fun celsiusToFahrenheit(celsius: Float): Float {
-        return celsius * 9f / 5f + 32f
-    }
+    fun celsiusToFahrenheit(celsius: Float): Float = celsius * 9f / 5f + 32f
 
-    fun fahrenheitToCelsius(fahrenheit: Float): Float {
-        return (fahrenheit - 32f) * 5f / 9f
-    }
+    fun fahrenheitToCelsius(fahrenheit: Float): Float = (fahrenheit - 32f) * 5f / 9f
 
-    fun celsiusToKelvin(celsius: Float): Float {
-        return celsius + 273.15f
-    }
+    fun celsiusToKelvin(celsius: Float): Float = celsius + 273.15f
 
-    fun kelvinToCelsius(kelvin: Float): Float {
-        return kelvin - 273.15f
-    }
+    fun kelvinToCelsius(kelvin: Float): Float = kelvin - 273.15f
 
     @JvmStatic
     fun formatTemperature(
         temperature: Float,
-        unit: TemperatureUnit = TemperatureUnit.CELSIUS
-    ): String {
-        return when (unit) {
+        unit: TemperatureUnit = TemperatureUnit.CELSIUS,
+    ): String =
+        when (unit) {
             TemperatureUnit.CELSIUS -> "%.1f°C".format(temperature)
             TemperatureUnit.FAHRENHEIT -> "%.1f°F".format(celsiusToFahrenheit(temperature))
             TemperatureUnit.KELVIN -> "%.1f K".format(celsiusToKelvin(temperature))
         }
-    }
 
     enum class TemperatureUnit {
-        CELSIUS, FAHRENHEIT, KELVIN
+        CELSIUS,
+        FAHRENHEIT,
+        KELVIN,
     }
 
     private fun byteToTemperature(byte: Byte): Float {
@@ -175,7 +162,10 @@ object UnifiedTemperatureUtils {
         return byte.toFloat() / 10f
     }
 
-    private fun getLinePoints(point1: Point, point2: Point): List<Point> {
+    private fun getLinePoints(
+        point1: Point,
+        point2: Point,
+    ): List<Point> {
         val points = mutableListOf<Point>()
         if (point1.x == point2.x) {
             // Vertical line

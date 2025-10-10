@@ -20,7 +20,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.Spacing
 @Composable
 fun ComponentShowcaseScreen(
     onBackClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LibUnifiedTheme {
         Scaffold(
@@ -29,34 +29,33 @@ fun ComponentShowcaseScreen(
                     title = {
                         Text(
                             "Component Showcase",
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
-                    }
+                    },
                 )
-            }
+            },
         ) { paddingValues ->
             ComponentShowcaseContent(
-                modifier = Modifier.padding(paddingValues)
+                modifier = Modifier.padding(paddingValues),
             )
         }
     }
 }
 
 @Composable
-private fun ComponentShowcaseContent(
-    modifier: Modifier = Modifier
-) {
+private fun ComponentShowcaseContent(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(Spacing.normal)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(Spacing.normal)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(Spacing.normal)
+                .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(Spacing.normal),
     ) {
         // Typography showcase
         TypographyShowcase()
@@ -77,49 +76,49 @@ private fun ComponentShowcaseContent(
 private fun TypographyShowcase() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall),
     ) {
         Column(
             modifier = Modifier.padding(Spacing.normal),
-            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium),
         ) {
             Text(
                 "Typography Styles",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             HorizontalDivider()
             Text(
                 "Headline Large",
-                style = MaterialTheme.typography.headlineLarge
+                style = MaterialTheme.typography.headlineLarge,
             )
             Text(
                 "Headline Medium",
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
             )
             Text(
                 "Headline Small",
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineSmall,
             )
             Text(
                 "Title Large",
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
             )
             Text(
                 "Title Medium",
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
             )
             Text(
                 "Body Large - This is the standard body text for longer content and descriptions.",
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
             )
             Text(
                 "Body Medium - This is commonly used for secondary information.",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
             Text(
                 "Body Small - Used for captions and supplementary text.",
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
             )
         }
     }
@@ -129,21 +128,21 @@ private fun TypographyShowcase() {
 private fun ColorPaletteShowcase() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall),
     ) {
         Column(
             modifier = Modifier.padding(Spacing.normal),
-            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium),
         ) {
             Text(
                 "Thermal Imaging Color Palette",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             HorizontalDivider()
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Spacing.small)
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small),
             ) {
                 ColorSwatch("Primary", MaterialTheme.colorScheme.primary, Modifier.weight(1f))
                 ColorSwatch("Secondary", MaterialTheme.colorScheme.secondary, Modifier.weight(1f))
@@ -151,7 +150,7 @@ private fun ColorPaletteShowcase() {
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Spacing.small)
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small),
             ) {
                 ColorSwatch("Error", MaterialTheme.colorScheme.error, Modifier.weight(1f))
                 ColorSwatch("Background", MaterialTheme.colorScheme.background, Modifier.weight(1f))
@@ -165,19 +164,20 @@ private fun ColorPaletteShowcase() {
 private fun ColorSwatch(
     name: String,
     color: androidx.compose.ui.graphics.Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = color)
+        colors = CardDefaults.cardColors(containerColor = color),
     ) {
         Text(
             name,
-            modifier = Modifier
-                .padding(Spacing.small)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(Spacing.small)
+                    .fillMaxWidth(),
             style = MaterialTheme.typography.bodySmall,
-            color = androidx.compose.ui.graphics.Color.White
+            color = androidx.compose.ui.graphics.Color.White,
         )
     }
 }
@@ -189,38 +189,38 @@ private fun InteractiveComponentsShowcase() {
     var selectedChip by remember { mutableStateOf("Option 1") }
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall),
     ) {
         Column(
             modifier = Modifier.padding(Spacing.normal),
-            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium),
         ) {
             Text(
                 "Interactive Components",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             HorizontalDivider()
             // Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Spacing.small)
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small),
             ) {
                 Button(
                     onClick = { },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text("Button")
                 }
                 OutlinedButton(
                     onClick = { },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text("Outlined")
                 }
                 TextButton(
                     onClick = { },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text("Text")
                 }
@@ -231,30 +231,30 @@ private fun InteractiveComponentsShowcase() {
                 Slider(
                     value = sliderValue,
                     onValueChange = { sliderValue = it },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
             // Switch
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text("Switch Control")
                 Switch(
                     checked = switchState,
-                    onCheckedChange = { switchState = it }
+                    onCheckedChange = { switchState = it },
                 )
             }
             // Filter Chips
             Row(
-                horizontalArrangement = Arrangement.spacedBy(Spacing.small)
+                horizontalArrangement = Arrangement.spacedBy(Spacing.small),
             ) {
                 listOf("Option 1", "Option 2", "Option 3").forEach { option ->
                     FilterChip(
                         onClick = { selectedChip = option },
                         label = { Text(option) },
-                        selected = selectedChip == option
+                        selected = selectedChip == option,
                     )
                 }
             }
@@ -266,34 +266,34 @@ private fun InteractiveComponentsShowcase() {
 private fun StatusIndicatorsShowcase() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall),
     ) {
         Column(
             modifier = Modifier.padding(Spacing.normal),
-            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium),
         ) {
             Text(
                 "Status Indicators",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             HorizontalDivider()
             // Progress indicators
             Column(
-                verticalArrangement = Arrangement.spacedBy(Spacing.small)
+                verticalArrangement = Arrangement.spacedBy(Spacing.small),
             ) {
                 Text("Linear Progress")
                 LinearProgressIndicator(
                     progress = { 0.75f },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 Text("Circular Progress")
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(Spacing.normal)
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.normal),
                 ) {
                     CircularProgressIndicator(
-                        progress = { 0.75f }
+                        progress = { 0.75f },
                     )
                     CircularProgressIndicator()
                 }
@@ -301,21 +301,21 @@ private fun StatusIndicatorsShowcase() {
             // Badges
             Row(
                 horizontalArrangement = Arrangement.spacedBy(Spacing.small),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text("Badges:")
                 Badge { Text("New") }
                 Badge(
-                    containerColor = MaterialTheme.colorScheme.error
+                    containerColor = MaterialTheme.colorScheme.error,
                 ) { Text("Error") }
                 Badge(
-                    containerColor = MaterialTheme.colorScheme.tertiary
+                    containerColor = MaterialTheme.colorScheme.tertiary,
                 ) { Text("Warning") }
             }
             // Status icons
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 StatusIcon(Icons.Default.CheckCircle, "Success", MaterialTheme.colorScheme.primary)
                 StatusIcon(Icons.Default.Warning, "Warning", MaterialTheme.colorScheme.tertiary)
@@ -330,21 +330,21 @@ private fun StatusIndicatorsShowcase() {
 private fun StatusIcon(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     label: String,
-    color: androidx.compose.ui.graphics.Color
+    color: androidx.compose.ui.graphics.Color,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(Spacing.extraSmall)
+        verticalArrangement = Arrangement.spacedBy(Spacing.extraSmall),
     ) {
         Icon(
             icon,
             contentDescription = label,
             tint = color,
-            modifier = Modifier.size(Spacing.large)
+            modifier = Modifier.size(Spacing.large),
         )
         Text(
             label,
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodySmall,
         )
     }
 }
@@ -353,49 +353,51 @@ private fun StatusIcon(
 private fun CardLayoutsShowcase() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall),
     ) {
         Column(
             modifier = Modifier.padding(Spacing.normal),
-            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium),
         ) {
             Text(
                 "Card Layouts",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             HorizontalDivider()
             // Information card
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    ),
             ) {
                 Row(
-                    modifier = Modifier
-                        .padding(12.dp)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(12.dp)
+                            .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Icon(
                         Icons.Default.Info,
                         contentDescription = "Component Info",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                     Column(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text(
                             "Information Card",
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
                         )
                         Text(
                             "This is an example of an information card layout",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -403,38 +405,39 @@ private fun CardLayoutsShowcase() {
             // Action card
             Card(
                 onClick = { },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Row(
-                    modifier = Modifier
-                        .padding(Spacing.medium)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(Spacing.medium)
+                            .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(Spacing.medium)
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.medium),
                 ) {
                     Icon(
                         Icons.Default.TouchApp,
                         contentDescription = "Touch Interaction",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                     Column(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text(
                             "Clickable Action Card",
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
                         )
                         Text(
                             "This card responds to tap interactions",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = "View Component",
-                        tint = MaterialTheme.colorScheme.outline
+                        tint = MaterialTheme.colorScheme.outline,
                     )
                 }
             }
@@ -446,24 +449,24 @@ private fun CardLayoutsShowcase() {
 private fun NavigationComponentsShowcase() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall),
     ) {
         Column(
             modifier = Modifier.padding(Spacing.normal),
-            verticalArrangement = Arrangement.spacedBy(Spacing.medium)
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium),
         ) {
             Text(
                 "Navigation Components",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             HorizontalDivider()
             Text(
                 "The unified navigation system provides:",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
             Column(
-                verticalArrangement = Arrangement.spacedBy(Spacing.small)
+                verticalArrangement = Arrangement.spacedBy(Spacing.small),
             ) {
                 NavigationFeature("Type-safe navigation routes")
                 NavigationFeature("Smooth page transitions")
@@ -473,9 +476,9 @@ private fun NavigationComponentsShowcase() {
             }
             Text(
                 "All navigation is handled through the UnifiedNavigation system, " +
-                        "providing consistent behavior across the entire application.",
+                    "providing consistent behavior across the entire application.",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -485,17 +488,17 @@ private fun NavigationComponentsShowcase() {
 private fun NavigationFeature(feature: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Spacing.small)
+        horizontalArrangement = Arrangement.spacedBy(Spacing.small),
     ) {
         Icon(
             Icons.Default.Check,
             contentDescription = "Feature Available",
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(Spacing.normal)
+            modifier = Modifier.size(Spacing.normal),
         )
         Text(
             feature,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }

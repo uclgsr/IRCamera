@@ -5,7 +5,6 @@ import static com.mpdc4gsr.libunified.ir.usbdual.camera.IFrameData.FRAME_LEN;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
@@ -164,7 +163,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                     if (handler != null) {
                         handler.sendEmptyMessage(Const.RESTART_USB);
                     }
-                    Log.d(TAG, "RESTART_USB");
                     return;
                 }
 
@@ -177,8 +175,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                         fps = 100 * 1000 / (timeuse + 0.0);
                     }
                     timestart = currentTimeMillis;
-                    Log.d(TAG, "frame.length = " + frame.length + " fps=" + String.format(Locale.US, "%.1f", fps) +
-                            " dataFlowMode = " + dataFlowMode);
                 }
                 System.arraycopy(frame, 0, mixData, 0, fusionLength);
                 System.arraycopy(frame, fusionLength, irData, 0, irSize * 2);
@@ -255,15 +251,12 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                                 auto_gain_switch_info, gain_switch_param, new AutoGainSwitchCallback() {
                                     @Override
                                     public void onAutoGainSwitchState(CommonParams.PropTPDParamsValue.GAINSELStatus gainselStatus) {
-                                        Log.d(TAG, "onAutoGainSwitchState = " + gainselStatus.getValue());
                                         auto_gain_switch_running = false;
                                         resetAutoGainInfo();
                                     }
 
                                     @Override
                                     public void onAutoGainSwitchResult(CommonParams.PropTPDParamsValue.GAINSELStatus gainselStatus, int result) {
-                                        Log.d(TAG, "onAutoGainSwitchResult = " + gainselStatus.getValue() + "  result" +
-                                                ":" + result);
                                         auto_gain_switch_running = true;
                                     }
                                 });
@@ -275,7 +268,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                                 pixel_above_prop, switch_frame_cnt, close_frame_cnt, new AvoidOverexposureCallback() {
                                     @Override
                                     public void onAvoidOverexposureState(boolean avoidOverexpol) {
-                                        Log.d(TAG, "onAvoidOverexposureState = " + avoidOverexpol);
                                     }
                                 });
                     }

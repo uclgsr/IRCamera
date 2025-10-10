@@ -5,19 +5,28 @@ import java.io.File
 
 object UnifiedCleanupUtils {
     // ==================== FINAL BLE MODULE CONSOLIDATION ====================
-    fun setDoubleAccuracy(num: Double, scale: Int): Double {
+    fun setDoubleAccuracy(
+        num: Double,
+        scale: Int,
+    ): Double {
         val factor = Math.pow(10.0, scale.toDouble())
         return Math.floor(num * factor) / factor
     }
 
-    fun getPercents(scale: Int, vararg values: Float): FloatArray {
+    fun getPercents(
+        scale: Int,
+        vararg values: Float,
+    ): FloatArray {
         val sum = values.sum()
         if (sum == 0f) return FloatArray(values.size) { 0f }
         val factor = Math.pow(10.0, scale.toDouble()).toFloat()
         return values.map { (it / sum * 100 * factor).toInt() / factor }.toFloatArray()
     }
 
-    fun splitPackage(src: ByteArray, size: Int): List<ByteArray> {
+    fun splitPackage(
+        src: ByteArray,
+        size: Int,
+    ): List<ByteArray> {
         if (size <= 0) return emptyList()
         val result = mutableListOf<ByteArray>()
         var offset = 0
@@ -41,20 +50,23 @@ object UnifiedCleanupUtils {
     }
 
     // ==================== FINAL LIBUNIFIED CONSOLIDATION ====================
-    fun getScreenDensity(context: Context): Float {
-        return context.resources.displayMetrics.density
-    }
+    fun getScreenDensity(context: Context): Float = context.resources.displayMetrics.density
 
-    fun dpToPx(context: Context, dp: Float): Int {
-        return (dp * context.resources.displayMetrics.density + 0.5f).toInt()
-    }
+    fun dpToPx(
+        context: Context,
+        dp: Float,
+    ): Int = (dp * context.resources.displayMetrics.density + 0.5f).toInt()
 
-    fun pxToDp(context: Context, px: Float): Int {
-        return (px / context.resources.displayMetrics.density + 0.5f).toInt()
-    }
+    fun pxToDp(
+        context: Context,
+        px: Float,
+    ): Int = (px / context.resources.displayMetrics.density + 0.5f).toInt()
 
     // Color utility consolidation
-    fun adjustColorBrightness(color: Int, factor: Float): Int {
+    fun adjustColorBrightness(
+        color: Int,
+        factor: Float,
+    ): Int {
         val red = ((color shr 16) and 0xFF)
         val green = ((color shr 8) and 0xFF)
         val blue = (color and 0xFF)
@@ -66,11 +78,12 @@ object UnifiedCleanupUtils {
     }
 
     // ==================== FINAL COMPONENT CONSOLIDATION ====================
-    fun calculateThermalAverage(temperatures: FloatArray): Float {
-        return if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
-    }
+    fun calculateThermalAverage(temperatures: FloatArray): Float = if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
 
-    fun findThermalHotspot(temperatures: FloatArray, width: Int): Pair<Int, Float> {
+    fun findThermalHotspot(
+        temperatures: FloatArray,
+        width: Int,
+    ): Pair<Int, Float> {
         if (temperatures.isEmpty()) return Pair(0, 0f)
         var maxTemp = temperatures[0]
         var maxIndex = 0
@@ -83,12 +96,17 @@ object UnifiedCleanupUtils {
         return Pair(maxIndex, maxTemp)
     }
 
-    fun validateUserInput(input: String, minLength: Int = 1, maxLength: Int = 100): Boolean {
-        return input.isNotBlank() && input.length in minLength..maxLength
-    }
+    fun validateUserInput(
+        input: String,
+        minLength: Int = 1,
+        maxLength: Int = 100,
+    ): Boolean = input.isNotBlank() && input.length in minLength..maxLength
 
     // ==================== FINAL APP UTILITIES CONSOLIDATION ====================
-    fun cleanupTempFiles(context: Context, maxAgeHours: Int = 24): Int {
+    fun cleanupTempFiles(
+        context: Context,
+        maxAgeHours: Int = 24,
+    ): Int {
         val tempDir = File(context.cacheDir, "temp")
         if (!tempDir.exists()) return 0
         val cutoffTime = System.currentTimeMillis() - (maxAgeHours * 60 * 60 * 1000)
@@ -117,22 +135,26 @@ object UnifiedCleanupUtils {
         val root = File(rootPath)
         val issues = mutableListOf<String>()
         // Check for duplicate utility files (should be zero after consolidation)
-        val utilityFiles = root.walkTopDown()
-            .filter { it.name.contains("Utils", ignoreCase = true) && it.isFile }
-            .filter { !it.absolutePath.contains("UnifiedCleanupUtils") }
-            .toList()
+        val utilityFiles =
+            root
+                .walkTopDown()
+                .filter { it.name.contains("Utils", ignoreCase = true) && it.isFile }
+                .filter { !it.absolutePath.contains("UnifiedCleanupUtils") }
+                .toList()
         if (utilityFiles.isNotEmpty()) {
             issues.add("Found ${utilityFiles.size} remaining utility files that should be consolidated")
         }
         // Check for redundant documentation
-        val docFiles = root.walkTopDown()
-            .filter {
-                it.extension == "md" && it.name.contains(
-                    "IMPLEMENTATION",
-                    ignoreCase = true
-                )
-            }
-            .toList()
+        val docFiles =
+            root
+                .walkTopDown()
+                .filter {
+                    it.extension == "md" &&
+                        it.name.contains(
+                            "IMPLEMENTATION",
+                            ignoreCase = true,
+                        )
+                }.toList()
         if (docFiles.size > 1) {
             issues.add("Found ${docFiles.size} implementation documentation files - should consolidate")
         }
@@ -140,7 +162,7 @@ object UnifiedCleanupUtils {
             isClean = issues.isEmpty(),
             issues = issues,
             utilityFilesRemaining = utilityFiles.size,
-            consolidationComplete = issues.isEmpty()
+            consolidationComplete = issues.isEmpty(),
         )
     }
 
@@ -148,7 +170,7 @@ object UnifiedCleanupUtils {
         val isClean: Boolean,
         val issues: List<String>,
         val utilityFilesRemaining: Int,
-        val consolidationComplete: Boolean
+        val consolidationComplete: Boolean,
     )
 
     fun generateConsolidationReport(rootPath: String): String {

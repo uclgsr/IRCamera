@@ -10,14 +10,14 @@ data class GSRPlotData(
     val ppgMovingAverage: List<Double>,
     val gsrEvents: List<GSREvent>,
     val statistics: List<TimeWindowStats>,
-    val metadata: PlotMetadata
+    val metadata: PlotMetadata,
 ) : Serializable
 
 data class GSREvent(
     val timestamp: Double,
     val type: String,
     val magnitude: Double,
-    val gsrValue: Double
+    val gsrValue: Double,
 ) : Serializable
 
 data class TimeWindowStats(
@@ -27,12 +27,12 @@ data class TimeWindowStats(
     val stdDev: Double,
     val min: Double,
     val max: Double,
-    val count: Int
+    val count: Int,
 ) : Serializable
 
 data class PlotMetadata(
     val fileName: String,
     val duration: Double,
     val samplingRate: Double,
-    val dataPoints: Int
+    val dataPoints: Int,
 ) : Serializable

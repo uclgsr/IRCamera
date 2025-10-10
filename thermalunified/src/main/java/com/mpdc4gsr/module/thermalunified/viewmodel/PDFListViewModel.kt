@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
@@ -25,7 +24,7 @@ class PDFListViewModel : BaseViewModel() {
         val size: Long,
         val pageCount: Int,
         val dateModified: Long,
-        val isAnalysisReport: Boolean = false
+        val isAnalysisReport: Boolean = false,
     )
 
     // State flows for Compose
@@ -51,7 +50,6 @@ class PDFListViewModel : BaseViewModel() {
                     _pdfItems.update { items }
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error loading PDF items", e)
             } finally {
                 _isLoading.update { false }
             }
@@ -99,7 +97,6 @@ class PDFListViewModel : BaseViewModel() {
                 try {
                     File(item.path).delete()
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error deleting file: ${item.path}", e)
                 }
             }
             withContext(Dispatchers.Main) {
@@ -114,21 +111,21 @@ class PDFListViewModel : BaseViewModel() {
     }
 
     // Get PDF items from file system
-    private suspend fun getPDFItemsList(): List<PDFItem> {
-        return try {
+    private suspend fun getPDFItemsList(): List<PDFItem> =
+        try {
             val items = mutableListOf<PDFItem>()
             // Scan the PDF directory for PDF files
             val pdfDir = File(FileConfig.getPdfDir())
-            Log.d(TAG, "Scanning PDF directory: ${pdfDir.absolutePath}")
             if (pdfDir.exists() && pdfDir.isDirectory) {
-                val pdfFiles = pdfDir.listFiles { file ->
-                    file.isFile && file.name.lowercase().endsWith(".pdf")
-                }
-                Log.d(TAG, "Found ${pdfFiles?.size ?: 0} PDF files")
+                val pdfFiles =
+                    pdfDir.listFiles { file ->
+                        file.isFile && file.name.lowercase().endsWith(".pdf")
+                    }
                 pdfFiles?.forEach { pdfFile ->
                     try {
                         // Determine if this is an analysis report based on filename patterns
-                        val isAnalysisReport = pdfFile.name.contains("analysis", ignoreCase = true) ||
+                        val isAnalysisReport =
+                            pdfFile.name.contains("analysis", ignoreCase = true) ||
                                 pdfFile.name.contains("report", ignoreCase = true) ||
                                 pdfFile.name.contains("thermal", ignoreCase = true)
                         // For now, we'll use a default page count of 1
@@ -141,26 +138,20 @@ class PDFListViewModel : BaseViewModel() {
                                 size = pdfFile.length(),
                                 pageCount = pageCount,
                                 dateModified = pdfFile.lastModified(),
-                                isAnalysisReport = isAnalysisReport
-                            )
+                                isAnalysisReport = isAnalysisReport,
+                            ),
                         )
-                        Log.d(TAG, "Added PDF: ${pdfFile.name} (${pdfFile.length()} bytes)")
                     } catch (e: Exception) {
-                        Log.w(TAG, "Error processing PDF file: ${pdfFile.name}", e)
                     }
                 }
             } else {
-                Log.w(TAG, "PDF directory does not exist or is not a directory: ${pdfDir.absolutePath}")
             }
             // Sort by date modified (newest first)
             val sortedItems = items.sortedByDescending { it.dateModified }
-            Log.d(TAG, "Returning ${sortedItems.size} PDF items")
             sortedItems
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting PDF items list", e)
             emptyList()
         }
-    }
 
     fun showMoreActions(item: PDFItem) {
         // Placeholder for more actions functionality

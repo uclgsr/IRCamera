@@ -9,25 +9,25 @@ class MoreViewModel : BaseViewModel() {
     data class SettingsItem(
         val title: String,
         val subtitle: String,
-        val action: SettingsAction
+        val action: SettingsAction,
     )
 
     data class QuickAction(
         val title: String,
         val subtitle: String,
-        val actionType: String
+        val actionType: String,
     )
 
     data class HelpResource(
         val title: String,
         val subtitle: String,
-        val resourceType: String
+        val resourceType: String,
     )
 
     data class CommunityLink(
         val title: String,
         val subtitle: String,
-        val linkType: String
+        val linkType: String,
     )
 
     enum class SettingsAction {
@@ -38,7 +38,7 @@ class MoreViewModel : BaseViewModel() {
         UNIT,
         VERSION,
         DISCONNECT,
-        RESET
+        RESET,
     }
 
     private val _settingsItems = MutableStateFlow<List<SettingsItem>>(emptyList())
@@ -61,48 +61,49 @@ class MoreViewModel : BaseViewModel() {
 
     private fun loadSettingsItems() {
         launchWithErrorHandling {
-            val items = listOf(
-                SettingsItem(
-                    title = "Device Information",
-                    subtitle = "View device details and specifications",
-                    action = SettingsAction.DEVICE_INFORMATION
-                ),
-                SettingsItem(
-                    title = "TISR",
-                    subtitle = "Temperature Image Super Resolution settings",
-                    action = SettingsAction.TISR
-                ),
-                SettingsItem(
-                    title = "Storage Space",
-                    subtitle = "Manage device storage and format options",
-                    action = SettingsAction.STORAGE_SPACE
-                ),
-                SettingsItem(
-                    title = "Auto Save",
-                    subtitle = "Automatically save images to device",
-                    action = SettingsAction.AUTO_SAVE
-                ),
-                SettingsItem(
-                    title = "Temperature Unit",
-                    subtitle = "Choose Celsius or Fahrenheit",
-                    action = SettingsAction.UNIT
-                ),
-                SettingsItem(
-                    title = "Version Information",
-                    subtitle = "App version and update information",
-                    action = SettingsAction.VERSION
-                ),
-                SettingsItem(
-                    title = "Disconnect Device",
-                    subtitle = "Disconnect from thermal camera",
-                    action = SettingsAction.DISCONNECT
-                ),
-                SettingsItem(
-                    title = "Factory Reset",
-                    subtitle = "Reset device to factory settings",
-                    action = SettingsAction.RESET
+            val items =
+                listOf(
+                    SettingsItem(
+                        title = "Device Information",
+                        subtitle = "View device details and specifications",
+                        action = SettingsAction.DEVICE_INFORMATION,
+                    ),
+                    SettingsItem(
+                        title = "TISR",
+                        subtitle = "Temperature Image Super Resolution settings",
+                        action = SettingsAction.TISR,
+                    ),
+                    SettingsItem(
+                        title = "Storage Space",
+                        subtitle = "Manage device storage and format options",
+                        action = SettingsAction.STORAGE_SPACE,
+                    ),
+                    SettingsItem(
+                        title = "Auto Save",
+                        subtitle = "Automatically save images to device",
+                        action = SettingsAction.AUTO_SAVE,
+                    ),
+                    SettingsItem(
+                        title = "Temperature Unit",
+                        subtitle = "Choose Celsius or Fahrenheit",
+                        action = SettingsAction.UNIT,
+                    ),
+                    SettingsItem(
+                        title = "Version Information",
+                        subtitle = "App version and update information",
+                        action = SettingsAction.VERSION,
+                    ),
+                    SettingsItem(
+                        title = "Disconnect Device",
+                        subtitle = "Disconnect from thermal camera",
+                        action = SettingsAction.DISCONNECT,
+                    ),
+                    SettingsItem(
+                        title = "Factory Reset",
+                        subtitle = "Reset device to factory settings",
+                        action = SettingsAction.RESET,
+                    ),
                 )
-            )
             _settingsItems.value = items
         }
     }
@@ -119,69 +120,72 @@ class MoreViewModel : BaseViewModel() {
 
     private fun loadQuickActions() {
         launchWithErrorHandling {
-            val actions = listOf(
-                QuickAction(
-                    title = "Quick Calibration",
-                    subtitle = "Start thermal camera calibration",
-                    actionType = "startQuickCalibration"
-                ),
-                QuickAction(
-                    title = "Export Data",
-                    subtitle = "Export thermal images and logs",
-                    actionType = "exportData"
-                ),
-                QuickAction(
-                    title = "Share Analysis",
-                    subtitle = "Share thermal analysis results",
-                    actionType = "shareAnalysis"
+            val actions =
+                listOf(
+                    QuickAction(
+                        title = "Quick Calibration",
+                        subtitle = "Start thermal camera calibration",
+                        actionType = "startQuickCalibration",
+                    ),
+                    QuickAction(
+                        title = "Export Data",
+                        subtitle = "Export thermal images and logs",
+                        actionType = "exportData",
+                    ),
+                    QuickAction(
+                        title = "Share Analysis",
+                        subtitle = "Share thermal analysis results",
+                        actionType = "shareAnalysis",
+                    ),
                 )
-            )
             _quickActions.value = actions
         }
     }
 
     private fun loadHelpResources() {
         launchWithErrorHandling {
-            val resources = listOf(
-                HelpResource(
-                    title = "User Guide",
-                    subtitle = "Complete user manual and tutorials",
-                    resourceType = "USER_GUIDE"
-                ),
-                HelpResource(
-                    title = "FAQ",
-                    subtitle = "Frequently asked questions",
-                    resourceType = "FAQ"
-                ),
-                HelpResource(
-                    title = "Troubleshooting",
-                    subtitle = "Common issues and solutions",
-                    resourceType = "TROUBLESHOOTING"
+            val resources =
+                listOf(
+                    HelpResource(
+                        title = "User Guide",
+                        subtitle = "Complete user manual and tutorials",
+                        resourceType = "USER_GUIDE",
+                    ),
+                    HelpResource(
+                        title = "FAQ",
+                        subtitle = "Frequently asked questions",
+                        resourceType = "FAQ",
+                    ),
+                    HelpResource(
+                        title = "Troubleshooting",
+                        subtitle = "Common issues and solutions",
+                        resourceType = "TROUBLESHOOTING",
+                    ),
                 )
-            )
             _helpResources.value = resources
         }
     }
 
     private fun loadCommunityLinks() {
         launchWithErrorHandling {
-            val links = listOf(
-                CommunityLink(
-                    title = "Advanced Analysis",
-                    subtitle = "Access advanced thermal analysis tools",
-                    linkType = "openAdvancedAnalysis"
-                ),
-                CommunityLink(
-                    title = "Batch Processing",
-                    subtitle = "Process multiple thermal images",
-                    linkType = "openBatchProcessing"
-                ),
-                CommunityLink(
-                    title = "AI Detection",
-                    subtitle = "Use AI for thermal anomaly detection",
-                    linkType = "openAIDetection"
+            val links =
+                listOf(
+                    CommunityLink(
+                        title = "Advanced Analysis",
+                        subtitle = "Access advanced thermal analysis tools",
+                        linkType = "openAdvancedAnalysis",
+                    ),
+                    CommunityLink(
+                        title = "Batch Processing",
+                        subtitle = "Process multiple thermal images",
+                        linkType = "openBatchProcessing",
+                    ),
+                    CommunityLink(
+                        title = "AI Detection",
+                        subtitle = "Use AI for thermal anomaly detection",
+                        linkType = "openAIDetection",
+                    ),
                 )
-            )
             _communityLinks.value = links
         }
     }

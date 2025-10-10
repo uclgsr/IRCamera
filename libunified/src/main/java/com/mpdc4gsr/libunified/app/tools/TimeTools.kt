@@ -1,7 +1,6 @@
 package com.mpdc4gsr.libunified.app.tools
 
 import android.annotation.SuppressLint
-import android.util.Log
 import com.mpdc4gsr.libunified.app.utils.CommUtils
 import java.io.File
 import java.text.ParsePosition
@@ -9,9 +8,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object TimeTools {
-    fun formatDetectTime(timeMillis: Long): String {
-        return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(timeMillis))
-    }
+    fun formatDetectTime(timeMillis: Long): String = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(timeMillis))
 
     @SuppressLint("SimpleDateFormat")
     fun getNowTime(): String {
@@ -31,8 +28,8 @@ object TimeTools {
     }
 
     @SuppressLint("SimpleDateFormat")
-    fun strToTime(timeStr: String): Long {
-        return try {
+    fun strToTime(timeStr: String): Long =
+        try {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val timeZone =
                 TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
@@ -41,7 +38,6 @@ object TimeTools {
         } catch (e: Exception) {
             1609430400000
         }
-    }
 
     @SuppressLint("SimpleDateFormat")
     fun showDateType(
@@ -136,7 +132,6 @@ object TimeTools {
                     file.lastModified()
                 }
         } catch (e: Exception) {
-            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]", "${e.message}")
         }
         return currentTime
     }

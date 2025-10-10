@@ -3,7 +3,6 @@ package mpdc4gsr.feature.network.data
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -128,10 +127,6 @@ suspend fun connectBluetooth(bluetoothDevice: BluetoothDevice): Boolean {
     if (activeConnection != null) {
         disconnect()
     }
-    Log.i(
-        TAG,
-        "Attempting Bluetooth connection to ${bluetoothDevice.name} (${bluetoothDevice.address})"
-    )
     // Save settings asynchronously
     managerScope.launch {
         networkSettings.saveBluetoothDevice(bluetoothDevice)
@@ -343,10 +338,6 @@ private fun handleConnectionStateChange(
 
 private fun scheduleReconnection() {
     if (currentReconnectAttempts >= networkSettings.reconnectAttempts) {
-        Log.w(
-            TAG,
-            "Maximum reconnection attempts reached (${networkSettings.reconnectAttempts})"
-        )
         _lastError.value =
             "Connection failed after ${networkSettings.reconnectAttempts} attempts"
         return

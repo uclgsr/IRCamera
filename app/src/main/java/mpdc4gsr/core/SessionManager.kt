@@ -1,7 +1,6 @@
 package mpdc4gsr.core
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -53,14 +52,14 @@ class SessionManager(
         RECORDING_ACTIVE,
         STOPPING,
         CLEANUP,
-        ERROR
+        ERROR,
     }
 
     data class WorkflowStep(
         val name: String,
         val action: suspend () -> Boolean,
         val timeout: Long = 30000L,
-        val required: Boolean = true
+        val required: Boolean = true,
     )
 
     private var onSessionStateChanged: ((SessionState) -> Unit)? = null
@@ -128,12 +127,6 @@ class SessionManager(
         isRunning.set(true)
         sessionJob.set(
             sessionScope.launch {
-                logger.log(
-                    StructuredLogger.LogLevel.INFO,
-                    "SessionManager",
-                    "service_started",
-                    emptyMap()
-                )
                 try {
                     while (isRunning.get()) {
                         updateSessionState()
@@ -142,21 +135,7 @@ class SessionManager(
                         delay(SESSION_HEARTBEAT_INTERVAL_MS)
                     }
                 } catch (e: CancellationException) {
-                    logger.log(
-                        StructuredLogger.LogLevel.DEBUG,
-                        "SessionManager",
-                        "service_cancelled",
-                        mapOf("reason" to (e.message ?: "cancelled")),
-                    )
                 } catch (e: Exception) {
-                    logger.log(
-                        StructuredLogger.LogLevel.ERROR,
-                        "SessionManager",
-                        "service_error",
-                        mapOf(
-                            "error" to e.message.orEmpty(),
-                        ),
-                    )
                 }
             },
         )
@@ -173,7 +152,6 @@ class SessionManager(
         sessionJob.set(null)
         // Cancel the sessionScope to cleanup all coroutines
         sessionScope.cancel()
-        logger.log(StructuredLogger.LogLevel.INFO, "SessionManager", "service_stopped", emptyMap())
     }
 
     fun createSession(metadata: Map<String, Any> = emptyMap()): String {
@@ -192,15 +170,6 @@ class SessionManager(
         sessionStartTime.set(startTime)
         sessionHistory[id] = session
         updateSessionState(SessionState.ACTIVE)
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            "SessionManager",
-            "session_created",
-            mapOf(
-                "session_id" to id,
-                "metadata_keys" to metadata.keys.joinToString(","),
-            ),
-        )
         return id
     }
 
@@ -226,18 +195,6 @@ class SessionManager(
         connectedDevices[deviceId] = deviceInfo
         updateSessionParticipants()
         onDeviceJoined?.invoke(deviceInfo)
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            "SessionManager",
-            "device_joined",
-            mapOf(
-                "session_id" to session.id,
-                "device_id" to deviceId,
-                "device_type" to deviceType,
-                "capabilities" to capabilities.joinToString(","),
-                "total_devices" to connectedDevices.size.toString(),
-            ),
-        )
         return true
     }
 
@@ -249,16 +206,6 @@ class SessionManager(
         if (deviceInfo != null) {
             updateSessionParticipants()
             onDeviceLeft?.invoke(deviceInfo)
-            logger.log(
-                StructuredLogger.LogLevel.INFO,
-                "SessionManager",
-                "device_left",
-                mapOf(
-                    "device_id" to deviceId,
-                    "reason" to reason,
-                    "remaining_devices" to connectedDevices.size.toString(),
-                ),
-            )
         }
     }
 
@@ -281,15 +228,6 @@ class SessionManager(
                 recordingCapableDevices.forEach { device ->
                     connectedDevices[device.deviceId] = device.copy(isRecording = true)
                 }
-                logger.log(
-                    StructuredLogger.LogLevel.INFO,
-                    "SessionManager",
-                    "sync_recording_started",
-                    mapOf(
-                        "session_id" to session.id,
-                        "recording_devices" to recordingCapableDevices.size.toString(),
-                    ),
-                )
             }
         }
         return true
@@ -304,14 +242,6 @@ class SessionManager(
             }
         }
         updateSessionState(SessionState.ACTIVE)
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            "SessionManager",
-            "sync_recording_stopped",
-            mapOf(
-                "session_id" to session.id,
-            ),
-        )
     }
 
     fun endSession(
@@ -336,16 +266,6 @@ class SessionManager(
         this.sessionId.set(null)
         sessionStartTime.set(0L)
         updateSessionState(SessionState.IDLE)
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            "SessionManager",
-            "session_ended",
-            mapOf(
-                "session_id" to session.id,
-                "reason" to reason,
-                "duration_ms" to (endedSession.endTime - endedSession.startTime).toString(),
-            ),
-        )
     }
 
     fun updateDeviceHeartbeat(
@@ -365,8 +285,11 @@ class SessionManager(
     }
 
     fun getCurrentSession(): SessionInfo? = currentSession.get()
+
     fun getConnectedDevices(): List<DeviceInfo> = connectedDevices.values.toList()
+
     fun getSessionHistory(): List<SessionInfo> = sessionHistory.values.toList()
+
     fun getDiagnostics(): JSONObject {
         val session = currentSession.get()
         return JSONObject().apply {
@@ -376,16 +299,14 @@ class SessionManager(
             put("connected_devices", connectedDevices.size)
             put(
                 "session_duration_ms",
-                if (session != null) System.currentTimeMillis() - session.startTime else 0
+                if (session != null) System.currentTimeMillis() - session.startTime else 0,
             )
             put("total_sessions", sessionHistory.size)
             put("recording_active", session?.recordingActive ?: false)
         }
     }
 
-    private fun generateSessionId(): String {
-        return "session_${UUID.randomUUID().toString().replace("-", "")}"
-    }
+    private fun generateSessionId(): String = "session_${UUID.randomUUID().toString().replace("-", "")}"
 
     private fun updateSessionState(newState: SessionState? = null) {
         val session = currentSession.get() ?: return
@@ -395,26 +316,15 @@ class SessionManager(
             currentSession.set(updatedSession)
             sessionHistory[session.id] = updatedSession
             onSessionStateChanged?.invoke(updatedState)
-            logger.log(
-                StructuredLogger.LogLevel.DEBUG,
-                "SessionManager",
-                "state_changed",
-                mapOf(
-                    "session_id" to session.id,
-                    "old_state" to session.state.name,
-                    "new_state" to updatedState.name,
-                ),
-            )
         }
     }
 
-    private fun determineSessionState(session: SessionInfo): SessionState {
-        return when {
+    private fun determineSessionState(session: SessionInfo): SessionState =
+        when {
             connectedDevices.isEmpty() -> SessionState.IDLE
             connectedDevices.values.any { it.isRecording } -> SessionState.RECORDING
             else -> SessionState.ACTIVE
         }
-    }
 
     private fun updateSessionParticipants() {
         val session = currentSession.get() ?: return
@@ -444,52 +354,32 @@ class SessionManager(
         val needsSync =
             devices.any { device ->
                 device.connectionQuality == ConnectionQuality.POOR ||
-                        device.connectionQuality == ConnectionQuality.UNSTABLE ||
-                        kotlin.math.abs(device.syncOffset) > 5_000_000L
+                    device.connectionQuality == ConnectionQuality.UNSTABLE ||
+                    kotlin.math.abs(device.syncOffset) > 5_000_000L
             }
         if (needsSync && session.state == SessionState.ACTIVE) {
-            logger.log(
-                StructuredLogger.LogLevel.DEBUG,
-                "SessionManager",
-                "sync_required",
-                mapOf(
-                    "session_id" to session.id,
-                    "device_count" to devices.size.toString(),
-                ),
-            )
             onSyncRequired?.invoke(devices)
         }
     }
 
     suspend fun initializeSessionWithWorkflow(
         sessionConfig: SessionConfig,
-        permissionController: mpdc4gsr.core.ui.PermissionController? = null
-    ): Boolean = withContext(Dispatchers.IO) {
-        try {
-            logger.log(
-                StructuredLogger.LogLevel.INFO,
-                "SessionManager",
-                "workflow_init_start",
-                mapOf("session_id" to sessionConfig.sessionId)
-            )
-            _sessionWorkflowState.value = SessionWorkflowState.INITIALIZING
-            setupWorkflowSteps(sessionConfig, permissionController)
-            executeWorkflow()
-        } catch (e: Exception) {
-            logger.log(
-                StructuredLogger.LogLevel.ERROR,
-                "SessionManager",
-                "workflow_init_failed",
-                mapOf("error" to (e.message ?: "Unknown error"))
-            )
-            _sessionWorkflowState.value = SessionWorkflowState.ERROR
-            false
+        permissionController: mpdc4gsr.core.ui.PermissionController? = null,
+    ): Boolean =
+        withContext(Dispatchers.IO) {
+            try {
+                _sessionWorkflowState.value = SessionWorkflowState.INITIALIZING
+                setupWorkflowSteps(sessionConfig, permissionController)
+                executeWorkflow()
+            } catch (e: Exception) {
+                _sessionWorkflowState.value = SessionWorkflowState.ERROR
+                false
+            }
         }
-    }
 
     private suspend fun setupWorkflowSteps(
         config: SessionConfig,
-        permissionController: mpdc4gsr.core.ui.PermissionController?
+        permissionController: mpdc4gsr.core.ui.PermissionController?,
     ) {
         workflowSteps.clear()
         currentStepIndex = 0
@@ -500,8 +390,8 @@ class SessionManager(
                     _sessionWorkflowState.value = SessionWorkflowState.PERMISSION_CHECK
                     permissionController?.hasAllRequiredPermissions() ?: true
                 },
-                timeout = 15000L
-            )
+                timeout = 15000L,
+            ),
         )
         workflowSteps.add(
             WorkflowStep(
@@ -510,8 +400,8 @@ class SessionManager(
                     _sessionWorkflowState.value = SessionWorkflowState.DEVICE_DISCOVERY
                     discoverDevices(config.expectedDevices)
                 },
-                timeout = 20000L
-            )
+                timeout = 20000L,
+            ),
         )
         workflowSteps.add(
             WorkflowStep(
@@ -520,8 +410,8 @@ class SessionManager(
                     _sessionWorkflowState.value = SessionWorkflowState.DEVICE_CONNECTION
                     connectToDevices()
                 },
-                timeout = 30000L
-            )
+                timeout = 30000L,
+            ),
         )
         workflowSteps.add(
             WorkflowStep(
@@ -530,8 +420,8 @@ class SessionManager(
                     _sessionWorkflowState.value = SessionWorkflowState.TIME_SYNCHRONIZATION
                     performTimeSynchronization()
                 },
-                timeout = 15000L
-            )
+                timeout = 15000L,
+            ),
         )
         workflowSteps.add(
             WorkflowStep(
@@ -540,78 +430,34 @@ class SessionManager(
                     _sessionWorkflowState.value = SessionWorkflowState.RECORDING_SETUP
                     setupRecording(config)
                 },
-                timeout = 10000L
-            )
-        )
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            "SessionManager",
-            "workflow_configured",
-            mapOf("steps" to workflowSteps.size.toString())
+                timeout = 10000L,
+            ),
         )
     }
 
     private suspend fun executeWorkflow(): Boolean {
         for ((index, step) in workflowSteps.withIndex()) {
             currentStepIndex = index
-            logger.log(
-                StructuredLogger.LogLevel.INFO,
-                "SessionManager",
-                "workflow_step_start",
-                mapOf(
-                    "step" to step.name,
-                    "index" to "${index + 1}/${workflowSteps.size}"
-                )
-            )
             try {
-                val success = withContext(Dispatchers.IO) {
-                    kotlinx.coroutines.withTimeout(step.timeout) {
-                        step.action()
+                val success =
+                    withContext(Dispatchers.IO) {
+                        kotlinx.coroutines.withTimeout(step.timeout) {
+                            step.action()
+                        }
                     }
-                }
                 onWorkflowStepCompleted?.invoke(step.name, success)
                 if (!success && step.required) {
-                    logger.log(
-                        StructuredLogger.LogLevel.ERROR,
-                        "SessionManager",
-                        "workflow_step_failed",
-                        mapOf("step" to step.name, "required" to "true")
-                    )
                     _sessionWorkflowState.value = SessionWorkflowState.ERROR
                     return false
                 } else if (!success) {
-                    logger.log(
-                        StructuredLogger.LogLevel.WARNING,
-                        "SessionManager",
-                        "workflow_step_failed",
-                        mapOf("step" to step.name, "required" to "false")
-                    )
                 }
-                logger.log(
-                    StructuredLogger.LogLevel.INFO,
-                    "SessionManager",
-                    "workflow_step_success",
-                    mapOf("step" to step.name)
-                )
             } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
-                logger.log(
-                    StructuredLogger.LogLevel.ERROR,
-                    "SessionManager",
-                    "workflow_step_timeout",
-                    mapOf("step" to step.name, "timeout" to step.timeout.toString())
-                )
                 onWorkflowStepCompleted?.invoke(step.name, false)
                 if (step.required) {
                     _sessionWorkflowState.value = SessionWorkflowState.ERROR
                     return false
                 }
             } catch (e: Exception) {
-                logger.log(
-                    StructuredLogger.LogLevel.ERROR,
-                    "SessionManager",
-                    "workflow_step_exception",
-                    mapOf("step" to step.name, "error" to (e.message ?: "Unknown"))
-                )
                 onWorkflowStepCompleted?.invoke(step.name, false)
                 if (step.required) {
                     _sessionWorkflowState.value = SessionWorkflowState.ERROR
@@ -620,56 +466,26 @@ class SessionManager(
             }
         }
         _sessionWorkflowState.value = SessionWorkflowState.RECORDING_ACTIVE
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            "SessionManager",
-            "workflow_completed",
-            emptyMap()
-        )
         return true
     }
 
     private suspend fun discoverDevices(expectedDevices: List<String>): Boolean {
         delay(DEVICE_DISCOVERY_DELAY_MS)
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            "SessionManager",
-            "device_discovery",
-            mapOf("expected" to expectedDevices.joinToString(","))
-        )
         return true
     }
 
     private suspend fun connectToDevices(): Boolean {
         delay(DEVICE_CONNECTION_DELAY_MS)
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            "SessionManager",
-            "device_connection",
-            emptyMap()
-        )
         return true
     }
 
     private suspend fun performTimeSynchronization(): Boolean {
         delay(TIME_SYNC_DELAY_MS)
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            "SessionManager",
-            "time_sync",
-            emptyMap()
-        )
         return true
     }
 
     private suspend fun setupRecording(config: SessionConfig): Boolean {
         delay(RECORDING_SETUP_DELAY_MS)
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            "SessionManager",
-            "recording_setup",
-            mapOf("session_id" to config.sessionId)
-        )
         return true
     }
 
@@ -686,6 +502,6 @@ class SessionManager(
         val expectedDevices: List<String> = listOf("RGB", "Thermal", "Shimmer"),
         val recordingDuration: Long? = null,
         val participantId: String? = null,
-        val studyName: String? = null
+        val studyName: String? = null,
     )
 }

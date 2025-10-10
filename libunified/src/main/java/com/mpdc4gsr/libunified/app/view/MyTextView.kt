@@ -20,14 +20,15 @@ class MyTextView : AppCompatTextView {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ) {
         val typedArray =
             context.obtainStyledAttributes(attrs, R.styleable.MyTextView, defStyleAttr, 0)
-        val drawableHeight = typedArray.getDimensionPixelSize(
-            R.styleable.MyTextView_drawable_height,
-            textSize.toInt()
-        )
+        val drawableHeight =
+            typedArray.getDimensionPixelSize(
+                R.styleable.MyTextView_drawable_height,
+                textSize.toInt(),
+            )
         topHeight =
             typedArray.getDimensionPixelSize(R.styleable.MyTextView_top_height, drawableHeight)
         bottomHeight =
@@ -143,7 +144,7 @@ class MyTextView : AppCompatTextView {
                 0,
                 0,
                 (height * 1f * drawable.intrinsicWidth / drawable.intrinsicHeight).toInt(),
-                height
+                height,
             )
         }
     }

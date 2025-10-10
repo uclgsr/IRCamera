@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.ir.usbdual.camera;
 import static com.mpdc4gsr.libunified.ir.usbdual.Const.HIDE_LOADING;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceView;
 
@@ -32,7 +31,6 @@ public class DualViewWithManualAlignExternalCamera extends BaseParamDualView {
 
         @Override
         public void onFrame(byte[] frame) {
-            Log.d(TAG, "onFrame");
             System.arraycopy(frame, 0, mixData, 0, fusionLength);
 
             mSurface = cameraview.getHolder().getSurface();

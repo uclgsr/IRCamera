@@ -8,18 +8,24 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 abstract class BaseRepository(
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     sealed class Result<out T> {
-        data class Success<T>(val data: T) : Result<T>()
-        data class Error(val exception: Throwable) : Result<Nothing>()
+        data class Success<T>(
+            val data: T,
+        ) : Result<T>()
+
+        data class Error(
+            val exception: Throwable,
+        ) : Result<Nothing>()
+
         object Loading : Result<Nothing>()
     }
 
     data class CachedData<T>(
         val data: T,
         val timestamp: Long = System.currentTimeMillis(),
-        val ttlMs: Long = DEFAULT_CACHE_TTL
+        val ttlMs: Long = DEFAULT_CACHE_TTL,
     ) {
         val isExpired: Boolean
             get() = System.currentTimeMillis() - timestamp > ttlMs
@@ -27,10 +33,9 @@ abstract class BaseRepository(
 
     // Simple in-memory cache
     private val cache = mutableMapOf<String, CachedData<Any>>()
-    protected suspend fun <T> safeCall(
-        operation: suspend () -> T
-    ): Result<T> {
-        return withContext(ioDispatcher) {
+
+    protected suspend fun <T> safeCall(operation: suspend () -> T): Result<T> =
+        withContext(ioDispatcher) {
             try {
                 val result = operation()
                 Result.Success(result)
@@ -38,19 +43,17 @@ abstract class BaseRepository(
                 Result.Error(e)
             }
         }
-    }
 
-    protected fun <T> safeFlow(
-        operation: suspend () -> T
-    ): Flow<Result<T>> = flow {
-        emit(Result.Loading)
-        try {
-            val result = operation()
-            emit(Result.Success(result))
-        } catch (e: Exception) {
-            emit(Result.Error(e))
-        }
-    }.flowOn(ioDispatcher)
+    protected fun <T> safeFlow(operation: suspend () -> T): Flow<Result<T>> =
+        flow {
+            emit(Result.Loading)
+            try {
+                val result = operation()
+                emit(Result.Success(result))
+            } catch (e: Exception) {
+                emit(Result.Error(e))
+            }
+        }.flowOn(ioDispatcher)
 
     // The unchecked cast from CachedData<Any> to CachedData<T> is safe here because
     // each cacheKey is always associated with a single type T for the lifetime of the cache entry.
@@ -59,7 +62,7 @@ abstract class BaseRepository(
     protected suspend fun <T> getCachedOrExecute(
         cacheKey: String,
         ttlMs: Long = DEFAULT_CACHE_TTL,
-        operation: suspend () -> T
+        operation: suspend () -> T,
     ): T {
         val cached = cache[cacheKey] as? CachedData<T>
         return if (cached != null && !cached.isExpired) {
@@ -83,27 +86,29 @@ abstract class BaseRepository(
         query: () -> Flow<T?>,
         fetch: suspend () -> T,
         saveFetchResult: suspend (T) -> Unit,
-        shouldFetch: (T?) -> Boolean = { true }
-    ): Flow<Result<T>> = flow {
-        emit(Result.Loading)
-        val data = query().collect { localData ->
-            if (shouldFetch(localData)) {
-                try {
-                    val networkData = fetch()
-                    saveFetchResult(networkData)
-                    emit(Result.Success(networkData))
-                } catch (e: Exception) {
-                    if (localData != null) {
+        shouldFetch: (T?) -> Boolean = { true },
+    ): Flow<Result<T>> =
+        flow {
+            emit(Result.Loading)
+            val data =
+                query().collect { localData ->
+                    if (shouldFetch(localData)) {
+                        try {
+                            val networkData = fetch()
+                            saveFetchResult(networkData)
+                            emit(Result.Success(networkData))
+                        } catch (e: Exception) {
+                            if (localData != null) {
+                                emit(Result.Success(localData))
+                            } else {
+                                emit(Result.Error(e))
+                            }
+                        }
+                    } else if (localData != null) {
                         emit(Result.Success(localData))
-                    } else {
-                        emit(Result.Error(e))
                     }
                 }
-            } else if (localData != null) {
-                emit(Result.Success(localData))
-            }
-        }
-    }.flowOn(ioDispatcher)
+        }.flowOn(ioDispatcher)
 
     companion object {
         private const val DEFAULT_CACHE_TTL = 5 * 60 * 1000L // 5 minutes

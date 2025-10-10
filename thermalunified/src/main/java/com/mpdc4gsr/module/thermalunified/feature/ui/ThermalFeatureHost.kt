@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -65,10 +64,11 @@ fun ThermalFeatureScaffoldContent(
 ) {
     val activeId = state.activeFeatureId
     val features = state.features
-    val pagerState = rememberPagerState(
-        initialPage = features.indexOfFirst { it.id == activeId }.coerceAtLeast(0),
-        pageCount = { features.size },
-    )
+    val pagerState =
+        rememberPagerState(
+            initialPage = features.indexOfFirst { it.id == activeId }.coerceAtLeast(0),
+            pageCount = { features.size },
+        )
     LaunchedEffect(activeId) {
         val targetIndex = features.indexOfFirst { it.id == activeId }
         if (targetIndex >= 0 && targetIndex != pagerState.currentPage) {
@@ -77,22 +77,25 @@ fun ThermalFeatureScaffoldContent(
     }
     Surface(modifier = modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             topContent?.invoke()
             ThermalStatusBanner(
                 status = state.deviceStatus,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp),
+                modifier =
+                    Modifier
+                        .padding(horizontal = 16.dp),
             )
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
             ) { page ->
                 val descriptor = features.getOrNull(page)
                 if (descriptor != null) {
@@ -105,11 +108,12 @@ fun ThermalFeatureScaffoldContent(
                 onTabSelected = {
                     onTabSelected(it)
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(72.dp)
-                    .navigationBarsPadding()
-                    .background(Color(0x1114181F)),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(72.dp)
+                        .navigationBarsPadding()
+                        .background(Color(0x1114181F)),
             )
         }
     }
@@ -207,6 +211,6 @@ private fun FragmentFeatureContainer(
                     remove(fragment)
                 }
             }
-        }
+        },
     )
 }

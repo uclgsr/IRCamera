@@ -39,7 +39,7 @@ class ReportIRInputView : LinearLayout {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ) {
         inflate(context, R.layout.view_report_ir_input, this)
         initViews()

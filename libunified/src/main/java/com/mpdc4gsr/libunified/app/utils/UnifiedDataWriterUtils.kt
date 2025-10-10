@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.utils
 
-import android.util.Log
 import kotlinx.coroutines.*
 import java.io.BufferedWriter
 import java.io.File
@@ -14,7 +13,7 @@ class UnifiedDataWriterUtils(
     private val outputFile: File,
     private val bufferSize: Int = 8192,
     private val flushIntervalMs: Long = 1000L,
-    private val maxQueueSize: Int = 10000
+    private val maxQueueSize: Int = 10000,
 ) {
     private val dataQueue = LinkedBlockingQueue<String>(maxQueueSize)
     private val isRunning = AtomicBoolean(false)
@@ -22,12 +21,13 @@ class UnifiedDataWriterUtils(
     private val linesWritten = AtomicLong(0)
     private var writerJob: Job? = null
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
     fun start() {
         if (isRunning.compareAndSet(false, true)) {
-            writerJob = scope.launch {
-                startWriting()
-            }
-            Log.d(TAG, "BufferedDataWriter started for ${outputFile.name}")
+            writerJob =
+                scope.launch {
+                    startWriting()
+                }
         }
     }
 
@@ -37,25 +37,24 @@ class UnifiedDataWriterUtils(
             scope.launch {
                 flushAll()
             }
-            Log.d(TAG, "BufferedDataWriter stopped for ${outputFile.name}")
         }
     }
 
     fun writeData(data: String) {
         if (isRunning.get()) {
             if (!dataQueue.offer(data)) {
-                Log.w(TAG, "Data queue full, dropping data")
             }
         }
     }
 
     fun writeCSVRow(vararg values: Any) {
-        val csvLine = values.joinToString(",") { value ->
-            when (value) {
-                is String -> "\"${value.replace("\"", "\"\"")}\""
-                else -> value.toString()
+        val csvLine =
+            values.joinToString(",") { value ->
+                when (value) {
+                    is String -> "\"${value.replace("\"", "\"\"")}\""
+                    else -> value.toString()
+                }
             }
-        }
         writeData(csvLine)
     }
 
@@ -67,17 +66,16 @@ class UnifiedDataWriterUtils(
         val bytesWritten: Long,
         val linesWritten: Long,
         val queueSize: Int,
-        val isRunning: Boolean
+        val isRunning: Boolean,
     )
 
-    fun getStats(): WriterStats {
-        return WriterStats(
+    fun getStats(): WriterStats =
+        WriterStats(
             bytesWritten = bytesWritten.get(),
             linesWritten = linesWritten.get(),
             queueSize = dataQueue.size,
-            isRunning = isRunning.get()
+            isRunning = isRunning.get(),
         )
-    }
 
     private suspend fun startWriting() {
         var bufferedWriter: BufferedWriter? = null
@@ -112,20 +110,20 @@ class UnifiedDataWriterUtils(
                 }
             }
         } catch (e: CancellationException) {
-            Log.d(TAG, "Writer cancelled")
         } catch (e: Exception) {
-            Log.e(TAG, "Error in writer", e)
         } finally {
             try {
                 bufferedWriter?.flush()
                 bufferedWriter?.close()
             } catch (e: IOException) {
-                Log.e(TAG, "Error closing writer", e)
             }
         }
     }
 
-    private fun writeBatch(writer: BufferedWriter, batch: List<String>) {
+    private fun writeBatch(
+        writer: BufferedWriter,
+        batch: List<String>,
+    ) {
         for (data in batch) {
             writer.write(data)
             writer.newLine()
@@ -134,36 +132,44 @@ class UnifiedDataWriterUtils(
         }
     }
 
-    private suspend fun flushAll() = withContext(Dispatchers.IO) {
-        try {
-            if (outputFile.exists()) {
-                BufferedWriter(FileWriter(outputFile, true)).use { writer ->
-                    val remainingData = mutableListOf<String>()
-                    while (dataQueue.isNotEmpty()) {
-                        dataQueue.poll()?.let { remainingData.add(it) }
+    private suspend fun flushAll() =
+        withContext(Dispatchers.IO) {
+            try {
+                if (outputFile.exists()) {
+                    BufferedWriter(FileWriter(outputFile, true)).use { writer ->
+                        val remainingData = mutableListOf<String>()
+                        while (dataQueue.isNotEmpty()) {
+                            dataQueue.poll()?.let { remainingData.add(it) }
+                        }
+                        writeBatch(writer, remainingData)
+                        writer.flush()
                     }
-                    writeBatch(writer, remainingData)
-                    writer.flush()
                 }
+            } catch (e: Exception) {
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error flushing remaining data", e)
         }
-    }
 
     // Static utility methods for simple file operations
     companion object {
         private const val TAG = "UnifiedDataWriter"
-        fun writeToFile(file: File, data: String, append: Boolean = false) {
+
+        fun writeToFile(
+            file: File,
+            data: String,
+            append: Boolean = false,
+        ) {
             try {
                 file.parentFile?.mkdirs()
                 file.writeText(data, Charsets.UTF_8)
             } catch (e: Exception) {
-                Log.e(TAG, "Error writing to file: ${file.name}", e)
             }
         }
 
-        fun writeCSVToFile(file: File, headers: Array<String>, rows: List<Array<Any>>) {
+        fun writeCSVToFile(
+            file: File,
+            headers: Array<String>,
+            rows: List<Array<Any>>,
+        ) {
             try {
                 file.parentFile?.mkdirs()
                 BufferedWriter(FileWriter(file)).use { writer ->
@@ -172,19 +178,19 @@ class UnifiedDataWriterUtils(
                     writer.newLine()
                     // Write rows
                     for (row in rows) {
-                        val csvLine = row.joinToString(",") { value ->
-                            when (value) {
-                                is String -> "\"${value.replace("\"", "\"\"")}\""
-                                else -> value.toString()
+                        val csvLine =
+                            row.joinToString(",") { value ->
+                                when (value) {
+                                    is String -> "\"${value.replace("\"", "\"\"")}\""
+                                    else -> value.toString()
+                                }
                             }
-                        }
                         writer.write(csvLine)
                         writer.newLine()
                     }
                     writer.flush()
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error writing CSV to file: ${file.name}", e)
             }
         }
 
@@ -192,9 +198,7 @@ class UnifiedDataWriterUtils(
             outputFile: File,
             bufferSize: Int = 8192,
             flushIntervalMs: Long = 1000L,
-            maxQueueSize: Int = 10000
-        ): UnifiedDataWriterUtils {
-            return UnifiedDataWriterUtils(outputFile, bufferSize, flushIntervalMs, maxQueueSize)
-        }
+            maxQueueSize: Int = 10000,
+        ): UnifiedDataWriterUtils = UnifiedDataWriterUtils(outputFile, bufferSize, flushIntervalMs, maxQueueSize)
     }
 }

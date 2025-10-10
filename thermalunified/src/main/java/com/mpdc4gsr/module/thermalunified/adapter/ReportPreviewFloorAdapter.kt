@@ -16,21 +16,18 @@ import com.mpdc4gsr.module.thermalunified.R
 class ReportPreviewFloorAdapter(
     val cxt: Context,
     var dataList: List<HouseRepPreviewProjectItemBean>,
-) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    override fun getItemViewType(position: Int): Int {
-        return position
-    }
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    override fun getItemViewType(position: Int): Int = position
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder {
-        return ItemView(
-            LayoutInflater.from(parent.context)
+    ): RecyclerView.ViewHolder =
+        ItemView(
+            LayoutInflater
+                .from(parent.context)
                 .inflate(R.layout.item_report_floor_child, parent, false),
         )
-    }
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
@@ -88,11 +85,11 @@ class ReportPreviewFloorAdapter(
         }
     }
 
-    override fun getItemCount(): Int {
-        return dataList.size
-    }
+    override fun getItemCount(): Int = dataList.size
 
-    inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ItemView(
+        itemView: View,
+    ) : RecyclerView.ViewHolder(itemView) {
         val tvProject: TextView = itemView.findViewById(R.id.tv_project)
         val tvProblem: TextView = itemView.findViewById(R.id.tv_problem)
         val ivProblemState: ImageView = itemView.findViewById(R.id.iv_problem)

@@ -10,9 +10,8 @@ import android.view.TextureView
  */
 class Camera2System(
     private val context: Context,
-    private val previewTextureView: TextureView? = null
+    private val previewTextureView: TextureView? = null,
 ) {
-
     private val configurationManager = CameraConfigurationManager(context)
     private val rawEngine = RawEngine(context)
 
@@ -27,15 +26,14 @@ class Camera2System(
         }
     }
 
-    fun getDeviceCapabilities(useFrontCamera: Boolean = false): CameraConfigurationManager.DeviceCapabilities {
-        return configurationManager.detectDeviceCapabilities(useFrontCamera)
-    }
+    fun getDeviceCapabilities(useFrontCamera: Boolean = false): CameraConfigurationManager.DeviceCapabilities =
+        configurationManager.detectDeviceCapabilities(useFrontCamera)
 
     fun supportsFastSessionSwitching(): Boolean {
         val capabilities = configurationManager.detectDeviceCapabilities()
         val hardwareLevel = capabilities.hardwareLevel ?: return false
         return hardwareLevel == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL ||
-                hardwareLevel == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3
+            hardwareLevel == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3
     }
 
     fun release() {

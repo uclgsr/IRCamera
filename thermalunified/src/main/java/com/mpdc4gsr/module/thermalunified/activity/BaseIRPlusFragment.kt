@@ -6,14 +6,11 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.os.SystemClock
-import android.util.Log
 import android.view.SurfaceView
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
-import com.elvishew.xlog.XLog
-import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.sdkisp.LibIRProcess
 import com.energy.iruvc.usb.USBMonitor
@@ -31,6 +28,7 @@ import com.mpdc4gsr.libunified.ir.usbdual.inf.OnUSBConnectListener
 import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
 import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.extension.setAutoShutter
 import com.mpdc4gsr.module.thermalunified.extension.setContrast
 import com.mpdc4gsr.module.thermalunified.extension.setMirror
@@ -86,9 +84,13 @@ abstract class BaseIRPlusFragment :
     protected var dualRotate = 0
     protected var dualDisp = 30
     private var vlUVCCamera: IRUVCDual? = null
+
     abstract fun getSurfaceView(): SurfaceView
+
     abstract fun getTemperatureDualView(): TemperatureView
+
     abstract suspend fun onDualViewCreate(dualView: DualViewWithExternalCameraCommonApi?)
+
     open fun initdata() {
     }
 
@@ -144,7 +146,9 @@ abstract class BaseIRPlusFragment :
     }
 
     abstract fun isDualIR(): Boolean
+
     abstract fun setTemperatureViewType()
+
     override fun initView() {
         if (isDualIR()) {
             getTemperatureDualView().setTextSize(SaveSettingUtils.tempTextSize)
@@ -192,10 +196,6 @@ abstract class BaseIRPlusFragment :
             var lenth = `is`.available()
             psedocolor!![0] = ByteArray(lenth + 1)
             if (`is`.read(psedocolor!![0]) != lenth) {
-                Log.d(
-                    TAG,
-                    "read file fail ",
-                )
             }
             psedocolor!![0][lenth] = 0
             dualView!!.getDualUVCCamera().loadPseudocolor(
@@ -227,6 +227,7 @@ abstract class BaseIRPlusFragment :
 
     val calibrationDataSize = 192
     val SAVE_DUAL_BIN = "dual_calibration_parameters2.bin"
+
     open fun initDefIntegralArgsDISP_VALUE(typeLoadParameters: DualCameraParams.TypeLoadParameters) {
         if (!isDualIR()) {
             return
@@ -262,10 +263,6 @@ abstract class BaseIRPlusFragment :
         if (!isDualIR()) {
             return
         }
-        Log.d(
-            TAG,
-            "dualStart",
-        )
         USBMonitorManager.getInstance().registerUSB()
         getTemperatureDualView().setUseIRISP(isUseIRISP)
         if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
@@ -281,24 +278,12 @@ abstract class BaseIRPlusFragment :
         object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
-                Log.d(
-                    TAG,
-                    "USBMonitorManager ${msg.what}",
-                )
                 if (!isDualIR()) {
                     return
                 }
                 if (msg.what == Const.RESTART_USB) {
-                    Log.d(
-                        TAG,
-                        "restartDualCamera",
-                    )
                     restartDualCamera()
                 } else if (msg.what == Const.HANDLE_CONNECT) {
-                    Log.d(
-                        TAG,
-                        "USBMonitorManager HANDLE_CONNECT",
-                    )
                     lifecycleScope.launch(Dispatchers.Main) {
                         startVLCamera(vlPid, vlFps, vlCameraWidth, vlCameraHeight)
                         initDualCamera()
@@ -307,23 +292,16 @@ abstract class BaseIRPlusFragment :
                 } else if (msg.what == Const.HANDLE_REGISTER) {
                     USBMonitorManager.getInstance().registerUSB()
                 } else if (msg.what == Const.SHOW_LOADING) {
-                    Log.d(
-                        TAG,
-                        "SHOW_LOADING",
-                    )
                     showLoadingDialog()
                 } else if (msg.what == Const.HIDE_LOADING) {
-                    Log.d(
-                        TAG,
-                        "HIDE_LOADING",
-                    )
                     dismissLoadingDialog()
                 } else if (msg.what == Const.SHOW_RESTART_MESSAGE) {
-                    Toast.makeText(
-                        context,
-                        "please restart app or reinsert device",
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    Toast
+                        .makeText(
+                            context,
+                            "please restart app or reinsert device",
+                            Toast.LENGTH_SHORT,
+                        ).show()
                     activity?.finish()
                 }
             }
@@ -336,17 +314,20 @@ abstract class BaseIRPlusFragment :
         if (dualView != null) {
             return
         }
-        Log.d(
-            TAG,
-            "initDualCamera",
-        )
         dualView =
             DualViewWithExternalCameraCommonApi(
                 getSurfaceView(),
-                USBMonitorManager.getInstance().uvcCamera, defaultDataFlowMode,
-                irCameraWidth, irCameraHeight - irTempHeight,
-                vlCameraWidth, vlCameraHeight, dualCameraWidth, dualCameraHeight,
-                isUseIRISP, dualRotate, this,
+                USBMonitorManager.getInstance().uvcCamera,
+                defaultDataFlowMode,
+                irCameraWidth,
+                irCameraHeight - irTempHeight,
+                vlCameraWidth,
+                vlCameraHeight,
+                dualCameraWidth,
+                dualCameraHeight,
+                isUseIRISP,
+                dualRotate,
+                this,
             )
         dualView?.addFrameCallback(getTemperatureDualView())
         getTemperatureDualView().setDualUVCCamera(dualView!!.getDualUVCCamera())
@@ -364,10 +345,6 @@ abstract class BaseIRPlusFragment :
         if (!isDualIR()) {
             return
         }
-        Log.i(
-            TAG,
-            "startVLCamera",
-        )
         vlUVCCamera =
             IRUVCDual(
                 cameraWidth,
@@ -377,10 +354,6 @@ abstract class BaseIRPlusFragment :
                 fps,
                 object : ConnectCallback {
                     override fun onCameraOpened(uvcCamera: UVCCamera) {
-                        Log.i(
-                            TAG,
-                            "ConnectCallback-startVLCamera-onCameraOpened",
-                        )
                     }
 
                     override fun onIRCMDCreate(ircmd: IRCMD) {
@@ -388,16 +361,15 @@ abstract class BaseIRPlusFragment :
                     }
                 },
                 IFrameCallback { frame ->
-                    Log.i(
-                        TAG,
-                        "startVLCamera-onFrame->frame.length = " + frame.size,
-                    )
-                    if (dualView != null && dualView?.getDualUVCCamera() != null &&
+                    if (dualView != null &&
+                        dualView?.getDualUVCCamera() != null &&
                         Const.isDeviceConnected
                     ) {
                         System.arraycopy(frame, 0, vlData, 0, vlData.size)
                         dualView?.getDualUVCCamera()?.updateFrame(
-                            ImageFormat.FLEX_RGB_888, vlData, vlCameraWidth,
+                            ImageFormat.FLEX_RGB_888,
+                            vlData,
+                            vlCameraWidth,
                             vlCameraHeight,
                         )
                     }
@@ -412,10 +384,6 @@ abstract class BaseIRPlusFragment :
         this@BaseIRPlusFragment.ircmd = ircmd
         snStr = getSNStr(ircmd)
         isConfigWait = false
-        Log.i(
-            TAG,
-            "ConnectCallback-startVLCamera-onIRCMDCreate",
-        )
     }
 
     override fun onStart() {
@@ -429,6 +397,7 @@ abstract class BaseIRPlusFragment :
     private var isFirst = true
     private var configJob: Job? = null
     private val timeMillis = 150L
+
     private fun configParam() {
         configJob =
             lifecycleScope.launch {
@@ -439,7 +408,6 @@ abstract class BaseIRPlusFragment :
                 val config = ConfigRepository.readConfig(false)
                 val disChar = (config.distance * 128).toInt()
                 val emsChar = (config.radiation * 128).toInt()
-                XLog.w("TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 delay(timeMillis)
                 ircmd?.setPropTPDParams(
                     CommonParams.PropTPDParams.TPD_PROP_EMS,
@@ -451,7 +419,6 @@ abstract class BaseIRPlusFragment :
                     CommonParams.PropTPDParamsValue.NumberType(disChar.toString()),
                 )
                 delay(timeMillis)
-                XLog.w("TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 if (isFirst && isrun) {
                     ircmd?.setMirror(false)
                     delay(timeMillis)
@@ -471,7 +438,6 @@ abstract class BaseIRPlusFragment :
                 } else {
                     ircmd?.updateOOCOrB(CommonParams.UpdateOOCOrBType.B_UPDATE)
                 }
-                XLog.w("TPD_PROP DISTANCE2:$disChar, EMS:$emsChar}")
             }
     }
 
@@ -479,10 +445,6 @@ abstract class BaseIRPlusFragment :
         if (!isDualIR()) {
             return
         }
-        Log.d(
-            TAG,
-            "USBMonitorManager dualStop",
-        )
         isrun = false
         syncimage.valid = false
         isConfigWait = true
@@ -503,35 +465,19 @@ abstract class BaseIRPlusFragment :
             SystemClock.sleep(100)
             dualView?.stopPreview()
             dualView = null
-            Log.d(
-                TAG,
-                " dualStop",
-            )
         }
     }
 
     override fun onAttach(device: UsbDevice?) {
-        Log.d(
-            TAG,
-            "USBMonitorManager onAttach",
-        )
     }
 
     override fun onGranted(
         usbDevice: UsbDevice?,
         granted: Boolean,
     ) {
-        Log.d(
-            TAG,
-            "USBMonitorManager onGranted",
-        )
     }
 
     override fun onDettach(device: UsbDevice?) {
-        Log.d(
-            TAG,
-            "USBMonitorManager onDettach",
-        )
     }
 
     override fun onConnect(
@@ -539,10 +485,6 @@ abstract class BaseIRPlusFragment :
         ctrlBlock: USBMonitor.UsbControlBlock?,
         createNew: Boolean,
     ) {
-        Log.d(
-            TAG,
-            "USBMonitorManager onConnect",
-        )
         mIrHandler.sendEmptyMessage(Const.HANDLE_CONNECT)
     }
 
@@ -550,17 +492,9 @@ abstract class BaseIRPlusFragment :
         device: UsbDevice?,
         ctrlBlock: USBMonitor.UsbControlBlock?,
     ) {
-        XLog.d(
-            TAG,
-            "USBMonitorManager onDisconnect",
-        )
     }
 
     override fun onCancel(device: UsbDevice?) {
-        Log.d(
-            TAG,
-            "USBMonitorManager onCancel",
-        )
     }
 
     override fun onIRCMDInit(ircmd: IRCMD?) {
@@ -578,6 +512,7 @@ abstract class BaseIRPlusFragment :
     protected val preIrARGBData = ByteArray(256 * 192 * 4)
     protected val preIrData = ByteArray(256 * 192 * 2)
     protected val preTempData = ByteArray(256 * 192 * 2)
+
     override fun onIrFrame(irFrame: ByteArray?): ByteArray {
         irFrame?.let {
             System.arraycopy(it, 0, preIrData, 0, preIrData.size)

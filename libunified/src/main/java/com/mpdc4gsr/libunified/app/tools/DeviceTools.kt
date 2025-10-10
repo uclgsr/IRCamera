@@ -8,14 +8,13 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
-import com.mpdc4gsr.libunified.compat.ContextProvider
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isHik256
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcLiteDevice
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
 import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import com.mpdc4gsr.libunified.app.utils.ByteUtils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 
 object DeviceTools {
     fun isConnect(
@@ -27,13 +26,11 @@ object DeviceTools {
         for (usbDevice in deviceList.values) {
             if (usbDevice.isTcTsDevice()) {
                 return if (usbManager.hasPermission(usbDevice)) {
-                    XLog.i("[ph][ph][ph][ph][ph][ph][ph][ph][ph]")
                     if (isSendConnectEvent) {
                         DeviceEventManager.emitDeviceConnectionSync(true, usbDevice)
                     }
                     true
                 } else {
-                    XLog.w("[ph][ph][ph][ph][ph][ph][ph][ph][ph]")
                     if (isAutoRequest) {
                         DeviceEventManager.emitDevicePermissionRequestSync(usbDevice)
                     }
@@ -49,25 +46,25 @@ object DeviceTools {
         val deviceList: HashMap<String, UsbDevice> = usbManager.deviceList
         for (usbDevice in deviceList.values) {
             if (usbDevice.isTcTsDevice()) {
-                val productID = ByteUtils.toHexString(
-                    ByteUtils.numberToBytes(
-                        true,
-                        usbDevice.productId.toLong(),
-                        2
+                val productID =
+                    ByteUtils.toHexString(
+                        ByteUtils.numberToBytes(
+                            true,
+                            usbDevice.productId.toLong(),
+                            2,
+                        ),
                     )
-                )
-                val vendorID = ByteUtils.toHexString(
-                    ByteUtils.numberToBytes(
-                        true,
-                        usbDevice.vendorId.toLong(),
-                        2
+                val vendorID =
+                    ByteUtils.toHexString(
+                        ByteUtils.numberToBytes(
+                            true,
+                            usbDevice.vendorId.toLong(),
+                            2,
+                        ),
                     )
-                )
-                XLog.i("[ph][ph][ph][ph]usb[ph][ph] productId:$productID, vendorId:$vendorID, deviceName:${usbDevice.deviceName}")
                 return usbDevice
             }
         }
-        XLog.i("[ph][ph][ph]${deviceList.size}[ph][ph][ph], [ph][ph][ph][ph][ph][ph]usb[ph][ph]")
         return null
     }
 
@@ -119,6 +116,5 @@ object DeviceTools {
         val flag = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         val pendingIntent = PendingIntent.getBroadcast(activity, requestCode, intent, flag)
         usbManager.requestPermission(device, pendingIntent)
-        XLog.i("[ph][ph]usb[ph][ph]")
     }
 }

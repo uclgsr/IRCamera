@@ -10,7 +10,6 @@ import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState
@@ -27,7 +26,7 @@ object PermissionTools {
         val type: Type,
         val callback: () -> Unit,
         val btCallback: Callback? = null,
-        val isBtFirst: Boolean = false
+        val isBtFirst: Boolean = false,
     )
 
     fun requestRecordAudio(
@@ -66,10 +65,11 @@ object PermissionTools {
             when (type) {
                 Type.RECORD_AUDIO -> listOf(Manifest.permission.RECORD_AUDIO)
                 Type.CAMERA -> listOf(Manifest.permission.CAMERA)
-                Type.LOCATION -> listOf(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
+                Type.LOCATION ->
+                    listOf(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                    )
 
                 Type.IMAGE ->
                     listOf(
@@ -90,31 +90,33 @@ object PermissionTools {
                     }
             }
         // Check if permissions are already granted
-        val allGranted = permissions.all { permission ->
-            ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
-        }
+        val allGranted =
+            permissions.all { permission ->
+                ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
+            }
         if (allGranted) {
             callback.invoke()
             return
         }
         // Store callback for result handling
-        permissionCallbacks[REQUEST_CODE_PERMISSIONS] = PermissionCallback(
-            WeakReference(activity),
-            type,
-            callback
-        )
+        permissionCallbacks[REQUEST_CODE_PERMISSIONS] =
+            PermissionCallback(
+                WeakReference(activity),
+                type,
+                callback,
+            )
         // Request permissions using the standard API
         ActivityCompat.requestPermissions(
             activity,
             permissions.toTypedArray(),
-            REQUEST_CODE_PERMISSIONS
+            REQUEST_CODE_PERMISSIONS,
         )
     }
 
     fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         when (requestCode) {
             REQUEST_CODE_PERMISSIONS -> handlePermissionResult(requestCode, permissions, grantResults)
@@ -125,7 +127,7 @@ object PermissionTools {
     private fun handlePermissionResult(
         requestCode: Int,
         permissions: Array<String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         val callbackData = permissionCallbacks.remove(requestCode) ?: return
         val activity = callbackData.activityRef.get() ?: return
@@ -133,12 +135,14 @@ object PermissionTools {
         if (allGranted) {
             callbackData.callback.invoke()
         } else {
-            val deniedPermissions = permissions.filterIndexed { index, _ ->
-                grantResults.getOrNull(index) != PackageManager.PERMISSION_GRANTED
-            }
-            val shouldShowRationale = deniedPermissions.any { permission ->
-                ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
-            }
+            val deniedPermissions =
+                permissions.filterIndexed { index, _ ->
+                    grantResults.getOrNull(index) != PackageManager.PERMISSION_GRANTED
+                }
+            val shouldShowRationale =
+                deniedPermissions.any { permission ->
+                    ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
+                }
             if (!shouldShowRationale && deniedPermissions.isNotEmpty()) {
                 val tipsResId: Int =
                     when (callbackData.type) {
@@ -160,7 +164,7 @@ object PermissionTools {
                         negativeText = activity.getString(R.string.app_cancel),
                         onPositive = {
                             openAppSettings(activity)
-                        }
+                        },
                     )
                 }
             } else {
@@ -170,33 +174,33 @@ object PermissionTools {
     }
 
     private fun openAppSettings(context: Context) {
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-            data = Uri.fromParts("package", context.packageName, null)
-        }
+        val intent =
+            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.fromParts("package", context.packageName, null)
+            }
         context.startActivity(intent)
     }
 
-    fun hasBtPermission(context: Context): Boolean {
-        return if (Build.VERSION.SDK_INT < 31) {
+    fun hasBtPermission(context: Context): Boolean =
+        if (Build.VERSION.SDK_INT < 31) {
             ContextCompat.checkSelfPermission(
                 context,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION,
             ) == PackageManager.PERMISSION_GRANTED
         } else {
             ContextCompat.checkSelfPermission(
                 context,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION,
             ) == PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.BLUETOOTH_SCAN
-                    ) == PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.BLUETOOTH_CONNECT
-                    ) == PackageManager.PERMISSION_GRANTED
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.BLUETOOTH_SCAN,
+                ) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.BLUETOOTH_CONNECT,
+                ) == PackageManager.PERMISSION_GRANTED
         }
-    }
 
     fun requestBluetooth(
         activity: FragmentActivity,
@@ -215,50 +219,52 @@ object PermissionTools {
                 )
             }
         // Check if permissions are already granted
-        val allGranted = permissionList.all { permission ->
-            ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
-        }
+        val allGranted =
+            permissionList.all { permission ->
+                ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
+            }
         if (allGranted) {
             callback.onResult(true)
             return
         }
         // Store callback for result handling
-        permissionCallbacks[REQUEST_CODE_BLUETOOTH] = PermissionCallback(
-            WeakReference(activity),
-            Type.LOCATION, // Using LOCATION type as placeholder
-            {},
-            callback,
-            isBtFirst
-        )
+        permissionCallbacks[REQUEST_CODE_BLUETOOTH] =
+            PermissionCallback(
+                WeakReference(activity),
+                Type.LOCATION, // Using LOCATION type as placeholder
+                {},
+                callback,
+                isBtFirst,
+            )
         // Request permissions using the standard API
         ActivityCompat.requestPermissions(
             activity,
             permissionList.toTypedArray(),
-            REQUEST_CODE_BLUETOOTH
+            REQUEST_CODE_BLUETOOTH,
         )
     }
 
     private fun handleBluetoothPermissionResult(
         requestCode: Int,
         permissions: Array<String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         val callbackData = permissionCallbacks.remove(requestCode) ?: return
         val activity = callbackData.activityRef.get() ?: return
         val callback = callbackData.btCallback ?: return
         val isBtFirst = callbackData.isBtFirst
         val allGranted = grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }
-        XLog.i("onGranted($allGranted)")
         if (allGranted) {
             callback.onResult(true)
         } else {
-            val deniedPermissions = permissions.filterIndexed { index, _ ->
-                grantResults.getOrNull(index) != PackageManager.PERMISSION_GRANTED
-            }
-            val shouldShowRationale = deniedPermissions.any { permission ->
-                ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
-            }
-            XLog.i("onDenied(never=${!shouldShowRationale})")
+            val deniedPermissions =
+                permissions.filterIndexed { index, _ ->
+                    grantResults.getOrNull(index) != PackageManager.PERMISSION_GRANTED
+                }
+            val shouldShowRationale =
+                deniedPermissions.any { permission ->
+                    ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
+                }
             if (!shouldShowRationale && deniedPermissions.isNotEmpty()) {
                 var isBtNever = false
                 var isLocationNever = false
@@ -266,15 +272,19 @@ object PermissionTools {
                     if (permission == Manifest.permission.BLUETOOTH_SCAN || permission == Manifest.permission.BLUETOOTH_CONNECT) {
                         isBtNever = true
                     }
-                    if (permission == Manifest.permission.ACCESS_FINE_LOCATION || permission == Manifest.permission.ACCESS_COARSE_LOCATION) {
+                    if (permission == Manifest.permission.ACCESS_FINE_LOCATION ||
+                        permission == Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) {
                         isLocationNever = true
                     }
                 }
                 val tipDialogState = TipDialogState(activity)
-                val messageResId = if (!isLocationNever || (isBtNever && isBtFirst))
-                    R.string.app_bluetooth_content
-                else
-                    R.string.app_location_content
+                val messageResId =
+                    if (!isLocationNever || (isBtNever && isBtFirst)) {
+                        R.string.app_bluetooth_content
+                    } else {
+                        R.string.app_location_content
+                    }
                 tipDialogState.show(
                     title = activity.getString(R.string.app_tip),
                     message = activity.getString(messageResId),
@@ -288,7 +298,7 @@ object PermissionTools {
                     },
                     onNegative = {
                         callback.onNever(false)
-                    }
+                    },
                 )
             } else {
                 callback.onResult(false)
@@ -298,6 +308,7 @@ object PermissionTools {
 
     interface Callback {
         fun onResult(allGranted: Boolean)
+
         fun onNever(isJump: Boolean)
     }
 }

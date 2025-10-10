@@ -7,9 +7,7 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import mpdc4gsr.core.ui.navigation.UnifiedNavHost
 
 class UnifiedComposeActivity : BaseComposeActivity<UnifiedComposeViewModel>() {
-    override fun createViewModel(): UnifiedComposeViewModel {
-        return viewModels<UnifiedComposeViewModel>().value
-    }
+    override fun createViewModel(): UnifiedComposeViewModel = viewModels<UnifiedComposeViewModel>().value
 
     @Composable
     override fun Content(viewModel: UnifiedComposeViewModel) {

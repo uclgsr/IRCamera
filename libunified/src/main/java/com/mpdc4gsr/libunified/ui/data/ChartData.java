@@ -1,7 +1,6 @@
 package com.mpdc4gsr.libunified.ui.data;
 
 import android.graphics.Typeface;
-import android.util.Log;
 
 import com.mpdc4gsr.libunified.ui.components.YAxis.AxisDependency;
 import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter;
@@ -279,7 +278,6 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
             calcMinMax(e, set.getAxisDependency());
 
         } else {
-            Log.e("addEntry", "Cannot add Entry because dataSetIndex too high or too low.");
         }
     }
 

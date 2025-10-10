@@ -1,6 +1,8 @@
 package com.mpdc4gsr.module.thermalunified.view.compass
 
-enum class CompassSource(val id: String) {
+enum class CompassSource(
+    val id: String,
+) {
     RotationVector("rotation_vector"),
     GeomagneticRotationVector("geomagnetic_rotation_vector"),
     CustomMagnetometer("custom_magnetometer"),

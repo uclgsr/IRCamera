@@ -13,4 +13,7 @@ enum class IrParam {
     ParamTemperature,
 }
 
-data class TempFont(val textSize: Int, val textColor: Int)
+data class TempFont(
+    val textSize: Int,
+    val textColor: Int,
+)

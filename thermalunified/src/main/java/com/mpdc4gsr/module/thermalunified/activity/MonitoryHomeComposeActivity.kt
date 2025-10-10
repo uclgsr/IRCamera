@@ -27,9 +27,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.launch
 
 class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -65,7 +63,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             Text(
                                 "Monitor Dashboard",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -73,7 +71,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -85,7 +83,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.Default.FileDownload,
                                     contentDescription = "Export",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                             IconButton(onClick = {
@@ -95,13 +93,14 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.Default.MoreVert,
                                     contentDescription = "Settings",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF16131E)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
                     )
                 },
                 floatingActionButton = {
@@ -110,31 +109,32 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             isRecording = !isRecording
                         },
                         containerColor = if (isRecording) Color.Red else Color(0xFFFF6B35),
-                        contentColor = Color.White
+                        contentColor = Color.White,
                     ) {
                         Icon(
                             if (isRecording) Icons.Default.Stop else Icons.Default.PlayArrow,
-                            contentDescription = if (isRecording) "Stop" else "Start"
+                            contentDescription = if (isRecording) "Stop" else "Start",
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             if (isRecording) "Stop Monitor" else "Start Monitor",
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 },
-                containerColor = Color(0xFF16131E)
+                containerColor = Color(0xFF16131E),
             ) { paddingValues ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color(0xFF16131E))
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color(0xFF16131E)),
                 ) {
                     // Recording status
                     if (isRecording) {
                         RecordingStatusBar(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
                     // Tab selector
@@ -146,21 +146,22 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 pagerState.animateScrollToPage(tab)
                             }
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                     // Content pager
                     HorizontalPager(
                         state = pagerState,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     ) { page ->
                         when (page) {
                             0 -> MonitorHistoryTab()
-                            1 -> MonitorRealTimeTab(
-                                isRecording = isRecording,
-                                onSnapshot = { viewModel.captureSnapshot() },
-                                onZoom = { },
-                                onAdjust = { }
-                            )
+                            1 ->
+                                MonitorRealTimeTab(
+                                    isRecording = isRecording,
+                                    onSnapshot = { viewModel.captureSnapshot() },
+                                    onZoom = { },
+                                    onAdjust = { },
+                                )
                         }
                     }
                 }
@@ -185,7 +186,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     viewModel.exportData(this@MonitoryHomeComposeActivity, format)
                                     showExportDialog = false
                                 },
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
                             ) {
                                 Text(format.name)
                             }
@@ -197,7 +198,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     TextButton(onClick = { showExportDialog = false }) {
                         Text("Cancel")
                     }
-                }
+                },
             )
         }
         // Settings dialog
@@ -211,7 +212,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             "Configure monitoring parameters here",
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodySmall,
                         )
                     }
                 },
@@ -220,42 +221,42 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         Text("OK")
                     }
                 },
-                dismissButton = {}
+                dismissButton = {},
             )
         }
     }
 }
 
 @Composable
-private fun RecordingStatusBar(
-    modifier: Modifier = Modifier
-) {
+private fun RecordingStatusBar(modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Red.copy(alpha = 0.1f)
-        ),
-        shape = RoundedCornerShape(0.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Red.copy(alpha = 0.1f),
+            ),
+        shape = RoundedCornerShape(0.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 Icons.Default.FiberManualRecord,
                 contentDescription = "Recording",
                 tint = Color.Red,
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(16.dp),
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 "Recording in progress...",
                 color = Color.Red,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
     }
@@ -265,34 +266,36 @@ private fun RecordingStatusBar(
 private fun MonitorTabRow(
     selectedTab: Int,
     onTabSelected: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             MonitorTab(
                 text = "History",
                 icon = Icons.Default.History,
                 isSelected = selectedTab == 0,
                 onClick = { onTabSelected(0) },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             MonitorTab(
                 text = "Real-time",
                 icon = Icons.AutoMirrored.Filled.ShowChart,
                 isSelected = selectedTab == 1,
                 onClick = { onTabSelected(1) },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
         }
     }
@@ -304,30 +307,31 @@ private fun MonitorTab(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     isSelected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Button(
         onClick = onClick,
         modifier = modifier,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSelected) Color(0xFFFF6B35) else Color.Transparent,
-            contentColor = if (isSelected) Color.White else Color(0xFF7D8590)
-        ),
-        shape = RoundedCornerShape(8.dp)
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = if (isSelected) Color(0xFFFF6B35) else Color.Transparent,
+                contentColor = if (isSelected) Color.White else Color(0xFF7D8590),
+            ),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Icon(
                 icon,
                 contentDescription = text,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(20.dp),
             )
             Text(
                 text,
                 fontSize = 14.sp,
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
             )
         }
     }
@@ -337,9 +341,10 @@ private fun MonitorTab(
 private fun MonitorHistoryTab() {
     // Embed existing history fragment using AndroidView
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF0D1117))
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(Color(0xFF0D1117)),
     ) {
         AndroidView(
             factory = { context ->
@@ -348,52 +353,52 @@ private fun MonitorHistoryTab() {
                     id = androidx.core.R.id.accessibility_custom_action_4
                 }
             },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
         // History stats overlay
         HistoryStatsOverlay(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp),
         )
     }
 }
 
 @Composable
-private fun HistoryStatsOverlay(
-    modifier: Modifier = Modifier
-) {
+private fun HistoryStatsOverlay(modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black.copy(alpha = 0.8f)
-        ),
-        shape = RoundedCornerShape(8.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Black.copy(alpha = 0.8f),
+            ),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
                 "History Stats",
                 color = Color.White,
                 fontSize = 10.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 "Sessions: 15",
                 color = Color(0xFF7D8590),
-                fontSize = 9.sp
+                fontSize = 9.sp,
             )
             Text(
                 "Duration: 2h 30m",
                 color = Color(0xFF7D8590),
-                fontSize = 9.sp
+                fontSize = 9.sp,
             )
             Text(
                 "Data Points: 1,250",
                 color = Color(0xFFFF6B35),
-                fontSize = 9.sp
+                fontSize = 9.sp,
             )
         }
     }
@@ -404,13 +409,14 @@ private fun MonitorRealTimeTab(
     isRecording: Boolean,
     onSnapshot: () -> Unit = {},
     onZoom: () -> Unit = {},
-    onAdjust: () -> Unit = {}
+    onAdjust: () -> Unit = {},
 ) {
     // Embed existing real-time fragment using AndroidView
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF0D1117))
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(Color(0xFF0D1117)),
     ) {
         AndroidView(
             factory = { context ->
@@ -419,23 +425,25 @@ private fun MonitorRealTimeTab(
                     id = androidx.core.R.id.accessibility_custom_action_5
                 }
             },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
         // Real-time monitor overlay
         RealTimeMonitorOverlay(
             isRecording = isRecording,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .align(Alignment.TopStart)
+                    .padding(16.dp),
         )
         // Quick controls
         QuickControlsOverlay(
             onSnapshot = onSnapshot,
             onZoom = onZoom,
             onAdjust = onAdjust,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
         )
     }
 }
@@ -443,51 +451,52 @@ private fun MonitorRealTimeTab(
 @Composable
 private fun RealTimeMonitorOverlay(
     isRecording: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var recordingTime by remember { mutableIntStateOf(0) }
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black.copy(alpha = 0.8f)
-        ),
-        shape = RoundedCornerShape(8.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Black.copy(alpha = 0.8f),
+            ),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 if (isRecording) {
                     Icon(
                         Icons.Default.FiberManualRecord,
                         contentDescription = "Recording",
                         tint = Color.Red,
-                        modifier = Modifier.size(12.dp)
+                        modifier = Modifier.size(12.dp),
                     )
                 }
                 Text(
                     if (isRecording) "RECORDING" else "READY",
                     color = if (isRecording) Color.Red else Color(0xFF00FF00),
                     fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
             if (isRecording) {
                 Text(
                     "Duration: ${recordingTime}s",
                     color = Color.White,
-                    fontSize = 9.sp
+                    fontSize = 9.sp,
                 )
             }
             Text(
                 "Live: 35.2°C",
                 color = Color(0xFFFF6B35),
                 fontSize = 9.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
     }
@@ -509,46 +518,46 @@ private fun QuickControlsOverlay(
     onSnapshot: () -> Unit = {},
     onZoom: () -> Unit = {},
     onAdjust: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         FloatingActionButton(
             onClick = onSnapshot,
             modifier = Modifier.size(40.dp),
-            containerColor = Color(0xFF6B7280)
+            containerColor = Color(0xFF6B7280),
         ) {
             Icon(
                 Icons.Default.CameraAlt,
                 contentDescription = "Snapshot",
                 tint = Color.White,
-                modifier = Modifier.size(18.dp)
+                modifier = Modifier.size(18.dp),
             )
         }
         FloatingActionButton(
             onClick = onZoom,
             modifier = Modifier.size(40.dp),
-            containerColor = Color(0xFF6B7280)
+            containerColor = Color(0xFF6B7280),
         ) {
             Icon(
                 Icons.Default.ZoomIn,
                 contentDescription = "Zoom",
                 tint = Color.White,
-                modifier = Modifier.size(18.dp)
+                modifier = Modifier.size(18.dp),
             )
         }
         FloatingActionButton(
             onClick = onAdjust,
             modifier = Modifier.size(40.dp),
-            containerColor = Color(0xFF6B7280)
+            containerColor = Color(0xFF6B7280),
         ) {
             Icon(
                 Icons.Default.Tune,
                 contentDescription = "Adjust",
                 tint = Color.White,
-                modifier = Modifier.size(18.dp)
+                modifier = Modifier.size(18.dp),
             )
         }
     }

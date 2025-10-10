@@ -20,9 +20,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
-    override fun createViewModel(): IRVideoGSYViewModel {
-        return IRVideoGSYViewModel()
-    }
+    override fun createViewModel(): IRVideoGSYViewModel = IRVideoGSYViewModel()
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -35,7 +33,7 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                             Text(
                                 "Thermal Video Player",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -43,19 +41,20 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFFFF6B35)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFFFF6B35),
+                            ),
                     )
-                }
+                },
             ) { paddingValues ->
                 IRVideoGSYContent(
                     viewModel = viewModel,
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
         }
@@ -64,7 +63,7 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
     @Composable
     private fun IRVideoGSYContent(
         viewModel: IRVideoGSYViewModel,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         var isPlaying by remember { mutableStateOf(false) }
         var currentTime by remember { mutableStateOf(0f) }
@@ -72,59 +71,62 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
         var playbackSpeed by remember { mutableStateOf(1f) }
         var showThermalOverlay by remember { mutableStateOf(true) }
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Video player area
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.Center,
                     ) {
                         Icon(
                             if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                             contentDescription = if (isPlaying) "Pause" else "Play",
                             tint = Color(0xFFFF6B35),
-                            modifier = Modifier.size(64.dp)
+                            modifier = Modifier.size(64.dp),
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             "Thermal Video Playback",
                             color = Color.White,
                             style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
                             "GSY Player with thermal analysis",
                             color = Color(0xFF9E9E9E),
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                     // Thermal overlay indicator
                     if (showThermalOverlay) {
                         Card(
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(16.dp),
-                            colors = CardDefaults.cardColors(containerColor = Color(0xFFFF6B35))
+                            modifier =
+                                Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFFFF6B35)),
                         ) {
                             Text(
                                 "THERMAL",
                                 modifier = Modifier.padding(8.dp),
                                 color = Color.White,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                         }
                     }
@@ -133,11 +135,11 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
             // Video controls
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F9FA))
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F9FA)),
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     // Progress slider
                     Column {
@@ -145,24 +147,25 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                             value = currentTime,
                             onValueChange = { currentTime = it },
                             valueRange = 0f..totalTime,
-                            colors = SliderDefaults.colors(
-                                thumbColor = Color(0xFFFF6B35),
-                                activeTrackColor = Color(0xFFFF6B35)
-                            )
+                            colors =
+                                SliderDefaults.colors(
+                                    thumbColor = Color(0xFFFF6B35),
+                                    activeTrackColor = Color(0xFFFF6B35),
+                                ),
                         )
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
                             Text(
                                 "${(currentTime / 60).toInt()}:${
                                     (currentTime % 60).toInt().toString().padStart(2, '0')
                                 }",
-                                style = MaterialTheme.typography.bodySmall
+                                style = MaterialTheme.typography.bodySmall,
                             )
                             Text(
                                 "${(totalTime / 60).toInt()}:${(totalTime % 60).toInt().toString().padStart(2, '0')}",
-                                style = MaterialTheme.typography.bodySmall
+                                style = MaterialTheme.typography.bodySmall,
                             )
                         }
                     }
@@ -170,25 +173,25 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         IconButton(
-                            onClick = { currentTime = (currentTime - 10f).coerceAtLeast(0f) }
+                            onClick = { currentTime = (currentTime - 10f).coerceAtLeast(0f) },
                         ) {
                             Icon(Icons.Default.Replay10, contentDescription = "Back 10s")
                         }
                         FloatingActionButton(
                             onClick = { isPlaying = !isPlaying },
-                            containerColor = Color(0xFFFF6B35)
+                            containerColor = Color(0xFFFF6B35),
                         ) {
                             Icon(
                                 if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                                 contentDescription = if (isPlaying) "Pause" else "Play",
-                                tint = Color.White
+                                tint = Color.White,
                             )
                         }
                         IconButton(
-                            onClick = { currentTime = (currentTime + 10f).coerceAtMost(totalTime) }
+                            onClick = { currentTime = (currentTime + 10f).coerceAtMost(totalTime) },
                         ) {
                             Icon(Icons.Default.Forward10, contentDescription = "Forward 10s")
                         }
@@ -197,11 +200,11 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         // Playback speed
                         Row(
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text("Speed: ")
                             val speeds = listOf(0.5f, 1f, 1.5f, 2f)
@@ -210,26 +213,28 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                                     onClick = { playbackSpeed = speed },
                                     label = { Text("${speed}x") },
                                     selected = playbackSpeed == speed,
-                                    colors = FilterChipDefaults.filterChipColors(
-                                        selectedContainerColor = Color(0xFFFF6B35),
-                                        selectedLabelColor = Color.White
-                                    )
+                                    colors =
+                                        FilterChipDefaults.filterChipColors(
+                                            selectedContainerColor = Color(0xFFFF6B35),
+                                            selectedLabelColor = Color.White,
+                                        ),
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                             }
                         }
                         // Thermal overlay toggle
                         Row(
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text("Thermal Overlay")
                             Switch(
                                 checked = showThermalOverlay,
                                 onCheckedChange = { showThermalOverlay = it },
-                                colors = SwitchDefaults.colors(
-                                    checkedThumbColor = Color(0xFFFF6B35),
-                                    checkedTrackColor = Color(0xFFFF6B35).copy(alpha = 0.5f)
-                                )
+                                colors =
+                                    SwitchDefaults.colors(
+                                        checkedThumbColor = Color(0xFFFF6B35),
+                                        checkedTrackColor = Color(0xFFFF6B35).copy(alpha = 0.5f),
+                                    ),
                             )
                         }
                     }
@@ -238,21 +243,21 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
             // Temperature analysis
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBE0))
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBE0)),
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(
                         "Frame Temperature Analysis",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFFFF6B35)
+                        color = Color(0xFFFF6B35),
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        horizontalArrangement = Arrangement.SpaceEvenly,
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text("Max", style = MaterialTheme.typography.bodySmall)

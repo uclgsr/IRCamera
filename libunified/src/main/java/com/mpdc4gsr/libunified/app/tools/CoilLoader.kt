@@ -3,33 +3,34 @@ package com.mpdc4gsr.libunified.app.tools
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.util.Log
 import android.widget.ImageView
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
-import com.mpdc4gsr.libunified.compat.dpToPx
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.compat.dpToPx
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 object CoilLoader {
     private const val TAG = "CoilLoader"
     private const val CORNER_RADIUS_DP = 6f
-    private fun getPhotoOptions(context: Context): RoundedCornersTransformation {
-        return RoundedCornersTransformation(CORNER_RADIUS_DP.dpToPx(context))
-    }
+
+    private fun getPhotoOptions(context: Context): RoundedCornersTransformation =
+        RoundedCornersTransformation(CORNER_RADIUS_DP.dpToPx(context))
 
     private fun loadCircleWithData(
         img: ImageView,
         data: Any,
         options: ((ImageRequest.Builder) -> Unit)? = null,
     ) {
-        val request = ImageRequest.Builder(img.context)
-            .data(data)
-            .target(img)
-            .apply { options?.invoke(this) }
-            .build()
+        val request =
+            ImageRequest
+                .Builder(img.context)
+                .data(data)
+                .target(img)
+                .apply { options?.invoke(this) }
+                .build()
         img.context.imageLoader.enqueue(request)
     }
 
@@ -63,13 +64,15 @@ object CoilLoader {
         resourceId: Int,
         options: ((ImageRequest.Builder) -> Unit)? = null,
     ) {
-        val request = ImageRequest.Builder(img.context)
-            .data(url)
-            .error(resourceId)
-            .placeholder(resourceId)
-            .target(img)
-            .apply { options?.invoke(this) }
-            .build()
+        val request =
+            ImageRequest
+                .Builder(img.context)
+                .data(url)
+                .error(resourceId)
+                .placeholder(resourceId)
+                .target(img)
+                .apply { options?.invoke(this) }
+                .build()
         img.context.imageLoader.enqueue(request)
     }
 
@@ -77,12 +80,14 @@ object CoilLoader {
         img: ImageView,
         data: Any,
     ) {
-        val request = ImageRequest.Builder(img.context)
-            .data(data)
-            .transformations(getPhotoOptions(img.context))
-            .error(R.mipmap.ic_default_head)
-            .target(img)
-            .build()
+        val request =
+            ImageRequest
+                .Builder(img.context)
+                .data(data)
+                .transformations(getPhotoOptions(img.context))
+                .error(R.mipmap.ic_default_head)
+                .target(img)
+                .build()
         img.context.imageLoader.enqueue(request)
     }
 
@@ -110,12 +115,14 @@ object CoilLoader {
         img: ImageView,
         url: String?,
     ) {
-        val request = ImageRequest.Builder(img.context)
-            .data(url)
-            .placeholder(R.mipmap.bg_default_img)
-            .error(R.mipmap.bg_default_img)
-            .target(img)
-            .build()
+        val request =
+            ImageRequest
+                .Builder(img.context)
+                .data(url)
+                .placeholder(R.mipmap.bg_default_img)
+                .error(R.mipmap.bg_default_img)
+                .target(img)
+                .build()
         img.context.imageLoader.enqueue(request)
     }
 
@@ -123,12 +130,14 @@ object CoilLoader {
         img: ImageView,
         url: String?,
     ) {
-        val request = ImageRequest.Builder(img.context)
-            .data(url)
-            .placeholder(R.drawable.ic_gallery_default_shape)
-            .error(R.drawable.ic_gallery_default_shape)
-            .target(img)
-            .build()
+        val request =
+            ImageRequest
+                .Builder(img.context)
+                .data(url)
+                .placeholder(R.drawable.ic_gallery_default_shape)
+                .error(R.drawable.ic_gallery_default_shape)
+                .target(img)
+                .build()
         img.context.imageLoader.enqueue(request)
     }
 
@@ -136,12 +145,14 @@ object CoilLoader {
         img: ImageView,
         url: String?,
     ) {
-        val request = ImageRequest.Builder(img.context)
-            .data(url)
-            .placeholder(R.drawable.ic_default_search_svg)
-            .error(R.drawable.ic_default_search_svg)
-            .target(img)
-            .build()
+        val request =
+            ImageRequest
+                .Builder(img.context)
+                .data(url)
+                .placeholder(R.drawable.ic_default_search_svg)
+                .error(R.drawable.ic_default_search_svg)
+                .target(img)
+                .build()
         img.context.imageLoader.enqueue(request)
     }
 
@@ -149,10 +160,12 @@ object CoilLoader {
         img: ImageView,
         resourceId: Int,
     ) {
-        val request = ImageRequest.Builder(img.context)
-            .data(resourceId)
-            .target(img)
-            .build()
+        val request =
+            ImageRequest
+                .Builder(img.context)
+                .data(resourceId)
+                .target(img)
+                .build()
         img.context.imageLoader.enqueue(request)
     }
 
@@ -160,11 +173,13 @@ object CoilLoader {
         img: ImageView,
         url: String?,
     ) {
-        val request = ImageRequest.Builder(img.context)
-            .data(url)
-            .placeholder(R.drawable.ic_default_search_svg)
-            .target(img)
-            .build()
+        val request =
+            ImageRequest
+                .Builder(img.context)
+                .data(url)
+                .placeholder(R.drawable.ic_default_search_svg)
+                .target(img)
+                .build()
         img.context.imageLoader.enqueue(request)
     }
 
@@ -177,13 +192,14 @@ object CoilLoader {
         }
         return withContext(Dispatchers.IO) {
             try {
-                val request = ImageRequest.Builder(context)
-                    .data(url)
-                    .build()
+                val request =
+                    ImageRequest
+                        .Builder(context)
+                        .data(url)
+                        .build()
                 val result = context.imageLoader.execute(request)
                 result.drawable
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to load drawable from URL: $url", e)
                 null
             }
         }

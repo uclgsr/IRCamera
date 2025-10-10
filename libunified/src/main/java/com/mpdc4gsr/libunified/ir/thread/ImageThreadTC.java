@@ -3,11 +3,9 @@ package com.mpdc4gsr.libunified.ir.thread;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.SystemClock;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.elvishew.xlog.XLog;
 import com.energy.iruvc.sdkisp.LibIRProcess;
 import com.energy.iruvc.utils.CommonParams;
 import com.energy.iruvc.utils.SynchronizedBitmap;
@@ -64,7 +62,6 @@ public class ImageThreadTC extends Thread {
     private volatile boolean isOpenAmplify = false;
 
     public ImageThreadTC(Context context, int imageWidth, int imageHeight) {
-        Log.i(TAG, "ImageThread create->imageWidth = " + imageWidth + " imageHeight = " + imageHeight);
         this.mContext = context;
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
@@ -229,7 +226,6 @@ public class ImageThreadTC extends Thread {
                                 imageDst = grayData;
                                 firstTime++;
                             } catch (Throwable e) {
-                                Log.e("Static Intrusion Error：", e.getMessage());
                             }
                         } else {
 
@@ -269,10 +265,8 @@ public class ImageThreadTC extends Thread {
             try {
                 SystemClock.sleep(20);
             } catch (Exception e) {
-                XLog.e("Image ThreadrefreshException: " + e.getMessage());
             }
         }
-        Log.i(TAG, "ImageThread exit");
     }
 
     public Bitmap getBaseBitmap(int rotateInt) {

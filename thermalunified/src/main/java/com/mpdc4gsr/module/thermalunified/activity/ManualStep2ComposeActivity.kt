@@ -26,9 +26,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -46,7 +44,7 @@ class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             Text(
                                 "Manual Setup - Step 2",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -54,31 +52,33 @@ class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF16131E)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
                     )
                 },
-                containerColor = Color(0xFF16131E)
+                containerColor = Color(0xFF16131E),
             ) { paddingValues ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color(0xFF16131E))
-                        .padding(24.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color(0xFF16131E))
+                            .padding(24.dp),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     // Progress indicator
                     SetupProgressIndicator(
                         currentStep = 2,
                         totalSteps = 2,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(modifier = Modifier.height(32.dp))
                     // Connection and calibration card
@@ -108,7 +108,7 @@ class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 isCalibrating = false
                             }
                         },
-                        onFinish = { finish() }
+                        onFinish = { finish() },
                     )
                 }
             }
@@ -120,42 +120,45 @@ class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 private fun SetupProgressIndicator(
     currentStep: Int,
     totalSteps: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 "Setup Progress",
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(12.dp))
             // Progress bar
             LinearProgressIndicator(
                 progress = { currentStep.toFloat() / totalSteps.toFloat() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(8.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(8.dp),
                 color = Color(0xFFFF6B35),
-                trackColor = Color(0xFF16131E)
+                trackColor = Color(0xFF16131E),
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 "Step $currentStep of $totalSteps - Final Step",
                 color = Color(0xFF7D8590),
-                fontSize = 12.sp
+                fontSize = 12.sp,
             )
         }
     }
@@ -169,20 +172,22 @@ private fun ConnectionSetupCard(
     calibrationProgress: Float,
     onConnect: () -> Unit,
     onCalibrate: () -> Unit,
-    onFinish: () -> Unit
+    onFinish: () -> Unit,
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(16.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(16.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             // Status icon
             when {
@@ -190,14 +195,14 @@ private fun ConnectionSetupCard(
                     CircularProgressIndicator(
                         progress = { calibrationProgress },
                         color = Color(0xFFFF6B35),
-                        modifier = Modifier.size(64.dp)
+                        modifier = Modifier.size(64.dp),
                     )
                 }
 
                 isConnecting -> {
                     CircularProgressIndicator(
                         color = Color(0xFFFF6B35),
-                        modifier = Modifier.size(64.dp)
+                        modifier = Modifier.size(64.dp),
                     )
                 }
 
@@ -206,7 +211,7 @@ private fun ConnectionSetupCard(
                         Icons.Default.CheckCircle,
                         contentDescription = "Connected",
                         tint = Color(0xFF00FF00),
-                        modifier = Modifier.size(64.dp)
+                        modifier = Modifier.size(64.dp),
                     )
                 }
 
@@ -215,14 +220,14 @@ private fun ConnectionSetupCard(
                         Icons.Default.Bluetooth,
                         contentDescription = "Bluetooth",
                         tint = Color(0xFFFF6B35),
-                        modifier = Modifier.size(64.dp)
+                        modifier = Modifier.size(64.dp),
                     )
                 }
             }
             // Title and status
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
                     when {
@@ -234,7 +239,7 @@ private fun ConnectionSetupCard(
                     color = Color.White,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
                 Text(
                     when {
@@ -245,7 +250,7 @@ private fun ConnectionSetupCard(
                     },
                     color = Color(0xFF7D8590),
                     fontSize = 14.sp,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
             // Connection steps
@@ -264,7 +269,7 @@ private fun ConnectionSetupCard(
                 calibrationComplete = calibrationProgress >= 1f,
                 onConnect = onConnect,
                 onCalibrate = onCalibrate,
-                onFinish = onFinish
+                onFinish = onFinish,
             )
         }
     }
@@ -273,22 +278,24 @@ private fun ConnectionSetupCard(
 @Composable
 private fun ConnectionSteps() {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF16131E)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF16131E),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 "Connection Steps",
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             ConnectionStep("1", "Turn on thermal camera")
             ConnectionStep("2", "Enable camera pairing mode")
@@ -300,32 +307,33 @@ private fun ConnectionSteps() {
 @Composable
 private fun ConnectionStep(
     step: String,
-    instruction: String
+    instruction: String,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Box(
-            modifier = Modifier
-                .size(20.dp)
-                .background(
-                    Color(0xFFFF6B35),
-                    RoundedCornerShape(10.dp)
-                ),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .size(20.dp)
+                    .background(
+                        Color(0xFFFF6B35),
+                        RoundedCornerShape(10.dp),
+                    ),
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 step,
                 color = Color.White,
                 fontSize = 10.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
         Text(
             instruction,
             color = Color(0xFF7D8590),
-            fontSize = 12.sp
+            fontSize = 12.sp,
         )
     }
 }
@@ -333,27 +341,29 @@ private fun ConnectionStep(
 @Composable
 private fun CalibrationInfo() {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF16131E)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF16131E),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
                 "Calibration Required",
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 "Camera calibration ensures accurate temperature readings. This process takes about 30 seconds.",
                 color = Color(0xFF7D8590),
-                fontSize = 12.sp
+                fontSize = 12.sp,
             )
         }
     }
@@ -367,33 +377,35 @@ private fun ActionButtons(
     calibrationComplete: Boolean,
     onConnect: () -> Unit,
     onCalibrate: () -> Unit,
-    onFinish: () -> Unit
+    onFinish: () -> Unit,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         when {
             calibrationComplete -> {
                 Button(
                     onClick = onFinish,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF00AA00)
-                    ),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF00AA00),
+                        ),
                     shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
                 ) {
                     Icon(
                         Icons.Default.Done,
                         contentDescription = "Complete",
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         "Setup Complete",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 }
             }
@@ -401,24 +413,26 @@ private fun ActionButtons(
             isConnected && !isCalibrating -> {
                 Button(
                     onClick = onCalibrate,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFF6B35)
-                    ),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFFF6B35),
+                        ),
                     shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
                 ) {
                     Icon(
                         Icons.Default.Tune,
                         contentDescription = "Calibrate",
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         "Start Calibration",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 }
             }
@@ -426,24 +440,26 @@ private fun ActionButtons(
             !isConnected && !isConnecting -> {
                 Button(
                     onClick = onConnect,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFF6B35)
-                    ),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFFF6B35),
+                        ),
                     shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
                 ) {
                     Icon(
                         Icons.Default.Bluetooth,
                         contentDescription = "Connect",
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         "Connect to Camera",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 }
             }
@@ -452,12 +468,13 @@ private fun ActionButtons(
         if (!calibrationComplete) {
             OutlinedButton(
                 onClick = onFinish,
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = Color(0xFF7D8590)
-                ),
+                colors =
+                    ButtonDefaults.outlinedButtonColors(
+                        contentColor = Color(0xFF7D8590),
+                    ),
                 border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF7D8590)),
                 shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Text("Cancel Setup", fontSize = 14.sp)
             }

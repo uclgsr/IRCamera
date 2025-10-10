@@ -6,8 +6,10 @@ import com.mpdc4gsr.libunified.ui.formatter.IndexAxisValueFormatter
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MyValueFormatter(private val startTime: Long, private val type: Int = 1) :
-    IndexAxisValueFormatter() {
+class MyValueFormatter(
+    private val startTime: Long,
+    private val type: Int = 1,
+) : IndexAxisValueFormatter() {
     companion object {
         const val TYPE_TIME_SECOND = 1
         const val TYPE_TIME_MINUTE = 2

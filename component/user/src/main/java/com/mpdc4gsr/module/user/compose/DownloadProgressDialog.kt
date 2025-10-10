@@ -20,32 +20,36 @@ fun DownloadProgressDialog(
     isVisible: Boolean,
     currentBytes: Long,
     totalBytes: Long,
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
     if (isVisible) {
         Dialog(
             onDismissRequest = {},
-            properties = DialogProperties(
-                dismissOnBackPress = false,
-                dismissOnClickOutside = false
-            )
+            properties =
+                DialogProperties(
+                    dismissOnBackPress = false,
+                    dismissOnClickOutside = false,
+                ),
         ) {
             Card(
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .wrapContentHeight(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth(0.8f)
+                        .wrapContentHeight(),
                 shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
             ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     // Title
                     Text(
@@ -53,7 +57,7 @@ fun DownloadProgressDialog(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                     // File size info
                     val sizeText =
@@ -64,19 +68,20 @@ fun DownloadProgressDialog(
                         text = sizeText,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                     // Progress bar
                     val progress =
                         if (totalBytes > 0) (currentBytes.toFloat() / totalBytes.toFloat()) else 0f
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         LinearProgressIndicator(
                             progress = { progress },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(8.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .height(8.dp),
                             color = MaterialTheme.colorScheme.primary,
                             trackColor = MaterialTheme.colorScheme.surfaceVariant,
                         )
@@ -85,7 +90,7 @@ fun DownloadProgressDialog(
                             text = "${(progress * 100).toInt()}%",
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.primary,
                         )
                     }
                 }
@@ -94,11 +99,10 @@ fun DownloadProgressDialog(
     }
 }
 
-private fun formatFileSize(size: Long): String {
-    return when {
+private fun formatFileSize(size: Long): String =
+    when {
         size < 1024 -> "${size}B"
         size < 1024 * 1024 -> DecimalFormat("#.0").format(size.toDouble() / 1024) + "KB"
         size < 1024 * 1024 * 1024 -> DecimalFormat("#.0").format(size.toDouble() / 1024 / 1024) + "MB"
         else -> DecimalFormat("#.0").format(size.toDouble() / 1024 / 1024 / 1024) + "GB"
     }
-}

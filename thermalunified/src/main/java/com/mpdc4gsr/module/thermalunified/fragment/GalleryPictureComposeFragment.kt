@@ -35,9 +35,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
-    override fun createViewModel(): GalleryViewModel {
-        return viewModels<GalleryViewModel>().value
-    }
+    override fun createViewModel(): GalleryViewModel = viewModels<GalleryViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -50,7 +48,7 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
         val isSelectionMode by viewModel.isSelectionMode.collectAsStateWithLifecycle()
         LibUnifiedTheme {
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 // Selection toolbar
                 if (isSelectionMode) {
@@ -63,12 +61,12 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         onDeleteSelected = { viewModel.deleteSelectedItems() },
                         onExportSelected = {
                             exportSelectedImages(context, selectedItems.toList())
-                        }
+                        },
                     )
                 }
                 // Gallery content
                 Box(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     when {
                         isLoading -> {
@@ -77,7 +75,7 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
 
                         galleryItems.isEmpty() -> {
                             EmptyGalleryState(
-                                onRefresh = { viewModel.refreshGallery() }
+                                onRefresh = { viewModel.refreshGallery() },
                             )
                         }
 
@@ -98,7 +96,7 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                                         viewModel.enterSelectionMode()
                                         viewModel.toggleItemSelection(item)
                                     }
-                                }
+                                },
                             )
                         }
                     }
@@ -113,30 +111,33 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
         onClearSelection: () -> Unit,
         onShareSelected: () -> Unit,
         onDeleteSelected: () -> Unit,
-        onExportSelected: () -> Unit
+        onExportSelected: () -> Unit,
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            )
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                ),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "$selectedCount selected",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     IconButton(onClick = onShareSelected) {
                         Icon(Icons.Default.Share, contentDescription = "Share")
@@ -148,7 +149,7 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                         Icon(
                             Icons.Default.Delete,
                             contentDescription = "Delete",
-                            tint = MaterialTheme.colorScheme.error
+                            tint = MaterialTheme.colorScheme.error,
                         )
                     }
                     TextButton(onClick = onClearSelection) {
@@ -163,50 +164,48 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
     private fun LoadingState() {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 CircularProgressIndicator()
                 Text(
                     text = "Loading images...",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
     }
 
     @Composable
-    private fun EmptyGalleryState(
-        onRefresh: () -> Unit
-    ) {
+    private fun EmptyGalleryState(onRefresh: () -> Unit) {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
                     Icons.Default.PhotoLibrary,
                     contentDescription = "No pictures",
                     modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "No Pictures Found",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "Capture thermal images to see them here",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Button(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
@@ -223,7 +222,7 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
         selectedItems: Set<String>,
         isSelectionMode: Boolean,
         onItemClick: (GalleryViewModel.MediaItem) -> Unit,
-        onItemLongClick: (GalleryViewModel.MediaItem) -> Unit
+        onItemLongClick: (GalleryViewModel.MediaItem) -> Unit,
     ) {
         // Adaptive grid columns based on screen size
         val columns = remember { mutableIntStateOf(3) }
@@ -231,7 +230,7 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
             columns = GridCells.Fixed(columns.intValue),
             contentPadding = PaddingValues(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(pictures) { item ->
                 PictureGridItem(
@@ -239,7 +238,7 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
                     isSelected = selectedItems.contains(item.id),
                     isSelectionMode = isSelectionMode,
                     onClick = { onItemClick(item) },
-                    onLongClick = { onItemLongClick(item) }
+                    onLongClick = { onItemLongClick(item) },
                 )
             }
         }
@@ -251,120 +250,135 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
         isSelected: Boolean,
         isSelectionMode: Boolean,
         onClick: () -> Unit,
-        onLongClick: () -> Unit
+        onLongClick: () -> Unit,
     ) {
         Card(
             onClick = onClick,
-            modifier = Modifier
-                .aspectRatio(1f)
-                .fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = if (isSelected)
-                    MaterialTheme.colorScheme.primaryContainer
-                else
-                    MaterialTheme.colorScheme.surface
-            ),
-            border = if (isSelected)
-                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-            else null,
-            shape = RoundedCornerShape(12.dp)
+            modifier =
+                Modifier
+                    .aspectRatio(1f)
+                    .fillMaxWidth(),
+            colors =
+                CardDefaults.cardColors(
+                    containerColor =
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.primaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.surface
+                        },
+                ),
+            border =
+                if (isSelected) {
+                    androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+                } else {
+                    null
+                },
+            shape = RoundedCornerShape(12.dp),
         ) {
             Box(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 // Image thumbnail
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(item.path)
-                        .crossfade(true)
-                        .build(),
+                    model =
+                        ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(item.path)
+                            .crossfade(true)
+                            .build(),
                     contentDescription = item.name,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.Crop
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop,
                 )
                 // Thermal image overlay indicator
                 if (!item.isVideo) {
                     Card(
-                        modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .padding(8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.secondary
-                        ),
-                        shape = RoundedCornerShape(8.dp)
+                        modifier =
+                            Modifier
+                                .align(Alignment.TopStart)
+                                .padding(8.dp),
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.secondary,
+                            ),
+                        shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(
                             text = "THERMAL",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSecondary,
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
                         )
                     }
                 }
                 // Selection indicator
                 if (isSelectionMode) {
                     Box(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(8.dp)
+                        modifier =
+                            Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(8.dp),
                     ) {
                         if (isSelected) {
                             Icon(
                                 Icons.Default.CheckCircle,
                                 contentDescription = "Selected",
                                 tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier
-                                    .background(
-                                        Color.White,
-                                        shape = androidx.compose.foundation.shape.CircleShape
-                                    )
-                                    .padding(2.dp)
+                                modifier =
+                                    Modifier
+                                        .background(
+                                            Color.White,
+                                            shape = androidx.compose.foundation.shape.CircleShape,
+                                        ).padding(2.dp),
                             )
                         } else {
                             Icon(
                                 Icons.Default.RadioButtonUnchecked,
                                 contentDescription = "Not Selected",
                                 tint = Color.White,
-                                modifier = Modifier
-                                    .background(
-                                        Color.Black.copy(alpha = 0.5f),
-                                        shape = androidx.compose.foundation.shape.CircleShape
-                                    )
-                                    .padding(2.dp)
+                                modifier =
+                                    Modifier
+                                        .background(
+                                            Color.Black.copy(alpha = 0.5f),
+                                            shape = androidx.compose.foundation.shape.CircleShape,
+                                        ).padding(2.dp),
                             )
                         }
                     }
                 }
                 // Image info overlay
                 Card(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(8.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Black.copy(alpha = 0.7f)
-                    ),
-                    shape = RoundedCornerShape(6.dp)
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(8.dp),
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = Color.Black.copy(alpha = 0.7f),
+                        ),
+                    shape = RoundedCornerShape(6.dp),
                 ) {
                     Column(
-                        modifier = Modifier.padding(6.dp)
+                        modifier = Modifier.padding(6.dp),
                     ) {
                         Text(
                             text = item.name,
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White,
-                            maxLines = 1
+                            maxLines = 1,
                         )
                         Text(
                             text = formatFileSize(item.size),
                             style = MaterialTheme.typography.labelSmall,
-                            color = Color.White.copy(alpha = 0.8f)
+                            color = Color.White.copy(alpha = 0.8f),
                         )
                         Text(
                             text = SimpleDateFormat("MM/dd HH:mm", Locale.getDefault()).format(Date(item.dateModified)),
                             style = MaterialTheme.typography.labelSmall,
-                            color = Color.White.copy(alpha = 0.8f)
+                            color = Color.White.copy(alpha = 0.8f),
                         )
                     }
                 }
@@ -373,45 +387,57 @@ class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
     }
 
     // Helper functions
-    private fun previewPicture(context: android.content.Context, path: String) {
+    private fun previewPicture(
+        context: android.content.Context,
+        path: String,
+    ) {
         try {
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(Uri.fromFile(File(path)), "image/*")
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
+            val intent =
+                Intent(Intent.ACTION_VIEW).apply {
+                    setDataAndType(Uri.fromFile(File(path)), "image/*")
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
             context.startActivity(intent)
         } catch (e: Exception) {
             // Handle error - maybe show a toast or use internal image viewer
         }
     }
 
-    private fun shareSelectedImages(context: android.content.Context, selectedPaths: List<String>) {
+    private fun shareSelectedImages(
+        context: android.content.Context,
+        selectedPaths: List<String>,
+    ) {
         try {
-            val uris = selectedPaths.map { path ->
-                androidx.core.content.FileProvider.getUriForFile(
-                    context,
-                    "${context.packageName}.fileprovider",
-                    File(path)
-                )
-            }
-            val intent = Intent().apply {
-                if (uris.size == 1) {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_STREAM, uris.first())
-                } else {
-                    action = Intent.ACTION_SEND_MULTIPLE
-                    putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
+            val uris =
+                selectedPaths.map { path ->
+                    androidx.core.content.FileProvider.getUriForFile(
+                        context,
+                        "${context.packageName}.fileprovider",
+                        File(path),
+                    )
                 }
-                type = "image/*"
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
+            val intent =
+                Intent().apply {
+                    if (uris.size == 1) {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_STREAM, uris.first())
+                    } else {
+                        action = Intent.ACTION_SEND_MULTIPLE
+                        putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
+                    }
+                    type = "image/*"
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
             context.startActivity(Intent.createChooser(intent, "Share Images"))
         } catch (e: Exception) {
             // Handle error
         }
     }
 
-    private fun exportSelectedImages(context: android.content.Context, selectedPaths: List<String>) {
+    private fun exportSelectedImages(
+        context: android.content.Context,
+        selectedPaths: List<String>,
+    ) {
         // Implementation for exporting images to external storage
         // This would typically involve copying files to a user-accessible location
     }

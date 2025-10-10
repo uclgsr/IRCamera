@@ -12,17 +12,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 
-
 @Composable
 fun AndroidViewWrapper(
     viewFactory: (Context) -> View,
     modifier: Modifier = Modifier,
-    update: (View) -> Unit = {}
+    update: (View) -> Unit = {},
 ) {
     AndroidView(
         factory = viewFactory,
         modifier = modifier,
-        update = update
+        update = update,
     )
 }
 
@@ -31,7 +30,7 @@ fun FragmentContainer(
     fragmentManager: FragmentManager,
     fragmentFactory: () -> Fragment,
     modifier: Modifier = Modifier.fillMaxSize(),
-    containerId: Int = View.generateViewId()
+    containerId: Int = View.generateViewId(),
 ) {
     AndroidView(
         factory = { context ->
@@ -39,19 +38,20 @@ fun FragmentContainer(
                 id = containerId
                 // Add the fragment to the container
                 val fragment = fragmentFactory()
-                fragmentManager.beginTransaction()
+                fragmentManager
+                    .beginTransaction()
                     .replace(id, fragment)
                     .commit()
             }
         },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
 @Composable
 fun HybridScreen(
     composeContent: @Composable () -> Unit,
-    androidViewContent: @Composable () -> Unit
+    androidViewContent: @Composable () -> Unit,
 ) {
     // This can be customized based on layout requirements
     // For now, simple vertical layout approach
@@ -67,19 +67,18 @@ object StateFlowBridge {
 }
 
 object FragmentComposeUtils {
-
     @Composable
     fun FragmentCompose(
         fragmentManager: FragmentManager,
         fragmentTag: String,
         fragmentFactory: () -> Fragment,
-        modifier: Modifier = Modifier.fillMaxSize()
+        modifier: Modifier = Modifier.fillMaxSize(),
     ) {
         FragmentContainer(
             fragmentManager = fragmentManager,
             fragmentFactory = fragmentFactory,
             modifier = modifier,
-            containerId = View.generateViewId()
+            containerId = View.generateViewId(),
         )
     }
 
@@ -87,11 +86,12 @@ object FragmentComposeUtils {
         fragment: Fragment,
         composeActivityClass: Class<*>,
         extras: Bundle? = null,
-        finishCurrent: Boolean = false
+        finishCurrent: Boolean = false,
     ) {
-        val intent = Intent(fragment.requireContext(), composeActivityClass).apply {
-            extras?.let { putExtras(it) }
-        }
+        val intent =
+            Intent(fragment.requireContext(), composeActivityClass).apply {
+                extras?.let { putExtras(it) }
+            }
         fragment.startActivity(intent)
         if (finishCurrent && fragment.activity != null) {
             fragment.activity?.finish()
@@ -101,16 +101,17 @@ object FragmentComposeUtils {
     fun preserveFragmentState(
         fragment: Fragment,
         key: String,
-        value: Any
+        value: Any,
     ) {
-        fragment.arguments = (fragment.arguments ?: Bundle()).apply {
-            when (value) {
-                is String -> putString(key, value)
-                is Int -> putInt(key, value)
-                is Boolean -> putBoolean(key, value)
-                is Bundle -> putBundle(key, value)
-                // Add more types as needed
+        fragment.arguments =
+            (fragment.arguments ?: Bundle()).apply {
+                when (value) {
+                    is String -> putString(key, value)
+                    is Int -> putInt(key, value)
+                    is Boolean -> putBoolean(key, value)
+                    is Bundle -> putBundle(key, value)
+                    // Add more types as needed
+                }
             }
-        }
     }
 }

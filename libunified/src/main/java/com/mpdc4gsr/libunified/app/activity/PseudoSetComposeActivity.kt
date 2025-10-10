@@ -32,13 +32,14 @@ import kotlinx.coroutines.launch
 
 class PseudoSetComposeActivity : ComponentActivity() {
     private val viewModel: PseudoSetViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             IRCameraTheme {
                 PseudoSetScreen(
                     viewModel = viewModel,
-                    onBackPressed = { finish() }
+                    onBackPressed = { finish() },
                 )
             }
         }
@@ -55,7 +56,7 @@ class PseudoSetComposeActivity : ComponentActivity() {
 @Composable
 fun PseudoSetScreen(
     viewModel: PseudoSetViewModel,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     Scaffold(
@@ -66,61 +67,63 @@ fun PseudoSetScreen(
                     IconButton(onClick = onBackPressed) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Back",
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    ),
             )
-        }
+        },
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Temperature Range Configuration
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Text(
                         text = "Temperature Range",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text("Min: ${uiState.minTemp}°C")
                         Slider(
                             value = uiState.minTemp,
                             onValueChange = { viewModel.updateMinTemp(it) },
                             valueRange = -40f..120f,
-                            modifier = Modifier.weight(1f).padding(horizontal = 16.dp)
+                            modifier = Modifier.weight(1f).padding(horizontal = 16.dp),
                         )
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text("Max: ${uiState.maxTemp}°C")
                         Slider(
                             value = uiState.maxTemp,
                             onValueChange = { viewModel.updateMaxTemp(it) },
                             valueRange = -40f..120f,
-                            modifier = Modifier.weight(1f).padding(horizontal = 16.dp)
+                            modifier = Modifier.weight(1f).padding(horizontal = 16.dp),
                         )
                     }
                 }
@@ -128,25 +131,25 @@ fun PseudoSetScreen(
             // Color Palette Selection
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Text(
                         text = "Color Palette",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         items(uiState.availablePalettes) { palette ->
                             PaletteItem(
                                 palette = palette,
                                 isSelected = palette == uiState.selectedPalette,
-                                onSelect = { viewModel.selectPalette(palette) }
+                                onSelect = { viewModel.selectPalette(palette) },
                             )
                         }
                     }
@@ -155,37 +158,37 @@ fun PseudoSetScreen(
             // Advanced Settings
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Text(
                         text = "Advanced Settings",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text("Auto Range")
                         Switch(
                             checked = uiState.autoRange,
-                            onCheckedChange = { viewModel.toggleAutoRange(it) }
+                            onCheckedChange = { viewModel.toggleAutoRange(it) },
                         )
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text("Lock Range")
                         Switch(
                             checked = uiState.lockRange,
-                            onCheckedChange = { viewModel.toggleLockRange(it) }
+                            onCheckedChange = { viewModel.toggleLockRange(it) },
                         )
                     }
                 }
@@ -194,17 +197,17 @@ fun PseudoSetScreen(
             // Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 OutlinedButton(
                     onClick = { viewModel.resetToDefaults() },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text("Reset")
                 }
                 Button(
                     onClick = { viewModel.applySettings() },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text("Apply")
                 }
@@ -217,50 +220,56 @@ fun PseudoSetScreen(
 fun PaletteItem(
     palette: ThermalPalette,
     isSelected: Boolean,
-    onSelect: () -> Unit
+    onSelect: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(60.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(60.dp),
         onClick = onSelect,
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected)
-                MaterialTheme.colorScheme.primaryContainer
-            else
-                MaterialTheme.colorScheme.surface
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.surface
+                    },
+            ),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             // Color gradient preview
             Row(
-                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
             ) {
                 palette.colors.forEach { color ->
                     Box(
-                        modifier = Modifier
-                            .width(8.dp)
-                            .height(30.dp)
-                            .background(color)
+                        modifier =
+                            Modifier
+                                .width(8.dp)
+                                .height(30.dp)
+                                .background(color),
                     )
                 }
             }
             Text(
                 text = palette.name,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             if (isSelected) {
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = "Selected",
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             }
         }
@@ -270,32 +279,35 @@ fun PaletteItem(
 // Data Classes
 data class ThermalPalette(
     val name: String,
-    val colors: List<Color>
+    val colors: List<Color>,
 )
 
 data class PseudoSetUiState(
     val minTemp: Float = -20f,
     val maxTemp: Float = 120f,
-    val selectedPalette: ThermalPalette = ThermalPalette(
-        "Iron",
-        listOf(Color.Blue, Color.Cyan, Color.Yellow, Color.Red)
-    ),
-    val availablePalettes: List<ThermalPalette> = listOf(
-        ThermalPalette("Iron", listOf(Color.Blue, Color.Cyan, Color.Yellow, Color.Red)),
-        ThermalPalette("Rainbow", listOf(Color.Blue, Color.Green, Color.Yellow, Color.Red, Color.Magenta)),
-        ThermalPalette("Gray", listOf(Color.Black, Color.Gray, Color.White)),
-        ThermalPalette("Hot", listOf(Color.Black, Color.Red, Color.Yellow, Color.White)),
-        ThermalPalette("Medical", listOf(Color.Blue, Color.Cyan, Color.Green, Color.Yellow))
-    ),
+    val selectedPalette: ThermalPalette =
+        ThermalPalette(
+            "Iron",
+            listOf(Color.Blue, Color.Cyan, Color.Yellow, Color.Red),
+        ),
+    val availablePalettes: List<ThermalPalette> =
+        listOf(
+            ThermalPalette("Iron", listOf(Color.Blue, Color.Cyan, Color.Yellow, Color.Red)),
+            ThermalPalette("Rainbow", listOf(Color.Blue, Color.Green, Color.Yellow, Color.Red, Color.Magenta)),
+            ThermalPalette("Gray", listOf(Color.Black, Color.Gray, Color.White)),
+            ThermalPalette("Hot", listOf(Color.Black, Color.Red, Color.Yellow, Color.White)),
+            ThermalPalette("Medical", listOf(Color.Blue, Color.Cyan, Color.Green, Color.Yellow)),
+        ),
     val autoRange: Boolean = false,
     val lockRange: Boolean = false,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
 )
 
 // ViewModel
 class PseudoSetViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(PseudoSetUiState())
     val uiState: StateFlow<PseudoSetUiState> = _uiState.asStateFlow()
+
     fun updateMinTemp(temp: Float) {
         _uiState.value = _uiState.value.copy(minTemp = temp)
     }
@@ -342,7 +354,7 @@ fun PseudoSetScreenPreview() {
     IRCameraTheme {
         PseudoSetScreen(
             viewModel = PseudoSetViewModel(),
-            onBackPressed = { }
+            onBackPressed = { },
         )
     }
 }

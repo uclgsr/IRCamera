@@ -10,7 +10,9 @@ import kotlinx.coroutines.launch
 
 abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
     protected lateinit var viewModel: VM
+
     abstract fun providerVMClass(): Class<VM>?
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,

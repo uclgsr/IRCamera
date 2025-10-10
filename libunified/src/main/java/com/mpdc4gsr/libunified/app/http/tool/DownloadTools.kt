@@ -15,7 +15,7 @@ object DownloadTools {
             connectTimeout = 10,
             readTimeout = 10,
             writeTimeout = 10,
-            retryOnConnectionFailure = false
+            retryOnConnectionFailure = false,
         )
     }
 

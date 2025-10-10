@@ -22,22 +22,24 @@ class StorageSpaceViewModel : BaseViewModel() {
         val freeSpace: Long = 0L,
         val photoSpace: Long = 0L,
         val videoSpace: Long = 0L,
-        val systemSpace: Long = 0L
+        val systemSpace: Long = 0L,
     )
 
     private val _storageInfo = MutableStateFlow(StorageInfo())
     val storageInfo: StateFlow<StorageInfo> = _storageInfo.asStateFlow()
+
     fun loadStorageInfo() {
         launchWithErrorHandling {
             // Original TS004Repository functionality removed - use mock data
-            val mockStorageInfo = StorageInfo(
-                totalSpace = MOCK_TOTAL_SPACE,
-                usedSpace = MOCK_USED_SPACE,
-                freeSpace = MOCK_FREE_SPACE,
-                photoSpace = MOCK_PHOTO_SPACE,
-                videoSpace = MOCK_VIDEO_SPACE,
-                systemSpace = MOCK_SYSTEM_SPACE
-            )
+            val mockStorageInfo =
+                StorageInfo(
+                    totalSpace = MOCK_TOTAL_SPACE,
+                    usedSpace = MOCK_USED_SPACE,
+                    freeSpace = MOCK_FREE_SPACE,
+                    photoSpace = MOCK_PHOTO_SPACE,
+                    videoSpace = MOCK_VIDEO_SPACE,
+                    systemSpace = MOCK_SYSTEM_SPACE,
+                )
             _storageInfo.value = mockStorageInfo
         }
     }
@@ -51,15 +53,14 @@ class StorageSpaceViewModel : BaseViewModel() {
         }
     }
 
-    fun formatFileSize(fileSize: Long): String {
-        return when {
+    fun formatFileSize(fileSize: Long): String =
+        when {
             fileSize == 0L -> "0 B"
             fileSize < 1024 -> DecimalFormat("#.0").format(fileSize.toDouble()) + " B"
             fileSize < 1048576 -> DecimalFormat("#.0").format(fileSize.toDouble() / 1024) + " KB"
             fileSize < 1073741824 -> DecimalFormat("#.0").format(fileSize.toDouble() / 1048576) + " MB"
             else -> DecimalFormat("#.0").format(fileSize.toDouble() / 1073741824) + " GB"
         }
-    }
 
     fun formatStorage() {
         launchWithErrorHandling {

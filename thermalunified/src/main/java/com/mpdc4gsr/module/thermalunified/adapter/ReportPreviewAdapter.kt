@@ -16,20 +16,19 @@ import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.module.thermalunified.R
 
 @SuppressLint("NotifyDataSetChanged")
-class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRepPreviewItemBean>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    override fun getItemViewType(position: Int): Int {
-        return position
-    }
+class ReportPreviewAdapter(
+    private val cxt: Context,
+    var dataList: List<HouseRepPreviewItemBean>,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    override fun getItemViewType(position: Int): Int = position
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder {
-        return ItemView(
+    ): RecyclerView.ViewHolder =
+        ItemView(
             LayoutInflater.from(parent.context).inflate(R.layout.item_report_floor, parent, false),
         )
-    }
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
@@ -70,11 +69,11 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
         }
     }
 
-    override fun getItemCount(): Int {
-        return dataList.size
-    }
+    override fun getItemCount(): Int = dataList.size
 
-    inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ItemView(
+        itemView: View,
+    ) : RecyclerView.ViewHolder(itemView) {
         val tvFloorNumber: TextView = itemView.findViewById(R.id.tv_floor_number)
         val rcyReport: RecyclerView = itemView.findViewById(R.id.rcy_report)
         val rcyCategory: RecyclerView = itemView.findViewById(R.id.rcy_category)

@@ -10,49 +10,40 @@ object UnifiedTimeUtils {
     private const val FORMAT_TIME = "HH:mm:ss"
     private const val FORMAT_FILENAME = "yyyyMMdd_HHmmss"
     private const val FORMAT_ISO = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-    fun getCurrentTimestamp(): String {
-        return SimpleDateFormat(FORMAT_TIMESTAMP, Locale.getDefault()).format(Date())
-    }
 
-    fun getCurrentDate(): String {
-        return SimpleDateFormat(FORMAT_DATE, Locale.getDefault()).format(Date())
-    }
+    fun getCurrentTimestamp(): String = SimpleDateFormat(FORMAT_TIMESTAMP, Locale.getDefault()).format(Date())
 
-    fun getCurrentTime(): String {
-        return SimpleDateFormat(FORMAT_TIME, Locale.getDefault()).format(Date())
-    }
+    fun getCurrentDate(): String = SimpleDateFormat(FORMAT_DATE, Locale.getDefault()).format(Date())
 
-    fun getFilenameTimestamp(): String {
-        return SimpleDateFormat(FORMAT_FILENAME, Locale.getDefault()).format(Date())
-    }
+    fun getCurrentTime(): String = SimpleDateFormat(FORMAT_TIME, Locale.getDefault()).format(Date())
 
-    fun getISOTimestamp(): String {
-        return SimpleDateFormat(FORMAT_ISO, Locale.getDefault()).format(Date())
-    }
+    fun getFilenameTimestamp(): String = SimpleDateFormat(FORMAT_FILENAME, Locale.getDefault()).format(Date())
 
-    fun formatTimestamp(timestamp: Long, format: String): String {
-        return SimpleDateFormat(format, Locale.getDefault()).format(Date(timestamp))
-    }
+    fun getISOTimestamp(): String = SimpleDateFormat(FORMAT_ISO, Locale.getDefault()).format(Date())
 
-    fun formatDate(date: Date, format: String): String {
-        return SimpleDateFormat(format, Locale.getDefault()).format(date)
-    }
+    fun formatTimestamp(
+        timestamp: Long,
+        format: String,
+    ): String = SimpleDateFormat(format, Locale.getDefault()).format(Date(timestamp))
 
-    fun parseTimestamp(timestamp: String, format: String = FORMAT_TIMESTAMP): Date? {
-        return try {
+    fun formatDate(
+        date: Date,
+        format: String,
+    ): String = SimpleDateFormat(format, Locale.getDefault()).format(date)
+
+    fun parseTimestamp(
+        timestamp: String,
+        format: String = FORMAT_TIMESTAMP,
+    ): Date? =
+        try {
             SimpleDateFormat(format, Locale.getDefault()).parse(timestamp)
         } catch (e: Exception) {
             null
         }
-    }
 
-    fun getCurrentTimeMillis(): Long {
-        return System.currentTimeMillis()
-    }
+    fun getCurrentTimeMillis(): Long = System.currentTimeMillis()
 
-    fun getCurrentTimeNanos(): Long {
-        return System.nanoTime()
-    }
+    fun getCurrentTimeNanos(): Long = System.nanoTime()
 
     fun formatDuration(durationMs: Long): String {
         val seconds = durationMs / 1000
@@ -71,17 +62,18 @@ object UnifiedTimeUtils {
         val today = Calendar.getInstance()
         val date = Calendar.getInstance().apply { timeInMillis = timestamp }
         return today.get(Calendar.YEAR) == date.get(Calendar.YEAR) &&
-                today.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR)
+            today.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR)
     }
 
-    fun isWithinDays(timestamp: Long, days: Int): Boolean {
+    fun isWithinDays(
+        timestamp: Long,
+        days: Int,
+    ): Boolean {
         val cutoff = getCurrentTimeMillis() - (days * 24 * 60 * 60 * 1000L)
         return timestamp >= cutoff
     }
 
-    fun getAge(timestamp: Long): Long {
-        return getCurrentTimeMillis() - timestamp
-    }
+    fun getAge(timestamp: Long): Long = getCurrentTimeMillis() - timestamp
 
     fun sleep(millis: Long) {
         try {

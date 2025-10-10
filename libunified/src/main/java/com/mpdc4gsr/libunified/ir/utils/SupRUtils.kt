@@ -6,9 +6,7 @@ import android.graphics.BitmapFactory
 import java.io.ByteArrayOutputStream
 
 object SupRUtils {
-    fun canOpenSupR(): Boolean {
-        return true
-    }
+    fun canOpenSupR(): Boolean = true
 
     fun showOpenSupRTipsDialog(activity: Activity) {
     }
@@ -19,7 +17,5 @@ object SupRUtils {
         return byteArrayOutputStream.toByteArray()
     }
 
-    fun byteArrayToBitmap(byteArray: ByteArray): Bitmap {
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-    }
+    fun byteArrayToBitmap(byteArray: ByteArray): Bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
 }

@@ -47,8 +47,11 @@ open class HouseBase {
 
     @ColumnInfo
     var updateTime: Long = 0
+
     override fun equals(other: Any?): Boolean = other is HouseBase && other.id == id
+
     override fun hashCode(): Int = id.toInt()
+
     fun getSpaceUnitStr(): String =
         when (houseSpaceUnit) {
             0 -> "ac"
@@ -71,10 +74,12 @@ open class HouseBase {
 
     fun getPdfFileName(): String {
         val formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")
-        val formatted = Instant.ofEpochMilli(createTime)
-            .atZone(ZoneId.systemDefault())
-            .format(formatter)
-        return "TC_${formatted}.pdf"
+        val formatted =
+            Instant
+                .ofEpochMilli(createTime)
+                .atZone(ZoneId.systemDefault())
+                .format(formatter)
+        return "TC_$formatted.pdf"
     }
 }
 
@@ -82,6 +87,7 @@ open class HouseBase {
 class HouseDetect : HouseBase() {
     @Ignore
     var dirList: ArrayList<DirDetect> = ArrayList()
+
     fun copyOne(): HouseDetect {
         val newDetect = HouseDetect()
         newDetect.id = 0

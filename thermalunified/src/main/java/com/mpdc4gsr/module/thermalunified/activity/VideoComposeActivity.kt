@@ -36,6 +36,7 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     }
 
     private var videoPath = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         if (intent.hasExtra(KEY_PATH)) {
             videoPath = intent.getStringExtra(KEY_PATH) ?: ""
@@ -43,9 +44,7 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -78,7 +77,7 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             Text(
                                 "Thermal Video",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -86,7 +85,7 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -95,29 +94,31 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     if (showControls) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                                     contentDescription = "Toggle Controls",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Black
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Black,
+                            ),
                     )
                 },
-                containerColor = Color.Black
+                containerColor = Color.Black,
             ) { paddingValues ->
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color.Black)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color.Black),
                 ) {
                     // Video player view
                     ThermalVideoPlayer(
                         videoPath = videoPath,
                         isPlaying = isPlaying,
                         currentPosition = currentPosition,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
                     // Video controls overlay
                     if (showControls) {
@@ -134,9 +135,10 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             scope = scope,
                             snackbarHostState = snackbarHostState,
                             contentResolver = contentResolver,
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .fillMaxWidth()
+                            modifier =
+                                Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .fillMaxWidth(),
                         )
                     }
                     // Thermal analysis overlay
@@ -145,9 +147,10 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         onTogglePointAnalysis = {
                             pointAnalysisEnabled = !pointAnalysisEnabled
                         },
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(16.dp)
+                        modifier =
+                            Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(16.dp),
                     )
                 }
             }
@@ -169,7 +172,7 @@ private fun ThermalVideoPlayer(
     videoPath: String,
     isPlaying: Boolean,
     currentPosition: Long,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     // Embed actual video player using AndroidView for VideoView
     AndroidView(
@@ -181,7 +184,7 @@ private fun ThermalVideoPlayer(
                 }
             }
         },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -199,19 +202,20 @@ private fun VideoControlsOverlay(
     scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
     contentResolver: android.content.ContentResolver,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black.copy(alpha = 0.8f)
-        ),
-        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Black.copy(alpha = 0.8f),
+            ),
+        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             // Progress bar
             Column {
@@ -219,25 +223,26 @@ private fun VideoControlsOverlay(
                     value = currentPosition.toFloat(),
                     onValueChange = { onSeek(it.toLong()) },
                     valueRange = 0f..duration.toFloat(),
-                    colors = SliderDefaults.colors(
-                        thumbColor = Color(0xFFFF6B35),
-                        activeTrackColor = Color(0xFFFF6B35),
-                        inactiveTrackColor = Color(0xFF21262D)
-                    )
+                    colors =
+                        SliderDefaults.colors(
+                            thumbColor = Color(0xFFFF6B35),
+                            activeTrackColor = Color(0xFFFF6B35),
+                            inactiveTrackColor = Color(0xFF21262D),
+                        ),
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
                         formatTime(currentPosition),
                         color = Color.White,
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
                     )
                     Text(
                         formatTime(duration),
                         color = Color.White,
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
                     )
                 }
             }
@@ -245,7 +250,7 @@ private fun VideoControlsOverlay(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Skip backward
                 IconButton(onClick = { onSeek(maxOf(0, currentPosition - 10000)) }) {
@@ -253,22 +258,23 @@ private fun VideoControlsOverlay(
                         Icons.Outlined.Replay10,
                         contentDescription = "Skip back 10s",
                         tint = Color.White,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                 }
                 // Play/Pause
                 IconButton(
                     onClick = onPlayPause,
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
-                        .background(Color(0xFFFF6B35))
+                    modifier =
+                        Modifier
+                            .size(56.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFFFF6B35)),
                 ) {
                     Icon(
                         if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                         contentDescription = if (isPlaying) "Pause" else "Play",
                         tint = Color.White,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                 }
                 // Skip forward
@@ -277,7 +283,7 @@ private fun VideoControlsOverlay(
                         Icons.Outlined.Forward10,
                         contentDescription = "Skip forward 10s",
                         tint = Color.White,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                 }
             }
@@ -285,76 +291,80 @@ private fun VideoControlsOverlay(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Playback speed
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(
                         "Speed:",
                         color = Color.White,
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
                     )
                     FilterChip(
                         onClick = { onSpeedChange(0.5f) },
                         label = { Text("0.5x", fontSize = 10.sp) },
                         selected = playbackSpeed == 0.5f,
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Color(0xFFFF6B35),
-                            selectedLabelColor = Color.White
-                        )
+                        colors =
+                            FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Color(0xFFFF6B35),
+                                selectedLabelColor = Color.White,
+                            ),
                     )
                     FilterChip(
                         onClick = { onSpeedChange(1.0f) },
                         label = { Text("1x", fontSize = 10.sp) },
                         selected = playbackSpeed == 1.0f,
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Color(0xFFFF6B35),
-                            selectedLabelColor = Color.White
-                        )
+                        colors =
+                            FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Color(0xFFFF6B35),
+                                selectedLabelColor = Color.White,
+                            ),
                     )
                     FilterChip(
                         onClick = { onSpeedChange(2.0f) },
                         label = { Text("2x", fontSize = 10.sp) },
                         selected = playbackSpeed == 2.0f,
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Color(0xFFFF6B35),
-                            selectedLabelColor = Color.White
-                        )
+                        colors =
+                            FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Color(0xFFFF6B35),
+                                selectedLabelColor = Color.White,
+                            ),
                     )
                 }
                 // Additional controls
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     IconButton(onClick = onToggleFullscreen) {
                         Icon(
                             if (isFullscreen) Icons.Default.FullscreenExit else Icons.Default.Fullscreen,
                             contentDescription = if (isFullscreen) "Exit Fullscreen" else "Fullscreen",
-                            tint = Color.White
+                            tint = Color.White,
                         )
                     }
                     IconButton(onClick = {
                         scope.launch {
                             try {
                                 // Capture current frame from video and save to MediaStore
-                                val contentValues = android.content.ContentValues().apply {
-                                    put(
-                                        android.provider.MediaStore.Images.Media.DISPLAY_NAME,
-                                        "thermal_frame_${System.currentTimeMillis()}.jpg"
-                                    )
-                                    put(android.provider.MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-                                    put(
-                                        android.provider.MediaStore.Images.Media.RELATIVE_PATH,
-                                        android.os.Environment.DIRECTORY_PICTURES
-                                    )
-                                }
+                                val contentValues =
+                                    android.content.ContentValues().apply {
+                                        put(
+                                            android.provider.MediaStore.Images.Media.DISPLAY_NAME,
+                                            "thermal_frame_${System.currentTimeMillis()}.jpg",
+                                        )
+                                        put(android.provider.MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                                        put(
+                                            android.provider.MediaStore.Images.Media.RELATIVE_PATH,
+                                            android.os.Environment.DIRECTORY_PICTURES,
+                                        )
+                                    }
                                 // Insert into MediaStore (actual frame capture would happen here)
                                 context.contentResolver.insert(
                                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                    contentValues
+                                    contentValues,
                                 )
                                 snackbarHostState.showSnackbar("Frame exported to gallery")
                             } catch (e: Exception) {
@@ -365,7 +375,7 @@ private fun VideoControlsOverlay(
                         Icon(
                             Icons.Default.CameraAlt,
                             contentDescription = "Capture Frame",
-                            tint = Color.White
+                            tint = Color.White,
                         )
                     }
                 }
@@ -378,24 +388,25 @@ private fun VideoControlsOverlay(
 private fun ThermalAnalysisOverlay(
     pointAnalysisEnabled: Boolean,
     onTogglePointAnalysis: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.width(120.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black.copy(alpha = 0.8f)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Black.copy(alpha = 0.8f),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
                 "Analysis",
                 color = Color.White,
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             // Temperature readings
             AnalysisItem("Max", "45.2°C", Color(0xFFFF4444))
@@ -405,13 +416,13 @@ private fun ThermalAnalysisOverlay(
             // Analysis tools - Point analysis toggle
             IconButton(
                 onClick = onTogglePointAnalysis,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
             ) {
                 Icon(
                     Icons.Default.Place,
                     contentDescription = if (pointAnalysisEnabled) "Disable Point Analysis" else "Enable Point Analysis",
                     tint = if (pointAnalysisEnabled) Color(0xFFFF6B35) else Color(0xFF7D8590),
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(16.dp),
                 )
             }
             if (pointAnalysisEnabled) {
@@ -419,7 +430,7 @@ private fun ThermalAnalysisOverlay(
                     "Point Analysis ON",
                     color = Color(0xFFFF6B35),
                     fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }
@@ -430,23 +441,23 @@ private fun ThermalAnalysisOverlay(
 private fun AnalysisItem(
     label: String,
     value: String,
-    color: Color
+    color: Color,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             label,
             color = Color(0xFF7D8590),
-            fontSize = 10.sp
+            fontSize = 10.sp,
         )
         Text(
             value,
             color = color,
             fontSize = 10.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
     }
 }

@@ -26,23 +26,24 @@ fun TimeDownCompose(
     isVisible: Boolean = true,
     onFinish: () -> Unit = {},
     onTimeChange: (Int) -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var currentTime by remember(initialSeconds) { mutableIntStateOf(initialSeconds) }
     var isRunning by remember(initialSeconds) { mutableStateOf(initialSeconds > 0) }
     // Animation states
     val scale by animateFloatAsState(
         targetValue = if (isRunning && isVisible) 1f else 0.8f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        ),
-        label = "scale"
+        animationSpec =
+            spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow,
+            ),
+        label = "scale",
     )
     val alpha by animateFloatAsState(
         targetValue = if (isRunning && isVisible) 1f else 0f,
         animationSpec = tween(300),
-        label = "alpha"
+        label = "alpha",
     )
     // Countdown effect
     LaunchedEffect(initialSeconds, isVisible) {
@@ -73,17 +74,18 @@ fun TimeDownCompose(
         visible = isVisible && isRunning,
         enter = scaleIn() + fadeIn(),
         exit = scaleOut() + fadeOut(),
-        modifier = modifier
+        modifier = modifier,
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    alpha = alpha
-                )
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .graphicsLayer(
+                        scaleX = scale,
+                        scaleY = scale,
+                        alpha = alpha,
+                    ),
         ) {
             Text(
                 text = currentTime.toString(),
@@ -91,7 +93,7 @@ fun TimeDownCompose(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 color = Color.White,
-                style = MaterialTheme.typography.displayMedium
+                style = MaterialTheme.typography.displayMedium,
             )
         }
     }
@@ -101,7 +103,7 @@ fun TimeDownCompose(
 fun TimeDownStatefulCompose(
     seconds: Int,
     onFinish: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var isVisible by remember(seconds) { mutableStateOf(seconds > 0) }
     TimeDownCompose(
@@ -111,7 +113,7 @@ fun TimeDownStatefulCompose(
             isVisible = false
             onFinish()
         },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -121,7 +123,7 @@ fun TimeDownComposePreview() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         TimeDownStatefulCompose(
             seconds = seconds,
@@ -129,11 +131,11 @@ fun TimeDownComposePreview() {
                 // Reset for preview
                 seconds = 5
             },
-            modifier = Modifier.size(100.dp)
+            modifier = Modifier.size(100.dp),
         )
         Spacer(modifier = Modifier.height(32.dp))
         Button(
-            onClick = { seconds = 5 }
+            onClick = { seconds = 5 },
         ) {
             Text("Start Countdown")
         }

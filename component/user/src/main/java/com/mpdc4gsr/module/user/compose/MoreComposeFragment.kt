@@ -1,12 +1,27 @@
 package com.mpdc4gsr.module.user.compose
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.Devices
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Speed
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,10 +38,11 @@ import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
 @Composable
+@Suppress("FunctionName")
 fun MoreComposeFragment(
     viewModel: MoreComposeFragmentViewModel,
     isTC007: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val deviceSettings by viewModel.deviceSettings.collectAsState()
@@ -35,57 +51,60 @@ fun MoreComposeFragment(
         viewModel.initialize(isTC007)
     }
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         // Device Configuration Card
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             ) {
                 Text(
                     text = "Device Configuration",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    modifier = Modifier.padding(bottom = 12.dp),
                 )
                 // Save Setting Switch
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text(
                             text = "Save Settings",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                         Text(
                             text = "Automatically save device configuration",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                         )
                     }
                     Switch(
                         checked = deviceSettings.isSaveSettingEnabled,
-                        onCheckedChange = { viewModel.updateSaveSetting(it) }
+                        onCheckedChange = { viewModel.updateSaveSetting(it) },
                     )
                 }
             }
@@ -94,13 +113,14 @@ fun MoreComposeFragment(
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         ) {
             Column(
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp),
             ) {
                 ListItemComponent(
                     leftText = "Model Settings",
@@ -108,7 +128,7 @@ fun MoreComposeFragment(
                     showLine = true,
                     onClick = {
                         // Model settings navigation
-                    }
+                    },
                 )
                 ListItemComponent(
                     leftText = "Correction Settings",
@@ -116,7 +136,7 @@ fun MoreComposeFragment(
                     showLine = true,
                     onClick = {
                         // Correction settings navigation
-                    }
+                    },
                 )
                 ListItemComponent(
                     leftText = "Dual Mode",
@@ -124,17 +144,18 @@ fun MoreComposeFragment(
                     showLine = true,
                     onClick = {
                         // Dual mode navigation
-                    }
+                    },
                 )
                 ListItemComponent(
                     leftText = stringResource(RCore.string.setting_unit),
                     leftIcon = Icons.Default.Speed,
                     showLine = true,
                     onClick = {
-                        NavigationManager.getInstance()
+                        NavigationManager
+                            .getInstance()
                             .build(RouterConfig.UNIT)
                             .navigation(context)
-                    }
+                    },
                 )
                 ListItemComponent(
                     leftText = stringResource(RCore.string.setting_version),
@@ -142,25 +163,27 @@ fun MoreComposeFragment(
                     rightText = if (deviceSettings.hasUpgrade) "Update Available" else deviceSettings.versionText,
                     showLine = true,
                     onClick = {
-                        NavigationManager.getInstance()
+                        NavigationManager
+                            .getInstance()
                             .build(RouterConfig.VERSION)
                             .navigation(context)
-                    }
+                    },
                 )
                 ListItemComponent(
                     leftText = "Device Information",
                     leftIcon = Icons.Default.Devices,
                     showLine = true,
                     onClick = {
-                        NavigationManager.getInstance()
+                        NavigationManager
+                            .getInstance()
                             .build(RouterConfig.DEVICE_INFORMATION)
                             .navigation(context)
-                    }
+                    },
                 )
                 ListItemComponent(
                     leftText = "Factory Reset",
                     leftIcon = Icons.Default.Refresh,
-                    onClick = { viewModel.performFactoryReset() }
+                    onClick = { viewModel.performFactoryReset() },
                 )
             }
         }

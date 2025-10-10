@@ -12,7 +12,6 @@ import android.os.Environment;
 import android.provider.MediaStore.Images;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -142,7 +141,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         mInfoPaint.setTextSize(Utils.convertDpToPixel(12f));
 
         if (mLogEnabled)
-            Log.i("", "Chart.init()");
     }
 
     public void clear() {
@@ -319,7 +317,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         else {
 
             if (mLogEnabled)
-                Log.i(LOG_TAG, "Highlighted: " + high.toString());
 
             e = mData.getEntryForHighlight(high);
             if (e == null) {
@@ -351,7 +348,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     public Highlight getHighlightByTouchPoint(float x, float y) {
 
         if (mData == null) {
-            Log.e(LOG_TAG, "Can't select by touch. No data set.");
             return null;
         } else
             return getHighlighter().getHighlight(x, y);
@@ -393,7 +389,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
                 mMarker.draw(canvas, pos[0], pos[1]);
             } catch (Exception exception) {
-                Log.e("Test", exception.getMessage());
             }
         }
     }
@@ -709,7 +704,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         notifyDataSetChanged();
 
         if (mLogEnabled)
-            Log.i(LOG_TAG, "Data is set.");
     }
 
     public ViewPortHandler getViewPortHandler() {
@@ -901,15 +895,12 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         if (mLogEnabled)
-            Log.i(LOG_TAG, "OnSizeChanged()");
 
         if (w > 0 && h > 0 && w < 10000 && h < 10000) {
             if (mLogEnabled)
-                Log.i(LOG_TAG, "Setting chart dimens, width: " + w + ", height: " + h);
             mViewPortHandler.setChartDimens(w, h);
         } else {
             if (mLogEnabled)
-                Log.w(LOG_TAG, "*Avoiding* setting chart dimens! width: " + w + ", height: " + h);
         }
 
         notifyDataSetChanged();

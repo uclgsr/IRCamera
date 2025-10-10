@@ -3,7 +3,6 @@ package mpdc4gsr.core.network
 import android.content.Context
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
-import android.util.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +30,6 @@ import java.net.SocketTimeoutException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
-import kotlin.coroutines.CoroutineContext
 
 /**
  * Extracts the custom PC controller socket server out of [mpdc4gsr.core.RecordingService].
@@ -46,9 +44,8 @@ class PcControllerServer(
     private val deviceId: String,
     private val callbacks: Callbacks,
     private val listener: Listener,
-    private val config: Config = Config()
+    private val config: Config = Config(),
 ) {
-
     data class Config(
         val basePort: Int = DEFAULT_PORT,
         val serviceName: String = DEFAULT_SERVICE_NAME,
@@ -58,8 +55,11 @@ class PcControllerServer(
 
     interface Callbacks {
         suspend fun onSessionStartRequested(sessionDirectory: File)
+
         suspend fun onSessionStopRequested()
+
         suspend fun onSyncFlashRequested(durationMs: Int)
+
         suspend fun provideRecordingState(): RecordingState
     }
 
@@ -71,8 +71,11 @@ class PcControllerServer(
 
     interface Listener {
         fun onServerStarted(port: Int)
+
         fun onServerStopped()
+
         fun onClientCountChanged(count: Int)
+
         fun onServerFailure(throwable: Throwable)
     }
 
@@ -108,27 +111,29 @@ class PcControllerServer(
     private var nsdListener: NsdManager.RegistrationListener? = null
     private val nsdRegistered = AtomicBoolean(false)
 
-    private val healthCheck = object : CrashSafeSupervisor.HealthCheck {
-        override suspend fun checkHealth(): CrashSafeSupervisor.HealthStatus {
-            val running = isRunning.get() && serverSocket?.isClosed == false
-            return if (running) {
-                CrashSafeSupervisor.HealthStatus(
-                    isHealthy = true,
-                    message = "Server socket listening",
-                    details = mapOf(
-                        "port" to actualPort.get(),
-                        "client_count" to activeConnections.size,
-                        "mdns_registered" to nsdRegistered.get(),
-                    ),
-                )
-            } else {
-                CrashSafeSupervisor.HealthStatus(
-                    isHealthy = false,
-                    message = "Server socket stopped or closed",
-                )
+    private val healthCheck =
+        object : CrashSafeSupervisor.HealthCheck {
+            override suspend fun checkHealth(): CrashSafeSupervisor.HealthStatus {
+                val running = isRunning.get() && serverSocket?.isClosed == false
+                return if (running) {
+                    CrashSafeSupervisor.HealthStatus(
+                        isHealthy = true,
+                        message = "Server socket listening",
+                        details =
+                            mapOf(
+                                "port" to actualPort.get(),
+                                "client_count" to activeConnections.size,
+                                "mdns_registered" to nsdRegistered.get(),
+                            ),
+                    )
+                } else {
+                    CrashSafeSupervisor.HealthStatus(
+                        isHealthy = false,
+                        message = "Server socket stopped or closed",
+                    )
+                }
             }
         }
-    }
 
     fun start() {
         if (serverJob?.isActive == true || isRunning.get()) {
@@ -163,18 +168,16 @@ class PcControllerServer(
 
     fun currentPort(): Int = actualPort.get()
 
-    fun describeStatus(): String {
-        return if (isRunning()) {
+    fun describeStatus(): String =
+        if (isRunning()) {
             "Running on port ${currentPort()} (${activeConnections.size} clients)"
         } else {
             "Stopped"
         }
-    }
 
     fun connectedClients(): List<String> = activeConnections.keys().asSequence().toList()
 
-    fun status(): Status =
-        Status(isRunning(), currentPort(), connectedClients())
+    fun status(): Status = Status(isRunning(), currentPort(), connectedClients())
 
     private suspend fun runServer(stopToken: CrashSafeSupervisor.StopToken) {
         try {
@@ -410,11 +413,12 @@ class PcControllerServer(
             sessionId,
             mapOf("session_name" to sessionName, "client_id" to clientId),
         )
-        val baseDir = File(context.getExternalFilesDir(null), "recordings").apply {
-            if (!exists()) {
-                mkdirs()
+        val baseDir =
+            File(context.getExternalFilesDir(null), "recordings").apply {
+                if (!exists()) {
+                    mkdirs()
+                }
             }
-        }
         val sessionDir = File(baseDir, sessionId)
         callbacks.onSessionStartRequested(sessionDir)
         val ackPayload =
@@ -534,7 +538,10 @@ class PcControllerServer(
         sendMessage(output, statusMessage)
     }
 
-    private suspend fun sendError(output: DataOutputStream, error: String) {
+    private suspend fun sendError(
+        output: DataOutputStream,
+        error: String,
+    ) {
         val errorMessage =
             JSONObject().apply {
                 put("message_type", "error")
@@ -720,7 +727,6 @@ class PcControllerServer(
                 "nsd_registration_exception",
                 mapOf("error" to (e.message ?: "unknown_error")),
             )
-            Log.w(TAG, "NSD registration failed", e)
         }
     }
 
@@ -736,7 +742,6 @@ class PcControllerServer(
                 "nsd_unregistration_exception",
                 mapOf("error" to (e.message ?: "unknown_error")),
             )
-            Log.w(TAG, "NSD unregistration failed", e)
         } finally {
             nsdListener = null
             nsdRegistered.set(false)
@@ -752,7 +757,8 @@ class PcControllerServer(
         try {
             socket?.close()
         } catch (ignored: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("PcControllerServer", "Unexpected Exception in PcControllerServer catch block", ignored)
+            mpdc4gsr.core.utils.AppLogger
+                .e("PcControllerServer", "Unexpected Exception in PcControllerServer catch block", ignored)
         }
     }
 
@@ -760,7 +766,8 @@ class PcControllerServer(
         try {
             socket?.close()
         } catch (ignored: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("PcControllerServer", "Unexpected Exception in PcControllerServer catch block", ignored)
+            mpdc4gsr.core.utils.AppLogger
+                .e("PcControllerServer", "Unexpected Exception in PcControllerServer catch block", ignored)
         }
     }
 

@@ -3,7 +3,6 @@ package com.mpdc4gsr.module.user.util;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
 import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtils;
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast;
@@ -12,13 +11,11 @@ import com.mpdc4gsr.module.user.R;
 public class ActivityUtils {
 
     public static void goSystemCustomer(Context mContext) {
-        Log.w("bcf", "[TEXT]Event");
         String url = "https://www.topdon.cc/tc-chat";
         goSystemBrowser(mContext, url);
     }
 
     public static void goSystemBrowser(Context mContext, String url) {
-        Log.w("bcf", "goSystemBrowser");
         if (!NetworkUtils.isConnected(mContext)) {
             TToast.shortToast(mContext, R.string.lms_setting_http_error);
             return;

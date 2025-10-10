@@ -35,16 +35,18 @@ class GSRDataPersistence(
     private var csvBufferedWriter: CSVBufferedWriter? = null
     private val scope = CoroutineScope(Dispatchers.IO)
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault())
+
     suspend fun initialize(): Boolean {
         val sessionDir = createSessionDirectory()
         csvFile = createCsvFile(sessionDir)
         val headers = createCsvHeaders()
-        csvBufferedWriter = CSVBufferedWriter(
-            outputFile = csvFile!!,
-            headers = headers,
-            bufferSize = 4096,
-            flushIntervalMs = FLUSH_INTERVAL_MS
-        )
+        csvBufferedWriter =
+            CSVBufferedWriter(
+                outputFile = csvFile!!,
+                headers = headers,
+                bufferSize = 4096,
+                flushIntervalMs = FLUSH_INTERVAL_MS,
+            )
         csvBufferedWriter?.startWithHeaders()
         startBatchWriter()
         return true
@@ -60,21 +62,30 @@ class GSRDataPersistence(
         return shimmerDir
     }
 
-    private fun createCsvFile(sessionDir: File): File {
-        return File(sessionDir, SessionDirectoryManager.SHIMMER_DATA_FILE)
-    }
+    private fun createCsvFile(sessionDir: File): File = File(sessionDir, SessionDirectoryManager.SHIMMER_DATA_FILE)
 
-    private fun createCsvHeaders(): List<String> {
-        return listOf(
-            "system_nanos", "elapsed_realtime_ms", "device_timestamp_ms",
-            "session_relative_ms", "synchronized_timestamp_ms",
-            "gsr_raw_value", "gsr_microsiemens", "gsr_resistance_kohm",
-            "ppg_raw_value", "ppg_filtered", "heart_rate_bpm",
-            "device_id", "battery_level", "signal_quality",
-            "sampling_rate_hz", "packet_sequence",
-            "session_id", "participant_id", "recording_mode"
+    private fun createCsvHeaders(): List<String> =
+        listOf(
+            "system_nanos",
+            "elapsed_realtime_ms",
+            "device_timestamp_ms",
+            "session_relative_ms",
+            "synchronized_timestamp_ms",
+            "gsr_raw_value",
+            "gsr_microsiemens",
+            "gsr_resistance_kohm",
+            "ppg_raw_value",
+            "ppg_filtered",
+            "heart_rate_bpm",
+            "device_id",
+            "battery_level",
+            "signal_quality",
+            "sampling_rate_hz",
+            "packet_sequence",
+            "session_id",
+            "participant_id",
+            "recording_mode",
         )
-    }
 
     fun queueDataRecord(gsrData: GSRSampleData) {
         val timestamp = TimestampManager.createTimestampRecord()
@@ -153,7 +164,7 @@ class GSRDataPersistence(
             csvFilePath = csvFile?.absolutePath ?: "",
             sessionId = sessionId,
             isActive = isWriting.get(),
-            bufferStats = writeStats
+            bufferStats = writeStats,
         )
     }
 }
@@ -175,8 +186,8 @@ data class GSRDataRecord(
     val participantId: String,
     val recordingMode: String,
 ) {
-    fun toCsvRow(): List<Any> {
-        return listOf(
+    fun toCsvRow(): List<Any> =
+        listOf(
             timestamp.systemNanos,
             timestamp.elapsedRealtimeMs,
             timestamp.deviceTimestampMs,
@@ -195,12 +206,11 @@ data class GSRDataRecord(
             packetSequence,
             sessionId,
             participantId,
-            recordingMode
+            recordingMode,
         )
-    }
 
-    fun toCsvLine(): String {
-        return buildString {
+    fun toCsvLine(): String =
+        buildString {
             append(timestamp.toCsvFormat())
             append(",")
             append("$gsrRawValue,$gsrMicrosiemens,$gsrResistanceKohm,")
@@ -209,7 +219,6 @@ data class GSRDataRecord(
             append("$samplingRateHz,$packetSequence,")
             append("$sessionId,$participantId,$recordingMode")
         }
-    }
 }
 
 data class GSRSampleData(
@@ -241,12 +250,13 @@ data class GSRPersistenceStats(
     val averageSampleSize: Double
         get() = if (samplesWritten > 0) totalDataSizeBytes.toDouble() / samplesWritten else 0.0
     val writePerformanceInfo: String
-        get() = bufferStats?.let { stats ->
-            "Queue: ${stats.queueSize}, Size: ${stats.formattedSize}, Avg: ${
-                String.format(
-                    "%.1f",
-                    averageSampleSize
-                )
-            } bytes/sample"
-        } ?: "No buffer stats available"
+        get() =
+            bufferStats?.let { stats ->
+                "Queue: ${stats.queueSize}, Size: ${stats.formattedSize}, Avg: ${
+                    String.format(
+                        "%.1f",
+                        averageSampleSize,
+                    )
+                } bytes/sample"
+            } ?: "No buffer stats available"
 }

@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.mpdc4gsr.libunified.ui.animation.Easing.EasingFunction;
@@ -220,8 +219,6 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
         mViewPortHandler.restrainViewPort(offsetLeft, offsetTop, offsetRight, offsetBottom);
 
         if (mLogEnabled)
-            Log.i(LOG_TAG, "offsetLeft: " + offsetLeft + ", offsetTop: " + offsetTop
-                    + ", offsetRight: " + offsetRight + ", offsetBottom: " + offsetBottom);
     }
 
     public float getAngleForPoint(float x, float y) {

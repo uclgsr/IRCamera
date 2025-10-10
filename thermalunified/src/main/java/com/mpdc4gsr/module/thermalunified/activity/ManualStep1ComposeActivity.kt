@@ -24,9 +24,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 
 class ManualStep1ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -41,7 +39,7 @@ class ManualStep1ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             Text(
                                 "Manual Setup - Step 1",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -49,31 +47,33 @@ class ManualStep1ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF16131E)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
                     )
                 },
-                containerColor = Color(0xFF16131E)
+                containerColor = Color(0xFF16131E),
             ) { paddingValues ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color(0xFF16131E))
-                        .padding(24.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color(0xFF16131E))
+                            .padding(24.dp),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     // Progress indicator
                     SetupProgressIndicator(
                         currentStep = 1,
                         totalSteps = 2,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(modifier = Modifier.height(32.dp))
                     // Main setup card
@@ -82,7 +82,7 @@ class ManualStep1ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         onNextStep = {
                             val intent = Intent(context, ManualStep2ComposeActivity::class.java)
                             context.startActivity(intent)
-                        }
+                        },
                     )
                 }
             }
@@ -94,42 +94,45 @@ class ManualStep1ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 private fun SetupProgressIndicator(
     currentStep: Int,
     totalSteps: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 "Setup Progress",
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(12.dp))
             // Progress bar
             LinearProgressIndicator(
                 progress = { currentStep.toFloat() / totalSteps.toFloat() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(8.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(8.dp),
                 color = Color(0xFFFF6B35),
-                trackColor = Color(0xFF16131E)
+                trackColor = Color(0xFF16131E),
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 "Step $currentStep of $totalSteps",
                 color = Color(0xFF7D8590),
-                fontSize = 12.sp
+                fontSize = 12.sp,
             )
         }
     }
@@ -138,27 +141,29 @@ private fun SetupProgressIndicator(
 @Composable
 private fun ManualSetupCard(
     step: Int,
-    onNextStep: () -> Unit
+    onNextStep: () -> Unit,
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(16.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(16.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             // Setup icon
             Icon(
                 Icons.Default.Build,
                 contentDescription = "Setup",
                 tint = Color(0xFFFF6B35),
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier.size(64.dp),
             )
             // Title
             Text(
@@ -166,7 +171,7 @@ private fun ManualSetupCard(
                 color = Color.White,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
             // Instructions
             SetupInstructions()
@@ -175,24 +180,26 @@ private fun ManualSetupCard(
             // Continue button
             Button(
                 onClick = onNextStep,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFF6B35)
-                ),
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFFF6B35),
+                    ),
                 shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
             ) {
                 Text(
                     "Continue to Step 2",
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = "Next",
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
             }
         }
@@ -202,25 +209,25 @@ private fun ManualSetupCard(
 @Composable
 private fun SetupInstructions() {
     Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Text(
             "Device Preparation",
             color = Color.White,
             fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         InstructionItem(
             step = "1",
-            instruction = "Ensure your thermal camera device is powered on and ready"
+            instruction = "Ensure your thermal camera device is powered on and ready",
         )
         InstructionItem(
             step = "2",
-            instruction = "Check that Bluetooth is enabled on your mobile device"
+            instruction = "Check that Bluetooth is enabled on your mobile device",
         )
         InstructionItem(
             step = "3",
-            instruction = "Place the thermal camera within 3 meters of your phone"
+            instruction = "Place the thermal camera within 3 meters of your phone",
         )
     }
 }
@@ -228,33 +235,34 @@ private fun SetupInstructions() {
 @Composable
 private fun InstructionItem(
     step: String,
-    instruction: String
+    instruction: String,
 ) {
     Row(
         verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Box(
-            modifier = Modifier
-                .size(24.dp)
-                .background(
-                    Color(0xFFFF6B35),
-                    RoundedCornerShape(12.dp)
-                ),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .size(24.dp)
+                    .background(
+                        Color(0xFFFF6B35),
+                        RoundedCornerShape(12.dp),
+                    ),
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 step,
                 color = Color.White,
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
         Text(
             instruction,
             color = Color(0xFF7D8590),
             fontSize = 14.sp,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
     }
 }
@@ -265,37 +273,39 @@ private fun SetupChecklist() {
     var bluetoothEnabled by remember { mutableStateOf(false) }
     var cameraInRange by remember { mutableStateOf(false) }
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF16131E)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF16131E),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 "Setup Checklist",
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             ChecklistItem(
                 text = "Thermal camera powered on",
                 checked = devicePowered,
-                onCheckedChange = { devicePowered = it }
+                onCheckedChange = { devicePowered = it },
             )
             ChecklistItem(
                 text = "Bluetooth enabled",
                 checked = bluetoothEnabled,
-                onCheckedChange = { bluetoothEnabled = it }
+                onCheckedChange = { bluetoothEnabled = it },
             )
             ChecklistItem(
                 text = "Camera within range",
                 checked = cameraInRange,
-                onCheckedChange = { cameraInRange = it }
+                onCheckedChange = { cameraInRange = it },
             )
         }
     }
@@ -305,27 +315,28 @@ private fun SetupChecklist() {
 private fun ChecklistItem(
     text: String,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Checkbox(
             checked = checked,
             onCheckedChange = onCheckedChange,
-            colors = CheckboxDefaults.colors(
-                checkedColor = Color(0xFFFF6B35),
-                uncheckedColor = Color(0xFF7D8590),
-                checkmarkColor = Color.White
-            )
+            colors =
+                CheckboxDefaults.colors(
+                    checkedColor = Color(0xFFFF6B35),
+                    uncheckedColor = Color(0xFF7D8590),
+                    checkmarkColor = Color.White,
+                ),
         )
         Text(
             text,
             color = if (checked) Color.White else Color(0xFF7D8590),
             fontSize = 14.sp,
-            fontWeight = if (checked) FontWeight.Medium else FontWeight.Normal
+            fontWeight = if (checked) FontWeight.Medium else FontWeight.Normal,
         )
     }
 }

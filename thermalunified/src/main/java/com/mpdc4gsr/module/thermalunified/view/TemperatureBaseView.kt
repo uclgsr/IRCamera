@@ -75,7 +75,7 @@ abstract class TemperatureBaseView : View {
     var textColor: Int
         @ColorInt get() = helper.textColor
         set(
-            @ColorInt value
+        @ColorInt value
         ) {
             helper.textColor = value
             invalidate()
@@ -90,9 +90,13 @@ abstract class TemperatureBaseView : View {
 
     @Volatile
     protected var trendLine: Line? = null
+
     protected fun getPointListSafe(): List<Point> = synchronized(this) { pointList }
+
     protected fun getLineListSafe(): List<Line> = synchronized(this) { lineList }
+
     protected fun getRectListSafe(): List<Rect> = synchronized(this) { rectList }
+
     private fun getSourcePointList(): List<Point> {
         val resultList = ArrayList<Point>(pointList.size)
         pointList.forEach {
@@ -149,14 +153,14 @@ abstract class TemperatureBaseView : View {
         context,
         attrs,
         defStyleAttr,
-        0
+        0,
     )
 
     constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : super(
         context,
         attrs,
@@ -235,7 +239,7 @@ abstract class TemperatureBaseView : View {
             line.start.x,
             line.start.y,
             line.end.x,
-            line.end.y
+            line.end.y,
         )
     }
 
@@ -292,6 +296,7 @@ abstract class TemperatureBaseView : View {
     }
 
     protected var operatePoint: Point? = null
+
     private fun touchPoint(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -356,6 +361,7 @@ abstract class TemperatureBaseView : View {
 
     private var lineMoveType = LineMoveType.ALL
     private val downLine: Line = Line(Point(0, 0), Point(0, 0))
+
     private fun touchLine(
         event: MotionEvent,
         isTrend: Boolean,
@@ -390,12 +396,16 @@ abstract class TemperatureBaseView : View {
                     downLine.start.set(line.start.x, line.start.y)
                     downLine.end.set(line.end.x, line.end.y)
                     lineMoveType =
-                        if (downX > line.start.x - TOUCH_TOLERANCE && downX < line.start.x + TOUCH_TOLERANCE &&
-                            downY > line.start.y - TOUCH_TOLERANCE && downY < line.start.y + TOUCH_TOLERANCE
+                        if (downX > line.start.x - TOUCH_TOLERANCE &&
+                            downX < line.start.x + TOUCH_TOLERANCE &&
+                            downY > line.start.y - TOUCH_TOLERANCE &&
+                            downY < line.start.y + TOUCH_TOLERANCE
                         ) {
                             LineMoveType.START
-                        } else if (downX > line.end.x - TOUCH_TOLERANCE && downX < line.end.x + TOUCH_TOLERANCE &&
-                            downY > line.end.y - TOUCH_TOLERANCE && downY < line.end.y + TOUCH_TOLERANCE
+                        } else if (downX > line.end.x - TOUCH_TOLERANCE &&
+                            downX < line.end.x + TOUCH_TOLERANCE &&
+                            downY > line.end.y - TOUCH_TOLERANCE &&
+                            downY < line.end.y + TOUCH_TOLERANCE
                         ) {
                             LineMoveType.END
                         } else {
@@ -421,22 +431,30 @@ abstract class TemperatureBaseView : View {
                             val minY: Int = min(downLine.start.y, downLine.end.y)
                             val maxY: Int = max(downLine.start.y, downLine.end.y)
                             val biasX: Int =
-                                if (x < downX) max(x - downX, rect.left - minX) else min(
-                                    x - downX,
-                                    rect.right - maxX
-                                )
+                                if (x < downX) {
+                                    max(x - downX, rect.left - minX)
+                                } else {
+                                    min(
+                                        x - downX,
+                                        rect.right - maxX,
+                                    )
+                                }
                             val biasY: Int =
-                                if (y < downY) max(y - downY, rect.top - minY) else min(
-                                    y - downY,
-                                    rect.bottom - maxY
-                                )
+                                if (y < downY) {
+                                    max(y - downY, rect.top - minY)
+                                } else {
+                                    min(
+                                        y - downY,
+                                        rect.bottom - maxY,
+                                    )
+                                }
                             (if (isTrend) operateTrend else operateLine)?.start?.set(
                                 downLine.start.x + biasX,
-                                downLine.start.y + biasY
+                                downLine.start.y + biasY,
                             )
                             (if (isTrend) operateTrend else operateLine)?.end?.set(
                                 downLine.end.x + biasX,
-                                downLine.end.y + biasY
+                                downLine.end.y + biasY,
                             )
                         }
 
@@ -460,7 +478,9 @@ abstract class TemperatureBaseView : View {
                 val y: Int = event.y.correct(height)
                 val line: Line =
                     (if (isTrend) operateTrend else operateLine) ?: Line(Point(), Point())
-                if ((line.start.x / xScale).toInt() != (line.end.x / xScale).toInt() || (line.start.y / yScale).toInt() != (line.end.y / yScale).toInt()) {
+                if ((line.start.x / xScale).toInt() != (line.end.x / xScale).toInt() ||
+                    (line.start.y / yScale).toInt() != (line.end.y / yScale).toInt()
+                ) {
                     if (isAddAction || abs(x - downX) > DELETE_TOLERANCE || abs(y - downY) > DELETE_TOLERANCE) {
                         if (isTrend) {
                             trendLine = line
@@ -517,14 +537,22 @@ abstract class TemperatureBaseView : View {
         }
         var tempDistance =
             (line.end.y - line.start.y) * x - (line.end.x - line.start.x) * y + line.end.x * line.start.y - line.start.x * line.end.y
-        tempDistance = (tempDistance / sqrt(
-            (line.end.y - line.start.y).toDouble().pow(2.0) + (line.end.x - line.start.x).toDouble()
-                .pow(2.0)
-        )).toInt()
-        return abs(tempDistance) < TOUCH_TOLERANCE && x > min(
-            line.start.x,
-            line.end.x
-        ) - TOUCH_TOLERANCE && x < max(line.start.x, line.end.x) + TOUCH_TOLERANCE
+        tempDistance =
+            (
+                tempDistance /
+                    sqrt(
+                        (line.end.y - line.start.y).toDouble().pow(2.0) +
+                            (line.end.x - line.start.x)
+                                .toDouble()
+                                .pow(2.0),
+                    )
+            ).toInt()
+        return abs(tempDistance) < TOUCH_TOLERANCE &&
+            x > min(
+                line.start.x,
+                line.end.x,
+            ) - TOUCH_TOLERANCE &&
+            x < max(line.start.x, line.end.x) + TOUCH_TOLERANCE
     }
 
     protected var operateRect: Rect? = null
@@ -541,6 +569,7 @@ abstract class TemperatureBaseView : View {
 
     private var rectMoveCorner = RectMoveCorner.LT
     private val downRect = Rect()
+
     private fun touchRect(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -651,7 +680,7 @@ abstract class TemperatureBaseView : View {
                                 downRect.left + biasX,
                                 downRect.top + biasY,
                                 downRect.right + biasX,
-                                downRect.bottom + biasY
+                                downRect.bottom + biasY,
                             )
                         }
 
@@ -743,8 +772,10 @@ abstract class TemperatureBaseView : View {
     ): Rect? {
         for (i in rectList.size - 1 downTo 0) {
             val rect: Rect = rectList[i]
-            if (rect.left - TOUCH_TOLERANCE < x && rect.right + TOUCH_TOLERANCE > x &&
-                rect.top - TOUCH_TOLERANCE < y && rect.bottom + TOUCH_TOLERANCE > y
+            if (rect.left - TOUCH_TOLERANCE < x &&
+                rect.right + TOUCH_TOLERANCE > x &&
+                rect.top - TOUCH_TOLERANCE < y &&
+                rect.bottom + TOUCH_TOLERANCE > y
             ) {
                 return synchronized(this) { rectList.removeAt(i) }
             }

@@ -93,9 +93,9 @@ See **[pc-controller/docs/time_sync_implementation.md](../../pc-controller/docs/
 
 ### Testing Guide
 
-See **[docs/summaries/testing-time-sync.md](../summaries/testing-time-sync.md)** for:
+See **[docs/testing-and-quality.md](../testing-and-quality.md)** for:
 
-- Quick test procedures
+- End-to-end Android and PC controller test procedures
 - Success indicators
 - Common issues and solutions
 

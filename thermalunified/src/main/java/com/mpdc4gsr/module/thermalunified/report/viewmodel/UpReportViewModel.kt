@@ -1,7 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.report.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.lms.LMS
@@ -28,6 +27,7 @@ class UpReportViewModel : BaseViewModel() {
     val exceptionLD = SingleLiveEvent<Exception?>()
     private val gson = Gson()
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+
     fun upload(
         isTC007: Boolean,
         reportBean: ReportBean?,
@@ -65,14 +65,11 @@ class UpReportViewModel : BaseViewModel() {
                                 }
                             }
                         } catch (e: Exception) {
-                            XLog.e("Error parsing upload response", e)
                         }
-                        XLog.i("Upload")
                         downLatch.countDown()
                     }
                 }
                 downLatch.await()
-                XLog.i("${irList.size} Upload")
             }
         }
     }
@@ -87,7 +84,7 @@ class UpReportViewModel : BaseViewModel() {
             params.addBodyParameter("reportType", 2)
             params.addBodyParameter(
                 "modelId",
-                if (isTC007) 1783 else 950
+                if (isTC007) 1783 else 950,
             )
             params.addBodyParameter("testTime", dateFormat.format(Date()))
             params.addBodyParameter("testInfo", gson.toJson(reportBean))

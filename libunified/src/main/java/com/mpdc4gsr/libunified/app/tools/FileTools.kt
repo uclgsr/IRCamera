@@ -36,8 +36,13 @@ object FileTools {
     fun getImagePathFromURI(path: String): Uri? {
         val cr: ContentResolver = ContextProvider.getContext().contentResolver
         val buffer = StringBuffer()
-        buffer.append("(").append(MediaStore.Images.ImageColumns.DATA)
-            .append("=").append("'").append(path).append("'")
+        buffer
+            .append("(")
+            .append(MediaStore.Images.ImageColumns.DATA)
+            .append("=")
+            .append("'")
+            .append(path)
+            .append("'")
             .append(")")
         val cur: Cursor? =
             cr.query(

@@ -2,7 +2,6 @@ package com.mpdc4gsr.libunified.ui.listener;
 
 import android.annotation.SuppressLint;
 import android.graphics.Matrix;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -443,8 +442,6 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
             mChart.zoom(mChart.isScaleXEnabled() ? 1.4f : 1f, mChart.isScaleYEnabled() ? 1.4f : 1f, trans.x, trans.y);
 
             if (mChart.isLogEnabled())
-                Log.i("BarlineChartTouch", "Double-Tap, Zooming In, x: " + trans.x + ", y: "
-                        + trans.y);
 
             MPPointF.recycleInstance(trans);
         }

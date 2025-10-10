@@ -10,7 +10,6 @@ import android.net.NetworkRequest;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiNetworkSpecifier;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
@@ -97,16 +96,13 @@ public class EasyWifi {
     public boolean connectByOld(String str, String str2, WifiCapability wifiCapability) {
         int addNetwork = this.wifiManager.addNetwork(createWifiConfig(str, str2, wifiCapability));
         if (-1 == addNetwork) {
-            Log.e(this.TAG, ",wifi");
         }
         boolean enableNetwork = this.wifiManager.enableNetwork(addNetwork, true);
-        Log.d(this.TAG, "connectByOld: " + (enableNetwork ? "" : ""));
         return enableNetwork;
     }
 
     private WifiConfiguration isExist(String str) {
         if (ContextCompat.checkSelfPermission(BaseApplication.instance, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
-            Log.w(this.TAG, "isExist: Missing ACCESS_WIFI_STATE permission");
             return null;
         }
         for (WifiConfiguration wifiConfiguration : this.wifiManager.getConfiguredNetworks()) {
@@ -127,9 +123,7 @@ public class EasyWifi {
         wifiConfiguration.SSID = "\"" + str + "\"";
         WifiConfiguration isExist = isExist(str);
         if (null != isExist) {
-            Log.d(this.TAG, "createWifiConfig: （true:，false:），=" + this.wifiManager.removeNetwork(isExist.networkId) + "" + this.wifiManager.saveConfiguration());
         }
-        Log.d(this.TAG, "createWifiConfig: ssid=" + str);
         if (WifiCapability.WIFI_CIPHER_NO_PASS == wifiCapability) {
             wifiConfiguration.allowedKeyManagement.set(0);
         } else if (WifiCapability.WIFI_CIPHER_WEP == wifiCapability) {
@@ -155,7 +149,6 @@ public class EasyWifi {
     }
 
     public void setNetworkType(NetType netType) {
-        Log.d(this.TAG, "selectNetworkType: wifi");
         NetworkRequest.Builder builder = new NetworkRequest.Builder();
         if (NetType.WIFI == netType) {
             builder.addTransportType(1);
@@ -166,7 +159,6 @@ public class EasyWifi {
             @Override // android.net.ConnectivityManager.NetworkCallback
             public void onAvailable(Network network) {
                 try {
-                    Log.d(EasyWifi.this.TAG, "onAvailable: ");
                     EasyWifi.this.getConnectivityManager().bindProcessToNetwork(network);
                 } catch (Exception e) {
                     e.printStackTrace();

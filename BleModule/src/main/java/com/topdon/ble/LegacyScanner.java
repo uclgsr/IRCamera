@@ -23,7 +23,6 @@ class LegacyScanner extends AbstractScanner implements BluetoothAdapter.LeScanCa
         try {
             bluetoothAdapter.startLeScan(this);
         } catch (SecurityException e) {
-            logger.log(android.util.Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permission for legacy scan: " + e.getMessage());
         }
     }
 
@@ -32,7 +31,6 @@ class LegacyScanner extends AbstractScanner implements BluetoothAdapter.LeScanCa
         try {
             bluetoothAdapter.stopLeScan(this);
         } catch (SecurityException e) {
-            logger.log(android.util.Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permission to stop legacy scan: " + e.getMessage());
         }
     }
 

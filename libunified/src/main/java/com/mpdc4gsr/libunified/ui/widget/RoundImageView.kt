@@ -24,24 +24,25 @@ class RoundImageView : AppCompatImageView {
                 invalidate()
             }
         }
-    private var radius = 0 //， px
-    private val path = Path()//
-    private var density = 0f //，dppx
+    private var radius = 0 // ， px
+    private val path = Path() //
+    private var density = 0f // ，dppx
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ) {
         density = context.resources.displayMetrics.density
         val typedArray =
             context.obtainStyledAttributes(attrs, R.styleable.RoundImageView, defStyleAttr, 0)
-        radius = typedArray.getDimensionPixelSize(
-            R.styleable.RoundImageView_round_radius,
-            dp2px(DEFAULT_RADIUS)
-        )
+        radius =
+            typedArray.getDimensionPixelSize(
+                R.styleable.RoundImageView_round_radius,
+                dp2px(DEFAULT_RADIUS),
+            )
         position = typedArray.getInt(R.styleable.RoundImageView_round_position, DEFAULT_POSITION)
         typedArray.recycle()
     }
@@ -63,7 +64,7 @@ class RoundImageView : AppCompatImageView {
                 width.toFloat(),
                 height.toFloat(),
                 (width - radius).toFloat(),
-                height.toFloat()
+                height.toFloat(),
             )
         } else {
             path.lineTo(width.toFloat(), height.toFloat())
@@ -91,7 +92,5 @@ class RoundImageView : AppCompatImageView {
         }
     }
 
-    private fun dp2px(dpValue: Float): Int {
-        return (dpValue * density + 0.5f).toInt()
-    }
+    private fun dp2px(dpValue: Float): Int = (dpValue * density + 0.5f).toInt()
 }

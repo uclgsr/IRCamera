@@ -9,15 +9,13 @@ import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfDocument.PageInfo
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.widget.ScrollView
 import androidx.core.content.ContextCompat
-import com.mpdc4gsr.libunified.compat.ContextProvider
 import androidx.documentfile.provider.DocumentFile
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.config.FileConfig
-import java.io.BufferedOutputStream
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import java.io.File
 import java.io.FileOutputStream
 
@@ -44,7 +42,8 @@ object PDFHelp {
             }
             if (page == null) {
                 val pageInfo =
-                    PageInfo.Builder(view.width, onePageHeight, 1)
+                    PageInfo
+                        .Builder(view.width, onePageHeight, 1)
                         .setContentRect(Rect(0, 0, view.width, onePageHeight))
                         .create()
                 page = pdfDocument.startPage(pageInfo)
@@ -96,7 +95,6 @@ object PDFHelp {
                 }
                 val documentFile = DocumentFile.fromSingleUri(ContextProvider.getContext(), uri)
                 val filePath = uri.toString()
-                Log.w("[ph][ph]", filePath)
                 filePath
             } else {
                 ""

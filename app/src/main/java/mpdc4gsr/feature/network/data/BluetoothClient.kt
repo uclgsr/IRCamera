@@ -4,21 +4,34 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
 import android.content.Context
-import kotlinx.coroutines.*
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.IOException
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+import java.util.UUID
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.io.*
-import java.util.*
+import kotlinx.coroutines.withContext
+import mpdc4gsr.core.utils.AppLogger
 
 class BluetoothClient(
     private val context: Context,
     private val bluetoothDevice: BluetoothDevice,
-    private val serviceUuid: UUID = DEFAULT_SPP_UUID
+    private val serviceUuid: UUID = DEFAULT_SPP_UUID,
 ) : CommandConnection {
     companion object {
         // Standard Serial Port Profile UUID
         val DEFAULT_SPP_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+        private const val TAG = "BluetoothClient"
     }
 
     private var bluetoothSocket: BluetoothSocket? = null
@@ -26,126 +39,122 @@ class BluetoothClient(
     private var writer: BufferedWriter? = null
     private val clientScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var readerJob: Job? = null
+
     private val _connectionState = MutableStateFlow(CommandConnection.ConnectionState.DISCONNECTED)
     override val connectionState: StateFlow<CommandConnection.ConnectionState> =
         _connectionState.asStateFlow()
+
     private var messageCallback: ((String) -> Unit)? = null
     private var connectionCallback: ((CommandConnection.ConnectionState) -> Unit)? = null
-    override suspend fun connect(): Boolean = withContext(Dispatchers.IO) {
-        try {
-            if (isConnected()) {
-                Log.i(
-                    TAG,
-                    "Already connected to ${bluetoothDevice.name} (${bluetoothDevice.address})"
-                )
-                return@withContext true
-            }
-            val bluetoothManager =
-                context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
-            val bluetoothAdapter = bluetoothManager?.adapter
-            if (bluetoothManager == null || bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-                handleConnectionError("Bluetooth not available")
-                return@withContext false
-            }
-            Log.i(
-                TAG,
-                "Connecting to PC via Bluetooth: ${bluetoothDevice.name} (${bluetoothDevice.address})"
-            )
-            _connectionState.value = CommandConnection.ConnectionState.CONNECTING
-            connectionCallback?.invoke(CommandConnection.ConnectionState.CONNECTING)
-            // Cancel discovery to improve connection performance
-            bluetoothAdapter.cancelDiscovery()
-            // Create RFCOMM socket
-            bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(serviceUuid)
-            // Connect to the device
-            bluetoothSocket?.connect()
-            val inputStream = bluetoothSocket?.inputStream
-            val outputStream = bluetoothSocket?.outputStream
-            if (inputStream != null && outputStream != null) {
+
+    override suspend fun connect(): Boolean =
+        withContext(Dispatchers.IO) {
+            try {
+                if (isConnected()) {
+                    return@withContext true
+                }
+
+                val bluetoothManager =
+                    context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+                val bluetoothAdapter = bluetoothManager?.adapter
+                if (bluetoothManager == null || bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
+                    handleConnectionError("Bluetooth not available")
+                    return@withContext false
+                }
+
+
+                _connectionState.value = CommandConnection.ConnectionState.CONNECTING
+                connectionCallback?.invoke(CommandConnection.ConnectionState.CONNECTING)
+
+                bluetoothAdapter.cancelDiscovery()
+
+                bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(serviceUuid)
+                bluetoothSocket?.connect()
+
+                val inputStream = bluetoothSocket?.inputStream
+                val outputStream = bluetoothSocket?.outputStream
+                if (inputStream == null || outputStream == null) {
+                    throw IOException("Failed to get Bluetooth socket streams")
+                }
+
                 reader = BufferedReader(InputStreamReader(inputStream, Charsets.UTF_8))
                 writer = BufferedWriter(OutputStreamWriter(outputStream, Charsets.UTF_8))
+
                 _connectionState.value = CommandConnection.ConnectionState.CONNECTED
                 connectionCallback?.invoke(CommandConnection.ConnectionState.CONNECTED)
-                // Start reader thread
-                startReaderLoop()                return@withContext true
-            } else {
-                throw IOException("Failed to get Bluetooth socket streams")
-            }
-        } catch (e: IOException) {
-            handleConnectionError("Bluetooth connection failed: ${e.message}")
-            return@withContext false
-        } catch (e: SecurityException) {
-            handleConnectionError("Bluetooth permission denied")
-            return@withContext false
-        } catch (e: Exception) {
-            handleConnectionError("Connection failed: ${e.message}")
-            return@withContext false
-        }
-    }
 
-    override suspend fun sendMessage(message: String): Boolean = withContext(Dispatchers.IO) {
-        try {
-            val currentWriter = writer
-            if (currentWriter != null && isConnected()) {
-                currentWriter.write(message)
-                currentWriter.write("\n")
-                currentWriter.flush()                return@withContext true
-            } else {
-                return@withContext false
+                startReaderLoop()
+                true
+            } catch (ioException: IOException) {
+                handleConnectionError("Bluetooth connection failed: ${ioException.message}")
+                false
+            } catch (securityException: SecurityException) {
+                handleConnectionError("Bluetooth permission denied")
+                false
+            } catch (exception: Exception) {
+                handleConnectionError("Connection failed: ${exception.message}")
+                false
             }
-        } catch (e: IOException) {
-            handleConnectionError("Send failed: ${e.message}")
-            return@withContext false
         }
-    }
 
-    override suspend fun disconnect(): Unit =
-        withContext(Dispatchers.IO) {        // Cancel reader job first to stop any ongoing reads
+    override suspend fun sendMessage(message: String): Boolean =
+        withContext(Dispatchers.IO) {
+            try {
+                val currentWriter = writer
+                if (currentWriter != null && isConnected()) {
+                    currentWriter.write(message)
+                    currentWriter.newLine()
+                    currentWriter.flush()
+                    true
+                } else {
+                    false
+                }
+            } catch (ioException: IOException) {
+                handleConnectionError("Send failed: ${ioException.message}")
+                false
+            }
+        }
+
+    override suspend fun disconnect() {
+        withContext(Dispatchers.IO) {
             readerJob?.cancel()
             readerJob = null
-            // Close resources in proper order: writer, reader, then socket
-            try {
-                writer?.let { w ->
-                    try {
-                        w.flush()
-                        w.close()
-                    } catch (e: IOException) {
-                        mpdc4gsr.core.utils.AppLogger.e("BluetoothClient", "Unexpected IOException in BluetoothClient catch block", e)
-                    }
+
+            runCatching {
+                writer?.run {
+                    flush()
+                    close()
                 }
-            } catch (e: Exception) {
-                mpdc4gsr.core.utils.AppLogger.e("BluetoothClient", "Unexpected Exception in BluetoothClient catch block", e)
+            }.onFailure { throwable ->
+                AppLogger.e(TAG, "Failed to close writer", throwable)
             }
-            try {
-                reader?.close()
-            } catch (e: IOException) {
-                mpdc4gsr.core.utils.AppLogger.e("BluetoothClient", "Unexpected IOException in BluetoothClient catch block", e)
+
+            runCatching { reader?.close() }.onFailure { throwable ->
+                AppLogger.e(TAG, "Failed to close reader", throwable)
             }
-            try {
+
+            runCatching {
                 bluetoothSocket?.let { socket ->
                     if (socket.isConnected) {
                         socket.close()
                     }
                 }
-            } catch (e: IOException) {
-                mpdc4gsr.core.utils.AppLogger.e(
-                    "BluetoothClient",
-                    "Failed to close Bluetooth socket cleanly",
-                    e,
-                )
-            } catch (e: SecurityException) {
-                mpdc4gsr.core.utils.AppLogger.e("BluetoothClient", "Unexpected SecurityException in BluetoothClient catch block", e)
+            }.onFailure { throwable ->
+                AppLogger.e(TAG, "Failed to close Bluetooth socket", throwable)
             }
-            // Clear all references
+
             writer = null
             reader = null
             bluetoothSocket = null
+
             _connectionState.value = CommandConnection.ConnectionState.DISCONNECTED
             connectionCallback?.invoke(CommandConnection.ConnectionState.DISCONNECTED)
         }
+    }
 
     override fun isConnected(): Boolean {
-        return bluetoothSocket?.isConnected == true && _connectionState.value == CommandConnection.ConnectionState.CONNECTED
+        return bluetoothSocket?.isConnected == true &&
+            _connectionState.value == CommandConnection.ConnectionState.CONNECTED
     }
 
     override fun setMessageCallback(callback: (String) -> Unit) {
@@ -170,26 +179,21 @@ class BluetoothClient(
             val currentReader = reader ?: return@launch
             try {
                 while (isActive && isConnected()) {
-                    try {
-                        val message = currentReader.readLine()
-                        if (message != null) {
-                            messageCallback?.invoke(message)
-                        } else {
-                            break
-                        }
-                    } catch (e: IOException) {
-                        if (isActive) {
-                            break
-                        }
+                    val message = currentReader.readLine()
+                    if (message != null) {
+                        messageCallback?.invoke(message)
+                    } else {
+                        break
                     }
                 }
-            } catch (e: Exception) {
+            } catch (throwable: Throwable) {
                 if (isActive) {
-                    handleConnectionError("Reader error: ${e.message}")
+                    handleConnectionError("Reader error: ${throwable.message}")
                 }
-            }
-            if (isActive) {
-                handleConnectionError("PC disconnected")
+            } finally {
+                if (isActive) {
+                    handleConnectionError("PC disconnected")
+                }
             }
         }
     }

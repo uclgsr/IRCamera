@@ -3,7 +3,7 @@ package com.mpdc4gsr.libunified.app.bean
 data class ContinuousBean(
     var isOpen: Boolean = false,
     var continuaTime: Long = 1000,
-    var count: Int = 3
+    var count: Int = 3,
 )
 
 class ObserveBean {
@@ -72,13 +72,13 @@ data class CameraItemBean(
         const val TYPE_SDKM = 2
         const val TYPE_AUDIO = 3
         const val TYPE_SETTING = 4
-        const val DELAY_TIME_0 = 0//3
-        const val DELAY_TIME_3 = 3//3
-        const val DELAY_TIME_6 = 6//6
+        const val DELAY_TIME_0 = 0 // 3
+        const val DELAY_TIME_3 = 3 // 3
+        const val DELAY_TIME_6 = 6 // 6
 
         //
         const val TYPE_TMP_ZD = -1 //
-        const val TYPE_TMP_C = 1 // 
+        const val TYPE_TMP_C = 1 //
         const val TYPE_TMP_H = 0 //
     }
 }

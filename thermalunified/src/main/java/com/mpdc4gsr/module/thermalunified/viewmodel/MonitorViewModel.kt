@@ -18,11 +18,15 @@ class MonitorViewModel : BaseViewModel() {
     val selectedIndex: MutableLiveData<ArrayList<Int>> = _selectedIndex
     private val _recordingTime = MutableLiveData(0L)
     val recordingTime: MutableLiveData<Long> = _recordingTime
+
     fun setMonitorState(state: Int) {
         _monitorState.value = state
     }
 
-    fun selectMonitorType(type: Int, indices: ArrayList<Int>) {
+    fun selectMonitorType(
+        type: Int,
+        indices: ArrayList<Int>,
+    ) {
         _selectedType.value = type
         _selectedIndex.value = indices
         _monitorState.value = STATS_FINISH

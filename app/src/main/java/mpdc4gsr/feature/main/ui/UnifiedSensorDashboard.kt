@@ -32,7 +32,7 @@ fun UnifiedSensorDashboard(
     onCameraSettingsClick: () -> Unit = {},
     onGSRSettingsClick: () -> Unit = {},
     onThermalSettingsClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     // Sensor states - showing disconnected until actual ViewModels are connected
     var gsrState by remember { mutableStateOf(SensorState.Disconnected) }
@@ -40,43 +40,46 @@ fun UnifiedSensorDashboard(
     var rgbState by remember { mutableStateOf(SensorState.Disconnected) }
     var unifiedState by remember { mutableStateOf(UnifiedSystemState.Inactive) }
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFF16131e))
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color(0xFF16131e)),
     ) {
         // Title bar with user-friendly name
         TitleBar(
             title = "Sensor Overview",
             showBackButton = true,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
         ) {
             TitleBarAction(
                 icon = Icons.Default.Settings,
                 contentDescription = "Sensor Settings",
-                onClick = onSettingsClick
+                onClick = onSettingsClick,
             )
         }
         // Breadcrumb navigation for context
         NavigationBreadcrumb(
             currentScreen = "Sensor Overview",
-            previousScreen = "Home"
+            previousScreen = "Home",
         )
         // Scrollable sensor content
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Unified system status overview
             UnifiedSensorStatus(
                 systemState = unifiedState,
-                activeSensors = listOf(
-                    SensorInfo(SensorType.GSR, gsrState),
-                    SensorInfo(SensorType.ThermalIR, thermalState),
-                    SensorInfo(SensorType.RGBCamera, rgbState)
-                ),
+                activeSensors =
+                    listOf(
+                        SensorInfo(SensorType.GSR, gsrState),
+                        SensorInfo(SensorType.ThermalIR, thermalState),
+                        SensorInfo(SensorType.RGBCamera, rgbState),
+                    ),
                 onSystemAction = { action ->
                     when (action) {
                         is SystemAction.StartRecording -> {
@@ -91,7 +94,7 @@ fun UnifiedSensorDashboard(
                             // Trigger sensor synchronization
                         }
                     }
-                }
+                },
             )
             // Individual sensor cards
             GSRSensorCard(
@@ -108,7 +111,7 @@ fun UnifiedSensorDashboard(
                         }
                     }
                 },
-                onSettingsClick = onGSRSettingsClick
+                onSettingsClick = onGSRSettingsClick,
             )
             ThermalSensorCard(
                 state = thermalState,
@@ -127,7 +130,7 @@ fun UnifiedSensorDashboard(
                         }
                     }
                 },
-                onSettingsClick = onThermalSettingsClick
+                onSettingsClick = onThermalSettingsClick,
             )
             RGBCameraSensorCard(
                 state = rgbState,
@@ -143,7 +146,7 @@ fun UnifiedSensorDashboard(
                         }
                     }
                 },
-                onSettingsClick = onCameraSettingsClick
+                onSettingsClick = onCameraSettingsClick,
             )
         }
     }

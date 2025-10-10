@@ -21,7 +21,8 @@ object TelemetryManager {
             setDeviceProperties(context)
             isInitialized = true
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("TelemetryManager", "Unexpected Exception in TelemetryManager catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("TelemetryManager", "Unexpected Exception in TelemetryManager catch block", e)
         }
     }
 
@@ -33,7 +34,10 @@ object TelemetryManager {
         userId = null
     }
 
-    fun trackEvent(eventName: String, params: Map<String, Any>? = null) {
+    fun trackEvent(
+        eventName: String,
+        params: Map<String, Any>? = null,
+    ) {
         if (!isInitialized) {
             return
         }
@@ -41,65 +45,91 @@ object TelemetryManager {
             val eventData = buildEventData(eventName, params)
             // TODO: Send to analytics backend
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("TelemetryManager", "Unexpected Exception in TelemetryManager catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("TelemetryManager", "Unexpected Exception in TelemetryManager catch block", e)
         }
     }
 
-    fun trackScreenView(screenName: String, screenClass: String) {
+    fun trackScreenView(
+        screenName: String,
+        screenClass: String,
+    ) {
         trackEvent(
-            "screen_view", mapOf(
+            "screen_view",
+            mapOf(
                 "screen_name" to screenName,
-                "screen_class" to screenClass
-            )
+                "screen_class" to screenClass,
+            ),
         )
     }
 
-    fun trackError(error: String, exception: Throwable? = null, fatal: Boolean = false) {
+    fun trackError(
+        error: String,
+        exception: Throwable? = null,
+        fatal: Boolean = false,
+    ) {
         try {
-            val errorData = mapOf(
-                "error" to error,
-                "fatal" to fatal,
-                "exception_type" to (exception?.javaClass?.simpleName ?: "Unknown"),
-                "stack_trace" to (exception?.stackTraceToString() ?: "")
-            )
+            val errorData =
+                mapOf(
+                    "error" to error,
+                    "fatal" to fatal,
+                    "exception_type" to (exception?.javaClass?.simpleName ?: "Unknown"),
+                    "stack_trace" to (exception?.stackTraceToString() ?: ""),
+                )
             trackEvent(if (fatal) "fatal_error" else "error", errorData)
             // TODO: Send to crash reporting service
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("TelemetryManager", "Unexpected Exception in TelemetryManager catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("TelemetryManager", "Unexpected Exception in TelemetryManager catch block", e)
         }
     }
 
-    fun logMetric(metricName: String, value: Number, unit: String? = null) {
+    fun logMetric(
+        metricName: String,
+        value: Number,
+        unit: String? = null,
+    ) {
         try {
-            val metricData = mutableMapOf<String, Any>(
-                "metric_name" to metricName,
-                "value" to value
-            )
+            val metricData =
+                mutableMapOf<String, Any>(
+                    "metric_name" to metricName,
+                    "value" to value,
+                )
             unit?.let { metricData["unit"] = it }
             trackEvent("metric_logged", metricData)
             // TODO: Send to metrics backend
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("TelemetryManager", "Unexpected Exception in TelemetryManager catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("TelemetryManager", "Unexpected Exception in TelemetryManager catch block", e)
         }
     }
 
-    fun trackRecordingSession(recordingId: String, durationMs: Long, success: Boolean) {
+    fun trackRecordingSession(
+        recordingId: String,
+        durationMs: Long,
+        success: Boolean,
+    ) {
         trackEvent(
-            "recording_session", mapOf(
+            "recording_session",
+            mapOf(
                 "recording_id" to recordingId,
                 "duration_ms" to durationMs,
                 "duration_seconds" to (durationMs / 1000),
-                "success" to success
-            )
+                "success" to success,
+            ),
         )
     }
 
-    fun trackFeatureUsage(featureName: String, action: String) {
+    fun trackFeatureUsage(
+        featureName: String,
+        action: String,
+    ) {
         trackEvent(
-            "feature_usage", mapOf(
+            "feature_usage",
+            mapOf(
                 "feature" to featureName,
-                "action" to action
-            )
+                "action" to action,
+            ),
         )
     }
 
@@ -107,29 +137,37 @@ object TelemetryManager {
         endpoint: String,
         method: String,
         statusCode: Int,
-        durationMs: Long
+        durationMs: Long,
     ) {
         trackEvent(
-            "network_request", mapOf(
+            "network_request",
+            mapOf(
                 "endpoint" to endpoint,
                 "method" to method,
                 "status_code" to statusCode,
                 "duration_ms" to durationMs,
-                "success" to (statusCode in 200..299)
-            )
+                "success" to (statusCode in 200..299),
+            ),
         )
     }
 
-    fun trackPermissionRequest(permission: String, granted: Boolean) {
+    fun trackPermissionRequest(
+        permission: String,
+        granted: Boolean,
+    ) {
         trackEvent(
-            "permission_request", mapOf(
+            "permission_request",
+            mapOf(
                 "permission" to permission,
-                "granted" to granted
-            )
+                "granted" to granted,
+            ),
         )
     }
 
-    fun setProperty(key: String, value: String) {
+    fun setProperty(
+        key: String,
+        value: String,
+    ) {
         properties[key] = value
     }
 
@@ -137,8 +175,11 @@ object TelemetryManager {
         properties.remove(key)
     }
 
-    private fun buildEventData(eventName: String, params: Map<String, Any>?): JSONObject {
-        return JSONObject().apply {
+    private fun buildEventData(
+        eventName: String,
+        params: Map<String, Any>?,
+    ): JSONObject =
+        JSONObject().apply {
             put("event_name", eventName)
             put("timestamp", System.currentTimeMillis())
             put("session_id", sessionId)
@@ -150,7 +191,6 @@ object TelemetryManager {
                 put(key, value)
             }
         }
-    }
 
     private fun setDeviceProperties(context: Context) {
         setProperty("device_model", Build.MODEL)
@@ -160,22 +200,22 @@ object TelemetryManager {
         setProperty("app_version", getAppVersion(context))
     }
 
-    private fun getAppVersion(context: Context): String {
-        return try {
+    private fun getAppVersion(context: Context): String =
+        try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
             packageInfo.versionName ?: "Unknown"
         } catch (e: Exception) {
             "Unknown"
         }
-    }
 
-    private fun generateSessionId(): String {
-        return "session_${System.currentTimeMillis()}_${java.util.UUID.randomUUID().toString().substring(0, 8)}"
-    }
+    private fun generateSessionId(): String =
+        "session_${System.currentTimeMillis()}_${java.util.UUID.randomUUID().toString().substring(0, 8)}"
 }
 
-
-inline fun <T> trackExecutionTime(operationName: String, block: () -> T): T {
+inline fun <T> trackExecutionTime(
+    operationName: String,
+    block: () -> T,
+): T {
     val startTime = System.currentTimeMillis()
     try {
         return block()
@@ -187,7 +227,7 @@ inline fun <T> trackExecutionTime(operationName: String, block: () -> T): T {
 
 suspend inline fun <T> trackExecutionTimeSuspend(
     operationName: String,
-    crossinline block: suspend () -> T
+    crossinline block: suspend () -> T,
 ): T {
     val startTime = System.currentTimeMillis()
     try {

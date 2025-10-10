@@ -1,7 +1,6 @@
 package mpdc4gsr.feature.gsr.ui
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,7 +33,7 @@ fun GSRSensorScreen(
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onSaveData: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -60,7 +59,7 @@ fun GSRSensorScreen(
             } else {
                 snackbarHostState.showSnackbar(
                     message = error,
-                    duration = SnackbarDuration.Long
+                    duration = SnackbarDuration.Long,
                 )
             }
         }
@@ -86,7 +85,7 @@ fun GSRSensorScreen(
                         Text("Retry")
                     }
                 }
-            }
+            },
         )
     }
     // Use real data from ViewModel or fallback to simulated data for preview
@@ -97,11 +96,12 @@ fun GSRSensorScreen(
     val deviceBattery = if (sensorState.deviceBattery > 0) sensorState.deviceBattery else 87
     val samplingRate = sensorState.samplingRate
     // Use GSR history from ViewModel state, with fallback to generated data
-    val gsrHistory = if (sensorState.gsrHistory.isNotEmpty()) {
-        sensorState.gsrHistory
-    } else {
-        remember { generateInitialGSRData() }
-    }
+    val gsrHistory =
+        if (sensorState.gsrHistory.isNotEmpty()) {
+            sensorState.gsrHistory
+        } else {
+            remember { generateInitialGSRData() }
+        }
     // Only simulate data when not connected and for preview purposes
     LaunchedEffect(isConnected) {
         if (!isConnected) {
@@ -114,37 +114,39 @@ fun GSRSensorScreen(
     }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = Color(0xFF16131e)
+        containerColor = Color(0xFF16131e),
     ) { paddingValues ->
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
         ) {
             // Title bar with GSR-specific actions
             TitleBar(
                 title = "GSR Sensor Monitor",
                 showBackButton = true,
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
             ) {
                 TitleBarAction(
                     icon = Icons.Default.Save,
                     contentDescription = "Save GSR Data",
-                    onClick = onSaveData
+                    onClick = onSaveData,
                 )
                 TitleBarAction(
                     icon = Icons.Default.Settings,
                     contentDescription = "GSR Settings",
-                    onClick = onSettingsClick
+                    onClick = onSettingsClick,
                 )
             }
             // Scrollable content
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 // Connection status card
                 GSRConnectionCard(
@@ -162,19 +164,19 @@ fun GSRSensorScreen(
                         } else {
                             viewModel.connectDevice()
                         }
-                    }
+                    },
                 )
                 // Real-time GSR metrics
                 GSRMetricsCard(
                     currentGSR = currentGSR,
                     skinConductance = skinConductance,
-                    isRecording = isRecording
+                    isRecording = isRecording,
                 )
                 // GSR waveform visualization
                 GSRWaveformCard(
                     gsrHistory = gsrHistory,
                     isStreaming = isConnected,
-                    currentValue = currentGSR
+                    currentValue = currentGSR,
                 )
                 // Recording controls
                 GSRRecordingControls(
@@ -190,13 +192,13 @@ fun GSRSensorScreen(
                     onExportData = {
                         viewModel.exportData()
                         onSaveData()
-                    }
+                    },
                 )
                 // GSR analysis summary
                 if (isRecording || gsrHistory.isNotEmpty()) {
                     GSRAnalysisCard(
                         gsrData = gsrHistory,
-                        isRecording = isRecording
+                        isRecording = isRecording,
                     )
                 }
             }
@@ -215,53 +217,57 @@ private fun GSRConnectionCard(
     maxReconnectionAttempts: Int = 0,
     error: String? = null,
     onConnectionToggle: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = when {
-                isReconnecting -> Color(0xFF8B4513)
-                isConnected -> Color(0xFF1A2A1A)
-                error != null -> Color(0xFF4A1A1A)
-                else -> Color(0xFF2A1A1A)
-            }
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    when {
+                        isReconnecting -> Color(0xFF8B4513)
+                        isConnected -> Color(0xFF1A2A1A)
+                        error != null -> Color(0xFF4A1A1A)
+                        else -> Color(0xFF2A1A1A)
+                    },
+            ),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "Shimmer3 GSR Device",
                         color = Color.White,
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Text(
                         text = connectionStatus,
-                        color = when {
-                            isReconnecting -> Color.Yellow
-                            isConnected -> Color.Green
-                            error != null -> Color.Red
-                            else -> Color.Gray
-                        },
-                        fontSize = 14.sp
+                        color =
+                            when {
+                                isReconnecting -> Color.Yellow
+                                isConnected -> Color.Green
+                                error != null -> Color.Red
+                                else -> Color.Gray
+                            },
+                        fontSize = 14.sp,
                     )
                     if (isReconnecting && reconnectionAttempt > 0) {
                         Text(
                             text = "Reconnecting: attempt $reconnectionAttempt/$maxReconnectionAttempts",
                             color = Color.Yellow,
                             fontSize = 12.sp,
-                            modifier = Modifier.padding(top = 4.dp)
+                            modifier = Modifier.padding(top = 4.dp),
                         )
                     }
                     if (error != null && !isReconnecting) {
@@ -269,7 +275,7 @@ private fun GSRConnectionCard(
                             text = error,
                             color = Color.Red,
                             fontSize = 12.sp,
-                            modifier = Modifier.padding(top = 4.dp)
+                            modifier = Modifier.padding(top = 4.dp),
                         )
                     }
                 }
@@ -277,18 +283,19 @@ private fun GSRConnectionCard(
                     checked = isConnected,
                     onCheckedChange = { onConnectionToggle() },
                     enabled = !isReconnecting,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.Green,
-                        uncheckedThumbColor = Color.Gray,
-                        disabledCheckedThumbColor = Color.Yellow,
-                        disabledUncheckedThumbColor = Color.DarkGray
-                    )
+                    colors =
+                        SwitchDefaults.colors(
+                            checkedThumbColor = Color.Green,
+                            uncheckedThumbColor = Color.Gray,
+                            disabledCheckedThumbColor = Color.Yellow,
+                            disabledUncheckedThumbColor = Color.DarkGray,
+                        ),
                 )
             }
             if (isConnected && !isReconnecting) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     MetricItem("Battery", "$deviceBattery%", Color.Green)
                     MetricItem("Sampling", "${samplingRate}Hz", MaterialTheme.colorScheme.primary)
@@ -304,59 +311,60 @@ private fun GSRMetricsCard(
     currentGSR: Float,
     skinConductance: Float,
     isRecording: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "Real-time GSR Metrics",
                     color = Color.White,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 if (isRecording) {
                     Surface(
                         color = Color.Red.copy(alpha = 0.2f),
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(12.dp),
                     ) {
                         Text(
                             text = "RECORDING",
                             color = Color.Red,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         )
                     }
                 }
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 MetricCard(
                     label = "GSR Value",
                     value = String.format("%.2f μS", currentGSR),
                     color = Color.Cyan,
-                    description = "Current resistance"
+                    description = "Current resistance",
                 )
                 MetricCard(
                     label = "Skin Conductance",
                     value = String.format("%.2f μS", skinConductance),
                     color = Color.Green,
-                    description = "Conductance level"
+                    description = "Conductance level",
                 )
             }
         }
@@ -368,28 +376,30 @@ private fun GSRWaveformCard(
     gsrHistory: List<Float>,
     isStreaming: Boolean,
     currentValue: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.Black)
+        colors = CardDefaults.cardColors(containerColor = Color.Black),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
                 text = "GSR Waveform",
                 color = Color.White,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Canvas(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
             ) {
                 val width = size.width
                 val height = size.height
@@ -401,13 +411,13 @@ private fun GSRWaveformCard(
                     color = Color.Gray,
                     start = Offset(padding, height - padding),
                     end = Offset(width - padding, height - padding),
-                    strokeWidth = 1.dp.toPx()
+                    strokeWidth = 1.dp.toPx(),
                 )
                 drawLine(
                     color = Color.Gray,
                     start = Offset(padding, padding),
                     end = Offset(padding, height - padding),
-                    strokeWidth = 1.dp.toPx()
+                    strokeWidth = 1.dp.toPx(),
                 )
                 // Draw GSR waveform
                 if (gsrHistory.isNotEmpty()) {
@@ -428,7 +438,9 @@ private fun GSRWaveformCard(
                     drawPath(
                         path = path,
                         color = Color.Cyan,
-                        style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx())
+                        style =
+                            androidx.compose.ui.graphics.drawscope
+                                .Stroke(width = 2.dp.toPx()),
                     )
                 }
                 // Draw current value indicator
@@ -436,20 +448,20 @@ private fun GSRWaveformCard(
                     drawCircle(
                         color = Color.Yellow,
                         radius = 4.dp.toPx(),
-                        center = Offset(width - padding - 10.dp.toPx(), height / 2)
+                        center = Offset(width - padding - 10.dp.toPx(), height / 2),
                     )
                 }
             }
             // Value scale indicators
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text("0 μS", color = Color.Gray, fontSize = 10.sp)
                 Text(
                     "${String.format("%.1f", currentValue)} μS",
                     color = Color.Cyan,
-                    fontSize = 10.sp
+                    fontSize = 10.sp,
                 )
                 Text("5 μS", color = Color.Gray, fontSize = 10.sp)
             }
@@ -463,41 +475,43 @@ private fun GSRRecordingControls(
     isConnected: Boolean,
     onRecordingToggle: () -> Unit,
     onExportData: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 text = "Recording Controls",
                 color = Color.White,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 Button(
                     onClick = onRecordingToggle,
                     enabled = isConnected,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isRecording) Color.Red else Color.Green
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = if (isRecording) Color.Red else Color.Green,
+                        ),
                 ) {
                     Text(if (isRecording) "Stop Recording" else "Start Recording")
                 }
                 Button(
                     onClick = onExportData,
                     enabled = !isRecording,
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 ) {
                     Text("Export Data")
                 }
@@ -510,7 +524,7 @@ private fun GSRRecordingControls(
 private fun GSRAnalysisCard(
     gsrData: List<Float>,
     isRecording: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     if (gsrData.isEmpty()) return
     val avgGSR = gsrData.average().toFloat()
@@ -519,23 +533,24 @@ private fun GSRAnalysisCard(
     val stdDev = kotlin.math.sqrt(gsrData.map { (it - avgGSR) * (it - avgGSR) }.average()).toFloat()
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 text = "GSR Analysis",
                 color = Color.White,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 MetricItem("Average", String.format("%.2f μS", avgGSR), Color.Cyan)
                 MetricItem("Maximum", String.format("%.2f μS", maxGSR), Color.Red)
@@ -552,27 +567,27 @@ private fun MetricCard(
     value: String,
     color: Color,
     description: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             color = color,
             fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Text(
             text = label,
             color = Color.White,
-            fontSize = 12.sp
+            fontSize = 12.sp,
         )
         Text(
             text = description,
             color = Color.Gray,
-            fontSize = 10.sp
+            fontSize = 10.sp,
         )
     }
 }
@@ -582,31 +597,30 @@ private fun MetricItem(
     label: String,
     value: String,
     color: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             color = color,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Text(
             text = label,
             color = Color.Gray,
-            fontSize = 10.sp
+            fontSize = 10.sp,
         )
     }
 }
 
-private fun generateInitialGSRData(): List<Float> {
-    return (0..99).map {
+private fun generateInitialGSRData(): List<Float> =
+    (0..99).map {
         2.0f + kotlin.math.sin(it * 0.1f).toFloat() * 0.5f + kotlin.random.Random.nextFloat() * 0.2f
     }
-}
 
 @Preview(showBackground = true)
 @Composable

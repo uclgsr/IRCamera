@@ -27,31 +27,37 @@ class PermissionRequestViewModel : BaseViewModel() {
         val bluetooth: PermissionStatus = PermissionStatus.UNKNOWN,
         val location: PermissionStatus = PermissionStatus.UNKNOWN,
         val storage: PermissionStatus = PermissionStatus.UNKNOWN,
-        val usb: PermissionStatus = PermissionStatus.UNKNOWN
+        val usb: PermissionStatus = PermissionStatus.UNKNOWN,
     )
 
     data class ScreenState(
         val canStartRecording: Boolean = false,
         val isRequestingPermissions: Boolean = false,
-        val statusMessage: String = "Checking permissions..."
+        val statusMessage: String = "Checking permissions...",
     )
 
     data class LogMessage(
         val timestamp: String,
         val message: String,
-        val id: Long = System.currentTimeMillis()
+        val id: Long = System.currentTimeMillis(),
     )
 
     enum class PermissionStatus {
         UNKNOWN,
         GRANTED,
         DENIED,
-        NOT_AVAILABLE
+        NOT_AVAILABLE,
     }
 
     sealed class PermissionEvent {
-        data class ShowError(val message: String) : PermissionEvent()
-        data class ShowSuccess(val message: String) : PermissionEvent()
+        data class ShowError(
+            val message: String,
+        ) : PermissionEvent()
+
+        data class ShowSuccess(
+            val message: String,
+        ) : PermissionEvent()
+
         object NavigateToRecording : PermissionEvent()
     }
 
@@ -60,14 +66,14 @@ class PermissionRequestViewModel : BaseViewModel() {
         viewModelScope.launch {
             combine(
                 _permissionStates,
-                _logMessages
+                _logMessages,
             ) { permissionStates, _ ->
                 val canStartRecording = checkCanStartRecording(permissionStates)
                 val statusMessage = generateStatusMessage(permissionStates)
                 ScreenState(
                     canStartRecording = canStartRecording,
                     isRequestingPermissions = false,
-                    statusMessage = statusMessage
+                    statusMessage = statusMessage,
                 )
             }.collect { newState ->
                 _screenState.value = newState
@@ -86,13 +92,14 @@ class PermissionRequestViewModel : BaseViewModel() {
 
     fun updatePermissionStatus() {
         launchWithErrorHandling {
-            val newStates = PermissionStates(
-                camera = if (permissionController.hasCameraPermissions()) PermissionStatus.GRANTED else PermissionStatus.DENIED,
-                bluetooth = if (permissionController.hasBluetoothPermissions()) PermissionStatus.GRANTED else PermissionStatus.DENIED,
-                location = if (permissionController.hasLocationPermission()) PermissionStatus.GRANTED else PermissionStatus.DENIED,
-                storage = if (permissionController.hasStoragePermissions()) PermissionStatus.GRANTED else PermissionStatus.DENIED,
-                usb = if (permissionController.hasUsbPermissions()) PermissionStatus.GRANTED else PermissionStatus.NOT_AVAILABLE
-            )
+            val newStates =
+                PermissionStates(
+                    camera = if (permissionController.hasCameraPermissions()) PermissionStatus.GRANTED else PermissionStatus.DENIED,
+                    bluetooth = if (permissionController.hasBluetoothPermissions()) PermissionStatus.GRANTED else PermissionStatus.DENIED,
+                    location = if (permissionController.hasLocationPermission()) PermissionStatus.GRANTED else PermissionStatus.DENIED,
+                    storage = if (permissionController.hasStoragePermissions()) PermissionStatus.GRANTED else PermissionStatus.DENIED,
+                    usb = if (permissionController.hasUsbPermissions()) PermissionStatus.GRANTED else PermissionStatus.NOT_AVAILABLE,
+                )
             _permissionStates.value = newStates
             addLog("Permission status updated.")
         }
@@ -231,21 +238,21 @@ class PermissionRequestViewModel : BaseViewModel() {
         }
     }
 
-    private fun checkCanStartRecording(states: PermissionStates): Boolean {
-        return if (::permissionController.isInitialized) {
+    private fun checkCanStartRecording(states: PermissionStates): Boolean =
+        if (::permissionController.isInitialized) {
             permissionController.canStartRecording() && permissionController.canConnectToShimmer()
         } else {
             false
         }
-    }
 
     private fun generateStatusMessage(states: PermissionStates): String {
-        val grantedCount = listOf(
-            states.camera,
-            states.bluetooth,
-            states.location,
-            states.storage
-        ).count { it == PermissionStatus.GRANTED }
+        val grantedCount =
+            listOf(
+                states.camera,
+                states.bluetooth,
+                states.location,
+                states.storage,
+            ).count { it == PermissionStatus.GRANTED }
         return when {
             grantedCount == 4 -> "All critical permissions granted"
             grantedCount > 0 -> "Some permissions granted ($grantedCount/4)"

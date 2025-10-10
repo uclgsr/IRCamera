@@ -6,14 +6,13 @@ data class ProductBean(
     val ProductPN: String = "",
     val ProductSN: String = "",
     val Code: String = "",
-    val SoftwareVersion: Version07Bean? = null
+    val SoftwareVersion: Version07Bean? = null,
 ) {
-    fun getVersionStr(): String =
-        "${SoftwareVersion?.Major ?: "-"}.${SoftwareVersion?.Minor ?: "-"}${SoftwareVersion?.Build ?: "-"}"
+    fun getVersionStr(): String = "${SoftwareVersion?.Major ?: "-"}.${SoftwareVersion?.Minor ?: "-"}${SoftwareVersion?.Build ?: "-"}"
 }
 
 data class Version07Bean(
     val Major: String? = "",
     val Minor: String? = "",
-    val Build: String? = ""
+    val Build: String? = "",
 )

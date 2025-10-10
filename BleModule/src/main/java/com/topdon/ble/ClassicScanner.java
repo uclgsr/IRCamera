@@ -23,7 +23,6 @@ class ClassicScanner extends AbstractScanner {
         try {
             bluetoothAdapter.startDiscovery();
         } catch (SecurityException e) {
-            logger.log(android.util.Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permission for classic scan: " + e.getMessage());
         }
     }
 
@@ -32,7 +31,6 @@ class ClassicScanner extends AbstractScanner {
         try {
             bluetoothAdapter.cancelDiscovery();
         } catch (SecurityException e) {
-            logger.log(android.util.Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permission to stop classic scan: " + e.getMessage());
         }
     }
 

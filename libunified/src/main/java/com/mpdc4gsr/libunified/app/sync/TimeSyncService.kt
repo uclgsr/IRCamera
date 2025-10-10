@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.sync
 
-import android.util.Log
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.DataInputStream
@@ -41,11 +40,14 @@ class TimeSyncService {
 
     interface TimeSyncListener {
         fun onSyncCompleted(result: SyncResult)
+
         fun onSyncStarted(targetHost: String)
+
         fun onSyncError(error: String)
     }
 
     private var listener: TimeSyncListener? = null
+
     fun setListener(listener: TimeSyncListener?) {
         this.listener = listener
     }
@@ -56,7 +58,6 @@ class TimeSyncService {
     ): SyncResult =
         withContext(Dispatchers.IO) {
             listener?.onSyncStarted(targetHost)
-            Log.i(TAG, "Starting time synchronization with $targetHost:$targetPort")
             val samples = mutableListOf<SyncSample>()
             var lastError: String? = null
             repeat(MAX_SYNC_ATTEMPTS) { attempt ->
@@ -64,29 +65,19 @@ class TimeSyncService {
                     val sample = performSyncRequest(targetHost, targetPort)
                     if (sample.roundTripDelay <= MAX_ACCEPTABLE_DELAY_MS) {
                         samples.add(sample)
-                        Log.d(
-                            TAG,
-                            "Sample ${attempt + 1}: offset=${sample.clockOffset}ms, delay=${sample.roundTripDelay}ms"
-                        )
                     } else {
-                        Log.w(
-                            TAG,
-                            "Sample ${attempt + 1} rejected: delay too high (${sample.roundTripDelay}ms)"
-                        )
                     }
                     if (attempt < MAX_SYNC_ATTEMPTS - 1) {
                         delay(100)
                     }
                 } catch (e: Exception) {
                     lastError = e.message
-                    Log.w(TAG, "Sync attempt ${attempt + 1} failed: ${e.message}")
                     delay(500)
                 }
             }
             if (samples.size < MIN_SAMPLES) {
                 val error =
                     "Insufficient samples for reliable sync (got ${samples.size}, need $MIN_SAMPLES)"
-                Log.e(TAG, error)
                 listener?.onSyncError(error)
                 return@withContext SyncResult(
                     isSuccess = false,
@@ -94,10 +85,6 @@ class TimeSyncService {
                 )
             }
             val result = calculateSyncResult(samples)
-            Log.i(
-                TAG,
-                "Time sync completed: offset=${result.clockOffsetMs}ms, accuracy=±${result.accuracyMs}ms"
-            )
             listener?.onSyncCompleted(result)
             result
         }
@@ -115,29 +102,23 @@ class TimeSyncService {
                         synchronizeTime(targetHost, targetPort)
                         delay(intervalMs)
                     } catch (e: Exception) {
-                        Log.e(TAG, "Periodic sync error", e)
                         listener?.onSyncError("Periodic sync failed: ${e.message}")
                         delay(intervalMs)
                     }
                 }
             }
-        Log.i(
-            TAG,
-            "Started periodic time sync with $targetHost:$targetPort (interval: ${intervalMs}ms)"
-        )
     }
 
     fun stopPeriodicSync() {
         periodicSyncJob?.cancel()
         periodicSyncJob = null
-        Log.i(TAG, "Stopped periodic time sync")
     }
 
     private suspend fun performSyncRequest(
         host: String,
         port: Int,
-    ): SyncSample {
-        return withContext(Dispatchers.IO) {
+    ): SyncSample =
+        withContext(Dispatchers.IO) {
             val socket = Socket()
             socket.connect(InetSocketAddress(host, port), SYNC_TIMEOUT_MS.toInt())
             socket.soTimeout = SYNC_TIMEOUT_MS.toInt()
@@ -172,7 +153,6 @@ class TimeSyncService {
                 socket.close()
             }
         }
-    }
 
     private fun calculateSyncResult(samples: List<SyncSample>): SyncResult {
         val sortedSamples = samples.sortedBy { it.roundTripDelay }
@@ -196,9 +176,7 @@ class TimeSyncService {
         return systemTime * 1000 + nanoOffset
     }
 
-    fun getSynchronizedTime(clockOffsetMs: Long): Long {
-        return getHighPrecisionTime() + (clockOffsetMs * 1000)
-    }
+    fun getSynchronizedTime(clockOffsetMs: Long): Long = getHighPrecisionTime() + (clockOffsetMs * 1000)
 
     fun validateSync(
         localTime: Long,
@@ -221,8 +199,8 @@ class TimeSyncService {
         }
     }
 
-    fun processSyncPacket(packet: JSONObject): Long? {
-        return try {
+    fun processSyncPacket(packet: JSONObject): Long? =
+        try {
             if (packet.optString("message_type") == "time_sync_broadcast") {
                 val senderTime = packet.getLong("sender_time")
                 val receiveTime = getHighPrecisionTime()
@@ -231,10 +209,8 @@ class TimeSyncService {
                 null
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error processing sync packet", e)
             null
         }
-    }
 
     fun cleanup() {
         stopPeriodicSync()

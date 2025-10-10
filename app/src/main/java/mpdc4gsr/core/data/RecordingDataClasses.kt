@@ -4,7 +4,7 @@ data class SessionManifest(
     val sessionId: String,
     val startTimestamp: Long,
     val activeSensors: List<String>,
-    val sessionDirectory: String
+    val sessionDirectory: String,
 )
 
 data class SessionEvent(
@@ -14,7 +14,7 @@ data class SessionEvent(
     val triggerSource: String? = null,
     val metadata: Map<String, String> = emptyMap(),
     val success: Boolean = true,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
 )
 
 data class SensorActivityInfo(
@@ -24,7 +24,7 @@ data class SensorActivityInfo(
     val finalStatus: String,
     val errorMessages: List<String> = emptyList(),
     val samplesCollected: Long = 0,
-    val lastActivityTimestamp: Long = System.currentTimeMillis()
+    val lastActivityTimestamp: Long = System.currentTimeMillis(),
 )
 
 data class SensorHealthInfo(
@@ -32,18 +32,18 @@ data class SensorHealthInfo(
     val isHealthy: Boolean,
     val lastHealthCheck: Long,
     val consecutiveFailures: Int = 0,
-    val lastError: String? = null
+    val lastError: String? = null,
 )
 
 data class DropoutEvent(
     val sensorType: String,
     val timestamp: Long,
-    val reason: String
+    val reason: String,
 )
 
 data class ReconnectionEvent(
     val sensorType: String,
     val timestamp: Long,
     val successful: Boolean,
-    val attemptNumber: Int
+    val attemptNumber: Int,
 )

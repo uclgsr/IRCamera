@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.energy.iruvc.utils.CommonParams;
 import com.mpdc4gsr.libunified.compat.ContextProvider;
@@ -72,7 +71,6 @@ public enum FileUtils {
             String fileName = fileTitle + new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).
                     format(new Date(System.currentTimeMillis())) + ".bin";
             File file = new File(fileSaveDir, fileName);
-            Log.i(TAG, "fileSaveDir=" + fileSaveDir + " fileName=" + fileName);
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(bytes);
             fos.close();
@@ -96,9 +94,7 @@ public enum FileUtils {
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(toByteArray(bytes));
             fos.close();
-            Log.i(TAG, fileTitle + " saved");
         } catch (IOException e) {
-            Log.e(TAG, fileTitle + " save error: " + e.getMessage());
         }
     }
 
@@ -169,7 +165,6 @@ public enum FileUtils {
             boolean mkdirs = dirFile.mkdirs();
             boolean isSuccess = mkdirs || dirFile.exists();
             if (!isSuccess) {
-                Log.e("FileUtils", "createFileDir fail " + dirFile);
             }
             return isSuccess;
         }
@@ -180,7 +175,6 @@ public enum FileUtils {
             File dirFile = new File(dirPath);
             if (!dirFile.exists()) {
                 if (!createFileDir(dirFile)) {
-                    Log.e(TAG, "createFile dirFile.mkdirs fail");
                     return null;
                 }
             } else if (!dirFile.isDirectory()) {
@@ -188,20 +182,17 @@ public enum FileUtils {
                 if (delete) {
                     return createFile(dirPath, fileName);
                 } else {
-                    Log.e(TAG, "createFile dirFile !isDirectory and delete fail");
                     return null;
                 }
             }
             File file = new File(dirPath, fileName);
             if (!file.exists()) {
                 if (!file.createNewFile()) {
-                    Log.e(TAG, "createFile createNewFile fail");
                     return null;
                 }
             }
             return file;
         } catch (Exception e) {
-            Log.e(TAG, "createFile fail :" + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -324,7 +315,6 @@ public enum FileUtils {
         try {
             File file = new File(fileDir, fileTitle + ".bin");
             createOrExistsDir(file);
-            Log.i("TAG", "getAbsolutePath = " + file.getAbsolutePath());
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(toByteArray(bytes));
             fos.close();
@@ -392,12 +382,10 @@ public enum FileUtils {
     public static void copyAssetsBigDataToSD(Context context, String srcFileName, String strOutFileName) {
         try {
             File file = new File(strOutFileName);
-            Log.i(TAG, "file.exists->getAbsolutePath = " + file.getAbsolutePath());
             if (file.exists()) {
                 file.delete();
             }
             if (!file.createNewFile()) {
-                Log.e(TAG, "Failed to create file: " + srcFileName);
                 return;
             }
 
@@ -419,7 +407,6 @@ public enum FileUtils {
     }
 
     public static String getISPConfigByGainStatus(CommonParams.GainStatus gainStatus) {
-//        Log.i(TAG, "INFISENSE_SAVE_DIR = " + MyApplication.getInstance().INFISENSE_SAVE_DIR);
         if (CommonParams.GainStatus.HIGH_GAIN == gainStatus) {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_H.json";
         } else {
@@ -536,7 +523,6 @@ public enum FileUtils {
             file = new File(filePath + fileName);
             fc = new FileOutputStream(file, false).getChannel();
             if (null == fc) {
-                Log.e("FileUtils", "fc is null.");
             }
             fc.position(fc.size());
             fc.write(ByteBuffer.wrap(bytes));
@@ -608,7 +594,6 @@ public enum FileUtils {
         int fbit = Float.floatToIntBits(num);
         for (int i = 0; 4 > i; i++) {
             numbyte[i] = (byte) (fbit >> (i * 8)); //little-endian
-            Log.i(TAG, "numbyte[=" + i + "]=" + numbyte[i]);
         }
     }
 

@@ -18,14 +18,14 @@ class IRThermalFragmentViewModel : BaseViewModel() {
         val hasConnection: Boolean = false,
         val isTC007Connected: Boolean = false,
         val hasUsbDevice: Boolean = false,
-        val isTC007Device: Boolean = false
+        val isTC007Device: Boolean = false,
     )
 
     data class ThermalUIState(
         val isConnected: Boolean = false,
         val isTC007Connected: Boolean = false,
         val showConnectButton: Boolean = false,
-        val isLoading: Boolean = false
+        val isLoading: Boolean = false,
     )
 
     // Device connection state management
@@ -66,23 +66,25 @@ class IRThermalFragmentViewModel : BaseViewModel() {
             // Monitor device connections and update UI state accordingly
             combine(
                 _deviceConnectionState,
-                _thermalUiState
+                _thermalUiState,
             ) { connectionState, uiState ->
                 // Update individual state flows
-                _connectionStatus.value = when {
-                    connectionState.hasConnection -> ConnectionStatus.CONNECTED
-                    else -> ConnectionStatus.DISCONNECTED
-                }
+                _connectionStatus.value =
+                    when {
+                        connectionState.hasConnection -> ConnectionStatus.CONNECTED
+                        else -> ConnectionStatus.DISCONNECTED
+                    }
                 _isTC007.value = connectionState.isTC007Device
-                _deviceInfo.value = if (connectionState.hasConnection) {
-                    if (connectionState.isTC007Device) "TC007 Connected" else "Device Connected"
-                } else {
-                    if (connectionState.hasUsbDevice) "USB Device Available" else "No Device Detected"
-                }
+                _deviceInfo.value =
+                    if (connectionState.hasConnection) {
+                        if (connectionState.isTC007Device) "TC007 Connected" else "Device Connected"
+                    } else {
+                        if (connectionState.hasUsbDevice) "USB Device Available" else "No Device Detected"
+                    }
                 uiState.copy(
                     isConnected = connectionState.hasConnection,
                     isTC007Connected = connectionState.isTC007Connected,
-                    showConnectButton = !connectionState.hasConnection && connectionState.hasUsbDevice
+                    showConnectButton = !connectionState.hasConnection && connectionState.hasUsbDevice,
                 )
             }.collect { newUiState ->
                 _thermalUiState.value = newUiState
@@ -91,64 +93,77 @@ class IRThermalFragmentViewModel : BaseViewModel() {
     }
 
     fun checkDeviceConnection(isTC007: Boolean) {
-        val hasConnection = if (isTC007) {
-            WebSocketProxy.getInstance().isTC007Connect()
-        } else {
-            DeviceTools.isConnect(isAutoRequest = false)
-        }
+        val hasConnection =
+            if (isTC007) {
+                WebSocketProxy.getInstance().isTC007Connect()
+            } else {
+                DeviceTools.isConnect(isAutoRequest = false)
+            }
         val hasUsbDevice = DeviceTools.findUsbDevice() != null
-        _deviceConnectionState.value = DeviceConnectionState(
-            hasConnection = hasConnection,
-            isTC007Connected = isTC007 && hasConnection,
-            hasUsbDevice = hasUsbDevice,
-            isTC007Device = isTC007
-        )
+        _deviceConnectionState.value =
+            DeviceConnectionState(
+                hasConnection = hasConnection,
+                isTC007Connected = isTC007 && hasConnection,
+                hasUsbDevice = hasUsbDevice,
+                isTC007Device = isTC007,
+            )
         // Update individual state flows
         _connectionStatus.value = if (hasConnection) ConnectionStatus.CONNECTED else ConnectionStatus.DISCONNECTED
         _isTC007.value = isTC007
-        _deviceInfo.value = when {
-            hasConnection -> if (isTC007) "TC007 Connected" else "Device Connected"
-            hasUsbDevice -> "USB Device Available"
-            else -> "No Device Detected"
-        }
+        _deviceInfo.value =
+            when {
+                hasConnection -> if (isTC007) "TC007 Connected" else "Device Connected"
+                hasUsbDevice -> "USB Device Available"
+                else -> "No Device Detected"
+            }
     }
 
     fun onDeviceConnected(isTC007Device: Boolean) {
         if (!isTC007Device) {
             SharedManager.hasTcLine = true
         }
-        _deviceConnectionState.value = _deviceConnectionState.value.copy(
-            hasConnection = true,
-            isTC007Connected = isTC007Device,
-            isTC007Device = isTC007Device
-        )
+        _deviceConnectionState.value =
+            _deviceConnectionState.value.copy(
+                hasConnection = true,
+                isTC007Connected = isTC007Device,
+                isTC007Device = isTC007Device,
+            )
     }
 
     fun onDeviceDisconnected() {
-        _deviceConnectionState.value = _deviceConnectionState.value.copy(
-            hasConnection = false,
-            isTC007Connected = false,
-            isTC007Device = false
-        )
+        _deviceConnectionState.value =
+            _deviceConnectionState.value.copy(
+                hasConnection = false,
+                isTC007Connected = false,
+                isTC007Device = false,
+            )
     }
 
-    fun onSocketConnected(isTS004: Boolean, isTC007Device: Boolean) {
+    fun onSocketConnected(
+        isTS004: Boolean,
+        isTC007Device: Boolean,
+    ) {
         if (isTC007Device && !isTS004) {
-            _deviceConnectionState.value = _deviceConnectionState.value.copy(
-                hasConnection = true,
-                isTC007Connected = true,
-                isTC007Device = true
-            )
+            _deviceConnectionState.value =
+                _deviceConnectionState.value.copy(
+                    hasConnection = true,
+                    isTC007Connected = true,
+                    isTC007Device = true,
+                )
         }
     }
 
-    fun onSocketDisConnected(isTS004: Boolean, isTC007Device: Boolean) {
+    fun onSocketDisConnected(
+        isTS004: Boolean,
+        isTC007Device: Boolean,
+    ) {
         if (isTC007Device && !isTS004) {
-            _deviceConnectionState.value = _deviceConnectionState.value.copy(
-                hasConnection = false,
-                isTC007Connected = false,
-                isTC007Device = false
-            )
+            _deviceConnectionState.value =
+                _deviceConnectionState.value.copy(
+                    hasConnection = false,
+                    isTC007Connected = false,
+                    isTC007Device = false,
+                )
         }
     }
 
@@ -202,11 +217,12 @@ class IRThermalFragmentViewModel : BaseViewModel() {
         _connectionStatus.value = ConnectionStatus.CONNECTING
         viewModelScope.launch {
             val isTC007Device = _isTC007.value
-            val hasConnection = if (isTC007Device) {
-                WebSocketProxy.getInstance().isTC007Connect()
-            } else {
-                DeviceTools.isConnect(isAutoRequest = false)
-            }
+            val hasConnection =
+                if (isTC007Device) {
+                    WebSocketProxy.getInstance().isTC007Connect()
+                } else {
+                    DeviceTools.isConnect(isAutoRequest = false)
+                }
             if (hasConnection) {
                 _connectionStatus.value = ConnectionStatus.CONNECTED
                 onDeviceConnected(isTC007Device)
@@ -233,25 +249,38 @@ class IRThermalFragmentViewModel : BaseViewModel() {
 
     sealed class NavigationEvent {
         object NavigateToTC007Thermal : NavigationEvent()
+
         object StartThermalPlusActivity : NavigationEvent()
+
         object NavigateToTCLite : NavigationEvent()
+
         object NavigateToHikMain : NavigationEvent()
+
         object StartThermalNightActivity : NavigationEvent()
     }
 
     sealed class ThermalAction {
         object ShowDeviceConnectTip : ThermalAction()
+
         object ShowConnectTip : ThermalAction()
+
         object ShowPermissionSettingsTip : ThermalAction()
     }
 
     sealed class PermissionState {
         object RequestCameraPermission : PermissionState()
+
         object PermissionGranted : PermissionState()
-        data class PermissionDenied(val doNotAskAgain: Boolean) : PermissionState()
+
+        data class PermissionDenied(
+            val doNotAskAgain: Boolean,
+        ) : PermissionState()
     }
 
     enum class ConnectionStatus {
-        DISCONNECTED, CONNECTING, CONNECTED, ERROR
+        DISCONNECTED,
+        CONNECTING,
+        CONNECTED,
+        ERROR,
     }
 }

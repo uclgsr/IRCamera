@@ -71,9 +71,7 @@ class ListItemView : LinearLayout {
         mIvLeftContent.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    fun getLeftText(): String {
-        return mIvLeftContent.text.toString()
-    }
+    fun getLeftText(): String = mIvLeftContent.text.toString()
 
     fun setRightText(text: CharSequence?) {
         if (TextUtils.isEmpty(text)) return
@@ -81,7 +79,5 @@ class ListItemView : LinearLayout {
         mIvRightContent.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    fun getRightText(): String {
-        return mIvRightContent.text.toString()
-    }
+    fun getRightText(): String = mIvRightContent.text.toString()
 }

@@ -39,7 +39,7 @@ fun VideoPlayerCompose(
     cacheWithPlay: Boolean = false,
     isTouchWidget: Boolean = true,
     onVideoCallback: VideoPlayerCallback? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var isPlaying by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
@@ -48,16 +48,18 @@ fun VideoPlayerCompose(
     var duration by remember { mutableStateOf(0L) }
     var volume by remember { mutableStateOf(1f) }
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.Black)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.Black),
     ) {
         // Video surface placeholder (would integrate with actual video player)
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.Black),
+            contentAlignment = Alignment.Center,
         ) {
             if (url.isNullOrEmpty()) {
                 EmptyVideoStateCompose()
@@ -66,7 +68,7 @@ fun VideoPlayerCompose(
                 VideoSurfaceCompose(
                     url = url,
                     isPlaying = isPlaying,
-                    isLoading = isLoading
+                    isLoading = isLoading,
                 )
             }
         }
@@ -98,18 +100,18 @@ fun VideoPlayerCompose(
                         onVideoCallback?.onFullscreenChanged(isFullscreen)
                     }
                 },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
         // Loading indicator
         if (isLoading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(48.dp),
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
         }
@@ -120,19 +122,19 @@ fun VideoPlayerCompose(
 private fun EmptyVideoStateCompose() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Icon(
             imageVector = Icons.Default.VideocamOff,
             contentDescription = "No video",
             modifier = Modifier.size(64.dp),
-            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "No video source",
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
         )
     }
 }
@@ -141,21 +143,22 @@ private fun EmptyVideoStateCompose() {
 private fun VideoSurfaceCompose(
     url: String,
     isPlaying: Boolean,
-    isLoading: Boolean
+    isLoading: Boolean,
 ) {
     // Placeholder for video surface - in actual implementation would use ExoPlayer or similar
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black),
-        contentAlignment = Alignment.Center
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(Color.Black),
+        contentAlignment = Alignment.Center,
     ) {
         if (!isLoading) {
             Icon(
                 imageVector = if (isPlaying) Icons.Default.PlayArrow else Icons.Default.Pause,
                 contentDescription = if (isPlaying) "Playing" else "Paused",
                 modifier = Modifier.size(80.dp),
-                tint = Color.White.copy(alpha = 0.8f)
+                tint = Color.White.copy(alpha = 0.8f),
             )
         }
         // URL display for preview
@@ -163,9 +166,10 @@ private fun VideoSurfaceCompose(
             text = "Video: ${url.takeLast(30)}",
             style = MaterialTheme.typography.bodySmall,
             color = Color.White.copy(alpha = 0.7f),
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(8.dp)
+            modifier =
+                Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(8.dp),
         )
     }
 }
@@ -183,7 +187,7 @@ private fun VideoControlsOverlayCompose(
     onSeek: (Long) -> Unit,
     onVolumeChange: (Float) -> Unit,
     onFullscreenToggle: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var showControls by remember { mutableStateOf(true) }
     var showVolumeSlider by remember { mutableStateOf(false) }
@@ -195,37 +199,37 @@ private fun VideoControlsOverlayCompose(
         }
     }
     Box(
-        modifier = modifier.clickable { showControls = !showControls }
+        modifier = modifier.clickable { showControls = !showControls },
     ) {
         AnimatedVisibility(
             visible = showControls,
             enter = fadeIn(animationSpec = tween(300)),
-            exit = fadeOut(animationSpec = tween(300))
+            exit = fadeOut(animationSpec = tween(300)),
         ) {
             // Top bar with title and fullscreen
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        Color.Black.copy(alpha = 0.6f)
-                    )
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(
+                            Color.Black.copy(alpha = 0.6f),
+                        ).padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = title ?: "Video",
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 IconButton(
-                    onClick = onFullscreenToggle
+                    onClick = onFullscreenToggle,
                 ) {
                     Icon(
                         imageVector = if (isFullscreen) Icons.Default.FullscreenExit else Icons.Default.Fullscreen,
                         contentDescription = "Toggle fullscreen",
-                        tint = Color.White
+                        tint = Color.White,
                     )
                 }
             }
@@ -235,33 +239,35 @@ private fun VideoControlsOverlayCompose(
             visible = showControls && !isLoading,
             enter = scaleIn(animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)),
             exit = scaleOut(animationSpec = tween(200)),
-            modifier = Modifier.align(Alignment.Center)
+            modifier = Modifier.align(Alignment.Center),
         ) {
             FloatingActionButton(
                 onClick = onPlayPause,
                 modifier = Modifier.size(72.dp),
-                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.9f)
+                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.9f),
             ) {
                 Icon(
                     imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                     contentDescription = if (isPlaying) "Pause" else "Play",
                     modifier = Modifier.size(36.dp),
-                    tint = Color.White
+                    tint = Color.White,
                 )
             }
         }
         // Bottom controls
         AnimatedVisibility(
             visible = showControls,
-            enter = slideInVertically(
-                initialOffsetY = { it },
-                animationSpec = tween(300)
-            ) + fadeIn(),
-            exit = slideOutVertically(
-                targetOffsetY = { it },
-                animationSpec = tween(300)
-            ) + fadeOut(),
-            modifier = Modifier.align(Alignment.BottomCenter)
+            enter =
+                slideInVertically(
+                    initialOffsetY = { it },
+                    animationSpec = tween(300),
+                ) + fadeIn(),
+            exit =
+                slideOutVertically(
+                    targetOffsetY = { it },
+                    animationSpec = tween(300),
+                ) + fadeOut(),
+            modifier = Modifier.align(Alignment.BottomCenter),
         ) {
             VideoBottomControlsCompose(
                 currentPosition = currentPosition,
@@ -270,7 +276,7 @@ private fun VideoControlsOverlayCompose(
                 showVolumeSlider = showVolumeSlider,
                 onSeek = onSeek,
                 onVolumeChange = onVolumeChange,
-                onVolumeToggle = { showVolumeSlider = !showVolumeSlider }
+                onVolumeToggle = { showVolumeSlider = !showVolumeSlider },
             )
         }
     }
@@ -284,26 +290,26 @@ private fun VideoBottomControlsCompose(
     showVolumeSlider: Boolean,
     onSeek: (Long) -> Unit,
     onVolumeChange: (Float) -> Unit,
-    onVolumeToggle: () -> Unit
+    onVolumeToggle: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                Color.Black.copy(alpha = 0.6f)
-            )
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .background(
+                    Color.Black.copy(alpha = 0.6f),
+                ).padding(16.dp),
     ) {
         // Progress bar
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = formatTime(currentPosition),
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.White,
-                modifier = Modifier.width(48.dp)
+                modifier = Modifier.width(48.dp),
             )
             Slider(
                 value = if (duration > 0) currentPosition.toFloat() / duration else 0f,
@@ -311,58 +317,61 @@ private fun VideoBottomControlsCompose(
                     onSeek((progress * duration).toLong())
                 },
                 modifier = Modifier.weight(1f),
-                colors = SliderDefaults.colors(
-                    thumbColor = MaterialTheme.colorScheme.primary,
-                    activeTrackColor = MaterialTheme.colorScheme.primary,
-                    inactiveTrackColor = Color.White.copy(alpha = 0.3f)
-                )
+                colors =
+                    SliderDefaults.colors(
+                        thumbColor = MaterialTheme.colorScheme.primary,
+                        activeTrackColor = MaterialTheme.colorScheme.primary,
+                        inactiveTrackColor = Color.White.copy(alpha = 0.3f),
+                    ),
             )
             Text(
                 text = formatTime(duration),
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.White,
                 modifier = Modifier.width(48.dp),
-                textAlign = TextAlign.End
+                textAlign = TextAlign.End,
             )
         }
         // Volume controls
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             AnimatedVisibility(
                 visible = showVolumeSlider,
                 enter = slideInHorizontally(initialOffsetX = { it }) + fadeIn(),
-                exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
+                exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut(),
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Slider(
                         value = volume,
                         onValueChange = onVolumeChange,
                         modifier = Modifier.width(100.dp),
-                        colors = SliderDefaults.colors(
-                            thumbColor = MaterialTheme.colorScheme.primary,
-                            activeTrackColor = MaterialTheme.colorScheme.primary,
-                            inactiveTrackColor = Color.White.copy(alpha = 0.3f)
-                        )
+                        colors =
+                            SliderDefaults.colors(
+                                thumbColor = MaterialTheme.colorScheme.primary,
+                                activeTrackColor = MaterialTheme.colorScheme.primary,
+                                inactiveTrackColor = Color.White.copy(alpha = 0.3f),
+                            ),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                 }
             }
             IconButton(
-                onClick = onVolumeToggle
+                onClick = onVolumeToggle,
             ) {
                 Icon(
-                    imageVector = when {
-                        volume == 0f -> Icons.AutoMirrored.Filled.VolumeOff
-                        volume < 0.5f -> Icons.AutoMirrored.Filled.VolumeDown
-                        else -> Icons.AutoMirrored.Filled.VolumeUp
-                    },
+                    imageVector =
+                        when {
+                            volume == 0f -> Icons.AutoMirrored.Filled.VolumeOff
+                            volume < 0.5f -> Icons.AutoMirrored.Filled.VolumeDown
+                            else -> Icons.AutoMirrored.Filled.VolumeUp
+                        },
                     contentDescription = "Volume",
-                    tint = Color.White
+                    tint = Color.White,
                 )
             }
         }
@@ -377,17 +386,19 @@ fun ThermalImageLoaderCompose(
     errorIcon: ImageVector = Icons.Default.BrokenImage,
     modifier: Modifier = Modifier,
     onImageLoad: (() -> Unit)? = null,
-    onImageError: (() -> Unit)? = null
+    onImageError: (() -> Unit)? = null,
 ) {
     AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(url)
-            .crossfade(true)
-            .build(),
+        model =
+            ImageRequest
+                .Builder(LocalContext.current)
+                .data(url)
+                .crossfade(true)
+                .build(),
         contentDescription = contentDescription,
         modifier = modifier,
         onSuccess = { onImageLoad?.invoke() },
-        onError = { onImageError?.invoke() }
+        onError = { onImageError?.invoke() },
     )
 }
 
@@ -398,11 +409,11 @@ fun MediaUtilsCompose(
     onFileSelected: (MediaFile) -> Unit = {},
     onFileDelete: (MediaFile) -> Unit = {},
     onFileShare: (MediaFile) -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(mediaFiles) { file ->
             MediaFileItemCompose(
@@ -410,7 +421,7 @@ fun MediaUtilsCompose(
                 isSelected = file == selectedFile,
                 onSelect = { onFileSelected(file) },
                 onDelete = { onFileDelete(file) },
-                onShare = { onFileShare(file) }
+                onShare = { onFileShare(file) },
             )
         }
     }
@@ -422,60 +433,68 @@ private fun MediaFileItemCompose(
     isSelected: Boolean,
     onSelect: () -> Unit,
     onDelete: () -> Unit,
-    onShare: () -> Unit
+    onShare: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onSelect() },
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer
-            else MaterialTheme.colorScheme.surface
-        )
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable { onSelect() },
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.surface
+                    },
+            ),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                imageVector = when (file.type) {
-                    MediaFileType.VIDEO -> Icons.Default.VideoFile
-                    MediaFileType.IMAGE -> Icons.Default.Image
-                    MediaFileType.AUDIO -> Icons.Default.AudioFile
-                },
+                imageVector =
+                    when (file.type) {
+                        MediaFileType.VIDEO -> Icons.Default.VideoFile
+                        MediaFileType.IMAGE -> Icons.Default.Image
+                        MediaFileType.AUDIO -> Icons.Default.AudioFile
+                    },
                 contentDescription = file.type.name,
                 modifier = Modifier.size(40.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = file.name,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 Text(
                     text = "${formatFileSize(file.size)} • ${formatTime(file.duration)}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 )
             }
             IconButton(onClick = onShare) {
                 Icon(
                     imageVector = Icons.Default.Share,
                     contentDescription = "Share",
-                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 )
             }
             IconButton(onClick = onDelete) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete",
-                    tint = MaterialTheme.colorScheme.error
+                    tint = MaterialTheme.colorScheme.error,
                 )
             }
         }
@@ -509,8 +528,11 @@ private fun formatFileSize(bytes: Long): String {
 // Data classes and interfaces
 interface VideoPlayerCallback {
     fun onPlayStateChanged(isPlaying: Boolean)
+
     fun onSeekTo(position: Long)
+
     fun onVolumeChanged(volume: Float)
+
     fun onFullscreenChanged(isFullscreen: Boolean)
 }
 
@@ -521,11 +543,13 @@ data class MediaFile(
     val type: MediaFileType,
     val size: Long,
     val duration: Long,
-    val thumbnailPath: String? = null
+    val thumbnailPath: String? = null,
 )
 
 enum class MediaFileType {
-    VIDEO, IMAGE, AUDIO
+    VIDEO,
+    IMAGE,
+    AUDIO,
 }
 
 // Preview functions
@@ -536,7 +560,7 @@ private fun VideoPlayerComposePreview() {
         VideoPlayerCompose(
             url = "https://example.com/video.mp4",
             title = "Thermal Video Recording",
-            modifier = Modifier.size(400.dp, 300.dp)
+            modifier = Modifier.size(400.dp, 300.dp),
         )
     }
 }
@@ -546,13 +570,14 @@ private fun VideoPlayerComposePreview() {
 private fun MediaUtilsComposePreview() {
     MaterialTheme {
         MediaUtilsCompose(
-            mediaFiles = listOf(
-                MediaFile("1", "thermal_video_1.mp4", "/path/1", MediaFileType.VIDEO, 1024000, 30000),
-                MediaFile("2", "thermal_image_1.jpg", "/path/2", MediaFileType.IMAGE, 512000, 0),
-                MediaFile("3", "thermal_audio_1.mp3", "/path/3", MediaFileType.AUDIO, 256000, 45000)
-            ),
+            mediaFiles =
+                listOf(
+                    MediaFile("1", "thermal_video_1.mp4", "/path/1", MediaFileType.VIDEO, 1024000, 30000),
+                    MediaFile("2", "thermal_image_1.jpg", "/path/2", MediaFileType.IMAGE, 512000, 0),
+                    MediaFile("3", "thermal_audio_1.mp3", "/path/3", MediaFileType.AUDIO, 256000, 45000),
+                ),
             selectedFile = null,
-            modifier = Modifier.height(300.dp)
+            modifier = Modifier.height(300.dp),
         )
     }
 }

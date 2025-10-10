@@ -24,6 +24,7 @@ public class TimeDownView : AppCompatTextView {
     private var delayMills: Long = 0
     private var animationSet: AnimationSet? = null
     var isRunning = false
+
     private fun init() {
         if (animationSet == null) {
             animationSet = AnimationSet(true)
@@ -124,13 +125,16 @@ public class TimeDownView : AppCompatTextView {
 
     interface DownTimeWatcher {
         fun onTime(num: Int)
+
         fun onLastTime(num: Int)
+
         fun onLastTimeFinish(num: Int)
     }
 
     var onTimeListener: ((time: Int) -> Unit)? = null
     var onFinishListener: (() -> Unit)? = null
     var downTimeWatcher: DownTimeWatcher? = null
+
     fun setOnTimeDownListener(downTimeWatcher: DownTimeWatcher?) {
         this.downTimeWatcher = downTimeWatcher
     }
@@ -179,6 +183,7 @@ public class TimeDownView : AppCompatTextView {
     private val AFTER_LAST_TIME_DIMISS = 1
     private val AFTER_LAST_TIME_NODIMISS = 0
     private var afterDownDimissFlag = AFTER_LAST_TIME_DIMISS
+
     fun setAfterDownNoDimiss() {
         afterDownDimissFlag = AFTER_LAST_TIME_NODIMISS
     }
@@ -188,6 +193,7 @@ public class TimeDownView : AppCompatTextView {
     }
 
     var startDefaultAnimFlag = true
+
     fun closeDefaultAnimate() {
         animationSet?.reset()
         startDefaultAnimFlag = false

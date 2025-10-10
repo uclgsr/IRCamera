@@ -4,25 +4,26 @@ import android.content.Context
 import android.text.TextUtils
 
 object UnifiedVersionUtils {
-    fun getVersionName(context: Context): String {
-        return try {
+    fun getVersionName(context: Context): String =
+        try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
             packageInfo.versionName ?: ""
         } catch (e: Exception) {
             ""
         }
-    }
 
-    fun getVersionCode(context: Context): Long {
-        return try {
+    fun getVersionCode(context: Context): Long =
+        try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
             packageInfo.longVersionCode
         } catch (e: Exception) {
             0L
         }
-    }
 
-    fun compareVersions(serverVersion: String, currentVersion: String): Boolean {
+    fun compareVersions(
+        serverVersion: String,
+        currentVersion: String,
+    ): Boolean {
         if (TextUtils.isEmpty(serverVersion) || TextUtils.isEmpty(currentVersion)) {
             return false
         }
@@ -41,7 +42,10 @@ object UnifiedVersionUtils {
         return false // Versions are equal
     }
 
-    fun isUpdateNeeded(context: Context, serverVersion: String): Boolean {
+    fun isUpdateNeeded(
+        context: Context,
+        serverVersion: String,
+    ): Boolean {
         val currentVersion = getVersionName(context)
         return compareVersions(serverVersion, currentVersion)
     }

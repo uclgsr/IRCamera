@@ -15,16 +15,18 @@ import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.utils.IRConfigData
 
-class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapter.ViewHolder>() {
+class ConfigEmAdapter(
+    val context: Context,
+) : RecyclerView.Adapter<ConfigEmAdapter.ViewHolder>() {
     private val dataList: ArrayList<IRConfigData> = IRConfigData.irConfigData(context)
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ViewHolder {
-        return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.item_ir_config_emissivity, parent, false)
+    ): ViewHolder =
+        ViewHolder(
+            LayoutInflater.from(context).inflate(R.layout.item_ir_config_emissivity, parent, false),
         )
-    }
 
     override fun onBindViewHolder(
         holder: ViewHolder,
@@ -37,12 +39,18 @@ class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapt
     }
 
     override fun getItemCount(): Int = dataList.size
-    class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
+
+    class ViewHolder(
+        rootView: View,
+    ) : RecyclerView.ViewHolder(rootView) {
         val tvEmName: TextView = rootView.findViewById(R.id.tv_em_name)
         val tvEmNum: TextView = rootView.findViewById(R.id.tv_em_num)
     }
 
-    private inner class EmBgDrawable(val drawRight: Boolean, val drawBottom: Boolean) : Drawable() {
+    private inner class EmBgDrawable(
+        val drawRight: Boolean,
+        val drawBottom: Boolean,
+    ) : Drawable() {
         private val paint = Paint()
 
         init {
@@ -59,7 +67,7 @@ class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapt
                     0f,
                     bounds.right.toFloat(),
                     bounds.bottom.toFloat(),
-                    paint
+                    paint,
                 )
             }
             if (drawBottom) {
@@ -68,7 +76,7 @@ class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapt
                     bounds.bottom.toFloat(),
                     bounds.right.toFloat(),
                     bounds.bottom.toFloat(),
-                    paint
+                    paint,
                 )
             }
         }

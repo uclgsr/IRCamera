@@ -10,7 +10,7 @@ class MineFragmentViewModel : BaseViewModel() {
     data class UserProfileState(
         val username: String = "Guest",
         val avatarUrl: String? = null,
-        val isLoggedIn: Boolean = false
+        val isLoggedIn: Boolean = false,
     )
 
     private val _userProfile = MutableStateFlow(UserProfileState())
@@ -26,11 +26,12 @@ class MineFragmentViewModel : BaseViewModel() {
         launchWithErrorHandling {
             val userInfoManager = UserInfoManager.getInstance()
             val isLoggedIn = userInfoManager.isLogin()
-            _userProfile.value = UserProfileState(
-                username = if (isLoggedIn) "User" else "Guest",
-                avatarUrl = null,
-                isLoggedIn = isLoggedIn
-            )
+            _userProfile.value =
+                UserProfileState(
+                    username = if (isLoggedIn) "User" else "Guest",
+                    avatarUrl = null,
+                    isLoggedIn = isLoggedIn,
+                )
         }
     }
 

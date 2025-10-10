@@ -14,22 +14,28 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
     data class TemperatureData(
         val centerTemp: Float,
         val maxTemp: Float,
-        val minTemp: Float
+        val minTemp: Float,
     )
 
     data class CaptureData(
         val id: Int,
         val timestamp: Long,
         val temperature: Float,
-        val imagePath: String
+        val imagePath: String,
     )
 
     enum class DeviceConnectionState {
-        DISCONNECTED, CONNECTING, CONNECTED, ERROR
+        DISCONNECTED,
+        CONNECTING,
+        CONNECTED,
+        ERROR,
     }
 
     enum class CaptureState {
-        INACTIVE, ACTIVE, CONTINUOUS, CAPTURING
+        INACTIVE,
+        ACTIVE,
+        CONTINUOUS,
+        CAPTURING,
     }
 
     // StateFlow properties for UI state management
@@ -86,22 +92,24 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
             delay(500)
             // Create capture data
             val currentTemp = _temperatureData.value?.centerTemp ?: 25.0f
-            val capture = CaptureData(
-                id = captureIdCounter++,
-                timestamp = System.currentTimeMillis(),
-                temperature = currentTemp,
-                imagePath = "/mock/path/capture_${captureIdCounter - 1}.jpg"
-            )
+            val capture =
+                CaptureData(
+                    id = captureIdCounter++,
+                    timestamp = System.currentTimeMillis(),
+                    temperature = currentTemp,
+                    imagePath = "/mock/path/capture_${captureIdCounter - 1}.jpg",
+                )
             // Add to history
             val currentHistory = _captureHistory.value.toMutableList()
             currentHistory.add(0, capture) // Add to beginning
             _captureHistory.value = currentHistory
             // Return to previous state
-            _captureState.value = if (continuousCapturingJob?.isActive == true) {
-                CaptureState.CONTINUOUS
-            } else {
-                CaptureState.ACTIVE
-            }
+            _captureState.value =
+                if (continuousCapturingJob?.isActive == true) {
+                    CaptureState.CONTINUOUS
+                } else {
+                    CaptureState.ACTIVE
+                }
         }
     }
 
@@ -130,17 +138,17 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
                 return@launch
             }
             // Create export data with capture information
-            val exportData = captures.map { capture ->
-                mapOf(
-                    "id" to capture.id,
-                    "timestamp" to capture.timestamp,
-                    "temperature" to capture.temperature,
-                    "imagePath" to capture.imagePath
-                )
-            }
+            val exportData =
+                captures.map { capture ->
+                    mapOf(
+                        "id" to capture.id,
+                        "timestamp" to capture.timestamp,
+                        "temperature" to capture.temperature,
+                        "imagePath" to capture.imagePath,
+                    )
+                }
             // In a real implementation, this would write to a file or share the data
             // For now, we log the export action
-            android.util.Log.d("IRMonitorCaptureVM", "Exporting ${captures.size} captures")
         }
     }
 
@@ -155,11 +163,12 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
     // Private helper methods
     private fun initializeMockData() {
         // Initialize with mock temperature data
-        _temperatureData.value = TemperatureData(
-            centerTemp = 25.0f,
-            maxTemp = 28.5f,
-            minTemp = 22.1f
-        )
+        _temperatureData.value =
+            TemperatureData(
+                centerTemp = 25.0f,
+                maxTemp = 28.5f,
+                minTemp = 22.1f,
+            )
         _deviceConnectionState.value = DeviceConnectionState.DISCONNECTED
     }
 
@@ -179,11 +188,12 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
                     val baseTemp = 25.0f
                     val variation = (Random.nextFloat() - 0.5f) * 5.0f
                     val centerTemp = baseTemp + variation
-                    _temperatureData.value = TemperatureData(
-                        centerTemp = centerTemp,
-                        maxTemp = centerTemp + (Random.nextFloat() * 3.0f),
-                        minTemp = centerTemp - (Random.nextFloat() * 2.0f)
-                    )
+                    _temperatureData.value =
+                        TemperatureData(
+                            centerTemp = centerTemp,
+                            maxTemp = centerTemp + (Random.nextFloat() * 3.0f),
+                            minTemp = centerTemp - (Random.nextFloat() * 2.0f),
+                        )
                 }
                 delay(1000) // Update every second
             }
@@ -192,12 +202,13 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
 
     private fun startContinuousCapture() {
         _captureState.value = CaptureState.CONTINUOUS
-        continuousCapturingJob = viewModelScope.launch {
-            while (_captureState.value == CaptureState.CONTINUOUS) {
-                captureFrame()
-                delay(3000) // Capture every 3 seconds
+        continuousCapturingJob =
+            viewModelScope.launch {
+                while (_captureState.value == CaptureState.CONTINUOUS) {
+                    captureFrame()
+                    delay(3000) // Capture every 3 seconds
+                }
             }
-        }
     }
 
     private fun stopContinuousCapture() {

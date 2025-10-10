@@ -23,13 +23,14 @@ class ThermalFeatureCoordinator(
     private val deviceManager: ThermalDeviceManager,
     private val scope: CoroutineScope,
 ) {
-    private val _state = MutableStateFlow(
-        ThermalPresentationState(
-            features = registry.available(),
-            activeFeatureId = registry.defaultFeatureId(),
-            deviceStatus = deviceManager.status.value,
+    private val _state =
+        MutableStateFlow(
+            ThermalPresentationState(
+                features = registry.available(),
+                activeFeatureId = registry.defaultFeatureId(),
+                deviceStatus = deviceManager.status.value,
+            ),
         )
-    )
     val state: StateFlow<ThermalPresentationState> = _state.asStateFlow()
 
     init {

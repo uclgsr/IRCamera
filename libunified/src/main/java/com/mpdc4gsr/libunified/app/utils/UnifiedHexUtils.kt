@@ -2,6 +2,7 @@ package com.mpdc4gsr.libunified.app.utils
 
 object UnifiedHexUtils {
     private const val HEX_CHARS = "0123456789ABCDEF"
+
     fun binaryToHexString(bytes: ByteArray): String {
         val result = StringBuilder()
         for (b in bytes) {
@@ -25,45 +26,41 @@ object UnifiedHexUtils {
         val data = ByteArray(len / 2)
         var i = 0
         while (i < len) {
-            data[i / 2] = ((Character.digit(cleanHex[i], 16) shl 4) + Character.digit(
-                cleanHex[i + 1],
-                16
-            )).toByte()
+            data[i / 2] =
+                (
+                    (Character.digit(cleanHex[i], 16) shl 4) +
+                        Character.digit(
+                            cleanHex[i + 1],
+                            16,
+                        )
+                ).toByte()
             i += 2
         }
         return data
     }
 
-    fun byteToHex(byte: Byte): String {
-        return String.format("%02X", byte)
-    }
+    fun byteToHex(byte: Byte): String = String.format("%02X", byte)
 
-    fun intToHex(value: Int): String {
-        return String.format("%08X", value)
-    }
+    fun intToHex(value: Int): String = String.format("%08X", value)
 
-    fun longToHex(value: Long): String {
-        return String.format("%016X", value)
-    }
+    fun longToHex(value: Long): String = String.format("%016X", value)
 
-    fun hexToInt(hex: String): Int {
-        return hex.toInt(16)
-    }
+    fun hexToInt(hex: String): Int = hex.toInt(16)
 
-    fun hexToLong(hex: String): Long {
-        return hex.toLong(16)
-    }
+    fun hexToLong(hex: String): Long = hex.toLong(16)
 
-    fun isValidHex(hex: String): Boolean {
-        return try {
+    fun isValidHex(hex: String): Boolean =
+        try {
             hex.toLong(16)
             true
         } catch (e: NumberFormatException) {
             false
         }
-    }
 
-    fun hexDump(bytes: ByteArray, bytesPerLine: Int = 16): String {
+    fun hexDump(
+        bytes: ByteArray,
+        bytesPerLine: Int = 16,
+    ): String {
         val result = StringBuilder()
         for (i in bytes.indices step bytesPerLine) {
             result.append(String.format("%04X: ", i))
@@ -90,11 +87,7 @@ object UnifiedHexUtils {
         return result.toString()
     }
 
-    fun stringToHex(str: String): String {
-        return bytesToHex(str.toByteArray())
-    }
+    fun stringToHex(str: String): String = bytesToHex(str.toByteArray())
 
-    fun hexToString(hex: String): String {
-        return String(hexToBytes(hex))
-    }
+    fun hexToString(hex: String): String = String(hexToBytes(hex))
 }

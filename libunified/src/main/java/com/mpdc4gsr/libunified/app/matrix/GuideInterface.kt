@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.matrix
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.mpdc4gsr.libunified.app.matrix.utils.HexDump
 import com.mpdc4gsr.libunified.app.utils.FileUtils
@@ -19,11 +18,11 @@ class GuideInterface {
     private val IR_WIDTH = 256
     private val IR_HEIGHT = 192
     private val HEAD_SIZE = 64
-    private val IR_SIZE = IR_WIDTH * IR_HEIGHT //49152
+    private val IR_SIZE = IR_WIDTH * IR_HEIGHT // 49152
     private val YUV_SIZE = IR_SIZE * 2
     private val PARAM_SIZE = 512
     private val TEMP_MATRIX_SIZE = IR_SIZE * 4
-    private val FRAME_SIZE = HEAD_SIZE + YUV_SIZE + PARAM_SIZE + TEMP_MATRIX_SIZE //295488
+    private val FRAME_SIZE = HEAD_SIZE + YUV_SIZE + PARAM_SIZE + TEMP_MATRIX_SIZE // 295488
     private val MAX_BULK_TRANSFER_SIZE = 16384
     private var mGuideUsbManager: GuideUsbManager? = null
     private var mUsbBuffer: UsbBuffer? = null
@@ -46,65 +45,71 @@ class GuideInterface {
     private val mLock = Any()
 
     interface IrDataCallback {
-        fun processIrData(yuv: ByteArray, temp: FloatArray)
+        fun processIrData(
+            yuv: ByteArray,
+            temp: FloatArray,
+        )
     }
 
     private fun startUsbBufferWriteThread() {
         mWriteThreadFlag = true
-        mUsbBufferWriteThread = Thread {
-            Logger.d(TAG, "write thread start")
-            while (mWriteThreadFlag) {
-                val length: Int = mGuideUsbManager!!.read(mUsbReadbuffer)
-                if (length > 0) {
-                    mUsbBuffer!!.write(mUsbReadbuffer, 0, length)
-                } else {
+        mUsbBufferWriteThread =
+            Thread {
+                Logger.d(TAG, "write thread start")
+                while (mWriteThreadFlag) {
+                    val length: Int = mGuideUsbManager!!.read(mUsbReadbuffer)
+                    if (length > 0) {
+                        mUsbBuffer!!.write(mUsbReadbuffer, 0, length)
+                    } else {
 //                        Logger.d(TAG, "length < 0");
-                    try {
-                        Thread.sleep(10)
-                    } catch (e: InterruptedException) {
-                        e.printStackTrace()
+                        try {
+                            Thread.sleep(10)
+                        } catch (e: InterruptedException) {
+                            e.printStackTrace()
+                        }
                     }
                 }
+                Logger.d(TAG, "write thread exit")
             }
-            Logger.d(TAG, "write thread exit")
-        }
         mUsbBufferWriteThread!!.start()
     }
 
     var startTime = 0L
+
     private fun startUsbBufferReadThread() {
         mReadThreadFlag = true
-        mUsbBufferReadThread = Thread {
-            Logger.d(TAG, "read thread start")
-            while (mReadThreadFlag) {
-                val ret = mUsbBuffer!!.readFrame(mFrame) //mFrame len: 295488
-                if (ret) {
-                    System.arraycopy(mFrame, HEAD_SIZE, mYuv, 0, mYuv.size)
-                    synchronized(mLock) {
-                        System.arraycopy(
-                            mFrame,
-                            HEAD_SIZE + YUV_SIZE,
-                            mParam,
-                            0,
-                            mParam.size
-                        )
-                        System.arraycopy(
-                            mFrame,
-                            HEAD_SIZE + YUV_SIZE + PARAM_SIZE,
-                            mTempMatrixByte,
-                            0,
-                            mTempMatrixByte.size
-                        )
+        mUsbBufferReadThread =
+            Thread {
+                Logger.d(TAG, "read thread start")
+                while (mReadThreadFlag) {
+                    val ret = mUsbBuffer!!.readFrame(mFrame) // mFrame len: 295488
+                    if (ret) {
+                        System.arraycopy(mFrame, HEAD_SIZE, mYuv, 0, mYuv.size)
+                        synchronized(mLock) {
+                            System.arraycopy(
+                                mFrame,
+                                HEAD_SIZE + YUV_SIZE,
+                                mParam,
+                                0,
+                                mParam.size,
+                            )
+                            System.arraycopy(
+                                mFrame,
+                                HEAD_SIZE + YUV_SIZE + PARAM_SIZE,
+                                mTempMatrixByte,
+                                0,
+                                mTempMatrixByte.size,
+                            )
+                        }
+                        mNativeGuideCore!!.toFloatTempMatrix(mTempMatrixFloat, mTempMatrixByte)
+                        if (mIrDataCallback != null) {
+                            mIrDataCallback!!.processIrData(mYuv, mTempMatrixFloat)
+                        }
+                    } else {
                     }
-                    mNativeGuideCore!!.toFloatTempMatrix(mTempMatrixFloat, mTempMatrixByte)
-                    if (mIrDataCallback != null) {
-                        mIrDataCallback!!.processIrData(mYuv, mTempMatrixFloat)
-                    }
-                } else {
                 }
+                Logger.d(TAG, "read thread exit")
             }
-            Logger.d(TAG, "read thread exit")
-        }
         mUsbBufferReadThread!!.start()
     }
 
@@ -132,20 +137,30 @@ class GuideInterface {
         }
     }
 
-    private fun getParam(offset: Int, len: Int, index: Int): Byte {
+    private fun getParam(
+        offset: Int,
+        len: Int,
+        index: Int,
+    ): Byte {
         val param = ByteArray(len)
         synchronized(mLock) { System.arraycopy(mParam, offset, param, 0, len) }
         return param[index]
     }
 
-    private fun getParam(offset: Int, len: Int): ByteArray {
+    private fun getParam(
+        offset: Int,
+        len: Int,
+    ): ByteArray {
         val param = ByteArray(len)
         synchronized(mLock) { System.arraycopy(mParam, offset, param, 0, len) }
         return param
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    fun init(context: Context?, irDataCallback: IrDataCallback?): Int {
+    fun init(
+        context: Context?,
+        irDataCallback: IrDataCallback?,
+    ): Int {
         mNativeGuideCore = NativeGuideCore()
         mGuideUsbManager = GuideUsbManager(context, mNativeGuideCore)
         mIrDataCallback = irDataCallback
@@ -188,7 +203,6 @@ class GuideInterface {
     }
 
     fun changePalette(i: Int) {
-        Log.d(TAG, "changePalette() called with: i = [$i]")
         if (mGuideUsbManager == null) {
             return
         }
@@ -249,7 +263,10 @@ class GuideInterface {
         return getParam(PARAM_INDEX_CONTRAST * 2, 2, 1).toInt()
     }
 
-    fun yuv2Bitmap(bitmap: Bitmap?, yuv: ByteArray?) {
+    fun yuv2Bitmap(
+        bitmap: Bitmap?,
+        yuv: ByteArray?,
+    ) {
         if (mNativeGuideCore == null) {
             return
         }
@@ -298,7 +315,8 @@ class GuideInterface {
         val mainVersion3: Int = mainVersion and 0x003F
         val asicVersion = StringBuilder()
         1.shr(2)
-        asicVersion.append(mainVersion1)
+        asicVersion
+            .append(mainVersion1)
             .append(DOT)
             .append(mainVersion2)
             .append(DOT)

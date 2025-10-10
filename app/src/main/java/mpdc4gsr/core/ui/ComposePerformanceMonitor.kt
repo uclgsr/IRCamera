@@ -1,6 +1,5 @@
 package mpdc4gsr.core.ui
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -32,7 +31,10 @@ object ComposePerformanceMonitor {
     private val performanceMetrics = mutableMapOf<String, PerformanceMetric>()
 
     @Composable
-    fun TrackRecomposition(name: String, content: @Composable () -> Unit) {
+    fun TrackRecomposition(
+        name: String,
+        content: @Composable () -> Unit,
+    ) {
         val recompositionCount = remember { mutableIntStateOf(0) }
         LaunchedEffect(Unit) {
             recompositionCount.intValue++
@@ -44,7 +46,7 @@ object ComposePerformanceMonitor {
     @Composable
     fun <T> MeasureCompositionTime(
         name: String,
-        content: @Composable () -> T
+        content: @Composable () -> T,
     ): T {
         val startTime = remember { System.currentTimeMillis() }
         val result = content()
@@ -63,33 +65,39 @@ object ComposePerformanceMonitor {
         _memoryUsageMb.value = usedMemory.toFloat()
     }
 
-    fun trackNavigation(route: String, startTime: Long) {
+    fun trackNavigation(
+        route: String,
+        startTime: Long,
+    ) {
         val latency = System.currentTimeMillis() - startTime
         _navigationLatencyMs.value = latency
         recordMetric("navigation_$route", latency)
     }
 
-    private fun recordMetric(name: String, value: Long) {
+    private fun recordMetric(
+        name: String,
+        value: Long,
+    ) {
         val metric = performanceMetrics.getOrPut(name) { PerformanceMetric(name) }
         metric.addSample(value)
     }
 
-    fun getPerformanceSummary(): Map<String, PerformanceMetric> {
-        return performanceMetrics.toMap()
-    }
+    fun getPerformanceSummary(): Map<String, PerformanceMetric> = performanceMetrics.toMap()
 
-    fun Modifier.trackDrawPerformance(name: String): Modifier = this.drawWithContent {
-        val drawTime = measureTimeMillis {
-            drawContent()
+    fun Modifier.trackDrawPerformance(name: String): Modifier =
+        this.drawWithContent {
+            val drawTime =
+                measureTimeMillis {
+                    drawContent()
+                }
+            if (drawTime > FRAME_BUDGET_MS) {
+            }
         }
-        if (drawTime > FRAME_BUDGET_MS) {
-        }
-    }
 }
 
 data class PerformanceMetric(
     val name: String,
-    private val samples: MutableList<Long> = mutableListOf()
+    private val samples: MutableList<Long> = mutableListOf(),
 ) {
     fun addSample(value: Long) {
         samples.add(value)
@@ -108,7 +116,7 @@ data class PerformanceMetric(
 @Composable
 fun PerformanceOverlay(
     showOverlay: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     if (!showOverlay) return
     val recompositionCount by ComposePerformanceMonitor.recompositionCount.collectAsState()
@@ -117,45 +125,49 @@ fun PerformanceOverlay(
     val navigationLatency by ComposePerformanceMonitor.navigationLatencyMs.collectAsState()
     val density = LocalDensity.current
     Box(
-        modifier = modifier.drawWithContent {
-            drawContent()
-            // Draw performance overlay
-            drawIntoCanvas { canvas ->
-                val paint = android.graphics.Paint().apply {
-                    color = Color.White.toArgb()
-                    textSize = with(density) { 12.dp.toPx() }
-                    isAntiAlias = true
-                }
-                val backgroundPaint = android.graphics.Paint().apply {
-                    color = Color.Black.copy(alpha = 0.6f).toArgb()
-                }
-                val metrics = listOf(
-                    "Recompositions: $recompositionCount",
-                    "Frame Time: ${frameTime}ms",
-                    "Memory: ${String.format("%.1f", memoryUsage)}MB",
-                    "Nav Latency: ${navigationLatency}ms"
-                )
-                val textHeight = 40f
-                val overlayHeight = metrics.size * textHeight + 20f
-                // Draw background
-                canvas.nativeCanvas.drawRect(
-                    10f,
-                    10f,
-                    300f,
-                    overlayHeight,
-                    backgroundPaint
-                )
-                // Draw metrics
-                metrics.forEachIndexed { index, metric ->
-                    canvas.nativeCanvas.drawText(
-                        metric,
-                        20f,
-                        40f + (index * textHeight),
-                        paint
+        modifier =
+            modifier.drawWithContent {
+                drawContent()
+                // Draw performance overlay
+                drawIntoCanvas { canvas ->
+                    val paint =
+                        android.graphics.Paint().apply {
+                            color = Color.White.toArgb()
+                            textSize = with(density) { 12.dp.toPx() }
+                            isAntiAlias = true
+                        }
+                    val backgroundPaint =
+                        android.graphics.Paint().apply {
+                            color = Color.Black.copy(alpha = 0.6f).toArgb()
+                        }
+                    val metrics =
+                        listOf(
+                            "Recompositions: $recompositionCount",
+                            "Frame Time: ${frameTime}ms",
+                            "Memory: ${String.format("%.1f", memoryUsage)}MB",
+                            "Nav Latency: ${navigationLatency}ms",
+                        )
+                    val textHeight = 40f
+                    val overlayHeight = metrics.size * textHeight + 20f
+                    // Draw background
+                    canvas.nativeCanvas.drawRect(
+                        10f,
+                        10f,
+                        300f,
+                        overlayHeight,
+                        backgroundPaint,
                     )
+                    // Draw metrics
+                    metrics.forEachIndexed { index, metric ->
+                        canvas.nativeCanvas.drawText(
+                            metric,
+                            20f,
+                            40f + (index * textHeight),
+                            paint,
+                        )
+                    }
                 }
-            }
-        }
+            },
     )
 }
 
@@ -163,35 +175,29 @@ object SensorDataPerformanceTracker {
     private const val SENSOR_PROCESSING_THRESHOLD_MS = 100L
     private const val SENSOR_PROCESSING_CRITICAL_MS = 200L
     private const val NAVIGATION_SLOW_THRESHOLD_MS = 300L
-    fun trackGSRDataProcessing(dataPoints: Int, processingTimeMs: Long) {
+
+    fun trackGSRDataProcessing(
+        dataPoints: Int,
+        processingTimeMs: Long,
+    ) {
         val throughput = dataPoints / (processingTimeMs / 1000.0)
-        Log.d(
-            "SensorPerformance",
-            "GSR processing: $dataPoints points in ${processingTimeMs}ms (${
-                String.format(
-                    "%.1f",
-                    throughput
-                )
-            } points/sec)"
-        )
         if (processingTimeMs > SENSOR_PROCESSING_THRESHOLD_MS) {
-            Log.w(
-                "SensorPerformance",
-                "GSR processing slower than expected: ${processingTimeMs}ms for $dataPoints points"
-            )
         }
     }
 
-    fun trackThermalImageProcessing(imageSize: String, processingTimeMs: Long) {
+    fun trackThermalImageProcessing(
+        imageSize: String,
+        processingTimeMs: Long,
+    ) {
         if (processingTimeMs > SENSOR_PROCESSING_CRITICAL_MS) {
-            Log.w(
-                "SensorPerformance",
-                "Thermal processing slower than expected: ${processingTimeMs}ms"
-            )
         }
     }
 
-    fun trackNavigationPerformance(fromRoute: String, toRoute: String, transitionTimeMs: Long) {
+    fun trackNavigationPerformance(
+        fromRoute: String,
+        toRoute: String,
+        transitionTimeMs: Long,
+    ) {
         if (transitionTimeMs > NAVIGATION_SLOW_THRESHOLD_MS) {
         }
     }
@@ -216,33 +222,39 @@ object ComposeMemoryOptimizer {
         }
     }
 
-    fun getOptimizationSuggestions(pressureLevel: MemoryPressureLevel): List<String> {
-        return when (pressureLevel) {
-            MemoryPressureLevel.CRITICAL -> listOf(
-                "Consider reducing image resolution",
-                "Implement lazy loading for large datasets",
-                "Clear unused caches",
-                "Reduce number of concurrent operations"
-            )
+    fun getOptimizationSuggestions(pressureLevel: MemoryPressureLevel): List<String> =
+        when (pressureLevel) {
+            MemoryPressureLevel.CRITICAL ->
+                listOf(
+                    "Consider reducing image resolution",
+                    "Implement lazy loading for large datasets",
+                    "Clear unused caches",
+                    "Reduce number of concurrent operations",
+                )
 
-            MemoryPressureLevel.HIGH -> listOf(
-                "Optimize image loading",
-                "Use lighter data structures",
-                "Consider pagination for long lists"
-            )
+            MemoryPressureLevel.HIGH ->
+                listOf(
+                    "Optimize image loading",
+                    "Use lighter data structures",
+                    "Consider pagination for long lists",
+                )
 
-            MemoryPressureLevel.MODERATE -> listOf(
-                "Monitor memory usage trends",
-                "Consider preemptive cleanup"
-            )
+            MemoryPressureLevel.MODERATE ->
+                listOf(
+                    "Monitor memory usage trends",
+                    "Consider preemptive cleanup",
+                )
 
-            MemoryPressureLevel.LOW -> listOf(
-                "Memory usage is optimal"
-            )
+            MemoryPressureLevel.LOW ->
+                listOf(
+                    "Memory usage is optimal",
+                )
         }
-    }
 }
 
 enum class MemoryPressureLevel {
-    LOW, MODERATE, HIGH, CRITICAL
+    LOW,
+    MODERATE,
+    HIGH,
+    CRITICAL,
 }

@@ -22,7 +22,7 @@ import kotlinx.coroutines.delay
 fun ComposeToast(
     message: String,
     duration: Long = 2000L,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         delay(duration)
@@ -30,16 +30,17 @@ fun ComposeToast(
     }
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomCenter
+        contentAlignment = Alignment.BottomCenter,
     ) {
         Surface(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 80.dp)
-                .wrapContentWidth()
-                .wrapContentHeight(),
+            modifier =
+                Modifier
+                    .padding(horizontal = 16.dp, vertical = 80.dp)
+                    .wrapContentWidth()
+                    .wrapContentHeight(),
             shape = RoundedCornerShape(8.dp),
             color = Color(0xCC000000),
-            shadowElevation = 8.dp
+            shadowElevation = 8.dp,
         ) {
             Text(
                 text = message,
@@ -47,7 +48,7 @@ fun ComposeToast(
                 color = Color.White,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
-                maxLines = 3
+                maxLines = 3,
             )
         }
     }
@@ -55,36 +56,47 @@ fun ComposeToast(
 
 object ComposeToastHelper {
     private var currentToast: android.app.Dialog? = null
-    fun show(context: Context, message: String, duration: Long = 2000L) {
+
+    fun show(
+        context: Context,
+        message: String,
+        duration: Long = 2000L,
+    ) {
         dismiss()
-        currentToast = android.app.Dialog(context, android.R.style.Theme_Translucent_NoTitleBar).apply {
-            val composeView = ComposeView(context).apply {
-                setContent {
-                    LibUnifiedTheme {
-                        ComposeToast(
-                            message = message,
-                            duration = duration,
-                            onDismiss = { dismiss() }
-                        )
+        currentToast =
+            android.app.Dialog(context, android.R.style.Theme_Translucent_NoTitleBar).apply {
+                val composeView =
+                    ComposeView(context).apply {
+                        setContent {
+                            LibUnifiedTheme {
+                                ComposeToast(
+                                    message = message,
+                                    duration = duration,
+                                    onDismiss = { dismiss() },
+                                )
+                            }
+                        }
                     }
+                setContentView(composeView)
+                window?.apply {
+                    setLayout(
+                        android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                        android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                    )
+                    setBackgroundDrawableResource(android.R.color.transparent)
+                    clearFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND)
                 }
+                setCancelable(false)
+                setCanceledOnTouchOutside(false)
+                show()
             }
-            setContentView(composeView)
-            window?.apply {
-                setLayout(
-                    android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-                    android.view.ViewGroup.LayoutParams.MATCH_PARENT
-                )
-                setBackgroundDrawableResource(android.R.color.transparent)
-                clearFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            }
-            setCancelable(false)
-            setCanceledOnTouchOutside(false)
-            show()
-        }
     }
 
-    fun show(context: Context, @StringRes resId: Int, duration: Long = 2000L) {
+    fun show(
+        context: Context,
+        @StringRes resId: Int,
+        duration: Long = 2000L,
+    ) {
         show(context, context.getString(resId), duration)
     }
 

@@ -23,9 +23,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -42,7 +40,7 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             Text(
                                 "Thermal Correction",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -50,7 +48,7 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -59,30 +57,32 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.Default.Refresh,
                                     contentDescription = "Reset",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF16131E)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
                     )
                 },
-                containerColor = Color(0xFF16131E)
+                containerColor = Color(0xFF16131E),
             ) { paddingValues ->
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color(0xFF16131E)),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color(0xFF16131E)),
                     contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     // Correction type selector
                     item {
                         CorrectionTypeSelector(
                             selectedCorrection = selectedCorrection,
-                            onCorrectionSelected = { selectedCorrection = it }
+                            onCorrectionSelected = { selectedCorrection = it },
                         )
                     }
                     // Processing status
@@ -90,13 +90,13 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         ProcessingStatusCard(
                             isProcessing = isProcessing,
                             progress = correctionProgress,
-                            correctionType = getCorrectionTypes()[selectedCorrection]
+                            correctionType = getCorrectionTypes()[selectedCorrection],
                         )
                     }
                     // Correction parameters
                     item {
                         CorrectionParametersCard(
-                            correctionType = selectedCorrection
+                            correctionType = selectedCorrection,
                         )
                     }
                     // Comparison view
@@ -123,7 +123,7 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             onDiscardChanges = {
                                 correctionProgress = 0f
                                 isProcessing = false
-                            }
+                            },
                         )
                     }
                 }
@@ -135,32 +135,34 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 @Composable
 private fun CorrectionTypeSelector(
     selectedCorrection: Int,
-    onCorrectionSelected: (Int) -> Unit
+    onCorrectionSelected: (Int) -> Unit,
 ) {
     val correctionTypes = getCorrectionTypes()
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Text(
                 "Correction Type",
                 color = Color.White,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(12.dp))
             correctionTypes.forEachIndexed { index, correction ->
                 CorrectionTypeCard(
                     correction = correction,
                     isSelected = selectedCorrection == index,
-                    onClick = { onCorrectionSelected(index) }
+                    onClick = { onCorrectionSelected(index) },
                 )
                 if (index < correctionTypes.size - 1) {
                     Spacer(modifier = Modifier.height(8.dp))
@@ -174,41 +176,43 @@ private fun CorrectionTypeSelector(
 private fun CorrectionTypeCard(
     correction: CorrectionType,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
         onClick = onClick,
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) Color(0xFFFF6B35) else Color(0xFF16131E)
-        ),
-        shape = RoundedCornerShape(8.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = if (isSelected) Color(0xFFFF6B35) else Color(0xFF16131E),
+            ),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 correction.icon,
                 contentDescription = correction.name,
                 tint = if (isSelected) Color.White else Color(0xFFFF6B35),
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
             )
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     correction.name,
                     color = if (isSelected) Color.White else Color(0xFF7D8590),
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 Text(
                     correction.description,
                     color = if (isSelected) Color.White.copy(alpha = 0.8f) else Color(0xFF7D8590),
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
                 )
             }
             if (isSelected) {
@@ -216,7 +220,7 @@ private fun CorrectionTypeCard(
                     Icons.Default.CheckCircle,
                     contentDescription = "Selected",
                     tint = Color.White,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
             }
         }
@@ -227,35 +231,37 @@ private fun CorrectionTypeCard(
 private fun ProcessingStatusCard(
     isProcessing: Boolean,
     progress: Float,
-    correctionType: CorrectionType
+    correctionType: CorrectionType,
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     "Processing Status",
                     color = Color.White,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 if (isProcessing) {
                     CircularProgressIndicator(
                         progress = { progress },
                         color = Color(0xFFFF6B35),
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
                 }
             }
@@ -263,7 +269,7 @@ private fun ProcessingStatusCard(
             Text(
                 if (isProcessing) "Applying ${correctionType.name}..." else "Ready for correction",
                 color = Color(0xFF7D8590),
-                fontSize = 14.sp
+                fontSize = 14.sp,
             )
             if (isProcessing) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -271,13 +277,13 @@ private fun ProcessingStatusCard(
                     progress = { progress },
                     modifier = Modifier.fillMaxWidth(),
                     color = Color(0xFFFF6B35),
-                    trackColor = Color(0xFF16131E)
+                    trackColor = Color(0xFF16131E),
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     "${(progress * 100).toInt()}% Complete",
                     color = Color(0xFFFF6B35),
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
                 )
             }
         }
@@ -285,28 +291,28 @@ private fun ProcessingStatusCard(
 }
 
 @Composable
-private fun CorrectionParametersCard(
-    correctionType: Int
-) {
+private fun CorrectionParametersCard(correctionType: Int) {
     var brightness by remember { mutableFloatStateOf(0f) }
     var contrast by remember { mutableFloatStateOf(0f) }
     var gamma by remember { mutableFloatStateOf(1f) }
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Text(
                 "Correction Parameters",
                 color = Color.White,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(16.dp))
             // Brightness adjustment
@@ -315,7 +321,7 @@ private fun CorrectionParametersCard(
                 value = brightness,
                 onValueChange = { brightness = it },
                 valueRange = -100f..100f,
-                unit = "%"
+                unit = "%",
             )
             Spacer(modifier = Modifier.height(12.dp))
             // Contrast adjustment
@@ -324,7 +330,7 @@ private fun CorrectionParametersCard(
                 value = contrast,
                 onValueChange = { contrast = it },
                 valueRange = -100f..100f,
-                unit = "%"
+                unit = "%",
             )
             Spacer(modifier = Modifier.height(12.dp))
             // Gamma adjustment
@@ -333,7 +339,7 @@ private fun CorrectionParametersCard(
                 value = gamma,
                 onValueChange = { gamma = it },
                 valueRange = 0.1f..3f,
-                unit = ""
+                unit = "",
             )
         }
     }
@@ -345,24 +351,24 @@ private fun ParameterSlider(
     value: Float,
     onValueChange: (Float) -> Unit,
     valueRange: ClosedFloatingPointRange<Float>,
-    unit: String
+    unit: String,
 ) {
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 label,
                 color = Color.White,
-                fontSize = 14.sp
+                fontSize = 14.sp,
             )
             Text(
                 "${value.toInt()}$unit",
                 color = Color(0xFFFF6B35),
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
         Spacer(modifier = Modifier.height(4.dp))
@@ -370,11 +376,12 @@ private fun ParameterSlider(
             value = value,
             onValueChange = onValueChange,
             valueRange = valueRange,
-            colors = SliderDefaults.colors(
-                thumbColor = Color(0xFFFF6B35),
-                activeTrackColor = Color(0xFFFF6B35),
-                inactiveTrackColor = Color(0xFF16131E)
-            )
+            colors =
+                SliderDefaults.colors(
+                    thumbColor = Color(0xFFFF6B35),
+                    activeTrackColor = Color(0xFFFF6B35),
+                    inactiveTrackColor = Color(0xFF16131E),
+                ),
         )
     }
 }
@@ -382,38 +389,40 @@ private fun ParameterSlider(
 @Composable
 private fun CorrectionComparisonCard() {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Text(
                 "Before / After Comparison",
                 color = Color.White,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 // Before image
                 ComparisonImageCard(
                     title = "Before",
                     description = "Original thermal image",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 // After image
                 ComparisonImageCard(
                     title = "After",
                     description = "Corrected thermal image",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
@@ -424,47 +433,50 @@ private fun CorrectionComparisonCard() {
 private fun ComparisonImageCard(
     title: String,
     description: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF16131E)
-        ),
-        shape = RoundedCornerShape(8.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF16131E),
+            ),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                contentAlignment = Alignment.Center,
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Icon(
                         Icons.Default.Image,
                         contentDescription = title,
                         tint = Color(0xFF7D8590),
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                     Text(
                         title,
                         color = Color.White,
                         fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Text(
                         description,
                         color = Color(0xFF7D8590),
-                        fontSize = 10.sp
+                        fontSize = 10.sp,
                     )
                 }
             }
@@ -477,24 +489,25 @@ private fun CorrectionActionButtons(
     isProcessing: Boolean,
     onStartCorrection: () -> Unit,
     onSaveCorrection: () -> Unit,
-    onDiscardChanges: () -> Unit
+    onDiscardChanges: () -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         if (!isProcessing) {
             Button(
                 onClick = onStartCorrection,
                 modifier = Modifier.weight(1f),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFF6B35)
-                )
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFFF6B35),
+                    ),
             ) {
                 Icon(
                     Icons.Default.PlayArrow,
                     contentDescription = "Start",
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(18.dp),
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text("Apply Correction")
@@ -504,14 +517,15 @@ private fun CorrectionActionButtons(
             onClick = onSaveCorrection,
             modifier = Modifier.weight(1f),
             enabled = !isProcessing,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF00AA00)
-            )
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF00AA00),
+                ),
         ) {
             Icon(
                 Icons.Default.Save,
                 contentDescription = "Save",
-                modifier = Modifier.size(18.dp)
+                modifier = Modifier.size(18.dp),
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text("Save")
@@ -520,15 +534,16 @@ private fun CorrectionActionButtons(
             onClick = onDiscardChanges,
             modifier = Modifier.weight(1f),
             enabled = !isProcessing,
-            colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = Color(0xFF7D8590)
-            ),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF7D8590))
+            colors =
+                ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color(0xFF7D8590),
+                ),
+            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF7D8590)),
         ) {
             Icon(
                 Icons.Default.Cancel,
                 contentDescription = "Discard",
-                modifier = Modifier.size(18.dp)
+                modifier = Modifier.size(18.dp),
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text("Discard")
@@ -540,30 +555,29 @@ private fun CorrectionActionButtons(
 data class CorrectionType(
     val name: String,
     val description: String,
-    val icon: androidx.compose.ui.graphics.vector.ImageVector
+    val icon: androidx.compose.ui.graphics.vector.ImageVector,
 )
 
-private fun getCorrectionTypes(): List<CorrectionType> {
-    return listOf(
+private fun getCorrectionTypes(): List<CorrectionType> =
+    listOf(
         CorrectionType(
             "Auto Correct",
             "Automatic thermal image enhancement",
-            Icons.Default.AutoFixHigh
+            Icons.Default.AutoFixHigh,
         ),
         CorrectionType(
             "Manual Adjust",
             "Fine-tune brightness, contrast, and gamma",
-            Icons.Default.Tune
+            Icons.Default.Tune,
         ),
         CorrectionType(
             "Noise Reduction",
             "Remove thermal noise and artifacts",
-            Icons.Default.FilterAlt
+            Icons.Default.FilterAlt,
         ),
         CorrectionType(
             "Temperature Range",
             "Optimize temperature range display",
-            Icons.Default.Straighten
-        )
+            Icons.Default.Straighten,
+        ),
     )
-}

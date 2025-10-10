@@ -1,7 +1,6 @@
 package mpdc4gsr.core
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.*
@@ -11,7 +10,9 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class StructuredLogger private constructor(private val context: Context) {
+class StructuredLogger private constructor(
+    private val context: Context,
+) {
     companion object {
         private const val TAG = "StructuredLogger"
         private const val LOG_DIRECTORY = "pc_to_phone_logs"
@@ -21,11 +22,11 @@ class StructuredLogger private constructor(private val context: Context) {
 
         @Volatile
         private var instance: StructuredLogger? = null
-        fun getInstance(context: Context): StructuredLogger {
-            return instance ?: synchronized(this) {
+
+        fun getInstance(context: Context): StructuredLogger =
+            instance ?: synchronized(this) {
                 instance ?: StructuredLogger(context.applicationContext).also { instance = it }
             }
-        }
 
         fun logInfo(
             component: String,
@@ -60,7 +61,9 @@ class StructuredLogger private constructor(private val context: Context) {
         }
     }
 
-    enum class LogLevel(val value: String) {
+    enum class LogLevel(
+        val value: String,
+    ) {
         DEBUG("DEBUG"),
         INFO("INFO"),
         WARNING("WARNING"),
@@ -111,7 +114,6 @@ class StructuredLogger private constructor(private val context: Context) {
                 ),
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize structured logging", e)
         }
     }
 
@@ -122,29 +124,26 @@ class StructuredLogger private constructor(private val context: Context) {
             try {
                 currentLogWriter?.close()
             } catch (e: Exception) {
-                Log.w(TAG, "Error closing previous log writer", e)
             }
             currentLogWriter = BufferedWriter(FileWriter(currentLogFile, true))
             currentLogSize = currentLogFile?.length() ?: 0L
-            Log.i(TAG, "Created new log file: ${currentLogFile?.name}")
         }
     }
 
     private fun cleanupOldLogs(logDir: File) {
         try {
             val logFiles =
-                logDir.listFiles { _, name ->
-                    name.startsWith("pc_to_phone_") && name.endsWith(".jsonl")
-                }?.sortedByDescending { it.lastModified() }
+                logDir
+                    .listFiles { _, name ->
+                        name.startsWith("pc_to_phone_") && name.endsWith(".jsonl")
+                    }?.sortedByDescending { it.lastModified() }
             if (logFiles != null && logFiles.size > MAX_LOG_FILES) {
                 logFiles.drop(MAX_LOG_FILES).forEach { file ->
                     if (file.delete()) {
-                        Log.i(TAG, "Deleted old log file: ${file.name}")
                     }
                 }
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Error cleaning up old logs", e)
         }
     }
 
@@ -175,17 +174,20 @@ class StructuredLogger private constructor(private val context: Context) {
             logQueue.offer(logEntry)
             val logMessage = "$component: $event ${if (details.isNotEmpty()) details else ""}"
             when (level) {
-                LogLevel.DEBUG -> Log.d(TAG, logMessage)
-                LogLevel.INFO -> Log.i(TAG, logMessage)
-                LogLevel.WARNING -> Log.w(TAG, logMessage)
-                LogLevel.ERROR -> Log.e(TAG, logMessage)
+                LogLevel.DEBUG -> Unit
+                LogLevel.INFO -> Unit
+                LogLevel.WARNING -> Unit
+                LogLevel.ERROR -> Unit
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error creating log entry", e)
         }
     }
 
-    fun logConnection(event: String, connectionId: String, details: Map<String, Any> = emptyMap()) {
+    fun logConnection(
+        event: String,
+        connectionId: String,
+        details: Map<String, Any> = emptyMap(),
+    ) {
         log(LogLevel.INFO, "NetworkConnection", event, details, connectionId)
     }
 
@@ -198,21 +200,30 @@ class StructuredLogger private constructor(private val context: Context) {
         log(LogLevel.INFO, "ProtocolHandler", event, details, connectionId, messageId)
     }
 
-    fun logServerEvent(event: String, details: Map<String, Any> = emptyMap()) {
+    fun logServerEvent(
+        event: String,
+        details: Map<String, Any> = emptyMap(),
+    ) {
         log(LogLevel.INFO, "ServerSocket", event, details)
     }
 
-    fun logSensorEvent(event: String, sensorType: String, details: Map<String, Any> = emptyMap()) {
+    fun logSensorEvent(
+        event: String,
+        sensorType: String,
+        details: Map<String, Any> = emptyMap(),
+    ) {
         log(LogLevel.INFO, "SensorRecorder", event, details + ("sensor_type" to sensorType))
     }
 
-    fun logSessionEvent(event: String, sessionId: String, details: Map<String, Any> = emptyMap()) {
+    fun logSessionEvent(
+        event: String,
+        sessionId: String,
+        details: Map<String, Any> = emptyMap(),
+    ) {
         log(LogLevel.INFO, "RecordingSession", event, details + ("session_id" to sessionId))
     }
 
-    private fun generateMessageId(): String {
-        return "${System.currentTimeMillis()}_${++messageIdCounter}"
-    }
+    private fun generateMessageId(): String = "${System.currentTimeMillis()}_${++messageIdCounter}"
 
     private fun startPeriodicFlush() {
         logScope.launch {
@@ -227,7 +238,6 @@ class StructuredLogger private constructor(private val context: Context) {
                     processLogQueue()
                     delay(100)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error processing log queue", e)
                 }
             }
         }
@@ -239,7 +249,6 @@ class StructuredLogger private constructor(private val context: Context) {
             synchronized(writerLock) {
                 val writer = currentLogWriter
                 if (writer == null) {
-                    Log.w(TAG, "Log writer is null, skipping log entry")
                     return@synchronized
                 }
                 try {
@@ -250,13 +259,11 @@ class StructuredLogger private constructor(private val context: Context) {
                         rotateLogFile()
                     }
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error writing log entry", e)
                     // If write fails, try to recreate the writer
                     if (e.message?.contains("Stream closed") == true) {
                         try {
                             recreateLogWriter()
                         } catch (recreateException: Exception) {
-                            Log.e(TAG, "Failed to recreate log writer", recreateException)
                         }
                     }
                 }
@@ -269,12 +276,10 @@ class StructuredLogger private constructor(private val context: Context) {
             try {
                 currentLogWriter?.close()
             } catch (e: Exception) {
-                Log.w(TAG, "Error closing corrupted log writer", e)
             }
             val logFile = currentLogFile
             if (logFile != null) {
                 currentLogWriter = BufferedWriter(FileWriter(logFile, true))
-                Log.i(TAG, "Recreated log writer for: ${logFile.name}")
             } else {
                 val logDir = File(context.getExternalFilesDir(null), LOG_DIRECTORY)
                 createNewLogFile(logDir)
@@ -287,7 +292,6 @@ class StructuredLogger private constructor(private val context: Context) {
             try {
                 currentLogWriter?.flush()
             } catch (e: Exception) {
-                Log.e(TAG, "Error flushing logs", e)
             }
         }
     }
@@ -309,24 +313,19 @@ class StructuredLogger private constructor(private val context: Context) {
                     ),
                 )
             } catch (e: Exception) {
-                Log.e(TAG, "Error rotating log file", e)
             }
         }
     }
 
-    fun getCurrentLogFile(): String? {
-        return currentLogFile?.absolutePath
-    }
+    fun getCurrentLogFile(): String? = currentLogFile?.absolutePath
 
-    fun getLogFiles(): List<String> {
-        return try {
+    fun getLogFiles(): List<String> =
+        try {
             val logDir = File(context.getExternalFilesDir(null), LOG_DIRECTORY)
             logDir.listFiles()?.map { it.name }?.sorted() ?: emptyList()
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting log files", e)
             emptyList()
         }
-    }
 
     fun exportRecentLogs(maxLines: Int = 100): String {
         return try {
@@ -340,7 +339,6 @@ class StructuredLogger private constructor(private val context: Context) {
             }
             lines.takeLast(maxLines).joinToString("\n")
         } catch (e: Exception) {
-            Log.e(TAG, "Error exporting logs", e)
             "Error exporting logs: ${e.message}"
         }
     }
@@ -355,9 +353,7 @@ class StructuredLogger private constructor(private val context: Context) {
             }
             logExecutor.shutdown()
             logExecutor.awaitTermination(5, TimeUnit.SECONDS)
-            Log.i(TAG, "Structured logging cleanup completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Error during logging cleanup", e)
         }
     }
 }

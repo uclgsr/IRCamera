@@ -5,7 +5,6 @@ import android.app.Activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
 
-import com.mpdc4gsr.libunified.ui.gzuliyujiang.dialog.DialogLog;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.PhoneCodeEntity;
 
 import org.json.JSONArray;
@@ -307,7 +306,6 @@ public class PhoneCodePicker extends OptionPicker {
                     data.add(entity);
                 }
             } catch (JSONException e) {
-                DialogLog.print(e);
             }
         }
         return data;

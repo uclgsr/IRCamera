@@ -14,10 +14,10 @@ object UnifiedByteUtils {
             it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
         }
 
-    fun String.hexStringToByteArray(): ByteArray =
-        ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
+    fun String.hexStringToByteArray(): ByteArray = ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
 
     fun UUID.getTag(): String = toString().substring(4, 8)
+
     fun ByteArray.bytesToInt(): Int {
         var total = 0
         val size = this.size
@@ -37,7 +37,11 @@ object UnifiedByteUtils {
         return count
     }
 
-    fun numberToBytes(bigEndian: Boolean, value: Long, len: Int): ByteArray {
+    fun numberToBytes(
+        bigEndian: Boolean,
+        value: Long,
+        len: Int,
+    ): ByteArray {
         val bytes = ByteArray(8)
         for (i in 0..7) {
             val j = if (bigEndian) 7 - i else i
@@ -50,7 +54,10 @@ object UnifiedByteUtils {
         }
     }
 
-    fun splitPackage(src: ByteArray, size: Int): List<ByteArray> {
+    fun splitPackage(
+        src: ByteArray,
+        size: Int,
+    ): List<ByteArray> {
         val list = mutableListOf<ByteArray>()
         val loop = src.size / size + if (src.size % size == 0) 0 else 1
         for (i in 0 until loop) {

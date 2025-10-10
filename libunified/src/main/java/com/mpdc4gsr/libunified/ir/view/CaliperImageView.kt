@@ -40,10 +40,13 @@ class CaliperImageView : AppCompatImageView {
     )
 
     private fun initView() {
-        originalBitmap = (androidx.core.content.ContextCompat.getDrawable(
-            context,
-            R.drawable.svg_ic_target_horizontal_person_green
-        ) as? BitmapDrawable)?.bitmap
+        originalBitmap =
+            (
+                androidx.core.content.ContextCompat.getDrawable(
+                    context,
+                    R.drawable.svg_ic_target_horizontal_person_green,
+                ) as? BitmapDrawable
+            )?.bitmap
         originalBitmapWidth = originalBitmap?.width?.toFloat() ?: 0f
         originalBitmapHeight = originalBitmap?.height?.toFloat() ?: 0f
         visibility = View.GONE
@@ -102,6 +105,7 @@ class CaliperImageView : AppCompatImageView {
     private var downX = 0f
     private var downY = 0f
     private val downTime: Long = 0
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         super.onTouchEvent(event)
         if (this.isEnabled) {

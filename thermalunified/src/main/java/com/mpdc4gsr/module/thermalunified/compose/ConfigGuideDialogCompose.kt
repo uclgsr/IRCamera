@@ -19,59 +19,63 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.libunified.app.compose.theme.Spacing
+import com.mpdc4gsr.module.thermalunified.R
 
 @Composable
 fun ConfigGuideDialogCompose(
     isTC007: Boolean,
     initialStep: Int = 1,
     onDismiss: () -> Unit,
-    onComplete: () -> Unit = {}
+    onComplete: () -> Unit = {},
 ) {
     var currentStep by remember(initialStep) { mutableIntStateOf(initialStep) }
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            dismissOnBackPress = false,
-            dismissOnClickOutside = false,
-            usePlatformDefaultWidth = false
-        )
+        properties =
+            DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false,
+                usePlatformDefaultWidth = false,
+            ),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.7f))
-                .blur(8.dp),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.7f))
+                    .blur(8.dp),
+            contentAlignment = Alignment.Center,
         ) {
             AnimatedContent(
                 targetState = currentStep,
                 transitionSpec = {
                     slideInHorizontally(
                         animationSpec = tween(300),
-                        initialOffsetX = { if (targetState > initialState) 300 else -300 }
+                        initialOffsetX = { if (targetState > initialState) 300 else -300 },
                     ) + fadeIn() togetherWith
-                            slideOutHorizontally(
-                                animationSpec = tween(300),
-                                targetOffsetX = { if (targetState > initialState) -300 else 300 }
-                            ) + fadeOut()
+                        slideOutHorizontally(
+                            animationSpec = tween(300),
+                            targetOffsetX = { if (targetState > initialState) -300 else 300 },
+                        ) + fadeOut()
                 },
-                label = "config_step"
+                label = "config_step",
             ) { step ->
                 when (step) {
-                    1 -> ConfigStep1Content(
-                        isTC007 = isTC007,
-                        onNext = { currentStep = 2 }
-                    )
+                    1 ->
+                        ConfigStep1Content(
+                            isTC007 = isTC007,
+                            onNext = { currentStep = 2 },
+                        )
 
-                    2 -> ConfigStep2Content(
-                        isTC007 = isTC007,
-                        onComplete = {
-                            onComplete()
-                            onDismiss()
-                        }
-                    )
+                    2 ->
+                        ConfigStep2Content(
+                            isTC007 = isTC007,
+                            onComplete = {
+                                onComplete()
+                                onDismiss()
+                            },
+                        )
                 }
             }
         }
@@ -81,47 +85,49 @@ fun ConfigGuideDialogCompose(
 @Composable
 private fun ConfigStep1Content(
     isTC007: Boolean,
-    onNext: () -> Unit
+    onNext: () -> Unit,
 ) {
     val context = LocalContext.current
     Card(
-        modifier = Modifier
-            .fillMaxWidth(0.9f)
-            .wrapContentHeight(),
+        modifier =
+            Modifier
+                .fillMaxWidth(0.9f)
+                .wrapContentHeight(),
         elevation = CardDefaults.cardElevation(defaultElevation = Spacing.small),
-        shape = RoundedCornerShape(Spacing.normal)
+        shape = RoundedCornerShape(Spacing.normal),
     ) {
         Column(
             modifier = Modifier.padding(Spacing.large),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(Spacing.normal)
+            verticalArrangement = Arrangement.spacedBy(Spacing.normal),
         ) {
             Text(
                 text = "Thermal Configuration Guide",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
             Text(
                 text = "Step 1: Basic Parameters",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
             ConfigParameterCard(
                 title = "${context.getString(R.string.thermal_config_environment)} (-10~${if (isTC007) 50 else 55}°C)",
-                description = "Set the ambient temperature for accurate thermal measurements"
+                description = "Set the ambient temperature for accurate thermal measurements",
             )
             ConfigParameterCard(
                 title = "${context.getString(R.string.thermal_config_distance)} (0.2~${if (isTC007) 4 else 5}m)",
-                description = "Configure the distance to target for proper calibration"
+                description = "Configure the distance to target for proper calibration",
             )
             Spacer(modifier = Modifier.height(Spacing.small))
             Button(
                 onClick = onNext,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = Spacing.touchTarget)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = Spacing.touchTarget),
             ) {
                 Text("Next")
             }
@@ -132,19 +138,20 @@ private fun ConfigStep1Content(
 @Composable
 private fun ConfigStep2Content(
     isTC007: Boolean,
-    onComplete: () -> Unit
+    onComplete: () -> Unit,
 ) {
     val context = LocalContext.current
     Card(
-        modifier = Modifier
-            .fillMaxWidth(0.9f)
-            .fillMaxHeight(0.8f),
+        modifier =
+            Modifier
+                .fillMaxWidth(0.9f)
+                .fillMaxHeight(0.8f),
         elevation = CardDefaults.cardElevation(defaultElevation = Spacing.small),
-        shape = RoundedCornerShape(Spacing.normal)
+        shape = RoundedCornerShape(Spacing.normal),
     ) {
         Column(
             modifier = Modifier.padding(Spacing.large),
-            verticalArrangement = Arrangement.spacedBy(Spacing.normal)
+            verticalArrangement = Arrangement.spacedBy(Spacing.normal),
         ) {
             Text(
                 text = "Step 2: Emissivity Settings",
@@ -152,20 +159,20 @@ private fun ConfigStep2Content(
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
             ConfigParameterCard(
                 title = "${context.getString(R.string.thermal_config_radiation)} (${if (isTC007) "0.1" else "0.01"}~1.00)",
-                description = "Select appropriate emissivity value for your target material"
+                description = "Select appropriate emissivity value for your target material",
             )
             Text(
                 text = "Common Materials",
                 style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             LazyColumn(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(Spacing.small)
+                verticalArrangement = Arrangement.spacedBy(Spacing.small),
             ) {
                 items(getEmissivityPresets(isTC007)) { preset ->
                     EmissivityPresetCard(preset = preset)
@@ -173,9 +180,10 @@ private fun ConfigStep2Content(
             }
             Button(
                 onClick = onComplete,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = Spacing.touchTarget)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = Spacing.touchTarget),
             ) {
                 Text("I Know")
             }
@@ -187,27 +195,28 @@ private fun ConfigStep2Content(
 private fun ConfigParameterCard(
     title: String,
     description: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            ),
     ) {
         Column(
             modifier = Modifier.padding(Spacing.normal),
-            verticalArrangement = Arrangement.spacedBy(Spacing.extraSmall)
+            verticalArrangement = Arrangement.spacedBy(Spacing.extraSmall),
         ) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
             )
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -216,36 +225,38 @@ private fun ConfigParameterCard(
 @Composable
 private fun EmissivityPresetCard(
     preset: EmissivityPreset,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
+        elevation = CardDefaults.cardElevation(defaultElevation = Spacing.extraSmall),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(Spacing.medium),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(Spacing.medium),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(Spacing.extraSmall)
+                verticalArrangement = Arrangement.spacedBy(Spacing.extraSmall),
             ) {
                 Text(
                     text = preset.material,
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 if (preset.description.isNotEmpty()) {
                     Text(
                         text = preset.description,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -253,14 +264,14 @@ private fun EmissivityPresetCard(
                 text = preset.emissivity.toString(),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
         }
     }
 }
 
-private fun getEmissivityPresets(isTC007: Boolean): List<EmissivityPreset> {
-    return listOf(
+private fun getEmissivityPresets(isTC007: Boolean): List<EmissivityPreset> =
+    listOf(
         EmissivityPreset("Human Skin", 0.98f, "Human body temperature measurement"),
         EmissivityPreset("Water", 0.96f, "Liquid water surface"),
         EmissivityPreset("Concrete", 0.95f, "Concrete surfaces and walls"),
@@ -270,16 +281,15 @@ private fun getEmissivityPresets(isTC007: Boolean): List<EmissivityPreset> {
         EmissivityPreset("Brick", 0.85f, "Red brick and ceramic"),
         EmissivityPreset("Stainless Steel", 0.16f, "Polished stainless steel"),
         EmissivityPreset("Aluminum", if (isTC007) 0.1f else 0.05f, "Oxidized aluminum"),
-        EmissivityPreset("Copper", 0.04f, "Polished copper surface")
+        EmissivityPreset("Copper", 0.04f, "Polished copper surface"),
     ).filter {
         it.emissivity >= (if (isTC007) 0.1f else 0.01f) && it.emissivity <= 1.0f
     }
-}
 
 data class EmissivityPreset(
     val material: String,
     val emissivity: Float,
-    val description: String = ""
+    val description: String = "",
 )
 
 @Composable
@@ -291,9 +301,8 @@ fun ConfigGuideDialogComposePreview() {
             initialStep = 1,
             onDismiss = { showDialog = false },
             onComplete = {
-                println("Configuration guide completed")
                 showDialog = false
-            }
+            },
         )
     }
 }

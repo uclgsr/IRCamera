@@ -8,22 +8,26 @@ data class PCControllerInfo(
     val properties: Map<String, String> = emptyMap(),
     val capabilities: List<String> = emptyList(),
     val protocolVersion: String = "1.0",
-    val lastSeen: Long = System.currentTimeMillis()
+    val lastSeen: Long = System.currentTimeMillis(),
 ) {
     val address: String
         get() = "$host:$port"
     val supportsGSR: Boolean
-        get() = capabilities.contains("gsr") ||
+        get() =
+            capabilities.contains("gsr") ||
                 properties["supports_gsr"] == "true" ||
                 properties.containsKey("shimmer_support")
     val supportsThermal: Boolean
-        get() = capabilities.contains("thermal") ||
+        get() =
+            capabilities.contains("thermal") ||
                 properties["supports_thermal"] == "true"
     val supportsRGB: Boolean
-        get() = capabilities.contains("rgb") ||
+        get() =
+            capabilities.contains("rgb") ||
                 properties["supports_rgb"] == "true"
     val supportsSecure: Boolean
-        get() = capabilities.contains("tls") ||
+        get() =
+            capabilities.contains("tls") ||
                 properties["secure"] == "true" ||
                 properties["tls"] == "true"
     val isRecentlyActive: Boolean
@@ -35,18 +39,19 @@ data class PCControllerInfo(
     val displayName: String
         get() = properties["display_name"] ?: name
     val statusSummary: String
-        get() = buildString {
-            append(address)
-            softwareVersion?.let { append(" • v$it") }
-            platform?.let { append(" • $it") }
-            val supportedFeatures = mutableListOf<String>()
-            if (supportsGSR) supportedFeatures.add("GSR")
-            if (supportsThermal) supportedFeatures.add("Thermal")
-            if (supportsRGB) supportedFeatures.add("RGB")
-            if (supportedFeatures.isNotEmpty()) {
-                append(" • ${supportedFeatures.joinToString("/")}")
+        get() =
+            buildString {
+                append(address)
+                softwareVersion?.let { append(" • v$it") }
+                platform?.let { append(" • $it") }
+                val supportedFeatures = mutableListOf<String>()
+                if (supportsGSR) supportedFeatures.add("GSR")
+                if (supportsThermal) supportedFeatures.add("Thermal")
+                if (supportsRGB) supportedFeatures.add("RGB")
+                if (supportedFeatures.isNotEmpty()) {
+                    append(" • ${supportedFeatures.joinToString("/")}")
+                }
             }
-        }
     val connectionPriority: Int
         get() {
             var priority = 0
@@ -58,8 +63,8 @@ data class PCControllerInfo(
             return priority
         }
 
-    fun toMap(): Map<String, Any?> {
-        return mapOf(
+    fun toMap(): Map<String, Any?> =
+        mapOf(
             "name" to name,
             "host" to host,
             "port" to port,
@@ -78,17 +83,16 @@ data class PCControllerInfo(
             "platform" to platform,
             "display_name" to displayName,
             "status_summary" to statusSummary,
-            "connection_priority" to connectionPriority
+            "connection_priority" to connectionPriority,
         )
-    }
 
     fun getWebSocketUrl(secure: Boolean = false): String {
         val protocol = if (secure && supportsSecure) "wss" else "ws"
         return "$protocol://$host:$port"
     }
 
-    fun isCompatibleWith(requiredFeatures: List<String>): Boolean {
-        return requiredFeatures.all { feature ->
+    fun isCompatibleWith(requiredFeatures: List<String>): Boolean =
+        requiredFeatures.all { feature ->
             when (feature.lowercase()) {
                 "gsr" -> supportsGSR
                 "thermal" -> supportsThermal
@@ -97,7 +101,6 @@ data class PCControllerInfo(
                 else -> capabilities.contains(feature) || properties.containsKey(feature)
             }
         }
-    }
 
     companion object {
         fun fromServiceInfo(
@@ -105,7 +108,7 @@ data class PCControllerInfo(
             hostAddress: String,
             port: Int,
             serviceType: String,
-            txtRecord: Map<String, String>
+            txtRecord: Map<String, String>,
         ): PCControllerInfo {
             val capabilities =
                 txtRecord["capabilities"]?.split(",")?.map { it.trim() } ?: emptyList()
@@ -117,7 +120,7 @@ data class PCControllerInfo(
                 type = serviceType,
                 properties = txtRecord,
                 capabilities = capabilities,
-                protocolVersion = protocolVersion
+                protocolVersion = protocolVersion,
             )
         }
 
@@ -125,23 +128,24 @@ data class PCControllerInfo(
             controllerId: String = "test_pc",
             includeGSR: Boolean = true,
             includeThermal: Boolean = true,
-            includeRGB: Boolean = true
+            includeRGB: Boolean = true,
         ): PCControllerInfo {
             val capabilities = mutableListOf<String>()
             if (includeGSR) capabilities.add("gsr")
             if (includeThermal) capabilities.add("thermal")
             if (includeRGB) capabilities.add("rgb")
             capabilities.add("tls")
-            val properties = mapOf(
-                "version" to "2.1.0",
-                "platform" to "Windows 11",
-                "display_name" to "IRCamera PC Controller $controllerId",
-                "supports_gsr" to includeGSR.toString(),
-                "supports_thermal" to includeThermal.toString(),
-                "supports_rgb" to includeRGB.toString(),
-                "secure" to "true",
-                "shimmer_support" to "true"
-            )
+            val properties =
+                mapOf(
+                    "version" to "2.1.0",
+                    "platform" to "Windows 11",
+                    "display_name" to "IRCamera PC Controller $controllerId",
+                    "supports_gsr" to includeGSR.toString(),
+                    "supports_thermal" to includeThermal.toString(),
+                    "supports_rgb" to includeRGB.toString(),
+                    "secure" to "true",
+                    "shimmer_support" to "true",
+                )
             return PCControllerInfo(
                 name = "ircamera-pc-$controllerId",
                 host = "192.168.1.${100 + controllerId.hashCode() % 50}",
@@ -149,27 +153,20 @@ data class PCControllerInfo(
                 type = "_ircamera._tcp.local.",
                 properties = properties,
                 capabilities = capabilities,
-                protocolVersion = "2.0"
+                protocolVersion = "2.0",
             )
         }
 
-        fun sortByPriority(controllers: List<PCControllerInfo>): List<PCControllerInfo> {
-            return controllers.sortedByDescending { it.connectionPriority }
-        }
+        fun sortByPriority(controllers: List<PCControllerInfo>): List<PCControllerInfo> =
+            controllers.sortedByDescending { it.connectionPriority }
 
         fun filterByFeatures(
             controllers: List<PCControllerInfo>,
-            requiredFeatures: List<String>
-        ): List<PCControllerInfo> {
-            return controllers.filter { it.isCompatibleWith(requiredFeatures) }
-        }
+            requiredFeatures: List<String>,
+        ): List<PCControllerInfo> = controllers.filter { it.isCompatibleWith(requiredFeatures) }
 
-        fun getGSRCapableControllers(controllers: List<PCControllerInfo>): List<PCControllerInfo> {
-            return controllers.filter { it.supportsGSR }
-        }
+        fun getGSRCapableControllers(controllers: List<PCControllerInfo>): List<PCControllerInfo> = controllers.filter { it.supportsGSR }
 
-        fun getActiveControllers(controllers: List<PCControllerInfo>): List<PCControllerInfo> {
-            return controllers.filter { it.isRecentlyActive }
-        }
+        fun getActiveControllers(controllers: List<PCControllerInfo>): List<PCControllerInfo> = controllers.filter { it.isRecentlyActive }
     }
 }

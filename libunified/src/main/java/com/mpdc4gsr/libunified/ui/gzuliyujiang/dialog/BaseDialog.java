@@ -69,7 +69,6 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
     @Deprecated
     @CallSuper
     protected void onInit(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
-        DialogLog.print("dialog onInit");
     }
 
     @CallSuper
@@ -81,7 +80,6 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
     @Override
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DialogLog.print("dialog onCreate");
         if (contentView == null) {
             readyView();
         }
@@ -102,7 +100,6 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
     @Deprecated
     @CallSuper
     protected void initView(View contentView) {
-        DialogLog.print("dialog initView");
     }
 
     @CallSuper
@@ -220,10 +217,8 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
         }
         try {
             super.show();
-            DialogLog.print("dialog show");
         } catch (Exception e) {
 
-            DialogLog.print(e);
         }
     }
 
@@ -235,43 +230,36 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
         }
         try {
             super.dismiss();
-            DialogLog.print("dialog dismiss");
         } catch (Exception e) {
 
-            DialogLog.print(e);
         }
     }
 
     @CallSuper
     @Override
     public void onAttachedToWindow() {
-        DialogLog.print("dialog attached to window");
         super.onAttachedToWindow();
         initData();
     }
 
     @CallSuper
     protected void initData() {
-        DialogLog.print("dialog initData");
     }
 
     @CallSuper
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        DialogLog.print("dialog detached from window");
     }
 
     @CallSuper
     @Override
     public void onShow(DialogInterface dialog) {
-        DialogLog.print("dialog onShow");
     }
 
     @CallSuper
     @Override
     public void onDismiss(DialogInterface dialog) {
-        DialogLog.print("dialog onDismiss");
     }
 
 }

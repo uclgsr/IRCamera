@@ -57,14 +57,14 @@ class ImageEditView : View {
         context,
         attrs,
         defStyleAttr,
-        0
+        0,
     )
 
     constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : super(
         context,
         attrs,
@@ -172,7 +172,7 @@ class ImageEditView : View {
                         downY.toFloat(),
                         currentX.toFloat(),
                         endY.toFloat(),
-                        paint
+                        paint,
                     )
                     val triangleH: Float = (ARROW_WIDTH / 2) * sqrt(3f)
                     val y: Float =
@@ -192,7 +192,7 @@ class ImageEditView : View {
                         downY.toFloat(),
                         endX.toFloat(),
                         currentY.toFloat(),
-                        paint
+                        paint,
                     )
                     val triangleH: Float = (ARROW_WIDTH / 2) * sqrt(3f)
                     val x: Float =
@@ -279,15 +279,27 @@ class ImageEditView : View {
             return false
         }
         currentX =
-            event.x.toInt().coerceAtLeast(HALF_PAINT_WIDTH).coerceAtMost(width - HALF_PAINT_WIDTH)
+            event.x
+                .toInt()
+                .coerceAtLeast(HALF_PAINT_WIDTH)
+                .coerceAtMost(width - HALF_PAINT_WIDTH)
         currentY =
-            event.y.toInt().coerceAtLeast(HALF_PAINT_WIDTH).coerceAtMost(height - HALF_PAINT_WIDTH)
+            event.y
+                .toInt()
+                .coerceAtLeast(HALF_PAINT_WIDTH)
+                .coerceAtMost(height - HALF_PAINT_WIDTH)
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                downX = event.x.toInt().coerceAtLeast(HALF_PAINT_WIDTH)
-                    .coerceAtMost(width - HALF_PAINT_WIDTH)
-                downY = event.y.toInt().coerceAtLeast(HALF_PAINT_WIDTH)
-                    .coerceAtMost(height - HALF_PAINT_WIDTH)
+                downX =
+                    event.x
+                        .toInt()
+                        .coerceAtLeast(HALF_PAINT_WIDTH)
+                        .coerceAtMost(width - HALF_PAINT_WIDTH)
+                downY =
+                    event.y
+                        .toInt()
+                        .coerceAtLeast(HALF_PAINT_WIDTH)
+                        .coerceAtMost(height - HALF_PAINT_WIDTH)
             }
 
             MotionEvent.ACTION_MOVE -> {

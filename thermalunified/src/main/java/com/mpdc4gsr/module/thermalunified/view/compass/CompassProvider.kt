@@ -8,7 +8,9 @@ import com.kylecorry.andromeda.sense.compass.LegacyCompass
 import com.kylecorry.andromeda.sense.orientation.GeomagneticRotationSensor
 import com.kylecorry.andromeda.sense.orientation.RotationSensor
 
-class CompassProvider(private val context: Context) {
+class CompassProvider(
+    private val context: Context,
+) {
     fun get(): ICompass {
         val smoothing = 1
         val useTrueNorth = true

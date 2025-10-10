@@ -25,7 +25,7 @@ fun GSRVideoPlayerScreen(
     videoUri: String = "sample_video.mp4",
     sessionId: String = "GSR_Session_001",
     onBackClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val localContext = LocalContext.current
     var isPlaying by remember { mutableStateOf(false) }
@@ -33,36 +33,39 @@ fun GSRVideoPlayerScreen(
     var duration by remember { mutableStateOf(100) }
     var showGSROverlay by remember { mutableStateOf(true) }
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFF16131e))
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color(0xFF16131e)),
     ) {
         TitleBar(
             title = "GSR Video Player",
             showBackButton = true,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
         ) {
             TitleBarAction(
                 icon = Icons.Default.Visibility,
                 contentDescription = "Toggle GSR Overlay",
-                onClick = { showGSROverlay = !showGSROverlay }
+                onClick = { showGSROverlay = !showGSROverlay },
             )
         }
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Video Player Section
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(16f / 9f),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
             ) {
                 Box(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     // Video View
                     AndroidView(
@@ -72,24 +75,24 @@ fun GSRVideoPlayerScreen(
                                 // setVideoURI(Uri.parse(videoUri))
                             }
                         },
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
                     // GSR Data Overlay
                     if (showGSROverlay) {
                         GSRDataOverlay(
-                            modifier = Modifier.align(Alignment.BottomEnd)
+                            modifier = Modifier.align(Alignment.BottomEnd),
                         )
                     }
                     // Play/Pause Button
                     FloatingActionButton(
                         onClick = { isPlaying = !isPlaying },
                         modifier = Modifier.align(Alignment.Center),
-                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
                     ) {
                         Icon(
                             imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                             contentDescription = if (isPlaying) "Pause" else "Play",
-                            tint = Color.White
+                            tint = Color.White,
                         )
                     }
                 }
@@ -100,7 +103,7 @@ fun GSRVideoPlayerScreen(
                 currentPosition = currentPosition,
                 duration = duration,
                 onPlayPause = { isPlaying = !isPlaying },
-                onSeek = { currentPosition = it }
+                onSeek = { currentPosition = it },
             )
             // Session Information
             SessionDetailsCard(sessionId = sessionId)
@@ -111,46 +114,47 @@ fun GSRVideoPlayerScreen(
 }
 
 @Composable
-private fun GSRDataOverlay(
-    modifier: Modifier = Modifier
-) {
+private fun GSRDataOverlay(modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier
-            .padding(8.dp)
-            .width(120.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black.copy(alpha = 0.7f)
-        )
+        modifier =
+            modifier
+                .padding(8.dp)
+                .width(120.dp),
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Black.copy(alpha = 0.7f),
+            ),
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = "GSR",
                 color = Color.White,
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 text = "0.42 μS",
                 color = Color.Cyan,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             // Mini GSR waveform
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(30.dp)
-                    .background(Color.Gray.copy(alpha = 0.3f))
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(30.dp)
+                        .background(Color.Gray.copy(alpha = 0.3f)),
             ) {
                 // Placeholder for mini waveform visualization
                 Text(
                     text = "~~~",
                     color = Color.Cyan,
                     fontSize = 10.sp,
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
                 )
             }
         }
@@ -164,92 +168,96 @@ private fun VideoControlsCard(
     currentPosition: Int,
     duration: Int,
     onPlayPause: () -> Unit,
-    onSeek: (Int) -> Unit
+    onSeek: (Int) -> Unit,
 ) {
     val localContext = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             // Progress slider
             Slider(
                 value = currentPosition.toFloat(),
                 onValueChange = { onSeek(it.toInt()) },
                 valueRange = 0f..duration.toFloat(),
-                colors = SliderDefaults.colors(
-                    thumbColor = MaterialTheme.colorScheme.primary,
-                    activeTrackColor = MaterialTheme.colorScheme.primary,
-                    inactiveTrackColor = Color.Gray
-                )
+                colors =
+                    SliderDefaults.colors(
+                        thumbColor = MaterialTheme.colorScheme.primary,
+                        activeTrackColor = MaterialTheme.colorScheme.primary,
+                        inactiveTrackColor = Color.Gray,
+                    ),
             )
             // Time indicators
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = formatTime(currentPosition),
                     color = Color.White,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
                 )
                 Text(
                     text = formatTime(duration),
                     color = Color.White,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 IconButton(onClick = {
                     // TODO: Skip to previous video
-                    android.widget.Toast.makeText(
-                        localContext,
-                        "Previous video",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
+                    android.widget.Toast
+                        .makeText(
+                            localContext,
+                            "Previous video",
+                            android.widget.Toast.LENGTH_SHORT,
+                        ).show()
                 }) {
                     Icon(
                         Icons.Default.SkipPrevious,
                         contentDescription = "Previous",
-                        tint = Color.White
+                        tint = Color.White,
                     )
                 }
                 IconButton(onClick = onPlayPause) {
                     Icon(
                         imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                         contentDescription = if (isPlaying) "Pause" else "Play",
-                        tint = Color.White
+                        tint = Color.White,
                     )
                 }
                 IconButton(onClick = {
                     // TODO: Skip to next video
-                    android.widget.Toast.makeText(
-                        localContext,
-                        "Next video",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
+                    android.widget.Toast
+                        .makeText(
+                            localContext,
+                            "Next video",
+                            android.widget.Toast.LENGTH_SHORT,
+                        ).show()
                 }) {
                     Icon(Icons.Default.SkipNext, contentDescription = "Next", tint = Color.White)
                 }
                 IconButton(onClick = {
                     // TODO: Toggle fullscreen mode
-                    android.widget.Toast.makeText(
-                        localContext,
-                        "Fullscreen mode",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
+                    android.widget.Toast
+                        .makeText(
+                            localContext,
+                            "Fullscreen mode",
+                            android.widget.Toast.LENGTH_SHORT,
+                        ).show()
                 }) {
                     Icon(
                         Icons.Default.Fullscreen,
                         contentDescription = "Fullscreen",
-                        tint = Color.White
+                        tint = Color.White,
                     )
                 }
             }
@@ -261,29 +269,30 @@ private fun VideoControlsCard(
 private fun SessionDetailsCard(sessionId: String) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = "Session Details",
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp),
             )
-            val details = listOf(
-                "Session ID" to sessionId,
-                "Recording Date" to "2024-01-15",
-                "Duration" to "5m 32s",
-                "Participant" to "P001",
-                "Condition" to "Stress Test"
-            )
+            val details =
+                listOf(
+                    "Session ID" to sessionId,
+                    "Recording Date" to "2024-01-15",
+                    "Duration" to "5m 32s",
+                    "Participant" to "P001",
+                    "Condition" to "Stress Test",
+                )
             details.forEach { (label, value) ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(label, color = Color.Gray, fontSize = 14.sp)
                     Text(value, color = Color.White, fontSize = 14.sp)
@@ -298,21 +307,21 @@ private fun SessionDetailsCard(sessionId: String) {
 private fun GSRMetricsCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = "Real-time GSR Metrics",
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp),
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 MetricItem("Current", "0.42 μS", Color.Cyan)
                 MetricItem("Average", "0.38 μS", Color.Green)
@@ -326,21 +335,21 @@ private fun GSRMetricsCard() {
 private fun MetricItem(
     label: String,
     value: String,
-    color: Color
+    color: Color,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             color = color,
             fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Text(
             text = label,
             color = Color.Gray,
-            fontSize = 12.sp
+            fontSize = 12.sp,
         )
     }
 }

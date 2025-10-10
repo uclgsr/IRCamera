@@ -11,7 +11,7 @@ object ConfigRepository {
             // TC007 functionality removed
             Gson().fromJson(
                 if (isTC007) "{}" else SharedManager.getIRConfig(), // Use empty JSON for TC007
-                ModelBean::class.java
+                ModelBean::class.java,
             )
         } catch (_: Exception) {
             ModelBean(DataBean(id = 0, use = true))

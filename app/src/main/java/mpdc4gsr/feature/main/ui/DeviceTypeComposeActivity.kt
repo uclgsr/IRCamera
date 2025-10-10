@@ -37,20 +37,20 @@ enum class IRDeviceType(
     val displayName: String,
     val description: String,
     val icon: ImageVector,
-    val isTS004: Boolean
+    val isTS004: Boolean,
 ) {
     TS004(
         "TS004 Thermal Camera",
         "High-precision thermal imaging device",
         Icons.Default.Thermostat,
-        true
+        true,
     ),
     TC007(
         "TC007 Thermal Camera",
         "Compact thermal imaging solution",
         Icons.Default.CameraAlt,
-        false
-    )
+        false,
+    ),
 }
 
 class DeviceTypeViewModel : AppBaseViewModel() {
@@ -58,20 +58,21 @@ class DeviceTypeViewModel : AppBaseViewModel() {
     val selectedDevice: State<IRDeviceType?> = _selectedDevice
     private val _availableDevices = mutableStateOf(IRDeviceType.values().toList())
     val availableDevices: State<List<IRDeviceType>> = _availableDevices
+
     fun selectDevice(device: IRDeviceType) {
         _selectedDevice.value = device
     }
 
-    fun getDeviceList(): List<IRDeviceType> {
-        return listOf(
+    fun getDeviceList(): List<IRDeviceType> =
+        listOf(
             IRDeviceType.TS004,
-            IRDeviceType.TC007
+            IRDeviceType.TC007,
         )
-    }
 }
 
 class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
     private val deviceTypeVM: DeviceTypeViewModel by viewModels()
+
     override fun createViewModel(): DeviceTypeViewModel = deviceTypeVM
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -82,58 +83,62 @@ class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
             val selectedDevice by viewModel.selectedDevice
             val devices = viewModel.getDeviceList()
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFF16131E))
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFF16131E)),
             ) {
                 TitleBar(
                     title = stringResource(R.string.device_type_selection),
-                    onBackClick = { finish() }
+                    onBackClick = { finish() },
                 )
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
                 ) {
                     // Header section
                     Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 24.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 24.dp),
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surface,
+                            ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     ) {
                         Column(
                             modifier = Modifier.padding(20.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Icon(
                                 imageVector = Icons.Default.DeviceHub,
                                 contentDescription = null,
                                 modifier = Modifier.size(48.dp),
-                                tint = MaterialTheme.colorScheme.primary
+                                tint = MaterialTheme.colorScheme.primary,
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
                                 text = "Select Device Type",
                                 style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
                             Text(
                                 text = "Choose the thermal camera device you want to connect",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(top = 8.dp)
+                                modifier = Modifier.padding(top = 8.dp),
                             )
                         }
                     }
                     // Device list
                     LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         items(devices) { device ->
                             DeviceTypeCard(
@@ -144,20 +149,22 @@ class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
                                     // Navigate based on device type
                                     when (selectedDevice) {
                                         IRDeviceType.TS004 -> {
-                                            NavigationManager.getInstance()
+                                            NavigationManager
+                                                .getInstance()
                                                 .build(RouterConfig.IR_DEVICE_ADD)
                                                 .withBoolean("isTS004", true)
                                                 .navigation(context as DeviceTypeComposeActivity)
                                         }
 
                                         IRDeviceType.TC007 -> {
-                                            NavigationManager.getInstance()
+                                            NavigationManager
+                                                .getInstance()
                                                 .build(RouterConfig.IR_DEVICE_ADD)
                                                 .withBoolean("isTS004", false)
                                                 .navigation(context as DeviceTypeComposeActivity)
                                         }
                                     }
-                                }
+                                },
                             )
                         }
                     }
@@ -165,35 +172,36 @@ class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
                     // Information section
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant
-                        )
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            ),
                     ) {
                         Column(
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(16.dp),
                         ) {
                             Row(
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Info,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(20.dp)
+                                    modifier = Modifier.size(20.dp),
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = "Device Information",
                                     style = MaterialTheme.typography.titleSmall,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = "Make sure your thermal camera device is powered on and ready for connection before proceeding.",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                     }
@@ -208,72 +216,87 @@ private fun DeviceTypeCard(
     device: IRDeviceType,
     isSelected: Boolean,
     onDeviceClick: (IRDeviceType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .clickable { onDeviceClick(device) },
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected)
-                MaterialTheme.colorScheme.primaryContainer
-            else
-                MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = if (isSelected) 8.dp else 4.dp
-        )
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .clickable { onDeviceClick(device) },
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.surface
+                    },
+            ),
+        elevation =
+            CardDefaults.cardElevation(
+                defaultElevation = if (isSelected) 8.dp else 4.dp,
+            ),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             // Device icon
             Surface(
                 modifier = Modifier.size(56.dp),
                 shape = RoundedCornerShape(12.dp),
-                color = if (isSelected)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.primaryContainer
+                color =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.primaryContainer
+                    },
             ) {
                 Icon(
                     imageVector = device.icon,
                     contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(12.dp),
-                    tint = if (isSelected)
-                        MaterialTheme.colorScheme.onPrimary
-                    else
-                        MaterialTheme.colorScheme.onPrimaryContainer
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(12.dp),
+                    tint =
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.onPrimary
+                        } else {
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        },
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
             // Device info
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = device.displayName,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (isSelected)
-                        MaterialTheme.colorScheme.onPrimaryContainer
-                    else
-                        MaterialTheme.colorScheme.onSurface
+                    color =
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.onSurface
+                        },
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = device.description,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (isSelected)
-                        MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
-                    else
-                        MaterialTheme.colorScheme.onSurfaceVariant
+                    color =
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
                 )
             }
             // Selection indicator
@@ -282,14 +305,14 @@ private fun DeviceTypeCard(
                     imageVector = Icons.Default.CheckCircle,
                     contentDescription = "Selected",
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
             } else {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                     contentDescription = "Select",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(16.dp),
                 )
             }
         }

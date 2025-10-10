@@ -32,13 +32,13 @@ data class ResearchTemplate(
     val tasks: List<String>,
     val difficulty: TemplateDifficulty,
     val category: TemplateCategory,
-    val isCustom: Boolean = false
+    val isCustom: Boolean = false,
 )
 
 enum class TemplateDifficulty {
     BEGINNER,
     INTERMEDIATE,
-    ADVANCED
+    ADVANCED,
 }
 
 enum class TemplateCategory {
@@ -46,7 +46,7 @@ enum class TemplateCategory {
     COGNITIVE_LOAD,
     EMOTION_RECOGNITION,
     PHYSIOLOGICAL_MONITORING,
-    CUSTOM
+    CUSTOM,
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,38 +54,44 @@ enum class TemplateCategory {
 fun ResearchTemplateScreen(
     onNavigateBack: () -> Unit = {},
     onCreateCustomTemplate: () -> Unit = {},
-    onUseTemplate: (ResearchTemplate) -> Unit = {}
+    onUseTemplate: (ResearchTemplate) -> Unit = {},
 ) {
     var selectedCategory by remember { mutableStateOf<TemplateCategory?>(null) }
     var searchQuery by remember { mutableStateOf("") }
     val templates = remember { getSampleTemplates() }
     val keyboardController = LocalSoftwareKeyboardController.current
-    val filteredTemplates = templates.filter { template ->
-        val matchesCategory = selectedCategory == null || template.category == selectedCategory
-        val matchesSearch = if (searchQuery.isBlank()) true
-        else template.title.contains(searchQuery, ignoreCase = true) ||
-                template.description.contains(searchQuery, ignoreCase = true)
-        matchesCategory && matchesSearch
-    }
+    val filteredTemplates =
+        templates.filter { template ->
+            val matchesCategory = selectedCategory == null || template.category == selectedCategory
+            val matchesSearch =
+                if (searchQuery.isBlank()) {
+                    true
+                } else {
+                    template.title.contains(searchQuery, ignoreCase = true) ||
+                        template.description.contains(searchQuery, ignoreCase = true)
+                }
+            matchesCategory && matchesSearch
+        }
     IRCameraTheme {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .systemBarsPadding()
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .systemBarsPadding(),
         ) {
             TitleBar(
                 title = "Research Templates",
                 showBackButton = true,
-                onBackClick = onNavigateBack
+                onBackClick = onNavigateBack,
             ) {
                 TitleBarAction(
                     icon = Icons.Default.Add,
                     contentDescription = "Create custom template",
-                    onClick = onCreateCustomTemplate
+                    onClick = onCreateCustomTemplate,
                 )
             }
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 // Search Bar
                 OutlinedTextField(
@@ -104,33 +110,36 @@ fun ResearchTemplateScreen(
                             }
                         }
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF6B73FF),
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        cursorColor = Color(0xFF6B73FF)
-                    ),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF6B73FF),
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White,
+                            cursorColor = Color(0xFF6B73FF),
+                        ),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(
-                        onSearch = {
-                            keyboardController?.hide()
-                        }
-                    )
+                    keyboardActions =
+                        KeyboardActions(
+                            onSearch = {
+                                keyboardController?.hide()
+                            },
+                        ),
                 )
                 // Category Filter Chips
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     item {
                         CategoryFilterChips(
                             selectedCategory = selectedCategory,
-                            onCategorySelected = { selectedCategory = it }
+                            onCategorySelected = { selectedCategory = it },
                         )
                     }
                     item {
@@ -139,7 +148,7 @@ fun ResearchTemplateScreen(
                     items(filteredTemplates) { template ->
                         TemplateItem(
                             template = template,
-                            onUse = { onUseTemplate(template) }
+                            onUse = { onUseTemplate(template) },
                         )
                     }
                     if (filteredTemplates.isEmpty()) {
@@ -147,7 +156,7 @@ fun ResearchTemplateScreen(
                             EmptyTemplatesState(
                                 searchQuery = searchQuery,
                                 selectedCategory = selectedCategory,
-                                onCreateCustom = onCreateCustomTemplate
+                                onCreateCustom = onCreateCustomTemplate,
                             )
                         }
                     }
@@ -160,7 +169,7 @@ fun ResearchTemplateScreen(
 @Composable
 fun CategoryFilterChips(
     selectedCategory: TemplateCategory?,
-    onCategorySelected: (TemplateCategory?) -> Unit
+    onCategorySelected: (TemplateCategory?) -> Unit,
 ) {
     Column {
         Text(
@@ -168,29 +177,30 @@ fun CategoryFilterChips(
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White,
-            modifier = Modifier.padding(bottom = 12.dp)
+            modifier = Modifier.padding(bottom = 12.dp),
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             // All Categories Chip
             FilterChip(
                 onClick = { onCategorySelected(null) },
                 label = { Text("All") },
                 selected = selectedCategory == null,
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = Color(0xFF6B73FF),
-                    selectedLabelColor = Color.White,
-                    containerColor = Color(0xFF2A2A2A),
-                    labelColor = Color.White
-                )
+                colors =
+                    FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = Color(0xFF6B73FF),
+                        selectedLabelColor = Color.White,
+                        containerColor = Color(0xFF2A2A2A),
+                        labelColor = Color.White,
+                    ),
             )
             // Category-specific chips (showing only a few due to space)
             listOf(
                 TemplateCategory.STRESS_RESPONSE to "Stress",
                 TemplateCategory.COGNITIVE_LOAD to "Cognitive",
-                TemplateCategory.EMOTION_RECOGNITION to "Emotion"
+                TemplateCategory.EMOTION_RECOGNITION to "Emotion",
             ).forEach { (category, label) ->
                 FilterChip(
                     onClick = {
@@ -198,12 +208,13 @@ fun CategoryFilterChips(
                     },
                     label = { Text(label) },
                     selected = selectedCategory == category,
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = Color(0xFF6B73FF),
-                        selectedLabelColor = Color.White,
-                        containerColor = Color(0xFF2A2A2A),
-                        labelColor = Color.White
-                    )
+                    colors =
+                        FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = Color(0xFF6B73FF),
+                            selectedLabelColor = Color.White,
+                            containerColor = Color(0xFF2A2A2A),
+                            labelColor = Color.White,
+                        ),
                 )
             }
         }
@@ -217,26 +228,26 @@ fun TemplateStatsCard(templates: List<ResearchTemplate>) {
     val avgDuration = templates.map { parseDuration(it.duration) }.average().toInt()
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
             StatItem(
                 label = "Templates",
                 value = totalTemplates.toString(),
-                color = Color(0xFF6B73FF)
+                color = Color(0xFF6B73FF),
             )
             StatItem(
                 label = "Custom",
                 value = customTemplates.toString(),
-                color = Color(0xFF4ECDC4)
+                color = Color(0xFF4ECDC4),
             )
             StatItem(
                 label = "Avg Duration",
                 value = "${avgDuration}min",
-                color = Color(0xFFFF6B6B)
+                color = Color(0xFFFF6B6B),
             )
         }
     }
@@ -246,21 +257,21 @@ fun TemplateStatsCard(templates: List<ResearchTemplate>) {
 private fun StatItem(
     label: String,
     value: String,
-    color: Color
+    color: Color,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
-            color = color
+            color = color,
         )
         Text(
             text = label,
             fontSize = 12.sp,
-            color = Color(0xFFCCFFFFFF)
+            color = Color(0xFFCCFFFFFF),
         )
     }
 }
@@ -268,33 +279,33 @@ private fun StatItem(
 @Composable
 fun TemplateItem(
     template: ResearchTemplate,
-    onUse: () -> Unit
+    onUse: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             // Header
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(
                         text = template.title,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = Color.White,
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         DifficultyBadge(difficulty = template.difficulty)
                         Spacer(modifier = Modifier.width(8.dp))
@@ -303,14 +314,14 @@ fun TemplateItem(
                             Spacer(modifier = Modifier.width(8.dp))
                             Surface(
                                 color = Color(0xFF4ECDC4).copy(alpha = 0.2f),
-                                shape = MaterialTheme.shapes.small
+                                shape = MaterialTheme.shapes.small,
                             ) {
                                 Text(
                                     text = "Custom",
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = Color(0xFF4ECDC4),
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                                 )
                             }
                         }
@@ -318,9 +329,10 @@ fun TemplateItem(
                 }
                 Button(
                     onClick = onUse,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6B73FF)
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF6B73FF),
+                        ),
                 ) {
                     Text("Use Template")
                 }
@@ -331,65 +343,68 @@ fun TemplateItem(
                 text = template.description,
                 fontSize = 14.sp,
                 color = Color(0xFFCCFFFFFF),
-                lineHeight = 20.sp
+                lineHeight = 20.sp,
             )
             Spacer(modifier = Modifier.height(16.dp))
             // Details Row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Duration and Sensors
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Timer,
                         contentDescription = "Duration",
                         tint = Color(0xFF4ECDC4),
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = template.duration,
                         fontSize = 12.sp,
-                        color = Color(0xFFCCFFFFFF)
+                        color = Color(0xFFCCFFFFFF),
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Icon(
                         imageVector = Icons.Default.Sensors,
                         contentDescription = "Sensors",
                         tint = Color(0xFF4ECDC4),
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = "${template.sensorTypes.size} sensors",
                         fontSize = 12.sp,
-                        color = Color(0xFFCCFFFFFF)
+                        color = Color(0xFFCCFFFFFF),
                     )
                 }
                 // Sensor Type Icons
                 Row {
                     template.sensorTypes.take(3).forEach { sensorType ->
                         Icon(
-                            imageVector = when (sensorType) {
-                                "GSR" -> Icons.Default.Sensors
-                                "Thermal" -> Icons.Default.Thermostat
-                                "Camera" -> Icons.Default.Camera
-                                else -> Icons.Default.DeviceHub
-                            },
+                            imageVector =
+                                when (sensorType) {
+                                    "GSR" -> Icons.Default.Sensors
+                                    "Thermal" -> Icons.Default.Thermostat
+                                    "Camera" -> Icons.Default.Camera
+                                    else -> Icons.Default.DeviceHub
+                                },
                             contentDescription = sensorType,
-                            tint = when (sensorType) {
-                                "GSR" -> Color(0xFF4ECDC4)
-                                "Thermal" -> Color(0xFFFF6B6B)
-                                "Camera" -> Color.White
-                                else -> Color(0xFF6B73FF)
-                            },
-                            modifier = Modifier
-                                .size(20.dp)
-                                .padding(horizontal = 2.dp)
+                            tint =
+                                when (sensorType) {
+                                    "GSR" -> Color(0xFF4ECDC4)
+                                    "Thermal" -> Color(0xFFFF6B6B)
+                                    "Camera" -> Color.White
+                                    else -> Color(0xFF6B73FF)
+                                },
+                            modifier =
+                                Modifier
+                                    .size(20.dp)
+                                    .padding(horizontal = 2.dp),
                         )
                     }
                     if (template.sensorTypes.size > 3) {
@@ -397,7 +412,7 @@ fun TemplateItem(
                             text = "+${template.sensorTypes.size - 3}",
                             fontSize = 12.sp,
                             color = Color(0xFFCCFFFFFF),
-                            modifier = Modifier.padding(start = 4.dp)
+                            modifier = Modifier.padding(start = 4.dp),
                         )
                     }
                 }
@@ -410,7 +425,7 @@ fun TemplateItem(
                         template.tasks.take(2).joinToString(", ")
                     }${if (template.tasks.size > 2) "..." else ""}",
                     fontSize = 12.sp,
-                    color = Color(0xFFCCFFFFFF)
+                    color = Color(0xFFCCFFFFFF),
                 )
             }
         }
@@ -419,44 +434,46 @@ fun TemplateItem(
 
 @Composable
 fun DifficultyBadge(difficulty: TemplateDifficulty) {
-    val (color, text) = when (difficulty) {
-        TemplateDifficulty.BEGINNER -> Color(0xFF4ECDC4) to "Beginner"
-        TemplateDifficulty.INTERMEDIATE -> Color(0xFFFFB74D) to "Intermediate"
-        TemplateDifficulty.ADVANCED -> Color(0xFFFF6B6B) to "Advanced"
-    }
+    val (color, text) =
+        when (difficulty) {
+            TemplateDifficulty.BEGINNER -> Color(0xFF4ECDC4) to "Beginner"
+            TemplateDifficulty.INTERMEDIATE -> Color(0xFFFFB74D) to "Intermediate"
+            TemplateDifficulty.ADVANCED -> Color(0xFFFF6B6B) to "Advanced"
+        }
     Surface(
         color = color.copy(alpha = 0.2f),
-        shape = MaterialTheme.shapes.small
+        shape = MaterialTheme.shapes.small,
     ) {
         Text(
             text = text,
             fontSize = 10.sp,
             fontWeight = FontWeight.Medium,
             color = color,
-            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
         )
     }
 }
 
 @Composable
 fun CategoryBadge(category: TemplateCategory) {
-    val (color, text) = when (category) {
-        TemplateCategory.STRESS_RESPONSE -> Color(0xFFFF6B6B) to "Stress"
-        TemplateCategory.COGNITIVE_LOAD -> Color(0xFF6B73FF) to "Cognitive"
-        TemplateCategory.EMOTION_RECOGNITION -> Color(0xFFFFB74D) to "Emotion"
-        TemplateCategory.PHYSIOLOGICAL_MONITORING -> Color(0xFF4ECDC4) to "Physiology"
-        TemplateCategory.CUSTOM -> Color(0xFF9E9E9E) to "Custom"
-    }
+    val (color, text) =
+        when (category) {
+            TemplateCategory.STRESS_RESPONSE -> Color(0xFFFF6B6B) to "Stress"
+            TemplateCategory.COGNITIVE_LOAD -> Color(0xFF6B73FF) to "Cognitive"
+            TemplateCategory.EMOTION_RECOGNITION -> Color(0xFFFFB74D) to "Emotion"
+            TemplateCategory.PHYSIOLOGICAL_MONITORING -> Color(0xFF4ECDC4) to "Physiology"
+            TemplateCategory.CUSTOM -> Color(0xFF9E9E9E) to "Custom"
+        }
     Surface(
         color = color.copy(alpha = 0.2f),
-        shape = MaterialTheme.shapes.small
+        shape = MaterialTheme.shapes.small,
     ) {
         Text(
             text = text,
             fontSize = 10.sp,
             fontWeight = FontWeight.Medium,
             color = color,
-            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
         )
     }
 }
@@ -465,50 +482,62 @@ fun CategoryBadge(category: TemplateCategory) {
 fun EmptyTemplatesState(
     searchQuery: String,
     selectedCategory: TemplateCategory?,
-    onCreateCustom: () -> Unit
+    onCreateCustom: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
-            imageVector = if (searchQuery.isBlank() && selectedCategory == null)
-                Icons.AutoMirrored.Filled.Assignment else Icons.Default.SearchOff,
+            imageVector =
+                if (searchQuery.isBlank() && selectedCategory == null) {
+                    Icons.AutoMirrored.Filled.Assignment
+                } else {
+                    Icons.Default.SearchOff
+                },
             contentDescription = if (searchQuery.isBlank() && selectedCategory == null) "No Templates" else "No Search Results",
             tint = Color(0xFF6B73FF),
-            modifier = Modifier.size(64.dp)
+            modifier = Modifier.size(64.dp),
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = if (searchQuery.isBlank() && selectedCategory == null)
-                "No templates available" else "No templates found",
+            text =
+                if (searchQuery.isBlank() && selectedCategory == null) {
+                    "No templates available"
+                } else {
+                    "No templates found"
+                },
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.White
+            color = Color.White,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = if (searchQuery.isBlank() && selectedCategory == null)
-                "Create your first custom template to get started"
-            else
-                "Try adjusting your search or category filter",
+            text =
+                if (searchQuery.isBlank() && selectedCategory == null) {
+                    "Create your first custom template to get started"
+                } else {
+                    "Try adjusting your search or category filter"
+                },
             fontSize = 14.sp,
-            color = Color(0xFFCCFFFFFF)
+            color = Color(0xFFCCFFFFFF),
         )
         if (searchQuery.isBlank() && selectedCategory == null) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = onCreateCustom,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF6B73FF)
-                )
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF6B73FF),
+                    ),
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Create Template",
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Create Custom Template")
@@ -522,59 +551,60 @@ private fun parseDuration(duration: String): Int {
     return duration.replace(" min", "").toIntOrNull() ?: 0
 }
 
-private fun getSampleTemplates() = listOf(
-    ResearchTemplate(
-        id = "TEMPLATE-001",
-        title = "Basic Stress Response",
-        description = "Measure physiological responses to cognitive stress tasks. Includes baseline recording, math problems, and recovery period.",
-        duration = "20 min",
-        sensorTypes = listOf("GSR", "Thermal"),
-        tasks = listOf("Baseline (5min)", "Math problems", "Recovery (5min)"),
-        difficulty = TemplateDifficulty.BEGINNER,
-        category = TemplateCategory.STRESS_RESPONSE
-    ),
-    ResearchTemplate(
-        id = "TEMPLATE-002",
-        title = "Cognitive Load Assessment",
-        description = "Advanced cognitive load measurement using multi-modal sensors during complex reasoning tasks.",
-        duration = "35 min",
-        sensorTypes = listOf("GSR", "Thermal", "Camera"),
-        tasks = listOf("Training", "N-back task", "Stroop test", "Memory recall"),
-        difficulty = TemplateDifficulty.ADVANCED,
-        category = TemplateCategory.COGNITIVE_LOAD
-    ),
-    ResearchTemplate(
-        id = "TEMPLATE-003",
-        title = "Emotion Recognition Study",
-        description = "Capture emotional responses using facial thermal imaging and GSR during video stimuli presentation.",
-        duration = "25 min",
-        sensorTypes = listOf("GSR", "Thermal", "Camera"),
-        tasks = listOf("Baseline", "Happy videos", "Sad videos", "Neutral videos"),
-        difficulty = TemplateDifficulty.INTERMEDIATE,
-        category = TemplateCategory.EMOTION_RECOGNITION
-    ),
-    ResearchTemplate(
-        id = "TEMPLATE-004",
-        title = "Physiological Monitoring",
-        description = "Continuous physiological monitoring during extended computer work sessions.",
-        duration = "60 min",
-        sensorTypes = listOf("GSR", "Thermal"),
-        tasks = listOf("Computer work", "Break periods", "Final assessment"),
-        difficulty = TemplateDifficulty.BEGINNER,
-        category = TemplateCategory.PHYSIOLOGICAL_MONITORING
-    ),
-    ResearchTemplate(
-        id = "CUSTOM-001",
-        title = "My Custom Protocol",
-        description = "Custom research protocol designed for specific study requirements.",
-        duration = "30 min",
-        sensorTypes = listOf("GSR", "Thermal", "Camera"),
-        tasks = listOf("Custom task 1", "Custom task 2"),
-        difficulty = TemplateDifficulty.INTERMEDIATE,
-        category = TemplateCategory.CUSTOM,
-        isCustom = true
+private fun getSampleTemplates() =
+    listOf(
+        ResearchTemplate(
+            id = "TEMPLATE-001",
+            title = "Basic Stress Response",
+            description = "Measure physiological responses to cognitive stress tasks. Includes baseline recording, math problems, and recovery period.",
+            duration = "20 min",
+            sensorTypes = listOf("GSR", "Thermal"),
+            tasks = listOf("Baseline (5min)", "Math problems", "Recovery (5min)"),
+            difficulty = TemplateDifficulty.BEGINNER,
+            category = TemplateCategory.STRESS_RESPONSE,
+        ),
+        ResearchTemplate(
+            id = "TEMPLATE-002",
+            title = "Cognitive Load Assessment",
+            description = "Advanced cognitive load measurement using multi-modal sensors during complex reasoning tasks.",
+            duration = "35 min",
+            sensorTypes = listOf("GSR", "Thermal", "Camera"),
+            tasks = listOf("Training", "N-back task", "Stroop test", "Memory recall"),
+            difficulty = TemplateDifficulty.ADVANCED,
+            category = TemplateCategory.COGNITIVE_LOAD,
+        ),
+        ResearchTemplate(
+            id = "TEMPLATE-003",
+            title = "Emotion Recognition Study",
+            description = "Capture emotional responses using facial thermal imaging and GSR during video stimuli presentation.",
+            duration = "25 min",
+            sensorTypes = listOf("GSR", "Thermal", "Camera"),
+            tasks = listOf("Baseline", "Happy videos", "Sad videos", "Neutral videos"),
+            difficulty = TemplateDifficulty.INTERMEDIATE,
+            category = TemplateCategory.EMOTION_RECOGNITION,
+        ),
+        ResearchTemplate(
+            id = "TEMPLATE-004",
+            title = "Physiological Monitoring",
+            description = "Continuous physiological monitoring during extended computer work sessions.",
+            duration = "60 min",
+            sensorTypes = listOf("GSR", "Thermal"),
+            tasks = listOf("Computer work", "Break periods", "Final assessment"),
+            difficulty = TemplateDifficulty.BEGINNER,
+            category = TemplateCategory.PHYSIOLOGICAL_MONITORING,
+        ),
+        ResearchTemplate(
+            id = "CUSTOM-001",
+            title = "My Custom Protocol",
+            description = "Custom research protocol designed for specific study requirements.",
+            duration = "30 min",
+            sensorTypes = listOf("GSR", "Thermal", "Camera"),
+            tasks = listOf("Custom task 1", "Custom task 2"),
+            difficulty = TemplateDifficulty.INTERMEDIATE,
+            category = TemplateCategory.CUSTOM,
+            isCustom = true,
+        ),
     )
-)
 
 @Preview(showBackground = true)
 @Composable

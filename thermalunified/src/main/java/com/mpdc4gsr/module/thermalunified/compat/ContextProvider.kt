@@ -17,14 +17,12 @@ object ContextProvider {
     fun getContext(): Context {
         if (!::applicationContext.isInitialized) {
             throw IllegalStateException(
-                "ContextProvider not initialized. Call ContextProvider.init() in Application.onCreate()"
+                "ContextProvider not initialized. Call ContextProvider.init() in Application.onCreate()",
             )
         }
         return applicationContext
     }
 
     @JvmStatic
-    fun getApplication(): Application {
-        return getContext() as Application
-    }
+    fun getApplication(): Application = getContext() as Application
 }

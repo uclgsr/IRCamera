@@ -19,13 +19,14 @@ import coil.load
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.tools.ToastTools
-import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import com.mpdc4gsr.libunified.app.tools.UnitTools
+import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 
 class TempAlarmSetDialog(
     context: Context,
     private val isEdit: Boolean,
-) : Dialog(context, R.style.app_compat_dialog), CompoundButton.OnCheckedChangeListener {
+) : Dialog(context, R.style.app_compat_dialog),
+    CompoundButton.OnCheckedChangeListener {
     var alarmBean = AlarmBean()
         set(value) {
             field = value.copy()
@@ -59,6 +60,7 @@ class TempAlarmSetDialog(
     private lateinit var clRingtoneSelect: ConstraintLayout
     private lateinit var tvAlarmRingtone: TextView
     private lateinit var tvAlarmMark: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCancelable(false)
@@ -197,17 +199,25 @@ class TempAlarmSetDialog(
         try {
             val inputHigh =
                 if (switchAlarmHigh.isChecked) {
-                    if (etAlarmHigh.text.isNotEmpty()) UnitTools.showToCValue(
-                        etAlarmHigh.text.toString().toFloat()
-                    ) else null
+                    if (etAlarmHigh.text.isNotEmpty()) {
+                        UnitTools.showToCValue(
+                            etAlarmHigh.text.toString().toFloat(),
+                        )
+                    } else {
+                        null
+                    }
                 } else {
                     null
                 }
             val inputLow =
                 if (switchAlarmLow.isChecked) {
-                    if (etAlarmLow.text.isNotEmpty()) UnitTools.showToCValue(
-                        etAlarmLow.text.toString().toFloat()
-                    ) else null
+                    if (etAlarmLow.text.isNotEmpty()) {
+                        UnitTools.showToCValue(
+                            etAlarmLow.text.toString().toFloat(),
+                        )
+                    } else {
+                        null
+                    }
                 } else {
                     null
                 }
@@ -268,7 +278,10 @@ class TempAlarmSetDialog(
         }
     }
 
-    override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
+    override fun onCheckedChanged(
+        buttonView: CompoundButton,
+        isChecked: Boolean,
+    ) {
         when (buttonView?.id) {
             R.id.switch_alarm_high -> {
                 etAlarmHigh.isEnabled = isChecked

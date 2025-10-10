@@ -2,12 +2,11 @@ package mpdc4gsr.core.data
 
 import android.content.Context
 import com.mpdc4gsr.libunified.app.repository.BaseRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
 class SensorDataRepository(
-    private val context: Context
+    private val context: Context,
 ) : BaseRepository() {
     companion object {
         private const val DEVICE_STATUS_CACHE_KEY = "device_status"
@@ -22,7 +21,7 @@ class SensorDataRepository(
         val conductance: Double,
         val quality: DataQuality,
         val deviceId: String,
-        val batteryLevel: Int? = null
+        val batteryLevel: Int? = null,
     )
 
     data class ThermalSensorData(
@@ -33,7 +32,7 @@ class SensorDataRepository(
         val minTemp: Float,
         val maxTemp: Float,
         val avgTemp: Float,
-        val deviceId: String
+        val deviceId: String,
     ) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
@@ -42,9 +41,7 @@ class SensorDataRepository(
             return timestamp == other.timestamp && deviceId == other.deviceId
         }
 
-        override fun hashCode(): Int {
-            return timestamp.hashCode() * 31 + deviceId.hashCode()
-        }
+        override fun hashCode(): Int = timestamp.hashCode() * 31 + deviceId.hashCode()
     }
 
     data class DeviceStatus(
@@ -54,79 +51,97 @@ class SensorDataRepository(
         val batteryLevel: Int?,
         val signalStrength: Int?,
         val lastSeen: Long,
-        val firmwareVersion: String?
+        val firmwareVersion: String?,
     )
 
     enum class DataQuality {
-        EXCELLENT, GOOD, FAIR, POOR, UNKNOWN
+        EXCELLENT,
+        GOOD,
+        FAIR,
+        POOR,
+        UNKNOWN,
     }
 
     enum class DeviceType {
-        TC007, TS004, SHIMMER_GSR, UNKNOWN
+        TC007,
+        TS004,
+        SHIMMER_GSR,
+        UNKNOWN,
     }
 
     enum class SensorType {
-        GSR, THERMAL, PPG, ACCELEROMETER
+        GSR,
+        THERMAL,
+        PPG,
+        ACCELEROMETER,
     }
 
-    fun getGSRDataStream(deviceId: String): Flow<BaseRepository.Result<GSRSensorData>> = safeFlow {
-        throw NotImplementedError("GSR data stream requires actual sensor connection. Simulation removed.")
-    }
+    fun getGSRDataStream(deviceId: String): Flow<BaseRepository.Result<GSRSensorData>> =
+        safeFlow {
+            throw NotImplementedError("GSR data stream requires actual sensor connection. Simulation removed.")
+        }
 
     fun getThermalDataStream(deviceId: String): Flow<BaseRepository.Result<ThermalSensorData>> =
         safeFlow {
             throw NotImplementedError("Thermal data stream requires actual sensor connection. Simulation removed.")
         }
 
-    fun getDeviceStatus(deviceId: String): Flow<BaseRepository.Result<DeviceStatus>> = safeFlow {
-        val cacheKey = "${DEVICE_STATUS_CACHE_KEY}_$deviceId"
-        getCachedOrExecute(cacheKey, DEVICE_STATUS_TTL) {
-            fetchDeviceStatus(deviceId)
+    fun getDeviceStatus(deviceId: String): Flow<BaseRepository.Result<DeviceStatus>> =
+        safeFlow {
+            val cacheKey = "${DEVICE_STATUS_CACHE_KEY}_$deviceId"
+            getCachedOrExecute(cacheKey, DEVICE_STATUS_TTL) {
+                fetchDeviceStatus(deviceId)
+            }
         }
-    }
 
     fun getCombinedSensorData(deviceIds: List<String>): Flow<BaseRepository.Result<CombinedSensorData>> {
         val gsrStreams = deviceIds.map { getGSRDataStream(it) }
         val thermalStreams = deviceIds.map { getThermalDataStream(it) }
         return combine(gsrStreams + thermalStreams) { results ->
-            val gsrData = results.take(deviceIds.size).mapNotNull { result ->
-                if (result is BaseRepository.Result.Success<*>) {
-                    @Suppress("UNCHECKED_CAST")
-                    (result.data as? GSRSensorData)
-                } else null
-            }
-            val thermalData = results.drop(deviceIds.size).mapNotNull { result ->
-                if (result is BaseRepository.Result.Success<*>) {
-                    @Suppress("UNCHECKED_CAST")
-                    (result.data as? ThermalSensorData)
-                } else null
-            }
+            val gsrData =
+                results.take(deviceIds.size).mapNotNull { result ->
+                    if (result is BaseRepository.Result.Success<*>) {
+                        @Suppress("UNCHECKED_CAST")
+                        (result.data as? GSRSensorData)
+                    } else {
+                        null
+                    }
+                }
+            val thermalData =
+                results.drop(deviceIds.size).mapNotNull { result ->
+                    if (result is BaseRepository.Result.Success<*>) {
+                        @Suppress("UNCHECKED_CAST")
+                        (result.data as? ThermalSensorData)
+                    } else {
+                        null
+                    }
+                }
             BaseRepository.Result.Success(CombinedSensorData(gsrData, thermalData))
         }
     }
 
     data class CombinedSensorData(
         val gsrData: List<GSRSensorData>,
-        val thermalData: List<ThermalSensorData>
+        val thermalData: List<ThermalSensorData>,
     ) {
         val timestamp: Long = System.currentTimeMillis()
         val hasData: Boolean = gsrData.isNotEmpty() || thermalData.isNotEmpty()
     }
 
-    private suspend fun fetchDeviceStatus(deviceId: String): DeviceStatus {
-        return DeviceStatus(
+    private suspend fun fetchDeviceStatus(deviceId: String): DeviceStatus =
+        DeviceStatus(
             deviceId = deviceId,
-            deviceType = when {
-                deviceId.contains("TC007") -> DeviceType.TC007
-                deviceId.contains("TS004") -> DeviceType.TS004
-                deviceId.contains("SHIMMER") -> DeviceType.SHIMMER_GSR
-                else -> DeviceType.UNKNOWN
-            },
+            deviceType =
+                when {
+                    deviceId.contains("TC007") -> DeviceType.TC007
+                    deviceId.contains("TS004") -> DeviceType.TS004
+                    deviceId.contains("SHIMMER") -> DeviceType.SHIMMER_GSR
+                    else -> DeviceType.UNKNOWN
+                },
             isConnected = false,
             batteryLevel = null,
             signalStrength = null,
             lastSeen = 0L,
-            firmwareVersion = null
+            firmwareVersion = null,
         )
-    }
 }

@@ -30,9 +30,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -44,7 +42,7 @@ import androidx.compose.ui.window.DialogProperties
 @Immutable
 data class SensorSelectionState(
     val entries: List<SensorAvailability>,
-    val selected: Set<SensorOption>
+    val selected: Set<SensorOption>,
 )
 
 @Composable
@@ -53,37 +51,40 @@ fun SensorSelectionDialog(
     onSelectionChanged: (Set<SensorOption>) -> Unit,
     onDismiss: () -> Unit,
     title: String = "Select Sensors",
-    subtitle: String = "Choose sensors for your research session"
+    subtitle: String = "Choose sensors for your research session",
 ) {
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true,
-            usePlatformDefaultWidth = false
-        )
+        properties =
+            DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+                usePlatformDefaultWidth = false,
+            ),
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ),
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
                 SensorSelectionHeader(
                     title = title,
                     subtitle = subtitle,
                     selectedCount = state.selected.size,
-                    totalCount = state.entries.count { it.isAvailable }
+                    totalCount = state.entries.count { it.isAvailable },
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 SensorList(
                     entries = state.entries,
                     selected = state.selected,
-                    onSelectionChanged = onSelectionChanged
+                    onSelectionChanged = onSelectionChanged,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 SelectionActions(
@@ -92,13 +93,13 @@ fun SensorSelectionDialog(
                         onSelectionChanged(emptySet())
                         onDismiss()
                     },
-                    onConfirm = onDismiss
+                    onConfirm = onDismiss,
                 )
                 if (state.selected.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(12.dp))
                     BatteryImpactSummary(
                         selected = state.selected,
-                        entries = state.entries
+                        entries = state.entries,
                     )
                 }
             }
@@ -110,13 +111,14 @@ fun SensorSelectionDialog(
 private fun SensorList(
     entries: List<SensorAvailability>,
     selected: Set<SensorOption>,
-    onSelectionChanged: (Set<SensorOption>) -> Unit
+    onSelectionChanged: (Set<SensorOption>) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(max = 400.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .heightIn(max = 400.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(entries) { availability ->
             val option = availability.option
@@ -125,13 +127,14 @@ private fun SensorList(
                 availability = availability,
                 isSelected = isSelected,
                 onToggle = {
-                    val next = if (isSelected) {
-                        selected - option
-                    } else {
-                        selected + option
-                    }
+                    val next =
+                        if (isSelected) {
+                            selected - option
+                        } else {
+                            selected + option
+                        }
                     onSelectionChanged(next)
-                }
+                },
             )
         }
     }
@@ -142,35 +145,35 @@ private fun SensorSelectionHeader(
     title: String,
     subtitle: String,
     selectedCount: Int,
-    totalCount: Int
+    totalCount: Int,
 ) {
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(modifier = Modifier.weight(1f, fill = true)) {
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = MaterialTheme.colorScheme.primaryContainer
+                color = MaterialTheme.colorScheme.primaryContainer,
             ) {
                 Text(
                     text = "$selectedCount/$totalCount",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                 )
             }
         }
@@ -181,95 +184,100 @@ private fun SensorSelectionHeader(
 private fun SensorSelectionItem(
     availability: SensorAvailability,
     isSelected: Boolean,
-    onToggle: () -> Unit
+    onToggle: () -> Unit,
 ) {
     val option = availability.option
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .selectable(
-                selected = isSelected,
-                enabled = availability.isAvailable,
-                onClick = {
-                    if (availability.isAvailable) {
-                        onToggle()
-                    }
-                }
-            ),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .selectable(
+                    selected = isSelected,
+                    enabled = availability.isAvailable,
+                    onClick = {
+                        if (availability.isAvailable) {
+                            onToggle()
+                        }
+                    },
+                ),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) {
-                MaterialTheme.colorScheme.primaryContainer
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.surface
+                    },
+            ),
+        border =
+            if (isSelected) {
+                BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
             } else {
-                MaterialTheme.colorScheme.surface
-            }
-        ),
-        border = if (isSelected) {
-            BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
-        } else {
-            null
-        }
+                null
+            },
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+            verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Surface(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .padding(end = 12.dp),
+                    modifier =
+                        Modifier
+                            .size(40.dp)
+                            .padding(end = 12.dp),
                     shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.secondaryContainer
+                    color = MaterialTheme.colorScheme.secondaryContainer,
                 ) {
                     Icon(
                         imageVector = option.icon,
                         contentDescription = option.displayName,
                         tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                        modifier = Modifier.padding(10.dp)
+                        modifier = Modifier.padding(10.dp),
                     )
                 }
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = option.displayName,
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
                     )
                     Text(
                         text = option.description,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
                 SelectionStatusTag(
                     available = availability.isAvailable,
-                    isSelected = isSelected
+                    isSelected = isSelected,
                 )
             }
             if (availability.availabilityReason.isNotBlank()) {
                 Text(
                     text = availability.availabilityReason,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error
+                    color = MaterialTheme.colorScheme.error,
                 )
             }
             Divider()
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = "Battery: ${availability.batteryImpact}",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "Data: ${availability.dataRate}",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -279,26 +287,28 @@ private fun SensorSelectionItem(
 @Composable
 private fun SelectionStatusTag(
     available: Boolean,
-    isSelected: Boolean
+    isSelected: Boolean,
 ) {
-    val (label, container, content) = when {
-        !available -> Triple("Unavailable", MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.colorScheme.error)
-        isSelected -> Triple("Selected", MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.onPrimary)
-        else -> Triple(
-            "Available",
-            MaterialTheme.colorScheme.secondaryContainer,
-            MaterialTheme.colorScheme.onSecondaryContainer
-        )
-    }
+    val (label, container, content) =
+        when {
+            !available -> Triple("Unavailable", MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.colorScheme.error)
+            isSelected -> Triple("Selected", MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.onPrimary)
+            else ->
+                Triple(
+                    "Available",
+                    MaterialTheme.colorScheme.secondaryContainer,
+                    MaterialTheme.colorScheme.onSecondaryContainer,
+                )
+        }
     Surface(
         shape = RoundedCornerShape(10.dp),
-        color = container
+        color = container,
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
             color = content,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
         )
     }
 }
@@ -307,29 +317,30 @@ private fun SelectionStatusTag(
 private fun SelectionActions(
     selectedCount: Int,
     onClear: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
 ) {
     val hasSelection = selectedCount > 0
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         OutlinedButton(
             onClick = onClear,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Text("Cancel")
         }
         TextButton(
             onClick = onConfirm,
             modifier = Modifier.weight(1f),
-            enabled = hasSelection
+            enabled = hasSelection,
         ) {
-            val label = if (hasSelection) {
-                "Confirm ($selectedCount)"
-            } else {
-                "Confirm"
-            }
+            val label =
+                if (hasSelection) {
+                    "Confirm ($selectedCount)"
+                } else {
+                    "Confirm"
+                }
             Text(label)
         }
     }
@@ -338,52 +349,56 @@ private fun SelectionActions(
 @Composable
 private fun BatteryImpactSummary(
     selected: Set<SensorOption>,
-    entries: List<SensorAvailability>
+    entries: List<SensorAvailability>,
 ) {
-    val impact = remember(selected, entries) {
-        entries.filter { selected.contains(it.option) }
-            .groupingBy { it.batteryImpact }
-            .eachCount()
-            .map { (impactLabel, count) -> impactLabel to count }
-    }
+    val impact =
+        remember(selected, entries) {
+            entries
+                .filter { selected.contains(it.option) }
+                .groupingBy { it.batteryImpact }
+                .eachCount()
+                .map { (impactLabel, count) -> impactLabel to count }
+        }
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            ),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Info,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(16.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "Estimated battery impact",
                     style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
             }
             if (impact.isEmpty()) {
                 Text(
                     text = "Minimal impact",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
             } else {
                 impact.forEach { (label, count) ->
                     Text(
                         text = "$label x$count",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
                     )
                 }
             }
@@ -394,21 +409,28 @@ private fun BatteryImpactSummary(
 @Composable
 fun SensorSelectionPreview(
     modifier: Modifier = Modifier,
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
-    val entries = SensorOption.values().map {
-        SensorAvailability(
-            option = it,
-            isAvailable = it.isAvailableByDefault,
-            isSelected = false
-        )
-    }
+    val entries =
+        SensorOption.values().map {
+            SensorAvailability(
+                option = it,
+                isAvailable = it.isAvailableByDefault,
+                isSelected = false,
+            )
+        }
     SensorSelectionDialog(
-        state = SensorSelectionState(
-            entries = entries,
-            selected = entries.filter { it.isAvailable }.take(2).map { it.option }.toSet()
-        ),
+        state =
+            SensorSelectionState(
+                entries = entries,
+                selected =
+                    entries
+                        .filter { it.isAvailable }
+                        .take(2)
+                        .map { it.option }
+                        .toSet(),
+            ),
         onSelectionChanged = {},
-        onDismiss = onDismiss
+        onDismiss = onDismiss,
     )
 }

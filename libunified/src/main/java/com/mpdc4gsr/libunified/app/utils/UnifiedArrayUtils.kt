@@ -4,26 +4,27 @@ object UnifiedArrayUtils {
     fun getMaxIndex(
         data: FloatArray,
         rotateType: Int = 0,
-        selectIndexList: ArrayList<Int> = arrayListOf()
-    ): Int {
-        return when (rotateType) {
+        selectIndexList: ArrayList<Int> = arrayListOf(),
+    ): Int =
+        when (rotateType) {
             1, 2, 3 -> getRotateMaxIndex(data, rotateType, selectIndexList)
             else -> getMaxIndex(data, selectIndexList)
         }
-    }
 
     fun getMinIndex(
         data: FloatArray,
         rotateType: Int = 0,
-        selectIndexList: ArrayList<Int> = arrayListOf()
-    ): Int {
-        return when (rotateType) {
+        selectIndexList: ArrayList<Int> = arrayListOf(),
+    ): Int =
+        when (rotateType) {
             1, 2, 3 -> getRotateMinIndex(data, rotateType, selectIndexList)
             else -> getMinIndex(data, selectIndexList)
         }
-    }
 
-    private fun getMaxIndex(data: FloatArray, selectIndexList: ArrayList<Int>): Int {
+    private fun getMaxIndex(
+        data: FloatArray,
+        selectIndexList: ArrayList<Int>,
+    ): Int {
         if (data.isEmpty()) return -1
         var maxIndex = 0
         var maxValue = Float.MIN_VALUE
@@ -37,7 +38,10 @@ object UnifiedArrayUtils {
         return maxIndex
     }
 
-    private fun getMinIndex(data: FloatArray, selectIndexList: ArrayList<Int>): Int {
+    private fun getMinIndex(
+        data: FloatArray,
+        selectIndexList: ArrayList<Int>,
+    ): Int {
         if (data.isEmpty()) return -1
         var minIndex = 0
         var minValue = Float.MAX_VALUE
@@ -54,7 +58,7 @@ object UnifiedArrayUtils {
     private fun getRotateMaxIndex(
         data: FloatArray,
         rotateType: Int,
-        selectIndexList: ArrayList<Int>
+        selectIndexList: ArrayList<Int>,
     ): Int {
         val maxIndex = getMaxIndex(data, selectIndexList)
         return rotateIndex(maxIndex, data.size, rotateType)
@@ -63,7 +67,7 @@ object UnifiedArrayUtils {
     private fun getRotateMinIndex(
         data: FloatArray,
         rotateType: Int,
-        selectIndexList: ArrayList<Int>
+        selectIndexList: ArrayList<Int>,
     ): Int {
         val minIndex = getMinIndex(data, selectIndexList)
         return rotateIndex(minIndex, data.size, rotateType)
@@ -74,30 +78,38 @@ object UnifiedArrayUtils {
         arraySize: Int,
         rotateType: Int,
         width: Int = 256,
-        height: Int = 192
+        height: Int = 192,
     ): Int {
         // Support for thermal data arrays (typically 256x192 for IR cameras)
         val actualWidth =
-            if (width * height == arraySize) width else kotlin.math.sqrt(arraySize.toDouble())
-                .toInt()
+            if (width * height == arraySize) {
+                width
+            } else {
+                kotlin.math
+                    .sqrt(arraySize.toDouble())
+                    .toInt()
+            }
         val actualHeight = if (width * height == arraySize) height else arraySize / actualWidth
         if (actualWidth * actualHeight != arraySize) return index
         val x = index % width
         val y = index / width
-        val (newX, newY, newWidth) = when (rotateType) {
-            1 -> Triple(
-                height - 1 - y,
-                x,
-                height
-            )           // 90 degrees clockwise, width and height swapped
-            2 -> Triple(width - 1 - x, height - 1 - y, width) // 180 degrees, dimensions unchanged
-            3 -> Triple(
-                y,
-                width - 1 - x,
-                height
-            )           // 270 degrees clockwise, width and height swapped
-            else -> Triple(x, y, width)                    // No rotation
-        }
+        val (newX, newY, newWidth) =
+            when (rotateType) {
+                1 ->
+                    Triple(
+                        height - 1 - y,
+                        x,
+                        height,
+                    ) // 90 degrees clockwise, width and height swapped
+                2 -> Triple(width - 1 - x, height - 1 - y, width) // 180 degrees, dimensions unchanged
+                3 ->
+                    Triple(
+                        y,
+                        width - 1 - x,
+                        height,
+                    ) // 270 degrees clockwise, width and height swapped
+                else -> Triple(x, y, width) // No rotation
+            }
         return newY * newWidth + newX
     }
 
@@ -113,16 +125,21 @@ object UnifiedArrayUtils {
         return data.indices.filter { data[it] == minValue }
     }
 
-    fun getIndicesInRange(data: FloatArray, minValue: Float, maxValue: Float): List<Int> {
-        return data.indices.filter { data[it] in minValue..maxValue }
-    }
+    fun getIndicesInRange(
+        data: FloatArray,
+        minValue: Float,
+        maxValue: Float,
+    ): List<Int> =
+        data.indices.filter {
+            data[it] in minValue..maxValue
+        }
 
     data class ArrayStats(
         val min: Float,
         val max: Float,
         val mean: Float,
         val median: Float,
-        val standardDeviation: Float
+        val standardDeviation: Float,
     )
 
     fun calculateStats(data: FloatArray): ArrayStats? {
@@ -131,11 +148,12 @@ object UnifiedArrayUtils {
         val min = sorted.first()
         val max = sorted.last()
         val mean = data.average().toFloat()
-        val median = if (sorted.size % 2 == 0) {
-            (sorted[sorted.size / 2 - 1] + sorted[sorted.size / 2]) / 2f
-        } else {
-            sorted[sorted.size / 2]
-        }
+        val median =
+            if (sorted.size % 2 == 0) {
+                (sorted[sorted.size / 2 - 1] + sorted[sorted.size / 2]) / 2f
+            } else {
+                sorted[sorted.size / 2]
+            }
         val variance = data.map { (it - mean) * (it - mean) }.average().toFloat()
         val standardDeviation = kotlin.math.sqrt(variance)
         return ArrayStats(min, max, mean, median, standardDeviation)
@@ -145,7 +163,7 @@ object UnifiedArrayUtils {
         data: FloatArray,
         width: Int,
         height: Int,
-        sigma: Float = 1.0f
+        sigma: Float = 1.0f,
     ): FloatArray {
         if (width * height != data.size) return data.copyOf()
         val result = data.copyOf()
@@ -187,7 +205,10 @@ object UnifiedArrayUtils {
         return result
     }
 
-    private fun generateGaussianKernel(size: Int, sigma: Float): FloatArray {
+    private fun generateGaussianKernel(
+        size: Int,
+        sigma: Float,
+    ): FloatArray {
         val kernel = FloatArray(size)
         val center = size / 2
         var sum = 0f
@@ -203,7 +224,12 @@ object UnifiedArrayUtils {
         return kernel
     }
 
-    fun downsample(data: FloatArray, width: Int, height: Int, factor: Int): FloatArray {
+    fun downsample(
+        data: FloatArray,
+        width: Int,
+        height: Int,
+        factor: Int,
+    ): FloatArray {
         val newWidth = width / factor
         val newHeight = height / factor
         val result = FloatArray(newWidth * newHeight)

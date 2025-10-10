@@ -1,6 +1,5 @@
 package mpdc4gsr.core.data
 
-import android.util.Log
 import org.json.JSONObject
 
 object ProtocolVersion {
@@ -19,22 +18,20 @@ object ProtocolVersion {
             "basic_auth",
         )
 
-    fun isVersionSupported(version: String): Boolean {
-        return when (version) {
+    fun isVersionSupported(version: String): Boolean =
+        when (version) {
             "v1" -> true
             else -> false
         }
-    }
 
-    fun getCapabilities(version: String): Set<String> {
-        return when (version) {
+    fun getCapabilities(version: String): Set<String> =
+        when (version) {
             "v1" -> V1_CAPABILITIES
             else -> emptySet()
         }
-    }
 
-    fun createHandshakeMessage(deviceId: String): JSONObject {
-        return JSONObject().apply {
+    fun createHandshakeMessage(deviceId: String): JSONObject =
+        JSONObject().apply {
             put("message_type", "protocol_handshake")
             put("protocol_version", CURRENT_VERSION)
             put("min_supported_version", MIN_SUPPORTED_VERSION)
@@ -43,14 +40,17 @@ object ProtocolVersion {
             put("capabilities", V1_CAPABILITIES.joinToString(","))
             put("timestamp", System.currentTimeMillis())
         }
-    }
 
     fun validateHandshakeResponse(response: JSONObject): HandshakeResult {
         try {
             val remoteVersion = response.optString("protocol_version")
             val remoteMinVersion = response.optString("min_supported_version", remoteVersion)
             val remoteCapabilities =
-                response.optString("capabilities", "").split(",").filter { it.isNotEmpty() }.toSet()
+                response
+                    .optString("capabilities", "")
+                    .split(",")
+                    .filter { it.isNotEmpty() }
+                    .toSet()
             if (!isVersionSupported(remoteVersion)) {
                 return HandshakeResult(
                     success = false,
@@ -71,10 +71,6 @@ object ProtocolVersion {
             }
             val localCapabilities = getCapabilities(CURRENT_VERSION)
             val commonCapabilities = localCapabilities.intersect(remoteCapabilities)
-            Log.i(
-                TAG,
-                "Protocol handshake successful: version=$remoteVersion, capabilities=${commonCapabilities.size}"
-            )
             return HandshakeResult(
                 success = true,
                 negotiatedVersion = remoteVersion,
@@ -91,8 +87,8 @@ object ProtocolVersion {
     fun createProtocolMessage(
         messageType: String,
         content: JSONObject = JSONObject(),
-    ): JSONObject {
-        return JSONObject().apply {
+    ): JSONObject =
+        JSONObject().apply {
             put("protocol_version", CURRENT_VERSION)
             put("message_type", messageType)
             put("timestamp", System.currentTimeMillis())
@@ -100,7 +96,6 @@ object ProtocolVersion {
                 put(key, content.get(key))
             }
         }
-    }
 
     fun validateMessageVersion(message: JSONObject): Boolean {
         val version = message.optString("protocol_version", CURRENT_VERSION)
@@ -110,14 +105,13 @@ object ProtocolVersion {
         return isValid
     }
 
-    fun getProtocolInfo(): Map<String, Any> {
-        return mapOf(
+    fun getProtocolInfo(): Map<String, Any> =
+        mapOf(
             "current_version" to CURRENT_VERSION,
             "min_supported_version" to MIN_SUPPORTED_VERSION,
             "capabilities" to V1_CAPABILITIES.toList(),
             "capabilities_count" to V1_CAPABILITIES.size,
         )
-    }
 
     data class HandshakeResult(
         val success: Boolean,

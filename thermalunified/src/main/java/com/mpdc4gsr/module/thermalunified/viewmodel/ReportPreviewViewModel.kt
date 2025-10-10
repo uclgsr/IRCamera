@@ -28,7 +28,7 @@ class ReportPreviewViewModel : BaseViewModel() {
         val includeImages: Boolean,
         val includeMetadata: Boolean,
         val includeWatermark: Boolean,
-        val timestamp: Long = System.currentTimeMillis()
+        val timestamp: Long = System.currentTimeMillis(),
     )
 
     fun selectLayout(index: Int) {
@@ -62,12 +62,13 @@ class ReportPreviewViewModel : BaseViewModel() {
             val currentShowMetadata = _showMetadata.value
             val currentShowWatermark = _showWatermark.value
             delay(500)
-            val preview = PreviewData(
-                layoutIndex = currentLayout,
-                includeImages = currentShowImages,
-                includeMetadata = currentShowMetadata,
-                includeWatermark = currentShowWatermark
-            )
+            val preview =
+                PreviewData(
+                    layoutIndex = currentLayout,
+                    includeImages = currentShowImages,
+                    includeMetadata = currentShowMetadata,
+                    includeWatermark = currentShowWatermark,
+                )
             _previewData.value = preview
             _previewGenerated.value = true
         }
@@ -75,7 +76,8 @@ class ReportPreviewViewModel : BaseViewModel() {
 
     fun proceedToSecond(context: Context) {
         launchWithErrorHandling {
-            NavigationManager.build(RouterConfig.REPORT_PREVIEW_SECOND)
+            NavigationManager
+                .build(RouterConfig.REPORT_PREVIEW_SECOND)
                 .navigation(context)
         }
     }

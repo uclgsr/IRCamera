@@ -19,7 +19,11 @@ class RingBuffer {
         mUnReadLength = length
     }
 
-    fun write(buffer: ByteArray?, offset: Int, length: Int): Int {
+    fun write(
+        buffer: ByteArray?,
+        offset: Int,
+        length: Int,
+    ): Int {
         var head: Int
         var toEnd: Int
         var toWrite: Int
@@ -45,7 +49,11 @@ class RingBuffer {
         return toWrite
     }
 
-    fun read(buffer: ByteArray?, offset: Int, length: Int): Int {
+    fun read(
+        buffer: ByteArray?,
+        offset: Int,
+        length: Int,
+    ): Int {
         if (buffer == null) return 0
         var toEnd: Int
         var toRead: Int
@@ -91,27 +99,16 @@ class RingBuffer {
         return length
     }
 
-    fun getUnReadLength(): Int {
-        return mUnReadLength
-    }
+    fun getUnReadLength(): Int = mUnReadLength
 
-    fun getMaxLength(): Int {
-        return byteArray.size
-    }
+    fun getMaxLength(): Int = byteArray.size
 
-    fun getFreeSpace(): Int {
-        return byteArray.size - mUnReadLength
-    }
+    fun getFreeSpace(): Int = byteArray.size - mUnReadLength
 
-    fun getByteArray(): ByteArray? {
-        return byteArray
-    }
+    fun getByteArray(): ByteArray? = byteArray
 
-    fun getReadPositon(): Int {
-        return mReadPositon
-    }
+    fun getReadPositon(): Int = mReadPositon
 
-    override fun toString(): String {
-        return "RingBuffer(byteArray=${byteArray.contentToString()}, mReadPositon=$mReadPositon, mUnReadLength=$mUnReadLength)"
-    }
+    override fun toString(): String =
+        "RingBuffer(byteArray=${byteArray.contentToString()}, mReadPositon=$mReadPositon, mUnReadLength=$mUnReadLength)"
 }

@@ -24,9 +24,7 @@ import com.mpdc4gsr.module.user.model.QuestionData
 import com.mpdc4gsr.module.user.viewmodel.QuestionViewModel
 
 class QuestionComposeActivity : BaseComposeActivity<QuestionViewModel>() {
-    override fun createViewModel(): QuestionViewModel {
-        return viewModels<QuestionViewModel>().value
-    }
+    override fun createViewModel(): QuestionViewModel = viewModels<QuestionViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -44,34 +42,36 @@ class QuestionComposeActivity : BaseComposeActivity<QuestionViewModel>() {
                     title = {
                         Text(
                             text = "FAQ",
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     },
                     navigationIcon = {
                         IconButton(onClick = { finish() }) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
-                    }
+                    },
                 )
-            }
+            },
         ) { paddingValues ->
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 items(questions) { question ->
                     QuestionItem(
                         question = question,
                         onClick = {
-                            NavigationManager.getInstance()
+                            NavigationManager
+                                .getInstance()
                                 .build(RouterConfig.QUESTION_DETAILS)
                                 .withString("question", question.question)
                                 .withString("answer", question.answer)
                                 .navigation(this@QuestionComposeActivity)
-                        }
+                        },
                     )
                 }
             }
@@ -83,35 +83,37 @@ class QuestionComposeActivity : BaseComposeActivity<QuestionViewModel>() {
 private fun QuestionItem(
     question: QuestionData,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = question.question,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             Icon(
                 Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = "View Answer",
-                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
             )
         }
     }

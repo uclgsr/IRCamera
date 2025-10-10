@@ -60,17 +60,11 @@ data class CustomPseudoBean(
         return if (isUseCustomPseudo) null else null
     }
 
-    fun getCustomColors(): IntArray {
-        return colors ?: intArrayOf(customMinColor, customMiddleColor, customMaxColor)
-    }
+    fun getCustomColors(): IntArray = colors ?: intArrayOf(customMinColor, customMiddleColor, customMaxColor)
 
-    fun getCustomZAltitudes(): IntArray {
-        return zAltitudes ?: intArrayOf(0, 50, 100)
-    }
+    fun getCustomZAltitudes(): IntArray = zAltitudes ?: intArrayOf(0, 50, 100)
 
-    fun getCustomPlaces(): FloatArray {
-        return places ?: floatArrayOf(0f, 0.5f, 1f)
-    }
+    fun getCustomPlaces(): FloatArray = places ?: floatArrayOf(0f, 0.5f, 1f)
 
     fun toByteArray(): ByteArray {
         // Return minimal byte array
@@ -85,15 +79,21 @@ data class CustomPseudoBean(
         if (colors != null) {
             if (other.colors == null) return false
             if (!colors.contentEquals(other.colors)) return false
-        } else if (other.colors != null) return false
+        } else if (other.colors != null) {
+            return false
+        }
         if (zAltitudes != null) {
             if (other.zAltitudes == null) return false
             if (!zAltitudes.contentEquals(other.zAltitudes)) return false
-        } else if (other.zAltitudes != null) return false
+        } else if (other.zAltitudes != null) {
+            return false
+        }
         if (places != null) {
             if (other.places == null) return false
             if (!places.contentEquals(other.places)) return false
-        } else if (other.places != null) return false
+        } else if (other.places != null) {
+            return false
+        }
         if (isUseCustomPseudo != other.isUseCustomPseudo) return false
         if (maxTemp != other.maxTemp) return false
         if (minTemp != other.minTemp) return false

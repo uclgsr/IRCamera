@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.ui.data;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
@@ -108,7 +107,6 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
         if (radius >= 1f) {
             mCircleRadius = Utils.convertDpToPixel(radius);
         } else {
-            Log.e("LineDataSet", "Circle radius cannot be < 1");
         }
     }
 
@@ -122,7 +120,6 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
         if (holeRadius >= 0.5f) {
             mCircleHoleRadius = Utils.convertDpToPixel(holeRadius);
         } else {
-            Log.e("LineDataSet", "Circle radius cannot be < 0.5");
         }
     }
 

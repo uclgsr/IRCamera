@@ -7,15 +7,14 @@ import android.os.Bundle
 import android.os.StrictMode
 import androidx.appcompat.app.AppCompatDelegate
 import com.csl.irCamera.BuildConfig
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
-import dagger.hilt.android.HiltAndroidApp
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.HttpConfig
 import com.mpdc4gsr.libunified.app.lms.Config
 import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
 import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
+import dagger.hilt.android.HiltAndroidApp
 import mpdc4gsr.core.ui.InitUtils.initJPush
 import mpdc4gsr.core.ui.InitUtils.initLms
 import mpdc4gsr.core.ui.InitUtils.initLog
@@ -28,9 +27,10 @@ class App : BaseApplication() {
         @Deprecated(
             message = "Use dependency injection instead of static instance",
             replaceWith = ReplaceWith("Use Hilt @Inject or ContextProvider.getContext()"),
-            level = DeprecationLevel.WARNING
+            level = DeprecationLevel.WARNING,
         )
         lateinit var instance: App
+
         fun delayInit() {
             try {
                 initLog()
@@ -45,10 +45,11 @@ class App : BaseApplication() {
     }
 
     override fun getSoftWareCode(): String = BuildConfig.SOFT_CODE
-    override fun isDomestic(): Boolean =
-        false
+
+    override fun isDomestic(): Boolean = false
 
     val activityNameList: MutableList<String> = mutableListOf()
+
     override fun onCreate() {
         super.onCreate()
         @Suppress("DEPRECATION")
@@ -58,7 +59,8 @@ class App : BaseApplication() {
             enableStrictMode()
         }
         // Initialize performance metrics tracking as early as possible
-        mpdc4gsr.core.monitoring.PerformanceMetrics.initialize()
+        mpdc4gsr.core.monitoring.PerformanceMetrics
+            .initialize()
         // Initialize ContextProvider for AndroidX migration
         ContextProvider.init(this)
 
@@ -66,7 +68,8 @@ class App : BaseApplication() {
         loadNativeLibraries()
 
         // Initialize telemetry and observability
-        mpdc4gsr.core.monitoring.TelemetryManager.initialize(this)
+        mpdc4gsr.core.monitoring.TelemetryManager
+            .initialize(this)
         setupGlobalExceptionHandler()
         try {
             SPUtils.getInstance(this).put(Config.KEY_PRIVACY_AGREEMENT, true)
@@ -79,9 +82,9 @@ class App : BaseApplication() {
                 UrlConstants.setBaseUrl("${HttpConfig.HOST}/", false)
                 SharedManager.setBaseHost(UrlConstants.BASE_URL)
             }
-
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("App", "Unexpected Exception in App catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("App", "Unexpected Exception in App catch block", e)
         }
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         registerActivityLifecycleCallbacks(
@@ -96,9 +99,13 @@ class App : BaseApplication() {
                 }
 
                 override fun onActivityStarted(activity: Activity) {}
+
                 override fun onActivityResumed(activity: Activity) {}
+
                 override fun onActivityPaused(activity: Activity) {}
+
                 override fun onActivityStopped(activity: Activity) {}
+
                 override fun onActivitySaveInstanceState(
                     activity: Activity,
                     outState: Bundle,
@@ -125,7 +132,6 @@ class App : BaseApplication() {
         }
     }
 
-
     private fun loadNativeLibraries() {
         try {
             System.loadLibrary("USBUVCCamera")
@@ -136,7 +142,8 @@ class App : BaseApplication() {
                 e,
             )
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("App", "Unexpected Exception in App catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("App", "Unexpected Exception in App catch block", e)
         }
     }
 
@@ -156,13 +163,15 @@ class App : BaseApplication() {
         try {
             RecordingService.startServer(this)
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("App", "Unexpected Exception in App catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("App", "Unexpected Exception in App catch block", e)
         }
     }
 
     private fun enableStrictMode() {
         StrictMode.setThreadPolicy(
-            StrictMode.ThreadPolicy.Builder()
+            StrictMode.ThreadPolicy
+                .Builder()
                 .detectDiskReads()
                 .detectDiskWrites()
                 .detectNetwork()
@@ -175,11 +184,11 @@ class App : BaseApplication() {
                         penaltyListener(mainExecutor) { violation ->
                         }
                     }
-                }
-                .build()
+                }.build(),
         )
         StrictMode.setVmPolicy(
-            StrictMode.VmPolicy.Builder()
+            StrictMode.VmPolicy
+                .Builder()
                 .detectLeakedSqlLiteObjects()
                 .detectLeakedClosableObjects()
                 .detectActivityLeaks()
@@ -192,8 +201,7 @@ class App : BaseApplication() {
                             }
                         }
                     }
-                }
-                .build()
+                }.build(),
         )
     }
 }

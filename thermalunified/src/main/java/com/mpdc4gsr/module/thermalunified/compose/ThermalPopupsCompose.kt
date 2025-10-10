@@ -37,38 +37,45 @@ fun SeekBarPopupCompose(
     onProgressChange: (Float) -> Unit,
     onDismiss: () -> Unit,
     isRealTimeTrigger: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
         visible = visible,
-        enter = fadeIn(animationSpec = tween(200)) + scaleIn(
-            initialScale = 0.8f,
-            animationSpec = tween(200)
-        ),
-        exit = fadeOut(animationSpec = tween(150)) + scaleOut(
-            targetScale = 0.8f,
-            animationSpec = tween(150)
-        )
+        enter =
+            fadeIn(animationSpec = tween(200)) +
+                scaleIn(
+                    initialScale = 0.8f,
+                    animationSpec = tween(200),
+                ),
+        exit =
+            fadeOut(animationSpec = tween(150)) +
+                scaleOut(
+                    targetScale = 0.8f,
+                    animationSpec = tween(150),
+                ),
     ) {
         Popup(
             onDismissRequest = onDismiss,
-            properties = PopupProperties(
-                dismissOnBackPress = true,
-                dismissOnClickOutside = true
-            )
+            properties =
+                PopupProperties(
+                    dismissOnBackPress = true,
+                    dismissOnClickOutside = true,
+                ),
         ) {
             Card(
-                modifier = modifier
-                    .fillMaxWidth(0.8f)
-                    .shadow(8.dp, RoundedCornerShape(16.dp)),
+                modifier =
+                    modifier
+                        .fillMaxWidth(0.8f)
+                        .shadow(8.dp, RoundedCornerShape(16.dp)),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
             ) {
                 Column(
                     modifier = Modifier.padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     // Title
                     if (title.isNotEmpty()) {
@@ -76,7 +83,7 @@ fun SeekBarPopupCompose(
                             text = title,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
@@ -85,7 +92,7 @@ fun SeekBarPopupCompose(
                         text = "${progress.roundToInt()}%",
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     // Modern Slider
@@ -103,21 +110,22 @@ fun SeekBarPopupCompose(
                         },
                         valueRange = 0f..maxValue,
                         modifier = Modifier.fillMaxWidth(),
-                        colors = SliderDefaults.colors(
-                            thumbColor = MaterialTheme.colorScheme.primary,
-                            activeTrackColor = MaterialTheme.colorScheme.primary,
-                            inactiveTrackColor = MaterialTheme.colorScheme.primaryContainer
-                        )
+                        colors =
+                            SliderDefaults.colors(
+                                thumbColor = MaterialTheme.colorScheme.primary,
+                                activeTrackColor = MaterialTheme.colorScheme.primary,
+                                inactiveTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                            ),
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     // Action buttons
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         OutlinedButton(
                             onClick = onDismiss,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
                         ) {
                             Text("Cancel")
                         }
@@ -127,7 +135,7 @@ fun SeekBarPopupCompose(
                                 onProgressChange(progress)
                                 onDismiss()
                             },
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
                         ) {
                             Text("OK")
                         }
@@ -146,38 +154,45 @@ fun OptionPickPopupCompose(
     selectedIndex: Int = -1,
     onOptionSelected: (Int, String) -> Unit,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
         visible = visible,
-        enter = fadeIn(animationSpec = tween(200)) + scaleIn(
-            initialScale = 0.8f,
-            animationSpec = tween(200)
-        ),
-        exit = fadeOut(animationSpec = tween(150)) + scaleOut(
-            targetScale = 0.8f,
-            animationSpec = tween(150)
-        )
+        enter =
+            fadeIn(animationSpec = tween(200)) +
+                scaleIn(
+                    initialScale = 0.8f,
+                    animationSpec = tween(200),
+                ),
+        exit =
+            fadeOut(animationSpec = tween(150)) +
+                scaleOut(
+                    targetScale = 0.8f,
+                    animationSpec = tween(150),
+                ),
     ) {
         Popup(
             onDismissRequest = onDismiss,
-            properties = PopupProperties(
-                dismissOnBackPress = true,
-                dismissOnClickOutside = true
-            )
+            properties =
+                PopupProperties(
+                    dismissOnBackPress = true,
+                    dismissOnClickOutside = true,
+                ),
         ) {
             Card(
-                modifier = modifier
-                    .width(280.dp)
-                    .heightIn(max = 300.dp)
-                    .shadow(8.dp, RoundedCornerShape(16.dp)),
+                modifier =
+                    modifier
+                        .width(280.dp)
+                        .heightIn(max = 300.dp)
+                        .shadow(8.dp, RoundedCornerShape(16.dp)),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
             ) {
                 LazyColumn(
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(8.dp),
                 ) {
                     itemsIndexed(options) { index, option ->
                         OptionItemCompose(
@@ -187,7 +202,7 @@ fun OptionPickPopupCompose(
                             onClick = {
                                 onOptionSelected(index, option)
                                 onDismiss()
-                            }
+                            },
                         )
                     }
                 }
@@ -201,50 +216,59 @@ private fun OptionItemCompose(
     text: String,
     icon: ImageVector? = null,
     isSelected: Boolean = false,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val backgroundColor by animateFloatAsState(
         targetValue = if (isSelected) 1f else 0f,
-        animationSpec = tween(200), label = "background"
+        animationSpec = tween(200),
+        label = "background",
     )
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(
-                lerp(
-                    Color.Transparent,
-                    MaterialTheme.colorScheme.primaryContainer,
-                    backgroundColor
-                )
-            )
-            .clickable { onClick() }
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(
+                    lerp(
+                        Color.Transparent,
+                        MaterialTheme.colorScheme.primaryContainer,
+                        backgroundColor,
+                    ),
+                ).clickable { onClick() }
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         if (icon != null) {
             Icon(
                 imageVector = icon,
                 contentDescription = text,
                 modifier = Modifier.size(24.dp),
-                tint = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
-                else MaterialTheme.colorScheme.onSurface
+                tint =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.onPrimaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
             )
             Spacer(modifier = Modifier.width(12.dp))
         }
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium,
-            color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
-            else MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.weight(1f)
+            color =
+                if (isSelected) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
+            modifier = Modifier.weight(1f),
         )
         if (isSelected) {
             Icon(
                 imageVector = Icons.Default.Check,
                 contentDescription = "Selected",
                 modifier = Modifier.size(20.dp),
-                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
             )
         }
     }
@@ -257,61 +281,68 @@ fun GalleryChangePopupCompose(
     availableGalleries: List<String>,
     onGallerySelected: (String) -> Unit,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
         visible = visible,
-        enter = fadeIn(animationSpec = tween(200)) + scaleIn(
-            initialScale = 0.8f,
-            animationSpec = tween(200)
-        ),
-        exit = fadeOut(animationSpec = tween(150)) + scaleOut(
-            targetScale = 0.8f,
-            animationSpec = tween(150)
-        )
+        enter =
+            fadeIn(animationSpec = tween(200)) +
+                scaleIn(
+                    initialScale = 0.8f,
+                    animationSpec = tween(200),
+                ),
+        exit =
+            fadeOut(animationSpec = tween(150)) +
+                scaleOut(
+                    targetScale = 0.8f,
+                    animationSpec = tween(150),
+                ),
     ) {
         Popup(
             onDismissRequest = onDismiss,
-            properties = PopupProperties(
-                dismissOnBackPress = true,
-                dismissOnClickOutside = true
-            )
+            properties =
+                PopupProperties(
+                    dismissOnBackPress = true,
+                    dismissOnClickOutside = true,
+                ),
         ) {
             Card(
-                modifier = modifier
-                    .width(320.dp)
-                    .shadow(12.dp, RoundedCornerShape(16.dp)),
+                modifier =
+                    modifier
+                        .width(320.dp)
+                        .shadow(12.dp, RoundedCornerShape(16.dp)),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
                 ) {
                     // Header
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
                             imageVector = Icons.Default.PhotoLibrary,
                             contentDescription = "Select Gallery",
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(24.dp),
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = "Select Gallery",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     // Gallery options
                     LazyColumn(
-                        modifier = Modifier.heightIn(max = 240.dp)
+                        modifier = Modifier.heightIn(max = 240.dp),
                     ) {
                         itemsIndexed(availableGalleries) { index, gallery ->
                             GalleryOptionItemCompose(
@@ -320,7 +351,7 @@ fun GalleryChangePopupCompose(
                                 onClick = {
                                     onGallerySelected(gallery)
                                     onDismiss()
-                                }
+                                },
                             )
                         }
                     }
@@ -334,48 +365,57 @@ fun GalleryChangePopupCompose(
 private fun GalleryOptionItemCompose(
     galleryName: String,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val backgroundColor by animateFloatAsState(
         targetValue = if (isSelected) 1f else 0f,
-        animationSpec = tween(200), label = "gallery_background"
+        animationSpec = tween(200),
+        label = "gallery_background",
     )
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(
-                lerp(
-                    Color.Transparent,
-                    MaterialTheme.colorScheme.primaryContainer,
-                    backgroundColor
-                )
-            )
-            .clickable { onClick() }
-            .padding(12.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .background(
+                    lerp(
+                        Color.Transparent,
+                        MaterialTheme.colorScheme.primaryContainer,
+                        backgroundColor,
+                    ),
+                ).clickable { onClick() }
+                .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = Icons.Default.Folder,
             contentDescription = galleryName,
             modifier = Modifier.size(20.dp),
-            tint = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
-            else MaterialTheme.colorScheme.onSurfaceVariant
+            tint =
+                if (isSelected) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                },
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = galleryName,
             style = MaterialTheme.typography.bodyMedium,
-            color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
-            else MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.weight(1f)
+            color =
+                if (isSelected) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
+            modifier = Modifier.weight(1f),
         )
         if (isSelected) {
             Icon(
                 imageVector = Icons.Default.CheckCircle,
                 contentDescription = "Selected",
                 modifier = Modifier.size(18.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
         }
     }
@@ -391,7 +431,7 @@ private fun SeekBarPopupPreview() {
             title = "Brightness",
             progress = 75f,
             onProgressChange = {},
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }
@@ -406,7 +446,7 @@ private fun OptionPickPopupPreview() {
             icons = listOf(Icons.Default.Settings, Icons.Default.Camera, Icons.Default.Photo),
             selectedIndex = 1,
             onOptionSelected = { _, _ -> },
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }
@@ -420,7 +460,7 @@ private fun GalleryChangePopupPreview() {
             currentGallery = "Thermal Images",
             availableGalleries = listOf("Thermal Images", "Regular Photos", "Screenshots"),
             onGallerySelected = {},
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }

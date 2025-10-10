@@ -63,8 +63,6 @@ public class HomoFilter {
                     dst.put(i, dy, data);
                 }
 
-            } else {
-                System.out.println("copy failed");
             }
         }
 
@@ -107,7 +105,6 @@ public class HomoFilter {
         Mat hu2c = calcHU(image_padd.size(), t2);
         Core.mulSpectrums(image_padd, hu2c, image_padd_2c, 0);
         Core.idft(image_padd_2c, image_padd_2c, DFT_SCALE);
-        System.out.println(image_padd_2c.channels());
 
         Core.exp(image_padd_2c, image_padd_2c);
         Core.subtract(image_padd_2c, new Scalar(1), image_padd_2c);

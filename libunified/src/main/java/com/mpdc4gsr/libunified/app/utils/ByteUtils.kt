@@ -1,33 +1,41 @@
 package com.mpdc4gsr.libunified.app.utils
 
-import android.util.Log
 import java.util.*
 
 object ByteUtils {
-    fun byteMerger(byte1: ByteArray, byte2: Int, byte3: Int, byte4: Int): ByteArray {
-        return byteMerger(
+    fun byteMerger(
+        byte1: ByteArray,
+        byte2: Int,
+        byte3: Int,
+        byte4: Int,
+    ): ByteArray =
+        byteMerger(
             byte1,
             intToByteArray(byte2),
             intToByteArray(byte3),
-            intToByteArray2(byte4)
+            intToByteArray2(byte4),
         )
-    }
 
-    fun byteMerger(byte1: ByteArray, byte2: String, byte3: String): ByteArray {
-        return byteMerger(byte1, byte2.toByteArray(), byte3.toByteArray())
-    }
+    fun byteMerger(
+        byte1: ByteArray,
+        byte2: String,
+        byte3: String,
+    ): ByteArray = byteMerger(byte1, byte2.toByteArray(), byte3.toByteArray())
 
-    fun byteMerger(byte1: String, byte2: Int): ByteArray {
-        return byteMerger(byte1.toByteArray(), intToByteArray(byte2))
-    }
+    fun byteMerger(
+        byte1: String,
+        byte2: Int,
+    ): ByteArray = byteMerger(byte1.toByteArray(), intToByteArray(byte2))
 
-    fun byteMerger(byte1: ByteArray, byte2: Int): ByteArray {
-        return byteMerger(byte1, intToByteArray(byte2))
-    }
+    fun byteMerger(
+        byte1: ByteArray,
+        byte2: Int,
+    ): ByteArray = byteMerger(byte1, intToByteArray(byte2))
 
-    fun byteMerger(byte1: String, byte2: String): ByteArray {
-        return byteMerger(byte1.toByteArray(), byte2.toByteArray())
-    }
+    fun byteMerger(
+        byte1: String,
+        byte2: String,
+    ): ByteArray = byteMerger(byte1.toByteArray(), byte2.toByteArray())
 
     fun byteMerger(vararg bytes: ByteArray): ByteArray {
         var resultByteArray = ByteArray(0)
@@ -49,36 +57,30 @@ object ByteUtils {
             resultByte[i] = bytes[i]
         }
         val value = Integer.valueOf(HexUtil.bytesToHexString(resultByte), 16)
-        Log.e(
-            "ByteUtils",
-            "bytesToFloat bytes: ${HexUtil.bytesToHexString(resultByte)} float:$value"
-        )
         return value.toFloat()
     }
 
-    fun byteToInt(b: Byte): Int {
-        return b.toInt() and 0xFF
-    }
+    fun byteToInt(b: Byte): Int = b.toInt() and 0xFF
 
-    fun intToByteArray(value: Int): ByteArray {
-        return byteArrayOf(
+    fun intToByteArray(value: Int): ByteArray =
+        byteArrayOf(
             (value shr 24 and 0xFF).toByte(),
             (value shr 16 and 0xFF).toByte(),
             (value shr 8 and 0xFF).toByte(),
-            (value and 0xFF).toByte()
-        )
-    }
-
-    fun intToByteArray2(value: Int): ByteArray {
-        return byteArrayOf(
             (value and 0xFF).toByte(),
-            (value shr 8 and 0xFF).toByte()
         )
-    }
+
+    fun intToByteArray2(value: Int): ByteArray =
+        byteArrayOf(
+            (value and 0xFF).toByte(),
+            (value shr 8 and 0xFF).toByte(),
+        )
 
     // Compatibility methods for existing code
     fun ByteArray.descBytes(): ByteArray = this.reversedArray()
+
     fun ByteArray.toBytes(): ByteArray = this
+
     fun String.toBytes(length: Int): ByteArray {
         val bytes = this.toByteArray()
         val result = ByteArray(length)
@@ -87,44 +89,50 @@ object ByteUtils {
         return result
     }
 
-    fun Short.toLittleBytes(): ByteArray {
-        return byteArrayOf(
+    fun Short.toLittleBytes(): ByteArray =
+        byteArrayOf(
             (this.toInt() and 0xFF).toByte(),
-            (this.toInt() shr 8 and 0xFF).toByte()
+            (this.toInt() shr 8 and 0xFF).toByte(),
         )
-    }
 
-    fun Int.toLittleBytes(): ByteArray {
-        return byteArrayOf(
+    fun Int.toLittleBytes(): ByteArray =
+        byteArrayOf(
             (this and 0xFF).toByte(),
             (this shr 8 and 0xFF).toByte(),
             (this shr 16 and 0xFF).toByte(),
-            (this shr 24 and 0xFF).toByte()
+            (this shr 24 and 0xFF).toByte(),
         )
-    }
 
     fun Float.toLittleBytes(): ByteArray {
         val bits = this.toBits()
         return bits.toLittleBytes()
     }
 
-    fun Int.getIndex(index: Int): Int {
-        return if (index < 32) {
+    fun Int.getIndex(index: Int): Int =
+        if (index < 32) {
             (this shr index) and 1
         } else {
             0
         }
-    }
 
-    fun bigBytesToInt(b1: Byte, b2: Byte, b3: Byte, b4: Byte): Int {
-        return (b1.toInt() and 0xFF shl 24) or
-                (b2.toInt() and 0xFF shl 16) or
-                (b3.toInt() and 0xFF shl 8) or
-                (b4.toInt() and 0xFF)
-    }
+    fun bigBytesToInt(
+        b1: Byte,
+        b2: Byte,
+        b3: Byte,
+        b4: Byte,
+    ): Int =
+        (b1.toInt() and 0xFF shl 24) or
+            (b2.toInt() and 0xFF shl 16) or
+            (b3.toInt() and 0xFF shl 8) or
+            (b4.toInt() and 0xFF)
 
     fun joinPackage(vararg src: ByteArray): ByteArray = byteMerger(*src)
-    fun numberToBytes(bigEndian: Boolean, value: Long, len: Int): ByteArray {
+
+    fun numberToBytes(
+        bigEndian: Boolean,
+        value: Long,
+        len: Int,
+    ): ByteArray {
         val bytes = ByteArray(8)
         for (i in 0..7) {
             val j = if (bigEndian) 7 - i else i
@@ -137,7 +145,10 @@ object ByteUtils {
         }
     }
 
-    fun splitPackage(src: ByteArray, size: Int): List<ByteArray> {
+    fun splitPackage(
+        src: ByteArray,
+        size: Int,
+    ): List<ByteArray> {
         val list = mutableListOf<ByteArray>()
         val loop = src.size / size + if (src.size % size == 0) 0 else 1
         for (i in 0 until loop) {
@@ -149,9 +160,7 @@ object ByteUtils {
     }
 
     // Additional utility methods
-    fun toHexString(bytes: ByteArray): String {
-        return HexUtil.bytesToHexString(bytes)
-    }
+    fun toHexString(bytes: ByteArray): String = HexUtil.bytesToHexString(bytes)
 
     fun bytesToInt(bytes: ByteArray): Int {
         var count = 0

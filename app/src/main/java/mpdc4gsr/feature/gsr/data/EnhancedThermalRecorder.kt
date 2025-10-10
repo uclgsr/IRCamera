@@ -7,15 +7,17 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.core.sensors.api.RecordingStats
 import mpdc4gsr.core.sensors.api.RecordingStatus
 import mpdc4gsr.core.sensors.api.SensorError
-import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import java.io.File
 import java.io.FileWriter
 
-class EnhancedThermalRecorder(private val context: Context) {
+class EnhancedThermalRecorder(
+    private val context: Context,
+) {
     companion object {
         private const val TAG = "EnhancedThermalRecorder"
     }
@@ -24,14 +26,13 @@ class EnhancedThermalRecorder(private val context: Context) {
     private var currentSessionDirectory: File? = null
     private var syncEventWriter: FileWriter? = null
     private val recorderScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    suspend fun initialize(): Boolean {
-        return thermalCameraRecorder.initialize()
-    }
+
+    suspend fun initialize(): Boolean = thermalCameraRecorder.initialize()
 
     fun startRecording(
         sessionId: String,
         sessionMetadata: SessionMetadata?,
-        saveImages: Boolean = false
+        saveImages: Boolean = false,
     ): Boolean {
         try {
             val externalDir = File(context.getExternalFilesDir(null), "IRCamera/sessions")
@@ -39,14 +40,15 @@ class EnhancedThermalRecorder(private val context: Context) {
             currentSessionDirectory?.mkdirs()
             setupSyncEventsFile()
             recorderScope.launch {
-                val success = if (sessionMetadata != null) {
-                    thermalCameraRecorder.startRecording(
-                        currentSessionDirectory!!.absolutePath,
-                        sessionMetadata
-                    )
-                } else {
-                    thermalCameraRecorder.startRecording(currentSessionDirectory!!.absolutePath)
-                }
+                val success =
+                    if (sessionMetadata != null) {
+                        thermalCameraRecorder.startRecording(
+                            currentSessionDirectory!!.absolutePath,
+                            sessionMetadata,
+                        )
+                    } else {
+                        thermalCameraRecorder.startRecording(currentSessionDirectory!!.absolutePath)
+                    }
                 if (success) {
                 } else {
                 }
@@ -57,44 +59,48 @@ class EnhancedThermalRecorder(private val context: Context) {
         }
     }
 
-    fun stopRecording(): SessionInfo? {
-        return try {
+    fun stopRecording(): SessionInfo? =
+        try {
             recorderScope.launch {
                 thermalCameraRecorder.stopRecording()
             }
             closeSyncEventsFile()
-            val sessionInfo = SessionInfo(
-                sessionDirectory = currentSessionDirectory,
-                sampleCount = thermalCameraRecorder.getRecordingStats().totalSamplesRecorded
-            ) sessionInfo
+            val sessionInfo =
+                SessionInfo(
+                    sessionDirectory = currentSessionDirectory,
+                    sampleCount = thermalCameraRecorder.getRecordingStats().totalSamplesRecorded,
+                )
+            sessionInfo
         } catch (e: Exception) {
             null
         }
-    }
 
-    fun triggerSyncEvent(eventType: String, eventData: Map<String, String>) {
+    fun triggerSyncEvent(
+        eventType: String,
+        eventData: Map<String, String>,
+    ) {
         try {
             val timestamp = System.nanoTime()
-            val eventLine = buildString {
-                append(timestamp)
-                append(",")
-                append(eventType)
-                append(",")
-                append(eventData.entries.joinToString(";") { "${it.key}=${it.value}" })
-            }
+            val eventLine =
+                buildString {
+                    append(timestamp)
+                    append(",")
+                    append(eventType)
+                    append(",")
+                    append(eventData.entries.joinToString(";") { "${it.key}=${it.value}" })
+                }
             syncEventWriter?.let { writer ->
                 writer.write(eventLine)
                 writer.write("\n")
                 writer.flush()
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("EnhancedThermalRecorder", "Unexpected Exception in EnhancedThermalRecorder catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("EnhancedThermalRecorder", "Unexpected Exception in EnhancedThermalRecorder catch block", e)
         }
     }
 
-    fun getSessionDirectory(): File? {
-        return currentSessionDirectory
-    }
+    fun getSessionDirectory(): File? = currentSessionDirectory
 
     fun cleanup() {
         try {
@@ -105,13 +111,17 @@ class EnhancedThermalRecorder(private val context: Context) {
             recorderScope.cancel()
             currentSessionDirectory = null
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("EnhancedThermalRecorder", "Unexpected Exception in EnhancedThermalRecorder catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("EnhancedThermalRecorder", "Unexpected Exception in EnhancedThermalRecorder catch block", e)
         }
     }
 
     fun getStatusFlow(): Flow<RecordingStatus> = thermalCameraRecorder.getStatusFlow()
+
     fun getErrorFlow(): Flow<SensorError> = thermalCameraRecorder.getErrorFlow()
+
     fun getRecordingStats(): RecordingStats = thermalCameraRecorder.getRecordingStats()
+
     private fun setupSyncEventsFile() {
         try {
             currentSessionDirectory?.let { dir ->
@@ -121,7 +131,8 @@ class EnhancedThermalRecorder(private val context: Context) {
                 syncEventWriter?.flush()
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("EnhancedThermalRecorder", "Unexpected Exception in EnhancedThermalRecorder catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("EnhancedThermalRecorder", "Unexpected Exception in EnhancedThermalRecorder catch block", e)
         }
     }
 
@@ -130,13 +141,14 @@ class EnhancedThermalRecorder(private val context: Context) {
             syncEventWriter?.close()
             syncEventWriter = null
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("EnhancedThermalRecorder", "Unexpected Exception in EnhancedThermalRecorder catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("EnhancedThermalRecorder", "Unexpected Exception in EnhancedThermalRecorder catch block", e)
         }
     }
 
     data class SessionInfo(
         val sessionDirectory: File?,
         val sampleCount: Long,
-        val startTime: Long = System.currentTimeMillis()
+        val startTime: Long = System.currentTimeMillis(),
     )
 }

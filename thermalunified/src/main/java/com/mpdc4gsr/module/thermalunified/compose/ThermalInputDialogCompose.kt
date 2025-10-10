@@ -32,7 +32,7 @@ fun ThermalInputDialogCompose(
     negativeButtonText: String = "Cancel",
     onConfirm: (Float, Float, Int, Int) -> Unit,
     onCancel: () -> Unit = {},
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     var maxTempInput by remember { mutableStateOf(maxTemp.toString()) }
     var minTempInput by remember { mutableStateOf(minTemp.toString()) }
@@ -43,28 +43,30 @@ fun ThermalInputDialogCompose(
     }
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true
-        )
+        properties =
+            DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+            ),
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .wrapContentHeight(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(0.85f)
+                    .wrapContentHeight(),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(16.dp),
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 // Title
                 Text(
                     text = "Thermal Parameters",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 // Message
@@ -73,7 +75,7 @@ fun ThermalInputDialogCompose(
                         text = message,
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
@@ -82,69 +84,77 @@ fun ThermalInputDialogCompose(
                     // Max Temperature
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         Box(
-                            modifier = Modifier
-                                .size(20.dp)
-                                .background(maxColor, RoundedCornerShape(4.dp))
+                            modifier =
+                                Modifier
+                                    .size(20.dp)
+                                    .background(maxColor, RoundedCornerShape(4.dp)),
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         OutlinedTextField(
                             value = maxTempInput,
                             onValueChange = { maxTempInput = it },
                             label = { Text("Max Temperature") },
-                            modifier = Modifier
-                                .weight(1f)
-                                .focusRequester(maxTempFocusRequester),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Decimal,
-                                imeAction = ImeAction.Next
-                            ),
-                            keyboardActions = KeyboardActions(
-                                onNext = { minTempFocusRequester.requestFocus() }
-                            ),
+                            modifier =
+                                Modifier
+                                    .weight(1f)
+                                    .focusRequester(maxTempFocusRequester),
+                            keyboardOptions =
+                                KeyboardOptions(
+                                    keyboardType = KeyboardType.Decimal,
+                                    imeAction = ImeAction.Next,
+                                ),
+                            keyboardActions =
+                                KeyboardActions(
+                                    onNext = { minTempFocusRequester.requestFocus() },
+                                ),
                             singleLine = true,
-                            suffix = { Text("°C") }
+                            suffix = { Text("°C") },
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     // Min Temperature
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         Box(
-                            modifier = Modifier
-                                .size(20.dp)
-                                .background(minColor, RoundedCornerShape(4.dp))
+                            modifier =
+                                Modifier
+                                    .size(20.dp)
+                                    .background(minColor, RoundedCornerShape(4.dp)),
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         OutlinedTextField(
                             value = minTempInput,
                             onValueChange = { minTempInput = it },
                             label = { Text("Min Temperature") },
-                            modifier = Modifier
-                                .weight(1f)
-                                .focusRequester(minTempFocusRequester),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Decimal,
-                                imeAction = ImeAction.Done
-                            ),
-                            keyboardActions = KeyboardActions(
-                                onDone = {
-                                    handleConfirm(
-                                        maxTempInput,
-                                        minTempInput,
-                                        maxColor,
-                                        minColor,
-                                        onConfirm,
-                                        onDismiss
-                                    )
-                                }
-                            ),
+                            modifier =
+                                Modifier
+                                    .weight(1f)
+                                    .focusRequester(minTempFocusRequester),
+                            keyboardOptions =
+                                KeyboardOptions(
+                                    keyboardType = KeyboardType.Decimal,
+                                    imeAction = ImeAction.Done,
+                                ),
+                            keyboardActions =
+                                KeyboardActions(
+                                    onDone = {
+                                        handleConfirm(
+                                            maxTempInput,
+                                            minTempInput,
+                                            maxColor,
+                                            minColor,
+                                            onConfirm,
+                                            onDismiss,
+                                        )
+                                    },
+                                ),
                             singleLine = true,
-                            suffix = { Text("°C") }
+                            suffix = { Text("°C") },
                         )
                     }
                 }
@@ -152,14 +162,14 @@ fun ThermalInputDialogCompose(
                 // Action buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     TextButton(
                         onClick = {
                             onCancel()
                             onDismiss()
                         },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text(negativeButtonText)
                     }
@@ -171,10 +181,10 @@ fun ThermalInputDialogCompose(
                                 maxColor,
                                 minColor,
                                 onConfirm,
-                                onDismiss
+                                onDismiss,
                             )
                         },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text(positiveButtonText)
                     }
@@ -190,7 +200,7 @@ private fun handleConfirm(
     maxColor: Color,
     minColor: Color,
     onConfirm: (Float, Float, Int, Int) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     try {
         val maxTemp = maxTempInput.toFloat()
@@ -200,7 +210,7 @@ private fun handleConfirm(
                 maxTemp,
                 minTemp,
                 maxColor.toArgb(),
-                minColor.toArgb()
+                minColor.toArgb(),
             )
             onDismiss()
         }
@@ -219,24 +229,34 @@ class ThermalInputDialogComposeBuilder {
     private var negativeButtonText: String = "Cancel"
     private var onConfirm: ((Float, Float, Int, Int) -> Unit)? = null
     private var onCancel: (() -> Unit)? = null
+
     fun setMessage(message: String): ThermalInputDialogComposeBuilder {
         this.message = message
         return this
     }
 
-    fun setTemperatureRange(max: Float, min: Float): ThermalInputDialogComposeBuilder {
+    fun setTemperatureRange(
+        max: Float,
+        min: Float,
+    ): ThermalInputDialogComposeBuilder {
         this.maxTemp = max
         this.minTemp = min
         return this
     }
 
-    fun setColors(maxColor: Color, minColor: Color): ThermalInputDialogComposeBuilder {
+    fun setColors(
+        maxColor: Color,
+        minColor: Color,
+    ): ThermalInputDialogComposeBuilder {
         this.maxColor = maxColor
         this.minColor = minColor
         return this
     }
 
-    fun setButtonTexts(positive: String, negative: String): ThermalInputDialogComposeBuilder {
+    fun setButtonTexts(
+        positive: String,
+        negative: String,
+    ): ThermalInputDialogComposeBuilder {
         this.positiveButtonText = positive
         this.negativeButtonText = negative
         return this
@@ -264,7 +284,7 @@ class ThermalInputDialogComposeBuilder {
             negativeButtonText = negativeButtonText,
             onConfirm = onConfirm ?: { _, _, _, _ -> },
             onCancel = onCancel ?: {},
-            onDismiss = onDismiss
+            onDismiss = onDismiss,
         )
     }
 }
@@ -278,14 +298,12 @@ fun ThermalInputDialogComposePreview() {
             maxTemp = 80f,
             minTemp = 20f,
             onConfirm = { maxTemp, minTemp, maxColor, minColor ->
-                println("Confirmed: Max=$maxTemp, Min=$minTemp, MaxColor=$maxColor, MinColor=$minColor")
             },
             onCancel = {
-                println("Cancelled")
             },
             onDismiss = {
                 showDialog = false
-            }
+            },
         )
     }
 }

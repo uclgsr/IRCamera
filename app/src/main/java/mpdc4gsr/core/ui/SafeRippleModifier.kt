@@ -16,7 +16,7 @@ fun Modifier.safeClickable(
     enabled: Boolean = true,
     onClickLabel: String? = null,
     role: Role? = null,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ): Modifier = libSafeClickable(enabled, onClickLabel, role, onClick)
 
 fun Modifier.safeClickableWithRipple(
@@ -26,7 +26,7 @@ fun Modifier.safeClickableWithRipple(
     color: Color = Color.Unspecified,
     onClickLabel: String? = null,
     role: Role? = null,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ): Modifier = libSafeClickableWithRipple(enabled, bounded, radius, color, onClickLabel, role, onClick)
 
 @Composable
@@ -34,7 +34,7 @@ fun Modifier.safeClickableNoRipple(
     enabled: Boolean = true,
     onClickLabel: String? = null,
     role: Role? = null,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ): Modifier = libSafeClickableNoRipple(enabled, onClickLabel, role, onClick)
 
 @Composable
@@ -42,7 +42,7 @@ fun Modifier.safeClickableDeferred(
     enabled: Boolean = true,
     onClickLabel: String? = null,
     role: Role? = null,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ): Modifier = libSafeClickableDeferred(enabled, onClickLabel, role, onClick)
 
 @Composable

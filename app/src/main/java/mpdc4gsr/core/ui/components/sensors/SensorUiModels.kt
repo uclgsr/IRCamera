@@ -23,7 +23,7 @@ enum class SensorStatusUi {
     Connected,
     Streaming,
     Error,
-    Simulation
+    Simulation,
 }
 
 data class SensorDashboardItem(
@@ -35,7 +35,7 @@ data class SensorDashboardItem(
     val dataRate: String = "0 KB/s",
     val lastUpdate: String = "Never",
     val signalStrength: Int = 0,
-    val isAnimating: Boolean = false
+    val isAnimating: Boolean = false,
 )
 
 enum class SensorOption(
@@ -43,83 +43,83 @@ enum class SensorOption(
     val description: String,
     val icon: ImageVector,
     val isAvailableByDefault: Boolean = true,
-    val requiresPermission: Boolean = false
+    val requiresPermission: Boolean = false,
 ) {
     Thermal(
         displayName = "Thermal Camera",
         description = "TC001/TS004 thermal imaging sensor",
-        icon = Icons.Default.Thermostat
+        icon = Icons.Default.Thermostat,
     ),
     Rgb(
         displayName = "RGB Camera",
         description = "High-resolution color camera",
         icon = Icons.Default.Camera,
-        requiresPermission = true
+        requiresPermission = true,
     ),
     Gsr(
         displayName = "GSR Sensor",
         description = "Galvanic skin response via Shimmer3",
         icon = Icons.Default.Sensors,
-        requiresPermission = true
+        requiresPermission = true,
     ),
     Audio(
         displayName = "Audio Recorder",
         description = "High-quality audio capture",
         icon = Icons.Default.Mic,
-        requiresPermission = true
+        requiresPermission = true,
     ),
     Accelerometer(
         displayName = "Accelerometer",
         description = "Motion and orientation sensor",
-        icon = Icons.Default.Wifi
+        icon = Icons.Default.Wifi,
     ),
     Gyroscope(
         displayName = "Gyroscope",
         description = "Angular velocity sensor",
-        icon = Icons.AutoMirrored.Filled.RotateRight
+        icon = Icons.AutoMirrored.Filled.RotateRight,
     ),
     Magnetometer(
         displayName = "Magnetometer",
         description = "Magnetic field sensor",
-        icon = Icons.Default.Explore
+        icon = Icons.Default.Explore,
     ),
     HeartRate(
         displayName = "Heart Rate",
         description = "Optical heart rate monitor",
         icon = Icons.Default.Favorite,
-        isAvailableByDefault = false
+        isAvailableByDefault = false,
     ),
     Temperature(
         displayName = "Temperature",
         description = "Ambient temperature sensor",
-        icon = Icons.Default.DeviceThermostat
+        icon = Icons.Default.DeviceThermostat,
     ),
     Humidity(
         displayName = "Humidity",
         description = "Environmental humidity sensor",
         icon = Icons.Default.Water,
-        isAvailableByDefault = false
+        isAvailableByDefault = false,
     ),
     NetworkSync(
         displayName = "Network Sync",
         description = "Synchronization over network",
-        icon = Icons.Default.NetworkCheck
+        icon = Icons.Default.NetworkCheck,
     ),
     Storage(
         displayName = "Storage System",
         description = "Local storage availability",
-        icon = Icons.Default.Storage
+        icon = Icons.Default.Storage,
     ),
     BluetoothPeripheral(
         displayName = "Bluetooth Device",
         description = "Bluetooth LE peripherals",
-        icon = Icons.Default.Bluetooth
+        icon = Icons.Default.Bluetooth,
     ),
     ScheduledTask(
         displayName = "Scheduled Task",
         description = "Automation and scheduling",
-        icon = Icons.Default.Schedule
-    )
+        icon = Icons.Default.Schedule,
+    ),
 }
 
 data class SensorAvailability(
@@ -128,5 +128,5 @@ data class SensorAvailability(
     val isSelected: Boolean,
     val availabilityReason: String = "",
     val batteryImpact: String = "Low",
-    val dataRate: String = "Unknown"
+    val dataRate: String = "Unknown",
 )

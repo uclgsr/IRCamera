@@ -22,8 +22,13 @@ class ReportDetailViewModel : BaseViewModel() {
     private val reportRepository = ReportDetailRepository()
 
     sealed class ReportDetailEvent {
-        data class ShareReport(val reportId: String) : ReportDetailEvent()
-        data class DeleteReport(val reportId: String) : ReportDetailEvent()
+        data class ShareReport(
+            val reportId: String,
+        ) : ReportDetailEvent()
+
+        data class DeleteReport(
+            val reportId: String,
+        ) : ReportDetailEvent()
     }
 
     fun loadReportData(reportId: String) {
@@ -72,19 +77,20 @@ class ReportDetailViewModel : BaseViewModel() {
     }
 
     private inner class ReportDetailRepository : BaseRepository() {
-        suspend fun getReportById(reportId: String): Result<ReportDetail> = safeCall {
-            val cacheKey = "report_detail_$reportId"
-            getCachedOrExecute(cacheKey, 5 * 60 * 1000L) {
-                ReportDetail(
-                    id = reportId,
-                    date = "2024-10-01",
-                    time = "14:30:00",
-                    location = "Building A - Room 101",
-                    inspector = "John Doe",
-                    equipment = "TC001 Thermal Camera"
-                )
+        suspend fun getReportById(reportId: String): Result<ReportDetail> =
+            safeCall {
+                val cacheKey = "report_detail_$reportId"
+                getCachedOrExecute(cacheKey, 5 * 60 * 1000L) {
+                    ReportDetail(
+                        id = reportId,
+                        date = "2024-10-01",
+                        time = "14:30:00",
+                        location = "Building A - Room 101",
+                        inspector = "John Doe",
+                        equipment = "TC001 Thermal Camera",
+                    )
+                }
             }
-        }
     }
 
     data class ReportDetail(
@@ -93,6 +99,6 @@ class ReportDetailViewModel : BaseViewModel() {
         val time: String,
         val location: String,
         val inspector: String,
-        val equipment: String
+        val equipment: String,
     )
 }

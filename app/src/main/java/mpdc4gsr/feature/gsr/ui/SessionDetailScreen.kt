@@ -30,7 +30,7 @@ data class SessionInfo(
     val participantId: String,
     val sensorTypes: List<String>,
     val dataPoints: Int,
-    val notes: String
+    val notes: String,
 )
 
 data class SessionMetrics(
@@ -41,13 +41,13 @@ data class SessionMetrics(
     val thermalMean: Double,
     val thermalStd: Double,
     val heartRateAvg: Int,
-    val stressLevel: String
+    val stressLevel: String,
 )
 
 data class TimeSeriesData(
     val timestamp: Long,
     val gsrValue: Double,
-    val thermalValue: Double
+    val thermalValue: Double,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,37 +56,38 @@ fun SessionDetailScreen(
     sessionId: String = "SESSION-2024-001",
     onNavigateBack: () -> Unit = {},
     onExportSession: () -> Unit = {},
-    onPlayVideo: () -> Unit = {}
+    onPlayVideo: () -> Unit = {},
 ) {
     val session = remember { getSampleSession(sessionId) }
     val metrics = remember { getSampleMetrics() }
     val timeSeriesData = remember { getSampleTimeSeriesData() }
     IRCameraTheme {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .systemBarsPadding()
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .systemBarsPadding(),
         ) {
             TitleBar(
                 title = "Session Details",
                 showBackButton = true,
-                onBackClick = onNavigateBack
+                onBackClick = onNavigateBack,
             ) {
                 TitleBarAction(
                     icon = Icons.Default.Share,
                     contentDescription = "Export session",
-                    onClick = onExportSession
+                    onClick = onExportSession,
                 )
                 TitleBarAction(
                     icon = Icons.Default.PlayArrow,
                     contentDescription = "Play video",
-                    onClick = onPlayVideo
+                    onClick = onPlayVideo,
                 )
             }
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 // Session Header
                 item {
@@ -113,7 +114,7 @@ fun SessionDetailScreen(
                     ExportOptionsCard(
                         onExportRaw = { onExportSession() },
                         onExportReport = { onExportSession() },
-                        onExportVideo = { onPlayVideo() }
+                        onExportVideo = { onPlayVideo() },
                     )
                 }
             }
@@ -125,47 +126,47 @@ fun SessionDetailScreen(
 fun SessionHeaderCard(session: SessionInfo) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = session.title,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = Color.White,
             )
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 SessionInfoItem(
                     icon = Icons.Default.CalendarToday,
                     label = "Date",
-                    value = session.date
+                    value = session.date,
                 )
                 SessionInfoItem(
                     icon = Icons.Default.Timer,
                     label = "Duration",
-                    value = session.duration
+                    value = session.duration,
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 SessionInfoItem(
                     icon = Icons.Default.Person,
                     label = "Participant",
-                    value = session.participantId
+                    value = session.participantId,
                 )
                 SessionInfoItem(
                     icon = Icons.Default.DataUsage,
                     label = "Data Points",
-                    value = session.dataPoints.toString()
+                    value = session.dataPoints.toString(),
                 )
             }
             if (session.notes.isNotEmpty()) {
@@ -173,7 +174,7 @@ fun SessionHeaderCard(session: SessionInfo) {
                 Text(
                     text = "Notes: ${session.notes}",
                     fontSize = 14.sp,
-                    color = Color(0xFFCCFFFFFF)
+                    color = Color(0xFFCCFFFFFF),
                 )
             }
         }
@@ -184,30 +185,30 @@ fun SessionHeaderCard(session: SessionInfo) {
 fun SessionInfoItem(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     label: String,
-    value: String
+    value: String,
 ) {
     Column {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = label,
                 tint = Color(0xFF4ECDC4),
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(16.dp),
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = label,
                 fontSize = 12.sp,
-                color = Color(0xFFCCFFFFFF)
+                color = Color(0xFFCCFFFFFF),
             )
         }
         Text(
             text = value,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
-            color = Color.White
+            color = Color.White,
         )
     }
 }
@@ -216,58 +217,59 @@ fun SessionInfoItem(
 fun MetricsOverviewCard(metrics: SessionMetrics) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = "Metrics Overview",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 MetricItem(
                     label = "GSR Mean",
                     value = "${String.format("%.2f", metrics.gsrMean)} μS",
-                    color = Color(0xFF4ECDC4)
+                    color = Color(0xFF4ECDC4),
                 )
                 MetricItem(
                     label = "Thermal Avg",
                     value = "${String.format("%.1f", metrics.thermalMean)}°C",
-                    color = Color(0xFFFF6B6B)
+                    color = Color(0xFFFF6B6B),
                 )
                 MetricItem(
                     label = "Heart Rate",
                     value = "${metrics.heartRateAvg} BPM",
-                    color = Color(0xFF6B73FF)
+                    color = Color(0xFF6B73FF),
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "Stress Level: ",
                     fontSize = 14.sp,
-                    color = Color(0xFFCCFFFFFF)
+                    color = Color(0xFFCCFFFFFF),
                 )
                 Text(
                     text = metrics.stressLevel,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = when (metrics.stressLevel) {
-                        "Low" -> Color(0xFF4ECDC4)
-                        "Medium" -> Color(0xFFFFB74D)
-                        "High" -> Color(0xFFFF6B6B)
-                        else -> Color.White
-                    }
+                    color =
+                        when (metrics.stressLevel) {
+                            "Low" -> Color(0xFF4ECDC4)
+                            "Medium" -> Color(0xFFFFB74D)
+                            "High" -> Color(0xFFFF6B6B)
+                            else -> Color.White
+                        },
                 )
             }
         }
@@ -278,21 +280,21 @@ fun MetricsOverviewCard(metrics: SessionMetrics) {
 private fun MetricItem(
     label: String,
     value: String,
-    color: Color
+    color: Color,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = color
+            color = color,
         )
         Text(
             text = label,
             fontSize = 12.sp,
-            color = Color(0xFFCCFFFFFF)
+            color = Color(0xFFCCFFFFFF),
         )
     }
 }
@@ -301,22 +303,23 @@ private fun MetricItem(
 fun GSRWaveformCard(data: List<TimeSeriesData>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = "GSR Waveform",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             Canvas(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
             ) {
                 val path = Path()
                 val width = size.width
@@ -327,9 +330,12 @@ fun GSRWaveformCard(data: List<TimeSeriesData>) {
                     val valueRange = maxValue - minValue
                     data.forEachIndexed { index, point ->
                         val x = (index.toFloat() / (data.size - 1)) * width
-                        val normalizedValue = if (valueRange > 0) {
-                            ((point.gsrValue - minValue) / valueRange)
-                        } else 0.5
+                        val normalizedValue =
+                            if (valueRange > 0) {
+                                ((point.gsrValue - minValue) / valueRange)
+                            } else {
+                                0.5
+                            }
                         val y = height - (normalizedValue.toFloat() * height)
                         if (index == 0) {
                             path.moveTo(x, y)
@@ -340,7 +346,7 @@ fun GSRWaveformCard(data: List<TimeSeriesData>) {
                     drawPath(
                         path = path,
                         color = Color(0xFF4ECDC4),
-                        style = Stroke(width = 2.dp.toPx())
+                        style = Stroke(width = 2.dp.toPx()),
                     )
                 }
             }
@@ -352,22 +358,23 @@ fun GSRWaveformCard(data: List<TimeSeriesData>) {
 fun ThermalDataCard(data: List<TimeSeriesData>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = "Thermal Data",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             Canvas(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
             ) {
                 val path = Path()
                 val width = size.width
@@ -378,9 +385,12 @@ fun ThermalDataCard(data: List<TimeSeriesData>) {
                     val valueRange = maxValue - minValue
                     data.forEachIndexed { index, point ->
                         val x = (index.toFloat() / (data.size - 1)) * width
-                        val normalizedValue = if (valueRange > 0) {
-                            ((point.thermalValue - minValue) / valueRange)
-                        } else 0.5
+                        val normalizedValue =
+                            if (valueRange > 0) {
+                                ((point.thermalValue - minValue) / valueRange)
+                            } else {
+                                0.5
+                            }
                         val y = height - (normalizedValue.toFloat() * height)
                         if (index == 0) {
                             path.moveTo(x, y)
@@ -391,7 +401,7 @@ fun ThermalDataCard(data: List<TimeSeriesData>) {
                     drawPath(
                         path = path,
                         color = Color(0xFFFF6B6B),
-                        style = Stroke(width = 2.dp.toPx())
+                        style = Stroke(width = 2.dp.toPx()),
                     )
                 }
             }
@@ -402,42 +412,43 @@ fun ThermalDataCard(data: List<TimeSeriesData>) {
 @Composable
 fun AnalysisSummaryCard(
     session: SessionInfo,
-    metrics: SessionMetrics
+    metrics: SessionMetrics,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = "Analysis Summary",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
-            val summaryText = buildString {
-                append("This ${session.duration} session recorded ${session.dataPoints} data points ")
-                append("from ${session.sensorTypes.joinToString(", ")} sensors. ")
-                append("Average GSR was ${String.format("%.2f", metrics.gsrMean)} μS with ")
-                append("standard deviation of ${String.format("%.2f", metrics.gsrStd)}. ")
-                append(
-                    "Thermal readings averaged ${
-                        String.format(
-                            "%.1f",
-                            metrics.thermalMean
-                        )
-                    }°C. "
-                )
-                append("Overall stress level assessed as ${metrics.stressLevel.lowercase()}.")
-            }
+            val summaryText =
+                buildString {
+                    append("This ${session.duration} session recorded ${session.dataPoints} data points ")
+                    append("from ${session.sensorTypes.joinToString(", ")} sensors. ")
+                    append("Average GSR was ${String.format("%.2f", metrics.gsrMean)} μS with ")
+                    append("standard deviation of ${String.format("%.2f", metrics.gsrStd)}. ")
+                    append(
+                        "Thermal readings averaged ${
+                            String.format(
+                                "%.1f",
+                                metrics.thermalMean,
+                            )
+                        }°C. ",
+                    )
+                    append("Overall stress level assessed as ${metrics.stressLevel.lowercase()}.")
+                }
             Text(
                 text = summaryText,
                 fontSize = 14.sp,
                 color = Color(0xFFCCFFFFFF),
-                lineHeight = 20.sp
+                lineHeight = 20.sp,
             )
         }
     }
@@ -447,64 +458,67 @@ fun AnalysisSummaryCard(
 fun ExportOptionsCard(
     onExportRaw: () -> Unit,
     onExportReport: () -> Unit,
-    onExportVideo: () -> Unit
+    onExportVideo: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Text(
                 text = "Export Options",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 OutlinedButton(
                     onClick = onExportRaw,
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color(0xFF4ECDC4)
-                    )
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color(0xFF4ECDC4),
+                        ),
                 ) {
                     Icon(
                         imageVector = Icons.Default.TableChart,
                         contentDescription = "Export Raw Data",
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Raw Data")
                 }
                 OutlinedButton(
                     onClick = onExportReport,
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color(0xFF6B73FF)
-                    )
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color(0xFF6B73FF),
+                        ),
                 ) {
                     Icon(
                         imageVector = Icons.Default.Description,
                         contentDescription = "Export Report",
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Report")
                 }
                 OutlinedButton(
                     onClick = onExportVideo,
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color(0xFFFF6B6B)
-                    )
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color(0xFFFF6B6B),
+                        ),
                 ) {
                     Icon(
                         imageVector = Icons.Default.VideoFile,
                         contentDescription = "Export Video",
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Video")
@@ -514,37 +528,38 @@ fun ExportOptionsCard(
     }
 }
 
-private fun getSampleSession(id: String) = SessionInfo(
-    id = id,
-    title = "Stress Response Study - Session A",
-    date = "Dec 15, 2024 14:30",
-    duration = "25:42",
-    participantId = "P001-UCL-2024",
-    sensorTypes = listOf("GSR", "Thermal", "Heart Rate"),
-    dataPoints = 15420,
-    notes = "Baseline recording with cognitive stress tasks. Participant reported feeling moderately stressed during math problems."
-)
+private fun getSampleSession(id: String) =
+    SessionInfo(
+        id = id,
+        title = "Stress Response Study - Session A",
+        date = "Dec 15, 2024 14:30",
+        duration = "25:42",
+        participantId = "P001-UCL-2024",
+        sensorTypes = listOf("GSR", "Thermal", "Heart Rate"),
+        dataPoints = 15420,
+        notes = "Baseline recording with cognitive stress tasks. Participant reported feeling moderately stressed during math problems.",
+    )
 
-private fun getSampleMetrics() = SessionMetrics(
-    gsrMean = 12.45,
-    gsrStd = 3.21,
-    gsrMin = 8.12,
-    gsrMax = 18.67,
-    thermalMean = 36.4,
-    thermalStd = 0.8,
-    heartRateAvg = 78,
-    stressLevel = "Medium"
-)
+private fun getSampleMetrics() =
+    SessionMetrics(
+        gsrMean = 12.45,
+        gsrStd = 3.21,
+        gsrMin = 8.12,
+        gsrMax = 18.67,
+        thermalMean = 36.4,
+        thermalStd = 0.8,
+        heartRateAvg = 78,
+        stressLevel = "Medium",
+    )
 
-private fun getSampleTimeSeriesData(): List<TimeSeriesData> {
-    return (0..100).map { i ->
+private fun getSampleTimeSeriesData(): List<TimeSeriesData> =
+    (0..100).map { i ->
         TimeSeriesData(
             timestamp = System.currentTimeMillis() + i * 1000,
             gsrValue = 12.0 + 3.0 * sin(i * 0.1) + (Math.random() - 0.5) * 2.0,
-            thermalValue = 36.4 + 0.5 * sin(i * 0.05) + (Math.random() - 0.5) * 0.3
+            thermalValue = 36.4 + 0.5 * sin(i * 0.05) + (Math.random() - 0.5) * 0.3,
         )
     }
-}
 
 @Preview(showBackground = true)
 @Composable

@@ -1,14 +1,14 @@
 package com.mpdc4gsr.libunified.app.common
 
 import android.util.TypedValue
-import com.mpdc4gsr.libunified.compat.SPUtils
 import com.google.gson.Gson
-import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.libunified.compat.ContextProvider
+import com.mpdc4gsr.libunified.compat.SPUtils
 
 object SaveSettingUtils {
     private const val SP_NAME = "SaveSettingUtils"
@@ -21,6 +21,7 @@ object SaveSettingUtils {
     const val FusionTypeHSLFusion = 3
     const val FusionTypeScreenFusion = 5
     const val FusionTypeIROnlyNoFusion = 6
+
     fun reset() {
         isMeasureTempMode = true
         isVideoMode = false
@@ -59,23 +60,36 @@ object SaveSettingUtils {
             SPUtils.getInstance(SP_NAME).put("isSaveSetting", value)
         }
     var isMeasureTempMode: Boolean
-        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME)
-            .getBoolean("isMeasureTempMode", true) else true
+        get() =
+            if (isSaveSetting) {
+                SPUtils
+                    .getInstance(SP_NAME)
+                    .getBoolean("isMeasureTempMode", true)
+            } else {
+                true
+            }
         set(value) {
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isMeasureTempMode", value)
             }
         }
     var isOpenAmplify: Boolean
-        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME)
-            .getBoolean("isOpenAmplify", false) else false
+        get() =
+            if (isSaveSetting) {
+                SPUtils
+                    .getInstance(SP_NAME)
+                    .getBoolean("isOpenAmplify", false)
+            } else {
+                false
+            }
         set(value) {
             SPUtils.getInstance(SP_NAME).put("isOpenAmplify", value)
         }
     var isVideoMode: Boolean
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getBoolean("isVideoMode", false)
             } else {
                 false
@@ -88,7 +102,8 @@ object SaveSettingUtils {
     var isAutoShutter: Boolean
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getBoolean("isAutoShutter", true)
             } else {
                 true
@@ -101,7 +116,8 @@ object SaveSettingUtils {
     var isRecordAudio: Boolean
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getBoolean("isRecordAudio", false)
             } else {
                 false
@@ -114,7 +130,8 @@ object SaveSettingUtils {
     var delayCaptureSecond: Int
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getInt("delayCaptureSecond", 0)
             } else {
                 0
@@ -125,14 +142,26 @@ object SaveSettingUtils {
             }
         }
     var fusionType: Int
-        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME)
-            .getInt("fusionType", FusionTypeLPYFusion) else FusionTypeLPYFusion
+        get() =
+            if (isSaveSetting) {
+                SPUtils
+                    .getInstance(SP_NAME)
+                    .getInt("fusionType", FusionTypeLPYFusion)
+            } else {
+                FusionTypeLPYFusion
+            }
         set(value) {
             SPUtils.getInstance(SP_NAME).put("fusionType", value)
         }
     var isOpenTwoLight: Boolean
-        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME)
-            .getBoolean("isOpenTwoLight", false) else false
+        get() =
+            if (isSaveSetting) {
+                SPUtils
+                    .getInstance(SP_NAME)
+                    .getBoolean("isOpenTwoLight", false)
+            } else {
+                false
+            }
         set(value) {
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isOpenTwoLight", value)
@@ -155,7 +184,8 @@ object SaveSettingUtils {
     var isOpenPseudoBar: Boolean
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getBoolean("isOpenPseudoBar", true)
             } else {
                 true
@@ -168,7 +198,8 @@ object SaveSettingUtils {
     var contrastValue: Int
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getInt("contrastValue", 128)
             } else {
                 128
@@ -189,10 +220,14 @@ object SaveSettingUtils {
         get() =
             if (isSaveSetting) {
                 val json = SPUtils.getInstance(SP_NAME).getString("alarmBean", "")
-                if (json.isNullOrEmpty()) AlarmBean() else Gson().fromJson(
-                    json,
-                    AlarmBean::class.java
-                )
+                if (json.isNullOrEmpty()) {
+                    AlarmBean()
+                } else {
+                    Gson().fromJson(
+                        json,
+                        AlarmBean::class.java,
+                    )
+                }
             } else {
                 AlarmBean()
             }
@@ -204,7 +239,8 @@ object SaveSettingUtils {
     var rotateAngle: Int
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getInt("rotateAngle", DeviceConfig.S_ROTATE_ANGLE)
             } else {
                 DeviceConfig.S_ROTATE_ANGLE
@@ -217,7 +253,8 @@ object SaveSettingUtils {
     var isOpenMirror: Boolean
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getBoolean("isOpenMirror", false)
             } else {
                 false
@@ -230,7 +267,8 @@ object SaveSettingUtils {
     var isOpenCompass: Boolean
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getBoolean("isOpenCompass", false)
             } else {
                 false
@@ -243,7 +281,8 @@ object SaveSettingUtils {
     var tempTextColor: Int
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getInt("tempTextColor", 0xffffffff.toInt())
             } else {
                 0xffffffff.toInt()
@@ -256,13 +295,16 @@ object SaveSettingUtils {
     var tempTextSize: Int
         get() {
             val context = ContextProvider.getContext()
-            val defaultSize = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_SP,
-                14f,
-                context.resources.displayMetrics
-            ).toInt()
+            val defaultSize =
+                TypedValue
+                    .applyDimension(
+                        TypedValue.COMPLEX_UNIT_SP,
+                        14f,
+                        context.resources.displayMetrics,
+                    ).toInt()
             return if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getInt("tempTextSize", defaultSize)
             } else {
                 defaultSize
@@ -276,7 +318,8 @@ object SaveSettingUtils {
     var temperatureMode: Int
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getInt("temperatureMode", CameraItemBean.TYPE_TMP_C)
             } else {
                 CameraItemBean.TYPE_TMP_C
@@ -289,7 +332,8 @@ object SaveSettingUtils {
     var isOpenHighPoint: Boolean
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getBoolean("isOpenHighPoint", false)
             } else {
                 false
@@ -302,7 +346,8 @@ object SaveSettingUtils {
     var isOpenLowPoint: Boolean
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getBoolean("isOpenLowPoint", false)
             } else {
                 false
@@ -315,7 +360,8 @@ object SaveSettingUtils {
     var aiTraceType: Int
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getInt("aiTraceType", ObserveBean.TYPE_NONE)
             } else {
                 ObserveBean.TYPE_NONE
@@ -328,7 +374,8 @@ object SaveSettingUtils {
     var isOpenTarget: Boolean
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getBoolean("isOpenTarget", false)
             } else {
                 false
@@ -386,7 +433,8 @@ object SaveSettingUtils {
     var reportAuthorName: String
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getString("reportAuthorName", CommUtils.getAppName())
             } else {
                 CommUtils.getAppName()
@@ -399,7 +447,8 @@ object SaveSettingUtils {
     var reportWatermarkText: String
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getString("reportWatermarkText", CommUtils.getAppName())
             } else {
                 CommUtils.getAppName()
@@ -412,7 +461,8 @@ object SaveSettingUtils {
     var reportHumidity: Int
         get() =
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
+                SPUtils
+                    .getInstance(SP_NAME)
                     .getInt("reportHumidity", 500)
             } else {
                 500

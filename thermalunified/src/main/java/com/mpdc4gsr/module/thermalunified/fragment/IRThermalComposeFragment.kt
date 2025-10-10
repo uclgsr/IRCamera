@@ -26,9 +26,7 @@ import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalFragmentViewModel
 
 class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>() {
-    override fun createViewModel(): IRThermalFragmentViewModel {
-        return viewModels<IRThermalFragmentViewModel>().value
-    }
+    override fun createViewModel(): IRThermalFragmentViewModel = viewModels<IRThermalFragmentViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -40,28 +38,29 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
         val deviceInfo by viewModel.deviceInfo.collectAsStateWithLifecycle()
         LibUnifiedTheme {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 // Header section
                 Text(
                     text = "IR Thermal Imaging",
                     style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = "Access advanced thermal imaging capabilities",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 // Connection status card
                 ConnectionStatusCard(
                     connectionStatus = connectionStatus,
                     isTC007 = isTC007,
                     deviceInfo = deviceInfo,
-                    onRetryConnection = { viewModel.retryConnection() }
+                    onRetryConnection = { viewModel.retryConnection() },
                 )
                 // Main thermal entry point
                 if (connectionStatus == IRThermalFragmentViewModel.ConnectionStatus.CONNECTED) {
@@ -74,23 +73,24 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
                         onOpenThermalPlus = {
                             val intent = Intent(context, IRThermalPlusComposeActivity::class.java)
                             context.startActivity(intent)
-                        }
+                        },
                     )
                 } else {
                     ConnectionGuideCard(
                         connectionStatus = connectionStatus,
                         isTC007 = isTC007,
                         onConnectDevice = { viewModel.connectDevice() },
-                        onOpenSettings = { viewModel.openDeviceSettings() }
+                        onOpenSettings = { viewModel.openDeviceSettings() },
                     )
                 }
                 // Advanced features section
                 AdvancedFeaturesSection(
                     onNavigateToFeature = { route ->
-                        NavigationManager.getInstance()
+                        NavigationManager
+                            .getInstance()
                             .build(route)
                             .navigation(context)
-                    }
+                    },
                 )
             }
         }
@@ -101,75 +101,81 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
         connectionStatus: IRThermalFragmentViewModel.ConnectionStatus,
         isTC007: Boolean,
         deviceInfo: String?,
-        onRetryConnection: () -> Unit
+        onRetryConnection: () -> Unit,
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = when (connectionStatus) {
-                    IRThermalFragmentViewModel.ConnectionStatus.CONNECTED -> MaterialTheme.colorScheme.primaryContainer
-                    IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> MaterialTheme.colorScheme.secondaryContainer
-                    else -> MaterialTheme.colorScheme.errorContainer
-                }
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor =
+                        when (connectionStatus) {
+                            IRThermalFragmentViewModel.ConnectionStatus.CONNECTED -> MaterialTheme.colorScheme.primaryContainer
+                            IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> MaterialTheme.colorScheme.secondaryContainer
+                            else -> MaterialTheme.colorScheme.errorContainer
+                        },
+                ),
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column {
                         Text(
                             text = "Device Status",
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
                             text = if (isTC007) "TC007 Device" else "Standard Device",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                     // Status indicator
                     Box(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .background(
-                                color = when (connectionStatus) {
-                                    IRThermalFragmentViewModel.ConnectionStatus.CONNECTED -> Color.Green
-                                    IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> Color(0xFFFFA500)
-                                    else -> Color.Red
-                                },
-                                shape = androidx.compose.foundation.shape.CircleShape
-                            )
+                        modifier =
+                            Modifier
+                                .size(12.dp)
+                                .background(
+                                    color =
+                                        when (connectionStatus) {
+                                            IRThermalFragmentViewModel.ConnectionStatus.CONNECTED -> Color.Green
+                                            IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> Color(0xFFFFA500)
+                                            else -> Color.Red
+                                        },
+                                    shape = androidx.compose.foundation.shape.CircleShape,
+                                ),
                     )
                 }
                 Text(
                     text = getStatusText(connectionStatus),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = when (connectionStatus) {
-                        IRThermalFragmentViewModel.ConnectionStatus.CONNECTED -> MaterialTheme.colorScheme.primary
-                        IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> MaterialTheme.colorScheme.secondary
-                        else -> MaterialTheme.colorScheme.error
-                    }
+                    color =
+                        when (connectionStatus) {
+                            IRThermalFragmentViewModel.ConnectionStatus.CONNECTED -> MaterialTheme.colorScheme.primary
+                            IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> MaterialTheme.colorScheme.secondary
+                            else -> MaterialTheme.colorScheme.error
+                        },
                 )
                 deviceInfo?.let { info ->
                     Text(
                         text = info,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
                 if (connectionStatus != IRThermalFragmentViewModel.ConnectionStatus.CONNECTED) {
                     Button(
                         onClick = onRetryConnection,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         Icon(Icons.Default.Refresh, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
@@ -184,32 +190,35 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
     private fun ThermalEntryCard(
         onOpenThermal: () -> Unit,
         onOpenNightVision: () -> Unit,
-        onOpenThermalPlus: () -> Unit
+        onOpenThermalPlus: () -> Unit,
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                ),
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Text(
                     text = "Thermal Imaging Modes",
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 // Main thermal button
                 Button(
                     onClick = onOpenThermal,
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                        ),
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -218,11 +227,11 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
                 // Additional mode buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     OutlinedButton(
                         onClick = onOpenNightVision,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Icon(Icons.Default.NightsStay, contentDescription = null)
                         Spacer(modifier = Modifier.width(4.dp))
@@ -230,7 +239,7 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
                     }
                     OutlinedButton(
                         onClick = onOpenThermalPlus,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Icon(Icons.Default.Add, contentDescription = null)
                         Spacer(modifier = Modifier.width(4.dp))
@@ -246,52 +255,56 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
         connectionStatus: IRThermalFragmentViewModel.ConnectionStatus,
         isTC007: Boolean,
         onConnectDevice: () -> Unit,
-        onOpenSettings: () -> Unit
+        onOpenSettings: () -> Unit,
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                ),
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
                     Icons.Default.Warning,
                     contentDescription = "Connection Required",
                     modifier = Modifier.size(48.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
-                    text = when (connectionStatus) {
-                        IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> "Connecting to Device..."
-                        else -> "Device Not Connected"
-                    },
+                    text =
+                        when (connectionStatus) {
+                            IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> "Connecting to Device..."
+                            else -> "Device Not Connected"
+                        },
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    text = if (isTC007) {
-                        "Connect your TC007 thermal imaging device to access advanced thermal features"
-                    } else {
-                        "Connect your thermal imaging device to start capturing thermal data"
-                    },
+                    text =
+                        if (isTC007) {
+                            "Connect your TC007 thermal imaging device to access advanced thermal features"
+                        } else {
+                            "Connect your thermal imaging device to start capturing thermal data"
+                        },
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 if (connectionStatus != IRThermalFragmentViewModel.ConnectionStatus.CONNECTING) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         Button(
                             onClick = onConnectDevice,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         ) {
                             Icon(Icons.Default.Cable, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
@@ -299,7 +312,7 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
                         }
                         OutlinedButton(
                             onClick = onOpenSettings,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         ) {
                             Icon(Icons.Default.Settings, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
@@ -314,34 +327,32 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
     }
 
     @Composable
-    private fun AdvancedFeaturesSection(
-        onNavigateToFeature: (String) -> Unit
-    ) {
+    private fun AdvancedFeaturesSection(onNavigateToFeature: (String) -> Unit) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
                 text = "Advanced Features",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 FeatureCard(
                     title = "Gallery",
                     description = "View thermal images",
                     icon = Icons.Default.PhotoLibrary,
                     onClick = { onNavigateToFeature(RouterConfig.IR_GALLERY_HOME) },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 FeatureCard(
                     title = "Settings",
                     description = "Configure thermal",
                     icon = Icons.Default.Settings,
                     onClick = { onNavigateToFeature(RouterConfig.THERMAL_SETTINGS) },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
@@ -353,44 +364,46 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
         description: String,
         icon: androidx.compose.ui.graphics.vector.ImageVector,
         onClick: () -> Unit,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         Card(
             onClick = onClick,
             modifier = modifier,
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Icon(
                     icon,
                     contentDescription = title,
                     modifier = Modifier.size(24.dp),
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primary,
                 )
                 Text(
                     text = title,
                     style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
     }
 
-    private fun getStatusText(status: IRThermalFragmentViewModel.ConnectionStatus): String = when (status) {
-        IRThermalFragmentViewModel.ConnectionStatus.CONNECTED -> "Device connected and ready"
-        IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> "Connecting to device..."
-        IRThermalFragmentViewModel.ConnectionStatus.DISCONNECTED -> "Device not connected"
-        IRThermalFragmentViewModel.ConnectionStatus.ERROR -> "Connection error - check device"
-    }
+    private fun getStatusText(status: IRThermalFragmentViewModel.ConnectionStatus): String =
+        when (status) {
+            IRThermalFragmentViewModel.ConnectionStatus.CONNECTED -> "Device connected and ready"
+            IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> "Connecting to device..."
+            IRThermalFragmentViewModel.ConnectionStatus.DISCONNECTED -> "Device not connected"
+            IRThermalFragmentViewModel.ConnectionStatus.ERROR -> "Connection error - check device"
+        }
 }

@@ -1,7 +1,6 @@
 package mpdc4gsr.feature.camera.data
 
 import android.content.Context
-import android.util.Log
 
 /**
  * Represents the RAW capture processing pipeline. For now the implementation focuses on
@@ -9,25 +8,22 @@ import android.util.Log
  * binding directly to low-level camera classes.
  */
 class RawEngine(
-    private val context: Context
+    private val context: Context,
 ) {
-
     private var stage3Enabled: Boolean = SamsungDeviceCompatibility.isStage3Compatible()
 
     fun isStage3ProcessingEnabled(): Boolean = stage3Enabled
 
     fun setStage3ProcessingEnabled(enabled: Boolean) {
         stage3Enabled = enabled
-        Log.i(TAG, "Stage3 processing ${if (enabled) "enabled" else "disabled"}")
     }
 
     fun describePipeline(): String {
         val deviceInfo = SamsungDeviceCompatibility.getDeviceInfo()
-        return "Stage3=${stage3Enabled}, device=$deviceInfo"
+        return "Stage3=$stage3Enabled, device=$deviceInfo"
     }
 
     fun release() {
-        Log.i(TAG, "RawEngine released")
     }
 
     companion object {

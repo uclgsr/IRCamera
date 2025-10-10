@@ -6,7 +6,9 @@ import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 
-class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
+class IrSurfaceView :
+    SurfaceView,
+    SurfaceHolder.Callback {
     private var mHolder: SurfaceHolder? = null
     private var mCanvas: Canvas? = null
     private val p: Paint by lazy { Paint() }
@@ -22,7 +24,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
     @Volatile
     private var isLockImage = false
     private var callback: IfrCamOpenOverCallback? = null
-    private var mCtx: Context? = null;
+    private var mCtx: Context? = null
 
     constructor(context: Context) : super(context) {
         mCtx = context
@@ -52,7 +54,11 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 //        mMatrix.postTranslate(x, y)
 //        mMatrix.getValues(mBeforeRotateMatrixValues)
 //    }
-    fun setMatrix(rotate: Float, w: Float, h: Float) {
+    fun setMatrix(
+        rotate: Float,
+        w: Float,
+        h: Float,
+    ) {
         val screenWidth = resources.displayMetrics.widthPixels.toFloat()
         mMatrix.reset()
         when (rotate) {
@@ -84,7 +90,10 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
-    fun doDraw(bitmap: Bitmap?, shutterFlag: Int) {
+    fun doDraw(
+        bitmap: Bitmap?,
+        shutterFlag: Int,
+    ) {
         synchronized(this) {
             if (isLockImage || !isPrepare || null == bitmap || shutterFlag == 1) {
                 return@doDraw
@@ -115,38 +124,90 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
-    private var mColorMatrix = ColorMatrix(
-        floatArrayOf(
-            1f, 0f, 0f, 0f, 0f,
-            0f, 1f, 0f, 0f, 0f,
-            0f, 0f, 1f, 0f, 0f,
-            0f, 0f, 0f, 01f, 0f
+    private var mColorMatrix =
+        ColorMatrix(
+            floatArrayOf(
+                1f,
+                0f,
+                0f,
+                0f,
+                0f,
+                0f,
+                1f,
+                0f,
+                0f,
+                0f,
+                0f,
+                0f,
+                1f,
+                0f,
+                0f,
+                0f,
+                0f,
+                0f,
+                01f,
+                0f,
+            ),
         )
-    )
-    private var mColorMatrixLut = ColorMatrix(
-        floatArrayOf(
-            1f, 0f, 0f, 0f, 0f,
-            0f, 1.5f, 0f, 0f, 25f,
-            0.1f, 0.2f, 0.7f, 0f, 25f,
-            0f, 0f, 0f, 01f, 0f
+    private var mColorMatrixLut =
+        ColorMatrix(
+            floatArrayOf(
+                1f,
+                0f,
+                0f,
+                0f,
+                0f,
+                0f,
+                1.5f,
+                0f,
+                0f,
+                25f,
+                0.1f,
+                0.2f,
+                0.7f,
+                0f,
+                25f,
+                0f,
+                0f,
+                0f,
+                01f,
+                0f,
+            ),
         )
-    )
     private val n = 1f
-    private var mColorMatrixEnhance = ColorMatrix(
+    private var mColorMatrixEnhance =
+        ColorMatrix(
 //        floatArrayOf(
 //            n, 0f, 0f, 0f, 128 * (1 - n),
 //            0f, n, 0f, 0f, 128 * (1 - n),
 //            0f, 0f, n, 0f, 128 * (1 - n),
 //            0f, 0f, 0f, 1f, 0f
 //        )
-        floatArrayOf(
-            1f, 0f, 0f, 0f, 0f,
-            0f, 1f, 0f, 0f, 0f,
-            0f, 0f, 1f, 0f, 0f,
-            0f, 0f, 0f, 1f, 0f
+            floatArrayOf(
+                1f,
+                0f,
+                0f,
+                0f,
+                0f,
+                0f,
+                1f,
+                0f,
+                0f,
+                0f,
+                0f,
+                0f,
+                1f,
+                0f,
+                0f,
+                0f,
+                0f,
+                0f,
+                1f,
+                0f,
+            ),
         )
-    )
     private var saturation = 0
+
     fun setOpenLut() {
 //        openLut = !openLut
         openLut = true
@@ -156,9 +217,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         this.saturation = saturation
     }
 
-    fun getSaturationValue(): Int {
-        return saturation
-    }
+    fun getSaturationValue(): Int = saturation
 
     fun setAlpha(alpha: Int) {
         if (alpha in 0..255) {
@@ -168,12 +227,18 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         isPrepare = true
-        if (callback != null)
+        if (callback != null) {
             callback!!.onSurfaceCreated()
+        }
         Logger.d(TAG, "holder onSurfaceCreated")
     }
 
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+    override fun surfaceChanged(
+        holder: SurfaceHolder,
+        format: Int,
+        width: Int,
+        height: Int,
+    ) {
         Logger.d(TAG, "holder surfaceChanged")
     }
 

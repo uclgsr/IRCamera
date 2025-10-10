@@ -29,18 +29,22 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
     companion object {
         private const val KEY_PATH = "video_path"
         private const val KEY_TITLE = "video_title"
-        fun startWithPath(context: Context, videoPath: String, title: String = "Thermal Video") {
-            val intent = Intent(context, ThermalVideoComposeActivity::class.java).apply {
-                putExtra(KEY_PATH, videoPath)
-                putExtra(KEY_TITLE, title)
-            }
+
+        fun startWithPath(
+            context: Context,
+            videoPath: String,
+            title: String = "Thermal Video",
+        ) {
+            val intent =
+                Intent(context, ThermalVideoComposeActivity::class.java).apply {
+                    putExtra(KEY_PATH, videoPath)
+                    putExtra(KEY_TITLE, title)
+                }
             context.startActivity(intent)
         }
     }
 
-    override fun createViewModel(): BaseViewModel {
-        return viewModels<BaseViewModel>().value
-    }
+    override fun createViewModel(): BaseViewModel = viewModels<BaseViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -59,7 +63,7 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
                         title = {
                             Text(
                                 videoTitle,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                         },
                         navigationIcon = {
@@ -71,32 +75,34 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
                             IconButton(onClick = { showThermalData = !showThermalData }) {
                                 Icon(
                                     if (showThermalData) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                    contentDescription = "Toggle thermal data"
+                                    contentDescription = "Toggle thermal data",
                                 )
                             }
                             IconButton(onClick = {
                                 // TODO: Share thermal video
-                                android.widget.Toast.makeText(
-                                    this@ThermalVideoComposeActivity,
-                                    "Sharing video...",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
+                                android.widget.Toast
+                                    .makeText(
+                                        this@ThermalVideoComposeActivity,
+                                        "Sharing video...",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
                             }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
                             IconButton(onClick = {
                                 // TODO: Show more video options
-                                android.widget.Toast.makeText(
-                                    this@ThermalVideoComposeActivity,
-                                    "More options...",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
+                                android.widget.Toast
+                                    .makeText(
+                                        this@ThermalVideoComposeActivity,
+                                        "More options...",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
                             }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
-                        }
+                        },
                     )
-                }
+                },
             ) { paddingValues ->
                 ThermalVideoContent(
                     videoPath = videoPath,
@@ -108,7 +114,7 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
                     showControls = showControls,
                     onControlsToggle = { showControls = !showControls },
                     showThermalData = showThermalData,
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
         }
@@ -126,12 +132,13 @@ private fun ThermalVideoContent(
     showControls: Boolean,
     onControlsToggle: () -> Unit,
     showThermalData: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.Black)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color.Black),
     ) {
         // Video player
         ThermalVideoPlayer(
@@ -140,7 +147,7 @@ private fun ThermalVideoContent(
             currentPosition = currentPosition,
             onPositionChange = onPositionChange,
             onClick = onControlsToggle,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
         // Thermal data overlay
         if (showThermalData) {
@@ -148,9 +155,10 @@ private fun ThermalVideoContent(
                 currentTemp = 36.8f,
                 maxTemp = 42.1f,
                 minTemp = 28.3f,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(16.dp)
+                modifier =
+                    Modifier
+                        .align(Alignment.TopStart)
+                        .padding(16.dp),
             )
         }
         // Video controls overlay
@@ -161,39 +169,41 @@ private fun ThermalVideoContent(
                 currentPosition = currentPosition,
                 videoDuration = videoDuration,
                 onPositionChange = onPositionChange,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(16.dp)
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .padding(16.dp),
             )
         }
         // Playback indicator
         if (isPlaying) {
             Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(16.dp)
-                    .background(
-                        Color.Black.copy(alpha = 0.7f),
-                        RoundedCornerShape(12.dp)
-                    )
-                    .padding(8.dp)
+                modifier =
+                    Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp)
+                        .background(
+                            Color.Black.copy(alpha = 0.7f),
+                            RoundedCornerShape(12.dp),
+                        ).padding(8.dp),
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFF4CAF50))
+                        modifier =
+                            Modifier
+                                .size(8.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFF4CAF50)),
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = "PLAYING",
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 }
             }
@@ -208,7 +218,7 @@ private fun ThermalVideoPlayer(
     currentPosition: Long,
     onPositionChange: (Long) -> Unit,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     AndroidView(
@@ -234,7 +244,7 @@ private fun ThermalVideoPlayer(
                 videoView.pause()
             }
         },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -243,41 +253,42 @@ private fun ThermalDataOverlay(
     currentTemp: Float,
     maxTemp: Float,
     minTemp: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black.copy(alpha = 0.8f)
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Black.copy(alpha = 0.8f),
+            ),
     ) {
         Column(
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(12.dp),
         ) {
             Text(
                 text = "THERMAL DATA",
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.White,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
-                text = "${currentTemp}°C",
+                text = "$currentTemp°C",
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color(0xFFFF6B35),
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
-                    text = "H:${maxTemp}°",
+                    text = "H:$maxTemp°",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.White
+                    color = Color.White,
                 )
                 Text(
-                    text = "L:${minTemp}°",
+                    text = "L:$minTemp°",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.White
+                    color = Color.White,
                 )
             }
         }
@@ -291,19 +302,21 @@ private fun ThermalVideoControls(
     currentPosition: Long,
     videoDuration: Long,
     onPositionChange: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black.copy(alpha = 0.8f)
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Black.copy(alpha = 0.8f),
+            ),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             // Progress bar
             if (videoDuration > 0) {
@@ -311,25 +324,26 @@ private fun ThermalVideoControls(
                     value = currentPosition.toFloat(),
                     onValueChange = { onPositionChange(it.toLong()) },
                     valueRange = 0f..videoDuration.toFloat(),
-                    colors = SliderDefaults.colors(
-                        thumbColor = Color(0xFFFF6B35),
-                        activeTrackColor = Color(0xFFFF6B35)
-                    )
+                    colors =
+                        SliderDefaults.colors(
+                            thumbColor = Color(0xFFFF6B35),
+                            activeTrackColor = Color(0xFFFF6B35),
+                        ),
                 )
                 // Time indicators
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
                         text = formatTime(currentPosition),
                         style = MaterialTheme.typography.labelSmall,
-                        color = Color.White
+                        color = Color.White,
                     )
                     Text(
                         text = formatTime(videoDuration),
                         style = MaterialTheme.typography.labelSmall,
-                        color = Color.White
+                        color = Color.White,
                     )
                 }
             }
@@ -338,51 +352,54 @@ private fun ThermalVideoControls(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(onClick = {
                     // TODO: Go to previous frame
-                    android.widget.Toast.makeText(
-                        context,
-                        "Previous frame",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
+                    android.widget.Toast
+                        .makeText(
+                            context,
+                            "Previous frame",
+                            android.widget.Toast.LENGTH_SHORT,
+                        ).show()
                 }) {
                     Icon(
                         Icons.Default.SkipPrevious,
                         contentDescription = "Previous",
-                        tint = Color.White
+                        tint = Color.White,
                     )
                 }
                 // Play/Pause button
                 IconButton(
                     onClick = { onPlayingChange(!isPlaying) },
-                    modifier = Modifier
-                        .size(56.dp)
-                        .background(
-                            Color(0xFFFF6B35),
-                            CircleShape
-                        )
+                    modifier =
+                        Modifier
+                            .size(56.dp)
+                            .background(
+                                Color(0xFFFF6B35),
+                                CircleShape,
+                            ),
                 ) {
                     Icon(
                         if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                         contentDescription = if (isPlaying) "Pause" else "Play",
                         tint = Color.White,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                 }
                 IconButton(onClick = {
                     // TODO: Go to next frame
-                    android.widget.Toast.makeText(
-                        context,
-                        "Next frame",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
+                    android.widget.Toast
+                        .makeText(
+                            context,
+                            "Next frame",
+                            android.widget.Toast.LENGTH_SHORT,
+                        ).show()
                 }) {
                     Icon(
                         Icons.Default.SkipNext,
                         contentDescription = "Next",
-                        tint = Color.White
+                        tint = Color.White,
                     )
                 }
             }
@@ -390,25 +407,27 @@ private fun ThermalVideoControls(
             // Additional controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 OutlinedButton(
                     onClick = {
                         // TODO: Export current frame
-                        android.widget.Toast.makeText(
-                            context,
-                            "Exporting frame...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Exporting frame...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color.White
-                    )
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color.White,
+                        ),
                 ) {
                     Icon(
                         Icons.Default.CameraAlt,
                         contentDescription = "Export Frame",
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Frame")
@@ -416,20 +435,22 @@ private fun ThermalVideoControls(
                 OutlinedButton(
                     onClick = {
                         // TODO: Analyze thermal video
-                        android.widget.Toast.makeText(
-                            context,
-                            "Analyzing video...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Analyzing video...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color.White
-                    )
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color.White,
+                        ),
                 ) {
                     Icon(
                         Icons.Default.Analytics,
                         contentDescription = "Analyze",
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Analyze")
@@ -437,20 +458,22 @@ private fun ThermalVideoControls(
                 OutlinedButton(
                     onClick = {
                         // TODO: Open video settings
-                        android.widget.Toast.makeText(
-                            context,
-                            "Opening settings...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Opening settings...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color.White
-                    )
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color.White,
+                        ),
                 ) {
                     Icon(
                         Icons.Default.Settings,
                         contentDescription = "Settings",
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Settings")

@@ -50,11 +50,9 @@ class ThermalEntity {
     val avgTemp: Float get() = (thermalMax + thermalMin) / 2f
     val timestamp: Long get() = createTime
     val notes: String? get() = if (info.isBlank()) null else info
-    override fun toString(): String {
-        return "ThermalEntity(id=$id, thermalId='$thermalId', userId='$userId', thermal=$thermal, thermalMax=$thermalMax, thermalMin=$thermalMin, sn='$sn', info='$info', type='$type', startTime=$startTime, createTime=$createTime, updateTime=$updateTime)"
-    }
 
-    fun getTime(): String {
-        return TimeTools.reportTime(createTime)
-    }
+    override fun toString(): String =
+        "ThermalEntity(id=$id, thermalId='$thermalId', userId='$userId', thermal=$thermal, thermalMax=$thermalMax, thermalMin=$thermalMin, sn='$sn', info='$info', type='$type', startTime=$startTime, createTime=$createTime, updateTime=$updateTime)"
+
+    fun getTime(): String = TimeTools.reportTime(createTime)
 }

@@ -2,7 +2,6 @@ package com.mpdc4gsr.libunified.app.tools
 
 import android.text.InputFilter
 import android.text.Spanned
-import android.util.Log
 import android.widget.EditText
 import java.util.regex.Pattern
 
@@ -36,7 +35,6 @@ class InputTextFilterTool {
             ): CharSequence? {
                 val emojiMatcher = emoji.matcher(source)
                 if (emojiMatcher.find()) {
-                    Log.w("123", "[ph][ph][ph][ph][ph][ph][ph]")
                     return ""
                 }
                 return null

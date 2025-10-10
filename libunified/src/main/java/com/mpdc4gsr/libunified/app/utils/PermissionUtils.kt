@@ -7,18 +7,16 @@ import androidx.core.content.ContextCompat
 import com.mpdc4gsr.libunified.app.BaseApplication
 
 object PermissionUtils {
-    fun isVisualUser(): Boolean {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE &&
-                ContextCompat.checkSelfPermission(
-                    BaseApplication.instance,
-                    READ_MEDIA_VISUAL_USER_SELECTED
-                ) == PERMISSION_GRANTED
-    }
+    fun isVisualUser(): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE &&
+            ContextCompat.checkSelfPermission(
+                BaseApplication.instance,
+                READ_MEDIA_VISUAL_USER_SELECTED,
+            ) == PERMISSION_GRANTED
 
-    fun hasCameraPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
+    fun hasCameraPermission(): Boolean =
+        ContextCompat.checkSelfPermission(
             BaseApplication.instance,
-            android.Manifest.permission.CAMERA
+            android.Manifest.permission.CAMERA,
         ) == PERMISSION_GRANTED
-    }
 }

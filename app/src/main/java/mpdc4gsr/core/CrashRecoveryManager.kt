@@ -2,7 +2,6 @@ package mpdc4gsr.core
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -11,7 +10,9 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CrashRecoveryManager(private val context: Context) {
+class CrashRecoveryManager(
+    private val context: Context,
+) {
     companion object {
         private const val TAG = "CrashRecoveryManager"
         private const val PREFS_NAME = "crash_recovery"
@@ -26,66 +27,70 @@ class CrashRecoveryManager(private val context: Context) {
     private val preferences: SharedPreferences =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    suspend fun checkForCrashedSessions(): CrashRecoveryResult = withContext(Dispatchers.IO) {
-        try {
-            val activeSessionId = preferences.getString(KEY_ACTIVE_SESSION, null)
-            val sessionStartTime = preferences.getLong(KEY_SESSION_START_TIME, 0L)
-            val activeSensorsJson = preferences.getString(KEY_ACTIVE_SENSORS, null)
-            val sessionDirectory = preferences.getString(KEY_SESSION_DIRECTORY, null)
-            if (activeSessionId == null || sessionStartTime == 0L) {
+    suspend fun checkForCrashedSessions(): CrashRecoveryResult =
+        withContext(Dispatchers.IO) {
+            try {
+                val activeSessionId = preferences.getString(KEY_ACTIVE_SESSION, null)
+                val sessionStartTime = preferences.getLong(KEY_SESSION_START_TIME, 0L)
+                val activeSensorsJson = preferences.getString(KEY_ACTIVE_SENSORS, null)
+                val sessionDirectory = preferences.getString(KEY_SESSION_DIRECTORY, null)
+                if (activeSessionId == null || sessionStartTime == 0L) {
+                    return@withContext CrashRecoveryResult(
+                        hasCrashedSession = false,
+                        recoveredSession = null,
+                        recoveryActions = emptyList(),
+                    )
+                }
+                val activeSensors =
+                    try {
+                        activeSensorsJson?.let {
+                            val jsonArray = JSONArray(it)
+                            (0 until jsonArray.length()).map { i -> jsonArray.getString(i) }
+                        } ?: emptyList()
+                    } catch (e: Exception) {
+                        emptyList<String>()
+                    }
+                val currentTime = System.currentTimeMillis()
+                val sessionAge = currentTime - sessionStartTime
+                if (sessionAge > SESSION_TIMEOUT_MS) {
+                    clearCrashRecoveryState()
+                    return@withContext CrashRecoveryResult(
+                        hasCrashedSession = false,
+                        recoveredSession = null,
+                        recoveryActions = listOf("Cleared invalid old session data"),
+                    )
+                }
+                val sessionAnalysis = analyzeSessionDirectory(sessionDirectory, activeSensors)
+                val recoveredSession =
+                    RecoveredSession(
+                        sessionId = activeSessionId,
+                        sessionDirectory = sessionDirectory ?: "unknown",
+                        sessionStartTime = sessionStartTime,
+                        activeSensors = activeSensors,
+                        sessionAge = sessionAge,
+                        analysis = sessionAnalysis,
+                    )
                 return@withContext CrashRecoveryResult(
-                    hasCrashedSession = false,
-                    recoveredSession = null,
-                    recoveryActions = emptyList()
+                    hasCrashedSession = true,
+                    recoveredSession = recoveredSession,
+                    recoveryActions = generateRecoveryActions(recoveredSession),
                 )
-            }
-            val activeSensors = try {
-                activeSensorsJson?.let {
-                    val jsonArray = JSONArray(it)
-                    (0 until jsonArray.length()).map { i -> jsonArray.getString(i) }
-                } ?: emptyList()
             } catch (e: Exception) {
-                emptyList<String>()
-            }
-            val currentTime = System.currentTimeMillis()
-            val sessionAge = currentTime - sessionStartTime
-            if (sessionAge > SESSION_TIMEOUT_MS) {
-                clearCrashRecoveryState()
                 return@withContext CrashRecoveryResult(
                     hasCrashedSession = false,
                     recoveredSession = null,
-                    recoveryActions = listOf("Cleared invalid old session data")
+                    recoveryActions = listOf("Error during recovery check: ${e.message}"),
                 )
             }
-            val sessionAnalysis = analyzeSessionDirectory(sessionDirectory, activeSensors)
-            val recoveredSession = RecoveredSession(
-                sessionId = activeSessionId,
-                sessionDirectory = sessionDirectory ?: "unknown",
-                sessionStartTime = sessionStartTime,
-                activeSensors = activeSensors,
-                sessionAge = sessionAge,
-                analysis = sessionAnalysis
-            )
-            return@withContext CrashRecoveryResult(
-                hasCrashedSession = true,
-                recoveredSession = recoveredSession,
-                recoveryActions = generateRecoveryActions(recoveredSession)
-            )
-        } catch (e: Exception) {
-            return@withContext CrashRecoveryResult(
-                hasCrashedSession = false,
-                recoveredSession = null,
-                recoveryActions = listOf("Error during recovery check: ${e.message}")
-            )
         }
-    }
 
     fun markSessionActive(
         sessionId: String,
         sessionDirectory: String,
-        activeSensors: List<String>
+        activeSensors: List<String>,
     ) {
-        preferences.edit()
+        preferences
+            .edit()
             .putString(KEY_ACTIVE_SESSION, sessionId)
             .putLong(KEY_SESSION_START_TIME, System.currentTimeMillis())
             .putString(KEY_ACTIVE_SENSORS, JSONArray(activeSensors).toString())
@@ -97,14 +102,18 @@ class CrashRecoveryManager(private val context: Context) {
         clearCrashRecoveryState()
     }
 
-    fun markSessionFailed(sessionId: String, reason: String) {
+    fun markSessionFailed(
+        sessionId: String,
+        reason: String,
+    ) {
         try {
             val sessionDirectory = preferences.getString(KEY_SESSION_DIRECTORY, null)
             if (sessionDirectory != null) {
                 updateSessionMetadataWithFailure(sessionDirectory, reason)
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("CrashRecoveryManager", "Unexpected Exception in CrashRecoveryManager catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("CrashRecoveryManager", "Unexpected Exception in CrashRecoveryManager catch block", e)
         }
         clearCrashRecoveryState()
     }
@@ -133,88 +142,91 @@ class CrashRecoveryManager(private val context: Context) {
                     success = true,
                     recoveredSessionId = recoveredSession.sessionId,
                     recoveryActions = recoveryActions,
-                    error = null
+                    error = null,
                 )
             } catch (e: Exception) {
                 return@withContext SessionRecoveryResult(
                     success = false,
                     recoveredSessionId = recoveredSession.sessionId,
                     recoveryActions = emptyList(),
-                    error = "Recovery failed: ${e.message}"
+                    error = "Recovery failed: ${e.message}",
                 )
             }
         }
 
     private suspend fun analyzeSessionDirectory(
         sessionDirectory: String?,
-        activeSensors: List<String>
-    ): SessionAnalysis = withContext(Dispatchers.IO) {
-        if (sessionDirectory == null) {
-            return@withContext SessionAnalysis(
-                hasSessionDirectory = false,
-                sessionDirectoryExists = false,
-                dataFiles = emptyMap(),
-                partialDataSize = 0L,
-                summary = "Session directory path unknown"
-            )
-        }
-        val sessionDir = File(sessionDirectory)
-        if (!sessionDir.exists()) {
-            return@withContext SessionAnalysis(
-                hasSessionDirectory = false,
-                sessionDirectoryExists = false,
-                dataFiles = emptyMap(),
-                partialDataSize = 0L,
-                summary = "Session directory does not exist"
-            )
-        }
-        try {
-            val dataFiles = mutableMapOf<String, SessionDataInfo>()
-            var totalDataSize = 0L
-            activeSensors.forEach { sensorName ->
-                val sensorDir = File(sessionDir, sensorName.lowercase())
-                if (sensorDir.exists()) {
-                    val sensorFiles = sensorDir.listFiles() ?: emptyArray()
-                    val sensorDataSize = sensorFiles.sumOf { it.length() }
-                    totalDataSize += sensorDataSize
-                    dataFiles[sensorName] = SessionDataInfo(
-                        sensorName = sensorName,
-                        fileCount = sensorFiles.size,
-                        dataSize = sensorDataSize,
-                        hasData = sensorFiles.isNotEmpty(),
-                        lastModified = sensorFiles.maxOfOrNull { it.lastModified() } ?: 0L
-                    )
-                }
+        activeSensors: List<String>,
+    ): SessionAnalysis =
+        withContext(Dispatchers.IO) {
+            if (sessionDirectory == null) {
+                return@withContext SessionAnalysis(
+                    hasSessionDirectory = false,
+                    sessionDirectoryExists = false,
+                    dataFiles = emptyMap(),
+                    partialDataSize = 0L,
+                    summary = "Session directory path unknown",
+                )
             }
-            val metadataFile = File(sessionDir, "session_metadata.json")
-            val hasMetadata = metadataFile.exists()
-            val summary = buildString {
-                append("Found ${dataFiles.size} sensor data directories")
-                if (totalDataSize > 0) {
-                    append(", ${totalDataSize / 1024} KB partial data")
-                }
-                if (hasMetadata) {
-                    append(", has metadata")
-                }
+            val sessionDir = File(sessionDirectory)
+            if (!sessionDir.exists()) {
+                return@withContext SessionAnalysis(
+                    hasSessionDirectory = false,
+                    sessionDirectoryExists = false,
+                    dataFiles = emptyMap(),
+                    partialDataSize = 0L,
+                    summary = "Session directory does not exist",
+                )
             }
-            return@withContext SessionAnalysis(
-                hasSessionDirectory = true,
-                sessionDirectoryExists = true,
-                dataFiles = dataFiles,
-                partialDataSize = totalDataSize,
-                hasMetadata = hasMetadata,
-                summary = summary
-            )
-        } catch (e: Exception) {
-            return@withContext SessionAnalysis(
-                hasSessionDirectory = true,
-                sessionDirectoryExists = true,
-                dataFiles = emptyMap(),
-                partialDataSize = 0L,
-                summary = "Analysis failed: ${e.message}"
-            )
+            try {
+                val dataFiles = mutableMapOf<String, SessionDataInfo>()
+                var totalDataSize = 0L
+                activeSensors.forEach { sensorName ->
+                    val sensorDir = File(sessionDir, sensorName.lowercase())
+                    if (sensorDir.exists()) {
+                        val sensorFiles = sensorDir.listFiles() ?: emptyArray()
+                        val sensorDataSize = sensorFiles.sumOf { it.length() }
+                        totalDataSize += sensorDataSize
+                        dataFiles[sensorName] =
+                            SessionDataInfo(
+                                sensorName = sensorName,
+                                fileCount = sensorFiles.size,
+                                dataSize = sensorDataSize,
+                                hasData = sensorFiles.isNotEmpty(),
+                                lastModified = sensorFiles.maxOfOrNull { it.lastModified() } ?: 0L,
+                            )
+                    }
+                }
+                val metadataFile = File(sessionDir, "session_metadata.json")
+                val hasMetadata = metadataFile.exists()
+                val summary =
+                    buildString {
+                        append("Found ${dataFiles.size} sensor data directories")
+                        if (totalDataSize > 0) {
+                            append(", ${totalDataSize / 1024} KB partial data")
+                        }
+                        if (hasMetadata) {
+                            append(", has metadata")
+                        }
+                    }
+                return@withContext SessionAnalysis(
+                    hasSessionDirectory = true,
+                    sessionDirectoryExists = true,
+                    dataFiles = dataFiles,
+                    partialDataSize = totalDataSize,
+                    hasMetadata = hasMetadata,
+                    summary = summary,
+                )
+            } catch (e: Exception) {
+                return@withContext SessionAnalysis(
+                    hasSessionDirectory = true,
+                    sessionDirectoryExists = true,
+                    dataFiles = emptyMap(),
+                    partialDataSize = 0L,
+                    summary = "Analysis failed: ${e.message}",
+                )
+            }
         }
-    }
 
     private fun generateRecoveryActions(recoveredSession: RecoveredSession): List<String> {
         val actions = mutableListOf<String>()
@@ -234,70 +246,86 @@ class CrashRecoveryManager(private val context: Context) {
         return actions
     }
 
-    private fun updateSessionMetadataWithCrashRecovery(recoveredSession: RecoveredSession): Boolean {
-        return try {
+    private fun updateSessionMetadataWithCrashRecovery(recoveredSession: RecoveredSession): Boolean =
+        try {
             val sessionDir = File(recoveredSession.sessionDirectory)
             val metadataFile = File(sessionDir, "session_metadata.json")
-            val crashRecoveryInfo = JSONObject().apply {
-                put("session_status", "CRASHED_RECOVERED")
-                put("crash_detected_at", System.currentTimeMillis())
-                put("original_session_start", recoveredSession.sessionStartTime)
-                put("session_duration_before_crash", recoveredSession.sessionAge)
-                put("active_sensors_at_crash", JSONArray(recoveredSession.activeSensors))
-                put("recovery_analysis", JSONObject().apply {
-                    put("has_partial_data", recoveredSession.analysis.partialDataSize > 0)
-                    put("partial_data_size", recoveredSession.analysis.partialDataSize)
-                    put("sensor_data_files", JSONObject().apply {
-                        recoveredSession.analysis.dataFiles.forEach { (sensor, info) ->
-                            put(sensor, JSONObject().apply {
-                                put("file_count", info.fileCount)
-                                put("data_size", info.dataSize)
-                                put("has_data", info.hasData)
-                                put("last_modified", info.lastModified)
-                            })
-                        }
-                    })
-                })
-            }
-            val existingMetadata = if (metadataFile.exists()) {
-                try {
-                    JSONObject(metadataFile.readText())
-                } catch (e: Exception) {
+            val crashRecoveryInfo =
+                JSONObject().apply {
+                    put("session_status", "CRASHED_RECOVERED")
+                    put("crash_detected_at", System.currentTimeMillis())
+                    put("original_session_start", recoveredSession.sessionStartTime)
+                    put("session_duration_before_crash", recoveredSession.sessionAge)
+                    put("active_sensors_at_crash", JSONArray(recoveredSession.activeSensors))
+                    put(
+                        "recovery_analysis",
+                        JSONObject().apply {
+                            put("has_partial_data", recoveredSession.analysis.partialDataSize > 0)
+                            put("partial_data_size", recoveredSession.analysis.partialDataSize)
+                            put(
+                                "sensor_data_files",
+                                JSONObject().apply {
+                                    recoveredSession.analysis.dataFiles.forEach { (sensor, info) ->
+                                        put(
+                                            sensor,
+                                            JSONObject().apply {
+                                                put("file_count", info.fileCount)
+                                                put("data_size", info.dataSize)
+                                                put("has_data", info.hasData)
+                                                put("last_modified", info.lastModified)
+                                            },
+                                        )
+                                    }
+                                },
+                            )
+                        },
+                    )
+                }
+            val existingMetadata =
+                if (metadataFile.exists()) {
+                    try {
+                        JSONObject(metadataFile.readText())
+                    } catch (e: Exception) {
+                        JSONObject()
+                    }
+                } else {
                     JSONObject()
                 }
-            } else {
-                JSONObject()
-            }
             existingMetadata.put("crash_recovery", crashRecoveryInfo)
             metadataFile.writeText(existingMetadata.toString(2))
             true
         } catch (e: Exception) {
             false
         }
-    }
 
-    private fun updateSessionMetadataWithFailure(sessionDirectory: String, reason: String) {
+    private fun updateSessionMetadataWithFailure(
+        sessionDirectory: String,
+        reason: String,
+    ) {
         try {
             val sessionDir = File(sessionDirectory)
             val metadataFile = File(sessionDir, "session_metadata.json")
-            val failureInfo = JSONObject().apply {
-                put("session_status", "FAILED")
-                put("failure_reason", reason)
-                put("failed_at", System.currentTimeMillis())
-            }
-            val existingMetadata = if (metadataFile.exists()) {
-                try {
-                    JSONObject(metadataFile.readText())
-                } catch (e: Exception) {
+            val failureInfo =
+                JSONObject().apply {
+                    put("session_status", "FAILED")
+                    put("failure_reason", reason)
+                    put("failed_at", System.currentTimeMillis())
+                }
+            val existingMetadata =
+                if (metadataFile.exists()) {
+                    try {
+                        JSONObject(metadataFile.readText())
+                    } catch (e: Exception) {
+                        JSONObject()
+                    }
+                } else {
                     JSONObject()
                 }
-            } else {
-                JSONObject()
-            }
             existingMetadata.put("failure_info", failureInfo)
             metadataFile.writeText(existingMetadata.toString(2))
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("CrashRecoveryManager", "Unexpected Exception in CrashRecoveryManager catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("CrashRecoveryManager", "Unexpected Exception in CrashRecoveryManager catch block", e)
         }
     }
 
@@ -326,20 +354,21 @@ class CrashRecoveryManager(private val context: Context) {
                 if (recoveredSession.analysis.partialDataSize > 0) {
                     val sessionDir = File(recoveredSession.sessionDirectory)
                     val preservationMarker = File(sessionDir, "PARTIAL_DATA_PRESERVED.txt")
-                    val preservationInfo = buildString {
-                        appendLine("Partial session data preserved after crash recovery")
-                        appendLine("Original session: ${recoveredSession.sessionId}")
-                        appendLine("Session start time: ${Date(recoveredSession.sessionStartTime)}")
-                        appendLine("Crash detected after: ${recoveredSession.sessionAge}ms")
-                        appendLine("Active sensors: ${recoveredSession.activeSensors.joinToString(", ")}")
-                        appendLine("Partial data size: ${recoveredSession.analysis.partialDataSize} bytes")
-                        appendLine("Recovery performed at: ${Date()}")
-                        appendLine()
-                        appendLine("Data analysis:")
-                        recoveredSession.analysis.dataFiles.forEach { (sensor, info) ->
-                            appendLine("  $sensor: ${info.fileCount} files, ${info.dataSize} bytes")
+                    val preservationInfo =
+                        buildString {
+                            appendLine("Partial session data preserved after crash recovery")
+                            appendLine("Original session: ${recoveredSession.sessionId}")
+                            appendLine("Session start time: ${Date(recoveredSession.sessionStartTime)}")
+                            appendLine("Crash detected after: ${recoveredSession.sessionAge}ms")
+                            appendLine("Active sensors: ${recoveredSession.activeSensors.joinToString(", ")}")
+                            appendLine("Partial data size: ${recoveredSession.analysis.partialDataSize} bytes")
+                            appendLine("Recovery performed at: ${Date()}")
+                            appendLine()
+                            appendLine("Data analysis:")
+                            recoveredSession.analysis.dataFiles.forEach { (sensor, info) ->
+                                appendLine("  $sensor: ${info.fileCount} files, ${info.dataSize} bytes")
+                            }
                         }
-                    }
                     preservationMarker.writeText(preservationInfo)
                     true
                 } else {
@@ -352,49 +381,61 @@ class CrashRecoveryManager(private val context: Context) {
 
     private suspend fun generateRecoveryReport(
         recoveredSession: RecoveredSession,
-        recoveryActions: List<String>
-    ): Boolean = withContext(Dispatchers.IO) {
-        return@withContext try {
-            val sessionDir = File(recoveredSession.sessionDirectory)
-            val reportFile = File(sessionDir, "crash_recovery_report.json")
-            val report = JSONObject().apply {
-                put("session_id", recoveredSession.sessionId)
-                put("recovery_timestamp", System.currentTimeMillis())
-                put(
-                    "recovery_date",
-                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
-                )
-                put("original_session_start", recoveredSession.sessionStartTime)
-                put("session_age_at_crash", recoveredSession.sessionAge)
-                put("active_sensors", JSONArray(recoveredSession.activeSensors))
-                put("recovery_actions", JSONArray(recoveryActions))
-                put("session_analysis", JSONObject().apply {
-                    put("has_session_directory", recoveredSession.analysis.hasSessionDirectory)
-                    put("directory_exists", recoveredSession.analysis.sessionDirectoryExists)
-                    put("partial_data_size", recoveredSession.analysis.partialDataSize)
-                    put("has_metadata", recoveredSession.analysis.hasMetadata)
-                    put("summary", recoveredSession.analysis.summary)
-                    put("data_files", JSONObject().apply {
-                        recoveredSession.analysis.dataFiles.forEach { (sensor, info) ->
-                            put(sensor, JSONObject().apply {
-                                put("file_count", info.fileCount)
-                                put("data_size", info.dataSize)
-                                put("has_data", info.hasData)
-                                put("last_modified", info.lastModified)
-                            })
-                        }
-                    })
-                })
+        recoveryActions: List<String>,
+    ): Boolean =
+        withContext(Dispatchers.IO) {
+            return@withContext try {
+                val sessionDir = File(recoveredSession.sessionDirectory)
+                val reportFile = File(sessionDir, "crash_recovery_report.json")
+                val report =
+                    JSONObject().apply {
+                        put("session_id", recoveredSession.sessionId)
+                        put("recovery_timestamp", System.currentTimeMillis())
+                        put(
+                            "recovery_date",
+                            SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()),
+                        )
+                        put("original_session_start", recoveredSession.sessionStartTime)
+                        put("session_age_at_crash", recoveredSession.sessionAge)
+                        put("active_sensors", JSONArray(recoveredSession.activeSensors))
+                        put("recovery_actions", JSONArray(recoveryActions))
+                        put(
+                            "session_analysis",
+                            JSONObject().apply {
+                                put("has_session_directory", recoveredSession.analysis.hasSessionDirectory)
+                                put("directory_exists", recoveredSession.analysis.sessionDirectoryExists)
+                                put("partial_data_size", recoveredSession.analysis.partialDataSize)
+                                put("has_metadata", recoveredSession.analysis.hasMetadata)
+                                put("summary", recoveredSession.analysis.summary)
+                                put(
+                                    "data_files",
+                                    JSONObject().apply {
+                                        recoveredSession.analysis.dataFiles.forEach { (sensor, info) ->
+                                            put(
+                                                sensor,
+                                                JSONObject().apply {
+                                                    put("file_count", info.fileCount)
+                                                    put("data_size", info.dataSize)
+                                                    put("has_data", info.hasData)
+                                                    put("last_modified", info.lastModified)
+                                                },
+                                            )
+                                        }
+                                    },
+                                )
+                            },
+                        )
+                    }
+                reportFile.writeText(report.toString(2))
+                true
+            } catch (e: Exception) {
+                false
             }
-            reportFile.writeText(report.toString(2))
-            true
-        } catch (e: Exception) {
-            false
         }
-    }
 
     private fun clearCrashRecoveryState() {
-        preferences.edit()
+        preferences
+            .edit()
             .remove(KEY_ACTIVE_SESSION)
             .remove(KEY_SESSION_START_TIME)
             .remove(KEY_ACTIVE_SENSORS)
@@ -406,7 +447,7 @@ class CrashRecoveryManager(private val context: Context) {
 data class CrashRecoveryResult(
     val hasCrashedSession: Boolean,
     val recoveredSession: RecoveredSession?,
-    val recoveryActions: List<String>
+    val recoveryActions: List<String>,
 )
 
 data class RecoveredSession(
@@ -415,7 +456,7 @@ data class RecoveredSession(
     val sessionStartTime: Long,
     val activeSensors: List<String>,
     val sessionAge: Long,
-    val analysis: SessionAnalysis
+    val analysis: SessionAnalysis,
 )
 
 data class SessionAnalysis(
@@ -424,7 +465,7 @@ data class SessionAnalysis(
     val dataFiles: Map<String, SessionDataInfo>,
     val partialDataSize: Long,
     val hasMetadata: Boolean = false,
-    val summary: String
+    val summary: String,
 )
 
 data class SessionDataInfo(
@@ -432,12 +473,12 @@ data class SessionDataInfo(
     val fileCount: Int,
     val dataSize: Long,
     val hasData: Boolean,
-    val lastModified: Long
+    val lastModified: Long,
 )
 
 data class SessionRecoveryResult(
     val success: Boolean,
     val recoveredSessionId: String,
     val recoveryActions: List<String>,
-    val error: String?
+    val error: String?,
 )

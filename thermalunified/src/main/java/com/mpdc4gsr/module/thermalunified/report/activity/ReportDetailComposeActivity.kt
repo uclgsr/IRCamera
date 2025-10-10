@@ -24,9 +24,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ReportDetailViewModel
 
 class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>() {
-    override fun createViewModel(): ReportDetailViewModel {
-        return viewModels<ReportDetailViewModel>().value
-    }
+    override fun createViewModel(): ReportDetailViewModel = viewModels<ReportDetailViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -40,7 +38,7 @@ class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>()
                             Text(
                                 "Report Details",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -48,7 +46,7 @@ class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>()
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -58,49 +56,54 @@ class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>()
                             }
                             IconButton(onClick = {
                                 // TODO: Edit report details
-                                android.widget.Toast.makeText(
-                                    this@ReportDetailComposeActivity,
-                                    "Opening report editor...",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
+                                android.widget.Toast
+                                    .makeText(
+                                        this@ReportDetailComposeActivity,
+                                        "Opening report editor...",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
                             }) {
                                 Icon(Icons.Default.Edit, contentDescription = "Edit", tint = Color.White)
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF16131E)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
                     )
                 },
-                containerColor = Color(0xFF16131E)
+                containerColor = Color(0xFF16131E),
             ) { paddingValues ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .verticalScroll(rememberScrollState())
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .verticalScroll(rememberScrollState())
+                            .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     // Report info card
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF1A1A1A)
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = Color(0xFF1A1A1A),
+                            ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     ) {
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             Text(
                                 "Report Information",
                                 color = Color.White,
                                 fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                             HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
                             ReportInfoRow("Date", "2024-10-01")
@@ -113,44 +116,47 @@ class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>()
                     // Thermal image section
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF1A1A1A)
-                        )
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = Color(0xFF1A1A1A),
+                            ),
                     ) {
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             Text(
                                 "Thermal Images",
                                 color = Color.White,
                                 fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                             // Image placeholder
                             Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .aspectRatio(4f / 3f)
-                                    .background(Color(0xFF2A2A2A), RoundedCornerShape(8.dp)),
-                                contentAlignment = Alignment.Center
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .aspectRatio(4f / 3f)
+                                        .background(Color(0xFF2A2A2A), RoundedCornerShape(8.dp)),
+                                contentAlignment = Alignment.Center,
                             ) {
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
                                 ) {
                                     Icon(
                                         Icons.Default.Image,
                                         contentDescription = null,
                                         modifier = Modifier.size(48.dp),
-                                        tint = Color.White.copy(alpha = 0.3f)
+                                        tint = Color.White.copy(alpha = 0.3f),
                                     )
                                     Text(
                                         "Thermal Image",
                                         color = Color.White.copy(alpha = 0.5f),
-                                        fontSize = 14.sp
+                                        fontSize = 14.sp,
                                     )
                                 }
                             }
@@ -159,21 +165,23 @@ class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>()
                     // Measurement data
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF1A1A1A)
-                        )
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = Color(0xFF1A1A1A),
+                            ),
                     ) {
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             Text(
                                 "Measurements",
                                 color = Color.White,
                                 fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                             HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
                             MeasurementRow("Max Temperature", "28.5°C", Color(0xFFFF4747))
@@ -185,27 +193,29 @@ class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>()
                     // Notes section
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF1A1A1A)
-                        )
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = Color(0xFF1A1A1A),
+                            ),
                     ) {
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             Text(
                                 "Notes",
                                 color = Color.White,
                                 fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                             Text(
                                 "Regular thermal inspection conducted. All readings within normal parameters. Minor hotspot detected in corner area, requires follow-up.",
                                 color = Color.White.copy(alpha = 0.8f),
                                 fontSize = 14.sp,
-                                lineHeight = 20.sp
+                                lineHeight = 20.sp,
                             )
                         }
                     }
@@ -215,7 +225,7 @@ class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>()
                         modifier = Modifier.fillMaxWidth(),
                         color = Color.White.copy(alpha = 0.4f),
                         fontSize = 12.sp,
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                     )
                 }
             }
@@ -223,49 +233,57 @@ class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>()
     }
 
     @Composable
-    fun ReportInfoRow(label: String, value: String) {
+    fun ReportInfoRow(
+        label: String,
+        value: String,
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 label,
                 color = Color.White.copy(alpha = 0.6f),
-                fontSize = 14.sp
+                fontSize = 14.sp,
             )
             Text(
                 value,
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
     }
 
     @Composable
-    fun MeasurementRow(label: String, value: String, valueColor: Color) {
+    fun MeasurementRow(
+        label: String,
+        value: String,
+        valueColor: Color,
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 label,
                 color = Color.White.copy(alpha = 0.8f),
-                fontSize = 14.sp
+                fontSize = 14.sp,
             )
             Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = valueColor.copy(alpha = 0.2f)
-                ),
-                shape = RoundedCornerShape(8.dp)
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = valueColor.copy(alpha = 0.2f),
+                    ),
+                shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
                     value,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                     color = valueColor,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }

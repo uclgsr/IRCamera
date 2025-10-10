@@ -36,11 +36,12 @@ class ThermalViewModel : BaseViewModel() {
         if (deviceManager === manager) return
         deviceManager = manager
         deviceStatusJob?.cancel()
-        deviceStatusJob = viewModelScope.launch {
-            manager.status.collect { status ->
-                _deviceStatus.value = status
+        deviceStatusJob =
+            viewModelScope.launch {
+                manager.status.collect { status ->
+                    _deviceStatus.value = status
+                }
             }
-        }
     }
 
     fun connectHardware() {
@@ -80,7 +81,10 @@ class ThermalViewModel : BaseViewModel() {
         startStream(currentConfig.copy(gainMode = gainMode))
     }
 
-    fun exportData(context: Context, format: ExportFormat) {
+    fun exportData(
+        context: Context,
+        format: ExportFormat,
+    ) {
         viewModelScope.launch {
             _exportStatus.value = ExportStatus.Exporting
             try {
@@ -92,7 +96,10 @@ class ThermalViewModel : BaseViewModel() {
         }
     }
 
-    private fun createExportFile(context: Context, format: ExportFormat): File {
+    private fun createExportFile(
+        context: Context,
+        format: ExportFormat,
+    ): File {
         val fileName = "thermal_export_${System.currentTimeMillis()}.${format.extension}"
         return File(context.getExternalFilesDir(null), fileName)
     }
@@ -118,14 +125,23 @@ class ThermalViewModel : BaseViewModel() {
 
     sealed class ExportStatus {
         object Idle : ExportStatus()
+
         object Exporting : ExportStatus()
-        data class Success(val file: File) : ExportStatus()
-        data class Error(val message: String) : ExportStatus()
+
+        data class Success(
+            val file: File,
+        ) : ExportStatus()
+
+        data class Error(
+            val message: String,
+        ) : ExportStatus()
     }
 
-    enum class ExportFormat(val extension: String) {
+    enum class ExportFormat(
+        val extension: String,
+    ) {
         CSV("csv"),
         JSON("json"),
-        PDF("pdf")
+        PDF("pdf"),
     }
 }

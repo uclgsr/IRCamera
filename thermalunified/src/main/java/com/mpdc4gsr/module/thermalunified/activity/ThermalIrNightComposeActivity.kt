@@ -20,9 +20,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalIrNightViewModel
 
 class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewModel>() {
-    override fun createViewModel(): ThermalIrNightViewModel {
-        return viewModels<ThermalIrNightViewModel>().value
-    }
+    override fun createViewModel(): ThermalIrNightViewModel = viewModels<ThermalIrNightViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -43,38 +41,42 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                     TopAppBar(
                         title = {
                             Row(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 TextButton(
                                     onClick = { viewModel.selectMode(0) },
-                                    colors = ButtonDefaults.textButtonColors(
-                                        contentColor = if (selectedMode == 0) Color.White else Color.White.copy(alpha = 0.6f)
-                                    )
+                                    colors =
+                                        ButtonDefaults.textButtonColors(
+                                            contentColor = if (selectedMode == 0) Color.White else Color.White.copy(alpha = 0.6f),
+                                        ),
                                 ) {
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                         Text("Temperature", fontSize = 16.sp)
                                         if (selectedMode == 0) {
                                             Box(
-                                                modifier = Modifier
-                                                    .size(4.dp)
-                                                    .background(MaterialTheme.colorScheme.primary)
+                                                modifier =
+                                                    Modifier
+                                                        .size(4.dp)
+                                                        .background(MaterialTheme.colorScheme.primary),
                                             )
                                         }
                                     }
                                 }
                                 TextButton(
                                     onClick = { viewModel.selectMode(1) },
-                                    colors = ButtonDefaults.textButtonColors(
-                                        contentColor = if (selectedMode == 1) Color.White else Color.White.copy(alpha = 0.6f)
-                                    )
+                                    colors =
+                                        ButtonDefaults.textButtonColors(
+                                            contentColor = if (selectedMode == 1) Color.White else Color.White.copy(alpha = 0.6f),
+                                        ),
                                 ) {
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                         Text("Observe", fontSize = 16.sp)
                                         if (selectedMode == 1) {
                                             Box(
-                                                modifier = Modifier
-                                                    .size(4.dp)
-                                                    .background(MaterialTheme.colorScheme.primary)
+                                                modifier =
+                                                    Modifier
+                                                        .size(4.dp)
+                                                        .background(MaterialTheme.colorScheme.primary),
                                             )
                                         }
                                     }
@@ -86,7 +88,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -98,79 +100,84 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                 Icon(
                                     if (nightModeEnabled) Icons.Default.Brightness3 else Icons.Default.Brightness7,
                                     contentDescription = "Night Mode",
-                                    tint = if (nightModeEnabled) Color.Yellow else Color.White
+                                    tint = if (nightModeEnabled) Color.Yellow else Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF16131E)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
                     )
                 },
-                containerColor = Color(0xFF16131E)
+                containerColor = Color(0xFF16131E),
             ) { paddingValues ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
                 ) {
                     // Main thermal display with night mode styling
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .aspectRatio(192f / 256f)
-                            .background(Color.Black)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .aspectRatio(192f / 256f)
+                                .background(Color.Black),
                     ) {
                         // Thermal camera view
                         Box(
                             modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.Center,
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 Icon(
                                     if (nightModeEnabled) Icons.Default.Brightness3 else Icons.Default.Brightness7,
                                     contentDescription = if (nightModeEnabled) "Night Mode" else "Day Mode",
                                     modifier = Modifier.size(48.dp),
-                                    tint = Color.White.copy(alpha = 0.3f)
+                                    tint = Color.White.copy(alpha = 0.3f),
                                 )
                                 Text(
                                     if (nightModeEnabled) "Night Mode Active" else "Day Mode",
                                     color = Color.White.copy(alpha = 0.5f),
-                                    fontSize = 16.sp
+                                    fontSize = 16.sp,
                                 )
                             }
                         }
                         // Night mode specific overlays
                         if (nightModeEnabled && showOverlay) {
                             Column(
-                                modifier = Modifier
-                                    .align(Alignment.TopStart)
-                                    .padding(16.dp)
+                                modifier =
+                                    Modifier
+                                        .align(Alignment.TopStart)
+                                        .padding(16.dp),
                             ) {
                                 Card(
-                                    colors = CardDefaults.cardColors(
-                                        containerColor = Color(0x80000000)
-                                    )
+                                    colors =
+                                        CardDefaults.cardColors(
+                                            containerColor = Color(0x80000000),
+                                        ),
                                 ) {
                                     Row(
                                         modifier = Modifier.padding(8.dp),
                                         verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     ) {
                                         Icon(
                                             Icons.Default.NightsStay,
                                             contentDescription = "Night Mode",
                                             modifier = Modifier.size(20.dp),
-                                            tint = Color.Yellow
+                                            tint = Color.Yellow,
                                         )
                                         Text(
                                             "Night Mode",
                                             color = Color.White,
-                                            fontSize = 14.sp
+                                            fontSize = 14.sp,
                                         )
                                     }
                                 }
@@ -178,25 +185,27 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                         }
                         // Temperature controls
                         Column(
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(8.dp)
+                            modifier =
+                                Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(8.dp),
                         ) {
                             Card(
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color(0x80000000)
-                                )
+                                colors =
+                                    CardDefaults.cardColors(
+                                        containerColor = Color(0x80000000),
+                                    ),
                             ) {
                                 Column(
                                     modifier = Modifier.padding(8.dp),
-                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                    verticalArrangement = Arrangement.spacedBy(4.dp),
                                 ) {
                                     IconButton(onClick = { rangeLocked = !rangeLocked }) {
                                         Icon(
                                             if (rangeLocked) Icons.Default.Lock else Icons.Default.LockOpen,
                                             contentDescription = if (rangeLocked) "Unlock" else "Lock",
                                             tint = if (rangeLocked) Color.Yellow else Color.White,
-                                            modifier = Modifier.size(24.dp)
+                                            modifier = Modifier.size(24.dp),
                                         )
                                     }
                                     IconButton(onClick = { showRangeEditDialog = true }) {
@@ -204,7 +213,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                             Icons.Default.Edit,
                                             contentDescription = "Edit",
                                             tint = Color.White,
-                                            modifier = Modifier.size(24.dp)
+                                            modifier = Modifier.size(24.dp),
                                         )
                                     }
                                 }
@@ -213,22 +222,25 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                         // Recording status
                         if (isRecording) {
                             Card(
-                                modifier = Modifier
-                                    .align(Alignment.BottomCenter)
-                                    .padding(16.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color(0xCC000000)
-                                )
+                                modifier =
+                                    Modifier
+                                        .align(Alignment.BottomCenter)
+                                        .padding(16.dp),
+                                colors =
+                                    CardDefaults.cardColors(
+                                        containerColor = Color(0xCC000000),
+                                    ),
                             ) {
                                 Row(
                                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                                     verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 ) {
                                     Box(
-                                        modifier = Modifier
-                                            .size(8.dp)
-                                            .background(Color.Red, androidx.compose.foundation.shape.CircleShape)
+                                        modifier =
+                                            Modifier
+                                                .size(8.dp)
+                                                .background(Color.Red, androidx.compose.foundation.shape.CircleShape),
                                     )
                                     Text("Recording", color = Color.White, fontSize = 14.sp)
                                     Text("00:00", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
@@ -239,25 +251,27 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                     // Bottom menu optimized for night mode
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF16131E)
-                        )
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
                     ) {
                         Column(
-                            modifier = Modifier.padding(8.dp)
+                            modifier = Modifier.padding(8.dp),
                         ) {
                             // Secondary menu row
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp),
-                                horizontalArrangement = Arrangement.SpaceEvenly
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp),
+                                horizontalArrangement = Arrangement.SpaceEvenly,
                             ) {
                                 IconButton(onClick = { viewModel.toggleOverlay() }) {
                                     Icon(
                                         if (showOverlay) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                                         "Overlay",
-                                        tint = Color.White
+                                        tint = Color.White,
                                     )
                                 }
                                 IconButton(onClick = { showPaletteDialog = true }) {
@@ -270,29 +284,30 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                             HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
                             // Primary controls
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 8.dp),
-                                horizontalArrangement = Arrangement.SpaceEvenly
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 8.dp),
+                                horizontalArrangement = Arrangement.SpaceEvenly,
                             ) {
                                 IconButton(onClick = {
                                     startActivity(
                                         Intent(
                                             this@ThermalIrNightComposeActivity,
-                                            ThermalGalleryComposeActivity::class.java
-                                        )
+                                            ThermalGalleryComposeActivity::class.java,
+                                        ),
                                     )
                                 }) {
                                     Icon(Icons.Default.PhotoLibrary, "Gallery", tint = Color.White)
                                 }
                                 FloatingActionButton(
                                     onClick = { viewModel.toggleRecording() },
-                                    containerColor = if (isRecording) Color.Red else MaterialTheme.colorScheme.primary
+                                    containerColor = if (isRecording) Color.Red else MaterialTheme.colorScheme.primary,
                                 ) {
                                     Icon(
                                         if (isRecording) Icons.Default.Stop else Icons.Default.FiberManualRecord,
                                         contentDescription = "Record",
-                                        tint = Color.White
+                                        tint = Color.White,
                                     )
                                 }
                                 IconButton(onClick = { showMoreOptions = true }) {
@@ -322,7 +337,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                         TextButton(onClick = { showInfoDialog = false }) {
                             Text("OK")
                         }
-                    }
+                    },
                 )
             }
             // Palette Dialog
@@ -343,7 +358,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                         TextButton(onClick = { showPaletteDialog = false }) {
                             Text("Cancel")
                         }
-                    }
+                    },
                 )
             }
             // Settings Dialog (reuse from IRThermalNightComposeActivity)
@@ -369,7 +384,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                         TextButton(onClick = { showSettingsDialog = false }) {
                             Text("Cancel")
                         }
-                    }
+                    },
                 )
             }
             // Range Edit Dialog
@@ -397,7 +412,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                         TextButton(onClick = { showRangeEditDialog = false }) {
                             Text("Cancel")
                         }
-                    }
+                    },
                 )
             }
             // More Options Menu
@@ -425,7 +440,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                         TextButton(onClick = { showMoreOptions = false }) {
                             Text("Close")
                         }
-                    }
+                    },
                 )
             }
         }

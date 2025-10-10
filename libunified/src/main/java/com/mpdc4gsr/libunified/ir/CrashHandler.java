@@ -5,7 +5,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
@@ -130,7 +129,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 pw.println(field.get(null).toString());
             }
         } catch (Exception e) {
-            Log.i(TAG, "an error occured when collect crash info" + e);
         }
 
         ex.printStackTrace(pw);

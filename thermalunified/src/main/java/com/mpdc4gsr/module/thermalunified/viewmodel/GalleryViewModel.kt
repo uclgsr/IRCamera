@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
@@ -27,7 +26,7 @@ class GalleryViewModel : BaseViewModel() {
         val thumbnailPath: String,
         val size: Long,
         val dateModified: Long,
-        val isVideo: Boolean = false
+        val isVideo: Boolean = false,
     )
 
     // State flows for Compose
@@ -62,7 +61,6 @@ class GalleryViewModel : BaseViewModel() {
                     _videoItems.value = items.filter { it.isVideo }
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error loading media items", e)
             } finally {
                 _isLoading.value = false
             }
@@ -115,7 +113,6 @@ class GalleryViewModel : BaseViewModel() {
                 try {
                     File(item.path).delete()
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error deleting file: ${item.path}", e)
                 }
             }
             withContext(Dispatchers.Main) {
@@ -131,13 +128,11 @@ class GalleryViewModel : BaseViewModel() {
         if (itemsToShare.isNotEmpty()) {
             // Implementation would depend on context being available
             // For now, just log the action
-            Log.d(TAG, "Sharing ${itemsToShare.size} items")
         }
     }
 
     fun openMediaItem(item: MediaItem) {
         // Implementation for opening media item
-        Log.d(TAG, "Opening media item: ${item.name}")
     }
 
     // Refresh methods
@@ -154,7 +149,6 @@ class GalleryViewModel : BaseViewModel() {
         viewModelScope.launch {
             getGalleryList().collect { it ->
                 if (it.size == 0) {
-                    Log.w(TAG, "No gallery items found")
                 } else {
                     galleryLiveData.postValue(it)
                 }
@@ -166,7 +160,6 @@ class GalleryViewModel : BaseViewModel() {
         viewModelScope.launch {
             getVideoList().collect { it ->
                 if (it.size == 0) {
-                    Log.w(TAG, "No video items found")
                 } else {
                     galleryLiveData.postValue(it)
                 }
@@ -177,8 +170,11 @@ class GalleryViewModel : BaseViewModel() {
     private fun getMediaItemsList(): List<MediaItem> {
         val items = mutableListOf<MediaItem>()
         // Load pictures
-        val picturePath = ContextProvider.getContext()
-            .getExternalFilesDir("Pictures")!!.absolutePath + File.separator + "thermal"
+        val picturePath =
+            ContextProvider
+                .getContext()
+                .getExternalFilesDir("Pictures")!!
+                .absolutePath + File.separator + "thermal"
         val pictureDir = File(picturePath)
         if (pictureDir.isDirectory) {
             pictureDir.listFiles()?.forEach { file ->
@@ -191,8 +187,8 @@ class GalleryViewModel : BaseViewModel() {
                             thumbnailPath = file.absolutePath,
                             size = file.length(),
                             dateModified = file.lastModified(),
-                            isVideo = false
-                        )
+                            isVideo = false,
+                        ),
                     )
                 }
             }
@@ -211,8 +207,8 @@ class GalleryViewModel : BaseViewModel() {
                             thumbnailPath = file.absolutePath,
                             size = file.length(),
                             dateModified = file.lastModified(),
-                            isVideo = true
-                        )
+                            isVideo = true,
+                        ),
                     )
                 }
             }
@@ -224,8 +220,10 @@ class GalleryViewModel : BaseViewModel() {
         val flow =
             flow {
                 val path =
-                    ContextProvider.getContext()
-                        .getExternalFilesDir("Pictures")!!.absolutePath + File.separator + "thermal"
+                    ContextProvider
+                        .getContext()
+                        .getExternalFilesDir("Pictures")!!
+                        .absolutePath + File.separator + "thermal"
                 val file = File(path)
                 if (file.isDirectory) {
                     val list = arrayListOf<String>()

@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.mpdc4gsr.libunified.compat.dpToPx
-import com.mpdc4gsr.libunified.compat.spToPx
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.compat.dpToPx
 
-class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
+class TipsSeekBar :
+    ViewGroup,
+    SeekBar.OnSeekBarChangeListener {
     private val tipsPercent: Float
     private val seekPercent: Float
     private val seekBar: SeekBar
@@ -49,19 +50,19 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         context,
         attrs,
         defStyleAttr,
-        0
+        0,
     )
 
     constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : super(
         context,
         attrs,
         defStyleAttr,
-        defStyleRes
+        defStyleRes,
     ) {
         // seekBar  maxHeight  29  xml ， View  maxHeight, attr  seekBar
         val thumb = ContextCompat.getDrawable(context, R.drawable.ic_tips_seek_bar_thumb)
@@ -101,7 +102,10 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         addView(tvMax)
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
@@ -111,15 +115,16 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         for (i in 0 until childCount) {
             when (val child = getChildAt(i)) {
                 seekBar -> {
-                    val childWidthSpec = MeasureSpec.makeMeasureSpec(
-                        (width * seekPercent).toInt(),
-                        MeasureSpec.EXACTLY
-                    )
+                    val childWidthSpec =
+                        MeasureSpec.makeMeasureSpec(
+                            (width * seekPercent).toInt(),
+                            MeasureSpec.EXACTLY,
+                        )
                     val childHeightSpc =
                         MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.AT_MOST)
                     child.measure(
                         childWidthSpec,
-                        if (heightMode == MeasureSpec.EXACTLY) childHeightSpc else heightMeasureSpec
+                        if (heightMode == MeasureSpec.EXACTLY) childHeightSpc else heightMeasureSpec,
                     )
                 }
 
@@ -138,12 +143,20 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
             }
         }
         val height =
-            tvTips.measuredHeight + 5f.dpToPx(context).toInt() + (seekBar.thumb?.intrinsicHeight
-                ?: seekBar.measuredHeight)
+            tvTips.measuredHeight + 5f.dpToPx(context).toInt() + (
+                seekBar.thumb?.intrinsicHeight
+                    ?: seekBar.measuredHeight
+            )
         setMeasuredDimension(width, if (heightMode == MeasureSpec.EXACTLY) heightSize else height)
     }
 
-    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+    override fun onLayout(
+        changed: Boolean,
+        l: Int,
+        t: Int,
+        r: Int,
+        b: Int,
+    ) {
         for (i in 0 until childCount) {
             val child = getChildAt(i)
             val childWidth = child.measuredWidth
@@ -181,11 +194,19 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         }
     }
 
-    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+    override fun onProgressChanged(
+        seekBar: SeekBar?,
+        progress: Int,
+        fromUser: Boolean,
+    ) {
         tvTips.text =
-            if (valueFormatListener == null) progress.toString() else valueFormatListener?.invoke(
-                progress
-            )
+            if (valueFormatListener == null) {
+                progress.toString()
+            } else {
+                valueFormatListener?.invoke(
+                    progress,
+                )
+            }
         requestLayout()
         onProgressChangeListener?.invoke(progress, fromUser)
     }
@@ -197,7 +218,5 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         onStopTrackingTouch?.invoke(this.seekBar.progress)
     }
 
-    fun getFormattedValue(): String {
-        return valueFormatListener?.invoke(progress)?.toString() ?: progress.toString()
-    }
+    fun getFormattedValue(): String = valueFormatListener?.invoke(progress)?.toString() ?: progress.toString()
 }

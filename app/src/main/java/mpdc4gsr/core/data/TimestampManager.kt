@@ -1,7 +1,6 @@
 package mpdc4gsr.core.data
 
 import android.os.SystemClock
-import android.util.Log
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.system.measureNanoTime
 
@@ -21,13 +20,9 @@ object TimestampManager {
         bootTimeReference.set(System.currentTimeMillis() - SystemClock.elapsedRealtime())
     }
 
-    fun nowNanos(): Long {
-        return System.nanoTime()
-    }
+    fun nowNanos(): Long = System.nanoTime()
 
-    fun getCurrentTimestampNanos(): Long {
-        return SystemClock.elapsedRealtimeNanos()
-    }
+    fun getCurrentTimestampNanos(): Long = SystemClock.elapsedRealtimeNanos()
 
     private val iso8601Format by lazy {
         java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US).apply {
@@ -41,17 +36,11 @@ object TimestampManager {
         return iso8601Format.format(date)
     }
 
-    fun getCurrentSystemTimeMs(): Long {
-        return System.currentTimeMillis()
-    }
+    fun getCurrentSystemTimeMs(): Long = System.currentTimeMillis()
 
-    fun getCurrentElapsedRealtimeMs(): Long {
-        return SystemClock.elapsedRealtime()
-    }
+    fun getCurrentElapsedRealtimeMs(): Long = SystemClock.elapsedRealtime()
 
-    fun getDeviceTimestampMs(): Long {
-        return bootTimeReference.get() + SystemClock.elapsedRealtime()
-    }
+    fun getDeviceTimestampMs(): Long = bootTimeReference.get() + SystemClock.elapsedRealtime()
 
     fun getSessionRelativeTimestampMs(): Long {
         val sessionStart = sessionStartTime.get()
@@ -68,16 +57,13 @@ object TimestampManager {
         sessionStartTime.set(sessionStart)
         sessionStartSystemMs.set(systemStart)
         sessionStartMonotonicNs.set(monotonicStart)
-        val reference = SessionTimestampReference(
-            sessionStartElapsedMs = sessionStart,
-            sessionStartSystemMs = systemStart,
-            sessionStartMonotonicNs = monotonicStart,
-            bootTimeReferenceMs = bootTimeReference.get()
-        )
-        Log.i(
-            TAG,
-            "Session started with reference: system=${systemStart}ms, monotonic=${monotonicStart}ns"
-        )
+        val reference =
+            SessionTimestampReference(
+                sessionStartElapsedMs = sessionStart,
+                sessionStartSystemMs = systemStart,
+                sessionStartMonotonicNs = monotonicStart,
+                bootTimeReferenceMs = bootTimeReference.get(),
+            )
         return reference
     }
 
@@ -94,13 +80,9 @@ object TimestampManager {
         clockOffset.set(offsetMs)
     }
 
-    fun getClockOffsetMs(): Long {
-        return clockOffset.get()
-    }
+    fun getClockOffsetMs(): Long = clockOffset.get()
 
-    fun getSynchronizedTimestampMs(): Long {
-        return getDeviceTimestampMs() + clockOffset.get()
-    }
+    fun getSynchronizedTimestampMs(): Long = getDeviceTimestampMs() + clockOffset.get()
 
     fun createTimestampRecord(): TimestampRecord {
         val currentNanos = getCurrentTimestampNanos()
@@ -140,9 +122,10 @@ object TimestampManager {
 
     inline fun <T> measureExecutionTime(block: () -> T): Pair<T, Long> {
         var result: T
-        val executionTime = measureNanoTime {
-            result = block()
-        }
+        val executionTime =
+            measureNanoTime {
+                result = block()
+            }
         return Pair(result, executionTime)
     }
 }
@@ -151,15 +134,14 @@ data class SessionTimestampReference(
     val sessionStartElapsedMs: Long,
     val sessionStartSystemMs: Long,
     val sessionStartMonotonicNs: Long,
-    val bootTimeReferenceMs: Long
+    val bootTimeReferenceMs: Long,
 ) {
-    fun toCsvMetadata(): String {
-        return "# Session Reference Timestamps\n" +
-                "# session_start_elapsed_ms=$sessionStartElapsedMs\n" +
-                "# session_start_system_ms=$sessionStartSystemMs\n" +
-                "# session_start_monotonic_ns=$sessionStartMonotonicNs\n" +
-                "# boot_time_reference_ms=$bootTimeReferenceMs\n"
-    }
+    fun toCsvMetadata(): String =
+        "# Session Reference Timestamps\n" +
+            "# session_start_elapsed_ms=$sessionStartElapsedMs\n" +
+            "# session_start_system_ms=$sessionStartSystemMs\n" +
+            "# session_start_monotonic_ns=$sessionStartMonotonicNs\n" +
+            "# boot_time_reference_ms=$bootTimeReferenceMs\n"
 }
 
 data class TimestampRecord(
@@ -170,13 +152,11 @@ data class TimestampRecord(
     val sessionRelativeMs: Long,
     val synchronizedTimestampMs: Long,
 ) {
-    fun toCsvFormat(): String {
-        return "$systemNanos,$systemTimeMs,$elapsedRealtimeMs,$deviceTimestampMs,$sessionRelativeMs,$synchronizedTimestampMs"
-    }
+    fun toCsvFormat(): String =
+        "$systemNanos,$systemTimeMs,$elapsedRealtimeMs,$deviceTimestampMs,$sessionRelativeMs,$synchronizedTimestampMs"
 
     companion object {
-        fun getCsvHeader(): String {
-            return "system_nanos,system_time_ms,elapsed_realtime_ms,device_timestamp_ms,session_relative_ms,synchronized_timestamp_ms"
-        }
+        fun getCsvHeader(): String =
+            "system_nanos,system_time_ms,elapsed_realtime_ms,device_timestamp_ms,session_relative_ms,synchronized_timestamp_ms"
     }
 }

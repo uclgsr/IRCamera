@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
-import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
@@ -47,12 +46,6 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 intent.getParcelableExtra(UsbManager.EXTRA_DEVICE) as? UsbDevice
             }
         if (device != null) {
-            Log.i(
-                TAG,
-                "USB device attached: ${device.productName} (VID=${device.vendorId.toString(16)}, PID=${
-                    device.productId.toString(16)
-                })"
-            )
             if (device.isTcTsDevice()) {
                 AppLogger.i(TAG, "Topdon thermal camera detected: ${device.productName}")
                 val usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
@@ -79,12 +72,6 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 intent.getParcelableExtra(UsbManager.EXTRA_DEVICE) as? UsbDevice
             }
         if (device != null) {
-            Log.i(
-                TAG,
-                "USB device detached: ${device.productName} (VID=${device.vendorId.toString(16)}, PID=${
-                    device.productId.toString(16)
-                })"
-            )
             if (device.isTcTsDevice()) {
                 AppLogger.w(TAG, "Topdon thermal camera disconnected: ${device.productName}")
                 DeviceEventManager.emitDeviceConnectionSync(false, device)

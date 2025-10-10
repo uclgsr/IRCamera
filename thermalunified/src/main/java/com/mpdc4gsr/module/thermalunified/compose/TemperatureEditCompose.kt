@@ -33,7 +33,7 @@ fun TemperatureEditCompose(
     onMeasurementAdded: (TemperatureMeasurementResult) -> Unit = {},
     onMeasurementCleared: () -> Unit = {},
     measurements: List<TemperatureMeasurementResult> = emptyList(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var currentMeasurements by remember { mutableStateOf(measurements) }
     var isDrawing by remember { mutableStateOf(false) }
@@ -44,83 +44,90 @@ fun TemperatureEditCompose(
         currentMeasurements = measurements
     }
     Row(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         // Main measurement area
         Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight()
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color.Black.copy(alpha = 0.1f))
-                .pointerInput(mode) {
-                    detectTapGestures(
-                        onPress = { offset ->
-                            when (mode) {
-                                TemperatureMode.POINT -> {
-                                    val temp = simulateTemperatureReading(offset)
-                                    val measurement = TemperatureMeasurementResult.Point(
-                                        pointId = java.util.UUID.randomUUID().toString(),
-                                        position = offset,
-                                        temperature = temp
-                                    )
-                                    onMeasurementAdded(measurement)
-                                }
-
-                                TemperatureMode.LINE -> {
-                                    if (drawStart == null) {
-                                        drawStart = offset
-                                        isDrawing = true
-                                    } else {
-                                        drawEnd = offset
-                                        val temp1 = simulateTemperatureReading(drawStart!!)
-                                        val temp2 = simulateTemperatureReading(offset)
-                                        val measurement = TemperatureMeasurementResult.Line(
-                                            lineId = UUID.randomUUID().toString(),
-                                            start = drawStart!!,
-                                            end = offset,
-                                            temperatureMax = maxOf(temp1, temp2),
-                                            temperatureMin = minOf(temp1, temp2),
-                                            temperatureAvg = (temp1 + temp2) / 2f
-                                        )
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color.Black.copy(alpha = 0.1f))
+                    .pointerInput(mode) {
+                        detectTapGestures(
+                            onPress = { offset ->
+                                when (mode) {
+                                    TemperatureMode.POINT -> {
+                                        val temp = simulateTemperatureReading(offset)
+                                        val measurement =
+                                            TemperatureMeasurementResult.Point(
+                                                pointId =
+                                                    java.util.UUID
+                                                        .randomUUID()
+                                                        .toString(),
+                                                position = offset,
+                                                temperature = temp,
+                                            )
                                         onMeasurementAdded(measurement)
-                                        drawStart = null
-                                        drawEnd = null
-                                        isDrawing = false
+                                    }
+
+                                    TemperatureMode.LINE -> {
+                                        if (drawStart == null) {
+                                            drawStart = offset
+                                            isDrawing = true
+                                        } else {
+                                            drawEnd = offset
+                                            val temp1 = simulateTemperatureReading(drawStart!!)
+                                            val temp2 = simulateTemperatureReading(offset)
+                                            val measurement =
+                                                TemperatureMeasurementResult.Line(
+                                                    lineId = UUID.randomUUID().toString(),
+                                                    start = drawStart!!,
+                                                    end = offset,
+                                                    temperatureMax = maxOf(temp1, temp2),
+                                                    temperatureMin = minOf(temp1, temp2),
+                                                    temperatureAvg = (temp1 + temp2) / 2f,
+                                                )
+                                            onMeasurementAdded(measurement)
+                                            drawStart = null
+                                            drawEnd = null
+                                            isDrawing = false
+                                        }
+                                    }
+
+                                    TemperatureMode.RECTANGLE -> {
+                                        if (drawStart == null) {
+                                            drawStart = offset
+                                            isDrawing = true
+                                        } else {
+                                            val rect = Rect(drawStart!!, offset)
+                                            val temp = simulateAreaTemperatureReading(rect)
+                                            val measurement =
+                                                TemperatureMeasurementResult.Rectangle(
+                                                    rectId = UUID.randomUUID().toString(),
+                                                    rect = rect,
+                                                    temperatureMax = temp + 5f,
+                                                    temperatureMin = temp - 5f,
+                                                    temperatureAvg = temp,
+                                                )
+                                            onMeasurementAdded(measurement)
+                                            drawStart = null
+                                            isDrawing = false
+                                        }
+                                    }
+
+                                    TemperatureMode.CLEAR -> {
+                                        onMeasurementCleared()
                                     }
                                 }
-
-                                TemperatureMode.RECTANGLE -> {
-                                    if (drawStart == null) {
-                                        drawStart = offset
-                                        isDrawing = true
-                                    } else {
-                                        val rect = Rect(drawStart!!, offset)
-                                        val temp = simulateAreaTemperatureReading(rect)
-                                        val measurement = TemperatureMeasurementResult.Rectangle(
-                                            rectId = UUID.randomUUID().toString(),
-                                            rect = rect,
-                                            temperatureMax = temp + 5f,
-                                            temperatureMin = temp - 5f,
-                                            temperatureAvg = temp
-                                        )
-                                        onMeasurementAdded(measurement)
-                                        drawStart = null
-                                        isDrawing = false
-                                    }
-                                }
-
-                                TemperatureMode.CLEAR -> {
-                                    onMeasurementCleared()
-                                }
-                            }
-                        }
-                    )
-                }
+                            },
+                        )
+                    },
         ) {
             // Thermal camera overlay (placeholder)
             Canvas(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 // Draw thermal background pattern
                 drawThermalBackground()
@@ -137,7 +144,7 @@ fun TemperatureEditCompose(
                                     color = Color.Yellow,
                                     start = drawStart!!,
                                     end = end,
-                                    strokeWidth = 3.dp.toPx()
+                                    strokeWidth = 3.dp.toPx(),
                                 )
                             }
                         }
@@ -149,7 +156,7 @@ fun TemperatureEditCompose(
                                     color = Color.Yellow,
                                     topLeft = rect.topLeft,
                                     size = rect.size,
-                                    style = Stroke(width = 3.dp.toPx())
+                                    style = Stroke(width = 3.dp.toPx()),
                                 )
                             }
                         }
@@ -161,19 +168,21 @@ fun TemperatureEditCompose(
             // Mode indicator
             TemperatureModeIndicator(
                 mode = mode,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(8.dp)
+                modifier =
+                    Modifier
+                        .align(Alignment.TopStart)
+                        .padding(8.dp),
             )
         }
         // Measurement panel
         MeasurementPanel(
             measurements = currentMeasurements,
             onClearAll = onMeasurementCleared,
-            modifier = Modifier
-                .width(250.dp)
-                .fillMaxHeight()
-                .padding(start = 8.dp)
+            modifier =
+                Modifier
+                    .width(250.dp)
+                    .fillMaxHeight()
+                    .padding(start = 8.dp),
         )
     }
 }
@@ -181,30 +190,31 @@ fun TemperatureEditCompose(
 @Composable
 private fun TemperatureModeIndicator(
     mode: TemperatureMode,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+            ),
     ) {
         Row(
             modifier = Modifier.padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Icon(
                 imageVector = mode.icon,
                 contentDescription = mode.displayName,
                 modifier = Modifier.size(16.dp),
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = MaterialTheme.colorScheme.onPrimary,
             )
             Text(
                 text = mode.displayName,
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
     }
@@ -214,24 +224,24 @@ private fun TemperatureModeIndicator(
 private fun MeasurementPanel(
     measurements: List<TemperatureMeasurementResult>,
     onClearAll: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "Measurements",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 if (measurements.isNotEmpty()) {
                     TextButton(onClick = onClearAll) {
@@ -242,30 +252,31 @@ private fun MeasurementPanel(
             Spacer(modifier = Modifier.height(8.dp))
             if (measurements.isEmpty()) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Icon(
                             imageVector = Icons.Default.TouchApp,
                             contentDescription = "No measurements",
                             modifier = Modifier.size(48.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Text(
                             text = "Tap to measure",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
             } else {
                 LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     items(measurements) { measurement ->
                         MeasurementCard(measurement = measurement)
@@ -279,31 +290,32 @@ private fun MeasurementPanel(
 @Composable
 private fun MeasurementCard(
     measurement: TemperatureMeasurementResult,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            ),
     ) {
         Column(
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(12.dp),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Icon(
                     imageVector = measurement.icon,
                     contentDescription = measurement.type,
                     modifier = Modifier.size(16.dp),
-                    tint = measurement.color
+                    tint = measurement.color,
                 )
                 Text(
                     text = measurement.type,
                     style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))
@@ -313,7 +325,7 @@ private fun MeasurementCard(
                         text = "${measurement.temperature.roundToInt()}°C",
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold,
-                        color = measurement.color
+                        color = measurement.color,
                     )
                 }
 
@@ -339,9 +351,14 @@ private fun MeasurementCard(
 
 private fun DrawScope.drawThermalBackground() {
     // Draw a simplified thermal pattern background
-    val colors = listOf(
-        Color.Blue, Color.Green, Color.Yellow, Color(0xFFFF6600), Color.Red
-    )
+    val colors =
+        listOf(
+            Color.Blue,
+            Color.Green,
+            Color.Yellow,
+            Color(0xFFFF6600),
+            Color.Red,
+        )
     val cellSize = 20.dp.toPx()
     val cols = (size.width / cellSize).toInt()
     val rows = (size.height / cellSize).toInt()
@@ -352,7 +369,9 @@ private fun DrawScope.drawThermalBackground() {
             drawRect(
                 color = colors[colorIndex].copy(alpha = alpha),
                 topLeft = Offset(col * cellSize, row * cellSize),
-                size = androidx.compose.ui.geometry.Size(cellSize, cellSize)
+                size =
+                    androidx.compose.ui.geometry
+                        .Size(cellSize, cellSize),
             )
         }
     }
@@ -360,7 +379,7 @@ private fun DrawScope.drawThermalBackground() {
 
 private fun DrawScope.drawMeasurement(
     measurement: TemperatureMeasurementResult,
-    showName: Boolean
+    showName: Boolean,
 ) {
     when (measurement) {
         is TemperatureMeasurementResult.Point -> {
@@ -370,19 +389,19 @@ private fun DrawScope.drawMeasurement(
                 color = measurement.color,
                 start = Offset(measurement.position.x - crossSize, measurement.position.y),
                 end = Offset(measurement.position.x + crossSize, measurement.position.y),
-                strokeWidth = 2.dp.toPx()
+                strokeWidth = 2.dp.toPx(),
             )
             drawLine(
                 color = measurement.color,
                 start = Offset(measurement.position.x, measurement.position.y - crossSize),
                 end = Offset(measurement.position.x, measurement.position.y + crossSize),
-                strokeWidth = 2.dp.toPx()
+                strokeWidth = 2.dp.toPx(),
             )
             // Draw center circle
             drawCircle(
                 color = measurement.color,
                 radius = 4.dp.toPx(),
-                center = measurement.position
+                center = measurement.position,
             )
             if (showName) {
                 // Temperature label would go here in a real implementation
@@ -394,18 +413,18 @@ private fun DrawScope.drawMeasurement(
                 color = measurement.color,
                 start = measurement.start,
                 end = measurement.end,
-                strokeWidth = 3.dp.toPx()
+                strokeWidth = 3.dp.toPx(),
             )
             // Draw endpoints
             drawCircle(
                 color = measurement.color,
                 radius = 6.dp.toPx(),
-                center = measurement.start
+                center = measurement.start,
             )
             drawCircle(
                 color = measurement.color,
                 radius = 6.dp.toPx(),
-                center = measurement.end
+                center = measurement.end,
             )
         }
 
@@ -414,7 +433,7 @@ private fun DrawScope.drawMeasurement(
                 color = measurement.color,
                 topLeft = measurement.rect.topLeft,
                 size = measurement.rect.size,
-                style = Stroke(width = 3.dp.toPx())
+                style = Stroke(width = 3.dp.toPx()),
             )
         }
     }
@@ -424,10 +443,12 @@ private fun simulateTemperatureReading(position: Offset): Float {
     // Simulate temperature based on position (warmer toward center)
     val centerX = 400f // Assume center of thermal image
     val centerY = 300f
-    val distance = kotlin.math.sqrt(
-        (position.x - centerX) * (position.x - centerX) +
-                (position.y - centerY) * (position.y - centerY)
-    ).toFloat()
+    val distance =
+        kotlin.math
+            .sqrt(
+                (position.x - centerX) * (position.x - centerX) +
+                    (position.y - centerY) * (position.y - centerY),
+            ).toFloat()
     return 25f + (100f - distance * 0.1f).coerceIn(15f, 45f)
 }
 
@@ -441,27 +462,30 @@ private fun simulateAreaTemperatureReading(rect: Rect): Float {
 // Data classes and enums
 enum class TemperatureMode(
     val displayName: String,
-    val icon: androidx.compose.ui.graphics.vector.ImageVector
+    val icon: androidx.compose.ui.graphics.vector.ImageVector,
 ) {
     POINT("Point", Icons.Default.Place),
     LINE("Line", Icons.Default.Timeline),
     RECTANGLE("Rectangle", Icons.Default.CropFree),
-    CLEAR("Clear", Icons.Default.Clear)
+    CLEAR("Clear", Icons.Default.Clear),
 }
 
 sealed class TemperatureMeasurementResult(
     val id: String,
     val type: String,
     val color: Color,
-    val icon: androidx.compose.ui.graphics.vector.ImageVector
+    val icon: androidx.compose.ui.graphics.vector.ImageVector,
 ) {
     data class Point(
         val pointId: String,
         val position: Offset,
-        val temperature: Float
+        val temperature: Float,
     ) : TemperatureMeasurementResult(
-        pointId, "Point", Color(0xFF2196F3), Icons.Default.Place
-    )
+            pointId,
+            "Point",
+            Color(0xFF2196F3),
+            Icons.Default.Place,
+        )
 
     data class Line(
         val lineId: String,
@@ -469,20 +493,26 @@ sealed class TemperatureMeasurementResult(
         val end: Offset,
         val temperatureMax: Float,
         val temperatureMin: Float,
-        val temperatureAvg: Float
+        val temperatureAvg: Float,
     ) : TemperatureMeasurementResult(
-        lineId, "Line", Color(0xFF4CAF50), Icons.Default.Timeline
-    )
+            lineId,
+            "Line",
+            Color(0xFF4CAF50),
+            Icons.Default.Timeline,
+        )
 
     data class Rectangle(
         val rectId: String,
         val rect: Rect,
         val temperatureMax: Float,
         val temperatureMin: Float,
-        val temperatureAvg: Float
+        val temperatureAvg: Float,
     ) : TemperatureMeasurementResult(
-        rectId, "Rectangle", Color(0xFFFF9800), Icons.Default.CropFree
-    )
+            rectId,
+            "Rectangle",
+            Color(0xFFFF9800),
+            Icons.Default.CropFree,
+        )
 }
 
 @Composable
@@ -490,15 +520,16 @@ fun TemperatureEditComposePreview() {
     var mode by remember { mutableStateOf(TemperatureMode.POINT) }
     var measurements by remember { mutableStateOf(emptyList<TemperatureMeasurementResult>()) }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(16.dp),
     ) {
         // Mode selector
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
         ) {
             TemperatureMode.values().forEach { tempMode ->
                 FilterChip(
@@ -509,9 +540,9 @@ fun TemperatureEditComposePreview() {
                         Icon(
                             imageVector = tempMode.icon,
                             contentDescription = null,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(16.dp),
                         )
-                    }
+                    },
                 )
             }
         }
@@ -526,7 +557,7 @@ fun TemperatureEditComposePreview() {
                 measurements = emptyList()
             },
             measurements = measurements,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }

@@ -33,34 +33,37 @@ import mpdc4gsr.feature.camera.data.CameraConfigurationManager
 @Composable
 fun CameraSettingsScreen(
     onBackClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val configManager = remember(context) { CameraConfigurationManager(context) }
-    val capabilities = remember {
-        configManager.detectDeviceCapabilities()
-    }
+    val capabilities =
+        remember {
+            configManager.detectDeviceCapabilities()
+        }
     val supports4K = capabilities.supports4K
     val supportsRAW = capabilities.supportsRaw
     val supports60fps = capabilities.supports60Fps
     val lensDescription = remember(capabilities) { describeLensFacing(capabilities.lensFacing) }
     val hardwareDescription = remember(capabilities) { describeHardwareLevel(capabilities.hardwareLevel) }
-    val resolutionSummary = remember(capabilities) {
-        val sizes = capabilities.supportedVideoSizes
-        if (sizes.isEmpty()) {
-            "Not available"
-        } else {
-            sizes.take(3).joinToString(", ") { size -> "${size.width}x${size.height}" }
+    val resolutionSummary =
+        remember(capabilities) {
+            val sizes = capabilities.supportedVideoSizes
+            if (sizes.isEmpty()) {
+                "Not available"
+            } else {
+                sizes.take(3).joinToString(", ") { size -> "${size.width}x${size.height}" }
+            }
         }
-    }
-    val availableResolutions = remember(capabilities) {
-        val sizes = capabilities.supportedVideoSizes
-        if (sizes.isNotEmpty()) {
-            sizes.map { size -> "${size.width}x${size.height}" }
-        } else {
-            listOf("1920x1080", "1280x720", "640x480")
+    val availableResolutions =
+        remember(capabilities) {
+            val sizes = capabilities.supportedVideoSizes
+            if (sizes.isNotEmpty()) {
+                sizes.map { size -> "${size.width}x${size.height}" }
+            } else {
+                listOf("1920x1080", "1280x720", "640x480")
+            }
         }
-    }
     val maxFrameRate = if (supports60fps) 60f else 30f
     var resolution by remember { mutableStateOf(availableResolutions.first()) }
     var frameRate by remember { mutableIntStateOf(30) }
@@ -69,38 +72,40 @@ fun CameraSettingsScreen(
     var stabilization by remember { mutableStateOf(false) }
     var gridLines by remember { mutableStateOf(true) }
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFF16131e))
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color(0xFF16131e)),
     ) {
         TitleBar(
             title = "Camera Settings",
             showBackButton = true,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
         )
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Device Capabilities
             SettingsCard(
                 title = "Device Capabilities",
-                icon = Icons.Default.Info
+                icon = Icons.Default.Info,
             ) {
                 SettingsRow(
                     label = "Active Lens",
-                    value = lensDescription
+                    value = lensDescription,
                 )
                 SettingsRow(
                     label = "Hardware Level",
-                    value = hardwareDescription
+                    value = hardwareDescription,
                 )
                 SettingsRow(
                     label = "Top Resolutions",
-                    value = resolutionSummary
+                    value = resolutionSummary,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsToggle(
@@ -108,76 +113,76 @@ fun CameraSettingsScreen(
                     description = "Device supports 4K video recording",
                     checked = supports4K,
                     onCheckedChange = {},
-                    enabled = false
+                    enabled = false,
                 )
                 SettingsToggle(
                     label = "60fps Support",
                     description = "Device supports 60fps video recording",
                     checked = supports60fps,
                     onCheckedChange = {},
-                    enabled = false
+                    enabled = false,
                 )
                 SettingsToggle(
                     label = "RAW Image Support",
                     description = "Device supports RAW image capture",
                     checked = supportsRAW,
                     onCheckedChange = {},
-                    enabled = false
+                    enabled = false,
                 )
             }
             // Video Settings
             SettingsCard(
                 title = "Video Settings",
-                icon = Icons.Default.Videocam
+                icon = Icons.Default.Videocam,
             ) {
                 SettingsDropdown(
                     label = "Resolution",
                     options = availableResolutions,
                     value = resolution,
-                    onValueChange = { resolution = it }
+                    onValueChange = { resolution = it },
                 )
                 SettingsSlider(
                     label = "Frame Rate",
                     value = frameRate.toFloat(),
                     valueRange = 15f..maxFrameRate,
                     onValueChange = { frameRate = it.toInt() },
-                    unit = " fps"
+                    unit = " fps",
                 )
             }
             // Camera Features
             SettingsCard(
                 title = "Camera Features",
-                icon = Icons.Default.CameraAlt
+                icon = Icons.Default.CameraAlt,
             ) {
                 SettingsToggle(
                     label = "Auto Focus",
                     description = "Automatic focus adjustment",
                     checked = autoFocus,
-                    onCheckedChange = { autoFocus = it }
+                    onCheckedChange = { autoFocus = it },
                 )
                 SettingsToggle(
                     label = "Auto Exposure",
                     description = "Automatic exposure control",
                     checked = autoExposure,
-                    onCheckedChange = { autoExposure = it }
+                    onCheckedChange = { autoExposure = it },
                 )
                 SettingsToggle(
                     label = "Image Stabilization",
                     description = "Digital image stabilization",
                     checked = stabilization,
-                    onCheckedChange = { stabilization = it }
+                    onCheckedChange = { stabilization = it },
                 )
             }
             // Interface Options
             SettingsCard(
                 title = "Interface",
-                icon = Icons.Default.GridOn
+                icon = Icons.Default.GridOn,
             ) {
                 SettingsToggle(
                     label = "Grid Lines",
                     description = "Show rule of thirds grid",
                     checked = gridLines,
-                    onCheckedChange = { gridLines = it }
+                    onCheckedChange = { gridLines = it },
                 )
             }
         }
@@ -192,17 +197,16 @@ private fun CameraSettingsScreenPreview() {
     }
 }
 
-private fun describeLensFacing(lensFacing: Int?): String {
-    return when (lensFacing) {
+private fun describeLensFacing(lensFacing: Int?): String =
+    when (lensFacing) {
         CameraCharacteristics.LENS_FACING_FRONT -> "Front Lens"
         CameraCharacteristics.LENS_FACING_BACK -> "Back Lens"
         CameraCharacteristics.LENS_FACING_EXTERNAL -> "External Lens"
         else -> "Unknown Lens"
     }
-}
 
-private fun describeHardwareLevel(level: Int?): String {
-    return when (level) {
+private fun describeHardwareLevel(level: Int?): String =
+    when (level) {
         CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3 -> "Level 3"
         CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL -> "Level Full"
         CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED -> "Level Limited"
@@ -210,4 +214,3 @@ private fun describeHardwareLevel(level: Int?): String {
         CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_EXTERNAL -> "Level External"
         else -> "Level Unknown"
     }
-}

@@ -26,15 +26,13 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 class ThermalGalleryComposeActivity : BaseComposeActivity<ThermalGalleryViewModel>() {
-    override fun createViewModel(): ThermalGalleryViewModel {
-        return ThermalGalleryViewModel()
-    }
+    override fun createViewModel(): ThermalGalleryViewModel = ThermalGalleryViewModel()
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalGalleryViewModel) {
         ThermalGalleryScreen(
-            onBackClick = { finish() }
+            onBackClick = { finish() },
         )
     }
 }
@@ -47,16 +45,17 @@ class ThermalGalleryViewModel : BaseViewModel() {
 @Composable
 private fun ThermalGalleryScreen(
     viewModel: ThermalGalleryViewModel = viewModel(),
-    onBackClick: (() -> Unit)? = null
+    onBackClick: (() -> Unit)? = null,
 ) {
     var viewMode by remember { mutableStateOf(ViewMode.GRID) }
     var selectedFilter by remember { mutableStateOf(FilterType.ALL) }
     var showSearchDialog by remember { mutableStateOf(false) }
     var showMoreOptionsDialog by remember { mutableStateOf(false) }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF0D1117))
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(Color(0xFF0D1117)),
     ) {
         // Top App Bar
         TopAppBar(
@@ -65,19 +64,20 @@ private fun ThermalGalleryScreen(
                     "Thermal Gallery",
                     color = Color.White,
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
             },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF161B22),
-                titleContentColor = Color.White
-            ),
+            colors =
+                TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF161B22),
+                    titleContentColor = Color.White,
+                ),
             navigationIcon = {
                 IconButton(onClick = { onBackClick?.invoke() }) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = Color.White
+                        tint = Color.White,
                     )
                 }
             },
@@ -88,34 +88,36 @@ private fun ThermalGalleryScreen(
                     Icon(
                         if (viewMode == ViewMode.GRID) Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
                         contentDescription = "Toggle View",
-                        tint = Color(0xFFFF6B35)
+                        tint = Color(0xFFFF6B35),
                     )
                 }
                 IconButton(onClick = { showSearchDialog = true }) {
                     Icon(
                         Icons.Default.Search,
                         contentDescription = "Search",
-                        tint = Color(0xFFFF6B35)
+                        tint = Color(0xFFFF6B35),
                     )
                 }
-            }
+            },
         )
         // Filter Bar
         ThermalFilterBar(
             selectedFilter = selectedFilter,
-            onFilterSelected = { selectedFilter = it }
+            onFilterSelected = { selectedFilter = it },
         )
         // Gallery Content
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .weight(1f),
         ) {
             when (viewMode) {
                 ViewMode.GRID -> ThermalGridView()
-                ViewMode.LIST -> ThermalListView(
-                    onMoreClick = { showMoreOptionsDialog = true }
-                )
+                ViewMode.LIST ->
+                    ThermalListView(
+                        onMoreClick = { showMoreOptionsDialog = true },
+                    )
             }
         }
     }
@@ -131,7 +133,7 @@ private fun ThermalGalleryScreen(
                     listOf("Date", "Temperature Range", "Location", "Tags").forEach { searchType ->
                         TextButton(
                             onClick = { showSearchDialog = false },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         ) {
                             Text(searchType)
                         }
@@ -143,7 +145,7 @@ private fun ThermalGalleryScreen(
                 TextButton(onClick = { showSearchDialog = false }) {
                     Text("Cancel")
                 }
-            }
+            },
         )
     }
     // More Options Dialog
@@ -158,11 +160,11 @@ private fun ThermalGalleryScreen(
                         "Sort by Temperature",
                         "Batch Export",
                         "Delete Selected",
-                        "Settings"
+                        "Settings",
                     ).forEach { option ->
                         TextButton(
                             onClick = { showMoreOptionsDialog = false },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         ) {
                             Text(option)
                         }
@@ -174,7 +176,7 @@ private fun ThermalGalleryScreen(
                 TextButton(onClick = { showMoreOptionsDialog = false }) {
                     Text("Cancel")
                 }
-            }
+            },
         )
     }
 }
@@ -182,18 +184,19 @@ private fun ThermalGalleryScreen(
 @Composable
 private fun ThermalFilterBar(
     selectedFilter: FilterType,
-    onFilterSelected: (FilterType) -> Unit
+    onFilterSelected: (FilterType) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
     ) {
         item {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 FilterType.values().forEach { filter ->
                     FilterChip(
@@ -201,16 +204,17 @@ private fun ThermalFilterBar(
                         label = {
                             Text(
                                 filter.displayName,
-                                fontSize = 12.sp
+                                fontSize = 12.sp,
                             )
                         },
                         selected = selectedFilter == filter,
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Color(0xFFFF6B35),
-                            selectedLabelColor = Color.White,
-                            containerColor = Color(0xFF21262D),
-                            labelColor = Color(0xFF7D8590)
-                        )
+                        colors =
+                            FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Color(0xFFFF6B35),
+                                selectedLabelColor = Color.White,
+                                containerColor = Color(0xFF21262D),
+                                labelColor = Color(0xFF7D8590),
+                            ),
                     )
                 }
             }
@@ -224,7 +228,7 @@ private fun ThermalGridView() {
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(generateSampleThermalImages()) { image ->
             ThermalImageCard(image = image, onMoreClick = {})
@@ -233,51 +237,54 @@ private fun ThermalGridView() {
 }
 
 @Composable
-private fun ThermalListView(
-    onMoreClick: (GalleryThermalImage) -> Unit = {}
-) {
+private fun ThermalListView(onMoreClick: (GalleryThermalImage) -> Unit = {}) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(generateSampleThermalImages()) { image ->
             ThermalImageListItem(
                 image = image,
-                onMoreClick = { onMoreClick(image) }
+                onMoreClick = { onMoreClick(image) },
             )
         }
     }
 }
 
 @Composable
-private fun ThermalImageCard(image: GalleryThermalImage, onMoreClick: () -> Unit = {}) {
+private fun ThermalImageCard(
+    image: GalleryThermalImage,
+    onMoreClick: () -> Unit = {},
+) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(12.dp),
         ) {
             // Image preview placeholder
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .background(
-                        Color(0xFF0D1117),
-                        RoundedCornerShape(8.dp)
-                    ),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .background(
+                            Color(0xFF0D1117),
+                            RoundedCornerShape(8.dp),
+                        ),
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     Icons.Default.Thermostat,
                     contentDescription = "Thermal Image",
                     tint = Color(0xFFFF6B35),
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(32.dp),
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -287,17 +294,17 @@ private fun ThermalImageCard(image: GalleryThermalImage, onMoreClick: () -> Unit
                 color = Color.White,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
-                maxLines = 1
+                maxLines = 1,
             )
             Text(
                 "${image.temperature}°C",
                 color = Color(0xFFFF6B35),
-                fontSize = 10.sp
+                fontSize = 10.sp,
             )
             Text(
                 image.date,
                 color = Color(0xFF7D8590),
-                fontSize = 10.sp
+                fontSize = 10.sp,
             )
         }
     }
@@ -306,56 +313,58 @@ private fun ThermalImageCard(image: GalleryThermalImage, onMoreClick: () -> Unit
 @Composable
 private fun ThermalImageListItem(
     image: GalleryThermalImage,
-    onMoreClick: () -> Unit = {}
+    onMoreClick: () -> Unit = {},
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             // Thumbnail
             Box(
-                modifier = Modifier
-                    .size(60.dp)
-                    .background(
-                        Color(0xFF0D1117),
-                        RoundedCornerShape(6.dp)
-                    ),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .size(60.dp)
+                        .background(
+                            Color(0xFF0D1117),
+                            RoundedCornerShape(6.dp),
+                        ),
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     Icons.Default.Thermostat,
                     contentDescription = "Thermal Image",
                     tint = Color(0xFFFF6B35),
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
             // Image details
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     image.name,
                     color = Color.White,
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 Text(
                     "${image.temperature}°C • ${image.date}",
                     color = Color(0xFF7D8590),
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
                 )
                 Text(
                     "${image.resolution} • ${image.size}",
                     color = Color(0xFF7D8590),
-                    fontSize = 10.sp
+                    fontSize = 10.sp,
                 )
             }
             // Actions
@@ -363,25 +372,24 @@ private fun ThermalImageListItem(
                 Icon(
                     Icons.Default.MoreVert,
                     contentDescription = "More",
-                    tint = Color(0xFF7D8590)
+                    tint = Color(0xFF7D8590),
                 )
             }
         }
     }
 }
 
-private fun generateSampleThermalImages(): List<GalleryThermalImage> {
-    return (1..20).map { index ->
+private fun generateSampleThermalImages(): List<GalleryThermalImage> =
+    (1..20).map { index ->
         GalleryThermalImage(
             id = index,
             name = "thermal_image_$index.tiff",
             temperature = (20..80).random(),
             date = "2024-01-${(10..28).random()}",
             resolution = "640x480",
-            size = "${(100..500).random()}KB"
+            size = "${(100..500).random()}KB",
         )
     }
-}
 
 private data class GalleryThermalImage(
     val id: Int,
@@ -389,17 +397,20 @@ private data class GalleryThermalImage(
     val temperature: Int,
     val date: String,
     val resolution: String,
-    val size: String
+    val size: String,
 )
 
 private enum class ViewMode {
-    GRID, LIST
+    GRID,
+    LIST,
 }
 
-private enum class FilterType(val displayName: String) {
+private enum class FilterType(
+    val displayName: String,
+) {
     ALL("All"),
     TODAY("Today"),
     THIS_WEEK("This Week"),
     HIGH_TEMP("High Temp"),
-    LOW_TEMP("Low Temp")
+    LOW_TEMP("Low Temp"),
 }

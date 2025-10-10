@@ -36,7 +36,7 @@ class SpanBuilder : SpannableStringBuilder {
             MyImageSpan(context, resourceId, wantHeight),
             oldLength,
             this.length,
-            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE,
         )
         this.append(" ")
         return this
@@ -55,7 +55,7 @@ class SpanBuilder : SpannableStringBuilder {
             ForegroundColorSpan(color),
             oldLength,
             this.length,
-            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE,
         )
         return this
     }
@@ -74,7 +74,7 @@ class SpanBuilder : SpannableStringBuilder {
             MyClickSpan(listener, color, false),
             oldLength,
             this.length,
-            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE,
         )
         return this
     }
@@ -94,7 +94,7 @@ class SpanBuilder : SpannableStringBuilder {
             MyClickSpan(listener, color, hasUnderLine),
             startIndex,
             endIndex,
-            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE,
         )
         return this
     }
@@ -102,7 +102,7 @@ class SpanBuilder : SpannableStringBuilder {
     private class MyClickSpan(
         val listener: OnClickListener,
         val color: Int,
-        val hasUnderLine: Boolean
+        val hasUnderLine: Boolean,
     ) : ClickableSpan() {
         override fun updateDrawState(ds: TextPaint) {
             ds.color = color
@@ -120,6 +120,7 @@ class SpanBuilder : SpannableStringBuilder {
         @Px val wantHeight: Int,
     ) : ReplacementSpan() {
         private var weakReference: WeakReference<Drawable>? = null
+
         fun getCachedDrawable(): Drawable {
             val weakDrawable = weakReference?.get()
             if (weakDrawable != null) {
@@ -130,7 +131,7 @@ class SpanBuilder : SpannableStringBuilder {
                 0,
                 0,
                 (drawable.intrinsicWidth * wantHeight * 1f / drawable.intrinsicHeight).toInt(),
-                wantHeight
+                wantHeight,
             )
             weakReference = WeakReference(drawable)
             return drawable

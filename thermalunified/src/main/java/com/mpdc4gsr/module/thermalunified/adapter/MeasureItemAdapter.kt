@@ -12,10 +12,13 @@ import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.bean.TargetColorBean
 import com.mpdc4gsr.module.thermalunified.R
 
-class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MeasureItemAdapter(
+    val context: Context,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
     private var selected = -1
+
     fun selected(index: Int) {
         selected = index
         notifyDataSetChanged()
@@ -59,11 +62,11 @@ class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    override fun getItemCount(): Int {
-        return secondBean.size
-    }
+    override fun getItemCount(): Int = secondBean.size
 
-    inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ItemView(
+        itemView: View,
+    ) : RecyclerView.ViewHolder(itemView) {
         val lay: View = itemView.findViewById(R.id.item_menu_tab_lay)
         val img: ImageView = itemView.findViewById(R.id.item_menu_tab_img)
         val name: TextView = itemView.findViewById(R.id.item_menu_tab_text)

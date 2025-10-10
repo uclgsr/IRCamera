@@ -4,11 +4,11 @@ object WsCmdConstants {
     const val AR_COMMAND_IP: String = "127.0.0.1"
     const val AR_COMMAND_LOGIN: Int = 1
     const val AR_COMMAND_LOGOUT: String = "AR_COMMAND_LOGOUT"
-    const val AR_COMMAND_VERSION_GET = 3  //
+    const val AR_COMMAND_VERSION_GET = 3 //
     const val AR_COMMAND_DEV_INFO_GET: String = "AR_COMMAND_DEV_INFO_GET" //
     const val AR_COMMAND_CONFIG_RESET: String = "AR_COMMAND_CONFIG_RESET"
-    const val AR_COMMAND_ALL_RESET: String = "AR_COMMAND_ALL_RESET"  //
-    const val AR_COMMAND_POWER_CTL: String = "AR_COMMAND_POWER_CTL" //、
+    const val AR_COMMAND_ALL_RESET: String = "AR_COMMAND_ALL_RESET" //
+    const val AR_COMMAND_POWER_CTL: String = "AR_COMMAND_POWER_CTL" // 、
     const val AR_COMMAND_BATTERY_GET: String = "AR_COMMAND_BATTERY_GET" //
     const val AR_COMMAND_USBPC_CONN_STATE_GET: String = "AR_COMMAND_USBPC_CONN_STATE_GET"
     const val AR_COMMAND_LANGUAGE_SET: Int = 11 //
@@ -22,27 +22,27 @@ object WsCmdConstants {
     const val AR_COMMAND_WIFI_AP_CONFIG_SET: String = "AR_COMMAND_WIFI_AP_CONFIG_SET" //
     const val AR_COMMAND_WIFI_AP_CONFIG_GET: String = "AR_COMMAND_WIFI_AP_CONFIG_GET"
     const val AR_COMMAND_WIFI_AP_INFO_GET: String = "AR_COMMAND_WIFI_AP_INFO_GET"
-    const val AR_COMMAND_STORAGE_FORMAT: String = "AR_COMMAND_STORAGE_FORMAT"//
-    const val AR_COMMAND_STORAGE_DELETE_FILE: String = "AR_COMMAND_STORAGE_DELETE_FILE"  //
+    const val AR_COMMAND_STORAGE_FORMAT: String = "AR_COMMAND_STORAGE_FORMAT" //
+    const val AR_COMMAND_STORAGE_DELETE_FILE: String = "AR_COMMAND_STORAGE_DELETE_FILE" //
     const val AR_COMMAND_STORAGE_GET_FILELIST: String = "AR_COMMAND_STORAGE_GET_FILELIST" //
     const val AR_COMMAND_STORAGE_GET_FILECNT: String = "AR_COMMAND_STORAGE_GET_FILECNT"
     const val AR_COMMAND_STORAGE_GET_SPACEINFO: String =
-        "AR_COMMAND_STORAGE_GET_SPACEINFO"//
-    const val AR_COMMAND_SET_KEY_CAPTURE_FUNC: String = "AR_COMMAND_SET_KEY_CAPTURE_FUNC"//
+        "AR_COMMAND_STORAGE_GET_SPACEINFO" //
+    const val AR_COMMAND_SET_KEY_CAPTURE_FUNC: String = "AR_COMMAND_SET_KEY_CAPTURE_FUNC" //
     const val AR_COMMAND_GET_KEY_CAPTURE_FUNC: String = "AR_COMMAND_GET_KEY_CAPTURE_FUNC"
     const val AR_COMMAND_SET_CONTINUOUS_SHOOTING: String =
         "AR_COMMAND_SET_CONTINUOUS_SHOOTING" //
-    const val AR_COMMAND_RETICLE_SET: Int = 101  //
+    const val AR_COMMAND_RETICLE_SET: Int = 101 //
     const val AR_COMMAND_RETICLE_GET: String = "AR_COMMAND_RETICLE_GET"
-    const val AR_COMMAND_SNAPSHOT: Int = 103   //
+    const val AR_COMMAND_SNAPSHOT: Int = 103 //
     const val AR_COMMAND_VRECORD: Int = 104 //
-    const val AR_COMMAND_RECORD_STATUS_GET: String = "AR_COMMAND_RECORD_STATUS_GET"//
+    const val AR_COMMAND_RECORD_STATUS_GET: String = "AR_COMMAND_RECORD_STATUS_GET" //
     const val AR_COMMAND_LASER_SET: String = "AR_COMMAND_LASER_SET"
     const val AR_COMMAND_LASER_GET: String = "AR_COMMAND_LASER_GET"
     const val AR_COMMAND_PIP_SET: String = "AR_COMMAND_PIP_SET" //
-    const val AR_COMMAND_PIP_GET: Int = 108//
+    const val AR_COMMAND_PIP_GET: Int = 108 //
     const val AR_COMMAND_ZOOM_SET: String = "AR_COMMAND_ZOOM_SET" //
-    const val AR_COMMAND_ZOOM_GET: Int = 110//
+    const val AR_COMMAND_ZOOM_GET: Int = 110 //
     const val AR_COMMAND_VGS_SET: String = "AR_COMMAND_VGS_SET"
     const val AR_COMMAND_VGS_GET: String = "AR_COMMAND_VGS_GET"
     const val AR_COMMAND_TRACK_SET: String = "AR_COMMAND_TRACK_SET"
@@ -69,11 +69,11 @@ object WsCmdConstants {
     const val AR_COMMAND_IR_IMG_PARAM_SET: String = "AR_COMMAND_IR_IMG_PARAM_SET"
     const val AR_COMMAND_IR_IMG_PARAM_GET: String = "AR_COMMAND_IR_IMG_PARAM_GET"
     const val AR_COMMAND_PSEUDO_COLOR_SET: String = "AR_COMMAND_PSEUDO_COLOR_SET" //
-    const val AR_COMMAND_PSEUDO_COLOR_GET: Int = 209//
+    const val AR_COMMAND_PSEUDO_COLOR_GET: Int = 209 //
     const val AR_COMMAND_DO_NUC: String = "AR_COMMAND_DO_NUC"
     const val AR_COMMAND_TEMPERATURE_STATE_SET: String = "AR_COMMAND_TEMPERATURE_STATE_SET"
-    const val AR_COMMAND_FREEZE_SET: String = "AR_COMMAND_FREEZE_SET"//
-    const val AR_COMMAND_TISR_SET: String = "AR_COMMAND_TISR_SET"   //
+    const val AR_COMMAND_FREEZE_SET: String = "AR_COMMAND_FREEZE_SET" //
+    const val AR_COMMAND_TISR_SET: String = "AR_COMMAND_TISR_SET" //
     const val AR_COMMAND_TISR_GET: Int = 214
     const val AR_COMMAND_RANGE_FIND_SET: String = "AR_COMMAND_RANGE_FIND_SET" //
     const val AR_COMMAND_RANGE_FIND_GET: Int = 216
@@ -86,7 +86,7 @@ object WsCmdConstants {
     const val AR_COMMAND_PANEL_SHIFT_SET: String = "AR_COMMAND_PANEL_SHIFT_SET"
     const val AR_COMMAND_PANEL_SHIFT_GET: String = "AR_COMMAND_PANEL_SHIFT_GET"
     const val AR_COMMAND_PRODUCT_CFG_GET: Int = 401
-    const val APP_EVENT_HEART_BEATS: Int = 1001//
-    const val APP_EVENT_DISTANCE_DATA: Int = 500//
-    const val APP_EVENT_TEMP_DATA: Int = 500//
+    const val APP_EVENT_HEART_BEATS: Int = 1001 //
+    const val APP_EVENT_DISTANCE_DATA: Int = 500 //
+    const val APP_EVENT_TEMP_DATA: Int = 500 //
 }

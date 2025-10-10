@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
@@ -30,6 +29,7 @@ class TempLayout : LinearLayout {
     }
 
     var animatorAlpha = 1f
+
     private fun initView() {
         rootV = LayoutInflater.from(context).inflate(R.layout.layout_temp_bg, this)
         bg = rootV?.findViewById(R.id.bg)
@@ -76,7 +76,6 @@ class TempLayout : LinearLayout {
                 try {
                     alphaAnimator?.start()
                 } catch (e: IllegalStateException) {
-                    Log.w("TempLayout", "Failed to start animator: ${e.message}")
                 }
             }
             this.type = type
@@ -99,12 +98,12 @@ class TempLayout : LinearLayout {
                     try {
                         alphaAnimator?.start()
                     } catch (e: IllegalStateException) {
-                        Log.w("TempLayout", "Failed to restart animator in onAnimationEnd: ${e.message}")
                     }
                 }
             }
 
             override fun onAnimationCancel(animation: Animator) {}
+
             override fun onAnimationRepeat(animation: Animator) {}
         }
 
@@ -120,7 +119,6 @@ class TempLayout : LinearLayout {
             try {
                 alphaAnimator?.start()
             } catch (e: IllegalStateException) {
-                Log.w("TempLayout", "Failed to start breath animation: ${e.message}")
             }
         }
     }

@@ -24,9 +24,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -44,7 +42,7 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             Text(
                                 "Algorithm Processing",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -52,7 +50,7 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -65,61 +63,66 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.Default.Save,
                                     contentDescription = "Save",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Black
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Black,
+                            ),
                     )
                 },
-                containerColor = Color.Black
+                containerColor = Color.Black,
             ) { paddingValues ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color.Black)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color.Black),
                 ) {
                     // Image processing view
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.7f)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(0.7f),
                     ) {
                         // Main image display
                         AlgorithmImageView(
                             selectedAlgorithm = selectedAlgorithm,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
                         )
                         // Processing indicator
                         if (isProcessing) {
                             ProcessingOverlay(
                                 progress = processingProgress,
-                                modifier = Modifier.align(Alignment.Center)
+                                modifier = Modifier.align(Alignment.Center),
                             )
                         }
                         // Algorithm info overlay
                         AlgorithmInfoOverlay(
                             selectedAlgorithm = selectedAlgorithm,
-                            modifier = Modifier
-                                .align(Alignment.TopStart)
-                                .padding(16.dp)
+                            modifier =
+                                Modifier
+                                    .align(Alignment.TopStart)
+                                    .padding(16.dp),
                         )
                     }
                     // Control panel
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.3f)
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(0.3f)
+                                .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         // Algorithm selection
                         AlgorithmSelector(
                             selectedAlgorithm = selectedAlgorithm,
-                            onAlgorithmSelected = { selectedAlgorithm = it }
+                            onAlgorithmSelected = { selectedAlgorithm = it },
                         )
                         // Processing controls
                         ProcessingControls(
@@ -142,7 +145,7 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             onStop = {
                                 isProcessing = false
                                 processingProgress = 0f
-                            }
+                            },
                         )
                     }
                 }
@@ -154,38 +157,39 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 @Composable
 private fun AlgorithmImageView(
     selectedAlgorithm: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF0D1117)
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF0D1117),
+            ),
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
                     Icons.Default.AutoFixHigh,
                     contentDescription = "Processing",
                     tint = Color(0xFF7D8590),
-                    modifier = Modifier.size(64.dp)
+                    modifier = Modifier.size(64.dp),
                 )
                 Text(
                     "Thermal Image Processing",
                     color = Color(0xFF7D8590),
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 Text(
                     "Algorithm: $selectedAlgorithm",
                     color = Color(0xFFFF6B35),
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
                 )
             }
         }
@@ -195,35 +199,36 @@ private fun AlgorithmImageView(
 @Composable
 private fun ProcessingOverlay(
     progress: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black.copy(alpha = 0.8f)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Black.copy(alpha = 0.8f),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
             modifier = Modifier.padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             CircularProgressIndicator(
                 progress = { progress },
                 color = Color(0xFFFF6B35),
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(48.dp),
             )
             Text(
                 "Processing...",
                 color = Color.White,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 "${(progress * 100).toInt()}%",
                 color = Color(0xFFFF6B35),
-                fontSize = 14.sp
+                fontSize = 14.sp,
             )
         }
     }
@@ -232,28 +237,29 @@ private fun ProcessingOverlay(
 @Composable
 private fun AlgorithmInfoOverlay(
     selectedAlgorithm: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black.copy(alpha = 0.7f)
-        ),
-        shape = RoundedCornerShape(8.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Black.copy(alpha = 0.7f),
+            ),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Column(
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(12.dp),
         ) {
             Text(
                 "Active Algorithm",
                 color = Color(0xFF7D8590),
-                fontSize = 10.sp
+                fontSize = 10.sp,
             )
             Text(
                 selectedAlgorithm,
                 color = Color.White,
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
     }
@@ -262,35 +268,37 @@ private fun AlgorithmInfoOverlay(
 @Composable
 private fun AlgorithmSelector(
     selectedAlgorithm: String,
-    onAlgorithmSelected: (String) -> Unit
+    onAlgorithmSelected: (String) -> Unit,
 ) {
     val algorithms = getAlgorithmOptions()
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Text(
                 "Algorithm Selection",
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(12.dp))
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 items(algorithms) { algorithm ->
                     AlgorithmChip(
                         algorithm = algorithm,
                         isSelected = selectedAlgorithm == algorithm.name,
-                        onClick = { onAlgorithmSelected(algorithm.name) }
+                        onClick = { onAlgorithmSelected(algorithm.name) },
                     )
                 }
             }
@@ -302,23 +310,24 @@ private fun AlgorithmSelector(
 private fun AlgorithmChip(
     algorithm: AlgorithmOption,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     FilterChip(
         onClick = onClick,
         label = {
             Text(
                 algorithm.name,
-                fontSize = 12.sp
+                fontSize = 12.sp,
             )
         },
         selected = isSelected,
-        colors = FilterChipDefaults.filterChipColors(
-            selectedContainerColor = Color(0xFFFF6B35),
-            selectedLabelColor = Color.White,
-            containerColor = Color(0xFF16131E),
-            labelColor = Color(0xFF7D8590)
-        )
+        colors =
+            FilterChipDefaults.filterChipColors(
+                selectedContainerColor = Color(0xFFFF6B35),
+                selectedLabelColor = Color.White,
+                containerColor = Color(0xFF16131E),
+                labelColor = Color(0xFF7D8590),
+            ),
     )
 }
 
@@ -329,33 +338,36 @@ private fun ProcessingControls(
     coroutineScope: kotlinx.coroutines.CoroutineScope,
     snackbarHostState: SnackbarHostState,
     onProcess: () -> Unit,
-    onStop: () -> Unit
+    onStop: () -> Unit,
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             if (!isProcessing) {
                 Button(
                     onClick = onProcess,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFF6B35)
-                    ),
-                    shape = RoundedCornerShape(8.dp)
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFFF6B35),
+                        ),
+                    shape = RoundedCornerShape(8.dp),
                 ) {
                     Icon(
                         Icons.Default.PlayArrow,
                         contentDescription = "Process",
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Process Image", fontSize = 14.sp)
@@ -363,15 +375,16 @@ private fun ProcessingControls(
             } else {
                 Button(
                     onClick = onStop,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Red
-                    ),
-                    shape = RoundedCornerShape(8.dp)
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color.Red,
+                        ),
+                    shape = RoundedCornerShape(8.dp),
                 ) {
                     Icon(
                         Icons.Default.Stop,
                         contentDescription = "Stop",
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Stop", fontSize = 14.sp)
@@ -383,16 +396,17 @@ private fun ProcessingControls(
                         snackbarHostState.showSnackbar("Image reset to original state")
                     }
                 },
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = Color.White
-                ),
+                colors =
+                    ButtonDefaults.outlinedButtonColors(
+                        contentColor = Color.White,
+                    ),
                 border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF7D8590)),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(8.dp),
             ) {
                 Icon(
                     Icons.Default.Refresh,
                     contentDescription = "Reset",
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(16.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Reset", fontSize = 14.sp)
@@ -404,16 +418,15 @@ private fun ProcessingControls(
 // Data classes
 data class AlgorithmOption(
     val name: String,
-    val description: String
+    val description: String,
 )
 
-private fun getAlgorithmOptions(): List<AlgorithmOption> {
-    return listOf(
+private fun getAlgorithmOptions(): List<AlgorithmOption> =
+    listOf(
         AlgorithmOption("Edge Detection", "Detect temperature boundaries"),
         AlgorithmOption("Noise Reduction", "Smooth thermal image"),
         AlgorithmOption("Contrast Enhancement", "Improve image contrast"),
         AlgorithmOption("Temperature Mapping", "Enhanced color mapping"),
         AlgorithmOption("Object Detection", "Identify thermal objects"),
-        AlgorithmOption("Pattern Analysis", "Analyze thermal patterns")
+        AlgorithmOption("Pattern Analysis", "Analyze thermal patterns"),
     )
-}

@@ -7,7 +7,6 @@ import static org.opencv.imgproc.Imgproc.*;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.util.Log;
 
 import org.opencv.android.Utils;
 import org.opencv.core.*;
@@ -180,7 +179,6 @@ public class OnlineMethod {
     public static Bitmap draw_edge_from_temp_reigon_bitmap(byte[] image, byte[] temperature, int row, int col, double high_t, double low_t, int color_h, int color_l, int type) throws IOException {
         Mat src = draw_high_temp_edge(image, temperature, high_t, color_h, type);
         Mat mat = draw_temp_edge(src, temperature, low_t, color_l, type);
-        Log.e("[ph][ph]", mat.toString());
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_BGR2RGBA);
         Bitmap dstBitmap = Bitmap.createBitmap(mat.width(), mat.height(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(mat, dstBitmap);

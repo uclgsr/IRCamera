@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.ir.utils
 
-import android.util.Log
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import org.opencv.android.Utils
 import org.opencv.core.CvType
@@ -19,9 +18,8 @@ class IRImageHelp {
     private var customMinTemp = 0f
     private var maxRGB = IntArray(3)
     private var minRGB = IntArray(3)
-    fun getColorList(): IntArray? {
-        return colorList
-    }
+
+    fun getColorList(): IntArray? = colorList
 
     fun setColorList(
         colorList: IntArray?,
@@ -65,15 +63,17 @@ class IRImageHelp {
                 while (index < imageDstLength) {
                     var temperature0: Float =
                         (
-                                (temperatureSrc.get(j).toInt() and 0xff) + (
-                                        temperatureSrc.get(j + 1)
-                                            .toInt() and 0xff
-                                        ) * 256
-                                ).toFloat()
+                            (temperatureSrc.get(j).toInt() and 0xff) + (
+                                temperatureSrc
+                                    .get(j + 1)
+                                    .toInt() and 0xff
+                            ) * 256
+                        ).toFloat()
                     temperature0 = (temperature0 / 64 - 273.15).toFloat()
                     if (temperature0 >= customMinTemp && temperature0 <= customMaxTemp) {
                         val intensity =
-                            ((temperature0 - customMinTemp) / (customMaxTemp - customMinTemp) * 255).toInt()
+                            ((temperature0 - customMinTemp) / (customMaxTemp - customMinTemp) * 255)
+                                .toInt()
                                 .coerceIn(0, 255)
                         imageDst[index] = intensity.toByte()
                         imageDst[index + 1] = intensity.toByte()
@@ -99,7 +99,6 @@ class IRImageHelp {
                 }
             }
         } catch (exception: Exception) {
-            Log.e("[ph][ph][ph][ph]", exception.message!!)
         } finally {
             return imageDst
         }
@@ -123,11 +122,11 @@ class IRImageHelp {
             while (index < imageDstLength) {
                 var temperature0: Float =
                     (
-                            (temperatureSrc[j].toInt() and 0xff) + (
-                                    temperatureSrc[j + 1]
-                                        .toInt() and 0xff
-                                    ) * 256
-                            ).toFloat()
+                        (temperatureSrc[j].toInt() and 0xff) + (
+                            temperatureSrc[j + 1]
+                                .toInt() and 0xff
+                        ) * 256
+                    ).toFloat()
                 temperature0 = (temperature0 / 64 - 273.15).toFloat()
                 val y0: Int = imageDst!![j].toInt() and 0xff
                 if (temperature0 < biaochiMin || temperature0 > biaochiMax) {
@@ -154,10 +153,11 @@ class IRImageHelp {
         imageHeight: Int,
     ): ByteArray? {
         if (alarmBean != null && imageDst != null && temperatureSrc != null) {
-            if (alarmBean.isMarkOpen && (
-                        (alarmBean.highTemp != Float.MAX_VALUE && alarmBean.isHighOpen) ||
-                                (alarmBean.isLowOpen && alarmBean.lowTemp != Float.MIN_VALUE)
-                        )
+            if (alarmBean.isMarkOpen &&
+                (
+                    (alarmBean.highTemp != Float.MAX_VALUE && alarmBean.isHighOpen) ||
+                        (alarmBean.isLowOpen && alarmBean.lowTemp != Float.MIN_VALUE)
+                )
             ) {
                 try {
                     val resultBitmap =

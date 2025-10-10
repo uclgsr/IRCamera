@@ -16,19 +16,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.common.TitleBar
 import mpdc4gsr.core.ui.components.settings.SettingsCard
 import mpdc4gsr.core.ui.components.settings.SettingsRow
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.device.presentation.DiagnosticsViewModel
-import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun DiagnosticsScreen(
     onBackClick: (() -> Unit)? = null,
     viewModel: DiagnosticsViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val systemStatus by viewModel.systemStatus.collectAsState()
@@ -37,75 +37,77 @@ fun DiagnosticsScreen(
         viewModel.initialize()
     }
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFF16131e))
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color(0xFF16131e)),
     ) {
         TitleBar(
             title = "Diagnostics",
             showBackButton = true,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
         )
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // System Status
             SettingsCard(
                 title = "System Status",
-                icon = Icons.Default.Computer
+                icon = Icons.Default.Computer,
             ) {
                 SettingsRow(
                     label = "System Health",
-                    value = systemStatus.systemHealth
+                    value = systemStatus.systemHealth,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Battery",
-                    value = systemStatus.battery
+                    value = systemStatus.battery,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Temperature",
-                    value = systemStatus.temperature
+                    value = systemStatus.temperature,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Memory Usage",
-                    value = systemStatus.memoryUsage
+                    value = systemStatus.memoryUsage,
                 )
             }
             // Sensor Status
             SettingsCard(
                 title = "Sensor Status",
-                icon = Icons.Default.Sensors
+                icon = Icons.Default.Sensors,
             ) {
                 SettingsRow(
                     label = "GSR Sensor",
-                    value = sensorStatus.gsrSensor
+                    value = sensorStatus.gsrSensor,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Thermal Camera",
-                    value = sensorStatus.thermalCamera
+                    value = sensorStatus.thermalCamera,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "RGB Camera",
-                    value = sensorStatus.rgbCamera
+                    value = sensorStatus.rgbCamera,
                 )
             }
             // Diagnostic Tools
             SettingsCard(
                 title = "Diagnostic Tools",
-                icon = Icons.Default.Build
+                icon = Icons.Default.Build,
             ) {
                 Button(
                     onClick = { viewModel.runFullDiagnostics() },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -115,9 +117,10 @@ fun DiagnosticsScreen(
                 Button(
                     onClick = { viewModel.testAllSensors() },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                        ),
                 ) {
                     Icon(Icons.Default.Science, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -126,7 +129,7 @@ fun DiagnosticsScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedButton(
                     onClick = { viewModel.exportDiagnosticLogs() },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(Icons.Default.FileDownload, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))

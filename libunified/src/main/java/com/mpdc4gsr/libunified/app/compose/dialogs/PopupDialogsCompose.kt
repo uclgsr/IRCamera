@@ -31,7 +31,7 @@ fun EmissivityTipPopup(
     checkboxLabel: String = "Don't show again",
     onConfirm: (dontShowAgain: Boolean) -> Unit,
     onCancel: () -> Unit = {},
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
     var isChecked by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
@@ -39,24 +39,28 @@ fun EmissivityTipPopup(
     val widthFraction = if (isPortrait) 0.85f else 0.55f
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = false
-        )
+        properties =
+            DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = false,
+            ),
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth(widthFraction)
-                .wrapContentHeight(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(widthFraction)
+                    .wrapContentHeight(),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = Color.White,
+                ),
         ) {
             Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth(),
             ) {
                 if (title.isNotEmpty()) {
                     Text(
@@ -64,71 +68,75 @@ fun EmissivityTipPopup(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
-                        modifier = Modifier.padding(bottom = 16.dp)
+                        modifier = Modifier.padding(bottom = 16.dp),
                     )
                 }
                 if (materialText.isNotEmpty()) {
                     Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp),
                         shape = RoundedCornerShape(8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFFF5F5F5)
-                        )
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = Color(0xFFF5F5F5),
+                            ),
                     ) {
                         Text(
                             text = materialText,
                             fontSize = 14.sp,
                             color = Color.DarkGray,
-                            modifier = Modifier
-                                .padding(12.dp)
-                                .fillMaxWidth()
+                            modifier =
+                                Modifier
+                                    .padding(12.dp)
+                                    .fillMaxWidth(),
                         )
                     }
                 }
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .verticalScroll(rememberScrollState())
-                        .weight(1f, fill = false)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState())
+                            .weight(1f, fill = false),
                 ) {
                     EmissivityInfoRow(
                         label = "$environmentLabel:",
-                        value = String.format("%.1f°C", environmentTemp)
+                        value = String.format("%.1f°C", environmentTemp),
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     EmissivityInfoRow(
                         label = "$distanceLabel:",
-                        value = String.format("%.1fm", distance)
+                        value = String.format("%.1fm", distance),
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     EmissivityInfoRow(
                         label = "$emissivityLabel:",
-                        value = String.format("%.2f", emissivity)
+                        value = String.format("%.2f", emissivity),
                     )
                 }
                 if (showCheckbox) {
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Checkbox(
                             checked = isChecked,
-                            onCheckedChange = { isChecked = it }
+                            onCheckedChange = { isChecked = it },
                         )
                         Text(
                             text = checkboxLabel,
                             fontSize = 14.sp,
-                            color = Color.Black
+                            color = Color.Black,
                         )
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     OutlinedButton(
                         onClick = {
@@ -136,7 +144,7 @@ fun EmissivityTipPopup(
                             onDismiss()
                         },
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(text = "Cancel", fontSize = 16.sp)
                     }
@@ -146,7 +154,7 @@ fun EmissivityTipPopup(
                             onDismiss()
                         },
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(text = "Confirm", fontSize = 16.sp)
                     }
@@ -159,30 +167,30 @@ fun EmissivityTipPopup(
 @Composable
 private fun EmissivityInfoRow(
     label: String,
-    value: String
+    value: String,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = Color(0xFFF8F8F8),
-                shape = RoundedCornerShape(6.dp)
-            )
-            .padding(12.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .background(
+                    color = Color(0xFFF8F8F8),
+                    shape = RoundedCornerShape(6.dp),
+                ).padding(12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = label,
             fontSize = 14.sp,
             color = Color.Gray,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
         Text(
             text = value,
             fontSize = 16.sp,
             color = Color.Black,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
     }
 }

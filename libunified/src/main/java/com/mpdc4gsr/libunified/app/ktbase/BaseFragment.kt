@@ -15,16 +15,18 @@ import kotlinx.coroutines.launch
 
 abstract class BaseFragment : Fragment() {
     val TAG = BaseFragment::class.java.simpleName
+
     abstract fun initContentView(): Int
+
     abstract fun initView()
+
     abstract fun initData()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(initContentView(), container, false)
-    }
+    ): View? = inflater.inflate(initContentView(), container, false)
 
     override fun onViewCreated(
         view: View,
@@ -48,6 +50,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     private val loadingDialogState by lazy { LoadingDialogState(requireContext()) }
+
     fun showLoadingDialog(
         @StringRes resId: Int = 0,
     ) {

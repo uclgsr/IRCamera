@@ -26,9 +26,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 
 class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -47,7 +45,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             Text(
                                 "Camera Settings",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -55,49 +53,51 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF16131E)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
                     )
                 },
-                containerColor = Color(0xFF16131E)
+                containerColor = Color(0xFF16131E),
             ) { paddingValues ->
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color(0xFF16131E)),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color(0xFF16131E)),
                     contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     // Image Settings
                     item {
                         SettingsCategoryCard(
                             title = "Image Settings",
-                            icon = Icons.Default.Image
+                            icon = Icons.Default.Image,
                         ) {
                             SettingsDropdownItem(
                                 title = "Color Palette",
                                 selectedValue = selectedPalette,
                                 options = listOf("Iron", "Rainbow", "Grayscale", "Hot", "Cool"),
-                                onValueChange = { selectedPalette = it }
+                                onValueChange = { selectedPalette = it },
                             )
                             SettingsSliderItem(
                                 title = "Frame Rate",
                                 value = frameRate,
                                 valueRange = 1f..25f,
                                 unit = "fps",
-                                onValueChange = { frameRate = it.toInt() }
+                                onValueChange = { frameRate = it.toInt() },
                             )
                             SettingsDropdownItem(
                                 title = "Resolution",
                                 selectedValue = resolution,
                                 options = listOf("384x288", "640x480", "160x120"),
-                                onValueChange = { resolution = it }
+                                onValueChange = { resolution = it },
                             )
                         }
                     }
@@ -105,19 +105,19 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     item {
                         SettingsCategoryCard(
                             title = "Camera Features",
-                            icon = Icons.Default.CameraAlt
+                            icon = Icons.Default.CameraAlt,
                         ) {
                             SettingsSwitchItem(
                                 title = "Auto Shutter",
                                 description = "Automatic shutter calibration",
                                 checked = autoShutter,
-                                onCheckedChange = { autoShutter = it }
+                                onCheckedChange = { autoShutter = it },
                             )
                             SettingsSwitchItem(
                                 title = "Image Correction",
                                 description = "Automatic image enhancement",
                                 checked = imageCorrection,
-                                onCheckedChange = { imageCorrection = it }
+                                onCheckedChange = { imageCorrection = it },
                             )
                         }
                     }
@@ -125,13 +125,13 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     item {
                         SettingsCategoryCard(
                             title = "Temperature Settings",
-                            icon = Icons.Default.Thermostat
+                            icon = Icons.Default.Thermostat,
                         ) {
                             SettingsDropdownItem(
                                 title = "Temperature Unit",
                                 selectedValue = temperatureUnit,
                                 options = listOf("Celsius", "Fahrenheit", "Kelvin"),
-                                onValueChange = { temperatureUnit = it }
+                                onValueChange = { temperatureUnit = it },
                             )
                         }
                     }
@@ -139,43 +139,46 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     item {
                         SettingsCategoryCard(
                             title = "Advanced Settings",
-                            icon = Icons.Default.Tune
+                            icon = Icons.Default.Tune,
                         ) {
                             AdvancedSettingItem(
                                 title = "Calibration",
                                 description = "Manual camera calibration",
                                 onClick = {
                                     // TODO: Navigate to calibration activity
-                                    android.widget.Toast.makeText(
-                                        this@IRCameraSettingComposeActivity,
-                                        "Calibration feature coming soon",
-                                        android.widget.Toast.LENGTH_SHORT
-                                    ).show()
-                                }
+                                    android.widget.Toast
+                                        .makeText(
+                                            this@IRCameraSettingComposeActivity,
+                                            "Calibration feature coming soon",
+                                            android.widget.Toast.LENGTH_SHORT,
+                                        ).show()
+                                },
                             )
                             AdvancedSettingItem(
                                 title = "Firmware Update",
                                 description = "Check for camera firmware updates",
                                 onClick = {
                                     // TODO: Check for firmware updates
-                                    android.widget.Toast.makeText(
-                                        this@IRCameraSettingComposeActivity,
-                                        "Checking for firmware updates...",
-                                        android.widget.Toast.LENGTH_SHORT
-                                    ).show()
-                                }
+                                    android.widget.Toast
+                                        .makeText(
+                                            this@IRCameraSettingComposeActivity,
+                                            "Checking for firmware updates...",
+                                            android.widget.Toast.LENGTH_SHORT,
+                                        ).show()
+                                },
                             )
                             AdvancedSettingItem(
                                 title = "Factory Reset",
                                 description = "Reset camera to default settings",
                                 onClick = {
                                     // TODO: Show confirmation dialog for factory reset
-                                    android.widget.Toast.makeText(
-                                        this@IRCameraSettingComposeActivity,
-                                        "Factory reset confirmation dialog",
-                                        android.widget.Toast.LENGTH_SHORT
-                                    ).show()
-                                }
+                                    android.widget.Toast
+                                        .makeText(
+                                            this@IRCameraSettingComposeActivity,
+                                            "Factory reset confirmation dialog",
+                                            android.widget.Toast.LENGTH_SHORT,
+                                        ).show()
+                                },
                             )
                         }
                     }
@@ -184,11 +187,12 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         SaveResetButtons(
                             onSave = {
                                 // TODO: Save camera settings to preferences
-                                android.widget.Toast.makeText(
-                                    this@IRCameraSettingComposeActivity,
-                                    "Settings saved successfully",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
+                                android.widget.Toast
+                                    .makeText(
+                                        this@IRCameraSettingComposeActivity,
+                                        "Settings saved successfully",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
                             },
                             onReset = {
                                 // TODO: Reset settings to defaults
@@ -198,12 +202,13 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 imageCorrection = true
                                 temperatureUnit = "Celsius"
                                 resolution = "384x288"
-                                android.widget.Toast.makeText(
-                                    this@IRCameraSettingComposeActivity,
-                                    "Settings reset to defaults",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                                android.widget.Toast
+                                    .makeText(
+                                        this@IRCameraSettingComposeActivity,
+                                        "Settings reset to defaults",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
+                            },
                         )
                     }
                 }
@@ -216,34 +221,36 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 private fun SettingsCategoryCard(
     title: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Icon(
                     icon,
                     contentDescription = title,
                     tint = Color(0xFFFF6B35),
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
                 Text(
                     title,
                     color = Color.White,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -258,7 +265,7 @@ private fun SettingsDropdownItem(
     title: String,
     selectedValue: String,
     options: List<String>,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     Column {
@@ -266,12 +273,12 @@ private fun SettingsDropdownItem(
             title,
             color = Color.White,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
         Spacer(modifier = Modifier.height(8.dp))
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
+            onExpandedChange = { expanded = !expanded },
         ) {
             OutlinedTextField(
                 value = selectedValue,
@@ -280,19 +287,21 @@ private fun SettingsDropdownItem(
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                 },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFFFF6B35),
-                    unfocusedBorderColor = Color(0xFF7D8590),
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true)
+                colors =
+                    OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFFFF6B35),
+                        unfocusedBorderColor = Color(0xFF7D8590),
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White,
+                    ),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true),
             )
             ExposedDropdownMenu(
                 expanded = expanded,
-                onDismissRequest = { expanded = false }
+                onDismissRequest = { expanded = false },
             ) {
                 options.forEach { option ->
                     DropdownMenuItem(
@@ -300,7 +309,7 @@ private fun SettingsDropdownItem(
                         onClick = {
                             onValueChange(option)
                             expanded = false
-                        }
+                        },
                     )
                 }
             }
@@ -315,25 +324,25 @@ private fun SettingsSliderItem(
     value: Int,
     valueRange: ClosedFloatingPointRange<Float>,
     unit: String,
-    onValueChange: (Float) -> Unit
+    onValueChange: (Float) -> Unit,
 ) {
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 title,
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
             Text(
                 "$value $unit",
                 color = Color(0xFFFF6B35),
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -341,11 +350,12 @@ private fun SettingsSliderItem(
             value = value.toFloat(),
             onValueChange = onValueChange,
             valueRange = valueRange,
-            colors = SliderDefaults.colors(
-                thumbColor = Color(0xFFFF6B35),
-                activeTrackColor = Color(0xFFFF6B35),
-                inactiveTrackColor = Color(0xFF7D8590)
-            )
+            colors =
+                SliderDefaults.colors(
+                    thumbColor = Color(0xFFFF6B35),
+                    activeTrackColor = Color(0xFFFF6B35),
+                    inactiveTrackColor = Color(0xFF7D8590),
+                ),
         )
         Spacer(modifier = Modifier.height(16.dp))
     }
@@ -356,35 +366,36 @@ private fun SettingsSwitchItem(
     title: String,
     description: String,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 title,
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
             Text(
                 description,
                 color = Color(0xFF7D8590),
-                fontSize = 12.sp
+                fontSize = 12.sp,
             )
         }
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.White,
-                checkedTrackColor = Color(0xFFFF6B35),
-                uncheckedThumbColor = Color(0xFF7D8590),
-                uncheckedTrackColor = Color(0xFF21262D)
-            )
+            colors =
+                SwitchDefaults.colors(
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = Color(0xFFFF6B35),
+                    uncheckedThumbColor = Color(0xFF7D8590),
+                    uncheckedTrackColor = Color(0xFF21262D),
+                ),
         )
     }
     Spacer(modifier = Modifier.height(16.dp))
@@ -394,42 +405,45 @@ private fun SettingsSwitchItem(
 private fun AdvancedSettingItem(
     title: String,
     description: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF16131E)
-        ),
-        shape = RoundedCornerShape(8.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable { onClick() },
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF16131E),
+            ),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     title,
                     color = Color.White,
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 Text(
                     description,
                     color = Color(0xFF7D8590),
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
                 )
             }
             Icon(
                 Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Navigate",
                 tint = Color(0xFF7D8590),
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(20.dp),
             )
         }
     }
@@ -439,28 +453,30 @@ private fun AdvancedSettingItem(
 @Composable
 private fun SaveResetButtons(
     onSave: () -> Unit,
-    onReset: () -> Unit
+    onReset: () -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         OutlinedButton(
             onClick = onReset,
             modifier = Modifier.weight(1f),
-            colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = Color(0xFF7D8590)
-            ),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF7D8590))
+            colors =
+                ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color(0xFF7D8590),
+                ),
+            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF7D8590)),
         ) {
             Text("Reset", fontWeight = FontWeight.Bold)
         }
         Button(
             onClick = onSave,
             modifier = Modifier.weight(1f),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFFF6B35)
-            )
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFFF6B35),
+                ),
         ) {
             Text("Save Settings", fontWeight = FontWeight.Bold)
         }

@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.tools
 
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import java.util.regex.Pattern
 
@@ -16,7 +15,7 @@ object VersionTools {
                 str.toFloat()
                 versionStr = str
             } catch (e: Exception) {
-            LibraryLogger.e("VersionTools", "Unexpected Exception in VersionTools catch block", e)
+                LibraryLogger.e("VersionTools", "Unexpected Exception in VersionTools catch block", e)
             }
         }
         return versionStr
@@ -31,7 +30,6 @@ object VersionTools {
             val localV = getVersion(localVersionStr)
             return serverV.toFloat() > localV.toFloat()
         } catch (e: Exception) {
-            XLog.e("[ph][ph][ph][ph][ph][ph][ph][ph]: ${e.message}")
             return false
         }
     }
@@ -42,8 +40,18 @@ object VersionTools {
     ): Boolean {
         try {
             val regex = "[^(0-9).]"
-            val remoteStrTemp = Pattern.compile(regex).matcher(remoteStr).replaceAll("").trim()
-            val localStrTemp = Pattern.compile(regex).matcher(localStr).replaceAll("").trim()
+            val remoteStrTemp =
+                Pattern
+                    .compile(regex)
+                    .matcher(remoteStr)
+                    .replaceAll("")
+                    .trim()
+            val localStrTemp =
+                Pattern
+                    .compile(regex)
+                    .matcher(localStr)
+                    .replaceAll("")
+                    .trim()
             val remoteSplit = remoteStrTemp.split(".")
             val localSplit = localStrTemp.split(".")
             val minIndex = Integer.min(remoteSplit.size, localSplit.size)
@@ -56,7 +64,6 @@ object VersionTools {
             }
             return result
         } catch (e: Exception) {
-            XLog.e("[ph][ph][ph][ph][ph][ph]: ${e.message}, remoteStr: $remoteStr, localStr: $localStr")
             return false
         }
     }

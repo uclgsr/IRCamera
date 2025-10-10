@@ -5,13 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 
 class BackgroundScanningManager(
-    private val context: Context
-) : DefaultLifecycleObserver, ServiceConnection {
+    private val context: Context,
+) : DefaultLifecycleObserver,
+    ServiceConnection {
     companion object {
         private const val TAG = "BackgroundScanningManager"
     }
@@ -23,26 +23,31 @@ class BackgroundScanningManager(
     // Callback interface for service status updates
     interface ServiceStatusCallback {
         fun onServiceConnected(service: BackgroundDeviceScanningService)
+
         fun onServiceDisconnected()
+
         fun onServiceStatusChanged(status: BackgroundDeviceScanningService.ServiceStatus)
     }
 
     private var statusCallback: ServiceStatusCallback? = null
+
     fun setStatusCallback(callback: ServiceStatusCallback?) {
         this.statusCallback = callback
     }
 
     fun startBackgroundScanning() {
         try {
-            val intent = Intent(context, BackgroundDeviceScanningService::class.java).apply {
-                action = BackgroundDeviceScanningService.ACTION_START_SCANNING
-            }
+            val intent =
+                Intent(context, BackgroundDeviceScanningService::class.java).apply {
+                    action = BackgroundDeviceScanningService.ACTION_START_SCANNING
+                }
             context.startForegroundService(intent)
             isServiceStarted = true
             // Bind to the service to get status updates
             bindService()
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
         }
     }
 
@@ -52,36 +57,42 @@ class BackgroundScanningManager(
                 unbindService()
             }
             if (isServiceStarted) {
-                val intent = Intent(context, BackgroundDeviceScanningService::class.java).apply {
-                    action = BackgroundDeviceScanningService.ACTION_STOP_SCANNING
-                }
+                val intent =
+                    Intent(context, BackgroundDeviceScanningService::class.java).apply {
+                        action = BackgroundDeviceScanningService.ACTION_STOP_SCANNING
+                    }
                 context.startService(intent)
                 isServiceStarted = false
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
         }
     }
 
     fun pauseBackgroundScanning() {
         try {
-            val intent = Intent(context, BackgroundDeviceScanningService::class.java).apply {
-                action = BackgroundDeviceScanningService.ACTION_PAUSE_SCANNING
-            }
+            val intent =
+                Intent(context, BackgroundDeviceScanningService::class.java).apply {
+                    action = BackgroundDeviceScanningService.ACTION_PAUSE_SCANNING
+                }
             context.startService(intent)
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
         }
     }
 
     fun resumeBackgroundScanning() {
         try {
-            val intent = Intent(context, BackgroundDeviceScanningService::class.java).apply {
-                action = BackgroundDeviceScanningService.ACTION_RESUME_SCANNING
-            }
+            val intent =
+                Intent(context, BackgroundDeviceScanningService::class.java).apply {
+                    action = BackgroundDeviceScanningService.ACTION_RESUME_SCANNING
+                }
             context.startService(intent)
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
         }
     }
 
@@ -90,7 +101,8 @@ class BackgroundScanningManager(
             val intent = Intent(context, BackgroundDeviceScanningService::class.java)
             context.bindService(intent, this, Context.BIND_AUTO_CREATE)
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
         }
     }
 
@@ -103,20 +115,20 @@ class BackgroundScanningManager(
                 statusCallback?.onServiceDisconnected()
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
+            mpdc4gsr.core.utils.AppLogger
+                .e("BackgroundScanningManager", "Unexpected Exception in BackgroundScanningManager catch block", e)
         }
     }
 
-    fun getServiceStatus(): BackgroundDeviceScanningService.ServiceStatus? {
-        return scanningService?.getStatus()
-    }
+    fun getServiceStatus(): BackgroundDeviceScanningService.ServiceStatus? = scanningService?.getStatus()
 
-    fun isServiceRunning(): Boolean {
-        return isServiceStarted && scanningService != null
-    }
+    fun isServiceRunning(): Boolean = isServiceStarted && scanningService != null
 
     // ServiceConnection implementation
-    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+    override fun onServiceConnected(
+        name: ComponentName?,
+        service: IBinder?,
+    ) {
         val binder = service as BackgroundDeviceScanningService.LocalBinder
         scanningService = binder.getService()
         isBound = true

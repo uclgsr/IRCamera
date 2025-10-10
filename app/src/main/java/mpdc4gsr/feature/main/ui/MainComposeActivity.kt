@@ -63,7 +63,7 @@ fun MainApp() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = MainNavRoutes.MAIN
+        startDestination = MainNavRoutes.MAIN,
     ) {
         // Main screen with bottom navigation
         composable(MainNavRoutes.MAIN) {
@@ -78,7 +78,7 @@ fun MainApp() {
                         SensorType.ThermalIR -> navController.navigate(MainNavRoutes.THERMAL_CONNECT)
                         SensorType.RGBCamera -> navController.navigate(MainNavRoutes.RGB_CAMERA)
                     }
-                }
+                },
             )
         }
         // Unified sensor dashboard
@@ -95,13 +95,13 @@ fun MainApp() {
                 },
                 onCameraSettingsClick = { navController.navigate(MainNavRoutes.CAMERA_SETTINGS) },
                 onGSRSettingsClick = { navController.navigate(MainNavRoutes.GSR_SETTINGS) },
-                onThermalSettingsClick = { navController.navigate(MainNavRoutes.THERMAL_SETTINGS) }
+                onThermalSettingsClick = { navController.navigate(MainNavRoutes.THERMAL_SETTINGS) },
             )
         }
         // Individual sensor screens
         composable(MainNavRoutes.GSR_SENSOR) {
             GSRSensorScreen(
-                navController = navController
+                navController = navController,
             )
         }
         composable(MainNavRoutes.RGB_CAMERA) {
@@ -110,7 +110,7 @@ fun MainApp() {
                 onSettingsClick = { navController.navigate(MainNavRoutes.CAMERA_SETTINGS) },
                 onCapturePhoto = {
                     // Capture photo functionality
-                }
+                },
             )
         }
         // Thermal camera workflow
@@ -119,7 +119,7 @@ fun MainApp() {
                 onDeviceSelected = { device ->
                     navController.navigate(MainNavRoutes.THERMAL_MONITOR)
                 },
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(MainNavRoutes.THERMAL_MONITOR) {
@@ -128,7 +128,7 @@ fun MainApp() {
                 onSettingsClick = { navController.navigate(MainNavRoutes.THERMAL_SETTINGS) },
                 onRecordClick = {
                     // Recording functionality
-                }
+                },
             )
         }
         composable(MainNavRoutes.THERMAL_CALIBRATE) {
@@ -137,7 +137,7 @@ fun MainApp() {
                 onCalibrationComplete = {
                     navController.popBackStack()
                 },
-                onCalibrationCancel = { navController.popBackStack() }
+                onCalibrationCancel = { navController.popBackStack() },
             )
         }
         composable(MainNavRoutes.THERMAL_ANNOTATE) {
@@ -148,13 +148,13 @@ fun MainApp() {
                 },
                 onShare = {
                     // Share functionality
-                }
+                },
             )
         }
         // Additional screens
         composable(MainNavRoutes.GALLERY) {
             ThermalGalleryScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(MainNavRoutes.SETTINGS) {
@@ -163,7 +163,11 @@ fun MainApp() {
                 onNavigateToGSRSettings = { navController.navigate(MainNavRoutes.GSR_SETTINGS) },
                 onNavigateToThermalSettings = { navController.navigate(MainNavRoutes.THERMAL_SETTINGS) },
                 onNavigateToCameraSettings = { navController.navigate(MainNavRoutes.CAMERA_SETTINGS) },
-                onNavigateToRecordingSettings = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.RecordingSettings.route) },
+                onNavigateToRecordingSettings = {
+                    navController.navigate(
+                        mpdc4gsr.core.ui.navigation.UnifiedRoute.RecordingSettings.route,
+                    )
+                },
                 onNavigateToStorageSettings = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.StorageSettings.route) },
                 onNavigateToSyncSettings = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.SyncSettings.route) },
                 onNavigateToCalibration = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.Calibration.route) },
@@ -171,73 +175,73 @@ fun MainApp() {
                 onNavigateToDiagnostics = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.Diagnostics.route) },
                 onNavigateToAppInfo = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.AppInfo.route) },
                 onNavigateToPrivacyPolicy = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.PrivacyPolicy.route) },
-                onNavigateToHelp = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.Help.route) }
+                onNavigateToHelp = { navController.navigate(mpdc4gsr.core.ui.navigation.UnifiedRoute.Help.route) },
             )
         }
         composable(MainNavRoutes.PROFILE) {
             ProfileScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         // Settings screens
         composable(MainNavRoutes.GSR_SETTINGS) {
             GSRSettingsScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(MainNavRoutes.CAMERA_SETTINGS) {
             CameraSettingsScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(MainNavRoutes.THERMAL_SETTINGS) {
             ThermalSettingsScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(MainNavRoutes.RECORDING_SETTINGS) {
             RecordingSettingsScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(MainNavRoutes.STORAGE_SETTINGS) {
             StorageSettingsScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(MainNavRoutes.SYNC_SETTINGS) {
             SyncSettingsScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(MainNavRoutes.CALIBRATION) {
             CalibrationScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(MainNavRoutes.NETWORK_SETTINGS) {
             NetworkSettingsScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(MainNavRoutes.DIAGNOSTICS) {
             DiagnosticsScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(MainNavRoutes.APP_INFO) {
             AppInfoScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(MainNavRoutes.PRIVACY_POLICY) {
             PrivacyPolicyScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
         composable(MainNavRoutes.HELP) {
             HelpScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
             )
         }
     }

@@ -7,11 +7,14 @@ import androidx.lifecycle.viewmodel.CreationExtras
 
 class BaseViewModelFactory(
     private val application: Application,
-    private val repositories: Map<Class<*>, Any> = emptyMap()
+    private val repositories: Map<Class<*>, Any> = emptyMap(),
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        return when {
+    override fun <T : ViewModel> create(
+        modelClass: Class<T>,
+        extras: CreationExtras,
+    ): T =
+        when {
             modelClass.isAssignableFrom(BaseViewModel::class.java) -> {
                 BaseViewModel() as T
             }
@@ -32,7 +35,6 @@ class BaseViewModelFactory(
                 }
             }
         }
-    }
 
     @Suppress("UNCHECKED_CAST")
     private fun <T : ViewModel> createWithRepositories(modelClass: Class<T>): T {
@@ -64,25 +66,24 @@ class BaseViewModelFactory(
         throw IllegalArgumentException("Cannot create ViewModel ${modelClass.simpleName}")
     }
 
-    class Builder(private val application: Application) {
+    class Builder(
+        private val application: Application,
+    ) {
         private val repositories = mutableMapOf<Class<*>, Any>()
-        fun <T : Any> addRepository(repositoryClass: Class<T>, repository: T): Builder {
+
+        fun <T : Any> addRepository(
+            repositoryClass: Class<T>,
+            repository: T,
+        ): Builder {
             repositories[repositoryClass] = repository
             return this
         }
 
-        inline fun <reified T : Any> addRepository(repository: T): Builder {
-            return addRepository(T::class.java, repository)
-        }
+        inline fun <reified T : Any> addRepository(repository: T): Builder = addRepository(T::class.java, repository)
 
-        fun build(): BaseViewModelFactory {
-            return BaseViewModelFactory(application, repositories)
-        }
+        fun build(): BaseViewModelFactory = BaseViewModelFactory(application, repositories)
     }
 }
 
-inline fun <reified T : ViewModel> androidx.lifecycle.ViewModelStoreOwner.createViewModelWithFactory(
-    factory: BaseViewModelFactory
-): T {
-    return ViewModelProvider(this, factory)[T::class.java]
-}
+inline fun <reified T : ViewModel> androidx.lifecycle.ViewModelStoreOwner.createViewModelWithFactory(factory: BaseViewModelFactory): T =
+    ViewModelProvider(this, factory)[T::class.java]

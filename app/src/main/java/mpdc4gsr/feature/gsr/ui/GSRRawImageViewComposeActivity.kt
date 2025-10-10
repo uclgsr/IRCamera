@@ -1,7 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
 
-import dagger.hilt.android.AndroidEntryPoint
-
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,15 +27,14 @@ import java.io.File
 
 @AndroidEntryPoint
 class GSRRawImageViewComposeActivity : BaseComposeActivity<GSRRawImageViewViewModel>() {
-    override fun createViewModel(): GSRRawImageViewViewModel =
-        viewModels<GSRRawImageViewViewModel>().value
+    override fun createViewModel(): GSRRawImageViewViewModel = viewModels<GSRRawImageViewViewModel>().value
 
     @Composable
     override fun Content(viewModel: GSRRawImageViewViewModel) {
         IRCameraTheme {
             GSRRawImageViewScreen(
                 viewModel = viewModel,
-                onNavigateBack = { finish() }
+                onNavigateBack = { finish() },
             )
         }
     }
@@ -47,11 +44,11 @@ class GSRRawImageViewComposeActivity : BaseComposeActivity<GSRRawImageViewViewMo
 @Composable
 fun GSRRawImageViewScreen(
     viewModel: GSRRawImageViewViewModel = hiltViewModel(),
-    onNavigateBack: () -> Unit = {}
+    onNavigateBack: () -> Unit = {},
 ) {
     val uiState by viewModel.imageViewState.collectAsState()
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         // Modern Material 3 App Bar
         CenterAlignedTopAppBar(
@@ -60,30 +57,31 @@ fun GSRRawImageViewScreen(
                 IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Navigate back"
+                        contentDescription = "Navigate back",
                     )
                 }
             },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-            )
+            colors =
+                TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                ),
         )
         // Content Area
         when {
             uiState.isLoading -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         CircularProgressIndicator()
                         Text(
                             text = "Loading GSR images...",
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                 }
@@ -93,7 +91,7 @@ fun GSRRawImageViewScreen(
                 val errorMessage = uiState.error ?: "Unknown error"
                 ErrorContent(
                     error = errorMessage,
-                    onRetry = { viewModel.loadImages() }
+                    onRetry = { viewModel.loadImages() },
                 )
             }
 
@@ -104,7 +102,7 @@ fun GSRRawImageViewScreen(
             else -> {
                 ImageListContent(
                     imageFiles = uiState.imageFiles,
-                    onImageClick = { file -> viewModel.openImage(file) }
+                    onImageClick = { file -> viewModel.openImage(file) },
                 )
             }
         }
@@ -114,17 +112,17 @@ fun GSRRawImageViewScreen(
 @Composable
 private fun ImageListContent(
     imageFiles: List<File>,
-    onImageClick: (File) -> Unit
+    onImageClick: (File) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(imageFiles) { imageFile ->
             GSRImageCard(
                 imageFile = imageFile,
-                onClick = { onImageClick(imageFile) }
+                onClick = { onImageClick(imageFile) },
             )
         }
     }
@@ -134,40 +132,45 @@ private fun ImageListContent(
 @Composable
 private fun GSRImageCard(
     imageFile: File,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
         onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(120.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(120.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             // Image Thumbnail
             Card(
                 modifier = Modifier.size(80.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    ),
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(imageFile)
-                            .crossfade(true)
-                            .build(),
+                        model =
+                            ImageRequest
+                                .Builder(LocalContext.current)
+                                .data(imageFile)
+                                .crossfade(true)
+                                .build(),
                         contentDescription = "GSR image thumbnail",
                         modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
                     )
                 }
             }
@@ -175,22 +178,22 @@ private fun GSRImageCard(
             // Image Information
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Text(
                     text = imageFile.name,
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
                 Text(
                     text = "Size: ${formatFileSize(imageFile.length())}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "Modified: ${formatDate(imageFile.lastModified())}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -200,31 +203,31 @@ private fun GSRImageCard(
 @Composable
 private fun ErrorContent(
     error: String,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Icon(
                 imageVector = Icons.Default.Image,
                 contentDescription = "Error",
                 modifier = Modifier.size(64.dp),
-                tint = MaterialTheme.colorScheme.error
+                tint = MaterialTheme.colorScheme.error,
             )
             Text(
                 text = "Error loading images",
                 style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = error,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Button(onClick = onRetry) {
                 Text("Retry")
@@ -237,42 +240,41 @@ private fun ErrorContent(
 private fun EmptyContent() {
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Icon(
                 imageVector = Icons.Default.Image,
                 contentDescription = "No images",
                 modifier = Modifier.size(64.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
                 text = "No GSR images found",
                 style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = "GSR images will appear here when available",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
 }
 
 // Utility functions
-private fun formatFileSize(bytes: Long): String {
-    return when {
+private fun formatFileSize(bytes: Long): String =
+    when {
         bytes < 1024 -> "$bytes B"
         bytes < 1024 * 1024 -> "${bytes / 1024} KB"
         else -> "${bytes / (1024 * 1024)} MB"
     }
-}
 
-private fun formatDate(timestamp: Long): String {
-    return java.text.SimpleDateFormat("MMM dd, yyyy HH:mm", java.util.Locale.getDefault())
+private fun formatDate(timestamp: Long): String =
+    java.text
+        .SimpleDateFormat("MMM dd, yyyy HH:mm", java.util.Locale.getDefault())
         .format(java.util.Date(timestamp))
-}

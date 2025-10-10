@@ -2,7 +2,6 @@ package mpdc4gsr.feature.network.data
 
 import android.content.Context
 import android.os.SystemClock
-import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -106,10 +105,6 @@ class RecordingController(
                     async {
                         try {
                             val success = sensor.initialize()
-                            Log.i(
-                                TAG,
-                                "Sensor $sensorName initialization: ${if (success) "SUCCESS" else "FAILED"}"
-                            )
                             Triple(sensorName, sensor, success)
                         } catch (e: Exception) {
                             emitError(
@@ -188,10 +183,6 @@ suspend fun startRecording(
             }
             lastTriggerSource = triggerSource
             addSessionEvent("SESSION_START_REQUESTED", triggerSource = triggerSource)
-            Log.i(
-                TAG,
-                " Starting enhanced multi-modal recording with validation (trigger: $triggerSource)"
-            )
             _recordingStateFlow.value = RecordingState.STARTING
             // Phase 1: Prerequisite Checks                val validationResult = validateRecordingPrerequisites(enabledSensors)
             if (!validationResult.isValid) {
@@ -401,10 +392,6 @@ suspend fun startRecording(
                 "Active sensors: ${successfulStarts.joinToString(", ") { it.first }}"
                 )
                 if (failedStarts.isNotEmpty()) {
-                    Log.w(
-                        TAG,
-                        "Failed sensors: ${failedStarts.joinToString(", ") { it.first }}"
-                    )
                 }
                 // Start health monitoring for active sensors
                 startSensorHealthMonitoring()
@@ -546,12 +533,6 @@ suspend fun startRecording(sessionDirectory: String): Boolean {
                 } else {
                     "Multi-modal recording started with $successCount/$totalSensors sensors"
                 }
-                Log.i(
-                    TAG,
-                    "Recording started with legacy API: $successCount/$totalSensors sensors " +
-                            "(successful: ${successfulStarts.map { it.first }}, " +
-                            "failed: ${failedStarts.map { it.first }})"
-                )
                 true
             } else {
                 _recordingStateFlow.value = RecordingState.ERROR emitError (
@@ -588,10 +569,6 @@ suspend fun stopSession(triggerSource: TriggerSource = TriggerSource.LOCAL_UI): 
             val transitionSuccess =
                 transitionSessionState(SessionState.RECORDING, SessionState.STOPPING)
             if (!transitionSuccess) {
-                Log.w(
-                    TAG,
-                    "Failed to transition to STOPPING state - current state: ${currentSessionState.get()}"
-                )
             }
             addSessionEvent(
                 "SESSION_STOP_REQUESTED",
@@ -650,10 +627,6 @@ suspend fun stopSession(triggerSource: TriggerSource = TriggerSource.LOCAL_UI): 
             sessionStartTimestampMs = 0
             sessionStartTimestampNs = 0
             currentSessionDirectory = null
-            Log.i(
-                TAG,
-                "Multi-modal recording stopped (duration: ${sessionDurationMs / 1000.0}s)"
-            )
             true
         } catch (e: Exception) {
             _recordingStateFlow.value = RecordingState.ERROR
@@ -1295,10 +1268,6 @@ if (availableSensors == 0) {
 
 val isValid = issues.isEmpty()
 val isRecoverable = issues.all { it.contains("permission") }
-Log.d(
-TAG,
-"Validation result: ${if (isValid) "PASSED" else "FAILED"} with ${issues.size} issues, ${warnings.size} warnings"
-)
 return ValidationResult(
 isValid = isValid,
 isRecoverable = isRecoverable,
@@ -1404,10 +1373,6 @@ private fun transitionSessionState(from: SessionState, to: SessionState): Boolea
                 )
             )
         } else {
-            Log.w(
-                TAG,
-                "Failed session state transition: $from -> $to (current: ${currentSessionState.get()})"
-            )
         }
     }
 }
@@ -1466,10 +1431,6 @@ private suspend fun attemptSensorReconnection(sensorName: String): Boolean {
         addSessionEvent("SENSOR_RECONNECTION_EXHAUSTED", sensorId = sensorName, success = false)
         return false
     }
-    Log.i(
-        TAG,
-        "Attempting to reconnect sensor $sensorName (attempt ${currentAttempts + 1}/$MAX_RECONNECTION_ATTEMPTS)"
-    )
     reconnectionAttempts[sensorName] = currentAttempts + 1
     addSessionEvent(
         "SENSOR_RECONNECTION_ATTEMPT", sensorId = sensorName, metadata = mapOf(

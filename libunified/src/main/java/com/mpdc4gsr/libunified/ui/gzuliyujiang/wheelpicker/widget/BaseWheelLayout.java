@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import androidx.annotation.*;
 
 import com.mpdc4gsr.libunified.R;
-import com.mpdc4gsr.libunified.ui.gzuliyujiang.dialog.DialogLog;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.CurtainCorner;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.ItemTextAlign;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.ScrollState;
@@ -88,7 +87,6 @@ public abstract class BaseWheelLayout extends LinearLayout implements OnWheelCha
 
     public void setStyle(@StyleRes int style) {
         if (attrs == null) {
-            DialogLog.print("Please use " + getClass().getSimpleName() + " in xml");
             return;
         }
         TypedArray a = getContext().obtainStyledAttributes(attrs, provideStyleableRes(), R.attr.WheelStyle, style);

@@ -5,7 +5,6 @@ import android.app.Activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
 
-import com.mpdc4gsr.libunified.ui.gzuliyujiang.dialog.DialogLog;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.SexEntity;
 
 import org.json.JSONArray;
@@ -73,7 +72,6 @@ public class SexPicker extends OptionPicker {
                 data.add(entity);
             }
         } catch (JSONException e) {
-            DialogLog.print(e);
         }
         return data;
     }

@@ -28,9 +28,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
 class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
-    override fun createViewModel(): ThermalFragmentViewModel {
-        return viewModels<ThermalFragmentViewModel>().value
-    }
+    override fun createViewModel(): ThermalFragmentViewModel = viewModels<ThermalFragmentViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -44,21 +42,21 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
                         title = {
                             Text(
                                 "IR Thermal Monitor",
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                         },
                         actions = {
                             IconButton(onClick = { viewModel.showSettings() }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
-                        }
+                        },
                     )
-                }
+                },
             ) { paddingValues ->
                 IRMonitorThermalContent(
                     viewModel = viewModel,
                     uiState = uiState,
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
         }
@@ -68,55 +66,55 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
     private fun IRMonitorThermalContent(
         viewModel: ThermalFragmentViewModel,
         uiState: ThermalFragmentViewModel.ThermalMonitoringUiState,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Thermal camera view integration
             ThermalCameraSection(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(300.dp),
             )
             // Monitoring controls
             MonitoringControlsSection(
                 onStartMonitoring = { viewModel.startMonitoring() },
                 onStopMonitoring = { viewModel.stopMonitoring() },
                 onConfigureRegions = { viewModel.configureRegions() },
-                isMonitoring = uiState.isMonitoring
+                isMonitoring = uiState.isMonitoring,
             )
             // Temperature data display
             TemperatureDataSection(
                 currentTemp = uiState.currentTemperature,
                 minTemp = uiState.minTemperature,
                 maxTemp = uiState.maxTemperature,
-                avgTemp = uiState.averageTemperature
+                avgTemp = uiState.averageTemperature,
             )
             // Monitoring status and alerts
             MonitoringStatusSection(
                 isConnected = uiState.isDeviceConnected,
                 isRecording = uiState.isRecording,
-                alertCount = uiState.alertCount
+                alertCount = uiState.alertCount,
             )
         }
     }
 
     @Composable
-    private fun ThermalCameraSection(
-        modifier: Modifier = Modifier
-    ) {
+    private fun ThermalCameraSection(modifier: Modifier = Modifier) {
         Card(
             modifier = modifier,
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         ) {
             Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 // Integration with native thermal camera views
                 AndroidView(
@@ -128,37 +126,38 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
                             // For now, placeholder that shows integration point
                         }
                     },
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 )
                 // Overlay for camera integration status
                 if (true) { // Replace with actual camera status
                     Surface(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.Black.copy(alpha = 0.7f)),
-                        color = Color.Transparent
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .background(Color.Black.copy(alpha = 0.7f)),
+                        color = Color.Transparent,
                     ) {
                         Column(
                             modifier = Modifier.fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
+                            verticalArrangement = Arrangement.Center,
                         ) {
                             Icon(
                                 Icons.Default.ThermostatAuto,
                                 contentDescription = "Thermal Camera",
                                 tint = Color.White,
-                                modifier = Modifier.size(48.dp)
+                                modifier = Modifier.size(48.dp),
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 "IR Thermal Monitor View",
                                 color = Color.White,
-                                style = MaterialTheme.typography.headlineSmall
+                                style = MaterialTheme.typography.headlineSmall,
                             )
                             Text(
                                 "Integration with CameraView & TemperatureView",
                                 color = Color.White.copy(alpha = 0.8f),
-                                style = MaterialTheme.typography.bodyMedium
+                                style = MaterialTheme.typography.bodyMedium,
                             )
                         }
                     }
@@ -172,46 +171,49 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
         onStartMonitoring: () -> Unit,
         onStopMonitoring: () -> Unit,
         onConfigureRegions: () -> Unit,
-        isMonitoring: Boolean
+        isMonitoring: Boolean,
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Text(
                     "Monitoring Controls",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Button(
                         onClick = if (isMonitoring) onStopMonitoring else onStartMonitoring,
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isMonitoring)
-                                MaterialTheme.colorScheme.error
-                            else
-                                MaterialTheme.colorScheme.primary
-                        )
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                containerColor =
+                                    if (isMonitoring) {
+                                        MaterialTheme.colorScheme.error
+                                    } else {
+                                        MaterialTheme.colorScheme.primary
+                                    },
+                            ),
                     ) {
                         Icon(
                             if (isMonitoring) Icons.Default.RecordVoiceOver else Icons.Default.MonitorHeart,
                             contentDescription = null,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(16.dp),
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(if (isMonitoring) "Stop" else "Start")
                     }
                     OutlinedButton(
                         onClick = onConfigureRegions,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text("Configure Regions")
                     }
@@ -225,24 +227,24 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
         currentTemp: Float?,
         minTemp: Float?,
         maxTemp: Float?,
-        avgTemp: Float?
+        avgTemp: Float?,
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Text(
                     "Temperature Data",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     TemperatureCard("Current", currentTemp, MaterialTheme.colorScheme.primary)
                     TemperatureCard("Min", minTemp, MaterialTheme.colorScheme.secondary)
@@ -257,27 +259,27 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
     private fun TemperatureCard(
         label: String,
         temperature: Float?,
-        color: Color
+        color: Color,
     ) {
         Surface(
             shape = RoundedCornerShape(8.dp),
             color = color.copy(alpha = 0.1f),
-            modifier = Modifier.padding(4.dp)
+            modifier = Modifier.padding(4.dp),
         ) {
             Column(
                 modifier = Modifier.padding(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     label,
                     style = MaterialTheme.typography.bodySmall,
-                    color = color
+                    color = color,
                 )
                 Text(
                     temperature?.let { "%.1f°C".format(it) } ?: "--",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = color
+                    color = color,
                 )
             }
         }
@@ -287,53 +289,57 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
     private fun MonitoringStatusSection(
         isConnected: Boolean,
         isRecording: Boolean,
-        alertCount: Int
+        alertCount: Int,
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
                     "Status",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 StatusRow(
                     "Device Connected",
                     isConnected,
-                    if (isConnected) Color.Green else Color.Red
+                    if (isConnected) Color.Green else Color.Red,
                 )
                 StatusRow(
                     "Recording",
                     isRecording,
-                    if (isRecording) Color.Red else Color.Gray
+                    if (isRecording) Color.Red else Color.Gray,
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text("Alerts", style = MaterialTheme.typography.bodyMedium)
                     Surface(
                         shape = RoundedCornerShape(12.dp),
-                        color = if (alertCount > 0)
-                            MaterialTheme.colorScheme.error.copy(alpha = 0.2f)
-                        else
-                            MaterialTheme.colorScheme.surfaceVariant
+                        color =
+                            if (alertCount > 0) {
+                                MaterialTheme.colorScheme.error.copy(alpha = 0.2f)
+                            } else {
+                                MaterialTheme.colorScheme.surfaceVariant
+                            },
                     ) {
                         Text(
                             alertCount.toString(),
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Bold,
-                            color = if (alertCount > 0)
-                                MaterialTheme.colorScheme.error
-                            else
-                                MaterialTheme.colorScheme.onSurfaceVariant
+                            color =
+                                if (alertCount > 0) {
+                                    MaterialTheme.colorScheme.error
+                                } else {
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                                },
                         )
                     }
                 }
@@ -345,23 +351,23 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
     private fun StatusRow(
         label: String,
         status: Boolean,
-        color: Color
+        color: Color,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(label, style = MaterialTheme.typography.bodyMedium)
             Surface(
                 shape = RoundedCornerShape(4.dp),
-                color = color.copy(alpha = 0.2f)
+                color = color.copy(alpha = 0.2f),
             ) {
                 Text(
                     if (status) "Active" else "Inactive",
                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                     style = MaterialTheme.typography.bodySmall,
-                    color = color
+                    color = color,
                 )
             }
         }

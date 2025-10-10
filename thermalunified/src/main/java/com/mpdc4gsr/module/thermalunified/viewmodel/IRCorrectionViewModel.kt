@@ -24,11 +24,12 @@ class IRCorrectionViewModel : BaseViewModel() {
 
     init {
         // Initialize with default temperature data
-        _temperatureData.value = TemperatureData(
-            currentTemp = 25.0f,
-            correctedTemp = 25.0f,
-            offsetValue = 0.0f
-        )
+        _temperatureData.value =
+            TemperatureData(
+                currentTemp = 25.0f,
+                correctedTemp = 25.0f,
+                offsetValue = 0.0f,
+            )
     }
 
     fun toggleCorrection() {
@@ -57,7 +58,11 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-    fun updateTemperaturePoint(temp: Float, x: Int, y: Int) {
+    fun updateTemperaturePoint(
+        temp: Float,
+        x: Int,
+        y: Int,
+    ) {
         currentTemperaturePoint = Triple(temp, x, y)
         updateTemperatureData(temp)
     }
@@ -97,11 +102,12 @@ class IRCorrectionViewModel : BaseViewModel() {
             _calibrationStatus.value = CalibrationStatus.NONE
             _correctionState.value = CorrectionState.INACTIVE
             // Reset temperature data
-            _temperatureData.value = TemperatureData(
-                currentTemp = 25.0f,
-                correctedTemp = 25.0f,
-                offsetValue = 0.0f
-            )
+            _temperatureData.value =
+                TemperatureData(
+                    currentTemp = 25.0f,
+                    correctedTemp = 25.0f,
+                    offsetValue = 0.0f,
+                )
         }
     }
 
@@ -141,24 +147,29 @@ class IRCorrectionViewModel : BaseViewModel() {
 
     private fun updateTemperatureData(currentTemp: Float) {
         val correctedTemp = currentTemp + currentCorrectionValue
-        _temperatureData.value = TemperatureData(
-            currentTemp = currentTemp,
-            correctedTemp = correctedTemp,
-            offsetValue = currentCorrectionValue
-        )
+        _temperatureData.value =
+            TemperatureData(
+                currentTemp = currentTemp,
+                correctedTemp = correctedTemp,
+                offsetValue = currentCorrectionValue,
+            )
     }
 }
 
 data class TemperatureData(
     val currentTemp: Float,
     val correctedTemp: Float,
-    val offsetValue: Float
+    val offsetValue: Float,
 )
 
 enum class CorrectionState {
-    INACTIVE, ACTIVE, CALIBRATING
+    INACTIVE,
+    ACTIVE,
+    CALIBRATING,
 }
 
 enum class CalibrationStatus {
-    NONE, CALIBRATED, NEEDS_CALIBRATION
+    NONE,
+    CALIBRATED,
+    NEEDS_CALIBRATION,
 }

@@ -27,14 +27,13 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRConfigViewModel
 
 class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
     private var isTC007 = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
         super.onCreate(savedInstanceState)
     }
 
-    override fun createViewModel(): IRConfigViewModel {
-        return viewModels<IRConfigViewModel>().value
-    }
+    override fun createViewModel(): IRConfigViewModel = viewModels<IRConfigViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -52,7 +51,7 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             Text(
                                 "Model Configuration",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -60,30 +59,32 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF16131E)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
                     )
                 },
-                containerColor = Color(0xFF16131E)
+                containerColor = Color(0xFF16131E),
             ) { paddingValues ->
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color(0xFF16131E)),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color(0xFF16131E)),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(16.dp)
+                    contentPadding = PaddingValues(16.dp),
                 ) {
                     // Default Model Selection
                     item {
                         DefaultModelCard(
                             isSelected = useDefaultModel,
-                            onSelectionChange = { useDefaultModel = it }
+                            onSelectionChange = { useDefaultModel = it },
                         )
                     }
                     // Environment Temperature
@@ -95,12 +96,13 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             icon = Icons.Default.Thermostat,
                             onClick = {
                                 // TODO: Show temperature input dialog
-                                android.widget.Toast.makeText(
-                                    this@IRConfigComposeActivity,
-                                    "Opening temperature dialog...",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                                android.widget.Toast
+                                    .makeText(
+                                        this@IRConfigComposeActivity,
+                                        "Opening temperature dialog...",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
+                            },
                         )
                     }
                     // Distance Configuration
@@ -112,12 +114,13 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             icon = Icons.Default.Straighten,
                             onClick = {
                                 // TODO: Show distance input dialog
-                                android.widget.Toast.makeText(
-                                    this@IRConfigComposeActivity,
-                                    "Opening distance dialog...",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                                android.widget.Toast
+                                    .makeText(
+                                        this@IRConfigComposeActivity,
+                                        "Opening distance dialog...",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
+                            },
                         )
                     }
                     // Emissivity Configuration
@@ -129,12 +132,13 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             icon = Icons.Default.Tune,
                             onClick = {
                                 // TODO: Show emissivity input dialog
-                                android.widget.Toast.makeText(
-                                    this@IRConfigComposeActivity,
-                                    "Opening emissivity dialog...",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                                android.widget.Toast
+                                    .makeText(
+                                        this@IRConfigComposeActivity,
+                                        "Opening emissivity dialog...",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
+                            },
                         )
                     }
                     // Material Presets Section
@@ -144,7 +148,7 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             color = Color.White,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(vertical = 8.dp)
+                            modifier = Modifier.padding(vertical = 8.dp),
                         )
                     }
                     items(getMaterialPresets()) { material ->
@@ -155,7 +159,7 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                                 selectedMaterial = material
                                 emissivity = material.emissivity
                                 useDefaultModel = false
-                            }
+                            },
                         )
                     }
                 }
@@ -167,44 +171,48 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
 @Composable
 private fun DefaultModelCard(
     isSelected: Boolean,
-    onSelectionChange: (Boolean) -> Unit
+    onSelectionChange: (Boolean) -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onSelectionChange(!isSelected) },
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable { onSelectionChange(!isSelected) },
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column {
                 Text(
                     "Default Model",
                     color = Color.White,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 Text(
                     "Use system default thermal settings",
                     color = Color(0xFF7D8590),
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
                 )
             }
             RadioButton(
                 selected = isSelected,
                 onClick = { onSelectionChange(!isSelected) },
-                colors = RadioButtonDefaults.colors(
-                    selectedColor = Color(0xFFFF6B35),
-                    unselectedColor = Color(0xFF7D8590)
-                )
+                colors =
+                    RadioButtonDefaults.colors(
+                        selectedColor = Color(0xFFFF6B35),
+                        unselectedColor = Color(0xFF7D8590),
+                    ),
             )
         }
     }
@@ -216,45 +224,48 @@ private fun ConfigurationCard(
     subtitle: String,
     value: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable { onClick() },
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Icon(
                     icon,
                     contentDescription = title,
                     tint = Color(0xFFFF6B35),
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         title,
                         color = Color.White,
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
                     )
                     Text(
                         subtitle,
                         color = Color(0xFF7D8590),
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
                     )
                 }
             }
@@ -262,7 +273,7 @@ private fun ConfigurationCard(
                 value,
                 color = Color(0xFFFF6B35),
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
     }
@@ -272,48 +283,54 @@ private fun ConfigurationCard(
 private fun MaterialPresetCard(
     material: MaterialPreset,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) Color(0xFF2D1B69) else Color(0xFF21262D)
-        ),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable { onClick() },
+        colors =
+            CardDefaults.cardColors(
+                containerColor = if (isSelected) Color(0xFF2D1B69) else Color(0xFF21262D),
+            ),
         shape = RoundedCornerShape(8.dp),
-        border = if (isSelected) {
-            androidx.compose.foundation.BorderStroke(2.dp, Color(0xFFFF6B35))
-        } else null
+        border =
+            if (isSelected) {
+                androidx.compose.foundation.BorderStroke(2.dp, Color(0xFFFF6B35))
+            } else {
+                null
+            },
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Icon(
                     material.icon,
                     contentDescription = material.name,
                     tint = if (isSelected) Color(0xFFFF6B35) else Color(0xFF7D8590),
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
                 Column {
                     Text(
                         material.name,
                         color = Color.White,
                         fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
                     )
                     Text(
                         "ε = ${material.emissivity}",
                         color = Color(0xFF7D8590),
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
                     )
                 }
             }
@@ -322,7 +339,7 @@ private fun MaterialPresetCard(
                     Icons.Default.Check,
                     contentDescription = "Selected",
                     tint = Color(0xFFFF6B35),
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
             }
         }
@@ -333,11 +350,11 @@ private fun MaterialPresetCard(
 data class MaterialPreset(
     val name: String,
     val emissivity: Float,
-    val icon: androidx.compose.ui.graphics.vector.ImageVector
+    val icon: androidx.compose.ui.graphics.vector.ImageVector,
 )
 
-private fun getMaterialPresets(): List<MaterialPreset> {
-    return listOf(
+private fun getMaterialPresets(): List<MaterialPreset> =
+    listOf(
         MaterialPreset("Human Skin", 0.98f, Icons.Default.Person),
         MaterialPreset("Concrete", 0.95f, Icons.Default.Home),
         MaterialPreset("Metal (Polished)", 0.07f, Icons.Default.Build),
@@ -347,6 +364,5 @@ private fun getMaterialPresets(): List<MaterialPreset> {
         MaterialPreset("Wood", 0.90f, Icons.Default.Home),
         MaterialPreset("Plastic", 0.94f, Icons.Default.Build),
         MaterialPreset("Paper", 0.92f, Icons.Default.Home),
-        MaterialPreset("Ceramic", 0.90f, Icons.Default.Home)
+        MaterialPreset("Ceramic", 0.90f, Icons.Default.Home),
     )
-}

@@ -1,7 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
 
-import dagger.hilt.android.AndroidEntryPoint
-
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -25,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.ui.AppBaseViewModel
 
 @AndroidEntryPoint
@@ -35,9 +34,7 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
         }
     }
 
-    override fun createViewModel(): AppBaseViewModel {
-        return viewModels<AppBaseViewModel>().value
-    }
+    override fun createViewModel(): AppBaseViewModel = viewModels<AppBaseViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -54,7 +51,7 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                         title = {
                             Text(
                                 "GSR Device Management",
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                         },
                         navigationIcon = {
@@ -66,7 +63,7 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                             IconButton(onClick = { isScanning = !isScanning }) {
                                 Icon(
                                     if (isScanning) Icons.Default.Stop else Icons.Default.Refresh,
-                                    contentDescription = if (isScanning) "Stop Scan" else "Scan"
+                                    contentDescription = if (isScanning) "Stop Scan" else "Scan",
                                 )
                             }
                             IconButton(onClick = { showBulkActions = true }) {
@@ -74,17 +71,18 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                             }
                             IconButton(onClick = {
                                 // TODO: Open device help documentation
-                                android.widget.Toast.makeText(
-                                    this@GSRDeviceManagementComposeActivity,
-                                    "Opening device help...",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
+                                android.widget.Toast
+                                    .makeText(
+                                        this@GSRDeviceManagementComposeActivity,
+                                        "Opening device help...",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
                             }) {
                                 Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
-                        }
+                        },
                     )
-                }
+                },
             ) { paddingValues ->
                 GSRDeviceManagementContent(
                     isScanning = isScanning,
@@ -94,7 +92,7 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                         showDeviceDetails = true
                     },
                     viewModel = viewModel,
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
         }
@@ -105,7 +103,7 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                 onConfigure = {
                     GSRDeviceConfigComposeActivity.startActivity(this@GSRDeviceManagementComposeActivity)
                     showDeviceDetails = false
-                }
+                },
             )
         }
         if (showBulkActions) {
@@ -114,7 +112,7 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                 onPerformAction = { action ->
                     // Perform bulk action
                     showBulkActions = false
-                }
+                },
             )
         }
     }
@@ -126,31 +124,32 @@ private fun GSRDeviceManagementContent(
     selectedDevice: GSRDeviceInfo?,
     onDeviceSelect: (GSRDeviceInfo) -> Unit,
     viewModel: AppBaseViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val localContext = androidx.compose.ui.platform.LocalContext.current
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp),
     ) {
         // Device Status Overview
         DeviceStatusOverview(
             connectedDevices = 2,
             availableDevices = 3,
             isScanning = isScanning,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
         )
         // Connected Devices Section
         Text(
             text = "Connected Devices",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 12.dp)
+            modifier = Modifier.padding(bottom = 12.dp),
         )
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             val connectedDevices = getMockGSRDevices().filter { it.status == "connected" }
             val availableDevices = getMockGSRDevices().filter { it.status != "connected" }
@@ -160,20 +159,22 @@ private fun GSRDeviceManagementContent(
                     onSelect = { onDeviceSelect(device) },
                     onConnect = {
                         // TODO: Implement device connection logic
-                        android.widget.Toast.makeText(
-                            localContext,
-                            "Connecting to ${device.name}...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                localContext,
+                                "Connecting to ${device.name}...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
                     onDisconnect = {
                         // TODO: Implement device disconnection logic
-                        android.widget.Toast.makeText(
-                            localContext,
-                            "Disconnecting from ${device.name}...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                        android.widget.Toast
+                            .makeText(
+                                localContext,
+                                "Disconnecting from ${device.name}...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
+                    },
                 )
             }
             if (availableDevices.isNotEmpty()) {
@@ -182,7 +183,7 @@ private fun GSRDeviceManagementContent(
                         text = "Available Devices",
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
+                        modifier = Modifier.padding(top = 16.dp, bottom = 12.dp),
                     )
                 }
                 items(availableDevices) { device ->
@@ -191,20 +192,22 @@ private fun GSRDeviceManagementContent(
                         onSelect = { onDeviceSelect(device) },
                         onConnect = {
                             // TODO: Implement device connection logic
-                            android.widget.Toast.makeText(
-                                localContext,
-                                "Connecting to ${device.name}...",
-                                android.widget.Toast.LENGTH_SHORT
-                            ).show()
+                            android.widget.Toast
+                                .makeText(
+                                    localContext,
+                                    "Connecting to ${device.name}...",
+                                    android.widget.Toast.LENGTH_SHORT,
+                                ).show()
                         },
                         onDisconnect = {
                             // TODO: Implement device disconnection logic
-                            android.widget.Toast.makeText(
-                                localContext,
-                                "Disconnecting from ${device.name}...",
-                                android.widget.Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                            android.widget.Toast
+                                .makeText(
+                                    localContext,
+                                    "Disconnecting from ${device.name}...",
+                                    android.widget.Toast.LENGTH_SHORT,
+                                ).show()
+                        },
                     )
                 }
             }
@@ -217,53 +220,54 @@ private fun DeviceStatusOverview(
     connectedDevices: Int,
     availableDevices: Int,
     isScanning: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+            ),
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(20.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "Device Status",
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 if (isScanning) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
-                        strokeWidth = 2.dp
+                        strokeWidth = 2.dp,
                     )
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 DeviceStatusItem(
                     label = "Connected",
                     count = connectedDevices,
-                    color = Color(0xFF4CAF50)
+                    color = Color(0xFF4CAF50),
                 )
                 DeviceStatusItem(
                     label = "Available",
                     count = availableDevices,
-                    color = Color(0xFF2196F3)
+                    color = Color(0xFF2196F3),
                 )
                 DeviceStatusItem(
                     label = "Total",
                     count = connectedDevices + availableDevices,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
         }
@@ -275,22 +279,22 @@ private fun DeviceStatusItem(
     label: String,
     count: Int,
     color: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Text(
             text = count.toString(),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-            color = color
+            color = color,
         )
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
         )
     }
 }
@@ -301,51 +305,54 @@ private fun GSRDeviceCard(
     onSelect: () -> Unit,
     onConnect: () -> Unit,
     onDisconnect: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onSelect() },
-        colors = CardDefaults.cardColors(
-            containerColor = when (device.status) {
-                "connected" -> MaterialTheme.colorScheme.tertiaryContainer
-                "connecting" -> MaterialTheme.colorScheme.primaryContainer
-                else -> MaterialTheme.colorScheme.surface
-            }
-        )
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable { onSelect() },
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    when (device.status) {
+                        "connected" -> MaterialTheme.colorScheme.tertiaryContainer
+                        "connecting" -> MaterialTheme.colorScheme.primaryContainer
+                        else -> MaterialTheme.colorScheme.surface
+                    },
+            ),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = device.name,
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
                     )
                     Text(
                         text = "ID: ${device.deviceId}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
                 // Status indicator
                 Surface(
                     shape = RoundedCornerShape(12.dp),
                     color = getDeviceStatusColor(device.status),
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = Modifier.padding(start = 8.dp),
                 ) {
                     Text(
                         text = device.status?.uppercase() ?: "N/A",
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                     )
                 }
             }
@@ -353,37 +360,37 @@ private fun GSRDeviceCard(
             // Device metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 DeviceMetricItem(
                     label = "Battery",
                     value = "${device.batteryLevel}%",
-                    icon = getBatteryIcon(device.batteryLevel)
+                    icon = getBatteryIcon(device.batteryLevel),
                 )
                 DeviceMetricItem(
                     label = "Signal",
                     value = "${device.signalStrength} dBm",
-                    icon = Icons.Default.Wifi
+                    icon = Icons.Default.Wifi,
                 )
                 DeviceMetricItem(
                     label = "Sample Rate",
                     value = "${device.samplingRate} Hz",
-                    icon = Icons.Default.Timeline
+                    icon = Icons.Default.Timeline,
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
             // Device actions
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 OutlinedButton(
                     onClick = onSelect,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Icon(
                         Icons.Default.Info,
                         contentDescription = "Details",
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(18.dp),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Details")
@@ -391,15 +398,16 @@ private fun GSRDeviceCard(
                 if (device.status == "connected") {
                     Button(
                         onClick = onDisconnect,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFE53E3E)
-                        ),
-                        modifier = Modifier.weight(1f)
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFE53E3E),
+                            ),
+                        modifier = Modifier.weight(1f),
                     ) {
                         Icon(
                             Icons.Default.LinkOff,
                             contentDescription = "Disconnect",
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(18.dp),
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Disconnect")
@@ -407,12 +415,12 @@ private fun GSRDeviceCard(
                 } else {
                     Button(
                         onClick = onConnect,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Icon(
                             Icons.Default.Link,
                             contentDescription = "Connect",
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(18.dp),
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Connect")
@@ -428,27 +436,27 @@ private fun DeviceMetricItem(
     label: String,
     value: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Icon(
             imageVector = icon,
             contentDescription = label,
             modifier = Modifier.size(16.dp),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodySmall,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -457,7 +465,7 @@ private fun DeviceMetricItem(
 private fun DeviceDetailsDialog(
     device: GSRDeviceInfo,
     onDismiss: () -> Unit,
-    onConfigure: () -> Unit
+    onConfigure: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -466,7 +474,7 @@ private fun DeviceDetailsDialog(
         },
         text = {
             Column(
-                modifier = Modifier.verticalScroll(rememberScrollState())
+                modifier = Modifier.verticalScroll(rememberScrollState()),
             ) {
                 DeviceDetailItem("Device ID", device.deviceId)
                 DeviceDetailItem("Status", device.status?.replaceFirstChar { it.uppercaseChar() } ?: "N/A")
@@ -480,12 +488,12 @@ private fun DeviceDetailsDialog(
                         text = "Recent Data",
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Medium,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                        modifier = Modifier.padding(bottom = 8.dp),
                     )
                     Text(
                         text = "GSR: 2.45 µS\nPPG: 1024, 1028\nTemperature: 36.2°C",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -499,7 +507,7 @@ private fun DeviceDetailsDialog(
             TextButton(onClick = onDismiss) {
                 Text("Close")
             }
-        }
+        },
     )
 }
 
@@ -507,22 +515,23 @@ private fun DeviceDetailsDialog(
 private fun DeviceDetailItem(
     label: String,
     value: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = "$label:",
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
     }
 }
@@ -530,7 +539,7 @@ private fun DeviceDetailItem(
 @Composable
 private fun BulkActionsDialog(
     onDismiss: () -> Unit,
-    onPerformAction: (String) -> Unit
+    onPerformAction: (String) -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -543,11 +552,11 @@ private fun BulkActionsDialog(
                     "Disconnect All" to "disconnect_all",
                     "Update Firmware" to "update_firmware",
                     "Reset Configuration" to "reset_config",
-                    "Export Device List" to "export_list"
+                    "Export Device List" to "export_list",
                 ).forEach { (label, action) ->
                     TextButton(
                         onClick = { onPerformAction(action) },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         Text(label, modifier = Modifier.fillMaxWidth())
                     }
@@ -558,25 +567,27 @@ private fun BulkActionsDialog(
             TextButton(onClick = onDismiss) {
                 Text("Cancel")
             }
-        }
+        },
     )
 }
 
-private fun getDeviceStatusColor(status: String?) = when (status) {
-    "connected" -> Color(0xFF4CAF50)
-    "connecting" -> Color(0xFFFF9800)
-    "available" -> Color(0xFF2196F3)
-    "disconnected" -> Color(0xFF9E9E9E)
-    null -> Color(0xFF9E9E9E).copy(alpha = 0.6f)
-    else -> Color(0xFFE53E3E)
-}
+private fun getDeviceStatusColor(status: String?) =
+    when (status) {
+        "connected" -> Color(0xFF4CAF50)
+        "connecting" -> Color(0xFFFF9800)
+        "available" -> Color(0xFF2196F3)
+        "disconnected" -> Color(0xFF9E9E9E)
+        null -> Color(0xFF9E9E9E).copy(alpha = 0.6f)
+        else -> Color(0xFFE53E3E)
+    }
 
-private fun getBatteryIcon(batteryLevel: Int) = when {
-    batteryLevel > 75 -> Icons.Default.BatteryFull
-    batteryLevel > 50 -> Icons.Default.Battery6Bar
-    batteryLevel > 25 -> Icons.Default.Battery3Bar
-    else -> Icons.Default.Battery1Bar
-}
+private fun getBatteryIcon(batteryLevel: Int) =
+    when {
+        batteryLevel > 75 -> Icons.Default.BatteryFull
+        batteryLevel > 50 -> Icons.Default.Battery6Bar
+        batteryLevel > 25 -> Icons.Default.Battery3Bar
+        else -> Icons.Default.Battery1Bar
+    }
 
 data class GSRDeviceInfo(
     val name: String,
@@ -585,13 +596,14 @@ data class GSRDeviceInfo(
     val batteryLevel: Int,
     val signalStrength: Int,
     val samplingRate: Int,
-    val lastSeen: String
+    val lastSeen: String,
 )
 
-private fun getMockGSRDevices() = listOf(
-    GSRDeviceInfo("Shimmer3 GSR+ #001", "shimmer_001", "disconnected", 89, -42, 128, "Just now"),
-    GSRDeviceInfo("Shimmer3 GSR+ #002", "shimmer_002", "disconnected", 76, -38, 256, "2 min ago"),
-    GSRDeviceInfo("Shimmer3 GSR+ #003", "shimmer_003", "available", 92, -55, 128, "5 min ago"),
-    GSRDeviceInfo("Shimmer3 GSR+ #004", "shimmer_004", "disconnected", 45, -68, 128, "1 hour ago"),
-    GSRDeviceInfo("Shimmer3 GSR+ #005", "shimmer_005", "available", 83, -48, 256, "10 min ago")
-)
+private fun getMockGSRDevices() =
+    listOf(
+        GSRDeviceInfo("Shimmer3 GSR+ #001", "shimmer_001", "disconnected", 89, -42, 128, "Just now"),
+        GSRDeviceInfo("Shimmer3 GSR+ #002", "shimmer_002", "disconnected", 76, -38, 256, "2 min ago"),
+        GSRDeviceInfo("Shimmer3 GSR+ #003", "shimmer_003", "available", 92, -55, 128, "5 min ago"),
+        GSRDeviceInfo("Shimmer3 GSR+ #004", "shimmer_004", "disconnected", 45, -68, 128, "1 hour ago"),
+        GSRDeviceInfo("Shimmer3 GSR+ #005", "shimmer_005", "available", 83, -48, 256, "10 min ago"),
+    )

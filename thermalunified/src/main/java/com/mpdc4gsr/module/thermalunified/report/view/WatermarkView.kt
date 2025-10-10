@@ -22,7 +22,7 @@ class WatermarkView : View {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ) {
         marginTop = 220f.dpToPx(context)
         textPaint.isFakeBoldText = true

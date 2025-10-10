@@ -26,7 +26,7 @@ fun ConfirmDialog(
     checkboxLabel: String = "",
     onConfirm: (isChecked: Boolean) -> Unit,
     onDismiss: () -> Unit = {},
-    showIcon: Boolean
+    showIcon: Boolean,
 ) {
     var isChecked by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
@@ -34,25 +34,29 @@ fun ConfirmDialog(
     val widthFraction = if (isPortrait) 0.8f else 0.4f
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = false
-        )
+        properties =
+            DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = false,
+            ),
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth(widthFraction)
-                .wrapContentHeight(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(widthFraction)
+                    .wrapContentHeight(),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = Color.White,
+                ),
         ) {
             Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier =
+                    Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = title,
@@ -60,7 +64,7 @@ fun ConfirmDialog(
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 if (message.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
@@ -69,7 +73,7 @@ fun ConfirmDialog(
                         fontSize = 14.sp,
                         color = Color.Gray,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
                 if (showCheckbox) {
@@ -77,33 +81,33 @@ fun ConfirmDialog(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.Center,
                     ) {
                         Checkbox(
                             checked = isChecked,
-                            onCheckedChange = { isChecked = it }
+                            onCheckedChange = { isChecked = it },
                         )
                         Text(
                             text = checkboxLabel,
                             fontSize = 14.sp,
-                            color = Color.Black
+                            color = Color.Black,
                         )
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     if (showCancel) {
                         OutlinedButton(
                             onClick = onDismiss,
                             modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(8.dp)
+                            shape = RoundedCornerShape(8.dp),
                         ) {
                             Text(
                                 text = cancelText,
-                                fontSize = 16.sp
+                                fontSize = 16.sp,
                             )
                         }
                     }
@@ -111,13 +115,14 @@ fun ConfirmDialog(
                         onClick = { onConfirm(isChecked) },
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        )
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                            ),
                     ) {
                         Text(
                             text = confirmText,
-                            fontSize = 16.sp
+                            fontSize = 16.sp,
                         )
                     }
                 }

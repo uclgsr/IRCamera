@@ -14,11 +14,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import mpdc4gsr.core.ui.deferAction
 import mpdc4gsr.feature.camera.presentation.FocusMode
 import mpdc4gsr.feature.camera.presentation.WhiteBalance
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +28,7 @@ fun CameraDashboardScreen(
     onNavigateToSingleCamera: (() -> Unit)? = null,
     onNavigateToTimeLapse: (() -> Unit)? = null,
     onNavigateToGallery: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LibUnifiedTheme {
         Scaffold(
@@ -37,7 +37,7 @@ fun CameraDashboardScreen(
                     title = {
                         Text(
                             "Camera Dashboard",
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     },
                     navigationIcon = {
@@ -49,15 +49,15 @@ fun CameraDashboardScreen(
                         IconButton(onClick = deferAction { onNavigateToSettings() }) {
                             Icon(Icons.Default.Settings, contentDescription = "Settings")
                         }
-                    }
+                    },
                 )
-            }
+            },
         ) { paddingValues ->
             CameraDashboardContent(
                 onNavigateToSingleCamera = onNavigateToSingleCamera,
                 onNavigateToTimeLapse = onNavigateToTimeLapse,
                 onNavigateToGallery = onNavigateToGallery,
-                modifier = Modifier.padding(paddingValues)
+                modifier = Modifier.padding(paddingValues),
             )
         }
     }
@@ -68,15 +68,16 @@ private fun CameraDashboardContent(
     onNavigateToSingleCamera: (() -> Unit)? = null,
     onNavigateToTimeLapse: (() -> Unit)? = null,
     onNavigateToGallery: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val showToast: (String) -> Unit = { message ->
-        android.widget.Toast.makeText(
-            context,
-            message,
-            android.widget.Toast.LENGTH_SHORT
-        ).show()
+        android.widget.Toast
+            .makeText(
+                context,
+                message,
+                android.widget.Toast.LENGTH_SHORT,
+            ).show()
     }
     var isPreviewActive by remember { mutableStateOf(true) }
     var isRecording by remember { mutableStateOf(false) }
@@ -103,13 +104,14 @@ private fun CameraDashboardContent(
         }
     }
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        CameraStatusCard(
+        DashboardStatusCard(
             isPreviewActive = isPreviewActive,
             isRecording = isRecording,
             resolution = resolution,
@@ -117,15 +119,15 @@ private fun CameraDashboardContent(
             exposureTime = exposureTime,
             iso = iso,
             focusMode = focusMode.displayName,
-            whiteBalance = whiteBalance.displayName
+            whiteBalance = whiteBalance.displayName,
         )
         // Camera Modes Card
         CameraModesCard(
             onNavigateToSingleCamera = onNavigateToSingleCamera,
             onNavigateToTimeLapse = onNavigateToTimeLapse,
-            showToast = showToast
+            showToast = showToast,
         )
-        RecordingControlsCard(
+        DashboardRecordingControlsCard(
             isRecording = isRecording,
             isPreviewActive = isPreviewActive,
             recordingDuration = recordingDuration,
@@ -149,9 +151,9 @@ private fun CameraDashboardContent(
             },
             onCapturePhoto = {
                 onNavigateToSingleCamera?.invoke() ?: showToast("Launching RGB capture")
-            }
+            },
         )
-        CameraSettingsCard(
+        DashboardSettingsCard(
             resolution = resolution,
             frameRate = frameRate,
             focusMode = focusMode.displayName,
@@ -164,13 +166,302 @@ private fun CameraDashboardContent(
                 exposureTime = if (it > 30) "1/120" else "1/60"
             },
             onFocusModeChange = { focusMode = it },
-            onWhiteBalanceChange = { whiteBalance = it }
+            onWhiteBalanceChange = { whiteBalance = it },
         )
         // Preview and Gallery Card
         PreviewGalleryCard(
             onNavigateToSingleCamera = onNavigateToSingleCamera,
             onNavigateToGallery = onNavigateToGallery,
-            showToast = showToast
+            showToast = showToast,
+        )
+    }
+}
+
+@Composable
+private fun DashboardStatusCard(
+    isPreviewActive: Boolean,
+    isRecording: Boolean,
+    resolution: String,
+    frameRate: Int,
+    exposureTime: String,
+    iso: Int,
+    focusMode: String,
+    whiteBalance: String,
+    modifier: Modifier = Modifier,
+) {
+    val statusLabel =
+        when {
+            isRecording -> "Recording"
+            isPreviewActive -> "Preview"
+            else -> "Standby"
+        }
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+    ) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    "Camera Status",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                )
+                AssistChip(
+                    onClick = {},
+                    label = { Text(statusLabel) },
+                    leadingIcon = {
+                        val icon =
+                            when {
+                                isRecording -> Icons.Default.FiberManualRecord
+                                isPreviewActive -> Icons.Default.Visibility
+                                else -> Icons.Default.PowerSettingsNew
+                            }
+                        Icon(icon, contentDescription = null)
+                    },
+                    enabled = false,
+                )
+            }
+            StatusMetricRow(
+                "Resolution" to resolution,
+                "Frame Rate" to "${frameRate}fps",
+            )
+            StatusMetricRow(
+                "Exposure" to exposureTime,
+                "ISO" to "$iso",
+            )
+            StatusMetricRow(
+                "Focus" to focusMode,
+                "White Balance" to whiteBalance,
+            )
+        }
+    }
+}
+
+@Composable
+private fun StatusMetricRow(
+    left: Pair<String, String>,
+    right: Pair<String, String>,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        MetricColumn(title = left.first, value = left.second)
+        MetricColumn(title = right.first, value = right.second)
+    }
+}
+
+@Composable
+private fun MetricColumn(
+    title: String,
+    value: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        Text(
+            value,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold,
+        )
+        Text(
+            title,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@Composable
+private fun DashboardRecordingControlsCard(
+    isRecording: Boolean,
+    isPreviewActive: Boolean,
+    recordingDuration: Int,
+    capturedFrames: Int,
+    onToggleRecording: () -> Unit,
+    onTogglePreview: () -> Unit,
+    onCapturePhoto: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+    ) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(
+                "Recording Controls",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+            )
+            Text(
+                "Duration: ${recordingDuration}s • Frames: $capturedFrames",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                FilledTonalButton(
+                    onClick = deferAction { onTogglePreview() },
+                    modifier = Modifier.weight(1f),
+                ) {
+                    val label = if (isPreviewActive) "Stop Preview" else "Start Preview"
+                    Icon(Icons.Default.Visibility, contentDescription = label)
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(label)
+                }
+                Button(
+                    onClick = deferAction { onToggleRecording() },
+                    enabled = isPreviewActive,
+                    modifier = Modifier.weight(1f),
+                    colors =
+                        if (isRecording) {
+                            ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                        } else {
+                            ButtonDefaults.buttonColors()
+                        },
+                ) {
+                    Icon(
+                        imageVector = if (isRecording) Icons.Default.Stop else Icons.Default.FiberManualRecord,
+                        contentDescription = null,
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(if (isRecording) "Stop" else "Record")
+                }
+            }
+            OutlinedButton(
+                onClick = deferAction { onCapturePhoto() },
+                enabled = isPreviewActive && !isRecording,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Icon(Icons.Default.CameraAlt, contentDescription = "Capture Photo")
+                Spacer(modifier = Modifier.width(6.dp))
+                Text("Capture Photo")
+            }
+        }
+    }
+}
+
+@Composable
+private fun DashboardSettingsCard(
+    resolution: String,
+    frameRate: Int,
+    focusMode: String,
+    whiteBalance: String,
+    currentFocusMode: FocusMode,
+    currentWhiteBalance: WhiteBalance,
+    onResolutionChange: (String) -> Unit,
+    onFrameRateChange: (Int) -> Unit,
+    onFocusModeChange: (FocusMode) -> Unit,
+    onWhiteBalanceChange: (WhiteBalance) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+    ) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(
+                "Quick Settings",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+            )
+            SettingsRow(
+                title = "Resolution",
+                current = resolution,
+                options = listOf("1920A-1080", "1280A-720"),
+                onOptionSelected = onResolutionChange,
+            )
+            SettingsRow(
+                title = "Frame Rate",
+                current = "${frameRate}fps",
+                options = listOf(30, 60).map { "${it}fps" },
+                onOptionSelected = { option ->
+                    val numeric = option.removeSuffix("fps").toIntOrNull() ?: frameRate
+                    onFrameRateChange(numeric)
+                },
+            )
+            val focusModeOptions = FocusMode.values()
+            SettingsRow(
+                title = "Focus Mode",
+                current = focusMode,
+                options = focusModeOptions.map { it.displayName },
+                onOptionSelected = { selected ->
+                    focusModeOptions.firstOrNull { it.displayName == selected }?.let(onFocusModeChange)
+                },
+                highlighted = currentFocusMode.displayName,
+            )
+            val whiteBalanceOptions = WhiteBalance.values()
+            SettingsRow(
+                title = "White Balance",
+                current = whiteBalance,
+                options = whiteBalanceOptions.map { it.displayName },
+                onOptionSelected = { selected ->
+                    whiteBalanceOptions.firstOrNull { it.displayName == selected }?.let(onWhiteBalanceChange)
+                },
+                highlighted = currentWhiteBalance.displayName,
+            )
+        }
+    }
+}
+
+@Composable
+private fun SettingsRow(
+    title: String,
+    current: String,
+    options: List<String>,
+    onOptionSelected: (String) -> Unit,
+    highlighted: String = current,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Text(
+            title,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            options.forEach { option ->
+                FilterChip(
+                    selected = option == highlighted,
+                    onClick = deferAction { onOptionSelected(option) },
+                    label = { Text(option) },
+                )
+            }
+        }
+        Text(
+            "Current: $current",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -179,20 +470,20 @@ private fun CameraDashboardContent(
 private fun CameraModesCard(
     onNavigateToSingleCamera: (() -> Unit)? = null,
     onNavigateToTimeLapse: (() -> Unit)? = null,
-    showToast: (String) -> Unit
+    showToast: (String) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 "Camera Modes",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             HorizontalDivider()
             // Single Camera Mode
@@ -203,7 +494,7 @@ private fun CameraModesCard(
                 isActive = false,
                 onClick = {
                     onNavigateToSingleCamera?.invoke() ?: showToast("Single camera mode coming soon")
-                }
+                },
             )
             // Time-lapse Mode
             CameraModeItem(
@@ -213,7 +504,7 @@ private fun CameraModesCard(
                 isActive = false,
                 onClick = {
                     onNavigateToTimeLapse?.invoke() ?: showToast("Time-lapse mode coming soon")
-                }
+                },
             )
         }
     }
@@ -225,41 +516,43 @@ private fun CameraModeItem(
     description: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     isActive: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
         onClick = deferAction { onClick() },
         modifier = Modifier.fillMaxWidth(),
-        colors = if (isActive) {
-            CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-        } else {
-            CardDefaults.cardColors()
-        }
+        colors =
+            if (isActive) {
+                CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+            } else {
+                CardDefaults.cardColors()
+            },
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Icon(
                 icon,
                 contentDescription = title,
-                tint = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                tint = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
             )
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     title,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal
+                    fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal,
                 )
                 Text(
                     description,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
             if (isActive) {
@@ -275,31 +568,31 @@ private fun CameraModeItem(
 private fun PreviewGalleryCard(
     onNavigateToSingleCamera: (() -> Unit)? = null,
     onNavigateToGallery: (() -> Unit)? = null,
-    showToast: (String) -> Unit
+    showToast: (String) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 "Preview & Gallery",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             HorizontalDivider()
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 OutlinedButton(
                     onClick = {
                         onNavigateToSingleCamera?.invoke() ?: showToast("Preview feature coming soon")
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Icon(Icons.Default.Preview, contentDescription = "Preview Camera")
                     Spacer(modifier = Modifier.width(4.dp))
@@ -309,7 +602,7 @@ private fun PreviewGalleryCard(
                     onClick = {
                         onNavigateToGallery?.invoke() ?: showToast("Gallery feature coming soon")
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Icon(Icons.Default.PhotoLibrary, contentDescription = "Open Gallery")
                     Spacer(modifier = Modifier.width(4.dp))

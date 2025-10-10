@@ -196,10 +196,6 @@ class UnifiedDataStreamingService(
                         if (connectedClients.size < MAX_CLIENTS) {
                             connectedClients.add(clientHandler)
                             clientsConnected.incrementAndGet()
-                            Log.i(
-                                TAG,
-                                "Client connected: ${socket.remoteSocketAddress} (${connectedClients.size} total)"
-                            )
                             clientHandler.sendSessionInfo()
                         } else {
                             socket.close()

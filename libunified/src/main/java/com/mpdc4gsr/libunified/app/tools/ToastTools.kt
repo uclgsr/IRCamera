@@ -9,12 +9,13 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
-import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.compat.ContextProvider
 
 object ToastTools {
     var mPublicToast: Toast? = null
     private val mainHandler = Handler(Looper.getMainLooper())
+
     fun showShort(
         @StringRes textStr: Int,
     ) {

@@ -25,9 +25,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryViewModel>() {
-    override fun createViewModel(): IRMonitorHistoryViewModel {
-        return viewModels<IRMonitorHistoryViewModel>().value
-    }
+    override fun createViewModel(): IRMonitorHistoryViewModel = viewModels<IRMonitorHistoryViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -40,7 +38,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
         val isSelectionMode by viewModel.isSelectionMode.collectAsStateWithLifecycle()
         LibUnifiedTheme {
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 // History header with filter controls
                 HistoryHeader(
@@ -48,7 +46,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                     totalItems = historyItems.size,
                     onFilterChange = { filter ->
                         viewModel.changeFilter(filter)
-                    }
+                    },
                 )
                 // Selection toolbar
                 if (isSelectionMode) {
@@ -56,12 +54,12 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                         selectedCount = selectedItems.size,
                         onClearSelection = { viewModel.clearSelection() },
                         onExportSelected = { viewModel.exportSelectedItems() },
-                        onDeleteSelected = { viewModel.deleteSelectedItems() }
+                        onDeleteSelected = { viewModel.deleteSelectedItems() },
                     )
                 }
                 // History content
                 Box(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     when {
                         isLoading -> {
@@ -71,7 +69,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                         historyItems.isEmpty() -> {
                             EmptyHistoryState(
                                 filter = selectedFilter,
-                                onRefresh = { viewModel.refreshHistory() }
+                                onRefresh = { viewModel.refreshHistory() },
                             )
                         }
 
@@ -93,7 +91,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                                         viewModel.enterSelectionMode()
                                         viewModel.toggleItemSelection(item.id)
                                     }
-                                }
+                                },
                             )
                         }
                     }
@@ -106,49 +104,52 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
     private fun HistoryHeader(
         selectedFilter: HistoryFilter,
         totalItems: Int,
-        onFilterChange: (HistoryFilter) -> Unit
+        onFilterChange: (HistoryFilter) -> Unit,
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            )
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                ),
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column {
                         Text(
                             text = "Monitor History",
                             style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
                             text = "$totalItems sessions recorded",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
                     }
                     Icon(
                         Icons.Default.History,
                         contentDescription = "History",
                         modifier = Modifier.size(32.dp),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 }
                 // Filter chips
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     HistoryFilter.values().forEach { filter ->
                         FilterChip(
@@ -156,7 +157,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                             label = {
                                 Text(
                                     text = filter.displayName,
-                                    style = MaterialTheme.typography.labelMedium
+                                    style = MaterialTheme.typography.labelMedium,
                                 )
                             },
                             selected = selectedFilter == filter,
@@ -164,9 +165,9 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                                 Icon(
                                     filter.icon,
                                     contentDescription = filter.displayName,
-                                    modifier = Modifier.size(16.dp)
+                                    modifier = Modifier.size(16.dp),
                                 )
-                            }
+                            },
                         )
                     }
                 }
@@ -179,30 +180,33 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
         selectedCount: Int,
         onClearSelection: () -> Unit,
         onExportSelected: () -> Unit,
-        onDeleteSelected: () -> Unit
+        onDeleteSelected: () -> Unit,
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer
-            )
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                ),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "$selectedCount session${if (selectedCount != 1) "s" else ""} selected",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     IconButton(onClick = onExportSelected) {
                         Icon(Icons.Default.FileDownload, contentDescription = "Export")
@@ -211,7 +215,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                         Icon(
                             Icons.Default.Delete,
                             contentDescription = "Delete",
-                            tint = MaterialTheme.colorScheme.error
+                            tint = MaterialTheme.colorScheme.error,
                         )
                     }
                     TextButton(onClick = onClearSelection) {
@@ -226,17 +230,17 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
     private fun LoadingState() {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 CircularProgressIndicator()
                 Text(
                     text = "Loading history...",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -245,37 +249,38 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
     @Composable
     private fun EmptyHistoryState(
         filter: HistoryFilter,
-        onRefresh: () -> Unit
+        onRefresh: () -> Unit,
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
                     Icons.Default.Timeline,
                     contentDescription = "No history",
                     modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
-                    text = when (filter) {
-                        HistoryFilter.ALL -> "No History Found"
-                        HistoryFilter.TODAY -> "No Sessions Today"
-                        HistoryFilter.WEEK -> "No Sessions This Week"
-                        HistoryFilter.MONTH -> "No Sessions This Month"
-                    },
+                    text =
+                        when (filter) {
+                            HistoryFilter.ALL -> "No History Found"
+                            HistoryFilter.TODAY -> "No Sessions Today"
+                            HistoryFilter.WEEK -> "No Sessions This Week"
+                            HistoryFilter.MONTH -> "No Sessions This Month"
+                        },
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "Monitor thermal sessions to see history here",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Button(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
@@ -293,11 +298,11 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
         selectedItems: Set<String>,
         isSelectionMode: Boolean,
         onItemClick: (HistoryItem) -> Unit,
-        onItemLongClick: (HistoryItem) -> Unit
+        onItemLongClick: (HistoryItem) -> Unit,
     ) {
         LazyColumn(
             contentPadding = PaddingValues(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(historyItems) { item ->
                 HistoryListItem(
@@ -306,7 +311,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                     isSelected = selectedItems.contains(item.id),
                     isSelectionMode = isSelectionMode,
                     onClick = { onItemClick(item) },
-                    onLongClick = { onItemLongClick(item) }
+                    onLongClick = { onItemLongClick(item) },
                 )
             }
         }
@@ -319,96 +324,104 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
         isSelected: Boolean,
         isSelectionMode: Boolean,
         onClick: () -> Unit,
-        onLongClick: () -> Unit
+        onLongClick: () -> Unit,
     ) {
         Card(
             onClick = onClick,
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = if (isSelected)
-                    MaterialTheme.colorScheme.primaryContainer
-                else
-                    MaterialTheme.colorScheme.surface
-            ),
-            border = if (isSelected)
-                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-            else null,
-            shape = RoundedCornerShape(12.dp)
+            colors =
+                CardDefaults.cardColors(
+                    containerColor =
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.primaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.surface
+                        },
+                ),
+            border =
+                if (isSelected) {
+                    androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+                } else {
+                    null
+                },
+            shape = RoundedCornerShape(12.dp),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Session icon
                 Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(
-                            getSessionTypeColor(item.sessionType).copy(alpha = 0.2f),
-                            shape = RoundedCornerShape(8.dp)
-                        ),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .background(
+                                getSessionTypeColor(item.sessionType).copy(alpha = 0.2f),
+                                shape = RoundedCornerShape(8.dp),
+                            ),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         getSessionTypeIcon(item.sessionType),
                         contentDescription = item.sessionType.name,
                         tint = getSessionTypeColor(item.sessionType),
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
                 }
                 // Session info
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     Text(
                         text = item.sessionName,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Medium,
-                        maxLines = 1
+                        maxLines = 1,
                     )
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = formatDuration(item.duration),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Text(
                             text = "${item.sampleCount} samples",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         StatusChip(
                             text = item.sessionType.displayName,
-                            color = getSessionTypeColor(item.sessionType)
+                            color = getSessionTypeColor(item.sessionType),
                         )
                     }
                     Text(
                         text = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault()).format(Date(item.startTime)),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
                 // Temperature summary
                 Column(
-                    horizontalAlignment = Alignment.End
+                    horizontalAlignment = Alignment.End,
                 ) {
                     Text(
                         text = "${item.avgTemperature}°C",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
                     )
                     Text(
                         text = "Average",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
                 // Selection indicator or actions
@@ -417,22 +430,22 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                         Icon(
                             Icons.Default.CheckCircle,
                             contentDescription = "Selected",
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = MaterialTheme.colorScheme.primary,
                         )
                     } else {
                         Icon(
                             Icons.Default.RadioButtonUnchecked,
                             contentDescription = "Not Selected",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 } else {
                     IconButton(
-                        onClick = { viewModel.viewHistoryDetails(item) }
+                        onClick = { viewModel.viewHistoryDetails(item) },
                     ) {
                         Icon(
                             Icons.Default.Visibility,
-                            contentDescription = "View details"
+                            contentDescription = "View details",
                         )
                     }
                 }
@@ -443,19 +456,20 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
     @Composable
     private fun StatusChip(
         text: String,
-        color: Color
+        color: Color,
     ) {
         Card(
-            colors = CardDefaults.cardColors(
-                containerColor = color.copy(alpha = 0.2f)
-            ),
-            shape = RoundedCornerShape(8.dp)
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = color.copy(alpha = 0.2f),
+                ),
+            shape = RoundedCornerShape(8.dp),
         ) {
             Text(
                 text = text,
                 style = MaterialTheme.typography.labelSmall,
                 color = color,
-                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
             )
         }
     }
@@ -472,18 +486,20 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
         }
     }
 
-    private fun getSessionTypeIcon(type: SessionType): androidx.compose.ui.graphics.vector.ImageVector = when (type) {
-        SessionType.MONITORING -> Icons.Default.Monitor
-        SessionType.CAPTURE -> Icons.Default.CameraAlt
-        SessionType.ANALYSIS -> Icons.Default.Analytics
-        SessionType.CALIBRATION -> Icons.Default.Tune
-    }
+    private fun getSessionTypeIcon(type: SessionType): androidx.compose.ui.graphics.vector.ImageVector =
+        when (type) {
+            SessionType.MONITORING -> Icons.Default.Monitor
+            SessionType.CAPTURE -> Icons.Default.CameraAlt
+            SessionType.ANALYSIS -> Icons.Default.Analytics
+            SessionType.CALIBRATION -> Icons.Default.Tune
+        }
 
     @Composable
-    private fun getSessionTypeColor(type: SessionType): Color = when (type) {
-        SessionType.MONITORING -> MaterialTheme.colorScheme.primary
-        SessionType.CAPTURE -> Color.Green
-        SessionType.ANALYSIS -> Color(0xFFFFA500)
-        SessionType.CALIBRATION -> Color.Red
-    }
+    private fun getSessionTypeColor(type: SessionType): Color =
+        when (type) {
+            SessionType.MONITORING -> MaterialTheme.colorScheme.primary
+            SessionType.CAPTURE -> Color.Green
+            SessionType.ANALYSIS -> Color(0xFFFFA500)
+            SessionType.CALIBRATION -> Color.Red
+        }
 }

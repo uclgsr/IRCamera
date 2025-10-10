@@ -2,7 +2,6 @@ package com.mpdc4gsr.libunified.app.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 
 object UnifiedPreferencesUtils {
     private const val TAG = "UnifiedPreferences"
@@ -51,21 +50,18 @@ object UnifiedPreferencesUtils {
 
     private fun getPreferences(
         context: Context,
-        prefsName: String = DEFAULT_PREFS_NAME
-    ): SharedPreferences {
-        return context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-    }
+        prefsName: String = DEFAULT_PREFS_NAME,
+    ): SharedPreferences = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
 
     fun putString(
         context: Context,
         key: String,
         value: String,
-        prefsName: String = DEFAULT_PREFS_NAME
+        prefsName: String = DEFAULT_PREFS_NAME,
     ) {
         try {
             getPreferences(context, prefsName).edit().putString(key, value).apply()
         } catch (e: Exception) {
-            Log.e(TAG, "Error saving string preference: $key", e)
         }
     }
 
@@ -73,21 +69,23 @@ object UnifiedPreferencesUtils {
         context: Context,
         key: String,
         defaultValue: String = "",
-        prefsName: String = DEFAULT_PREFS_NAME
-    ): String {
-        return try {
+        prefsName: String = DEFAULT_PREFS_NAME,
+    ): String =
+        try {
             getPreferences(context, prefsName).getString(key, defaultValue) ?: defaultValue
         } catch (e: Exception) {
-            Log.e(TAG, "Error reading string preference: $key", e)
             defaultValue
         }
-    }
 
-    fun putInt(context: Context, key: String, value: Int, prefsName: String = DEFAULT_PREFS_NAME) {
+    fun putInt(
+        context: Context,
+        key: String,
+        value: Int,
+        prefsName: String = DEFAULT_PREFS_NAME,
+    ) {
         try {
             getPreferences(context, prefsName).edit().putInt(key, value).apply()
         } catch (e: Exception) {
-            Log.e(TAG, "Error saving int preference: $key", e)
         }
     }
 
@@ -95,26 +93,23 @@ object UnifiedPreferencesUtils {
         context: Context,
         key: String,
         defaultValue: Int = 0,
-        prefsName: String = DEFAULT_PREFS_NAME
-    ): Int {
-        return try {
+        prefsName: String = DEFAULT_PREFS_NAME,
+    ): Int =
+        try {
             getPreferences(context, prefsName).getInt(key, defaultValue)
         } catch (e: Exception) {
-            Log.e(TAG, "Error reading int preference: $key", e)
             defaultValue
         }
-    }
 
     fun putBoolean(
         context: Context,
         key: String,
         value: Boolean,
-        prefsName: String = DEFAULT_PREFS_NAME
+        prefsName: String = DEFAULT_PREFS_NAME,
     ) {
         try {
             getPreferences(context, prefsName).edit().putBoolean(key, value).apply()
         } catch (e: Exception) {
-            Log.e(TAG, "Error saving boolean preference: $key", e)
         }
     }
 
@@ -122,26 +117,23 @@ object UnifiedPreferencesUtils {
         context: Context,
         key: String,
         defaultValue: Boolean = false,
-        prefsName: String = DEFAULT_PREFS_NAME
-    ): Boolean {
-        return try {
+        prefsName: String = DEFAULT_PREFS_NAME,
+    ): Boolean =
+        try {
             getPreferences(context, prefsName).getBoolean(key, defaultValue)
         } catch (e: Exception) {
-            Log.e(TAG, "Error reading boolean preference: $key", e)
             defaultValue
         }
-    }
 
     fun putFloat(
         context: Context,
         key: String,
         value: Float,
-        prefsName: String = DEFAULT_PREFS_NAME
+        prefsName: String = DEFAULT_PREFS_NAME,
     ) {
         try {
             getPreferences(context, prefsName).edit().putFloat(key, value).apply()
         } catch (e: Exception) {
-            Log.e(TAG, "Error saving float preference: $key", e)
         }
     }
 
@@ -149,26 +141,23 @@ object UnifiedPreferencesUtils {
         context: Context,
         key: String,
         defaultValue: Float = 0f,
-        prefsName: String = DEFAULT_PREFS_NAME
-    ): Float {
-        return try {
+        prefsName: String = DEFAULT_PREFS_NAME,
+    ): Float =
+        try {
             getPreferences(context, prefsName).getFloat(key, defaultValue)
         } catch (e: Exception) {
-            Log.e(TAG, "Error reading float preference: $key", e)
             defaultValue
         }
-    }
 
     fun putLong(
         context: Context,
         key: String,
         value: Long,
-        prefsName: String = DEFAULT_PREFS_NAME
+        prefsName: String = DEFAULT_PREFS_NAME,
     ) {
         try {
             getPreferences(context, prefsName).edit().putLong(key, value).apply()
         } catch (e: Exception) {
-            Log.e(TAG, "Error saving long preference: $key", e)
         }
     }
 
@@ -176,26 +165,23 @@ object UnifiedPreferencesUtils {
         context: Context,
         key: String,
         defaultValue: Long = 0L,
-        prefsName: String = DEFAULT_PREFS_NAME
-    ): Long {
-        return try {
+        prefsName: String = DEFAULT_PREFS_NAME,
+    ): Long =
+        try {
             getPreferences(context, prefsName).getLong(key, defaultValue)
         } catch (e: Exception) {
-            Log.e(TAG, "Error reading long preference: $key", e)
             defaultValue
         }
-    }
 
     fun putStringSet(
         context: Context,
         key: String,
         value: Set<String>,
-        prefsName: String = DEFAULT_PREFS_NAME
+        prefsName: String = DEFAULT_PREFS_NAME,
     ) {
         try {
             getPreferences(context, prefsName).edit().putStringSet(key, value).apply()
         } catch (e: Exception) {
-            Log.e(TAG, "Error saving string set preference: $key", e)
         }
     }
 
@@ -203,76 +189,83 @@ object UnifiedPreferencesUtils {
         context: Context,
         key: String,
         defaultValue: Set<String> = emptySet(),
-        prefsName: String = DEFAULT_PREFS_NAME
-    ): Set<String> {
-        return try {
+        prefsName: String = DEFAULT_PREFS_NAME,
+    ): Set<String> =
+        try {
             getPreferences(context, prefsName).getStringSet(key, defaultValue) ?: defaultValue
         } catch (e: Exception) {
-            Log.e(TAG, "Error reading string set preference: $key", e)
             defaultValue
         }
-    }
 
-    fun remove(context: Context, key: String, prefsName: String = DEFAULT_PREFS_NAME) {
+    fun remove(
+        context: Context,
+        key: String,
+        prefsName: String = DEFAULT_PREFS_NAME,
+    ) {
         try {
             getPreferences(context, prefsName).edit().remove(key).apply()
         } catch (e: Exception) {
-            Log.e(TAG, "Error removing preference: $key", e)
         }
     }
 
-    fun clear(context: Context, prefsName: String = DEFAULT_PREFS_NAME) {
+    fun clear(
+        context: Context,
+        prefsName: String = DEFAULT_PREFS_NAME,
+    ) {
         try {
             getPreferences(context, prefsName).edit().clear().apply()
         } catch (e: Exception) {
-            Log.e(TAG, "Error clearing preferences", e)
         }
     }
 
-    fun contains(context: Context, key: String, prefsName: String = DEFAULT_PREFS_NAME): Boolean {
-        return try {
+    fun contains(
+        context: Context,
+        key: String,
+        prefsName: String = DEFAULT_PREFS_NAME,
+    ): Boolean =
+        try {
             getPreferences(context, prefsName).contains(key)
         } catch (e: Exception) {
-            Log.e(TAG, "Error checking preference exists: $key", e)
             false
         }
-    }
 
-    fun getAllKeys(context: Context, prefsName: String = DEFAULT_PREFS_NAME): Set<String> {
-        return try {
+    fun getAllKeys(
+        context: Context,
+        prefsName: String = DEFAULT_PREFS_NAME,
+    ): Set<String> =
+        try {
             getPreferences(context, prefsName).all.keys
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting all preference keys", e)
             emptySet()
         }
-    }
 
     fun registerOnSharedPreferenceChangeListener(
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener,
-        prefsName: String = DEFAULT_PREFS_NAME
+        prefsName: String = DEFAULT_PREFS_NAME,
     ) {
         try {
             getPreferences(context, prefsName).registerOnSharedPreferenceChangeListener(listener)
         } catch (e: Exception) {
-            Log.e(TAG, "Error registering preference change listener", e)
         }
     }
 
     fun unregisterOnSharedPreferenceChangeListener(
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener,
-        prefsName: String = DEFAULT_PREFS_NAME
+        prefsName: String = DEFAULT_PREFS_NAME,
     ) {
         try {
             getPreferences(context, prefsName).unregisterOnSharedPreferenceChangeListener(listener)
         } catch (e: Exception) {
-            Log.e(TAG, "Error unregistering preference change listener", e)
         }
     }
 
-    fun exportPreferences(context: Context, prefsName: String = DEFAULT_PREFS_NAME): String {
-        return try {
+    fun exportPreferences(
+        context: Context,
+        prefsName: String = DEFAULT_PREFS_NAME,
+    ): String =
+        try {
             val prefs = getPreferences(context, prefsName).all
             val json = org.json.JSONObject()
             prefs.forEach { (key, value) ->
@@ -280,13 +273,11 @@ object UnifiedPreferencesUtils {
             }
             json.toString(2)
         } catch (e: Exception) {
-            Log.e(TAG, "Error exporting preferences", e)
             "{}"
         }
-    }
 
-    fun getDefaultPreferences(): Map<String, Any> {
-        return mapOf(
+    fun getDefaultPreferences(): Map<String, Any> =
+        mapOf(
             Keys.FIRST_LAUNCH to true,
             Keys.CAMERA_AUTO_FOCUS to true,
             Keys.THERMAL_UNIT to "celsius",
@@ -296,11 +287,13 @@ object UnifiedPreferencesUtils {
             Keys.GSR_AUTO_CONNECT to false,
             Keys.NETWORK_AUTO_CONNECT to false,
             Keys.NETWORK_TIMEOUT to 5000,
-            Keys.RECORDING_AUTO_SAVE to true
+            Keys.RECORDING_AUTO_SAVE to true,
         )
-    }
 
-    fun initializePreferences(context: Context, defaults: Map<String, Any>) {
+    fun initializePreferences(
+        context: Context,
+        defaults: Map<String, Any>,
+    ) {
         val prefs = getSharedPreferences(context)
         val editor = prefs.edit()
         defaults.forEach { (key, value) ->
@@ -317,7 +310,5 @@ object UnifiedPreferencesUtils {
         editor.apply()
     }
 
-    fun getSharedPreferences(context: Context): SharedPreferences {
-        return context.getSharedPreferences(DEFAULT_PREFS_NAME, Context.MODE_PRIVATE)
-    }
+    fun getSharedPreferences(context: Context): SharedPreferences = context.getSharedPreferences(DEFAULT_PREFS_NAME, Context.MODE_PRIVATE)
 }

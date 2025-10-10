@@ -6,6 +6,7 @@ class UserInfoManager {
     companion object {
         @Volatile
         var manager: UserInfoManager? = null
+
         fun getInstance(): UserInfoManager {
             if (manager == null) {
                 synchronized(UserInfoManager::class) {
@@ -37,7 +38,7 @@ class UserInfoManager {
     ) {
         SharedManager.setUserId(userId)
         SharedManager.setUsername(
-            if (getMaskPhone(phone)?.isNotEmpty() == true) getMaskPhone(phone) ?: "" else email
+            if (getMaskPhone(phone)?.isNotEmpty() == true) getMaskPhone(phone) ?: "" else email,
         )
         SharedManager.setNickname(nickname)
         SharedManager.setHeadIcon(headUrl ?: "12345")
@@ -51,7 +52,5 @@ class UserInfoManager {
         SharedManager.setHeadIcon("")
     }
 
-    private fun getMaskPhone(phone: String?): String? {
-        return phone?.replace("(\\d{3})\\d{4}(\\d{4})".toRegex(), "$1****$2")
-    }
+    private fun getMaskPhone(phone: String?): String? = phone?.replace("(\\d{3})\\d{4}(\\d{4})".toRegex(), "$1****$2")
 }

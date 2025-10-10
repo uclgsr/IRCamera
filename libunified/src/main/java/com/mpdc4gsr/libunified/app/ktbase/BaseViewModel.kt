@@ -8,16 +8,24 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-open class BaseViewModel : ViewModel(), LifecycleObserver {
+open class BaseViewModel :
+    ViewModel(),
+    LifecycleObserver {
     data class UiState(
         val isLoading: Boolean = false,
         val error: String? = null,
-        val isRefreshing: Boolean = false
+        val isRefreshing: Boolean = false,
     )
 
     sealed class UiEvent {
-        data class ShowError(val message: String) : UiEvent()
-        data class ShowMessage(val message: String) : UiEvent()
+        data class ShowError(
+            val message: String,
+        ) : UiEvent()
+
+        data class ShowMessage(
+            val message: String,
+        ) : UiEvent()
+
         object NavigateBack : UiEvent()
     }
 
@@ -26,9 +34,10 @@ open class BaseViewModel : ViewModel(), LifecycleObserver {
     protected val _uiEvents = MutableSharedFlow<UiEvent>()
     val uiEvents: SharedFlow<UiEvent> = _uiEvents.asSharedFlow()
 
-    protected val exceptionHandler = CoroutineExceptionHandler { _, exception ->
-        handleError(exception)
-    }
+    protected val exceptionHandler =
+        CoroutineExceptionHandler { _, exception ->
+            handleError(exception)
+        }
 
     protected open fun handleError(exception: Throwable) {
         val errorMessage = exception.message ?: "Unknown error occurred"
@@ -50,17 +59,13 @@ open class BaseViewModel : ViewModel(), LifecycleObserver {
         _uiState.update { it.copy(error = null) }
     }
 
-    protected fun launchWithErrorHandling(
-        block: suspend CoroutineScope.() -> Unit
-    ) {
+    protected fun launchWithErrorHandling(block: suspend CoroutineScope.() -> Unit) {
         viewModelScope.launch(exceptionHandler) {
             block()
         }
     }
 
-    protected fun launchWithLoading(
-        block: suspend CoroutineScope.() -> Unit
-    ) {
+    protected fun launchWithLoading(block: suspend CoroutineScope.() -> Unit) {
         viewModelScope.launch(exceptionHandler) {
             setLoading(true)
             try {

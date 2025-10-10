@@ -11,15 +11,14 @@ import kotlin.math.min
  * diagnostics in the UI and throttle background work when the device starts to lag.
  */
 class CameraPerformanceManager(
-    private val context: Context
+    private val context: Context,
 ) {
-
     data class PerformanceSnapshot(
         val averageFps: Double,
         val frameIntervalNs: Long,
         val framesCaptured: Int,
         val droppedFrames: Int,
-        val availableDiskMb: Long
+        val availableDiskMb: Long,
     )
 
     private val frameTimestamps = ArrayDeque<Long>()
@@ -53,17 +52,18 @@ class CameraPerformanceManager(
         }
         val intervals = timestampsCopy.zipWithNext { previous, current -> current - previous }
         val averageInterval = intervals.average().toLong()
-        val averageFps = if (averageInterval == 0L) {
-            0.0
-        } else {
-            TimeUnit.SECONDS.toNanos(1).toDouble() / averageInterval.toDouble()
-        }
+        val averageFps =
+            if (averageInterval == 0L) {
+                0.0
+            } else {
+                TimeUnit.SECONDS.toNanos(1).toDouble() / averageInterval.toDouble()
+            }
         return PerformanceSnapshot(
             averageFps = averageFps,
             frameIntervalNs = averageInterval,
             framesCaptured = timestampsCopy.size,
             droppedFrames = droppedFrames,
-            availableDiskMb = getAvailableDiskMb()
+            availableDiskMb = getAvailableDiskMb(),
         )
     }
 
@@ -72,14 +72,13 @@ class CameraPerformanceManager(
         return snapshot.averageFps > 0 && snapshot.averageFps < THROTTLE_THRESHOLD_FPS
     }
 
-    private fun getAvailableDiskMb(): Long {
-        return runCatching {
+    private fun getAvailableDiskMb(): Long =
+        runCatching {
             val dir = context.getExternalFilesDir(Environment.DIRECTORY_MOVIES) ?: context.filesDir
             val stat = StatFs(dir.path)
             val bytesAvailable = stat.availableBytes
             bytesAvailable / (1024 * 1024)
         }.getOrElse { 0L }
-    }
 
     companion object {
         private const val THROTTLE_THRESHOLD_FPS = 15.0

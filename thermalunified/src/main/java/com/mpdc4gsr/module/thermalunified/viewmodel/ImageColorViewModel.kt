@@ -29,7 +29,10 @@ class ImageColorViewModel : BaseViewModel() {
         }
     }
 
-    fun loadImages(leftImagePath: String, rightImagePath: String) {
+    fun loadImages(
+        leftImagePath: String,
+        rightImagePath: String,
+    ) {
         launchWithLoading {
             _leftImagePath.value = leftImagePath
             _rightImagePath.value = rightImagePath

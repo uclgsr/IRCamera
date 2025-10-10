@@ -1,6 +1,5 @@
 package com.topdon.commons.observer;
 
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,7 +38,6 @@ public final class Observable {
                 }
             }
             if (registered) {
-                Log.e("Observable", "", new Error("Observer " + observer + " is already registered."));
                 return;
             }
             Map<String, Method> methodMap = helper.findObserverMethod(observer);

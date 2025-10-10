@@ -33,14 +33,14 @@ class TopdonThermalDeviceManager(
     private val externalScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
     private val hardwareProbe: HardwareProbe = DeviceToolsHardwareProbe,
 ) : ThermalDeviceManager {
-
     private val applicationContext = context.applicationContext
-    private val _status = MutableStateFlow(
-        ThermalDeviceStatus(
-            deviceLabel = "Topdon TC001",
-            capabilities = DEFAULT_CAPABILITIES,
+    private val _status =
+        MutableStateFlow(
+            ThermalDeviceStatus(
+                deviceLabel = "Topdon TC001",
+                capabilities = DEFAULT_CAPABILITIES,
+            ),
         )
-    )
     override val status = _status.asStateFlow()
 
     private val syncBitmap = SynchronizedBitmap()
@@ -54,20 +54,21 @@ class TopdonThermalDeviceManager(
         startDeviceMonitoring()
     }
 
-    override suspend fun connect(): Result<Unit> = withContext(Dispatchers.IO) {
-        runCatching {
-            ensureCamera()
-            irCamera?.registerUSB()
-            _status.update {
-                it.copy(
-                    lastError = null,
-                    deviceLabel = "Topdon TC001 - Connecting",
-                )
+    override suspend fun connect(): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                ensureCamera()
+                irCamera?.registerUSB()
+                _status.update {
+                    it.copy(
+                        lastError = null,
+                        deviceLabel = "Topdon TC001 - Connecting",
+                    )
+                }
+            }.onFailure { error ->
+                _status.update { it.copy(lastError = error.message) }
             }
-        }.onFailure { error ->
-            _status.update { it.copy(lastError = error.message) }
         }
-    }
 
     override suspend fun disconnect() {
         withContext(Dispatchers.IO) {
@@ -87,22 +88,23 @@ class TopdonThermalDeviceManager(
         }
     }
 
-    override suspend fun startStream(config: ThermalDeviceConfig): Result<Unit> = withContext(Dispatchers.IO) {
-        currentConfig = config
-        runCatching {
-            ensureCamera()
-            applyConfigToSdk(config)
-            _status.update {
-                it.copy(
-                    isStreaming = true,
-                    deviceLabel = "Topdon TC001 - Streaming",
-                    lastError = null,
-                )
+    override suspend fun startStream(config: ThermalDeviceConfig): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            currentConfig = config
+            runCatching {
+                ensureCamera()
+                applyConfigToSdk(config)
+                _status.update {
+                    it.copy(
+                        isStreaming = true,
+                        deviceLabel = "Topdon TC001 - Streaming",
+                        lastError = null,
+                    )
+                }
+            }.onFailure { error ->
+                _status.update { it.copy(isStreaming = false, lastError = error.message) }
             }
-        }.onFailure { error ->
-            _status.update { it.copy(isStreaming = false, lastError = error.message) }
         }
-    }
 
     override suspend fun stopStream() {
         withContext(Dispatchers.IO) {
@@ -118,141 +120,148 @@ class TopdonThermalDeviceManager(
         }
     }
 
-    override suspend fun triggerManualCalibration(): Result<Unit> = withContext(Dispatchers.IO) {
-        runCatching {
-            irCmd?.performNUC() ?: error("Topdon IRCMD not available")
-        }.onFailure { error ->
-            _status.update { it.copy(lastError = error.message) }
+    override suspend fun triggerManualCalibration(): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                irCmd?.performNUC() ?: error("Topdon IRCMD not available")
+            }.onFailure { error ->
+                _status.update { it.copy(lastError = error.message) }
+            }
         }
-    }
 
     private fun ensureCamera() {
         if (irCamera != null) return
-        val connectCallback = object : ConnectCallback {
-            override fun onCameraOpened(camera: UVCCamera?) {
-                _status.update {
-                    it.copy(
-                        isConnected = true,
-                        isStreaming = true,
-                        deviceLabel = "Topdon TC001 - Preview Active",
-                        lastError = null,
-                    )
+        val connectCallback =
+            object : ConnectCallback {
+                override fun onCameraOpened(camera: UVCCamera?) {
+                    _status.update {
+                        it.copy(
+                            isConnected = true,
+                            isStreaming = true,
+                            deviceLabel = "Topdon TC001 - Preview Active",
+                            lastError = null,
+                        )
+                    }
+                }
+
+                override fun onIRCMDCreate(cmd: IRCMD?) {
+                    irCmd = cmd
+                    applyConfigToSdk(currentConfig)
+                    cmd?.setAutoShutter(true)
+                    cmd?.setPropDdeLevel(128)
+                    cmd?.setContrast(128)
                 }
             }
+        val usbMonitorCallback =
+            object : USBMonitorCallback {
+                override fun onAttach() {
+                    _status.update { it.copy(deviceLabel = "Topdon TC001 - Attached") }
+                }
 
-            override fun onIRCMDCreate(cmd: IRCMD?) {
-                irCmd = cmd
-                applyConfigToSdk(currentConfig)
-                cmd?.setAutoShutter(true)
-                cmd?.setPropDdeLevel(128)
-                cmd?.setContrast(128)
-            }
-        }
-        val usbMonitorCallback = object : USBMonitorCallback {
-            override fun onAttach() {
-                _status.update { it.copy(deviceLabel = "Topdon TC001 - Attached") }
-            }
+                override fun onGranted() {
+                    _status.update { it.copy(deviceLabel = "Topdon TC001 - Permission Granted") }
+                }
 
-            override fun onGranted() {
-                _status.update { it.copy(deviceLabel = "Topdon TC001 - Permission Granted") }
-            }
+                override fun onDettach() {
+                    _status.update {
+                        it.copy(
+                            deviceLabel = "Topdon TC001 - Detached",
+                            isConnected = false,
+                            isStreaming = false,
+                        )
+                    }
+                }
 
-            override fun onDettach() {
-                _status.update {
-                    it.copy(
-                        deviceLabel = "Topdon TC001 - Detached",
-                        isConnected = false,
-                        isStreaming = false
-                    )
+                override fun onCancel() {
+                    _status.update { it.copy(deviceLabel = "Topdon TC001 - Permission Cancelled") }
+                }
+
+                override fun onConnect() {
+                    _status.update { it.copy(deviceLabel = "Topdon TC001 - Negotiating") }
+                }
+
+                override fun onDisconnect() {
+                    _status.update {
+                        it.copy(
+                            deviceLabel = "Topdon TC001 - Disconnected",
+                            isConnected = false,
+                            isStreaming = false,
+                        )
+                    }
                 }
             }
-
-            override fun onCancel() {
-                _status.update { it.copy(deviceLabel = "Topdon TC001 - Permission Cancelled") }
-            }
-
-            override fun onConnect() {
-                _status.update { it.copy(deviceLabel = "Topdon TC001 - Negotiating") }
-            }
-
-            override fun onDisconnect() {
-                _status.update {
-                    it.copy(
-                        deviceLabel = "Topdon TC001 - Disconnected",
-                        isConnected = false,
-                        isStreaming = false
-                    )
-                }
-            }
-        }
-        irCamera = IRUVCTC(
-            256,
-            192,
-            applicationContext,
-            syncBitmap,
-            CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT,
-            connectCallback,
-            usbMonitorCallback
-        )
+        irCamera =
+            IRUVCTC(
+                256,
+                192,
+                applicationContext,
+                syncBitmap,
+                CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT,
+                connectCallback,
+                usbMonitorCallback,
+            )
     }
 
     private fun applyConfigToSdk(config: ThermalDeviceConfig) {
-        val palette = when (config.colorPalette) {
-            ThermalColorPalette.Ironbow -> ColorPalette.IRONBOW
-            ThermalColorPalette.Rainbow -> ColorPalette.RAINBOW
-            ThermalColorPalette.WhiteHot -> ColorPalette.WHITEHOT
-            ThermalColorPalette.BlackHot -> ColorPalette.BLACKHOT
-        }
+        val palette =
+            when (config.colorPalette) {
+                ThermalColorPalette.Ironbow -> ColorPalette.IRONBOW
+                ThermalColorPalette.Rainbow -> ColorPalette.RAINBOW
+                ThermalColorPalette.WhiteHot -> ColorPalette.WHITEHOT
+                ThermalColorPalette.BlackHot -> ColorPalette.BLACKHOT
+            }
         irCmd?.setColorPalette(palette)
         irCmd?.setAutoShutter(config.enableNoiseReduction)
     }
 
     private fun startDeviceMonitoring() {
         monitorJob?.cancel()
-        monitorJob = externalScope.launch {
-            while (isActive) {
-                val usbAttached = hardwareProbe.isUsbAttached()
-                val topdonConnected = hardwareProbe.isTopdonConnected()
-                val label = when {
-                    topdonConnected -> "Topdon TC001 - Connected"
-                    usbAttached -> "Topdon TC001 - USB Detected"
-                    else -> "Topdon TC001 - Not Detected"
+        monitorJob =
+            externalScope.launch {
+                while (isActive) {
+                    val usbAttached = hardwareProbe.isUsbAttached()
+                    val topdonConnected = hardwareProbe.isTopdonConnected()
+                    val label =
+                        when {
+                            topdonConnected -> "Topdon TC001 - Connected"
+                            usbAttached -> "Topdon TC001 - USB Detected"
+                            else -> "Topdon TC001 - Not Detected"
+                        }
+                    _status.update {
+                        it.copy(
+                            deviceLabel = label,
+                            isConnected = topdonConnected,
+                            lastError = it.lastError?.takeIf { topdonConnected.not() },
+                            capabilities = DEFAULT_CAPABILITIES,
+                        )
+                    }
+                    delay(750)
                 }
-                _status.update {
-                    it.copy(
-                        deviceLabel = label,
-                        isConnected = topdonConnected,
-                        lastError = it.lastError?.takeIf { topdonConnected.not() },
-                        capabilities = DEFAULT_CAPABILITIES,
-                    )
-                }
-                delay(750)
             }
-        }
     }
 
     interface HardwareProbe {
         fun isTopdonConnected(): Boolean
+
         fun isUsbAttached(): Boolean
     }
 
     private object DeviceToolsHardwareProbe : HardwareProbe {
-        override fun isTopdonConnected(): Boolean =
-            DeviceTools.isTC001PlusConnect() || DeviceTools.isTC001LiteConnect()
+        override fun isTopdonConnected(): Boolean = DeviceTools.isTC001PlusConnect() || DeviceTools.isTC001LiteConnect()
 
         override fun isUsbAttached(): Boolean = DeviceTools.findUsbDevice() != null
     }
 
     companion object {
-        private val DEFAULT_CAPABILITIES = setOf(
-            ThermalDeviceCapability.Radiometric,
-            ThermalDeviceCapability.ManualCalibration,
-            ThermalDeviceCapability.VideoRecording,
-        )
+        private val DEFAULT_CAPABILITIES =
+            setOf(
+                ThermalDeviceCapability.Radiometric,
+                ThermalDeviceCapability.ManualCalibration,
+                ThermalDeviceCapability.VideoRecording,
+            )
     }
 
     internal fun cancelMonitoringForTests() {
         monitorJob?.cancel()
     }
 }
-

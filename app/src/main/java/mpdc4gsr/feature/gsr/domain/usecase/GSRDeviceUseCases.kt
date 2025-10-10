@@ -6,15 +6,13 @@ import mpdc4gsr.core.sensors.gsr.model.GSRSample
 import mpdc4gsr.feature.gsr.domain.repository.GSRDeviceRepository
 
 class ScanGSRDevicesUseCase(
-    private val repository: GSRDeviceRepository
+    private val repository: GSRDeviceRepository,
 ) {
-    suspend operator fun invoke(): Flow<List<DeviceInfo>> {
-        return repository.scanForDevices()
-    }
+    suspend operator fun invoke(): Flow<List<DeviceInfo>> = repository.scanForDevices()
 }
 
 class ConnectGSRDeviceUseCase(
-    private val repository: GSRDeviceRepository
+    private val repository: GSRDeviceRepository,
 ) {
     suspend operator fun invoke(deviceAddress: String): Result<Unit> {
         if (deviceAddress.isBlank()) {
@@ -25,7 +23,7 @@ class ConnectGSRDeviceUseCase(
 }
 
 class DisconnectGSRDeviceUseCase(
-    private val repository: GSRDeviceRepository
+    private val repository: GSRDeviceRepository,
 ) {
     suspend operator fun invoke(deviceAddress: String) {
         repository.disconnectDevice(deviceAddress)
@@ -33,7 +31,7 @@ class DisconnectGSRDeviceUseCase(
 }
 
 class StartGSRStreamingUseCase(
-    private val repository: GSRDeviceRepository
+    private val repository: GSRDeviceRepository,
 ) {
     suspend operator fun invoke(deviceAddress: String): Flow<GSRSample> {
         if (!repository.isDeviceConnected(deviceAddress)) {
@@ -44,7 +42,7 @@ class StartGSRStreamingUseCase(
 }
 
 class StopGSRStreamingUseCase(
-    private val repository: GSRDeviceRepository
+    private val repository: GSRDeviceRepository,
 ) {
     suspend operator fun invoke(deviceAddress: String) {
         repository.stopStreaming(deviceAddress)
@@ -52,17 +50,13 @@ class StopGSRStreamingUseCase(
 }
 
 class CheckGSRDeviceConnectionUseCase(
-    private val repository: GSRDeviceRepository
+    private val repository: GSRDeviceRepository,
 ) {
-    operator fun invoke(deviceAddress: String): Boolean {
-        return repository.isDeviceConnected(deviceAddress)
-    }
+    operator fun invoke(deviceAddress: String): Boolean = repository.isDeviceConnected(deviceAddress)
 }
 
 class GetGSRDeviceBatteryUseCase(
-    private val repository: GSRDeviceRepository
+    private val repository: GSRDeviceRepository,
 ) {
-    suspend operator fun invoke(deviceAddress: String): Int? {
-        return repository.getDeviceBatteryLevel(deviceAddress)
-    }
+    suspend operator fun invoke(deviceAddress: String): Int? = repository.getDeviceBatteryLevel(deviceAddress)
 }

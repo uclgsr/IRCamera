@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.compose.utils
 
-import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -47,18 +46,19 @@ fun Modifier.safeClickable(
     enabled: Boolean = true,
     onClickLabel: String? = null,
     role: Role? = null,
-    onClick: () -> Unit
-): Modifier = composed {
-    val interactionSource = rememberCancellableInteractionSource()
-    this.clickable(
-        enabled = enabled,
-        onClickLabel = onClickLabel,
-        role = role,
-        interactionSource = interactionSource,
-        indication = LocalIndication.current,
-        onClick = onClick
-    )
-}
+    onClick: () -> Unit,
+): Modifier =
+    composed {
+        val interactionSource = rememberCancellableInteractionSource()
+        this.clickable(
+            enabled = enabled,
+            onClickLabel = onClickLabel,
+            role = role,
+            interactionSource = interactionSource,
+            indication = LocalIndication.current,
+            onClick = onClick,
+        )
+    }
 
 fun Modifier.safeClickableWithRipple(
     enabled: Boolean = true,
@@ -67,60 +67,63 @@ fun Modifier.safeClickableWithRipple(
     color: Color = Color.Unspecified,
     onClickLabel: String? = null,
     role: Role? = null,
-    onClick: () -> Unit
-): Modifier = composed {
-    val interactionSource = rememberCancellableInteractionSource()
-    this.clickable(
-        enabled = enabled,
-        onClickLabel = onClickLabel,
-        role = role,
-        interactionSource = interactionSource,
-        indication = ripple(bounded = bounded, radius = radius, color = color),
-        onClick = onClick
-    )
-}
+    onClick: () -> Unit,
+): Modifier =
+    composed {
+        val interactionSource = rememberCancellableInteractionSource()
+        this.clickable(
+            enabled = enabled,
+            onClickLabel = onClickLabel,
+            role = role,
+            interactionSource = interactionSource,
+            indication = ripple(bounded = bounded, radius = radius, color = color),
+            onClick = onClick,
+        )
+    }
 
 @Composable
 fun Modifier.safeClickableNoRipple(
     enabled: Boolean = true,
     onClickLabel: String? = null,
     role: Role? = null,
-    onClick: () -> Unit
-): Modifier = composed {
-    val interactionSource = remember { MutableInteractionSource() }
-    this.clickable(
-        enabled = enabled,
-        onClickLabel = onClickLabel,
-        role = role,
-        interactionSource = interactionSource,
-        indication = null,
-        onClick = onClick
-    )
-}
+    onClick: () -> Unit,
+): Modifier =
+    composed {
+        val interactionSource = remember { MutableInteractionSource() }
+        this.clickable(
+            enabled = enabled,
+            onClickLabel = onClickLabel,
+            role = role,
+            interactionSource = interactionSource,
+            indication = null,
+            onClick = onClick,
+        )
+    }
 
 @Composable
 fun Modifier.safeClickableDeferred(
     enabled: Boolean = true,
     onClickLabel: String? = null,
     role: Role? = null,
-    onClick: () -> Unit
-): Modifier = composed {
-    val scope = rememberCoroutineScope()
-    val interactionSource = rememberCancellableInteractionSource()
-    this.clickable(
-        enabled = enabled,
-        onClickLabel = onClickLabel,
-        role = role,
-        interactionSource = interactionSource,
-        indication = LocalIndication.current,
-        onClick = {
-            scope.launch {
-                withFrameNanos { }
-                onClick()
-            }
-        }
-    )
-}
+    onClick: () -> Unit,
+): Modifier =
+    composed {
+        val scope = rememberCoroutineScope()
+        val interactionSource = rememberCancellableInteractionSource()
+        this.clickable(
+            enabled = enabled,
+            onClickLabel = onClickLabel,
+            role = role,
+            interactionSource = interactionSource,
+            indication = LocalIndication.current,
+            onClick = {
+                scope.launch {
+                    withFrameNanos { }
+                    onClick()
+                }
+            },
+        )
+    }
 
 @Composable
 fun deferAction(action: () -> Unit): () -> Unit {

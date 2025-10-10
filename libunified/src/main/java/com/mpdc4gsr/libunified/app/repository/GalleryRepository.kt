@@ -3,11 +3,10 @@ package com.mpdc4gsr.libunified.app.repository
 import android.content.ContentResolver
 import android.media.MediaScannerConnection
 import android.provider.MediaStore
-import com.mpdc4gsr.libunified.compat.ContextProvider
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.bean.GalleryBean
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.*
@@ -51,8 +50,8 @@ object GalleryRepository {
     private fun copyPictureFile(
         oldPath: String,
         newPath: String,
-    ): Boolean {
-        return try {
+    ): Boolean =
+        try {
             val streamFrom: InputStream = FileInputStream(oldPath)
             val streamTo: OutputStream = FileOutputStream(newPath)
             val buffer = ByteArray(1024)
@@ -66,7 +65,6 @@ object GalleryRepository {
         } catch (ex: Exception) {
             false
         }
-    }
 
     fun readLatest(dirType: DirType): String {
         var firstPath = ""
@@ -85,7 +83,6 @@ object GalleryRepository {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            XLog.e(": ${e.message}")
             return ""
         }
         return firstPath
@@ -119,7 +116,6 @@ object GalleryRepository {
                         }
                     }
                 } catch (e: Exception) {
-                    XLog.e(": ${e.message}")
                 }
             }
             return@withContext resultList
@@ -140,7 +136,6 @@ object GalleryRepository {
                     }
                 }
             } catch (e: Exception) {
-                XLog.e(": ${e.message}")
             }
             return@withContext resultList
         }
@@ -159,7 +154,7 @@ object GalleryRepository {
                         ContextProvider.getContext(),
                         arrayOf(FileConfig.lineGalleryDir),
                         null,
-                        null
+                        null,
                     )
                 }
             }

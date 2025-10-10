@@ -21,8 +21,12 @@ interface GsrRecorder : SensorRecorder {
     val lastConnectedDeviceAddress: String?
 
     suspend fun startDeviceDiscovery(): Boolean
+
     fun getDiscoveredDevices(): List<DeviceInfo>
+
     suspend fun connectToDevice(deviceInfo: DeviceInfo): Boolean
+
     suspend fun disconnectDevice(): Boolean
+
     suspend fun flushAndCloseFiles()
 }

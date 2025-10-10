@@ -61,6 +61,6 @@ object UnifiedConstants {
     object Recording {
         const val DEFAULT_QUALITY = 80
         const val MAX_DURATION_MS = 600000L // 10 minutes
-        const val MIN_DURATION_MS = 1000L   // 1 second
+        const val MIN_DURATION_MS = 1000L // 1 second
     }
 }

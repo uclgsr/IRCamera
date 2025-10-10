@@ -5,15 +5,14 @@ import android.hardware.SensorManager
 import com.kylecorry.andromeda.sense.Sensors
 import com.kylecorry.andromeda.sense.compass.ICompass
 
-class SensorService(ctx: Context) {
+class SensorService(
+    ctx: Context,
+) {
     private var context = ctx.applicationContext
-    fun hasCompass(): Boolean {
-        return Sensors.hasCompass(context)
-    }
 
-    fun getCompass(): ICompass {
-        return CompassProvider(context).get()
-    }
+    fun hasCompass(): Boolean = Sensors.hasCompass(context)
+
+    fun getCompass(): ICompass = CompassProvider(context).get()
 
     companion object {
         const val MOTION_SENSOR_DELAY = SensorManager.SENSOR_DELAY_GAME

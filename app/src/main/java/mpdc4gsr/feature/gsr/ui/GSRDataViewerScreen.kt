@@ -28,48 +28,51 @@ import kotlin.random.Random
 fun GSRDataViewerScreen(
     sessionId: String = "GSR_Session_001",
     onBackClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
     // Sample GSR data - in real app, this would come from ViewModel
     val gsrData = remember { generateSampleGSRData() }
     var selectedAnalysis by remember { mutableStateOf(AnalysisType.RAW_SIGNAL) }
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFF16131e))
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color(0xFF16131e)),
     ) {
         TitleBar(
             title = "GSR Data Analysis",
             showBackButton = true,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
         ) {
             TitleBarAction(
                 icon = Icons.Default.Share,
                 contentDescription = "Export Data",
                 onClick = {
                     // TODO: Implement GSR data export functionality
-                    android.widget.Toast.makeText(
-                        context,
-                        "Exporting GSR data...",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                }
+                    android.widget.Toast
+                        .makeText(
+                            context,
+                            "Exporting GSR data...",
+                            android.widget.Toast.LENGTH_SHORT,
+                        ).show()
+                },
             )
         }
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Session Info Card
             SessionInfoCard(sessionId = sessionId)
             // Analysis Type Selector
             AnalysisTypeSelector(
                 selectedType = selectedAnalysis,
-                onTypeSelected = { selectedAnalysis = it }
+                onTypeSelected = { selectedAnalysis = it },
             )
             // Data Visualization
             when (selectedAnalysis) {
@@ -77,7 +80,7 @@ fun GSRDataViewerScreen(
                     GSRSignalChart(
                         title = "Raw GSR Signal",
                         data = gsrData,
-                        color = Color.Cyan
+                        color = Color.Cyan,
                     )
                 }
 
@@ -85,7 +88,7 @@ fun GSRDataViewerScreen(
                     GSRSignalChart(
                         title = "Filtered Signal",
                         data = gsrData.map { it * 0.8f + 0.1f }, // Simple filter simulation
-                        color = Color.Green
+                        color = Color.Green,
                     )
                 }
 
@@ -106,35 +109,35 @@ fun GSRDataViewerScreen(
 private fun SessionInfoCard(sessionId: String) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = "Session Information",
                 color = Color.White,
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text("Session ID:", color = Color.Gray, fontSize = 14.sp)
                 Text(sessionId, color = Color.White, fontSize = 14.sp)
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text("Duration:", color = Color.Gray, fontSize = 14.sp)
                 Text("5m 32s", color = Color.White, fontSize = 14.sp)
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text("Sample Rate:", color = Color.Gray, fontSize = 14.sp)
                 Text("128 Hz", color = Color.White, fontSize = 14.sp)
@@ -146,25 +149,25 @@ private fun SessionInfoCard(sessionId: String) {
 @Composable
 private fun AnalysisTypeSelector(
     selectedType: AnalysisType,
-    onTypeSelected: (AnalysisType) -> Unit
+    onTypeSelected: (AnalysisType) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = "Analysis Type",
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = 12.dp),
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 AnalysisType.entries.forEach { type ->
                     FilterChip(
@@ -172,16 +175,17 @@ private fun AnalysisTypeSelector(
                         label = {
                             Text(
                                 type.displayName,
-                                fontSize = 12.sp
+                                fontSize = 12.sp,
                             )
                         },
                         selected = selectedType == type,
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = MaterialTheme.colorScheme.primary,
-                            selectedLabelColor = Color.White,
-                            containerColor = Color.Gray,
-                            labelColor = Color.White
-                        )
+                        colors =
+                            FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                selectedLabelColor = Color.White,
+                                containerColor = Color.Gray,
+                                labelColor = Color.White,
+                            ),
                     )
                 }
             }
@@ -193,26 +197,27 @@ private fun AnalysisTypeSelector(
 private fun GSRSignalChart(
     title: String,
     data: List<Float>,
-    color: Color
+    color: Color,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = title,
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = 12.dp),
             )
             Canvas(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
             ) {
                 val width = size.width
                 val height = size.height
@@ -230,7 +235,7 @@ private fun GSRSignalChart(
                 drawPath(
                     path = path,
                     color = color,
-                    style = Stroke(width = 3.dp.toPx())
+                    style = Stroke(width = 3.dp.toPx()),
                 )
                 // Draw grid lines
                 for (i in 0..4) {
@@ -239,7 +244,7 @@ private fun GSRSignalChart(
                         color = Color.Gray.copy(alpha = 0.3f),
                         start = Offset(0f, y),
                         end = Offset(width, y),
-                        strokeWidth = 1.dp.toPx()
+                        strokeWidth = 1.dp.toPx(),
                     )
                 }
             }
@@ -251,29 +256,30 @@ private fun GSRSignalChart(
 private fun GSRFeaturesCard(data: List<Float>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = "GSR Features",
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = 12.dp),
             )
-            val features = listOf(
-                "Skin Conductance Response (SCR) Count" to "23",
-                "Average SCR Amplitude" to "0.15 μS",
-                "Peak Detection" to "17 peaks",
-                "Arousal Index" to "High",
-                "Stress Level" to "Moderate"
-            )
+            val features =
+                listOf(
+                    "Skin Conductance Response (SCR) Count" to "23",
+                    "Average SCR Amplitude" to "0.15 μS",
+                    "Peak Detection" to "17 peaks",
+                    "Arousal Index" to "High",
+                    "Stress Level" to "Moderate",
+                )
             features.forEach { (label, value) ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(label, color = Color.Gray, fontSize = 14.sp)
                     Text(value, color = Color.Cyan, fontSize = 14.sp, fontWeight = FontWeight.Bold)
@@ -288,32 +294,34 @@ private fun GSRFeaturesCard(data: List<Float>) {
 private fun GSRStatisticsCard(data: List<Float>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = "Statistical Analysis",
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = 12.dp),
             )
-            val stats = listOf(
-                "Mean" to String.format("%.3f μS", data.average()),
-                "Standard Deviation" to "0.045 μS",
-                "Min Value" to String.format("%.3f μS", data.minOrNull() ?: 0f),
-                "Max Value" to String.format("%.3f μS", data.maxOrNull() ?: 0f),
-                "Range" to String.format(
-                    "%.3f μS",
-                    (data.maxOrNull() ?: 0f) - (data.minOrNull() ?: 0f)
+            val stats =
+                listOf(
+                    "Mean" to String.format("%.3f μS", data.average()),
+                    "Standard Deviation" to "0.045 μS",
+                    "Min Value" to String.format("%.3f μS", data.minOrNull() ?: 0f),
+                    "Max Value" to String.format("%.3f μS", data.maxOrNull() ?: 0f),
+                    "Range" to
+                        String.format(
+                            "%.3f μS",
+                            (data.maxOrNull() ?: 0f) - (data.minOrNull() ?: 0f),
+                        ),
                 )
-            )
             stats.forEach { (label, value) ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(label, color = Color.Gray, fontSize = 14.sp)
                     Text(value, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
@@ -324,18 +332,19 @@ private fun GSRStatisticsCard(data: List<Float>) {
     }
 }
 
-enum class AnalysisType(val displayName: String) {
+enum class AnalysisType(
+    val displayName: String,
+) {
     RAW_SIGNAL("Raw"),
     FILTERED("Filtered"),
     FEATURES("Features"),
-    STATISTICS("Stats")
+    STATISTICS("Stats"),
 }
 
-private fun generateSampleGSRData(): List<Float> {
-    return (0..200).map { i ->
+private fun generateSampleGSRData(): List<Float> =
+    (0..200).map { i ->
         0.5f + 0.3f * sin(i * 0.1).toFloat() + 0.1f * Random.nextFloat()
     }
-}
 
 @Preview(showBackground = true)
 @Composable

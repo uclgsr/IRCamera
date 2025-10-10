@@ -11,7 +11,7 @@ class MineViewModel : BaseViewModel() {
         val name: String = "User",
         val email: String = "user@example.com",
         val avatarUrl: String? = null,
-        val isLoggedIn: Boolean = false
+        val isLoggedIn: Boolean = false,
     )
 
     data class DeviceInfo(
@@ -20,14 +20,14 @@ class MineViewModel : BaseViewModel() {
         val hasTC007Connection: Boolean = false,
         val tc007Battery: Int? = null,
         val hasTS004: Boolean = false,
-        val hasTS004Connection: Boolean = false
+        val hasTS004Connection: Boolean = false,
     )
 
     data class AppInfo(
         val version: String = "1.0.0",
         val buildNumber: String = "1000",
         val cacheSize: String = "0 MB",
-        val lastUpdated: String = "Never"
+        val lastUpdated: String = "Never",
     )
 
     private val _userInfo = MutableStateFlow(UserInfo())
@@ -47,38 +47,41 @@ class MineViewModel : BaseViewModel() {
         launchWithErrorHandling {
             val userInfoManager = UserInfoManager.getInstance()
             val isLoggedIn = userInfoManager.isLogin()
-            _userInfo.value = UserInfo(
-                name = if (isLoggedIn) "User" else "Guest",
-                email = if (isLoggedIn) "user@example.com" else "guest@example.com",
-                avatarUrl = null,
-                isLoggedIn = isLoggedIn
-            )
+            _userInfo.value =
+                UserInfo(
+                    name = if (isLoggedIn) "User" else "Guest",
+                    email = if (isLoggedIn) "user@example.com" else "guest@example.com",
+                    avatarUrl = null,
+                    isLoggedIn = isLoggedIn,
+                )
         }
     }
 
     private fun loadDeviceInfo() {
         launchWithErrorHandling {
             // Load device connection information
-            _deviceInfo.value = DeviceInfo(
-                hasLineConnection = false,
-                hasTC007 = false,
-                hasTC007Connection = false,
-                tc007Battery = null,
-                hasTS004 = false,
-                hasTS004Connection = false
-            )
+            _deviceInfo.value =
+                DeviceInfo(
+                    hasLineConnection = false,
+                    hasTC007 = false,
+                    hasTC007Connection = false,
+                    tc007Battery = null,
+                    hasTS004 = false,
+                    hasTS004Connection = false,
+                )
         }
     }
 
     private fun loadAppInfo() {
         launchWithErrorHandling {
             // Load app information
-            _appInfo.value = AppInfo(
-                version = "1.10.000",
-                buildNumber = "1100",
-                cacheSize = "0 MB",
-                lastUpdated = "Never"
-            )
+            _appInfo.value =
+                AppInfo(
+                    version = "1.10.000",
+                    buildNumber = "1100",
+                    cacheSize = "0 MB",
+                    lastUpdated = "Never",
+                )
         }
     }
 

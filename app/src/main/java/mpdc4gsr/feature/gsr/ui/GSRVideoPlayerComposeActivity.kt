@@ -1,7 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
 
-import dagger.hilt.android.AndroidEntryPoint
-
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -26,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.ui.AppBaseViewModel
 
 @AndroidEntryPoint
@@ -33,22 +32,22 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
     companion object {
         private const val EXTRA_VIDEO_PATH = "video_path"
         private const val EXTRA_SESSION_ID = "session_id"
+
         fun startActivity(
             context: Context,
             videoPath: String,
-            sessionId: String? = null
+            sessionId: String? = null,
         ) {
-            val intent = Intent(context, GSRVideoPlayerComposeActivity::class.java).apply {
-                putExtra(EXTRA_VIDEO_PATH, videoPath)
-                sessionId?.let { putExtra(EXTRA_SESSION_ID, it) }
-            }
+            val intent =
+                Intent(context, GSRVideoPlayerComposeActivity::class.java).apply {
+                    putExtra(EXTRA_VIDEO_PATH, videoPath)
+                    sessionId?.let { putExtra(EXTRA_SESSION_ID, it) }
+                }
             context.startActivity(intent)
         }
     }
 
-    override fun createViewModel(): AppBaseViewModel {
-        return viewModels<AppBaseViewModel>().value
-    }
+    override fun createViewModel(): AppBaseViewModel = viewModels<AppBaseViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -62,7 +61,7 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
                         title = {
                             Text(
                                 "GSR Video Player",
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                         },
                         navigationIcon = {
@@ -73,42 +72,45 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
                         actions = {
                             IconButton(onClick = {
                                 // TODO: Share video
-                                android.widget.Toast.makeText(
-                                    this@GSRVideoPlayerComposeActivity,
-                                    "Share video feature coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
+                                android.widget.Toast
+                                    .makeText(
+                                        this@GSRVideoPlayerComposeActivity,
+                                        "Share video feature coming soon",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
                             }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
                             IconButton(onClick = {
                                 // TODO: Open video settings
-                                android.widget.Toast.makeText(
-                                    this@GSRVideoPlayerComposeActivity,
-                                    "Video settings coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
+                                android.widget.Toast
+                                    .makeText(
+                                        this@GSRVideoPlayerComposeActivity,
+                                        "Video settings coming soon",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
                             }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
                             IconButton(onClick = {
                                 // TODO: Show more options menu
-                                android.widget.Toast.makeText(
-                                    this@GSRVideoPlayerComposeActivity,
-                                    "More options coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
+                                android.widget.Toast
+                                    .makeText(
+                                        this@GSRVideoPlayerComposeActivity,
+                                        "More options coming soon",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
                             }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
-                        }
+                        },
                     )
-                }
+                },
             ) { paddingValues ->
                 GSRVideoPlayerContent(
                     videoPath = videoPath,
                     sessionId = sessionId,
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
         }
@@ -119,7 +121,7 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
 private fun GSRVideoPlayerContent(
     videoPath: String,
     sessionId: String?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var isPlaying by remember { mutableStateOf(false) }
     var currentPosition by remember { mutableFloatStateOf(0f) }
@@ -127,7 +129,7 @@ private fun GSRVideoPlayerContent(
     var showDataOverlay by remember { mutableStateOf(true) }
     var playbackSpeed by remember { mutableFloatStateOf(1.0f) }
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         // Video Player Area
         VideoPlayerCard(
@@ -137,15 +139,16 @@ private fun GSRVideoPlayerContent(
             duration = duration,
             showDataOverlay = showDataOverlay,
             onPlayPause = { isPlaying = !isPlaying },
-            onSeek = { currentPosition = it }
+            onSeek = { currentPosition = it },
         )
         // Scrollable content below video
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Video Controls
             VideoControlsCard(
@@ -157,32 +160,32 @@ private fun GSRVideoPlayerContent(
                 onPlayPause = { isPlaying = !isPlaying },
                 onSeek = { currentPosition = it },
                 onSpeedChange = { playbackSpeed = it },
-                onOverlayToggle = { showDataOverlay = it }
+                onOverlayToggle = { showDataOverlay = it },
             )
             // Video Information
             VideoInfoCard(
                 videoPath = videoPath,
                 sessionId = sessionId,
-                duration = duration
+                duration = duration,
             )
             // GSR Data Timeline
             if (sessionId != null) {
                 GSRDataTimelineCard(
                     sessionId = sessionId,
                     currentPosition = currentPosition,
-                    duration = duration
+                    duration = duration,
                 )
             }
             // Playback Statistics
             PlaybackStatisticsCard(
                 currentPosition = currentPosition,
                 duration = duration,
-                playbackSpeed = playbackSpeed
+                playbackSpeed = playbackSpeed,
             )
             // Export Options
             VideoExportCard(
                 videoPath = videoPath,
-                sessionId = sessionId
+                sessionId = sessionId,
             )
         }
     }
@@ -196,33 +199,35 @@ private fun VideoPlayerCard(
     duration: Float,
     showDataOverlay: Boolean,
     onPlayPause: () -> Unit,
-    onSeek: (Float) -> Unit
+    onSeek: (Float) -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 "Video Playback",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             // Video View Container
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-                    .background(
-                        Color.Black,
-                        RoundedCornerShape(8.dp)
-                    ),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                        .background(
+                            Color.Black,
+                            RoundedCornerShape(8.dp),
+                        ),
+                contentAlignment = Alignment.Center,
             ) {
                 // AndroidView for VideoView integration
                 AndroidView(
@@ -232,31 +237,32 @@ private fun VideoPlayerCard(
                             setMediaController(MediaController(context))
                         }
                     },
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 )
                 // GSR Data Overlay
                 if (showDataOverlay) {
                     GSRDataOverlay(
                         currentPosition = currentPosition,
-                        modifier = Modifier.align(Alignment.TopEnd)
+                        modifier = Modifier.align(Alignment.TopEnd),
                     )
                 }
                 // Play/Pause Overlay
                 IconButton(
                     onClick = onPlayPause,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(64.dp)
-                        .background(
-                            Color.Black.copy(alpha = 0.6f),
-                            RoundedCornerShape(32.dp)
-                        )
+                    modifier =
+                        Modifier
+                            .align(Alignment.Center)
+                            .size(64.dp)
+                            .background(
+                                Color.Black.copy(alpha = 0.6f),
+                                RoundedCornerShape(32.dp),
+                            ),
                 ) {
                     Icon(
                         if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                         contentDescription = if (isPlaying) "Pause" else "Play",
                         tint = Color.White,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                 }
             }
@@ -266,19 +272,19 @@ private fun VideoPlayerCard(
                     value = currentPosition,
                     onValueChange = onSeek,
                     valueRange = 0f..duration,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
                         formatTime(currentPosition),
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
                     )
                     Text(
                         formatTime(duration),
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
                     )
                 }
             }
@@ -289,31 +295,32 @@ private fun VideoPlayerCard(
 @Composable
 private fun GSRDataOverlay(
     currentPosition: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.padding(8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
+            ),
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
-            horizontalAlignment = Alignment.End
+            horizontalAlignment = Alignment.End,
         ) {
             Text(
                 "GSR Data",
                 style = MaterialTheme.typography.labelSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 "12.4 μS",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
             Text(
                 "Quality: 94%",
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
             )
         }
     }
@@ -329,27 +336,27 @@ private fun VideoControlsCard(
     onPlayPause: () -> Unit,
     onSeek: (Float) -> Unit,
     onSpeedChange: (Float) -> Unit,
-    onOverlayToggle: (Boolean) -> Unit
+    onOverlayToggle: (Boolean) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 "Playback Controls",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             HorizontalDivider()
             // Main Controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(onClick = { onSeek(0f) }) {
                     Icon(Icons.Default.SkipPrevious, contentDescription = "Restart")
@@ -359,18 +366,19 @@ private fun VideoControlsCard(
                 }
                 IconButton(
                     onClick = onPlayPause,
-                    modifier = Modifier
-                        .size(56.dp)
-                        .background(
-                            MaterialTheme.colorScheme.primary,
-                            RoundedCornerShape(28.dp)
-                        )
+                    modifier =
+                        Modifier
+                            .size(56.dp)
+                            .background(
+                                MaterialTheme.colorScheme.primary,
+                                RoundedCornerShape(28.dp),
+                            ),
                 ) {
                     Icon(
                         if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                         contentDescription = if (isPlaying) "Pause" else "Play",
                         tint = Color.White,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                 }
                 IconButton(onClick = { onSeek(minOf(duration, currentPosition + 10f)) }) {
@@ -384,18 +392,18 @@ private fun VideoControlsCard(
             Text(
                 "Playback Speed: ${String.format("%.1f", playbackSpeed)}x",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 listOf(0.5f, 1.0f, 1.5f, 2.0f).forEach { speed ->
                     FilterChip(
                         onClick = { onSpeedChange(speed) },
                         label = { Text("${speed}x") },
                         selected = playbackSpeed == speed,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                 }
             }
@@ -403,15 +411,15 @@ private fun VideoControlsCard(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     "Show GSR Data Overlay",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
                 Switch(
                     checked = showDataOverlay,
-                    onCheckedChange = onOverlayToggle
+                    onCheckedChange = onOverlayToggle,
                 )
             }
         }
@@ -422,20 +430,20 @@ private fun VideoControlsCard(
 private fun VideoInfoCard(
     videoPath: String,
     sessionId: String?,
-    duration: Float
+    duration: Float,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 "Video Information",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             HorizontalDivider()
             VideoInfoRow("File Name", videoPath.substringAfterLast("/"))
@@ -452,21 +460,21 @@ private fun VideoInfoCard(
 @Composable
 private fun VideoInfoRow(
     label: String,
-    value: String
+    value: String,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             label,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
             value,
             style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
         )
     }
 }
@@ -475,62 +483,65 @@ private fun VideoInfoRow(
 private fun GSRDataTimelineCard(
     sessionId: String,
     currentPosition: Float,
-    duration: Float
+    duration: Float,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 "GSR Data Timeline",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             HorizontalDivider()
             // Timeline visualization
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .background(
-                        MaterialTheme.colorScheme.surfaceVariant,
-                        RoundedCornerShape(8.dp)
-                    )
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(80.dp)
+                        .background(
+                            MaterialTheme.colorScheme.surfaceVariant,
+                            RoundedCornerShape(8.dp),
+                        ),
             ) {
                 // Simplified timeline representation
                 Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     // Current position indicator
                     val progress = if (duration > 0) currentPosition / duration else 0f
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth(progress)
-                            .height(4.dp)
-                            .background(
-                                MaterialTheme.colorScheme.primary,
-                                RoundedCornerShape(2.dp)
-                            )
+                        modifier =
+                            Modifier
+                                .fillMaxWidth(progress)
+                                .height(4.dp)
+                                .background(
+                                    MaterialTheme.colorScheme.primary,
+                                    RoundedCornerShape(2.dp),
+                                ),
                     )
                 }
                 Text(
                     "GSR Timeline Visualization",
                     modifier = Modifier.align(Alignment.Center),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
             // Current GSR values
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 GSRTimelineMetric("Current", "12.4 μS")
                 GSRTimelineMetric("Peak", "18.9 μS")
@@ -544,21 +555,21 @@ private fun GSRDataTimelineCard(
 @Composable
 private fun GSRTimelineMetric(
     label: String,
-    value: String
+    value: String,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             value,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
         Text(
             label,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -567,25 +578,25 @@ private fun GSRTimelineMetric(
 private fun PlaybackStatisticsCard(
     currentPosition: Float,
     duration: Float,
-    playbackSpeed: Float
+    playbackSpeed: Float,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 "Playback Statistics",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             HorizontalDivider()
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 PlaybackStatistic("Progress", "${((currentPosition / duration) * 100).toInt()}%")
                 PlaybackStatistic("Remaining", formatTime(duration - currentPosition))
@@ -598,21 +609,21 @@ private fun PlaybackStatisticsCard(
 @Composable
 private fun PlaybackStatistic(
     label: String,
-    value: String
+    value: String,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             value,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
         Text(
             label,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -620,37 +631,38 @@ private fun PlaybackStatistic(
 @Composable
 private fun VideoExportCard(
     videoPath: String,
-    sessionId: String?
+    sessionId: String?,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 "Export Options",
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             HorizontalDivider()
             val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 OutlinedButton(
                     onClick = {
                         // TODO: Export video file
-                        android.widget.Toast.makeText(
-                            context,
-                            "Exporting video...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Exporting video...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Icon(Icons.Default.VideoFile, contentDescription = "Export Video")
                     Spacer(modifier = Modifier.width(4.dp))
@@ -659,13 +671,14 @@ private fun VideoExportCard(
                 OutlinedButton(
                     onClick = {
                         // TODO: Export audio track
-                        android.widget.Toast.makeText(
-                            context,
-                            "Exporting audio...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Exporting audio...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Icon(Icons.Default.AudioFile, contentDescription = "Export Audio")
                     Spacer(modifier = Modifier.width(4.dp))
@@ -674,18 +687,19 @@ private fun VideoExportCard(
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Button(
                     onClick = {
                         // TODO: Share video
-                        android.widget.Toast.makeText(
-                            context,
-                            "Sharing video...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Sharing video...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Icon(Icons.Default.Share, contentDescription = "Share Video")
                     Spacer(modifier = Modifier.width(4.dp))
@@ -694,13 +708,14 @@ private fun VideoExportCard(
                 OutlinedButton(
                     onClick = {
                         // TODO: Save current frame as image
-                        android.widget.Toast.makeText(
-                            context,
-                            "Saving frame...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Saving frame...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Icon(Icons.Default.Image, contentDescription = "Save Frame")
                     Spacer(modifier = Modifier.width(4.dp))

@@ -2,7 +2,6 @@ package com.mpdc4gsr.libunified.ir.usbdual.camera;
 
 import android.hardware.usb.UsbDevice;
 import android.os.SystemClock;
-import android.util.Log;
 
 import com.mpdc4gsr.libunified.compat.ContextProvider;
 import com.energy.iruvc.ircmd.ConcreteIRCMDBuilder;
@@ -61,7 +60,6 @@ public class USBMonitorDualManager {
 
                         @Override
                         public void onAttach(UsbDevice device) {
-                            Log.w(TAG, "USBMonitor-onAttach-getProductId = " + device.getProductId());
 
                             mUSBMonitor.requestPermission(device);
                             for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
@@ -71,7 +69,6 @@ public class USBMonitorDualManager {
 
                         @Override
                         public void onGranted(UsbDevice usbDevice, boolean granted) {
-                            Log.d(TAG, "USBMonitor-onGranted");
                             for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
                                 onUSBConnectListener.onGranted(usbDevice, granted);
                             }
@@ -79,7 +76,6 @@ public class USBMonitorDualManager {
 
                         @Override
                         public void onDettach(UsbDevice device) {
-                            Log.d(TAG, "USBMonitor-onDettach");
                             Const.isDeviceConnected = false;
                             for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
                                 onUSBConnectListener.onDettach(device);
@@ -90,8 +86,6 @@ public class USBMonitorDualManager {
                         @Override
                         public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock,
                                               boolean createNew) {
-                            Log.w(TAG, "USBMonitor-onConnect createNew " + createNew);
-                            Log.w(TAG, "USBMonitor-onConnect Pid " + device.getProductId());
                             if (!mIrOpened) {
                                 openIrUVCCamera(irPid, irWidth, irHeight, irFPS, irBandWith, device, ctrlBlock);
                             }
@@ -108,7 +102,6 @@ public class USBMonitorDualManager {
 
                         @Override
                         public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
-                            Log.w(TAG, "USBMonitor-onDisconnect");
                             Const.isDeviceConnected = false;
                             for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
                                 onUSBConnectListener.onDisconnect(device, ctrlBlock);
@@ -117,7 +110,6 @@ public class USBMonitorDualManager {
 
                         @Override
                         public void onCancel(UsbDevice device) {
-                            Log.d(TAG, "USBMonitor-onCancel");
                             Const.isDeviceConnected = false;
                             for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
                                 onUSBConnectListener.onCancel(device);
@@ -141,12 +133,10 @@ public class USBMonitorDualManager {
     }
 
     private void openIrUVCCamera(int pid, int irWidth, int irHeight, int irFps, float irBandWidth, UsbDevice device, USBMonitor.UsbControlBlock controlBlock) {
-        Log.w(TAG, "USBMonitor-openIrUVCCamera 1 " + device.getProductId());
         synchronized (mSyncs) {
             if (device.getProductId() != pid) {
                 return;
             }
-            Log.w(TAG, "USBMonitor-openIrUVCCamera " + device.getProductId());
 
             if (mIrUvcCamera == null) {
                 ConcreateUVCBuilder concreateUVCBuilder = new ConcreateUVCBuilder();
@@ -162,7 +152,6 @@ public class USBMonitorDualManager {
                 mIrUvcCamera.setUSBPreviewSize(irWidth, irHeight);
                 mIrUvcCamera.onStartPreview();
                 mIrOpened = true;
-                Log.w(TAG, "USBMonitor-openIrUVCCamera complete" + device.getProductId());
 
             }
         }
@@ -185,12 +174,10 @@ public class USBMonitorDualManager {
 
     private void openVlUVCCamera(int pid, int vlWidth, int vlHeight, int vlFps, float vlBandWidth, UsbDevice device, USBMonitor.UsbControlBlock controlBlock) {
         synchronized (mSyncs) {
-            Log.w(TAG, "USBMonitor-openVlUVCCamera 1" + device.getProductId());
 
             if (device.getProductId() != pid) {
                 return;
             }
-            Log.w(TAG, "USBMonitor-openVlUVCCamera " + device.getProductId());
 
             if (mVlUvcCamera == null) {
                 ConcreateUVCBuilder concreateUVCBuilder = new ConcreateUVCBuilder();
@@ -210,13 +197,11 @@ public class USBMonitorDualManager {
                 }
                 mVlUvcCamera.onStartPreview();
                 mVlOpened = true;
-                Log.w(TAG, "USBMonitor-openVlUVCCamera complete" + device.getProductId());
             }
         }
     }
 
     public void stopIrUVCCamera() {
-        Log.i(TAG, "stopIrUVCCamera");
         if (mIrUvcCamera != null) {
             mIrUvcCamera.onStopPreview();
             SystemClock.sleep(200);
@@ -227,7 +212,6 @@ public class USBMonitorDualManager {
     }
 
     public void stopVlUVCCamera() {
-        Log.i(TAG, "stopVlUVCCamera");
         if (mVlUvcCamera != null) {
             mVlUvcCamera.onStopPreview();
             SystemClock.sleep(200);

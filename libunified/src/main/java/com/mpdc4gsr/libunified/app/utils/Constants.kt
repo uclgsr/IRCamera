@@ -13,7 +13,7 @@ object Constants {
     const val IR_TEMPERATURE_MODE = 1
     const val IR_OBSERVE_MODE = 2
     const val IR_EDIT_MODE = 4 //
-    const val IR_TCPLUS_MODE = 5 // 
+    const val IR_TCPLUS_MODE = 5 //
     const val IR_TC007_MODE = 6 // TC007
     const val IR_TEMPERATURE_LITE = 7 // lite
     const val IS_REPORT_FIRST = "IS_REPORT_FIRST"

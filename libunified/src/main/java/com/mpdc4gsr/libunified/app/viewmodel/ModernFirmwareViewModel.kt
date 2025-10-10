@@ -11,7 +11,7 @@ import java.io.File
 
 class ModernFirmwareViewModel(
     application: Application,
-    private val firmwareRepository: FirmwareRepository = FirmwareRepository(application)
+    private val firmwareRepository: FirmwareRepository = FirmwareRepository(application),
 ) : AndroidViewModel(application) {
     // State management
     private val _firmwareState = MutableStateFlow<FirmwareState>(FirmwareState.Idle)
@@ -26,28 +26,58 @@ class ModernFirmwareViewModel(
     // Sealed classes for type-safe state management
     sealed class FirmwareState {
         object Idle : FirmwareState()
+
         object Checking : FirmwareState()
-        data class UpdateAvailable(val info: FirmwareRepository.FirmwareInfo) : FirmwareState()
+
+        data class UpdateAvailable(
+            val info: FirmwareRepository.FirmwareInfo,
+        ) : FirmwareState()
+
         object UpToDate : FirmwareState()
-        data class Error(val message: String, val isBindError: Boolean = false) : FirmwareState()
+
+        data class Error(
+            val message: String,
+            val isBindError: Boolean = false,
+        ) : FirmwareState()
     }
 
     sealed class DownloadState {
         object Idle : DownloadState()
-        data class Downloading(val progress: Float) : DownloadState()
-        data class Completed(val file: File) : DownloadState()
-        data class Error(val message: String) : DownloadState()
+
+        data class Downloading(
+            val progress: Float,
+        ) : DownloadState()
+
+        data class Completed(
+            val file: File,
+        ) : DownloadState()
+
+        data class Error(
+            val message: String,
+        ) : DownloadState()
     }
 
     sealed class FirmwareEvent {
-        data class ShowUpdateDialog(val info: FirmwareRepository.FirmwareInfo) : FirmwareEvent()
-        data class ShowError(val message: String) : FirmwareEvent()
-        data class ShowSuccess(val message: String) : FirmwareEvent()
+        data class ShowUpdateDialog(
+            val info: FirmwareRepository.FirmwareInfo,
+        ) : FirmwareEvent()
+
+        data class ShowError(
+            val message: String,
+        ) : FirmwareEvent()
+
+        data class ShowSuccess(
+            val message: String,
+        ) : FirmwareEvent()
+
         object UpdateCompleted : FirmwareEvent()
     }
 
     // Public API for checking firmware updates
-    fun checkFirmwareUpdate(isTC007: Boolean, deviceInfo: FirmwareRepository.DeviceInfo) {
+    fun checkFirmwareUpdate(
+        isTC007: Boolean,
+        deviceInfo: FirmwareRepository.DeviceInfo,
+    ) {
         viewModelScope.launch {
             _firmwareState.value = FirmwareState.Checking
             firmwareRepository.checkFirmwareUpdate(isTC007, deviceInfo).collect { result ->
@@ -78,7 +108,10 @@ class ModernFirmwareViewModel(
     }
 
     // Download firmware update
-    fun downloadFirmwareUpdate(firmwareInfo: FirmwareRepository.FirmwareInfo, outputDir: File) {
+    fun downloadFirmwareUpdate(
+        firmwareInfo: FirmwareRepository.FirmwareInfo,
+        outputDir: File,
+    ) {
         viewModelScope.launch {
             _downloadState.value = DownloadState.Downloading(0f)
             when (val result = firmwareRepository.downloadFirmware(firmwareInfo, outputDir)) {
@@ -152,17 +185,16 @@ class ModernFirmwareViewModel(
         val version: String,
         val updateStr: String,
         val downUrl: String,
-        val size: Long
+        val size: Long,
     ) {
         companion object {
-            fun fromFirmwareInfo(info: FirmwareRepository.FirmwareInfo): FirmwareData {
-                return FirmwareData(
+            fun fromFirmwareInfo(info: FirmwareRepository.FirmwareInfo): FirmwareData =
+                FirmwareData(
                     version = info.version,
                     updateStr = info.updateDescription,
                     downUrl = info.downloadUrl,
-                    size = info.size
+                    size = info.size,
                 )
-            }
         }
     }
 

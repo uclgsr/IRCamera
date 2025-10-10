@@ -14,6 +14,7 @@ class ThermalIrNightViewModel : BaseViewModel() {
     val showOverlay: StateFlow<Boolean> = _showOverlay.asStateFlow()
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
+
     fun selectMode(mode: Int) {
         launchWithErrorHandling {
             _selectedMode.value = mode

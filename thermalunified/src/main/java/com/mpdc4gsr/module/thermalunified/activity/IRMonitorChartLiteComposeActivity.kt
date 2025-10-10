@@ -25,9 +25,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorChartLiteViewModel
 
 class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLiteViewModel>() {
-    override fun createViewModel(): IRMonitorChartLiteViewModel {
-        return viewModels<IRMonitorChartLiteViewModel>().value
-    }
+    override fun createViewModel(): IRMonitorChartLiteViewModel = viewModels<IRMonitorChartLiteViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -45,7 +43,7 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
                             Text(
                                 "Monitor Chart Lite",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -53,7 +51,7 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -62,176 +60,191 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
                                 Icon(
                                     if (showOverlay) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                                     contentDescription = "Toggle Overlay",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                             TextButton(
-                                onClick = { finish() }
+                                onClick = { finish() },
                             ) {
                                 Text("Finish", color = Color.White)
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Black
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Black,
+                            ),
                     )
                 },
-                containerColor = Color.Black
+                containerColor = Color.Black,
             ) { paddingValues ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
                 ) {
                     // Chart area
                     Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.45f)
-                            .padding(8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF16131E)
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(0.45f)
+                                .padding(8.dp),
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                     ) {
                         Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(12.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxSize()
+                                    .padding(12.dp),
                         ) {
                             // Recording time indicator
                             Card(
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color(0xFF3B3E44)
-                                ),
-                                shape = RoundedCornerShape(50.dp)
+                                colors =
+                                    CardDefaults.cardColors(
+                                        containerColor = Color(0xFF3B3E44),
+                                    ),
+                                shape = RoundedCornerShape(50.dp),
                             ) {
                                 Row(
-                                    modifier = Modifier.padding(
-                                        horizontal = 12.dp,
-                                        vertical = 4.dp
-                                    ),
+                                    modifier =
+                                        Modifier.padding(
+                                            horizontal = 12.dp,
+                                            vertical = 4.dp,
+                                        ),
                                     verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
                                 ) {
                                     Box(
-                                        modifier = Modifier
-                                            .size(6.dp)
-                                            .clip(CircleShape)
-                                            .background(Color(0xFFFF4747))
+                                        modifier =
+                                            Modifier
+                                                .size(6.dp)
+                                                .clip(CircleShape)
+                                                .background(Color(0xFFFF4747)),
                                     )
                                     Text(
                                         recordingTime,
                                         color = Color.White,
-                                        fontSize = 14.sp
+                                        fontSize = 14.sp,
                                     )
                                 }
                             }
                             Spacer(modifier = Modifier.height(12.dp))
                             // Legend
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp),
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp),
                                 horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 ) {
                                     Box(
-                                        modifier = Modifier
-                                            .size(12.dp)
-                                            .clip(CircleShape)
-                                            .background(Color(0xFFFF4747))
+                                        modifier =
+                                            Modifier
+                                                .size(12.dp)
+                                                .clip(CircleShape)
+                                                .background(Color(0xFFFF4747)),
                                     )
                                     Text(
                                         "Current",
                                         color = Color.White,
-                                        fontSize = 10.sp
+                                        fontSize = 10.sp,
                                     )
                                 }
                                 Spacer(modifier = Modifier.width(16.dp))
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 ) {
                                     Box(
-                                        modifier = Modifier
-                                            .size(12.dp)
-                                            .clip(CircleShape)
-                                            .background(Color(0xFF06AAFF))
+                                        modifier =
+                                            Modifier
+                                                .size(12.dp)
+                                                .clip(CircleShape)
+                                                .background(Color(0xFF06AAFF)),
                                     )
                                     Text(
                                         "Low Temp",
                                         color = Color.White,
-                                        fontSize = 10.sp
+                                        fontSize = 10.sp,
                                     )
                                 }
                             }
                             // Chart placeholder
                             Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(top = 4.dp)
-                                    .background(
-                                        Color(0xFF1A1A1A),
-                                        RoundedCornerShape(8.dp)
-                                    ),
-                                contentAlignment = Alignment.Center
+                                modifier =
+                                    Modifier
+                                        .fillMaxSize()
+                                        .padding(top = 4.dp)
+                                        .background(
+                                            Color(0xFF1A1A1A),
+                                            RoundedCornerShape(8.dp),
+                                        ),
+                                contentAlignment = Alignment.Center,
                             ) {
                                 Text(
                                     "Chart View",
                                     color = Color.White.copy(alpha = 0.5f),
-                                    fontSize = 16.sp
+                                    fontSize = 16.sp,
                                 )
                             }
                         }
                     }
                     // Thermal image view area
                     Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.55f)
-                            .padding(8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF16131E)
-                        )
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(0.55f)
+                                .padding(8.dp),
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
                     ) {
                         Box(
                             modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.Center,
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 Text(
                                     "Thermal Display",
                                     color = Color.White.copy(alpha = 0.5f),
-                                    fontSize = 16.sp
+                                    fontSize = 16.sp,
                                 )
                                 if (showOverlay) {
                                     Card(
-                                        colors = CardDefaults.cardColors(
-                                            containerColor = Color(0x80000000)
-                                        )
+                                        colors =
+                                            CardDefaults.cardColors(
+                                                containerColor = Color(0x80000000),
+                                            ),
                                     ) {
                                         Column(
                                             modifier = Modifier.padding(16.dp),
-                                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                                            verticalArrangement = Arrangement.spacedBy(4.dp),
                                         ) {
                                             Text(
                                                 "Current: %.1f°C".format(currentTemp),
                                                 color = Color.White,
-                                                fontSize = 14.sp
+                                                fontSize = 14.sp,
                                             )
                                             Text(
                                                 "Low: %.1f°C".format(lowTemp),
                                                 color = Color.White,
-                                                fontSize = 14.sp
+                                                fontSize = 14.sp,
                                             )
                                         }
                                     }

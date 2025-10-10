@@ -44,11 +44,13 @@ class HikSurfaceView : SurfaceView {
     var limitTempMin = Float.MIN_VALUE
     var limitTempMax = Float.MAX_VALUE
     private val irImageHelp = IRImageHelp()
+
     fun refreshCustomPseudo(it: DataBean) {
     }
 
     @Volatile
     private var pseudoType: PseudoColorType = PseudoColorType.PSEUDO_3
+
     fun setPseudoCode(code: Int) {
         pseudoType = PseudocodeUtils.changePseudocodeModeByOld(code)
     }
@@ -66,14 +68,14 @@ class HikSurfaceView : SurfaceView {
         context,
         attrs,
         defStyleAttr,
-        0
+        0,
     )
 
     constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : super(
         context,
         attrs,
@@ -102,7 +104,7 @@ class HikSurfaceView : SurfaceView {
             yuvArray,
             (sourceWidth * sourceHeight).toLong(),
             pseudo,
-            sourceArgbArray
+            sourceArgbArray,
         )
         irImageHelp.customPseudoColor(sourceArgbArray, tempArray, sourceWidth, sourceHeight)
         irImageHelp.setPseudoColorMaxMin(
@@ -111,36 +113,40 @@ class HikSurfaceView : SurfaceView {
             limitTempMax,
             limitTempMin,
             sourceWidth,
-            sourceHeight
+            sourceHeight,
         )
-        val newArray = irImageHelp.contourDetection(
-            alarmBean,
-            sourceArgbArray,
-            tempArray,
-            sourceWidth,
-            sourceHeight
-        ) ?: sourceArgbArray
+        val newArray =
+            irImageHelp.contourDetection(
+                alarmBean,
+                sourceArgbArray,
+                tempArray,
+                sourceWidth,
+                sourceHeight,
+            ) ?: sourceArgbArray
         when (rotateAngle) {
-            90 -> LibIRProcess.rotateLeft90(
-                newArray,
-                imageRes,
-                IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
-                rotateArgbArray
-            )
+            90 ->
+                LibIRProcess.rotateLeft90(
+                    newArray,
+                    imageRes,
+                    IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
+                    rotateArgbArray,
+                )
 
-            180 -> LibIRProcess.rotate180(
-                newArray,
-                imageRes,
-                IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
-                rotateArgbArray
-            )
+            180 ->
+                LibIRProcess.rotate180(
+                    newArray,
+                    imageRes,
+                    IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
+                    rotateArgbArray,
+                )
 
-            270 -> LibIRProcess.rotateRight90(
-                newArray,
-                imageRes,
-                IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
-                rotateArgbArray
-            )
+            270 ->
+                LibIRProcess.rotateRight90(
+                    newArray,
+                    imageRes,
+                    IRPROCSRCFMTType.IRPROC_SRC_FMT_ARGB8888,
+                    rotateArgbArray,
+                )
 
             else -> System.arraycopy(newArray, 0, rotateArgbArray, 0, rotateArgbArray.size)
         }

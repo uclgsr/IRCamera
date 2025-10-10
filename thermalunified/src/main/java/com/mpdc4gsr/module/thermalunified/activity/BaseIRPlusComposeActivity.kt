@@ -21,9 +21,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.launch
 
 class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -42,7 +40,7 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             Text(
                                 "Thermal Plus Control",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -50,7 +48,7 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -59,49 +57,53 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.Default.MoreVert,
                                     contentDescription = "More",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Black
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Black,
+                            ),
                     )
                 },
-                containerColor = Color.Black
+                containerColor = Color.Black,
             ) { paddingValues ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color.Black)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color.Black),
                 ) {
                     // Plus mode status
                     PlusStatusCard(
                         isPlushActive = isPlushActive,
                         plusMode = plusMode,
                         onTogglePlus = { isPlushActive = !isPlushActive },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                     // Main thermal view with plus features
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
                     ) {
                         // Enhanced thermal surface
                         PlusThermalSurface(
                             isPlushActive = isPlushActive,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
                         )
                         // Plus feature overlay
                         if (isPlushActive) {
                             PlusFeatureOverlay(
                                 scope = scope,
                                 snackbarHostState = snackbarHostState,
-                                modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .padding(16.dp)
+                                modifier =
+                                    Modifier
+                                        .align(Alignment.TopEnd)
+                                        .padding(16.dp),
                             )
                         }
                         // Advanced controls
@@ -111,9 +113,10 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             advancedVisible = advancedSettings,
                             scope = scope,
                             snackbarHostState = snackbarHostState,
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .fillMaxWidth()
+                            modifier =
+                                Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .fillMaxWidth(),
                         )
                     }
                 }
@@ -127,44 +130,46 @@ private fun PlusStatusCard(
     isPlushActive: Boolean,
     plusMode: String,
     onTogglePlus: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             // Plus status
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Icon(
                     Icons.Default.Star,
                     contentDescription = "Plus",
                     tint = if (isPlushActive) Color(0xFFFFD700) else Color(0xFF7D8590),
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
                 Column {
                     Text(
                         "Thermal Plus Mode",
                         color = Color.White,
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Text(
                         if (isPlushActive) "Active - $plusMode" else "Inactive",
                         color = if (isPlushActive) Color(0xFFFFD700) else Color(0xFF7D8590),
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
                     )
                 }
             }
@@ -172,12 +177,13 @@ private fun PlusStatusCard(
             Switch(
                 checked = isPlushActive,
                 onCheckedChange = { onTogglePlus() },
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color.White,
-                    checkedTrackColor = Color(0xFFFFD700),
-                    uncheckedThumbColor = Color(0xFF7D8590),
-                    uncheckedTrackColor = Color(0xFF16131E)
-                )
+                colors =
+                    SwitchDefaults.colors(
+                        checkedThumbColor = Color.White,
+                        checkedTrackColor = Color(0xFFFFD700),
+                        uncheckedThumbColor = Color(0xFF7D8590),
+                        uncheckedTrackColor = Color(0xFF16131E),
+                    ),
             )
         }
     }
@@ -186,48 +192,50 @@ private fun PlusStatusCard(
 @Composable
 private fun PlusThermalSurface(
     isPlushActive: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF0D1117)
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF0D1117),
+            ),
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
                     if (isPlushActive) Icons.Default.Star else Icons.Default.Videocam,
                     contentDescription = "Camera",
                     tint = if (isPlushActive) Color(0xFFFFD700) else Color(0xFF7D8590),
-                    modifier = Modifier.size(64.dp)
+                    modifier = Modifier.size(64.dp),
                 )
                 Text(
                     if (isPlushActive) "Enhanced Thermal Plus Feed" else "Standard Thermal Feed",
                     color = if (isPlushActive) Color.White else Color(0xFF7D8590),
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 )
                 if (isPlushActive) {
                     Text(
                         "Advanced Processing Active",
                         color = Color(0xFFFFD700),
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
                     )
                 }
             }
             // Plus enhancement indicators
             if (isPlushActive) {
                 PlusEnhancementIndicators(
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(16.dp)
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopStart)
+                            .padding(16.dp),
                 )
             }
         }
@@ -235,25 +243,24 @@ private fun PlusThermalSurface(
 }
 
 @Composable
-private fun PlusEnhancementIndicators(
-    modifier: Modifier = Modifier
-) {
+private fun PlusEnhancementIndicators(modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black.copy(alpha = 0.8f)
-        ),
-        shape = RoundedCornerShape(8.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Black.copy(alpha = 0.8f),
+            ),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
                 "PLUS ACTIVE",
                 color = Color(0xFFFFD700),
                 fontSize = 10.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             PlusIndicatorItem("AI Enhancement", true)
             PlusIndicatorItem("Noise Reduction", true)
@@ -266,22 +273,22 @@ private fun PlusEnhancementIndicators(
 @Composable
 private fun PlusIndicatorItem(
     feature: String,
-    active: Boolean
+    active: Boolean,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Icon(
             if (active) Icons.Default.CheckCircle else Icons.Default.Circle,
             contentDescription = feature,
             tint = if (active) Color(0xFF00FF00) else Color(0xFF7D8590),
-            modifier = Modifier.size(10.dp)
+            modifier = Modifier.size(10.dp),
         )
         Text(
             feature,
             color = if (active) Color.White else Color(0xFF7D8590),
-            fontSize = 9.sp
+            fontSize = 9.sp,
         )
     }
 }
@@ -290,24 +297,25 @@ private fun PlusIndicatorItem(
 private fun PlusFeatureOverlay(
     scope: kotlinx.coroutines.CoroutineScope,
     snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black.copy(alpha = 0.8f)
-        ),
-        shape = RoundedCornerShape(8.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Black.copy(alpha = 0.8f),
+            ),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
                 "Plus Features",
                 color = Color(0xFFFFD700),
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             PlusFeatureButton(
                 icon = Icons.Default.AutoFixHigh,
@@ -316,7 +324,7 @@ private fun PlusFeatureOverlay(
                     scope.launch {
                         snackbarHostState.showSnackbar("Auto enhance processing...")
                     }
-                }
+                },
             )
             PlusFeatureButton(
                 icon = Icons.Default.Tune,
@@ -325,7 +333,7 @@ private fun PlusFeatureOverlay(
                     scope.launch {
                         snackbarHostState.showSnackbar("Opening manual tune controls...")
                     }
-                }
+                },
             )
             PlusFeatureButton(
                 icon = Icons.Default.Analytics,
@@ -334,7 +342,7 @@ private fun PlusFeatureOverlay(
                     scope.launch {
                         snackbarHostState.showSnackbar("Running AI analysis...")
                     }
-                }
+                },
             )
         }
     }
@@ -344,30 +352,31 @@ private fun PlusFeatureOverlay(
 private fun PlusFeatureButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFFFD700).copy(alpha = 0.2f),
-            contentColor = Color(0xFFFFD700)
-        ),
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFFD700).copy(alpha = 0.2f),
+                contentColor = Color(0xFFFFD700),
+            ),
         shape = RoundedCornerShape(6.dp),
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Icon(
                 icon,
                 contentDescription = text,
-                modifier = Modifier.size(14.dp)
+                modifier = Modifier.size(14.dp),
             )
             Text(
                 text,
                 fontSize = 10.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
     }
@@ -380,25 +389,27 @@ private fun PlusControlsOverlay(
     advancedVisible: Boolean,
     scope: kotlinx.coroutines.CoroutineScope,
     snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black.copy(alpha = 0.9f)
-        ),
-        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Black.copy(alpha = 0.9f),
+            ),
+        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Plus mode selector
             PlusModeSelector(
                 selectedMode = plusMode,
-                onModeSelected = onModeChange
+                onModeSelected = onModeChange,
             )
             // Advanced controls (when visible)
             if (advancedVisible) {
@@ -420,7 +431,7 @@ private fun PlusControlsOverlay(
                     scope.launch {
                         snackbarHostState.showSnackbar("Processing with Plus algorithms...")
                     }
-                }
+                },
             )
         }
     }
@@ -429,33 +440,34 @@ private fun PlusControlsOverlay(
 @Composable
 private fun PlusModeSelector(
     selectedMode: String,
-    onModeSelected: (String) -> Unit
+    onModeSelected: (String) -> Unit,
 ) {
     val modes = getPlusModes()
     Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             "Plus Mode",
             color = Color(0xFFFFD700),
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             modes.forEach { mode ->
                 FilterChip(
                     onClick = { onModeSelected(mode) },
                     label = { Text(mode.replaceFirstChar { it.uppercase() }, fontSize = 11.sp) },
                     selected = selectedMode == mode,
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = Color(0xFFFFD700),
-                        selectedLabelColor = Color.Black,
-                        containerColor = Color(0xFF21262D),
-                        labelColor = Color(0xFF7D8590)
-                    )
+                    colors =
+                        FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = Color(0xFFFFD700),
+                            selectedLabelColor = Color.Black,
+                            containerColor = Color(0xFF21262D),
+                            labelColor = Color(0xFF7D8590),
+                        ),
                 )
             }
         }
@@ -467,70 +479,72 @@ private fun AdvancedPlusControls() {
     var aiStrength by remember { mutableFloatStateOf(75f) }
     var noiseReduction by remember { mutableFloatStateOf(50f) }
     Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text(
             "Advanced Controls",
             color = Color.White,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         // AI Enhancement Strength
         Column {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     "AI Enhancement",
                     color = Color.White,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
                 )
                 Text(
                     "${aiStrength.toInt()}%",
                     color = Color(0xFFFFD700),
                     fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
             Slider(
                 value = aiStrength,
                 onValueChange = { aiStrength = it },
                 valueRange = 0f..100f,
-                colors = SliderDefaults.colors(
-                    thumbColor = Color(0xFFFFD700),
-                    activeTrackColor = Color(0xFFFFD700),
-                    inactiveTrackColor = Color(0xFF21262D)
-                )
+                colors =
+                    SliderDefaults.colors(
+                        thumbColor = Color(0xFFFFD700),
+                        activeTrackColor = Color(0xFFFFD700),
+                        inactiveTrackColor = Color(0xFF21262D),
+                    ),
             )
         }
         // Noise Reduction
         Column {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     "Noise Reduction",
                     color = Color.White,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
                 )
                 Text(
                     "${noiseReduction.toInt()}%",
                     color = Color(0xFFFFD700),
                     fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
             Slider(
                 value = noiseReduction,
                 onValueChange = { noiseReduction = it },
                 valueRange = 0f..100f,
-                colors = SliderDefaults.colors(
-                    thumbColor = Color(0xFFFFD700),
-                    activeTrackColor = Color(0xFFFFD700),
-                    inactiveTrackColor = Color(0xFF21262D)
-                )
+                colors =
+                    SliderDefaults.colors(
+                        thumbColor = Color(0xFFFFD700),
+                        activeTrackColor = Color(0xFFFFD700),
+                        inactiveTrackColor = Color(0xFF21262D),
+                    ),
             )
         }
     }
@@ -540,24 +554,25 @@ private fun AdvancedPlusControls() {
 private fun PlusQuickActions(
     onCapture: () -> Unit = {},
     onRecord: () -> Unit = {},
-    onProcess: () -> Unit = {}
+    onProcess: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         OutlinedButton(
             onClick = onCapture,
             modifier = Modifier.weight(1f),
-            colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = Color(0xFFFFD700)
-            ),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFFFD700))
+            colors =
+                ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color(0xFFFFD700),
+                ),
+            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFFFD700)),
         ) {
             Icon(
                 Icons.Default.CameraAlt,
                 contentDescription = "Capture Plus",
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(16.dp),
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text("Plus Capture", fontSize = 11.sp)
@@ -565,15 +580,16 @@ private fun PlusQuickActions(
         OutlinedButton(
             onClick = onRecord,
             modifier = Modifier.weight(1f),
-            colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = Color(0xFFFFD700)
-            ),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFFFD700))
+            colors =
+                ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color(0xFFFFD700),
+                ),
+            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFFFD700)),
         ) {
             Icon(
                 Icons.Default.Videocam,
                 contentDescription = "Record Plus",
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(16.dp),
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text("Plus Record", fontSize = 11.sp)
@@ -581,15 +597,16 @@ private fun PlusQuickActions(
         OutlinedButton(
             onClick = onProcess,
             modifier = Modifier.weight(1f),
-            colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = Color(0xFFFFD700)
-            ),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFFFD700))
+            colors =
+                ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color(0xFFFFD700),
+                ),
+            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFFFD700)),
         ) {
             Icon(
                 Icons.Default.AutoFixHigh,
                 contentDescription = "Process Plus",
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(16.dp),
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text("Process", fontSize = 11.sp)
@@ -597,6 +614,4 @@ private fun PlusQuickActions(
     }
 }
 
-private fun getPlusModes(): List<String> {
-    return listOf("enhanced", "precision", "speed", "balanced")
-}
+private fun getPlusModes(): List<String> = listOf("enhanced", "precision", "speed", "balanced")

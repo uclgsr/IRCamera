@@ -31,16 +31,16 @@ fun ChartTrendCompose(
     lineColor: Color = Color(0xFF2196F3),
     gridColor: Color = Color.Gray.copy(alpha = 0.3f),
     textColor: Color = MaterialTheme.colorScheme.onSurface,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             // Title
             Text(
@@ -48,27 +48,29 @@ fun ChartTrendCompose(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = textColor,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             // Chart area
             if (dataPoints.isEmpty()) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = "No data available",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             } else {
                 Canvas(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
                 ) {
                     drawTrendChart(
                         dataPoints = dataPoints,
@@ -76,31 +78,32 @@ fun ChartTrendCompose(
                         maxValue = maxValue,
                         lineColor = lineColor,
                         gridColor = gridColor,
-                        textColor = textColor
+                        textColor = textColor,
                     )
                 }
             }
             // Legend/Labels
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = "Start",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "${dataPoints.size} points",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "End",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -113,7 +116,7 @@ private fun DrawScope.drawTrendChart(
     maxValue: Float,
     lineColor: Color,
     gridColor: Color,
-    textColor: Color
+    textColor: Color,
 ) {
     if (dataPoints.isEmpty()) return
     val padding = 40.dp.toPx()
@@ -129,7 +132,7 @@ private fun DrawScope.drawTrendChart(
             color = gridColor,
             start = Offset(padding, y),
             end = Offset(size.width - padding, y),
-            strokeWidth = 1.dp.toPx()
+            strokeWidth = 1.dp.toPx(),
         )
     }
     // Draw vertical grid lines
@@ -140,15 +143,16 @@ private fun DrawScope.drawTrendChart(
             color = gridColor,
             start = Offset(x, padding),
             end = Offset(x, size.height - padding),
-            strokeWidth = 0.5.dp.toPx()
+            strokeWidth = 0.5.dp.toPx(),
         )
     }
     // Draw Y-axis labels
-    val textPaint = android.graphics.Paint().apply {
-        color = textColor.value.toInt()
-        textSize = 11.sp.toPx()
-        isAntiAlias = true
-    }
+    val textPaint =
+        android.graphics.Paint().apply {
+            color = textColor.value.toInt()
+            textSize = 11.sp.toPx()
+            isAntiAlias = true
+        }
     for (i in 0..gridLineCount) {
         val y = padding + (chartHeight * i / gridLineCount)
         val value = maxValue - (valueRange * i / gridLineCount)
@@ -156,7 +160,7 @@ private fun DrawScope.drawTrendChart(
             String.format("%.0f", value),
             5.dp.toPx(),
             y + 4.dp.toPx(),
-            textPaint
+            textPaint,
         )
     }
     // Draw trend line
@@ -178,14 +182,14 @@ private fun DrawScope.drawTrendChart(
             drawCircle(
                 color = lineColor,
                 radius = 3.dp.toPx(),
-                center = Offset(x, y)
+                center = Offset(x, y),
             )
         }
         // Draw the trend line
         drawPath(
             path = path,
             color = lineColor,
-            style = Stroke(width = 2.dp.toPx())
+            style = Stroke(width = 2.dp.toPx()),
         )
     }
 }
@@ -196,7 +200,7 @@ fun TemperatureTrendCompose(
     unit: String = "°C",
     lowTemp: Float = 20f,
     highTemp: Float = 40f,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val minTemp = temperatures.minOrNull() ?: 0f
     val maxTemp = temperatures.maxOrNull() ?: 50f
@@ -207,35 +211,37 @@ fun TemperatureTrendCompose(
         minValue = adjustedMin,
         maxValue = adjustedMax,
         title = "Temperature Trend ($unit)",
-        lineColor = when {
-            temperatures.lastOrNull() ?: 0f < lowTemp -> Color.Blue
-            temperatures.lastOrNull() ?: 0f > highTemp -> Color.Red
-            else -> Color.Green
-        },
-        modifier = modifier
+        lineColor =
+            when {
+                temperatures.lastOrNull() ?: 0f < lowTemp -> Color.Blue
+                temperatures.lastOrNull() ?: 0f > highTemp -> Color.Red
+                else -> Color.Green
+            },
+        modifier = modifier,
     )
 }
 
 @Composable
 fun ChartTrendComposePreview() {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         // Sample temperature data
         val sampleTemps = listOf(22f, 24f, 26f, 25f, 28f, 30f, 27f, 29f, 31f, 28f)
         TemperatureTrendCompose(
             temperatures = sampleTemps,
             lowTemp = 25f,
-            highTemp = 30f
+            highTemp = 30f,
         )
         // Empty state
         ChartTrendCompose(
             dataPoints = emptyList(),
-            title = "No Data Example"
+            title = "No Data Example",
         )
     }
 }

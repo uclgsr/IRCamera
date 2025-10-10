@@ -33,16 +33,14 @@ typealias PDFItem = PDFListViewModel.PDFItem
 
 class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
     private var isTC007 by mutableStateOf(false)
-    override fun createViewModel(): PDFListViewModel {
-        return viewModels<PDFListViewModel>().value
-    }
+
+    override fun createViewModel(): PDFListViewModel = viewModels<PDFListViewModel>().value
 
     companion object {
-        fun newInstance(isTC007: Boolean): PDFListComposeFragment {
-            return PDFListComposeFragment().apply {
+        fun newInstance(isTC007: Boolean): PDFListComposeFragment =
+            PDFListComposeFragment().apply {
                 this.isTC007 = isTC007
             }
-        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -56,12 +54,12 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
         val isSelectionMode by viewModel.isSelectionMode.collectAsStateWithLifecycle()
         LibUnifiedTheme {
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 // Header with device type indicator
                 PDFListHeader(
                     isTC007 = isTC007,
-                    totalReports = pdfItems.size
+                    totalReports = pdfItems.size,
                 )
                 // Selection toolbar
                 if (isSelectionMode) {
@@ -74,12 +72,12 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                         onDeleteSelected = { viewModel.deleteSelectedItems() },
                         onExportSelected = {
                             exportSelectedPDFs(context, selectedItems.toList())
-                        }
+                        },
                     )
                 }
                 // PDF list content
                 Box(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     when {
                         isLoading -> {
@@ -88,7 +86,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
 
                         pdfItems.isEmpty() -> {
                             EmptyPDFState(
-                                onRefresh = { viewModel.refreshPDFList() }
+                                onRefresh = { viewModel.refreshPDFList() },
                             )
                         }
 
@@ -110,7 +108,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                                         viewModel.enterSelectionMode()
                                         viewModel.toggleItemSelection(item.path)
                                     }
-                                }
+                                },
                             )
                         }
                     }
@@ -122,41 +120,44 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
     @Composable
     private fun PDFListHeader(
         isTC007: Boolean,
-        totalReports: Int
+        totalReports: Int,
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            )
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                ),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column {
                     Text(
                         text = "Analysis Reports",
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         StatusChip(
                             text = if (isTC007) "TC007 Device" else "Standard Device",
-                            color = if (isTC007) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+                            color = if (isTC007) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary,
                         )
                         Text(
                             text = "$totalReports reports",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
                     }
                 }
@@ -164,7 +165,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                     Icons.Default.PictureAsPdf,
                     contentDescription = "PDF Reports",
                     modifier = Modifier.size(32.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
         }
@@ -173,19 +174,20 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
     @Composable
     private fun StatusChip(
         text: String,
-        color: androidx.compose.ui.graphics.Color
+        color: androidx.compose.ui.graphics.Color,
     ) {
         Card(
-            colors = CardDefaults.cardColors(
-                containerColor = color.copy(alpha = 0.2f)
-            ),
-            shape = RoundedCornerShape(12.dp)
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = color.copy(alpha = 0.2f),
+                ),
+            shape = RoundedCornerShape(12.dp),
         ) {
             Text(
                 text = text,
                 style = MaterialTheme.typography.labelSmall,
                 color = color,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             )
         }
     }
@@ -196,30 +198,33 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
         onClearSelection: () -> Unit,
         onShareSelected: () -> Unit,
         onDeleteSelected: () -> Unit,
-        onExportSelected: () -> Unit
+        onExportSelected: () -> Unit,
     ) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer
-            )
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                ),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "$selectedCount report${if (selectedCount != 1) "s" else ""} selected",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     IconButton(onClick = onShareSelected) {
                         Icon(Icons.Default.Share, contentDescription = "Share")
@@ -231,7 +236,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                         Icon(
                             Icons.Default.Delete,
                             contentDescription = "Delete",
-                            tint = MaterialTheme.colorScheme.error
+                            tint = MaterialTheme.colorScheme.error,
                         )
                     }
                     TextButton(onClick = onClearSelection) {
@@ -246,50 +251,48 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
     private fun LoadingState() {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 CircularProgressIndicator()
                 Text(
                     text = "Loading reports...",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
     }
 
     @Composable
-    private fun EmptyPDFState(
-        onRefresh: () -> Unit
-    ) {
+    private fun EmptyPDFState(onRefresh: () -> Unit) {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.Assignment,
                     contentDescription = "No reports",
                     modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "No Reports Found",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "Generate thermal analysis reports to see them here",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Button(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
@@ -307,11 +310,11 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
         selectedItems: Set<String>,
         isSelectionMode: Boolean,
         onItemClick: (PDFItem) -> Unit,
-        onItemLongClick: (PDFItem) -> Unit
+        onItemLongClick: (PDFItem) -> Unit,
     ) {
         LazyColumn(
             contentPadding = PaddingValues(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(pdfs) { item ->
                 PDFListItem(
@@ -320,7 +323,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                     isSelected = selectedItems.contains(item.path),
                     isSelectionMode = isSelectionMode,
                     onClick = { onItemClick(item) },
-                    onLongClick = { onItemLongClick(item) }
+                    onLongClick = { onItemLongClick(item) },
                 )
             }
         }
@@ -333,85 +336,94 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
         isSelected: Boolean,
         isSelectionMode: Boolean,
         onClick: () -> Unit,
-        onLongClick: () -> Unit
+        onLongClick: () -> Unit,
     ) {
         Card(
             onClick = onClick,
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = if (isSelected)
-                    MaterialTheme.colorScheme.primaryContainer
-                else
-                    MaterialTheme.colorScheme.surface
-            ),
-            border = if (isSelected)
-                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-            else null,
-            shape = RoundedCornerShape(12.dp)
+            colors =
+                CardDefaults.cardColors(
+                    containerColor =
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.primaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.surface
+                        },
+                ),
+            border =
+                if (isSelected) {
+                    androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+                } else {
+                    null
+                },
+            shape = RoundedCornerShape(12.dp),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 // PDF icon
                 Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(
-                            MaterialTheme.colorScheme.errorContainer,
-                            shape = RoundedCornerShape(8.dp)
-                        ),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .background(
+                                MaterialTheme.colorScheme.errorContainer,
+                                shape = RoundedCornerShape(8.dp),
+                            ),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         Icons.Default.PictureAsPdf,
                         contentDescription = "PDF",
                         tint = MaterialTheme.colorScheme.onErrorContainer,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
                 }
                 // PDF info
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     Text(
                         text = item.name,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Medium,
-                        maxLines = 2
+                        maxLines = 2,
                     )
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = formatFileSize(item.size),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Text(
                             text = "${item.pageCount} pages",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         if (item.isAnalysisReport) {
                             StatusChip(
                                 text = "ANALYSIS",
-                                color = MaterialTheme.colorScheme.secondary
+                                color = MaterialTheme.colorScheme.secondary,
                             )
                         }
                     }
                     Text(
-                        text = SimpleDateFormat(
-                            "MMM dd, yyyy HH:mm",
-                            Locale.getDefault()
-                        ).format(Date(item.dateModified)),
+                        text =
+                            SimpleDateFormat(
+                                "MMM dd, yyyy HH:mm",
+                                Locale.getDefault(),
+                            ).format(Date(item.dateModified)),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
                 // Selection indicator or actions
@@ -420,22 +432,22 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                         Icon(
                             Icons.Default.CheckCircle,
                             contentDescription = "Selected",
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = MaterialTheme.colorScheme.primary,
                         )
                     } else {
                         Icon(
                             Icons.Default.RadioButtonUnchecked,
                             contentDescription = "Not Selected",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 } else {
                     IconButton(
-                        onClick = { viewModel.showMoreActions(item) }
+                        onClick = { viewModel.showMoreActions(item) },
                     ) {
                         Icon(
                             Icons.Default.MoreVert,
-                            contentDescription = "More actions"
+                            contentDescription = "More actions",
                         )
                     }
                 }
@@ -444,52 +456,64 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
     }
 
     // Helper functions
-    private fun openPDF(context: android.content.Context, path: String) {
+    private fun openPDF(
+        context: android.content.Context,
+        path: String,
+    ) {
         try {
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(
-                    androidx.core.content.FileProvider.getUriForFile(
-                        context,
-                        "${context.packageName}.fileprovider",
-                        File(path)
-                    ),
-                    "application/pdf"
-                )
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
+            val intent =
+                Intent(Intent.ACTION_VIEW).apply {
+                    setDataAndType(
+                        androidx.core.content.FileProvider.getUriForFile(
+                            context,
+                            "${context.packageName}.fileprovider",
+                            File(path),
+                        ),
+                        "application/pdf",
+                    )
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
             context.startActivity(intent)
         } catch (e: Exception) {
             // Handle error - maybe show a toast or use internal PDF viewer
         }
     }
 
-    private fun shareSelectedPDFs(context: android.content.Context, selectedPaths: List<String>) {
+    private fun shareSelectedPDFs(
+        context: android.content.Context,
+        selectedPaths: List<String>,
+    ) {
         try {
-            val uris = selectedPaths.map { path ->
-                androidx.core.content.FileProvider.getUriForFile(
-                    context,
-                    "${context.packageName}.fileprovider",
-                    File(path)
-                )
-            }
-            val intent = Intent().apply {
-                if (uris.size == 1) {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_STREAM, uris.first())
-                } else {
-                    action = Intent.ACTION_SEND_MULTIPLE
-                    putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
+            val uris =
+                selectedPaths.map { path ->
+                    androidx.core.content.FileProvider.getUriForFile(
+                        context,
+                        "${context.packageName}.fileprovider",
+                        File(path),
+                    )
                 }
-                type = "application/pdf"
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
+            val intent =
+                Intent().apply {
+                    if (uris.size == 1) {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_STREAM, uris.first())
+                    } else {
+                        action = Intent.ACTION_SEND_MULTIPLE
+                        putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
+                    }
+                    type = "application/pdf"
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
             context.startActivity(Intent.createChooser(intent, "Share Reports"))
         } catch (e: Exception) {
             // Handle error
         }
     }
 
-    private fun exportSelectedPDFs(context: android.content.Context, selectedPaths: List<String>) {
+    private fun exportSelectedPDFs(
+        context: android.content.Context,
+        selectedPaths: List<String>,
+    ) {
         // Implementation for exporting PDFs to external storage
         // This would typically involve copying files to a user-accessible location
     }

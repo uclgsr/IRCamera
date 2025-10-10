@@ -2,7 +2,6 @@ package com.mpdc4gsr.module.thermalunified.tools
 
 import android.graphics.Bitmap
 import android.os.Handler
-import com.elvishew.xlog.XLog
 import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.ui.camera.CameraPreviewManager as LibUnifiedCameraPreviewManager
 
@@ -14,20 +13,16 @@ class CameraPreviewManager private constructor() {
 
         @Volatile
         private var INSTANCE: CameraPreviewManager? = null
-        fun getInstance(): CameraPreviewManager {
-            return INSTANCE ?: synchronized(this) {
+
+        fun getInstance(): CameraPreviewManager =
+            INSTANCE ?: synchronized(this) {
                 INSTANCE ?: CameraPreviewManager().also { INSTANCE = it }
             }
-        }
     }
 
-    fun scaledBitmap(cached: Boolean = false): Bitmap? {
-        return delegate.scaledBitmap(cached)
-    }
+    fun scaledBitmap(cached: Boolean = false): Bitmap? = delegate.scaledBitmap(cached)
 
-    fun getCameraBitmap(): Bitmap? {
-        return delegate.getCameraBitmap()
-    }
+    fun getCameraBitmap(): Bitmap? = delegate.getCameraBitmap()
 
     fun updateCameraBitmap(bitmap: Bitmap?) {
         delegate.updateCameraBitmap(bitmap)
@@ -58,19 +53,26 @@ class CameraPreviewManager private constructor() {
     }
 
     fun getImageRotation(): Int = delegate.getImageRotation()
-    fun setTemperatureLimits(min: Float, max: Float) {
+
+    fun setTemperatureLimits(
+        min: Float,
+        max: Float,
+    ) {
         delegate.setTemperatureLimits(min, max)
     }
 
     fun getMinTemperature(): Float = delegate.getMinTemperature()
-    fun getMaxTemperature(): Float = delegate.getMaxTemperature()
-    fun getPseudocolorMode(): Int = delegate.getPseudocolorMode()
-    fun applyPseudocolor(bitmap: Bitmap): Bitmap {
-        return delegate.applyPseudocolor(bitmap)
-    }
 
-    fun init(cameraView: CameraView, handler: Handler) {
+    fun getMaxTemperature(): Float = delegate.getMaxTemperature()
+
+    fun getPseudocolorMode(): Int = delegate.getPseudocolorMode()
+
+    fun applyPseudocolor(bitmap: Bitmap): Bitmap = delegate.applyPseudocolor(bitmap)
+
+    fun init(
+        cameraView: CameraView,
+        handler: Handler,
+    ) {
         delegate.init(cameraView, handler)
-        XLog.d(TAG, "Thermal CameraPreviewManager initialized (delegating to libunified)")
     }
 }

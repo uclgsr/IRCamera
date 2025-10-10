@@ -7,14 +7,14 @@ import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermalunified.video.media.Encoder
 import com.mpdc4gsr.module.thermalunified.video.media.MP4Encoder
-import java.io.File
-import java.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.io.File
+import java.util.*
 
 class VideoRecordMedia(
     private var cameraView: CameraView,
@@ -46,13 +46,14 @@ class VideoRecordMedia(
         encoder.setOutputSize(width, height)
         encoder.startEncode()
         isRunning = true
-        exportJob = coroutineScope.launch {
-            while (isActive && isRunning) {
-                val bitmap = createBitmapFromView()
-                encoder.addFrame(bitmap)
-                delay(50)
+        exportJob =
+            coroutineScope.launch {
+                while (isActive && isRunning) {
+                    val bitmap = createBitmapFromView()
+                    encoder.addFrame(bitmap)
+                    delay(50)
+                }
             }
-        }
     }
 
     override fun startRecord(fileDir: String) {

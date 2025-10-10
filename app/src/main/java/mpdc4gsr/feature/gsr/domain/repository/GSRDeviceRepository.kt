@@ -5,7 +5,6 @@ import mpdc4gsr.core.sensors.gsr.model.DeviceInfo
 import mpdc4gsr.core.sensors.gsr.model.GSRSample
 
 interface GSRDeviceRepository {
-
     suspend fun scanForDevices(): Flow<List<DeviceInfo>>
 
     suspend fun connectDevice(deviceAddress: String): Result<Unit>

@@ -8,17 +8,21 @@ interface SensorRecorder {
     val sensorType: String
     val isRecording: Boolean
     val samplingRate: Double
+
     suspend fun initialize(): Boolean
+
     suspend fun startRecording(sessionDirectory: String): Boolean
+
     suspend fun startRecording(
         sessionDirectory: String,
-        sessionMetadata: SessionMetadata
+        sessionMetadata: SessionMetadata,
     ): Boolean {
         // Default implementation delegates to original method for backward compatibility
         return startRecording(sessionDirectory)
     }
 
     suspend fun stopRecording(): Boolean
+
     suspend fun addSyncMarker(
         markerType: String,
         timestampNs: Long,
@@ -26,8 +30,11 @@ interface SensorRecorder {
     )
 
     suspend fun cleanup()
+
     fun getStatusFlow(): Flow<RecordingStatus>
+
     fun getErrorFlow(): Flow<SensorError>
+
     fun getRecordingStats(): RecordingStats
 }
 
@@ -41,11 +48,12 @@ data class RecordingStatus(
     val timestampNs: Long,
 ) {
     val displayText: String
-        get() = if (isRecording) {
-            "Recording: $samplesRecorded samples @ ${String.format("%.1f", currentDataRate)} Hz"
-        } else {
-            "Ready - ${String.format("%.1f", storageUsedMB)} MB"
-        }
+        get() =
+            if (isRecording) {
+                "Recording: $samplesRecorded samples @ ${String.format("%.1f", currentDataRate)} Hz"
+            } else {
+                "Ready - ${String.format("%.1f", storageUsedMB)} MB"
+            }
 }
 
 data class SensorError(
@@ -68,7 +76,7 @@ enum class ErrorType {
     DEVICE_ERROR,
     STORAGE_ERROR,
     CONNECTION_LOST,
-    CONNECTION_RESTORED,  // Added for enhanced reconnection feedback
+    CONNECTION_RESTORED, // Added for enhanced reconnection feedback
     PAIRING_REQUIRED,
     DATA_PROCESSING_ERROR,
     FEATURE_NOT_SUPPORTED,

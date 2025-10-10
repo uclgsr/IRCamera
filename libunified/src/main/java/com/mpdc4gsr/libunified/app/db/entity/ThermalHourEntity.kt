@@ -42,19 +42,13 @@ class ThermalHourEntity {
 
     @ColumnInfo(name = "update_time")
     var updateTime: Long = 0
-    override fun toString(): String {
-        return "ThermalHourEntity(id=$id, thermalId='$thermalId', userId='$userId', thermal=$thermal, thermalMax=$thermalMax, thermalMin=$thermalMin, sn='$sn', info='$info', type='$type', startTime=$startTime, createTime=$createTime, updateTime=$updateTime)"
-    }
 
-    fun getTime(): String {
-        return TimeTools.reportTime(createTime)
-    }
+    override fun toString(): String =
+        "ThermalHourEntity(id=$id, thermalId='$thermalId', userId='$userId', thermal=$thermal, thermalMax=$thermalMax, thermalMin=$thermalMin, sn='$sn', info='$info', type='$type', startTime=$startTime, createTime=$createTime, updateTime=$updateTime)"
 
-    fun getMaxTemp(): Float {
-        return thermalMax
-    }
+    fun getTime(): String = TimeTools.reportTime(createTime)
 
-    fun getMinTemp(): Float {
-        return thermalMin
-    }
+    fun getMaxTemp(): Float = thermalMax
+
+    fun getMinTemp(): Float = thermalMin
 }

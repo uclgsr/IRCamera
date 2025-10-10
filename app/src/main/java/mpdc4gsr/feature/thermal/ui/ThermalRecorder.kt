@@ -2,7 +2,6 @@ package mpdc4gsr.feature.thermal.ui
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
@@ -73,10 +72,6 @@ class ThermalRecorder(private val context: Context) {
                 val thermalSettingsRepo = mpdc4gsr.feature.thermal.data.ThermalSettingsRepository.getInstance(context)
                 thermalSettings = thermalSettingsRepo.getSettings()
                 val effectiveSaveImages = saveImages || (thermalSettings?.saveRawImages ?: false)
-                Log.i(
-                    TAG,
-                    "Thermal settings loaded: frameRate=${thermalSettings?.frameRate}fps, saveImages=$effectiveSaveImages, palette=${thermalSettings?.palette}"
-                )
                 this@ThermalRecorder.saveImages = effectiveSaveImages
                 this@ThermalRecorder.sessionMetadata = sessionMetadata
                 sessionDirectory = File(sessionDir)
@@ -114,10 +109,6 @@ class ThermalRecorder(private val context: Context) {
                 AppLogger.i(TAG, "Thermal recording SessionSync event logged for alignment verification")
                 if (saveImages) {
                     sessionDirectory?.let { dir ->
-                        Log.i(
-                            TAG,
-                            "Thermal frame images will be saved to: ${dir.absolutePath}"
-                        )
                     }
                 }
                 return@withContext true
@@ -157,10 +148,6 @@ class ThermalRecorder(private val context: Context) {
                 AppLogger.i(TAG, "Thermal recording started (legacy mode): ${csvFile.absolutePath}")
                 if (saveImages) {
                     sessionDirectory?.let { dir ->
-                        Log.i(
-                            TAG,
-                            "Thermal frame images will be saved to: ${dir.absolutePath}"
-                        )
                     }
                 }
                 return@withContext true
@@ -358,10 +345,6 @@ class ThermalRecorder(private val context: Context) {
                 writer.write(csvLine)
                 writer.write("\n")
                 writer.flush()
-                Log.d(
-                    TAG,
-                    "Frame ${stats.frameSequence}: T=${stats.minTemp}°C to ${stats.maxTemp}°C (avg=${stats.avgTemp}°C)"
-                )
             }
         } catch (e: Exception) {
             AppLogger.e(TAG, "Error writing thermal stats to CSV", e)

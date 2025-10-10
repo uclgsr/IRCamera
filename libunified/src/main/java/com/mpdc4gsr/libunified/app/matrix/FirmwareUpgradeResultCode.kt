@@ -9,7 +9,8 @@ enum class FirmwareUpgradeResultCode {
     PAGE_ERROR("Upgrade page error", 6),
     RENDER_DATA_ERROR("Render data is not available", 7),
     INVALID_FILE_ERROR("Upgrade file is invalid", 8),
-    FILE_WRITE_ERROR("Write upgrade file error", 9);
+    FILE_WRITE_ERROR("Write upgrade file error", 9),
+    ;
 
     private var msg: String? = null
     private var code = 0
@@ -19,17 +20,13 @@ enum class FirmwareUpgradeResultCode {
         this.code = code
     }
 
-    open fun getMsg(): String? {
-        return msg
-    }
+    open fun getMsg(): String? = msg
 
     open fun setMsg(msg: String?) {
         this.msg = msg
     }
 
-    open fun getCode(): Int {
-        return code
-    }
+    open fun getCode(): Int = code
 
     open fun setCode(code: Int) {
         this.code = code

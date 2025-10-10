@@ -47,12 +47,12 @@ class TemperatureEditView : TemperatureBaseView {
             invalidate()
         }
     private var iTsTempListenerWeakReference: WeakReference<ITsTempListener>? = null
+
     fun setITsTempListener(listener: ITsTempListener) {
         iTsTempListenerWeakReference = WeakReference(listener)
     }
 
-    private fun getTSTemp(temp: Float): Float =
-        iTsTempListenerWeakReference?.get()?.tempCorrectByTs(temp) ?: temp
+    private fun getTSTemp(temp: Float): Float = iTsTempListenerWeakReference?.get()?.tempCorrectByTs(temp) ?: temp
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -60,14 +60,14 @@ class TemperatureEditView : TemperatureBaseView {
         context,
         attrs,
         defStyleAttr,
-        0
+        0,
     )
 
     constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : super(
         context,
         attrs,
@@ -146,8 +146,8 @@ class TemperatureEditView : TemperatureBaseView {
                 irtemp.getTemperatureOfPoint(
                     Point(
                         (point.x / xScale).toInt(),
-                        (point.y / yScale).toInt()
-                    )
+                        (point.y / yScale).toInt(),
+                    ),
                 )
             } catch (_: IllegalArgumentException) {
                 return null
@@ -179,8 +179,8 @@ class TemperatureEditView : TemperatureBaseView {
                 irtemp.getTemperatureOfLine(
                     Line(
                         Point(tempStartX, tempStartY),
-                        Point(tempStopX, tempStopY)
-                    )
+                        Point(tempStopX, tempStopY),
+                    ),
                 )
             } catch (_: IllegalArgumentException) {
                 return null

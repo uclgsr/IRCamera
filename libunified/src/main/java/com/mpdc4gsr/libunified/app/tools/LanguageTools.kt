@@ -3,15 +3,9 @@ package com.mpdc4gsr.libunified.app.tools
 import android.content.Context
 
 object LanguageTools {
-    fun showLanguage(context: Context): String {
-        return "English"
-    }
+    fun showLanguage(context: Context): String = "English"
 
-    fun useLanguage(context: Context): String {
-        return "en-WW"
-    }
+    fun useLanguage(context: Context): String = "en-WW"
 
-    fun useStatementLanguage(): String {
-        return "EN"
-    }
+    fun useStatementLanguage(): String = "EN"
 }

@@ -2,6 +2,7 @@ package com.mpdc4gsr.libunified.app.tools
 
 object CheckDoubleClick {
     private val records: MutableMap<String, Long> = HashMap()
+
     fun isFastDoubleClick(): Boolean {
         if (records.size > 1000) {
             records.clear()

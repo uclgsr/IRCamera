@@ -20,11 +20,11 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.core.sensors.api.ErrorType
-import mpdc4gsr.core.sensors.api.RecordingStatus
-import mpdc4gsr.core.sensors.api.RecordingStats
-import mpdc4gsr.core.sensors.api.SensorError
 import mpdc4gsr.core.data.SessionMetadata
+import mpdc4gsr.core.sensors.api.ErrorType
+import mpdc4gsr.core.sensors.api.RecordingStats
+import mpdc4gsr.core.sensors.api.RecordingStatus
+import mpdc4gsr.core.sensors.api.SensorError
 import mpdc4gsr.core.sensors.api.SensorRecorder
 import mpdc4gsr.core.sensors.gsr.DefaultGsrRecorder
 import mpdc4gsr.core.sensors.gsr.GsrRecorder
@@ -52,7 +52,6 @@ class GSRSensorRecorder(
     },
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : SensorRecorder {
-
     companion object {
         private const val DEFAULT_SENSOR_ID = "gsr_shimmer_1"
         private const val DEFAULT_SAMPLING_RATE = 128
@@ -86,13 +85,14 @@ class GSRSensorRecorder(
     private var sessionId: String? = null
     private val networkErrors = MutableSharedFlow<SensorError>(extraBufferCapacity = 8)
 
-    override suspend fun initialize(): Boolean = withContext(dispatcher) {
-        val initialized = backend.initialize()
-        if (initialized) {
-            startStatusMirroring()
+    override suspend fun initialize(): Boolean =
+        withContext(dispatcher) {
+            val initialized = backend.initialize()
+            if (initialized) {
+                startStatusMirroring()
+            }
+            initialized
         }
-        initialized
-    }
 
     override suspend fun startRecording(sessionDirectory: String): Boolean =
         startRecordingInternal(sessionDirectory, null) {
@@ -101,33 +101,36 @@ class GSRSensorRecorder(
 
     override suspend fun startRecording(
         sessionDirectory: String,
-        sessionMetadata: SessionMetadata
-    ): Boolean = startRecordingInternal(sessionDirectory, sessionMetadata) {
-        backend.startRecording(sessionDirectory, sessionMetadata)
-    }
+        sessionMetadata: SessionMetadata,
+    ): Boolean =
+        startRecordingInternal(sessionDirectory, sessionMetadata) {
+            backend.startRecording(sessionDirectory, sessionMetadata)
+        }
 
     private suspend fun startRecordingInternal(
         sessionDirectory: String,
         sessionMetadata: SessionMetadata?,
-        startAction: suspend () -> Boolean
-    ): Boolean = withContext(dispatcher) {
-        if (!startAction()) {
-            return@withContext false
+        startAction: suspend () -> Boolean,
+    ): Boolean =
+        withContext(dispatcher) {
+            if (!startAction()) {
+                return@withContext false
+            }
+            sessionId = sessionMetadata?.sessionId ?: deriveSessionId(sessionDirectory)
+            startCollectingSamples()
+            startNetworkStreaming()
+            true
         }
-        sessionId = sessionMetadata?.sessionId ?: deriveSessionId(sessionDirectory)
-        startCollectingSamples()
-        startNetworkStreaming()
-        true
-    }
 
     private fun startCollectingSamples() {
         dataCollectionJob?.cancel()
-        dataCollectionJob = scope.launch {
-            backend.dataStream.collect { sample ->
-                _latestSample.value = sample
-                networkStreamer?.addSample(sample)
+        dataCollectionJob =
+            scope.launch {
+                backend.dataStream.collect { sample ->
+                    _latestSample.value = sample
+                    networkStreamer?.addSample(sample)
+                }
             }
-        }
     }
 
     private suspend fun startNetworkStreaming() {
@@ -135,35 +138,38 @@ class GSRSensorRecorder(
         val activeSessionId = sessionId ?: return
         val streamer = networkStreamerFactory(context, activeSessionId, controller)
         networkStreamer = streamer
-        val initialized = try {
-            streamer.initialize()
-        } catch (t: Throwable) {
-            emitNetworkError("NETWORK_INIT_FAILED", "Failed to initialise network streaming: ${t.message}")
-            false
-        }
+        val initialized =
+            try {
+                streamer.initialize()
+            } catch (t: Throwable) {
+                emitNetworkError("NETWORK_INIT_FAILED", "Failed to initialise network streaming: ${t.message}")
+                false
+            }
         if (!initialized) {
             return
         }
-        val started = try {
-            streamer.startStreaming()
-        } catch (t: Throwable) {
-            emitNetworkError("NETWORK_START_FAILED", "Failed to start network streaming: ${t.message}")
-            false
-        }
+        val started =
+            try {
+                streamer.startStreaming()
+            } catch (t: Throwable) {
+                emitNetworkError("NETWORK_START_FAILED", "Failed to start network streaming: ${t.message}")
+                false
+            }
         if (!started) {
             emitNetworkError("NETWORK_START_FAILED", "GSR network streaming could not be started")
         }
     }
 
-    override suspend fun stopRecording(): Boolean = withContext(dispatcher) {
-        val stopped = backend.stopRecording()
-        backend.flushAndCloseFiles()
-        stopNetworkStreaming()
-        dataCollectionJob?.cancelAndJoin()
-        dataCollectionJob = null
-        sessionId = null
-        stopped
-    }
+    override suspend fun stopRecording(): Boolean =
+        withContext(dispatcher) {
+            val stopped = backend.stopRecording()
+            backend.flushAndCloseFiles()
+            stopNetworkStreaming()
+            dataCollectionJob?.cancelAndJoin()
+            dataCollectionJob = null
+            sessionId = null
+            stopped
+        }
 
     private suspend fun stopNetworkStreaming() {
         val streamer = networkStreamer ?: return
@@ -179,54 +185,63 @@ class GSRSensorRecorder(
     override suspend fun addSyncMarker(
         markerType: String,
         timestampNs: Long,
-        metadata: Map<String, String>
+        metadata: Map<String, String>,
     ) {
         backend.addSyncMarker(markerType, timestampNs, metadata)
     }
 
-    override suspend fun cleanup() = withContext(dispatcher) {
-        try {
-            if (backend.isRecording) {
-                backend.stopRecording()
+    override suspend fun cleanup() =
+        withContext(dispatcher) {
+            try {
+                if (backend.isRecording) {
+                    backend.stopRecording()
+                }
+                backend.flushAndCloseFiles()
+                stopNetworkStreaming()
+                dataCollectionJob?.cancelAndJoin()
+                statusMirroringJob?.cancelAndJoin()
+                backend.cleanup()
+            } finally {
+                scope.cancel()
             }
-            backend.flushAndCloseFiles()
-            stopNetworkStreaming()
-            dataCollectionJob?.cancelAndJoin()
-            statusMirroringJob?.cancelAndJoin()
-            backend.cleanup()
-        } finally {
-            scope.cancel()
         }
-    }
 
     override fun getStatusFlow(): Flow<RecordingStatus> = backend.getStatusFlow()
 
-    override fun getErrorFlow(): Flow<SensorError> =
-        merge(backend.getErrorFlow(), networkErrors)
+    override fun getErrorFlow(): Flow<SensorError> = merge(backend.getErrorFlow(), networkErrors)
 
     override fun getRecordingStats(): RecordingStats = backend.getRecordingStats()
 
     fun getDataStream(): Flow<GSRSample> = backend.dataStream
+
     fun connectionQualityFlow(): StateFlow<Double> = backend.connectionQuality
+
     fun deviceStatusFlow(): StateFlow<String> = backend.deviceStatus
 
     suspend fun startDeviceDiscovery(): Boolean = backend.startDeviceDiscovery()
+
     fun getDiscoveredDevices(): List<DeviceInfo> = backend.getDiscoveredDevices()
+
     suspend fun connectToDevice(deviceInfo: DeviceInfo): Boolean = backend.connectToDevice(deviceInfo)
+
     suspend fun disconnectDevice(): Boolean = backend.disconnectDevice()
 
     fun currentGsrValue(): Double? = latestSample.value?.gsrMicrosiemens
 
     private fun startStatusMirroring() {
         statusMirroringJob?.cancel()
-        statusMirroringJob = scope.launch {
-            backend.deviceStatus.collect { status ->
-                _isConnected.value = status.contains(CONNECTED_TOKEN, ignoreCase = true)
+        statusMirroringJob =
+            scope.launch {
+                backend.deviceStatus.collect { status ->
+                    _isConnected.value = status.contains(CONNECTED_TOKEN, ignoreCase = true)
+                }
             }
-        }
     }
 
-    private suspend fun emitNetworkError(type: String, message: String) {
+    private suspend fun emitNetworkError(
+        type: String,
+        message: String,
+    ) {
         networkErrors.emit(
             SensorError(
                 sensorId = sensorId,
@@ -234,8 +249,8 @@ class GSRSensorRecorder(
                 errorType = ErrorType.DEVICE_ERROR,
                 errorMessage = "$type: $message",
                 timestampNs = System.nanoTime(),
-                isRecoverable = true
-            )
+                isRecoverable = true,
+            ),
         )
     }
 
@@ -244,14 +259,14 @@ class GSRSensorRecorder(
         return folderName.ifBlank { "gsr_session_${System.currentTimeMillis()}" }
     }
 
-    private fun createFallbackLifecycleOwner(): LifecycleOwner {
-        return object : LifecycleOwner {
-            private val registry = LifecycleRegistry(this).apply {
-                currentState = Lifecycle.State.RESUMED
-            }
+    private fun createFallbackLifecycleOwner(): LifecycleOwner =
+        object : LifecycleOwner {
+            private val registry =
+                LifecycleRegistry(this).apply {
+                    currentState = Lifecycle.State.RESUMED
+                }
 
             override val lifecycle: Lifecycle
                 get() = registry
         }
-    }
 }

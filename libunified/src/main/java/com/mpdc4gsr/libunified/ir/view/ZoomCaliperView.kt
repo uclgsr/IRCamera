@@ -16,11 +16,13 @@ import android.widget.LinearLayout
 import android.widget.Magnifier
 import androidx.core.content.ContextCompat
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.compat.dpToPx
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.utils.TargetUtils
+import com.mpdc4gsr.libunified.compat.dpToPx
 
-class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
+class ZoomCaliperView :
+    LinearLayout,
+    ScaleGestureDetector.OnScaleGestureListener {
     private var centerX: Float = Float.MAX_VALUE
     private var centerY: Float = Float.MAX_VALUE
     private var cameraCharacteristics: CameraCharacteristics? = null
@@ -48,10 +50,12 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         inflate(context, R.layout.zoom_bb, this)
         mTextureView = findViewById(R.id.camera_texture)
         lis = ScaleGestureDetector(context, this)
-        originalBitmap = (androidx.core.content.ContextCompat.getDrawable(
-            context,
-            R.drawable.svg_ic_target_horizontal_person_green
-        ) as? BitmapDrawable)?.bitmap
+        originalBitmap = (
+            androidx.core.content.ContextCompat.getDrawable(
+                context,
+                R.drawable.svg_ic_target_horizontal_person_green,
+            ) as? BitmapDrawable
+        )?.bitmap
             ?: return
         originalBitmapWidth = originalBitmap.width.toFloat()
         originalBitmapHeight = originalBitmap.height.toFloat()
@@ -124,6 +128,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     var isCheckChildView = false
     var contentWith = 0
     var contentHeight = 0
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (canScale && isScale && event.action != MotionEvent.ACTION_UP) {
             return lis.onTouchEvent(event)
@@ -263,6 +268,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     }
 
     private var mPreviewSize: Size? = null
+
     fun setRotation(isReverse: Boolean) {
         this.isReverse = isReverse
         updateRotation()
@@ -305,6 +311,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
 
     private var curChooseMeasureMode: Int = ObserveBean.TYPE_MEASURE_PERSON
     private var curChooseTargetMode: Int = ObserveBean.TYPE_TARGET_HORIZONTAL
+
     fun updateSelectBitmap(
         targetMeasureMode: Int,
         targetType: Int,
@@ -329,10 +336,12 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         m = TargetUtils.getMeasureSize(targetMeasureMode)
         val targetIcon =
             TargetUtils.getSelectTargetDraw(targetMeasureMode, targetType, targetColorType)
-        originalBitmap = (androidx.core.content.ContextCompat.getDrawable(
-            context,
-            targetIcon
-        ) as? BitmapDrawable)?.bitmap ?: return
+        originalBitmap = (
+            androidx.core.content.ContextCompat.getDrawable(
+                context,
+                targetIcon,
+            ) as? BitmapDrawable
+        )?.bitmap ?: return
         (mTextureView as ImageView).setImageBitmap(originalBitmap)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             magnifier?.dismiss()

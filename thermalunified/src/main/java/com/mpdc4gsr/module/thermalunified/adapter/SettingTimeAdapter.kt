@@ -9,12 +9,14 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.module.thermalunified.R
 
-class SettingTimeAdapter(val context: Context) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SettingTimeAdapter(
+    val context: Context,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var datas = arrayOf("1min", "5min", "10min", "30min")
     private var dataTimes = arrayOf(60, 300, 600, 1800)
     var listener: OnItemClickListener? = null
     var select = 0
+
     fun setCheck(index: Int) {
         this.select = index
         notifyDataSetChanged()
@@ -40,16 +42,16 @@ class SettingTimeAdapter(val context: Context) :
                 holder.btn.setTextColor(
                     ContextCompat.getColor(
                         context,
-                        com.mpdc4gsr.libunified.R.color.white
-                    )
+                        com.mpdc4gsr.libunified.R.color.white,
+                    ),
                 )
             } else {
                 holder.btn.background = null
                 holder.btn.setTextColor(
                     ContextCompat.getColor(
                         context,
-                        com.mpdc4gsr.libunified.R.color.font_third_color
-                    )
+                        com.mpdc4gsr.libunified.R.color.font_third_color,
+                    ),
                 )
             }
             holder.btn.setOnClickListener {
@@ -59,11 +61,11 @@ class SettingTimeAdapter(val context: Context) :
         }
     }
 
-    override fun getItemCount(): Int {
-        return datas.size
-    }
+    override fun getItemCount(): Int = datas.size
 
-    inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ItemView(
+        itemView: View,
+    ) : RecyclerView.ViewHolder(itemView) {
         val btn: Button = itemView.findViewById(R.id.item_setting_time_btn)
     }
 

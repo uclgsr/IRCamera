@@ -54,7 +54,9 @@ open class BaseThermalFragment : BaseFragment() {
     var width = 0
     var height = 0
     var mIsIrVideoStart = false
+
     override fun initContentView() = 0
+
     override fun initView() {
     }
 

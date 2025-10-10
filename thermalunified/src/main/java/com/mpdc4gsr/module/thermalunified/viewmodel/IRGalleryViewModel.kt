@@ -122,6 +122,7 @@ class IRGalleryViewModel : BaseViewModel() {
     }
 
     var hasLoadPage = 0
+
     fun queryAllReportImg(dirType: GalleryRepository.DirType) {
         viewModelScope.launch(Dispatchers.IO) {
             val sourceList: ArrayList<GalleryBean> = GalleryRepository.loadAllReportImg(dirType)
@@ -150,17 +151,31 @@ class IRGalleryViewModel : BaseViewModel() {
             pageListLD.postValue(pageList)
             if (pageList != null) {
                 val sourceList =
-                    if (hasLoadPage == 0) ArrayList(pageList.size) else sourceListLD.value
-                        ?: ArrayList(pageList.size)
-                val showList = if (hasLoadPage == 0) ArrayList(pageList.size) else showListLD.value
-                    ?: ArrayList(pageList.size)
+                    if (hasLoadPage == 0) {
+                        ArrayList(pageList.size)
+                    } else {
+                        sourceListLD.value
+                            ?: ArrayList(pageList.size)
+                    }
+                val showList =
+                    if (hasLoadPage == 0) {
+                        ArrayList(pageList.size)
+                    } else {
+                        showListLD.value
+                            ?: ArrayList(pageList.size)
+                    }
                 if (pageList.isNotEmpty()) {
                     hasLoadPage++
                 }
-                var beforeTime = if (sourceList.isEmpty()) 0 else TimeTools.timeToMinute(
-                    sourceList.last().timeMillis,
-                    4
-                )
+                var beforeTime =
+                    if (sourceList.isEmpty()) {
+                        0
+                    } else {
+                        TimeTools.timeToMinute(
+                            sourceList.last().timeMillis,
+                            4,
+                        )
+                    }
                 for (galleryBean in pageList) {
                     val currentTime = TimeTools.timeToMinute(galleryBean.timeMillis, 4)
                     if (beforeTime != currentTime) {
@@ -176,18 +191,15 @@ class IRGalleryViewModel : BaseViewModel() {
         }
     }
 
-    private fun calculateFileSize(path: String): Long {
-        return try {
+    private fun calculateFileSize(path: String): Long =
+        try {
             val file = File(path)
             if (file.exists()) file.length() else 0L
         } catch (e: Exception) {
             0L
         }
-    }
 
-    fun getCachedFileSize(path: String): Long {
-        return fileSizeCache[path] ?: 0L
-    }
+    fun getCachedFileSize(path: String): Long = fileSizeCache[path] ?: 0L
 
     fun delete(
         deleteList: List<GalleryBean>,

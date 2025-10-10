@@ -6,23 +6,27 @@ import java.io.File
 object UnifiedConfigUtils {
     data class ConfigSection(
         val name: String,
-        val properties: MutableMap<String, String> = mutableMapOf()
+        val properties: MutableMap<String, String> = mutableMapOf(),
     ) {
-        fun getString(key: String, defaultValue: String = ""): String {
-            return properties[key] ?: defaultValue
-        }
+        fun getString(
+            key: String,
+            defaultValue: String = "",
+        ): String = properties[key] ?: defaultValue
 
-        fun getInt(key: String, defaultValue: Int = 0): Int {
-            return properties[key]?.toIntOrNull() ?: defaultValue
-        }
+        fun getInt(
+            key: String,
+            defaultValue: Int = 0,
+        ): Int = properties[key]?.toIntOrNull() ?: defaultValue
 
-        fun getBoolean(key: String, defaultValue: Boolean = false): Boolean {
-            return properties[key]?.toBooleanStrictOrNull() ?: defaultValue
-        }
+        fun getBoolean(
+            key: String,
+            defaultValue: Boolean = false,
+        ): Boolean = properties[key]?.toBooleanStrictOrNull() ?: defaultValue
 
-        fun getFloat(key: String, defaultValue: Float = 0f): Float {
-            return properties[key]?.toFloatOrNull() ?: defaultValue
-        }
+        fun getFloat(
+            key: String,
+            defaultValue: Float = 0f,
+        ): Float = properties[key]?.toFloatOrNull() ?: defaultValue
     }
 
     fun parseIniContent(content: String): Map<String, ConfigSection> {
@@ -56,27 +60,31 @@ object UnifiedConfigUtils {
         return sections
     }
 
-    fun readIniFromAssets(context: Context, fileName: String): Map<String, ConfigSection> {
-        return try {
+    fun readIniFromAssets(
+        context: Context,
+        fileName: String,
+    ): Map<String, ConfigSection> =
+        try {
             val inputStream = context.assets.open(fileName)
             val content = inputStream.bufferedReader().use { it.readText() }
             parseIniContent(content)
         } catch (e: Exception) {
             emptyMap()
         }
-    }
 
-    fun readIniFromFile(file: File): Map<String, ConfigSection> {
-        return try {
+    fun readIniFromFile(file: File): Map<String, ConfigSection> =
+        try {
             val content = file.readText()
             parseIniContent(content)
         } catch (e: Exception) {
             emptyMap()
         }
-    }
 
-    fun writeIniToFile(file: File, sections: Map<String, ConfigSection>): Boolean {
-        return try {
+    fun writeIniToFile(
+        file: File,
+        sections: Map<String, ConfigSection>,
+    ): Boolean =
+        try {
             file.parentFile?.mkdirs()
             file.bufferedWriter().use { writer ->
                 sections.values.forEach { section ->
@@ -91,11 +99,10 @@ object UnifiedConfigUtils {
         } catch (e: Exception) {
             false
         }
-    }
 
     fun mergeSections(
         base: Map<String, ConfigSection>,
-        overlay: Map<String, ConfigSection>
+        overlay: Map<String, ConfigSection>,
     ): Map<String, ConfigSection> {
         val result = base.toMutableMap()
         overlay.forEach { (sectionName, overlaySection) ->
@@ -115,12 +122,12 @@ object UnifiedConfigUtils {
         val section: String,
         val key: String,
         val required: Boolean = false,
-        val validator: (String) -> Boolean = { true }
+        val validator: (String) -> Boolean = { true },
     )
 
     fun validateConfiguration(
         config: Map<String, ConfigSection>,
-        rules: List<ConfigValidationRule>
+        rules: List<ConfigValidationRule>,
     ): List<String> {
         val errors = mutableListOf<String>()
         rules.forEach { rule ->
@@ -139,86 +146,102 @@ object UnifiedConfigUtils {
         return errors
     }
 
-    fun createDefaultAppConfig(): Map<String, ConfigSection> {
-        return mapOf(
-            "app" to ConfigSection(
-                "app", mutableMapOf(
-                    "version" to "1.0.0",
-                    "debug" to "false",
-                    "log_level" to "INFO"
-                )
-            ),
-            "camera" to ConfigSection(
-                "camera", mutableMapOf(
-                    "width" to "1920",
-                    "height" to "1080",
-                    "fps" to "30",
-                    "format" to "JPEG"
-                )
-            ),
-            "thermal" to ConfigSection(
-                "thermal", mutableMapOf(
-                    "emissivity" to "0.95",
-                    "temperature_unit" to "CELSIUS",
-                    "color_palette" to "RAINBOW"
-                )
-            ),
-            "gsr" to ConfigSection(
-                "gsr", mutableMapOf(
-                    "sampling_rate" to "128",
-                    "gain" to "1",
-                    "range" to "GSR_RANGE_AUTO"
-                )
-            ),
-            "network" to ConfigSection(
-                "network", mutableMapOf(
-                    "server_port" to "8080",
-                    "timeout" to "5000",
-                    "retry_count" to "3"
-                )
-            )
+    fun createDefaultAppConfig(): Map<String, ConfigSection> =
+        mapOf(
+            "app" to
+                ConfigSection(
+                    "app",
+                    mutableMapOf(
+                        "version" to "1.0.0",
+                        "debug" to "false",
+                        "log_level" to "INFO",
+                    ),
+                ),
+            "camera" to
+                ConfigSection(
+                    "camera",
+                    mutableMapOf(
+                        "width" to "1920",
+                        "height" to "1080",
+                        "fps" to "30",
+                        "format" to "JPEG",
+                    ),
+                ),
+            "thermal" to
+                ConfigSection(
+                    "thermal",
+                    mutableMapOf(
+                        "emissivity" to "0.95",
+                        "temperature_unit" to "CELSIUS",
+                        "color_palette" to "RAINBOW",
+                    ),
+                ),
+            "gsr" to
+                ConfigSection(
+                    "gsr",
+                    mutableMapOf(
+                        "sampling_rate" to "128",
+                        "gain" to "1",
+                        "range" to "GSR_RANGE_AUTO",
+                    ),
+                ),
+            "network" to
+                ConfigSection(
+                    "network",
+                    mutableMapOf(
+                        "server_port" to "8080",
+                        "timeout" to "5000",
+                        "retry_count" to "3",
+                    ),
+                ),
         )
-    }
 
-    fun getSystemConfig(context: Context): Map<String, String> {
-        return mapOf(
+    fun getSystemConfig(context: Context): Map<String, String> =
+        mapOf(
             "android_version" to android.os.Build.VERSION.RELEASE,
-            "api_level" to android.os.Build.VERSION.SDK_INT.toString(),
+            "api_level" to
+                android.os.Build.VERSION.SDK_INT
+                    .toString(),
             "device_model" to android.os.Build.MODEL,
             "device_manufacturer" to android.os.Build.MANUFACTURER,
             "app_version" to UnifiedPackageUtils.getVersionName(context),
             "app_version_code" to UnifiedPackageUtils.getVersionCode(context).toString(),
             "package_name" to context.packageName,
-            "is_debuggable" to UnifiedPackageUtils.isDebuggable(context).toString()
+            "is_debuggable" to UnifiedPackageUtils.isDebuggable(context).toString(),
         )
-    }
 
     enum class Environment {
-        DEVELOPMENT, TESTING, PRODUCTION
+        DEVELOPMENT,
+        TESTING,
+        PRODUCTION,
     }
 
     fun loadEnvironmentConfig(
         context: Context,
-        environment: Environment = Environment.PRODUCTION
+        environment: Environment = Environment.PRODUCTION,
     ): Map<String, ConfigSection> {
         val baseConfig = createDefaultAppConfig()
-        val envConfigFile = when (environment) {
-            Environment.DEVELOPMENT -> "config-dev.ini"
-            Environment.TESTING -> "config-test.ini"
-            Environment.PRODUCTION -> "config-prod.ini"
-        }
+        val envConfigFile =
+            when (environment) {
+                Environment.DEVELOPMENT -> "config-dev.ini"
+                Environment.TESTING -> "config-test.ini"
+                Environment.PRODUCTION -> "config-prod.ini"
+            }
         val envConfig = readIniFromAssets(context, envConfigFile)
         return mergeSections(baseConfig, envConfig)
     }
 
-    fun backupConfiguration(context: Context, config: Map<String, ConfigSection>): Boolean {
+    fun backupConfiguration(
+        context: Context,
+        config: Map<String, ConfigSection>,
+    ): Boolean {
         val backupFile = File(context.filesDir, "config_backup_${System.currentTimeMillis()}.ini")
         return writeIniToFile(backupFile, config)
     }
 
     fun restoreConfiguration(
         context: Context,
-        backupFileName: String
+        backupFileName: String,
     ): Map<String, ConfigSection>? {
         val backupFile = File(context.filesDir, backupFileName)
         return if (backupFile.exists()) {
@@ -229,21 +252,20 @@ object UnifiedConfigUtils {
     }
 
     fun calculateConfigHash(config: Map<String, ConfigSection>): String {
-        val content = buildString {
-            config.values.sortedBy { it.name }.forEach { section ->
-                append("[${section.name}]")
-                section.properties.toSortedMap().forEach { (key, value) ->
-                    append("$key=$value")
+        val content =
+            buildString {
+                config.values.sortedBy { it.name }.forEach { section ->
+                    append("[${section.name}]")
+                    section.properties.toSortedMap().forEach { (key, value) ->
+                        append("$key=$value")
+                    }
                 }
             }
-        }
         return content.hashCode().toString()
     }
 
     fun hasConfigChanged(
         oldConfig: Map<String, ConfigSection>,
-        newConfig: Map<String, ConfigSection>
-    ): Boolean {
-        return calculateConfigHash(oldConfig) != calculateConfigHash(newConfig)
-    }
+        newConfig: Map<String, ConfigSection>,
+    ): Boolean = calculateConfigHash(oldConfig) != calculateConfigHash(newConfig)
 }

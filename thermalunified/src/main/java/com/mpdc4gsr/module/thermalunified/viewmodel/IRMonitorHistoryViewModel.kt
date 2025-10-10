@@ -27,24 +27,26 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         val maxTemperature: Float,
         val minTemperature: Float,
         val sessionType: SessionType,
-        val dataFilePath: String
+        val dataFilePath: String,
     )
 
-    enum class SessionType(val displayName: String) {
+    enum class SessionType(
+        val displayName: String,
+    ) {
         MONITORING("Monitor"),
         CAPTURE("Capture"),
         ANALYSIS("Analysis"),
-        CALIBRATION("Calibration")
+        CALIBRATION("Calibration"),
     }
 
     enum class HistoryFilter(
         val displayName: String,
-        val icon: androidx.compose.ui.graphics.vector.ImageVector
+        val icon: androidx.compose.ui.graphics.vector.ImageVector,
     ) {
         ALL("All", Icons.AutoMirrored.Filled.ViewList),
         TODAY("Today", Icons.Default.Today),
         WEEK("This Week", Icons.Default.DateRange),
-        MONTH("This Month", Icons.Default.CalendarMonth)
+        MONTH("This Month", Icons.Default.CalendarMonth),
     }
 
     // StateFlow properties expected by the Compose fragment
@@ -124,39 +126,41 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         launchWithLoading {
             try {
                 // Perform database operations on IO thread
-                val historyItems = withContext(Dispatchers.IO) {
-                    val recordList: List<ThermalDao.Record> =
-                        AppDatabase.getInstance().thermalDao().queryRecordList()
-                    // Convert database records to HistoryItem objects
-                    recordList.mapIndexed { index, record ->
-                        // Query additional details for temperature statistics
-                        val detailList = AppDatabase.getInstance().thermalDao().queryDetail(record.startTime)
-                        // Calculate temperature statistics from detail data
-                        val temperatures = detailList.map { it.thermal }
-                        val maxTemperatures = detailList.map { it.thermalMax }
-                        val minTemperatures = detailList.map { it.thermalMin }
-                        val avgTemp = if (temperatures.isNotEmpty()) temperatures.average().toFloat() else 0f
-                        val maxTemp = maxTemperatures.maxOrNull() ?: 0f
-                        val minTemp = minTemperatures.minOrNull() ?: 0f
-                        HistoryItem(
-                            id = record.startTime.toString(),
-                            sessionName = "Session ${index + 1}",
-                            startTime = record.startTime,
-                            duration = record.duration.toLong() * 1000L, // Convert seconds to milliseconds
-                            sampleCount = detailList.size,
-                            avgTemperature = avgTemp,
-                            maxTemperature = maxTemp,
-                            minTemperature = minTemp,
-                            sessionType = when (record.type) {
-                                "point" -> SessionType.MONITORING
-                                "line" -> SessionType.ANALYSIS
-                                "area" -> SessionType.CAPTURE
-                                else -> SessionType.MONITORING
-                            },
-                            dataFilePath = findThermalImagePath(record.startTime, detailList.firstOrNull()?.thermalId)
-                        )
+                val historyItems =
+                    withContext(Dispatchers.IO) {
+                        val recordList: List<ThermalDao.Record> =
+                            AppDatabase.getInstance().thermalDao().queryRecordList()
+                        // Convert database records to HistoryItem objects
+                        recordList.mapIndexed { index, record ->
+                            // Query additional details for temperature statistics
+                            val detailList = AppDatabase.getInstance().thermalDao().queryDetail(record.startTime)
+                            // Calculate temperature statistics from detail data
+                            val temperatures = detailList.map { it.thermal }
+                            val maxTemperatures = detailList.map { it.thermalMax }
+                            val minTemperatures = detailList.map { it.thermalMin }
+                            val avgTemp = if (temperatures.isNotEmpty()) temperatures.average().toFloat() else 0f
+                            val maxTemp = maxTemperatures.maxOrNull() ?: 0f
+                            val minTemp = minTemperatures.minOrNull() ?: 0f
+                            HistoryItem(
+                                id = record.startTime.toString(),
+                                sessionName = "Session ${index + 1}",
+                                startTime = record.startTime,
+                                duration = record.duration.toLong() * 1000L, // Convert seconds to milliseconds
+                                sampleCount = detailList.size,
+                                avgTemperature = avgTemp,
+                                maxTemperature = maxTemp,
+                                minTemperature = minTemp,
+                                sessionType =
+                                    when (record.type) {
+                                        "point" -> SessionType.MONITORING
+                                        "line" -> SessionType.ANALYSIS
+                                        "area" -> SessionType.CAPTURE
+                                        else -> SessionType.MONITORING
+                                    },
+                                dataFilePath = findThermalImagePath(record.startTime, detailList.firstOrNull()?.thermalId),
+                            )
+                        }
                     }
-                }
                 // Update the data on main thread
                 allHistoryItems = historyItems
                 applyFilter()
@@ -193,26 +197,31 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
     }
 
     private fun applyFilter() {
-        val filteredItems = when (_selectedFilter.value) {
-            HistoryFilter.ALL -> allHistoryItems
-            HistoryFilter.TODAY -> filterByToday()
-            HistoryFilter.WEEK -> filterByThisWeek()
-            HistoryFilter.MONTH -> filterByThisMonth()
-        }
+        val filteredItems =
+            when (_selectedFilter.value) {
+                HistoryFilter.ALL -> allHistoryItems
+                HistoryFilter.TODAY -> filterByToday()
+                HistoryFilter.WEEK -> filterByThisWeek()
+                HistoryFilter.MONTH -> filterByThisMonth()
+            }
         _historyItems.value = filteredItems.sortedByDescending { it.startTime }
     }
 
     private fun filterByToday(): List<HistoryItem> {
         val calendar = Calendar.getInstance()
-        val today = calendar.apply {
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }.timeInMillis
-        val tomorrow = calendar.apply {
-            add(Calendar.DAY_OF_MONTH, 1)
-        }.timeInMillis
+        val today =
+            calendar
+                .apply {
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }.timeInMillis
+        val tomorrow =
+            calendar
+                .apply {
+                    add(Calendar.DAY_OF_MONTH, 1)
+                }.timeInMillis
         return allHistoryItems.filter { it.startTime in today until tomorrow }
     }
 
@@ -242,27 +251,42 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         return allHistoryItems.filter { it.startTime in monthStart until monthEnd }
     }
 
-    private fun findThermalImagePath(startTime: Long, thermalId: String?): String {
-        val possibleDirs = sequenceOf(
-            FileConfig.gallerySourDir,
-            FileConfig.lineIrGalleryDir,
-            FileConfig.tc007IrGalleryDir
-        )
-        val possibleNames = sequenceOf(
-            thermalId?.let { "$it.jpg" },
-            thermalId?.let { "$it.png" },
-            "${startTime}.jpg",
-            "${startTime}.png"
-        ).filterNotNull()
-        return possibleDirs.flatMap { dir ->
-            possibleNames.map { name -> File(dir, name) }
-        }.firstOrNull { it.exists() }?.absolutePath ?: ""
+    private fun findThermalImagePath(
+        startTime: Long,
+        thermalId: String?,
+    ): String {
+        val possibleDirs =
+            sequenceOf(
+                FileConfig.gallerySourDir,
+                FileConfig.lineIrGalleryDir,
+                FileConfig.tc007IrGalleryDir,
+            )
+        val possibleNames =
+            sequenceOf(
+                thermalId?.let { "$it.jpg" },
+                thermalId?.let { "$it.png" },
+                "$startTime.jpg",
+                "$startTime.png",
+            ).filterNotNull()
+        return possibleDirs
+            .flatMap { dir ->
+                possibleNames.map { name -> File(dir, name) }
+            }.firstOrNull { it.exists() }
+            ?.absolutePath ?: ""
     }
 
     // History UI Event sealed class for one-time events
     sealed class HistoryUiEvent {
-        data class ShowMessage(val message: String) : HistoryUiEvent()
-        data class ExportData(val items: List<HistoryItem>) : HistoryUiEvent()
-        data class NavigateToDetails(val item: HistoryItem) : HistoryUiEvent()
+        data class ShowMessage(
+            val message: String,
+        ) : HistoryUiEvent()
+
+        data class ExportData(
+            val items: List<HistoryItem>,
+        ) : HistoryUiEvent()
+
+        data class NavigateToDetails(
+            val item: HistoryItem,
+        ) : HistoryUiEvent()
     }
 }

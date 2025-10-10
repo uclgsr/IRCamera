@@ -25,21 +25,22 @@ fun SettingItem(
     showIcon: Boolean = true,
     showMoreArrow: Boolean = true,
     showLine: Boolean = false,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Column {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onClick)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = onClick)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 if (showIcon) {
                     when {
@@ -48,7 +49,7 @@ fun SettingItem(
                                 imageVector = icon,
                                 contentDescription = text,
                                 modifier = Modifier.size(24.dp),
-                                tint = Color.Gray
+                                tint = Color.Gray,
                             )
                         }
 
@@ -56,7 +57,7 @@ fun SettingItem(
                             Image(
                                 painter = painterResource(id = iconRes),
                                 contentDescription = text,
-                                modifier = Modifier.size(24.dp)
+                                modifier = Modifier.size(24.dp),
                             )
                         }
                     }
@@ -65,7 +66,7 @@ fun SettingItem(
                     text = text,
                     fontSize = 16.sp,
                     color = Color.Black,
-                    fontWeight = FontWeight.Normal
+                    fontWeight = FontWeight.Normal,
                 )
             }
             if (showMoreArrow) {
@@ -73,7 +74,7 @@ fun SettingItem(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = "More",
                     tint = Color.Gray,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
             }
         }
@@ -81,7 +82,7 @@ fun SettingItem(
             HorizontalDivider(
                 color = Color.LightGray,
                 thickness = 0.5.dp,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp),
             )
         }
     }
@@ -91,7 +92,7 @@ fun SettingItem(
 fun SettingsSection(
     title: String? = null,
     items: List<SettingItemData>,
-    onItemClick: (Int) -> Unit = {}
+    onItemClick: (Int) -> Unit = {},
 ) {
     Column {
         if (title != null) {
@@ -99,17 +100,19 @@ fun SettingsSection(
                 text = title,
                 fontSize = 14.sp,
                 color = Color.Gray,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
         }
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = Color.White,
+                ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         ) {
             items.forEachIndexed { index, item ->
                 SettingItem(
@@ -119,7 +122,7 @@ fun SettingsSection(
                     showIcon = item.showIcon,
                     showMoreArrow = item.showMoreArrow,
                     showLine = index < items.size - 1,
-                    onClick = { onItemClick(index) }
+                    onClick = { onItemClick(index) },
                 )
             }
         }
@@ -131,5 +134,5 @@ data class SettingItemData(
     @DrawableRes val iconRes: Int? = null,
     val icon: ImageVector? = null,
     val showIcon: Boolean = true,
-    val showMoreArrow: Boolean = true
+    val showMoreArrow: Boolean = true,
 )

@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.ui.charts;
 import android.content.Context;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.mpdc4gsr.libunified.ui.components.YAxis;
 import com.mpdc4gsr.libunified.ui.data.BarData;
@@ -66,7 +65,6 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
     public Highlight getHighlightByTouchPoint(float x, float y) {
 
         if (mData == null) {
-            Log.e(LOG_TAG, "Can't select by touch. No data set.");
             return null;
         } else {
             Highlight h = getHighlighter().getHighlight(x, y);

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 class ElectronicManualViewModel : BaseViewModel() {
     data class ManualOption(
         val name: String,
-        val isTS001: Boolean
+        val isTS001: Boolean,
     )
 
     private val _title = MutableStateFlow("")
@@ -18,6 +18,7 @@ class ElectronicManualViewModel : BaseViewModel() {
     val options: StateFlow<List<ManualOption>> = _options.asStateFlow()
     private val _productType = MutableStateFlow(0)
     val productType: StateFlow<Int> = _productType.asStateFlow()
+
     fun loadManualOptions(productType: Int) {
         launchWithErrorHandling {
             _productType.value = productType
@@ -28,11 +29,12 @@ class ElectronicManualViewModel : BaseViewModel() {
             }
             optionsList.add(ManualOption("TS004", false))
             _options.value = optionsList
-            _title.value = if (productType == Constants.SETTING_BOOK) {
-                "Electronic Manual"
-            } else {
-                "Questions"
-            }
+            _title.value =
+                if (productType == Constants.SETTING_BOOK) {
+                    "Electronic Manual"
+                } else {
+                    "Questions"
+                }
         }
     }
 

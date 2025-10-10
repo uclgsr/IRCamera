@@ -1,7 +1,6 @@
 package mpdc4gsr.core.data
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.*
 import mpdc4gsr.core.StructuredLogger
 import org.json.JSONObject
@@ -67,7 +66,10 @@ class SecurityMonitor(
         var acknowledged: Boolean = false,
     )
 
-    enum class Severity(val level: Int, val displayName: String) {
+    enum class Severity(
+        val level: Int,
+        val displayName: String,
+    ) {
         LOW(1, "Low"),
         MEDIUM(2, "Medium"),
         HIGH(3, "High"),
@@ -76,6 +78,7 @@ class SecurityMonitor(
 
     interface SecurityEventListener {
         fun onSecurityAlert(alert: SecurityAlert)
+
         fun onSuspiciousActivity(
             deviceId: String,
             activityType: String,
@@ -95,31 +98,13 @@ class SecurityMonitor(
     }
 
     private var securityListener: SecurityEventListener? = null
-    fun initialize(): Boolean {
-        return try {
-            logger.log(
-                StructuredLogger.LogLevel.INFO,
-                TAG,
-                "security_monitor_initialized",
-                mapOf(
-                    "monitoring_interval_seconds" to (MONITORING_INTERVAL_MS / 1000L),
-                    "cleanup_interval_minutes" to (CLEANUP_INTERVAL_MS / (60 * 1000L)),
-                    "alert_types_count" to 8,
-                ),
-            )
+
+    fun initialize(): Boolean =
+        try {
             true
         } catch (e: Exception) {
-            logger.log(
-                StructuredLogger.LogLevel.ERROR,
-                TAG,
-                "init_failed",
-                mapOf(
-                    "error" to e.message.orEmpty(),
-                ),
-            )
             false
         }
-    }
 
     fun setSecurityEventListener(listener: SecurityEventListener) {
         this.securityListener = listener
@@ -136,7 +121,8 @@ class SecurityMonitor(
                     performSecurityCheck()
                     delay(MONITORING_INTERVAL_MS)
                 } catch (e: Exception) {
-                    mpdc4gsr.core.utils.AppLogger.e("SecurityMonitor", "Unexpected Exception in SecurityMonitor catch block", e)
+                    mpdc4gsr.core.utils.AppLogger
+                        .e("SecurityMonitor", "Unexpected Exception in SecurityMonitor catch block", e)
                 }
             }
         }
@@ -146,33 +132,16 @@ class SecurityMonitor(
                     performCleanup()
                     delay(CLEANUP_INTERVAL_MS)
                 } catch (e: Exception) {
-                    mpdc4gsr.core.utils.AppLogger.e("SecurityMonitor", "Unexpected Exception in SecurityMonitor catch block", e)
+                    mpdc4gsr.core.utils.AppLogger
+                        .e("SecurityMonitor", "Unexpected Exception in SecurityMonitor catch block", e)
                 }
             }
         }
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            TAG,
-            "monitoring_started",
-            mapOf(
-                "monitoring_active" to true,
-            ),
-        )
     }
 
     fun stopMonitoring() {
         isMonitoring.set(false)
         scope.cancel()
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            TAG,
-            "monitoring_stopped",
-            mapOf(
-                "total_connections_monitored" to totalConnections.get(),
-                "total_failed_logins" to totalFailedLogins.get(),
-                "total_alerts_generated" to totalSecurityAlerts.get(),
-            ),
-        )
     }
 
     fun reportConnectionAttempt(
@@ -191,17 +160,7 @@ class SecurityMonitor(
         updateSessionActivity(
             deviceId,
             "connection_attempt",
-            details + mapOf("successful" to successful)
-        )
-        logger.log(
-            StructuredLogger.LogLevel.DEBUG,
-            TAG,
-            "connection_attempt",
-            mapOf(
-                "device_id" to deviceId,
-                "successful" to successful,
-                "timestamp" to currentTime,
-            ),
+            details + mapOf("successful" to successful),
         )
     }
 
@@ -215,16 +174,6 @@ class SecurityMonitor(
         if (severity.level >= Severity.MEDIUM.level) {
             generateSecurityAlert(eventType, severity, deviceId, details)
         }
-        logger.log(
-            StructuredLogger.LogLevel.INFO,
-            TAG,
-            "security_event",
-            mapOf(
-                "event_type" to eventType,
-                "device_id" to deviceId,
-                "severity" to severity.name,
-            ),
-        )
     }
 
     fun checkSessionActivity(deviceId: String) {
@@ -368,8 +317,8 @@ class SecurityMonitor(
     private fun isSuspiciousActivity(
         activityType: String,
         details: Map<String, Any>,
-    ): Boolean {
-        return when (activityType) {
+    ): Boolean =
+        when (activityType) {
             "connection_attempt" -> !(details["successful"] as? Boolean ?: true)
             "permission_denied" -> true
             "certificate_invalid" -> true
@@ -377,7 +326,6 @@ class SecurityMonitor(
             "unusual_data_access" -> true
             else -> false
         }
-    }
 
     private fun generateSecurityAlert(
         alertType: String,
@@ -403,24 +351,13 @@ class SecurityMonitor(
         }
         totalSecurityAlerts.incrementAndGet()
         securityListener?.onSecurityAlert(alert)
-        logger.log(
-            StructuredLogger.LogLevel.WARNING,
-            TAG,
-            "security_alert",
-            mapOf(
-                "alert_id" to alert.id,
-                "alert_type" to alertType,
-                "severity" to severity.name,
-                "device_id" to deviceId,
-            ),
-        )
     }
 
     private fun determineSeverity(
         eventType: String,
         details: Map<String, Any>,
-    ): Severity {
-        return when (eventType) {
+    ): Severity =
+        when (eventType) {
             ALERT_BRUTE_FORCE -> Severity.HIGH
             ALERT_SESSION_HIJACK -> Severity.CRITICAL
             ALERT_SYSTEM_COMPROMISE -> Severity.CRITICAL
@@ -431,13 +368,12 @@ class SecurityMonitor(
             "connection_attempt" -> if (details["successful"] == false) Severity.LOW else Severity.LOW
             else -> Severity.LOW
         }
-    }
 
     private fun generateAlertDescription(
         alertType: String,
         details: Map<String, Any>,
-    ): String {
-        return when (alertType) {
+    ): String =
+        when (alertType) {
             ALERT_BRUTE_FORCE -> "Brute force attack detected: ${details["failed_attempts"]} failed attempts"
             ALERT_SUSPICIOUS_CONNECTION -> "Suspicious connection pattern: ${details["connections_per_minute"]} connections/minute"
             ALERT_UNUSUAL_ACTIVITY -> "Unusual activity detected: ${details["activity_count"]} actions in ${details["time_window_seconds"]}s"
@@ -448,11 +384,8 @@ class SecurityMonitor(
             ALERT_SYSTEM_COMPROMISE -> "System compromise indicators detected"
             else -> "Security event: $alertType"
         }
-    }
 
-    private fun generateAlertId(): String {
-        return "ALERT_${System.currentTimeMillis()}_${(Math.random() * 1000).toInt()}"
-    }
+    private fun generateAlertId(): String = "ALERT_${System.currentTimeMillis()}_${(Math.random() * 1000).toInt()}"
 
     private fun getRecentFailedLogins(
         deviceId: String,
@@ -479,20 +412,13 @@ class SecurityMonitor(
             failures.removeAll { it < cleanupCutoff }
         }
         val inactiveSessions =
-            sessionActivities.filterValues {
-                currentTime - it.lastActivity > (60 * 60 * 1000L)
-            }.keys
+            sessionActivities
+                .filterValues {
+                    currentTime - it.lastActivity > (60 * 60 * 1000L)
+                }.keys
         inactiveSessions.forEach { deviceId ->
             sessionActivities.remove(deviceId)
         }
-        logger.log(
-            StructuredLogger.LogLevel.DEBUG,
-            TAG,
-            "cleanup_performed",
-            mapOf(
-                "inactive_sessions_removed" to inactiveSessions.size,
-            ),
-        )
     }
 
     private fun updateMonitoringStatistics() {
@@ -509,14 +435,6 @@ class SecurityMonitor(
             val alert = securityAlerts.find { it.id == alertId }
             return if (alert != null) {
                 alert.acknowledged = true
-                logger.log(
-                    StructuredLogger.LogLevel.INFO,
-                    TAG,
-                    "alert_acknowledged",
-                    mapOf(
-                        "alert_id" to alertId,
-                    ),
-                )
                 true
             } else {
                 false
@@ -524,8 +442,8 @@ class SecurityMonitor(
         }
     }
 
-    fun getMonitoringStatistics(): JSONObject {
-        return JSONObject().apply {
+    fun getMonitoringStatistics(): JSONObject =
+        JSONObject().apply {
             put("monitoring_active", isMonitoring.get())
             put("total_connections", totalConnections.get())
             put("total_failed_logins", totalFailedLogins.get())
@@ -534,10 +452,9 @@ class SecurityMonitor(
             put("recent_alerts_count", getRecentAlerts(60 * 60 * 1000L).size)
             put("monitored_devices", connectionAttempts.size)
         }
-    }
 
-    fun getSecurityDiagnostics(): JSONObject {
-        return JSONObject().apply {
+    fun getSecurityDiagnostics(): JSONObject =
+        JSONObject().apply {
             put("monitoring_statistics", getMonitoringStatistics())
             put(
                 "recent_alerts",
@@ -564,5 +481,4 @@ class SecurityMonitor(
                 },
             )
         }
-    }
 }

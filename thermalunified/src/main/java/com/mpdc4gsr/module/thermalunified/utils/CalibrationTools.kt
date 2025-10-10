@@ -1,7 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.utils
 
-import android.util.Log
-import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.SynchronizedBitmap
@@ -14,17 +12,16 @@ object CalibrationTools {
         var success = false
         if (irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD) == 0) {
             irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD)
-            val result = irCmd.setTPDKtBtRecalPoint(
-                CommonParams.TPDKtBtRecalPointType.RECAL_1_POINT,
-                singlePointTemp
-            )
+            val result =
+                irCmd.setTPDKtBtRecalPoint(
+                    CommonParams.TPDKtBtRecalPointType.RECAL_1_POINT,
+                    singlePointTemp,
+                )
             if (result == 0) {
                 success = true
             } else {
-                XLog.w("Single point calibration failed")
             }
         } else {
-            XLog.w("Single point calibration failed")
         }
         return success
     }
@@ -35,17 +32,16 @@ object CalibrationTools {
     ): Boolean {
         var success = false
         if (irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD) == 0) {
-            val result = irCmd.setTPDKtBtRecalPoint(
-                CommonParams.TPDKtBtRecalPointType.RECAL_2_POINT_FIRST,
-                pointTemp + 273
-            )
+            val result =
+                irCmd.setTPDKtBtRecalPoint(
+                    CommonParams.TPDKtBtRecalPointType.RECAL_2_POINT_FIRST,
+                    pointTemp + 273,
+                )
             if (result == 0) {
                 success = true
             } else {
-                XLog.w("[ph][ph][ph][ph][ph][ph]")
             }
         } else {
-            XLog.w("[ph][ph][ph][ph][ph][ph]")
         }
         return success
     }
@@ -56,24 +52,21 @@ object CalibrationTools {
     ): Boolean {
         var success = false
         if (irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD) == 0) {
-            val result = irCmd.setTPDKtBtRecalPoint(
-                CommonParams.TPDKtBtRecalPointType.RECAL_2_POINT_END,
-                pointTemp + 273
-            )
+            val result =
+                irCmd.setTPDKtBtRecalPoint(
+                    CommonParams.TPDKtBtRecalPointType.RECAL_2_POINT_END,
+                    pointTemp + 273,
+                )
             if (result == 0) {
                 success = true
             } else {
-                Log.w("123", "[ph][ph]")
             }
         } else {
-            Log.w("123", "[ph][ph]")
         }
         return success
     }
 
-    fun potReady(irCmd: IRCMD): Boolean {
-        return irCmd.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_DIS) == 0
-    }
+    fun potReady(irCmd: IRCMD): Boolean = irCmd.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_DIS) == 0
 
     fun potStart(
         irCmd: IRCMD,
@@ -116,7 +109,7 @@ object CalibrationTools {
         } else {
             irCmd.setPropTPDParams(
                 CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL,
-                CommonParams.PropTPDParamsValue.GAINSELStatus.GAIN_SEL_LOW
+                CommonParams.PropTPDParamsValue.GAINSELStatus.GAIN_SEL_LOW,
             )
         }
     }
@@ -174,7 +167,7 @@ object CalibrationTools {
             if (flag) CommonParams.PropAutoShutterParameterValue.StatusSwith.ON else CommonParams.PropAutoShutterParameterValue.StatusSwith.OFF
         irCmd?.setPropAutoShutterParameter(
             CommonParams.PropAutoShutterParameter.SHUTTER_PROP_SWITCH,
-            data
+            data,
         )
     }
 
@@ -186,7 +179,7 @@ object CalibrationTools {
         setTpdParams(
             irCmd = irCmd,
             params = CommonParams.PropTPDParams.TPD_PROP_DISTANCE,
-            value = data
+            value = data,
         )
     }
 
@@ -202,12 +195,10 @@ object CalibrationTools {
         irCmd: IRCMD?,
         params: CommonParams.PropTPDParams,
         value: CommonParams.PropTPDParamsValue,
-    ): Int {
-        return try {
+    ): Int =
+        try {
             irCmd?.setPropTPDParams(params, value) ?: 0
         } catch (e: Exception) {
-            XLog.w("[ph][ph][ph][ph][ph][ph][${params.name}]: ${e.message}")
             0
         }
-    }
 }

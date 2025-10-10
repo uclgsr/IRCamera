@@ -14,46 +14,51 @@ import mpdc4gsr.feature.camera.data.CameraConfigurationManager
 import java.text.SimpleDateFormat
 import java.util.*
 
-enum class FocusMode(val displayName: String) {
+enum class FocusMode(
+    val displayName: String,
+) {
     AUTO("Auto"),
     MANUAL("Manual"),
-    CONTINUOUS("Continuous");
+    CONTINUOUS("Continuous"),
+    ;
 
-    fun getNext(): FocusMode {
-        return when (this) {
+    fun getNext(): FocusMode =
+        when (this) {
             AUTO -> MANUAL
             MANUAL -> CONTINUOUS
             CONTINUOUS -> AUTO
         }
-    }
 }
 
-enum class WhiteBalance(val displayName: String) {
+enum class WhiteBalance(
+    val displayName: String,
+) {
     AUTO("Auto"),
     DAYLIGHT("Daylight"),
     CLOUDY("Cloudy"),
-    TUNGSTEN("Tungsten");
+    TUNGSTEN("Tungsten"),
+    ;
 
-    fun getNext(): WhiteBalance {
-        return when (this) {
+    fun getNext(): WhiteBalance =
+        when (this) {
             AUTO -> DAYLIGHT
             DAYLIGHT -> CLOUDY
             CLOUDY -> TUNGSTEN
             TUNGSTEN -> AUTO
         }
-    }
 }
 
 class RGBCameraViewModel(
-    context: Context
+    context: Context,
 ) : AppBaseViewModel() {
     private val application: Context = context.applicationContext
 
     companion object {
         // Reuse SimpleDateFormat instance for better performance
-        private val ISO_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
-            timeZone = TimeZone.getTimeZone("UTC")
-        }
+        private val ISO_DATE_FORMAT =
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
+                timeZone = TimeZone.getTimeZone("UTC")
+            }
     }
 
     data class CameraState(
@@ -75,7 +80,7 @@ class RGBCameraViewModel(
         val lensFacingDescription: String = "Back Lens",
         val hardwareLevelDescription: String = "Level Unknown",
         val availableResolutions: List<String> = emptyList(),
-        val capabilities: CameraConfigurationManager.DeviceCapabilities? = null
+        val capabilities: CameraConfigurationManager.DeviceCapabilities? = null,
     )
 
     private val _cameraState = MutableStateFlow(CameraState())
@@ -86,10 +91,11 @@ class RGBCameraViewModel(
     fun initializeCamera(lifecycleOwner: androidx.lifecycle.LifecycleOwner) {
         viewModelScope.launch {
             try {
-                val recorder = RgbCameraRecorder(
-                    context = application,
-                    lifecycleOwner = lifecycleOwner
-                )
+                val recorder =
+                    RgbCameraRecorder(
+                        context = application,
+                        lifecycleOwner = lifecycleOwner,
+                    )
                 val initialized = recorder.initialize()
                 if (initialized) {
                     _cameraRecorder.value = recorder
@@ -98,7 +104,7 @@ class RGBCameraViewModel(
                             isPreviewActive = true,
                             resolution = recorder.getResolution(),
                             frameRate = recorder.getCurrentFps(),
-                            error = null
+                            error = null,
                         )
                     }
                 } else {
@@ -112,7 +118,7 @@ class RGBCameraViewModel(
 
     @Deprecated(
         message = "Use cameraRecorder StateFlow for reactive updates",
-        replaceWith = ReplaceWith("cameraRecorder.value")
+        replaceWith = ReplaceWith("cameraRecorder.value"),
     )
     fun getCameraRecorder(): RgbCameraRecorder? = _cameraRecorder.value
 
@@ -124,16 +130,18 @@ class RGBCameraViewModel(
                     _cameraState.update { it.copy(error = "Camera not initialized") }
                     return@launch
                 }
-                val sessionDir = application.getExternalFilesDir("camera_recordings")?.absolutePath
-                    ?: application.filesDir.absolutePath
+                val sessionDir =
+                    application.getExternalFilesDir("camera_recordings")?.absolutePath
+                        ?: application.filesDir.absolutePath
                 val currentTimeMs = System.currentTimeMillis()
                 val currentMonotonicNs = System.nanoTime()
-                val metadata = mpdc4gsr.core.data.SessionMetadata(
-                    sessionId = "camera_${currentTimeMs}",
-                    sessionStartTimestampMs = currentTimeMs,
-                    sessionStartMonotonicNs = currentMonotonicNs,
-                    sessionStartIso = ISO_DATE_FORMAT.format(java.util.Date(currentTimeMs))
-                )
+                val metadata =
+                    mpdc4gsr.core.data.SessionMetadata(
+                        sessionId = "camera_$currentTimeMs",
+                        sessionStartTimestampMs = currentTimeMs,
+                        sessionStartMonotonicNs = currentMonotonicNs,
+                        sessionStartIso = ISO_DATE_FORMAT.format(java.util.Date(currentTimeMs)),
+                    )
                 val started = recorder.startRecording(sessionDir, metadata)
                 if (started) {
                     updateStateFromRecorder(recorder) { state ->
@@ -178,7 +186,6 @@ class RGBCameraViewModel(
         viewModelScope.launch {
             try {
                 // Photo capture functionality would be implemented here
-                android.util.Log.d("RGBCameraViewModel", "Photo capture requested")
             } catch (e: Exception) {
                 _cameraState.update { it.copy(error = "Photo capture failed: ${e.message}") }
             }
@@ -195,28 +202,30 @@ class RGBCameraViewModel(
                 }
                 val cameraInfo = recorder.getCurrentCameraInfo()
                 if (!cameraInfo.canSwitch) {
-                    val reason = when {
-                        _cameraState.value.isRecording -> "Cannot switch camera during recording"
-                        !cameraInfo.frontAvailable && !cameraInfo.backAvailable -> "No cameras available"
-                        cameraInfo.isUsingFrontCamera && !cameraInfo.backAvailable -> "Back camera not available"
-                        !cameraInfo.isUsingFrontCamera && !cameraInfo.frontAvailable -> "Front camera not available"
-                        else -> "Camera switch not available"
-                    }
+                    val reason =
+                        when {
+                            _cameraState.value.isRecording -> "Cannot switch camera during recording"
+                            !cameraInfo.frontAvailable && !cameraInfo.backAvailable -> "No cameras available"
+                            cameraInfo.isUsingFrontCamera && !cameraInfo.backAvailable -> "Back camera not available"
+                            !cameraInfo.isUsingFrontCamera && !cameraInfo.frontAvailable -> "Front camera not available"
+                            else -> "Camera switch not available"
+                        }
                     _cameraState.update { it.copy(error = reason) }
                     return@launch
                 }
-                val success = if (cameraInfo.isUsingFrontCamera) {
-                    recorder.switchToBackCamera()
-                } else {
-                    recorder.switchToFrontCamera()
-                }
+                val success =
+                    if (cameraInfo.isUsingFrontCamera) {
+                        recorder.switchToBackCamera()
+                    } else {
+                        recorder.switchToFrontCamera()
+                    }
                 if (success) {
                     updateStateFromRecorder(recorder) { state ->
                         state.copy(
                             error = null,
                             cameraChangeCounter = state.cameraChangeCounter + 1,
                             resolution = recorder.getResolution(),
-                            frameRate = recorder.getCurrentFps()
+                            frameRate = recorder.getCurrentFps(),
                         )
                     }
                 } else {
@@ -284,7 +293,7 @@ class RGBCameraViewModel(
                 _cameraState.update {
                     it.copy(
                         recordingDuration = it.recordingDuration + 1,
-                        capturedFrames = it.capturedFrames + it.frameRate
+                        capturedFrames = it.capturedFrames + it.frameRate,
                     )
                 }
             }
@@ -293,7 +302,7 @@ class RGBCameraViewModel(
 
     private fun updateStateFromRecorder(
         recorder: RgbCameraRecorder,
-        transform: (CameraState) -> CameraState
+        transform: (CameraState) -> CameraState,
     ) {
         val capabilities = recorder.getCurrentCapabilities()
         _cameraState.update { current ->
@@ -304,14 +313,16 @@ class RGBCameraViewModel(
 
     private fun enrichWithCapabilities(
         state: CameraState,
-        capabilities: CameraConfigurationManager.DeviceCapabilities?
+        capabilities: CameraConfigurationManager.DeviceCapabilities?,
     ): CameraState {
         val resolved = capabilities ?: state.capabilities
         val lensDescription = resolved?.let { describeLensFacing(it.lensFacing) } ?: state.lensFacingDescription
-        val hardwareDescription = resolved?.let { describeHardwareLevel(it.hardwareLevel) }
-            ?: state.hardwareLevelDescription
-        val resolutions = resolved?.supportedVideoSizes?.map { size -> "${size.width}x${size.height}" }
-            ?: state.availableResolutions
+        val hardwareDescription =
+            resolved?.let { describeHardwareLevel(it.hardwareLevel) }
+                ?: state.hardwareLevelDescription
+        val resolutions =
+            resolved?.supportedVideoSizes?.map { size -> "${size.width}x${size.height}" }
+                ?: state.availableResolutions
         return state.copy(
             capabilities = resolved,
             supports4K = resolved?.supports4K == true,
@@ -319,21 +330,20 @@ class RGBCameraViewModel(
             supports60Fps = resolved?.supports60Fps == true,
             lensFacingDescription = lensDescription,
             hardwareLevelDescription = hardwareDescription,
-            availableResolutions = resolutions
+            availableResolutions = resolutions,
         )
     }
 
-    private fun describeLensFacing(lensFacing: Int?): String {
-        return when (lensFacing) {
+    private fun describeLensFacing(lensFacing: Int?): String =
+        when (lensFacing) {
             CameraCharacteristics.LENS_FACING_FRONT -> "Front Lens"
             CameraCharacteristics.LENS_FACING_BACK -> "Back Lens"
             CameraCharacteristics.LENS_FACING_EXTERNAL -> "External Lens"
             else -> "Unknown Lens"
         }
-    }
 
-    private fun describeHardwareLevel(level: Int?): String {
-        return when (level) {
+    private fun describeHardwareLevel(level: Int?): String =
+        when (level) {
             CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3 -> "Level 3"
             CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL -> "Level Full"
             CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED -> "Level Limited"
@@ -341,7 +351,6 @@ class RGBCameraViewModel(
             CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_EXTERNAL -> "Level External"
             else -> "Level Unknown"
         }
-    }
 
     override fun onCleared() {
         super.onCleared()
@@ -350,7 +359,6 @@ class RGBCameraViewModel(
                 _cameraRecorder.value?.stopRecording()
                 _cameraRecorder.value?.cleanup()
             } catch (e: Exception) {
-                android.util.Log.e("RGBCameraViewModel", "Error during cleanup", e)
             }
         }
     }

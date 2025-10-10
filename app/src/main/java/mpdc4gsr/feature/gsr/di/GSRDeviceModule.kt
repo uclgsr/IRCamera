@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.gsr.di
 
-import android.app.Application
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -16,58 +15,38 @@ import mpdc4gsr.feature.gsr.domain.usecase.*
 @Module
 @InstallIn(ViewModelComponent::class)
 abstract class GSRDeviceModule {
+    @Binds
+    @ViewModelScoped
+    abstract fun bindGSRDeviceRepository(gsrDeviceRepositoryImpl: GSRDeviceRepositoryImpl): GSRDeviceRepository
 
     @Binds
     @ViewModelScoped
-    abstract fun bindGSRDeviceRepository(
-        gsrDeviceRepositoryImpl: GSRDeviceRepositoryImpl
-    ): GSRDeviceRepository
-
-    @Binds
-    @ViewModelScoped
-    abstract fun bindGSRDeviceDataSource(
-        gsrDeviceDataSourceImpl: GSRDeviceDataSourceImpl
-    ): GSRDeviceDataSource
+    abstract fun bindGSRDeviceDataSource(gsrDeviceDataSourceImpl: GSRDeviceDataSourceImpl): GSRDeviceDataSource
 
     companion object {
         @Provides
         @ViewModelScoped
-        fun provideScanDevicesUseCase(
-            gsrDeviceRepository: GSRDeviceRepository
-        ): ScanGSRDevicesUseCase {
-            return ScanGSRDevicesUseCase(gsrDeviceRepository)
-        }
+        fun provideScanDevicesUseCase(gsrDeviceRepository: GSRDeviceRepository): ScanGSRDevicesUseCase =
+            ScanGSRDevicesUseCase(gsrDeviceRepository)
 
         @Provides
         @ViewModelScoped
-        fun provideConnectDeviceUseCase(
-            gsrDeviceRepository: GSRDeviceRepository
-        ): ConnectGSRDeviceUseCase {
-            return ConnectGSRDeviceUseCase(gsrDeviceRepository)
-        }
+        fun provideConnectDeviceUseCase(gsrDeviceRepository: GSRDeviceRepository): ConnectGSRDeviceUseCase =
+            ConnectGSRDeviceUseCase(gsrDeviceRepository)
 
         @Provides
         @ViewModelScoped
-        fun provideDisconnectDeviceUseCase(
-            gsrDeviceRepository: GSRDeviceRepository
-        ): DisconnectGSRDeviceUseCase {
-            return DisconnectGSRDeviceUseCase(gsrDeviceRepository)
-        }
+        fun provideDisconnectDeviceUseCase(gsrDeviceRepository: GSRDeviceRepository): DisconnectGSRDeviceUseCase =
+            DisconnectGSRDeviceUseCase(gsrDeviceRepository)
 
         @Provides
         @ViewModelScoped
-        fun provideGetBatteryLevelUseCase(
-            gsrDeviceRepository: GSRDeviceRepository
-        ): GetGSRDeviceBatteryUseCase {
-            return GetGSRDeviceBatteryUseCase(gsrDeviceRepository)
-        }
+        fun provideGetBatteryLevelUseCase(gsrDeviceRepository: GSRDeviceRepository): GetGSRDeviceBatteryUseCase =
+            GetGSRDeviceBatteryUseCase(gsrDeviceRepository)
 
         @Provides
         @ViewModelScoped
-        fun provideCheckConnectionUseCase(
-            gsrDeviceRepository: GSRDeviceRepository
-        ): CheckGSRDeviceConnectionUseCase {
-            return CheckGSRDeviceConnectionUseCase(gsrDeviceRepository)
-        }
+        fun provideCheckConnectionUseCase(gsrDeviceRepository: GSRDeviceRepository): CheckGSRDeviceConnectionUseCase =
+            CheckGSRDeviceConnectionUseCase(gsrDeviceRepository)
     }
 }

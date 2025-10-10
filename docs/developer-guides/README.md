@@ -1,49 +1,15 @@
 # Developer Guides
 
-Technical guides for developers working on the IRCamera codebase.
+Targeted deep dives into reusable tooling that supports feature development.
 
-## Contents
+- [ui-components-guide.md](ui-components-guide.md) – Overview of shared Compose components and permission-aware patterns for screens such as the camera dashboard.
+- [logging-utilities-guide.md](logging-utilities-guide.md) – Using `StructuredLogger`, telemetry helpers, and crash handling utilities.
+- [permission-handling-guide.md](permission-handling-guide.md) – Working with `PermissionTools` from `libunified` to request runtime permissions, manage USB access, and handle battery optimisations.
 
-### Core Systems
+These guides complement the broader references in:
 
-- [ui-components-guide.md](ui-components-guide.md) - Phase 1 permissions handling implementation
-    - Permission controller architecture
-    - Runtime permission management
-    - USB device permissions
-    - Battery optimization handling
-    - Integration examples
+- [../system-overview.md](../system-overview.md)
+- [../android-platform.md](../android-platform.md)
+- `libunified/PERMISSION_HANDLING.md`
 
-- [logging-utilities-guide.md](logging-utilities-guide.md) - Centralized logging and error handling
-    - AppLogger API and usage
-    - ErrorHandler utilities
-    - Structured logging
-    - Migration from legacy logging
-
-- [permission-handling-guide.md](permission-handling-guide.md) - Permission tools and utilities
-    - PermissionTools API
-    - Activity/Fragment integration
-    - Permission callbacks
-    - Best practices
-
-## Usage
-
-These guides document core utilities and systems used throughout the codebase. Refer to them when:
-
-- Implementing new features that require permissions
-- Adding logging to components
-- Handling errors consistently
-- Understanding the permission system architecture
-
-## Source Locations
-
-The actual implementation code is located in:
-
-- **UI Components**: `app/src/main/java/mpdc4gsr/core/ui/`
-- **Utilities**: `app/src/main/java/mpdc4gsr/core/utils/`
-- **Permission Tools**: `libunified/`
-
-## Related Documentation
-
-- [../android/](../android/) - Android app networking documentation
-- [../maintenance/](../maintenance/) - Maintenance and migration guides
-- [../anti-patterns-checklist.md](../anti-patterns-checklist.md) - Code quality guidelines
+When updating utilities, refresh both the guide and inline code comments to keep them in sync.

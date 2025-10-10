@@ -17,24 +17,27 @@ class MoreComposeFragmentViewModel : BaseViewModel() {
         val isTC007: Boolean = false,
         val isSaveSettingEnabled: Boolean = false,
         val hasUpgrade: Boolean = false,
-        val versionText: String = ""
+        val versionText: String = "",
     )
 
     private val _deviceSettings = MutableStateFlow(DeviceSettingsState())
     val deviceSettings: StateFlow<DeviceSettingsState> = _deviceSettings.asStateFlow()
+
     fun initialize(isTC007: Boolean) {
         launchWithErrorHandling {
-            val isSaveEnabled = if (isTC007) {
-                WifiSaveSettingUtils.isSaveSetting
-            } else {
-                SaveSettingUtils.isSaveSetting
-            }
-            _deviceSettings.value = DeviceSettingsState(
-                isTC007 = isTC007,
-                isSaveSettingEnabled = isSaveEnabled,
-                hasUpgrade = DEFAULT_UPGRADE_AVAILABLE,
-                versionText = DEFAULT_VERSION
-            )
+            val isSaveEnabled =
+                if (isTC007) {
+                    WifiSaveSettingUtils.isSaveSetting
+                } else {
+                    SaveSettingUtils.isSaveSetting
+                }
+            _deviceSettings.value =
+                DeviceSettingsState(
+                    isTC007 = isTC007,
+                    isSaveSettingEnabled = isSaveEnabled,
+                    hasUpgrade = DEFAULT_UPGRADE_AVAILABLE,
+                    versionText = DEFAULT_VERSION,
+                )
         }
     }
 
@@ -46,9 +49,10 @@ class MoreComposeFragmentViewModel : BaseViewModel() {
             } else {
                 SaveSettingUtils.isSaveSetting = enabled
             }
-            _deviceSettings.value = currentState.copy(
-                isSaveSettingEnabled = enabled
-            )
+            _deviceSettings.value =
+                currentState.copy(
+                    isSaveSettingEnabled = enabled,
+                )
         }
     }
 

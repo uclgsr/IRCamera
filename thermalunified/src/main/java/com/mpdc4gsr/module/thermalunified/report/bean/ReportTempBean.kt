@@ -20,7 +20,7 @@ data class ReportTempBean(
         temperature: String?,
         is_temperature: Int,
         comment: String?,
-        is_comment: Int
+        is_comment: Int,
     ) : this(
         null,
         0,
@@ -35,8 +35,12 @@ data class ReportTempBean(
     )
 
     fun isMaxOpen() = is_max_temperature == 1
+
     fun isMinOpen() = is_min_temperature == 1
+
     fun isAverageOpen() = is_mean_temperature == 1
+
     fun isExplainOpen() = is_comment == 1
+
     fun isTempOpen() = is_temperature == 1
 }

@@ -1,7 +1,6 @@
 package com.mpdc4gsr.libunified.app.ktbase
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +13,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {
     protected lateinit var viewModel: VM
+
     override fun onCreate(savedInstanceState: Bundle?) {
         initVM()
         super.onCreate(savedInstanceState)
@@ -85,19 +85,17 @@ abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {
     }
 
     abstract fun providerVMClass(): Class<VM>
+
     protected fun requestError(it: Exception?) {
         it?.run {
             when (it) {
-                is TimeoutCancellationException -> httpErrorTip(
-                    getString(R.string.http_time_out),
-                    ""
-                )
+                is TimeoutCancellationException ->
+                    httpErrorTip(
+                        getString(R.string.http_time_out),
+                        "",
+                    )
 
-                is CancellationException -> Log.d(
-                    "$TAG--->[ph][ph][ph][ph][ph][ph]",
-                    it.message.toString()
-                )
-
+                is CancellationException -> Unit
                 else -> httpErrorTip(getString(R.string.http_code_z5004), "")
             }
         }
@@ -111,13 +109,14 @@ abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {
     }
 
     private val messageDialogState by lazy { SimpleMessageDialogState(this) }
+
     open fun httpErrorTip(
         text: String,
         requestUrl: String,
     ) {
         messageDialogState.show(
             iconRes = R.drawable.ic_tip_error_svg,
-            message = text
+            message = text,
         )
     }
 }

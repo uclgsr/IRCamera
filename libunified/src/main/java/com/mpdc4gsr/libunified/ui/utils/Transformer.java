@@ -4,7 +4,6 @@ import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.RectF;
 
-import com.elvishew.xlog.XLog;
 import com.mpdc4gsr.libunified.ui.data.CandleEntry;
 import com.mpdc4gsr.libunified.ui.data.Entry;
 import com.mpdc4gsr.libunified.ui.interfaces.datasets.IBubbleDataSet;
@@ -125,7 +124,6 @@ public class Transformer {
                                                  int min, int max) {
 
         if (max < min) {
-            XLog.w("generateTransformedValuesLine error: max:" + max + ", min:" + min + ", phaseX:" + phaseX);
             return new float[0];
         }
         final int count = ((int) ((max - min) * phaseX) + 1) * 2;

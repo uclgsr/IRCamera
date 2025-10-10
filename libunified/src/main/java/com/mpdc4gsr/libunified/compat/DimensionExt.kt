@@ -4,65 +4,59 @@ import android.content.Context
 import android.content.res.Resources
 import android.util.TypedValue
 
+fun Int.dpToPx(context: Context): Int = (this * context.resources.displayMetrics.density).toInt()
 
-fun Int.dpToPx(context: Context): Int {
-    return (this * context.resources.displayMetrics.density).toInt()
-}
+fun Int.pxToDp(context: Context): Int = (this / context.resources.displayMetrics.density).toInt()
 
-fun Int.pxToDp(context: Context): Int {
-    return (this / context.resources.displayMetrics.density).toInt()
-}
+fun Int.spToPx(context: Context): Int =
+    TypedValue
+        .applyDimension(
+            TypedValue.COMPLEX_UNIT_SP,
+            this.toFloat(),
+            context.resources.displayMetrics,
+        ).toInt()
 
-fun Int.spToPx(context: Context): Int {
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_SP,
-        this.toFloat(),
-        context.resources.displayMetrics
-    ).toInt()
-}
+fun Float.dpToPx(context: Context): Float = this * context.resources.displayMetrics.density
 
-fun Float.dpToPx(context: Context): Float {
-    return this * context.resources.displayMetrics.density
-}
+fun Float.pxToDp(context: Context): Float = this / context.resources.displayMetrics.density
 
-fun Float.pxToDp(context: Context): Float {
-    return this / context.resources.displayMetrics.density
-}
-
-fun Float.spToPx(context: Context): Float {
-    return TypedValue.applyDimension(
+fun Float.spToPx(context: Context): Float =
+    TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_SP,
         this,
-        context.resources.displayMetrics
+        context.resources.displayMetrics,
     )
-}
 
 @Deprecated(
     message = "Use dpToPx(context) for context-aware conversion",
-    replaceWith = ReplaceWith("this.dpToPx(context)")
+    replaceWith = ReplaceWith("this.dpToPx(context)"),
 )
 val Int.dpLegacy: Int
     get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
 @Deprecated(
     message = "Use pxToDp(context) for context-aware conversion",
-    replaceWith = ReplaceWith("this.pxToDp(context)")
+    replaceWith = ReplaceWith("this.pxToDp(context)"),
 )
 val Int.pxLegacy: Int
     get() = (this / Resources.getSystem().displayMetrics.density).toInt()
 
 @Deprecated(
     message = "Use spToPx(context) for context-aware conversion",
-    replaceWith = ReplaceWith("this.spToPx(context)")
+    replaceWith = ReplaceWith("this.spToPx(context)"),
 )
 val Int.spLegacy: Int
-    get() = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_SP,
-        this.toFloat(),
-        Resources.getSystem().displayMetrics
-    ).toInt()
+    get() =
+        TypedValue
+            .applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
+                this.toFloat(),
+                Resources.getSystem().displayMetrics,
+            ).toInt()
 
-class ScreenDimensions(private val context: Context) {
+class ScreenDimensions(
+    private val context: Context,
+) {
     val screenWidthPx: Int
         get() = context.resources.displayMetrics.widthPixels
     val screenHeightPx: Int

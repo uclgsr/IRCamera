@@ -15,8 +15,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.feature.device.TopdonThermalDeviceManager
@@ -35,7 +35,6 @@ import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
 import kotlinx.coroutines.launch
 
 class IRMainComposeActivity : AppCompatActivity() {
-
     private lateinit var deviceManager: TopdonThermalDeviceManager
     private lateinit var featureRegistry: ThermalFeatureRegistry
     private lateinit var featureCoordinator: ThermalFeatureCoordinator
@@ -43,14 +42,16 @@ class IRMainComposeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         deviceManager = TopdonThermalDeviceManager(this, lifecycleScope)
-        featureRegistry = ThermalFeatureRegistry().apply {
-            registerAll(buildFeatureDescriptors())
-        }
-        featureCoordinator = ThermalFeatureCoordinator(
-            registry = featureRegistry,
-            deviceManager = deviceManager,
-            scope = lifecycleScope,
-        )
+        featureRegistry =
+            ThermalFeatureRegistry().apply {
+                registerAll(buildFeatureDescriptors())
+            }
+        featureCoordinator =
+            ThermalFeatureCoordinator(
+                registry = featureRegistry,
+                deviceManager = deviceManager,
+                scope = lifecycleScope,
+            )
 
         lifecycleScope.launch {
             deviceManager.connect()
@@ -80,8 +81,8 @@ class IRMainComposeActivity : AppCompatActivity() {
         }
     }
 
-    private fun buildFeatureDescriptors(): List<ThermalFeatureDescriptor> {
-        return listOf(
+    private fun buildFeatureDescriptors(): List<ThermalFeatureDescriptor> =
+        listOf(
             ThermalFeatureDescriptor(
                 id = ThermalFeatureIds.THERMAL,
                 title = "Thermal",
@@ -115,17 +116,17 @@ class IRMainComposeActivity : AppCompatActivity() {
                 title = "More",
                 iconId = "more",
                 priority = 20,
-                content = ThermalFeatureContent.Compose {
-                    val moreViewModel: MoreComposeFragmentViewModel = viewModel()
-                    MoreComposeFragment(
-                        viewModel = moreViewModel,
-                        isTC007 = false,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                },
+                content =
+                    ThermalFeatureContent.Compose {
+                        val moreViewModel: MoreComposeFragmentViewModel = viewModel()
+                        MoreComposeFragment(
+                            viewModel = moreViewModel,
+                            isTC007 = false,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    },
             ),
         )
-    }
 
     @Composable
     private fun FeatureStreamGuard(
@@ -146,9 +147,10 @@ class IRMainComposeActivity : AppCompatActivity() {
     private fun ThermalDashboardHeader() {
         Surface(modifier = Modifier.fillMaxWidth()) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
             ) {
                 Text(
                     text = "Thermal Experience Suite",
@@ -172,4 +174,3 @@ class IRMainComposeActivity : AppCompatActivity() {
         const val MORE = "thermal-more"
     }
 }
-

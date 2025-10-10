@@ -40,9 +40,14 @@ enum class ThermalGainMode {
 
 interface ThermalDeviceManager {
     val status: StateFlow<ThermalDeviceStatus>
+
     suspend fun connect(): Result<Unit>
+
     suspend fun disconnect()
+
     suspend fun startStream(config: ThermalDeviceConfig = ThermalDeviceConfig()): Result<Unit>
+
     suspend fun stopStream()
+
     suspend fun triggerManualCalibration(): Result<Unit>
 }

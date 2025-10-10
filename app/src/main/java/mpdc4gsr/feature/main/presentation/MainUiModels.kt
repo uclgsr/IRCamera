@@ -22,7 +22,7 @@ data class MainUiState(
     val isRemoteTriggered: Boolean = false,
     val exposureLocked: Boolean = false,
     val focusLocked: Boolean = false,
-    val exposureCompensation: Float = 0f
+    val exposureCompensation: Float = 0f,
 ) {
     companion object {
         const val PAGE_GALLERY = 0
@@ -38,29 +38,60 @@ data class MainUiState(
 data class SensorOverviewState(
     val gsr: SensorState = SensorState(),
     val thermal: SensorState = SensorState(),
-    val rgb: SensorState = SensorState()
+    val rgb: SensorState = SensorState(),
 )
 
 data class RecordingSessionConfig(
     val sessionId: String? = null,
     val participantId: String? = null,
     val studyName: String? = null,
-    val metadata: Map<String, String> = emptyMap()
+    val metadata: Map<String, String> = emptyMap(),
 )
 
 sealed class MainUiAction {
-    data class SelectPage(val index: Int) : MainUiAction()
+    data class SelectPage(
+        val index: Int,
+    ) : MainUiAction()
+
     object BackPressed : MainUiAction()
+
     object StartGsrConnection : MainUiAction()
-    data class PerformGsrAction(val action: mpdc4gsr.core.ui.model.GSRAction) : MainUiAction()
+
+    data class PerformGsrAction(
+        val action: mpdc4gsr.core.ui.model.GSRAction,
+    ) : MainUiAction()
+
     object StartNetworkDiscovery : MainUiAction()
-    data class PerformThermalAction(val action: mpdc4gsr.core.ui.model.ThermalAction) : MainUiAction()
-    data class PerformCameraAction(val action: mpdc4gsr.core.ui.model.CameraAction) : MainUiAction()
-    data class StartRecording(val config: RecordingSessionConfig = RecordingSessionConfig()) : MainUiAction()
+
+    data class PerformThermalAction(
+        val action: mpdc4gsr.core.ui.model.ThermalAction,
+    ) : MainUiAction()
+
+    data class PerformCameraAction(
+        val action: mpdc4gsr.core.ui.model.CameraAction,
+    ) : MainUiAction()
+
+    data class StartRecording(
+        val config: RecordingSessionConfig = RecordingSessionConfig(),
+    ) : MainUiAction()
+
     object StopRecording : MainUiAction()
-    data class SetRemoteTriggered(val isRemote: Boolean) : MainUiAction()
-    data class LockExposure(val locked: Boolean) : MainUiAction()
-    data class LockFocus(val locked: Boolean) : MainUiAction()
-    data class SetExposureCompensation(val value: Float) : MainUiAction()
+
+    data class SetRemoteTriggered(
+        val isRemote: Boolean,
+    ) : MainUiAction()
+
+    data class LockExposure(
+        val locked: Boolean,
+    ) : MainUiAction()
+
+    data class LockFocus(
+        val locked: Boolean,
+    ) : MainUiAction()
+
+    data class SetExposureCompensation(
+        val value: Float,
+    ) : MainUiAction()
+
     object ResetCameraControls : MainUiAction()
 }

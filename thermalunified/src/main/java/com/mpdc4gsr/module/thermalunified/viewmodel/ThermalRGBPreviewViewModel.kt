@@ -18,7 +18,7 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
         val previewSurface: Surface? = null,
         val currentFrame: Bitmap? = null,
         val exposureMode: ExposureMode = ExposureMode.AUTO,
-        val focusMode: FocusMode = FocusMode.AUTO
+        val focusMode: FocusMode = FocusMode.AUTO,
     )
 
     data class ThermalOverlayState(
@@ -30,7 +30,7 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
         val rotation: Float = 0f,
         val thermalBitmap: Bitmap? = null,
         val colorPalette: ColorPalette = ColorPalette.IRON,
-        val temperatureRange: Pair<Float, Float> = 20f to 40f
+        val temperatureRange: Pair<Float, Float> = 20f to 40f,
     )
 
     data class CombinedPreviewState(
@@ -38,7 +38,7 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
         val thermalState: ThermalOverlayState = ThermalOverlayState(),
         val isReady: Boolean = false,
         val overlayMode: OverlayMode = OverlayMode.BLENDED,
-        val syncedFrame: Bitmap? = null
+        val syncedFrame: Bitmap? = null,
     )
 
     // StateFlow for RGB preview state management
@@ -52,51 +52,88 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
     val previewEvents: SharedFlow<PreviewEvent> = _previewEvents.asSharedFlow()
 
     // Combined UI State for thermal + RGB preview
-    val combinedPreviewState: StateFlow<CombinedPreviewState> = combine(
-        _rgbPreviewState,
-        _thermalOverlayState
-    ) { rgbState, thermalState ->
-        CombinedPreviewState(
-            rgbState = rgbState,
-            thermalState = thermalState,
-            isReady = rgbState.isInitialized && thermalState.isEnabled,
-            overlayMode = when {
-                thermalState.blendMode == BlendMode.SIDE_BY_SIDE -> OverlayMode.SIDE_BY_SIDE
-                thermalState.opacity > 0.8f -> OverlayMode.THERMAL_PRIMARY
-                thermalState.opacity > 0.3f -> OverlayMode.BLENDED
-                else -> OverlayMode.RGB_PRIMARY
-            }
-        )
-    }.stateIn(viewModelScope, SharingStarted.Lazily, CombinedPreviewState())
+    val combinedPreviewState: StateFlow<CombinedPreviewState> =
+        combine(
+            _rgbPreviewState,
+            _thermalOverlayState,
+        ) { rgbState, thermalState ->
+            CombinedPreviewState(
+                rgbState = rgbState,
+                thermalState = thermalState,
+                isReady = rgbState.isInitialized && thermalState.isEnabled,
+                overlayMode =
+                    when {
+                        thermalState.blendMode == BlendMode.SIDE_BY_SIDE -> OverlayMode.SIDE_BY_SIDE
+                        thermalState.opacity > 0.8f -> OverlayMode.THERMAL_PRIMARY
+                        thermalState.opacity > 0.3f -> OverlayMode.BLENDED
+                        else -> OverlayMode.RGB_PRIMARY
+                    },
+            )
+        }.stateIn(viewModelScope, SharingStarted.Lazily, CombinedPreviewState())
 
     enum class BlendMode {
-        OVERLAY, MULTIPLY, SCREEN, SIDE_BY_SIDE, PICTURE_IN_PICTURE
+        OVERLAY,
+        MULTIPLY,
+        SCREEN,
+        SIDE_BY_SIDE,
+        PICTURE_IN_PICTURE,
     }
 
     enum class OverlayMode {
-        RGB_PRIMARY, BLENDED, THERMAL_PRIMARY, SIDE_BY_SIDE
+        RGB_PRIMARY,
+        BLENDED,
+        THERMAL_PRIMARY,
+        SIDE_BY_SIDE,
     }
 
     enum class ExposureMode {
-        AUTO, MANUAL, SCENE_NIGHT, SCENE_BRIGHT
+        AUTO,
+        MANUAL,
+        SCENE_NIGHT,
+        SCENE_BRIGHT,
     }
 
     enum class FocusMode {
-        AUTO, MANUAL, CONTINUOUS_VIDEO, MACRO
+        AUTO,
+        MANUAL,
+        CONTINUOUS_VIDEO,
+        MACRO,
     }
 
     enum class ColorPalette {
-        IRON, RAINBOW, GRAYSCALE, HOT, COOL, MEDICAL
+        IRON,
+        RAINBOW,
+        GRAYSCALE,
+        HOT,
+        COOL,
+        MEDICAL,
     }
 
     sealed class PreviewEvent {
         object RGBStreamStarted : PreviewEvent()
+
         object RGBStreamStopped : PreviewEvent()
-        data class CameraError(val message: String) : PreviewEvent()
-        data class ThermalDataReceived(val bitmap: Bitmap, val temperature: Float) : PreviewEvent()
-        data class CalibrationRequired(val message: String) : PreviewEvent()
-        data class ShowToast(val message: String) : PreviewEvent()
-        data class ShowError(val message: String) : PreviewEvent()
+
+        data class CameraError(
+            val message: String,
+        ) : PreviewEvent()
+
+        data class ThermalDataReceived(
+            val bitmap: Bitmap,
+            val temperature: Float,
+        ) : PreviewEvent()
+
+        data class CalibrationRequired(
+            val message: String,
+        ) : PreviewEvent()
+
+        data class ShowToast(
+            val message: String,
+        ) : PreviewEvent()
+
+        data class ShowError(
+            val message: String,
+        ) : PreviewEvent()
     }
 
     // RGB Camera Management
@@ -104,11 +141,12 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
         launchWithErrorHandling {
             try {
                 val cameraList = cameraManager.cameraIdList.toList()
-                _rgbPreviewState.value = _rgbPreviewState.value.copy(
-                    availableCameras = cameraList,
-                    cameraId = cameraList.firstOrNull() ?: "0",
-                    isInitialized = true
-                )
+                _rgbPreviewState.value =
+                    _rgbPreviewState.value.copy(
+                        availableCameras = cameraList,
+                        cameraId = cameraList.firstOrNull() ?: "0",
+                        isInitialized = true,
+                    )
                 _previewEvents.emit(PreviewEvent.ShowToast("RGB camera initialized"))
             } catch (e: Exception) {
                 _previewEvents.emit(PreviewEvent.CameraError("Failed to initialize RGB camera: ${e.message}"))
@@ -118,20 +156,22 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
 
     fun startRGBPreview(surface: Surface) {
         launchWithErrorHandling {
-            _rgbPreviewState.value = _rgbPreviewState.value.copy(
-                previewSurface = surface,
-                isStreaming = true
-            )
+            _rgbPreviewState.value =
+                _rgbPreviewState.value.copy(
+                    previewSurface = surface,
+                    isStreaming = true,
+                )
             _previewEvents.emit(PreviewEvent.RGBStreamStarted)
         }
     }
 
     fun stopRGBPreview() {
         launchWithErrorHandling {
-            _rgbPreviewState.value = _rgbPreviewState.value.copy(
-                previewSurface = null,
-                isStreaming = false
-            )
+            _rgbPreviewState.value =
+                _rgbPreviewState.value.copy(
+                    previewSurface = null,
+                    isStreaming = false,
+                )
             _previewEvents.emit(PreviewEvent.RGBStreamStopped)
         }
     }
@@ -149,20 +189,25 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
     }
 
     // Thermal Overlay Management
-    fun updateThermalOverlay(bitmap: Bitmap, temperature: Float) {
+    fun updateThermalOverlay(
+        bitmap: Bitmap,
+        temperature: Float,
+    ) {
         launchWithErrorHandling {
-            _thermalOverlayState.value = _thermalOverlayState.value.copy(
-                thermalBitmap = bitmap,
-                temperatureRange = _thermalOverlayState.value.temperatureRange.first to temperature
-            )
+            _thermalOverlayState.value =
+                _thermalOverlayState.value.copy(
+                    thermalBitmap = bitmap,
+                    temperatureRange = _thermalOverlayState.value.temperatureRange.first to temperature,
+                )
             _previewEvents.emit(PreviewEvent.ThermalDataReceived(bitmap, temperature))
         }
     }
 
     fun setOverlayOpacity(opacity: Float) {
-        _thermalOverlayState.value = _thermalOverlayState.value.copy(
-            opacity = opacity.coerceIn(0f, 1f)
-        )
+        _thermalOverlayState.value =
+            _thermalOverlayState.value.copy(
+                opacity = opacity.coerceIn(0f, 1f),
+            )
     }
 
     fun setBlendMode(blendMode: BlendMode) {
@@ -173,22 +218,28 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
         _thermalOverlayState.value = _thermalOverlayState.value.copy(colorPalette = palette)
     }
 
-    fun adjustAlignment(offsetX: Float, offsetY: Float) {
-        _thermalOverlayState.value = _thermalOverlayState.value.copy(
-            alignmentOffset = offsetX to offsetY
-        )
+    fun adjustAlignment(
+        offsetX: Float,
+        offsetY: Float,
+    ) {
+        _thermalOverlayState.value =
+            _thermalOverlayState.value.copy(
+                alignmentOffset = offsetX to offsetY,
+            )
     }
 
     fun setScale(scale: Float) {
-        _thermalOverlayState.value = _thermalOverlayState.value.copy(
-            scale = scale.coerceIn(0.1f, 3.0f)
-        )
+        _thermalOverlayState.value =
+            _thermalOverlayState.value.copy(
+                scale = scale.coerceIn(0.1f, 3.0f),
+            )
     }
 
     fun setRotation(rotation: Float) {
-        _thermalOverlayState.value = _thermalOverlayState.value.copy(
-            rotation = rotation % 360f
-        )
+        _thermalOverlayState.value =
+            _thermalOverlayState.value.copy(
+                rotation = rotation % 360f,
+            )
     }
 
     fun toggleThermalOverlay() {
@@ -202,11 +253,12 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
             // Simulate calibration process
             _previewEvents.emit(PreviewEvent.CalibrationRequired("Place calibration target in view and press OK"))
             // Reset alignment to defaults after calibration
-            _thermalOverlayState.value = _thermalOverlayState.value.copy(
-                alignmentOffset = 0f to 0f,
-                scale = 1.0f,
-                rotation = 0f
-            )
+            _thermalOverlayState.value =
+                _thermalOverlayState.value.copy(
+                    alignmentOffset = 0f to 0f,
+                    scale = 1.0f,
+                    rotation = 0f,
+                )
         }
     }
 
@@ -230,43 +282,51 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
     fun applyPreset(preset: PreviewPreset) {
         when (preset) {
             PreviewPreset.MEDICAL -> {
-                _thermalOverlayState.value = _thermalOverlayState.value.copy(
-                    colorPalette = ColorPalette.MEDICAL,
-                    opacity = 0.8f,
-                    blendMode = BlendMode.OVERLAY
-                )
+                _thermalOverlayState.value =
+                    _thermalOverlayState.value.copy(
+                        colorPalette = ColorPalette.MEDICAL,
+                        opacity = 0.8f,
+                        blendMode = BlendMode.OVERLAY,
+                    )
             }
 
             PreviewPreset.INDUSTRIAL -> {
-                _thermalOverlayState.value = _thermalOverlayState.value.copy(
-                    colorPalette = ColorPalette.IRON,
-                    opacity = 0.6f,
-                    blendMode = BlendMode.MULTIPLY
-                )
+                _thermalOverlayState.value =
+                    _thermalOverlayState.value.copy(
+                        colorPalette = ColorPalette.IRON,
+                        opacity = 0.6f,
+                        blendMode = BlendMode.MULTIPLY,
+                    )
             }
 
             PreviewPreset.RESEARCH -> {
-                _thermalOverlayState.value = _thermalOverlayState.value.copy(
-                    colorPalette = ColorPalette.RAINBOW,
-                    opacity = 0.5f,
-                    blendMode = BlendMode.SIDE_BY_SIDE
-                )
+                _thermalOverlayState.value =
+                    _thermalOverlayState.value.copy(
+                        colorPalette = ColorPalette.RAINBOW,
+                        opacity = 0.5f,
+                        blendMode = BlendMode.SIDE_BY_SIDE,
+                    )
             }
 
             PreviewPreset.NIGHT_VISION -> {
-                _rgbPreviewState.value = _rgbPreviewState.value.copy(
-                    exposureMode = ExposureMode.SCENE_NIGHT
-                )
-                _thermalOverlayState.value = _thermalOverlayState.value.copy(
-                    colorPalette = ColorPalette.HOT,
-                    opacity = 0.9f
-                )
+                _rgbPreviewState.value =
+                    _rgbPreviewState.value.copy(
+                        exposureMode = ExposureMode.SCENE_NIGHT,
+                    )
+                _thermalOverlayState.value =
+                    _thermalOverlayState.value.copy(
+                        colorPalette = ColorPalette.HOT,
+                        opacity = 0.9f,
+                    )
             }
         }
     }
 
     enum class PreviewPreset {
-        MEDICAL, INDUSTRIAL, RESEARCH, NIGHT_VISION
+        MEDICAL,
+        INDUSTRIAL,
+        RESEARCH,
+        NIGHT_VISION,
     }
 
     companion object {

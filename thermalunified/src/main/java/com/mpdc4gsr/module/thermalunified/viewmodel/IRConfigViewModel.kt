@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 
 class IRConfigViewModel : BaseViewModel() {
     val configLiveData = SingleLiveEvent<ModelBean>()
+
     fun getConfig(isTC007: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             configLiveData.postValue(ConfigRepository.read(isTC007))

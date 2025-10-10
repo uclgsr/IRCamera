@@ -21,9 +21,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryTabViewModel
 import kotlinx.coroutines.launch
 
 class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>() {
-    override fun createViewModel(): IRGalleryTabViewModel {
-        return viewModels<IRGalleryTabViewModel>().value
-    }
+    override fun createViewModel(): IRGalleryTabViewModel = viewModels<IRGalleryTabViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -50,7 +48,7 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
         val coroutineScope = rememberCoroutineScope()
         LibUnifiedTheme {
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 // Top app bar with directory switcher
                 GalleryTopBar(
@@ -61,12 +59,12 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
                     onDirectoryChange = { dirType ->
                         viewModel.changeDirType(dirType)
                     },
-                    onBackClick = { viewModel.navigateBack() }
+                    onBackClick = { viewModel.navigateBack() },
                 )
                 // Tab row
                 PrimaryScrollableTabRow(
                     selectedTabIndex = pagerState.currentPage,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     tabTitles.forEachIndexed { index, title ->
                         Tab(
@@ -79,33 +77,40 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
                             text = {
                                 Text(
                                     text = title,
-                                    fontWeight = if (pagerState.currentPage == index)
-                                        FontWeight.Bold else FontWeight.Normal
+                                    fontWeight =
+                                        if (pagerState.currentPage == index) {
+                                            FontWeight.Bold
+                                        } else {
+                                            FontWeight.Normal
+                                        },
                                 )
-                            }
+                            },
                         )
                     }
                 }
                 // Tab content
                 HorizontalPager(
                     state = pagerState,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) { page ->
                     when (page) {
-                        0 -> GalleryPictureTab(
-                            dirType = currentDirType,
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        0 ->
+                            GalleryPictureTab(
+                                dirType = currentDirType,
+                                modifier = Modifier.fillMaxSize(),
+                            )
 
-                        1 -> GalleryVideoTab(
-                            dirType = currentDirType,
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        1 ->
+                            GalleryVideoTab(
+                                dirType = currentDirType,
+                                modifier = Modifier.fillMaxSize(),
+                            )
 
-                        2 -> GalleryReportsTab(
-                            dirType = currentDirType,
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        2 ->
+                            GalleryReportsTab(
+                                dirType = currentDirType,
+                                modifier = Modifier.fillMaxSize(),
+                            )
                     }
                 }
             }
@@ -120,22 +125,22 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
         canSwitchDir: Boolean,
         hasBackIcon: Boolean,
         onDirectoryChange: (DirType) -> Unit,
-        onBackClick: () -> Unit
+        onBackClick: () -> Unit,
     ) {
         TopAppBar(
             title = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(
                         text = "Gallery",
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     if (canSwitchDir) {
                         DirectorySwitcher(
                             currentDirType = currentDirType,
-                            onDirectoryChange = onDirectoryChange
+                            onDirectoryChange = onDirectoryChange,
                         )
                     }
                 }
@@ -154,14 +159,14 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
                 IconButton(onClick = { viewModel.showMoreOptions() }) {
                     Icon(Icons.Default.MoreVert, contentDescription = "More")
                 }
-            }
+            },
         )
     }
 
     @Composable
     private fun DirectorySwitcher(
         currentDirType: DirType,
-        onDirectoryChange: (DirType) -> Unit
+        onDirectoryChange: (DirType) -> Unit,
     ) {
         var expanded by remember { mutableStateOf(false) }
         Box {
@@ -170,20 +175,20 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
                 label = {
                     Text(
                         text = getDirTypeDisplayName(currentDirType),
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
                     )
                 },
                 selected = false,
                 trailingIcon = {
                     Icon(
                         Icons.Default.ArrowDropDown,
-                        contentDescription = "Switch Directory"
+                        contentDescription = "Switch Directory",
                     )
-                }
+                },
             )
             DropdownMenu(
                 expanded = expanded,
-                onDismissRequest = { expanded = false }
+                onDismissRequest = { expanded = false },
             ) {
                 DirType.values().forEach { dirType ->
                     DropdownMenuItem(
@@ -199,10 +204,10 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
                                 Icon(
                                     Icons.Default.Check,
                                     contentDescription = "Selected",
-                                    tint = MaterialTheme.colorScheme.primary
+                                    tint = MaterialTheme.colorScheme.primary,
                                 )
                             }
-                        }
+                        },
                     )
                 }
             }
@@ -212,38 +217,38 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
     @Composable
     private fun GalleryPictureTab(
         dirType: DirType,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         Box(
             modifier = modifier,
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             // This would embed the actual GalleryPictureComposeFragment
             // For now, showing a placeholder that will be replaced with the actual implementation
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
                     Icons.Default.Photo,
                     contentDescription = "Pictures",
                     modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primary,
                 )
                 Text(
                     text = "Picture Gallery",
                     style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = "Directory: ${getDirTypeDisplayName(dirType)}",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "Integration with GalleryPictureComposeFragment",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -252,36 +257,36 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
     @Composable
     private fun GalleryVideoTab(
         dirType: DirType,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         Box(
             modifier = modifier,
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
                     Icons.Default.VideoLibrary,
                     contentDescription = "Videos",
                     modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.secondary
+                    tint = MaterialTheme.colorScheme.secondary,
                 )
                 Text(
                     text = "Video Gallery",
                     style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = "Directory: ${getDirTypeDisplayName(dirType)}",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "Thermal video recordings and playback",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -290,45 +295,46 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
     @Composable
     private fun GalleryReportsTab(
         dirType: DirType,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         Box(
             modifier = modifier,
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
                     Icons.Default.Assessment,
                     contentDescription = "Reports",
                     modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.tertiary
+                    tint = MaterialTheme.colorScheme.tertiary,
                 )
                 Text(
                     text = "Analysis Reports",
                     style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = "Directory: ${getDirTypeDisplayName(dirType)}",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "PDF reports and thermal analysis data",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
     }
 
-    private fun getDirTypeDisplayName(dirType: DirType): String = when (dirType) {
-        DirType.LINE -> "LINE Device"
-        DirType.TS004_LOCALE -> "TS004 Local"
-        DirType.TS004_REMOTE -> "TS004 Remote"
-        DirType.TC007 -> "TC007 Device"
-    }
+    private fun getDirTypeDisplayName(dirType: DirType): String =
+        when (dirType) {
+            DirType.LINE -> "LINE Device"
+            DirType.TS004_LOCALE -> "TS004 Local"
+            DirType.TS004_REMOTE -> "TS004 Remote"
+            DirType.TC007 -> "TC007 Device"
+        }
 }

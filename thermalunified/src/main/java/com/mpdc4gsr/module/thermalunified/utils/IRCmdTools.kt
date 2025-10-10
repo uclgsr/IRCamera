@@ -1,7 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.utils
 
-import android.util.Log
-import com.elvishew.xlog.XLog
 import com.energy.iruvc.dual.DualUVCCamera
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.utils.CommonParams
@@ -19,6 +17,7 @@ import kotlin.math.floor
 object IRCmdTools {
     val TAG = "IRCmdTool"
     var dispNumber = 30
+
     fun getDualBytes(irCmd: IRCMD?): ByteArray {
         val calibrationDataSize = 192
         val INIT_ALIGN_DATA = floatArrayOf(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
@@ -26,7 +25,6 @@ object IRCmdTools {
         val snData = ByteArray(256)
         val dispData = ByteArray(5)
         irCmd?.oemRead(CommonParams.ProductType.P2, oemInfo)
-        XLog.w("[ph][ph][ph][ph][ph][ph][ph][ph]", "[ph][ph][ph][ph][ph][ph]:")
         val calibrationData = ByteArray(calibrationDataSize)
         val productTypeData = ByteArray(2)
         System.arraycopy(oemInfo, 0, calibrationData, 0, calibrationData.size)
@@ -49,9 +47,7 @@ object IRCmdTools {
             if (dispNumber < -20) {
                 dispNumber = -20
             }
-            XLog.w("[ph][ph][ph][ph]:", "" + dispNumber)
         } catch (e: Exception) {
-            XLog.w("[ph][ph][ph][ph][ph][ph]")
         }
         val snList = String(snData).split(";")
         val snStr =
@@ -74,12 +70,10 @@ object IRCmdTools {
                 `is` = am.open("dual_calibration_parameters2.bin")
                 length = `is`.available()
                 if (`is`.read(parameters) != length) {
-                    Log.e(TAG, "read file fail ")
                 }
                 parameters[length] = 1
                 val alignByte = SharedManager.getManualData(snStr)
                 System.arraycopy(alignByte, 0, parameters, calibrationDataSize + 1, alignByte.size)
-                XLog.w("[ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]")
             } catch (e: IOException) {
                 e.printStackTrace()
             } finally {
@@ -122,7 +116,7 @@ object IRCmdTools {
         setTpdParams(
             irCmd = irCmd,
             params = CommonParams.PropTPDParams.TPD_PROP_DISTANCE,
-            value = data
+            value = data,
         )
     }
 
@@ -134,7 +128,7 @@ object IRCmdTools {
         setImageParams(
             irCmd = irCmd,
             params = CommonParams.PropImageParams.IMAGE_PROP_LEVEL_CONTRAST,
-            value = data
+            value = data,
         )
     }
 
@@ -154,7 +148,7 @@ object IRCmdTools {
         setImageParams(
             irCmd = irCmd,
             params = CommonParams.PropImageParams.IMAGE_PROP_LEVEL_DDE,
-            value = data
+            value = data,
         )
     }
 
@@ -171,7 +165,7 @@ object IRCmdTools {
         setImageParams(
             irCmd = irCmd,
             params = CommonParams.PropImageParams.IMAGE_PROP_ONOFF_AGC,
-            value = data
+            value = data,
         )
     }
 
@@ -198,7 +192,7 @@ object IRCmdTools {
         return setTpdParams(
             irCmd = irCmd,
             params = CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL,
-            value = data
+            value = data,
         )
     }
 
@@ -224,33 +218,29 @@ object IRCmdTools {
         irCmd: IRCMD?,
         params: CommonParams.PropTPDParams,
         value: CommonParams.PropTPDParamsValue,
-    ): Int {
-        return try {
+    ): Int =
+        try {
             irCmd?.setPropTPDParams(params, value) ?: 0
         } catch (e: Exception) {
-            XLog.w("[ph][ph][ph][ph][ph][ph][${params.name}]: ${e.message}")
             0
         }
-    }
 
     private fun setImageParams(
         irCmd: IRCMD?,
         params: CommonParams.PropImageParams,
         value: CommonParams.PropImageParamsValue,
-    ): Int {
-        return try {
+    ): Int =
+        try {
             irCmd?.setPropImageParams(params, value) ?: 0
         } catch (e: Exception) {
-            XLog.w("[ph][ph][ph][ph][ph][ph][${params.name}]: ${e.message}")
             0
         }
-    }
 
     fun setDisp(
         dualView: BaseDualView?,
         value: Int,
-    ): Int {
-        return try {
+    ): Int =
+        try {
             if (dualView != null) {
                 dualView?.dualUVCCamera!!.setDisp(value)
                 0
@@ -258,10 +248,8 @@ object IRCmdTools {
                 -1
             }
         } catch (e: Exception) {
-            XLog.w("[ph][ph][ph][ph][ph][ph][$value]: ${e.message}")
             0
         }
-    }
 
     fun setAlignTranslate(
         dualView: BaseDualView?,
@@ -297,7 +285,7 @@ object IRCmdTools {
             if (flag) CommonParams.PropAutoShutterParameterValue.StatusSwith.ON else CommonParams.PropAutoShutterParameterValue.StatusSwith.OFF
         irCmd?.setPropAutoShutterParameter(
             CommonParams.PropAutoShutterParameter.SHUTTER_PROP_SWITCH,
-            data
+            data,
         )
     }
 
@@ -330,14 +318,14 @@ object IRCmdTools {
     fun setZoomUp(irCmd: IRCMD?) {
         irCmd?.zoomCenterUp(
             CommonParams.PreviewPathChannel.PREVIEW_PATH0,
-            CommonParams.ZoomScaleStep.ZOOM_STEP2
+            CommonParams.ZoomScaleStep.ZOOM_STEP2,
         )
     }
 
     fun setZoomDown(irCmd: IRCMD?) {
         irCmd?.zoomCenterDown(
             CommonParams.PreviewPathChannel.PREVIEW_PATH0,
-            CommonParams.ZoomScaleStep.ZOOM_STEP2
+            CommonParams.ZoomScaleStep.ZOOM_STEP2,
         )
     }
 }

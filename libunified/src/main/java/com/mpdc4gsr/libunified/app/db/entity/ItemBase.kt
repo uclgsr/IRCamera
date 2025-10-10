@@ -2,8 +2,8 @@ package com.mpdc4gsr.libunified.app.db.entity
 
 import android.content.Context
 import androidx.room.*
-import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.compat.ContextProvider
 
 open class ItemBase {
     @PrimaryKey(autoGenerate = true)
@@ -35,8 +35,11 @@ open class ItemBase {
 
     @ColumnInfo
     var image4: String = ""
+
     override fun equals(other: Any?): Boolean = other is ItemBase && other.id == id
+
     override fun hashCode(): Int = id.toInt()
+
     fun getStateStr(context: Context): String =
         when (state) {
             1 -> context.getString(R.string.house_state_good)
@@ -172,7 +175,9 @@ class ItemDetect() : ItemBase() {
 
     @Ignore
     var dirDetect = DirDetect()
+
     fun copyName(): String = "$itemName(1)"
+
     fun copyOne(
         parentId: Long = this.parentId,
         position: Int = this.position,
@@ -221,32 +226,32 @@ class ItemDetect() : ItemBase() {
                         ItemDetect(
                             parentId,
                             1,
-                            ContextProvider.getContext().getString(R.string.detect_dir1_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir1_item2),
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            ContextProvider.getContext().getString(R.string.detect_dir1_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir1_item3),
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            ContextProvider.getContext().getString(R.string.detect_dir1_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir1_item4),
                         ),
                         ItemDetect(
                             parentId,
                             4,
-                            ContextProvider.getContext().getString(R.string.detect_dir1_item5)
+                            ContextProvider.getContext().getString(R.string.detect_dir1_item5),
                         ),
                         ItemDetect(
                             parentId,
                             5,
-                            ContextProvider.getContext().getString(R.string.detect_dir1_item6)
+                            ContextProvider.getContext().getString(R.string.detect_dir1_item6),
                         ),
                         ItemDetect(
                             parentId,
                             6,
-                            ContextProvider.getContext().getString(R.string.detect_dir1_item7)
+                            ContextProvider.getContext().getString(R.string.detect_dir1_item7),
                         ),
                     )
 
@@ -256,27 +261,27 @@ class ItemDetect() : ItemBase() {
                         ItemDetect(
                             parentId,
                             1,
-                            ContextProvider.getContext().getString(R.string.detect_dir2_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir2_item2),
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            ContextProvider.getContext().getString(R.string.detect_dir2_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir2_item3),
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            ContextProvider.getContext().getString(R.string.detect_dir2_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir2_item4),
                         ),
                         ItemDetect(
                             parentId,
                             4,
-                            ContextProvider.getContext().getString(R.string.detect_dir2_item5)
+                            ContextProvider.getContext().getString(R.string.detect_dir2_item5),
                         ),
                         ItemDetect(
                             parentId,
                             5,
-                            ContextProvider.getContext().getString(R.string.detect_dir2_item6)
+                            ContextProvider.getContext().getString(R.string.detect_dir2_item6),
                         ),
                     )
 
@@ -285,17 +290,17 @@ class ItemDetect() : ItemBase() {
                         ItemDetect(
                             parentId,
                             0,
-                            ContextProvider.getContext().getString(R.string.detect_dir3_item1)
+                            ContextProvider.getContext().getString(R.string.detect_dir3_item1),
                         ),
                         ItemDetect(
                             parentId,
                             1,
-                            ContextProvider.getContext().getString(R.string.detect_dir3_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir3_item2),
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            ContextProvider.getContext().getString(R.string.detect_dir3_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir3_item3),
                         ),
                     )
 
@@ -305,32 +310,32 @@ class ItemDetect() : ItemBase() {
                         ItemDetect(
                             parentId,
                             1,
-                            ContextProvider.getContext().getString(R.string.detect_dir4_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir4_item2),
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            ContextProvider.getContext().getString(R.string.detect_dir4_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir4_item3),
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            ContextProvider.getContext().getString(R.string.detect_dir4_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir4_item4),
                         ),
                         ItemDetect(
                             parentId,
                             4,
-                            ContextProvider.getContext().getString(R.string.detect_dir4_item5)
+                            ContextProvider.getContext().getString(R.string.detect_dir4_item5),
                         ),
                         ItemDetect(
                             parentId,
                             5,
-                            ContextProvider.getContext().getString(R.string.detect_dir4_item6)
+                            ContextProvider.getContext().getString(R.string.detect_dir4_item6),
                         ),
                         ItemDetect(
                             parentId,
                             6,
-                            ContextProvider.getContext().getString(R.string.detect_dir4_item7)
+                            ContextProvider.getContext().getString(R.string.detect_dir4_item7),
                         ),
                     )
 
@@ -340,42 +345,42 @@ class ItemDetect() : ItemBase() {
                         ItemDetect(
                             parentId,
                             1,
-                            ContextProvider.getContext().getString(R.string.detect_dir5_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item2),
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            ContextProvider.getContext().getString(R.string.detect_dir5_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item3),
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            ContextProvider.getContext().getString(R.string.detect_dir5_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item4),
                         ),
                         ItemDetect(
                             parentId,
                             4,
-                            ContextProvider.getContext().getString(R.string.detect_dir5_item5)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item5),
                         ),
                         ItemDetect(
                             parentId,
                             5,
-                            ContextProvider.getContext().getString(R.string.detect_dir5_item6)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item6),
                         ),
                         ItemDetect(
                             parentId,
                             6,
-                            ContextProvider.getContext().getString(R.string.detect_dir5_item7)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item7),
                         ),
                         ItemDetect(
                             parentId,
                             7,
-                            ContextProvider.getContext().getString(R.string.detect_dir5_item8)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item8),
                         ),
                         ItemDetect(
                             parentId,
                             8,
-                            ContextProvider.getContext().getString(R.string.detect_dir5_item9)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item9),
                         ),
                     )
 
@@ -385,12 +390,12 @@ class ItemDetect() : ItemBase() {
                         ItemDetect(
                             parentId,
                             1,
-                            ContextProvider.getContext().getString(R.string.detect_dir6_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir6_item2),
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            ContextProvider.getContext().getString(R.string.detect_dir6_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir6_item3),
                         ),
                     )
 
@@ -400,42 +405,42 @@ class ItemDetect() : ItemBase() {
                         ItemDetect(
                             parentId,
                             1,
-                            ContextProvider.getContext().getString(R.string.detect_dir7_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item2),
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            ContextProvider.getContext().getString(R.string.detect_dir7_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item3),
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            ContextProvider.getContext().getString(R.string.detect_dir7_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item4),
                         ),
                         ItemDetect(
                             parentId,
                             4,
-                            ContextProvider.getContext().getString(R.string.detect_dir7_item5)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item5),
                         ),
                         ItemDetect(
                             parentId,
                             5,
-                            ContextProvider.getContext().getString(R.string.detect_dir7_item6)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item6),
                         ),
                         ItemDetect(
                             parentId,
                             6,
-                            ContextProvider.getContext().getString(R.string.detect_dir7_item7)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item7),
                         ),
                         ItemDetect(
                             parentId,
                             7,
-                            ContextProvider.getContext().getString(R.string.detect_dir7_item8)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item8),
                         ),
                         ItemDetect(
                             parentId,
                             8,
-                            ContextProvider.getContext().getString(R.string.detect_dir7_item9)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item9),
                         ),
                     )
 
@@ -445,22 +450,22 @@ class ItemDetect() : ItemBase() {
                         ItemDetect(
                             parentId,
                             1,
-                            ContextProvider.getContext().getString(R.string.detect_dir8_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir8_item2),
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            ContextProvider.getContext().getString(R.string.detect_dir8_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir8_item3),
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            ContextProvider.getContext().getString(R.string.detect_dir8_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir8_item4),
                         ),
                         ItemDetect(
                             parentId,
                             4,
-                            ContextProvider.getContext().getString(R.string.detect_dir8_item5)
+                            ContextProvider.getContext().getString(R.string.detect_dir8_item5),
                         ),
                     )
 
@@ -470,22 +475,22 @@ class ItemDetect() : ItemBase() {
                         ItemDetect(
                             parentId,
                             1,
-                            ContextProvider.getContext().getString(R.string.detect_dir9_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir9_item2),
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            ContextProvider.getContext().getString(R.string.detect_dir9_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir9_item3),
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            ContextProvider.getContext().getString(R.string.detect_dir9_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir9_item4),
                         ),
                         ItemDetect(
                             parentId,
                             4,
-                            ContextProvider.getContext().getString(R.string.detect_dir9_item5)
+                            ContextProvider.getContext().getString(R.string.detect_dir9_item5),
                         ),
                     )
 
@@ -495,27 +500,28 @@ class ItemDetect() : ItemBase() {
                         ItemDetect(
                             parentId,
                             1,
-                            ContextProvider.getContext().getString(R.string.detect_dir10_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir10_item2),
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            ContextProvider.getContext().getString(R.string.detect_dir10_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir10_item3),
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            ContextProvider.getContext().getString(R.string.detect_dir10_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir10_item4),
                         ),
                     )
 
-                else -> arrayListOf(
-                    ItemDetect(
-                        parentId,
-                        0,
-                        ContextProvider.getContext().getString(R.string.detect_item1)
+                else ->
+                    arrayListOf(
+                        ItemDetect(
+                            parentId,
+                            0,
+                            ContextProvider.getContext().getString(R.string.detect_item1),
+                        ),
                     )
-                )
             }
     }
 }

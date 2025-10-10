@@ -10,15 +10,20 @@ class FenceView : View {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     )
 
     var listener: CallBack? = null
+
     fun clear() {
         // Clear fence view state
     }
 
     interface CallBack {
-        fun callback(startPoint: IntArray, endPoint: IntArray, srcRect: IntArray)
+        fun callback(
+            startPoint: IntArray,
+            endPoint: IntArray,
+            srcRect: IntArray,
+        )
     }
 }

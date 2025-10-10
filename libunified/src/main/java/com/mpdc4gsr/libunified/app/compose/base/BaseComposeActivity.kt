@@ -21,8 +21,11 @@ abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
 
     @Composable
     protected abstract fun Content(viewModel: VM)
+
     protected open fun onDeviceConnected() {}
+
     protected open fun onDeviceDisconnected() {}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,8 +42,8 @@ abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
         super.attachBaseContext(
             AppLanguageUtils.attachBaseContext(
                 newBase,
-                ConstantLanguages.ENGLISH
-            )
+                ConstantLanguages.ENGLISH,
+            ),
         )
     }
 

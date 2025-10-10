@@ -32,7 +32,7 @@ fun GSRSensorCard(
     onClick: () -> Unit,
     onAction: (GSRAction) -> Unit,
     onSettingsClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     // TODO: Replace with real GSR data from GSRSensorRecorder via ViewModel
     var gsrValue by remember { mutableFloatStateOf(2.45f) }
@@ -51,49 +51,51 @@ fun GSRSensorCard(
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF2A2A2A)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF2A2A2A),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             // Header with sensor icon and status
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Icon(
                         imageVector = Icons.Default.Sensors,
                         contentDescription = "GSR Sensor",
                         tint = getStatusColor(state),
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
                     Text(
                         text = "GSR Sensor",
                         color = Color.White,
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 }
                 Surface(
                     color = getStatusColor(state).copy(alpha = 0.2f),
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(16.dp),
                 ) {
                     Text(
                         text = state.name,
                         color = getStatusColor(state),
                         fontSize = 12.sp,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     )
                 }
             }
@@ -102,40 +104,40 @@ fun GSRSensorCard(
                 GSRDataVisualization(
                     gsrValue = gsrValue,
                     skinConductance = skinConductance,
-                    isStreaming = state == SensorState.Streaming
+                    isStreaming = state == SensorState.Streaming,
                 )
             }
             // Sensor metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 MetricItem(
                     label = "GSR Value",
                     value = "${String.format("%.2f", gsrValue)} μS",
-                    color = Color.Cyan
+                    color = Color.Cyan,
                 )
                 MetricItem(
                     label = "Conductance",
                     value = "${String.format("%.2f", skinConductance)} μS",
-                    color = Color.Green
+                    color = Color.Green,
                 )
                 MetricItem(
                     label = "Sampling",
                     value = if (state == SensorState.Streaming) "128 Hz" else "---",
-                    color = Color.Yellow
+                    color = Color.Yellow,
                 )
             }
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 when (state) {
                     SensorState.Disconnected -> {
                         Button(
                             onClick = { onAction(GSRAction.Connect) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
                         ) {
                             Text("Connect")
                         }
@@ -144,7 +146,7 @@ fun GSRSensorCard(
                     SensorState.Connected -> {
                         Button(
                             onClick = { onAction(GSRAction.StartStream) },
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         ) {
                             Icon(Icons.Default.PlayArrow, contentDescription = null)
                             Spacer(Modifier.width(4.dp))
@@ -152,7 +154,7 @@ fun GSRSensorCard(
                         }
                         Button(
                             onClick = { onAction(GSRAction.Disconnect) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
                         ) {
                             Text("Disconnect")
                         }
@@ -161,19 +163,19 @@ fun GSRSensorCard(
                     SensorState.Streaming -> {
                         Button(
                             onClick = { onAction(GSRAction.StopStream) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                         ) {
                             Icon(Icons.Default.Stop, contentDescription = null)
                             Spacer(Modifier.width(4.dp))
                             Text("Stop")
                         }
                         IconButton(
-                            onClick = { onSettingsClick?.invoke() }
+                            onClick = { onSettingsClick?.invoke() },
                         ) {
                             Icon(
                                 Icons.Default.Settings,
                                 contentDescription = "Settings",
-                                tint = Color.White
+                                tint = Color.White,
                             )
                         }
                     }
@@ -181,7 +183,7 @@ fun GSRSensorCard(
                     SensorState.Error -> {
                         Button(
                             onClick = { onAction(GSRAction.Connect) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500)),
                         ) {
                             Text("Retry")
                         }
@@ -199,21 +201,22 @@ private fun GSRDataVisualization(
     gsrValue: Float,
     skinConductance: Float,
     isStreaming: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(120.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Black.copy(alpha = 0.3f))
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(120.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Black.copy(alpha = 0.3f)),
     ) {
         Box(
-            modifier = Modifier.fillMaxSize().padding(8.dp)
+            modifier = Modifier.fillMaxSize().padding(8.dp),
         ) {
             if (isStreaming) {
                 // Real-time GSR waveform
                 Canvas(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     val width = size.width
                     val height = size.height
@@ -223,7 +226,7 @@ private fun GSRDataVisualization(
                         color = Color.Gray,
                         start = Offset(0f, centerY),
                         end = Offset(width, centerY),
-                        strokeWidth = 1.dp.toPx()
+                        strokeWidth = 1.dp.toPx(),
                     )
                     // Draw GSR waveform
                     val path = Path()
@@ -233,7 +236,8 @@ private fun GSRDataVisualization(
                         val x = (i.toFloat() / points) * width
                         val freq1 = 0.1f // Slow breathing component
                         val freq2 = 0.02f // Even slower arousal component
-                        val y = centerY +
+                        val y =
+                            centerY +
                                 (sin((i * freq1 + timeOffset) * 0.1f) * gsrValue * 5f) +
                                 (sin((i * freq2 + timeOffset) * 0.05f) * skinConductance * 10f)
                         if (i == 0) {
@@ -245,19 +249,21 @@ private fun GSRDataVisualization(
                     drawPath(
                         path = path,
                         color = Color.Cyan,
-                        style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx())
+                        style =
+                            androidx.compose.ui.graphics.drawscope
+                                .Stroke(width = 2.dp.toPx()),
                     )
                 }
             } else {
                 // Static placeholder
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = "GSR Data Visualization",
                         color = Color.Gray,
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
                     )
                 }
             }
@@ -270,29 +276,29 @@ private fun MetricItem(
     label: String,
     value: String,
     color: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             color = color,
             fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Text(
             text = label,
             color = Color.Gray,
-            fontSize = 10.sp
+            fontSize = 10.sp,
         )
     }
 }
 
 @Composable
-private fun getStatusColor(state: SensorState): Color {
-    return when (state) {
+private fun getStatusColor(state: SensorState): Color =
+    when (state) {
         SensorState.Connected -> Color.Green
         SensorState.Streaming -> MaterialTheme.colorScheme.primary
         SensorState.Error -> Color.Red
@@ -300,7 +306,6 @@ private fun getStatusColor(state: SensorState): Color {
         SensorState.Connecting -> Color.Yellow
         SensorState.Simulation -> Color.Magenta
     }
-}
 
 @Preview(showBackground = true)
 @Composable
@@ -311,7 +316,7 @@ private fun GSRSensorCardPreview() {
             onStateChange = {},
             onClick = {},
             onAction = {},
-            onSettingsClick = {}
+            onSettingsClick = {},
         )
     }
 }

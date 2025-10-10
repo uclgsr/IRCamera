@@ -1,7 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
 
-import dagger.hilt.android.AndroidEntryPoint
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -23,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -52,9 +51,10 @@ fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
         viewModel.loadGSRSessions()
     }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
     ) {
         // Header with Search and View Toggle
         GSRGalleryHeader(
@@ -66,7 +66,7 @@ fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
             isGridView = isGridView,
             onViewToggle = { isGridView = !isGridView },
             onShowFilter = { showFilterDialog = true },
-            sessionsCount = uiState.sessions.size
+            sessionsCount = uiState.sessions.size,
         )
         Spacer(modifier = Modifier.height(16.dp))
         // Content based on view mode
@@ -75,14 +75,14 @@ fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
                 sessions = uiState.filteredSessions,
                 onSessionClick = { viewModel.openSession(it) },
                 onSessionLongClick = { viewModel.selectSession(it) },
-                selectedSessions = uiState.selectedSessions
+                selectedSessions = uiState.selectedSessions,
             )
         } else {
             GSRSessionList(
                 sessions = uiState.filteredSessions,
                 onSessionClick = { viewModel.openSession(it) },
                 onSessionLongClick = { viewModel.selectSession(it) },
-                selectedSessions = uiState.selectedSessions
+                selectedSessions = uiState.selectedSessions,
             )
         }
     }
@@ -94,7 +94,7 @@ fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
             onApplyFilter = { filter ->
                 viewModel.applyFilter(filter)
                 showFilterDialog = false
-            }
+            },
         )
     }
     // Selection Actions
@@ -103,7 +103,7 @@ fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
             selectedCount = uiState.selectedSessions.size,
             onExportSelected = { viewModel.exportSelectedSessions() },
             onDeleteSelected = { viewModel.deleteSelectedSessions() },
-            onClearSelection = { viewModel.clearSelection() }
+            onClearSelection = { viewModel.clearSelection() },
         )
     }
 }
@@ -115,30 +115,30 @@ fun GSRGalleryHeader(
     isGridView: Boolean,
     onViewToggle: () -> Unit,
     onShowFilter: () -> Unit,
-    sessionsCount: Int
+    sessionsCount: Int,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "GSR Gallery",
                 style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 text = "$sessionsCount sessions",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
             )
         }
         Spacer(modifier = Modifier.height(12.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             OutlinedTextField(
                 value = searchQuery,
@@ -159,17 +159,18 @@ fun GSRGalleryHeader(
                 modifier = Modifier.weight(1f),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(
-                    onSearch = {
-                        keyboardController?.hide()
-                    }
-                )
+                keyboardActions =
+                    KeyboardActions(
+                        onSearch = {
+                            keyboardController?.hide()
+                        },
+                    ),
             )
             Spacer(modifier = Modifier.width(8.dp))
             IconButton(onClick = onViewToggle) {
                 Icon(
                     imageVector = if (isGridView) Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
-                    contentDescription = if (isGridView) "List View" else "Grid View"
+                    contentDescription = if (isGridView) "List View" else "Grid View",
                 )
             }
             IconButton(onClick = onShowFilter) {
@@ -184,19 +185,19 @@ fun GSRSessionGrid(
     sessions: List<GSRSession>,
     onSessionClick: (GSRSession) -> Unit,
     onSessionLongClick: (GSRSession) -> Unit,
-    selectedSessions: Set<String>
+    selectedSessions: Set<String>,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(sessions) { session ->
             GSRSessionGridItem(
                 session = session,
                 isSelected = selectedSessions.contains(session.id),
                 onClick = { onSessionClick(session) },
-                onLongClick = { onSessionLongClick(session) }
+                onLongClick = { onSessionLongClick(session) },
             )
         }
     }
@@ -207,17 +208,17 @@ fun GSRSessionList(
     sessions: List<GSRSession>,
     onSessionClick: (GSRSession) -> Unit,
     onSessionLongClick: (GSRSession) -> Unit,
-    selectedSessions: Set<String>
+    selectedSessions: Set<String>,
 ) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(sessions) { session ->
             GSRSessionListItem(
                 session = session,
                 isSelected = selectedSessions.contains(session.id),
                 onClick = { onSessionClick(session) },
-                onLongClick = { onSessionLongClick(session) }
+                onLongClick = { onSessionLongClick(session) },
             )
         }
     }
@@ -228,43 +229,51 @@ fun GSRSessionGridItem(
     session: GSRSession,
     isSelected: Boolean,
     onClick: () -> Unit,
-    onLongClick: () -> Unit
+    onLongClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f),
         onClick = onClick,
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-            else MaterialTheme.colorScheme.surface
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                    } else {
+                        MaterialTheme.colorScheme.surface
+                    },
+            ),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(12.dp),
         ) {
             // Session preview visualization
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                contentAlignment = Alignment.Center,
             ) {
                 if (isSelected) {
                     Icon(
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = "Selected",
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                 } else {
                     Icon(
                         imageVector = Icons.Default.Timeline,
                         contentDescription = "GSR Data",
                         tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     )
                 }
             }
@@ -273,27 +282,28 @@ fun GSRSessionGridItem(
                 text = session.name,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold,
-                maxLines = 1
+                maxLines = 1,
             )
             Text(
                 text = "${formatDuration(session.duration)} • ${session.sampleCount} samples",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                maxLines = 1
+                maxLines = 1,
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "Quality: ${session.dataQuality}%",
                     style = MaterialTheme.typography.bodySmall,
-                    color = when {
-                        session.dataQuality > 90 -> Color(0xFF4CAF50)
-                        session.dataQuality > 70 -> Color(0xFFFF9800)
-                        else -> Color(0xFFF44336)
-                    }
+                    color =
+                        when {
+                            session.dataQuality > 90 -> Color(0xFF4CAF50)
+                            session.dataQuality > 70 -> Color(0xFFFF9800)
+                            else -> Color(0xFFF44336)
+                        },
                 )
             }
         }
@@ -305,31 +315,36 @@ fun GSRSessionListItem(
     session: GSRSession,
     isSelected: Boolean,
     onClick: () -> Unit,
-    onLongClick: () -> Unit
+    onLongClick: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         onClick = onClick,
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-            else MaterialTheme.colorScheme.surface
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                    } else {
+                        MaterialTheme.colorScheme.surface
+                    },
+            ),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             if (isSelected) {
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
                     contentDescription = "Selected",
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             } else {
                 Icon(
                     imageVector = Icons.Default.Timeline,
                     contentDescription = "GSR Data",
-                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
@@ -337,41 +352,42 @@ fun GSRSessionListItem(
                 Text(
                     text = session.name,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
                 )
                 if (session.participantId.isNotEmpty()) {
                     Text(
                         text = "Participant: ${session.participantId}",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                     )
                 }
                 Row {
                     Text(
                         text = formatDuration(session.duration),
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
                     )
                     Text(" • ", style = MaterialTheme.typography.bodySmall)
                     Text(
                         text = "${session.sampleCount} samples",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
                     )
                     Text(" • ", style = MaterialTheme.typography.bodySmall)
                     Text(
                         text = "Quality: ${session.dataQuality}%",
                         style = MaterialTheme.typography.bodySmall,
-                        color = when {
-                            session.dataQuality > 90 -> Color(0xFF4CAF50)
-                            session.dataQuality > 70 -> Color(0xFFFF9800)
-                            else -> Color(0xFFF44336)
-                        }
+                        color =
+                            when {
+                                session.dataQuality > 90 -> Color(0xFF4CAF50)
+                                session.dataQuality > 70 -> Color(0xFFFF9800)
+                                else -> Color(0xFFF44336)
+                            },
                     )
                 }
             }
             Text(
                 text = formatFileSize(session.fileSize),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
             )
         }
     }
@@ -381,7 +397,7 @@ fun GSRSessionListItem(
 fun GSRFilterDialog(
     currentFilter: GSRFilter,
     onDismiss: () -> Unit,
-    onApplyFilter: (GSRFilter) -> Unit
+    onApplyFilter: (GSRFilter) -> Unit,
 ) {
     var filter by remember { mutableStateOf(currentFilter) }
     AlertDialog(
@@ -394,7 +410,7 @@ fun GSRFilterDialog(
                     value = filter.minQuality.toFloat(),
                     onValueChange = { filter = filter.copy(minQuality = it.toInt()) },
                     valueRange = 0f..100f,
-                    steps = 10
+                    steps = 10,
                 )
                 Text("${filter.minQuality}%")
                 Spacer(modifier = Modifier.height(12.dp))
@@ -403,14 +419,14 @@ fun GSRFilterDialog(
                     value = filter.minDuration.toFloat(),
                     onValueChange = { filter = filter.copy(minDuration = it.toInt()) },
                     valueRange = 0f..60f,
-                    steps = 12
+                    steps = 12,
                 )
                 Text("${filter.minDuration} min")
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         checked = filter.hasParticipant,
-                        onCheckedChange = { filter = filter.copy(hasParticipant = it) }
+                        onCheckedChange = { filter = filter.copy(hasParticipant = it) },
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Only sessions with participant ID")
@@ -426,7 +442,7 @@ fun GSRFilterDialog(
             TextButton(onClick = onDismiss) {
                 Text("Cancel")
             }
-        }
+        },
     )
 }
 
@@ -435,20 +451,20 @@ fun SelectionActionsBar(
     selectedCount: Int,
     onExportSelected: () -> Unit,
     onDeleteSelected: () -> Unit,
-    onClearSelection: () -> Unit
+    onClearSelection: () -> Unit,
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "$selectedCount selected",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
             )
             Row {
                 TextButton(onClick = onClearSelection) {
@@ -458,19 +474,19 @@ fun SelectionActionsBar(
                     Icon(
                         Icons.Default.Download,
                         contentDescription = null,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Export")
                 }
                 Button(
                     onClick = onDeleteSelected,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF44336))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF44336)),
                 ) {
                     Icon(
                         Icons.Default.Delete,
                         contentDescription = null,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Delete")
@@ -487,13 +503,12 @@ private fun formatDuration(millis: Long): String {
     return String.format("%d:%02d", minutes, seconds % 60)
 }
 
-private fun formatFileSize(bytes: Long): String {
-    return when {
+private fun formatFileSize(bytes: Long): String =
+    when {
         bytes < 1024 -> "$bytes B"
         bytes < 1024 * 1024 -> "${bytes / 1024} KB"
         else -> "${bytes / (1024 * 1024)} MB"
     }
-}
 
 // Data classes
 data class GSRSession(
@@ -504,13 +519,13 @@ data class GSRSession(
     val sampleCount: Int,
     val dataQuality: Int,
     val fileSize: Long,
-    val timestamp: Long
+    val timestamp: Long,
 )
 
 data class GSRFilter(
     val minQuality: Int = 0,
     val minDuration: Int = 0,
-    val hasParticipant: Boolean = false
+    val hasParticipant: Boolean = false,
 )
 
 data class GSRGalleryUiState(
@@ -518,102 +533,109 @@ data class GSRGalleryUiState(
     val filteredSessions: List<GSRSession> = emptyList(),
     val selectedSessions: Set<String> = emptySet(),
     val currentFilter: GSRFilter = GSRFilter(),
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
 )
 
 // ViewModel
 class GSRGalleryViewModel : AppBaseViewModel() {
     private val _galleryState = MutableStateFlow(GSRGalleryUiState())
     val galleryState: StateFlow<GSRGalleryUiState> = _galleryState.asStateFlow()
+
     fun loadGSRSessions() {
         _galleryState.value = _galleryState.value.copy(isLoading = true)
-        val mockSessions = listOf(
-            GSRSession(
-                "1",
-                "Stress Response Study",
-                "P001",
-                1800000,
-                460800,
-                95,
-                2048576,
-                System.currentTimeMillis() - 86400000
-            ),
-            GSRSession(
-                "2",
-                "Cognitive Load Test",
-                "P002",
-                1200000,
-                307200,
-                87,
-                1048576,
-                System.currentTimeMillis() - 172800000
-            ),
-            GSRSession(
-                "3",
-                "Emotion Recognition",
-                "",
-                2700000,
-                691200,
-                92,
-                3145728,
-                System.currentTimeMillis() - 259200000
-            ),
-            GSRSession(
-                "4",
-                "Quick Recording",
-                "",
-                300000,
-                76800,
-                78,
-                262144,
-                System.currentTimeMillis() - 345600000
-            ),
-            GSRSession(
-                "5",
-                "Baseline Measurement",
-                "P001",
-                600000,
-                153600,
-                98,
-                524288,
-                System.currentTimeMillis() - 432000000
+        val mockSessions =
+            listOf(
+                GSRSession(
+                    "1",
+                    "Stress Response Study",
+                    "P001",
+                    1800000,
+                    460800,
+                    95,
+                    2048576,
+                    System.currentTimeMillis() - 86400000,
+                ),
+                GSRSession(
+                    "2",
+                    "Cognitive Load Test",
+                    "P002",
+                    1200000,
+                    307200,
+                    87,
+                    1048576,
+                    System.currentTimeMillis() - 172800000,
+                ),
+                GSRSession(
+                    "3",
+                    "Emotion Recognition",
+                    "",
+                    2700000,
+                    691200,
+                    92,
+                    3145728,
+                    System.currentTimeMillis() - 259200000,
+                ),
+                GSRSession(
+                    "4",
+                    "Quick Recording",
+                    "",
+                    300000,
+                    76800,
+                    78,
+                    262144,
+                    System.currentTimeMillis() - 345600000,
+                ),
+                GSRSession(
+                    "5",
+                    "Baseline Measurement",
+                    "P001",
+                    600000,
+                    153600,
+                    98,
+                    524288,
+                    System.currentTimeMillis() - 432000000,
+                ),
             )
-        )
-        _galleryState.value = _galleryState.value.copy(
-            sessions = mockSessions,
-            filteredSessions = mockSessions,
-            isLoading = false
-        )
+        _galleryState.value =
+            _galleryState.value.copy(
+                sessions = mockSessions,
+                filteredSessions = mockSessions,
+                isLoading = false,
+            )
     }
 
     fun filterSessions(query: String) {
-        val filtered = _galleryState.value.sessions.filter { session ->
-            query.isEmpty() ||
+        val filtered =
+            _galleryState.value.sessions.filter { session ->
+                query.isEmpty() ||
                     session.name.contains(query, ignoreCase = true) ||
                     session.participantId.contains(query, ignoreCase = true)
-        }
+            }
         _galleryState.value = _galleryState.value.copy(filteredSessions = filtered)
     }
 
     fun applyFilter(filter: GSRFilter) {
-        val filtered = _galleryState.value.sessions.filter { session ->
-            session.dataQuality >= filter.minQuality &&
+        val filtered =
+            _galleryState.value.sessions.filter { session ->
+                session.dataQuality >= filter.minQuality &&
                     (session.duration / 60000) >= filter.minDuration &&
                     (!filter.hasParticipant || session.participantId.isNotEmpty())
-        }
-        _galleryState.value = _galleryState.value.copy(
-            filteredSessions = filtered,
-            currentFilter = filter
-        )
+            }
+        _galleryState.value =
+            _galleryState.value.copy(
+                filteredSessions = filtered,
+                currentFilter = filter,
+            )
     }
 
     fun selectSession(session: GSRSession) {
         val currentSelection = _galleryState.value.selectedSessions
-        val newSelection = if (currentSelection.contains(session.id)) {
-            currentSelection - session.id
-        } else {
-            currentSelection + session.id
-        }
+        val newSelection =
+            if (currentSelection.contains(session.id)) {
+                currentSelection - session.id
+            } else {
+                currentSelection + session.id
+            }
         _galleryState.value = _galleryState.value.copy(selectedSessions = newSelection)
     }
 
@@ -632,10 +654,11 @@ class GSRGalleryViewModel : AppBaseViewModel() {
     fun deleteSelectedSessions() {
         val selectedIds = _galleryState.value.selectedSessions
         val updatedSessions = _galleryState.value.sessions.filter { !selectedIds.contains(it.id) }
-        _galleryState.value = _galleryState.value.copy(
-            sessions = updatedSessions,
-            filteredSessions = updatedSessions,
-            selectedSessions = emptySet()
-        )
+        _galleryState.value =
+            _galleryState.value.copy(
+                sessions = updatedSessions,
+                filteredSessions = updatedSessions,
+                selectedSessions = emptySet(),
+            )
     }
 }

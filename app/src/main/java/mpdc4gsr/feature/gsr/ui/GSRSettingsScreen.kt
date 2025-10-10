@@ -32,7 +32,7 @@ import mpdc4gsr.feature.gsr.presentation.GSRSettingsViewModel
 fun GSRSettingsScreen(
     onBackClick: (() -> Unit)? = null,
     viewModel: GSRSettingsViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val uiState by viewModel.settingsUiState.collectAsState()
@@ -41,48 +41,52 @@ fun GSRSettingsScreen(
     LaunchedEffect(Unit) {
         viewModel.initialize(context)
         viewModel.settingsEvents.collect { event ->
-            val message = when (event) {
-                is GSRSettingsViewModel.SettingsEvent.ShowToast -> event.message
-                is GSRSettingsViewModel.SettingsEvent.CalibrationStarted -> event.message
-                is GSRSettingsViewModel.SettingsEvent.CalibrationCompleted -> event.message
-                is GSRSettingsViewModel.SettingsEvent.ShowError -> event.message
-                else -> null
-            }
+            val message =
+                when (event) {
+                    is GSRSettingsViewModel.SettingsEvent.ShowToast -> event.message
+                    is GSRSettingsViewModel.SettingsEvent.CalibrationStarted -> event.message
+                    is GSRSettingsViewModel.SettingsEvent.CalibrationCompleted -> event.message
+                    is GSRSettingsViewModel.SettingsEvent.ShowError -> event.message
+                    else -> null
+                }
             message?.let {
-                android.widget.Toast.makeText(
-                    context,
-                    it,
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
+                android.widget.Toast
+                    .makeText(
+                        context,
+                        it,
+                        android.widget.Toast.LENGTH_SHORT,
+                    ).show()
             }
         }
     }
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFF16131e))
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color(0xFF16131e)),
     ) {
         TitleBar(
             title = "GSR Settings",
             showBackButton = true,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
         )
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Device Configuration
             SettingsCard(
                 title = "Device Configuration",
-                icon = Icons.Default.DeviceHub
+                icon = Icons.Default.DeviceHub,
             ) {
                 deviceSettings.deviceName?.let { name ->
                     SettingsRow(
                         label = "Device Name",
-                        value = name
+                        value = name,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -91,7 +95,7 @@ fun GSRSettingsScreen(
                     value = gsrSettings.samplingRate.toFloat(),
                     valueRange = 1f..512f,
                     onValueChange = { viewModel.updateSamplingRate(it.toInt()) },
-                    unit = " Hz"
+                    unit = " Hz",
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsToggle(
@@ -100,9 +104,9 @@ fun GSRSettingsScreen(
                     checked = deviceSettings.autoReconnect,
                     onCheckedChange = {
                         viewModel.updateDeviceSettings(
-                            deviceSettings.copy(autoReconnect = it)
+                            deviceSettings.copy(autoReconnect = it),
                         )
-                    }
+                    },
                 )
                 if (deviceSettings.autoReconnect) {
                     Spacer(modifier = Modifier.height(8.dp))
@@ -112,10 +116,10 @@ fun GSRSettingsScreen(
                         valueRange = 1f..10f,
                         onValueChange = {
                             viewModel.updateDeviceSettings(
-                                deviceSettings.copy(reconnectionAttempts = it.toInt())
+                                deviceSettings.copy(reconnectionAttempts = it.toInt()),
                             )
                         },
-                        unit = " attempts"
+                        unit = " attempts",
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     SettingsSlider(
@@ -124,17 +128,17 @@ fun GSRSettingsScreen(
                         valueRange = 1f..10f,
                         onValueChange = {
                             viewModel.updateDeviceSettings(
-                                deviceSettings.copy(reconnectionBaseDelayMs = (it * 1000).toLong())
+                                deviceSettings.copy(reconnectionBaseDelayMs = (it * 1000).toLong()),
                             )
                         },
-                        unit = " seconds"
+                        unit = " seconds",
                     )
                 }
             }
             // Data Collection
             SettingsCard(
                 title = "Data Collection",
-                icon = Icons.Default.DataUsage
+                icon = Icons.Default.DataUsage,
             ) {
                 SettingsToggle(
                     label = "Real-Time Monitoring",
@@ -142,9 +146,9 @@ fun GSRSettingsScreen(
                     checked = gsrSettings.enableRealTimeMonitoring,
                     onCheckedChange = {
                         viewModel.updateGSRSettings(
-                            gsrSettings.copy(enableRealTimeMonitoring = it)
+                            gsrSettings.copy(enableRealTimeMonitoring = it),
                         )
-                    }
+                    },
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsToggle(
@@ -153,9 +157,9 @@ fun GSRSettingsScreen(
                     checked = gsrSettings.enableFiltering,
                     onCheckedChange = {
                         viewModel.updateGSRSettings(
-                            gsrSettings.copy(enableFiltering = it)
+                            gsrSettings.copy(enableFiltering = it),
                         )
-                    }
+                    },
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsToggle(
@@ -164,19 +168,19 @@ fun GSRSettingsScreen(
                     checked = gsrSettings.notificationEnabled,
                     onCheckedChange = {
                         viewModel.updateGSRSettings(
-                            gsrSettings.copy(notificationEnabled = it)
+                            gsrSettings.copy(notificationEnabled = it),
                         )
-                    }
+                    },
                 )
             }
             // Calibration
             SettingsCard(
                 title = "Calibration",
-                icon = Icons.Default.Tune
+                icon = Icons.Default.Tune,
             ) {
                 Button(
                     onClick = { viewModel.startCalibration() },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
@@ -185,7 +189,7 @@ fun GSRSettingsScreen(
                 Button(
                     onClick = { viewModel.resetToDefaults() },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                 ) {
                     Icon(Icons.Default.RestartAlt, contentDescription = null)
                     Spacer(Modifier.width(8.dp))

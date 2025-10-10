@@ -9,12 +9,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
-import com.mpdc4gsr.libunified.compat.dpToPx
-import com.mpdc4gsr.libunified.compat.spToPx
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.utils.ColorUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.libunified.app.view.ColorSelectView
+import com.mpdc4gsr.libunified.compat.spToPx
 import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener
 import com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
 
@@ -23,7 +22,8 @@ class ColorPickDialog(
     @ColorInt private var color: Int,
     var textSize: Int,
     var textSizeIsDP: Boolean = false,
-) : Dialog(context, R.style.InfoDialog), View.OnClickListener {
+) : Dialog(context, R.style.InfoDialog),
+    View.OnClickListener {
     var onPickListener: ((color: Int, textSize: Int) -> Unit)? = null
     private val rootView: View =
         LayoutInflater.from(context).inflate(R.layout.dialog_color_pick, null)
@@ -42,12 +42,12 @@ class ColorPickDialog(
         val activeTrackColor =
             ColorUtils.setColorAlpha(
                 ContextCompat.getColor(context, R.color.we_read_theme_color),
-                0.1f
+                0.1f,
             )
         val iconTintColor =
             ColorUtils.setColorAlpha(
                 ContextCompat.getColor(context, R.color.we_read_theme_color),
-                0.7f
+                0.7f,
             )
         when (color) {
             0xff0000ff.toInt() -> rootView.findViewById<View>(R.id.view_color1).isSelected = true
@@ -56,8 +56,10 @@ class ColorPickDialog(
             0xffffff00.toInt() -> rootView.findViewById<View>(R.id.view_color4).isSelected = true
             0xff000000.toInt() -> rootView.findViewById<View>(R.id.view_color5).isSelected = true
             0xffffffff.toInt() -> rootView.findViewById<View>(R.id.view_color6).isSelected = true
-            else -> rootView.findViewById<ColorSelectView>(R.id.color_select_view)
-                .selectColor(color)
+            else ->
+                rootView
+                    .findViewById<ColorSelectView>(R.id.color_select_view)
+                    .selectColor(color)
         }
         rootView.findViewById<ColorSelectView>(R.id.color_select_view).onSelectListener = {
             unSelect6Color()
@@ -76,7 +78,7 @@ class ColorPickDialog(
                         leftValue: Float,
                         rightValue: Float,
                         isFromUser: Boolean,
-                        tempMode: Int
+                        tempMode: Int,
                     ) {
                         var text = ""
                         text =
@@ -108,8 +110,8 @@ class ColorPickDialog(
             )
             findViewById<RangeSeekBar>(R.id.nifty_slider_view).setProgress(
                 textSizeToNifyValue(
-                    textSize
-                )
+                    textSize,
+                ),
             )
         } else {
             findViewById<RangeSeekBar>(R.id.nifty_slider_view).visibility = View.GONE

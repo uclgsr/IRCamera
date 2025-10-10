@@ -23,6 +23,7 @@ class DeviceDetailsViewModel : BaseViewModel() {
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
     private val _copyMessage = MutableStateFlow("")
     val copyMessage: StateFlow<String> = _copyMessage.asStateFlow()
+
     fun loadDeviceDetails(isTC007: Boolean) {
         launchWithErrorHandling {
             _isLoading.value = true
@@ -45,9 +46,7 @@ class DeviceDetailsViewModel : BaseViewModel() {
         }
     }
 
-    fun getCopyText(): String {
-        return "SN:${_serialNumber.value}  Device Model:${_deviceModel.value}"
-    }
+    fun getCopyText(): String = "SN:${_serialNumber.value}  Device Model:${_deviceModel.value}"
 
     fun setCopyMessage(message: String) {
         _copyMessage.value = message

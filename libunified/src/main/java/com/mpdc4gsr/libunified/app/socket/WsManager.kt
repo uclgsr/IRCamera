@@ -2,7 +2,6 @@ package com.mpdc4gsr.libunified.app.socket
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import okhttp3.*
 import okio.ByteString
@@ -12,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock
 class WsManager(
     private val wsUrl: String,
     private val okHttpClient: OkHttpClient,
-    private val statusListener: IWebSocketListener
+    private val statusListener: IWebSocketListener,
 ) {
     companion object {
         private const val NORMAL_CLOSE_CODE = 1000
@@ -108,21 +107,19 @@ class WsManager(
         }
 
     fun isConnect(): Boolean = status == State.CONNECTING || status == State.CONNECTED
+
     private var mLock = ReentrantLock()
 
     @Synchronized
     fun startConnect() {
         if (status == State.CONNECTING || status == State.CONNECTED) {
-            Log.w(
-                "WebSocket",
-                "${if (status == State.CONNECTING) "[ph][ph][ph]" else "[ph][ph][ph]"} startConnect() [ph][ph][ph][ph]"
-            )
             return
         }
         status = State.CONNECTING
         okHttpClient.dispatcher.cancelAll()
         val mRequest: Request =
-            Request.Builder()
+            Request
+                .Builder()
                 .url(wsUrl)
                 .build()
         try {
@@ -159,13 +156,9 @@ class WsManager(
         }
     }
 
-    fun sendMessage(msg: String?): Boolean {
-        return send(msg)
-    }
+    fun sendMessage(msg: String?): Boolean = send(msg)
 
-    fun sendMessage(byteString: ByteString?): Boolean {
-        return send(byteString)
-    }
+    fun sendMessage(byteString: ByteString?): Boolean = send(byteString)
 
     private fun send(msg: Any?): Boolean {
         var isSend = false
@@ -180,6 +173,7 @@ class WsManager(
     }
 
     private val wsMainHandler = Handler(Looper.getMainLooper())
+
     private fun IWebSocketListener?.runMain(block: (IWebSocketListener) -> Unit) {
         if (this != null) {
             if (Looper.myLooper() != Looper.getMainLooper()) {
@@ -192,11 +186,14 @@ class WsManager(
         }
     }
 
-    private class HeartBeatTimer(val wsManager: WsManager) : Timer() {
+    private class HeartBeatTimer(
+        val wsManager: WsManager,
+    ) : Timer() {
         var timeoutListener: (() -> Unit)? = null
 
         @Volatile
         var lastHeartBeatTime: Long = 0
+
         fun start() {
             schedule(
                 object : TimerTask() {
@@ -206,10 +203,6 @@ class WsManager(
                             lastHeartBeatTime = currentTime
                         }
                         if (currentTime - lastHeartBeatTime > 15 * 1000) {
-                            Log.d(
-                                "WebSocket",
-                                "[ph][ph]5[ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]"
-                            )
                             timeoutListener?.invoke()
                             lastHeartBeatTime = currentTime
                         } else {
@@ -218,10 +211,6 @@ class WsManager(
                                 lastHeartBeatTime = currentTime
                             } else {
                                 val isSuccess = wsManager.sendMessage(heartBeatMsg)
-                                Log.v(
-                                    "WebSocket",
-                                    "--> [ph][ph][ph][ph][ph][ph] ${if (isSuccess) "[ph][ph]" else "[ph][ph]"}"
-                                )
                             }
                         }
                     }
@@ -234,6 +223,7 @@ class WsManager(
 
     abstract class IWebSocketListener : WebSocketListener() {
         abstract fun onHeartBeat(): String?
+
         abstract fun onHeartBeatTimeout()
     }
 
@@ -247,6 +237,7 @@ class WsManager(
         private var wsUrl: String? = null
         private var okHttpClient: OkHttpClient? = null
         private var statusListener: IWebSocketListener? = null
+
         fun wsUrl(url: String?): Builder {
             wsUrl = url
             return this

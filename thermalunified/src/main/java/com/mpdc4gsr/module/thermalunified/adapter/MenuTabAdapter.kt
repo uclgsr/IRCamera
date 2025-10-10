@@ -11,8 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.libunified.R as LibUiR
 
-class MenuTabAdapter(val context: Context) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MenuTabAdapter(
+    val context: Context,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: OnItemClickListener? = null
     private var type = 0
     private var datas = arrayListOf<Int>()
@@ -102,19 +103,20 @@ class MenuTabAdapter(val context: Context) :
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder {
-        return if (viewType == TYPE_ITEM) {
+    ): RecyclerView.ViewHolder =
+        if (viewType == TYPE_ITEM) {
             val view =
-                LayoutInflater.from(parent.context)
+                LayoutInflater
+                    .from(parent.context)
                     .inflate(R.layout.item_menu_tab_view, parent, false)
             ItemView(view)
         } else {
             val view =
-                LayoutInflater.from(parent.context)
+                LayoutInflater
+                    .from(parent.context)
                     .inflate(R.layout.item_menu_tab_more_view, parent, false)
             ItemMoreView(view)
         }
-    }
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
@@ -137,7 +139,7 @@ class MenuTabAdapter(val context: Context) :
                     } else {
                         ContextCompat.getColor(
                             context,
-                            com.mpdc4gsr.libunified.R.color.font_third_color
+                            com.mpdc4gsr.libunified.R.color.font_third_color,
                         )
                     },
                 )
@@ -145,24 +147,25 @@ class MenuTabAdapter(val context: Context) :
         }
     }
 
-    override fun getItemCount(): Int {
-        return datas.size
-    }
+    override fun getItemCount(): Int = datas.size
 
-    override fun getItemViewType(position: Int): Int {
-        return if (type == 3) {
+    override fun getItemViewType(position: Int): Int =
+        if (type == 3) {
             TYPE_ITEM_MORE
         } else {
             TYPE_ITEM
         }
-    }
 
-    open class BaseItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    open class BaseItemView(
+        itemView: View,
+    ) : RecyclerView.ViewHolder(itemView) {
         lateinit var lay: View
         lateinit var img: ImageView
     }
 
-    inner class ItemView(itemView: View) : BaseItemView(itemView) {
+    inner class ItemView(
+        itemView: View,
+    ) : BaseItemView(itemView) {
         var name: TextView
 
         init {
@@ -173,7 +176,9 @@ class MenuTabAdapter(val context: Context) :
         }
     }
 
-    inner class ItemMoreView(itemView: View) : BaseItemView(itemView) {
+    inner class ItemMoreView(
+        itemView: View,
+    ) : BaseItemView(itemView) {
         init {
             lay =
                 itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_menu_tab_more_lay)

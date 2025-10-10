@@ -1,9 +1,9 @@
 package com.mpdc4gsr.module.thermalunified.extension
 
-import android.util.Log
 import com.energy.iruvc.ircmd.IRCMD
 
 private const val TAG = "IRCMDExtensions"
+
 fun IRCMD.setMirror(enabled: Boolean) {
     try {
         val result =
@@ -12,9 +12,7 @@ fun IRCMD.setMirror(enabled: Boolean) {
             } else {
                 nativeSetProperty("mirror", 0)
             }
-        Log.d(TAG, "Mirror mode set to $enabled, result: $result")
     } catch (e: Exception) {
-        Log.e(TAG, "Failed to set mirror mode: ${e.message}")
     }
 }
 
@@ -26,9 +24,7 @@ fun IRCMD.setAutoShutter(enabled: Boolean) {
             } else {
                 nativeSetProperty("auto_shutter", 0)
             }
-        Log.d(TAG, "Auto shutter set to $enabled, result: $result")
     } catch (e: Exception) {
-        Log.e(TAG, "Failed to set auto shutter: ${e.message}")
     }
 }
 
@@ -36,9 +32,7 @@ fun IRCMD.setPropDdeLevel(level: Int) {
     try {
         val clampedLevel = level.coerceIn(0, 255)
         val result = nativeSetProperty("dde_level", clampedLevel)
-        Log.d(TAG, "DDE level set to $clampedLevel, result: $result")
     } catch (e: Exception) {
-        Log.e(TAG, "Failed to set DDE level: ${e.message}")
     }
 }
 
@@ -46,21 +40,16 @@ fun IRCMD.setContrast(level: Int) {
     try {
         val clampedLevel = level.coerceIn(0, 255)
         val result = nativeSetProperty("contrast", clampedLevel)
-        Log.d(TAG, "Contrast set to $clampedLevel, result: $result")
     } catch (e: Exception) {
-        Log.e(TAG, "Failed to set contrast: ${e.message}")
     }
 }
 
 private fun IRCMD.nativeSetProperty(
     property: String,
     value: Int,
-): Boolean {
-    return try {
-        Log.d(TAG, "Setting $property to $value via native IRCMD interface")
+): Boolean =
+    try {
         true
     } catch (e: Exception) {
-        Log.e(TAG, "Native property set failed for $property: ${e.message}")
         false
     }
-}

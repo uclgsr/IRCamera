@@ -7,8 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mpdc4gsr.libunified.app.db.dao.*
-import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.app.db.entity.*
+import com.mpdc4gsr.libunified.compat.ContextProvider
 
 @Database(
     entities = [
@@ -27,22 +27,29 @@ import com.mpdc4gsr.libunified.app.db.entity.*
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun thermalDao(): ThermalDao
+
     abstract fun thermalMinDao(): ThermalMinuteDao
+
     abstract fun thermalHourDao(): ThermalHourDao
+
     abstract fun thermalDayDao(): ThermalDayDao
+
     abstract fun houseDetectDao(): HouseDetectDao
+
     abstract fun houseReportDao(): HouseReportDao
 
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
+
         fun getInstance(context: Context = ContextProvider.getContext()): AppDatabase =
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
             }
 
         private fun buildDatabase(context: Context) =
-            Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "MPDC4GSR.db")
+            Room
+                .databaseBuilder(context.applicationContext, AppDatabase::class.java, "MPDC4GSR.db")
                 .addMigrations(
                     object : Migration(4, 5) {
                         override fun migrate(db: SupportSQLiteDatabase) {
@@ -78,8 +85,7 @@ abstract class AppDatabase : RoomDatabase() {
                             db.execSQL("CREATE INDEX IF NOT EXISTS `index_ItemReport_parentId` ON `ItemReport` (`parentId`)")
                         }
                     },
-                )
-                .addMigrations(
+                ).addMigrations(
                     object : Migration(5, 6) {
                         override fun migrate(db: SupportSQLiteDatabase) {
                             db.execSQL(
@@ -93,8 +99,7 @@ abstract class AppDatabase : RoomDatabase() {
                             )
                         }
                     },
-                )
-                .fallbackToDestructiveMigration(true)
+                ).fallbackToDestructiveMigration(true)
                 .build()
     }
 }

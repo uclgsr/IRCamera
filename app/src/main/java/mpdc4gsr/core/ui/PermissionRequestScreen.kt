@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun PermissionRequestScreen(
     viewModel: PermissionRequestViewModel,
     onBackClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val permissionStates by viewModel.permissionStates.collectAsStateWithLifecycle()
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
@@ -59,25 +59,26 @@ fun PermissionRequestScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { viewModel.updatePermissionStatus() }
+                        onClick = { viewModel.updatePermissionStatus() },
                     ) {
                         Icon(Icons.Default.Refresh, contentDescription = "Refresh")
                     }
-                }
+                },
             )
-        }
+        },
     ) { paddingValues ->
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Status Overview
             StatusOverviewCard(
                 screenState = screenState,
-                permissionStates = permissionStates
+                permissionStates = permissionStates,
             )
             // Permission Cards
             PermissionCardsSection(
@@ -86,19 +87,19 @@ fun PermissionRequestScreen(
                 onRequestBluetooth = { viewModel.requestBluetoothPermissions() },
                 onRequestLocation = { viewModel.requestLocationPermissions() },
                 onRequestStorage = { viewModel.requestStoragePermissions() },
-                isRequestingPermissions = screenState.isRequestingPermissions
+                isRequestingPermissions = screenState.isRequestingPermissions,
             )
             // Action Buttons
             ActionButtonsSection(
                 screenState = screenState,
                 onRequestAll = { viewModel.requestAllPermissions() },
                 onTestCapabilities = { viewModel.testRecordingCapabilities() },
-                onStartRecording = { viewModel.startRecordingSession() }
+                onStartRecording = { viewModel.startRecordingSession() },
             )
             // Log Section
             LogSection(
                 logMessages = logMessages,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
         }
     }
@@ -109,55 +110,58 @@ fun PermissionRequestScreen(
 private fun StatusOverviewCard(
     screenState: PermissionRequestViewModel.ScreenState,
     permissionStates: PermissionRequestViewModel.PermissionStates,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = if (screenState.canStartRecording) {
-                MaterialTheme.colorScheme.primaryContainer
-            } else {
-                MaterialTheme.colorScheme.errorContainer
-            }
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    if (screenState.canStartRecording) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.errorContainer
+                    },
+            ),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Icon(
                     if (screenState.canStartRecording) Icons.Default.CheckCircle else Icons.Default.Warning,
                     contentDescription = null,
-                    tint = if (screenState.canStartRecording) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.error
-                    }
+                    tint =
+                        if (screenState.canStartRecording) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.error
+                        },
                 )
                 Text(
                     text = "Permission Status",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 if (screenState.isRequestingPermissions) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(16.dp),
-                        strokeWidth = 2.dp
+                        strokeWidth = 2.dp,
                     )
                 }
             }
             Text(
                 text = screenState.statusMessage,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
             // Permission quick status
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 PermissionStatusChip("Camera", permissionStates.camera)
                 PermissionStatusChip("Bluetooth", permissionStates.bluetooth)
@@ -171,20 +175,22 @@ private fun StatusOverviewCard(
 @Composable
 private fun PermissionStatusChip(
     name: String,
-    status: PermissionRequestViewModel.PermissionStatus
+    status: PermissionRequestViewModel.PermissionStatus,
 ) {
-    val color = when (status) {
-        PermissionRequestViewModel.PermissionStatus.GRANTED -> MaterialTheme.colorScheme.primary
-        PermissionRequestViewModel.PermissionStatus.DENIED -> MaterialTheme.colorScheme.error
-        PermissionRequestViewModel.PermissionStatus.NOT_AVAILABLE -> MaterialTheme.colorScheme.outline
-        PermissionRequestViewModel.PermissionStatus.UNKNOWN -> MaterialTheme.colorScheme.outline
-    }
-    val text = when (status) {
-        PermissionRequestViewModel.PermissionStatus.GRANTED -> "OK"
-        PermissionRequestViewModel.PermissionStatus.DENIED -> "Need"
-        PermissionRequestViewModel.PermissionStatus.NOT_AVAILABLE -> "N/A"
-        PermissionRequestViewModel.PermissionStatus.UNKNOWN -> "?"
-    }
+    val color =
+        when (status) {
+            PermissionRequestViewModel.PermissionStatus.GRANTED -> MaterialTheme.colorScheme.primary
+            PermissionRequestViewModel.PermissionStatus.DENIED -> MaterialTheme.colorScheme.error
+            PermissionRequestViewModel.PermissionStatus.NOT_AVAILABLE -> MaterialTheme.colorScheme.outline
+            PermissionRequestViewModel.PermissionStatus.UNKNOWN -> MaterialTheme.colorScheme.outline
+        }
+    val text =
+        when (status) {
+            PermissionRequestViewModel.PermissionStatus.GRANTED -> "OK"
+            PermissionRequestViewModel.PermissionStatus.DENIED -> "Need"
+            PermissionRequestViewModel.PermissionStatus.NOT_AVAILABLE -> "N/A"
+            PermissionRequestViewModel.PermissionStatus.UNKNOWN -> "?"
+        }
     AssistChip(
         onClick = { },
         label = {
@@ -193,10 +199,11 @@ private fun PermissionStatusChip(
                 Text(text, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
             }
         },
-        colors = AssistChipDefaults.assistChipColors(
-            labelColor = color,
-            leadingIconContentColor = color
-        )
+        colors =
+            AssistChipDefaults.assistChipColors(
+                labelColor = color,
+                leadingIconContentColor = color,
+            ),
     )
 }
 
@@ -208,20 +215,20 @@ private fun PermissionCardsSection(
     onRequestLocation: () -> Unit,
     onRequestStorage: () -> Unit,
     isRequestingPermissions: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             text = "Permission Details",
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             PermissionCard(
                 title = "Camera",
@@ -229,7 +236,7 @@ private fun PermissionCardsSection(
                 status = permissionStates.camera,
                 onClick = onRequestCamera,
                 enabled = !isRequestingPermissions,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             PermissionCard(
                 title = "Bluetooth",
@@ -237,12 +244,12 @@ private fun PermissionCardsSection(
                 status = permissionStates.bluetooth,
                 onClick = onRequestBluetooth,
                 enabled = !isRequestingPermissions,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             PermissionCard(
                 title = "Location",
@@ -250,7 +257,7 @@ private fun PermissionCardsSection(
                 status = permissionStates.location,
                 onClick = onRequestLocation,
                 enabled = !isRequestingPermissions,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             PermissionCard(
                 title = "Storage",
@@ -258,7 +265,7 @@ private fun PermissionCardsSection(
                 status = permissionStates.storage,
                 onClick = onRequestStorage,
                 enabled = !isRequestingPermissions,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
         }
     }
@@ -272,47 +279,50 @@ private fun PermissionCard(
     status: PermissionRequestViewModel.PermissionStatus,
     onClick: () -> Unit,
     enabled: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val containerColor = when (status) {
-        PermissionRequestViewModel.PermissionStatus.GRANTED -> MaterialTheme.colorScheme.primaryContainer
-        PermissionRequestViewModel.PermissionStatus.DENIED -> MaterialTheme.colorScheme.errorContainer
-        else -> MaterialTheme.colorScheme.surfaceVariant
-    }
+    val containerColor =
+        when (status) {
+            PermissionRequestViewModel.PermissionStatus.GRANTED -> MaterialTheme.colorScheme.primaryContainer
+            PermissionRequestViewModel.PermissionStatus.DENIED -> MaterialTheme.colorScheme.errorContainer
+            else -> MaterialTheme.colorScheme.surfaceVariant
+        }
     Card(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled && status != PermissionRequestViewModel.PermissionStatus.GRANTED,
-        colors = CardDefaults.cardColors(containerColor = containerColor)
+        colors = CardDefaults.cardColors(containerColor = containerColor),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Icon(
                 icon,
                 contentDescription = null,
                 modifier = Modifier.size(32.dp),
-                tint = when (status) {
-                    PermissionRequestViewModel.PermissionStatus.GRANTED -> MaterialTheme.colorScheme.primary
-                    PermissionRequestViewModel.PermissionStatus.DENIED -> MaterialTheme.colorScheme.error
-                    else -> MaterialTheme.colorScheme.onSurfaceVariant
-                }
+                tint =
+                    when (status) {
+                        PermissionRequestViewModel.PermissionStatus.GRANTED -> MaterialTheme.colorScheme.primary
+                        PermissionRequestViewModel.PermissionStatus.DENIED -> MaterialTheme.colorScheme.error
+                        else -> MaterialTheme.colorScheme.onSurfaceVariant
+                    },
             )
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
-                text = when (status) {
-                    PermissionRequestViewModel.PermissionStatus.GRANTED -> "Granted"
-                    PermissionRequestViewModel.PermissionStatus.DENIED -> "Request"
-                    PermissionRequestViewModel.PermissionStatus.NOT_AVAILABLE -> "N/A"
-                    PermissionRequestViewModel.PermissionStatus.UNKNOWN -> "Unknown"
-                },
-                style = MaterialTheme.typography.bodySmall
+                text =
+                    when (status) {
+                        PermissionRequestViewModel.PermissionStatus.GRANTED -> "Granted"
+                        PermissionRequestViewModel.PermissionStatus.DENIED -> "Request"
+                        PermissionRequestViewModel.PermissionStatus.NOT_AVAILABLE -> "N/A"
+                        PermissionRequestViewModel.PermissionStatus.UNKNOWN -> "Unknown"
+                    },
+                style = MaterialTheme.typography.bodySmall,
             )
         }
     }
@@ -324,20 +334,20 @@ private fun ActionButtonsSection(
     onRequestAll: () -> Unit,
     onTestCapabilities: () -> Unit,
     onStartRecording: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Button(
                 onClick = onRequestAll,
                 enabled = !screenState.isRequestingPermissions,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Icon(Icons.Default.Security, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(8.dp))
@@ -346,7 +356,7 @@ private fun ActionButtonsSection(
             OutlinedButton(
                 onClick = onTestCapabilities,
                 enabled = !screenState.isRequestingPermissions,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Icon(Icons.Default.BugReport, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(8.dp))
@@ -356,7 +366,7 @@ private fun ActionButtonsSection(
         Button(
             onClick = onStartRecording,
             enabled = screenState.canStartRecording && !screenState.isRequestingPermissions,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Icon(Icons.Default.FiberManualRecord, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.width(8.dp))
@@ -368,22 +378,23 @@ private fun ActionButtonsSection(
 @Composable
 private fun LogSection(
     logMessages: List<PermissionRequestViewModel.LogMessage>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             text = "Activity Log",
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                ),
         ) {
             val listState = rememberLazyListState()
             // Auto-scroll to bottom when new messages arrive
@@ -394,28 +405,29 @@ private fun LogSection(
             }
             LazyColumn(
                 state = listState,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 items(logMessages, key = { it.id }) { logMessage ->
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.Top
+                        verticalAlignment = Alignment.Top,
                     ) {
                         Text(
                             text = "[${logMessage.timestamp}]",
                             style = MaterialTheme.typography.bodySmall,
                             fontFamily = FontFamily.Monospace,
-                            color = MaterialTheme.colorScheme.outline
+                            color = MaterialTheme.colorScheme.outline,
                         )
                         Text(
                             text = logMessage.message,
                             style = MaterialTheme.typography.bodySmall,
                             fontFamily = FontFamily.Monospace,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
                         )
                     }
                 }

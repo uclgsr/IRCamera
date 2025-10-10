@@ -19,7 +19,7 @@ import kotlin.math.abs
 @Composable
 fun DistanceMeasureCompose(
     onDistanceChanged: (Float) -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
     var line1Y by remember { mutableFloatStateOf(0f) }
@@ -38,28 +38,29 @@ fun DistanceMeasureCompose(
         }
     }
     Canvas(
-        modifier = modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectDragGestures { change, _ ->
-                    val newY = change.position.y.coerceIn(0f, canvasHeight)
-                    // Determine which line is closer to touch point
-                    if (abs(newY - line1Y) < abs(newY - line2Y)) {
-                        // Moving line1
-                        val difference = line1Y - newY
-                        line1Y = newY
-                        line2Y += difference
-                    } else {
-                        // Moving line2
-                        val difference = newY - line2Y
-                        line2Y = newY
-                        line1Y -= difference
+        modifier =
+            modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectDragGestures { change, _ ->
+                        val newY = change.position.y.coerceIn(0f, canvasHeight)
+                        // Determine which line is closer to touch point
+                        if (abs(newY - line1Y) < abs(newY - line2Y)) {
+                            // Moving line1
+                            val difference = line1Y - newY
+                            line1Y = newY
+                            line2Y += difference
+                        } else {
+                            // Moving line2
+                            val difference = newY - line2Y
+                            line2Y = newY
+                            line1Y -= difference
+                        }
+                        // Update distance
+                        val distance = abs(line2Y - line1Y)
+                        onDistanceChanged(distance)
                     }
-                    // Update distance
-                    val distance = abs(line2Y - line1Y)
-                    onDistanceChanged(distance)
-                }
-            }
+                },
     ) {
         canvasHeight = size.height
         if (isInitialized) {
@@ -68,7 +69,10 @@ fun DistanceMeasureCompose(
     }
 }
 
-private fun DrawScope.drawDistanceLines(line1Y: Float, line2Y: Float) {
+private fun DrawScope.drawDistanceLines(
+    line1Y: Float,
+    line2Y: Float,
+) {
     val strokeWidth = 4.dp.toPx()
     val dashEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
     val lineColor = Color.Green
@@ -79,7 +83,7 @@ private fun DrawScope.drawDistanceLines(line1Y: Float, line2Y: Float) {
         start = Offset(margin, line1Y),
         end = Offset(size.width - margin, line1Y),
         strokeWidth = strokeWidth,
-        pathEffect = dashEffect
+        pathEffect = dashEffect,
     )
     // Draw second dashed line
     drawLine(
@@ -87,7 +91,7 @@ private fun DrawScope.drawDistanceLines(line1Y: Float, line2Y: Float) {
         start = Offset(margin, line2Y),
         end = Offset(size.width - margin, line2Y),
         strokeWidth = strokeWidth,
-        pathEffect = dashEffect
+        pathEffect = dashEffect,
     )
 }
 
@@ -95,20 +99,21 @@ private fun DrawScope.drawDistanceLines(line1Y: Float, line2Y: Float) {
 fun DistanceMeasureComposePreview() {
     var distance by remember { mutableFloatStateOf(0f) }
     Column(
-        modifier = Modifier.background(Color.Black)
+        modifier = Modifier.background(Color.Black),
     ) {
         DistanceMeasureCompose(
             onDistanceChanged = { distance = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(300.dp),
         )
         // Show distance value for testing
         androidx.compose.material3.Text(
             text = "Distance: ${distance.toInt()}px",
             color = Color.White,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         )
     }
 }

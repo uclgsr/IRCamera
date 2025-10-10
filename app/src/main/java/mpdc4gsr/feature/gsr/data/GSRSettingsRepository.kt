@@ -6,7 +6,9 @@ import androidx.preference.PreferenceManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class GSRSettingsRepository(private val context: Context) {
+class GSRSettingsRepository(
+    private val context: Context,
+) {
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     // StateFlow for reactive settings updates
@@ -23,7 +25,7 @@ class GSRSettingsRepository(private val context: Context) {
         val dataFormat: DataFormat = DataFormat.CSV,
         val bufferSize: Int = 1024,
         val enableFiltering: Boolean = true,
-        val notificationEnabled: Boolean = true
+        val notificationEnabled: Boolean = true,
     )
 
     data class DeviceSettings(
@@ -34,11 +36,13 @@ class GSRSettingsRepository(private val context: Context) {
         val reconnectionAttempts: Int = 3,
         val reconnectionBaseDelayMs: Long = 2000L,
         val keepDeviceConnected: Boolean = false,
-        val deviceCalibrationEnabled: Boolean = true
+        val deviceCalibrationEnabled: Boolean = true,
     )
 
     enum class DataFormat {
-        CSV, JSON, BINARY
+        CSV,
+        JSON,
+        BINARY,
     }
 
     companion object {
@@ -66,23 +70,23 @@ class GSRSettingsRepository(private val context: Context) {
         private const val DEFAULT_BUFFER_SIZE = 1024
     }
 
-    private fun loadGSRSettings(): GSRSettings {
-        return GSRSettings(
+    private fun loadGSRSettings(): GSRSettings =
+        GSRSettings(
             isEnabled = prefs.getBoolean(KEY_GSR_ENABLED, true),
             samplingRate = prefs.getInt(KEY_SAMPLING_RATE, DEFAULT_SAMPLING_RATE),
             autoStartRecording = prefs.getBoolean(KEY_AUTO_START_RECORDING, false),
             enableRealTimeMonitoring = prefs.getBoolean(KEY_REAL_TIME_MONITORING, true),
-            dataFormat = DataFormat.valueOf(
-                prefs.getString(KEY_DATA_FORMAT, DataFormat.CSV.name) ?: DataFormat.CSV.name
-            ),
+            dataFormat =
+                DataFormat.valueOf(
+                    prefs.getString(KEY_DATA_FORMAT, DataFormat.CSV.name) ?: DataFormat.CSV.name,
+                ),
             bufferSize = prefs.getInt(KEY_BUFFER_SIZE, DEFAULT_BUFFER_SIZE),
             enableFiltering = prefs.getBoolean(KEY_ENABLE_FILTERING, true),
-            notificationEnabled = prefs.getBoolean(KEY_NOTIFICATION_ENABLED, true)
+            notificationEnabled = prefs.getBoolean(KEY_NOTIFICATION_ENABLED, true),
         )
-    }
 
-    private fun loadDeviceSettings(): DeviceSettings {
-        return DeviceSettings(
+    private fun loadDeviceSettings(): DeviceSettings =
+        DeviceSettings(
             selectedDeviceId = prefs.getString(KEY_SELECTED_DEVICE_ID, null),
             deviceName = prefs.getString(KEY_DEVICE_NAME, null),
             connectionTimeout = prefs.getInt(KEY_CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT),
@@ -90,9 +94,8 @@ class GSRSettingsRepository(private val context: Context) {
             reconnectionAttempts = prefs.getInt(KEY_RECONNECTION_ATTEMPTS, 3),
             reconnectionBaseDelayMs = prefs.getLong(KEY_RECONNECTION_BASE_DELAY, 2000L),
             keepDeviceConnected = prefs.getBoolean(KEY_KEEP_DEVICE_CONNECTED, false),
-            deviceCalibrationEnabled = prefs.getBoolean(KEY_DEVICE_CALIBRATION, true)
+            deviceCalibrationEnabled = prefs.getBoolean(KEY_DEVICE_CALIBRATION, true),
         )
-    }
 
     suspend fun updateGSRSettings(settings: GSRSettings) {
         prefs.edit().apply {
@@ -131,57 +134,45 @@ class GSRSettingsRepository(private val context: Context) {
         updateDeviceSettings(defaultDeviceSettings)
     }
 
-    fun getSamplingRateOptions(): List<Int> {
-        return listOf(32, 64, 128, 256, 512, 1024)
-    }
+    fun getSamplingRateOptions(): List<Int> = listOf(32, 64, 128, 256, 512, 1024)
 
-    fun getDataFormatOptions(): List<DataFormat> {
-        return DataFormat.values().toList()
-    }
+    fun getDataFormatOptions(): List<DataFormat> = DataFormat.values().toList()
 
-    fun getConnectionTimeoutOptions(): List<Int> {
-        return listOf(10, 15, 30, 45, 60)
-    }
+    fun getConnectionTimeoutOptions(): List<Int> = listOf(10, 15, 30, 45, 60)
 
-    fun getBufferSizeOptions(): List<Int> {
-        return listOf(256, 512, 1024, 2048, 4096)
-    }
+    fun getBufferSizeOptions(): List<Int> = listOf(256, 512, 1024, 2048, 4096)
 
-    fun isValidSamplingRate(rate: Int): Boolean {
-        return rate in getSamplingRateOptions()
-    }
+    fun isValidSamplingRate(rate: Int): Boolean = rate in getSamplingRateOptions()
 
-    fun isValidConnectionTimeout(timeout: Int): Boolean {
-        return timeout in getConnectionTimeoutOptions()
-    }
+    fun isValidConnectionTimeout(timeout: Int): Boolean = timeout in getConnectionTimeoutOptions()
 
-    fun isValidBufferSize(size: Int): Boolean {
-        return size in getBufferSizeOptions()
-    }
+    fun isValidBufferSize(size: Int): Boolean = size in getBufferSizeOptions()
 
     // Export current settings for backup/sharing
     fun exportSettings(): Map<String, Any> {
         val currentGSR = _gsrSettings.value
         val currentDevice = _deviceSettings.value
         return mapOf(
-            "gsr_settings" to mapOf(
-                "enabled" to currentGSR.isEnabled,
-                "sampling_rate" to currentGSR.samplingRate,
-                "auto_start_recording" to currentGSR.autoStartRecording,
-                "real_time_monitoring" to currentGSR.enableRealTimeMonitoring,
-                "data_format" to currentGSR.dataFormat.name,
-                "buffer_size" to currentGSR.bufferSize,
-                "enable_filtering" to currentGSR.enableFiltering,
-                "notification_enabled" to currentGSR.notificationEnabled
-            ),
-            "device_settings" to mapOf(
-                "selected_device_id" to currentDevice.selectedDeviceId,
-                "device_name" to currentDevice.deviceName,
-                "connection_timeout" to currentDevice.connectionTimeout,
-                "auto_reconnect" to currentDevice.autoReconnect,
-                "keep_device_connected" to currentDevice.keepDeviceConnected,
-                "device_calibration_enabled" to currentDevice.deviceCalibrationEnabled
-            )
+            "gsr_settings" to
+                mapOf(
+                    "enabled" to currentGSR.isEnabled,
+                    "sampling_rate" to currentGSR.samplingRate,
+                    "auto_start_recording" to currentGSR.autoStartRecording,
+                    "real_time_monitoring" to currentGSR.enableRealTimeMonitoring,
+                    "data_format" to currentGSR.dataFormat.name,
+                    "buffer_size" to currentGSR.bufferSize,
+                    "enable_filtering" to currentGSR.enableFiltering,
+                    "notification_enabled" to currentGSR.notificationEnabled,
+                ),
+            "device_settings" to
+                mapOf(
+                    "selected_device_id" to currentDevice.selectedDeviceId,
+                    "device_name" to currentDevice.deviceName,
+                    "connection_timeout" to currentDevice.connectionTimeout,
+                    "auto_reconnect" to currentDevice.autoReconnect,
+                    "keep_device_connected" to currentDevice.keepDeviceConnected,
+                    "device_calibration_enabled" to currentDevice.deviceCalibrationEnabled,
+                ),
         )
     }
 
@@ -193,30 +184,35 @@ class GSRSettingsRepository(private val context: Context) {
 
             @Suppress("UNCHECKED_CAST")
             val deviceMap = settingsMap["device_settings"] as? Map<String, Any> ?: return false
-            val gsrSettings = GSRSettings(
-                isEnabled = gsrMap["enabled"] as? Boolean ?: true,
-                samplingRate = gsrMap["sampling_rate"] as? Int ?: DEFAULT_SAMPLING_RATE,
-                autoStartRecording = gsrMap["auto_start_recording"] as? Boolean ?: false,
-                enableRealTimeMonitoring = gsrMap["real_time_monitoring"] as? Boolean ?: true,
-                dataFormat = try {
-                    DataFormat.valueOf(gsrMap["data_format"] as? String ?: DataFormat.CSV.name)
-                } catch (e: Exception) {
-                    DataFormat.CSV
-                },
-                bufferSize = gsrMap["buffer_size"] as? Int ?: DEFAULT_BUFFER_SIZE,
-                enableFiltering = gsrMap["enable_filtering"] as? Boolean ?: true,
-                notificationEnabled = gsrMap["notification_enabled"] as? Boolean ?: true
-            )
-            val deviceSettings = DeviceSettings(
-                selectedDeviceId = deviceMap["selected_device_id"] as? String,
-                deviceName = deviceMap["device_name"] as? String,
-                connectionTimeout = deviceMap["connection_timeout"] as? Int
-                    ?: DEFAULT_CONNECTION_TIMEOUT,
-                autoReconnect = deviceMap["auto_reconnect"] as? Boolean ?: true,
-                keepDeviceConnected = deviceMap["keep_device_connected"] as? Boolean ?: false,
-                deviceCalibrationEnabled = deviceMap["device_calibration_enabled"] as? Boolean
-                    ?: true
-            )
+            val gsrSettings =
+                GSRSettings(
+                    isEnabled = gsrMap["enabled"] as? Boolean ?: true,
+                    samplingRate = gsrMap["sampling_rate"] as? Int ?: DEFAULT_SAMPLING_RATE,
+                    autoStartRecording = gsrMap["auto_start_recording"] as? Boolean ?: false,
+                    enableRealTimeMonitoring = gsrMap["real_time_monitoring"] as? Boolean ?: true,
+                    dataFormat =
+                        try {
+                            DataFormat.valueOf(gsrMap["data_format"] as? String ?: DataFormat.CSV.name)
+                        } catch (e: Exception) {
+                            DataFormat.CSV
+                        },
+                    bufferSize = gsrMap["buffer_size"] as? Int ?: DEFAULT_BUFFER_SIZE,
+                    enableFiltering = gsrMap["enable_filtering"] as? Boolean ?: true,
+                    notificationEnabled = gsrMap["notification_enabled"] as? Boolean ?: true,
+                )
+            val deviceSettings =
+                DeviceSettings(
+                    selectedDeviceId = deviceMap["selected_device_id"] as? String,
+                    deviceName = deviceMap["device_name"] as? String,
+                    connectionTimeout =
+                        deviceMap["connection_timeout"] as? Int
+                            ?: DEFAULT_CONNECTION_TIMEOUT,
+                    autoReconnect = deviceMap["auto_reconnect"] as? Boolean ?: true,
+                    keepDeviceConnected = deviceMap["keep_device_connected"] as? Boolean ?: false,
+                    deviceCalibrationEnabled =
+                        deviceMap["device_calibration_enabled"] as? Boolean
+                            ?: true,
+                )
             updateGSRSettings(gsrSettings)
             updateDeviceSettings(deviceSettings)
             true

@@ -21,9 +21,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewModel>() {
-    override fun createViewModel(): IRThermalNightViewModel {
-        return IRThermalNightViewModel()
-    }
+    override fun createViewModel(): IRThermalNightViewModel = IRThermalNightViewModel()
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -34,18 +32,18 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                     TopAppBar(
                         title = {
                             Row(
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Icon(
                                     Icons.Default.Brightness2,
                                     contentDescription = null,
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     "Night Vision Thermal",
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.White
+                                    color = Color.White,
                                 )
                             }
                         },
@@ -54,7 +52,7 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -80,19 +78,20 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                                         TextButton(onClick = { showSettings = false }) {
                                             Text("Close")
                                         }
-                                    }
+                                    },
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF0D1117) // Dark night theme
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF0D1117), // Dark night theme
+                            ),
                     )
-                }
+                },
             ) { paddingValues ->
                 IRThermalNightContent(
                     viewModel = viewModel,
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
         }
@@ -101,36 +100,38 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
     @Composable
     private fun IRThermalNightContent(
         viewModel: IRThermalNightViewModel,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         var isRecording by remember { mutableStateOf(false) }
         var nightMode by remember { mutableStateOf("Enhanced") }
         var sensitivity by remember { mutableStateOf(75f) }
         var currentTemp by remember { mutableStateOf(22.5f) }
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .background(Color(0xFF0D1117))
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF0D1117))
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Night mode status
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         Icons.Default.Brightness2,
                         contentDescription = null,
                         tint = Color(0xFF58A6FF),
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
@@ -138,68 +139,70 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                             "Night Vision Active",
                             color = Color(0xFF58A6FF),
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
                             "Enhanced sensitivity for low-light conditions",
                             color = Color(0xFF7D8590),
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                 }
             }
             // Thermal camera view
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.Center,
                     ) {
                         Text(
                             "Night Thermal Feed",
                             color = Color(0xFF58A6FF),
                             style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             "Enhanced night vision thermal imaging",
                             color = Color(0xFF7D8590),
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            "${currentTemp}°C",
+                            "$currentTemp°C",
                             color = Color(0xFF58A6FF),
                             style = MaterialTheme.typography.displaySmall,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                     // Recording indicator
                     if (isRecording) {
                         Card(
-                            modifier = Modifier
-                                .align(Alignment.TopStart)
-                                .padding(16.dp),
-                            colors = CardDefaults.cardColors(containerColor = Color(0xFFDA3633))
+                            modifier =
+                                Modifier
+                                    .align(Alignment.TopStart)
+                                    .padding(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFFDA3633)),
                         ) {
                             Row(
                                 modifier = Modifier.padding(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text(
                                     "● REC",
                                     color = Color.White,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
                                 )
                             }
                         }
@@ -210,21 +213,21 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Text(
                         "Night Vision Controls",
                         color = Color.White,
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     // Night mode selection
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         val modes = listOf("Standard", "Enhanced", "Ultra")
                         modes.forEach { mode ->
@@ -233,14 +236,15 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                                 label = {
                                     Text(
                                         mode,
-                                        color = if (nightMode == mode) Color.White else Color(0xFF7D8590)
+                                        color = if (nightMode == mode) Color.White else Color(0xFF7D8590),
                                     )
                                 },
                                 selected = nightMode == mode,
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = Color(0xFF58A6FF),
-                                    containerColor = Color(0xFF161B22)
-                                )
+                                colors =
+                                    FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = Color(0xFF58A6FF),
+                                        containerColor = Color(0xFF161B22),
+                                    ),
                             )
                         }
                     }
@@ -249,17 +253,18 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                         Text(
                             "Sensitivity: ${sensitivity.toInt()}%",
                             color = Color.White,
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                         Slider(
                             value = sensitivity,
                             onValueChange = { sensitivity = it },
                             valueRange = 10f..100f,
-                            colors = SliderDefaults.colors(
-                                thumbColor = Color(0xFF58A6FF),
-                                activeTrackColor = Color(0xFF58A6FF),
-                                inactiveTrackColor = Color(0xFF30363D)
-                            )
+                            colors =
+                                SliderDefaults.colors(
+                                    thumbColor = Color(0xFF58A6FF),
+                                    activeTrackColor = Color(0xFF58A6FF),
+                                    inactiveTrackColor = Color(0xFF30363D),
+                                ),
                         )
                     }
                 }
@@ -267,17 +272,21 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
             // Action buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 OutlinedButton(
                     onClick = { },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color(0xFF58A6FF)
-                    ),
-                    border = ButtonDefaults.outlinedButtonBorder(enabled = true).copy(
-                        brush = androidx.compose.ui.graphics.SolidColor(Color(0xFF58A6FF))
-                    )
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color(0xFF58A6FF),
+                        ),
+                    border =
+                        ButtonDefaults.outlinedButtonBorder(enabled = true).copy(
+                            brush =
+                                androidx.compose.ui.graphics
+                                    .SolidColor(Color(0xFF58A6FF)),
+                        ),
                 ) {
                     Icon(Icons.Default.Camera, contentDescription = "Capture")
                     Spacer(modifier = Modifier.width(8.dp))
@@ -286,13 +295,14 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                 Button(
                     onClick = { isRecording = !isRecording },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isRecording) Color(0xFFDA3633) else Color(0xFF58A6FF)
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = if (isRecording) Color(0xFFDA3633) else Color(0xFF58A6FF),
+                        ),
                 ) {
                     Icon(
                         Icons.Default.VideoCall,
-                        contentDescription = if (isRecording) "Stop Recording" else "Start Recording"
+                        contentDescription = if (isRecording) "Stop Recording" else "Start Recording",
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(if (isRecording) "Stop" else "Record")

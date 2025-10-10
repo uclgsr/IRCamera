@@ -3,8 +3,6 @@ package com.mpdc4gsr.libunified.app.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.mpdc4gsr.libunified.compat.ContextProvider
-import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.config.FileConfig
@@ -18,6 +16,7 @@ import com.mpdc4gsr.libunified.app.lms.utils.DateUtils
 import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtils
 import com.mpdc4gsr.libunified.app.lms.xutils.http.RequestParams
 import com.mpdc4gsr.libunified.app.utils.LibraryLogger
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.FileOutputStream
@@ -25,7 +24,9 @@ import java.io.IOException
 import java.io.OutputStream
 import java.util.concurrent.CountDownLatch
 
-class FirmwareViewModel(application: Application) : AndroidViewModel(application) {
+class FirmwareViewModel(
+    application: Application,
+) : AndroidViewModel(application) {
     companion object {
         private const val TS004_SOFT_CODE = "TS004_FirmwareSW_Scope"
         private const val TC007_SOFT_CODE = "TC007_FirmwareSW_Wireless"
@@ -66,7 +67,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val apkFirmwareName = if (isTS004) TS004_FIRMWARE_NAME else TC007_FIRMWARE_NAME
         val newVersion: Double = getVersionFromStr(apkVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
-        XLog.d("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - current[ph][ph]：$currentVersion apk[ph][ph][ph][ph]：$newVersion")
         if (newVersion <= currentVersion) {
             firmwareDataLD.postValue(null)
             isRequest = false
@@ -85,7 +85,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             inputStream.close()
             outputStream.close()
         } catch (e: IOException) {
-            XLog.e("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]! ${e.message}")
             firmwareFile.delete()
             firmwareDataLD.postValue(null)
             isRequest = false
@@ -97,8 +96,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 apkVersionStr,
                 tipsStr,
                 apkFirmwareName,
-                firmwareFile.length()
-            )
+                firmwareFile.length(),
+            ),
         )
         isRequest = false
     }
@@ -111,7 +110,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     ) {
         val bindCode = bindDevice(sn, randomNum)
         if (bindCode != LMS.SUCCESS.toInt() && bindCode != 15109) {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph]! sn: $sn")
             failLD.postValue(bindCode == 15162)
             isRequest = false
             return
@@ -119,7 +117,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val packageData: PackageData? =
             querySoftPackage(sn, if (isTS004) TS004_SOFT_CODE else TC007_SOFT_CODE)
         if (packageData == null) {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
             failLD.postValue(false)
             isRequest = false
             return
@@ -127,14 +124,12 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val record: PackageData.Record? = packageData.getFirstRecord()
         val newVersionStr: String? = record?.maxUpdateVersion
         if (record == null || newVersionStr == null) {
-            XLog.d("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph]，[ph]current[ph][ph][ph][ph][ph][ph]")
             firmwareDataLD.postValue(null)
             isRequest = false
             return
         }
         val newVersion: Double = getVersionFromStr(newVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
-        XLog.d("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - current[ph][ph]：$currentVersion [ph][ph][ph][ph][ph]：$newVersion")
         if (newVersion <= currentVersion) {
             firmwareDataLD.postValue(null)
             isRequest = false
@@ -151,7 +146,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 ),
             )
         } else {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
             failLD.postValue(downloadData?.responseCode == 60312)
         }
         isRequest = false
@@ -164,17 +158,23 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         return withContext(Dispatchers.IO) {
             var code = LMS.SUCCESS.toInt()
             val countDownLatch = CountDownLatch(1)
-            LMS.getInstance().bindDevice(sn, randomNum, "", "", object : IResponseCallback {
-                override fun onResponse(response: String) {
-                    try {
-                        val responseBean = Gson().fromJson(response, ResponseBean::class.java)
-                        code = responseBean.code.toInt()
-                    } catch (e: Exception) {
-                        code = 9999 // Error code
+            LMS.getInstance().bindDevice(
+                sn,
+                randomNum,
+                "",
+                "",
+                object : IResponseCallback {
+                    override fun onResponse(response: String) {
+                        try {
+                            val responseBean = Gson().fromJson(response, ResponseBean::class.java)
+                            code = responseBean.code.toInt()
+                        } catch (e: Exception) {
+                            code = 9999 // Error code
+                        }
+                        countDownLatch.countDown()
                     }
-                    countDownLatch.countDown()
-                }
-            })
+                },
+            )
             countDownLatch.await()
             return@withContext code
         }
@@ -193,7 +193,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             params.addBodyParameter("softCode", softCode)
             params.addBodyParameter(
                 "downloadLanguageId",
-                LanguageUtils.getLanguageId(ContextProvider.getContext())
+                LanguageUtils.getLanguageId(ContextProvider.getContext()),
             )
             params.addBodyParameter("downloadPlatformId", 2)
             params.addBodyParameter(
@@ -210,7 +210,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                                 Gson().fromJson(response, CommonBean::class.java)
                             packageData = Gson().fromJson(commonBean.data, PackageData::class.java)
                         } catch (exception: Exception) {
-                        LibraryLogger.e("FirmwareViewModel", "Unexpected Exception in FirmwareViewModel catch block", exception)
+                            LibraryLogger.e("FirmwareViewModel", "Unexpected Exception in FirmwareViewModel catch block", exception)
                         }
                         countDownLatch.countDown()
                     }
@@ -253,7 +253,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                                 result = DownloadData("", 0, commonBean.code.toInt())
                             }
                         } catch (exception: Exception) {
-                        LibraryLogger.e("FirmwareViewModel", "Unexpected Exception in FirmwareViewModel catch block", exception)
+                            LibraryLogger.e("FirmwareViewModel", "Unexpected Exception in FirmwareViewModel catch block", exception)
                         }
                         countDownLatch.countDown()
                     }
@@ -280,7 +280,9 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
     private class PackageData {
         var records: List<Record>? = null
+
         fun getFirstRecord(): Record? = if (records?.isNotEmpty() == true) records?.get(0) else null
+
         data class Record(
             var maxUpdateVersion: String?,
             var maxUpdateVersionSoftId: Int,

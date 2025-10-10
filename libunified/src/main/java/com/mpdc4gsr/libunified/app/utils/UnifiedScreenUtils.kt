@@ -44,20 +44,22 @@ object UnifiedScreenUtils {
         return size
     }
 
-    fun getScreenDensity(context: Context): Float {
-        return getDisplayMetrics(context).density
-    }
+    fun getScreenDensity(context: Context): Float = getDisplayMetrics(context).density
 
-    fun getScreenDensityDpi(context: Context): Int {
-        return getDisplayMetrics(context).densityDpi
-    }
+    fun getScreenDensityDpi(context: Context): Int = getDisplayMetrics(context).densityDpi
 
-    fun dpToPx(context: Context, dp: Float): Int {
+    fun dpToPx(
+        context: Context,
+        dp: Float,
+    ): Int {
         val density = getScreenDensity(context)
         return (dp * density + 0.5f).toInt()
     }
 
-    fun pxToDp(context: Context, px: Float): Int {
+    fun pxToDp(
+        context: Context,
+        px: Float,
+    ): Int {
         val density = getScreenDensity(context)
         return (px / density + 0.5f).toInt()
     }
@@ -102,32 +104,38 @@ object UnifiedScreenUtils {
         return Rect(location[0], location[1], location[0] + view.width, location[1] + view.height)
     }
 
-    fun isPointInsideView(x: Float, y: Float, view: View): Boolean {
+    fun isPointInsideView(
+        x: Float,
+        y: Float,
+        view: View,
+    ): Boolean {
         val bounds = getViewBoundsOnScreen(view)
         return x >= bounds.left && x <= bounds.right && y >= bounds.top && y <= bounds.bottom
     }
 
     @JvmStatic
-    fun getPreviewFPSByDataFlowMode(dataFlowMode: CommonParams.DataFlowMode): Int {
-        return when (dataFlowMode) {
+    fun getPreviewFPSByDataFlowMode(dataFlowMode: CommonParams.DataFlowMode): Int =
+        when (dataFlowMode) {
             CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT -> 30
             CommonParams.DataFlowMode.TNR_OUTPUT -> 15
             else -> 25
         }
-    }
 
     @JvmStatic
-    fun correct(value: Float, maxValue: Int): Int {
-        return kotlin.math.max(0, kotlin.math.min(value.toInt(), maxValue - 1))
-    }
+    fun correct(
+        value: Float,
+        maxValue: Int,
+    ): Int = kotlin.math.max(0, kotlin.math.min(value.toInt(), maxValue - 1))
 
     @JvmStatic
-    fun correctPoint(value: Float, maxValue: Int): Int {
-        return kotlin.math.max(0, kotlin.math.min(value.toInt(), maxValue - 1))
-    }
+    fun correctPoint(
+        value: Float,
+        maxValue: Int,
+    ): Int = kotlin.math.max(0, kotlin.math.min(value.toInt(), maxValue - 1))
 
     @JvmStatic
-    fun getRect(width: Int, height: Int): android.graphics.Rect {
-        return android.graphics.Rect(0, 0, width, height)
-    }
+    fun getRect(
+        width: Int,
+        height: Int,
+    ): android.graphics.Rect = android.graphics.Rect(0, 0, width, height)
 }

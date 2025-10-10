@@ -7,7 +7,11 @@ import android.graphics.RectF
 
 object UnifiedFinalUtils {
     // Convert byte array to various numeric types with endianness support
-    fun bytesToShort(bytes: ByteArray, offset: Int = 0, littleEndian: Boolean = true): Short {
+    fun bytesToShort(
+        bytes: ByteArray,
+        offset: Int = 0,
+        littleEndian: Boolean = true,
+    ): Short {
         if (offset + 1 >= bytes.size) return 0
         return if (littleEndian) {
             ((bytes[offset + 1].toInt() and 0xFF) shl 8 or (bytes[offset].toInt() and 0xFF)).toShort()
@@ -16,50 +20,66 @@ object UnifiedFinalUtils {
         }
     }
 
-    fun bytesToInt(bytes: ByteArray, offset: Int = 0, littleEndian: Boolean = true): Int {
+    fun bytesToInt(
+        bytes: ByteArray,
+        offset: Int = 0,
+        littleEndian: Boolean = true,
+    ): Int {
         if (offset + 3 >= bytes.size) return 0
         return if (littleEndian) {
             (bytes[offset + 3].toInt() and 0xFF) shl 24 or
-                    (bytes[offset + 2].toInt() and 0xFF) shl 16 or
-                    (bytes[offset + 1].toInt() and 0xFF) shl 8 or
-                    (bytes[offset].toInt() and 0xFF)
+                (bytes[offset + 2].toInt() and 0xFF) shl 16 or
+                (bytes[offset + 1].toInt() and 0xFF) shl 8 or
+                (bytes[offset].toInt() and 0xFF)
         } else {
             (bytes[offset].toInt() and 0xFF) shl 24 or
-                    (bytes[offset + 1].toInt() and 0xFF) shl 16 or
-                    (bytes[offset + 2].toInt() and 0xFF) shl 8 or
-                    (bytes[offset + 3].toInt() and 0xFF)
+                (bytes[offset + 1].toInt() and 0xFF) shl 16 or
+                (bytes[offset + 2].toInt() and 0xFF) shl 8 or
+                (bytes[offset + 3].toInt() and 0xFF)
         }
     }
 
-    fun bytesToLong(bytes: ByteArray, offset: Int = 0, littleEndian: Boolean = true): Long {
+    fun bytesToLong(
+        bytes: ByteArray,
+        offset: Int = 0,
+        littleEndian: Boolean = true,
+    ): Long {
         if (offset + 7 >= bytes.size) return 0L
         return if (littleEndian) {
             (bytes[offset + 7].toLong() and 0xFF) shl 56 or
-                    (bytes[offset + 6].toLong() and 0xFF) shl 48 or
-                    (bytes[offset + 5].toLong() and 0xFF) shl 40 or
-                    (bytes[offset + 4].toLong() and 0xFF) shl 32 or
-                    (bytes[offset + 3].toLong() and 0xFF) shl 24 or
-                    (bytes[offset + 2].toLong() and 0xFF) shl 16 or
-                    (bytes[offset + 1].toLong() and 0xFF) shl 8 or
-                    (bytes[offset].toLong() and 0xFF)
+                (bytes[offset + 6].toLong() and 0xFF) shl 48 or
+                (bytes[offset + 5].toLong() and 0xFF) shl 40 or
+                (bytes[offset + 4].toLong() and 0xFF) shl 32 or
+                (bytes[offset + 3].toLong() and 0xFF) shl 24 or
+                (bytes[offset + 2].toLong() and 0xFF) shl 16 or
+                (bytes[offset + 1].toLong() and 0xFF) shl 8 or
+                (bytes[offset].toLong() and 0xFF)
         } else {
             (bytes[offset].toLong() and 0xFF) shl 56 or
-                    (bytes[offset + 1].toLong() and 0xFF) shl 48 or
-                    (bytes[offset + 2].toLong() and 0xFF) shl 40 or
-                    (bytes[offset + 3].toLong() and 0xFF) shl 32 or
-                    (bytes[offset + 4].toLong() and 0xFF) shl 24 or
-                    (bytes[offset + 5].toLong() and 0xFF) shl 16 or
-                    (bytes[offset + 6].toLong() and 0xFF) shl 8 or
-                    (bytes[offset + 7].toLong() and 0xFF)
+                (bytes[offset + 1].toLong() and 0xFF) shl 48 or
+                (bytes[offset + 2].toLong() and 0xFF) shl 40 or
+                (bytes[offset + 3].toLong() and 0xFF) shl 32 or
+                (bytes[offset + 4].toLong() and 0xFF) shl 24 or
+                (bytes[offset + 5].toLong() and 0xFF) shl 16 or
+                (bytes[offset + 6].toLong() and 0xFF) shl 8 or
+                (bytes[offset + 7].toLong() and 0xFF)
         }
     }
 
-    fun bytesToFloat(bytes: ByteArray, offset: Int = 0, littleEndian: Boolean = true): Float {
+    fun bytesToFloat(
+        bytes: ByteArray,
+        offset: Int = 0,
+        littleEndian: Boolean = true,
+    ): Float {
         val intBits = bytesToInt(bytes, offset, littleEndian)
         return Float.fromBits(intBits)
     }
 
-    fun bytesToDouble(bytes: ByteArray, offset: Int = 0, littleEndian: Boolean = true): Double {
+    fun bytesToDouble(
+        bytes: ByteArray,
+        offset: Int = 0,
+        littleEndian: Boolean = true,
+    ): Double {
         val longBits = bytesToLong(bytes, offset, littleEndian)
         return Double.fromBits(longBits)
     }
@@ -72,7 +92,7 @@ object UnifiedFinalUtils {
         val minTemp: Float = 0f,
         val maxTemp: Float = 100f,
         val textSize: Float = 12f,
-        val lineWidth: Float = 2f
+        val lineWidth: Float = 2f,
     )
 
     fun drawTemperatureOverlay(
@@ -81,13 +101,14 @@ object UnifiedFinalUtils {
         bounds: RectF,
         temperatureData: FloatArray?,
         width: Int,
-        height: Int
+        height: Int,
     ) {
-        val paint = Paint().apply {
-            isAntiAlias = true
-            textSize = config.textSize
-            strokeWidth = config.lineWidth
-        }
+        val paint =
+            Paint().apply {
+                isAntiAlias = true
+                textSize = config.textSize
+                strokeWidth = config.lineWidth
+            }
         // Draw grid if enabled
         if (config.showGrid) {
             paint.color = 0x40FFFFFF
@@ -115,8 +136,11 @@ object UnifiedFinalUtils {
             // Draw scale background
             paint.color = 0x80000000.toInt()
             canvas.drawRect(
-                scaleLeft - 5f, scaleTop - 5f,
-                scaleLeft + scaleWidth + 25f, scaleTop + scaleHeight + 5f, paint
+                scaleLeft - 5f,
+                scaleTop - 5f,
+                scaleLeft + scaleWidth + 25f,
+                scaleTop + scaleHeight + 5f,
+                paint,
             )
             // Draw temperature scale
             val steps = 10
@@ -146,7 +170,7 @@ object UnifiedFinalUtils {
         temp: Float,
         minTemp: Float,
         maxTemp: Float,
-        palette: String
+        palette: String,
     ): Int {
         val normalized = ((temp - minTemp) / (maxTemp - minTemp)).coerceIn(0f, 1f)
         return when (palette.uppercase()) {
@@ -191,19 +215,19 @@ object UnifiedFinalUtils {
         val initializeCamera: Boolean = true,
         val initializeStorage: Boolean = true,
         val crashReportingEnabled: Boolean = true,
-        val performanceMonitoringEnabled: Boolean = false
+        val performanceMonitoringEnabled: Boolean = false,
     )
 
     data class InitializationResult(
         val success: Boolean,
         val errors: List<String> = emptyList(),
         val warnings: List<String> = emptyList(),
-        val initializationTimeMs: Long = 0L
+        val initializationTimeMs: Long = 0L,
     )
 
     fun initializeApplication(
         context: Context,
-        config: InitializationConfig
+        config: InitializationConfig,
     ): InitializationResult {
         val startTime = System.currentTimeMillis()
         val errors = mutableListOf<String>()
@@ -251,7 +275,7 @@ object UnifiedFinalUtils {
                 success = errors.isEmpty(),
                 errors = errors,
                 warnings = warnings,
-                initializationTimeMs = endTime - startTime
+                initializationTimeMs = endTime - startTime,
             )
         } catch (e: Exception) {
             errors.add("Critical initialization error: ${e.message}")
@@ -259,28 +283,29 @@ object UnifiedFinalUtils {
                 success = false,
                 errors = errors,
                 warnings = warnings,
-                initializationTimeMs = System.currentTimeMillis() - startTime
+                initializationTimeMs = System.currentTimeMillis() - startTime,
             )
         }
     }
 
-    fun validateRepositoryConsolidation(): Map<String, Any> {
-        return mapOf(
+    fun validateRepositoryConsolidation(): Map<String, Any> =
+        mapOf(
             "consolidated_utilities_count" to 25,
             "eliminated_files_count" to "55+",
             "duplication_reduction_percentage" to 99.95,
             "modules_covered" to listOf("BleModule", "app", "libunified", "component/*"),
-            "modern_practices_adopted" to listOf(
-                "StateFlow",
-                "Sealed Classes",
-                "Suspend Functions"
-            ),
-            "build_system_version" to mapOf(
-                "agp" to "8.11.0",
-                "kotlin" to "2.2.0",
-                "jdk_target" to "17"
-            ),
-            "repository_status" to "COMPLETELY_CONSOLIDATED"
+            "modern_practices_adopted" to
+                listOf(
+                    "StateFlow",
+                    "Sealed Classes",
+                    "Suspend Functions",
+                ),
+            "build_system_version" to
+                mapOf(
+                    "agp" to "8.11.0",
+                    "kotlin" to "2.2.0",
+                    "jdk_target" to "17",
+                ),
+            "repository_status" to "COMPLETELY_CONSOLIDATED",
         )
-    }
 }

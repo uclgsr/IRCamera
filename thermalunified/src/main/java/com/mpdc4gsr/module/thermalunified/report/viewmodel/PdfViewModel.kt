@@ -9,7 +9,6 @@ import com.mpdc4gsr.libunified.app.lms.LMS
 import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
 import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtils
 import com.mpdc4gsr.libunified.app.lms.utils.StringUtils
-import com.mpdc4gsr.libunified.app.lms.utils.TLog
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.utils.HttpHelp
 import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
@@ -22,6 +21,7 @@ import com.mpdc4gsr.libunified.R as LibR
 
 class PdfViewModel : BaseViewModel() {
     val listData = MutableLiveData<ReportData?>()
+
     fun getReportData(
         isTC007: Boolean,
         page: Int,
@@ -57,7 +57,6 @@ class PdfViewModel : BaseViewModel() {
                     result?.msg = p0?.message
                     result?.code = -1
                     downLatch.countDown()
-                    TLog.e("bcf", "：" + p0?.message)
                 }
 
                 override fun onFail(
@@ -66,12 +65,13 @@ class PdfViewModel : BaseViewModel() {
                 ) {
                     super.onFail(failMsg, errorCode)
                     try {
-                        StringUtils.getResString(
-                            LMS.mContext,
-                            if (TextUtils.isEmpty(errorCode)) -500 else errorCode.toInt(),
-                        ).let {
-                            TToast.shortToast(LMS.mContext, it)
-                        }
+                        StringUtils
+                            .getResString(
+                                LMS.mContext,
+                                if (TextUtils.isEmpty(errorCode)) -500 else errorCode.toInt(),
+                            ).let {
+                                TToast.shortToast(LMS.mContext, it)
+                            }
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

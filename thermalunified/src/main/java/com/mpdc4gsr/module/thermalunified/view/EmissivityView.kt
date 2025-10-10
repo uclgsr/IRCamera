@@ -30,14 +30,14 @@ class EmissivityView : View {
         context,
         attrs,
         defStyleAttr,
-        0
+        0,
     )
 
     constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : super(
         context,
         attrs,
@@ -75,14 +75,14 @@ class EmissivityView : View {
                     (if (i == 0) firstWidth else elseWidth) - 24.dpToPx(context)
                 }
             layoutList.add(
-                StaticLayout.Builder.obtain(
-                    textList[i],
-                    0,
-                    textList[i].length,
-                    textPaint,
-                    textWidth
-                )
-                    .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                StaticLayout.Builder
+                    .obtain(
+                        textList[i],
+                        0,
+                        textList[i].length,
+                        textPaint,
+                        textWidth,
+                    ).setAlignment(Layout.Alignment.ALIGN_CENTER)
                     .build(),
             )
         }
@@ -109,7 +109,7 @@ class EmissivityView : View {
             height.toFloat() - strokeWidth / 2,
             contentWidth,
             height.toFloat() - strokeWidth / 2,
-            linePaint
+            linePaint,
         )
         canvas.drawLine(strokeWidth / 2, 0f, strokeWidth / 2, height.toFloat(), linePaint)
         val padding = 12f.dpToPx(context)
@@ -117,7 +117,7 @@ class EmissivityView : View {
             canvas.save()
             canvas.translate(
                 padding,
-                if (isAlignTop) 6f.dpToPx(context) else (height - layout.height) / 2f
+                if (isAlignTop) 6f.dpToPx(context) else (height - layout.height) / 2f,
             )
             layout.draw(canvas)
             canvas.restore()
@@ -127,7 +127,7 @@ class EmissivityView : View {
                 0f,
                 itemWidth - strokeWidth / 2,
                 height.toFloat(),
-                linePaint
+                linePaint,
             )
             canvas.translate(itemWidth, 0f)
         }

@@ -13,7 +13,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
@@ -186,7 +185,6 @@ public class EasyBLE {
         if (!isInitialized) {
             if (!tryAutoInit()) {
                 String msg = "The SDK has not been initialized, make sure to call EasyBLE.getInstance().initialize(Application) first.";
-                logger.log(Log.ERROR, Logger.TYPE_GENERAL, msg);
                 return false;
             }
         } else if (application == null) {
@@ -380,7 +378,6 @@ public class EasyBLE {
             } else {
                 String message = String.format(Locale.US, "connect failed! [type: unconnectable, name: %s, addr: %s]",
                         device.getName(), device.getAddress());
-                logger.log(Log.ERROR, Logger.TYPE_CONNECTION_STATE, message);
                 if (observer != null) {
                     posterDispatcher.post(observer, MethodInfoGenerator.onConnectFailed(device, Connection.CONNECT_FAIL_TYPE_CONNECTION_IS_UNSUPPORTED));
                 }
@@ -521,7 +518,6 @@ public class EasyBLE {
             BluetoothDevice remoteDevice = bluetoothAdapter.getRemoteDevice(address);
             return remoteDevice.getBondState() != BluetoothDevice.BOND_NONE || remoteDevice.createBond();
         } catch (SecurityException e) {
-            logger.log(android.util.Log.ERROR, Logger.TYPE_CONNECTION_STATE, "Missing Bluetooth permission for bonding: " + e.getMessage());
             return false;
         } catch (Exception ignore) {
             return false;
@@ -567,7 +563,6 @@ public class EasyBLE {
                             //
                             observable.notifyObservers(MethodInfoGenerator.onBluetoothAdapterStateChanged(bluetoothAdapter.getState()));
                             if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) { //
-                                logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "");
                                 //
                                 if (scanner != null) {
                                     scanner.onBluetoothOff();
@@ -575,7 +570,6 @@ public class EasyBLE {
                                 //
                                 disconnectAllConnections();
                             } else if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON) {
-                                logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "");
                                 //
                                 for (Connection connection : connectionMap.values()) {
                                     if (connection.isAutoReconnectEnabled()) {
@@ -615,7 +609,6 @@ public class EasyBLE {
                     //
                     observable.notifyObservers(MethodInfoGenerator.onBluetoothAdapterStateChanged(bluetoothAdapter.getState()));
                     if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) { //
-                        logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "");
                         //
                         if (scanner != null) {
                             scanner.onBluetoothOff();
@@ -623,7 +616,6 @@ public class EasyBLE {
                         //
                         disconnectAllConnections();
                     } else if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON) {
-                        logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "");
                         //
                         for (Connection connection : connectionMap.values()) {
                             if (connection.isAutoReconnectEnabled()) {

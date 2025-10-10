@@ -27,9 +27,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryActivityViewModel
 import kotlinx.coroutines.launch
 
 class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
-    override fun createViewModel(): GalleryActivityViewModel {
-        return viewModels<GalleryActivityViewModel>().value
-    }
+    override fun createViewModel(): GalleryActivityViewModel = viewModels<GalleryActivityViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -45,7 +43,7 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
                             Text(
                                 "Thermal Gallery",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -53,52 +51,56 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
                         actions = {
                             IconButton(onClick = {
                                 // TODO: Search gallery
-                                android.widget.Toast.makeText(
-                                    this@GalleryComposeActivity,
-                                    "Searching gallery...",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
+                                android.widget.Toast
+                                    .makeText(
+                                        this@GalleryComposeActivity,
+                                        "Searching gallery...",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
                             }) {
                                 Icon(
                                     Icons.Default.Search,
                                     contentDescription = "Search",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                             IconButton(onClick = {
                                 // TODO: Open gallery settings
-                                android.widget.Toast.makeText(
-                                    this@GalleryComposeActivity,
-                                    "Opening gallery settings...",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
+                                android.widget.Toast
+                                    .makeText(
+                                        this@GalleryComposeActivity,
+                                        "Opening gallery settings...",
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
                             }) {
                                 Icon(
                                     Icons.Default.MoreVert,
                                     contentDescription = "Settings",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF16131E)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
                     )
                 },
-                containerColor = Color(0xFF16131E)
+                containerColor = Color(0xFF16131E),
             ) { paddingValues ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color(0xFF16131E))
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color(0xFF16131E)),
                 ) {
                     // Tab row
                     GalleryTabRow(
@@ -109,12 +111,12 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
                                 pagerState.animateScrollToPage(tab)
                             }
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                     // Content pager
                     HorizontalPager(
                         state = pagerState,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     ) { page ->
                         when (page) {
                             0 -> GalleryPictureTab()
@@ -135,34 +137,36 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
 private fun GalleryTabRow(
     selectedTab: Int,
     onTabSelected: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             GalleryTab(
                 text = "Pictures",
                 icon = Icons.Default.Photo,
                 isSelected = selectedTab == 0,
                 onClick = { onTabSelected(0) },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             GalleryTab(
                 text = "Videos",
                 icon = Icons.Default.VideoLibrary,
                 isSelected = selectedTab == 1,
                 onClick = { onTabSelected(1) },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
         }
     }
@@ -174,30 +178,31 @@ private fun GalleryTab(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     isSelected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Button(
         onClick = onClick,
         modifier = modifier,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSelected) Color(0xFFFF6B35) else Color.Transparent,
-            contentColor = if (isSelected) Color.White else Color(0xFF7D8590)
-        ),
-        shape = RoundedCornerShape(8.dp)
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = if (isSelected) Color(0xFFFF6B35) else Color.Transparent,
+                contentColor = if (isSelected) Color.White else Color(0xFF7D8590),
+            ),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Icon(
                 icon,
                 contentDescription = text,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(20.dp),
             )
             Text(
                 text,
                 fontSize = 14.sp,
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
             )
         }
     }
@@ -212,7 +217,7 @@ private fun GalleryPictureTab() {
                 id = androidx.core.R.id.accessibility_custom_action_0
             }
         },
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     )
 }
 
@@ -225,6 +230,6 @@ private fun GalleryVideoTab() {
                 id = androidx.core.R.id.accessibility_custom_action_1
             }
         },
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     )
 }

@@ -1,8 +1,8 @@
 package com.mpdc4gsr.libunified.app.db.entity
 
 import androidx.room.*
-import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.compat.ContextProvider
 
 open class DirBase {
     @PrimaryKey(autoGenerate = true)
@@ -25,10 +25,15 @@ open class DirBase {
 
     @ColumnInfo
     var dangerCount: Int = 0
+
     override fun equals(other: Any?): Boolean = other is DirBase && other.id == id
+
     override fun hashCode(): Int = id.toInt()
+
     fun getGoodCountStr(): String = if (goodCount > 99) "99+" else goodCount.toString()
+
     fun getWarnCountStr(): String = if (warnCount > 99) "99+" else warnCount.toString()
+
     fun getDangerCountStr(): String = if (dangerCount > 99) "99+" else dangerCount.toString()
 }
 
@@ -65,6 +70,7 @@ class DirDetect() : DirBase() {
 
     @Ignore
     var itemList: ArrayList<ItemDetect> = ArrayList()
+
     fun copyOne(): DirDetect {
         val newDirDetect = DirDetect()
         newDirDetect.id = 0

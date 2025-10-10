@@ -16,9 +16,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
 class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewModel>() {
-    override fun createViewModel(): ThermalFragmentViewModel {
-        return viewModels<ThermalFragmentViewModel>().value
-    }
+    override fun createViewModel(): ThermalFragmentViewModel = viewModels<ThermalFragmentViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -30,20 +28,20 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
                         title = {
                             Text(
                                 "Thermal Camera",
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                             }
-                        }
+                        },
                     )
-                }
+                },
             ) { paddingValues ->
                 ThermalCameraContent(
                     viewModel = viewModel,
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
         }
@@ -52,47 +50,51 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
     @Composable
     private fun ThermalCameraContent(
         viewModel: ThermalFragmentViewModel,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         val context = androidx.compose.ui.platform.LocalContext.current
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Placeholder for thermal camera view
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
             ) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
                 ) {
                     Text(
                         text = "Thermal Camera View\n(Integration with IrSurfaceView)",
-                        style = MaterialTheme.typography.headlineSmall
+                        style = MaterialTheme.typography.headlineSmall,
                     )
                 }
             }
             // Camera controls with proper icons
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Button(
                     onClick = {
                         // TODO: Implement thermal image capture
-                        android.widget.Toast.makeText(
-                            context,
-                            "Capturing thermal image",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Capturing thermal image",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = "Capture")
                     Spacer(modifier = Modifier.width(8.dp))
@@ -101,13 +103,14 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
                 Button(
                     onClick = {
                         // TODO: Implement thermal video recording
-                        android.widget.Toast.makeText(
-                            context,
-                            "Start/stop thermal recording",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Start/stop thermal recording",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Icon(Icons.Default.VideoCall, contentDescription = "Record")
                     Spacer(modifier = Modifier.width(8.dp))

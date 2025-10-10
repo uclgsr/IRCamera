@@ -9,6 +9,7 @@ object UnifiedGsrUtils {
     private var bootTimeReference: Long = 0L
     private var detectedProcessor: String = "Unknown"
     private var deviceModel: String = "Unknown"
+
     fun getUtcTimestamp(): Long {
         val currentDeviceTime = System.currentTimeMillis()
         val deviceOffset = currentDeviceTime - deviceGroundTruthBase
@@ -30,6 +31,7 @@ object UnifiedGsrUtils {
     }
 
     fun getPcTimeOffset(): Long = pcTimeOffset
+
     private fun detectSamsungS22Processor() {
         try {
             val model = android.os.Build.MODEL
@@ -54,45 +56,50 @@ object UnifiedGsrUtils {
         val model: String,
         val groundTruthBase: Long,
         val bootTimeReference: Long,
-        val pcTimeOffset: Long
+        val pcTimeOffset: Long,
     )
 
-    fun getDeviceTimingInfo(): DeviceTimingInfo {
-        return DeviceTimingInfo(
+    fun getDeviceTimingInfo(): DeviceTimingInfo =
+        DeviceTimingInfo(
             detectedProcessor,
             deviceModel,
             deviceGroundTruthBase,
             bootTimeReference,
-            pcTimeOffset
+            pcTimeOffset,
         )
-    }
 
-    fun calculateGsrSampleTimestamp(sampleIndex: Long, samplingRate: Double): Long {
+    fun calculateGsrSampleTimestamp(
+        sampleIndex: Long,
+        samplingRate: Double,
+    ): Long {
         val sampleTimeMs = (sampleIndex / samplingRate * 1000).toLong()
         return deviceGroundTruthBase + sampleTimeMs + pcTimeOffset
     }
 
-    fun resistanceToMicrosiemens(resistance: Double): Double {
-        return if (resistance > 0) {
+    fun resistanceToMicrosiemens(resistance: Double): Double =
+        if (resistance > 0) {
             1_000_000.0 / resistance
         } else {
             0.0
         }
-    }
 
-    fun microsiemensToResistance(microsiemens: Double): Double {
-        return if (microsiemens > 0) {
+    fun microsiemensToResistance(microsiemens: Double): Double =
+        if (microsiemens > 0) {
             1_000_000.0 / microsiemens
         } else {
             Double.MAX_VALUE
         }
-    }
 
-    fun applyGsrCalibration(rawValue: Double, gain: Double, offset: Double): Double {
-        return (rawValue * gain) + offset
-    }
+    fun applyGsrCalibration(
+        rawValue: Double,
+        gain: Double,
+        offset: Double,
+    ): Double = (rawValue * gain) + offset
 
-    fun calculateBaseline(gsrValues: DoubleArray, windowSize: Int = 100): Double {
+    fun calculateBaseline(
+        gsrValues: DoubleArray,
+        windowSize: Int = 100,
+    ): Double {
         if (gsrValues.isEmpty()) return 0.0
         val sortedValues = gsrValues.sorted()
         val baselineWindowSize = minOf(windowSize, sortedValues.size)
@@ -103,14 +110,14 @@ object UnifiedGsrUtils {
         val index: Int,
         val timestamp: Long,
         val value: Double,
-        val amplitude: Double
+        val amplitude: Double,
     )
 
     fun detectGsrPeaks(
         gsrValues: DoubleArray,
         timestamps: LongArray,
         threshold: Double = 0.1,
-        minDistance: Int = 50
+        minDistance: Int = 50,
     ): List<GsrPeak> {
         if (gsrValues.isEmpty() || gsrValues.size != timestamps.size) return emptyList()
         val peaks = mutableListOf<GsrPeak>()
@@ -133,7 +140,10 @@ object UnifiedGsrUtils {
         return peaks
     }
 
-    fun smoothGsrData(gsrValues: DoubleArray, windowSize: Int = 5): DoubleArray {
+    fun smoothGsrData(
+        gsrValues: DoubleArray,
+        windowSize: Int = 5,
+    ): DoubleArray {
         if (gsrValues.size <= windowSize) return gsrValues.copyOf()
         val smoothed = DoubleArray(gsrValues.size)
         val halfWindow = windowSize / 2
@@ -158,20 +168,24 @@ object UnifiedGsrUtils {
         val min: Double,
         val max: Double,
         val range: Double,
-        val peakCount: Int
+        val peakCount: Int,
     )
 
-    fun calculateGsrStats(gsrValues: DoubleArray, timestamps: LongArray): GsrStats {
+    fun calculateGsrStats(
+        gsrValues: DoubleArray,
+        timestamps: LongArray,
+    ): GsrStats {
         if (gsrValues.isEmpty()) {
             return GsrStats(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0)
         }
         val sorted = gsrValues.sorted()
         val mean = gsrValues.average()
-        val median = if (sorted.size % 2 == 0) {
-            (sorted[sorted.size / 2 - 1] + sorted[sorted.size / 2]) / 2.0
-        } else {
-            sorted[sorted.size / 2]
-        }
+        val median =
+            if (sorted.size % 2 == 0) {
+                (sorted[sorted.size / 2 - 1] + sorted[sorted.size / 2]) / 2.0
+            } else {
+                sorted[sorted.size / 2]
+            }
         val variance = gsrValues.map { (it - mean) * (it - mean) }.average()
         val standardDeviation = kotlin.math.sqrt(variance)
         val min = sorted.first()
@@ -184,7 +198,7 @@ object UnifiedGsrUtils {
     fun exportGsrToCsv(
         gsrValues: DoubleArray,
         timestamps: LongArray,
-        samplingRate: Double
+        samplingRate: Double,
     ): String {
         if (gsrValues.size != timestamps.size) {
             throw IllegalArgumentException("GSR values and timestamps must have same length")
@@ -202,10 +216,13 @@ object UnifiedGsrUtils {
     data class GsrQualityReport(
         val isValid: Boolean,
         val issues: List<String>,
-        val qualityScore: Double
+        val qualityScore: Double,
     )
 
-    fun validateGsrDataQuality(gsrValues: DoubleArray, samplingRate: Double): GsrQualityReport {
+    fun validateGsrDataQuality(
+        gsrValues: DoubleArray,
+        samplingRate: Double,
+    ): GsrQualityReport {
         val issues = mutableListOf<String>()
         var qualityScore = 1.0
         if (gsrValues.isEmpty()) {
@@ -231,9 +248,12 @@ object UnifiedGsrUtils {
         }
         // Check for excessive noise
         val smoothed = smoothGsrData(gsrValues)
-        val noiseLevel = gsrValues.zip(smoothed).map { (original, smooth) ->
-            kotlin.math.abs(original - smooth)
-        }.average()
+        val noiseLevel =
+            gsrValues
+                .zip(smoothed)
+                .map { (original, smooth) ->
+                    kotlin.math.abs(original - smooth)
+                }.average()
         if (noiseLevel > stats.standardDeviation * 0.5) {
             issues.add("High noise level detected")
             qualityScore -= 0.2
@@ -242,7 +262,7 @@ object UnifiedGsrUtils {
         return GsrQualityReport(
             isValid = issues.isEmpty() && qualityScore > 0.5,
             issues = issues,
-            qualityScore = qualityScore
+            qualityScore = qualityScore,
         )
     }
 }

@@ -10,8 +10,9 @@ import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 import com.mpdc4gsr.libunified.app.tools.TimeTools
 import com.mpdc4gsr.module.thermalunified.R
 
-class MonitorLogAdapter(val context: Context) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MonitorLogAdapter(
+    val context: Context,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: OnItemClickListener? = null
     var datas = arrayListOf<ThermalEntity>()
         set(value) {
@@ -48,11 +49,11 @@ class MonitorLogAdapter(val context: Context) :
         }
     }
 
-    override fun getItemCount(): Int {
-        return datas.size
-    }
+    override fun getItemCount(): Int = datas.size
 
-    inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ItemView(
+        itemView: View,
+    ) : RecyclerView.ViewHolder(itemView) {
         val lay =
             itemView.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.item_log_lay)
         val indexText = itemView.findViewById<TextView>(R.id.item_log_index_text)

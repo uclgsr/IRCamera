@@ -8,7 +8,9 @@ import com.mpdc4gsr.libunified.app.comm.util.SingletonHolder
 import com.mpdc4gsr.libunified.app.comm.view.TempLayout
 import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 
-class AlarmHelp private constructor(val context: Context) {
+class AlarmHelp private constructor(
+    val context: Context,
+) {
     companion object : SingletonHolder<AlarmHelp, Context>(::AlarmHelp)
 
     private var mediaPlayer: MediaPlayer? = null
@@ -20,6 +22,7 @@ class AlarmHelp private constructor(val context: Context) {
     private var minTemp: Float = 0f
     private var isPause = false
     private var alarmBean: AlarmBean? = null
+
     fun updateData(alarmBean: AlarmBean) {
         this.alarmBean = alarmBean
         isTempAlarmRingtoneOpen = alarmBean?.isRingtoneOpen ?: false
@@ -67,7 +70,7 @@ class AlarmHelp private constructor(val context: Context) {
                 mediaPlayer?.release()
                 mediaPlayer = null
             } catch (exception: Exception) {
-            LibraryLogger.e("AlarmHelp", "Unexpected Exception in AlarmHelp catch block", exception)
+                LibraryLogger.e("AlarmHelp", "Unexpected Exception in AlarmHelp catch block", exception)
             }
         } else {
             isTempAlarmRingtoneOpen = true
@@ -76,7 +79,7 @@ class AlarmHelp private constructor(val context: Context) {
                 mediaPlayer?.release()
                 mediaPlayer = null
             } catch (exception: Exception) {
-            LibraryLogger.e("AlarmHelp", "Unexpected Exception in AlarmHelp catch block", exception)
+                LibraryLogger.e("AlarmHelp", "Unexpected Exception in AlarmHelp catch block", exception)
             }
             when (ringtone) {
                 0 -> mediaPlayer = MediaPlayer.create(context, R.raw.ringtone1)

@@ -4,11 +4,11 @@ import android.content.Context
 import android.util.Base64
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
-import com.mpdc4gsr.libunified.compat.SPUtils
 import com.mpdc4gsr.libunified.app.bean.CarDetectChildBean
 import com.mpdc4gsr.libunified.app.bean.ContinuousBean
 import com.mpdc4gsr.libunified.app.bean.WatermarkBean
 import com.mpdc4gsr.libunified.app.utils.CarDetectData
+import com.mpdc4gsr.libunified.compat.SPUtils
 
 object SharedManager {
     var hasClickWinter: Boolean
@@ -71,9 +71,7 @@ object SharedManager {
             SPUtils.getInstance().put("is04AutoSync", value)
         }
 
-    fun getManualAngle(sId: String): Int {
-        return SPUtils.getInstance().getInt("manualAngle_$sId", 1000)
-    }
+    fun getManualAngle(sId: String): Int = SPUtils.getInstance().getInt("manualAngle_$sId", 1000)
 
     fun setManualAngle(
         sId: String,
@@ -121,7 +119,8 @@ object SharedManager {
         value: ByteArray,
     ) {
         if (value.size == 24) {
-            SPUtils.getInstance()
+            SPUtils
+                .getInstance()
                 .put("manualData_$sId", String(Base64.encode(value, Base64.DEFAULT)))
         }
     }
@@ -247,126 +246,86 @@ object SharedManager {
     private const val SP_CHANGE_DEVICE = "sp_change_device"
     private const val SP_TC007_CUSTOM_PSEUDO = "sp_tc007_custom_pseudo"
     private const val SP_CAR_DETECT = "sp_car_detect"
+
     fun setToken(token: String) {
         SPUtils.getInstance().put(TOKEN, token)
     }
 
-    fun getToken(): String {
-        return SPUtils.getInstance().getString(TOKEN, "")
-    }
+    fun getToken(): String = SPUtils.getInstance().getString(TOKEN, "")
 
     fun setUserId(token: String) {
         SPUtils.getInstance().put(USER_ID, token)
     }
 
-    fun getUserId(): String {
-        return SPUtils.getInstance().getString(USER_ID, "0")
-    }
+    fun getUserId(): String = SPUtils.getInstance().getString(USER_ID, "0")
 
     fun setUsername(username: String) {
         SPUtils.getInstance().put(USERNAME, username)
     }
 
-    fun getUsername(): String {
-        return SPUtils.getInstance().getString(USERNAME, "")
-    }
+    fun getUsername(): String = SPUtils.getInstance().getString(USERNAME, "")
 
     fun setNickname(nickname: String) {
         SPUtils.getInstance().put(NICKNAME, nickname)
     }
 
-    fun getNickname(): String {
-        return SPUtils.getInstance().getString(NICKNAME, "")
-    }
+    fun getNickname(): String = SPUtils.getInstance().getString(NICKNAME, "")
 
     fun setHeadIcon(headIcon: String) {
         SPUtils.getInstance().put(HEAD_ICON, headIcon)
     }
 
-    fun getHeadIcon(): String {
-        return SPUtils.getInstance().getString(HEAD_ICON, "")
-    }
+    fun getHeadIcon(): String = SPUtils.getInstance().getString(HEAD_ICON, "")
 
-    fun setBaseHost(value: String) {
-        return SPUtils.getInstance().put(BASE_HOST, value)
-    }
+    fun setBaseHost(value: String) = SPUtils.getInstance().put(BASE_HOST, value)
 
-    fun getBaseHost(): String {
-        return SPUtils.getInstance().getString(BASE_HOST, "")
-    }
+    fun getBaseHost(): String = SPUtils.getInstance().getString(BASE_HOST, "")
 
     fun setLanguage(
         context: Context,
         language: String,
     ) {
-        PreferenceManager.getDefaultSharedPreferences(context)
-            .edit().putString(LANGUAGE, language).apply()
+        PreferenceManager
+            .getDefaultSharedPreferences(context)
+            .edit()
+            .putString(LANGUAGE, language)
+            .apply()
     }
 
-    fun getLanguage(context: Context): String {
-        return PreferenceManager.getDefaultSharedPreferences(context).getString(LANGUAGE, "")!!
-    }
+    fun getLanguage(context: Context): String = PreferenceManager.getDefaultSharedPreferences(context).getString(LANGUAGE, "")!!
 
-    fun setHasShowClause(hasShowClause: Boolean) {
-        return SPUtils.getInstance().put(HAS_SHOW_CLAUSE, hasShowClause)
-    }
+    fun setHasShowClause(hasShowClause: Boolean) = SPUtils.getInstance().put(HAS_SHOW_CLAUSE, hasShowClause)
 
-    fun getHasShowClause(): Boolean {
-        return SPUtils.getInstance().getBoolean(HAS_SHOW_CLAUSE, false)
-    }
+    fun getHasShowClause(): Boolean = SPUtils.getInstance().getBoolean(HAS_SHOW_CLAUSE, false)
 
-    fun setIRConfig(value: String) {
-        return SPUtils.getInstance().put(IR_CONFIG, value)
-    }
+    fun setIRConfig(value: String) = SPUtils.getInstance().put(IR_CONFIG, value)
 
-    fun getIRConfig(): String {
-        return SPUtils.getInstance().getString(IR_CONFIG, "")
-    }
+    fun getIRConfig(): String = SPUtils.getInstance().getString(IR_CONFIG, "")
 
-    fun setTemperature(value: Int) {
-        return SPUtils.getInstance().put(TEMPERATURE_UNIT, value)
-    }
+    fun setTemperature(value: Int) = SPUtils.getInstance().put(TEMPERATURE_UNIT, value)
 
-    fun getTemperature(): Int {
-        return SPUtils.getInstance().getInt(TEMPERATURE_UNIT, 1)
-    }
+    fun getTemperature(): Int = SPUtils.getInstance().getInt(TEMPERATURE_UNIT, 1)
 
-    fun setVersionCheckDate(value: Long) {
-        return SPUtils.getInstance().put(VERSION_CHECK_DATE, value)
-    }
+    fun setVersionCheckDate(value: Long) = SPUtils.getInstance().put(VERSION_CHECK_DATE, value)
 
-    fun getVersionCheckDate(): Long {
-        return SPUtils.getInstance().getLong(VERSION_CHECK_DATE, 0)
-    }
+    fun getVersionCheckDate(): Long = SPUtils.getInstance().getLong(VERSION_CHECK_DATE, 0)
 
-    fun setDeviceSn(value: String) {
-        return SPUtils.getInstance().put(DEVICE_SN, value)
-    }
+    fun setDeviceSn(value: String) = SPUtils.getInstance().put(DEVICE_SN, value)
 
-    fun getDeviceSn(): String {
-        return SPUtils.getInstance().getString(DEVICE_SN, "")
-    }
+    fun getDeviceSn(): String = SPUtils.getInstance().getString(DEVICE_SN, "")
 
-    fun setDeviceVersion(value: String) {
-        return SPUtils.getInstance().put(DEVICE_VERSION, value)
-    }
+    fun setDeviceVersion(value: String) = SPUtils.getInstance().put(DEVICE_VERSION, value)
 
-    fun getDeviceVersion(): String {
-        return SPUtils.getInstance().getString(DEVICE_VERSION, "")
-    }
+    fun getDeviceVersion(): String = SPUtils.getInstance().getString(DEVICE_VERSION, "")
 
     fun saveCustomPseudo(json: String) {
         SPUtils.getInstance().put(SP_CUSTOM_PSEUDO, json)
     }
 
-    fun getCustomPseudo(): String {
-        return SPUtils.getInstance().getString(SP_CUSTOM_PSEUDO, "")
-    }
+    fun getCustomPseudo(): String = SPUtils.getInstance().getString(SP_CUSTOM_PSEUDO, "")
 
     // saveTC007CustomPseudo and getTC0007CustomPseudo methods removed - TC007 device support discontinued
-    fun getTargetPop(): Boolean {
-        return SPUtils.getInstance().getBoolean(SP_TARGET_POP, false)
-    }
+    fun getTargetPop(): Boolean = SPUtils.getInstance().getBoolean(SP_TARGET_POP, false)
 
     fun saveTargetPop(targetPop: Boolean) {
         SPUtils.getInstance().put(SP_TARGET_POP, targetPop)
@@ -374,49 +333,34 @@ object SharedManager {
 
     private const val IR_DUAL_DISP = "ir_dual_disp"
     private const val IR_DUAL_DISP_V = "ir_dual_disp_v"
+
     fun saveSettingIsPush(isPush: Boolean) {
         SPUtils.getInstance().put(SP_SETTING_IS_PUSH, isPush)
     }
 
-    fun getSettingIsPush(): Boolean {
-        return SPUtils.getInstance().getBoolean(SP_SETTING_IS_PUSH, true)
-    }
+    fun getSettingIsPush(): Boolean = SPUtils.getInstance().getBoolean(SP_SETTING_IS_PUSH, true)
 
     fun saveSettingIsRecommend(isRecommend: Boolean) {
         SPUtils.getInstance().put(SP_SETTING_IS_RECOMMEND, isRecommend)
     }
 
-    fun getSettingIsRecommend(): Boolean {
-        return SPUtils.getInstance().getBoolean(SP_SETTING_IS_RECOMMEND, true)
-    }
+    fun getSettingIsRecommend(): Boolean = SPUtils.getInstance().getBoolean(SP_SETTING_IS_RECOMMEND, true)
 
-    fun getMainPermissionsState(): Boolean {
-        return SPUtils.getInstance().getBoolean("main_permissions_state", false)
-    }
+    fun getMainPermissionsState(): Boolean = SPUtils.getInstance().getBoolean("main_permissions_state", false)
 
-    fun setMainPermissionsState(value: Boolean) {
-        return SPUtils.getInstance().put("main_permissions_state", value)
-    }
+    fun setMainPermissionsState(value: Boolean) = SPUtils.getInstance().put("main_permissions_state", value)
 
-    fun getImagePermissionsState(): Boolean {
-        return SPUtils.getInstance().getBoolean("storage_permissions_state", false)
-    }
+    fun getImagePermissionsState(): Boolean = SPUtils.getInstance().getBoolean("storage_permissions_state", false)
 
-    fun setImagePermissionsState(value: Boolean) {
-        return SPUtils.getInstance().put("storage_permissions_state", value)
-    }
+    fun setImagePermissionsState(value: Boolean) = SPUtils.getInstance().put("storage_permissions_state", value)
 
-    fun getHotMode(): Int {
-        return SPUtils.getInstance().getInt(SP_HOT_MODE, 1)
-    }
+    fun getHotMode(): Int = SPUtils.getInstance().getInt(SP_HOT_MODE, 1)
 
     fun saveHotMode(hotMode: Int) {
         SPUtils.getInstance().put(SP_HOT_MODE, hotMode)
     }
 
-    fun getChangeDevice(): Int {
-        return SPUtils.getInstance().getInt(SP_CHANGE_DEVICE, 0)
-    }
+    fun getChangeDevice(): Int = SPUtils.getInstance().getInt(SP_CHANGE_DEVICE, 0)
 
     fun saveChangeDevice(device: Int) {
         SPUtils.getInstance().put(SP_CHANGE_DEVICE, device)

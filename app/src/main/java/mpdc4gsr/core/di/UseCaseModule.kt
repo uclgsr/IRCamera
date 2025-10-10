@@ -15,44 +15,28 @@ import mpdc4gsr.feature.thermal.domain.usecase.StopThermalRecordingUseCase
 @Module
 @InstallIn(ViewModelComponent::class)
 object UseCaseModule {
+    @Provides
+    @ViewModelScoped
+    fun provideConnectThermalCameraUseCase(repository: ThermalRepository): ConnectThermalCameraUseCase =
+        ConnectThermalCameraUseCase(repository)
 
     @Provides
     @ViewModelScoped
-    fun provideConnectThermalCameraUseCase(
-        repository: ThermalRepository
-    ): ConnectThermalCameraUseCase {
-        return ConnectThermalCameraUseCase(repository)
-    }
+    fun provideStartThermalStreamingUseCase(repository: ThermalRepository): StartThermalStreamingUseCase =
+        StartThermalStreamingUseCase(repository)
 
     @Provides
     @ViewModelScoped
-    fun provideStartThermalStreamingUseCase(
-        repository: ThermalRepository
-    ): StartThermalStreamingUseCase {
-        return StartThermalStreamingUseCase(repository)
-    }
+    fun provideCaptureThermalSnapshotUseCase(repository: ThermalRepository): CaptureThermalSnapshotUseCase =
+        CaptureThermalSnapshotUseCase(repository)
 
     @Provides
     @ViewModelScoped
-    fun provideCaptureThermalSnapshotUseCase(
-        repository: ThermalRepository
-    ): CaptureThermalSnapshotUseCase {
-        return CaptureThermalSnapshotUseCase(repository)
-    }
+    fun provideStartThermalRecordingUseCase(repository: ThermalRepository): StartThermalRecordingUseCase =
+        StartThermalRecordingUseCase(repository)
 
     @Provides
     @ViewModelScoped
-    fun provideStartThermalRecordingUseCase(
-        repository: ThermalRepository
-    ): StartThermalRecordingUseCase {
-        return StartThermalRecordingUseCase(repository)
-    }
-
-    @Provides
-    @ViewModelScoped
-    fun provideStopThermalRecordingUseCase(
-        repository: ThermalRepository
-    ): StopThermalRecordingUseCase {
-        return StopThermalRecordingUseCase(repository)
-    }
+    fun provideStopThermalRecordingUseCase(repository: ThermalRepository): StopThermalRecordingUseCase =
+        StopThermalRecordingUseCase(repository)
 }

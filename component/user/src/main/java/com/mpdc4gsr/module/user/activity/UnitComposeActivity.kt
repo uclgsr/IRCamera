@@ -21,9 +21,7 @@ import com.mpdc4gsr.module.user.viewmodel.UnitViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
 class UnitComposeActivity : BaseComposeActivity<UnitViewModel>() {
-    override fun createViewModel(): UnitViewModel {
-        return viewModels<UnitViewModel>().value
-    }
+    override fun createViewModel(): UnitViewModel = viewModels<UnitViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -35,7 +33,7 @@ class UnitComposeActivity : BaseComposeActivity<UnitViewModel>() {
                     title = {
                         Text(
                             text = stringResource(RCore.string.setting_unit),
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
                     },
                     navigationIcon = {
@@ -48,109 +46,120 @@ class UnitComposeActivity : BaseComposeActivity<UnitViewModel>() {
                             onClick = {
                                 viewModel.saveTemperatureUnit()
                                 finish()
-                            }
+                            },
                         ) {
                             Text(
                                 text = stringResource(RCore.string.person_save),
                                 color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.Medium,
                             )
                         }
-                    }
+                    },
                 )
-            }
+            },
         ) { paddingValues ->
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 // Celsius Option
                 Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .selectable(
-                            selected = selectedUnit == UnitViewModel.CELSIUS,
-                            onClick = { viewModel.selectUnit(UnitViewModel.CELSIUS) }
-                        ),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = selectedUnit == UnitViewModel.CELSIUS,
+                                onClick = { viewModel.selectUnit(UnitViewModel.CELSIUS) },
+                            ),
                     shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (selectedUnit == UnitViewModel.CELSIUS) {
-                            MaterialTheme.colorScheme.primaryContainer
-                        } else {
-                            MaterialTheme.colorScheme.surface
-                        }
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor =
+                                if (selectedUnit == UnitViewModel.CELSIUS) {
+                                    MaterialTheme.colorScheme.primaryContainer
+                                } else {
+                                    MaterialTheme.colorScheme.surface
+                                },
+                        ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = "℃",
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Medium,
-                            color = if (selectedUnit == UnitViewModel.CELSIUS) {
-                                MaterialTheme.colorScheme.onPrimaryContainer
-                            } else {
-                                MaterialTheme.colorScheme.onSurface
-                            }
+                            color =
+                                if (selectedUnit == UnitViewModel.CELSIUS) {
+                                    MaterialTheme.colorScheme.onPrimaryContainer
+                                } else {
+                                    MaterialTheme.colorScheme.onSurface
+                                },
                         )
                         if (selectedUnit == UnitViewModel.CELSIUS) {
                             Icon(
                                 Icons.Default.Check,
                                 contentDescription = "Selected",
-                                tint = MaterialTheme.colorScheme.primary
+                                tint = MaterialTheme.colorScheme.primary,
                             )
                         }
                     }
                 }
                 // Fahrenheit Option
                 Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .selectable(
-                            selected = selectedUnit == UnitViewModel.FAHRENHEIT,
-                            onClick = { viewModel.selectUnit(UnitViewModel.FAHRENHEIT) }
-                        ),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = selectedUnit == UnitViewModel.FAHRENHEIT,
+                                onClick = { viewModel.selectUnit(UnitViewModel.FAHRENHEIT) },
+                            ),
                     shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (selectedUnit == UnitViewModel.FAHRENHEIT) {
-                            MaterialTheme.colorScheme.primaryContainer
-                        } else {
-                            MaterialTheme.colorScheme.surface
-                        }
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor =
+                                if (selectedUnit == UnitViewModel.FAHRENHEIT) {
+                                    MaterialTheme.colorScheme.primaryContainer
+                                } else {
+                                    MaterialTheme.colorScheme.surface
+                                },
+                        ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = "℉",
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Medium,
-                            color = if (selectedUnit == UnitViewModel.FAHRENHEIT) {
-                                MaterialTheme.colorScheme.onPrimaryContainer
-                            } else {
-                                MaterialTheme.colorScheme.onSurface
-                            }
+                            color =
+                                if (selectedUnit == UnitViewModel.FAHRENHEIT) {
+                                    MaterialTheme.colorScheme.onPrimaryContainer
+                                } else {
+                                    MaterialTheme.colorScheme.onSurface
+                                },
                         )
                         if (selectedUnit == UnitViewModel.FAHRENHEIT) {
                             Icon(
                                 Icons.Default.Check,
                                 contentDescription = "Selected",
-                                tint = MaterialTheme.colorScheme.primary
+                                tint = MaterialTheme.colorScheme.primary,
                             )
                         }
                     }

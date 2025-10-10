@@ -13,16 +13,13 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Process
 import android.text.TextUtils
-import android.util.Log
 import android.webkit.WebView
 import androidx.annotation.RequiresApi
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.db.AppDatabase
 import com.mpdc4gsr.libunified.app.socket.SocketCmdUtils
 import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
-import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
 import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
@@ -51,8 +48,11 @@ abstract class BaseApplication : Application() {
     val module: String get() = javaClass.simpleName
     var activitys = arrayListOf<Activity>()
     var hasOtgShow = false
+
     abstract fun getSoftWareCode(): String
+
     abstract fun isDomestic(): Boolean
+
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -71,7 +71,8 @@ abstract class BaseApplication : Application() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkRequest =
-                android.net.NetworkRequest.Builder()
+                android.net.NetworkRequest
+                    .Builder()
                     .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                     .build()
             manager.registerNetworkCallback(
@@ -82,7 +83,6 @@ abstract class BaseApplication : Application() {
                         val capabilities = manager.getNetworkCapabilities(network)
                         if (capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) {
                             connectWebSocket()
-                            Log.i("WebSocket", "WiFi network available: $network")
                         }
                     }
                 },
@@ -100,7 +100,7 @@ abstract class BaseApplication : Application() {
                 @Suppress("DEPRECATION")
                 registerReceiver(
                     NetworkChangedReceiver(),
-                    IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+                    IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
                 )
             }
         }
@@ -108,7 +108,6 @@ abstract class BaseApplication : Application() {
 
     private fun connectWebSocket() {
         val ssid = WifiUtils.getCurrentWifiSSID(this) ?: return
-        Log.i("WebSocket", "current[ph][ph] Wifi SSID: $ssid")
         // TS004/TC007 device functionality removed
         // if (ssid.startsWith(DeviceConfig.TS004_NAME_START)) {
         //     SharedManager.hasTS004 = true
@@ -122,7 +121,6 @@ abstract class BaseApplication : Application() {
     }
 
     fun disconnectWebSocket() {
-        Log.i("WebSocket", "disconnectWebSocket()")
         WebSocketProxy.getInstance().stopWebSocket()
     }
 
@@ -183,7 +181,6 @@ abstract class BaseApplication : Application() {
                         capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
                     ) {
                         connectWebSocket()
-                        Log.i("WebSocket", "WiFi network connected: ${'$'}activeNetwork")
                     }
                 } else {
                     @Suppress("DEPRECATION")
@@ -191,10 +188,6 @@ abstract class BaseApplication : Application() {
                     @Suppress("DEPRECATION")
                     if (activeNetwork?.isConnected == true && activeNetwork.type == ConnectivityManager.TYPE_WIFI) {
                         connectWebSocket()
-                        Log.i(
-                            "WebSocket",
-                            "WiFi network connected (legacy): ${'$'}{activeNetwork.type}"
-                        )
                     }
                 }
             }
@@ -227,7 +220,6 @@ abstract class BaseApplication : Application() {
             try {
                 AppDatabase.getInstance().thermalDao().deleteZero(SharedManager.getUserId())
             } catch (e: Exception) {
-                XLog.e("delete db error: ${'$'}{e.message}")
             }
         }
     }
@@ -248,9 +240,7 @@ abstract class BaseApplication : Application() {
         WebView(this).destroy()
     }
 
-    open fun getAppLanguage(context: Context): String? {
-        return ConstantLanguages.ENGLISH
-    }
+    open fun getAppLanguage(context: Context): String? = ConstantLanguages.ENGLISH
 
     fun exitAll() {
         hasOtgShow = false

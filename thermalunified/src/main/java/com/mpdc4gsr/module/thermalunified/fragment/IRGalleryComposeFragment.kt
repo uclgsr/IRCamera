@@ -34,9 +34,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
-    override fun createViewModel(): IRGalleryViewModel {
-        return viewModels<IRGalleryViewModel>().value
-    }
+    override fun createViewModel(): IRGalleryViewModel = viewModels<IRGalleryViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -51,7 +49,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
         val isGridView by viewModel.isGridView.collectAsStateWithLifecycle()
         LibUnifiedTheme {
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 // Top app bar with directory selector and controls
                 IRGalleryTopBar(
@@ -65,11 +63,11 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                     onToggleView = { viewModel.toggleViewMode() },
                     onCancelSelection = { viewModel.exitSelectionMode() },
                     onDeleteSelected = { viewModel.deleteSelectedItems() },
-                    onShareSelected = { viewModel.shareSelectedItems() }
+                    onShareSelected = { viewModel.shareSelectedItems() },
                 )
                 // Main content
                 Box(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     when {
                         isLoading -> {
@@ -79,7 +77,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                         galleryItems.isEmpty() -> {
                             EmptyGalleryState(
                                 dirType = currentDirType,
-                                onRefresh = { viewModel.refreshGallery() }
+                                onRefresh = { viewModel.refreshGallery() },
                             )
                         }
 
@@ -101,7 +99,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                                         viewModel.enterSelectionMode(item)
                                     }
                                 },
-                                onRefresh = { viewModel.refreshGallery() }
+                                onRefresh = { viewModel.refreshGallery() },
                             )
                         }
 
@@ -123,7 +121,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                                         viewModel.enterSelectionMode(item)
                                     }
                                 },
-                                onRefresh = { viewModel.refreshGallery() }
+                                onRefresh = { viewModel.refreshGallery() },
                             )
                         }
                     }
@@ -143,7 +141,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
         onToggleView: () -> Unit,
         onCancelSelection: () -> Unit,
         onDeleteSelected: () -> Unit,
-        onShareSelected: () -> Unit
+        onShareSelected: () -> Unit,
     ) {
         TopAppBar(
             title = {
@@ -155,32 +153,33 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                     Box {
                         TextButton(onClick = { expanded = true }) {
                             Text(
-                                text = when (currentDirType) {
-                                    DirType.LINE -> "LINE Device"
-                                    DirType.TS004_LOCALE -> "TS004 Device"
-                                    else -> "All Devices"
-                                },
-                                fontWeight = FontWeight.Bold
+                                text =
+                                    when (currentDirType) {
+                                        DirType.LINE -> "LINE Device"
+                                        DirType.TS004_LOCALE -> "TS004 Device"
+                                        else -> "All Devices"
+                                    },
+                                fontWeight = FontWeight.Bold,
                             )
                             Icon(Icons.Default.ArrowDropDown, contentDescription = null)
                         }
                         DropdownMenu(
                             expanded = expanded,
-                            onDismissRequest = { expanded = false }
+                            onDismissRequest = { expanded = false },
                         ) {
                             DropdownMenuItem(
                                 text = { Text("LINE Device") },
                                 onClick = {
                                     onDirTypeChanged(DirType.LINE)
                                     expanded = false
-                                }
+                                },
                             )
                             DropdownMenuItem(
                                 text = { Text("TS004 Device") },
                                 onClick = {
                                     onDirTypeChanged(DirType.TS004_LOCALE)
                                     expanded = false
-                                }
+                                },
                             )
                         }
                     }
@@ -195,7 +194,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                         Icon(
                             Icons.Default.Delete,
                             contentDescription = "Delete",
-                            tint = MaterialTheme.colorScheme.error
+                            tint = MaterialTheme.colorScheme.error,
                         )
                     }
                     TextButton(onClick = onCancelSelection) {
@@ -205,11 +204,11 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                     IconButton(onClick = onToggleView) {
                         Icon(
                             if (isGridView) Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
-                            contentDescription = if (isGridView) "List View" else "Grid View"
+                            contentDescription = if (isGridView) "List View" else "Grid View",
                         )
                     }
                 }
-            }
+            },
         )
     }
 
@@ -217,17 +216,17 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
     private fun LoadingState() {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 CircularProgressIndicator()
                 Text(
                     text = "Loading gallery...",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -236,31 +235,31 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
     @Composable
     private fun EmptyGalleryState(
         dirType: DirType,
-        onRefresh: () -> Unit
+        onRefresh: () -> Unit,
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
                     Icons.Default.PhotoLibrary,
                     contentDescription = "Empty gallery",
                     modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "No Files Found",
                     style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
                     text = "Capture thermal images with your ${getDirTypeName(dirType)} to see them here",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Button(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
@@ -279,13 +278,13 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
         viewModel: IRGalleryViewModel,
         onItemClick: (GalleryBean) -> Unit,
         onItemLongClick: (GalleryBean) -> Unit,
-        onRefresh: () -> Unit
+        onRefresh: () -> Unit,
     ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(galleryItems) { item ->
                 GridGalleryItem(
@@ -294,7 +293,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                     isSelectionMode = isSelectionMode,
                     viewModel = viewModel,
                     onClick = { onItemClick(item) },
-                    onLongClick = { onItemLongClick(item) }
+                    onLongClick = { onItemLongClick(item) },
                 )
             }
         }
@@ -308,11 +307,11 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
         viewModel: IRGalleryViewModel,
         onItemClick: (GalleryBean) -> Unit,
         onItemLongClick: (GalleryBean) -> Unit,
-        onRefresh: () -> Unit
+        onRefresh: () -> Unit,
     ) {
         LazyColumn(
             contentPadding = PaddingValues(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(galleryItems) { item ->
                 ListGalleryItem(
@@ -321,7 +320,7 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                     isSelectionMode = isSelectionMode,
                     viewModel = viewModel,
                     onClick = { onItemClick(item) },
-                    onLongClick = { onItemLongClick(item) }
+                    onLongClick = { onItemLongClick(item) },
                 )
             }
         }
@@ -334,77 +333,90 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
         isSelectionMode: Boolean,
         viewModel: IRGalleryViewModel,
         onClick: () -> Unit,
-        onLongClick: () -> Unit
+        onLongClick: () -> Unit,
     ) {
         Card(
             onClick = onClick,
-            modifier = Modifier
-                .aspectRatio(1f)
-                .fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = if (isSelected)
-                    MaterialTheme.colorScheme.primaryContainer
-                else
-                    MaterialTheme.colorScheme.surface
-            ),
-            border = if (isSelected)
-                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-            else null
+            modifier =
+                Modifier
+                    .aspectRatio(1f)
+                    .fillMaxWidth(),
+            colors =
+                CardDefaults.cardColors(
+                    containerColor =
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.primaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.surface
+                        },
+                ),
+            border =
+                if (isSelected) {
+                    androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+                } else {
+                    null
+                },
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(item.path)
-                        .crossfade(true)
-                        .build(),
+                    model =
+                        ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(item.path)
+                            .crossfade(true)
+                            .build(),
                     contentDescription = item.name,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop,
                 )
                 // Selection indicator
                 if (isSelectionMode && isSelected) {
                     Box(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(8.dp)
+                        modifier =
+                            Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(8.dp),
                     ) {
                         Icon(
                             Icons.Default.CheckCircle,
                             contentDescription = "Selected",
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier
-                                .background(
-                                    Color.White,
-                                    shape = androidx.compose.foundation.shape.CircleShape
-                                )
-                                .padding(2.dp)
+                            modifier =
+                                Modifier
+                                    .background(
+                                        Color.White,
+                                        shape = androidx.compose.foundation.shape.CircleShape,
+                                    ).padding(2.dp),
                         )
                     }
                 }
                 // File info overlay
                 Card(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(8.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Black.copy(alpha = 0.7f)
-                    )
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(8.dp),
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = Color.Black.copy(alpha = 0.7f),
+                        ),
                 ) {
                     Column(
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(8.dp),
                     ) {
                         Text(
                             text = item.name ?: "Unknown",
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White,
-                            maxLines = 1
+                            maxLines = 1,
                         )
                         Text(
                             text = formatFileSize(viewModel.getCachedFileSize(item.path)),
                             style = MaterialTheme.typography.labelSmall,
-                            color = Color.White.copy(alpha = 0.8f)
+                            color = Color.White.copy(alpha = 0.8f),
                         )
                     }
                 }
@@ -419,73 +431,82 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
         isSelectionMode: Boolean,
         viewModel: IRGalleryViewModel,
         onClick: () -> Unit,
-        onLongClick: () -> Unit
+        onLongClick: () -> Unit,
     ) {
         Card(
             onClick = onClick,
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = if (isSelected)
-                    MaterialTheme.colorScheme.primaryContainer
-                else
-                    MaterialTheme.colorScheme.surface
-            )
+            colors =
+                CardDefaults.cardColors(
+                    containerColor =
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.primaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.surface
+                        },
+                ),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(item.path)
-                        .crossfade(true)
-                        .build(),
+                    model =
+                        ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(item.path)
+                            .crossfade(true)
+                            .build(),
                     contentDescription = item.name,
-                    modifier = Modifier
-                        .size(60.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                    modifier =
+                        Modifier
+                            .size(60.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop,
                 )
                 // File info
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(
                         text = item.name ?: "Unknown File",
                         style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
                     )
                     Text(
                         text = formatFileSize(viewModel.getCachedFileSize(item.path)),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Text(
-                        text = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
-                            .format(Date(item.timeMillis)),
+                        text =
+                            SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
+                                .format(Date(item.timeMillis)),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
                 // Selection indicator
                 if (isSelectionMode) {
                     Checkbox(
                         checked = isSelected,
-                        onCheckedChange = null // Handled by card click
+                        onCheckedChange = null, // Handled by card click
                     )
                 }
             }
         }
     }
 
-    private fun getDirTypeName(dirType: DirType): String = when (dirType) {
-        DirType.LINE -> "LINE device"
-        DirType.TS004_LOCALE -> "TS004 device"
-        else -> "device"
-    }
+    private fun getDirTypeName(dirType: DirType): String =
+        when (dirType) {
+            DirType.LINE -> "LINE device"
+            DirType.TS004_LOCALE -> "TS004 device"
+            else -> "device"
+        }
 
     private fun formatFileSize(bytes: Long): String {
         val units = arrayOf("B", "KB", "MB", "GB")

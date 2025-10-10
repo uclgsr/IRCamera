@@ -24,9 +24,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.launch
 
 class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -48,7 +46,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             Text(
                                 "Data Log Chart",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -56,7 +54,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -65,31 +63,33 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.Default.FileDownload,
                                     contentDescription = "Export",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                             IconButton(onClick = { showSettingsDialog = true }) {
                                 Icon(
                                     Icons.Default.MoreVert,
                                     contentDescription = "Settings",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF16131E)
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color(0xFF16131E),
+                            ),
                     )
                 },
-                containerColor = Color(0xFF16131E)
+                containerColor = Color(0xFF16131E),
             ) { paddingValues ->
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color(0xFF16131E)),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color(0xFF16131E)),
                     contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     // Logging status card
                     item {
@@ -100,21 +100,21 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             onToggleLogging = {
                                 isLogging = !isLogging
                                 if (isLogging) logEntries = 0
-                            }
+                            },
                         )
                     }
                     // Chart display
                     item {
                         ChartDisplayCard(
                             selectedTimeRange = selectedTimeRange,
-                            dataPoints = dataPoints
+                            dataPoints = dataPoints,
                         )
                     }
                     // Time range selector
                     item {
                         TimeRangeSelector(
                             selectedRange = selectedTimeRange,
-                            onRangeSelected = { selectedTimeRange = it }
+                            onRangeSelected = { selectedTimeRange = it },
                         )
                     }
                     // Chart statistics
@@ -128,7 +128,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 scope.launch {
                                     viewModel.exportData(
                                         this@LogMPChartComposeActivity,
-                                        ThermalViewModel.ExportFormat.CSV
+                                        ThermalViewModel.ExportFormat.CSV,
                                     )
                                     snackbarHostState.showSnackbar("Exporting data as CSV...")
                                 }
@@ -137,7 +137,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 scope.launch {
                                     viewModel.exportData(
                                         this@LogMPChartComposeActivity,
-                                        ThermalViewModel.ExportFormat.PDF
+                                        ThermalViewModel.ExportFormat.PDF,
                                     )
                                     snackbarHostState.showSnackbar("Exporting data as PDF...")
                                 }
@@ -145,7 +145,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             onClearData = {
                                 logEntries = 0
                                 dataPoints = 0
-                            }
+                            },
                         )
                     }
                 }
@@ -178,7 +178,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     }
                                     showExportDialog = false
                                 },
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
                             ) {
                                 Text(format)
                             }
@@ -190,7 +190,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     TextButton(onClick = { showExportDialog = false }) {
                         Text("Cancel")
                     }
-                }
+                },
             )
         }
         // Settings dialog
@@ -212,7 +212,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         Text("OK")
                     }
                 },
-                dismissButton = {}
+                dismissButton = {},
             )
         }
     }
@@ -223,53 +223,56 @@ private fun LoggingStatusCard(
     isLogging: Boolean,
     logEntries: Int,
     dataPoints: Int,
-    onToggleLogging: () -> Unit
+    onToggleLogging: () -> Unit,
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column {
                     Text(
                         "Data Logging",
                         color = Color.White,
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                     Text(
                         if (isLogging) "Recording..." else "Stopped",
                         color = if (isLogging) Color(0xFF00FF00) else Color(0xFF7D8590),
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
                     )
                 }
                 Switch(
                     checked = isLogging,
                     onCheckedChange = { onToggleLogging() },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.White,
-                        checkedTrackColor = Color(0xFFFF6B35),
-                        uncheckedThumbColor = Color(0xFF7D8590),
-                        uncheckedTrackColor = Color(0xFF16131E)
-                    )
+                    colors =
+                        SwitchDefaults.colors(
+                            checkedThumbColor = Color.White,
+                            checkedTrackColor = Color(0xFFFF6B35),
+                            uncheckedThumbColor = Color(0xFF7D8590),
+                            uncheckedTrackColor = Color(0xFF16131E),
+                        ),
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
             // Statistics
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 LogStatItem("Log Entries", logEntries.toString())
                 LogStatItem("Data Points", dataPoints.toString())
@@ -282,21 +285,21 @@ private fun LoggingStatusCard(
 @Composable
 private fun LogStatItem(
     label: String,
-    value: String
+    value: String,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             value,
             color = Color(0xFFFF6B35),
             fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Text(
             label,
             color = Color(0xFF7D8590),
-            fontSize = 12.sp
+            fontSize = 12.sp,
         )
     }
 }
@@ -304,56 +307,59 @@ private fun LogStatItem(
 @Composable
 private fun ChartDisplayCard(
     selectedTimeRange: String,
-    dataPoints: Int
+    dataPoints: Int,
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Text(
                 "Temperature Chart - $selectedTimeRange",
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(16.dp))
             // Chart placeholder
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .background(
-                        Color(0xFF16131E),
-                        RoundedCornerShape(8.dp)
-                    ),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .background(
+                            Color(0xFF16131E),
+                            RoundedCornerShape(8.dp),
+                        ),
+                contentAlignment = Alignment.Center,
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Icon(
                         Icons.AutoMirrored.Filled.ShowChart,
                         contentDescription = "Chart",
                         tint = Color(0xFFFF6B35),
-                        modifier = Modifier.size(48.dp)
+                        modifier = Modifier.size(48.dp),
                     )
                     Text(
                         "Temperature Trend Chart",
                         color = Color(0xFF7D8590),
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
                     )
                     Text(
                         "$dataPoints data points",
                         color = Color(0xFFFF6B35),
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
                     )
                 }
             }
@@ -364,29 +370,31 @@ private fun ChartDisplayCard(
 @Composable
 private fun TimeRangeSelector(
     selectedRange: String,
-    onRangeSelected: (String) -> Unit
+    onRangeSelected: (String) -> Unit,
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Text(
                 "Time Range",
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 val timeRanges = listOf("15 Min", "1 Hour", "6 Hours", "24 Hours")
                 timeRanges.forEach { range ->
@@ -394,12 +402,13 @@ private fun TimeRangeSelector(
                         onClick = { onRangeSelected(range) },
                         label = { Text(range, fontSize = 12.sp) },
                         selected = selectedRange == range,
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Color(0xFFFF6B35),
-                            selectedLabelColor = Color.White,
-                            containerColor = Color(0xFF16131E),
-                            labelColor = Color(0xFF7D8590)
-                        )
+                        colors =
+                            FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = Color(0xFFFF6B35),
+                                selectedLabelColor = Color.White,
+                                containerColor = Color(0xFF16131E),
+                                labelColor = Color(0xFF7D8590),
+                            ),
                     )
                 }
             }
@@ -410,26 +419,28 @@ private fun TimeRangeSelector(
 @Composable
 private fun ChartStatisticsCard() {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Text(
                 "Chart Statistics",
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 StatItem("Peak", "47.2°C", Color(0xFFFF4444))
                 StatItem("Valley", "18.1°C", Color(0xFF4444FF))
@@ -444,21 +455,21 @@ private fun ChartStatisticsCard() {
 private fun StatItem(
     label: String,
     value: String,
-    color: Color
+    color: Color,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             value,
             color = color,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Text(
             label,
             color = Color(0xFF7D8590),
-            fontSize = 10.sp
+            fontSize = 10.sp,
         )
     }
 }
@@ -467,55 +478,60 @@ private fun StatItem(
 private fun DataManagementCard(
     onExportCsv: () -> Unit,
     onExportPdf: () -> Unit,
-    onClearData: () -> Unit
+    onClearData: () -> Unit,
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Text(
                 "Data Management",
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Button(
                     onClick = onExportCsv,
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFF6B35)
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFFF6B35),
+                        ),
                 ) {
                     Text("Export CSV", fontSize = 12.sp)
                 }
                 Button(
                     onClick = onExportPdf,
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6B7280)
-                    )
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF6B7280),
+                        ),
                 ) {
                     Text("Export PDF", fontSize = 12.sp)
                 }
                 OutlinedButton(
                     onClick = onClearData,
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color.Red
-                    ),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, Color.Red)
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color.Red,
+                        ),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Color.Red),
                 ) {
                     Text("Clear", fontSize = 12.sp)
                 }

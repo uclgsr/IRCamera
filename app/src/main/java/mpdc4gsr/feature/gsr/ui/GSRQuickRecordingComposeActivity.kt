@@ -1,7 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
 
-import dagger.hilt.android.AndroidEntryPoint
-
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -51,19 +50,20 @@ fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
         viewModel.initializeQuickRecording()
     }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
     ) {
         // Header
         Text(
             text = "Quick GSR Recording",
             style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Spacer(modifier = Modifier.height(24.dp))
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Recording Status Card
             item {
@@ -72,7 +72,7 @@ fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
                     recordingDuration = uiState.recordingDuration,
                     samplesCollected = uiState.samplesCollected,
                     onStartRecording = { viewModel.startQuickRecording() },
-                    onStopRecording = { viewModel.stopQuickRecording() }
+                    onStopRecording = { viewModel.stopQuickRecording() },
                 )
             }
             // GSR Device Status
@@ -80,7 +80,7 @@ fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
                 GSRDeviceStatusCard(
                     deviceStatus = uiState.deviceStatus,
                     signalQuality = uiState.signalQuality,
-                    batteryLevel = uiState.batteryLevel
+                    batteryLevel = uiState.batteryLevel,
                 )
             }
             // Live GSR Data Visualization
@@ -89,7 +89,7 @@ fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
                     LiveGSRDataCard(
                         currentValue = uiState.currentGSRValue,
                         averageValue = uiState.averageGSRValue,
-                        recentValues = uiState.recentGSRValues
+                        recentValues = uiState.recentGSRValues,
                     )
                 }
             }
@@ -99,7 +99,7 @@ fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
                     sampleRate = uiState.sampleRate,
                     autoSave = uiState.autoSave,
                     onSampleRateChange = { viewModel.setSampleRate(it) },
-                    onAutoSaveToggle = { viewModel.toggleAutoSave() }
+                    onAutoSaveToggle = { viewModel.toggleAutoSave() },
                 )
             }
             // Recent Sessions
@@ -108,14 +108,14 @@ fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
                     Text(
                         text = "Recent Quick Sessions",
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
                     )
                 }
                 items(uiState.recentSessions.take(3)) { session ->
                     QuickSessionCard(
                         session = session,
                         onView = { viewModel.viewSession(session) },
-                        onExport = { viewModel.exportSession(session) }
+                        onExport = { viewModel.exportSession(session) },
                     )
                 }
             }
@@ -129,37 +129,42 @@ fun QuickRecordingStatusCard(
     recordingDuration: Long,
     samplesCollected: Int,
     onStartRecording: () -> Unit,
-    onStopRecording: () -> Unit
+    onStopRecording: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isRecording) Color(0xFFF44336).copy(alpha = 0.1f)
-            else MaterialTheme.colorScheme.surface
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    if (isRecording) {
+                        Color(0xFFF44336).copy(alpha = 0.1f)
+                    } else {
+                        MaterialTheme.colorScheme.surface
+                    },
+            ),
     ) {
         Column(
             modifier = Modifier.padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             if (isRecording) {
                 // Recording indicator with animation
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     AnimatedVisibility(
                         visible = true,
                         enter = scaleIn() + fadeIn(),
-                        exit = scaleOut() + fadeOut()
+                        exit = scaleOut() + fadeOut(),
                     ) {
                         Box(
                             modifier = Modifier.size(16.dp),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.Center,
                         ) {
                             CircularProgressIndicator(
                                 modifier = Modifier.fillMaxSize(),
                                 strokeWidth = 2.dp,
-                                color = Color(0xFFF44336)
+                                color = Color(0xFFF44336),
                             )
                         }
                     }
@@ -168,14 +173,14 @@ fun QuickRecordingStatusCard(
                         text = "Recording Active",
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFFF44336)
+                        color = Color(0xFFF44336),
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 // Recording stats
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     QuickStatItem("Duration", formatDuration(recordingDuration))
                     QuickStatItem("Samples", samplesCollected.toString())
@@ -183,10 +188,11 @@ fun QuickRecordingStatusCard(
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
                     onClick = onStopRecording,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFF44336)
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFF44336),
+                        ),
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(Icons.Default.Stop, contentDescription = "Stop Recording")
                     Spacer(modifier = Modifier.width(8.dp))
@@ -197,26 +203,27 @@ fun QuickRecordingStatusCard(
                     imageVector = Icons.Default.FiberManualRecord,
                     contentDescription = "Ready to Record",
                     modifier = Modifier.size(64.dp),
-                    tint = Color(0xFF4CAF50)
+                    tint = Color(0xFF4CAF50),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Ready to Record",
                     style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = "Tap to start quick GSR recording",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
                     onClick = onStartRecording,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF4CAF50)
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF4CAF50),
+                        ),
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = "Start Recording")
                     Spacer(modifier = Modifier.width(8.dp))
@@ -231,52 +238,54 @@ fun QuickRecordingStatusCard(
 fun GSRDeviceStatusCard(
     deviceStatus: String,
     signalQuality: Int,
-    batteryLevel: Int?
+    batteryLevel: Int?,
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
                     imageVector = Icons.Default.Sensors,
                     contentDescription = "Sensor Status: $deviceStatus",
-                    tint = when (deviceStatus) {
-                        "Connected" -> Color(0xFF4CAF50)
-                        "Connecting" -> Color(0xFFFF9800)
-                        else -> Color(0xFFF44336)
-                    }
+                    tint =
+                        when (deviceStatus) {
+                            "Connected" -> Color(0xFF4CAF50)
+                            "Connecting" -> Color(0xFFFF9800)
+                            else -> Color(0xFFF44336)
+                        },
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "GSR Device",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
                     )
                     Text(
                         text = deviceStatus,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = when (deviceStatus) {
-                            "Connected" -> Color(0xFF4CAF50)
-                            "Connecting" -> Color(0xFFFF9800)
-                            else -> Color(0xFFF44336)
-                        }
+                        color =
+                            when (deviceStatus) {
+                                "Connected" -> Color(0xFF4CAF50)
+                                "Connecting" -> Color(0xFFFF9800)
+                                else -> Color(0xFFF44336)
+                            },
                     )
                 }
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = "Quality: $signalQuality%",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
                     )
                     if (batteryLevel != null) {
                         Text(
                             text = "Battery: $batteryLevel%",
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodySmall,
                         )
                     }
                 }
@@ -286,11 +295,12 @@ fun GSRDeviceStatusCard(
                 LinearProgressIndicator(
                     progress = { signalQuality / 100f },
                     modifier = Modifier.fillMaxWidth(),
-                    color = when {
-                        signalQuality > 80 -> Color(0xFF4CAF50)
-                        signalQuality > 60 -> Color(0xFFFF9800)
-                        else -> Color(0xFFF44336)
-                    }
+                    color =
+                        when {
+                            signalQuality > 80 -> Color(0xFF4CAF50)
+                            signalQuality > 60 -> Color(0xFFFF9800)
+                            else -> Color(0xFFF44336)
+                        },
                 )
             }
         }
@@ -301,23 +311,23 @@ fun GSRDeviceStatusCard(
 fun LiveGSRDataCard(
     currentValue: Double,
     averageValue: Double,
-    recentValues: List<Double>
+    recentValues: List<Double>,
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = "Live GSR Data",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
             )
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 QuickStatItem("Current", String.format("%.2f µS", currentValue))
                 QuickStatItem("Average", String.format("%.2f µS", averageValue))
@@ -325,22 +335,23 @@ fun LiveGSRDataCard(
                     "Range",
                     String.format(
                         "%.1f",
-                        recentValues.maxOrNull()?.minus(recentValues.minOrNull() ?: 0.0) ?: 0.0
-                    )
+                        recentValues.maxOrNull()?.minus(recentValues.minOrNull() ?: 0.0) ?: 0.0,
+                    ),
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
             // Simple data visualization placeholder
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(80.dp),
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = "Live GSR Signal Visualization",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
                 )
             }
         }
@@ -352,33 +363,33 @@ fun QuickSettingsCard(
     sampleRate: Int,
     autoSave: Boolean,
     onSampleRateChange: (Int) -> Unit,
-    onAutoSaveToggle: () -> Unit
+    onAutoSaveToggle: () -> Unit,
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = "Quick Settings",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
             )
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text("Sample Rate: ${sampleRate} Hz")
+                Text("Sample Rate: $sampleRate Hz")
                 Row {
                     listOf(128, 256, 512).forEach { rate ->
                         FilterChip(
                             onClick = { onSampleRateChange(rate) },
                             label = { Text("$rate") },
                             selected = sampleRate == rate,
-                            modifier = Modifier.padding(horizontal = 2.dp)
+                            modifier = Modifier.padding(horizontal = 2.dp),
                         )
                     }
                 }
@@ -387,12 +398,12 @@ fun QuickSettingsCard(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text("Auto-save Sessions")
                 Switch(
                     checked = autoSave,
-                    onCheckedChange = { onAutoSaveToggle() }
+                    onCheckedChange = { onAutoSaveToggle() },
                 )
             }
         }
@@ -403,31 +414,31 @@ fun QuickSettingsCard(
 fun QuickSessionCard(
     session: QuickSession,
     onView: () -> Unit,
-    onExport: () -> Unit
+    onExport: () -> Unit,
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = Icons.Default.Timeline,
                 contentDescription = "GSR Data",
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = session.name,
                     style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
                 )
                 Text(
                     text = "${formatDuration(session.duration)} • ${session.sampleCount} samples",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 )
             }
             IconButton(onClick = onView) {
@@ -441,20 +452,23 @@ fun QuickSessionCard(
 }
 
 @Composable
-fun QuickStatItem(label: String, value: String) {
+fun QuickStatItem(
+    label: String,
+    value: String,
+) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
         Text(
             text = label,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
         )
     }
 }
@@ -470,7 +484,7 @@ data class QuickSession(
     val name: String,
     val duration: Long,
     val sampleCount: Int,
-    val timestamp: Long
+    val timestamp: Long,
 )
 
 data class GSRQuickRecordingUiState(
@@ -485,7 +499,7 @@ data class GSRQuickRecordingUiState(
     val recentGSRValues: List<Double> = emptyList(),
     val sampleRate: Int = 256,
     val autoSave: Boolean = true,
-    val recentSessions: List<QuickSession> = emptyList()
+    val recentSessions: List<QuickSession> = emptyList(),
 )
 
 // ViewModel
@@ -493,12 +507,14 @@ class GSRQuickRecordingViewModel : AppBaseViewModel() {
     private val _recordingState = MutableStateFlow(GSRQuickRecordingUiState())
     val recordingState: StateFlow<GSRQuickRecordingUiState> = _recordingState.asStateFlow()
     private var recordingJob: Job? = null
+
     fun initializeQuickRecording() {
-        val mockSessions = listOf(
-            QuickSession("Quick Session 1", 180000, 46080, System.currentTimeMillis() - 3600000),
-            QuickSession("Quick Session 2", 120000, 30720, System.currentTimeMillis() - 7200000),
-            QuickSession("Quick Session 3", 240000, 61440, System.currentTimeMillis() - 10800000)
-        )
+        val mockSessions =
+            listOf(
+                QuickSession("Quick Session 1", 180000, 46080, System.currentTimeMillis() - 3600000),
+                QuickSession("Quick Session 2", 120000, 30720, System.currentTimeMillis() - 7200000),
+                QuickSession("Quick Session 3", 240000, 61440, System.currentTimeMillis() - 10800000),
+            )
         _recordingState.value = _recordingState.value.copy(recentSessions = mockSessions)
     }
 
@@ -507,19 +523,21 @@ class GSRQuickRecordingViewModel : AppBaseViewModel() {
         // Cancel any existing recording job
         recordingJob?.cancel()
         // Start recording simulation on main dispatcher
-        recordingJob = viewModelScope.launch(Dispatchers.Main) {
-            while (_recordingState.value.isRecording) {
-                delay(1000)
-                val currentState = _recordingState.value
-                _recordingState.value = currentState.copy(
-                    recordingDuration = currentState.recordingDuration + 1000,
-                    samplesCollected = currentState.samplesCollected + currentState.sampleRate,
-                    currentGSRValue = Random.nextDouble(5.0, 15.0),
-                    averageGSRValue = Random.nextDouble(8.0, 12.0),
-                    recentGSRValues = currentState.recentGSRValues.takeLast(10) + Random.nextDouble(5.0, 15.0)
-                )
+        recordingJob =
+            viewModelScope.launch(Dispatchers.Main) {
+                while (_recordingState.value.isRecording) {
+                    delay(1000)
+                    val currentState = _recordingState.value
+                    _recordingState.value =
+                        currentState.copy(
+                            recordingDuration = currentState.recordingDuration + 1000,
+                            samplesCollected = currentState.samplesCollected + currentState.sampleRate,
+                            currentGSRValue = Random.nextDouble(5.0, 15.0),
+                            averageGSRValue = Random.nextDouble(8.0, 12.0),
+                            recentGSRValues = currentState.recentGSRValues.takeLast(10) + Random.nextDouble(5.0, 15.0),
+                        )
+                }
             }
-        }
     }
 
     fun stopQuickRecording() {

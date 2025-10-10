@@ -18,9 +18,9 @@ import com.energy.iruvc.sdkisp.LibIRTemp
 import com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult
 import com.energy.iruvc.utils.CommonParams.IRPROCSRCFMTType
 import com.energy.iruvc.utils.Line
+import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper.Companion.correct
 import com.mpdc4gsr.libunified.ir.utils.TempUtils
-import com.mpdc4gsr.libunified.app.utils.LibraryLogger
 
 class TemperatureHikView : TemperatureBaseView {
     @Volatile
@@ -43,6 +43,7 @@ class TemperatureHikView : TemperatureBaseView {
     private var wantAddPoint: Point? = null
     private var wantAddLine: Line? = null
     private var wantAddRect: Rect? = null
+
     fun addSourcePoint(point: Point) {
         if (xScale > 0 && yScale > 0) {
             synchronized(this) {
@@ -95,40 +96,45 @@ class TemperatureHikView : TemperatureBaseView {
     private var beforeTime: Long = 0
     private val sourceTempArray = ByteArray(256 * 192 * 2)
     private val rotateTempArray = ByteArray(256 * 192 * 2)
+
     fun refreshTemp(newData: ByteArray) {
         val currentTime: Long = System.currentTimeMillis()
         if (currentTime - beforeTime > 1000) {
             beforeTime = currentTime
             System.arraycopy(newData, 0, sourceTempArray, 0, sourceTempArray.size)
             when (rotateAngle) {
-                90 -> LibIRProcess.rotateLeft90(
-                    sourceTempArray,
-                    imageRes,
-                    IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
-                    rotateTempArray
-                )
+                90 ->
+                    LibIRProcess.rotateLeft90(
+                        sourceTempArray,
+                        imageRes,
+                        IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
+                        rotateTempArray,
+                    )
 
-                180 -> LibIRProcess.rotate180(
-                    sourceTempArray,
-                    imageRes,
-                    IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
-                    rotateTempArray
-                )
+                180 ->
+                    LibIRProcess.rotate180(
+                        sourceTempArray,
+                        imageRes,
+                        IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
+                        rotateTempArray,
+                    )
 
-                270 -> LibIRProcess.rotateRight90(
-                    sourceTempArray,
-                    imageRes,
-                    IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
-                    rotateTempArray
-                )
+                270 ->
+                    LibIRProcess.rotateRight90(
+                        sourceTempArray,
+                        imageRes,
+                        IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14,
+                        rotateTempArray,
+                    )
 
-                else -> System.arraycopy(
-                    sourceTempArray,
-                    0,
-                    rotateTempArray,
-                    0,
-                    rotateTempArray.size
-                )
+                else ->
+                    System.arraycopy(
+                        sourceTempArray,
+                        0,
+                        rotateTempArray,
+                        0,
+                        rotateTempArray.size,
+                    )
             }
             libIRTemp.setTempData(rotateTempArray)
             if (mode != Mode.CLEAR) {
@@ -143,14 +149,14 @@ class TemperatureHikView : TemperatureBaseView {
         context,
         attrs,
         defStyleAttr,
-        0
+        0,
     )
 
     constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : super(
         context,
         attrs,
@@ -273,6 +279,7 @@ class TemperatureHikView : TemperatureBaseView {
     private inner class CalculateThread : HandlerThread("Calculate Thread") {
         private val mainHandler = Handler(Looper.getMainLooper())
         private var currentHandler: Handler? = null
+
         override fun start() {
             super.start()
             val looper: Looper = getLooper() ?: return
@@ -288,24 +295,31 @@ class TemperatureHikView : TemperatureBaseView {
             currentHandler?.sendEmptyMessage(0)
         }
 
-        private inner class MyHandler(looper: Looper) : Handler(looper) {
+        private inner class MyHandler(
+            looper: Looper,
+        ) : Handler(looper) {
             override fun handleMessage(msg: Message) {
                 val fullResult = libIRTemp.getTemperatureOfRect(Rect(0, 0, imageWidth, imageHeight))
                 mainHandler.post {
                     onTempChangeListener?.invoke(
                         fullResult.minTemperature,
-                        fullResult.maxTemperature
+                        fullResult.maxTemperature,
                     )
                 }
                 if (mode == Mode.CLEAR) {
                     return
                 }
-                val centerResult = if (isShowFull) libIRTemp.getTemperatureOfPoint(
-                    Point(
-                        imageWidth / 2,
-                        imageHeight / 2
-                    )
-                ) else null
+                val centerResult =
+                    if (isShowFull) {
+                        libIRTemp.getTemperatureOfPoint(
+                            Point(
+                                imageWidth / 2,
+                                imageHeight / 2,
+                            ),
+                        )
+                    } else {
+                        null
+                    }
                 var trendResult: TemperatureSampleResult? = null
                 trendLine?.let {
                     val startPoint =
@@ -314,7 +328,11 @@ class TemperatureHikView : TemperatureBaseView {
                     try {
                         trendResult = libIRTemp.getTemperatureOfLine(Line(startPoint, endPoint))
                     } catch (exception: IllegalArgumentException) {
-                        LibraryLogger.e("TemperatureHikView", "Unexpected IllegalArgumentException in TemperatureHikView catch block", exception)
+                        LibraryLogger.e(
+                            "TemperatureHikView",
+                            "Unexpected IllegalArgumentException in TemperatureHikView catch block",
+                            exception,
+                        )
                     }
                     val tempList: List<Float> =
                         TempUtils.getLineTemps(startPoint, endPoint, rotateTempArray, imageWidth)
@@ -329,7 +347,11 @@ class TemperatureHikView : TemperatureBaseView {
                     try {
                         pointResultList.add(libIRTemp.getTemperatureOfPoint(sourcePoint))
                     } catch (exception: IllegalArgumentException) {
-                        LibraryLogger.e("TemperatureHikView", "Unexpected IllegalArgumentException in TemperatureHikView catch block", exception)
+                        LibraryLogger.e(
+                            "TemperatureHikView",
+                            "Unexpected IllegalArgumentException in TemperatureHikView catch block",
+                            exception,
+                        )
                     }
                 }
                 val lineList: List<Line> = getLineListSafe()
@@ -343,7 +365,11 @@ class TemperatureHikView : TemperatureBaseView {
                     try {
                         lineResultList.add(libIRTemp.getTemperatureOfLine(sourceLine))
                     } catch (exception: IllegalArgumentException) {
-                        LibraryLogger.e("TemperatureHikView", "Unexpected IllegalArgumentException in TemperatureHikView catch block", exception)
+                        LibraryLogger.e(
+                            "TemperatureHikView",
+                            "Unexpected IllegalArgumentException in TemperatureHikView catch block",
+                            exception,
+                        )
                     }
                 }
                 val rectList: List<Rect> = getRectListSafe()
@@ -359,17 +385,22 @@ class TemperatureHikView : TemperatureBaseView {
                     try {
                         rectResultList.add(libIRTemp.getTemperatureOfRect(sourceRect))
                     } catch (exception: IllegalArgumentException) {
-                        LibraryLogger.e("TemperatureHikView", "Unexpected IllegalArgumentException in TemperatureHikView catch block", exception)
+                        LibraryLogger.e(
+                            "TemperatureHikView",
+                            "Unexpected IllegalArgumentException in TemperatureHikView catch block",
+                            exception,
+                        )
                     }
                 }
-                tempInfo = TempInfo(
-                    centerResult,
-                    if (isShowFull) fullResult else null,
-                    trendResult,
-                    pointResultList,
-                    lineResultList,
-                    rectResultList
-                )
+                tempInfo =
+                    TempInfo(
+                        centerResult,
+                        if (isShowFull) fullResult else null,
+                        trendResult,
+                        pointResultList,
+                        lineResultList,
+                        rectResultList,
+                    )
                 mainHandler.post {
                     onTempResultListener?.invoke(tempInfo)
                 }

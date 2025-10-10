@@ -21,9 +21,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 
 class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
-    }
+    override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -42,7 +40,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             Text(
                                 "Monitor Chart",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color.White,
                             )
                         },
                         navigationIcon = {
@@ -50,7 +48,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
@@ -59,33 +57,36 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 Icon(
                                     if (showTemperatureOverlay) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                                     contentDescription = if (showTemperatureOverlay) "Hide Overlay" else "Show Overlay",
-                                    tint = Color.White
+                                    tint = Color.White,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Black
-                        )
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Black,
+                            ),
                     )
                 },
-                containerColor = Color.Black
+                containerColor = Color.Black,
             ) { paddingValues ->
                 val context = androidx.compose.ui.platform.LocalContext.current
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color.Black)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .background(Color.Black),
                 ) {
                     // Main thermal camera view with overlay
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.7f)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(0.7f),
                     ) {
                         // Thermal camera view
                         ThermalCameraView(
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
                         )
                         // Temperature overlay
                         if (showTemperatureOverlay) {
@@ -93,28 +94,31 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 maxTemp = maxTemp,
                                 minTemp = minTemp,
                                 avgTemp = avgTemp,
-                                modifier = Modifier
-                                    .align(Alignment.TopStart)
-                                    .padding(16.dp)
+                                modifier =
+                                    Modifier
+                                        .align(Alignment.TopStart)
+                                        .padding(16.dp),
                             )
                         }
                         // Recording indicator
                         if (isRecording) {
                             RecordingIndicator(
                                 recordingTime = recordingTime,
-                                modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .padding(16.dp)
+                                modifier =
+                                    Modifier
+                                        .align(Alignment.TopEnd)
+                                        .padding(16.dp),
                             )
                         }
                     }
                     // Control panel and chart data
                     LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.3f)
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .weight(0.3f)
+                                .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         // Recording controls
                         item {
@@ -124,7 +128,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     isRecording = !isRecording
                                     if (!isRecording) recordingTime = 0L
                                 },
-                                context = context
+                                context = context,
                             )
                         }
                         // Temperature statistics
@@ -132,7 +136,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             TemperatureStatsCard(
                                 maxTemp = maxTemp,
                                 minTemp = minTemp,
-                                avgTemp = avgTemp
+                                avgTemp = avgTemp,
                             )
                         }
                         // Chart controls
@@ -160,25 +164,24 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 }
 
 @Composable
-private fun ThermalCameraView(
-    modifier: Modifier = Modifier
-) {
+private fun ThermalCameraView(modifier: Modifier = Modifier) {
     // Placeholder for thermal camera view
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF0D1117)
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF0D1117),
+            ),
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 "Thermal Camera Feed\n(Real-time monitoring)",
                 color = Color(0xFF7D8590),
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
     }
@@ -189,24 +192,25 @@ private fun TemperatureOverlay(
     maxTemp: Float,
     minTemp: Float,
     avgTemp: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black.copy(alpha = 0.7f)
-        ),
-        shape = RoundedCornerShape(8.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Black.copy(alpha = 0.7f),
+            ),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
                 "Temperature",
                 color = Color.White,
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             TemperatureItem("Max", maxTemp, Color(0xFFFF4444))
             TemperatureItem("Min", minTemp, Color(0xFF4444FF))
@@ -219,22 +223,22 @@ private fun TemperatureOverlay(
 private fun TemperatureItem(
     label: String,
     temperature: Float,
-    color: Color
+    color: Color,
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.width(80.dp)
+        modifier = Modifier.width(80.dp),
     ) {
         Text(
             label,
             color = Color(0xFF7D8590),
-            fontSize = 10.sp
+            fontSize = 10.sp,
         )
         Text(
             String.format("%.1f°C", temperature),
             color = color,
             fontSize = 10.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
     }
 }
@@ -242,25 +246,26 @@ private fun TemperatureItem(
 @Composable
 private fun RecordingIndicator(
     recordingTime: Long,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Red.copy(alpha = 0.9f)
-        ),
-        shape = RoundedCornerShape(8.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color.Red.copy(alpha = 0.9f),
+            ),
+        shape = RoundedCornerShape(8.dp),
     ) {
         Row(
             modifier = Modifier.padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Icon(
                 Icons.Default.FiberManualRecord,
                 contentDescription = "Recording",
                 tint = Color.White,
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(16.dp),
             )
             val minutes = recordingTime / 60
             val seconds = recordingTime % 60
@@ -268,7 +273,7 @@ private fun RecordingIndicator(
                 String.format("REC %02d:%02d", minutes, seconds),
                 color = Color.White,
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
     }
@@ -278,57 +283,62 @@ private fun RecordingIndicator(
 private fun RecordingControls(
     isRecording: Boolean,
     onStartStop: () -> Unit,
-    context: android.content.Context
+    context: android.content.Context,
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Button(
                 onClick = onStartStop,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isRecording) Color.Red else Color(0xFFFF6B35)
-                ),
-                shape = RoundedCornerShape(8.dp)
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = if (isRecording) Color.Red else Color(0xFFFF6B35),
+                    ),
+                shape = RoundedCornerShape(8.dp),
             ) {
                 Icon(
                     if (isRecording) Icons.Default.Stop else Icons.Default.PlayArrow,
                     contentDescription = if (isRecording) "Stop" else "Start",
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     if (isRecording) "Stop" else "Start",
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
             Button(
                 onClick = {
                     // TODO: Save chart as image
-                    android.widget.Toast.makeText(
-                        context,
-                        "Saving chart...",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
+                    android.widget.Toast
+                        .makeText(
+                            context,
+                            "Saving chart...",
+                            android.widget.Toast.LENGTH_SHORT,
+                        ).show()
                 },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF6B7280)
-                ),
-                shape = RoundedCornerShape(8.dp)
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF6B7280),
+                    ),
+                shape = RoundedCornerShape(8.dp),
             ) {
                 Icon(
                     Icons.Default.Save,
                     contentDescription = "Save",
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Save", fontWeight = FontWeight.Bold)
@@ -341,29 +351,31 @@ private fun RecordingControls(
 private fun TemperatureStatsCard(
     maxTemp: Float,
     minTemp: Float,
-    avgTemp: Float
+    avgTemp: Float,
 ) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Text(
                 "Temperature Statistics",
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 StatItem("Maximum", maxTemp, Color(0xFFFF4444))
                 StatItem("Minimum", minTemp, Color(0xFF4444FF))
@@ -377,21 +389,21 @@ private fun TemperatureStatsCard(
 private fun StatItem(
     label: String,
     value: Float,
-    color: Color
+    color: Color,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             String.format("%.1f°C", value),
             color = color,
             fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Text(
             label,
             color = Color(0xFF7D8590),
-            fontSize = 12.sp
+            fontSize = 12.sp,
         )
     }
 }
@@ -399,72 +411,80 @@ private fun StatItem(
 @Composable
 private fun ChartControlsCard(context: android.content.Context) {
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF21262D)
-        ),
-        shape = RoundedCornerShape(12.dp)
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF21262D),
+            ),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Text(
                 "Chart Controls",
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 OutlinedButton(
                     onClick = {
                         // TODO: Export monitoring data
-                        android.widget.Toast.makeText(
-                            context,
-                            "Exporting data...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Exporting data...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color.White
-                    ),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF7D8590))
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color.White,
+                        ),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF7D8590)),
                 ) {
                     Text("Export", fontSize = 12.sp)
                 }
                 OutlinedButton(
                     onClick = {
                         // TODO: Clear monitoring data
-                        android.widget.Toast.makeText(
-                            context,
-                            "Clearing data...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Clearing data...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color.White
-                    ),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF7D8590))
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color.White,
+                        ),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF7D8590)),
                 ) {
                     Text("Clear", fontSize = 12.sp)
                 }
                 OutlinedButton(
                     onClick = {
                         // TODO: Open monitoring settings
-                        android.widget.Toast.makeText(
-                            context,
-                            "Opening settings...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Opening settings...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color.White
-                    ),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF7D8590))
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color.White,
+                        ),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF7D8590)),
                 ) {
                     Text("Settings", fontSize = 12.sp)
                 }

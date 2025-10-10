@@ -29,7 +29,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 class ThermalFragmentViewModel(
-    private val context: Context? = null
+    private val context: Context? = null,
 ) : BaseViewModel() {
     // ThermalMonitoringUiState data class for Compose UI - holds monitoring-related state
     data class ThermalMonitoringUiState(
@@ -40,7 +40,7 @@ class ThermalFragmentViewModel(
         val averageTemperature: Float? = null,
         val isDeviceConnected: Boolean = false,
         val isRecording: Boolean = false,
-        val alertCount: Int = 0
+        val alertCount: Int = 0,
     )
 
     // Thermal image processing state
@@ -104,14 +104,14 @@ class ThermalFragmentViewModel(
             combine(
                 _thermalImageState,
                 _temperatureAnalysis,
-                _fenceState
+                _fenceState,
             ) { imageState, tempAnalysis, fenceState ->
                 ThermalProcessingUiState(
                     isProcessing = imageState.isProcessing,
                     hasValidImage = imageState.bitmap != null,
                     temperatureInfo = tempAnalysis,
                     fenceActive = fenceState.isActive,
-                    processingProgress = imageState.processingProgress
+                    processingProgress = imageState.processingProgress,
                 )
             }.collect { newUiState ->
                 _processingUiState.value = newUiState
@@ -131,41 +131,43 @@ class ThermalFragmentViewModel(
     }
 
     // Thermal image processing methods
-    suspend fun processThermalBitmap(bitmap: Bitmap): ProcessedThermalResult {
-        return withContext(Dispatchers.Default) {
-            _thermalImageState.value = _thermalImageState.value.copy(
-                isProcessing = true,
-                processingProgress = 0f
-            )
+    suspend fun processThermalBitmap(bitmap: Bitmap): ProcessedThermalResult =
+        withContext(Dispatchers.Default) {
+            _thermalImageState.value =
+                _thermalImageState.value.copy(
+                    isProcessing = true,
+                    processingProgress = 0f,
+                )
             try {
                 val processedBitmap = applyThermalProcessing(bitmap)
                 val temperatureData = extractTemperatureData(bitmap)
                 val analysis = performTemperatureAnalysis(temperatureData)
-                _thermalImageState.value = _thermalImageState.value.copy(
-                    bitmap = processedBitmap,
-                    isProcessing = false,
-                    processingProgress = 1f
-                )
+                _thermalImageState.value =
+                    _thermalImageState.value.copy(
+                        bitmap = processedBitmap,
+                        isProcessing = false,
+                        processingProgress = 1f,
+                    )
                 _temperatureAnalysis.value = analysis
                 ProcessedThermalResult(
                     processedBitmap = processedBitmap,
                     temperatureAnalysis = analysis,
-                    success = true
+                    success = true,
                 )
             } catch (e: Exception) {
-                _thermalImageState.value = _thermalImageState.value.copy(
-                    isProcessing = false,
-                    processingProgress = 0f
-                )
+                _thermalImageState.value =
+                    _thermalImageState.value.copy(
+                        isProcessing = false,
+                        processingProgress = 0f,
+                    )
                 ProcessedThermalResult(
                     processedBitmap = null,
                     temperatureAnalysis = TemperatureAnalysis(),
                     success = false,
-                    error = e.message
+                    error = e.message,
                 )
             }
         }
-    }
 
     private fun applyThermalProcessing(bitmap: Bitmap): Bitmap {
         // Apply thermal image processing algorithms
@@ -177,15 +179,16 @@ class ThermalFragmentViewModel(
     private fun extractTemperatureData(bitmap: Bitmap): FloatArray {
         val pixels = IntArray(bitmap.width * bitmap.height)
         bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
-        return pixels.map { pixel: Int ->
-            val red = (pixel shr 16) and 0xFF
-            val green = (pixel shr 8) and 0xFF
-            val blue = pixel and 0xFF
-            val intensity = (red * 0.3f + green * 0.59f + blue * 0.11f) / 255f
-            val minTemp = -20f
-            val maxTemp = 120f
-            minTemp + (intensity * (maxTemp - minTemp))
-        }.toFloatArray()
+        return pixels
+            .map { pixel: Int ->
+                val red = (pixel shr 16) and 0xFF
+                val green = (pixel shr 8) and 0xFF
+                val blue = pixel and 0xFF
+                val intensity = (red * 0.3f + green * 0.59f + blue * 0.11f) / 255f
+                val minTemp = -20f
+                val maxTemp = 120f
+                minTemp + (intensity * (maxTemp - minTemp))
+            }.toFloatArray()
     }
 
     private fun performTemperatureAnalysis(temperatureData: FloatArray): TemperatureAnalysis {
@@ -209,13 +212,14 @@ class ThermalFragmentViewModel(
             coldSpotCount = coldSpots.size,
             temperatureTrend = temperatureTrend,
             dataQuality = assessDataQuality(temperatureData),
-            isValid = true
+            isValid = true,
         )
     }
 
-    private fun calculateVariance(data: FloatArray, mean: Float): Float {
-        return data.map { (it - mean) * (it - mean) }.average().toFloat()
-    }
+    private fun calculateVariance(
+        data: FloatArray,
+        mean: Float,
+    ): Float = data.map { (it - mean) * (it - mean) }.average().toFloat()
 
     private fun detectHotSpots(temperatureData: FloatArray): List<HotSpot> {
         val threshold = temperatureData.maxOrNull()?.let { it * 0.8f } ?: 0f
@@ -264,45 +268,55 @@ class ThermalFragmentViewModel(
 
     // Fence management methods
     fun activateFence(fenceType: FenceType) {
-        _fenceState.value = _fenceState.value.copy(
-            isActive = true,
-            fenceType = fenceType,
-            measurements = emptyList()
-        )
+        _fenceState.value =
+            _fenceState.value.copy(
+                isActive = true,
+                fenceType = fenceType,
+                measurements = emptyList(),
+            )
     }
 
     fun deactivateFence() {
-        _fenceState.value = _fenceState.value.copy(
-            isActive = false,
-            fenceType = null,
-            measurements = emptyList()
-        )
+        _fenceState.value =
+            _fenceState.value.copy(
+                isActive = false,
+                fenceType = null,
+                measurements = emptyList(),
+            )
     }
 
-    fun addFenceMeasurement(x: Int, y: Int, temperature: Float) {
+    fun addFenceMeasurement(
+        x: Int,
+        y: Int,
+        temperature: Float,
+    ) {
         val currentMeasurements = _fenceState.value.measurements.toMutableList()
         currentMeasurements.add(FenceMeasurement(x, y, temperature))
-        _fenceState.value = _fenceState.value.copy(
-            measurements = currentMeasurements
-        )
+        _fenceState.value =
+            _fenceState.value.copy(
+                measurements = currentMeasurements,
+            )
     }
 
     // Video recording methods
     fun startVideoRecording(outputFile: File) {
-        _videoRecordingState.value = _videoRecordingState.value.copy(
-            isRecording = true,
-            outputFile = outputFile,
-            recordingStartTime = System.currentTimeMillis()
-        )
+        _videoRecordingState.value =
+            _videoRecordingState.value.copy(
+                isRecording = true,
+                outputFile = outputFile,
+                recordingStartTime = System.currentTimeMillis(),
+            )
     }
 
     fun stopVideoRecording() {
-        val recordingDuration = System.currentTimeMillis() -
+        val recordingDuration =
+            System.currentTimeMillis() -
                 (_videoRecordingState.value.recordingStartTime ?: 0L)
-        _videoRecordingState.value = _videoRecordingState.value.copy(
-            isRecording = false,
-            recordingDuration = recordingDuration
-        )
+        _videoRecordingState.value =
+            _videoRecordingState.value.copy(
+                isRecording = false,
+                recordingDuration = recordingDuration,
+            )
     }
 
     // Public methods for UI interaction
@@ -319,43 +333,52 @@ class ThermalFragmentViewModel(
                     surfaceView.holder.setFixedSize(256, 192)
                 }
                 syncBitmap = SynchronizedBitmap()
-                val connectCallback = object : ConnectCallback {
-                    override fun onCameraOpened(camera: UVCCamera?) {
-                        _connectionStatus.value = "Connected"
-                        _temperatureData.value = TemperatureData(
-                            centerTemp = "25.0°C",
-                            maxTemp = "30.0°C",
-                            minTemp = "20.0°C"
-                        )
-                    }
+                val connectCallback =
+                    object : ConnectCallback {
+                        override fun onCameraOpened(camera: UVCCamera?) {
+                            _connectionStatus.value = "Connected"
+                            _temperatureData.value =
+                                TemperatureData(
+                                    centerTemp = "25.0°C",
+                                    maxTemp = "30.0°C",
+                                    minTemp = "20.0°C",
+                                )
+                        }
 
-                    override fun onIRCMDCreate(cmd: IRCMD?) {
-                        ircmd = cmd
-                        cmd?.let {
-                            it.setMirror(false)
-                            it.setAutoShutter(true)
-                            it.setPropDdeLevel(128)
-                            it.setContrast(128)
+                        override fun onIRCMDCreate(cmd: IRCMD?) {
+                            ircmd = cmd
+                            cmd?.let {
+                                it.setMirror(false)
+                                it.setAutoShutter(true)
+                                it.setPropDdeLevel(128)
+                                it.setContrast(128)
+                            }
                         }
                     }
-                }
-                val usbMonitorCallback = object : USBMonitorCallback {
-                    override fun onAttach() {}
-                    override fun onGranted() {}
-                    override fun onDettach() {}
-                    override fun onCancel() {}
-                    override fun onConnect() {}
-                    override fun onDisconnect() {}
-                }
-                iruvctc = IRUVCTC(
-                    256,
-                    192,
-                    context,
-                    syncBitmap!!,
-                    CommonParams.DataFlowMode.TEMP_OUTPUT,
-                    connectCallback,
-                    usbMonitorCallback
-                )
+                val usbMonitorCallback =
+                    object : USBMonitorCallback {
+                        override fun onAttach() {}
+
+                        override fun onGranted() {}
+
+                        override fun onDettach() {}
+
+                        override fun onCancel() {}
+
+                        override fun onConnect() {}
+
+                        override fun onDisconnect() {}
+                    }
+                iruvctc =
+                    IRUVCTC(
+                        256,
+                        192,
+                        context,
+                        syncBitmap!!,
+                        CommonParams.DataFlowMode.TEMP_OUTPUT,
+                        connectCallback,
+                        usbMonitorCallback,
+                    )
                 iruvctc?.registerUSB()
                 rawWidth = 256
                 rawHeight = 192
@@ -373,17 +396,18 @@ class ThermalFragmentViewModel(
                 val fileName = "thermal_photo_$timestamp.jpg"
                 val thermalState = _thermalImageState.value
                 val tempAnalysis = _temperatureAnalysis.value
-                val metadata = mapOf(
-                    "timestamp" to timestamp,
-                    "centerTemp" to tempAnalysis.averageTemperature,
-                    "maxTemp" to tempAnalysis.maxTemperature,
-                    "minTemp" to tempAnalysis.minTemperature,
-                    "averageTemp" to tempAnalysis.averageTemperature,
-                    "deviceConnected" to (ircmd != null),
-                    "sdkInitialized" to (iruvctc != null)
-                )
+                val metadata =
+                    mapOf(
+                        "timestamp" to timestamp,
+                        "centerTemp" to tempAnalysis.averageTemperature,
+                        "maxTemp" to tempAnalysis.maxTemperature,
+                        "minTemp" to tempAnalysis.minTemperature,
+                        "averageTemp" to tempAnalysis.averageTemperature,
+                        "deviceConnected" to (ircmd != null),
+                        "sdkInitialized" to (iruvctc != null),
+                    )
                 _thermalProcessingAction.postValue(
-                    ThermalProcessingAction.PhotoCaptured(fileName, metadata)
+                    ThermalProcessingAction.PhotoCaptured(fileName, metadata),
                 )
             } catch (e: Exception) {
                 handleError(e)
@@ -401,10 +425,11 @@ class ThermalFragmentViewModel(
                 // Start recording
                 try {
                     // Create a temporary file for recording
-                    val outputFile = File.createTempFile(
-                        "thermal_recording_${System.currentTimeMillis()}",
-                        ".mp4"
-                    )
+                    val outputFile =
+                        File.createTempFile(
+                            "thermal_recording_${System.currentTimeMillis()}",
+                            ".mp4",
+                        )
                     startVideoRecording(outputFile)
                     _isRecording.value = true
                 } catch (e: Exception) {
@@ -413,7 +438,7 @@ class ThermalFragmentViewModel(
                     // Emit error event and log the exception
                     handleError(e)
                     _thermalProcessingAction.postValue(
-                        ThermalProcessingAction.RecordingError(e.message ?: "Failed to start recording")
+                        ThermalProcessingAction.RecordingError(e.message ?: "Failed to start recording"),
                     )
                 }
             }
@@ -423,11 +448,14 @@ class ThermalFragmentViewModel(
     fun openSettings() {
         // Open thermal camera settings
         _thermalProcessingAction.postValue(
-            ThermalProcessingAction.NavigateToSettings
+            ThermalProcessingAction.NavigateToSettings,
         )
     }
 
-    fun updateSurfaceDimensions(width: Int, height: Int) {
+    fun updateSurfaceDimensions(
+        width: Int,
+        height: Int,
+    ) {
         rawWidth = width
         rawHeight = height
     }
@@ -437,7 +465,7 @@ class ThermalFragmentViewModel(
         viewWidth: Int,
         viewHeight: Int,
         parentWidth: Int,
-        parentHeight: Int
+        parentHeight: Int,
     ): Pair<Float, Float> {
         if (rawWidth == 0 || rawHeight == 0) {
             return Pair(0f, 0f)
@@ -455,13 +483,13 @@ class ThermalFragmentViewModel(
     data class TemperatureData(
         val centerTemp: String = "--°C",
         val maxTemp: String = "--°C",
-        val minTemp: String = "--°C"
+        val minTemp: String = "--°C",
     )
 
     data class ThermalImageState(
         val bitmap: Bitmap? = null,
         val isProcessing: Boolean = false,
-        val processingProgress: Float = 0f
+        val processingProgress: Float = 0f,
     )
 
     data class TemperatureAnalysis(
@@ -473,20 +501,20 @@ class ThermalFragmentViewModel(
         val coldSpotCount: Int = 0,
         val temperatureTrend: TemperatureTrend = TemperatureTrend.STABLE,
         val dataQuality: DataQuality = DataQuality.POOR,
-        val isValid: Boolean = false
+        val isValid: Boolean = false,
     )
 
     data class FenceState(
         val isActive: Boolean = false,
         val fenceType: FenceType? = null,
-        val measurements: List<FenceMeasurement> = emptyList()
+        val measurements: List<FenceMeasurement> = emptyList(),
     )
 
     data class VideoRecordingState(
         val isRecording: Boolean = false,
         val outputFile: File? = null,
         val recordingStartTime: Long? = null,
-        val recordingDuration: Long = 0L
+        val recordingDuration: Long = 0L,
     )
 
     data class ThermalProcessingUiState(
@@ -494,33 +522,66 @@ class ThermalFragmentViewModel(
         val hasValidImage: Boolean = false,
         val temperatureInfo: TemperatureAnalysis = TemperatureAnalysis(),
         val fenceActive: Boolean = false,
-        val processingProgress: Float = 0f
+        val processingProgress: Float = 0f,
     )
 
     data class ProcessedThermalResult(
         val processedBitmap: Bitmap?,
         val temperatureAnalysis: TemperatureAnalysis,
         val success: Boolean,
-        val error: String? = null
+        val error: String? = null,
     )
 
-    data class HotSpot(val index: Int, val temperature: Float)
-    data class ColdSpot(val index: Int, val temperature: Float)
-    data class FenceMeasurement(val x: Int, val y: Int, val temperature: Float)
+    data class HotSpot(
+        val index: Int,
+        val temperature: Float,
+    )
+
+    data class ColdSpot(
+        val index: Int,
+        val temperature: Float,
+    )
+
+    data class FenceMeasurement(
+        val x: Int,
+        val y: Int,
+        val temperature: Float,
+    )
+
     enum class TemperatureTrend { RISING, FALLING, STABLE }
+
     enum class DataQuality { EXCELLENT, GOOD, FAIR, POOR }
+
     enum class FenceType { POINT, LINE, AREA }
+
     sealed class ThermalProcessingAction {
         object StartProcessing : ThermalProcessingAction()
-        object ProcessingComplete : ThermalProcessingAction()
-        data class ProcessingError(val message: String) : ThermalProcessingAction()
-        data class TemperatureAlert(val temperature: Float, val type: AlertType) :
-            ThermalProcessingAction()
 
-        data class PhotoCaptured(val fileName: String, val metadata: Map<String, Any>) : ThermalProcessingAction()
-        data class RecordingError(val message: String) : ThermalProcessingAction()
+        object ProcessingComplete : ThermalProcessingAction()
+
+        data class ProcessingError(
+            val message: String,
+        ) : ThermalProcessingAction()
+
+        data class TemperatureAlert(
+            val temperature: Float,
+            val type: AlertType,
+        ) : ThermalProcessingAction()
+
+        data class PhotoCaptured(
+            val fileName: String,
+            val metadata: Map<String, Any>,
+        ) : ThermalProcessingAction()
+
+        data class RecordingError(
+            val message: String,
+        ) : ThermalProcessingAction()
+
         object NavigateToSettings : ThermalProcessingAction()
-        data class RegionConfigured(val fenceType: FenceType) : ThermalProcessingAction()
+
+        data class RegionConfigured(
+            val fenceType: FenceType,
+        ) : ThermalProcessingAction()
     }
 
     enum class AlertType { HOT_SPOT, COLD_SPOT, TEMPERATURE_THRESHOLD }
@@ -531,13 +592,14 @@ class ThermalFragmentViewModel(
 
     // Monitoring state
     private val _isMonitoring = MutableStateFlow(false)
+
     private fun syncUiState() {
         viewModelScope.launch {
             combine(
                 _isMonitoring,
                 _temperatureAnalysis,
                 _connectionStatus,
-                _isRecording
+                _isRecording,
             ) { isMonitoring, tempAnalysis, connectionStatus, isRecording ->
                 ThermalMonitoringUiState(
                     isMonitoring = isMonitoring,
@@ -547,7 +609,7 @@ class ThermalFragmentViewModel(
                     averageTemperature = if (tempAnalysis.isValid) tempAnalysis.averageTemperature else null,
                     isDeviceConnected = connectionStatus == "Connected",
                     isRecording = isRecording,
-                    alertCount = tempAnalysis.hotSpotCount + tempAnalysis.coldSpotCount
+                    alertCount = tempAnalysis.hotSpotCount + tempAnalysis.coldSpotCount,
                 )
             }.collect { newUiState ->
                 _thermalUiState.value = newUiState
@@ -576,17 +638,19 @@ class ThermalFragmentViewModel(
         viewModelScope.launch {
             try {
                 val currentFence = _fenceState.value
-                val nextFenceType = when (currentFence.fenceType) {
-                    FenceType.POINT -> FenceType.LINE
-                    FenceType.LINE -> FenceType.AREA
-                    FenceType.AREA -> FenceType.POINT
-                    null -> FenceType.POINT
-                }
-                _fenceState.value = currentFence.copy(
-                    fenceType = nextFenceType
-                )
+                val nextFenceType =
+                    when (currentFence.fenceType) {
+                        FenceType.POINT -> FenceType.LINE
+                        FenceType.LINE -> FenceType.AREA
+                        FenceType.AREA -> FenceType.POINT
+                        null -> FenceType.POINT
+                    }
+                _fenceState.value =
+                    currentFence.copy(
+                        fenceType = nextFenceType,
+                    )
                 _thermalProcessingAction.postValue(
-                    ThermalProcessingAction.RegionConfigured(nextFenceType)
+                    ThermalProcessingAction.RegionConfigured(nextFenceType),
                 )
             } catch (e: Exception) {
                 handleError(e)

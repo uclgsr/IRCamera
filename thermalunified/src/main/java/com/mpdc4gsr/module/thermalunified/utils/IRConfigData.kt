@@ -3,45 +3,48 @@ package com.mpdc4gsr.module.thermalunified.utils
 import android.content.Context
 import com.mpdc4gsr.libunified.R as LibcoreR
 
-data class IRConfigData(val name: String, val value: String) {
+data class IRConfigData(
+    val name: String,
+    val value: String,
+) {
     companion object {
         fun irConfigData(context: Context): ArrayList<IRConfigData> =
             arrayListOf(
                 IRConfigData(
                     name = context.resources.getString(LibcoreR.string.reference_item1),
-                    value = "0.95"
+                    value = "0.95",
                 ),
                 IRConfigData(
                     name = context.resources.getString(LibcoreR.string.reference_item2),
-                    value = "0.94"
+                    value = "0.94",
                 ),
                 IRConfigData(
                     name = context.resources.getString(LibcoreR.string.reference_item3),
-                    value = "0.75"
+                    value = "0.75",
                 ),
                 IRConfigData(
                     name = context.resources.getString(LibcoreR.string.reference_item4),
-                    value = "0.98"
+                    value = "0.98",
                 ),
                 IRConfigData(
                     name = context.resources.getString(LibcoreR.string.reference_item5),
-                    value = "0.95"
+                    value = "0.95",
                 ),
                 IRConfigData(
                     name = context.resources.getString(LibcoreR.string.reference_item6),
-                    value = "0.95"
+                    value = "0.95",
                 ),
                 IRConfigData(
                     name = context.resources.getString(LibcoreR.string.reference_item7),
-                    value = "0.95"
+                    value = "0.95",
                 ),
                 IRConfigData(
                     name = context.resources.getString(LibcoreR.string.reference_item8),
-                    value = "0.90"
+                    value = "0.90",
                 ),
                 IRConfigData(
                     name = context.resources.getString(LibcoreR.string.reference_item9),
-                    value = "0.85"
+                    value = "0.85",
                 ),
             )
 
@@ -53,7 +56,8 @@ data class IRConfigData(val name: String, val value: String) {
             for (data in irConfigData(context)) {
                 if (emissivity.toString() == data.value) {
                     if (stringBuilder.isEmpty()) {
-                        stringBuilder.append(context.getString(LibcoreR.string.tc_temp_test_materials))
+                        stringBuilder
+                            .append(context.getString(LibcoreR.string.tc_temp_test_materials))
                             .append(" : ")
                     }
                     stringBuilder.append(data.name).append("/")

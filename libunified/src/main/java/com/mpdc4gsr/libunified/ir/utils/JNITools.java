@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.ir.utils;
 
-import android.util.Log;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -18,7 +17,6 @@ public class JNITools {
 
     public static byte[] diff2firstFrameU1(byte[] buffer, byte[] bufferB) {
         if (buffer == null || bufferB == null) {
-            Log.w(TAG, "Invalid input parameters for diff2firstFrameU1");
             return new byte[0];
         }
 
@@ -34,7 +32,6 @@ public class JNITools {
                 return OpencvTools.matToByteArray(diffMat);
             }
         } catch (Exception e) {
-            Log.e(TAG, "Error in diff2firstFrameU1 processing", e);
         }
 
         // Fallback to default size on error
@@ -43,7 +40,6 @@ public class JNITools {
 
     public static byte[] diff2firstFrameU4(byte[] baseImage, byte[] nextImage) {
         if (baseImage == null || nextImage == null) {
-            Log.w(TAG, "Invalid input parameters for diff2firstFrameU4");
             return new byte[0];
         }
 
@@ -59,7 +55,6 @@ public class JNITools {
                 return OpencvTools.matToByteArray(diffMat);
             }
         } catch (Exception e) {
-            Log.e(TAG, "Error in diff2firstFrameU4 processing", e);
         }
 
         // Fallback to default size on error
@@ -68,7 +63,6 @@ public class JNITools {
 
     public byte[] maxTempL(byte[] image, byte[] temperature, int width, int height, int flag) {
         if (image == null || temperature == null || width <= 0 || height <= 0) {
-            Log.w(TAG, "Invalid input parameters for maxTempL");
             return new byte[0];
         }
 
@@ -76,18 +70,15 @@ public class JNITools {
             // First try to use AC020 SDK from app/libs for professional thermal processing
             byte[] result = processWithAC020SDK(image, temperature, width, height, "maxtemp");
             if (result != null && result.length > 0) {
-                Log.v(TAG, "Maximum temperature tracking completed using AC020 SDK");
                 return result;
             }
 
             // Fallback to OpencvTools from libunified
             Mat opencvResult = OpencvTools.highTemTrack(image, temperature);
             if (opencvResult != null && !opencvResult.empty()) {
-                Log.v(TAG, "Maximum temperature tracking completed using OpencvTools");
                 return OpencvTools.matToByteArray(opencvResult);
             }
         } catch (Exception e) {
-            Log.e(TAG, "Error in maxTempL processing with app/libs", e);
         }
 
         // Final fallback to basic processing
@@ -96,7 +87,6 @@ public class JNITools {
 
     public byte[] lowTemTrack(byte[] image, byte[] temperature, int width, int height, int flag) {
         if (image == null || temperature == null || width <= 0 || height <= 0) {
-            Log.w(TAG, "Invalid input parameters for lowTemTrack");
             return new byte[0];
         }
 
@@ -104,18 +94,15 @@ public class JNITools {
             // Use AC020 SDK from app/libs for low temperature analysis
             byte[] result = processWithAC020SDK(image, temperature, width, height, "mintemp");
             if (result != null && result.length > 0) {
-                Log.v(TAG, "Minimum temperature tracking completed using AC020 SDK");
                 return result;
             }
 
             // Fallback to OpencvTools
             Mat opencvResult = OpencvTools.lowTemTrack(image, temperature);
             if (opencvResult != null && !opencvResult.empty()) {
-                Log.v(TAG, "Minimum temperature tracking completed using OpencvTools");
                 return OpencvTools.matToByteArray(opencvResult);
             }
         } catch (Exception e) {
-            Log.e(TAG, "Error in lowTemTrack processing with app/libs", e);
         }
 
         // Final fallback to basic processing
@@ -134,9 +121,7 @@ public class JNITools {
                 return invokeAC020Method(ac020Class, "processMinTemperature", image, temperature, width, height);
             }
         } catch (ClassNotFoundException e) {
-            Log.d(TAG, "AC020 SDK not available, using fallback");
         } catch (Exception e) {
-            Log.w(TAG, "AC020 SDK processing failed: " + e.getMessage());
         }
 
         return null;
@@ -148,7 +133,6 @@ public class JNITools {
             Object result = method.invoke(null, image, temperature, width, height);
             return (byte[]) result;
         } catch (Exception e) {
-            Log.w(TAG, "Failed to invoke AC020 method " + methodName + ": " + e.getMessage());
             return null;
         }
     }
@@ -165,7 +149,6 @@ public class JNITools {
             // Fallback to OpenCV processing
             return createBasicThermalVisualization(image, temperature, width, height, style);
         } catch (Exception e) {
-            Log.e(TAG, "Error in enhanced thermal visualization", e);
             return new byte[width * height * BGR_CHANNELS];
         }
     }
@@ -180,9 +163,7 @@ public class JNITools {
             Object result = processMethod.invoke(null, image, temperature, width, height, style);
             return (byte[]) result;
         } catch (ClassNotFoundException e) {
-            Log.d(TAG, "IRUtils library not available in current build");
         } catch (Exception e) {
-            Log.w(TAG, "IRUtils processing failed: " + e.getMessage());
         }
 
         return null;
@@ -196,7 +177,6 @@ public class JNITools {
 
     public byte[] diff2firstFrameByTempWH(int width, int height, byte[] firstTemp, byte[] temperature, byte[] image) {
         if (firstTemp == null || temperature == null || image == null || width <= 0 || height <= 0) {
-            Log.w(TAG, "Invalid input parameters for diff2firstFrameByTempWH");
             return new byte[0];
         }
 
@@ -215,7 +195,6 @@ public class JNITools {
                 return OpencvTools.matToByteArray(diffMat);
             }
         } catch (Exception e) {
-            Log.e(TAG, "Error in diff2firstFrameByTempWH processing", e);
         }
 
         // Fallback to empty array on error

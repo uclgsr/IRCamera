@@ -8,9 +8,9 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatSeekBar
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.compat.dpToPx
 import com.mpdc4gsr.libunified.compat.spToPx
-import com.mpdc4gsr.libunified.R
 import kotlin.math.roundToInt
 
 class Comm3DSeekBar : AppCompatSeekBar {
@@ -20,7 +20,7 @@ class Comm3DSeekBar : AppCompatSeekBar {
     private var mMaxHeight = 48
     private var mMinWidth = 24
     private var mMinHeight = 24
-    var level = 0;
+    var level = 0
 
     //
     private val mProgressTextRect: Rect = Rect()
@@ -37,7 +37,7 @@ class Comm3DSeekBar : AppCompatSeekBar {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ) {
         val typedArray =
             context.obtainStyledAttributes(attrs, R.styleable.CommSeekBar, defStyleAttr, 0)
@@ -72,7 +72,10 @@ class Comm3DSeekBar : AppCompatSeekBar {
         }
     }
 
-    override fun setProgress(progress: Int, animate: Boolean) {
+    override fun setProgress(
+        progress: Int,
+        animate: Boolean,
+    ) {
         super.setProgress(progress, animate)
         if (orientation != 0) {
             onSeekBarChangeListener?.onProgressChanged(this, progress, false)
@@ -86,7 +89,10 @@ class Comm3DSeekBar : AppCompatSeekBar {
         }
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         if (orientation == 0) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         } else {
@@ -103,19 +109,27 @@ class Comm3DSeekBar : AppCompatSeekBar {
             dh += paddingTop + paddingBottom
             setMeasuredDimension(
                 resolveSizeAndState(dw, widthMeasureSpec, 0),
-                resolveSizeAndState(dh, heightMeasureSpec, 0)
+                resolveSizeAndState(dh, heightMeasureSpec, 0),
             )
         }
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    override fun onSizeChanged(
+        w: Int,
+        h: Int,
+        oldw: Int,
+        oldh: Int,
+    ) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (orientation != 0) {
             calculateDrawable(w, h)
         }
     }
 
-    private fun calculateDrawable(w: Int, h: Int) {
+    private fun calculateDrawable(
+        w: Int,
+        h: Int,
+    ) {
         val paddingWidth: Int = w - paddingLeft - paddingRight
         val paddingHeight: Int = h - paddingTop - paddingBottom
         val trackWidth = mMaxWidth.coerceAtMost(paddingWidth)
@@ -138,13 +152,16 @@ class Comm3DSeekBar : AppCompatSeekBar {
         if (thumb != null) {
             val available: Int = paddingHeight - thumbHeight + thumbOffset * 2
             val left = progress / max.toFloat() * available + 0.5f
-            val reviseLeft = left.coerceAtLeast(thumbHeight / 2 + 0.5f)
-                .coerceAtMost(paddingHeight - thumbHeight / 2 - 0.5f).toInt()
+            val reviseLeft =
+                left
+                    .coerceAtLeast(thumbHeight / 2 + 0.5f)
+                    .coerceAtMost(paddingHeight - thumbHeight / 2 - 0.5f)
+                    .toInt()
             thumb.setBounds(
                 reviseLeft,
                 thumbTopOffset,
                 reviseLeft + thumbHeight,
-                thumbTopOffset + thumbWidth
+                thumbTopOffset + thumbWidth,
             )
         }
     }
@@ -154,7 +171,7 @@ class Comm3DSeekBar : AppCompatSeekBar {
             super.onDraw(canvas)
 //            val progressText = "$progress%"
 //            mPaint.getTextBounds(progressText, 0, progressText.length, mProgressTextRect)
-//            // 
+//            //
 //            val progressRatio = progress.toFloat() / max
 //            // thumb
 //            val thumbOffset: Float =
@@ -215,15 +232,16 @@ class Comm3DSeekBar : AppCompatSeekBar {
 
     private fun trackTouchEvent(event: MotionEvent) {
         val y = event.y.roundToInt()
-        progress = if (y < paddingTop) {
-            0
-        } else if (y > height - paddingBottom) {
-            max
-        } else {
-            val availableHeight: Int = height - paddingTop - paddingBottom
-            val scale: Float = (y - paddingTop) / availableHeight.toFloat()
-            (scale * max).roundToInt()
-        }
+        progress =
+            if (y < paddingTop) {
+                0
+            } else if (y > height - paddingBottom) {
+                max
+            } else {
+                val availableHeight: Int = height - paddingTop - paddingBottom
+                val scale: Float = (y - paddingTop) / availableHeight.toFloat()
+                (scale * max).roundToInt()
+            }
         stopTrackTouchLevel()
         if (thumb != null) {
             calculateDrawable(width, height)

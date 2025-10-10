@@ -8,14 +8,14 @@ enum class RecordingUiState {
     Starting,
     Recording,
     Stopping,
-    Error
+    Error,
 }
 
 enum class RecordingTriggerSource {
     Local,
     RemotePc,
     RemoteMobile,
-    Scheduled
+    Scheduled,
 }
 
 data class RecordingSessionSummary(
@@ -26,5 +26,5 @@ data class RecordingSessionSummary(
     val dataSize: String = "0 MB",
     val frameCount: Int = 0,
     val errorMessage: String? = null,
-    val startTimeMillis: Long = 0L
+    val startTimeMillis: Long = 0L,
 )

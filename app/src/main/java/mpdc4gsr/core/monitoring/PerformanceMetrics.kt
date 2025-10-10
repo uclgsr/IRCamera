@@ -25,7 +25,10 @@ object PerformanceMetrics {
         return duration
     }
 
-    fun logMetric(metricName: String, value: Long) {
+    fun logMetric(
+        metricName: String,
+        value: Long,
+    ) {
         // TODO: Send to analytics backend
     }
 
@@ -33,9 +36,7 @@ object PerformanceMetrics {
         metrics.getOrPut(counterName) { AtomicLong(0) }.incrementAndGet()
     }
 
-    fun getCounter(counterName: String): Long {
-        return metrics[counterName]?.get() ?: 0
-    }
+    fun getCounter(counterName: String): Long = metrics[counterName]?.get() ?: 0
 
     fun recordColdStartComplete() {
         val duration = endMeasurement("app_cold_start")
@@ -71,7 +72,10 @@ object PerformanceMetrics {
     }
 }
 
-inline fun <T> measureTime(operationName: String, block: () -> T): T {
+inline fun <T> measureTime(
+    operationName: String,
+    block: () -> T,
+): T {
     PerformanceMetrics.startMeasurement(operationName)
     try {
         return block()
@@ -80,7 +84,10 @@ inline fun <T> measureTime(operationName: String, block: () -> T): T {
     }
 }
 
-suspend inline fun <T> measureTimeSuspend(operationName: String, crossinline block: suspend () -> T): T {
+suspend inline fun <T> measureTimeSuspend(
+    operationName: String,
+    crossinline block: suspend () -> T,
+): T {
     PerformanceMetrics.startMeasurement(operationName)
     try {
         return block()

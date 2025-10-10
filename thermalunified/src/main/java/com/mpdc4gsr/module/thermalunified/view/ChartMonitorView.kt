@@ -5,11 +5,9 @@ import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
-import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.libunified.ui.charts.LineChart
 import com.mpdc4gsr.libunified.ui.components.Legend
 import com.mpdc4gsr.libunified.ui.components.XAxis
@@ -22,11 +20,14 @@ import com.mpdc4gsr.libunified.ui.listener.OnChartGestureListener
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.chart.IRMyValueFormatter
 import com.mpdc4gsr.module.thermalunified.chart.YValueFormatter
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.utils.ChartTools
 import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.module.thermalunified.R as ThermalR
 
-class ChartMonitorView : LineChart, OnChartGestureListener {
+class ChartMonitorView :
+    LineChart,
+    OnChartGestureListener {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }
 
     constructor(context: Context) : this(context, null)
@@ -47,6 +48,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
     private val textColor by lazy { ContextCompat.getColor(context, LibR.color.chart_text) }
     private val axisChartColors by lazy { ContextCompat.getColor(context, LibR.color.chart_axis) }
     private val axisLine by lazy { ContextCompat.getColor(context, LibR.color.circle_white) }
+
     private fun initChart() {
         synchronized(this) {
             this.setTouchEnabled(true)
@@ -103,6 +105,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
     }
 
     private var startTime = 0L
+
     fun addPointToChart(
         bean: ThermalEntity,
         timeType: Int = 1,
@@ -111,7 +114,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
         synchronized(this) {
             try {
                 if (bean.createTime == 0L) {
-                    Log.w("123", "createTime = 0L, bean:$bean")
                     return
                 }
                 val lineData: LineData = this.data
@@ -122,29 +124,27 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         IRMyValueFormatter(startTime = startTime, type = timeType)
                 }
                 val x =
-                    ChartTools.getChartX(
-                        x = bean.createTime,
-                        startTime = startTime,
-                        type = timeType,
-                    ).toFloat()
+                    ChartTools
+                        .getChartX(
+                            x = bean.createTime,
+                            startTime = startTime,
+                            type = timeType,
+                        ).toFloat()
                 when (selectType) {
                     1 -> {
                         if (volDataSet == null) {
                             volDataSet = createSet(0, "point temp")
                             lineData.addDataSet(volDataSet)
-                            Log.w("123", "volDataSet.entryCount:${volDataSet.entryCount}")
                         }
                         val entity = Entry(x, bean.thermal)
                         entity.data = bean
                         volDataSet.addEntry(entity)
-                        Log.w("123", ":$entity")
                     }
 
                     2 -> {
                         if (volDataSet == null) {
                             volDataSet = createSet(0, "line max temp")
                             lineData.addDataSet(volDataSet)
-                            Log.w("123", "volDataSet.entryCount:${volDataSet.entryCount}")
                         }
                         val entity = Entry(x, bean.thermalMax)
                         entity.data = bean
@@ -190,7 +190,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                 }
                 return@synchronized
             } catch (e: Exception) {
-                Log.e("123", ":${e.message}")
                 return@synchronized
             }
         }

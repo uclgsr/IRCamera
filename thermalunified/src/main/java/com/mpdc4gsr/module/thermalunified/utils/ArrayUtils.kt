@@ -30,14 +30,13 @@ object ArrayUtils {
     fun matrixRotate(
         srcData: FloatArray,
         rotateType: Int = 0,
-    ): FloatArray {
-        return when (rotateType) {
+    ): FloatArray =
+        when (rotateType) {
             1 -> matrixRotate90(srcData)
             2 -> matrixRotate180(srcData)
             3 -> matrixRotate270(srcData)
             else -> srcData
         }
-    }
 
     private fun getMaxIndex(
         data: FloatArray,

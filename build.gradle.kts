@@ -1,3 +1,11 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
+plugins {
+    alias(libs.plugins.ktlint) apply false
+}
+
 buildscript {
     repositories {
         google()
@@ -25,26 +33,78 @@ allprojects {
         }
     }
 }
-tasks.register<Delete>("clean") {
-    delete(rootProject.layout.buildDirectory.get().asFile)
-}
-tasks.register("cleanAll") {
-    group = "build"
-    description = "Clean all modules including build cache"
-    dependsOn("clean")
-    doLast {
-        // Do NOT delete .gradle directory to avoid Windows file lock issues
-        // Clean root build directory
-        delete(file("${rootProject.projectDir}/build"))
 
-        // Clean all subproject build directories
-        subprojects.forEach { subproject ->
-            delete(file("${subproject.projectDir}/build"))
+subprojects {
+    plugins.withType<KotlinBasePluginWrapper> {
+        if (!project.pluginManager.hasPlugin("org.jlleitschuh.gradle.ktlint")) {
+            project.pluginManager.apply("org.jlleitschuh.gradle.ktlint")
         }
-
-        println("All modules cleaned successfully (without deleting .gradle cache)")
+        project.extensions.configure<KtlintExtension> {
+            android.set(
+                project.pluginManager.hasPlugin("com.android.application") ||
+                    project.pluginManager.hasPlugin("com.android.library")
+            )
+            ignoreFailures.set(false)
+            reporters {
+                reporter(ReporterType.PLAIN)
+                reporter(ReporterType.CHECKSTYLE)
+            }
+            filter {
+                exclude("**/generated/**")
+                exclude("**/build/**")
+            }
+        }
     }
 }
+
+val formatCode = tasks.register("formatCode") {
+    group = "formatting"
+    description = "Runs ktlintFormat across all subprojects."
+}
+
+val lintAll = tasks.register("lintAll") {
+    group = "verification"
+    description = "Runs ktlintCheck and Android lint across all subprojects."
+}
+
+gradle.projectsEvaluated {
+    subprojects.forEach { subproject ->
+        subproject.tasks.findByName("ktlintFormat")?.let {
+            formatCode.configure {
+                dependsOn("${subproject.path}:ktlintFormat")
+            }
+        }
+        subproject.tasks.findByName("ktlintCheck")?.let {
+            lintAll.configure {
+                dependsOn("${subproject.path}:ktlintCheck")
+            }
+        }
+        subproject.tasks.findByName("lint")?.let {
+            lintAll.configure {
+                dependsOn("${subproject.path}:lint")
+            }
+        }
+    }
+}
+
+val cleanTask = tasks.register<Delete>("clean") {
+    delete(layout.buildDirectory)
+}
+
+val cleanAll = tasks.register("cleanAll") {
+    group = "build"
+    description = "Clean all modules including build cache"
+    dependsOn(cleanTask)
+}
+
+subprojects {
+    tasks.matching { it.name == "clean" }.configureEach {
+        rootProject.tasks.named("cleanAll").configure {
+            dependsOn(this@configureEach)
+        }
+    }
+}
+
 tasks.register("build") {
     group = "build"
     description = "Builds all modules using only release variants (starts with clean)"

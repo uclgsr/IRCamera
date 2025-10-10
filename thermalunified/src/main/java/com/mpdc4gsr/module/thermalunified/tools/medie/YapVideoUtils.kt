@@ -15,7 +15,8 @@ object YapVideoUtils {
             bitmap =
                 Bitmap.createBitmap(
                     view.measuredWidth,
-                    view.measuredHeight, Bitmap.Config.RGB_565,
+                    view.measuredHeight,
+                    Bitmap.Config.RGB_565,
                 )
             val bitmapHolder = Canvas(bitmap)
             view.draw(bitmapHolder)
