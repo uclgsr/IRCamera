@@ -206,3 +206,5 @@ testing-suite/temp/
 docs/thesis_evaluation/**/*.csv
 docs/thesis_evaluation/**/*.json
 docs/thesis_evaluation/real_session_data/
+**/*/ANDROID_SDK_USB_IR_1.3.7/
+/ANDROID_SDK_USB_IR_1.3.7/
