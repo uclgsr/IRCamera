@@ -41,7 +41,8 @@ object FileConfig {
         }
     }
 
-    fun getFirmwareFile(filename: String): File = File(ContextProvider.getContext().getExternalFilesDir("firmware"), filename)
+    fun getFirmwareFile(filename: String): File =
+        File(ContextProvider.getContext().getExternalFilesDir("firmware"), filename)
 
     @JvmStatic
     fun getPdfDir(): String =

@@ -145,7 +145,11 @@ class ThermalHardwareDataSourceImpl(
                     .build()
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("ThermalHardwareDataSourceImpl", "Unexpected Exception in ThermalHardwareDataSourceImpl catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "ThermalHardwareDataSourceImpl",
+                "Unexpected Exception in ThermalHardwareDataSourceImpl catch block",
+                e
+            )
         }
     }
 
@@ -153,7 +157,11 @@ class ThermalHardwareDataSourceImpl(
         try {
             irTemp = LibIRTemp()
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("ThermalHardwareDataSourceImpl", "Unexpected Exception in ThermalHardwareDataSourceImpl catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "ThermalHardwareDataSourceImpl",
+                "Unexpected Exception in ThermalHardwareDataSourceImpl catch block",
+                e
+            )
         }
     }
 
@@ -174,7 +182,11 @@ class ThermalHardwareDataSourceImpl(
             irTemp = null
             isConnected = false
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("ThermalHardwareDataSourceImpl", "Unexpected Exception in ThermalHardwareDataSourceImpl catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "ThermalHardwareDataSourceImpl",
+                "Unexpected Exception in ThermalHardwareDataSourceImpl catch block",
+                e
+            )
         }
     }
 
@@ -197,7 +209,11 @@ class ThermalHardwareDataSourceImpl(
                         }
                     }
                 } catch (e: Exception) {
-                    mpdc4gsr.core.utils.AppLogger.e("ThermalHardwareDataSourceImpl", "Unexpected Exception in ThermalHardwareDataSourceImpl catch block", e)
+                    mpdc4gsr.core.utils.AppLogger.e(
+                        "ThermalHardwareDataSourceImpl",
+                        "Unexpected Exception in ThermalHardwareDataSourceImpl catch block",
+                        e
+                    )
                 }
             }
             uvcCamera?.setFrameCallback(frameCallback)
@@ -260,7 +276,11 @@ class ThermalHardwareDataSourceImpl(
                 }
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("ThermalHardwareDataSourceImpl", "Unexpected Exception in ThermalHardwareDataSourceImpl catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "ThermalHardwareDataSourceImpl",
+                "Unexpected Exception in ThermalHardwareDataSourceImpl catch block",
+                e
+            )
         }
         val bitmap = createBitmapFromFrame(processedData)
         return ThermalFrameData(
@@ -289,7 +309,11 @@ class ThermalHardwareDataSourceImpl(
             frameCallback = null
             isStreaming = false
         } catch (e: Exception) {
-            mpdc4gsr.core.utils.AppLogger.e("ThermalHardwareDataSourceImpl", "Unexpected Exception in ThermalHardwareDataSourceImpl catch block", e)
+            mpdc4gsr.core.utils.AppLogger.e(
+                "ThermalHardwareDataSourceImpl",
+                "Unexpected Exception in ThermalHardwareDataSourceImpl catch block",
+                e
+            )
         }
     }
 

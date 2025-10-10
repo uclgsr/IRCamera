@@ -98,7 +98,10 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                                         android.provider.MediaStore.Files.FileColumns.DISPLAY_NAME,
                                                         "monitor_log_${System.currentTimeMillis()}.csv",
                                                     )
-                                                    put(android.provider.MediaStore.Files.FileColumns.MIME_TYPE, "text/csv")
+                                                    put(
+                                                        android.provider.MediaStore.Files.FileColumns.MIME_TYPE,
+                                                        "text/csv"
+                                                    )
                                                     put(
                                                         android.provider.MediaStore.Files.FileColumns.RELATIVE_PATH,
                                                         android.os.Environment.DIRECTORY_DOWNLOADS,

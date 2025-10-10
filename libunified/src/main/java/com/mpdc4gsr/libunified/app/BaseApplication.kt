@@ -140,7 +140,11 @@ abstract class BaseApplication : Application() {
                             autoSaveNewest(true)
                         }
                     } catch (exception: Exception) {
-                        LibraryLogger.e("BaseApplication", "Unexpected Exception in BaseApplication catch block", exception)
+                        LibraryLogger.e(
+                            "BaseApplication",
+                            "Unexpected Exception in BaseApplication catch block",
+                            exception
+                        )
                     }
                 }
             }

@@ -281,8 +281,22 @@ data class BaseConfigUiState(
     val networkConfigs: List<ConfigItem> =
         listOf(
             ConfigItem("wifi_timeout", "WiFi Timeout (s)", "WiFi connection timeout", 10, ConfigType.INTEGER, 10),
-            ConfigItem("enable_hotspot", "Enable Hotspot", "Allow device hotspot mode", false, ConfigType.BOOLEAN, false),
-            ConfigItem("network_encryption", "Encryption", "Network encryption type", "WPA2", ConfigType.STRING, "WPA2"),
+            ConfigItem(
+                "enable_hotspot",
+                "Enable Hotspot",
+                "Allow device hotspot mode",
+                false,
+                ConfigType.BOOLEAN,
+                false
+            ),
+            ConfigItem(
+                "network_encryption",
+                "Encryption",
+                "Network encryption type",
+                "WPA2",
+                ConfigType.STRING,
+                "WPA2"
+            ),
             ConfigItem("max_clients", "Max Clients", "Maximum connected clients", 4, ConfigType.INTEGER, 4),
         ),
     val cameraConfigs: List<ConfigItem> =
@@ -295,7 +309,14 @@ data class BaseConfigUiState(
     val sensorConfigs: List<ConfigItem> =
         listOf(
             ConfigItem("sample_rate", "Sample Rate (Hz)", "Sensor sampling frequency", 100, ConfigType.INTEGER, 100),
-            ConfigItem("enable_filtering", "Enable Filtering", "Apply signal filtering", true, ConfigType.BOOLEAN, true),
+            ConfigItem(
+                "enable_filtering",
+                "Enable Filtering",
+                "Apply signal filtering",
+                true,
+                ConfigType.BOOLEAN,
+                true
+            ),
             ConfigItem(
                 "calibration_mode",
                 "Calibration Mode",

@@ -43,16 +43,16 @@ fun SeekBarPopupCompose(
         visible = visible,
         enter =
             fadeIn(animationSpec = tween(200)) +
-                scaleIn(
-                    initialScale = 0.8f,
-                    animationSpec = tween(200),
-                ),
+                    scaleIn(
+                        initialScale = 0.8f,
+                        animationSpec = tween(200),
+                    ),
         exit =
             fadeOut(animationSpec = tween(150)) +
-                scaleOut(
-                    targetScale = 0.8f,
-                    animationSpec = tween(150),
-                ),
+                    scaleOut(
+                        targetScale = 0.8f,
+                        animationSpec = tween(150),
+                    ),
     ) {
         Popup(
             onDismissRequest = onDismiss,
@@ -160,16 +160,16 @@ fun OptionPickPopupCompose(
         visible = visible,
         enter =
             fadeIn(animationSpec = tween(200)) +
-                scaleIn(
-                    initialScale = 0.8f,
-                    animationSpec = tween(200),
-                ),
+                    scaleIn(
+                        initialScale = 0.8f,
+                        animationSpec = tween(200),
+                    ),
         exit =
             fadeOut(animationSpec = tween(150)) +
-                scaleOut(
-                    targetScale = 0.8f,
-                    animationSpec = tween(150),
-                ),
+                    scaleOut(
+                        targetScale = 0.8f,
+                        animationSpec = tween(150),
+                    ),
     ) {
         Popup(
             onDismissRequest = onDismiss,
@@ -287,16 +287,16 @@ fun GalleryChangePopupCompose(
         visible = visible,
         enter =
             fadeIn(animationSpec = tween(200)) +
-                scaleIn(
-                    initialScale = 0.8f,
-                    animationSpec = tween(200),
-                ),
+                    scaleIn(
+                        initialScale = 0.8f,
+                        animationSpec = tween(200),
+                    ),
         exit =
             fadeOut(animationSpec = tween(150)) +
-                scaleOut(
-                    targetScale = 0.8f,
-                    animationSpec = tween(150),
-                ),
+                    scaleOut(
+                        targetScale = 0.8f,
+                        animationSpec = tween(150),
+                    ),
     ) {
         Popup(
             onDismissRequest = onDismiss,

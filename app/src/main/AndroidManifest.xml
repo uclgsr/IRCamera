@@ -2,18 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Permissions -->
+    <!-- Core capabilities -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <!-- Bluetooth (API ≤ 30 use legacy; API 31+ use new runtime perms) -->
+    <!-- Bluetooth compatibility: legacy (API < 31) -->
     <uses-permission
         android:name="android.permission.BLUETOOTH"
         android:maxSdkVersion="30" />
     <uses-permission
         android:name="android.permission.BLUETOOTH_ADMIN"
         android:maxSdkVersion="30" />
+
+    <!-- Bluetooth runtime permissions (API 31+) -->
     <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation"
@@ -21,14 +23,14 @@
     <uses-permission
         android:name="android.permission.BLUETOOTH_CONNECT"
         tools:targetApi="31" />
-    <!-- <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" tools:targetApi="31"/> -->
+    <!-- <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" tools:targetApi="31" /> -->
 
-    <!-- Location only for BLE scan on API ≤ 30 -->
+    <!-- Legacy location fallback for BLE scanning (API < 31) -->
     <uses-permission
         android:name="android.permission.ACCESS_FINE_LOCATION"
         android:maxSdkVersion="30" />
 
-    <!-- Scoped media (API 33+) -->
+    <!-- Scoped media access (API 33+) -->
     <uses-permission
         android:name="android.permission.READ_MEDIA_IMAGES"
         tools:targetApi="33" />
@@ -36,7 +38,7 @@
         android:name="android.permission.READ_MEDIA_VIDEO"
         tools:targetApi="33" />
 
-    <!-- Legacy external storage only for API ≤ 32 -->
+    <!-- Legacy external storage access (API <= 32) -->
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -49,7 +51,7 @@
         android:name="android.permission.POST_NOTIFICATIONS"
         tools:targetApi="33" />
 
-    <!-- Foreground service permissions -->
+    <!-- Foreground service categories -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission
         android:name="android.permission.FOREGROUND_SERVICE_CAMERA"
@@ -60,10 +62,10 @@
     <uses-permission
         android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE"
         tools:targetApi="34" />
-    <!-- If your FGS records audio, also add:
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" tools:targetApi="34"/> -->
+    <!-- Add microphone category when foreground service records audio:
+         <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" tools:targetApi="34" /> -->
 
-    <!-- Hardware features -->
+    <!-- Required hardware -->
     <uses-feature
         android:name="android.hardware.camera.any"
         android:required="true" />

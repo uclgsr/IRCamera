@@ -17,7 +17,8 @@ import androidx.lifecycle.LifecycleOwner
 
 object WifiUtils {
     @Suppress("DEPRECATION")
-    fun ScanResult.getWifiName(): String = if (Build.VERSION.SDK_INT < 33) SSID else removeQuotation(wifiSsid.toString())
+    fun ScanResult.getWifiName(): String =
+        if (Build.VERSION.SDK_INT < 33) SSID else removeQuotation(wifiSsid.toString())
 
     fun WifiInfo.getWifiName(): String = removeQuotation(ssid)
 

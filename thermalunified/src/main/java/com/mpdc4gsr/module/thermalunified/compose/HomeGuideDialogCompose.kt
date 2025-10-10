@@ -50,10 +50,10 @@ fun HomeGuideDialogCompose(
                         animationSpec = tween(300),
                         initialOffsetX = { if (targetState > initialState) 300 else -300 },
                     ) + fadeIn() togetherWith
-                        slideOutHorizontally(
-                            animationSpec = tween(300),
-                            targetOffsetX = { if (targetState > initialState) -300 else 300 },
-                        ) + fadeOut()
+                            slideOutHorizontally(
+                                animationSpec = tween(300),
+                                targetOffsetX = { if (targetState > initialState) -300 else 300 },
+                            ) + fadeOut()
                 },
                 label = "guide_step",
             ) { step ->

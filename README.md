@@ -1,15 +1,23 @@
 # MPDC4GSR Multi-Sensor Recording Platform
 
-MPDC4GSR combines an Android capture application and a desktop PC controller to record synchronised galvanic skin response (GSR), thermal, and RGB data. The Android app manages sensor lifecycles, high throughput recording, and network communication. The PC controller provides orchestration, real-time visualisation, and long-form session storage.
+MPDC4GSR combines an Android capture application and a desktop PC controller to record synchronised galvanic skin
+response (GSR), thermal, and RGB data. The Android app manages sensor lifecycles, high throughput recording, and network
+communication. The PC controller provides orchestration, real-time visualisation, and long-form session storage.
 
 ## Feature Highlights
 
-- Android foreground recording service with crash recovery, session tracking, and a TCP server (`PcControllerServer`) that exposes remote controls and telemetry on port 8081 with optional mDNS discovery.
-- Camera subsystem built on CameraX with the `RgbCameraRecorder`, dashboards, and Compose-based UI for manual controls, sensor diagnostics, and live preview.
-- GSR pipeline using the Shimmer SDK with background scanning, reconnection logic, low-level packet parsing, and export utilities.
-- Thermal capture via the `thermalunified` component and coordinated multi-modal recording orchestrated by `MultiModalRecordingViewModel`.
-- Python PC controller (`pc_controller.py`) with PyQt6 dashboard, CLI mode, recording automation, native packet parsing, and end-to-end protocol compatibility with the Android service.
-- Structured logging, telemetry, StrictMode policies, and crash-safe supervisors that keep long running sessions observable and recoverable.
+- Android foreground recording service with crash recovery, session tracking, and a TCP server (`PcControllerServer`)
+  that exposes remote controls and telemetry on port 8081 with optional mDNS discovery.
+- Camera subsystem built on CameraX with the `RgbCameraRecorder`, dashboards, and Compose-based UI for manual controls,
+  sensor diagnostics, and live preview.
+- GSR pipeline using the Shimmer SDK with background scanning, reconnection logic, low-level packet parsing, and export
+  utilities.
+- Thermal capture via the `thermalunified` component and coordinated multi-modal recording orchestrated by
+  `MultiModalRecordingViewModel`.
+- Python PC controller (`pc_controller.py`) with PyQt6 dashboard, CLI mode, recording automation, native packet parsing,
+  and end-to-end protocol compatibility with the Android service.
+- Structured logging, telemetry, StrictMode policies, and crash-safe supervisors that keep long running sessions
+  observable and recoverable.
 
 ## Repository Layout
 
@@ -36,7 +44,8 @@ finalgsr/
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-The application starts the `RecordingService` automatically which exposes the PC control server and prepares sensor subsystems.
+The application starts the `RecordingService` automatically which exposes the PC control server and prepares sensor
+subsystems.
 
 ### PC Controller
 

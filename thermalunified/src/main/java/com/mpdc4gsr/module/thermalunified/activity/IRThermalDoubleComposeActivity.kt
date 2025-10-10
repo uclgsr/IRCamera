@@ -53,7 +53,9 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                     onClick = { viewModel.selectMode(0) },
                                     colors =
                                         ButtonDefaults.textButtonColors(
-                                            contentColor = if (selectedMode == 0) Color.White else Color.White.copy(alpha = 0.6f),
+                                            contentColor = if (selectedMode == 0) Color.White else Color.White.copy(
+                                                alpha = 0.6f
+                                            ),
                                         ),
                                 ) {
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -72,7 +74,9 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                     onClick = { viewModel.selectMode(1) },
                                     colors =
                                         ButtonDefaults.textButtonColors(
-                                            contentColor = if (selectedMode == 1) Color.White else Color.White.copy(alpha = 0.6f),
+                                            contentColor = if (selectedMode == 1) Color.White else Color.White.copy(
+                                                alpha = 0.6f
+                                            ),
                                         ),
                                 ) {
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {

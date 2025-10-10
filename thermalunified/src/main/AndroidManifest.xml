@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission
@@ -106,7 +107,7 @@
             android:screenOrientation="userPortrait"
             android:theme="@style/Theme.IRCamera" />
 
-        <!-- User experience screens (previously component:user) -->
+        <!-- User experience screens -->
         <activity
             android:name="com.mpdc4gsr.module.user.activity.QuestionComposeActivity"
             android:exported="false"
@@ -152,7 +153,6 @@
             android:exported="false"
             android:launchMode="singleTop"
             android:screenOrientation="userPortrait" />
-        <!-- Note: Component module activities are explicitly listed to avoid duplicate declarations -->
     </application>
 
 </manifest>

@@ -9,6 +9,8 @@ Use this directory for Android-specific notes that do not fit in the main platfo
 
 ## Deprecated Notes
 
-The former code quality audit and migration plans have been retired. Refer to `docs/testing-and-quality.md` for the current testing checklist.
+The former code quality audit and migration plans have been retired. Refer to `docs/testing-and-quality.md` for the
+current testing checklist.
 
-Contribute new Android-only design notes here when they are tightly scoped. Broader architecture topics belong in `docs/system-overview.md`.
+Contribute new Android-only design notes here when they are tightly scoped. Broader architecture topics belong in
+`docs/system-overview.md`.

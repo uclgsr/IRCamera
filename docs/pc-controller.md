@@ -1,10 +1,12 @@
 # PC Controller Overview
 
-The desktop controller located in `pc-controller/` orchestrates Android capture devices, provides live monitoring, and stores long-running session artefacts.
+The desktop controller located in `pc-controller/` orchestrates Android capture devices, provides live monitoring, and
+stores long-running session artefacts.
 
 ## Major Components
 
-- `pc_controller.py` – main entry point; starts the PyQt6 dashboard, CLI server, and background threads for networking and storage.
+- `pc_controller.py` – main entry point; starts the PyQt6 dashboard, CLI server, and background threads for networking
+  and storage.
 - `command_client.py` – convenience client for issuing commands to Android devices (used by scripts and tests).
 - `protocol_adapter.py` – bridges legacy key/value payloads to the JSON message schema and negotiates protocol versions.
 - `sync_handler.py` – performs time synchronisation and ensures consistent timestamps across devices.
@@ -46,4 +48,5 @@ python -m pytest
 python -m unittest discover -s tests
 ```
 
-Refer to [`pc-controller/docs/`](../pc-controller/docs/) for an exhaustive implementation guide, protocol specification, and verification logs.
+Refer to [`pc-controller/docs/`](../pc-controller/docs/) for an exhaustive implementation guide, protocol specification,
+and verification logs.

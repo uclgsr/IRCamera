@@ -154,10 +154,10 @@ fun FenceCompose(
                     color = fenceColor.copy(alpha = 0.8f * animatedAlpha),
                     topLeft =
                         centerPoint -
-                            Offset(
-                                textLayoutResult.size.width / 2f + 8.dp.toPx(),
-                                textLayoutResult.size.height / 2f + 4.dp.toPx(),
-                            ),
+                                Offset(
+                                    textLayoutResult.size.width / 2f + 8.dp.toPx(),
+                                    textLayoutResult.size.height / 2f + 4.dp.toPx(),
+                                ),
                     size =
                         Size(
                             textLayoutResult.size.width + 16.dp.toPx(),
@@ -172,10 +172,10 @@ fun FenceCompose(
                     textLayoutResult = textLayoutResult,
                     topLeft =
                         centerPoint -
-                            Offset(
-                                textLayoutResult.size.width / 2f,
-                                textLayoutResult.size.height / 2f,
-                            ),
+                                Offset(
+                                    textLayoutResult.size.width / 2f,
+                                    textLayoutResult.size.height / 2f,
+                                ),
                 )
             }
         }
@@ -506,10 +506,10 @@ private fun DrawScope.drawFence(
             color = color.copy(alpha = 0.8f * alpha),
             topLeft =
                 centerPoint -
-                    Offset(
-                        textLayoutResult.size.width / 2f + 6.dp.toPx(),
-                        textLayoutResult.size.height / 2f + 3.dp.toPx(),
-                    ),
+                        Offset(
+                            textLayoutResult.size.width / 2f + 6.dp.toPx(),
+                            textLayoutResult.size.height / 2f + 3.dp.toPx(),
+                        ),
             size =
                 Size(
                     textLayoutResult.size.width + 12.dp.toPx(),
@@ -524,10 +524,10 @@ private fun DrawScope.drawFence(
             textLayoutResult = textLayoutResult,
             topLeft =
                 centerPoint -
-                    Offset(
-                        textLayoutResult.size.width / 2f,
-                        textLayoutResult.size.height / 2f,
-                    ),
+                        Offset(
+                            textLayoutResult.size.width / 2f,
+                            textLayoutResult.size.height / 2f,
+                        ),
         )
     }
 }

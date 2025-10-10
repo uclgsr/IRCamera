@@ -105,13 +105,14 @@ object ColorUtils {
     fun isColorLight(color: Int): Boolean {
         val darkness =
             1 - (
-                0.299 * android.graphics.Color.red(color) + 0.587 *
-                    android.graphics.Color.green(
-                        color,
-                    ) + 0.114 * android.graphics.Color.blue(color)
-            ) / 255
+                    0.299 * android.graphics.Color.red(color) + 0.587 *
+                            android.graphics.Color.green(
+                                color,
+                            ) + 0.114 * android.graphics.Color.blue(color)
+                    ) / 255
         return darkness < 0.5
     }
 
-    fun getContrastColor(color: Int): Int = if (isColorLight(color)) android.graphics.Color.BLACK else android.graphics.Color.WHITE
+    fun getContrastColor(color: Int): Int =
+        if (isColorLight(color)) android.graphics.Color.BLACK else android.graphics.Color.WHITE
 }

@@ -28,14 +28,14 @@ object UnifiedFinalUtils {
         if (offset + 3 >= bytes.size) return 0
         return if (littleEndian) {
             (bytes[offset + 3].toInt() and 0xFF) shl 24 or
-                (bytes[offset + 2].toInt() and 0xFF) shl 16 or
-                (bytes[offset + 1].toInt() and 0xFF) shl 8 or
-                (bytes[offset].toInt() and 0xFF)
+                    (bytes[offset + 2].toInt() and 0xFF) shl 16 or
+                    (bytes[offset + 1].toInt() and 0xFF) shl 8 or
+                    (bytes[offset].toInt() and 0xFF)
         } else {
             (bytes[offset].toInt() and 0xFF) shl 24 or
-                (bytes[offset + 1].toInt() and 0xFF) shl 16 or
-                (bytes[offset + 2].toInt() and 0xFF) shl 8 or
-                (bytes[offset + 3].toInt() and 0xFF)
+                    (bytes[offset + 1].toInt() and 0xFF) shl 16 or
+                    (bytes[offset + 2].toInt() and 0xFF) shl 8 or
+                    (bytes[offset + 3].toInt() and 0xFF)
         }
     }
 
@@ -47,22 +47,22 @@ object UnifiedFinalUtils {
         if (offset + 7 >= bytes.size) return 0L
         return if (littleEndian) {
             (bytes[offset + 7].toLong() and 0xFF) shl 56 or
-                (bytes[offset + 6].toLong() and 0xFF) shl 48 or
-                (bytes[offset + 5].toLong() and 0xFF) shl 40 or
-                (bytes[offset + 4].toLong() and 0xFF) shl 32 or
-                (bytes[offset + 3].toLong() and 0xFF) shl 24 or
-                (bytes[offset + 2].toLong() and 0xFF) shl 16 or
-                (bytes[offset + 1].toLong() and 0xFF) shl 8 or
-                (bytes[offset].toLong() and 0xFF)
+                    (bytes[offset + 6].toLong() and 0xFF) shl 48 or
+                    (bytes[offset + 5].toLong() and 0xFF) shl 40 or
+                    (bytes[offset + 4].toLong() and 0xFF) shl 32 or
+                    (bytes[offset + 3].toLong() and 0xFF) shl 24 or
+                    (bytes[offset + 2].toLong() and 0xFF) shl 16 or
+                    (bytes[offset + 1].toLong() and 0xFF) shl 8 or
+                    (bytes[offset].toLong() and 0xFF)
         } else {
             (bytes[offset].toLong() and 0xFF) shl 56 or
-                (bytes[offset + 1].toLong() and 0xFF) shl 48 or
-                (bytes[offset + 2].toLong() and 0xFF) shl 40 or
-                (bytes[offset + 3].toLong() and 0xFF) shl 32 or
-                (bytes[offset + 4].toLong() and 0xFF) shl 24 or
-                (bytes[offset + 5].toLong() and 0xFF) shl 16 or
-                (bytes[offset + 6].toLong() and 0xFF) shl 8 or
-                (bytes[offset + 7].toLong() and 0xFF)
+                    (bytes[offset + 1].toLong() and 0xFF) shl 48 or
+                    (bytes[offset + 2].toLong() and 0xFF) shl 40 or
+                    (bytes[offset + 3].toLong() and 0xFF) shl 32 or
+                    (bytes[offset + 4].toLong() and 0xFF) shl 24 or
+                    (bytes[offset + 5].toLong() and 0xFF) shl 16 or
+                    (bytes[offset + 6].toLong() and 0xFF) shl 8 or
+                    (bytes[offset + 7].toLong() and 0xFF)
         }
     }
 
@@ -295,17 +295,17 @@ object UnifiedFinalUtils {
             "duplication_reduction_percentage" to 99.95,
             "modules_covered" to listOf("BleModule", "app", "libunified", "component/*"),
             "modern_practices_adopted" to
-                listOf(
-                    "StateFlow",
-                    "Sealed Classes",
-                    "Suspend Functions",
-                ),
+                    listOf(
+                        "StateFlow",
+                        "Sealed Classes",
+                        "Suspend Functions",
+                    ),
             "build_system_version" to
-                mapOf(
-                    "agp" to "8.11.0",
-                    "kotlin" to "2.2.0",
-                    "jdk_target" to "17",
-                ),
+                    mapOf(
+                        "agp" to "8.11.0",
+                        "kotlin" to "2.2.0",
+                        "jdk_target" to "17",
+                    ),
             "repository_status" to "COMPLETELY_CONSOLIDATED",
         )
 }

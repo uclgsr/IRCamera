@@ -1,7 +1,6 @@
 package com.topdon.commons.util;
 
 
-
 public class LLog {
 
     public final static int MAX_LENGTH = 2000;

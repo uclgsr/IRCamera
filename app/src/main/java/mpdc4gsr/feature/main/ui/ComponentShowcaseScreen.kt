@@ -509,7 +509,7 @@ private fun NavigationComponentsShowcase() {
             }
             Text(
                 "All navigation is handled through the UnifiedNavigation system, " +
-                    "providing consistent behavior across the entire application.",
+                        "providing consistent behavior across the entire application.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

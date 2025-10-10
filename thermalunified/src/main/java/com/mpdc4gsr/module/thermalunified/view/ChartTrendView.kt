@@ -138,7 +138,8 @@ class ChartTrendView : LineChart {
         axisLeft.axisMinimum = (minUnit - (maxUnit - minUnit) / 3).coerceAtMost(minUnit - 0.3f)
         axisLeft.valueFormatter =
             object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String = "${String.format("%.1f", value)}${UnitTools.showUnit()}"
+                override fun getFormattedValue(value: Float): String =
+                    "${String.format("%.1f", value)}${UnitTools.showUnit()}"
             }
         val lineDataSet = LineDataSet(entryList, "point temp")
         lineDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER

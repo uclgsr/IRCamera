@@ -74,7 +74,8 @@ class GsrDeviceManager(
     private var connectionMonitorJob: Job? = null
     private val _scanResults = MutableSharedFlow<List<DeviceInfo>>(replay = 1, extraBufferCapacity = 4)
     val scanResults: SharedFlow<List<DeviceInfo>> = _scanResults.asSharedFlow()
-    private val _connectionEvents = MutableSharedFlow<ConnectionEvent>(extraBufferCapacity = 4, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _connectionEvents =
+        MutableSharedFlow<ConnectionEvent>(extraBufferCapacity = 4, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val connectionEvents: SharedFlow<ConnectionEvent> = _connectionEvents.asSharedFlow()
     private val _dataEvents =
         MutableSharedFlow<Pair<String, ObjectCluster>>(
@@ -99,6 +100,7 @@ class GsrDeviceManager(
     enum class ConnectionState {
         CONNECTING, CONNECTED, DISCONNECTED, FAILED, TIMEOUT
     }
+
     private fun handleShimmerMessage(message: Message) {
         when (message.what) {
             ShimmerBluetooth.MSG_IDENTIFIER_STATE_CHANGE -> handleStateChangePayload(message.obj)
@@ -107,6 +109,7 @@ class GsrDeviceManager(
                 val macAddress = cluster.macAddress ?: return
                 _dataEvents.tryEmit(macAddress to cluster)
             }
+
             Shimmer.MESSAGE_TOAST -> {
                 val toastMessage = message.data?.getString(Shimmer.TOAST)
                 if (!toastMessage.isNullOrBlank()) {
@@ -124,10 +127,12 @@ class GsrDeviceManager(
                 state = payload.mState
                 macAddress = payload.macAddress
             }
+
             is CallbackObject -> {
                 state = payload.mState
                 macAddress = payload.mBluetoothAddress
             }
+
             else -> return
         }
 
@@ -161,7 +166,11 @@ class GsrDeviceManager(
                 emitConnectionEvent(macAddress, ConnectionState.FAILED, "Failed to connect")
             }
 
-            BT_STATE.CONNECTION_TIMEOUT -> emitConnectionEvent(macAddress, ConnectionState.TIMEOUT, "Connection timeout")
+            BT_STATE.CONNECTION_TIMEOUT -> emitConnectionEvent(
+                macAddress,
+                ConnectionState.TIMEOUT,
+                "Connection timeout"
+            )
 
             else -> Unit
         }
@@ -200,6 +209,7 @@ class GsrDeviceManager(
                                     handleDiscoveredDevice(device, rssi)
                                 }
                             }
+
                             BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
                                 coroutineScope.launch {
                                     _scanResults.emit(discoveredDevices.values.sortedBy { it.name ?: it.address })
@@ -212,7 +222,10 @@ class GsrDeviceManager(
                 classicDiscoveryReceiver = receiver
             }
             try {
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED ||
+                if (ActivityCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.BLUETOOTH_SCAN
+                    ) == PackageManager.PERMISSION_GRANTED ||
                     android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S
                 ) {
                     bluetoothAdapter?.let { adapter ->
@@ -231,7 +244,10 @@ class GsrDeviceManager(
     private fun stopClassicDiscoveryInternal() {
         mainHandler.post {
             try {
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED ||
+                if (ActivityCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.BLUETOOTH_SCAN
+                    ) == PackageManager.PERMISSION_GRANTED ||
                     android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S
                 ) {
                     bluetoothAdapter?.takeIf { it.isDiscovering }?.cancelDiscovery()
@@ -269,9 +285,12 @@ class GsrDeviceManager(
         val callback = currentScanCallback ?: return
         try {
             val adapter = bluetoothAdapter ?: bluetoothManager?.adapter
-                ?: (context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter
+            ?: (context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter
             val scanner = adapter?.bluetoothLeScanner
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED ||
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.BLUETOOTH_SCAN
+                ) == PackageManager.PERMISSION_GRANTED ||
                 android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S
             ) {
                 scanner?.stopScan(callback)

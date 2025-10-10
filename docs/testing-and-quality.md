@@ -12,12 +12,15 @@ This document captures the recommended checks for both sides of the MPDC4GSR pla
 - Instrumentation tests: `./gradlew connectedAndroidTest`
 - Assemble release artefacts: `./gradlew assembleRelease`
 
-The Android build uses `detekt-config.yml` and `lint-baseline.xml`; update these when new rules are added. CI runs in `.github/workflows/android-quality-gates.yml` and executes lint, detekt, unit tests, and assemble checks on pull requests.
+The Android build uses `detekt-config.yml` and `lint-baseline.xml`; update these when new rules are added. CI runs in
+`.github/workflows/android-quality-gates.yml` and executes lint, detekt, unit tests, and assemble checks on pull
+requests.
 
 ### Manual Verification
 
 - Confirm the `RecordingService` foreground notification appears and remains responsive during long recordings.
-- Inspect structured logs in the session storage directory (via `StructuredLogger`) for warnings during sensor start/stop.
+- Inspect structured logs in the session storage directory (via `StructuredLogger`) for warnings during sensor
+  start/stop.
 - Validate camera preview and recording flows through `CameraDashboardScreen` and `RGBCameraScreen`.
 - Pair with a Shimmer device and ensure reconnection works after toggling Bluetooth.
 - Test multi-modal sessions end-to-end with the PC controller connected.
@@ -38,7 +41,8 @@ The Android build uses `detekt-config.yml` and `lint-baseline.xml`; update these
 ## Observability
 
 - `TelemetryManager` and `PerformanceMetrics` log metrics; monitor the output when introducing long-running tasks.
-- Network health is surfaced via `NetworkController` logs; `PcControllerServer` reports client counts and failure causes.
+- Network health is surfaced via `NetworkController` logs; `PcControllerServer` reports client counts and failure
+  causes.
 - Crash recovery events emit notifications from `CrashRecoveryManager`. Always review these during QA cycles.
 
 ## Before Releasing

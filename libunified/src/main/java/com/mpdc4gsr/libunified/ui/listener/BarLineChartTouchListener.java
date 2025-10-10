@@ -443,7 +443,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
             if (mChart.isLogEnabled())
 
-            MPPointF.recycleInstance(trans);
+                MPPointF.recycleInstance(trans);
         }
 
         return super.onDoubleTap(e);

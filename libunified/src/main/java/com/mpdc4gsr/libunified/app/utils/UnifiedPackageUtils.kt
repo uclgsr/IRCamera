@@ -119,8 +119,8 @@ object UnifiedPackageUtils {
         if (parts.size < 2) return false
         return parts.all { part ->
             part.isNotEmpty() &&
-                part.first().isLetter() &&
-                part.all { it.isLetterOrDigit() || it == '_' }
+                    part.first().isLetter() &&
+                    part.all { it.isLetterOrDigit() || it == '_' }
         }
     }
 

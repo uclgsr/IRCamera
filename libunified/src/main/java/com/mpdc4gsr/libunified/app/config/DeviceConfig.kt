@@ -18,9 +18,9 @@ object DeviceConfig {
 
     fun UsbDevice.isTcTsDevice(): Boolean =
         (productId == TOPDON_PRODUCT_ID && vendorId == TOPDON_VENDOR_ID) ||
-            (productId == IR_PRODUCT_ID && vendorId == IR_VENDOR_ID) ||
-            (productId == TCLITE_PRODUCT_ID && vendorId == TCLITE_VENDOR_ID) ||
-            (productId == HIK_PRODUCT_ID && vendorId == HIK_VENDOR_ID)
+                (productId == IR_PRODUCT_ID && vendorId == IR_VENDOR_ID) ||
+                (productId == TCLITE_PRODUCT_ID && vendorId == TCLITE_VENDOR_ID) ||
+                (productId == HIK_PRODUCT_ID && vendorId == HIK_VENDOR_ID)
 
     fun UsbDevice.isTcLiteDevice(): Boolean = (productId == TCLITE_PRODUCT_ID && vendorId == TCLITE_VENDOR_ID)
 

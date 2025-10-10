@@ -80,11 +80,11 @@ class MyItemDecoration(
             dp2px(
                 if (position == itemCount - 1) {
                     wholeBottom ?: (
-                        (
-                            itemBottom
-                                ?: 0f
-                        ) * 2
-                    )
+                            (
+                                    itemBottom
+                                        ?: 0f
+                                    ) * 2
+                            )
                 } else {
                     (itemBottom ?: 0f)
                 },
@@ -105,9 +105,9 @@ class MyItemDecoration(
                     wholeRight ?: ((itemRight ?: 0f) * 2)
                 } else {
                     (
-                        itemRight
-                            ?: 0f
-                    )
+                            itemRight
+                                ?: 0f
+                            )
                 },
             )
         val top: Int = dp2px(wholeTop ?: ((itemTop ?: 0f) * 2))
@@ -132,11 +132,11 @@ class MyItemDecoration(
             dp2px(
                 if (columnPosition == spanCount - 1) {
                     wholeRight ?: (
-                        (
-                            itemRight
-                                ?: 0f
-                        ) * 2
-                    )
+                            (
+                                    itemRight
+                                        ?: 0f
+                                    ) * 2
+                            )
                 } else {
                     (itemRight ?: 0f)
                 },
@@ -147,11 +147,11 @@ class MyItemDecoration(
             dp2px(
                 if (rowPosition == totalRow - 1) {
                     wholeBottom ?: (
-                        (
-                            itemBottom
-                                ?: 0f
-                        ) * 2
-                    )
+                            (
+                                    itemBottom
+                                        ?: 0f
+                                    ) * 2
+                            )
                 } else {
                     (itemBottom ?: 0f)
                 },
@@ -174,11 +174,11 @@ class MyItemDecoration(
             dp2px(
                 if (spanIndex == spanCount - 1) {
                     wholeRight ?: (
-                        (
-                            itemRight
-                                ?: 0f
-                        ) * 2
-                    )
+                            (
+                                    itemRight
+                                        ?: 0f
+                                    ) * 2
+                            )
                 } else {
                     (itemRight ?: 0f)
                 },
@@ -189,11 +189,11 @@ class MyItemDecoration(
             dp2px(
                 if (rowPosition == totalRow - 1) {
                     wholeBottom ?: (
-                        (
-                            itemBottom
-                                ?: 0f
-                        ) * 2
-                    )
+                            (
+                                    itemBottom
+                                        ?: 0f
+                                    ) * 2
+                            )
                 } else {
                     (itemBottom ?: 0f)
                 },
@@ -219,9 +219,9 @@ class MyItemDecoration(
                     wholeRight ?: ((itemRight ?: 0f) * 2)
                 } else {
                     (
-                        itemRight
-                            ?: 0f
-                    )
+                            itemRight
+                                ?: 0f
+                            )
                 },
             )
         val top: Int = dp2px(if (row == 0) wholeTop ?: ((itemTop ?: 0f) * 2) else (itemTop ?: 0f))

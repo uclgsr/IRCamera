@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
+import org.gradle.api.Project
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
@@ -19,10 +19,6 @@ buildscript {
     }
     dependencies {
         classpath(libs.android.gradle.plugin)
-        classpath(libs.kotlin.gradle.plugin)
-        classpath(libs.ksp.gradle.plugin)
-        classpath(libs.hilt.android.gradle.plugin)
-        classpath(libs.huawei.agconnect)
     }
 }
 
@@ -34,26 +30,36 @@ allprojects {
     }
 }
 
+fun Project.configureKtlint() {
+    if (!pluginManager.hasPlugin("org.jlleitschuh.gradle.ktlint")) {
+        pluginManager.apply("org.jlleitschuh.gradle.ktlint")
+    }
+    extensions.configure<KtlintExtension> {
+        android.set(
+            pluginManager.hasPlugin("com.android.application") ||
+                    pluginManager.hasPlugin("com.android.library")
+        )
+        ignoreFailures.set(false)
+        reporters {
+            reporter(ReporterType.PLAIN)
+            reporter(ReporterType.CHECKSTYLE)
+        }
+        filter {
+            exclude("**/generated/**")
+            exclude("**/build/**")
+        }
+    }
+}
+
 subprojects {
-    plugins.withType<KotlinBasePluginWrapper> {
-        if (!project.pluginManager.hasPlugin("org.jlleitschuh.gradle.ktlint")) {
-            project.pluginManager.apply("org.jlleitschuh.gradle.ktlint")
-        }
-        project.extensions.configure<KtlintExtension> {
-            android.set(
-                project.pluginManager.hasPlugin("com.android.application") ||
-                    project.pluginManager.hasPlugin("com.android.library")
-            )
-            ignoreFailures.set(false)
-            reporters {
-                reporter(ReporterType.PLAIN)
-                reporter(ReporterType.CHECKSTYLE)
-            }
-            filter {
-                exclude("**/generated/**")
-                exclude("**/build/**")
-            }
-        }
+    pluginManager.withPlugin("org.jetbrains.kotlin.android") {
+        configureKtlint()
+    }
+    pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
+        configureKtlint()
+    }
+    pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
+        configureKtlint()
     }
 }
 

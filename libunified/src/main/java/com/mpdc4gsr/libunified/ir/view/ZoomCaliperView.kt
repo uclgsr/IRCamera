@@ -51,11 +51,11 @@ class ZoomCaliperView :
         mTextureView = findViewById(R.id.camera_texture)
         lis = ScaleGestureDetector(context, this)
         originalBitmap = (
-            androidx.core.content.ContextCompat.getDrawable(
-                context,
-                R.drawable.svg_ic_target_horizontal_person_green,
-            ) as? BitmapDrawable
-        )?.bitmap
+                androidx.core.content.ContextCompat.getDrawable(
+                    context,
+                    R.drawable.svg_ic_target_horizontal_person_green,
+                ) as? BitmapDrawable
+                )?.bitmap
             ?: return
         originalBitmapWidth = originalBitmap.width.toFloat()
         originalBitmapHeight = originalBitmap.height.toFloat()
@@ -337,11 +337,11 @@ class ZoomCaliperView :
         val targetIcon =
             TargetUtils.getSelectTargetDraw(targetMeasureMode, targetType, targetColorType)
         originalBitmap = (
-            androidx.core.content.ContextCompat.getDrawable(
-                context,
-                targetIcon,
-            ) as? BitmapDrawable
-        )?.bitmap ?: return
+                androidx.core.content.ContextCompat.getDrawable(
+                    context,
+                    targetIcon,
+                ) as? BitmapDrawable
+                )?.bitmap ?: return
         (mTextureView as ImageView).setImageBitmap(originalBitmap)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             magnifier?.dismiss()

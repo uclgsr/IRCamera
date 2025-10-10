@@ -1,9 +1,9 @@
 plugins {
     id("com.android.library")
-    kotlin("android")
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("kotlin-parcelize")
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.ksp)
 }
 android {
     namespace = "com.mpdc4gsr.module.thermalunified"

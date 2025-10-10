@@ -1,6 +1,7 @@
 package com.mpdc4gsr.libunified.ir.extension
 
 import com.energy.iruvc.ircmd.IRCMD
+import com.energy.iruvc.utils.CommonParams
 
 enum class ColorPalette(
     val value: Int,
@@ -109,7 +110,173 @@ private fun IRCMD.nativeSetProperty(
     value: Int,
 ): Boolean =
     try {
-        true
+        when (property) {
+            "mirror" ->
+                succeed(
+                    setPropImageParams(
+                        CommonParams.PropImageParams.IMAGE_PROP_SEL_MIRROR_FLIP,
+                        mirrorModeForValue(value),
+                    ),
+                )
+
+            "auto_shutter" ->
+                succeed(
+                    setPropAutoShutterParameter(
+                        CommonParams.PropAutoShutterParameter.SHUTTER_PROP_SWITCH,
+                        if (value != 0) {
+                            CommonParams.PropAutoShutterParameterValue.StatusSwith.ON
+                        } else {
+                            CommonParams.PropAutoShutterParameterValue.StatusSwith.OFF
+                        },
+                    ),
+                )
+
+            "dde_level" ->
+                succeed(
+                    setPropImageParams(
+                        CommonParams.PropImageParams.IMAGE_PROP_LEVEL_DDE,
+                        imageNumberValue(value),
+                    ),
+                )
+
+            "contrast" ->
+                succeed(
+                    setPropImageParams(
+                        CommonParams.PropImageParams.IMAGE_PROP_LEVEL_CONTRAST,
+                        imageNumberValue(value),
+                    ),
+                )
+
+            "brightness" ->
+                succeed(
+                    setPropImageParams(
+                        CommonParams.PropImageParams.IMAGE_PROP_LEVEL_BRIGHTNESS,
+                        imageNumberValue(value),
+                    ),
+                )
+
+            "sharpness" ->
+                succeed(
+                    setPropImageParams(
+                        CommonParams.PropImageParams.IMAGE_PROP_LEVEL_DDE_STR,
+                        imageNumberValue(value),
+                    ),
+                )
+
+            "gamma" ->
+                succeed(
+                    setPropImageParams(
+                        CommonParams.PropImageParams.IMAGE_PROP_LEVEL_SNR,
+                        imageNumberValue(value),
+                    ),
+                )
+
+            "pseudo_color" ->
+                succeed(setPseudoColor(pseudoColorForValue(value)))
+
+            "agc_mode" ->
+                succeed(
+                    setPropImageParams(
+                        CommonParams.PropImageParams.IMAGE_PROP_MODE_AGC,
+                        agcModeForValue(value),
+                    ),
+                )
+
+            "emissivity" ->
+                succeed(
+                    setPropTPDParams(
+                        CommonParams.PropTPDParams.TPD_PROP_EMS,
+                        tpdNumberValue(value),
+                    ),
+                )
+
+            "distance" ->
+                succeed(
+                    setPropTPDParams(
+                        CommonParams.PropTPDParams.TPD_PROP_DISTANCE,
+                        tpdNumberValue(value),
+                    ),
+                )
+
+            "reflected_temp" ->
+                succeed(
+                    setPropTPDParams(
+                        CommonParams.PropTPDParams.TPD_PROP_TU,
+                        tpdNumberValue(value),
+                    ),
+                )
+
+            "isp_enable" ->
+                succeed(
+                    setPropSelfAdaptionEn(
+                        if (value != 0) {
+                            CommonParams.StatusSwitch.ON
+                        } else {
+                            CommonParams.StatusSwitch.OFF
+                        },
+                    ),
+                )
+
+            "tnr_level" ->
+                succeed(
+                    setPropImageParams(
+                        CommonParams.PropImageParams.IMAGE_PROP_LEVEL_TNR,
+                        imageNumberValue(value),
+                    ),
+                )
+
+            "ffc_trigger" ->
+                succeed(shutterUpdate())
+
+            "nuc_trigger" ->
+                succeed(updateOOCOrB(CommonParams.UpdateOOCOrBType.OOC_UPDATE))
+
+            "agc_manual_min" ->
+                succeed(
+                    setPropImageParams(
+                        CommonParams.PropImageParams.IMAGE_PROP_LEVEL_BOS,
+                        imageNumberValue(value),
+                    ),
+                )
+
+            "agc_manual_max" ->
+                succeed(
+                    setPropImageParams(
+                        CommonParams.PropImageParams.IMAGE_PROP_LEVEL_MAX_GAIN,
+                        imageNumberValue(value),
+                    ),
+                )
+
+            else -> false
+        }
     } catch (e: Exception) {
         false
     }
+
+private fun mirrorModeForValue(value: Int): CommonParams.PropImageParamsValue.MirrorFlipType =
+    CommonParams.PropImageParamsValue.MirrorFlipType.values()
+        .firstOrNull { it.value == value }
+        ?: when (value) {
+            1 -> CommonParams.PropImageParamsValue.MirrorFlipType.ONLY_MIRROR
+            2 -> CommonParams.PropImageParamsValue.MirrorFlipType.ONLY_FLIP
+            3 -> CommonParams.PropImageParamsValue.MirrorFlipType.MIRROR_FLIP
+            else -> CommonParams.PropImageParamsValue.MirrorFlipType.NO_MIRROR_FLIP
+        }
+
+private fun pseudoColorForValue(value: Int): CommonParams.PseudoColorType =
+    CommonParams.PseudoColorType.values()
+        .firstOrNull { it.value == value }
+        ?: CommonParams.PseudoColorType.PSEUDO_1
+
+private fun agcModeForValue(value: Int): CommonParams.PropImageParamsValue.AGCType =
+    CommonParams.PropImageParamsValue.AGCType.values()
+        .firstOrNull { it.value == value }
+        ?: CommonParams.PropImageParamsValue.AGCType.AGC_0
+
+private fun imageNumberValue(value: Int) =
+    CommonParams.PropImageParamsValue.NumberType(value.toString())
+
+private fun tpdNumberValue(value: Int) =
+    CommonParams.PropTPDParamsValue.NumberType(value.toString())
+
+private fun succeed(result: Int) = result == 0

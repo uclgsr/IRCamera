@@ -44,14 +44,14 @@ open class GalleryBean(
 class GalleryTitle(
     timeMillis: Long,
 ) : GalleryBean(
-        id = 0,
-        path = "",
-        thumb = "",
-        name = "",
-        duration = 0L,
-        timeMillis = timeMillis,
-        hasDownload = true,
-    ) {
+    id = 0,
+    path = "",
+    thumb = "",
+    name = "",
+    duration = 0L,
+    timeMillis = timeMillis,
+    hasDownload = true,
+) {
     companion object CREATOR : Parcelable.Creator<GalleryTitle> {
         override fun createFromParcel(parcel: Parcel): GalleryTitle = GalleryTitle(parcel.readLong())
 

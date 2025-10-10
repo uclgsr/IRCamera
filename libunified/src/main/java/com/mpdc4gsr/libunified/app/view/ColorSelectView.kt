@@ -180,36 +180,66 @@ class ColorSelectView : View {
             @ColorInt color: Int,
         ): Int =
             when (color) {
-                0xFFFEFFFE.toInt(), 0xFFEBEBEB.toInt(), 0xFFD6D6D6.toInt(), 0xFFC2C2C2.toInt(), 0xFFADADAD.toInt(), 0xFF999999.toInt(), 0xFF858585
-                    .toInt(), 0xFF707070.toInt(), 0xFF5C5C5C.toInt(), 0xFF474747.toInt(), 0xFF333333.toInt(), 0xFF000000.toInt(),
-                -> 0
-                0xFF00374A.toInt(), 0xFF011D57.toInt(), 0xFF11053B.toInt(), 0xFF2E063D.toInt(), 0xFF3C071B.toInt(), 0xFF5C0701.toInt(), 0xFF5A1C00
-                    .toInt(), 0xFF583300.toInt(), 0xFF563D00.toInt(), 0xFF666100.toInt(), 0xFF4F5504.toInt(), 0xFF263E0F.toInt(),
-                -> 1
-                0xFF004D65.toInt(), 0xFF012F7B.toInt(), 0xFF1A0A52.toInt(), 0xFF450D59.toInt(), 0xFF551029.toInt(), 0xFF831100.toInt(), 0xFF7B2900
-                    .toInt(), 0xFF7A4A00.toInt(), 0xFF785800.toInt(), 0xFF8D8602.toInt(), 0xFF6F760A.toInt(), 0xFF38571A.toInt(),
-                -> 2
-                0xFF016E8F.toInt(), 0xFF0042A9.toInt(), 0xFF2C0977.toInt(), 0xFF61187C.toInt(), 0xFF791A3D.toInt(), 0xFFB51A00.toInt(), 0xFFAD3E00
-                    .toInt(), 0xFFA96800.toInt(), 0xFFA67B01.toInt(), 0xFFC4BC00.toInt(), 0xFF9BA50E.toInt(), 0xFF4E7A27.toInt(),
-                -> 3
-                0xFF008CB4.toInt(), 0xFF0056D6.toInt(), 0xFF371A94.toInt(), 0xFF7A219E.toInt(), 0xFF99244F.toInt(), 0xFFE22400.toInt(), 0xFFDA5100
-                    .toInt(), 0xFFD38301.toInt(), 0xFFD19D01.toInt(), 0xFFF5EC00.toInt(), 0xFFC3D117.toInt(), 0xFF669D34.toInt(),
-                -> 4
-                0xFF00A1D8.toInt(), 0xFF0061FD.toInt(), 0xFF4D22B2.toInt(), 0xFF982ABC.toInt(), 0xFFB92D5D.toInt(), 0xFFFF4015.toInt(), 0xFFFF6A00
-                    .toInt(), 0xFFFFAB01.toInt(), 0xFFFCC700.toInt(), 0xFFFEFB41.toInt(), 0xFFD9EC37.toInt(), 0xFF76BB40.toInt(),
-                -> 5
-                0xFF01C7FC.toInt(), 0xFF3A87FD.toInt(), 0xFF5E30EB.toInt(), 0xFFBE38F3.toInt(), 0xFFE63B7A.toInt(), 0xFFFE6250.toInt(), 0xFFFE8648
-                    .toInt(), 0xFFFEB43F.toInt(), 0xFFFECB3E.toInt(), 0xFFFFF76B.toInt(), 0xFFE4EF65.toInt(), 0xFF96D35F.toInt(),
-                -> 6
-                0xFF52D6FC.toInt(), 0xFF74A7FF.toInt(), 0xFF864FFD.toInt(), 0xFFD357FE.toInt(), 0xFFEE719E.toInt(), 0xFFFF8C82.toInt(), 0xFFFEA57D
-                    .toInt(), 0xFFFEC777.toInt(), 0xFFFED977.toInt(), 0xFFFFF994.toInt(), 0xFFEAF28F.toInt(), 0xFFB1DD8B.toInt(),
-                -> 7
-                0xFF93E3FC.toInt(), 0xFFA7C6FF.toInt(), 0xFFB18CFE.toInt(), 0xFFE292FE.toInt(), 0xFFF4A4C0.toInt(), 0xFFFFB5AF.toInt(), 0xFFFFC5AB
-                    .toInt(), 0xFFFED9A8.toInt(), 0xFFFDE4A8.toInt(), 0xFFFFFBB9.toInt(), 0xFFF1F7B7.toInt(), 0xFFCDE8B5.toInt(),
-                -> 8
-                0xFFCBF0FF.toInt(), 0xFFD2E2FE.toInt(), 0xFFD8C9FE.toInt(), 0xFFEFCAFE.toInt(), 0xFFF9D3E0.toInt(), 0xFFFFDAD8.toInt(), 0xFFFFE2D6
-                    .toInt(), 0xFFFEECD4.toInt(), 0xFFFEF1D5.toInt(), 0xFFFDFBDD.toInt(), 0xFFF6FADB.toInt(), 0xFFDEEED4.toInt(),
-                -> 9
+                0xFFFEFFFE.toInt(), 0xFFEBEBEB.toInt(), 0xFFD6D6D6.toInt(), 0xFFC2C2C2.toInt(), 0xFFADADAD.toInt(), 0xFF999999.toInt(),
+                0xFF858585
+                    .toInt(),
+                0xFF707070.toInt(), 0xFF5C5C5C.toInt(), 0xFF474747.toInt(), 0xFF333333.toInt(), 0xFF000000.toInt(),
+                    -> 0
+
+                0xFF00374A.toInt(), 0xFF011D57.toInt(), 0xFF11053B.toInt(), 0xFF2E063D.toInt(), 0xFF3C071B.toInt(), 0xFF5C0701.toInt(),
+                0xFF5A1C00
+                    .toInt(),
+                0xFF583300.toInt(), 0xFF563D00.toInt(), 0xFF666100.toInt(), 0xFF4F5504.toInt(), 0xFF263E0F.toInt(),
+                    -> 1
+
+                0xFF004D65.toInt(), 0xFF012F7B.toInt(), 0xFF1A0A52.toInt(), 0xFF450D59.toInt(), 0xFF551029.toInt(), 0xFF831100.toInt(),
+                0xFF7B2900
+                    .toInt(),
+                0xFF7A4A00.toInt(), 0xFF785800.toInt(), 0xFF8D8602.toInt(), 0xFF6F760A.toInt(), 0xFF38571A.toInt(),
+                    -> 2
+
+                0xFF016E8F.toInt(), 0xFF0042A9.toInt(), 0xFF2C0977.toInt(), 0xFF61187C.toInt(), 0xFF791A3D.toInt(), 0xFFB51A00.toInt(),
+                0xFFAD3E00
+                    .toInt(),
+                0xFFA96800.toInt(), 0xFFA67B01.toInt(), 0xFFC4BC00.toInt(), 0xFF9BA50E.toInt(), 0xFF4E7A27.toInt(),
+                    -> 3
+
+                0xFF008CB4.toInt(), 0xFF0056D6.toInt(), 0xFF371A94.toInt(), 0xFF7A219E.toInt(), 0xFF99244F.toInt(), 0xFFE22400.toInt(),
+                0xFFDA5100
+                    .toInt(),
+                0xFFD38301.toInt(), 0xFFD19D01.toInt(), 0xFFF5EC00.toInt(), 0xFFC3D117.toInt(), 0xFF669D34.toInt(),
+                    -> 4
+
+                0xFF00A1D8.toInt(), 0xFF0061FD.toInt(), 0xFF4D22B2.toInt(), 0xFF982ABC.toInt(), 0xFFB92D5D.toInt(), 0xFFFF4015.toInt(),
+                0xFFFF6A00
+                    .toInt(),
+                0xFFFFAB01.toInt(), 0xFFFCC700.toInt(), 0xFFFEFB41.toInt(), 0xFFD9EC37.toInt(), 0xFF76BB40.toInt(),
+                    -> 5
+
+                0xFF01C7FC.toInt(), 0xFF3A87FD.toInt(), 0xFF5E30EB.toInt(), 0xFFBE38F3.toInt(), 0xFFE63B7A.toInt(), 0xFFFE6250.toInt(),
+                0xFFFE8648
+                    .toInt(),
+                0xFFFEB43F.toInt(), 0xFFFECB3E.toInt(), 0xFFFFF76B.toInt(), 0xFFE4EF65.toInt(), 0xFF96D35F.toInt(),
+                    -> 6
+
+                0xFF52D6FC.toInt(), 0xFF74A7FF.toInt(), 0xFF864FFD.toInt(), 0xFFD357FE.toInt(), 0xFFEE719E.toInt(), 0xFFFF8C82.toInt(),
+                0xFFFEA57D
+                    .toInt(),
+                0xFFFEC777.toInt(), 0xFFFED977.toInt(), 0xFFFFF994.toInt(), 0xFFEAF28F.toInt(), 0xFFB1DD8B.toInt(),
+                    -> 7
+
+                0xFF93E3FC.toInt(), 0xFFA7C6FF.toInt(), 0xFFB18CFE.toInt(), 0xFFE292FE.toInt(), 0xFFF4A4C0.toInt(), 0xFFFFB5AF.toInt(),
+                0xFFFFC5AB
+                    .toInt(),
+                0xFFFED9A8.toInt(), 0xFFFDE4A8.toInt(), 0xFFFFFBB9.toInt(), 0xFFF1F7B7.toInt(), 0xFFCDE8B5.toInt(),
+                    -> 8
+
+                0xFFCBF0FF.toInt(), 0xFFD2E2FE.toInt(), 0xFFD8C9FE.toInt(), 0xFFEFCAFE.toInt(), 0xFFF9D3E0.toInt(), 0xFFFFDAD8.toInt(),
+                0xFFFFE2D6
+                    .toInt(),
+                0xFFFEECD4.toInt(), 0xFFFEF1D5.toInt(), 0xFFFDFBDD.toInt(), 0xFFF6FADB.toInt(), 0xFFDEEED4.toInt(),
+                    -> 9
+
                 else -> -1
             }
 
@@ -217,42 +247,78 @@ class ColorSelectView : View {
             @ColorInt color: Int,
         ): Int =
             when (color) {
-                0xFFFEFFFE.toInt(), 0xFF00374A.toInt(), 0xFF004D65.toInt(), 0xFF016E8F.toInt(), 0xFF008CB4.toInt(), 0xFF00A1D8.toInt(), 0xFF01C7FC
-                    .toInt(), 0xFF52D6FC.toInt(), 0xFF93E3FC.toInt(), 0xFFCBF0FF.toInt(),
-                -> 0
-                0xFFEBEBEB.toInt(), 0xFF011D57.toInt(), 0xFF012F7B.toInt(), 0xFF0042A9.toInt(), 0xFF0056D6.toInt(), 0xFF0061FD.toInt(), 0xFF3A87FD
-                    .toInt(), 0xFF74A7FF.toInt(), 0xFFA7C6FF.toInt(), 0xFFD2E2FE.toInt(),
-                -> 1
-                0xFFD6D6D6.toInt(), 0xFF11053B.toInt(), 0xFF1A0A52.toInt(), 0xFF2C0977.toInt(), 0xFF371A94.toInt(), 0xFF4D22B2.toInt(), 0xFF5E30EB
-                    .toInt(), 0xFF864FFD.toInt(), 0xFFB18CFE.toInt(), 0xFFD8C9FE.toInt(),
-                -> 2
-                0xFFC2C2C2.toInt(), 0xFF2E063D.toInt(), 0xFF450D59.toInt(), 0xFF61187C.toInt(), 0xFF7A219E.toInt(), 0xFF982ABC.toInt(), 0xFFBE38F3
-                    .toInt(), 0xFFD357FE.toInt(), 0xFFE292FE.toInt(), 0xFFEFCAFE.toInt(),
-                -> 3
-                0xFFADADAD.toInt(), 0xFF3C071B.toInt(), 0xFF551029.toInt(), 0xFF791A3D.toInt(), 0xFF99244F.toInt(), 0xFFB92D5D.toInt(), 0xFFE63B7A
-                    .toInt(), 0xFFEE719E.toInt(), 0xFFF4A4C0.toInt(), 0xFFF9D3E0.toInt(),
-                -> 4
-                0xFF999999.toInt(), 0xFF5C0701.toInt(), 0xFF831100.toInt(), 0xFFB51A00.toInt(), 0xFFE22400.toInt(), 0xFFFF4015.toInt(), 0xFFFE6250
-                    .toInt(), 0xFFFF8C82.toInt(), 0xFFFFB5AF.toInt(), 0xFFFFDAD8.toInt(),
-                -> 5
-                0xFF858585.toInt(), 0xFF5A1C00.toInt(), 0xFF7B2900.toInt(), 0xFFAD3E00.toInt(), 0xFFDA5100.toInt(), 0xFFFF6A00.toInt(), 0xFFFE8648
-                    .toInt(), 0xFFFEA57D.toInt(), 0xFFFFC5AB.toInt(), 0xFFFFE2D6.toInt(),
-                -> 6
-                0xFF707070.toInt(), 0xFF583300.toInt(), 0xFF7A4A00.toInt(), 0xFFA96800.toInt(), 0xFFD38301.toInt(), 0xFFFFAB01.toInt(), 0xFFFEB43F
-                    .toInt(), 0xFFFEC777.toInt(), 0xFFFED9A8.toInt(), 0xFFFEECD4.toInt(),
-                -> 7
-                0xFF5C5C5C.toInt(), 0xFF563D00.toInt(), 0xFF785800.toInt(), 0xFFA67B01.toInt(), 0xFFD19D01.toInt(), 0xFFFCC700.toInt(), 0xFFFECB3E
-                    .toInt(), 0xFFFED977.toInt(), 0xFFFDE4A8.toInt(), 0xFFFEF1D5.toInt(),
-                -> 8
-                0xFF474747.toInt(), 0xFF666100.toInt(), 0xFF8D8602.toInt(), 0xFFC4BC00.toInt(), 0xFFF5EC00.toInt(), 0xFFFEFB41.toInt(), 0xFFFFF76B
-                    .toInt(), 0xFFFFF994.toInt(), 0xFFFFFBB9.toInt(), 0xFFFDFBDD.toInt(),
-                -> 9
-                0xFF333333.toInt(), 0xFF4F5504.toInt(), 0xFF6F760A.toInt(), 0xFF9BA50E.toInt(), 0xFFC3D117.toInt(), 0xFFD9EC37.toInt(), 0xFFE4EF65
-                    .toInt(), 0xFFEAF28F.toInt(), 0xFFF1F7B7.toInt(), 0xFFF6FADB.toInt(),
-                -> 10
-                0xFF000000.toInt(), 0xFF263E0F.toInt(), 0xFF38571A.toInt(), 0xFF4E7A27.toInt(), 0xFF669D34.toInt(), 0xFF76BB40.toInt(), 0xFF96D35F
-                    .toInt(), 0xFFB1DD8B.toInt(), 0xFFCDE8B5.toInt(), 0xFFDEEED4.toInt(),
-                -> 11
+                0xFFFEFFFE.toInt(), 0xFF00374A.toInt(), 0xFF004D65.toInt(), 0xFF016E8F.toInt(), 0xFF008CB4.toInt(), 0xFF00A1D8.toInt(),
+                0xFF01C7FC
+                    .toInt(),
+                0xFF52D6FC.toInt(), 0xFF93E3FC.toInt(), 0xFFCBF0FF.toInt(),
+                    -> 0
+
+                0xFFEBEBEB.toInt(), 0xFF011D57.toInt(), 0xFF012F7B.toInt(), 0xFF0042A9.toInt(), 0xFF0056D6.toInt(), 0xFF0061FD.toInt(),
+                0xFF3A87FD
+                    .toInt(),
+                0xFF74A7FF.toInt(), 0xFFA7C6FF.toInt(), 0xFFD2E2FE.toInt(),
+                    -> 1
+
+                0xFFD6D6D6.toInt(), 0xFF11053B.toInt(), 0xFF1A0A52.toInt(), 0xFF2C0977.toInt(), 0xFF371A94.toInt(), 0xFF4D22B2.toInt(),
+                0xFF5E30EB
+                    .toInt(),
+                0xFF864FFD.toInt(), 0xFFB18CFE.toInt(), 0xFFD8C9FE.toInt(),
+                    -> 2
+
+                0xFFC2C2C2.toInt(), 0xFF2E063D.toInt(), 0xFF450D59.toInt(), 0xFF61187C.toInt(), 0xFF7A219E.toInt(), 0xFF982ABC.toInt(),
+                0xFFBE38F3
+                    .toInt(),
+                0xFFD357FE.toInt(), 0xFFE292FE.toInt(), 0xFFEFCAFE.toInt(),
+                    -> 3
+
+                0xFFADADAD.toInt(), 0xFF3C071B.toInt(), 0xFF551029.toInt(), 0xFF791A3D.toInt(), 0xFF99244F.toInt(), 0xFFB92D5D.toInt(),
+                0xFFE63B7A
+                    .toInt(),
+                0xFFEE719E.toInt(), 0xFFF4A4C0.toInt(), 0xFFF9D3E0.toInt(),
+                    -> 4
+
+                0xFF999999.toInt(), 0xFF5C0701.toInt(), 0xFF831100.toInt(), 0xFFB51A00.toInt(), 0xFFE22400.toInt(), 0xFFFF4015.toInt(),
+                0xFFFE6250
+                    .toInt(),
+                0xFFFF8C82.toInt(), 0xFFFFB5AF.toInt(), 0xFFFFDAD8.toInt(),
+                    -> 5
+
+                0xFF858585.toInt(), 0xFF5A1C00.toInt(), 0xFF7B2900.toInt(), 0xFFAD3E00.toInt(), 0xFFDA5100.toInt(), 0xFFFF6A00.toInt(),
+                0xFFFE8648
+                    .toInt(),
+                0xFFFEA57D.toInt(), 0xFFFFC5AB.toInt(), 0xFFFFE2D6.toInt(),
+                    -> 6
+
+                0xFF707070.toInt(), 0xFF583300.toInt(), 0xFF7A4A00.toInt(), 0xFFA96800.toInt(), 0xFFD38301.toInt(), 0xFFFFAB01.toInt(),
+                0xFFFEB43F
+                    .toInt(),
+                0xFFFEC777.toInt(), 0xFFFED9A8.toInt(), 0xFFFEECD4.toInt(),
+                    -> 7
+
+                0xFF5C5C5C.toInt(), 0xFF563D00.toInt(), 0xFF785800.toInt(), 0xFFA67B01.toInt(), 0xFFD19D01.toInt(), 0xFFFCC700.toInt(),
+                0xFFFECB3E
+                    .toInt(),
+                0xFFFED977.toInt(), 0xFFFDE4A8.toInt(), 0xFFFEF1D5.toInt(),
+                    -> 8
+
+                0xFF474747.toInt(), 0xFF666100.toInt(), 0xFF8D8602.toInt(), 0xFFC4BC00.toInt(), 0xFFF5EC00.toInt(), 0xFFFEFB41.toInt(),
+                0xFFFFF76B
+                    .toInt(),
+                0xFFFFF994.toInt(), 0xFFFFFBB9.toInt(), 0xFFFDFBDD.toInt(),
+                    -> 9
+
+                0xFF333333.toInt(), 0xFF4F5504.toInt(), 0xFF6F760A.toInt(), 0xFF9BA50E.toInt(), 0xFFC3D117.toInt(), 0xFFD9EC37.toInt(),
+                0xFFE4EF65
+                    .toInt(),
+                0xFFEAF28F.toInt(), 0xFFF1F7B7.toInt(), 0xFFF6FADB.toInt(),
+                    -> 10
+
+                0xFF000000.toInt(), 0xFF263E0F.toInt(), 0xFF38571A.toInt(), 0xFF4E7A27.toInt(), 0xFF669D34.toInt(), 0xFF76BB40.toInt(),
+                0xFF96D35F
+                    .toInt(),
+                0xFFB1DD8B.toInt(), 0xFFCDE8B5.toInt(), 0xFFDEEED4.toInt(),
+                    -> 11
+
                 else -> -1
             }
     }

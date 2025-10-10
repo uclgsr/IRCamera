@@ -126,8 +126,8 @@ class PDFListViewModel : BaseViewModel() {
                         // Determine if this is an analysis report based on filename patterns
                         val isAnalysisReport =
                             pdfFile.name.contains("analysis", ignoreCase = true) ||
-                                pdfFile.name.contains("report", ignoreCase = true) ||
-                                pdfFile.name.contains("thermal", ignoreCase = true)
+                                    pdfFile.name.contains("report", ignoreCase = true) ||
+                                    pdfFile.name.contains("thermal", ignoreCase = true)
                         // For now, we'll use a default page count of 1
                         // In a production app, you would use a PDF library to get actual page count
                         val pageCount = 1

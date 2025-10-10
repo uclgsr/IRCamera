@@ -4,36 +4,27 @@ import java.util.Locale
 
 plugins {
     id("com.android.application")
-    kotlin("android")
-    kotlin("kapt")
-    id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.dagger.hilt.android")
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
 val buildTimeStr = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
 
 android {
     namespace = "com.csl.irCamera"
-    compileSdk = 36
+    compileSdk = libs.versions.compileSdk.get().toInt()
+    ndkVersion = libs.versions.ndkVersion.get()
 
     defaultConfig {
         applicationId = "com.csl.irCamera"
-        minSdk =
-            libs.versions.minSdk
-                .get()
-                .toInt()
-        targetSdk =
-            libs.versions.targetSdk
-                .get()
-                .toInt()
-        versionCode =
-            libs.versions.versionCode
-                .get()
-                .toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        versionCode = libs.versions.versionCode.get().toInt()
         versionName = libs.versions.versionName.get()
-        ndkVersion = libs.versions.ndkVersion.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true

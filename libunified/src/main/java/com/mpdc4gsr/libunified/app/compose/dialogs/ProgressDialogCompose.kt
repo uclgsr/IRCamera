@@ -32,11 +32,11 @@ fun ProgressDialog(
     Dialog(
         onDismissRequest =
             (
-                if (cancelable) {
-                    onDismiss
-                } else {
-                }
-            ) as () -> Unit,
+                    if (cancelable) {
+                        onDismiss
+                    } else {
+                    }
+                    ) as () -> Unit,
         properties =
             DialogProperties(
                 dismissOnBackPress = cancelable,

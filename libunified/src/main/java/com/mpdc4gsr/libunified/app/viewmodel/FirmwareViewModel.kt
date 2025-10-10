@@ -210,7 +210,11 @@ class FirmwareViewModel(
                                 Gson().fromJson(response, CommonBean::class.java)
                             packageData = Gson().fromJson(commonBean.data, PackageData::class.java)
                         } catch (exception: Exception) {
-                            LibraryLogger.e("FirmwareViewModel", "Unexpected Exception in FirmwareViewModel catch block", exception)
+                            LibraryLogger.e(
+                                "FirmwareViewModel",
+                                "Unexpected Exception in FirmwareViewModel catch block",
+                                exception
+                            )
                         }
                         countDownLatch.countDown()
                     }
@@ -253,7 +257,11 @@ class FirmwareViewModel(
                                 result = DownloadData("", 0, commonBean.code.toInt())
                             }
                         } catch (exception: Exception) {
-                            LibraryLogger.e("FirmwareViewModel", "Unexpected Exception in FirmwareViewModel catch block", exception)
+                            LibraryLogger.e(
+                                "FirmwareViewModel",
+                                "Unexpected Exception in FirmwareViewModel catch block",
+                                exception
+                            )
                         }
                         countDownLatch.countDown()
                     }

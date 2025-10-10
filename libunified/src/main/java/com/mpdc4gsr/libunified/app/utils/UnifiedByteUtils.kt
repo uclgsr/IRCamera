@@ -14,7 +14,8 @@ object UnifiedByteUtils {
             it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
         }
 
-    fun String.hexStringToByteArray(): ByteArray = ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
+    fun String.hexStringToByteArray(): ByteArray =
+        ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
 
     fun UUID.getTag(): String = toString().substring(4, 8)
 

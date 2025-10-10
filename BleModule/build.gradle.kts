@@ -1,16 +1,13 @@
 plugins {
     id("com.android.library")
-    kotlin("android")
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
 android {
     namespace = "com.mpdc4gsr.ble"
-    compileSdk = 36
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
-        minSdk =
-            libs.versions.minSdk
-                .get()
-                .toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
     }
     buildTypes {
         release {
@@ -43,11 +40,11 @@ dependencies {
     implementation(libs.compose.activity)
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
-    api("androidx.appcompat:appcompat:1.2.0")
-    api("org.greenrobot:eventbus:3.2.0")
-    api("com.google.code.gson:gson:2.13.2")
-    api("com.elvishew:xlog:1.10.1")
-    api("no.nordicsemi.android:ble:2.11.0") {
+    api(libs.androidx.appcompat)
+    api(libs.eventbus)
+    api(libs.gson)
+    api(libs.xlog)
+    api(libs.nordic.ble) {
         exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
     }
     api(libs.nordic.ble.ktx)

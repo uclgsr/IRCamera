@@ -36,12 +36,12 @@ class UsbBuffer {
         offset: Int,
     ): Int =
         (
-            buf[offset].toUByte().toInt().shl(0) or (
-                (buf[offset + 1].toUByte())
-                    .toInt()
-                    .shl(8)
-            )
-        )
+                buf[offset].toUByte().toInt().shl(0) or (
+                        (buf[offset + 1].toUByte())
+                            .toInt()
+                            .shl(8)
+                        )
+                )
 
     private fun isValidFrame(frame: ByteArray): Boolean {
         var i = 0
