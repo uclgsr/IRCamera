@@ -94,4 +94,3 @@ enum class NetworkStatus(
             }
     }
 }
-

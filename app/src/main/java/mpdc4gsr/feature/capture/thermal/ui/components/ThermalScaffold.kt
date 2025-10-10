@@ -21,7 +21,7 @@ fun ThermalScaffold(
     onBackClick: (() -> Unit)? = null,
     actions: @Composable () -> Unit = {},
     modifier: Modifier = Modifier,
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
@@ -30,7 +30,7 @@ fun ThermalScaffold(
                 title = {
                     Text(
                         text = title,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 },
                 navigationIcon = {
@@ -38,22 +38,22 @@ fun ThermalScaffold(
                         IconButton(onClick = onBackClick) {
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back"
+                                contentDescription = "Back",
                             )
                         }
                     }
                 },
-                actions = { actions() }
+                actions = { actions() },
             )
         },
-        content = content
+        content = content,
     )
 }
 
 data class ThermalAction(
     val icon: ImageVector,
     val contentDescription: String,
-    val onClick: () -> Unit
+    val onClick: () -> Unit,
 )
 
 @Composable
@@ -64,4 +64,3 @@ fun ThermalActions(actions: List<ThermalAction>) {
         }
     }
 }
-

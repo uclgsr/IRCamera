@@ -14,11 +14,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,13 +36,9 @@ fun NetworkSettingsScreen(
     viewModel: NetworkSettingsViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     val settings by viewModel.networkSettings.collectAsState()
     val networkInfo by viewModel.networkInfo.collectAsState()
     val pairedDevices by viewModel.pairedDevices.collectAsState()
-    LaunchedEffect(Unit) {
-        viewModel.initialize()
-    }
     Column(
         modifier = modifier
             .fillMaxSize()

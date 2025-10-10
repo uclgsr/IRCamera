@@ -1,15 +1,14 @@
 package mpdc4gsr.feature.capture.thermal.ui
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.designsystem.theme.IRCameraTheme
 
 @AndroidEntryPoint
-class ThermalComposeActivity : BaseComposeActivity() {
-
+class ThermalComposeActivity : ComponentActivity() {
     companion object {
         const val EXTRA_SCREEN_TYPE = "screen_type"
         const val SCREEN_CAMERA = "camera"
@@ -27,7 +26,7 @@ class ThermalComposeActivity : BaseComposeActivity() {
             IRCameraTheme {
                 ThermalScreenRouter(
                     screenType = screenType,
-                    onBackClick = { finish() }
+                    onBackClick = { finish() },
                 )
             }
         }
@@ -37,32 +36,32 @@ class ThermalComposeActivity : BaseComposeActivity() {
 @Composable
 private fun ThermalScreenRouter(
     screenType: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     when (screenType) {
         ThermalComposeActivity.SCREEN_CAMERA -> {
             ThermalCameraScreen(
                 onBackClick = onBackClick,
                 onNavigateToSettings = { /* Navigate to settings */ },
-                onNavigateToGallery = { /* Navigate to gallery */ }
+                onNavigateToGallery = { /* Navigate to gallery */ },
             )
         }
 
         ThermalComposeActivity.SCREEN_SETTINGS -> {
             ThermalSettingsScreen(
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
             )
         }
 
         ThermalComposeActivity.SCREEN_CALIBRATION -> {
             ThermalCalibrationScreen(
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
             )
         }
 
         ThermalComposeActivity.SCREEN_GALLERY -> {
             ThermalGalleryScreen(
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
             )
         }
 
@@ -70,9 +69,8 @@ private fun ThermalScreenRouter(
             ThermalCameraScreen(
                 onBackClick = onBackClick,
                 onNavigateToSettings = { /* Navigate to settings */ },
-                onNavigateToGallery = { /* Navigate to gallery */ }
+                onNavigateToGallery = { /* Navigate to gallery */ },
             )
         }
     }
 }
-

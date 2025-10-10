@@ -2,29 +2,23 @@ package mpdc4gsr.feature.capture.thermal.ui.components
 
 import mpdc4gsr.feature.capture.thermal.data.TemperatureUnit
 
-fun formatTemperature(celsius: Float, unit: TemperatureUnit): String {
-    return when (unit) {
+fun formatTemperature(
+    celsius: Float,
+    unit: TemperatureUnit,
+): String =
+    when (unit) {
         TemperatureUnit.CELSIUS -> String.format("%.1f°C", celsius)
         TemperatureUnit.FAHRENHEIT -> String.format("%.1f°F", celsiusToFahrenheit(celsius))
         TemperatureUnit.KELVIN -> String.format("%.1fK", celsiusToKelvin(celsius))
     }
-}
 
-fun celsiusToFahrenheit(celsius: Float): Float {
-    return celsius * 9f / 5f + 32f
-}
+fun celsiusToFahrenheit(celsius: Float): Float = celsius * 9f / 5f + 32f
 
-fun celsiusToKelvin(celsius: Float): Float {
-    return celsius + 273.15f
-}
+fun celsiusToKelvin(celsius: Float): Float = celsius + 273.15f
 
-fun fahrenheitToCelsius(fahrenheit: Float): Float {
-    return (fahrenheit - 32f) * 5f / 9f
-}
+fun fahrenheitToCelsius(fahrenheit: Float): Float = (fahrenheit - 32f) * 5f / 9f
 
-fun kelvinToCelsius(kelvin: Float): Float {
-    return kelvin - 273.15f
-}
+fun kelvinToCelsius(kelvin: Float): Float = kelvin - 273.15f
 
 fun formatDuration(milliseconds: Long): String {
     val seconds = milliseconds / 1000
@@ -38,20 +32,17 @@ fun formatDuration(milliseconds: Long): String {
     }
 }
 
-fun formatFileSize(bytes: Long): String {
-    return when {
+fun formatFileSize(bytes: Long): String =
+    when {
         bytes < 1024 -> "$bytes B"
         bytes < 1024 * 1024 -> String.format("%.1f KB", bytes / 1024.0)
         bytes < 1024 * 1024 * 1024 -> String.format("%.1f MB", bytes / (1024.0 * 1024.0))
         else -> String.format("%.1f GB", bytes / (1024.0 * 1024.0 * 1024.0))
     }
-}
 
-fun formatFrameRate(fps: Double): String {
-    return String.format("%.1f fps", fps)
-}
+fun formatFrameRate(fps: Double): String = String.format("%.1f fps", fps)
 
-fun formatResolution(width: Int, height: Int): String {
-    return "${width}×${height}"
-}
-
+fun formatResolution(
+    width: Int,
+    height: Int,
+): String = "$width×$height"

@@ -16,18 +16,18 @@ import com.energy.iruvc.uvc.ConcreateUVCBuilder
 import com.energy.iruvc.uvc.UVCCamera
 import com.energy.iruvc.uvc.UVCType
 import com.mpdc4gsr.libunified.ir.extension.*
-import mpdc4gsr.feature.capture.thermal.data.*
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withTimeoutOrNull
+import mpdc4gsr.feature.capture.thermal.data.*
 import java.io.File
 import java.io.FileOutputStream
 
 class ThermalHardwareDataSourceImpl(
-    private val context: Context
+    private val context: Context,
 ) : ThermalHardwareDataSource {
     companion object {
         private const val TAG = "TopdonDataSourceImpl"
@@ -57,70 +57,82 @@ class ThermalHardwareDataSourceImpl(
     private var recordingOutputStream: FileOutputStream? = null
     private var frameCallback: IFrameCallback? = null
     private var connectionDeferred: kotlinx.coroutines.CompletableDeferred<Result<Unit>>? = null
-    override suspend fun connectDevice(): Result<Unit> {
-        return try {
+
+    override suspend fun connectDevice(): Result<Unit> =
+        try {
             connectionDeferred = CompletableDeferred()
             if (usbMonitor == null) {
-                usbMonitor = USBMonitor(context, object : USBMonitor.OnDeviceConnectListener {
-                    override fun onAttach(device: UsbDevice?) {
-                        device?.let {
-                            usbMonitor?.requestPermission(it)
-                        }
-                    }
-
-                    override fun onGranted(usbDevice: UsbDevice?, granted: Boolean) {
-                        if (granted && usbDevice != null) {
-                        } else {
-                            connectionDeferred?.complete(Result.failure(Exception("USB permission denied")))
-                        }
-                    }
-
-                    override fun onConnect(
-                        device: UsbDevice?,
-                        ctrlBlock: USBMonitor.UsbControlBlock?,
-                        createNew: Boolean
-                    ) {
-                        ctrlBlock?.let {
-                            val result = openCamera(it)
-                            if (result) {
-                                isConnected = true
-                                connectionDeferred?.complete(Result.success(Unit))
-                            } else {
-                                connectionDeferred?.complete(Result.failure(Exception("Failed to open camera")))
+                usbMonitor =
+                    USBMonitor(
+                        context,
+                        object : USBMonitor.OnDeviceConnectListener {
+                            override fun onAttach(device: UsbDevice?) {
+                                device?.let {
+                                    usbMonitor?.requestPermission(it)
+                                }
                             }
-                        }
-                    }
 
-                    override fun onDisconnect(device: UsbDevice?, ctrlBlock: USBMonitor.UsbControlBlock?) {
-                        isConnected = false
-                    }
+                            override fun onGranted(
+                                usbDevice: UsbDevice?,
+                                granted: Boolean,
+                            ) {
+                                if (granted && usbDevice != null) {
+                                } else {
+                                    connectionDeferred?.complete(Result.failure(Exception("USB permission denied")))
+                                }
+                            }
 
-                    override fun onDettach(device: UsbDevice?) {
-                        isConnected = false
-                    }
+                            override fun onConnect(
+                                device: UsbDevice?,
+                                ctrlBlock: USBMonitor.UsbControlBlock?,
+                                createNew: Boolean,
+                            ) {
+                                ctrlBlock?.let {
+                                    val result = openCamera(it)
+                                    if (result) {
+                                        isConnected = true
+                                        connectionDeferred?.complete(Result.success(Unit))
+                                    } else {
+                                        connectionDeferred?.complete(Result.failure(Exception("Failed to open camera")))
+                                    }
+                                }
+                            }
 
-                    override fun onCancel(device: UsbDevice?) {
-                        connectionDeferred?.complete(Result.failure(Exception("USB connection cancelled")))
-                    }
-                })
+                            override fun onDisconnect(
+                                device: UsbDevice?,
+                                ctrlBlock: USBMonitor.UsbControlBlock?,
+                            ) {
+                                isConnected = false
+                            }
+
+                            override fun onDettach(device: UsbDevice?) {
+                                isConnected = false
+                            }
+
+                            override fun onCancel(device: UsbDevice?) {
+                                connectionDeferred?.complete(Result.failure(Exception("USB connection cancelled")))
+                            }
+                        },
+                    )
                 usbMonitor?.register()
             }
             if (uvcCamera == null) {
-                uvcCamera = ConcreateUVCBuilder()
-                    .setUVCType(UVCType.USB_UVC)
-                    .build()
+                uvcCamera =
+                    ConcreateUVCBuilder()
+                        .setUVCType(UVCType.USB_UVC)
+                        .build()
             }
-            val timeoutResult = withTimeoutOrNull(10000) {
-                connectionDeferred?.await()
-            }
+            val timeoutResult =
+                withTimeoutOrNull(10000) {
+                    connectionDeferred?.await()
+                }
             timeoutResult ?: Result.failure(Exception("Connection timeout"))
         } catch (e: Exception) {
             Result.failure(e)
         }
-    }
 
-    private fun openCamera(ctrlBlock: USBMonitor.UsbControlBlock): Boolean {
-        return try {
+    private fun openCamera(ctrlBlock: USBMonitor.UsbControlBlock): Boolean =
+        try {
             uvcCamera?.let { camera ->
                 val result = camera.openUVCCamera(ctrlBlock)
                 if (result == 0) {
@@ -134,21 +146,21 @@ class ThermalHardwareDataSourceImpl(
         } catch (e: Exception) {
             false
         }
-    }
 
     private fun initializeIRCMD() {
         try {
             uvcCamera?.let { camera ->
-                ircmd = ConcreteIRCMDBuilder()
-                    .setIrcmdType(IRCMDType.USB_IR_256_384)
-                    .setIdCamera(camera.nativePtr)
-                    .build()
+                ircmd =
+                    ConcreteIRCMDBuilder()
+                        .setIrcmdType(IRCMDType.USB_IR_256_384)
+                        .setIdCamera(camera.nativePtr)
+                        .build()
             }
         } catch (e: Exception) {
             mpdc4gsr.core.common.AppLogger.e(
                 "ThermalHardwareDataSourceImpl",
                 "Unexpected Exception in ThermalHardwareDataSourceImpl catch block",
-                e
+                e,
             )
         }
     }
@@ -160,7 +172,7 @@ class ThermalHardwareDataSourceImpl(
             mpdc4gsr.core.common.AppLogger.e(
                 "ThermalHardwareDataSourceImpl",
                 "Unexpected Exception in ThermalHardwareDataSourceImpl catch block",
-                e
+                e,
             )
         }
     }
@@ -185,44 +197,46 @@ class ThermalHardwareDataSourceImpl(
             mpdc4gsr.core.common.AppLogger.e(
                 "ThermalHardwareDataSourceImpl",
                 "Unexpected Exception in ThermalHardwareDataSourceImpl catch block",
-                e
+                e,
             )
         }
     }
 
-    override suspend fun startStreaming(): Flow<ThermalFrameData> {
-        return flow {
+    override suspend fun startStreaming(): Flow<ThermalFrameData> =
+        flow {
             if (!isConnected) {
                 throw IllegalStateException("Camera not connected")
             }
             val frameChannel = Channel<ThermalFrameData>(Channel.BUFFERED)
-            frameCallback = IFrameCallback { frame ->
-                try {
-                    if (frame != null && frame.size >= FRAME_BUFFER_SIZE) {
-                        System.arraycopy(frame, 0, imageBuffer, 0, minOf(FRAME_BUFFER_SIZE, frame.size))
-                        val processedData = processFrame(frame)
-                        if (processedData != null) {
-                            val thermalFrame = createThermalFrameData(processedData)
-                            val sendResult = frameChannel.trySend(thermalFrame)
-                            if (sendResult.isFailure) {
+            frameCallback =
+                IFrameCallback { frame ->
+                    try {
+                        if (frame != null && frame.size >= FRAME_BUFFER_SIZE) {
+                            System.arraycopy(frame, 0, imageBuffer, 0, minOf(FRAME_BUFFER_SIZE, frame.size))
+                            val processedData = processFrame(frame)
+                            if (processedData != null) {
+                                val thermalFrame = createThermalFrameData(processedData)
+                                val sendResult = frameChannel.trySend(thermalFrame)
+                                if (sendResult.isFailure) {
+                                }
                             }
                         }
+                    } catch (e: Exception) {
+                        mpdc4gsr.core.common.AppLogger.e(
+                            "ThermalHardwareDataSourceImpl",
+                            "Unexpected Exception in ThermalHardwareDataSourceImpl catch block",
+                            e,
+                        )
                     }
-                } catch (e: Exception) {
-                    mpdc4gsr.core.common.AppLogger.e(
-                        "ThermalHardwareDataSourceImpl",
-                        "Unexpected Exception in ThermalHardwareDataSourceImpl catch block",
-                        e
-                    )
                 }
-            }
             uvcCamera?.setFrameCallback(frameCallback)
             isStreaming = true
             try {
                 while (isStreaming) {
-                    val frame = withTimeoutOrNull(FRAME_RECEIVE_TIMEOUT_MS) {
-                        frameChannel.receive()
-                    }
+                    val frame =
+                        withTimeoutOrNull(FRAME_RECEIVE_TIMEOUT_MS) {
+                            frameChannel.receive()
+                        }
                     if (frame != null) {
                         emit(frame)
                     }
@@ -231,25 +245,24 @@ class ThermalHardwareDataSourceImpl(
                 frameChannel.close()
             }
         }
-    }
 
-    private fun processFrame(frame: ByteArray): ByteArray? {
-        return try {
-            val imageRes = LibIRProcess.ImageRes_t().apply {
-                width = CAMERA_WIDTH.toChar()
-                height = CAMERA_HEIGHT.toChar()
-            }
+    private fun processFrame(frame: ByteArray): ByteArray? =
+        try {
+            val imageRes =
+                LibIRProcess.ImageRes_t().apply {
+                    width = CAMERA_WIDTH.toChar()
+                    height = CAMERA_HEIGHT.toChar()
+                }
             LibIRProcess.convertYuyvMapToARGBPseudocolor(
                 frame,
                 (CAMERA_WIDTH * CAMERA_HEIGHT).toLong(),
                 CommonParams.PseudoColorType.PSEUDO_1,
-                rgbBuffer
+                rgbBuffer,
             )
             rgbBuffer.copyOf()
         } catch (e: Exception) {
             null
         }
-    }
 
     private fun createThermalFrameData(processedData: ByteArray): ThermalFrameData {
         val temperatureMatrix = Array(CAMERA_HEIGHT) { FloatArray(CAMERA_WIDTH) }
@@ -264,9 +277,10 @@ class ThermalHardwareDataSourceImpl(
                     minTemp = fullResult.minTemperature
                     maxTemp = fullResult.maxTemperature
                 }
-                val centerResult = temp.getTemperatureOfPoint(
-                    android.graphics.Point(CAMERA_WIDTH / 2, CAMERA_HEIGHT / 2)
-                )
+                val centerResult =
+                    temp.getTemperatureOfPoint(
+                        android.graphics.Point(CAMERA_WIDTH / 2, CAMERA_HEIGHT / 2),
+                    )
                 centerTemp = centerResult?.maxTemperature ?: DEFAULT_TEMP
                 for (y in 0 until CAMERA_HEIGHT) {
                     for (x in 0 until CAMERA_WIDTH) {
@@ -279,7 +293,7 @@ class ThermalHardwareDataSourceImpl(
             mpdc4gsr.core.common.AppLogger.e(
                 "ThermalHardwareDataSourceImpl",
                 "Unexpected Exception in ThermalHardwareDataSourceImpl catch block",
-                e
+                e,
             )
         }
         val bitmap = createBitmapFromFrame(processedData)
@@ -289,19 +303,18 @@ class ThermalHardwareDataSourceImpl(
             temperatureMatrix = temperatureMatrix,
             minTemp = minTemp,
             maxTemp = maxTemp,
-            centerTemp = centerTemp
+            centerTemp = centerTemp,
         )
     }
 
-    private fun createBitmapFromFrame(data: ByteArray): Bitmap {
-        return try {
+    private fun createBitmapFromFrame(data: ByteArray): Bitmap =
+        try {
             val bitmap = Bitmap.createBitmap(CAMERA_WIDTH, CAMERA_HEIGHT, Bitmap.Config.ARGB_8888)
             bitmap.copyPixelsFromBuffer(java.nio.ByteBuffer.wrap(data))
             bitmap
         } catch (e: Exception) {
             Bitmap.createBitmap(CAMERA_WIDTH, CAMERA_HEIGHT, Bitmap.Config.ARGB_8888)
         }
-    }
 
     override suspend fun stopStreaming() {
         try {
@@ -312,7 +325,7 @@ class ThermalHardwareDataSourceImpl(
             mpdc4gsr.core.common.AppLogger.e(
                 "ThermalHardwareDataSourceImpl",
                 "Unexpected Exception in ThermalHardwareDataSourceImpl catch block",
-                e
+                e,
             )
         }
     }
@@ -342,14 +355,15 @@ class ThermalHardwareDataSourceImpl(
                 }
             }
             val bitmap = createBitmapFromFrame(processedData)
-            val snapshot = ThermalSnapshot(
-                bitmap = bitmap,
-                temperatureMatrix = temperatureMatrix,
-                minTemp = minTemp,
-                maxTemp = maxTemp,
-                timestamp = System.currentTimeMillis(),
-                location = null
-            )
+            val snapshot =
+                ThermalSnapshot(
+                    bitmap = bitmap,
+                    temperatureMatrix = temperatureMatrix,
+                    minTemp = minTemp,
+                    maxTemp = maxTemp,
+                    timestamp = System.currentTimeMillis(),
+                    location = null,
+                )
             Result.success(snapshot)
         } catch (e: Exception) {
             Result.failure(e)
@@ -372,8 +386,8 @@ class ThermalHardwareDataSourceImpl(
         }
     }
 
-    override suspend fun stopRecording(): Result<String> {
-        return try {
+    override suspend fun stopRecording(): Result<String> =
+        try {
             isRecording = false
             recordingOutputStream?.flush()
             recordingOutputStream?.close()
@@ -383,13 +397,13 @@ class ThermalHardwareDataSourceImpl(
         } catch (e: Exception) {
             Result.failure(e)
         }
-    }
 
-    override fun isConnected(): Boolean {
-        return isConnected
-    }
+    override fun isConnected(): Boolean = isConnected
 
-    override suspend fun setTemperatureRange(min: Float, max: Float): Result<Unit> {
+    override suspend fun setTemperatureRange(
+        min: Float,
+        max: Float,
+    ): Result<Unit> {
         return try {
             if (!isConnected) {
                 return Result.failure(IllegalStateException("Camera not connected"))
@@ -470,76 +484,79 @@ class ThermalHardwareDataSourceImpl(
                 return Result.failure(IllegalStateException("Camera not connected"))
             }
             irTemp?.let { temp ->
-                val result = when (area) {
-                    is MeasurementArea.PointArea -> {
-                        val tempResult = temp.getTemperatureOfPoint(area.point)
-                        tempResult?.let {
-                            MeasurementResult(
-                                minTemp = it.minTemperature,
-                                maxTemp = it.maxTemperature,
-                                avgTemp = (it.minTemperature + it.maxTemperature) / 2,
-                                area = area
-                            )
+                val result =
+                    when (area) {
+                        is MeasurementArea.PointArea -> {
+                            val tempResult = temp.getTemperatureOfPoint(area.point)
+                            tempResult?.let {
+                                MeasurementResult(
+                                    minTemp = it.minTemperature,
+                                    maxTemp = it.maxTemperature,
+                                    avgTemp = (it.minTemperature + it.maxTemperature) / 2,
+                                    area = area,
+                                )
+                            }
+                        }
+
+                        is MeasurementArea.RectangleArea -> {
+                            val tempResult = temp.getTemperatureOfRect(area.rect)
+                            tempResult?.let {
+                                MeasurementResult(
+                                    minTemp = it.minTemperature,
+                                    maxTemp = it.maxTemperature,
+                                    avgTemp = (it.minTemperature + it.maxTemperature) / 2,
+                                    area = area,
+                                )
+                            }
+                        }
+
+                        is MeasurementArea.LineArea -> {
+                            val startResult = temp.getTemperatureOfPoint(area.start)
+                            val endResult = temp.getTemperatureOfPoint(area.end)
+                            if (startResult != null && endResult != null) {
+                                val minT = minOf(startResult.minTemperature, endResult.minTemperature)
+                                val maxT = maxOf(startResult.maxTemperature, endResult.maxTemperature)
+                                MeasurementResult(
+                                    minTemp = minT,
+                                    maxTemp = maxT,
+                                    avgTemp = (minT + maxT) / 2,
+                                    area = area,
+                                )
+                            } else {
+                                null
+                            }
+                        }
+
+                        is MeasurementArea.EllipseArea -> {
+                            // TODO: Implement ellipse area measurement
+                            // SDK currently does not provide native ellipse measurement
+                            // Approximate using bounding rectangle for now
+                            val tempResult = temp.getTemperatureOfRect(area.boundingRect)
+                            tempResult?.let {
+                                MeasurementResult(
+                                    minTemp = it.minTemperature,
+                                    maxTemp = it.maxTemperature,
+                                    avgTemp = (it.minTemperature + it.maxTemperature) / 2,
+                                    area = area,
+                                )
+                            }
+                        }
+
+                        is MeasurementArea.PolygonArea -> {
+                            // TODO: Implement polygon area measurement
+                            // SDK currently does not provide native polygon measurement
+                            // Approximate using bounding rectangle for now
+                            val tempResult = temp.getTemperatureOfRect(area.boundingRect)
+                            tempResult?.let {
+                                MeasurementResult(
+                                    minTemp = it.minTemperature,
+                                    maxTemp = it.maxTemperature,
+                                    avgTemp = (it.minTemperature + it.maxTemperature) / 2,
+                                    area = area,
+                                )
+                            }
                         }
                     }
-
-                    is MeasurementArea.RectangleArea -> {
-                        val tempResult = temp.getTemperatureOfRect(area.rect)
-                        tempResult?.let {
-                            MeasurementResult(
-                                minTemp = it.minTemperature,
-                                maxTemp = it.maxTemperature,
-                                avgTemp = (it.minTemperature + it.maxTemperature) / 2,
-                                area = area
-                            )
-                        }
-                    }
-
-                    is MeasurementArea.LineArea -> {
-                        val startResult = temp.getTemperatureOfPoint(area.start)
-                        val endResult = temp.getTemperatureOfPoint(area.end)
-                        if (startResult != null && endResult != null) {
-                            val minT = minOf(startResult.minTemperature, endResult.minTemperature)
-                            val maxT = maxOf(startResult.maxTemperature, endResult.maxTemperature)
-                            MeasurementResult(
-                                minTemp = minT,
-                                maxTemp = maxT,
-                                avgTemp = (minT + maxT) / 2,
-                                area = area
-                            )
-                        } else null
-                    }
-
-                    is MeasurementArea.EllipseArea -> {
-                        // TODO: Implement ellipse area measurement
-                        // SDK currently does not provide native ellipse measurement
-                        // Approximate using bounding rectangle for now
-                        val tempResult = temp.getTemperatureOfRect(area.boundingRect)
-                        tempResult?.let {
-                            MeasurementResult(
-                                minTemp = it.minTemperature,
-                                maxTemp = it.maxTemperature,
-                                avgTemp = (it.minTemperature + it.maxTemperature) / 2,
-                                area = area
-                            )
-                        }
-                    }
-
-                    is MeasurementArea.PolygonArea -> {
-                        // TODO: Implement polygon area measurement
-                        // SDK currently does not provide native polygon measurement
-                        // Approximate using bounding rectangle for now
-                        val tempResult = temp.getTemperatureOfRect(area.boundingRect)
-                        tempResult?.let {
-                            MeasurementResult(
-                                minTemp = it.minTemperature,
-                                maxTemp = it.maxTemperature,
-                                avgTemp = (it.minTemperature + it.maxTemperature) / 2,
-                                area = area
-                            )
-                        }
-                    }
-                }
                 result?.let { Result.success(it) } ?: Result.failure(Exception("Measurement failed"))
             } ?: Result.failure(Exception("LibIRTemp not initialized"))
         } catch (e: Exception) {
@@ -660,39 +677,40 @@ class ThermalHardwareDataSourceImpl(
             }
             // TODO: Replace hardcoded values with actual SDK calls when API becomes available
             // Current SDK does not expose device info query methods
-            val deviceInfo = DeviceInfo(
-                model = "TC001",
-                serialNumber = "UNKNOWN",  // TODO: Fetch from SDK
-                firmwareVersion = "1.0.0",  // TODO: Fetch from SDK
-                sdkVersion = "1.1.1",  // TODO: Fetch from SDK
-                resolution = Pair(CAMERA_WIDTH, CAMERA_HEIGHT),
-                frameRate = 9.0f,
-                temperatureRange = Pair(MIN_TEMP_RANGE, MAX_TEMP_RANGE)
-            )
+            val deviceInfo =
+                DeviceInfo(
+                    model = "TC001",
+                    serialNumber = "UNKNOWN", // TODO: Fetch from SDK
+                    firmwareVersion = "1.0.0", // TODO: Fetch from SDK
+                    sdkVersion = "1.1.1", // TODO: Fetch from SDK
+                    resolution = Pair(CAMERA_WIDTH, CAMERA_HEIGHT),
+                    frameRate = 9.0f,
+                    temperatureRange = Pair(MIN_TEMP_RANGE, MAX_TEMP_RANGE),
+                )
             Result.success(deviceInfo)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    override suspend fun getBatteryStatus(): Result<BatteryStatus> {
-        return try {
-            val batteryStatus = BatteryStatus(
-                level = 100,
-                isCharging = false,
-                voltage = 3.7f
-            )
+    override suspend fun getBatteryStatus(): Result<BatteryStatus> =
+        try {
+            val batteryStatus =
+                BatteryStatus(
+                    level = 100,
+                    isCharging = false,
+                    voltage = 3.7f,
+                )
             Result.success(batteryStatus)
         } catch (e: Exception) {
             Result.failure(e)
         }
-    }
 
     fun configureCameraSettings(
         enableMirror: Boolean = false,
         enableAutoShutter: Boolean = true,
         ddeLevel: Int = 128,
-        contrastLevel: Int = 128
+        contrastLevel: Int = 128,
     ): Result<Unit> {
         return try {
             if (!isConnected) {
@@ -710,4 +728,3 @@ class ThermalHardwareDataSourceImpl(
         }
     }
 }
-

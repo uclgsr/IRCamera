@@ -74,4 +74,3 @@ fun rememberScreenDimensions(): ScreenDimensions {
     val context = LocalContext.current
     return ScreenDimensions(context)
 }
-

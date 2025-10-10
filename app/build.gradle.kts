@@ -16,14 +16,26 @@ val buildTimeStr = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
 
 android {
     namespace = "com.csl.irCamera"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.compileSdk
+            .get()
+            .toInt()
     ndkVersion = libs.versions.ndkVersion.get()
 
     defaultConfig {
         applicationId = "com.csl.irCamera"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = libs.versions.versionCode.get().toInt()
+        minSdk =
+            libs.versions.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.targetSdk
+                .get()
+                .toInt()
+        versionCode =
+            libs.versions.versionCode
+                .get()
+                .toInt()
         versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -230,14 +242,14 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
         isCoreLibraryDesugaringEnabled = true
     }
 
     kotlin {
         compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
             freeCompilerArgs.addAll(
                 listOf(
                     "-opt-in=kotlin.RequiresOptIn",
@@ -257,7 +269,7 @@ android {
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(17))
+            languageVersion.set(JavaLanguageVersion.of(21))
         }
     }
 
@@ -325,6 +337,8 @@ dependencies {
     // Hilt dependency injection
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    kapt(libs.guava)
+    kapt("com.google.guava:guava:33.0.0-jre")
     implementation(libs.hilt.navigation.compose)
 
     implementation(platform(libs.compose.bom))
@@ -338,11 +352,7 @@ dependencies {
     implementation(project(":component:thermalunified"))
     implementation(project(":libunified"))
     implementation(project(":BleModule"))
-    implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
-    implementation(files("libs/libirutils_1.2.0_2409241055.aar"))
-    implementation(files("libs/libcommon_1.2.0_24052117.aar"))
     implementation(files("libs/main-2.2.1-release.aar"))
-    implementation(files("libs/topdon.aar"))
 
     implementation(
         fileTree(
@@ -353,7 +363,6 @@ dependencies {
         ),
     )
 
-    implementation(files("../libunified/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
 
     implementation(libs.jsbridge)
     implementation(libs.ucrop)
@@ -365,6 +374,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
+    implementation(libs.androidx.preference)
+    implementation(libs.lifecycle.process)
     implementation(libs.nordic.ble)
     implementation(libs.nordic.ble.ktx)
     implementation(libs.lifecycle.service)
@@ -422,6 +433,16 @@ dependencies {
     androidTestImplementation(libs.truth)
     testImplementation(libs.javafaker)
 }
+
+configurations
+    .matching { it.name.startsWith("kapt") }
+    .configureEach {
+        resolutionStrategy.eachDependency {
+            if (requested.group == "com.google.guava" && requested.name == "guava") {
+                useTarget("com.google.guava:guava:33.0.0-jre")
+            }
+        }
+    }
 
 fun getYearStr(): String = SimpleDateFormat("yy", Locale.getDefault()).format(Date())
 

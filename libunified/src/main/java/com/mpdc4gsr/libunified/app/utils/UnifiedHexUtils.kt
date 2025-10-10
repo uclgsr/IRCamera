@@ -28,12 +28,12 @@ object UnifiedHexUtils {
         while (i < len) {
             data[i / 2] =
                 (
-                        (Character.digit(cleanHex[i], 16) shl 4) +
-                                Character.digit(
-                                    cleanHex[i + 1],
-                                    16,
-                                )
-                        ).toByte()
+                    (Character.digit(cleanHex[i], 16) shl 4) +
+                        Character.digit(
+                            cleanHex[i + 1],
+                            16,
+                        )
+                ).toByte()
             i += 2
         }
         return data

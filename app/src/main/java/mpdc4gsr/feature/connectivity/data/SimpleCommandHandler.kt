@@ -14,6 +14,7 @@ class SimpleCommandHandler(
         private const val STATUS_UPDATE_INTERVAL_MS = 5000L
     }
 
+
     private val handlerScope = CoroutineScope(Dispatchers.IO)
 
     suspend fun handleCommand(commandLine: String) {
@@ -29,6 +30,7 @@ class SimpleCommandHandler(
                     "ERROR cmd=UNKNOWN code=UNKNOWN_COMMAND msg=\"Unknown command: $commandLine\""
                 }
             }
+
             if (response.isNotEmpty()) {
                 networkManager.sendResponse(response)
             }
@@ -39,11 +41,13 @@ class SimpleCommandHandler(
         }
     }
 
+
     private suspend fun handleStartCommand(): String = withContext(Dispatchers.IO) {
         try {
             if (recordingController.isRecording) {
                 return@withContext "ERROR cmd=START code=ALREADY_RECORDING msg=\"Recording session already active\""
             }
+
             val success = recordingController.startRecording()
             if (success) {
                 val sessionId = "session_${System.currentTimeMillis()}"
@@ -56,11 +60,13 @@ class SimpleCommandHandler(
         }
     }
 
+
     private suspend fun handleStopCommand(): String = withContext(Dispatchers.IO) {
         try {
             if (!recordingController.isRecording) {
                 return@withContext "STOP-ACK msg=\"No active recording session\""
             }
+
             val success = recordingController.stopRecording()
             if (success) {
                 "STOP-ACK msg=\"Recording session stopped\""
@@ -71,6 +77,7 @@ class SimpleCommandHandler(
             "ERROR cmd=STOP code=STOP_EXCEPTION msg=\"Stop error: ${e.message}\""
         }
     }
+
 
     private suspend fun handleSyncCommand(commandLine: String): String =
         withContext(Dispatchers.IO) {
@@ -88,9 +95,11 @@ class SimpleCommandHandler(
             }
         }
 
+
     private fun handlePingCommand(): String {
         return "PONG"
     }
+
 
     private suspend fun handleGetStatusCommand(): String = withContext(Dispatchers.IO) {
         try {
@@ -100,18 +109,20 @@ class SimpleCommandHandler(
                 statusMap.forEach { (key, value) ->
                     put(key, value)
                 }
-            }            "STATUS $statusJson"
+            }
+            "STATUS $statusJson"
         } catch (e: Exception) {
             "ERROR cmd=GET_STATUS code=STATUS_EXCEPTION msg=\"Status error: ${e.message}\""
         }
     }
+
 
     private suspend fun handleJsonCommand(jsonString: String): String =
         withContext(Dispatchers.IO) {
             try {
                 val jsonObj = JSONObject(jsonString)
                 val command = jsonObj.optString("cmd", "")
-                return@withContext when (command) {
+            return@withContext when (command) {
                     "START" -> handleStartCommand()
                     "STOP" -> handleStopCommand()
                     "SYNC" -> {
@@ -129,6 +140,7 @@ class SimpleCommandHandler(
             }
         }
 
+
     private fun extractTimestampFromCommand(commandLine: String): Long? {
         return try {
             val regex = Regex("t_pc=(\\d+)")
@@ -138,6 +150,7 @@ class SimpleCommandHandler(
             null
         }
     }
+
 
     fun startPeriodicStatusUpdates() {
         handlerScope.launch {
@@ -159,6 +172,7 @@ class SimpleCommandHandler(
         }
     }
 
+
     fun notifySessionStarted(sessionId: String) {
         handlerScope.launch {
             try {
@@ -176,12 +190,14 @@ class SimpleCommandHandler(
         }
     }
 
+
     fun notifySessionStopped(sessionId: String, duration: Long) {
         handlerScope.launch {
             try {
                 val timestamp = System.currentTimeMillis()
                 val message =
-                    "STATUS Recording stopped at $timestamp, duration: ${duration}ms, files saved"
+                    "STATUS Recording stopped at $timestamp, duration: ${duration}
+ms, files saved"
                 networkManager.sendTelemetry(message)
             } catch (e: Exception) {
                 mpdc4gsr.core.common.AppLogger.e(
@@ -192,6 +208,7 @@ class SimpleCommandHandler(
             }
         }
     }
+
 
     fun notifyError(errorType: String, errorMessage: String) {
         handlerScope.launch {

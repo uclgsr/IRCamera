@@ -577,4 +577,3 @@ private fun RGBCameraScreenPreview() {
         RGBCameraScreen()
     }
 }
-

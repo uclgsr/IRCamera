@@ -10,138 +10,138 @@ import android.view.View
 import com.energy.iruvc.utils.SynchronizedBitmap
 
 class CameraView
-@JvmOverloads
-constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-) : View(context, attrs, defStyleAttr) {
-    private val TAG = "InfisenseCameraView"
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0,
+    ) : View(context, attrs, defStyleAttr) {
+        private val TAG = "InfisenseCameraView"
 
-    // Core properties for thermal camera display
-    var bitmap: Bitmap? = null
-        set(value) {
-            field = value
+        // Core properties for thermal camera display
+        var bitmap: Bitmap? = null
+            set(value) {
+                field = value
+                invalidate()
+            }
+        var isOpenAmplify: Boolean = false
+            set(value) {
+                field = value
+                invalidate()
+            }
+        var isDrawLine: Boolean = false
+            set(value) {
+                field = value
+                invalidate()
+            }
+        private var imageWidth: Int = 0
+        private var imageHeight: Int = 0
+        private var showCross: Boolean = false
+        private var syncImage: SynchronizedBitmap? = null
+        private val paint =
+            Paint().apply {
+                isAntiAlias = true
+            }
+
+        // Topdon TC001 specific camera control methods
+        fun start() {
+            visibility = VISIBLE
+        }
+
+        fun stop() {
+            bitmap = null
             invalidate()
         }
-    var isOpenAmplify: Boolean = false
-        set(value) {
-            field = value
+
+        fun openCamera() {
+            visibility = VISIBLE
+            start()
+        }
+
+        fun setImageSize(
+            width: Int,
+            height: Int,
+        ) {
+            this.imageWidth = width
+            this.imageHeight = height
+            requestLayout()
+        }
+
+        fun setShowCross(show: Boolean) {
+            this.showCross = show
             invalidate()
         }
-    var isDrawLine: Boolean = false
-        set(value) {
-            field = value
+
+        fun setSyncimage(sync: SynchronizedBitmap?) {
+            this.syncImage = sync
             invalidate()
         }
-    private var imageWidth: Int = 0
-    private var imageHeight: Int = 0
-    private var showCross: Boolean = false
-    private var syncImage: SynchronizedBitmap? = null
-    private val paint =
-        Paint().apply {
-            isAntiAlias = true
-        }
 
-    // Topdon TC001 specific camera control methods
-    fun start() {
-        visibility = VISIBLE
-    }
-
-    fun stop() {
-        bitmap = null
-        invalidate()
-    }
-
-    fun openCamera() {
-        visibility = VISIBLE
-        start()
-    }
-
-    fun setImageSize(
-        width: Int,
-        height: Int,
-    ) {
-        this.imageWidth = width
-        this.imageHeight = height
-        requestLayout()
-    }
-
-    fun setShowCross(show: Boolean) {
-        this.showCross = show
-        invalidate()
-    }
-
-    fun setSyncimage(sync: SynchronizedBitmap?) {
-        this.syncImage = sync
-        invalidate()
-    }
-
-    fun getScaledBitmap(): Bitmap? =
-        bitmap?.let { originalBitmap ->
-            if (width > 0 && height > 0) {
-                try {
-                    Bitmap.createScaledBitmap(originalBitmap, width, height, true)
-                } catch (e: Exception) {
+        fun getScaledBitmap(): Bitmap? =
+            bitmap?.let { originalBitmap ->
+                if (width > 0 && height > 0) {
+                    try {
+                        Bitmap.createScaledBitmap(originalBitmap, width, height, true)
+                    } catch (e: Exception) {
+                        originalBitmap
+                    }
+                } else {
                     originalBitmap
                 }
-            } else {
-                originalBitmap
             }
+
+        // TC001 thermal imaging specific methods
+        fun updateSelectBitmap() {
+            invalidate()
         }
 
-    // TC001 thermal imaging specific methods
-    fun updateSelectBitmap() {
-        invalidate()
-    }
+        fun updateTargetBitmap() {
+            invalidate()
+        }
 
-    fun updateTargetBitmap() {
-        invalidate()
-    }
+        fun updateMagnifier() {
+            invalidate()
+        }
 
-    fun updateMagnifier() {
-        invalidate()
-    }
-
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        bitmap?.let { bmp ->
-            try {
-                val destRect = Rect(0, 0, width, height)
-                canvas.drawBitmap(bmp, null, destRect, paint)
-                // Draw crosshair for thermal targeting if enabled
-                if (showCross) {
-                    drawThermalCrosshair(canvas)
+        override fun onDraw(canvas: Canvas) {
+            super.onDraw(canvas)
+            bitmap?.let { bmp ->
+                try {
+                    val destRect = Rect(0, 0, width, height)
+                    canvas.drawBitmap(bmp, null, destRect, paint)
+                    // Draw crosshair for thermal targeting if enabled
+                    if (showCross) {
+                        drawThermalCrosshair(canvas)
+                    }
+                } catch (e: Exception) {
                 }
-            } catch (e: Exception) {
+            }
+        }
+
+        private fun drawThermalCrosshair(canvas: Canvas) {
+            val centerX = width / 2f
+            val centerY = height / 2f
+            val crossSize = 20f
+            paint.strokeWidth = 2f
+            paint.color = android.graphics.Color.RED
+            // Draw horizontal line
+            canvas.drawLine(centerX - crossSize, centerY, centerX + crossSize, centerY, paint)
+            // Draw vertical line
+            canvas.drawLine(centerX, centerY - crossSize, centerX, centerY + crossSize, paint)
+        }
+
+        override fun onMeasure(
+            widthMeasureSpec: Int,
+            heightMeasureSpec: Int,
+        ) {
+            if (imageWidth > 0 && imageHeight > 0) {
+                // Maintain aspect ratio for thermal camera feed
+                val aspectRatio = imageWidth.toFloat() / imageHeight.toFloat()
+                val width = MeasureSpec.getSize(widthMeasureSpec)
+                val height = (width / aspectRatio).toInt()
+                setMeasuredDimension(width, height)
+            } else {
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec)
             }
         }
     }
-
-    private fun drawThermalCrosshair(canvas: Canvas) {
-        val centerX = width / 2f
-        val centerY = height / 2f
-        val crossSize = 20f
-        paint.strokeWidth = 2f
-        paint.color = android.graphics.Color.RED
-        // Draw horizontal line
-        canvas.drawLine(centerX - crossSize, centerY, centerX + crossSize, centerY, paint)
-        // Draw vertical line
-        canvas.drawLine(centerX, centerY - crossSize, centerX, centerY + crossSize, paint)
-    }
-
-    override fun onMeasure(
-        widthMeasureSpec: Int,
-        heightMeasureSpec: Int,
-    ) {
-        if (imageWidth > 0 && imageHeight > 0) {
-            // Maintain aspect ratio for thermal camera feed
-            val aspectRatio = imageWidth.toFloat() / imageHeight.toFloat()
-            val width = MeasureSpec.getSize(widthMeasureSpec)
-            val height = (width / aspectRatio).toInt()
-            setMeasuredDimension(width, height)
-        } else {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        }
-    }
-}

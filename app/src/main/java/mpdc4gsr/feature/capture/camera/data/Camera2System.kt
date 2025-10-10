@@ -33,11 +33,10 @@ class Camera2System(
         val capabilities = configurationManager.detectDeviceCapabilities()
         val hardwareLevel = capabilities.hardwareLevel ?: return false
         return hardwareLevel == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL ||
-                hardwareLevel == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3
+            hardwareLevel == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3
     }
 
     fun release() {
         rawEngine.release()
     }
 }
-

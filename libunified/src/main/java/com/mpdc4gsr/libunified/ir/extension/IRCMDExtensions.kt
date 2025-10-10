@@ -254,7 +254,8 @@ private fun IRCMD.nativeSetProperty(
     }
 
 private fun mirrorModeForValue(value: Int): CommonParams.PropImageParamsValue.MirrorFlipType =
-    CommonParams.PropImageParamsValue.MirrorFlipType.values()
+    CommonParams.PropImageParamsValue.MirrorFlipType
+        .values()
         .firstOrNull { it.value == value }
         ?: when (value) {
             1 -> CommonParams.PropImageParamsValue.MirrorFlipType.ONLY_MIRROR
@@ -264,19 +265,19 @@ private fun mirrorModeForValue(value: Int): CommonParams.PropImageParamsValue.Mi
         }
 
 private fun pseudoColorForValue(value: Int): CommonParams.PseudoColorType =
-    CommonParams.PseudoColorType.values()
+    CommonParams.PseudoColorType
+        .values()
         .firstOrNull { it.value == value }
         ?: CommonParams.PseudoColorType.PSEUDO_1
 
 private fun agcModeForValue(value: Int): CommonParams.PropImageParamsValue.AGCType =
-    CommonParams.PropImageParamsValue.AGCType.values()
+    CommonParams.PropImageParamsValue.AGCType
+        .values()
         .firstOrNull { it.value == value }
         ?: CommonParams.PropImageParamsValue.AGCType.AGC_0
 
-private fun imageNumberValue(value: Int) =
-    CommonParams.PropImageParamsValue.NumberType(value.toString())
+private fun imageNumberValue(value: Int) = CommonParams.PropImageParamsValue.NumberType(value.toString())
 
-private fun tpdNumberValue(value: Int) =
-    CommonParams.PropTPDParamsValue.NumberType(value.toString())
+private fun tpdNumberValue(value: Int) = CommonParams.PropTPDParamsValue.NumberType(value.toString())
 
 private fun succeed(result: Int) = result == 0

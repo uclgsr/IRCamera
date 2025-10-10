@@ -237,4 +237,3 @@ suspend inline fun <T> trackExecutionTimeSuspend(
         TelemetryManager.logMetric("${operationName}_duration", duration, "ms")
     }
 }
-

@@ -21,6 +21,7 @@ class TcpClient(
         private const val READ_TIMEOUT_MS = 30000
     }
 
+
     private var socket: Socket? = null
     private var reader: BufferedReader? = null
     private var writer: BufferedWriter? = null
@@ -35,15 +36,18 @@ class TcpClient(
         try {
             if (isConnected()) {
                 return@withContext true
-            } _connectionState . value = CommandConnection . ConnectionState . CONNECTING
+            }
+ _connectionState . value = CommandConnection . ConnectionState . CONNECTING
                     connectionCallback?.invoke(CommandConnection.ConnectionState.CONNECTING)
             TrafficStats.setThreadStatsTag(Process.myTid())
             socket = Socket().apply {
                 soTimeout = READ_TIMEOUT_MS
                 tcpNoDelay = true
             }
+
             socket?.connect(InetSocketAddress(serverHost, serverPort), CONNECTION_TIMEOUT_MS)
             socket?.let { TrafficStats.tagSocket(it) }
+
             val inputStream = socket?.getInputStream()
             val outputStream = socket?.getOutputStream()
             if (inputStream != null && outputStream != null) {
@@ -52,7 +56,8 @@ class TcpClient(
                 _connectionState.value = CommandConnection.ConnectionState.CONNECTED
                 connectionCallback?.invoke(CommandConnection.ConnectionState.CONNECTED)
                 // Start reader thread
-                startReaderLoop()                return@withContext true
+                startReaderLoop()
+            return@withContext true
             } else {
                 throw IOException("Failed to get socket streams")
             }
@@ -65,13 +70,15 @@ class TcpClient(
         }
     }
 
+
     override suspend fun sendMessage(message: String): Boolean = withContext(Dispatchers.IO) {
         try {
             val currentWriter = writer
             if (currentWriter != null && isConnected()) {
                 currentWriter.write(message)
                 currentWriter.write("\n")
-                currentWriter.flush()                return@withContext true
+                currentWriter.flush()
+            return@withContext true
             } else {
                 return@withContext false
             }
@@ -80,6 +87,7 @@ class TcpClient(
             return@withContext false
         }
     }
+
 
     override suspend fun disconnect(): Unit =
         withContext(Dispatchers.IO) {        // Cancel reader job first to stop any ongoing reads
@@ -102,11 +110,13 @@ class TcpClient(
             } catch (e: Exception) {
                 mpdc4gsr.core.common.AppLogger.e("TcpClient", "Unexpected Exception in TcpClient catch block", e)
             }
+
             try {
                 reader?.close()
             } catch (e: IOException) {
                 mpdc4gsr.core.common.AppLogger.e("TcpClient", "Unexpected IOException in TcpClient catch block", e)
             }
+
             try {
                 socket?.let { s ->
                     TrafficStats.untagSocket(s)
@@ -114,6 +124,7 @@ class TcpClient(
                         s.close()
                     }
                 }
+
                 TrafficStats.clearThreadStatsTag()
             } catch (e: IOException) {
                 mpdc4gsr.core.common.AppLogger.e("TcpClient", "Unexpected IOException in TcpClient catch block", e)
@@ -126,26 +137,32 @@ class TcpClient(
             connectionCallback?.invoke(CommandConnection.ConnectionState.DISCONNECTED)
         }
 
+
     override fun isConnected(): Boolean {
         return socket?.isConnected == true && !socket!!.isClosed && _connectionState.value == CommandConnection.ConnectionState.CONNECTED
     }
+
 
     override fun setMessageCallback(callback: (String) -> Unit) {
         messageCallback = callback
     }
 
+
     override fun setConnectionCallback(callback: (CommandConnection.ConnectionState) -> Unit) {
         connectionCallback = callback
     }
+
 
     override fun cleanup() {
         clientScope.launch {
             disconnect()
         }
+
         clientScope.cancel()
         messageCallback = null
         connectionCallback = null
     }
+
 
     private fun startReaderLoop() {
         readerJob = clientScope.launch {
@@ -173,11 +190,13 @@ class TcpClient(
                     handleConnectionError("Reader error: ${e.message}")
                 }
             }
+
             if (isActive) {
                 handleConnectionError("Server disconnected")
             }
         }
     }
+
 
     private fun handleConnectionError(errorMessage: String) {
         _connectionState.value = CommandConnection.ConnectionState.ERROR

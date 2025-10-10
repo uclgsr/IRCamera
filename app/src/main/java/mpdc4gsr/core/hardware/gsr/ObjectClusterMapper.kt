@@ -63,4 +63,3 @@ fun ObjectCluster.toGsrSamplePayload(): GsrSamplePayload? {
         GsrSamplePayload(sample, wallClockMs)
     }.getOrNull()
 }
-

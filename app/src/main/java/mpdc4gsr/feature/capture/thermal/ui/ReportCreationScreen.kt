@@ -57,7 +57,7 @@ import mpdc4gsr.core.designsystem.theme.IRCameraTheme
 fun ReportCreationScreen(
     imageUri: String? = null,
     onBackClick: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var reportTitle by remember { mutableStateOf("Thermal Analysis Report") }
     var description by remember { mutableStateOf("") }
@@ -69,14 +69,15 @@ fun ReportCreationScreen(
     var currentStep by remember { mutableIntStateOf(0) }
     val steps = listOf("Basic Info", "Content", "Format", "Preview")
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFF16131e))
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color(0xFF16131e)),
     ) {
         TitleBar(
             title = "Create Report",
             showBackButton = true,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
         ) {
             val context = androidx.compose.ui.platform.LocalContext.current
             TitleBarAction(
@@ -84,56 +85,62 @@ fun ReportCreationScreen(
                 contentDescription = "Save Draft",
                 onClick = {
                     // TODO: Save report draft
-                    android.widget.Toast.makeText(
-                        context,
-                        "Report draft saved",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                }
+                    android.widget.Toast
+                        .makeText(
+                            context,
+                            "Report draft saved",
+                            android.widget.Toast.LENGTH_SHORT,
+                        ).show()
+                },
             )
         }
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
         ) {
             // Progress Indicator
             ReportProgressIndicator(
                 currentStep = currentStep,
                 steps = steps,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             // Step Content
             when (currentStep) {
-                0 -> BasicInfoStep(
-                    title = reportTitle,
-                    onTitleChange = { reportTitle = it },
-                    description = description,
-                    onDescriptionChange = { description = it }
-                )
+                0 ->
+                    BasicInfoStep(
+                        title = reportTitle,
+                        onTitleChange = { reportTitle = it },
+                        description = description,
+                        onDescriptionChange = { description = it },
+                    )
 
-                1 -> ContentStep(
-                    observations = observations,
-                    onObservationsChange = { observations = it },
-                    includeMetadata = includeMetadata,
-                    onMetadataChange = { includeMetadata = it },
-                    includeTemperatureData = includeTemperatureData,
-                    onTemperatureDataChange = { includeTemperatureData = it },
-                    includeAnnotations = includeAnnotations,
-                    onAnnotationsChange = { includeAnnotations = it }
-                )
+                1 ->
+                    ContentStep(
+                        observations = observations,
+                        onObservationsChange = { observations = it },
+                        includeMetadata = includeMetadata,
+                        onMetadataChange = { includeMetadata = it },
+                        includeTemperatureData = includeTemperatureData,
+                        onTemperatureDataChange = { includeTemperatureData = it },
+                        includeAnnotations = includeAnnotations,
+                        onAnnotationsChange = { includeAnnotations = it },
+                    )
 
-                2 -> FormatStep(
-                    selectedFormat = reportFormat,
-                    onFormatChange = { reportFormat = it }
-                )
+                2 ->
+                    FormatStep(
+                        selectedFormat = reportFormat,
+                        onFormatChange = { reportFormat = it },
+                    )
 
-                3 -> PreviewStep(
-                    title = reportTitle,
-                    description = description,
-                    observations = observations,
-                    format = reportFormat
-                )
+                3 ->
+                    PreviewStep(
+                        title = reportTitle,
+                        description = description,
+                        observations = observations,
+                        format = reportFormat,
+                    )
             }
             Spacer(modifier = Modifier.weight(1f))
             // Navigation Buttons
@@ -145,12 +152,13 @@ fun ReportCreationScreen(
                 onNext = { if (currentStep < steps.size - 1) currentStep++ },
                 onFinish = {
                     // TODO: Generate and export report
-                    android.widget.Toast.makeText(
-                        context,
-                        "Generating report...",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                }
+                    android.widget.Toast
+                        .makeText(
+                            context,
+                            "Generating report...",
+                            android.widget.Toast.LENGTH_SHORT,
+                        ).show()
+                },
             )
         }
     }
@@ -160,27 +168,27 @@ fun ReportCreationScreen(
 private fun ReportProgressIndicator(
     currentStep: Int,
     steps: List<String>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = "Step ${currentStep + 1} of ${steps.size}: ${steps[currentStep]}",
                 color = Color.White,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(8.dp))
             LinearProgressIndicator(
                 progress = { (currentStep + 1).toFloat() / steps.size },
                 modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colorScheme.primary,
-                trackColor = Color.Gray
+                trackColor = Color.Gray,
             )
         }
     }
@@ -191,73 +199,79 @@ private fun BasicInfoStep(
     title: String,
     onTitleChange: (String) -> Unit,
     description: String,
-    onDescriptionChange: (String) -> Unit
+    onDescriptionChange: (String) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             ) {
                 Text(
                     text = "Basic Information",
                     color = Color.White,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
                 )
                 OutlinedTextField(
                     value = title,
                     onValueChange = onTitleChange,
                     label = { Text("Report Title") },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = Color.Gray,
-                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                        unfocusedLabelColor = Color.Gray
-                    ),
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = Color.Gray,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = Color.Gray,
+                        ),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    keyboardActions = KeyboardActions(
-                        onNext = {
-                            // Focus moves to description field
-                        }
-                    )
+                    keyboardActions =
+                        KeyboardActions(
+                            onNext = {
+                                // Focus moves to description field
+                            },
+                        ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     value = description,
                     onValueChange = onDescriptionChange,
                     label = { Text("Description") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(120.dp),
                     maxLines = 5,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = Color.Gray,
-                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                        unfocusedLabelColor = Color.Gray
-                    ),
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = Color.Gray,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = Color.Gray,
+                        ),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            keyboardController?.hide()
-                        }
-                    )
+                    keyboardActions =
+                        KeyboardActions(
+                            onDone = {
+                                keyboardController?.hide()
+                            },
+                        ),
                 )
             }
         }
@@ -275,85 +289,89 @@ private fun ContentStep(
     includeTemperatureData: Boolean,
     onTemperatureDataChange: (Boolean) -> Unit,
     includeAnnotations: Boolean,
-    onAnnotationsChange: (Boolean) -> Unit
+    onAnnotationsChange: (Boolean) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             ) {
                 Text(
                     text = "Report Content",
                     color = Color.White,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
                 )
                 OutlinedTextField(
                     value = observations,
                     onValueChange = onObservationsChange,
                     label = { Text("Observations & Analysis") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(150.dp),
                     maxLines = 8,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = Color.Gray,
-                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                        unfocusedLabelColor = Color.Gray
-                    ),
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = Color.Gray,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = Color.Gray,
+                        ),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            keyboardController?.hide()
-                        }
-                    )
+                    keyboardActions =
+                        KeyboardActions(
+                            onDone = {
+                                keyboardController?.hide()
+                            },
+                        ),
                 )
             }
         }
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             ) {
                 Text(
                     text = "Include in Report",
                     color = Color.White,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
                 )
                 ContentToggleItem(
                     label = "Image Metadata",
                     description = "Include capture date, settings, and device info",
                     checked = includeMetadata,
-                    onCheckedChange = onMetadataChange
+                    onCheckedChange = onMetadataChange,
                 )
                 ContentToggleItem(
                     label = "Temperature Data",
                     description = "Include temperature measurements and statistics",
                     checked = includeTemperatureData,
-                    onCheckedChange = onTemperatureDataChange
+                    onCheckedChange = onTemperatureDataChange,
                 )
                 ContentToggleItem(
                     label = "Annotations",
                     description = "Include all measurement points and areas",
                     checked = includeAnnotations,
-                    onCheckedChange = onAnnotationsChange
+                    onCheckedChange = onAnnotationsChange,
                 )
             }
         }
@@ -363,27 +381,27 @@ private fun ContentStep(
 @Composable
 private fun FormatStep(
     selectedFormat: ReportFormat,
-    onFormatChange: (ReportFormat) -> Unit
+    onFormatChange: (ReportFormat) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = "Report Format",
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             ReportFormat.entries.forEach { format ->
                 ReportFormatOption(
                     format = format,
                     selected = selectedFormat == format,
-                    onSelected = { onFormatChange(format) }
+                    onSelected = { onFormatChange(format) },
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -396,23 +414,24 @@ private fun PreviewStep(
     title: String,
     description: String,
     observations: String,
-    format: ReportFormat
+    format: ReportFormat,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
+            modifier =
+                Modifier
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()),
         ) {
             Text(
                 text = "Report Preview",
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             // Report Preview Content
             Text(
@@ -420,14 +439,14 @@ private fun PreviewStep(
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp),
             )
             if (description.isNotEmpty()) {
                 Text(
                     text = description,
                     color = Color.Gray,
                     fontSize = 14.sp,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
                 )
             }
             if (observations.isNotEmpty()) {
@@ -436,20 +455,20 @@ private fun PreviewStep(
                     color = Color.White,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 4.dp)
+                    modifier = Modifier.padding(bottom = 4.dp),
                 )
                 Text(
                     text = observations,
                     color = Color.Gray,
                     fontSize = 14.sp,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
                 )
             }
             Text(
                 text = "Export Format: ${format.displayName}",
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
     }
@@ -459,29 +478,30 @@ private fun PreviewStep(
 private fun MetadataInfoCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A)),
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Text(
                 text = "Image Information",
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp),
             )
-            val metadata = listOf(
-                "Capture Date" to "2024-01-15 14:30:22",
-                "Device" to "TOPDON TC001",
-                "Resolution" to "256 × 192",
-                "Temperature Range" to "-20°C to 120°C",
-                "Emissivity" to "0.95"
-            )
+            val metadata =
+                listOf(
+                    "Capture Date" to "2024-01-15 14:30:22",
+                    "Device" to "TOPDON TC001",
+                    "Resolution" to "256 × 192",
+                    "Temperature Range" to "-20°C to 120°C",
+                    "Emissivity" to "0.95",
+                )
             metadata.forEach { (label, value) ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(label, color = Color.Gray, fontSize = 14.sp)
                     Text(value, color = Color.White, fontSize = 14.sp)
@@ -497,38 +517,40 @@ private fun ContentToggleItem(
     label: String,
     description: String,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Text(
                 text = label,
                 color = Color.White,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
             Text(
                 text = description,
                 color = Color.Gray,
-                fontSize = 12.sp
+                fontSize = 12.sp,
             )
         }
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = MaterialTheme.colorScheme.primary,
-                uncheckedThumbColor = Color.Gray,
-                checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-                uncheckedTrackColor = Color.Gray.copy(alpha = 0.3f)
-            )
+            colors =
+                SwitchDefaults.colors(
+                    checkedThumbColor = MaterialTheme.colorScheme.primary,
+                    uncheckedThumbColor = Color.Gray,
+                    checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                    uncheckedTrackColor = Color.Gray.copy(alpha = 0.3f),
+                ),
         )
     }
 }
@@ -537,28 +559,31 @@ private fun ContentToggleItem(
 private fun ReportFormatOption(
     format: ReportFormat,
     selected: Boolean,
-    onSelected: () -> Unit
+    onSelected: () -> Unit,
 ) {
     Card(
         onClick = onSelected,
-        colors = CardDefaults.cardColors(
-            containerColor = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) else Color.Transparent
-        ),
-        border = if (selected) CardDefaults.outlinedCardBorder() else null
+        colors =
+            CardDefaults.cardColors(
+                containerColor = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) else Color.Transparent,
+            ),
+        border = if (selected) CardDefaults.outlinedCardBorder() else null,
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             RadioButton(
                 selected = selected,
                 onClick = onSelected,
-                colors = RadioButtonDefaults.colors(
-                    selectedColor = MaterialTheme.colorScheme.primary,
-                    unselectedColor = Color.Gray
-                )
+                colors =
+                    RadioButtonDefaults.colors(
+                        selectedColor = MaterialTheme.colorScheme.primary,
+                        unselectedColor = Color.Gray,
+                    ),
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column {
@@ -566,12 +591,12 @@ private fun ReportFormatOption(
                     text = format.displayName,
                     color = Color.White,
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = format.description,
                     color = Color.Gray,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
                 )
             }
         }
@@ -584,18 +609,19 @@ private fun ReportNavigationButtons(
     totalSteps: Int,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
-    onFinish: () -> Unit
+    onFinish: () -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         if (currentStep > 0) {
             OutlinedButton(
                 onClick = onPrevious,
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = Color.White
-                )
+                colors =
+                    ButtonDefaults.outlinedButtonColors(
+                        contentColor = Color.White,
+                    ),
             ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
@@ -607,9 +633,10 @@ private fun ReportNavigationButtons(
         if (currentStep < totalSteps - 1) {
             Button(
                 onClick = onNext,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                    ),
             ) {
                 Text("Next")
                 Spacer(modifier = Modifier.width(8.dp))
@@ -618,9 +645,10 @@ private fun ReportNavigationButtons(
         } else {
             Button(
                 onClick = onFinish,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                    ),
             ) {
                 Icon(Icons.Default.Check, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
@@ -630,11 +658,14 @@ private fun ReportNavigationButtons(
     }
 }
 
-enum class ReportFormat(val displayName: String, val description: String) {
+enum class ReportFormat(
+    val displayName: String,
+    val description: String,
+) {
     PDF("PDF Document", "Portable document format with images and text"),
     WORD("Word Document", "Microsoft Word document with editable content"),
     HTML("HTML Report", "Web-based report with interactive elements"),
-    EXCEL("Excel Spreadsheet", "Data-focused report with temperature analysis")
+    EXCEL("Excel Spreadsheet", "Data-focused report with temperature analysis"),
 }
 
 @Preview(showBackground = true)
@@ -644,4 +675,3 @@ private fun ReportCreationScreenPreview() {
         ReportCreationScreen()
     }
 }
-

@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.utils
 
-
 /**
  * Lightweight logger for the libunified module that safely forwards to AppLogger when available.
  */

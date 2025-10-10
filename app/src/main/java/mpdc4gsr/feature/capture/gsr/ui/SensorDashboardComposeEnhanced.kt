@@ -664,4 +664,3 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
             100f + (kotlin.random.Random.nextFloat() - 0.5f) * 50f
         }
 }
-

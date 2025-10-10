@@ -106,4 +106,3 @@ class TimeLapseCameraViewModelFactory(
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
-

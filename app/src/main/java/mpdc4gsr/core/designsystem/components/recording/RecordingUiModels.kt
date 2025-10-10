@@ -28,4 +28,3 @@ data class RecordingSessionSummary(
     val errorMessage: String? = null,
     val startTimeMillis: Long = 0L,
 )
-

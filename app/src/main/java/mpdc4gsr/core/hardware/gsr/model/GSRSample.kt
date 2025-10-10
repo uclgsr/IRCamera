@@ -12,8 +12,8 @@ data class GSRSample(
     val isValid: Boolean
         get() =
             gsrRaw in 0..4095 &&
-                    gsrMicrosiemens > 0.0 &&
-                    qualityScore >= 0.5
+                gsrMicrosiemens > 0.0 &&
+                qualityScore >= 0.5
     val resistanceOhms: Double
         get() = if (gsrMicrosiemens > 0) 1_000_000.0 / gsrMicrosiemens else Double.MAX_VALUE
     val qualityLevel: QualityLevel
@@ -99,4 +99,3 @@ data class GSRSample(
             }
     }
 }
-

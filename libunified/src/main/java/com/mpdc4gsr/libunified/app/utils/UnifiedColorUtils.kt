@@ -83,9 +83,9 @@ object UnifiedColorUtils {
         blue: Int,
     ): Int =
         (alpha.coerceIn(0, 255) shl 24) or
-                (red.coerceIn(0, 255) shl 16) or
-                (green.coerceIn(0, 255) shl 8) or
-                blue.coerceIn(0, 255)
+            (red.coerceIn(0, 255) shl 16) or
+            (green.coerceIn(0, 255) shl 8) or
+            blue.coerceIn(0, 255)
 
     @JvmStatic
     fun changePseudocodeModeByOld(oldMode: Int): CommonParams.PseudoColorType {

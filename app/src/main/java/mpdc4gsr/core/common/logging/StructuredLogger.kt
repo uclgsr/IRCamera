@@ -367,4 +367,3 @@ class StructuredLogger private constructor(
         }
     }
 }
-

@@ -13,13 +13,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mpdc4gsr.core.common.logging.StructuredLogger
 import org.json.JSONObject
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
-
-import mpdc4gsr.core.common.logging.StructuredLogger
 
 class SessionWorkflowManager(
     private val context: Context,
@@ -364,8 +363,8 @@ class SessionWorkflowManager(
         val needsSync =
             devices.any { device ->
                 device.connectionQuality == ConnectionQuality.POOR ||
-                        device.connectionQuality == ConnectionQuality.UNSTABLE ||
-                        kotlin.math.abs(device.syncOffset) > 5_000_000L
+                    device.connectionQuality == ConnectionQuality.UNSTABLE ||
+                    kotlin.math.abs(device.syncOffset) > 5_000_000L
             }
         if (needsSync && session.state == SessionState.ACTIVE) {
             onSyncRequired?.invoke(devices)
@@ -515,4 +514,3 @@ class SessionWorkflowManager(
         val studyName: String? = null,
     )
 }
-

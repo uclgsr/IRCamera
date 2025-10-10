@@ -15,7 +15,10 @@ class ThermalUsbReceiver : BroadcastReceiver() {
         private const val USB_PERMISSION_ACTION = "mpdc4gsr.USB_PERMISSION"
     }
 
-    override fun onReceive(context: Context?, intent: Intent?) {
+    override fun onReceive(
+        context: Context?,
+        intent: Intent?,
+    ) {
         if (context == null || intent == null) return
         try {
             when (intent.action) {
@@ -36,7 +39,10 @@ class ThermalUsbReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun handleDeviceAttached(context: Context, intent: Intent) {
+    private fun handleDeviceAttached(
+        context: Context,
+        intent: Intent,
+    ) {
         val device =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
@@ -62,7 +68,10 @@ class ThermalUsbReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun handleDeviceDetached(context: Context, intent: Intent) {
+    private fun handleDeviceDetached(
+        context: Context,
+        intent: Intent,
+    ) {
         val device =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
@@ -78,7 +87,10 @@ class ThermalUsbReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun handleUsbPermissionResult(context: Context, intent: Intent) {
+    private fun handleUsbPermissionResult(
+        context: Context,
+        intent: Intent,
+    ) {
         val device =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
@@ -101,4 +113,3 @@ class ThermalUsbReceiver : BroadcastReceiver() {
         }
     }
 }
-

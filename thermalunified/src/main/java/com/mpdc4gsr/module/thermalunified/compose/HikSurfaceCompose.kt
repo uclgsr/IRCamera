@@ -311,9 +311,9 @@ private fun DrawScope.drawThermalData(
                 val dataIndex = (y * dataWidth + x) * 2 // 2 bytes per pixel
                 if (dataIndex + 1 < thermalData.size) {
                     val tempValue = (
-                            (thermalData[dataIndex].toInt() and 0xFF) or
-                                    ((thermalData[dataIndex + 1].toInt() and 0xFF) shl 8)
-                            )
+                        (thermalData[dataIndex].toInt() and 0xFF) or
+                            ((thermalData[dataIndex + 1].toInt() and 0xFF) shl 8)
+                    )
                     // Convert to color (simplified)
                     val normalizedTemp = (tempValue % 256) / 255f
                     val color =

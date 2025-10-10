@@ -353,4 +353,3 @@ class BackgroundDeviceScanningService :
         val lastDeviceCount: Int,
     )
 }
-

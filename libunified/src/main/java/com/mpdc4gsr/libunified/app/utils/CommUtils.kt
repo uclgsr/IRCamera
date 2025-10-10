@@ -34,8 +34,7 @@ object CommUtils {
         return formatter.format(Date())
     }
 
-    fun getAppStorageDir(context: Context): File =
-        context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: context.filesDir
+    fun getAppStorageDir(context: Context): File = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: context.filesDir
 
     fun createDirectory(dirPath: String): Boolean {
         val dir = File(dirPath)

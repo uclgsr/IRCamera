@@ -74,8 +74,7 @@ object UnifiedTemperatureUtils {
 
     fun findMinTemperature(temperatures: List<Float>): Float? = temperatures.minOrNull()
 
-    fun calculateAverageTemperature(temperatures: List<Float>): Float =
-        if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
+    fun calculateAverageTemperature(temperatures: List<Float>): Float = if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
 
     fun findHotspot(
         topLeft: Point,

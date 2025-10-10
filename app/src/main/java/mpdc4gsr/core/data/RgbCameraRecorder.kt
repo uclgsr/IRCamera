@@ -43,12 +43,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
+import mpdc4gsr.core.designsystem.PermissionManager
 import mpdc4gsr.core.hardware.api.ErrorType
 import mpdc4gsr.core.hardware.api.RecordingStats
 import mpdc4gsr.core.hardware.api.RecordingStatus
 import mpdc4gsr.core.hardware.api.SensorError
 import mpdc4gsr.core.hardware.api.SensorRecorder
-import mpdc4gsr.core.designsystem.PermissionManager
 import mpdc4gsr.feature.capture.camera.data.CameraConfigurationManager
 import mpdc4gsr.feature.capture.camera.data.CameraControlsManager
 import mpdc4gsr.feature.capture.camera.data.CameraPerformanceManager
@@ -537,7 +537,7 @@ class RgbCameraRecorder(
                                         .e(
                                             "RgbCameraRecorder",
                                             "Unexpected Exception in RgbCameraRecorder catch block",
-                                            e
+                                            e,
                                         )
                                 }
                             }
@@ -1079,8 +1079,8 @@ class RgbCameraRecorder(
             }
             val useStage3 =
                 deviceSupportsRAW &&
-                        ENABLE_RAW_CAPTURE &&
-                        SamsungDeviceCompatibility.isStage3Compatible()
+                    ENABLE_RAW_CAPTURE &&
+                    SamsungDeviceCompatibility.isStage3Compatible()
             if (useStage3 && rawImageCapture != null) {
                 // Create Stage 3/Level 3 DNG file name
                 val stage3File = File(rawFile.parent, rawFile.nameWithoutExtension + "_stage3.dng")
@@ -1700,7 +1700,7 @@ class RgbCameraRecorder(
     fun hasCameraPermission(): Boolean {
         val hasCamera =
             context.checkSelfPermission(android.Manifest.permission.CAMERA) ==
-                    android.content.pm.PackageManager.PERMISSION_GRANTED
+                android.content.pm.PackageManager.PERMISSION_GRANTED
         if (!hasCamera) {
             return false
         }
@@ -1710,7 +1710,7 @@ class RgbCameraRecorder(
         }
         val hasAudio =
             context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) ==
-                    android.content.pm.PackageManager.PERMISSION_GRANTED
+                android.content.pm.PackageManager.PERMISSION_GRANTED
         if (!hasAudio) {
         }
         return hasAudio
@@ -1721,10 +1721,10 @@ class RgbCameraRecorder(
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                 val hasImages =
                     context.checkSelfPermission(android.Manifest.permission.READ_MEDIA_IMAGES) ==
-                            android.content.pm.PackageManager.PERMISSION_GRANTED
+                        android.content.pm.PackageManager.PERMISSION_GRANTED
                 val hasVideo =
                     context.checkSelfPermission(android.Manifest.permission.READ_MEDIA_VIDEO) ==
-                            android.content.pm.PackageManager.PERMISSION_GRANTED
+                        android.content.pm.PackageManager.PERMISSION_GRANTED
                 if (!hasImages) {
                 }
                 if (!hasVideo) {
@@ -1733,10 +1733,10 @@ class RgbCameraRecorder(
             } else {
                 val hasWrite =
                     context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                            android.content.pm.PackageManager.PERMISSION_GRANTED
+                        android.content.pm.PackageManager.PERMISSION_GRANTED
                 val hasRead =
                     context.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                            android.content.pm.PackageManager.PERMISSION_GRANTED
+                        android.content.pm.PackageManager.PERMISSION_GRANTED
                 if (!hasWrite) {
                 }
                 if (!hasRead) {
@@ -2070,4 +2070,3 @@ class RgbCameraRecorder(
             "stage3_compatible" to (deviceSupportsRAW && SamsungDeviceCompatibility.isStage3Compatible()),
         )
 }
-

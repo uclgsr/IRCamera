@@ -30,4 +30,3 @@ interface GsrRecorder : SensorRecorder {
 
     suspend fun flushAndCloseFiles()
 }
-

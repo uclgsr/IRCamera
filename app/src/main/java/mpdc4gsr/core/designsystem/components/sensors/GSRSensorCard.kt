@@ -263,8 +263,8 @@ private fun GSRDataVisualization(
                         val freq2 = 0.02f // Even slower arousal component
                         val y =
                             centerY +
-                                    (sin((i * freq1 + timeOffset) * 0.1f) * gsrValue * 5f) +
-                                    (sin((i * freq2 + timeOffset) * 0.05f) * skinConductance * 10f)
+                                (sin((i * freq1 + timeOffset) * 0.1f) * gsrValue * 5f) +
+                                (sin((i * freq2 + timeOffset) * 0.05f) * skinConductance * 10f)
                         if (i == 0) {
                             path.moveTo(x, y)
                         } else {
@@ -345,4 +345,3 @@ private fun GSRSensorCardPreview() {
         )
     }
 }
-

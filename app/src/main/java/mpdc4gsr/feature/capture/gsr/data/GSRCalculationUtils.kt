@@ -53,4 +53,3 @@ object GSRCalculationUtils {
         return max(0.0, baseQuality).coerceAtMost(1.0)
     }
 }
-

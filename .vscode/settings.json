@@ -50,5 +50,9 @@
   "editor.inlineSuggest.enabled": true,
   "editor.tabCompletion": "on",
   "workbench.colorTheme": "Visual Studio Light",
-  "terminal.integrated.defaultProfile.linux": "bash"
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "sonarlint.connectedMode.project": {
+    "connectionId": "uclgsr",
+    "projectKey": "uclgsr_IRCamera"
+  }
 }

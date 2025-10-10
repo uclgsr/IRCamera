@@ -127,8 +127,8 @@ object UnifiedSessionUtils {
 
     fun validateSessionDirectory(sessionDir: File): Boolean =
         sessionDir.exists() &&
-                sessionDir.isDirectory &&
-                File(sessionDir, RGB_SUBDIR).exists() &&
-                File(sessionDir, THERMAL_SUBDIR).exists() &&
-                File(sessionDir, SHIMMER_SUBDIR).exists()
+            sessionDir.isDirectory &&
+            File(sessionDir, RGB_SUBDIR).exists() &&
+            File(sessionDir, THERMAL_SUBDIR).exists() &&
+            File(sessionDir, SHIMMER_SUBDIR).exists()
 }

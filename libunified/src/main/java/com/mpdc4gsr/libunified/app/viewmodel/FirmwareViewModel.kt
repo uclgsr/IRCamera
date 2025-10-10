@@ -213,7 +213,7 @@ class FirmwareViewModel(
                             LibraryLogger.e(
                                 "FirmwareViewModel",
                                 "Unexpected Exception in FirmwareViewModel catch block",
-                                exception
+                                exception,
                             )
                         }
                         countDownLatch.countDown()
@@ -260,7 +260,7 @@ class FirmwareViewModel(
                             LibraryLogger.e(
                                 "FirmwareViewModel",
                                 "Unexpected Exception in FirmwareViewModel catch block",
-                                exception
+                                exception,
                             )
                         }
                         countDownLatch.countDown()

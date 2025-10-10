@@ -29,11 +29,7 @@ fun SyncSettingsScreen(
     viewModel: SyncSettingsViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     val settings by viewModel.syncSettings.collectAsState()
-    LaunchedEffect(Unit) {
-        viewModel.initialize(context)
-    }
     Column(
         modifier = modifier
             .fillMaxSize()

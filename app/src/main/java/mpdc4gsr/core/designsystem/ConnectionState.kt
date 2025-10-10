@@ -57,4 +57,3 @@ sealed class AppError(
         val throwable: Throwable? = null,
     ) : AppError(errorMessage, throwable)
 }
-

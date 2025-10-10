@@ -402,7 +402,7 @@ class GSRNetworkStreamer(
 
     private fun shouldFlushBuffer(): Boolean =
         sampleBuffer.isNotEmpty() &&
-                (System.currentTimeMillis() % (STREAM_INTERVAL_MS * 5) == 0L)
+            (System.currentTimeMillis() % (STREAM_INTERVAL_MS * 5) == 0L)
 
     fun getStreamingStats(): Map<String, Any> =
         mapOf(
@@ -422,4 +422,3 @@ class GSRNetworkStreamer(
         networkClient = null
     }
 }
-

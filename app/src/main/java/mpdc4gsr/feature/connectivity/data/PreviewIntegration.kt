@@ -18,6 +18,7 @@ object PreviewIntegration {
         }
     }
 
+
     fun updateThermalFrame(context: Context, thermalFrame: Bitmap) {
         try {
             val adapter = getPreviewDataAdapter(context)
@@ -30,6 +31,7 @@ object PreviewIntegration {
             )
         }
     }
+
 
     fun updateGsrValue(context: Context, gsrValue: Float) {
         try {
@@ -44,6 +46,7 @@ object PreviewIntegration {
         }
     }
 
+
     fun isPreviewStreamingActive(context: Context): Boolean {
         return try {
             val streamer = getPreviewStreamer(context)
@@ -53,6 +56,7 @@ object PreviewIntegration {
         }
     }
 
+
     fun getStreamingConfig(context: Context): Map<String, Any> {
         return try {
             emptyMap()
@@ -60,6 +64,7 @@ object PreviewIntegration {
             emptyMap()
         }
     }
+
 
     fun configureStreaming(
         context: Context,
@@ -87,20 +92,24 @@ object PreviewIntegration {
         }
     }
 
+
     private fun getPreviewDataAdapter(context: Context): PreviewDataAdapter? {
         val service = getRecordingService(context)
-        return service?.previewDataAdapter
+            return service?.previewDataAdapter
     }
+
 
     private fun getPreviewStreamer(context: Context): PreviewStreamer? {
         val service = getRecordingService(context)
-        return service?.previewStreamer
+            return service?.previewStreamer
     }
+
 
     private fun getRecordingService(context: Context): RecordingService? {
         return null
     }
 }
+
 
 fun com.mpdc4gsr.module.thermalunified.tools.CameraPreviewManager.updatePreview(context: Context) {
     try {
@@ -116,6 +125,7 @@ fun com.mpdc4gsr.module.thermalunified.tools.CameraPreviewManager.updatePreview(
         )
     }
 }
+
 
 fun Float.updateGsrPreview(context: Context) {
     PreviewIntegration.updateGsrValue(context, this)

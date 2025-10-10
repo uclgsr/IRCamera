@@ -24,18 +24,15 @@ object UnifiedDirectoryUtils {
         return File(rootDir, APP_ROOT_DIR).apply { mkdirs() }
     }
 
-    fun getRecordingsDirectory(context: Context): File =
-        File(getAppRootDirectory(context), RECORDINGS_DIR).apply { mkdirs() }
+    fun getRecordingsDirectory(context: Context): File = File(getAppRootDirectory(context), RECORDINGS_DIR).apply { mkdirs() }
 
-    fun getThermalDirectory(context: Context): File =
-        File(getRecordingsDirectory(context), THERMAL_DIR).apply { mkdirs() }
+    fun getThermalDirectory(context: Context): File = File(getRecordingsDirectory(context), THERMAL_DIR).apply { mkdirs() }
 
     fun getRGBDirectory(context: Context): File = File(getRecordingsDirectory(context), RGB_DIR).apply { mkdirs() }
 
     fun getGSRDirectory(context: Context): File = File(getRecordingsDirectory(context), GSR_DIR).apply { mkdirs() }
 
-    fun getSessionsDirectory(context: Context): File =
-        File(getAppRootDirectory(context), SESSIONS_DIR).apply { mkdirs() }
+    fun getSessionsDirectory(context: Context): File = File(getAppRootDirectory(context), SESSIONS_DIR).apply { mkdirs() }
 
     fun getExportsDirectory(context: Context): File = File(getAppRootDirectory(context), EXPORTS_DIR).apply { mkdirs() }
 

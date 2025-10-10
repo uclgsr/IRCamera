@@ -311,7 +311,7 @@ class ThermalFragmentViewModel(
     fun stopVideoRecording() {
         val recordingDuration =
             System.currentTimeMillis() -
-                    (_videoRecordingState.value.recordingStartTime ?: 0L)
+                (_videoRecordingState.value.recordingStartTime ?: 0L)
         _videoRecordingState.value =
             _videoRecordingState.value.copy(
                 isRecording = false,

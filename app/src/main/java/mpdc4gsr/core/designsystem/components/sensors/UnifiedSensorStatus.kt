@@ -370,4 +370,3 @@ private fun UnifiedSensorStatusPreview() {
         )
     }
 }
-

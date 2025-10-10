@@ -173,14 +173,14 @@ class BatteryView : AppCompatImageView {
         paint.strokeCap = Paint.Cap.BUTT
         paint.color =
             (
-                    if (isCharging) {
-                        0xff6dc80e
-                    } else if (battery <= 10) {
-                        0xffeb433e
-                    } else {
-                        0xffffffff
-                    }
-                    ).toInt()
+                if (isCharging) {
+                    0xff6dc80e
+                } else if (battery <= 10) {
+                    0xffeb433e
+                } else {
+                    0xffffffff
+                }
+            ).toInt()
         canvas.clipPath(path)
         canvas.drawRect(
             lineSize + anodeWidth,

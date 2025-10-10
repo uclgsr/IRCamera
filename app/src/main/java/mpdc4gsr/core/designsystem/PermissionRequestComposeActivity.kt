@@ -590,4 +590,3 @@ private fun getOptionalPermissions() =
             false,
         ),
     )
-

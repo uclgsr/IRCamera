@@ -57,9 +57,9 @@ class CertificateManager(
             val issuer = certificate.issuerDN.name
             val isValidDevice =
                 subject.contains("CN=TOPDON") ||
-                        subject.contains("CN=TC001") ||
-                        subject.contains("CN=TS004") ||
-                        subject.contains("CN=TC007")
+                    subject.contains("CN=TC001") ||
+                    subject.contains("CN=TS004") ||
+                    subject.contains("CN=TC007")
             if (!isValidDevice) {
                 return false
             }
@@ -151,7 +151,7 @@ class CertificateManager(
                 )
             val isValid =
                 validHosts.contains(hostname) ||
-                        hostname.matches(Regex("192\\.168\\.\\d+\\.\\d+"))
+                    hostname.matches(Regex("192\\.168\\.\\d+\\.\\d+"))
             if (!isValid) {
             }
             isValid

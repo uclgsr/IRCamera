@@ -10,6 +10,7 @@ enum class RecordingState {
     ERROR
 }
 
+
 enum class TriggerSource {
     LOCAL_UI,
     LOCAL_NOTIFICATION,
@@ -17,6 +18,7 @@ enum class TriggerSource {
     AUTOMATIC,
     CRASH_RECOVERY
 }
+
 
 enum class SessionState {
     IDLE,

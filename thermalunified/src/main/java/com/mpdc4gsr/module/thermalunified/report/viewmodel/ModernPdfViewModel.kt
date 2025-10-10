@@ -287,8 +287,7 @@ class ModernPdfViewModel : BaseViewModel() {
     }
 
     // Extension functions for ReportData
-    private fun ReportData.hasMoreData(): Boolean =
-        code == 200 && data?.records?.isNotEmpty() == true && data!!.records!!.size >= 20
+    private fun ReportData.hasMoreData(): Boolean = code == 200 && data?.records?.isNotEmpty() == true && data!!.records!!.size >= 20
 
     companion object {
         private const val TAG = "ModernPdfViewModel"

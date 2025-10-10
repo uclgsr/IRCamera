@@ -3,9 +3,25 @@ package mpdc4gsr.feature.connectivity.data
 import android.content.Context
 import android.net.TrafficStats
 import android.os.Process
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import java.io.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import mpdc4gsr.core.common.AppLogger
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.DataOutputStream
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
@@ -18,192 +34,209 @@ class NetworkServer(
 ) {
     companion object {}
 
+
     private var serverSocket: ServerSocket? = null
     private var clientSocket: Socket? = null
     private var outputWriter: BufferedWriter? = null
     private var inputReader: BufferedReader? = null
     private var binaryOutputStream: DataOutputStream? = null
+
     private val isRunning = AtomicBoolean(false)
     private val isClientConnected = AtomicBoolean(false)
-    private val serverScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private val _messageFlow = MutableSharedFlow<Protocol.ProtocolMessage>()
+
+    private val serverScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    private val _messageFlow = MutableSharedFlow<Protocol.ProtocolMessage>(extraBufferCapacity = 16)
     val messageFlow: SharedFlow<Protocol.ProtocolMessage> = _messageFlow.asSharedFlow()
-    private val _connectionStateFlow = MutableStateFlow(false)
-    val connectionStateFlow: StateFlow<Boolean> = _connectionStateFlow.asStateFlow()
-    private var serverJob: Job? = null
+
+    private val _connectionState = MutableStateFlow(false)
+    val connectionState: StateFlow<Boolean> = _connectionState.asStateFlow()
+
+    private var acceptJob: Job? = null
     private var messageListenerJob: Job? = null
 
-    // Device information for HELLO message
     private val deviceId = "android_${android.os.Build.MODEL.replace(" ", "_")}"
     private val supportedSensors = listOf("RGB", "THERMAL", "GSR")
-    suspend fun start(): Boolean {
-        return withContext(Dispatchers.IO) {
+
+    suspend fun start(): Boolean =
+        withContext(Dispatchers.IO) {
+            if (isRunning.get()) {
+                return@withContext true
+            }
+
             try {
-                if (isRunning.get()) {
-                    return@withContext true
-                } TrafficStats . setThreadStatsTag (Process.myTid())
+                TrafficStats.setThreadStatsTag(Process.myTid())
                 serverSocket = ServerSocket().apply {
                     reuseAddress = true
                     bind(InetSocketAddress(port))
                 }
+
                 isRunning.set(true)
-                serverJob =
+                acceptJob =
                     serverScope.launch {
                         acceptConnections()
-                    }                return@withContext true
-            } catch (e: java.net.BindException) {
-                isRunning.set(false)
-                return@withContext false
+                    }
+
+                true
             } catch (e: Exception) {
-                isRunning.set(false)
-                return@withContext false
+                AppLogger.e("NetworkServer", "Failed to start server", e)
+                stopInternal()
+                false
+            } finally {
+                TrafficStats.clearThreadStatsTag()
             }
         }
-    }
+
 
     suspend fun stop() {
         withContext(Dispatchers.IO) {
-            try {
-                isRunning.set(false)
-                isClientConnected.set(false)
-                _connectionStateFlow.value = false
-                serverJob?.cancel()
-                messageListenerJob?.cancel()
-                clientSocket?.let { TrafficStats.untagSocket(it) }
-                outputWriter?.close()
-                inputReader?.close()
-                binaryOutputStream?.close()
-                clientSocket?.close()
-                serverSocket?.close()
-                TrafficStats.clearThreadStatsTag()
-                outputWriter = null
-                inputReader = null
-                binaryOutputStream = null
-                clientSocket = null
-                serverSocket = null
-            } catch (e: Exception) {
-                mpdc4gsr.core.common.AppLogger.e("NetworkServer", "Unexpected Exception in NetworkServer catch block", e)
-            }
+            stopInternal()
         }
     }
 
-    suspend fun sendMessage(message: String): Boolean {
-        return withContext(Dispatchers.IO) {
-            try {
-                if (!isClientConnected.get() || outputWriter == null) {
-                    return@withContext false
-                }
-                outputWriter!!.write(message + "\n")
-                outputWriter!!.flush()                return@withContext true
-            } catch (e: Exception) {
-                disconnectClient()
-                return@withContext false
-            }
-        }
-    }
 
-    suspend fun sendBinaryData(header: String, data: ByteArray): Boolean {
-        return withContext(Dispatchers.IO) {
+    suspend fun sendMessage(message: String): Boolean =
+        withContext(Dispatchers.IO) {
             try {
-                if (!isClientConnected.get() || outputWriter == null || binaryOutputStream == null) {
+                if (!isClientConnected.get()) {
                     return@withContext false
                 }
-                // Send text header first
-                outputWriter!!.write(header + "\n")
-                outputWriter!!.flush()
-                // Send binary data with length prefix
-                binaryOutputStream!!.writeInt(data.size)
-                binaryOutputStream!!.write(data)
-                binaryOutputStream!!.flush()                return@withContext true
+
+                outputWriter?.apply {
+                    write(message)
+                    newLine()
+                    flush()
+                } ?: false
             } catch (e: Exception) {
+                AppLogger.e("NetworkServer", "Failed to send message", e)
                 disconnectClient()
-                return@withContext false
+                false
             }
         }
-    }
+
+
+    suspend fun sendBinaryData(header: String, data: ByteArray): Boolean =
+        withContext(Dispatchers.IO) {
+            try {
+                if (!isClientConnected.get()) {
+                    return@withContext false
+                }
+
+                outputWriter?.apply {
+                    write(header)
+                    newLine()
+                    flush()
+                }
+
+                binaryOutputStream?.apply {
+                    writeInt(data.size)
+                    write(data)
+                    flush()
+                    true
+                } ?: false
+            } catch (e: Exception) {
+                AppLogger.e("NetworkServer", "Failed to send binary data", e)
+                disconnectClient()
+                false
+            }
+        }
+
 
     private suspend fun acceptConnections() {
-        while (isRunning.get() && serverJob?.isCancelled != true) {
+        while (isRunning.get()) {
             try {
-                val socket = serverSocket?.accept()
-                if (socket != null && isRunning.get()) {
-                    TrafficStats.tagSocket(socket) disconnectClient ()
-                    clientSocket = socket
-                    outputWriter =
-                        BufferedWriter(OutputStreamWriter(socket.getOutputStream(), Charsets.UTF_8))
-                    inputReader =
-                        BufferedReader(InputStreamReader(socket.getInputStream(), Charsets.UTF_8))
-                    binaryOutputStream = DataOutputStream(socket.getOutputStream())
-                    isClientConnected.set(true)
-                    _connectionStateFlow.value = true
-                    // Send HELLO message immediately upon connection
-                    sendMessage(Protocol.createHelloMessage(deviceId, supportedSensors))
-                    messageListenerJob =
-                        serverScope.launch {
-                            listenForMessages()
-                        }
-                }
+                val socket = serverSocket?.accept() ?: continue
+                TrafficStats.tagSocket(socket)
+                prepareNewClient(socket)
             } catch (e: SocketException) {
                 if (isRunning.get()) {
-                } else {
+                    AppLogger.w("NetworkServer", "Socket exception while accepting connections", e)
                 }
+
                 break
             } catch (e: Exception) {
-                delay(1000)
+                AppLogger.e("NetworkServer", "Unexpected error while accepting connections", e)
+                delay(1_000)
             }
         }
     }
 
+
+    private fun prepareNewClient(socket: Socket) {
+        disconnectClient()
+        clientSocket = socket
+        outputWriter = BufferedWriter(OutputStreamWriter(socket.getOutputStream(), Charsets.UTF_8))
+        inputReader = BufferedReader(InputStreamReader(socket.getInputStream(), Charsets.UTF_8))
+        binaryOutputStream = DataOutputStream(socket.getOutputStream())
+        isClientConnected.set(true)
+        _connectionState.value = true
+
+        sendWelcomeMessage()
+
+        messageListenerJob =
+            serverScope.launch {
+                listenForMessages()
+            }
+    }
+
+
+    private fun sendWelcomeMessage() {
+        serverScope.launch {
+            sendMessage(Protocol.createHelloMessage(deviceId, supportedSensors))
+        }
+    }
+
+
     private suspend fun listenForMessages() {
-        while (isClientConnected.get() && isRunning.get() && messageListenerJob?.isCancelled != true) {
+        while (isClientConnected.get()) {
+            val message = receiveMessage() ?: break
             try {
-                val messageText = receiveMessage()
-                if (messageText != null) {
-                    val protocolMessage = Protocol.parseMessage(messageText)
-                    if (protocolMessage != null) {
-                        _messageFlow.emit(protocolMessage)
-                    } else {
-                    }
+                val protocolMessage = Protocol.parseMessage(message)
+                if (protocolMessage != null) {
+                    _messageFlow.emit(protocolMessage)
                 } else {
-                    break
+                    AppLogger.w("NetworkServer", "Received invalid protocol message: $message")
                 }
-            } catch (e: SocketException) {
-                break
             } catch (e: Exception) {
-                break
+                AppLogger.e("NetworkServer", "Failed to handle incoming message", e)
             }
         }
+
         disconnectClient()
     }
 
-    private suspend fun receiveMessage(): String? {
-        return withContext(Dispatchers.IO) {
+
+    private suspend fun receiveMessage(): String? =
+        withContext(Dispatchers.IO) {
             try {
-                val reader = inputReader ?: return@withContext null
-                val line = reader.readLine()
-                if (line != null) {
-                }
-                return@withContext line
+                inputReader?.readLine()
             } catch (e: Exception) {
-                return@withContext null
+                AppLogger.e("NetworkServer", "Failed to read message", e)
+                null
             }
         }
-    }
+
 
     private fun disconnectClient() {
-        if (isClientConnected.get()) {
-            isClientConnected.set(false)
-            _connectionStateFlow.value = false
-            messageListenerJob?.cancel()
-            try {
-                clientSocket?.let { TrafficStats.untagSocket(it) }
-                outputWriter?.close()
-                inputReader?.close()
-                binaryOutputStream?.close()
-                clientSocket?.close()
-            } catch (e: Exception) {
-                mpdc4gsr.core.common.AppLogger.e("NetworkServer", "Unexpected Exception in NetworkServer catch block", e)
-            }
+        if (!isClientConnected.compareAndSet(true, false)) {
+            return
+        }
+
+
+        _connectionState.value = false
+        messageListenerJob?.cancel()
+        messageListenerJob = null
+
+        try {
+            clientSocket?.let { TrafficStats.untagSocket(it) }
+
+            outputWriter?.close()
+            inputReader?.close()
+            binaryOutputStream?.close()
+            clientSocket?.close()
+        } catch (e: Exception) {
+            AppLogger.e("NetworkServer", "Error while disconnecting client", e)
+        } finally {
             outputWriter = null
             inputReader = null
             binaryOutputStream = null
@@ -211,11 +244,26 @@ class NetworkServer(
         }
     }
 
-    fun isRunning(): Boolean = isRunning.get()
-    fun isClientConnected(): Boolean = isClientConnected.get()
-    suspend fun cleanup() {
-        stop()
-        serverScope.cancel()
-    }
-}
 
+    private fun stopInternal() {
+        if (!isRunning.compareAndSet(true, false)) {
+            return
+        }
+
+
+        acceptJob?.cancel()
+        acceptJob = null
+        disconnectClient()
+
+        try {
+            serverSocket?.close()
+        } catch (e: Exception) {
+            AppLogger.e("NetworkServer", "Error while closing server socket", e)
+        } finally {
+            serverSocket = null
+        }
+    }
+
+
+    fun isClientConnected(): Boolean = isClientConnected.get()
+}

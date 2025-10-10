@@ -483,4 +483,3 @@ private fun LogSection(
         }
     }
 }
-

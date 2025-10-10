@@ -47,4 +47,3 @@ fun Modifier.safeClickableDeferred(
 
 @Composable
 fun deferAction(action: () -> Unit): () -> Unit = libDeferAction(action)
-

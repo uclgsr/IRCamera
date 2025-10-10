@@ -287,7 +287,7 @@ data class BaseConfigUiState(
                 "Allow device hotspot mode",
                 false,
                 ConfigType.BOOLEAN,
-                false
+                false,
             ),
             ConfigItem(
                 "network_encryption",
@@ -295,7 +295,7 @@ data class BaseConfigUiState(
                 "Network encryption type",
                 "WPA2",
                 ConfigType.STRING,
-                "WPA2"
+                "WPA2",
             ),
             ConfigItem("max_clients", "Max Clients", "Maximum connected clients", 4, ConfigType.INTEGER, 4),
         ),
@@ -315,7 +315,7 @@ data class BaseConfigUiState(
                 "Apply signal filtering",
                 true,
                 ConfigType.BOOLEAN,
-                true
+                true,
             ),
             ConfigItem(
                 "calibration_mode",

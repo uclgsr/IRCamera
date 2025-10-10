@@ -27,6 +27,7 @@ class NetworkRepositoryImpl @Inject constructor(
         setupEventListener()
     }
 
+
     override suspend fun discoverControllers(): Result<List<ControllerInfo>> {
         return try {
             val controllers = dataSource.discoverControllers()
@@ -35,6 +36,7 @@ class NetworkRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
 
     override suspend fun connectToController(
         ipAddress: String,
@@ -53,6 +55,7 @@ class NetworkRepositoryImpl @Inject constructor(
         }
     }
 
+
     override suspend fun disconnect(): Result<Unit> {
         return try {
             dataSource.disconnect()
@@ -61,6 +64,7 @@ class NetworkRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
 
     override suspend fun sendMessage(message: JSONObject): Result<Unit> {
         return try {
@@ -75,6 +79,7 @@ class NetworkRepositoryImpl @Inject constructor(
         }
     }
 
+
     override suspend fun sendMeasurementData(sessionId: String, data: JSONObject): Result<Unit> {
         return try {
             val success = dataSource.sendMeasurementData(sessionId, data)
@@ -88,19 +93,23 @@ class NetworkRepositoryImpl @Inject constructor(
         }
     }
 
+
     private fun setupEventListener() {
         val listener = object : NetworkClient.NetworkEventListener {
             override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
                 _discoveredControllers.tryEmit(dataSource.getDiscoveredControllers().map { it.toDomainModel() })
             }
 
+
             override fun onConnected(controller: NetworkClient.ControllerInfo) {
                 _connectionState.tryEmit(ConnectionState.Connected(controller.toDomainModel()))
             }
 
+
             override fun onDisconnected(reason: String) {
                 _connectionState.tryEmit(ConnectionState.Disconnected)
             }
+
 
             override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
                 TelemetryManager.trackEvent(
@@ -109,6 +118,7 @@ class NetworkRepositoryImpl @Inject constructor(
                 )
             }
 
+
             override fun onSyncFlash(durationMs: Int) {
                 TelemetryManager.trackEvent(
                     "sync_flash_requested",
@@ -116,25 +126,31 @@ class NetworkRepositoryImpl @Inject constructor(
                 )
             }
 
+
             override fun onTimeSynchronized(offsetNanoseconds: Long) {
                 TelemetryManager.setProperty("network_time_offset_ns", offsetNanoseconds.toString())
             }
+
 
             override fun onDataStreamingStarted() {
                 TelemetryManager.trackEvent("data_streaming_started")
             }
 
+
             override fun onDataStreamingStopped() {
                 TelemetryManager.trackEvent("data_streaming_stopped")
             }
+
 
             override fun onError(operation: String, error: String) {
                 _connectionState.tryEmit(ConnectionState.Error(NetworkError.Unknown(error)))
             }
         }
 
+
         dataSource.setEventListener(listener)
     }
+
 
     override fun observeConnectionState(): Flow<ConnectionState> = _connectionState.asSharedFlow()
 

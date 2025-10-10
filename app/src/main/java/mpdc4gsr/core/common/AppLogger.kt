@@ -117,4 +117,3 @@ object AppLogger {
         structuredLogger?.log(structuredLevel, component, "log_message", details)
     }
 }
-

@@ -35,7 +35,5 @@ object DataModule {
 
     @Provides
     @ViewModelScoped
-    fun provideThermalRepository(topdonDataSource: TopdonDataSource): ThermalRepository =
-        ThermalRepositoryImpl(topdonDataSource)
+    fun provideThermalRepository(topdonDataSource: TopdonDataSource): ThermalRepository = ThermalRepositoryImpl(topdonDataSource)
 }
-

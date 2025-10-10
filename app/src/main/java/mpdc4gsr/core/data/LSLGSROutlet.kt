@@ -371,4 +371,3 @@ class LSLGSROutlet(
 
     fun getBufferSize(): Int = sampleBuffer.size
 }
-

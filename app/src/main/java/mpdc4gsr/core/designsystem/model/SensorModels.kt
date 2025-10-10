@@ -78,4 +78,3 @@ sealed class CameraAction {
         val height: Int,
     ) : CameraAction()
 }
-

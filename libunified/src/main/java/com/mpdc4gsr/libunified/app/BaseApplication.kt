@@ -143,7 +143,7 @@ abstract class BaseApplication : Application() {
                         LibraryLogger.e(
                             "BaseApplication",
                             "Unexpected Exception in BaseApplication catch block",
-                            exception
+                            exception,
                         )
                     }
                 }

@@ -33,4 +33,3 @@ abstract class AppRepositoryModule {
     @Singleton
     abstract fun bindDiagnosticsRepository(diagnosticsRepositoryImpl: DiagnosticsRepositoryImpl): DiagnosticsRepository
 }
-

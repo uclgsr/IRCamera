@@ -9,10 +9,10 @@ import com.mpdc4gsr.libunified.app.BaseApplication
 object PermissionUtils {
     fun isVisualUser(): Boolean =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE &&
-                ContextCompat.checkSelfPermission(
-                    BaseApplication.instance,
-                    READ_MEDIA_VISUAL_USER_SELECTED,
-                ) == PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                BaseApplication.instance,
+                READ_MEDIA_VISUAL_USER_SELECTED,
+            ) == PERMISSION_GRANTED
 
     fun hasCameraPermission(): Boolean =
         ContextCompat.checkSelfPermission(

@@ -420,4 +420,3 @@ private fun ThermalSensorCardPreview() {
         )
     }
 }
-

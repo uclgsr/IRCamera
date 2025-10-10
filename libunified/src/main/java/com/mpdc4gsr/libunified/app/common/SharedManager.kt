@@ -292,8 +292,7 @@ object SharedManager {
             .apply()
     }
 
-    fun getLanguage(context: Context): String =
-        PreferenceManager.getDefaultSharedPreferences(context).getString(LANGUAGE, "")!!
+    fun getLanguage(context: Context): String = PreferenceManager.getDefaultSharedPreferences(context).getString(LANGUAGE, "")!!
 
     fun setHasShowClause(hasShowClause: Boolean) = SPUtils.getInstance().put(HAS_SHOW_CLAUSE, hasShowClause)
 

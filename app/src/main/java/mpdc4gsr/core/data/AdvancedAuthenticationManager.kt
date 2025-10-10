@@ -535,7 +535,7 @@ class AdvancedAuthenticationManager(
     fun hasPermission(permission: String): Boolean {
         if (!isAuthenticated()) return false
         return authenticatedRole.permissions.contains("*") ||
-                authenticatedRole.permissions.contains(permission)
+            authenticatedRole.permissions.contains(permission)
     }
 
     fun getSecurityDiagnostics(): JSONObject =
@@ -563,4 +563,3 @@ class AdvancedAuthenticationManager(
         authListener = null
     }
 }
-

@@ -27,47 +27,48 @@ import mpdc4gsr.core.designsystem.components.settings.SettingsRow
 import mpdc4gsr.core.designsystem.components.settings.SettingsToggle
 import mpdc4gsr.core.designsystem.theme.IRCameraTheme
 import mpdc4gsr.feature.capture.thermal.presentation.CalibrationViewModel
-import mpdc4gsr.feature.capture.thermal.ui.components.ThermalScaffold
 
 @Composable
-fun CalibrationScreen(
+fun ThermalCalibrationScreen(
     onBackClick: (() -> Unit)? = null,
     viewModel: CalibrationViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val settings by viewModel.calibrationSettings.collectAsStateWithLifecycle()
     val calibrationInfo by viewModel.calibrationInfo.collectAsStateWithLifecycle()
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFF16131e))
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color(0xFF16131e)),
     ) {
         TitleBar(
             title = "Calibration",
             showBackButton = true,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
         )
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Thermal Camera Calibration
             SettingsCard(
                 title = "Thermal Camera Calibration",
-                icon = Icons.Default.Thermostat
+                icon = Icons.Default.Thermostat,
             ) {
                 Text(
                     text = "Calibrate temperature readings for accuracy",
                     color = Color.Gray,
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
                     onClick = { viewModel.startThermalCalibration() },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -76,24 +77,24 @@ fun CalibrationScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Last Calibrated",
-                    value = calibrationInfo.thermalLastCalibrated
+                    value = calibrationInfo.thermalLastCalibrated,
                 )
             }
             // GSR Sensor Calibration
             SettingsCard(
                 title = "GSR Sensor Calibration",
-                icon = Icons.Default.Sensors
+                icon = Icons.Default.Sensors,
             ) {
                 SettingsToggle(
                     label = "Auto Calibration",
                     description = "Automatically calibrate before each recording",
                     checked = settings.autoCalibration,
-                    onCheckedChange = { viewModel.updateAutoCalibration(it) }
+                    onCheckedChange = { viewModel.updateAutoCalibration(it) },
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
                     onClick = { viewModel.startGSRCalibration() },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -102,23 +103,23 @@ fun CalibrationScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Last Calibrated",
-                    value = calibrationInfo.gsrLastCalibrated
+                    value = calibrationInfo.gsrLastCalibrated,
                 )
             }
             // Camera Alignment
             SettingsCard(
                 title = "Camera Alignment",
-                icon = Icons.Default.CenterFocusWeak
+                icon = Icons.Default.CenterFocusWeak,
             ) {
                 Text(
                     text = "Align RGB and thermal cameras for synchronized capture",
                     color = Color.Gray,
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
                     onClick = { viewModel.startCameraAlignment() },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -127,7 +128,7 @@ fun CalibrationScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Last Aligned",
-                    value = calibrationInfo.cameraLastAligned
+                    value = calibrationInfo.cameraLastAligned,
                 )
             }
         }
@@ -136,9 +137,8 @@ fun CalibrationScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun CalibrationScreenPreview() {
+private fun ThermalCalibrationScreenPreview() {
     IRCameraTheme {
-        CalibrationScreen()
+        ThermalCalibrationScreen()
     }
 }
-

@@ -47,4 +47,3 @@ data class ReconnectionEvent(
     val successful: Boolean,
     val attemptNumber: Int,
 )
-

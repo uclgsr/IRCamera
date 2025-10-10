@@ -8,8 +8,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object TimeTools {
-    fun formatDetectTime(timeMillis: Long): String =
-        SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(timeMillis))
+    fun formatDetectTime(timeMillis: Long): String = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(timeMillis))
 
     @SuppressLint("SimpleDateFormat")
     fun getNowTime(): String {

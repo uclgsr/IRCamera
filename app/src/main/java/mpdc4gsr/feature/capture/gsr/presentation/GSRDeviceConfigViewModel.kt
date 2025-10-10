@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.hardware.gsr.model.DeviceInfo
 import mpdc4gsr.core.designsystem.AppBaseViewModel
+import mpdc4gsr.core.hardware.gsr.model.DeviceInfo
 import mpdc4gsr.feature.capture.gsr.domain.usecase.CheckGSRDeviceConnectionUseCase
 import mpdc4gsr.feature.capture.gsr.domain.usecase.ConnectGSRDeviceUseCase
 import mpdc4gsr.feature.capture.gsr.domain.usecase.DisconnectGSRDeviceUseCase
@@ -25,123 +25,123 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GSRDeviceConfigViewModel
-@Inject
-constructor(
-    private val scanDevicesUseCase: ScanGSRDevicesUseCase,
-    private val connectDeviceUseCase: ConnectGSRDeviceUseCase,
-    private val disconnectDeviceUseCase: DisconnectGSRDeviceUseCase,
-    private val getBatteryLevelUseCase: GetGSRDeviceBatteryUseCase,
-    private val checkConnectionUseCase: CheckGSRDeviceConnectionUseCase,
-) : AppBaseViewModel() {
-    companion object {
-        private val REQUIRED_PERMISSIONS =
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                arrayOf(
-                    Manifest.permission.BLUETOOTH_SCAN,
-                    Manifest.permission.BLUETOOTH_CONNECT,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
+    @Inject
+    constructor(
+        private val scanDevicesUseCase: ScanGSRDevicesUseCase,
+        private val connectDeviceUseCase: ConnectGSRDeviceUseCase,
+        private val disconnectDeviceUseCase: DisconnectGSRDeviceUseCase,
+        private val getBatteryLevelUseCase: GetGSRDeviceBatteryUseCase,
+        private val checkConnectionUseCase: CheckGSRDeviceConnectionUseCase,
+    ) : AppBaseViewModel() {
+        companion object {
+            private val REQUIRED_PERMISSIONS =
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                    arrayOf(
+                        Manifest.permission.BLUETOOTH_SCAN,
+                        Manifest.permission.BLUETOOTH_CONNECT,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                    )
+                } else {
+                    arrayOf(
+                        Manifest.permission.BLUETOOTH,
+                        Manifest.permission.BLUETOOTH_ADMIN,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                    )
+                }
+        }
+
+        // StateFlow for UI state management
+        private val _shimmerUiState = MutableStateFlow(GSRDeviceConfigUiState())
+        val shimmerUiState: StateFlow<GSRDeviceConfigUiState> = _shimmerUiState.asStateFlow()
+
+        // Device management StateFlows
+        private val _discoveredDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())
+        val discoveredDevices: StateFlow<List<DeviceInfo>> = _discoveredDevices.asStateFlow()
+        private val _shimmerConnectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
+        val shimmerConnectionState: StateFlow<ConnectionState> = _shimmerConnectionState.asStateFlow()
+
+        // Permission management StateFlow
+        private val _permissionState = MutableStateFlow(PermissionState(false, emptyList()))
+        val permissionState: StateFlow<PermissionState> = _permissionState.asStateFlow()
+
+        // SharedFlow for one-time events
+        private val _configEvents = MutableSharedFlow<ConfigEvent>()
+        val configEvents: SharedFlow<ConfigEvent> = _configEvents.asSharedFlow()
+
+        // SharedFlow for config actions
+        private val _configAction = MutableSharedFlow<ConfigAction>()
+        val configAction: SharedFlow<ConfigAction> = _configAction.asSharedFlow()
+
+        fun startScan() {
+            viewModelScope.launch {
+                _shimmerUiState.update { it.copy(isScanning = true, error = null) }
+                try {
+                    scanDevicesUseCase().collect { devices ->
+                        _discoveredDevices.value = devices
+                        _shimmerUiState.update { it.copy(isScanning = false) }
+                    }
+                } catch (e: Exception) {
+                    _shimmerUiState.update {
+                        it.copy(isScanning = false, error = e.message ?: "Scan failed")
+                    }
+                }
+            }
+        }
+
+        fun connectDevice(deviceAddress: String) {
+            viewModelScope.launch {
+                _shimmerConnectionState.value = ConnectionState.Connecting
+                val result = connectDeviceUseCase(deviceAddress)
+                result.fold(
+                    onSuccess = {
+                        _shimmerConnectionState.value = ConnectionState.Connected(deviceAddress)
+                        _configEvents.emit(ConfigEvent.DeviceConnected(deviceAddress))
+                    },
+                    onFailure = { error ->
+                        _shimmerConnectionState.value = ConnectionState.Error(error.message ?: "Connection failed")
+                        _configEvents.emit(ConfigEvent.Error(error.message ?: "Connection failed"))
+                    },
                 )
-            } else {
-                arrayOf(
-                    Manifest.permission.BLUETOOTH,
-                    Manifest.permission.BLUETOOTH_ADMIN,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
+            }
+        }
+
+        fun disconnectDevice(deviceAddress: String) {
+            viewModelScope.launch {
+                disconnectDeviceUseCase(deviceAddress)
+                _shimmerConnectionState.value = ConnectionState.Disconnected
+                _configEvents.emit(ConfigEvent.DeviceDisconnected)
+            }
+        }
+
+        fun getBatteryLevel(deviceAddress: String) {
+            viewModelScope.launch {
+                val batteryLevel = getBatteryLevelUseCase(deviceAddress)
+                batteryLevel?.let {
+                    _shimmerUiState.update { state ->
+                        state.copy(batteryLevel = it)
+                    }
+                }
+            }
+        }
+
+        fun isDeviceConnected(deviceAddress: String): Boolean = checkConnectionUseCase(deviceAddress)
+
+        fun checkPermissions(context: Context) {
+            val missingPermissions =
+                REQUIRED_PERMISSIONS.filter {
+                    ActivityCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
+                }
+            _permissionState.value =
+                PermissionState(
+                    hasAllPermissions = missingPermissions.isEmpty(),
+                    missingPermissions = missingPermissions,
                 )
-            }
-    }
+        }
 
-    // StateFlow for UI state management
-    private val _shimmerUiState = MutableStateFlow(GSRDeviceConfigUiState())
-    val shimmerUiState: StateFlow<GSRDeviceConfigUiState> = _shimmerUiState.asStateFlow()
-
-    // Device management StateFlows
-    private val _discoveredDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())
-    val discoveredDevices: StateFlow<List<DeviceInfo>> = _discoveredDevices.asStateFlow()
-    private val _shimmerConnectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
-    val shimmerConnectionState: StateFlow<ConnectionState> = _shimmerConnectionState.asStateFlow()
-
-    // Permission management StateFlow
-    private val _permissionState = MutableStateFlow(PermissionState(false, emptyList()))
-    val permissionState: StateFlow<PermissionState> = _permissionState.asStateFlow()
-
-    // SharedFlow for one-time events
-    private val _configEvents = MutableSharedFlow<ConfigEvent>()
-    val configEvents: SharedFlow<ConfigEvent> = _configEvents.asSharedFlow()
-
-    // SharedFlow for config actions
-    private val _configAction = MutableSharedFlow<ConfigAction>()
-    val configAction: SharedFlow<ConfigAction> = _configAction.asSharedFlow()
-
-    fun startScan() {
-        viewModelScope.launch {
-            _shimmerUiState.update { it.copy(isScanning = true, error = null) }
-            try {
-                scanDevicesUseCase().collect { devices ->
-                    _discoveredDevices.value = devices
-                    _shimmerUiState.update { it.copy(isScanning = false) }
-                }
-            } catch (e: Exception) {
-                _shimmerUiState.update {
-                    it.copy(isScanning = false, error = e.message ?: "Scan failed")
-                }
-            }
+        fun onPermissionsGranted() {
+            _permissionState.value = PermissionState(hasAllPermissions = true, missingPermissions = emptyList())
         }
     }
-
-    fun connectDevice(deviceAddress: String) {
-        viewModelScope.launch {
-            _shimmerConnectionState.value = ConnectionState.Connecting
-            val result = connectDeviceUseCase(deviceAddress)
-            result.fold(
-                onSuccess = {
-                    _shimmerConnectionState.value = ConnectionState.Connected(deviceAddress)
-                    _configEvents.emit(ConfigEvent.DeviceConnected(deviceAddress))
-                },
-                onFailure = { error ->
-                    _shimmerConnectionState.value = ConnectionState.Error(error.message ?: "Connection failed")
-                    _configEvents.emit(ConfigEvent.Error(error.message ?: "Connection failed"))
-                },
-            )
-        }
-    }
-
-    fun disconnectDevice(deviceAddress: String) {
-        viewModelScope.launch {
-            disconnectDeviceUseCase(deviceAddress)
-            _shimmerConnectionState.value = ConnectionState.Disconnected
-            _configEvents.emit(ConfigEvent.DeviceDisconnected)
-        }
-    }
-
-    fun getBatteryLevel(deviceAddress: String) {
-        viewModelScope.launch {
-            val batteryLevel = getBatteryLevelUseCase(deviceAddress)
-            batteryLevel?.let {
-                _shimmerUiState.update { state ->
-                    state.copy(batteryLevel = it)
-                }
-            }
-        }
-    }
-
-    fun isDeviceConnected(deviceAddress: String): Boolean = checkConnectionUseCase(deviceAddress)
-
-    fun checkPermissions(context: Context) {
-        val missingPermissions =
-            REQUIRED_PERMISSIONS.filter {
-                ActivityCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
-            }
-        _permissionState.value =
-            PermissionState(
-                hasAllPermissions = missingPermissions.isEmpty(),
-                missingPermissions = missingPermissions,
-            )
-    }
-
-    fun onPermissionsGranted() {
-        _permissionState.value = PermissionState(hasAllPermissions = true, missingPermissions = emptyList())
-    }
-}
 
 data class GSRDeviceConfigUiState(
     val isScanning: Boolean = false,
@@ -191,4 +191,3 @@ sealed class ConfigAction {
         val deviceAddress: String,
     ) : ConfigAction()
 }
-

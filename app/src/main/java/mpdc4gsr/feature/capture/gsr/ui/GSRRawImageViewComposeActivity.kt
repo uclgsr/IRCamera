@@ -299,4 +299,3 @@ private fun formatDate(timestamp: Long): String =
     java.text
         .SimpleDateFormat("MMM dd, yyyy HH:mm", java.util.Locale.getDefault())
         .format(java.util.Date(timestamp))
-

@@ -127,4 +127,3 @@ class SessionManager private constructor(
         val isActive: Boolean,
     )
 }
-

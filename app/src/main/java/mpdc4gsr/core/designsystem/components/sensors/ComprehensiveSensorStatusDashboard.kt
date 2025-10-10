@@ -323,4 +323,3 @@ private fun statusColor(status: SensorStatusUi): Color =
         SensorStatusUi.Connecting -> Color(0xFFFF9800)
         SensorStatusUi.Disconnected -> Color(0xFF9E9E9E)
     }
-

@@ -149,59 +149,59 @@ object UnifiedConfigUtils {
     fun createDefaultAppConfig(): Map<String, ConfigSection> =
         mapOf(
             "app" to
-                    ConfigSection(
-                        "app",
-                        mutableMapOf(
-                            "version" to "1.0.0",
-                            "debug" to "false",
-                            "log_level" to "INFO",
-                        ),
+                ConfigSection(
+                    "app",
+                    mutableMapOf(
+                        "version" to "1.0.0",
+                        "debug" to "false",
+                        "log_level" to "INFO",
                     ),
+                ),
             "camera" to
-                    ConfigSection(
-                        "camera",
-                        mutableMapOf(
-                            "width" to "1920",
-                            "height" to "1080",
-                            "fps" to "30",
-                            "format" to "JPEG",
-                        ),
+                ConfigSection(
+                    "camera",
+                    mutableMapOf(
+                        "width" to "1920",
+                        "height" to "1080",
+                        "fps" to "30",
+                        "format" to "JPEG",
                     ),
+                ),
             "thermal" to
-                    ConfigSection(
-                        "thermal",
-                        mutableMapOf(
-                            "emissivity" to "0.95",
-                            "temperature_unit" to "CELSIUS",
-                            "color_palette" to "RAINBOW",
-                        ),
+                ConfigSection(
+                    "thermal",
+                    mutableMapOf(
+                        "emissivity" to "0.95",
+                        "temperature_unit" to "CELSIUS",
+                        "color_palette" to "RAINBOW",
                     ),
+                ),
             "gsr" to
-                    ConfigSection(
-                        "gsr",
-                        mutableMapOf(
-                            "sampling_rate" to "128",
-                            "gain" to "1",
-                            "range" to "GSR_RANGE_AUTO",
-                        ),
+                ConfigSection(
+                    "gsr",
+                    mutableMapOf(
+                        "sampling_rate" to "128",
+                        "gain" to "1",
+                        "range" to "GSR_RANGE_AUTO",
                     ),
+                ),
             "network" to
-                    ConfigSection(
-                        "network",
-                        mutableMapOf(
-                            "server_port" to "8080",
-                            "timeout" to "5000",
-                            "retry_count" to "3",
-                        ),
+                ConfigSection(
+                    "network",
+                    mutableMapOf(
+                        "server_port" to "8080",
+                        "timeout" to "5000",
+                        "retry_count" to "3",
                     ),
+                ),
         )
 
     fun getSystemConfig(context: Context): Map<String, String> =
         mapOf(
             "android_version" to android.os.Build.VERSION.RELEASE,
             "api_level" to
-                    android.os.Build.VERSION.SDK_INT
-                        .toString(),
+                android.os.Build.VERSION.SDK_INT
+                    .toString(),
             "device_model" to android.os.Build.MODEL,
             "device_manufacturer" to android.os.Build.MANUFACTURER,
             "app_version" to UnifiedPackageUtils.getVersionName(context),

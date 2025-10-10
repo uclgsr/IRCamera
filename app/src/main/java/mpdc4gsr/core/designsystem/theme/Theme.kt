@@ -86,4 +86,3 @@ fun IRCameraTheme(
         content = content,
     )
 }
-

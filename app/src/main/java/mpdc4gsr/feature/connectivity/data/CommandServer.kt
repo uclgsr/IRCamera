@@ -31,6 +31,7 @@ class CommandServer(
         object StatusRequest : CommandEvent()
     }
 
+
     enum class ServerStatus {
         STOPPED,
         STARTING,
@@ -38,11 +39,13 @@ class CommandServer(
         ERROR
     }
 
+
     enum class ConnectionStatus {
         DISCONNECTED,
         CONNECTED,
         ERROR
     }
+
 
     private val serverScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val _serverStatus = MutableStateFlow(ServerStatus.STOPPED)
@@ -62,6 +65,7 @@ class CommandServer(
         suspend fun onSyncRequest(pcAddress: String): Boolean
         suspend fun onStatusRequest(): JSONObject
     }
+
 
     private var commandCallback: CommandCallback? = null
 
@@ -97,6 +101,7 @@ class CommandServer(
         }
     }
 
+
     suspend fun stop() {
         serverScope.launch {
             networkServer?.stop()
@@ -106,6 +111,7 @@ class CommandServer(
         _connectionStatus.value = ConnectionStatus.DISCONNECTED
         commandCallback = null
     }
+
 
     suspend fun sendAck(
         originalMessageId: String,
@@ -121,11 +127,13 @@ class CommandServer(
                 put("device_id", android.os.Build.MODEL)
                 data?.let { put("data", it) }
             }
+
             networkServer?.sendMessage(ackMessage.toString())
         } catch (e: Exception) {
             mpdc4gsr.core.common.AppLogger.e("CommandServer", "Unexpected Exception in CommandServer catch block", e)
         }
     }
+
 
     suspend fun sendStatusUpdate(status: String, data: JSONObject? = null) {
         try {
@@ -136,11 +144,13 @@ class CommandServer(
                 put("device_id", android.os.Build.MODEL)
                 data?.let { put("data", it) }
             }
+
             networkServer?.sendMessage(statusMessage.toString())
         } catch (e: Exception) {
             mpdc4gsr.core.common.AppLogger.e("CommandServer", "Unexpected Exception in CommandServer catch block", e)
         }
     }
+
 
     private fun createProtocolCallback(): ProtocolHandler.CommandHandler {
         return object : ProtocolHandler.CommandHandler {
@@ -167,6 +177,7 @@ class CommandServer(
                 }
             }
 
+
             override suspend fun onStopRecording(sessionId: String): ProtocolHandler.CommandResult {
                 return try {
                     commandCallback?.let { callback ->
@@ -187,6 +198,7 @@ class CommandServer(
                     )
                 }
             }
+
 
             override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
                 return try {

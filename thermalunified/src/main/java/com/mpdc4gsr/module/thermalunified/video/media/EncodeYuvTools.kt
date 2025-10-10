@@ -21,7 +21,7 @@ object EncodeYuvTools {
         when (colorFormat) {
             @Suppress("DEPRECATION")
             COLOR_FormatYUV420SemiPlanar,
-                ->
+            ->
                 encodeYUV420SP(
                     yuv,
                     argb,
@@ -31,7 +31,7 @@ object EncodeYuvTools {
 
             @Suppress("DEPRECATION")
             COLOR_FormatYUV420Planar,
-                ->
+            ->
                 encodeYUV420P(
                     yuv,
                     argb,
@@ -41,7 +41,7 @@ object EncodeYuvTools {
 
             @Suppress("DEPRECATION")
             COLOR_FormatYUV420PackedSemiPlanar,
-                ->
+            ->
                 encodeYUV420PSP(
                     yuv,
                     argb,
@@ -51,7 +51,7 @@ object EncodeYuvTools {
 
             @Suppress("DEPRECATION")
             COLOR_FormatYUV420PackedPlanar,
-                ->
+            ->
                 encodeYUV420PP(
                     yuv,
                     argb,
@@ -90,35 +90,35 @@ object EncodeYuvTools {
                 val v = (-38 * r - 74 * g + 112 * b + 128 shr 8) + 128
                 yuv420sp[yIndex++] =
                     (
-                            if (y < 0) {
-                                0
-                            } else if (y > 255) {
-                                255
-                            } else {
-                                y
-                            }
-                            ).toByte()
+                        if (y < 0) {
+                            0
+                        } else if (y > 255) {
+                            255
+                        } else {
+                            y
+                        }
+                    ).toByte()
                 if (j % 2 == 0 && index % 2 == 0) {
                     yuv420sp[uvIndex++] =
                         (
-                                if (v < 0) {
-                                    0
-                                } else if (v > 255) {
-                                    255
-                                } else {
-                                    v
-                                }
-                                ).toByte()
+                            if (v < 0) {
+                                0
+                            } else if (v > 255) {
+                                255
+                            } else {
+                                v
+                            }
+                        ).toByte()
                     yuv420sp[uvIndex++] =
                         (
-                                if (u < 0) {
-                                    0
-                                } else if (u > 255) {
-                                    255
-                                } else {
-                                    u
-                                }
-                                ).toByte()
+                            if (u < 0) {
+                                0
+                            } else if (u > 255) {
+                                255
+                            } else {
+                                u
+                            }
+                        ).toByte()
                 }
                 index++
             }
@@ -146,35 +146,35 @@ object EncodeYuvTools {
                 val v = (-38 * r - 74 * g + 112 * b + 128 shr 8) + 128
                 yuv420sp[yIndex++] =
                     (
-                            if (y < 0) {
-                                0
-                            } else if (y > 255) {
-                                255
-                            } else {
-                                y
-                            }
-                            ).toByte()
+                        if (y < 0) {
+                            0
+                        } else if (y > 255) {
+                            255
+                        } else {
+                            y
+                        }
+                    ).toByte()
                 if (j % 2 == 0 && index % 2 == 0) {
                     yuv420sp[vIndex++] =
                         (
-                                if (u < 0) {
-                                    0
-                                } else if (u > 255) {
-                                    255
-                                } else {
-                                    u
-                                }
-                                ).toByte()
+                            if (u < 0) {
+                                0
+                            } else if (u > 255) {
+                                255
+                            } else {
+                                u
+                            }
+                        ).toByte()
                     yuv420sp[uIndex++] =
                         (
-                                if (v < 0) {
-                                    0
-                                } else if (v > 255) {
-                                    255
-                                } else {
-                                    v
-                                }
-                                ).toByte()
+                            if (v < 0) {
+                                0
+                            } else if (v > 255) {
+                                255
+                            } else {
+                                v
+                            }
+                        ).toByte()
                 }
                 index++
             }
@@ -199,35 +199,35 @@ object EncodeYuvTools {
                 val v = (-38 * r - 74 * g + 112 * b + 128 shr 8) + 128
                 yuv420sp[yIndex++] =
                     (
-                            if (y < 0) {
-                                0
-                            } else if (y > 255) {
-                                255
-                            } else {
-                                y
-                            }
-                            ).toByte()
+                        if (y < 0) {
+                            0
+                        } else if (y > 255) {
+                            255
+                        } else {
+                            y
+                        }
+                    ).toByte()
                 if (j % 2 == 0 && index % 2 == 0) {
                     yuv420sp[yIndex + 1] =
                         (
-                                if (v < 0) {
-                                    0
-                                } else if (v > 255) {
-                                    255
-                                } else {
-                                    v
-                                }
-                                ).toByte()
+                            if (v < 0) {
+                                0
+                            } else if (v > 255) {
+                                255
+                            } else {
+                                v
+                            }
+                        ).toByte()
                     yuv420sp[yIndex + 3] =
                         (
-                                if (u < 0) {
-                                    0
-                                } else if (u > 255) {
-                                    255
-                                } else {
-                                    u
-                                }
-                                ).toByte()
+                            if (u < 0) {
+                                0
+                            } else if (u > 255) {
+                                255
+                            } else {
+                                u
+                            }
+                        ).toByte()
                 }
                 if (index % 2 == 0) {
                     yIndex++
@@ -257,69 +257,69 @@ object EncodeYuvTools {
                 if (j % 2 == 0 && index % 2 == 0) {
                     yuv420sp[yIndex++] =
                         (
-                                if (y < 0) {
-                                    0
-                                } else if (y > 255) {
-                                    255
-                                } else {
-                                    y
-                                }
-                                ).toByte()
+                            if (y < 0) {
+                                0
+                            } else if (y > 255) {
+                                255
+                            } else {
+                                y
+                            }
+                        ).toByte()
                     yuv420sp[yIndex + 1] =
                         (
-                                if (v < 0) {
-                                    0
-                                } else if (v > 255) {
-                                    255
-                                } else {
-                                    v
-                                }
-                                ).toByte()
+                            if (v < 0) {
+                                0
+                            } else if (v > 255) {
+                                255
+                            } else {
+                                v
+                            }
+                        ).toByte()
                     yuv420sp[vIndex + 1] =
                         (
-                                if (u < 0) {
-                                    0
-                                } else if (u > 255) {
-                                    255
-                                } else {
-                                    u
-                                }
-                                ).toByte()
+                            if (u < 0) {
+                                0
+                            } else if (u > 255) {
+                                255
+                            } else {
+                                u
+                            }
+                        ).toByte()
                     yIndex++
                 } else if (j % 2 == 0 && index % 2 == 1) {
                     yuv420sp[yIndex++] =
                         (
-                                if (y < 0) {
-                                    0
-                                } else if (y > 255) {
-                                    255
-                                } else {
-                                    y
-                                }
-                                ).toByte()
+                            if (y < 0) {
+                                0
+                            } else if (y > 255) {
+                                255
+                            } else {
+                                y
+                            }
+                        ).toByte()
                 } else if (j % 2 == 1 && index % 2 == 0) {
                     yuv420sp[vIndex++] =
                         (
-                                if (y < 0) {
-                                    0
-                                } else if (y > 255) {
-                                    255
-                                } else {
-                                    y
-                                }
-                                ).toByte()
+                            if (y < 0) {
+                                0
+                            } else if (y > 255) {
+                                255
+                            } else {
+                                y
+                            }
+                        ).toByte()
                     vIndex++
                 } else if (j % 2 == 1 && index % 2 == 1) {
                     yuv420sp[vIndex++] =
                         (
-                                if (y < 0) {
-                                    0
-                                } else if (y > 255) {
-                                    255
-                                } else {
-                                    y
-                                }
-                                ).toByte()
+                            if (y < 0) {
+                                0
+                            } else if (y > 255) {
+                                255
+                            } else {
+                                y
+                            }
+                        ).toByte()
                 }
                 index++
             }

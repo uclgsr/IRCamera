@@ -23,6 +23,7 @@ class NetworkErrorRecoveryManager(
         private const val RAPID_FAILURE_WINDOW_MS = 60000L
     }
 
+
     private val recoveryJob = SupervisorJob()
     private val recoveryScope = CoroutineScope(Dispatchers.IO + recoveryJob)
     private val isRecoveryActive = AtomicBoolean(false)
@@ -49,30 +50,37 @@ class NetworkErrorRecoveryManager(
         fun onRapidFailureDetected(failureCount: Int)
     }
 
+
     private var eventListener: RecoveryEventListener? = null
     fun setEventListener(listener: RecoveryEventListener?) {
         eventListener = listener
     }
 
+
     fun enableAutoRecovery() {
         if (isRecoveryActive.get()) {
             return
         }
+
         isRecoveryActive.set(true)
     }
+
 
     fun disableAutoRecovery() {
         if (!isRecoveryActive.get()) {
             return
         }
+
         isRecoveryActive.set(false)
     }
+
 
     fun recordSuccessfulConnection(controller: NetworkClient.ControllerInfo) {
         lastKnownGoodController = controller
         reconnectionAttempts.set(0)
         rapidFailureCount.set(0)
     }
+
 
     fun handleNetworkError(
         operation: String,
@@ -84,29 +92,34 @@ class NetworkErrorRecoveryManager(
         } else {
             rapidFailureCount.set(1)
         }
+
         lastFailureTime = currentTime
         if (rapidFailureCount.get() >= RAPID_FAILURE_THRESHOLD) {
             eventListener?.onRapidFailureDetected(rapidFailureCount.get())
         }
     }
 
+
     fun recordDataTransfer(bytes: Long) {
         totalBytesTransferred.addAndGet(bytes)
     }
+
 
     fun recordLatency(latencyMs: Long) {
         latencySum.addAndGet(latencyMs)
         latencyCount.incrementAndGet()
     }
 
+
     fun getAverageLatency(): Long {
         val count = latencyCount.get()
-        return if (count > 0) {
+            return if (count > 0) {
             latencySum.get() / count
         } else {
             0L
         }
     }
+
 
     fun getThroughputKBps(): Double {
         val elapsedTimeMs = System.currentTimeMillis() - transferStartTime
@@ -116,6 +129,7 @@ class NetworkErrorRecoveryManager(
             0.0
         }
     }
+
 
     fun cleanup() {
         isRecoveryActive.set(false)

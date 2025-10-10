@@ -64,8 +64,8 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import dagger.hilt.android.AndroidEntryPoint
-import mpdc4gsr.core.recording.session.ResearchTemplate
 import mpdc4gsr.core.designsystem.AppBaseViewModel
+import mpdc4gsr.core.recording.session.ResearchTemplate
 
 @AndroidEntryPoint
 class ResearchTemplateComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
@@ -563,4 +563,3 @@ private fun getCategoryColor(category: ResearchTemplate.TemplateCategory) =
         ResearchTemplate.TemplateCategory.BEHAVIORAL_ANALYSIS -> Color(0xFF00BCD4)
         ResearchTemplate.TemplateCategory.CUSTOM -> Color(0xFFFF9800)
     }
-

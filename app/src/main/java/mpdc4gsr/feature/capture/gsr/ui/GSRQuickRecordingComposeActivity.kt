@@ -599,4 +599,3 @@ class GSRQuickRecordingViewModel : AppBaseViewModel() {
         // Implementation for exporting session
     }
 }
-

@@ -40,4 +40,3 @@ object UseCaseModule {
     fun provideStopThermalRecordingUseCase(repository: ThermalRepository): StopThermalRecordingUseCase =
         StopThermalRecordingUseCase(repository)
 }
-

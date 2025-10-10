@@ -12,7 +12,6 @@ import mpdc4gsr.feature.capture.thermal.data.source.ThermalFrameData
 import mpdc4gsr.feature.capture.thermal.data.source.ThermalSnapshot
 
 interface ThermalRepository {
-
     suspend fun connectCamera(): Result<Unit>
 
     suspend fun disconnectCamera()
@@ -29,7 +28,10 @@ interface ThermalRepository {
 
     fun isCameraConnected(): Boolean
 
-    suspend fun setTemperatureRange(minTemp: Float, maxTemp: Float): Result<Unit>
+    suspend fun setTemperatureRange(
+        minTemp: Float,
+        maxTemp: Float,
+    ): Result<Unit>
 
     suspend fun setColorPalette(palette: ColorPalette): Result<Unit>
 
@@ -57,4 +59,3 @@ interface ThermalRepository {
 
     suspend fun getBatteryStatus(): Result<BatteryStatus>
 }
-

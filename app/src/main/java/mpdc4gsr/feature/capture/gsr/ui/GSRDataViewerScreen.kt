@@ -329,10 +329,10 @@ private fun GSRStatisticsCard(data: List<Float>) {
                     "Min Value" to String.format("%.3f μS", data.minOrNull() ?: 0f),
                     "Max Value" to String.format("%.3f μS", data.maxOrNull() ?: 0f),
                     "Range" to
-                            String.format(
-                                "%.3f μS",
-                                (data.maxOrNull() ?: 0f) - (data.minOrNull() ?: 0f),
-                            ),
+                        String.format(
+                            "%.3f μS",
+                            (data.maxOrNull() ?: 0f) - (data.minOrNull() ?: 0f),
+                        ),
                 )
             stats.forEach { (label, value) ->
                 Row(
@@ -369,4 +369,3 @@ private fun GSRDataViewerScreenPreview() {
         GSRDataViewerScreen()
     }
 }
-

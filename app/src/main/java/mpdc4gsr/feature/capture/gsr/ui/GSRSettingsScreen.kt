@@ -207,4 +207,3 @@ private fun GSRSettingsScreenPreview() {
         GSRSettingsScreen()
     }
 }
-

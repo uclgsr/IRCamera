@@ -33,101 +33,101 @@ object UnifiedCameraUtils {
     )
 
     class UnifiedCameraView
-    @JvmOverloads
-    constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0,
-    ) : TextureView(context, attrs, defStyleAttr) {
-        private var _config = CameraConfig()
-        val config: CameraConfig get() = _config
-        private var bitmap: Bitmap? = null
-        private var syncImage: SynchronizedBitmap? = null
-        private var canvas: Canvas? = null
-        private var paint: Paint =
-            Paint().apply {
-                color = Color.GREEN
-                strokeWidth = 2f
-                isAntiAlias = true
+        @JvmOverloads
+        constructor(
+            context: Context,
+            attrs: AttributeSet? = null,
+            defStyleAttr: Int = 0,
+        ) : TextureView(context, attrs, defStyleAttr) {
+            private var _config = CameraConfig()
+            val config: CameraConfig get() = _config
+            private var bitmap: Bitmap? = null
+            private var syncImage: SynchronizedBitmap? = null
+            private var canvas: Canvas? = null
+            private var paint: Paint =
+                Paint().apply {
+                    color = Color.GREEN
+                    strokeWidth = 2f
+                    isAntiAlias = true
+                }
+            private var cameraThread: Thread? = null
+            private var isRunning = false
+
+            init {
+                setupView()
             }
-        private var cameraThread: Thread? = null
-        private var isRunning = false
 
-        init {
-            setupView()
-        }
-
-        private fun setupView() {
-            paint.color = _config.linePaintColor
-            paint.textSize = _config.textSize
-        }
-
-        fun setBitmap(bitmap: Bitmap?) {
-            this.bitmap = bitmap
-            invalidate()
-        }
-
-        fun setSyncImage(syncImage: SynchronizedBitmap?) {
-            this.syncImage = syncImage
-        }
-
-        fun setConfig(config: CameraConfig) {
-            this._config = config
-            setupView()
-        }
-
-        fun openCamera() {
-            if (!isRunning) {
-                isRunning = true
-                startCameraThread()
+            private fun setupView() {
+                paint.color = _config.linePaintColor
+                paint.textSize = _config.textSize
             }
-        }
 
-        fun closeCamera() {
-            isRunning = false
-            cameraThread?.interrupt()
-        }
+            fun setBitmap(bitmap: Bitmap?) {
+                this.bitmap = bitmap
+                invalidate()
+            }
 
-        private fun startCameraThread() {
-            cameraThread =
-                Thread {
-                    val frameDurationMs = 33L // ~30 FPS
-                    while (isRunning && !Thread.currentThread().isInterrupted) {
-                        val frameStart = android.os.SystemClock.elapsedRealtime()
-                        try {
-                            // Camera processing logic would go here
-                            // Calculate how long processing took
-                            val frameEnd = android.os.SystemClock.elapsedRealtime()
-                            val elapsed = frameEnd - frameStart
-                            val sleepTime = frameDurationMs - elapsed
-                            if (sleepTime > 0) {
-                                Thread.sleep(sleepTime)
+            fun setSyncImage(syncImage: SynchronizedBitmap?) {
+                this.syncImage = syncImage
+            }
+
+            fun setConfig(config: CameraConfig) {
+                this._config = config
+                setupView()
+            }
+
+            fun openCamera() {
+                if (!isRunning) {
+                    isRunning = true
+                    startCameraThread()
+                }
+            }
+
+            fun closeCamera() {
+                isRunning = false
+                cameraThread?.interrupt()
+            }
+
+            private fun startCameraThread() {
+                cameraThread =
+                    Thread {
+                        val frameDurationMs = 33L // ~30 FPS
+                        while (isRunning && !Thread.currentThread().isInterrupted) {
+                            val frameStart = android.os.SystemClock.elapsedRealtime()
+                            try {
+                                // Camera processing logic would go here
+                                // Calculate how long processing took
+                                val frameEnd = android.os.SystemClock.elapsedRealtime()
+                                val elapsed = frameEnd - frameStart
+                                val sleepTime = frameDurationMs - elapsed
+                                if (sleepTime > 0) {
+                                    Thread.sleep(sleepTime)
+                                }
+                            } catch (e: InterruptedException) {
+                                break
                             }
-                        } catch (e: InterruptedException) {
-                            break
                         }
                     }
+                cameraThread?.start()
+            }
+
+            private fun drawOverlay(canvas: Canvas) {
+                bitmap?.let { bmp ->
+                    canvas.drawBitmap(bmp, 0f, 0f, paint)
                 }
-            cameraThread?.start()
-        }
-
-        private fun drawOverlay(canvas: Canvas) {
-            bitmap?.let { bmp ->
-                canvas.drawBitmap(bmp, 0f, 0f, paint)
+                if (_config.drawLine) {
+                    drawCrosshair(canvas)
+                }
             }
-            if (_config.drawLine) {
-                drawCrosshair(canvas)
+
+            private fun drawCrosshair(canvas: Canvas) {
+                val centerX = width / 2f
+                val centerY = height / 2f
+                val crossLen = _config.crossLength.toFloat()
+                canvas.drawLine(centerX - crossLen, centerY, centerX + crossLen, centerY, paint)
+                canvas.drawLine(centerX, centerY - crossLen, centerX, centerY + crossLen, paint)
             }
         }
-
-        private fun drawCrosshair(canvas: Canvas) {
-            val centerX = width / 2f
-            val centerY = height / 2f
-            val crossLen = _config.crossLength.toFloat()
-            canvas.drawLine(centerX - crossLen, centerY, centerX + crossLen, centerY, paint)
-            canvas.drawLine(centerX, centerY - crossLen, centerX, centerY + crossLen, paint)
-        }
-    }
 
     data class CameraItem(
         val id: String,
@@ -284,12 +284,9 @@ object UnifiedCameraUtils {
             setConfig(config)
         }
 
-    fun createCameraAdapter(onItemClick: (CameraItem) -> Unit = {}): UnifiedCameraAdapter =
-        UnifiedCameraAdapter(onItemClick = onItemClick)
+    fun createCameraAdapter(onItemClick: (CameraItem) -> Unit = {}): UnifiedCameraAdapter = UnifiedCameraAdapter(onItemClick = onItemClick)
 
     fun createPreviewManager(): CameraPreviewManager = CameraPreviewManager()
 
-    fun validateCameraConsolidation(): Boolean {
-        return true
-    }
+    fun validateCameraConsolidation(): Boolean = true
 }

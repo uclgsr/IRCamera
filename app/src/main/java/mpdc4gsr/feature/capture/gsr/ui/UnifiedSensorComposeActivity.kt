@@ -55,10 +55,10 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.model.SessionQuality
 import mpdc4gsr.core.data.model.SessionStatus
 import mpdc4gsr.core.data.model.SessionType
-import mpdc4gsr.core.hardware.gsr.model.DeviceInfo
 import mpdc4gsr.core.designsystem.AppBaseViewModel
 import mpdc4gsr.core.designsystem.components.common.TitleBar
 import mpdc4gsr.core.designsystem.theme.IRCameraTheme
+import mpdc4gsr.core.hardware.gsr.model.DeviceInfo
 
 enum class UnifiedSensorType(
     val displayName: String,
@@ -534,4 +534,3 @@ private fun SensorStatusCard(
         }
     }
 }
-

@@ -292,4 +292,3 @@ data class ResearchTemplate(
             PREDEFINED_TEMPLATES.filter { sensorType in it.sensors }
     }
 }
-

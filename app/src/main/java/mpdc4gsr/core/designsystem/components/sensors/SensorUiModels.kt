@@ -130,4 +130,3 @@ data class SensorAvailability(
     val batteryImpact: String = "Low",
     val dataRate: String = "Unknown",
 )
-

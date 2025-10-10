@@ -591,4 +591,3 @@ private fun getSampleTimeSeriesData(): List<TimeSeriesData> =
 fun SessionDetailScreenPreview() {
     SessionDetailScreen()
 }
-

@@ -100,7 +100,7 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                                     )
                                                     put(
                                                         android.provider.MediaStore.Files.FileColumns.MIME_TYPE,
-                                                        "text/csv"
+                                                        "text/csv",
                                                     )
                                                     put(
                                                         android.provider.MediaStore.Files.FileColumns.RELATIVE_PATH,

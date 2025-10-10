@@ -219,4 +219,3 @@ private fun describeHardwareLevel(level: Int?): String =
         CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_EXTERNAL -> "Level External"
         else -> "Level Unknown"
     }
-

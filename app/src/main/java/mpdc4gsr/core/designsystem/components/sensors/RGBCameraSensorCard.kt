@@ -448,4 +448,3 @@ private fun RGBCameraSensorCardPreview() {
         )
     }
 }
-

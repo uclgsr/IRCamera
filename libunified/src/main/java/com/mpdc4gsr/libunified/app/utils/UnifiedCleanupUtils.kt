@@ -78,8 +78,7 @@ object UnifiedCleanupUtils {
     }
 
     // ==================== FINAL COMPONENT CONSOLIDATION ====================
-    fun calculateThermalAverage(temperatures: FloatArray): Float =
-        if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
+    fun calculateThermalAverage(temperatures: FloatArray): Float = if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
 
     fun findThermalHotspot(
         temperatures: FloatArray,
@@ -151,10 +150,10 @@ object UnifiedCleanupUtils {
                 .walkTopDown()
                 .filter {
                     it.extension == "md" &&
-                            it.name.contains(
-                                "IMPLEMENTATION",
-                                ignoreCase = true,
-                            )
+                        it.name.contains(
+                            "IMPLEMENTATION",
+                            ignoreCase = true,
+                        )
                 }.toList()
         if (docFiles.size > 1) {
             issues.add("Found ${docFiles.size} implementation documentation files - should consolidate")

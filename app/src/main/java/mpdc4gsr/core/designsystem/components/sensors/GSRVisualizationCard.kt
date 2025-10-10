@@ -324,4 +324,3 @@ data class GSRConnectionState(
     val deviceName: String = "",
     val connectionStrength: Int = 0,
 )
-

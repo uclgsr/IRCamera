@@ -9,4 +9,3 @@ open class AppBaseViewModel : BaseViewModel() {
     protected val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
     val connectionState: StateFlow<ConnectionState> = _connectionState.asStateFlow()
 }
-

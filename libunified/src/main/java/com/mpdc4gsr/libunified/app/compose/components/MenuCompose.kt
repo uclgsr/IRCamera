@@ -146,7 +146,7 @@ fun MenuFirstTab(
                     ),
                     MenuTabItem(
                         iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_4_3,
-                        label = "Menu 4-3"
+                        label = "Menu 4-3",
                     ),
                     MenuTabItem(
                         iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_observe_4,
@@ -154,11 +154,11 @@ fun MenuFirstTab(
                     ),
                     MenuTabItem(
                         iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_2_5,
-                        label = "Menu 2-5"
+                        label = "Menu 2-5",
                     ),
                     MenuTabItem(
                         iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_5_6,
-                        label = "Menu 5-6"
+                        label = "Menu 5-6",
                     ),
                 )
             } else {
@@ -166,7 +166,7 @@ fun MenuFirstTab(
                     MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_1, label = "Menu 1"),
                     MenuTabItem(
                         iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_2_5,
-                        label = "Menu 2-5"
+                        label = "Menu 2-5",
                     ),
                     MenuTabItem(
                         iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_normal_3,
@@ -174,11 +174,11 @@ fun MenuFirstTab(
                     ),
                     MenuTabItem(
                         iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_4_3,
-                        label = "Menu 4-3"
+                        label = "Menu 4-3",
                     ),
                     MenuTabItem(
                         iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_5_6,
-                        label = "Menu 5-6"
+                        label = "Menu 5-6",
                     ),
                     MenuTabItem(
                         iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_normal_6,

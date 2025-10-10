@@ -270,4 +270,3 @@ class PermissionRequestViewModel : BaseViewModel() {
         private const val TAG = "PermissionRequestViewModel"
     }
 }
-

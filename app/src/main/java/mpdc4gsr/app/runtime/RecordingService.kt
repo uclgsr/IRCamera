@@ -22,9 +22,9 @@ import mpdc4gsr.core.data.ProtocolVersion
 import mpdc4gsr.core.data.TimeSyncManager
 import mpdc4gsr.core.data.utils.SessionDirectory
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
+import mpdc4gsr.core.designsystem.PermissionManager
 import mpdc4gsr.core.infrastructure.network.PcControllerServer
 import mpdc4gsr.core.recording.session.SessionInfo
-import mpdc4gsr.core.designsystem.PermissionManager
 import mpdc4gsr.feature.connectivity.data.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -52,7 +52,7 @@ class RecordingService :
         private val FOREGROUND_SERVICE_TYPES
             get() =
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC or
-                        ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
         const val ACTION_START_RECORDING =
             "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_RECORDING"
         const val ACTION_STOP_RECORDING =
@@ -269,15 +269,13 @@ class RecordingService :
     inner class RecordingServiceBinder : Binder() {
         fun getService(): RecordingService = this@RecordingService
 
-        fun getRecordingController(): RecordingController? =
-            if (::recordingController.isInitialized) recordingController else null
+        fun getRecordingController(): RecordingController? = if (::recordingController.isInitialized) recordingController else null
 
         fun getNetworkServer(): NetworkServer? = if (::networkServer.isInitialized) networkServer else null
 
         fun getPreviewStreamer(): PreviewStreamer? = if (::previewStreamer.isInitialized) previewStreamer else null
 
-        fun getPreviewDataAdapter(): PreviewDataAdapter? =
-            if (::previewDataAdapter.isInitialized) previewDataAdapter else null
+        fun getPreviewDataAdapter(): PreviewDataAdapter? = if (::previewDataAdapter.isInitialized) previewDataAdapter else null
 
         fun isConnectedToPC(): Boolean = this@RecordingService.isConnectedToPC
 
@@ -288,8 +286,7 @@ class RecordingService :
                 "Stopped"
             }
 
-        fun getActualServerPort(): Int =
-            if (::pcControllerServer.isInitialized) pcControllerServer.currentPort() else SERVER_PORT
+        fun getActualServerPort(): Int = if (::pcControllerServer.isInitialized) pcControllerServer.currentPort() else SERVER_PORT
 
         fun getConnectedClients(): List<String> =
             if (::pcControllerServer.isInitialized) {
@@ -448,9 +445,9 @@ class RecordingService :
                             "service_initialized",
                             mapOf(
                                 "available_sensors" to
-                                        recordingController
-                                            .getAvailableSensors()
-                                            .map { it.sensorId },
+                                    recordingController
+                                        .getAvailableSensors()
+                                        .map { it.sensorId },
                                 "sensor_count" to recordingController.getAvailableSensors().size,
                             ),
                         )
@@ -526,7 +523,7 @@ class RecordingService :
                     // When recording, we need camera and data sync types
                     // Note: Microphone type removed - audio recording handled by RgbCameraRecorder
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA or
-                            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
                 } else {
                     // For server/networking only, just use dataSync
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
@@ -753,9 +750,9 @@ class RecordingService :
                     "session_directory" to sessionDirectory,
                     "trigger_source" to triggerSource.toString(),
                     "available_sensors" to
-                            recordingController
-                                .getAvailableSensors()
-                                .map { it.sensorId },
+                        recordingController
+                            .getAvailableSensors()
+                            .map { it.sensorId },
                 ),
             )
             // Update notification for different trigger sources
@@ -1239,8 +1236,8 @@ class RecordingService :
                 if (activeSensors > 0) {
                     val statusText =
                         "Recording: $activeSensors sensors, " +
-                                "$totalSamples samples, " +
-                                "${String.format("%.1f", totalStorage)}MB"
+                            "$totalSamples samples, " +
+                            "${String.format("%.1f", totalStorage)}MB"
                     updateNotification(statusText)
                 }
             }.launchIn(this)
@@ -2052,4 +2049,3 @@ class RecordingService :
         }
     }
 }
-

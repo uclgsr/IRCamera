@@ -33,11 +33,11 @@ class CrashSafeSupervisor private constructor(
     private val supervisorScope =
         CoroutineScope(
             SupervisorJob() +
-                    Dispatchers.Default +
-                    CoroutineName("CrashSafeSupervisor") +
-                    CoroutineExceptionHandler { _, exception ->
-                        handleSupervisorException(exception)
-                    },
+                Dispatchers.Default +
+                CoroutineName("CrashSafeSupervisor") +
+                CoroutineExceptionHandler { _, exception ->
+                    handleSupervisorException(exception)
+                },
         )
     private val managedJobs = ConcurrentHashMap<String, ManagedJob>()
     private val healthChecks = ConcurrentHashMap<String, HealthCheck>()
@@ -264,4 +264,3 @@ class CrashSafeSupervisor private constructor(
         restartCounts.clear()
     }
 }
-

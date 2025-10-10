@@ -21,11 +21,11 @@ object SamsungDeviceCompatibility {
 
     private val highFrameRateModels =
         stage3Models +
-                setOf(
-                    "SM-G998B", // S21 Ultra
-                    "SM-G996B", // S21+
-                    "SM-G991B", // S21
-                )
+            setOf(
+                "SM-G998B", // S21 Ultra
+                "SM-G996B", // S21+
+                "SM-G991B", // S21
+            )
 
     fun getDeviceInfo(): String =
         buildString {
@@ -56,8 +56,8 @@ object SamsungDeviceCompatibility {
         }
         val normalisedModel = model.uppercase(Locale.US)
         return normalisedModel in stage3Models ||
-                normalisedModel.startsWith("SM-S9") ||
-                normalisedModel.startsWith("SM-G99")
+            normalisedModel.startsWith("SM-S9") ||
+            normalisedModel.startsWith("SM-G99")
     }
 
     fun supportsHighFrameRateVideo(
@@ -69,10 +69,9 @@ object SamsungDeviceCompatibility {
         }
         val normalisedModel = model.uppercase(Locale.US)
         return normalisedModel in highFrameRateModels ||
-                normalisedModel.startsWith("SM-S91") ||
-                normalisedModel.startsWith("SM-S92")
+            normalisedModel.startsWith("SM-S91") ||
+            normalisedModel.startsWith("SM-S92")
     }
 
     fun isSamsungDevice(): Boolean = Build.MANUFACTURER.equals("samsung", ignoreCase = true)
 }
-

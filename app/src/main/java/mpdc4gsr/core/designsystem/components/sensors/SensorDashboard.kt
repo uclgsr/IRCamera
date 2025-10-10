@@ -359,4 +359,3 @@ fun SensorDashboardDemo(
         onRefresh = onRefresh,
     )
 }
-

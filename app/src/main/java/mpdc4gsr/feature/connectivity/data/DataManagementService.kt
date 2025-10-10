@@ -27,6 +27,7 @@ class DataManagementService(private val context: Context) {
             ZIP,
         }
 
+
         enum class SessionStatus {
             ACTIVE,
             COMPLETED,
@@ -35,6 +36,7 @@ class DataManagementService(private val context: Context) {
             ERROR,
         }
     }
+
 
     private val logger = StructuredLogger.getInstance(context)
     private val activeSessions = ConcurrentHashMap<String, SessionData>()
@@ -65,18 +67,22 @@ class DataManagementService(private val context: Context) {
             return (endTime ?: System.currentTimeMillis()) - startTime
         }
 
+
         fun getTotalFileSize(): Long {
             return files.sumOf { it.sizeBytes }
         }
+
 
         fun getFileCount(): Int {
             return files.size
         }
 
+
         fun getFilesByType(type: String): List<FileMetadata> {
             return files.filter { it.fileType == type }
         }
     }
+
 
     data class FileMetadata(
         val fileId: String,
@@ -111,12 +117,14 @@ class DataManagementService(private val context: Context) {
         }
     }
 
+
     fun initialize(fileUploadService: FileUploadService? = null) {
         this.fileUploadService = fileUploadService
         setupStorageDirectories()
         loadExistingSessions()
         isInitialized.set(true)
     }
+
 
     fun createSession(
         sessionId: String,
@@ -148,14 +156,16 @@ class DataManagementService(private val context: Context) {
         return session
     }
 
+
     fun endSession(sessionId: String): Boolean {
         val session = activeSessions[sessionId] ?: return false
         session.endTime = System.currentTimeMillis()
         session.status = SessionStatus.COMPLETED
         saveSessionMetadata(session)
         createFileManifest(session)
-        return true
+            return true
     }
+
 
     fun registerFile(
         filePath: String,
@@ -169,6 +179,7 @@ class DataManagementService(private val context: Context) {
             if (!file.exists()) {
                 return null
             }
+
             val fileId = generateFileId(sessionId, deviceId, file.name)
             val checksum = calculateFileChecksum(file)
             val mimeType = getMimeType(file.extension)
@@ -196,6 +207,7 @@ class DataManagementService(private val context: Context) {
         }
     }
 
+
     suspend fun queueFilesForUpload(sessionId: String): List<String> {
         val uploadService = fileUploadService ?: return emptyList()
         val session = activeSessions[sessionId] ?: return emptyList()
@@ -204,6 +216,7 @@ class DataManagementService(private val context: Context) {
             if (fileMetadata.uploadStatus == FileUploadService.UploadStatus.COMPLETED) {
                 continue
             }
+
             try {
                 val uploadFileType =
                     when (fileMetadata.fileName.substringAfterLast(".", "").lowercase()) {
@@ -213,6 +226,7 @@ class DataManagementService(private val context: Context) {
                         "wav" -> FileUploadService.FileType.AUDIO
                         else -> FileUploadService.FileType.METADATA
                     }
+
                 val jobId =
                     uploadService.queueUpload(
                         filePath = fileMetadata.filePath,
@@ -226,8 +240,10 @@ class DataManagementService(private val context: Context) {
             } catch (e: Exception) {
             }
         }
+
         return uploadJobIds
     }
+
 
     suspend fun exportSession(
         sessionId: String,
@@ -239,7 +255,8 @@ class DataManagementService(private val context: Context) {
             val exportDir = File(exportsDirectory, sessionId)
             exportDir.mkdirs()
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.UK).format(Date())
-            val exportFileName = "session_${sessionId}_$timestamp.${format.name.lowercase()}"
+            val exportFileName = "session_${sessionId}
+_$timestamp.${format.name.lowercase()}"
             val exportFile = File(exportDir, exportFileName)
             when (format) {
                 ExportFormat.JSON -> exportSessionAsJSON(session, exportFile, includeFiles)
@@ -247,6 +264,7 @@ class DataManagementService(private val context: Context) {
                 ExportFormat.HDF5 -> exportSessionAsHDF5(session, exportFile)
                 ExportFormat.ZIP -> exportSessionAsZIP(session, exportFile, includeFiles)
             }
+
             session.status = SessionStatus.EXPORTED
             saveSessionMetadata(session)
             return exportFile.absolutePath
@@ -255,26 +273,33 @@ class DataManagementService(private val context: Context) {
         }
     }
 
+
     fun getSession(sessionId: String): SessionData? {
         return activeSessions[sessionId]
     }
+
 
     fun getAllSessions(): List<SessionData> {
         return activeSessions.values.toList()
     }
 
+
     fun getFile(fileId: String): FileMetadata? {
         return fileRegistry[fileId]
     }
+
 
     fun getSessionFiles(sessionId: String): List<FileMetadata> {
         return activeSessions[sessionId]?.files ?: emptyList()
     }
 
+
     fun getStorageStats(): Map<String, Any> {
         val totalFiles = fileRegistry.size
         val totalSize = fileRegistry.values.sumOf { it.sizeBytes }
+
         val uploadedFiles = fileRegistry.values.count { it.isUploaded() }
+
         return mapOf(
             "total_sessions" to activeSessions.size,
             "total_files" to totalFiles,
@@ -288,6 +313,7 @@ class DataManagementService(private val context: Context) {
         )
     }
 
+
     suspend fun performCleanup(maxAgeMs: Long = 7 * 24 * 60 * 60 * 1000L) {
         val currentTime = System.currentTimeMillis()
         var cleanedSessions = 0
@@ -298,6 +324,7 @@ class DataManagementService(private val context: Context) {
                 val age = currentTime - (session.endTime ?: session.startTime)
                 age > maxAgeMs && (session.status == SessionStatus.COMPLETED || session.status == SessionStatus.EXPORTED)
             }
+
         for (session in sessionsToArchive) {
             if (archiveSession(session.sessionId)) {
                 freedBytes += session.getTotalFileSize()
@@ -305,6 +332,7 @@ class DataManagementService(private val context: Context) {
                 cleanedFiles += session.getFileCount()
             }
         }
+
         val tempFiles = tempDirectory.listFiles() ?: emptyArray()
         for (file in tempFiles) {
             if (currentTime - file.lastModified() > maxAgeMs) {
@@ -314,6 +342,7 @@ class DataManagementService(private val context: Context) {
         }
     }
 
+
     private fun archiveSession(sessionId: String): Boolean {
         val session = activeSessions[sessionId] ?: return false
         val sessionDir = File(sessionsDirectory, sessionId)
@@ -321,18 +350,21 @@ class DataManagementService(private val context: Context) {
             val archiveSessionDir = File(archiveDirectory, sessionId)
             archiveSessionDir.mkdirs()
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.UK).format(Date())
-            val archiveFile = File(archiveSessionDir, "session_${sessionId}_$timestamp.zip")
+            val archiveFile = File(archiveSessionDir, "session_${sessionId}
+_$timestamp.zip")
             exportSessionAsZIP(session, archiveFile, includeFiles = true)
             sessionDir.deleteRecursively()
             activeSessions.remove(sessionId)
             session.files.forEach { file ->
                 fileRegistry.remove(file.fileId)
             }
+
             return true
         } catch (e: Exception) {
             return false
         }
     }
+
 
     private fun setupStorageDirectories() {
         val externalDir = context.getExternalFilesDir(null) ?: context.filesDir
@@ -348,6 +380,7 @@ class DataManagementService(private val context: Context) {
         exportsDirectory.mkdirs()
     }
 
+
     private fun loadExistingSessions() {
         try {
             val sessionDirs = sessionsDirectory.listFiles { file -> file.isDirectory } ?: return
@@ -360,6 +393,7 @@ class DataManagementService(private val context: Context) {
         } catch (e: Exception) {
         }
     }
+
 
     private fun loadSessionFromMetadata(metadataFile: File) {
         try {
@@ -386,23 +420,27 @@ class DataManagementService(private val context: Context) {
                     session.metadata[key] = metadataJson.get(key)
                 }
             }
+
             if (json.has("conditions")) {
                 val conditionsJson = json.getJSONArray("conditions")
                 for (i in 0 until conditionsJson.length()) {
                     session.conditions.add(conditionsJson.getString(i))
                 }
             }
+
             activeSessions[sessionId] = session
             loadFileManifest(session)
         } catch (e: Exception) {
         }
     }
 
+
     private fun loadFileManifest(session: SessionData) {
         try {
             val sessionDir = File(sessionsDirectory, session.sessionId)
             val manifestFile = File(sessionDir, MANIFEST_FILE)
-            if (!manifestFile.exists()) return
+            if (!manifestFile.exists())
+            return
             val jsonContent = manifestFile.readText()
             val json = JSONObject(jsonContent)
             val filesJson = json.getJSONArray("files")
@@ -427,12 +465,14 @@ class DataManagementService(private val context: Context) {
                         fileMetadata.metadata[key] = metadataJson.get(key)
                     }
                 }
+
                 session.files.add(fileMetadata)
                 fileRegistry[fileMetadata.fileId] = fileMetadata
             }
         } catch (e: Exception) {
         }
     }
+
 
     private fun saveSessionMetadata(session: SessionData) {
         try {
@@ -445,20 +485,27 @@ class DataManagementService(private val context: Context) {
                     put("device_id", session.deviceId)
                     put("start_time", session.startTime)
                     session.endTime?.let { put("end_time", it) }
+
                     put("status", session.status.name)
                     session.participantId?.let { put("participant_id", it) }
+
                     session.studyId?.let { put("study_id", it) }
+
                     val metadataJson = JSONObject()
                     session.metadata.forEach { (key, value) -> metadataJson.put(key, value) }
+
                     put("metadata", metadataJson)
                     val conditionsJson = JSONArray()
                     session.conditions.forEach { condition -> conditionsJson.put(condition) }
+
                     put("conditions", conditionsJson)
                 }
+
             metadataFile.writeText(json.toString(2))
         } catch (e: Exception) {
         }
     }
+
 
     private fun createFileManifest(session: SessionData) {
         try {
@@ -491,16 +538,21 @@ class DataManagementService(private val context: Context) {
                                         value
                                     )
                                 }
+
                                 put("metadata", metadataJson)
                             }
+
                         filesJson.put(fileJson)
                     }
+
                     put("files", filesJson)
                 }
+
             manifestFile.writeText(json.toString(2))
         } catch (e: Exception) {
         }
     }
+
 
     private fun exportSessionAsJSON(
         session: SessionData,
@@ -513,10 +565,13 @@ class DataManagementService(private val context: Context) {
                 put("device_id", session.deviceId)
                 put("start_time", session.startTime)
                 session.endTime?.let { put("end_time", it) }
+
                 put("duration_ms", session.getDurationMs())
                 put("status", session.status.name)
                 session.participantId?.let { put("participant_id", it) }
+
                 session.studyId?.let { put("study_id", it) }
+
                 val filesJson = JSONArray()
                 session.files.forEach { file ->
                     val fileJson =
@@ -532,14 +587,18 @@ class DataManagementService(private val context: Context) {
                                 put("relative_path", file.relativePath)
                             }
                         }
+
                     filesJson.put(fileJson)
                 }
+
                 put("files", filesJson)
                 put("export_timestamp", System.currentTimeMillis())
                 put("export_format", "JSON")
             }
+
         exportFile.writeText(json.toString(2))
     }
+
 
     private fun exportSessionAsCSV(session: SessionData, exportFile: File) {
         val csvContent = StringBuilder()
@@ -549,8 +608,10 @@ class DataManagementService(private val context: Context) {
                 "\"${file.fileId}\",\"${file.fileName}\",\"${file.fileType}\",${file.sizeBytes},\"${file.checksum}\",${file.timestamp},\"${file.mimeType}\"",
             )
         }
+
         exportFile.writeText(csvContent.toString())
     }
+
 
     private fun exportSessionAsHDF5(session: SessionData, exportFile: File) {
         try {
@@ -617,6 +678,7 @@ class DataManagementService(private val context: Context) {
                             })
                         })
                     }
+
                     if (session.files.any { it.type == "rgb_video" }) {
                         dataGroups.put("rgb_video", JSONObject().apply {
                             put("attributes", JSONObject().apply {
@@ -642,6 +704,7 @@ class DataManagementService(private val context: Context) {
                             })
                         })
                     }
+
                     if (session.files.any { it.type == "thermal_data" }) {
                         dataGroups.put("thermal", JSONObject().apply {
                             put("attributes", JSONObject().apply {
@@ -671,6 +734,7 @@ class DataManagementService(private val context: Context) {
                             })
                         })
                     }
+
                     put("groups", dataGroups)
                     put("sync_markers", JSONObject().apply {
                         put("attributes", JSONObject().apply {
@@ -692,6 +756,7 @@ class DataManagementService(private val context: Context) {
                         })
                     })
                 }
+
                 put("root", rootGroup)
                 val fileManifest = JSONArray()
                 session.files.forEach { file ->
@@ -703,13 +768,16 @@ class DataManagementService(private val context: Context) {
                         put("created", file.createdAt)
                     })
                 }
+
                 put("external_files", fileManifest)
             }
+
             exportFile.writeText(hdf5Structure.toString(2))
         } catch (e: Exception) {
             exportSessionAsJSON(session, exportFile, includeFiles = true)
         }
     }
+
 
     private fun exportSessionAsZIP(
         session: SessionData,
@@ -737,6 +805,7 @@ class DataManagementService(private val context: Context) {
                     )
                 )
             }
+
             zipOutputStream.putNextEntry(java.util.zip.ZipEntry("session_metadata.json"))
             zipOutputStream.write(sessionMetadata.toString(2).toByteArray())
             zipOutputStream.closeEntry()
@@ -750,6 +819,7 @@ class DataManagementService(private val context: Context) {
                     put("created_at", fileInfo.createdAt)
                 })
             }
+
             zipOutputStream.putNextEntry(java.util.zip.ZipEntry("file_manifest.json"))
             zipOutputStream.write(manifest.toString(2).toByteArray())
             zipOutputStream.closeEntry()
@@ -762,8 +832,8 @@ class DataManagementService(private val context: Context) {
                             sourceFile.inputStream().use { input ->
                                 input.copyTo(zipOutputStream)
                             }
+
                             zipOutputStream.closeEntry()
-                        } else {
                         }
                     } catch (e: Exception) {
                         mpdc4gsr.core.common.AppLogger.e(
@@ -774,45 +844,64 @@ class DataManagementService(private val context: Context) {
                     }
                 }
             }
-            val readme = """
+
+            val readme =
+                """
                 IRCamera Session Export (ZIP Format)
                 ===================================
                 
                 Session ID: ${session.sessionId}
+
                 Participant: ${session.participantId ?: "Unknown"}
-                Duration: ${((session.endTime ?: System.currentTimeMillis()) - session.startTime) / 1000.0} seconds
+
+                Duration: ${((session.endTime ?: System.currentTimeMillis()) - session.startTime) / 1000.0}
+ seconds
                 Total Samples: ${session.totalSamples}
+
                 
                 Files included:
                 - session_metadata.json: Complete session metadata
                 - file_manifest.json: List of all data files with checksums
                 ${if (includeFiles) "- data/: Directory containing all session data files" else "- Data files not included (metadata only export)"}
+
                 
                 File Types:
                 ${
                 session.files.groupBy { file -> file.type }.entries.joinToString("\n") { entry ->
-                    "- ${entry.key}: ${entry.value.size} file(s)"
+                    "- ${entry.key}: ${entry.value.size}
+ file(s)"
                 }
             }
+
                 
                 Generated: ${
                 SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(
                     Date()
                 )
             }
+
                 Export Tool: IRCamera Data Management Service v1.0
-            """.trimIndent()
+                """.trimIndent()
             zipOutputStream.putNextEntry(java.util.zip.ZipEntry("README.txt"))
             zipOutputStream.write(readme.toByteArray())
             zipOutputStream.closeEntry()
-            zipOutputStream.close() Log . i (
-                    TAG,
-            "ZIP contains ${session.files.size} files (${if (includeFiles) "with" else "without"} data)"
+            zipOutputStream.close()
+            StructuredLogger.logInfo(
+                component = "DataManagementService",
+                event = "zip_export_complete",
+                details =
+                    mapOf(
+                        "session_id" to session.sessionId,
+                        "file_count" to session.files.size,
+                        "includes_data" to includeFiles,
+                        "export_path" to exportFile.absolutePath,
+                    ),
             )
         } catch (e: Exception) {
             exportSessionAsJSON(session, exportFile, includeFiles)
         }
     }
+
 
     private fun calculateFileChecksum(file: File): String {
         return try {
@@ -824,11 +913,13 @@ class DataManagementService(private val context: Context) {
                     digest.update(buffer, 0, bytesRead)
                 }
             }
+
             digest.digest().joinToString("") { "%02x".format(it) }
         } catch (e: Exception) {
             "error_calculating_checksum"
         }
     }
+
 
     private fun getMimeType(extension: String): String {
         return when (extension.lowercase()) {
@@ -842,6 +933,7 @@ class DataManagementService(private val context: Context) {
         }
     }
 
+
     private fun generateFileId(
         sessionId: String,
         deviceId: String,
@@ -851,7 +943,7 @@ class DataManagementService(private val context: Context) {
         val uniqueString = "$sessionId-$deviceId-$fileName-$timestamp-${UUID.randomUUID()}"
         val digest = java.security.MessageDigest.getInstance("SHA-1")
         val hashBytes = digest.digest(uniqueString.toByteArray())
-        return "file_" + hashBytes.joinToString("") { "%02x".format(it) }.substring(0, 16)
+            return "file_" + hashBytes.joinToString("") { "%02x".format(it) }.substring(0, 16)
     }
 }
 

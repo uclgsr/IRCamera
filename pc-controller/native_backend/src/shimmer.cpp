@@ -7,6 +7,7 @@
 #include <numeric>
 #include <atomic>
 #include <mutex>
+#include <random>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -232,8 +233,10 @@ namespace ircamera {
                     std::chrono::steady_clock::now().time_since_epoch()).count();
 
             // Generate realistic GSR simulation with baseline + noise + slow drift
-            double baseline = 500.0;  // μS
-            double noise = (rand() / static_cast<double>(RAND_MAX) - 0.5) * 50.0;
+            double baseline = 500.0;  // microSiemens
+            static thread_local std::mt19937 rng{std::random_device{}()};
+            static thread_local std::uniform_real_distribution<double> noise_dist(-0.5, 0.5);
+            double noise = noise_dist(rng) * 50.0;
             double slow_wave = 100.0 * std::sin(phase * 0.001);  // Slow breathing-like component
             double fast_wave = 20.0 * std::sin(phase * 0.1);     // Faster cardiac component
 

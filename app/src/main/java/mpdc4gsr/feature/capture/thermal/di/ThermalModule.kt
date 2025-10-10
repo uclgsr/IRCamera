@@ -34,29 +34,20 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ThermalModule {
-
     @Provides
     @Singleton
     fun provideThermalHardwareDataSource(
-        @ApplicationContext context: Context
-    ): ThermalHardwareDataSource {
-        return ThermalHardwareDataSourceImpl(context)
-    }
+        @ApplicationContext context: Context,
+    ): ThermalHardwareDataSource = ThermalHardwareDataSourceImpl(context)
 
     @Provides
     @Singleton
-    fun provideThermalRepository(
-        dataSource: ThermalHardwareDataSource
-    ): ThermalRepository {
-        return ThermalRepositoryImpl(dataSource)
-    }
+    fun provideThermalRepository(dataSource: ThermalHardwareDataSource): ThermalRepository = ThermalRepositoryImpl(dataSource)
 
     @Provides
     @Singleton
-    fun provideThermalCoreUseCases(
-        repository: ThermalRepository
-    ): ThermalCoreUseCases {
-        return ThermalCoreUseCases(
+    fun provideThermalCoreUseCases(repository: ThermalRepository): ThermalCoreUseCases =
+        ThermalCoreUseCases(
             connectCamera = ConnectThermalCameraUseCase(repository),
             disconnectCamera = DisconnectThermalCameraUseCase(repository),
             startStreaming = StartThermalStreamingUseCase(repository),
@@ -65,16 +56,13 @@ object ThermalModule {
             startRecording = StartThermalRecordingUseCase(repository),
             stopRecording = StopThermalRecordingUseCase(repository),
             setTemperatureRange = SetTemperatureRangeUseCase(repository),
-            checkConnection = CheckCameraConnectionUseCase(repository)
+            checkConnection = CheckCameraConnectionUseCase(repository),
         )
-    }
 
     @Provides
     @Singleton
-    fun provideThermalHardwareUseCases(
-        repository: ThermalRepository
-    ): ThermalHardwareUseCases {
-        return ThermalHardwareUseCases(
+    fun provideThermalHardwareUseCases(repository: ThermalRepository): ThermalHardwareUseCases =
+        ThermalHardwareUseCases(
             setColorPalette = SetColorPaletteUseCase(repository),
             setAgcMode = SetAgcModeUseCase(repository),
             configureAccuracy = ConfigureAccuracyUseCase(repository),
@@ -82,8 +70,6 @@ object ThermalModule {
             performCalibration = PerformCalibrationUseCase(repository),
             configureImageEnhancement = ConfigureImageEnhancementUseCase(repository),
             getDeviceInfo = GetDeviceInfoUseCase(repository),
-            getBatteryStatus = GetBatteryStatusUseCase(repository)
+            getBatteryStatus = GetBatteryStatusUseCase(repository),
         )
-    }
 }
-

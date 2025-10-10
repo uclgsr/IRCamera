@@ -493,4 +493,3 @@ fun RecordingControlsDemo(modifier: Modifier = Modifier) {
         modifier = modifier,
     )
 }
-

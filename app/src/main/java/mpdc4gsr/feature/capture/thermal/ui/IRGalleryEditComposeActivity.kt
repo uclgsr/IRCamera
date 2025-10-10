@@ -34,24 +34,24 @@ import mpdc4gsr.core.designsystem.theme.IRCameraTheme
 enum class EditTool(
     val displayName: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector,
-    val description: String
+    val description: String,
 ) {
     TEMPERATURE("Temperature", Icons.Default.Thermostat, "Add temperature markers"),
     ANNOTATION("Annotation", Icons.Default.Edit, "Add text annotations"),
     MEASUREMENT("Measurement", Icons.Default.Straighten, "Measure distances"),
     CROP("Crop", Icons.Default.Crop, "Crop image area"),
     FILTER("Filter", Icons.Default.FilterAlt, "Apply thermal filters"),
-    EXPORT("Export", Icons.Default.FileDownload, "Export processed image")
+    EXPORT("Export", Icons.Default.FileDownload, "Export processed image"),
 }
 
 enum class IRGalleryThermalPalette(
     val displayName: String,
-    val colors: List<Color>
+    val colors: List<Color>,
 ) {
     IRON("Iron", listOf(Color.Black, Color.Red, Color.Yellow, Color.White)),
     RAINBOW("Rainbow", listOf(Color.Blue, Color.Green, Color.Yellow, Color.Red)),
     GRAYSCALE("Grayscale", listOf(Color.Black, Color.Gray, Color.White)),
-    HOT("Hot", listOf(Color.Black, Color.Red, Color(0xFFFFA500), Color.Yellow))
+    HOT("Hot", listOf(Color.Black, Color.Red, Color(0xFFFFA500), Color.Yellow)),
 }
 
 data class ImageEditState(
@@ -60,7 +60,7 @@ data class ImageEditState(
     val selectedPalette: IRGalleryThermalPalette = IRGalleryThermalPalette.IRON,
     val hasUnsavedChanges: Boolean = false,
     val temperatureRange: Pair<Float, Float> = 20f to 40f,
-    val annotations: List<String> = emptyList()
+    val annotations: List<String> = emptyList(),
 )
 
 class IRGalleryEditViewModel : AppBaseViewModel() {
@@ -70,6 +70,7 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
     val isProcessing: State<Boolean> = _isProcessing
     private val _statusMessage = mutableStateOf("Image editor ready")
     val statusMessage: State<String> = _statusMessage
+
     fun loadImage(imagePath: String) {
         viewModelScope.launch {
             _isProcessing.value = true
@@ -87,27 +88,33 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
     }
 
     fun selectPalette(palette: IRGalleryThermalPalette) {
-        _editState.value = _editState.value.copy(
-            selectedPalette = palette,
-            hasUnsavedChanges = true
-        )
+        _editState.value =
+            _editState.value.copy(
+                selectedPalette = palette,
+                hasUnsavedChanges = true,
+            )
         _statusMessage.value = "Applied ${palette.displayName} palette"
     }
 
-    fun updateTemperatureRange(min: Float, max: Float) {
-        _editState.value = _editState.value.copy(
-            temperatureRange = min to max,
-            hasUnsavedChanges = true
-        )
-        _statusMessage.value = "Temperature range: ${min}°C - ${max}°C"
+    fun updateTemperatureRange(
+        min: Float,
+        max: Float,
+    ) {
+        _editState.value =
+            _editState.value.copy(
+                temperatureRange = min to max,
+                hasUnsavedChanges = true,
+            )
+        _statusMessage.value = "Temperature range: $min°C - $max°C"
     }
 
     fun addAnnotation(text: String) {
         val currentAnnotations = _editState.value.annotations
-        _editState.value = _editState.value.copy(
-            annotations = currentAnnotations + text,
-            hasUnsavedChanges = true
-        )
+        _editState.value =
+            _editState.value.copy(
+                annotations = currentAnnotations + text,
+                hasUnsavedChanges = true,
+            )
         _statusMessage.value = "Added annotation: $text"
     }
 
@@ -135,7 +142,9 @@ class IRGalleryEditViewModel : AppBaseViewModel() {
 
 class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>() {
     private val viewModelInstance: IRGalleryEditViewModel by viewModels()
+
     override fun createViewModel(): IRGalleryEditViewModel = viewModelInstance
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val imagePath = intent?.getStringExtra("image_path") ?: "sample_thermal_image.jpg"
@@ -151,9 +160,10 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
             val isProcessing by viewModel.isProcessing
             val statusMessage by viewModel.statusMessage
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFF16131E))
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFF16131E)),
             ) {
                 TitleBar(
                     title = "Thermal Image Editor",
@@ -164,114 +174,122 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                 Icon(
                                     imageVector = Icons.Default.Save,
                                     contentDescription = "Save",
-                                    tint = MaterialTheme.colorScheme.primary
+                                    tint = MaterialTheme.colorScheme.primary,
                                 )
                             }
                         }
-                    }
+                    },
                 )
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(16.dp)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(16.dp),
                 ) {
                     // Status bar
                     Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = if (isProcessing)
-                                MaterialTheme.colorScheme.surfaceVariant
-                            else
-                                MaterialTheme.colorScheme.surface
-                        )
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp),
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor =
+                                    if (isProcessing) {
+                                        MaterialTheme.colorScheme.surfaceVariant
+                                    } else {
+                                        MaterialTheme.colorScheme.surface
+                                    },
+                            ),
                     ) {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             if (isProcessing) {
                                 CircularProgressIndicator(
                                     modifier = Modifier.size(20.dp),
                                     color = MaterialTheme.colorScheme.primary,
-                                    strokeWidth = 2.dp
+                                    strokeWidth = 2.dp,
                                 )
                                 Spacer(modifier = Modifier.width(12.dp))
                             }
                             Text(
                                 text = statusMessage,
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
                         }
                     }
                     // Image preview area
                     Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp)
-                            .padding(bottom = 16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        )
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(300.dp)
+                                .padding(bottom = 16.dp),
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surface,
+                            ),
                     ) {
                         Box(
                             modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.Center,
                         ) {
                             if (editState.isImageLoaded) {
                                 // Thermal image preview placeholder
                                 Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(16.dp)
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .background(
-                                            androidx.compose.ui.graphics.Brush.horizontalGradient(
-                                                editState.selectedPalette.colors
-                                            )
-                                        )
-                                        .border(
-                                            2.dp,
-                                            MaterialTheme.colorScheme.outline,
-                                            RoundedCornerShape(8.dp)
-                                        ),
-                                    contentAlignment = Alignment.Center
+                                    modifier =
+                                        Modifier
+                                            .fillMaxSize()
+                                            .padding(16.dp)
+                                            .clip(RoundedCornerShape(8.dp))
+                                            .background(
+                                                androidx.compose.ui.graphics.Brush.horizontalGradient(
+                                                    editState.selectedPalette.colors,
+                                                ),
+                                            ).border(
+                                                2.dp,
+                                                MaterialTheme.colorScheme.outline,
+                                                RoundedCornerShape(8.dp),
+                                            ),
+                                    contentAlignment = Alignment.Center,
                                 ) {
                                     Column(
-                                        horizontalAlignment = Alignment.CenterHorizontally
+                                        horizontalAlignment = Alignment.CenterHorizontally,
                                     ) {
                                         Icon(
                                             imageVector = Icons.Default.Thermostat,
                                             contentDescription = "Thermal Image",
                                             modifier = Modifier.size(48.dp),
-                                            tint = Color.White
+                                            tint = Color.White,
                                         )
                                         Spacer(modifier = Modifier.height(8.dp))
                                         Text(
                                             text = "Thermal Image Preview",
                                             color = Color.White,
                                             style = MaterialTheme.typography.titleMedium,
-                                            fontWeight = FontWeight.Bold
+                                            fontWeight = FontWeight.Bold,
                                         )
                                         Text(
                                             text = "${editState.temperatureRange.first}°C - ${editState.temperatureRange.second}°C",
                                             color = Color.White.copy(alpha = 0.8f),
-                                            style = MaterialTheme.typography.bodySmall
+                                            style = MaterialTheme.typography.bodySmall,
                                         )
                                     }
                                 }
                             } else {
                                 Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally
+                                    horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
                                     if (isProcessing) {
                                         CircularProgressIndicator(
-                                            color = MaterialTheme.colorScheme.primary
+                                            color = MaterialTheme.colorScheme.primary,
                                         )
                                         Spacer(modifier = Modifier.height(16.dp))
                                     }
@@ -279,13 +297,13 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                                         imageVector = Icons.Default.Image,
                                         contentDescription = "Image Placeholder",
                                         modifier = Modifier.size(64.dp),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Text(
                                         text = if (isProcessing) "Loading image..." else "No image loaded",
                                         style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                 }
                             }
@@ -297,35 +315,37 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                             text = "Editing Tools",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(bottom = 12.dp)
+                            modifier = Modifier.padding(bottom = 12.dp),
                         )
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             EditTool.values().take(3).forEach { tool ->
                                 EditToolButton(
                                     tool = tool,
                                     isSelected = editState.selectedTool == tool,
                                     onClick = { viewModel.selectTool(tool) },
-                                    modifier = Modifier.weight(1f)
+                                    modifier = Modifier.weight(1f),
                                 )
                             }
                         }
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             EditTool.values().drop(3).forEach { tool ->
                                 EditToolButton(
                                     tool = tool,
                                     isSelected = editState.selectedTool == tool,
                                     onClick = { viewModel.selectTool(tool) },
-                                    modifier = Modifier.weight(1f)
+                                    modifier = Modifier.weight(1f),
                                 )
                             }
                         }
@@ -334,83 +354,85 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                             text = "Thermal Palette",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(bottom = 12.dp)
+                            modifier = Modifier.padding(bottom = 12.dp),
                         )
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             IRGalleryThermalPalette.values().forEach { palette ->
                                 PaletteButton(
                                     palette = palette,
                                     isSelected = editState.selectedPalette == palette,
                                     onClick = { viewModel.selectPalette(palette) },
-                                    modifier = Modifier.weight(1f)
+                                    modifier = Modifier.weight(1f),
                                 )
                             }
                         }
                         // Temperature range control
                         Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 16.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 16.dp),
                         ) {
                             Column(
-                                modifier = Modifier.padding(16.dp)
+                                modifier = Modifier.padding(16.dp),
                             ) {
                                 Text(
                                     text = "Temperature Range",
                                     style = MaterialTheme.typography.titleSmall,
                                     fontWeight = FontWeight.SemiBold,
-                                    modifier = Modifier.padding(bottom = 8.dp)
+                                    modifier = Modifier.padding(bottom = 8.dp),
                                 )
                                 Text(
                                     text = "Min: ${editState.temperatureRange.first}°C",
-                                    style = MaterialTheme.typography.bodySmall
+                                    style = MaterialTheme.typography.bodySmall,
                                 )
                                 Slider(
                                     value = editState.temperatureRange.first,
                                     onValueChange = { newMin ->
                                         viewModel.updateTemperatureRange(
                                             newMin,
-                                            editState.temperatureRange.second
+                                            editState.temperatureRange.second,
                                         )
                                     },
                                     valueRange = -10f..50f,
-                                    modifier = Modifier.padding(bottom = 8.dp)
+                                    modifier = Modifier.padding(bottom = 8.dp),
                                 )
                                 Text(
                                     text = "Max: ${editState.temperatureRange.second}°C",
-                                    style = MaterialTheme.typography.bodySmall
+                                    style = MaterialTheme.typography.bodySmall,
                                 )
                                 Slider(
                                     value = editState.temperatureRange.second,
                                     onValueChange = { newMax ->
                                         viewModel.updateTemperatureRange(
                                             editState.temperatureRange.first,
-                                            newMax
+                                            newMax,
                                         )
                                     },
-                                    valueRange = 10f..100f
+                                    valueRange = 10f..100f,
                                 )
                             }
                         }
                         // Action buttons
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             OutlinedButton(
                                 onClick = { viewModel.saveImage() },
                                 modifier = Modifier.weight(1f),
-                                enabled = editState.hasUnsavedChanges && !isProcessing
+                                enabled = editState.hasUnsavedChanges && !isProcessing,
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Save,
                                     contentDescription = "Save Image",
-                                    modifier = Modifier.size(18.dp)
+                                    modifier = Modifier.size(18.dp),
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Save")
@@ -418,12 +440,12 @@ class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>
                             Button(
                                 onClick = { viewModel.exportImage() },
                                 modifier = Modifier.weight(1f),
-                                enabled = !isProcessing
+                                enabled = !isProcessing,
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.FileDownload,
                                     contentDescription = "Export Image",
-                                    modifier = Modifier.size(18.dp)
+                                    modifier = Modifier.size(18.dp),
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Export")
@@ -441,40 +463,47 @@ private fun EditToolButton(
     tool: EditTool,
     isSelected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected)
-                MaterialTheme.colorScheme.primaryContainer
-            else
-                MaterialTheme.colorScheme.surface
-        ),
-        onClick = onClick
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.surface
+                    },
+            ),
+        onClick = onClick,
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Icon(
                 imageVector = tool.icon,
                 contentDescription = tool.name,
                 modifier = Modifier.size(24.dp),
-                tint = if (isSelected)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.onSurface
+                tint =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = tool.displayName,
                 style = MaterialTheme.typography.labelSmall,
                 textAlign = TextAlign.Center,
-                color = if (isSelected)
-                    MaterialTheme.colorScheme.onPrimaryContainer
-                else
-                    MaterialTheme.colorScheme.onSurface
+                color =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.onPrimaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
             )
         }
     }
@@ -485,38 +514,42 @@ private fun PaletteButton(
     palette: IRGalleryThermalPalette,
     isSelected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected)
-                MaterialTheme.colorScheme.primaryContainer
-            else
-                MaterialTheme.colorScheme.surface
-        ),
-        onClick = onClick
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.surface
+                    },
+            ),
+        onClick = onClick,
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(24.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(
-                        androidx.compose.ui.graphics.Brush.horizontalGradient(palette.colors)
-                    )
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(24.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(
+                            androidx.compose.ui.graphics.Brush
+                                .horizontalGradient(palette.colors),
+                        ),
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = palette.displayName,
                 style = MaterialTheme.typography.labelSmall,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }
 }
-

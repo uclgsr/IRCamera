@@ -15,21 +15,21 @@ data class PCControllerInfo(
     val supportsGSR: Boolean
         get() =
             capabilities.contains("gsr") ||
-                    properties["supports_gsr"] == "true" ||
-                    properties.containsKey("shimmer_support")
+                properties["supports_gsr"] == "true" ||
+                properties.containsKey("shimmer_support")
     val supportsThermal: Boolean
         get() =
             capabilities.contains("thermal") ||
-                    properties["supports_thermal"] == "true"
+                properties["supports_thermal"] == "true"
     val supportsRGB: Boolean
         get() =
             capabilities.contains("rgb") ||
-                    properties["supports_rgb"] == "true"
+                properties["supports_rgb"] == "true"
     val supportsSecure: Boolean
         get() =
             capabilities.contains("tls") ||
-                    properties["secure"] == "true" ||
-                    properties["tls"] == "true"
+                properties["secure"] == "true" ||
+                properties["tls"] == "true"
     val isRecentlyActive: Boolean
         get() = System.currentTimeMillis() - lastSeen < 60000
     val softwareVersion: String?
@@ -165,11 +165,8 @@ data class PCControllerInfo(
             requiredFeatures: List<String>,
         ): List<PCControllerInfo> = controllers.filter { it.isCompatibleWith(requiredFeatures) }
 
-        fun getGSRCapableControllers(controllers: List<PCControllerInfo>): List<PCControllerInfo> =
-            controllers.filter { it.supportsGSR }
+        fun getGSRCapableControllers(controllers: List<PCControllerInfo>): List<PCControllerInfo> = controllers.filter { it.supportsGSR }
 
-        fun getActiveControllers(controllers: List<PCControllerInfo>): List<PCControllerInfo> =
-            controllers.filter { it.isRecentlyActive }
+        fun getActiveControllers(controllers: List<PCControllerInfo>): List<PCControllerInfo> = controllers.filter { it.isRecentlyActive }
     }
 }
-

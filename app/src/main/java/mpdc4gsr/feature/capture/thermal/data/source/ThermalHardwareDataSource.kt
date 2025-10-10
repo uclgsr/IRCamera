@@ -11,7 +11,6 @@ import mpdc4gsr.feature.capture.thermal.data.MeasurementResult
 import mpdc4gsr.feature.capture.thermal.data.ThermalCalibrationData
 
 interface ThermalHardwareDataSource {
-
     suspend fun connectDevice(): Result<Unit>
 
     suspend fun disconnectDevice()
@@ -28,7 +27,10 @@ interface ThermalHardwareDataSource {
 
     fun isConnected(): Boolean
 
-    suspend fun setTemperatureRange(min: Float, max: Float): Result<Unit>
+    suspend fun setTemperatureRange(
+        min: Float,
+        max: Float,
+    ): Result<Unit>
 
     suspend fun setColorPalette(palette: ColorPalette): Result<Unit>
 
@@ -69,7 +71,7 @@ data class ThermalFrameData(
     val temperatureMatrix: Array<FloatArray>,
     val minTemp: Float,
     val maxTemp: Float,
-    val centerTemp: Float
+    val centerTemp: Float,
 )
 
 data class ThermalSnapshot(
@@ -78,6 +80,5 @@ data class ThermalSnapshot(
     val minTemp: Float,
     val maxTemp: Float,
     val timestamp: Long,
-    val location: String? = null
+    val location: String? = null,
 )
-

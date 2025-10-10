@@ -1,257 +1,214 @@
 package mpdc4gsr.feature.connectivity.data
 
 import android.content.Context
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import mpdc4gsr.core.common.AppLogger
 import mpdc4gsr.core.data.TimeSyncManager
-import mpdc4gsr.core.data.utils.TimeManager
 
+/**
+ * Central dispatcher for protocol messages exchanged with the external PC controller.
+ *
+ * Responsibilities:
+ *  * keep lightweight session state (command handler, sync manager)
+ *  * translate protocol messages into callback invocations
+ *  * serialise responses / acknowledgements back to the PC controller
+ */
 class ProtocolHandler(
     private val context: Context,
-    private val networkServer: NetworkServer
+    private val networkServer: NetworkServer,
 ) {
-    companion object {}
 
-    private val timeManager = TimeManager.getInstance(context)
-    private var timeSyncManager: TimeSyncManager? = null
+    companion object {
+        private const val TAG = "ProtocolHandler"
+    }
 
-    // Command callback interfaces
+    /**
+     * Callback hooks implemented by higher layers (typically [RecordingService] or
+     * [CommandServer]) to actually perform the requested action.
+     */
     interface CommandHandler {
         suspend fun onStartRecording(sessionId: String): CommandResult
         suspend fun onStopRecording(sessionId: String): CommandResult
         suspend fun onSyncRequest(pcTimestamp: Long): SyncResult
     }
 
-    // Extended interface for cases that need configuration and client address
-    interface CommandCallback {
-        suspend fun onStartRecording(sessionId: String, configuration: org.json.JSONObject): Boolean
-        suspend fun onStopRecording(): Boolean
-        suspend fun onSyncRequest(pcAddress: String): Boolean
-    }
 
     data class CommandResult(
         val success: Boolean,
-        val message: String = "",
-        val data: Map<String, String> = emptyMap()
+        val message: String,
+        val data: Map<String, String> = emptyMap(),
     )
 
     data class SyncResult(
         val success: Boolean,
-        val phoneTimestamp: Long = 0L,
-        val offsetNs: Long = 0L
+        val phoneTimestamp: Long? = null,
+        val offsetNs: Long? = null,
     )
 
+    private val handlerScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var commandHandler: CommandHandler? = null
+    private var timeSyncManager: TimeSyncManager? = null
+
     fun setCommandHandler(handler: CommandHandler) {
         commandHandler = handler
     }
 
-    fun setTimeSyncManager(syncManager: TimeSyncManager?) {
-        timeSyncManager = syncManager
+
+    fun setTimeSyncManager(manager: TimeSyncManager?) {
+        timeSyncManager = manager
     }
 
-    suspend fun processMessage(message: Protocol.ProtocolMessage): String? {
-        return when (message.type) {
-            Protocol.MSG_SYNC_REQUEST -> handleSyncRequest(message)
-            Protocol.MSG_SYNC_RESULT -> handleSyncResult(message)
-            Protocol.MSG_START_RECORD -> handleStartRecord(message)
-            Protocol.MSG_STOP_RECORD -> handleStopRecord(message)
-            else -> {
-                Protocol.createErrorMessage(message.type, Protocol.ERR_FAIL, "Unknown command")
-            }
+
+    fun onClientConnected() {
+        AppLogger.i(TAG, "Client connection established")
+        // Optional: send diagnostics or reset state here if needed in the future.
+    }
+
+
+    fun onClientDisconnected() {
+        AppLogger.i(TAG, "Client disconnected")
+    }
+
+    /**
+     * Consume an incoming message, invoke the appropriate callback and, if necessary,
+     * send a response back to the PC controller.
+     */
+    suspend fun handleIncomingMessage(message: Protocol.ProtocolMessage) {
+        processMessage(message)?.let { response ->
+            networkServer.sendMessage(response)
         }
     }
 
-    private suspend fun handleSyncRequest(message: Protocol.ProtocolMessage): String {
+    /**
+     * Process a message and return a response payload when a reply is necessary.
+     * Returns `null` when no response is required.
+     */
+    suspend fun processMessage(message: Protocol.ProtocolMessage): String? {
         return try {
-            val pcTimestamp = message.parameters["t_pc"]?.toLong()
-            if (pcTimestamp == null) {
-                Protocol.createErrorMessage(
-                    Protocol.MSG_SYNC_REQUEST,
-                    Protocol.ERR_FAIL,
-                    "Missing t_pc parameter"
-                )
-            } else {
-                // Use TimeSyncManager if available for enhanced sync handling
-                val syncManager = timeSyncManager
-                if (syncManager != null) {
-                    try {
-                        val syncResult = syncManager.performSyncResponse(pcTimestamp)
-                        if (syncResult.success) {
-                            Protocol.createSyncResponseMessage(syncResult.t1, syncResult.t2)
-                        } else {
-                            Protocol.createErrorMessage(
-                                Protocol.MSG_SYNC_REQUEST,
-                                Protocol.ERR_FAIL,
-                                "Sync failed"
-                            )
-                        }
-                    } catch (e: Exception) {
-                        Protocol.createErrorMessage(
-                            Protocol.MSG_SYNC_REQUEST,
-                            Protocol.ERR_FAIL,
-                            "Sync manager error"
-                        )
-                    }
-                } else {
-                    // Fallback to command handler or default behavior
-                    val handler = commandHandler
-                    if (handler != null) {
-                        val syncResult = handler.onSyncRequest(pcTimestamp)
-                        if (syncResult.success) {
-                            Protocol.createSyncResponseMessage(
-                                pcTimestamp,
-                                syncResult.phoneTimestamp
-                            )
-                        } else {
-                            Protocol.createErrorMessage(
-                                Protocol.MSG_SYNC_REQUEST,
-                                Protocol.ERR_FAIL,
-                                "Sync failed"
-                            )
-                        }
-                    } else {
-                        // Default sync handling without callback
-                        val phoneTime =
-                            timeManager.getCurrentTimestampNs() / 1_000_000 // Convert to ms
-                        Protocol.createSyncResponseMessage(pcTimestamp, phoneTime)
-                    }
+            when (message.type) {
+                Protocol.MSG_HELLO -> {
+                    AppLogger.i(TAG, "HELLO received from PC")
+                    Protocol.createAckMessage(
+                        Protocol.MSG_HELLO,
+                        mapOf(
+                            "device" to android.os.Build.MODEL,
+                            "protocol_version" to Protocol.PROTOCOL_VERSION,
+                        ),
+                    )
                 }
+
+
+                Protocol.MSG_START_RECORD -> handleStartRecording(message)
+                Protocol.MSG_STOP_RECORD -> handleStopRecording(message)
+                Protocol.MSG_SYNC_REQUEST -> handleSyncRequest(message)
+                else -> handleUnknown(message)
             }
-        } catch (e: Exception) {
+        } catch (t: Throwable) {
+            AppLogger.e(TAG, "Failed to process message ${message.type}", t)
             Protocol.createErrorMessage(
-                Protocol.MSG_SYNC_REQUEST,
+                message.type,
                 Protocol.ERR_FAIL,
-                "Sync error: ${e.message}"
+                t.message ?: "Unhandled exception",
             )
         }
     }
 
-    private suspend fun handleSyncResult(message: Protocol.ProtocolMessage): String? {
-        return try {
-            val syncManager = timeSyncManager
-            if (syncManager == null) {
-                return null // No response needed for SYNC_RESULT
-            }
-            val t1 = message.parameters["t1"]?.toLong()
-            val t2 = message.parameters["t2"]?.toLong()
-            val t3 = message.parameters["t3"]?.toLong()
-            val offset = message.parameters["offset"]?.toLong()
-            val rtt = message.parameters["rtt"]?.toLong()
-            if (t1 == null || t2 == null || t3 == null || offset == null || rtt == null) {
-                return null
-            }
-            // Complete the sync calculation with data from PC
-            try {
-                syncManager.completeSyncCalculation(t1, t2, t3, offset, rtt, 0)
-            } catch (e: Exception) {
-                mpdc4gsr.core.common.AppLogger.e(
-                    "ProtocolHandler",
-                    "Unexpected Exception in ProtocolHandler catch block",
-                    e
-                )
-            }
-            null // No response needed for SYNC_RESULT
-        } catch (e: Exception) {
-            null
-        }
-    }
 
-    private suspend fun handleStartRecord(message: Protocol.ProtocolMessage): String {
-        return try {
-            val sessionId = message.parameters["session_id"]
-            if (sessionId.isNullOrEmpty()) {
-                Protocol.createErrorMessage(
-                    Protocol.MSG_START_RECORD,
-                    Protocol.ERR_FAIL,
-                    "Missing session_id parameter"
-                )
-            } else {
-                val handler = commandHandler
-                if (handler != null) {
-                    val result = handler.onStartRecording(sessionId)
-                    if (result.success) {
-                        Protocol.createAckMessage(
-                            Protocol.MSG_START_RECORD,
-                            mapOf("session_id" to sessionId) + result.data
-                        )
-                    } else {
-                        Protocol.createErrorMessage(
-                            Protocol.MSG_START_RECORD,
-                            Protocol.ERR_FAIL,
-                            result.message
-                        )
-                    }
-                } else {
-                    Protocol.createErrorMessage(
-                        Protocol.MSG_START_RECORD,
-                        Protocol.ERR_FAIL,
-                        "No command handler registered"
-                    )
-                }
-            }
-        } catch (e: Exception) {
+    private suspend fun handleStartRecording(message: Protocol.ProtocolMessage): String {
+        val sessionId = message.parameters["session_id"] ?: generateDefaultSessionId()
+        val handler =
+            commandHandler ?: return Protocol.createErrorMessage(
+                Protocol.MSG_START_RECORD,
+                Protocol.ERR_FAIL,
+                "Command handler unavailable",
+            )
+
+        val result = handler.onStartRecording(sessionId)
+            return if (result.success) {
+            Protocol.createAckMessage(
+                Protocol.MSG_START_RECORD,
+                result.data + mapOf("session_id" to sessionId, "message" to result.message),
+            )
+        } else {
             Protocol.createErrorMessage(
                 Protocol.MSG_START_RECORD,
                 Protocol.ERR_FAIL,
-                "Start error: ${e.message}"
+                result.message,
             )
         }
     }
 
-    private suspend fun handleStopRecord(message: Protocol.ProtocolMessage): String {
-        return try {
-            val sessionId = message.parameters["session_id"]
-            if (sessionId.isNullOrEmpty()) {
-                Protocol.createErrorMessage(
-                    Protocol.MSG_STOP_RECORD,
-                    Protocol.ERR_FAIL,
-                    "Missing session_id parameter"
-                )
-            } else {
-                val handler = commandHandler
-                if (handler != null) {
-                    val result = handler.onStopRecording(sessionId)
-                    if (result.success) {
-                        Protocol.createAckMessage(
-                            Protocol.MSG_STOP_RECORD,
-                            mapOf("session_id" to sessionId) + result.data
-                        )
-                    } else {
-                        Protocol.createErrorMessage(
-                            Protocol.MSG_STOP_RECORD,
-                            Protocol.ERR_FAIL,
-                            result.message
-                        )
-                    }
-                } else {
-                    Protocol.createErrorMessage(
-                        Protocol.MSG_STOP_RECORD,
-                        Protocol.ERR_FAIL,
-                        "No command handler registered"
-                    )
-                }
-            }
-        } catch (e: Exception) {
+
+    private suspend fun handleStopRecording(message: Protocol.ProtocolMessage): String {
+        val sessionId = message.parameters["session_id"] ?: generateDefaultSessionId()
+        val handler =
+            commandHandler ?: return Protocol.createErrorMessage(
+                Protocol.MSG_STOP_RECORD,
+                Protocol.ERR_FAIL,
+                "Command handler unavailable",
+            )
+
+        val result = handler.onStopRecording(sessionId)
+            return if (result.success) {
+            Protocol.createAckMessage(
+                Protocol.MSG_STOP_RECORD,
+                result.data + mapOf("session_id" to sessionId, "message" to result.message),
+            )
+        } else {
             Protocol.createErrorMessage(
                 Protocol.MSG_STOP_RECORD,
                 Protocol.ERR_FAIL,
-                "Stop error: ${e.message}"
+                result.message,
             )
         }
     }
 
-    suspend fun sendGsrData(timestamp: Long, value: Double): Boolean {
-        val message = Protocol.createDataGsrMessage(timestamp, value)
-        return networkServer.sendMessage(message)
+
+    private suspend fun handleSyncRequest(message: Protocol.ProtocolMessage): String {
+        val handler =
+            commandHandler ?: return Protocol.createErrorMessage(
+                Protocol.MSG_SYNC_REQUEST,
+                Protocol.ERR_FAIL,
+                "Command handler unavailable",
+            )
+
+        val pcTimestamp =
+            message.parameters["t_pc"]?.toLongOrNull() ?: System.currentTimeMillis()
+        val result = handler.onSyncRequest(pcTimestamp)
+            return if (result.success) {
+            val phoneTimestamp = result.phoneTimestamp ?: System.currentTimeMillis()
+            val offsetNs = result.offsetNs ?: 0L
+            timeSyncManager?.recordSyncResult(pcTimestamp, phoneTimestamp, offsetNs)
+            Protocol.createSyncResultMessage(
+                t1 = pcTimestamp,
+                t2 = phoneTimestamp,
+                t3 = phoneTimestamp,
+                offsetMs = offsetNs / 1_000_000,
+                rttMs = 0,
+            )
+        } else {
+            Protocol.createErrorMessage(
+                Protocol.MSG_SYNC_REQUEST,
+                Protocol.ERR_FAIL,
+                "Sync request rejected",
+            )
+        }
     }
 
-    suspend fun sendFrame(frameType: String, timestamp: Long, frameData: ByteArray): Boolean {
-        val header = "${Protocol.MSG_FRAME} type=$frameType ts=$timestamp size=${frameData.size}"
-        return networkServer.sendBinaryData(header, frameData)
+
+    private fun handleUnknown(message: Protocol.ProtocolMessage): String {
+        AppLogger.w(TAG, "Unsupported protocol message: ${message.type}")
+            return Protocol.createErrorMessage(
+            message.type,
+            Protocol.ERR_FAIL,
+            "Unsupported command",
+        )
     }
 
-    suspend fun enablePreviewStreaming() {
-        // Note: This would integrate with existing preview streaming infrastructure
-        // For now, log that protocol-based streaming is enabled    }
 
-        suspend fun disablePreviewStreaming() {}
-    }
+    private fun generateDefaultSessionId(): String =
+        "session_${System.currentTimeMillis()}"
+}

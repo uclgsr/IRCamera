@@ -7,8 +7,9 @@ interface CommandConnection {
         DISCONNECTED,
         CONNECTING,
         CONNECTED,
-        ERROR
+        ERROR,
     }
+
 
     val connectionState: StateFlow<ConnectionState>
 

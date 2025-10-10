@@ -17,9 +17,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.feature.capture.gsr.ui.SensorDashboardComposeActivity
-import mpdc4gsr.feature.dashboard.ui.MainComposeActivity
 import mpdc4gsr.feature.control.settings.ui.AboutScreen
 import mpdc4gsr.feature.control.settings.ui.SettingsComposeActivity
+import mpdc4gsr.feature.dashboard.ui.MainComposeActivity
 
 sealed class IRCameraScreen(
     val route: String,
@@ -318,4 +318,3 @@ private fun SettingsFragmentScreen(onNavigateBack: () -> Unit) {
         }
     }
 }
-

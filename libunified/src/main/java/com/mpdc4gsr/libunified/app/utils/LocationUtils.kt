@@ -60,9 +60,9 @@ object LocationUtils {
                 }
                 val address = resultList[0]
                 return@withContext (address.adminArea ?: "") + (
-                        address.locality
-                            ?: ""
-                        ) + (address.subLocality ?: "") // --
+                    address.locality
+                        ?: ""
+                ) + (address.subLocality ?: "") // --
             } catch (e: Exception) {
                 e.printStackTrace()
                 return@withContext null

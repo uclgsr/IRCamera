@@ -10,6 +10,7 @@ suspend fun NetworkClient.startDiscoveryAsync(): Boolean =
                 continuation.resume(success)
             }
         }
+
         startDiscovery(callback)
         // Handle cancellation
         continuation.invokeOnCancellation {            // Cancel any ongoing discovery operations if needed

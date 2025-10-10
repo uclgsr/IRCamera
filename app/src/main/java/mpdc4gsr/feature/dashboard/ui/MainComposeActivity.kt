@@ -132,7 +132,7 @@ fun MainApp() {
             )
         }
         composable(MainNavRoutes.THERMAL_CALIBRATE) {
-            ThermalCalibrationScreen(
+            ThermalThermalCalibrationScreen(
                 onBackClick = { navController.popBackStack() },
                 onCalibrationComplete = {
                     navController.popBackStack()
@@ -215,7 +215,7 @@ fun MainApp() {
             )
         }
         composable(MainNavRoutes.CALIBRATION) {
-            CalibrationScreen(
+            ThermalCalibrationScreen(
                 onBackClick = { navController.popBackStack() },
             )
         }

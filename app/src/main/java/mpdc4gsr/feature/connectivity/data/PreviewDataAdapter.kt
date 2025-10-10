@@ -24,6 +24,7 @@ class PreviewDataAdapter(
         private const val POLLING_INTERVAL_MS = 500L
     }
 
+
     private val scope = CoroutineScope(SupervisorJob() + pollingDispatcher)
     private val thermalCameraManager = AtomicReference<CameraPreviewManager?>()
     private val gsrRecorder = AtomicReference<GSRSensorRecorder?>()
@@ -33,7 +34,8 @@ class PreviewDataAdapter(
     private var isRunning = false
 
     fun startDataPolling() {
-        if (isRunning) return
+        if (isRunning)
+            return
         isRunning = true
         pollingJob = scope.launch {
             while (isActive && isRunning) {
@@ -42,31 +44,38 @@ class PreviewDataAdapter(
                 } catch (_: Throwable) {
                     delay(POLLING_INTERVAL_MS * 2)
                 }
+
                 delay(POLLING_INTERVAL_MS)
             }
         }
     }
 
+
     fun stopDataPolling() {
-        if (!isRunning) return
+        if (!isRunning)
+            return
         isRunning = false
         pollingJob?.cancel()
         pollingJob = null
     }
 
+
     fun setThermalCameraManager(manager: CameraPreviewManager?) {
         thermalCameraManager.set(manager)
     }
 
+
     fun setGsrRecorder(recorder: GSRSensorRecorder?) {
         gsrRecorder.set(recorder)
     }
+
 
     private suspend fun pollSensorData() {
         pollThermalFrame()
         pollGsrData()
         updateRecordingStatus()
     }
+
 
     private suspend fun pollThermalFrame() {
         val manager = thermalCameraManager.get() ?: return
@@ -83,9 +92,11 @@ class PreviewDataAdapter(
         }
     }
 
+
     private suspend fun pollGsrData() {
         val recorder = gsrRecorder.get() ?: return
-        if (!recorder.isRecording) return
+        if (!recorder.isRecording)
+            return
         try {
             val gsrValue =
                 recorder.currentGsrValue()
@@ -104,6 +115,7 @@ class PreviewDataAdapter(
         }
     }
 
+
     private suspend fun updateRecordingStatus() {
         try {
             val controller = recordingService.getRecordingController()
@@ -112,6 +124,7 @@ class PreviewDataAdapter(
                 recordingService.isConnectedToPC -> "CONNECTED"
                 else -> "IDLE"
             }
+
             previewStreamer.updateRecordingStatus(status)
         } catch (exception: Throwable) {
             mpdc4gsr.core.common.AppLogger.e(
@@ -122,17 +135,21 @@ class PreviewDataAdapter(
         }
     }
 
+
     fun updateRgbFrame(bitmap: Bitmap) {
         previewStreamer.updateRgbFrame(bitmap)
     }
+
 
     fun updateThermalFrameDirect(bitmap: Bitmap) {
         previewStreamer.updateThermalFrame(bitmap)
     }
 
+
     fun updateGsrValueDirect(gsrValue: Float) {
         previewStreamer.updateGsrValue(gsrValue)
     }
+
 
     fun cleanup() {
         stopDataPolling()

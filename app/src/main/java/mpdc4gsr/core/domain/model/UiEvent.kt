@@ -8,4 +8,3 @@ sealed class UiEvent {
         val isLong: Boolean = false,
     ) : UiEvent()
 }
-

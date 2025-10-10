@@ -9,99 +9,63 @@ import mpdc4gsr.feature.capture.thermal.data.MeasurementArea
 import mpdc4gsr.feature.capture.thermal.data.MeasurementResult
 import mpdc4gsr.feature.capture.thermal.data.ThermalCalibrationData
 import mpdc4gsr.feature.capture.thermal.data.source.ThermalFrameData
-import mpdc4gsr.feature.capture.thermal.data.source.ThermalSnapshot
 import mpdc4gsr.feature.capture.thermal.data.source.ThermalHardwareDataSource
+import mpdc4gsr.feature.capture.thermal.data.source.ThermalSnapshot
 import mpdc4gsr.feature.capture.thermal.domain.repository.ThermalRepository
 
 class ThermalRepositoryImpl(
-    private val hardwareDataSource: ThermalHardwareDataSource
+    private val hardwareDataSource: ThermalHardwareDataSource,
 ) : ThermalRepository {
-    override suspend fun connectCamera(): Result<Unit> {
-        return hardwareDataSource.connectDevice()
-    }
+    override suspend fun connectCamera(): Result<Unit> = hardwareDataSource.connectDevice()
 
     override suspend fun disconnectCamera() {
         hardwareDataSource.disconnectDevice()
     }
 
-    override suspend fun getThermalStream(): Flow<ThermalFrameData> {
-        return hardwareDataSource.startStreaming()
-    }
+    override suspend fun getThermalStream(): Flow<ThermalFrameData> = hardwareDataSource.startStreaming()
 
     override suspend fun stopStream() {
         hardwareDataSource.stopStreaming()
     }
 
-    override suspend fun captureSnapshot(): Result<ThermalSnapshot> {
-        return hardwareDataSource.captureSnapshot()
-    }
+    override suspend fun captureSnapshot(): Result<ThermalSnapshot> = hardwareDataSource.captureSnapshot()
 
-    override suspend fun startRecording(): Result<Unit> {
-        return hardwareDataSource.startRecording()
-    }
+    override suspend fun startRecording(): Result<Unit> = hardwareDataSource.startRecording()
 
-    override suspend fun stopRecording(): Result<String> {
-        return hardwareDataSource.stopRecording()
-    }
+    override suspend fun stopRecording(): Result<String> = hardwareDataSource.stopRecording()
 
-    override fun isCameraConnected(): Boolean {
-        return hardwareDataSource.isConnected()
-    }
+    override fun isCameraConnected(): Boolean = hardwareDataSource.isConnected()
 
-    override suspend fun setTemperatureRange(minTemp: Float, maxTemp: Float): Result<Unit> {
-        return hardwareDataSource.setTemperatureRange(minTemp, maxTemp)
-    }
+    override suspend fun setTemperatureRange(
+        minTemp: Float,
+        maxTemp: Float,
+    ): Result<Unit> = hardwareDataSource.setTemperatureRange(minTemp, maxTemp)
 
-    override suspend fun setColorPalette(palette: ColorPalette): Result<Unit> {
-        return hardwareDataSource.setColorPalette(palette)
-    }
+    override suspend fun setColorPalette(palette: ColorPalette): Result<Unit> = hardwareDataSource.setColorPalette(palette)
 
-    override suspend fun setAgcMode(mode: AgcMode): Result<Unit> {
-        return hardwareDataSource.setAgcMode(mode)
-    }
+    override suspend fun setAgcMode(mode: AgcMode): Result<Unit> = hardwareDataSource.setAgcMode(mode)
 
-    override suspend fun getMeasurementForArea(area: MeasurementArea): Result<MeasurementResult> {
-        return hardwareDataSource.getMeasurementForArea(area)
-    }
+    override suspend fun getMeasurementForArea(area: MeasurementArea): Result<MeasurementResult> =
+        hardwareDataSource.getMeasurementForArea(area)
 
-    override suspend fun applyCalibration(calibrationData: ThermalCalibrationData): Result<Unit> {
-        return hardwareDataSource.applyCalibration(calibrationData)
-    }
+    override suspend fun applyCalibration(calibrationData: ThermalCalibrationData): Result<Unit> =
+        hardwareDataSource.applyCalibration(calibrationData)
 
-    override suspend fun performFFC(): Result<Unit> {
-        return hardwareDataSource.performFFC()
-    }
+    override suspend fun performFFC(): Result<Unit> = hardwareDataSource.performFFC()
 
-    override suspend fun performNUC(): Result<Unit> {
-        return hardwareDataSource.performNUC()
-    }
+    override suspend fun performNUC(): Result<Unit> = hardwareDataSource.performNUC()
 
-    override suspend fun enableISP(enabled: Boolean): Result<Unit> {
-        return hardwareDataSource.enableISP(enabled)
-    }
+    override suspend fun enableISP(enabled: Boolean): Result<Unit> = hardwareDataSource.enableISP(enabled)
 
-    override suspend fun setTNRLevel(level: Int): Result<Unit> {
-        return hardwareDataSource.setTNRLevel(level)
-    }
+    override suspend fun setTNRLevel(level: Int): Result<Unit> = hardwareDataSource.setTNRLevel(level)
 
-    override suspend fun setBrightness(level: Int): Result<Unit> {
-        return hardwareDataSource.setBrightness(level)
-    }
+    override suspend fun setBrightness(level: Int): Result<Unit> = hardwareDataSource.setBrightness(level)
 
-    override suspend fun setContrast(level: Int): Result<Unit> {
-        return hardwareDataSource.setContrast(level)
-    }
+    override suspend fun setContrast(level: Int): Result<Unit> = hardwareDataSource.setContrast(level)
 
-    override suspend fun setSharpness(level: Int): Result<Unit> {
-        return hardwareDataSource.setSharpness(level)
-    }
+    override suspend fun setSharpness(level: Int): Result<Unit> = hardwareDataSource.setSharpness(level)
 
-    override suspend fun getDeviceInfo(): Result<DeviceInfo> {
-        return hardwareDataSource.getDeviceInfo()
-    }
+    override suspend fun getDeviceInfo(): Result<DeviceInfo> = hardwareDataSource.getDeviceInfo()
 
-    override suspend fun getBatteryStatus(): Result<BatteryStatus> {
-        return hardwareDataSource.getBatteryStatus()
-    }
+    override suspend fun getBatteryStatus(): Result<BatteryStatus> = hardwareDataSource.getBatteryStatus()
 }
-

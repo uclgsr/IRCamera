@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class ThermalSettingsRepository(context: Context) {
+class ThermalSettingsRepository(
+    context: Context,
+) {
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private val _thermalSettings = MutableStateFlow(loadSettings())
     val thermalSettings: StateFlow<ThermalSettings> = _thermalSettings.asStateFlow()
@@ -20,7 +22,7 @@ class ThermalSettingsRepository(context: Context) {
         val emissivity: Float = 0.95f,
         val autoScale: Boolean = true,
         val showCrosshair: Boolean = true,
-        val temperatureRange: String = "Auto"
+        val temperatureRange: String = "Auto",
     )
 
     companion object {
@@ -38,17 +40,17 @@ class ThermalSettingsRepository(context: Context) {
 
         @Volatile
         private var instance: ThermalSettingsRepository? = null
-        fun getInstance(context: Context): ThermalSettingsRepository {
-            return instance ?: synchronized(this) {
+
+        fun getInstance(context: Context): ThermalSettingsRepository =
+            instance ?: synchronized(this) {
                 instance ?: ThermalSettingsRepository(context.applicationContext).also {
                     instance = it
                 }
             }
-        }
     }
 
-    private fun loadSettings(): ThermalSettings {
-        return ThermalSettings(
+    private fun loadSettings(): ThermalSettings =
+        ThermalSettings(
             frameRate = prefs.getInt(KEY_FRAME_RATE, 25),
             saveRawImages = prefs.getBoolean(KEY_SAVE_RAW_IMAGES, false),
             palette = prefs.getString(KEY_PALETTE, "Iron") ?: "Iron",
@@ -56,13 +58,10 @@ class ThermalSettingsRepository(context: Context) {
             emissivity = prefs.getFloat(KEY_EMISSIVITY, 0.95f),
             autoScale = prefs.getBoolean(KEY_AUTO_SCALE, true),
             showCrosshair = prefs.getBoolean(KEY_SHOW_CROSSHAIR, true),
-            temperatureRange = prefs.getString(KEY_TEMP_RANGE, "Auto") ?: "Auto"
+            temperatureRange = prefs.getString(KEY_TEMP_RANGE, "Auto") ?: "Auto",
         )
-    }
 
-    fun getSettings(): ThermalSettings {
-        return _thermalSettings.value
-    }
+    fun getSettings(): ThermalSettings = _thermalSettings.value
 
     fun updateFrameRate(frameRate: Int) {
         prefs.edit().putInt(KEY_FRAME_RATE, frameRate).apply()
@@ -107,20 +106,20 @@ class ThermalSettingsRepository(context: Context) {
     fun getThermalVideoConfig(): ThermalVideoConfig {
         val settings = getSettings()
         val frameRate = settings.frameRate.coerceIn(10, 30)
-        val bitrate = when {
-            frameRate <= 15 -> BITRATE_LOW
-            frameRate <= 25 -> BITRATE_MEDIUM
-            else -> BITRATE_HIGH
-        }
+        val bitrate =
+            when {
+                frameRate <= 15 -> BITRATE_LOW
+                frameRate <= 25 -> BITRATE_MEDIUM
+                else -> BITRATE_HIGH
+            }
         return ThermalVideoConfig(
             frameRate = frameRate,
-            bitrate = bitrate
+            bitrate = bitrate,
         )
     }
 
     data class ThermalVideoConfig(
         val frameRate: Int,
-        val bitrate: Int
+        val bitrate: Int,
     )
 }
-

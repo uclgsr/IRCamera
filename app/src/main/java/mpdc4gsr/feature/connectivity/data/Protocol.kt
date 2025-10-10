@@ -32,29 +32,36 @@ object Protocol {
         return "$MSG_HELLO device_name=$deviceId sensors=[${sensors.joinToString(",")}]"
     }
 
+
     fun createSyncInitMessage(): String {
         return MSG_SYNC_INIT
     }
+
 
     fun createSyncRequestMessage(pcTimestamp: Long): String {
         return "$MSG_SYNC_REQUEST t_pc=$pcTimestamp"
     }
 
+
     fun createSyncResponseMessage(pcTimestamp: Long, phoneTimestamp: Long): String {
         return "$MSG_SYNC_RESPONSE t_pc=$pcTimestamp t_ph=$phoneTimestamp"
     }
+
 
     fun createSyncResultMessage(t1: Long, t2: Long, t3: Long, offsetMs: Long, rttMs: Long): String {
         return "$MSG_SYNC_RESULT t1=$t1 t2=$t2 t3=$t3 offset=$offsetMs rtt=$rttMs"
     }
 
+
     fun createStartRecordMessage(sessionId: String): String {
         return "$MSG_START_RECORD session_id=$sessionId"
     }
 
+
     fun createStopRecordMessage(sessionId: String): String {
         return "$MSG_STOP_RECORD session_id=$sessionId"
     }
+
 
     fun createAckMessage(command: String, info: Map<String, String> = emptyMap()): String {
         val infoStr = if (info.isNotEmpty()) {
@@ -63,19 +70,24 @@ object Protocol {
         return "$MSG_ACK cmd=$command$infoStr"
     }
 
+
     fun createErrorMessage(command: String?, errorCode: String, message: String): String {
         val cmdStr = if (command != null) "cmd=$command " else ""
-        return "$MSG_ERROR ${cmdStr}code=$errorCode msg=\"$message\""
+        return "$MSG_ERROR ${cmdStr}
+code=$errorCode msg=\"$message\""
     }
+
 
     fun createDataGsrMessage(timestamp: Long, value: Double): String {
         return "$MSG_DATA_GSR ts=$timestamp value=$value"
     }
 
+
     fun parseMessage(message: String): ProtocolMessage? {
         return try {
             val parts = message.trim().split(" ", limit = 2)
-            if (parts.isEmpty()) return null
+            if (parts.isEmpty())
+            return null
             val messageType = parts[0]
             val params = if (parts.size > 1) parseParameters(parts[1]) else emptyMap()
             ProtocolMessage(messageType, params)
@@ -83,6 +95,7 @@ object Protocol {
             null
         }
     }
+
 
     private fun parseParameters(paramString: String): Map<String, String> {
         val params = mutableMapOf<String, String>()
@@ -94,8 +107,10 @@ object Protocol {
             val value = match.groups[3]?.value ?: match.groups[4]?.value ?: return@forEach
             params[key] = value
         }
+
         return params
     }
+
 
     data class ProtocolMessage(
         val type: String,

@@ -37,4 +37,3 @@ class ModeManager {
             CameraMode.NIGHT_MODE -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
         }
 }
-

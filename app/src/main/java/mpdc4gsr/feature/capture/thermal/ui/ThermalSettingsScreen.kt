@@ -24,120 +24,122 @@ import mpdc4gsr.core.designsystem.components.settings.SettingsSlider
 import mpdc4gsr.core.designsystem.components.settings.SettingsToggle
 import mpdc4gsr.core.designsystem.theme.IRCameraTheme
 import mpdc4gsr.feature.capture.thermal.presentation.ThermalSettingsViewModel
-import mpdc4gsr.feature.capture.thermal.ui.components.ThermalScaffold
 
 @Composable
 fun ThermalSettingsScreen(
     onBackClick: (() -> Unit)? = null,
     viewModel: ThermalSettingsViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val settings by viewModel.thermalSettings.collectAsStateWithLifecycle()
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFF16131e))
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(Color(0xFF16131e)),
     ) {
         TitleBar(
             title = "Thermal Settings",
             showBackButton = true,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
         )
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             // Recording Settings
             SettingsCard(
                 title = "Recording Settings",
-                icon = Icons.Default.Videocam
+                icon = Icons.Default.Videocam,
             ) {
                 SettingsSlider(
                     label = "Frame Rate",
                     value = settings.frameRate.toFloat(),
                     valueRange = 10f..30f,
                     onValueChange = { viewModel.updateFrameRate(it.toInt()) },
-                    unit = " fps"
+                    unit = " fps",
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsToggle(
                     label = "Save Raw Images",
                     description = "Save individual thermal frames during recording",
                     checked = settings.saveRawImages,
-                    onCheckedChange = { viewModel.updateSaveRawImages(it) }
+                    onCheckedChange = { viewModel.updateSaveRawImages(it) },
                 )
             }
             // Display Settings
             SettingsCard(
                 title = "Display Settings",
-                icon = Icons.Default.Palette
+                icon = Icons.Default.Palette,
             ) {
                 SettingsDropdown(
                     label = "Color Palette",
                     value = settings.palette,
                     options = listOf("Iron", "Rainbow", "Gray", "Hot", "Cool"),
-                    onValueChange = { viewModel.updatePalette(it) }
+                    onValueChange = { viewModel.updatePalette(it) },
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsDropdown(
                     label = "Temperature Unit",
                     value = settings.temperatureUnit,
                     options = listOf("Celsius", "Fahrenheit", "Kelvin"),
-                    onValueChange = { viewModel.updateTemperatureUnit(it) }
+                    onValueChange = { viewModel.updateTemperatureUnit(it) },
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsDropdown(
                     label = "Temperature Range",
                     value = settings.temperatureRange,
                     options = listOf("Auto", "-20°C to 120°C", "0°C to 100°C", "Custom"),
-                    onValueChange = { viewModel.updateTemperatureRange(it) }
+                    onValueChange = { viewModel.updateTemperatureRange(it) },
                 )
             }
             // Measurement Settings
             SettingsCard(
                 title = "Measurement",
-                icon = Icons.Default.Straighten
+                icon = Icons.Default.Straighten,
             ) {
                 SettingsSlider(
                     label = "Emissivity",
                     value = settings.emissivity,
                     valueRange = 0.1f..1.0f,
                     onValueChange = { viewModel.updateEmissivity(it) },
-                    unit = ""
+                    unit = "",
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsToggle(
                     label = "Auto Scale",
                     description = "Automatically adjust temperature scale",
                     checked = settings.autoScale,
-                    onCheckedChange = { viewModel.updateAutoScale(it) }
+                    onCheckedChange = { viewModel.updateAutoScale(it) },
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsToggle(
                     label = "Show Crosshair",
                     description = "Display center point crosshair",
                     checked = settings.showCrosshair,
-                    onCheckedChange = { viewModel.updateShowCrosshair(it) }
+                    onCheckedChange = { viewModel.updateShowCrosshair(it) },
                 )
             }
             // Calibration Controls
             SettingsCard(
                 title = "Calibration",
-                icon = Icons.Default.Tune
+                icon = Icons.Default.Tune,
             ) {
                 Button(
                     onClick = {
                         // TODO: Start flat field calibration process
-                        android.widget.Toast.makeText(
-                            context,
-                            "Starting flat field calibration...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Starting flat field calibration...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(Icons.Default.Adjust, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
@@ -146,13 +148,14 @@ fun ThermalSettingsScreen(
                 Button(
                     onClick = {
                         // TODO: Start temperature calibration process
-                        android.widget.Toast.makeText(
-                            context,
-                            "Starting temperature calibration...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        android.widget.Toast
+                            .makeText(
+                                context,
+                                "Starting temperature calibration...",
+                                android.widget.Toast.LENGTH_SHORT,
+                            ).show()
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(Icons.Default.Thermostat, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
@@ -170,4 +173,3 @@ private fun ThermalSettingsScreenPreview() {
         ThermalSettingsScreen()
     }
 }
-

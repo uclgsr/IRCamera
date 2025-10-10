@@ -32,4 +32,3 @@ object GSRModule {
         @ApplicationContext context: Context,
     ): SessionDirectoryManager = SessionDirectoryManager(context)
 }
-

@@ -9,6 +9,7 @@ class ConnectionMetrics {
         private const val PING_TIMEOUT_MS = 5000L
     }
 
+
     private val mutex = Mutex()
     private val connectionStartTime = AtomicLong(0)
     private val lastPingTime = AtomicLong(0)
@@ -32,9 +33,11 @@ class ConnectionMetrics {
         connectionStartTime.set(System.currentTimeMillis())
     }
 
+
     fun recordConnectionEnd() {
         val duration = getConnectionDuration()
     }
+
 
     fun recordMessageSent(messageSize: Int = 0) {
         totalMessagesSent.incrementAndGet()
@@ -43,6 +46,7 @@ class ConnectionMetrics {
         }
     }
 
+
     fun recordMessageReceived(messageSize: Int = 0) {
         totalMessagesReceived.incrementAndGet()
         if (messageSize > 0) {
@@ -50,9 +54,11 @@ class ConnectionMetrics {
         }
     }
 
+
     fun recordPingSent() {
         lastPingTime.set(System.currentTimeMillis())
     }
+
 
     suspend fun recordPongReceived() {
         val pingTime = lastPingTime.get()
@@ -67,18 +73,21 @@ class ConnectionMetrics {
         }
     }
 
+
     fun recordReconnectAttempt() {
         totalReconnectAttempts.incrementAndGet()
     }
 
+
     fun getConnectionDuration(): Long {
         val startTime = connectionStartTime.get()
-        return if (startTime > 0) {
+            return if (startTime > 0) {
             System.currentTimeMillis() - startTime
         } else {
             0L
         }
     }
+
 
     suspend fun getAverageLatency(): Long = mutex.withLock {
         if (latencyHistory.isEmpty()) {
@@ -88,9 +97,11 @@ class ConnectionMetrics {
         }
     }
 
+
     suspend fun getLatestLatency(): Long = mutex.withLock {
         latencyHistory.lastOrNull() ?: -1L
     }
+
 
     suspend fun getMetricsSummary(): Map<String, Any> = mutex.withLock {
         mapOf(
@@ -110,6 +121,7 @@ class ConnectionMetrics {
         )
     }
 
+
     suspend fun reset() = mutex.withLock {
         connectionStartTime.set(0)
         lastPingTime.set(0)
@@ -122,6 +134,7 @@ class ConnectionMetrics {
         bandwidthHistory.clear()
     }
 
+
     private suspend fun getAverageSendBandwidth(): Double = mutex.withLock {
         val duration = getConnectionDuration()
         if (duration > 0) {
@@ -131,6 +144,7 @@ class ConnectionMetrics {
         }
     }
 
+
     private suspend fun getAverageReceiveBandwidth(): Double = mutex.withLock {
         val duration = getConnectionDuration()
         if (duration > 0) {
@@ -139,6 +153,7 @@ class ConnectionMetrics {
             0.0
         }
     }
+
 
     suspend fun recordBandwidthSample() = mutex.withLock {
         val now = System.currentTimeMillis()
@@ -157,6 +172,7 @@ class ConnectionMetrics {
             bandwidthHistory.removeAt(0)
         }
     }
+
 
     suspend fun getConnectionQualityScore(): Int = mutex.withLock {
         var score = 100

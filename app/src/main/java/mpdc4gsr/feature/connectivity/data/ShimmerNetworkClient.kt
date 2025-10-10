@@ -2,284 +2,255 @@ package mpdc4gsr.feature.connectivity.data
 
 import android.net.TrafficStats
 import android.os.Process
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import mpdc4gsr.core.common.AppLogger
 import mpdc4gsr.core.hardware.gsr.model.GSRSample
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintWriter
+import java.net.InetSocketAddress
 import java.net.Socket
 import java.util.concurrent.atomic.AtomicBoolean
 
 class ShimmerNetworkClient(
     private val serverHost: String = "192.168.1.100",
-    private val serverPort: Int = 8888
+    private val serverPort: Int = 8888,
 ) {
     companion object {
-        private const val CONNECTION_TIMEOUT_MS = 5000
-        private const val RECONNECT_DELAY_MS = 3000L
+        private const val CONNECTION_TIMEOUT_MS = 5_000
+        private const val RECONNECT_DELAY_MS = 3_000L
+        private const val HEARTBEAT_INTERVAL_MS = 30_000L
     }
 
+
     private var socket: Socket? = null
-    private var outputStream: PrintWriter? = null
-    private var inputStream: BufferedReader? = null
-    private val isConnected = AtomicBoolean(false)
-    private val isRunning = AtomicBoolean(false)
-    private val networkScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private var connectionJob: Job? = null
+    private var outputWriter: PrintWriter? = null
+    private var inputReader: BufferedReader? = null
+
+    private val connected = AtomicBoolean(false)
+    private val running = AtomicBoolean(false)
+
+    private val clientScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private var listenerJob: Job? = null
     private var heartbeatJob: Job? = null
+
     var onConnected: (() -> Unit)? = null
     var onDisconnected: (() -> Unit)? = null
     var onError: ((String) -> Unit)? = null
-    suspend fun connect(): Boolean = withContext(Dispatchers.IO) {
-        try {
-            if (isConnected.get()) {
+
+    suspend fun connect(): Boolean =
+        withContext(Dispatchers.IO) {
+            if (connected.get()) {
                 return@withContext true
-            } TrafficStats . setThreadStatsTag (Process.myTid())
-            socket = Socket()
-            socket?.connect(
-                java.net.InetSocketAddress(serverHost, serverPort),
-                CONNECTION_TIMEOUT_MS
-            )
-            socket?.let { TrafficStats.tagSocket(it) }
-            outputStream = PrintWriter(socket?.getOutputStream()!!, true)
-            inputStream = BufferedReader(InputStreamReader(socket?.getInputStream()!!))
-            isConnected.set(true)
-            isRunning.set(true)
-            startMessageListener()
-            startHeartbeat() withContext (Dispatchers.Main) {
-                onConnected?.invoke()
             }
-            return@withContext true
-        } catch (e: Exception) {
-            cleanup()
-            withContext(Dispatchers.Main) {
-                onError?.invoke("Connection failed: ${e.message}")
+
+
+            try {
+                TrafficStats.setThreadStatsTag(Process.myTid())
+                socket = Socket().apply {
+                    connect(InetSocketAddress(serverHost, serverPort), CONNECTION_TIMEOUT_MS)
+                    TrafficStats.tagSocket(this)
+                }
+
+                outputWriter = PrintWriter(socket?.getOutputStream(), true)
+                inputReader = BufferedReader(InputStreamReader(socket?.getInputStream()))
+
+                connected.set(true)
+                running.set(true)
+
+                listenerJob = clientScope.launch { listenForMessages() }
+
+                heartbeatJob = clientScope.launch { heartbeatLoop() }
+
+
+                withContext(Dispatchers.Main) {
+                    onConnected?.invoke()
+                }
+
+
+                true
+            } catch (e: Exception) {
+                handleConnectionFailure("Connection failed", e)
+                false
             }
-            return@withContext false
         }
-    }
+
 
     fun disconnect() {
-        networkScope.launch {
-            try {
-                cleanup()
-                withContext(Dispatchers.Main) {
-                    onDisconnected?.invoke()
-                }
-            } catch (e: Exception) {
-                mpdc4gsr.core.common.AppLogger.e(
-                    "ShimmerNetworkClient",
-                    "Unexpected Exception in ShimmerNetworkClient catch block",
-                    e
-                )
+        clientScope.launch {
+            stopInternal()
+            withContext(Dispatchers.Main) {
+                onDisconnected?.invoke()
             }
         }
     }
 
-    fun sendGSRSample(sample: GSRSample, sequenceNumber: Long) {
-        if (!isConnected.get()) return
-        networkScope.launch {
-            try {
-                val message = JSONObject().apply {
-                    put("type", "gsr_sample")
-                    put("timestamp_ms", sample.timestamp)
-                    put("gsr_microsiemens", sample.gsrMicrosiemens)
-                    put("raw_value", sample.gsrRaw)
-                    put("resistance_kohm", sample.resistanceOhms / 1000.0)
-                    put("sample_sequence", sequenceNumber)
-                }
-                sendMessage(message)
-            } catch (e: Exception) {
-                mpdc4gsr.core.common.AppLogger.e(
-                    "ShimmerNetworkClient",
-                    "Unexpected Exception in ShimmerNetworkClient catch block",
-                    e
-                )
-            }
-        }
+
+    fun sendGsrSample(sample: GSRSample, sequenceNumber: Long) {
+        sendJson(
+            JSONObject()
+                .put("type", "gsr_sample")
+                .put("timestamp_ms", sample.timestamp)
+                .put("gsr_microsiemens", sample.gsrMicrosiemens)
+                .put("raw_value", sample.gsrRaw)
+                .put("resistance_kohm", sample.resistanceOhms / 1000.0)
+                .put("sample_sequence", sequenceNumber),
+        )
     }
+
 
     fun sendRecordingStart(sessionId: String) {
-        networkScope.launch {
-            try {
-                val message = JSONObject().apply {
-                    put("type", "recording_start")
-                    put("session_id", sessionId)
-                    put("timestamp_ms", System.currentTimeMillis())
-                }
-                sendMessage(message)
-            } catch (e: Exception) {
-                mpdc4gsr.core.common.AppLogger.e(
-                    "ShimmerNetworkClient",
-                    "Unexpected Exception in ShimmerNetworkClient catch block",
-                    e
-                )
-            }
-        }
+        sendJson(
+            JSONObject()
+                .put("type", "recording_start")
+                .put("session_id", sessionId)
+                .put("timestamp_ms", System.currentTimeMillis()),
+        )
     }
+
 
     fun sendRecordingStop(sessionId: String, sampleCount: Long) {
-        networkScope.launch {
+        sendJson(
+            JSONObject()
+                .put("type", "recording_stop")
+                .put("session_id", sessionId)
+                .put("timestamp_ms", System.currentTimeMillis())
+                .put("sample_count", sampleCount),
+        )
+    }
+
+
+    fun sendStatus(status: String) {
+        sendJson(
+            JSONObject()
+                .put("type", "status_update")
+                .put("status", status)
+                .put("timestamp_ms", System.currentTimeMillis()),
+        )
+    }
+
+
+    private fun sendJson(json: JSONObject) {
+        if (!connected.get())
+            return
+        clientScope.launch {
             try {
-                val message = JSONObject().apply {
-                    put("type", "recording_stop")
-                    put("session_id", sessionId)
-                    put("timestamp_ms", System.currentTimeMillis())
-                    put("total_samples", sampleCount)
+                outputWriter?.apply {
+                    print(json.toString())
+                    print("\n")
+                    flush()
                 }
-                sendMessage(message)
             } catch (e: Exception) {
-                mpdc4gsr.core.common.AppLogger.e(
-                    "ShimmerNetworkClient",
-                    "Unexpected Exception in ShimmerNetworkClient catch block",
-                    e
-                )
+                handleConnectionFailure("Failed to send message", e)
             }
         }
     }
 
-    fun sendSyncMarker(markerType: String, metadata: Map<String, String> = emptyMap()) {
-        networkScope.launch {
-            try {
-                val message = JSONObject().apply {
-                    put("type", "sync_marker")
-                    put("marker_type", markerType)
-                    put("timestamp_ms", System.currentTimeMillis())
-                    put("metadata", JSONObject(metadata))
-                }
-                sendMessage(message)
-            } catch (e: Exception) {
-                mpdc4gsr.core.common.AppLogger.e(
-                    "ShimmerNetworkClient",
-                    "Unexpected Exception in ShimmerNetworkClient catch block",
-                    e
-                )
-            }
-        }
-    }
 
-    private fun sendMessage(message: JSONObject) {
+    private suspend fun listenForMessages() {
         try {
-            outputStream?.let { out ->
-                val messageStr = message.toString() + "\n"
-                out.print(messageStr)
-                out.flush()
+            while (running.get()) {
+                val line = inputReader?.readLine() ?: break
+                processServerMessage(line)
             }
         } catch (e: Exception) {
-            handleConnectionError(e)
+            handleConnectionFailure("Connection lost", e)
+        } finally {
+            stopInternal()
         }
     }
 
-    private fun startMessageListener() {
-        connectionJob = networkScope.launch {
+
+    private suspend fun heartbeatLoop() {
+        while (running.get()) {
             try {
-                while (isRunning.get() && isConnected.get()) {
-                    val input = inputStream
-                    if (input != null) {
-                        val line = input.readLine()
-                        if (line != null) {
-                            processServerMessage(line)
-                        } else {
-                            return@launch
-                        }
-                    } else {
-                        return@launch
-                    }
-                }
+                delay(HEARTBEAT_INTERVAL_MS)
+                sendJson(
+                    JSONObject()
+                        .put("type", "heartbeat")
+                        .put("timestamp_ms", System.currentTimeMillis()),
+                )
             } catch (e: Exception) {
-                handleConnectionError(e)
+                handleConnectionFailure("Heartbeat failed", e)
+                break
             }
         }
     }
 
-    private fun startHeartbeat() {
-        heartbeatJob = networkScope.launch {
-            while (isRunning.get() && isConnected.get()) {
-                try {
-                    delay(30000)
-                    val heartbeat = JSONObject().apply {
-                        put("type", "heartbeat")
-                        put("timestamp_ms", System.currentTimeMillis())
-                    }
-                    sendMessage(heartbeat)
-                } catch (e: Exception) {
-                    break
-                }
-            }
-        }
-    }
 
     private fun processServerMessage(message: String) {
-        try {
-            val json = JSONObject(message)
-            val type = json.getString("type")
-            when (type) {
-                "connection_ack" -> {}
-
-                "sync_request" -> {}
-
-                else -> {}
-            }
-        } catch (e: Exception) {
-            mpdc4gsr.core.common.AppLogger.e(
-                "ShimmerNetworkClient",
-                "Unexpected Exception in ShimmerNetworkClient catch block",
-                e
-            )
-        }
+        // Currently we only log messages from the server, but we keep the hook for future use.
+        AppLogger.d("ShimmerNetworkClient", "Server message: $message")
     }
 
-    private fun handleConnectionError(error: Exception) {
-        if (isRunning.get()) {
-            cleanup()
-            networkScope.launch {
-                delay(RECONNECT_DELAY_MS)
-                if (isRunning.get()) {
-                    connect()
-                }
+
+    private fun handleConnectionFailure(reason: String, throwable: Exception) {
+        AppLogger.e("ShimmerNetworkClient", reason, throwable)
+        clientScope.launch {
+            stopInternal()
+            withContext(Dispatchers.Main) {
+                onError?.invoke("$reason: ${throwable.message}")
+            }
+
+            delay(RECONNECT_DELAY_MS)
+            if (running.get()) {
+                connect()
             }
         }
     }
 
-    private fun cleanup() {
-        isConnected.set(false)
-        isRunning.set(false)
-        connectionJob?.cancel()
+
+    private fun stopInternal() {
+        if (!connected.compareAndSet(true, false)) {
+            return
+        }
+
+
+        running.set(false)
+
+        listenerJob?.cancel()
         heartbeatJob?.cancel()
-        networkScope.cancel()
+        clientScope.coroutineContext.cancelChildren()
+
         try {
             socket?.let { TrafficStats.untagSocket(it) }
-            outputStream?.close()
-            inputStream?.close()
+
             socket?.close()
-            TrafficStats.clearThreadStatsTag()
+            outputWriter?.close()
+            inputReader?.close()
         } catch (e: Exception) {
-            mpdc4gsr.core.common.AppLogger.e(
-                "ShimmerNetworkClient",
-                "Unexpected Exception in ShimmerNetworkClient catch block",
-                e
-            )
+            AppLogger.e("ShimmerNetworkClient", "Error while closing socket", e)
+        } finally {
+            socket = null
+            outputWriter = null
+            inputReader = null
+            TrafficStats.clearThreadStatsTag()
         }
-        outputStream = null
-        inputStream = null
-        socket = null
-        onConnected = null
-        onDisconnected = null
-        onError = null
     }
 
-    fun isConnected(): Boolean = isConnected.get()
-    fun getConnectionStatus(): String {
-        return when {
-            isConnected.get() -> "Connected to $serverHost:$serverPort"
-            isRunning.get() -> "Connecting..."
+
+    fun isConnected(): Boolean = connected.get()
+
+    fun getConnectionStatus(): String =
+        when {
+            connected.get() -> "Connected to $serverHost:$serverPort"
+            running.get() -> "Connecting..."
             else -> "Disconnected"
         }
-    }
 
-    fun updateServerAddress(host: String, port: Int = serverPort): ShimmerNetworkClient {
-        return ShimmerNetworkClient(host, port)
-    }
+
+    fun updateServerAddress(host: String, port: Int = serverPort): ShimmerNetworkClient =
+        ShimmerNetworkClient(host, port).also {
+            it.onConnected = onConnected
+            it.onDisconnected = onDisconnected
+            it.onError = onError
+        }
 }
-

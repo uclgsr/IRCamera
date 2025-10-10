@@ -63,4 +63,3 @@ object NavigationPerformanceHelper {
             ?.let { it.key.removePrefix("navigation_") to it.value.average }
     }
 }
-

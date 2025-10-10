@@ -82,4 +82,3 @@ object NavigationAnimations {
             false,
         ) as ExitTransition
 }
-

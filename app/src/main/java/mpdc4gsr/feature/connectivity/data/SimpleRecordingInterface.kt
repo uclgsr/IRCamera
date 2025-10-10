@@ -7,6 +7,7 @@ interface SimpleRecordingInterface {
     fun getStatus(): Map<String, Any>
 }
 
+
 class MockRecordingController : SimpleRecordingInterface {
     private var _isRecording = false
     private var sessionStartTime: Long? = null
@@ -17,19 +18,23 @@ class MockRecordingController : SimpleRecordingInterface {
         if (_isRecording) {
             return false // Already recording
         }
+
         _isRecording = true
         sessionStartTime = System.currentTimeMillis()
-        return true
+            return true
     }
+
 
     override fun stopRecording(): Boolean {
         if (!_isRecording) {
             return false // Not recording
         }
+
         _isRecording = false
         sessionStartTime = null
         return true
     }
+
 
     override fun getStatus(): Map<String, Any> {
         val status = mutableMapOf<String, Any>()
@@ -39,6 +44,7 @@ class MockRecordingController : SimpleRecordingInterface {
             status["session_duration"] = System.currentTimeMillis() - sessionStartTime!!
             status["sensors"] = listOf("RGB", "Thermal", "GSR")
         }
+
         return status
     }
 }

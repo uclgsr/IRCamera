@@ -30,4 +30,3 @@ object GSRConstants {
     const val GSR_UNCAL_LIMIT_LOW = 100
     const val GSR_UNCAL_LIMIT_HIGH = 4000
 }
-

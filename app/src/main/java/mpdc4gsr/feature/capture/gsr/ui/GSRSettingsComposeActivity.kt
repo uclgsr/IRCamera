@@ -31,4 +31,3 @@ class GSRSettingsComposeActivity : BaseComposeActivity<GSRSettingsViewModel>() {
         }
     }
 }
-

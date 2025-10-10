@@ -108,7 +108,7 @@ fun SessionManagerScreen(
                     true
                 } else {
                     session.title.contains(searchQuery, ignoreCase = true) ||
-                            session.participantId.contains(searchQuery, ignoreCase = true)
+                        session.participantId.contains(searchQuery, ignoreCase = true)
                 }
             }
     IRCameraTheme {
@@ -569,4 +569,3 @@ private fun getSampleSessions() =
 fun SessionManagerScreenPreview() {
     SessionManagerScreen()
 }
-

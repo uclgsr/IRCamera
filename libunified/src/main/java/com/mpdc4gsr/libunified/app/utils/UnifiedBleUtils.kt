@@ -36,16 +36,15 @@ object UnifiedBleUtils {
         while (i < length) {
             data[i / 2] =
                 (
-                        (Character.digit(cleanHex[i], 16) shl 4) +
-                                Character.digit(cleanHex[i + 1], 16)
-                        ).toByte()
+                    (Character.digit(cleanHex[i], 16) shl 4) +
+                        Character.digit(cleanHex[i + 1], 16)
+                ).toByte()
             i += 2
         }
         return data
     }
 
-    fun isBleSupported(context: Context): Boolean =
-        context.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
+    fun isBleSupported(context: Context): Boolean = context.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
 
     fun isBluetoothEnabled(): Boolean {
         @Suppress("DEPRECATION")
@@ -60,7 +59,7 @@ object UnifiedBleUtils {
 
     fun hasBluetoothLowEnergyCapabilities(context: Context): Boolean =
         context.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE) &&
-                getBluetoothAdapter() != null
+            getBluetoothAdapter() != null
 
     fun formatDeviceName(device: BluetoothDevice?): String {
         if (device == null) return "Unknown Device"
@@ -162,11 +161,11 @@ object UnifiedBleUtils {
 
     fun isWritable(characteristic: BluetoothGattCharacteristic): Boolean =
         (
-                characteristic.properties and (
-                        BluetoothGattCharacteristic.PROPERTY_WRITE or
-                                BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE
-                        )
-                ) != 0
+            characteristic.properties and (
+                BluetoothGattCharacteristic.PROPERTY_WRITE or
+                    BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE
+            )
+        ) != 0
 
     fun calculateConnectionTimeout(rssi: Int): Long =
         when {

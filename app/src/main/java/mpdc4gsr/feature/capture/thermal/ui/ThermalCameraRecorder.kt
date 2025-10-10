@@ -43,7 +43,6 @@ class ThermalCameraRecorder(
     context: Context,
     private val sensorIdParam: String = "thermal_camera",
 ) : SensorRecorder {
-
     companion object {
         private const val TAG = "ThermalCameraRecorder"
         private const val DEFAULT_FRAME_RATE_HZ = 9f
@@ -116,8 +115,7 @@ class ThermalCameraRecorder(
             }
         }
 
-    override suspend fun startRecording(sessionDirectory: String): Boolean =
-        startRecording(sessionDirectory, sessionMetadata = null)
+    override suspend fun startRecording(sessionDirectory: String): Boolean = startRecording(sessionDirectory, sessionMetadata = null)
 
     override suspend fun startRecording(
         sessionDirectory: String,
@@ -285,5 +283,4 @@ class ThermalCameraRecorder(
         errorFlow.emit(error)
         ErrorHandler.default().handle(IllegalStateException(message))
     }
-
 }

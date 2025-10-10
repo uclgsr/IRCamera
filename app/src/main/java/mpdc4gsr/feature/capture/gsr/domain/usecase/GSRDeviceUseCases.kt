@@ -60,4 +60,3 @@ class GetGSRDeviceBatteryUseCase(
 ) {
     suspend operator fun invoke(deviceAddress: String): Int? = repository.getDeviceBatteryLevel(deviceAddress)
 }
-

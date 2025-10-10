@@ -45,10 +45,10 @@ object TimeUtils {
             detectedProcessor =
                 when {
                     hardware.contains("qcom", ignoreCase = true) ||
-                            soc.contains("qualcomm", ignoreCase = true) -> "Qualcomm"
+                        soc.contains("qualcomm", ignoreCase = true) -> "Qualcomm"
 
                     hardware.contains("exynos", ignoreCase = true) ||
-                            soc.contains("samsung", ignoreCase = true) -> "Exynos"
+                        soc.contains("samsung", ignoreCase = true) -> "Exynos"
 
                     else -> "Generic_Android_Timer"
                 }
@@ -122,4 +122,3 @@ object TimeUtils {
 
     fun getElapsedTimeMs(startMonotonicNs: Long): Long = (getMonotonicTimestampNs() - startMonotonicNs) / 1_000_000L
 }
-

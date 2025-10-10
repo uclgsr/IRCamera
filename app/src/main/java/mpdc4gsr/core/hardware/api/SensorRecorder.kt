@@ -97,4 +97,3 @@ data class RecordingStats(
     val syncMarkersCount: Int,
     val lastSampleTimestampNs: Long,
 )
-

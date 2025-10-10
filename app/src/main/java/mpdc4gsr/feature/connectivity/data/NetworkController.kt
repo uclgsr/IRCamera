@@ -17,6 +17,7 @@ class NetworkController(private val context: Context) {
         private const val BUFFER_SIZE = 4096
     }
 
+
     private var serverSocket: ServerSocket? = null
     private val isRunning = AtomicBoolean(false)
     private val clientConnections = ConcurrentHashMap<String, ClientConnection>()
@@ -35,6 +36,7 @@ class NetworkController(private val context: Context) {
         fun onClientDisconnected(clientId: String, reason: String)
         fun onError(operation: String, error: String)
     }
+
 
     data class ClientConnection(
         val socket: Socket,
@@ -55,33 +57,39 @@ class NetworkController(private val context: Context) {
         this.eventListener = listener
     }
 
+
     suspend fun start(port: Int = DEFAULT_PORT): Boolean = withContext(Dispatchers.IO) {
         if (isRunning.get()) {
             return@withContext false
         }
+
         try {
             // First check if the port is available
-            val actualPort = if (NetworkUtils.isPortAvailable(port)) {
-                port
-            } else {
-                try {
-                    val availablePort = NetworkUtils.findAvailablePort(port) availablePort
-                } catch (e: IllegalStateException) {
-                    eventListener?.onError(
-                        "start_server",
-                        "Port $port is already in use and no alternative ports available. Please ensure no other services are using ports ${port} to ${port + 9}."
-                    )
-                    return@withContext false
+            val actualPort =
+                if (NetworkUtils.isPortAvailable(port)) {
+                    port
+                } else {
+                    try {
+                        NetworkUtils.findAvailablePort(port)
+                    } catch (e: IllegalStateException) {
+                        eventListener?.onError(
+                            "start_server",
+                            "Port $port is already in use and no alternative ports available. Please ensure no other services are using ports ${port}
+ to ${port + 9}.",
+                        )
+            return@withContext false
+                    }
                 }
-            }
+
             serverSocket = ServerSocket().apply {
                 reuseAddress = true
                 bind(InetSocketAddress(actualPort))
                 soTimeout = SOCKET_TIMEOUT
             }
-            isRunning.set(true) controllerScope . launch {
-                acceptConnections()
-            }
+
+            isRunning.set(true)
+            controllerScope.launch { acceptConnections() }
+
             return@withContext true
         } catch (e: java.net.BindException) {
             eventListener?.onError(
@@ -95,10 +103,12 @@ class NetworkController(private val context: Context) {
         }
     }
 
+
     suspend fun stop() = withContext(Dispatchers.IO) {
         if (!isRunning.get()) {
             return@withContext
         }
+
         isRunning.set(false)
         try {
             // Close all client connections first
@@ -116,6 +126,7 @@ class NetworkController(private val context: Context) {
                     )
                 }
             }
+
             clientConnections.clear()
             // Close server socket
             serverSocket?.let { socket ->
@@ -131,6 +142,7 @@ class NetworkController(private val context: Context) {
                     )
                 }
             }
+
             serverSocket = null
             // Cancel coroutine scope
             controllerScope.cancel()
@@ -145,6 +157,7 @@ class NetworkController(private val context: Context) {
         }
     }
 
+
     private suspend fun acceptConnections() = withContext(Dispatchers.IO) {
         while (isRunning.get() && serverSocket != null) {
             try {
@@ -158,10 +171,12 @@ class NetworkController(private val context: Context) {
                 if (isRunning.get()) {
                     eventListener?.onError("accept_connection", e.message ?: "Unknown error")
                 }
+
                 break
             }
         }
     }
+
 
     private suspend fun handleNewClient(clientSocket: Socket) = withContext(Dispatchers.IO) {
         try {
@@ -177,8 +192,12 @@ class NetworkController(private val context: Context) {
             clientConnections[clientId] = connection
             eventListener?.onClientConnected(
                 clientId,
-                "PC Controller"
-            ) sendResponse (connection, createResponse("welcome", "Connected to IRCamera Android"))
+                "PC Controller",
+            )
+            sendResponse(
+                connection,
+                createResponse("welcome", "Connected to IRCamera Android"),
+            )
             controllerScope.launch {
                 handleClientMessages(connection)
             }
@@ -195,14 +214,18 @@ class NetworkController(private val context: Context) {
         }
     }
 
+
     private suspend fun handleClientMessages(connection: ClientConnection) =
         withContext(Dispatchers.IO) {
             try {
                 while (isRunning.get() && !connection.socket.isClosed) {
                     val message = connection.inputStream.readLine()
                     if (message == null) {
-                        // Client disconnected gracefully                        break
-                    } handleCommand (connection, message)
+                        // Client disconnected gracefully
+                        break
+                    }
+
+                    handleCommand(connection, message)
                 }
             } catch (e: SocketException) {
                 // Handle connection reset and other socket exceptions gracefully
@@ -214,6 +237,7 @@ class NetworkController(private val context: Context) {
                             e,
                         )
                     }
+
 
                     e.message?.contains("Socket closed") == true -> {
                         mpdc4gsr.core.common.AppLogger.d(
@@ -243,10 +267,12 @@ class NetworkController(private val context: Context) {
             }
         }
 
+
     private suspend fun handleCommand(connection: ClientConnection, message: String) {
         try {
             val json = JSONObject(message)
-            val command = json.getString("command")            when (command) {
+            val command = json.getString("command")
+            when (command) {
                 "start_recording" -> handleStartRecordingCommand(connection, json)
                 "stop_recording" -> handleStopRecordingCommand(connection, json)
                 "ping" -> handlePingCommand(connection, json)
@@ -266,6 +292,7 @@ class NetworkController(private val context: Context) {
         }
     }
 
+
     private suspend fun handleStartRecordingCommand(
         connection: ClientConnection,
         json: JSONObject
@@ -278,21 +305,28 @@ class NetworkController(private val context: Context) {
                     connection,
                     createErrorResponse("invalid_request", "Missing or invalid 'modalities' field")
                 )
-                return
+            return
             }
+
             val modalities = mutableListOf<String>()
             for (i in 0 until modalitiesArray.length()) {
                 modalities.add(modalitiesArray.getString(i))
             }
+
             val options = mutableMapOf<String, Any>()
             json.optBoolean("saveImages", false).let { options["saveImages"] = it }
+
             json.optInt("samplingRate", 64).let { options["samplingRate"] = it }
+
             json.optString("participantId", "").let {
                 if (it.isNotEmpty()) options["participantId"] = it
             }
+
             json.optString("studyName", "").let {
                 if (it.isNotEmpty()) options["studyName"] = it
-            } eventListener ?. onStartRecordingCommand (sessionId, modalities, options)
+            }
+
+            eventListener?.onStartRecordingCommand(sessionId, modalities, options)
             sendResponse(
                 connection, createResponse(
                     "recording_started", "Recording session started", mapOf(
@@ -309,6 +343,7 @@ class NetworkController(private val context: Context) {
         }
     }
 
+
     private suspend fun handleStopRecordingCommand(connection: ClientConnection, json: JSONObject) {
         try {
             eventListener?.onStopRecordingCommand()
@@ -324,9 +359,11 @@ class NetworkController(private val context: Context) {
         }
     }
 
+
     private suspend fun handlePingCommand(connection: ClientConnection, json: JSONObject) {
         sendResponse(connection, createResponse("pong", "Server is alive"))
     }
+
 
     private suspend fun handleGetStatusCommand(connection: ClientConnection, json: JSONObject) {
         val status = mapOf(
@@ -336,6 +373,7 @@ class NetworkController(private val context: Context) {
         )
         sendResponse(connection, createResponse("status", "Server status", status))
     }
+
 
     private fun sendResponse(connection: ClientConnection, response: String) {
         try {
@@ -349,6 +387,7 @@ class NetworkController(private val context: Context) {
         }
     }
 
+
     private fun createResponse(
         status: String,
         message: String,
@@ -361,8 +400,10 @@ class NetworkController(private val context: Context) {
         if (data.isNotEmpty()) {
             json.put("data", JSONObject(data))
         }
+
         return json.toString()
     }
+
 
     private fun createErrorResponse(error: String, message: String): String {
         val json = JSONObject()
@@ -370,8 +411,9 @@ class NetworkController(private val context: Context) {
         json.put("error", error)
         json.put("message", message)
         json.put("timestamp", System.currentTimeMillis())
-        return json.toString()
+            return json.toString()
     }
+
 
     private fun disconnectClient(clientId: String, reason: String) {
         clientConnections[clientId]?.let { connection ->
@@ -384,10 +426,12 @@ class NetworkController(private val context: Context) {
                     ignored
                 )
             }
+
             clientConnections.remove(clientId)
             eventListener?.onClientDisconnected(clientId, reason)
         }
     }
+
 
     fun getConnectedClientsCount(): Int = clientConnections.size
     fun isRunning(): Boolean = isRunning.get()

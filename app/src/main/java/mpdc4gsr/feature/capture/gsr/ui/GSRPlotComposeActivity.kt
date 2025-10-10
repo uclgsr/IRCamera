@@ -910,4 +910,3 @@ class GSRPlotViewModel : AppBaseViewModel() {
     // - Filter state management
     // - Export functionality
 }
-

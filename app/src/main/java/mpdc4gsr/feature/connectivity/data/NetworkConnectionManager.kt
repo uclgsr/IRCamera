@@ -1,233 +1,265 @@
 package mpdc4gsr.feature.connectivity.data
 
-import android.content.Context
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import mpdc4gsr.core.common.AppLogger
 
+/**
+ * Owns the lifecycle of [NetworkServer] and bridges connection events to the higher-level
+ * [ProtocolHandler].  The original implementation had become difficult to reason about,
+ * so this version emphasises predictable state transitions, small helper methods and
+ * consistent coroutine ownership.
+ */
 class NetworkConnectionManager(
-    private val context: Context,
     private val networkServer: NetworkServer,
-    private val protocolHandler: ProtocolHandler
+    private val protocolHandler: ProtocolHandler,
+    private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
 ) {
+
     companion object {
-        private const val RECONNECT_DELAY_MS = 2000L
+        private const val TAG = "NetworkConnectionManager"
+        private const val RECONNECT_DELAY_MS = 2_000L
+        private const val CONNECTION_TIMEOUT_MS = 30_000L
         private const val MAX_RECONNECT_ATTEMPTS = 5
-        private const val CONNECTION_TIMEOUT_MS = 30000L
     }
 
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private val _connectionState = MutableStateFlow(ConnectionState.DISCONNECTED)
-    val connectionState: StateFlow<ConnectionState> = _connectionState.asStateFlow()
-    private val _errorState = MutableStateFlow<String?>(null)
-    val errorState: StateFlow<String?> = _errorState.asStateFlow()
-    private var reconnectAttempts = 0
-    private var connectionTimeoutJob: kotlinx.coroutines.Job? = null
-
+    /**
+     * High-level state of the server / connection workflow.
+     */
     enum class ConnectionState {
-        DISCONNECTED,
-        CONNECTING,
+        STOPPED,
+        STARTING,
+        WAITING_FOR_CLIENT,
         CONNECTED,
+        RECONNECTING,
         ERROR,
-        RECONNECTING
     }
 
-    init {
-        // Monitor network server connection state
+
+    private val _connectionState = MutableStateFlow(ConnectionState.STOPPED)
+    val connectionState: StateFlow<ConnectionState> = _connectionState
+
+    private val _lastError = MutableStateFlow<String?>(null)
+    val lastError: StateFlow<String?> = _lastError
+
+    private var reconnectAttempts = 0
+
+    private var connectionJob: Job? = null
+    private var messageJob: Job? = null
+    private var timeoutJob: Job? = null
+
+    /**
+     * Starts listening for PC controller connections.
+     */
+    fun start() {
+        if (_connectionState.value != ConnectionState.STOPPED &&
+            _connectionState.value != ConnectionState.ERROR
+        ) {
+            return
+        }
+
+
+        updateState(ConnectionState.STARTING)
+        _lastError.value = null
+
         scope.launch {
-            networkServer.connectionStateFlow.collect { connected ->
-                if (connected) {
-                    onConnectionEstablished()
-                } else {
-                    onConnectionLost()
+            runCatching { networkServer.start() }
+                .onSuccess { started ->
+                    if (started) {
+                        reconnectAttempts = 0
+                        attachObservers()
+                        updateState(ConnectionState.WAITING_FOR_CLIENT)
+                    } else {
+                        setError("Failed to start network server")
+                    }
                 }
-            }
+                .onFailure { throwable ->
+                    setError("Server start failure: ${throwable.message}")
+                }
         }
-        // Monitor protocol messages for connection health
+    }
+
+    /**
+     * Stops the server and cancels any scheduled work.
+     */
+    fun stop() {
         scope.launch {
-            networkServer.messageFlow.collect { message ->
-                onProtocolMessageReceived(message)
-            }
+            runCatching { networkServer.stop() }
+                .onFailure { throwable ->
+                    AppLogger.e(TAG, "Error stopping server", throwable)
+                    _lastError.value = throwable.message
+                }
+
+            cancelObservers()
+            updateState(ConnectionState.STOPPED)
         }
     }
 
-    suspend fun startServer(): Boolean {
-        return try {
-            _connectionState.value = ConnectionState.CONNECTING
-            _errorState.value = null
-            val started = networkServer.start()
-            if (started) {                // Server is running, waiting for client connections
-                _connectionState.value = ConnectionState.DISCONNECTED // Waiting for PC to connect
-                true
-            } else {
-                _connectionState.value = ConnectionState.ERROR
-                _errorState.value = "Failed to start server"
-                false
-            }
-        } catch (e: Exception) {
-            _connectionState.value = ConnectionState.ERROR
-            _errorState.value = "Server start error: ${e.message}"
-            false
-        }
-    }
-
-    suspend fun stopServer() {
-        try {
-            connectionTimeoutJob?.cancel()
-            networkServer.stop()
-            _connectionState.value = ConnectionState.DISCONNECTED
-            _errorState.value = null
+    /**
+     * Forces a reconnection attempt from the current state.
+     */
+    fun forceReconnect() {
+        scope.launch {
             reconnectAttempts = 0
-        } catch (e: Exception) {
-            mpdc4gsr.core.common.AppLogger.e(
-                "NetworkConnectionManager",
-                "Unexpected Exception in NetworkConnectionManager catch block",
-                e
-            )
+            performReconnectionCycle()
         }
     }
 
-    private fun onConnectionEstablished() {
-        _connectionState.value = ConnectionState.CONNECTED
-        _errorState.value = null
-        reconnectAttempts = 0
-        // Start connection timeout monitoring
-        connectionTimeoutJob = scope.launch {
-            delay(CONNECTION_TIMEOUT_MS)
-            if (_connectionState.value == ConnectionState.CONNECTED) {
-                checkConnectionHealth()
-            }
-        }
-        // Enable preview streaming when PC connects
-        scope.launch {
-            try {
-                protocolHandler.enablePreviewStreaming()
-            } catch (e: Exception) {
-                mpdc4gsr.core.common.AppLogger.e(
-                    "NetworkConnectionManager",
-                    "Unexpected Exception in NetworkConnectionManager catch block",
-                    e
-                )
-            }
-        }
+    /**
+     * Releases resources when the manager is no longer required.
+     */
+    fun cleanup() {
+        stop()
+        scope.cancel()
     }
 
-    private fun onConnectionLost() {
-        connectionTimeoutJob?.cancel()
-        if (_connectionState.value == ConnectionState.CONNECTED) {
-            // Connection was active, this is unexpected
-            _connectionState.value = ConnectionState.ERROR
-            _errorState.value = "Connection lost unexpectedly"
-            // Disable preview streaming
+    /**
+     * Diagnostic snapshot for UI / logging.
+     */
+    fun getConnectionInfo(): Map<String, Any> =
+        mapOf(
+            "state" to _connectionState.value.name,
+            "lastError" to (_lastError.value ?: "none"),
+            "reconnectAttempts" to reconnectAttempts,
+            "serverRunning" to networkServer.isRunning(),
+            "clientConnected" to networkServer.isClientConnected(),
+        )
+
+    // -----------------------------------------------------------------------------------------
+    // Internal helpers
+    // -----------------------------------------------------------------------------------------
+            private fun attachObservers() {
+        cancelObservers()
+
+        connectionJob =
             scope.launch {
-                try {
-                    protocolHandler.disablePreviewStreaming()
-                } catch (e: Exception) {
-                    mpdc4gsr.core.common.AppLogger.e(
-                        "NetworkConnectionManager",
-                        "Unexpected Exception in NetworkConnectionManager catch block",
-                        e
-                    )
+                networkServer.connectionStateFlow.collect { connected ->
+                    if (connected) {
+                        handleClientConnected()
+                    } else {
+                        handleClientDisconnected()
+                    }
                 }
             }
-            // Attempt reconnection if not at max attempts
-            if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
-                scheduleReconnect()
-            } else {
-                _connectionState.value = ConnectionState.ERROR
-                _errorState.value = "Max reconnection attempts exceeded"
+
+
+        messageJob =
+            scope.launch {
+                networkServer.messageFlow.collect { message ->
+                    protocolHandler.handleIncomingMessage(message)
+                    resetTimeoutWatcher()
+                }
             }
-        } else {
-            // Normal disconnection or server waiting for connections
-            _connectionState.value = ConnectionState.DISCONNECTED
+    }
+
+
+    private fun cancelObservers() {
+        connectionJob?.cancel()
+        messageJob?.cancel()
+        timeoutJob?.cancel()
+        connectionJob = null
+        messageJob = null
+        timeoutJob = null
+    }
+
+
+    private fun handleClientConnected() {
+        AppLogger.i(TAG, "Client connected")
+        reconnectAttempts = 0
+        updateState(ConnectionState.CONNECTED)
+        protocolHandler.onClientConnected()
+        startTimeoutWatcher()
+    }
+
+
+    private fun handleClientDisconnected() {
+        AppLogger.w(TAG, "Client disconnected")
+        timeoutJob?.cancel()
+        protocolHandler.onClientDisconnected()
+
+        when (_connectionState.value) {
+            ConnectionState.CONNECTED,
+            ConnectionState.RECONNECTING -> scheduleReconnect()
+
+            ConnectionState.WAITING_FOR_CLIENT,
+            ConnectionState.STARTING,
+            ConnectionState.ERROR,
+            ConnectionState.STOPPED -> updateState(ConnectionState.WAITING_FOR_CLIENT)
         }
     }
+
 
     private fun scheduleReconnect() {
-        _connectionState.value = ConnectionState.RECONNECTING
-        reconnectAttempts++
+        timeoutJob?.cancel()
+
+        if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+            setError("Max reconnection attempts exceeded")
+            return
+        }
+
+
+        reconnectAttempts += 1
+        updateState(ConnectionState.RECONNECTING)
+
         scope.launch {
             delay(RECONNECT_DELAY_MS)
-            if (isActive && _connectionState.value == ConnectionState.RECONNECTING) {
-                attemptReconnection()
-            }
+            performReconnectionCycle()
         }
     }
 
-    private suspend fun attemptReconnection() {
-        try {            // Restart the server to accept new connections
+
+    private suspend fun performReconnectionCycle() {
+        runCatching {
             networkServer.stop()
-            delay(1000) // Brief pause before restart
-            val restarted = networkServer.start()
-            if (restarted) {
-                _connectionState.value = ConnectionState.DISCONNECTED // Waiting for PC
+            delay(250)
+            networkServer.start()
+        }.onSuccess { started ->
+            if (started) {
+                updateState(ConnectionState.WAITING_FOR_CLIENT)
             } else {
-                if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
-                    scheduleReconnect()
-                } else {
-                    _connectionState.value = ConnectionState.ERROR
-                    _errorState.value = "Reconnection failed after $MAX_RECONNECT_ATTEMPTS attempts"
-                }
+                setError("Failed to restart server during reconnection")
             }
-        } catch (e: Exception) {
-            if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
-                scheduleReconnect()
-            } else {
-                _connectionState.value = ConnectionState.ERROR
-                _errorState.value = "Reconnection error: ${e.message}"
-            }
+        }.onFailure { throwable ->
+            setError("Reconnection failure: ${throwable.message}")
         }
     }
 
-    private fun onProtocolMessageReceived(message: Protocol.ProtocolMessage) {
-        // Reset connection timeout when we receive messages
-        connectionTimeoutJob?.cancel()
-        if (_connectionState.value == ConnectionState.CONNECTED) {
-            // Restart timeout for next message
-            connectionTimeoutJob = scope.launch {
+
+    private fun startTimeoutWatcher() {
+        timeoutJob?.cancel()
+        timeoutJob =
+            scope.launch {
                 delay(CONNECTION_TIMEOUT_MS)
                 if (_connectionState.value == ConnectionState.CONNECTED) {
-                    checkConnectionHealth()
+                    AppLogger.w(TAG, "Connection timeout reached, forcing reconnect")
+                    scheduleReconnect()
                 }
             }
-        }
-        // Handle connection-related protocol messages
-        when (message.type) {
-            Protocol.MSG_HELLO -> {}
+    }
 
-            Protocol.MSG_ERROR -> {
-                val errorCode = message.parameters["code"]
-                val errorMsg = message.parameters["msg"] _errorState . value = "PC Error: $errorMsg"
-            }
 
-            else -> {
-                // Other messages indicate healthy connection            }
-            }
-        }
-
-        private fun checkConnectionHealth() {        // In a real implementation, we might send a ping/keepalive message
-            // For now, just log the health check
-        }
-
-        suspend fun forceReconnect() {
-            reconnectAttempts = 0
-            _connectionState.value = ConnectionState.RECONNECTING
-            attemptReconnection()
-        }
-
-        fun getConnectionInfo(): Map<String, Any> {
-            return mapOf(
-                "state" to _connectionState.value.name,
-                "error" to (_errorState.value ?: "none"),
-                "reconnect_attempts" to reconnectAttempts,
-                "server_running" to networkServer.isRunning(),
-                "client_connected" to networkServer.isClientConnected()
-            )
-        }
-
-        fun cleanup() {
-            scope.coroutineContext.job.cancel()
-            connectionTimeoutJob?.cancel()
+    private fun resetTimeoutWatcher() {
+        if (_connectionState.value == ConnectionState.CONNECTED) {
+            startTimeoutWatcher()
         }
     }
+
+
+    private fun updateState(newState: ConnectionState) {
+        _connectionState.value = newState
+    }
+
+
+    private fun setError(message: String) {
+        _lastError.value = message
+        updateState(ConnectionState.ERROR)
+        AppLogger.e(TAG, message)
+    }
+}

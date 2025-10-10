@@ -119,4 +119,3 @@ object ComposeEventBridge {
         // Preserves existing EventBus integration while enabling Compose UI updates
     }
 }
-

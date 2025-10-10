@@ -117,7 +117,7 @@ public final class Vector3 {
         return magnitude;
     }
 
-    public final void zero() {
+    public final void resetToZero() {
         set(0.0f, 0.0f, 0.0f);
     }
 

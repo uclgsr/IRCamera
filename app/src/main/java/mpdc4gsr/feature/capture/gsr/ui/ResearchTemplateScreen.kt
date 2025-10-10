@@ -104,7 +104,7 @@ fun ResearchTemplateScreen(
                     true
                 } else {
                     template.title.contains(searchQuery, ignoreCase = true) ||
-                            template.description.contains(searchQuery, ignoreCase = true)
+                        template.description.contains(searchQuery, ignoreCase = true)
                 }
             matchesCategory && matchesSearch
         }
@@ -647,4 +647,3 @@ private fun getSampleTemplates() =
 fun ResearchTemplateScreenPreview() {
     ResearchTemplateScreen()
 }
-

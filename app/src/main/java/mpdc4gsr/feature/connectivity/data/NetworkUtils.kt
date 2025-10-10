@@ -17,6 +17,7 @@ object NetworkUtils {
         }
     }
 
+
     fun findAvailablePort(preferredPort: Int, maxAttempts: Int = 10): Int {
         for (i in 0 until maxAttempts) {
             val port = preferredPort + i
@@ -24,6 +25,7 @@ object NetworkUtils {
                 return port
             }
         }
+
         throw IllegalStateException("Could not find available port starting from $preferredPort")
     }
 }

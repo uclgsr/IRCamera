@@ -202,4 +202,3 @@ data class TimestampConsistencyReport(
         fun getCsvHeader(): String = "is_consistent,max_difference_ns,gsr_timestamp,thermal_timestamp,rgb_timestamp"
     }
 }
-

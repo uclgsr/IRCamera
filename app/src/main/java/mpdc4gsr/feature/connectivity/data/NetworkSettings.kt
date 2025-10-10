@@ -35,9 +35,11 @@ class NetworkSettings(private val context: Context) {
         const val DEFAULT_CONNECTION_TIMEOUT = 10000L
     }
 
+
     enum class ConnectionType {
         WIFI_TCP, BLUETOOTH_RFCOMM
     }
+
 
     private val prefs: SharedPreferences =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -78,6 +80,7 @@ class NetworkSettings(private val context: Context) {
                 prefs.getInt(KEY_PREFERRED_CONNECTION_TYPE, ConnectionType.WIFI_TCP.ordinal)
             return ConnectionType.values().getOrNull(ordinal) ?: ConnectionType.WIFI_TCP
         }
+
         set(value) = prefs.edit().putInt(KEY_PREFERRED_CONNECTION_TYPE, value.ordinal).apply()
     var autoReconnect: Boolean
         get() = prefs.getBoolean(KEY_AUTO_RECONNECT, true)
@@ -119,6 +122,7 @@ class NetworkSettings(private val context: Context) {
                     e,
                 )
             }
+
             editor.apply()
         } catch (e: SecurityException) {
             mpdc4gsr.core.common.AppLogger.w(
@@ -131,6 +135,7 @@ class NetworkSettings(private val context: Context) {
         }
     }
 
+
     suspend fun getSavedBluetoothDeviceInfo(): Pair<String?, String?> =
         withContext(Dispatchers.IO) {
             try {
@@ -142,6 +147,7 @@ class NetworkSettings(private val context: Context) {
             }
         }
 
+
     suspend fun clearSettings() = withContext(Dispatchers.IO) {
         try {
             prefs.edit().clear().apply()
@@ -149,6 +155,7 @@ class NetworkSettings(private val context: Context) {
             mpdc4gsr.core.common.AppLogger.e("NetworkSettings", "Unexpected Exception in NetworkSettings catch block", e)
         }
     }
+
 
     fun getConnectionSummary(): String {
         return when (preferredConnectionType) {
@@ -159,6 +166,7 @@ class NetworkSettings(private val context: Context) {
             }
         }
     }
+
 
     fun isConfigured(): Boolean {
         return when (preferredConnectionType) {

@@ -152,4 +152,3 @@ class EnhancedThermalRecorder(
         val startTime: Long = System.currentTimeMillis(),
     )
 }
-

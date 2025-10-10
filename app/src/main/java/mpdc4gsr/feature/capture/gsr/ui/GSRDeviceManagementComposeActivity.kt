@@ -646,4 +646,3 @@ private fun getMockGSRDevices() =
         GSRDeviceInfo("Shimmer3 GSR+ #004", "shimmer_004", "disconnected", 45, -68, 128, "1 hour ago"),
         GSRDeviceInfo("Shimmer3 GSR+ #005", "shimmer_005", "available", 83, -48, 256, "10 min ago"),
     )
-

@@ -646,8 +646,8 @@ class GSRGalleryViewModel : AppBaseViewModel() {
         val filtered =
             _galleryState.value.sessions.filter { session ->
                 query.isEmpty() ||
-                        session.name.contains(query, ignoreCase = true) ||
-                        session.participantId.contains(query, ignoreCase = true)
+                    session.name.contains(query, ignoreCase = true) ||
+                    session.participantId.contains(query, ignoreCase = true)
             }
         _galleryState.value = _galleryState.value.copy(filteredSessions = filtered)
     }
@@ -656,8 +656,8 @@ class GSRGalleryViewModel : AppBaseViewModel() {
         val filtered =
             _galleryState.value.sessions.filter { session ->
                 session.dataQuality >= filter.minQuality &&
-                        (session.duration / 60000) >= filter.minDuration &&
-                        (!filter.hasParticipant || session.participantId.isNotEmpty())
+                    (session.duration / 60000) >= filter.minDuration &&
+                    (!filter.hasParticipant || session.participantId.isNotEmpty())
             }
         _galleryState.value =
             _galleryState.value.copy(
@@ -700,4 +700,3 @@ class GSRGalleryViewModel : AppBaseViewModel() {
             )
     }
 }
-

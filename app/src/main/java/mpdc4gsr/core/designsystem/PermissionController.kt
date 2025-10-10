@@ -278,8 +278,7 @@ class PermissionController(
         }
     }
 
-    fun getPermissionNames(permissions: List<String>): List<String> =
-        permissions.mapNotNull { PERMISSION_MAP[it] }.distinct()
+    fun getPermissionNames(permissions: List<String>): List<String> = permissions.mapNotNull { PERMISSION_MAP[it] }.distinct()
 
     // Add missing methods for compatibility
     fun hasAllRequiredPermissions(): Boolean = getMissingPermissions().isEmpty()
@@ -412,4 +411,3 @@ class PermissionController(
             )
     }
 }
-

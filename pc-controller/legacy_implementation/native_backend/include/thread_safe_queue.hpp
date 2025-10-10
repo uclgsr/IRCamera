@@ -20,9 +20,9 @@ namespace ircamera {
 
             ThreadSafeQueue &operator=(const ThreadSafeQueue &) = delete;
 
-            ThreadSafeQueue(ThreadSafeQueue &&) = default;
+            ThreadSafeQueue(ThreadSafeQueue &&) noexcept = default;
 
-            ThreadSafeQueue &operator=(ThreadSafeQueue &&) = default;
+            ThreadSafeQueue &operator=(ThreadSafeQueue &&) noexcept = default;
 
             bool push(const T &item);
 

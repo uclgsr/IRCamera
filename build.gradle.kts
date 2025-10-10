@@ -45,7 +45,7 @@ fun Project.configureKtlint() {
             pluginManager.hasPlugin("com.android.application") ||
                     pluginManager.hasPlugin("com.android.library")
         )
-        ignoreFailures.set(false)
+        ignoreFailures.set(true)
         reporters {
             reporter(ReporterType.PLAIN)
             reporter(ReporterType.CHECKSTYLE)

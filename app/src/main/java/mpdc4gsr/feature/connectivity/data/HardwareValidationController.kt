@@ -20,6 +20,7 @@ class HardwareValidationController(
 ) {
     companion object {}
 
+
     private val _isValidating = AtomicBoolean(false)
     val isValidating: Boolean get() = _isValidating.get()
     private var validationStartTime: Long = 0
@@ -27,12 +28,15 @@ class HardwareValidationController(
     private val performanceMetrics = mutableMapOf<String, Any>()
     private val errorLogs = mutableListOf<String>()
     private val sensorCapabilities = mutableMapOf<String, SensorCapability>()
+
     suspend fun validateAllSensors(): ValidationReport = withContext(Dispatchers.IO) {
         if (!_isValidating.compareAndSet(false, true)) {
             throw IllegalStateException("Validation already in progress")
         }
+
         try {
-            validationStartTime = System.currentTimeMillis() validationResults . clear ()
+            validationStartTime = System.currentTimeMillis()
+            validationResults.clear()
             errorLogs.clear()
             performanceMetrics.clear()
             sensorCapabilities.clear()
@@ -53,6 +57,7 @@ class HardwareValidationController(
         }
     }
 
+
     private suspend fun validatePermissionSystem() {
         val startTime = System.currentTimeMillis()
         try {
@@ -69,6 +74,7 @@ class HardwareValidationController(
                 val categoryResult = validatePermissionCategory(category, permissions)
                 validationResults[category] = categoryResult
             }
+
             val batteryOptResult = validateBatteryOptimizationExemption()
             validationResults["battery_optimization"] = batteryOptResult
             val duration = System.currentTimeMillis() - startTime
@@ -84,6 +90,7 @@ class HardwareValidationController(
         }
     }
 
+
     private suspend fun validateRGBCamera() {
         val startTime = System.currentTimeMillis()
         try {
@@ -91,7 +98,7 @@ class HardwareValidationController(
                 validationResults["rgb_camera"] = HardwareValidationResult(
                     "rgb_camera", false, emptyList(), listOf("Camera permission not granted")
                 )
-                return
+            return
             }
             // RGB camera validation uses the consolidated RgbCameraRecorder
             // which requires PreviewView and LifecycleOwner - simplified validation for now
@@ -99,10 +106,12 @@ class HardwareValidationController(
                 context.checkSelfPermission(android.Manifest.permission.CAMERA) == android.content.pm.PackageManager.PERMISSION_GRANTED
             val initTime = measureTimeMillis {
             }
+
             sensorCapabilities["rgb_camera"] = SensorCapability(
                 name = "RGB Camera",
                 isSupported = rgbCameraAvailable,
-                details = "Max resolution: 1920x1080, Max FPS: 30, Formats: MP4/JPEG, Init time: ${initTime}ms"
+                details = "Max resolution: 1920x1080, Max FPS: 30, Formats: MP4/JPEG, Init time: ${initTime}
+ms"
             )
             validationResults["rgb_camera"] = HardwareValidationResult(
                 "rgb_camera", true, emptyList(), emptyList()
@@ -120,6 +129,7 @@ class HardwareValidationController(
         }
     }
 
+
     private suspend fun validateThermalCamera() {
         val startTime = System.currentTimeMillis()
         try {
@@ -130,13 +140,14 @@ class HardwareValidationController(
                     emptyList(),
                     listOf("Storage permission required for thermal camera")
                 )
-                return
+            return
             }
+
             val thermalRecorder = ThermalCameraRecorder(context, "thermal_validation_1")
             sensorCapabilities["thermal_camera"] = SensorCapability(
                 name = "Topdon TC001 Thermal Camera",
                 isSupported = true,
-                details = "Resolution: 256x192, Range: -40°C to 550°C, Accuracy: ±2°C, Frame rate: 9Hz, Interface: USB-C"
+                details = "Resolution: 256x192, Range: -40C to 550C, Accuracy: +/-2C, Frame rate: 9Hz, Interface: USB-C"
             )
             validationResults["thermal_camera"] = HardwareValidationResult(
                 "thermal_camera", true, emptyList(), emptyList()
@@ -154,6 +165,7 @@ class HardwareValidationController(
         }
     }
 
+
     private suspend fun validateGSRSensor() {
         val startTime = System.currentTimeMillis()
         try {
@@ -164,8 +176,9 @@ class HardwareValidationController(
                     emptyList(),
                     listOf("Bluetooth permissions required for GSR sensor")
                 )
-                return
+            return
             }
+
             val gsrRecorder = GSRSensorRecorder(
                 context,
                 "gsr_validation_1",
@@ -175,7 +188,7 @@ class HardwareValidationController(
             sensorCapabilities["gsr_sensor"] = SensorCapability(
                 name = "Shimmer3 GSR+ Sensor",
                 isSupported = true,
-                details = "Sampling rate: 100Hz, ADC: 12-bit (0-4095), GSR range: 0-4000µS, PPG channels: 2, Connection: Bluetooth LE"
+                details = "Sampling rate: 100Hz, ADC: 12-bit (0-4095), GSR range: 0-4000uS, PPG channels: 2, Connection: Bluetooth LE"
             )
             validationResults["gsr_sensor"] = HardwareValidationResult(
                 "gsr_sensor", true, emptyList(), emptyList()
@@ -193,12 +206,14 @@ class HardwareValidationController(
         }
     }
 
+
     private suspend fun validateMultiSensorRecording() {
         val startTime = System.currentTimeMillis()
         try {
             val recordingDuration = measureTimeMillis {
                 delay(RecordingConstants.MIN_RECORDING_DURATION_MS)
             }
+
             validationResults["multi_sensor_recording"] = HardwareValidationResult(
                 "multi_sensor_recording", true, emptyList(), emptyList()
             )
@@ -214,11 +229,13 @@ class HardwareValidationController(
         }
     }
 
+
     private suspend fun validateNetworkCapabilities() {
         validationResults["network"] = HardwareValidationResult(
             "network", true, emptyList(), emptyList()
         )
     }
+
 
     private suspend fun validateBackgroundRecording() {
         validationResults["background_recording"] = HardwareValidationResult(
@@ -226,11 +243,13 @@ class HardwareValidationController(
         )
     }
 
+
     private suspend fun validateBatteryOptimization() {
         validationResults["battery_optimization"] = HardwareValidationResult(
             "battery_optimization", true, emptyList(), emptyList()
         )
     }
+
 
     private fun getBluetoothPermissions(): List<String> {
         return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
@@ -247,6 +266,7 @@ class HardwareValidationController(
         }
     }
 
+
     private fun getStoragePermissions(): List<String> {
         return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             listOf(
@@ -261,6 +281,7 @@ class HardwareValidationController(
         }
     }
 
+
     private fun getNotificationPermissions(): List<String> {
         return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             listOf("android.permission.POST_NOTIFICATIONS")
@@ -269,6 +290,7 @@ class HardwareValidationController(
         }
     }
 
+
     private fun getForegroundServicePermissions(): List<String> {
         return listOf(
             "android.permission.FOREGROUND_SERVICE",
@@ -276,6 +298,7 @@ class HardwareValidationController(
             "android.permission.FOREGROUND_SERVICE_DATA_SYNC"
         )
     }
+
 
     private suspend fun validatePermissionCategory(
         category: String,
@@ -286,19 +309,23 @@ class HardwareValidationController(
         )
     }
 
+
     private suspend fun validateBatteryOptimizationExemption(): HardwareValidationResult {
         return HardwareValidationResult(
             "battery_optimization", true, emptyList(), emptyList()
         )
     }
 
+
     private fun getSensorCount(): Int {
         return sensorCapabilities.values.count { it.isSupported }
     }
 
+
     private fun generateValidationReport(): ValidationReport {
         val totalDuration = System.currentTimeMillis() - validationStartTime
         val successfulValidations = validationResults.values.count { it.isOperational }
+
         val totalValidations = validationResults.size
         return ValidationReport(
             timestamp = System.currentTimeMillis(),
@@ -316,6 +343,7 @@ class HardwareValidationController(
             )
         )
     }
+
 
     private fun generateFailureReport(exception: Exception): ValidationReport {
         return ValidationReport(
@@ -335,9 +363,11 @@ class HardwareValidationController(
         )
     }
 
+
     private fun getDeviceInfo(): DeviceInfo {
         return DeviceInfo(
-            deviceId = "${android.os.Build.MANUFACTURER}_${android.os.Build.MODEL}",
+            deviceId = "${android.os.Build.MANUFACTURER}
+_${android.os.Build.MODEL}",
             model = android.os.Build.MODEL,
             androidVersion = android.os.Build.VERSION.RELEASE,
             availableStorageGB = 10.0, // Would need to calculate actual available storage

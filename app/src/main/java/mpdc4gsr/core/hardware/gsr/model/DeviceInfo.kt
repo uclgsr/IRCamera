@@ -13,7 +13,7 @@ data class DeviceInfo(
     val isGsrPlusDevice: Boolean
         get() =
             name.contains("GSR", ignoreCase = true) ||
-                    deviceType.contains("GSR", ignoreCase = true)
+                deviceType.contains("GSR", ignoreCase = true)
     val hasStrongSignal: Boolean
         get() = rssi >= -60
     val hasWeakSignal: Boolean
@@ -30,8 +30,8 @@ data class DeviceInfo(
     val isRecommended: Boolean
         get() =
             isGsrCapable &&
-                    hasStrongSignal &&
-                    (batteryLevel == null || batteryLevel > 20)
+                hasStrongSignal &&
+                (batteryLevel == null || batteryLevel > 20)
     val displayName: String
         get() =
             when {
@@ -160,4 +160,3 @@ data class DeviceInfo(
         }
     }
 }
-

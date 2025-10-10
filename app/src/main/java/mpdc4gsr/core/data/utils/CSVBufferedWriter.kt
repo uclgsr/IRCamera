@@ -72,4 +72,3 @@ data class CSVWriteStats(
     val averageRowSize: Double
         get() = if (rowsWritten > 0) baseStats.bytesWritten.toDouble() / rowsWritten else 0.0
 }
-

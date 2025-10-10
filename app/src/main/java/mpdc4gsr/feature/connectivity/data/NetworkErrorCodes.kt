@@ -103,6 +103,7 @@ object NetworkErrorCodes {
         }
     }
 
+
     fun getErrorCategory(errorCode: Int): String {
         return when (errorCode / 1000) {
             1 -> "Connection"
@@ -116,6 +117,7 @@ object NetworkErrorCodes {
         }
     }
 
+
     fun isRecoverable(errorCode: Int): Boolean {
         return when (errorCode) {
             ERROR_CONNECTION_TIMEOUT,
@@ -127,6 +129,7 @@ object NetworkErrorCodes {
             else -> false
         }
     }
+
 
     data class NetworkError(
         val code: Int,

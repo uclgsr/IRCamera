@@ -160,9 +160,10 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                             text = comparisonResult,
                             color = Color.White,
                             fontSize = 12.sp,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 24.dp, vertical = 8.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 24.dp, vertical = 8.dp),
                         )
                     }
                     // Control buttons

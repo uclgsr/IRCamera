@@ -116,4 +116,3 @@ object MonitoredMainThreadPoster {
         fun needsOptimization(): Boolean = slowPostRate > 5f
     }
 }
-

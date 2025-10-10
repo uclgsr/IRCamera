@@ -47,4 +47,3 @@ object ErrorHandler {
         block: suspend () -> T,
     ): T = runSafelySuspend(tag, operation, block).getOrDefault(defaultValue)
 }
-

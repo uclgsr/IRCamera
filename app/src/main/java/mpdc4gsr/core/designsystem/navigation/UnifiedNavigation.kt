@@ -18,17 +18,17 @@ import mpdc4gsr.feature.capture.gsr.ui.GSRPlotScreen
 import mpdc4gsr.feature.capture.gsr.ui.GSRSettingsScreen
 import mpdc4gsr.feature.capture.gsr.ui.ResearchTemplateScreen
 import mpdc4gsr.feature.capture.gsr.ui.SessionDetailScreen
-import mpdc4gsr.feature.dashboard.ui.ComponentShowcaseScreen
-import mpdc4gsr.feature.dashboard.ui.MainScreen
-import mpdc4gsr.feature.dashboard.ui.UnifiedSensorDashboard
+import mpdc4gsr.feature.capture.thermal.ui.ThermalCameraScreen
+import mpdc4gsr.feature.capture.thermal.ui.ThermalLoadingScreen
+import mpdc4gsr.feature.capture.thermal.ui.ThermalSettingsScreen
 import mpdc4gsr.feature.connectivity.ui.DevicePairingScreen
 import mpdc4gsr.feature.control.settings.ui.AboutScreen
 import mpdc4gsr.feature.control.settings.ui.ProfileEditScreen
 import mpdc4gsr.feature.control.settings.ui.SettingsScreen
+import mpdc4gsr.feature.dashboard.ui.ComponentShowcaseScreen
+import mpdc4gsr.feature.dashboard.ui.MainScreen
+import mpdc4gsr.feature.dashboard.ui.UnifiedSensorDashboard
 import mpdc4gsr.feature.testing.ui.TestResultsScreen
-import mpdc4gsr.feature.capture.thermal.ui.ThermalCameraScreen
-import mpdc4gsr.feature.capture.thermal.ui.ThermalLoadingScreen
-import mpdc4gsr.feature.capture.thermal.ui.ThermalSettingsScreen
 
 sealed class UnifiedRoute(
     val route: String,
@@ -481,4 +481,3 @@ object NavigationHelper {
         }
     }
 }
-

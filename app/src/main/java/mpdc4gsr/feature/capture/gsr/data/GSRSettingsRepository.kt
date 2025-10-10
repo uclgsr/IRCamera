@@ -154,25 +154,25 @@ class GSRSettingsRepository(
         val currentDevice = _deviceSettings.value
         return mapOf(
             "gsr_settings" to
-                    mapOf(
-                        "enabled" to currentGSR.isEnabled,
-                        "sampling_rate" to currentGSR.samplingRate,
-                        "auto_start_recording" to currentGSR.autoStartRecording,
-                        "real_time_monitoring" to currentGSR.enableRealTimeMonitoring,
-                        "data_format" to currentGSR.dataFormat.name,
-                        "buffer_size" to currentGSR.bufferSize,
-                        "enable_filtering" to currentGSR.enableFiltering,
-                        "notification_enabled" to currentGSR.notificationEnabled,
-                    ),
+                mapOf(
+                    "enabled" to currentGSR.isEnabled,
+                    "sampling_rate" to currentGSR.samplingRate,
+                    "auto_start_recording" to currentGSR.autoStartRecording,
+                    "real_time_monitoring" to currentGSR.enableRealTimeMonitoring,
+                    "data_format" to currentGSR.dataFormat.name,
+                    "buffer_size" to currentGSR.bufferSize,
+                    "enable_filtering" to currentGSR.enableFiltering,
+                    "notification_enabled" to currentGSR.notificationEnabled,
+                ),
             "device_settings" to
-                    mapOf(
-                        "selected_device_id" to currentDevice.selectedDeviceId,
-                        "device_name" to currentDevice.deviceName,
-                        "connection_timeout" to currentDevice.connectionTimeout,
-                        "auto_reconnect" to currentDevice.autoReconnect,
-                        "keep_device_connected" to currentDevice.keepDeviceConnected,
-                        "device_calibration_enabled" to currentDevice.deviceCalibrationEnabled,
-                    ),
+                mapOf(
+                    "selected_device_id" to currentDevice.selectedDeviceId,
+                    "device_name" to currentDevice.deviceName,
+                    "connection_timeout" to currentDevice.connectionTimeout,
+                    "auto_reconnect" to currentDevice.autoReconnect,
+                    "keep_device_connected" to currentDevice.keepDeviceConnected,
+                    "device_calibration_enabled" to currentDevice.deviceCalibrationEnabled,
+                ),
         )
     }
 
@@ -221,4 +221,3 @@ class GSRSettingsRepository(
         }
     }
 }
-

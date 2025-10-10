@@ -157,10 +157,11 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
                                         "area" -> SessionType.CAPTURE
                                         else -> SessionType.MONITORING
                                     },
-                                dataFilePath = findThermalImagePath(
-                                    record.startTime,
-                                    detailList.firstOrNull()?.thermalId
-                                ),
+                                dataFilePath =
+                                    findThermalImagePath(
+                                        record.startTime,
+                                        detailList.firstOrNull()?.thermalId,
+                                    ),
                             )
                         }
                     }

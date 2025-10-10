@@ -9,12 +9,10 @@ import androidx.compose.material.icons.filled.Backup
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,12 +31,8 @@ fun StorageSettingsScreen(
     viewModel: StorageSettingsViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     val settings by viewModel.storageSettings.collectAsState()
     val storageInfo by viewModel.storageInfo.collectAsState()
-    LaunchedEffect(Unit) {
-        viewModel.initialize()
-    }
     Column(
         modifier = modifier
             .fillMaxSize()

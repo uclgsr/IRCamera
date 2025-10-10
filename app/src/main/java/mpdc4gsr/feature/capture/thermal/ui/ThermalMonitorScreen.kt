@@ -71,7 +71,7 @@ fun ThermalMonitorScreen(
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onRecordClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     // Collect UI state from ViewModel
     val uiState by viewModel.uiState.collectAsState()
@@ -86,7 +86,7 @@ fun ThermalMonitorScreen(
         is ThermalUiState.Loading -> {
             Box(
                 modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 CircularProgressIndicator()
             }
@@ -95,27 +95,28 @@ fun ThermalMonitorScreen(
         is ThermalUiState.Error -> {
             Box(
                 modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = state.message,
                     color = Color.White,
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
                 )
             }
         }
 
         is ThermalUiState.Success -> {
             Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(Color.Black)
-                    .windowInsetsPadding(WindowInsets.systemBars)
+                modifier =
+                    modifier
+                        .fillMaxSize()
+                        .background(Color.Black)
+                        .windowInsetsPadding(WindowInsets.systemBars),
             ) {
                 // Full-screen thermal camera preview with actual bitmap from ThermalCameraRecorder
                 ThermalCameraPreview(
                     bitmap = state.previewBitmap,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 )
                 // Temperature overlay always visible on preview
                 TemperatureOverlay(
@@ -123,21 +124,21 @@ fun ThermalMonitorScreen(
                     maxTemp = state.maxTemperature,
                     minTemp = state.minTemperature,
                     avgTemp = state.avgTemperature,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 )
                 // Top overlay with back button and status
                 AnimatedVisibility(
                     visible = showControls,
                     enter = fadeIn() + slideInVertically(),
                     exit = fadeOut() + slideOutVertically(),
-                    modifier = Modifier.align(Alignment.TopCenter)
+                    modifier = Modifier.align(Alignment.TopCenter),
                 ) {
                     ThermalTopBar(
                         isConnected = state.isConnected,
                         isRecording = state.isRecording,
                         isSimulationMode = state.isSimulationMode,
                         onBackClick = onBackClick,
-                        onSettingsClick = onSettingsClick
+                        onSettingsClick = onSettingsClick,
                     )
                 }
                 // Bottom overlay with recording controls
@@ -145,7 +146,7 @@ fun ThermalMonitorScreen(
                     visible = showControls,
                     enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
                     exit = fadeOut() + slideOutVertically(targetOffsetY = { it }),
-                    modifier = Modifier.align(Alignment.BottomCenter)
+                    modifier = Modifier.align(Alignment.BottomCenter),
                 ) {
                     ThermalBottomControls(
                         isRecording = state.isRecording,
@@ -154,24 +155,25 @@ fun ThermalMonitorScreen(
                         onRecordClick = {
                             onRecordClick()
                         },
-                        onAdvancedClick = { showAdvancedControls = !showAdvancedControls }
+                        onAdvancedClick = { showAdvancedControls = !showAdvancedControls },
                     )
                 }
                 // Toggle controls visibility with tap
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) {
-                            showControls = !showControls
-                        }
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                            ) {
+                                showControls = !showControls
+                            },
                 )
                 // Advanced controls overlay
                 if (showAdvancedControls) {
                     AdvancedControlsPanel(
-                        onDismiss = { showAdvancedControls = false }
+                        onDismiss = { showAdvancedControls = false },
                     )
                 }
             }
@@ -186,80 +188,83 @@ private fun ThermalTopBar(
     isSimulationMode: Boolean = false,
     onBackClick: (() -> Unit)?,
     onSettingsClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        color = Color.Black.copy(alpha = 0.5f)
+        color = Color.Black.copy(alpha = 0.5f),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(
-                onClick = { onBackClick?.invoke() }
+                onClick = { onBackClick?.invoke() },
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",
-                    tint = Color.White
+                    tint = Color.White,
                 )
             }
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (isRecording) {
                     Surface(
                         color = Color.Red,
-                        shape = RoundedCornerShape(4.dp)
+                        shape = RoundedCornerShape(4.dp),
                     ) {
                         Row(
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
                             Box(
-                                modifier = Modifier
-                                    .size(8.dp)
-                                    .clip(CircleShape)
-                                    .background(Color.White)
+                                modifier =
+                                    Modifier
+                                        .size(8.dp)
+                                        .clip(CircleShape)
+                                        .background(Color.White),
                             )
                             Text(
                                 text = "REC",
                                 color = Color.White,
                                 fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                         }
                     }
                 }
                 Surface(
                     color = if (isConnected) Color(0xFF2E7D32) else Color(0xFFD32F2F),
-                    shape = RoundedCornerShape(4.dp)
+                    shape = RoundedCornerShape(4.dp),
                 ) {
                     Text(
-                        text = when {
-                            !isConnected -> "Disconnected"
-                            isSimulationMode -> "Simulation"
-                            else -> "Connected"
-                        },
+                        text =
+                            when {
+                                !isConnected -> "Disconnected"
+                                isSimulationMode -> "Simulation"
+                                else -> "Connected"
+                            },
                         color = Color.White,
                         fontSize = 12.sp,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     )
                 }
             }
             IconButton(
-                onClick = onSettingsClick
+                onClick = onSettingsClick,
             ) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Settings",
-                    tint = Color.White
+                    tint = Color.White,
                 )
             }
         }
@@ -273,33 +278,34 @@ private fun ThermalBottomControls(
     recordingDuration: Long = 0L,
     onRecordClick: () -> Unit,
     onAdvancedClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        color = Color.Black.copy(alpha = 0.5f)
+        color = Color.Black.copy(alpha = 0.5f),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Advanced settings button
                 FilledTonalButton(
                     onClick = onAdvancedClick,
-                    modifier = Modifier.height(56.dp)
+                    modifier = Modifier.height(56.dp),
                 ) {
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = "Advanced",
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Settings")
@@ -309,16 +315,17 @@ private fun ThermalBottomControls(
                     onClick = onRecordClick,
                     enabled = isConnected,
                     modifier = Modifier.size(72.dp),
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = if (isRecording) Color.Red else Color.White,
-                        disabledContainerColor = Color.White.copy(alpha = 0.3f)
-                    )
+                    colors =
+                        IconButtonDefaults.filledIconButtonColors(
+                            containerColor = if (isRecording) Color.Red else Color.White,
+                            disabledContainerColor = Color.White.copy(alpha = 0.3f),
+                        ),
                 ) {
                     Icon(
                         imageVector = if (isRecording) Icons.Default.Stop else Icons.Default.FiberManualRecord,
                         contentDescription = if (isRecording) "Stop Recording" else "Start Recording",
                         tint = if (isRecording) Color.White else Color.Red,
-                        modifier = Modifier.size(36.dp)
+                        modifier = Modifier.size(36.dp),
                     )
                 }
                 // Spacer for symmetry with settings button width
@@ -331,11 +338,11 @@ private fun ThermalBottomControls(
 @Composable
 private fun ThermalCameraPreview(
     bitmap: android.graphics.Bitmap?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier.background(Color.Black),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         if (bitmap != null) {
             // Display actual thermal bitmap from camera
@@ -343,14 +350,14 @@ private fun ThermalCameraPreview(
                 bitmap = bitmap.asImageBitmap(),
                 contentDescription = "Thermal Camera Preview",
                 modifier = Modifier.fillMaxSize(),
-                contentScale = androidx.compose.ui.layout.ContentScale.Fit
+                contentScale = androidx.compose.ui.layout.ContentScale.Fit,
             )
         } else {
             // Placeholder when no bitmap available
             Text(
                 text = "Waiting for thermal camera...",
                 color = Color.White.copy(alpha = 0.5f),
-                fontSize = 16.sp
+                fontSize = 16.sp,
             )
         }
     }
@@ -362,72 +369,76 @@ private fun TemperatureOverlay(
     maxTemp: Float,
     minTemp: Float,
     avgTemp: Float = 0f,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
         // Current temperature display (center)
         Surface(
             modifier = Modifier.align(Alignment.Center),
             color = Color.Black.copy(alpha = 0.7f),
-            shape = CircleShape
+            shape = CircleShape,
         ) {
             Text(
-                text = "${currentTemp}°C",
+                text = "$currentTemp°C",
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(12.dp)
+                modifier = Modifier.padding(12.dp),
             )
         }
         // Max temperature (top-right)
         Surface(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp),
             color = Color.Red.copy(alpha = 0.8f),
-            shape = CircleShape
+            shape = CircleShape,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp),
             ) {
                 Box(
-                    modifier = Modifier
-                        .size(8.dp)
-                        .clip(CircleShape)
-                        .background(Color.White)
+                    modifier =
+                        Modifier
+                            .size(8.dp)
+                            .clip(CircleShape)
+                            .background(Color.White),
                 )
                 Text(
-                    text = "${maxTemp}°C",
+                    text = "$maxTemp°C",
                     color = Color.White,
                     fontSize = 12.sp,
-                    modifier = Modifier.padding(top = 2.dp)
+                    modifier = Modifier.padding(top = 2.dp),
                 )
             }
         }
         // Min temperature (bottom-left)
         Surface(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(16.dp),
             color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
-            shape = CircleShape
+            shape = CircleShape,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp),
             ) {
                 Box(
-                    modifier = Modifier
-                        .size(8.dp)
-                        .clip(CircleShape)
-                        .background(Color.White)
+                    modifier =
+                        Modifier
+                            .size(8.dp)
+                            .clip(CircleShape)
+                            .background(Color.White),
                 )
                 Text(
-                    text = "${minTemp}°C",
+                    text = "$minTemp°C",
                     color = Color.White,
                     fontSize = 12.sp,
-                    modifier = Modifier.padding(top = 2.dp)
+                    modifier = Modifier.padding(top = 2.dp),
                 )
             }
         }
@@ -437,29 +448,30 @@ private fun TemperatureOverlay(
 @Composable
 private fun StatusPanel(
     isConnected: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         StatusIndicator(
             label = "Camera",
             isActive = isConnected,
-            color = if (isConnected) Color.Green else Color.Gray
+            color = if (isConnected) Color.Green else Color.Gray,
         )
         StatusIndicator(
             label = "Recording",
             isActive = false, // Will be connected to actual recording state
-            color = Color.Red
+            color = Color.Red,
         )
         StatusIndicator(
             label = "Storage",
             isActive = true,
-            color = Color.Green
+            color = Color.Green,
         )
     }
 }
@@ -469,23 +481,24 @@ private fun StatusIndicator(
     label: String,
     isActive: Boolean,
     color: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Box(
-            modifier = Modifier
-                .size(12.dp)
-                .clip(CircleShape)
-                .background(if (isActive) color else Color.Gray)
+            modifier =
+                Modifier
+                    .size(12.dp)
+                    .clip(CircleShape)
+                    .background(if (isActive) color else Color.Gray),
         )
         Text(
             text = label,
             color = Color.White,
             fontSize = 10.sp,
-            modifier = Modifier.padding(top = 4.dp)
+            modifier = Modifier.padding(top = 4.dp),
         )
     }
 }
@@ -495,33 +508,34 @@ private fun ControlPanel(
     isRecording: Boolean,
     onRecordClick: () -> Unit,
     onAdvancedClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         // Record button
         FloatingActionButton(
             onClick = onRecordClick,
-            containerColor = if (isRecording) Color.Red else MaterialTheme.colorScheme.primary
+            containerColor = if (isRecording) Color.Red else MaterialTheme.colorScheme.primary,
         ) {
             Icon(
                 imageVector = Icons.Default.VideoCall,
                 contentDescription = if (isRecording) "Stop recording" else "Start recording",
-                tint = Color.White
+                tint = Color.White,
             )
         }
         // Advanced controls button
         Button(
             onClick = onAdvancedClick,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF2A2A2A)
-            )
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF2A2A2A),
+                ),
         ) {
             Text(
                 text = "Advanced",
-                color = Color.White
+                color = Color.White,
             )
         }
     }
@@ -530,53 +544,56 @@ private fun ControlPanel(
 @Composable
 private fun AdvancedControlsPanel(
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF2A2A2A)
-        )
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        colors =
+            CardDefaults.cardColors(
+                containerColor = Color(0xFF2A2A2A),
+            ),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Text(
                 text = "Advanced Controls",
                 color = Color.White,
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(16.dp))
             // Sample controls - will be replaced with actual thermal camera controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text("Focus Lock", color = Color.White)
                 Switch(
                     checked = false,
-                    onCheckedChange = { }
+                    onCheckedChange = { },
                 )
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text("Auto Exposure", color = Color.White)
                 Switch(
                     checked = true,
-                    onCheckedChange = { }
+                    onCheckedChange = { },
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = onDismiss,
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier.align(Alignment.End),
             ) {
                 Text("Close")
             }
@@ -591,4 +608,3 @@ private fun ThermalMonitorScreenPreview() {
         ThermalMonitorScreen()
     }
 }
-

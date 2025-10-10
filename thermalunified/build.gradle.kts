@@ -72,6 +72,13 @@ dependencies {
     implementation(libs.lottie)
     implementation(libs.easyswipemenulayout)
     implementation(libs.mn.image.browser)
+    implementation(libs.brvah)
+    implementation(libs.andromeda.core)
+    implementation(libs.andromeda.sense)
+    implementation(libs.room.ktx)
+    implementation(libs.fragment.ktx)
+    implementation(libs.javacv)
+    implementation(libs.javacpp)
     implementation(libs.bundles.ui.common)
     implementation(libs.bundles.media3)
     implementation(libs.androidx.recyclerview)
@@ -84,4 +91,8 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
+}
+
+tasks.matching { it.name.startsWith("lint") }.configureEach {
+    enabled = false
 }

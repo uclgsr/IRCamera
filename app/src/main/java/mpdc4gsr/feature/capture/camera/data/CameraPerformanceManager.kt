@@ -84,4 +84,3 @@ class CameraPerformanceManager(
         private const val THROTTLE_THRESHOLD_FPS = 15.0
     }
 }
-

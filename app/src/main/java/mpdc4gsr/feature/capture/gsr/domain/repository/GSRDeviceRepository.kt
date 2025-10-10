@@ -19,4 +19,3 @@ interface GSRDeviceRepository {
 
     suspend fun getDeviceBatteryLevel(deviceAddress: String): Int?
 }
-

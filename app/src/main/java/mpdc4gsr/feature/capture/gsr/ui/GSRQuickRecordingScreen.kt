@@ -106,7 +106,7 @@ fun GSRQuickRecordingScreen(
                 // Simulate GSR reading
                 val newValue =
                     12.0 + 4.0 * sin(recordingDuration * 0.01) +
-                            (Math.random() - 0.5) * 2.0
+                        (Math.random() - 0.5) * 2.0
                 currentGSRValue = newValue
                 val newReading =
                     GSRReading(
@@ -445,7 +445,6 @@ fun GSRDisplayCard(
 }
 
 @Composable
-@Composable
 fun RecordingControlsCard(
     recordingState: RecordingState,
     duration: Int,
@@ -682,9 +681,9 @@ fun QuickSetupCard(onStartSetup: () -> Unit) {
             Text(
                 text =
                     "1. Turn on your Shimmer3 GSR device\n" +
-                            "2. Ensure Bluetooth is enabled\n" +
-                            "3. Attach GSR electrodes to fingers\n" +
-                            "4. Tap 'Connect Device' to begin",
+                        "2. Ensure Bluetooth is enabled\n" +
+                        "3. Attach GSR electrodes to fingers\n" +
+                        "4. Tap 'Connect Device' to begin",
                 fontSize = 14.sp,
                 color = Color(0xFFCCFFFFFF),
                 lineHeight = 20.sp,
@@ -721,4 +720,3 @@ private fun calculateStandardDeviation(values: List<Double>): Double {
 fun GSRQuickRecordingScreenPreview() {
     GSRQuickRecordingScreen()
 }
-

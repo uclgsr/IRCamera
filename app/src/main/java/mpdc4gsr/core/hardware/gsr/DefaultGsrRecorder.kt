@@ -13,7 +13,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
-import com.shimmerresearch.driver.ObjectCluster
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
@@ -35,7 +34,7 @@ class DefaultGsrRecorder(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
     override val sensorId: String = "unified_gsr_shimmer",
-    private val samplingRateHz: Int = 128
+    private val samplingRateHz: Int = 128,
 ) : GsrRecorder {
     companion object {
         private const val TAG = "DefaultGsrRecorder"
@@ -46,26 +45,34 @@ class DefaultGsrRecorder(
         private const val MIN_CONNECTION_STRENGTH = -70
         private const val MAX_DATA_GAP_MS = 50
         private const val MIN_QUALITY_SCORE = 0.8
+
         fun hasRequiredPermissions(context: Context): Boolean {
-            val bluetoothScan = ActivityCompat.checkSelfPermission(
-                context, Manifest.permission.BLUETOOTH_SCAN
-            ) == PackageManager.PERMISSION_GRANTED
-            val bluetoothConnect = ActivityCompat.checkSelfPermission(
-                context, Manifest.permission.BLUETOOTH_CONNECT
-            ) == PackageManager.PERMISSION_GRANTED
-            val locationFine = ActivityCompat.checkSelfPermission(
-                context, Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
+            val bluetoothScan =
+                ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.BLUETOOTH_SCAN,
+                ) == PackageManager.PERMISSION_GRANTED
+            val bluetoothConnect =
+                ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.BLUETOOTH_CONNECT,
+                ) == PackageManager.PERMISSION_GRANTED
+            val locationFine =
+                ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                ) == PackageManager.PERMISSION_GRANTED
             return bluetoothScan && bluetoothConnect && locationFine
         }
 
-        fun getRequiredPermissions(): Array<String> = arrayOf(
-            Manifest.permission.BLUETOOTH_SCAN,
-            Manifest.permission.BLUETOOTH_CONNECT,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.BLUETOOTH,
-            Manifest.permission.BLUETOOTH_ADMIN
-        )
+        fun getRequiredPermissions(): Array<String> =
+            arrayOf(
+                Manifest.permission.BLUETOOTH_SCAN,
+                Manifest.permission.BLUETOOTH_CONNECT,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.BLUETOOTH,
+                Manifest.permission.BLUETOOTH_ADMIN,
+            )
     }
 
     override val sensorType: String = "GSR (Galvanic Skin Response)"
@@ -83,10 +90,11 @@ class DefaultGsrRecorder(
     // Expose last connected device for reconnection
     override val lastConnectedDeviceAddress: String?
         get() = selectedDevice?.address
-    private val gsrDataFlow = MutableSharedFlow<GSRSample>(
-        replay = 1000,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
+    private val gsrDataFlow =
+        MutableSharedFlow<GSRSample>(
+            replay = 1000,
+            onBufferOverflow = BufferOverflow.DROP_OLDEST,
+        )
     override val dataStream: Flow<GSRSample> = gsrDataFlow.asSharedFlow()
     private var recordingJob: Job? = null
     private var sessionDirectory: File? = null
@@ -102,7 +110,7 @@ class DefaultGsrRecorder(
     private data class SyncMarker(
         val timestampNs: Long,
         val markerType: String,
-        val metadata: Map<String, String>
+        val metadata: Map<String, String>,
     )
 
     private val _connectionQuality = MutableStateFlow(0.0)
@@ -112,180 +120,186 @@ class DefaultGsrRecorder(
     private val _statusFlow = MutableSharedFlow<RecordingStatus>(replay = 1)
     private val _errorFlow = MutableSharedFlow<SensorError>(replay = 1)
     private val mainHandler = Handler(Looper.getMainLooper())
-    override suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
-        try {
-            if (!hasRequiredPermissions(context)) {
-                val missingPermissions = mutableListOf<String>()
-                if (ActivityCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.BLUETOOTH_SCAN
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    missingPermissions.add("BLUETOOTH_SCAN")
-                }
-                if (ActivityCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.BLUETOOTH_CONNECT
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    missingPermissions.add("BLUETOOTH_CONNECT")
-                }
-                if (ActivityCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    missingPermissions.add("ACCESS_FINE_LOCATION")
-                }
 
-                _deviceStatus.value = "Missing Permissions: ${missingPermissions.joinToString()}"
-                return@withContext false
-            }
-            bluetoothManager =
-                context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
-            bluetoothAdapter = bluetoothManager?.adapter
-            if (bluetoothAdapter == null || !bluetoothAdapter!!.isEnabled) {
-                _deviceStatus.value = "Bluetooth Disabled"
-                return@withContext false
-            }
-            shimmerManager = ShimmerBluetoothManagerAndroid(context, mainHandler)
-            shimmerDeviceManager = GsrDeviceManager(context, lifecycleOwner)
-            val deviceManagerInitialized = shimmerDeviceManager?.initialize() ?: false
-            if (!deviceManagerInitialized) {
-            } else {
-                lifecycleOwner.lifecycleScope.launch {
-                    shimmerDeviceManager?.connectionEvents?.collect { event ->
-                        when (event.state) {
-                            GsrDeviceManager.ConnectionState.CONNECTED -> {
-                                _deviceStatus.value = "Connected"
-                                connectedShimmer = shimmerDeviceManager?.getConnectedShimmer(event.deviceAddress)
-                            }
+    override suspend fun initialize(): Boolean =
+        withContext(Dispatchers.IO) {
+            try {
+                if (!hasRequiredPermissions(context)) {
+                    val missingPermissions = mutableListOf<String>()
+                    if (ActivityCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.BLUETOOTH_SCAN,
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        missingPermissions.add("BLUETOOTH_SCAN")
+                    }
+                    if (ActivityCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.BLUETOOTH_CONNECT,
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        missingPermissions.add("BLUETOOTH_CONNECT")
+                    }
+                    if (ActivityCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        missingPermissions.add("ACCESS_FINE_LOCATION")
+                    }
 
-                            GsrDeviceManager.ConnectionState.DISCONNECTED -> {
-                                _deviceStatus.value = "Disconnected"
-                                connectedShimmer = null
-                            }
+                    _deviceStatus.value = "Missing Permissions: ${missingPermissions.joinToString()}"
+                    return@withContext false
+                }
+                bluetoothManager =
+                    context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+                bluetoothAdapter = bluetoothManager?.adapter
+                if (bluetoothAdapter == null || !bluetoothAdapter!!.isEnabled) {
+                    _deviceStatus.value = "Bluetooth Disabled"
+                    return@withContext false
+                }
+                shimmerManager = ShimmerBluetoothManagerAndroid(context, mainHandler)
+                shimmerDeviceManager = GsrDeviceManager(context, lifecycleOwner)
+                val deviceManagerInitialized = shimmerDeviceManager?.initialize() ?: false
+                if (!deviceManagerInitialized) {
+                } else {
+                    lifecycleOwner.lifecycleScope.launch {
+                        shimmerDeviceManager?.connectionEvents?.collect { event ->
+                            when (event.state) {
+                                GsrDeviceManager.ConnectionState.CONNECTED -> {
+                                    _deviceStatus.value = "Connected"
+                                    connectedShimmer = shimmerDeviceManager?.getConnectedShimmer(event.deviceAddress)
+                                }
 
-                            GsrDeviceManager.ConnectionState.FAILED -> {
-                                _deviceStatus.value = "Connection Failed"
-                                _errorFlow.emit(
-                                    SensorError(
-                                        sensorId = sensorId,
-                                        sensorType = sensorType,
-                                        errorType = ErrorType.CONNECTION_LOST,
-                                        errorMessage = event.message ?: "Connection failed",
-                                        timestampNs = System.nanoTime()
+                                GsrDeviceManager.ConnectionState.DISCONNECTED -> {
+                                    _deviceStatus.value = "Disconnected"
+                                    connectedShimmer = null
+                                }
+
+                                GsrDeviceManager.ConnectionState.FAILED -> {
+                                    _deviceStatus.value = "Connection Failed"
+                                    _errorFlow.emit(
+                                        SensorError(
+                                            sensorId = sensorId,
+                                            sensorType = sensorType,
+                                            errorType = ErrorType.CONNECTION_LOST,
+                                            errorMessage = event.message ?: "Connection failed",
+                                            timestampNs = System.nanoTime(),
+                                        ),
                                     )
-                                )
-                            }
+                                }
 
-                            GsrDeviceManager.ConnectionState.CONNECTING -> {
-                                _deviceStatus.value = "Connecting..."
-                            }
+                                GsrDeviceManager.ConnectionState.CONNECTING -> {
+                                    _deviceStatus.value = "Connecting..."
+                                }
 
-                            GsrDeviceManager.ConnectionState.TIMEOUT -> {
-                                _deviceStatus.value = "Connection Timeout"
+                                GsrDeviceManager.ConnectionState.TIMEOUT -> {
+                                    _deviceStatus.value = "Connection Timeout"
+                                }
                             }
                         }
                     }
                 }
+                _deviceStatus.value = "Initialized"
+                return@withContext true
+            } catch (e: Exception) {
+                _deviceStatus.value = "Initialization Failed"
+                return@withContext false
             }
-            _deviceStatus.value = "Initialized"
-            return@withContext true
-        } catch (e: Exception) {
-            _deviceStatus.value = "Initialization Failed"
-            return@withContext false
         }
-    }
 
-    override suspend fun startDeviceDiscovery(): Boolean = withContext(Dispatchers.IO) {
-        if (shimmerManager == null) {
-            return@withContext false
-        }
-        try {
-            _deviceStatus.value = "Discovering..."
-            discoveredDevices.clear()
-            val deviceManager = shimmerDeviceManager
-            if (deviceManager != null) {
-                val scanSuccess = deviceManager.startDeviceScanning()
-                if (scanSuccess) {
-                    delay(10000)
-                    val scanResults = withTimeoutOrNull(1000) {
-                        deviceManager.scanResults.first()
-                    } ?: emptyList()
-                    discoveredDevices.clear()
-                    discoveredDevices.addAll(scanResults)
-                    deviceManager.stopDeviceScanning()
-                    Log.i(
-                        TAG,
-                        "Enhanced BLE scan completed: found ${discoveredDevices.size} devices"
-                    )
-                    if (discoveredDevices.isNotEmpty()) {
-                        _deviceStatus.value = "Found ${discoveredDevices.size} Shimmer devices"
-                        return@withContext true
+    override suspend fun startDeviceDiscovery(): Boolean =
+        withContext(Dispatchers.IO) {
+            if (shimmerManager == null) {
+                return@withContext false
+            }
+            try {
+                _deviceStatus.value = "Discovering..."
+                discoveredDevices.clear()
+                val deviceManager = shimmerDeviceManager
+                if (deviceManager != null) {
+                    val scanSuccess = deviceManager.startDeviceScanning()
+                    if (scanSuccess) {
+                        delay(10000)
+                        val scanResults =
+                            withTimeoutOrNull(1000) {
+                                deviceManager.scanResults.first()
+                            } ?: emptyList()
+                        discoveredDevices.clear()
+                        discoveredDevices.addAll(scanResults)
+                        deviceManager.stopDeviceScanning()
+                        Log.i(
+                            TAG,
+                            "Enhanced BLE scan completed: found ${discoveredDevices.size} devices",
+                        )
+                        if (discoveredDevices.isNotEmpty()) {
+                            _deviceStatus.value = "Found ${discoveredDevices.size} Shimmer devices"
+                            return@withContext true
+                        }
                     }
                 }
-            }
-            // Don't add dummy devices - require actual hardware detection
-            if (discoveredDevices.isNotEmpty()) {
-                _deviceStatus.value = "Found ${discoveredDevices.size} real Shimmer devices"
-                return@withContext true
-            } else {
-                _deviceStatus.value =
-                    "No Shimmer devices found - ensure device is powered on and in range"
+                // Don't add dummy devices - require actual hardware detection
+                if (discoveredDevices.isNotEmpty()) {
+                    _deviceStatus.value = "Found ${discoveredDevices.size} real Shimmer devices"
+                    return@withContext true
+                } else {
+                    _deviceStatus.value =
+                        "No Shimmer devices found - ensure device is powered on and in range"
+                    return@withContext false
+                }
+            } catch (e: Exception) {
+                incrementErrorCount()
+                _deviceStatus.value = "Discovery Failed"
                 return@withContext false
             }
-        } catch (e: Exception) {
-            incrementErrorCount()
-            _deviceStatus.value = "Discovery Failed"
-            return@withContext false
         }
-    }
 
-    override suspend fun connectToDevice(deviceInfo: DeviceInfo): Boolean = withContext(Dispatchers.IO) {
-        if (shimmerManager == null) {
-            return@withContext false
-        }
-        try {
-            _deviceStatus.value = "Connecting..."
-            selectedDevice = deviceInfo
-            shimmerManager?.connectShimmerThroughBTAddress(deviceInfo.address)
-            var attempts = 0
-            while (connectedShimmer == null && attempts < 30) {
-                delay(1000)
-                attempts++
-            }
-            if (connectedShimmer != null) {
-                configureGSRSensor()
-                _deviceStatus.value = "Connected: ${deviceInfo.name}"
-                _connectionQuality.value = 1.0
-                return@withContext true
-            } else {
-                _deviceStatus.value = "Connection Failed"
+    override suspend fun connectToDevice(deviceInfo: DeviceInfo): Boolean =
+        withContext(Dispatchers.IO) {
+            if (shimmerManager == null) {
                 return@withContext false
             }
-        } catch (e: Exception) {
-            incrementErrorCount()
-            _deviceStatus.value = "Connection Error"
-            return@withContext false
+            try {
+                _deviceStatus.value = "Connecting..."
+                selectedDevice = deviceInfo
+                shimmerManager?.connectShimmerThroughBTAddress(deviceInfo.address)
+                var attempts = 0
+                while (connectedShimmer == null && attempts < 30) {
+                    delay(1000)
+                    attempts++
+                }
+                if (connectedShimmer != null) {
+                    configureGSRSensor()
+                    _deviceStatus.value = "Connected: ${deviceInfo.name}"
+                    _connectionQuality.value = 1.0
+                    return@withContext true
+                } else {
+                    _deviceStatus.value = "Connection Failed"
+                    return@withContext false
+                }
+            } catch (e: Exception) {
+                incrementErrorCount()
+                _deviceStatus.value = "Connection Error"
+                return@withContext false
+            }
         }
-    }
 
-    private suspend fun configureGSRSensor() = withContext(Dispatchers.IO) {
-        connectedShimmer ?: return@withContext
-        try {
-            Log.i(
-                TAG,
-                "GSR sensor configured: 128Hz sampling, autorange, 12-bit ADC (simulation mode)"
-            )
-        } catch (e: Exception) {
-            throw e
+    private suspend fun configureGSRSensor() =
+        withContext(Dispatchers.IO) {
+            connectedShimmer ?: return@withContext
+            try {
+                Log.i(
+                    TAG,
+                    "GSR sensor configured: 128Hz sampling, autorange, 12-bit ADC (simulation mode)",
+                )
+            } catch (e: Exception) {
+                throw e
+            }
         }
-    }
 
     override suspend fun startRecording(
         sessionDirectory: String,
-        sessionMetadata: SessionMetadata
+        sessionMetadata: SessionMetadata,
     ): Boolean =
         withContext(Dispatchers.IO) {
             val shimmer = connectedShimmer
@@ -299,10 +313,11 @@ class DefaultGsrRecorder(
                 this@DefaultGsrRecorder.sessionMetadata = sessionMetadata
                 this@DefaultGsrRecorder.sessionDirectory = File(sessionDirectory)
                 this@DefaultGsrRecorder.sessionDirectory?.mkdirs()
-                val csvFile = File(
-                    this@DefaultGsrRecorder.sessionDirectory,
-                    "gsr_data_${sessionMetadata.sessionId}.csv"
-                )
+                val csvFile =
+                    File(
+                        this@DefaultGsrRecorder.sessionDirectory,
+                        "gsr_data_${sessionMetadata.sessionId}.csv",
+                    )
                 csvWriter = FileWriter(csvFile)
                 csvWriter?.write(sessionMetadata.createTimingHeader())
                 csvWriter?.write("# GSR Recording Session with Synchronized Timing\n")
@@ -321,7 +336,9 @@ class DefaultGsrRecorder(
                 csvWriter?.write("#   quality_score: Connection quality (0.0-1.0)\n")
                 csvWriter?.write("#   connection_rssi: Bluetooth RSSI in dBm\n")
                 csvWriter?.write("#\n")
-                csvWriter?.write("timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,gsr_microsiemens,gsr_raw_12bit,ppg_raw,quality_score,connection_rssi\n")
+                csvWriter?.write(
+                    "timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,gsr_microsiemens,gsr_raw_12bit,ppg_raw,quality_score,connection_rssi\n",
+                )
                 csvWriter?.flush()
                 recordedSamples.set(0)
                 lastExpectedSampleTime = 0
@@ -329,9 +346,10 @@ class DefaultGsrRecorder(
                 shimmer.startStreaming()
                 _isRecording.set(true)
                 _deviceStatus.value = "Recording..."
-                recordingJob = lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                    processRecordingData(selectedDevice?.address)
-                }
+                recordingJob =
+                    lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                        processRecordingData(selectedDevice?.address)
+                    }
                 return@withContext true
             } catch (e: Exception) {
                 _deviceStatus.value = "Recording Failed"
@@ -367,9 +385,10 @@ class DefaultGsrRecorder(
                 shimmer.startStreaming()
                 _isRecording.set(true)
                 _deviceStatus.value = "Recording..."
-                recordingJob = lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                    processRecordingData(selectedDevice?.address)
-                }
+                recordingJob =
+                    lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                        processRecordingData(selectedDevice?.address)
+                    }
                 return@withContext true
             } catch (e: Exception) {
                 _deviceStatus.value = "Recording Failed"
@@ -377,55 +396,58 @@ class DefaultGsrRecorder(
             }
         }
 
-    override suspend fun stopRecording(): Boolean = withContext(Dispatchers.IO) {
-        if (!_isRecording.get()) {
-            return@withContext true
-        }
-        try {
-            _isRecording.set(false)
-            connectedShimmer?.stopStreaming()
-            recordingJob?.cancel()
-            recordingJob = null
-            csvWriter?.write(
-                "# Recording stopped: ${
-                    SimpleDateFormat(
-                        "yyyy-MM-dd HH:mm:ss.SSS",
-                        Locale.getDefault()
-                    ).format(Date())
-                }\n"
-            )
-            csvWriter?.write("# Total samples: ${recordedSamples.get()}\n")
-            csvWriter?.write("# Duration: ${(System.nanoTime() - recordingStartTime) / 1_000_000_000.0} seconds\n")
-            csvWriter?.close()
-            csvWriter = null
-            val sampleCount = recordedSamples.get()
-            val durationSec = (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
-            _deviceStatus.value =
-                "Stopped (${sampleCount} samples, ${String.format("%.1f", durationSec)}s)"
-            Log.i(
-                TAG,
-                "GSR recording stopped: $sampleCount samples in ${
-                    String.format(
-                        "%.2f",
-                        durationSec
-                    )
-                } seconds"
-            )
-            return@withContext true
-        } catch (e: Exception) {
-            return@withContext false
-        }
-    }
-
-    private suspend fun processRecordingData(deviceAddress: String?) = withContext(Dispatchers.IO) {
-        val target = deviceAddress?.lowercase(Locale.getDefault())
-        shimmerDeviceManager?.dataEvents
-            ?.filter { (mac, _) -> target == null || mac.equals(target, ignoreCase = true) }
-            ?.collect { (_, cluster) ->
-                val payload = cluster.toGsrSamplePayload() ?: return@collect
-                handleIncomingSample(payload)
+    override suspend fun stopRecording(): Boolean =
+        withContext(Dispatchers.IO) {
+            if (!_isRecording.get()) {
+                return@withContext true
             }
-    }
+            try {
+                _isRecording.set(false)
+                connectedShimmer?.stopStreaming()
+                recordingJob?.cancel()
+                recordingJob = null
+                csvWriter?.write(
+                    "# Recording stopped: ${
+                        SimpleDateFormat(
+                            "yyyy-MM-dd HH:mm:ss.SSS",
+                            Locale.getDefault(),
+                        ).format(Date())
+                    }\n",
+                )
+                csvWriter?.write("# Total samples: ${recordedSamples.get()}\n")
+                csvWriter?.write("# Duration: ${(System.nanoTime() - recordingStartTime) / 1_000_000_000.0} seconds\n")
+                csvWriter?.close()
+                csvWriter = null
+                val sampleCount = recordedSamples.get()
+                val durationSec = (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
+                _deviceStatus.value =
+                    "Stopped ($sampleCount samples, ${String.format("%.1f", durationSec)}s)"
+                Log.i(
+                    TAG,
+                    "GSR recording stopped: $sampleCount samples in ${
+                        String.format(
+                            "%.2f",
+                            durationSec,
+                        )
+                    } seconds",
+                )
+                return@withContext true
+            } catch (e: Exception) {
+                return@withContext false
+            }
+        }
+
+    private suspend fun processRecordingData(deviceAddress: String?) =
+        withContext(Dispatchers.IO) {
+            val target = deviceAddress?.lowercase(Locale.getDefault())
+            shimmerDeviceManager
+                ?.dataEvents
+                ?.filter { (mac, _) -> target == null || mac.equals(target, ignoreCase = true) }
+                ?.collect { (_, cluster) ->
+                    val payload = cluster.toGsrSamplePayload() ?: return@collect
+                    handleIncomingSample(payload)
+                }
+        }
 
     private suspend fun handleIncomingSample(payload: GsrSamplePayload) {
         val sample = payload.sample
@@ -474,22 +496,24 @@ class DefaultGsrRecorder(
                 csvWriter?.flush()
             }
         } catch (e: Exception) {
-            mpdc4gsr.core.common.AppLogger.e(TAG, "Failed to write GSR sample", e)
+            mpdc4gsr.core.common.AppLogger
+                .e(TAG, "Failed to write GSR sample", e)
         }
     }
 
     override suspend fun addSyncMarker(
         markerType: String,
         timestampNs: Long,
-        metadata: Map<String, String>
+        metadata: Map<String, String>,
     ) {
         try {
             val syncMarker = SyncMarker(timestampNs, markerType, metadata)
             syncMarkers.add(syncMarker)
             if (_isRecording.get() && csvWriter != null) {
-                val iso = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(
-                    Date(timestampNs / 1_000_000)
-                )
+                val iso =
+                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(
+                        Date(timestampNs / 1_000_000),
+                    )
                 csvWriter?.write("# SYNC_MARKER: $markerType at $timestampNs ($iso)")
                 if (metadata.isNotEmpty()) {
                     csvWriter?.write(" metadata: ${metadata.entries.joinToString(", ") { "${it.key}=${it.value}" }}")
@@ -498,7 +522,7 @@ class DefaultGsrRecorder(
                 csvWriter?.flush()
                 Log.i(
                     TAG,
-                    "Added sync marker: $markerType at $timestampNs with ${metadata.size} metadata entries"
+                    "Added sync marker: $markerType at $timestampNs with ${metadata.size} metadata entries",
                 )
             } else {
             }
@@ -506,13 +530,15 @@ class DefaultGsrRecorder(
             mpdc4gsr.core.common.AppLogger.e(
                 "DefaultGsrRecorder",
                 "Unexpected Exception in DefaultGsrRecorder catch block",
-                e
+                e,
             )
         }
     }
 
     override fun getStatusFlow(): Flow<RecordingStatus> = _statusFlow.asSharedFlow()
+
     override fun getErrorFlow(): Flow<SensorError> = _errorFlow.asSharedFlow()
+
     override fun getRecordingStats(): RecordingStats {
         val currentTime = System.currentTimeMillis()
         val sessionDuration = if (recordingStartTime > 0) currentTime - recordingStartTime else 0L
@@ -521,20 +547,24 @@ class DefaultGsrRecorder(
             sensorType = sensorType,
             sessionDurationMs = sessionDuration,
             totalSamplesRecorded = recordedSamples.get(),
-            averageDataRate = if (sessionDuration > 0) {
-                recordedSamples.get().toDouble() / (sessionDuration / 1000.0)
-            } else 0.0,
+            averageDataRate =
+                if (sessionDuration > 0) {
+                    recordedSamples.get().toDouble() / (sessionDuration / 1000.0)
+                } else {
+                    0.0
+                },
             droppedSamples = droppedSamples.get(),
-            storageUsedMB = sessionDirectory?.let { dir ->
-                dir.walkTopDown().filter { it.isFile }.sumOf { it.length() } / (1024.0 * 1024.0)
-            } ?: 0.0,
+            storageUsedMB =
+                sessionDirectory?.let { dir ->
+                    dir.walkTopDown().filter { it.isFile }.sumOf { it.length() } / (1024.0 * 1024.0)
+                } ?: 0.0,
             syncMarkersCount = syncMarkers.size,
-            lastSampleTimestampNs = System.nanoTime()
+            lastSampleTimestampNs = System.nanoTime(),
         )
     }
 
-    fun getRecordingStatus(): Map<String, Any> {
-        return mapOf(
+    fun getRecordingStatus(): Map<String, Any> =
+        mapOf(
             "sensor_type" to sensorType,
             "sensor_id" to sensorId,
             "is_recording" to isRecording,
@@ -543,88 +573,97 @@ class DefaultGsrRecorder(
             "sampling_rate" to samplingRate,
             "recorded_samples" to recordedSamples.get(),
             "selected_device" to (selectedDevice?.name ?: "None"),
-            "discovered_devices" to discoveredDevices.size
+            "discovered_devices" to discoveredDevices.size,
         )
-    }
 
     override fun getDiscoveredDevices(): List<DeviceInfo> = discoveredDevices.toList()
+
     fun getDataStream(): Flow<GSRSample> = dataStream
 
     // Additional statistics methods required by UnifiedSessionManager
     fun getSampleCount(): Long = recordedSamples.get()
-    fun getOutputFileSize(): Long = sessionDirectory?.let { dir ->
-        dir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
-    } ?: 0L
+
+    fun getOutputFileSize(): Long =
+        sessionDirectory?.let { dir ->
+            dir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
+        } ?: 0L
 
     fun getAverageDataRate(): Double {
-        val sessionDuration = if (recordingStartTime > 0) {
-            (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
-        } else 0.0
+        val sessionDuration =
+            if (recordingStartTime > 0) {
+                (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
+            } else {
+                0.0
+            }
         return if (sessionDuration > 0) {
             recordedSamples.get().toDouble() / sessionDuration
-        } else 0.0
+        } else {
+            0.0
+        }
     }
 
     fun getDroppedSampleCount(): Long = droppedSamples.get()
+
     fun getAverageSignalQuality(): Double = _connectionQuality.value
 
     // Error tracking implementation
     private val errorCount = AtomicLong(0)
-    fun getErrorCount(): Long {
-        return errorCount.get()
-    }
+
+    fun getErrorCount(): Long = errorCount.get()
 
     private fun incrementErrorCount() {
         errorCount.incrementAndGet()
     }
 
-    override suspend fun flushAndCloseFiles() = withContext(Dispatchers.IO) {
-        try {
-            csvWriter?.flush()
-            csvWriter?.close()
-            csvWriter = null
-        } catch (e: Exception) {
-            mpdc4gsr.core.common.AppLogger.e(
-                "DefaultGsrRecorder",
-                "Unexpected Exception in DefaultGsrRecorder catch block",
-                e
-            )
-        }
-    }
-
-    override suspend fun disconnectDevice(): Boolean = withContext(Dispatchers.IO) {
-        try {
-            if (_isRecording.get()) {
-                stopRecording()
+    override suspend fun flushAndCloseFiles() =
+        withContext(Dispatchers.IO) {
+            try {
+                csvWriter?.flush()
+                csvWriter?.close()
+                csvWriter = null
+            } catch (e: Exception) {
+                mpdc4gsr.core.common.AppLogger.e(
+                    "DefaultGsrRecorder",
+                    "Unexpected Exception in DefaultGsrRecorder catch block",
+                    e,
+                )
             }
-            connectedShimmer?.disconnect()
-            connectedShimmer = null
-            selectedDevice = null
-            _deviceStatus.value = "Disconnected"
-            _connectionQuality.value = 0.0
-            return@withContext true
-        } catch (e: Exception) {
-            return@withContext false
         }
-    }
 
-    override suspend fun cleanup(): Unit = withContext(Dispatchers.IO) {
-        try {
-            if (_isRecording.get()) {
-                stopRecording()
+    override suspend fun disconnectDevice(): Boolean =
+        withContext(Dispatchers.IO) {
+            try {
+                if (_isRecording.get()) {
+                    stopRecording()
+                }
+                connectedShimmer?.disconnect()
+                connectedShimmer = null
+                selectedDevice = null
+                _deviceStatus.value = "Disconnected"
+                _connectionQuality.value = 0.0
+                return@withContext true
+            } catch (e: Exception) {
+                return@withContext false
             }
-            disconnectDevice()
-            shimmerDeviceManager?.release()
-            shimmerDeviceManager = null
-            shimmerManager = null
-            discoveredDevices.clear()
-        } catch (e: Exception) {
-            mpdc4gsr.core.common.AppLogger.e(
-                "DefaultGsrRecorder",
-                "Unexpected Exception in DefaultGsrRecorder catch block",
-                e
-            )
         }
-    }
+
+    override suspend fun cleanup(): Unit =
+        withContext(Dispatchers.IO) {
+            try {
+                if (_isRecording.get()) {
+                    stopRecording()
+                }
+                disconnectDevice()
+                shimmerDeviceManager?.release()
+                shimmerDeviceManager = null
+                shimmerManager = null
+                discoveredDevices.clear()
+            } catch (e: Exception) {
+                mpdc4gsr.core.common.AppLogger.e(
+                    "DefaultGsrRecorder",
+                    "Unexpected Exception in DefaultGsrRecorder catch block",
+                    e,
+                )
+            }
+        }
 }
-

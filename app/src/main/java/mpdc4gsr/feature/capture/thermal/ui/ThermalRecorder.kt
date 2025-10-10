@@ -7,9 +7,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mpdc4gsr.core.common.AppLogger
 import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.core.data.TimestampManager
-import mpdc4gsr.core.common.AppLogger
 import java.io.File
 import java.io.FileOutputStream
 import java.io.FileWriter
@@ -21,7 +21,9 @@ import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.max
 import kotlin.math.min
 
-class ThermalRecorder(private val context: Context) {
+class ThermalRecorder(
+    private val context: Context,
+) {
     companion object {
         private const val TAG = "ThermalRecorder"
         private const val CSV_HEADER =
@@ -38,7 +40,12 @@ class ThermalRecorder(private val context: Context) {
     private var thermalSettings: mpdc4gsr.feature.capture.thermal.data.ThermalSettingsRepository.ThermalSettings? = null
 
     interface ThermalFrameCallback {
-        fun onFrameReceived(frameData: ByteArray, width: Int, height: Int, timestamp: Long)
+        fun onFrameReceived(
+            frameData: ByteArray,
+            width: Int,
+            height: Int,
+            timestamp: Long,
+        )
     }
 
     data class ThermalFrameStats(
@@ -47,13 +54,14 @@ class ThermalRecorder(private val context: Context) {
         val minTemp: Float,
         val avgTemp: Float,
         val maxTemp: Float,
-        val pixelCount: Int
+        val pixelCount: Int,
     )
 
     private var frameListener: ThermalFrameListener? = null
 
     interface ThermalFrameListener {
         fun onFrameProcessed(stats: ThermalFrameStats)
+
         fun onError(error: String)
     }
 
@@ -64,7 +72,7 @@ class ThermalRecorder(private val context: Context) {
     suspend fun startRecording(
         sessionDir: String,
         sessionMetadata: SessionMetadata,
-        saveImages: Boolean = false
+        saveImages: Boolean = false,
     ): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording.get()) {
@@ -72,7 +80,9 @@ class ThermalRecorder(private val context: Context) {
                 return@withContext false
             }
             try {
-                val thermalSettingsRepo = mpdc4gsr.feature.capture.thermal.data.ThermalSettingsRepository.getInstance(context)
+                val thermalSettingsRepo =
+                    mpdc4gsr.feature.capture.thermal.data.ThermalSettingsRepository
+                        .getInstance(context)
                 thermalSettings = thermalSettingsRepo.getSettings()
                 val effectiveSaveImages = saveImages || (thermalSettings?.saveRawImages ?: false)
                 this@ThermalRecorder.saveImages = effectiveSaveImages
@@ -85,26 +95,30 @@ class ThermalRecorder(private val context: Context) {
                 }
                 val csvFile = File(sessionDirectory, "thermal_stats_${sessionMetadata.sessionId}.csv")
                 // Open writer for the entire recording session
-                csvWriter = FileWriter(csvFile, false).apply {
-                    write(sessionMetadata.createTimingHeader())
-                    write("# THERMAL FRAME DATA - Temperatures in Celsius\n")
-                    write("# Frame timestamps include:\n")
-                    write("#   timestamp_wall_ms: Wall clock time (UTC)\n")
-                    write("#   timestamp_relative_ms: Milliseconds since session start (monotonic)\n")
-                    write("#   timestamp_monotonic_ns: Raw monotonic nanoseconds for precise intervals\n")
-                    write("#   synchronized_timestamp_ms: PC-synchronized timestamp (includes clock offset from time sync)\n")
-                    write("#\n")
-                    write("timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,synchronized_timestamp_ms,frame_sequence,min_temp_c,avg_temp_c,max_temp_c,pixel_count\n")
-                    flush()
-                }
+                csvWriter =
+                    FileWriter(csvFile, false).apply {
+                        write(sessionMetadata.createTimingHeader())
+                        write("# THERMAL FRAME DATA - Temperatures in Celsius\n")
+                        write("# Frame timestamps include:\n")
+                        write("#   timestamp_wall_ms: Wall clock time (UTC)\n")
+                        write("#   timestamp_relative_ms: Milliseconds since session start (monotonic)\n")
+                        write("#   timestamp_monotonic_ns: Raw monotonic nanoseconds for precise intervals\n")
+                        write("#   synchronized_timestamp_ms: PC-synchronized timestamp (includes clock offset from time sync)\n")
+                        write("#\n")
+                        write(
+                            "timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,synchronized_timestamp_ms,frame_sequence,min_temp_c,avg_temp_c,max_temp_c,pixel_count\n",
+                        )
+                        flush()
+                    }
                 frameSequence.set(0)
                 sessionMetadata.addSyncEvent(
-                    "THERMAL_RECORDING_START", mapOf(
+                    "THERMAL_RECORDING_START",
+                    mapOf(
                         "sensor_type" to "thermal_topdon",
                         "sensor_id" to "thermal_topdon_tc001",
                         "save_images" to saveImages.toString(),
-                        "sync_verification" to "enabled"
-                    )
+                        "sync_verification" to "enabled",
+                    ),
                 )
                 isRecording.set(true)
                 AppLogger.i(TAG, "Thermal recording started with session timing: ${csvFile.absolutePath}")
@@ -122,7 +136,10 @@ class ThermalRecorder(private val context: Context) {
             }
         }
 
-    suspend fun startRecording(sessionDir: String, saveImages: Boolean = false): Boolean =
+    suspend fun startRecording(
+        sessionDir: String,
+        saveImages: Boolean = false,
+    ): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording.get()) {
                 AppLogger.w(TAG, "Thermal recording already in progress")
@@ -140,12 +157,13 @@ class ThermalRecorder(private val context: Context) {
                     SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault()).format(Date())
                 val csvFile = File(sessionDirectory, "thermal_stats_$timestamp.csv")
                 // Open writer for the entire recording session
-                csvWriter = FileWriter(csvFile, false).apply {
-                    write("# Legacy thermal recording - no session synchronization metadata\n")
-                    write(CSV_HEADER)
-                    write("\n")
-                    flush()
-                }
+                csvWriter =
+                    FileWriter(csvFile, false).apply {
+                        write("# Legacy thermal recording - no session synchronization metadata\n")
+                        write(CSV_HEADER)
+                        write("\n")
+                        flush()
+                    }
                 frameSequence.set(0)
                 isRecording.set(true)
                 AppLogger.i(TAG, "Thermal recording started (legacy mode): ${csvFile.absolutePath}")
@@ -161,30 +179,31 @@ class ThermalRecorder(private val context: Context) {
             }
         }
 
-    suspend fun stopRecording(): Boolean = withContext(Dispatchers.IO) {
-        if (!isRecording.get()) {
-            AppLogger.w(TAG, "No thermal recording in progress")
-            return@withContext false
+    suspend fun stopRecording(): Boolean =
+        withContext(Dispatchers.IO) {
+            if (!isRecording.get()) {
+                AppLogger.w(TAG, "No thermal recording in progress")
+                return@withContext false
+            }
+            try {
+                isRecording.set(false)
+                // Close the writer properly
+                csvWriter?.flush()
+                csvWriter?.close()
+                csvWriter = null
+                AppLogger.i(TAG, "Thermal recording stopped. Processed ${frameSequence.get()} frames")
+                return@withContext true
+            } catch (e: Exception) {
+                AppLogger.e(TAG, "Error stopping thermal recording", e)
+                return@withContext false
+            }
         }
-        try {
-            isRecording.set(false)
-            // Close the writer properly
-            csvWriter?.flush()
-            csvWriter?.close()
-            csvWriter = null
-            AppLogger.i(TAG, "Thermal recording stopped. Processed ${frameSequence.get()} frames")
-            return@withContext true
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error stopping thermal recording", e)
-            return@withContext false
-        }
-    }
 
     fun processFrame(
         frameData: ByteArray,
         width: Int,
         height: Int,
-        timestampNs: Long = TimestampManager.getCurrentTimestampNanos()
+        timestampNs: Long = TimestampManager.getCurrentTimestampNanos(),
     ) {
         if (!isRecording.get()) {
             return
@@ -210,7 +229,7 @@ class ThermalRecorder(private val context: Context) {
         height: Int,
         minTempRange: Float = -20f,
         maxTempRange: Float = 400f,
-        timestampNs: Long = TimestampManager.getCurrentTimestampNanos()
+        timestampNs: Long = TimestampManager.getCurrentTimestampNanos(),
     ) {
         if (!isRecording.get()) {
             return
@@ -240,7 +259,7 @@ class ThermalRecorder(private val context: Context) {
         frameData: ByteArray,
         width: Int,
         height: Int,
-        timestampNs: Long
+        timestampNs: Long,
     ): ThermalFrameStats {
         val pixelCount = width * height
         val expectedSize = pixelCount * 4
@@ -253,8 +272,11 @@ class ThermalRecorder(private val context: Context) {
         var validPixels = 0
         for (i in 0 until min(pixelCount, frameData.size / 4)) {
             val byteIndex = i * 4
-            val temp = ByteBuffer.wrap(frameData, byteIndex, 4)
-                .order(java.nio.ByteOrder.LITTLE_ENDIAN).float
+            val temp =
+                ByteBuffer
+                    .wrap(frameData, byteIndex, 4)
+                    .order(java.nio.ByteOrder.LITTLE_ENDIAN)
+                    .float
             if (!temp.isNaN() && !temp.isInfinite()) {
                 minTemp = min(minTemp, temp)
                 maxTemp = max(maxTemp, temp)
@@ -270,7 +292,7 @@ class ThermalRecorder(private val context: Context) {
             minTemp = if (minTemp == Float.MAX_VALUE) 0.0f else minTemp,
             avgTemp = avgTemp,
             maxTemp = if (maxTemp == Float.MIN_VALUE) 0.0f else maxTemp,
-            pixelCount = validPixels
+            pixelCount = validPixels,
         )
     }
 
@@ -278,7 +300,7 @@ class ThermalRecorder(private val context: Context) {
         tempData: FloatArray,
         width: Int,
         height: Int,
-        timestampNs: Long
+        timestampNs: Long,
     ): ThermalFrameStats {
         var minTemp = Float.MAX_VALUE
         var maxTemp = Float.MIN_VALUE
@@ -300,72 +322,76 @@ class ThermalRecorder(private val context: Context) {
             minTemp = if (minTemp == Float.MAX_VALUE) 0.0f else minTemp,
             avgTemp = avgTemp,
             maxTemp = if (maxTemp == Float.MIN_VALUE) 0.0f else maxTemp,
-            pixelCount = validPixels
+            pixelCount = validPixels,
         )
     }
 
-    private suspend fun logFrameStats(stats: ThermalFrameStats) = withContext(Dispatchers.IO) {
-        try {
-            csvWriter?.let { writer ->
-                val csvLine = sessionMetadata?.let { sm ->
-                    val wallClockMs = sm.monotonicToWallClock(stats.timestampNs)
-                    val relativeMs = (stats.timestampNs - sm.sessionStartMonotonicNs) / 1_000_000L
-                    // Calculate synchronized timestamp based on the frame's wall clock time and current offset
-                    val clockOffsetMs = TimestampManager.getClockOffsetMs()
-                    val synchronizedTimestampMs = wallClockMs + clockOffsetMs
-                    StringBuilder().apply {
-                        append(wallClockMs)
-                        append(',')
-                        append(relativeMs)
-                        append(',')
-                        append(stats.timestampNs)
-                        append(',')
-                        append(synchronizedTimestampMs)
-                        append(',')
-                        append(stats.frameSequence)
-                        append(',')
-                        append("%.3f".format(Locale.US, stats.minTemp))
-                        append(',')
-                        append("%.3f".format(Locale.US, stats.avgTemp))
-                        append(',')
-                        append("%.3f".format(Locale.US, stats.maxTemp))
-                        append(',')
-                        append(stats.pixelCount)
-                    }.toString()
-                } ?: StringBuilder().apply {
-                    append(stats.timestampNs)
-                    append(',')
-                    append(stats.frameSequence)
-                    append(',')
-                    append("%.3f".format(Locale.US, stats.minTemp))
-                    append(',')
-                    append("%.3f".format(Locale.US, stats.avgTemp))
-                    append(',')
-                    append("%.3f".format(Locale.US, stats.maxTemp))
-                    append(',')
-                    append(stats.pixelCount)
-                }.toString()
-                writer.write(csvLine)
-                writer.write("\n")
-                writer.flush()
+    private suspend fun logFrameStats(stats: ThermalFrameStats) =
+        withContext(Dispatchers.IO) {
+            try {
+                csvWriter?.let { writer ->
+                    val csvLine =
+                        sessionMetadata?.let { sm ->
+                            val wallClockMs = sm.monotonicToWallClock(stats.timestampNs)
+                            val relativeMs = (stats.timestampNs - sm.sessionStartMonotonicNs) / 1_000_000L
+                            // Calculate synchronized timestamp based on the frame's wall clock time and current offset
+                            val clockOffsetMs = TimestampManager.getClockOffsetMs()
+                            val synchronizedTimestampMs = wallClockMs + clockOffsetMs
+                            StringBuilder()
+                                .apply {
+                                    append(wallClockMs)
+                                    append(',')
+                                    append(relativeMs)
+                                    append(',')
+                                    append(stats.timestampNs)
+                                    append(',')
+                                    append(synchronizedTimestampMs)
+                                    append(',')
+                                    append(stats.frameSequence)
+                                    append(',')
+                                    append("%.3f".format(Locale.US, stats.minTemp))
+                                    append(',')
+                                    append("%.3f".format(Locale.US, stats.avgTemp))
+                                    append(',')
+                                    append("%.3f".format(Locale.US, stats.maxTemp))
+                                    append(',')
+                                    append(stats.pixelCount)
+                                }.toString()
+                        } ?: StringBuilder()
+                            .apply {
+                                append(stats.timestampNs)
+                                append(',')
+                                append(stats.frameSequence)
+                                append(',')
+                                append("%.3f".format(Locale.US, stats.minTemp))
+                                append(',')
+                                append("%.3f".format(Locale.US, stats.avgTemp))
+                                append(',')
+                                append("%.3f".format(Locale.US, stats.maxTemp))
+                                append(',')
+                                append(stats.pixelCount)
+                            }.toString()
+                    writer.write(csvLine)
+                    writer.write("\n")
+                    writer.flush()
+                }
+            } catch (e: Exception) {
+                AppLogger.e(TAG, "Error writing thermal stats to CSV", e)
             }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error writing thermal stats to CSV", e)
         }
-    }
 
     private suspend fun saveFrameImage(
         frameData: ByteArray,
         width: Int,
         height: Int,
-        frameSequence: Long
+        frameSequence: Long,
     ) = withContext(Dispatchers.IO) {
         try {
             sessionDirectory?.let { dir ->
                 val imageFile =
                     File(
                         dir,
-                        "thermal_frame_${frameSequence}_${TimestampManager.getCurrentTimestampNanos()}.raw"
+                        "thermal_frame_${frameSequence}_${TimestampManager.getCurrentTimestampNanos()}.raw",
                     )
                 FileOutputStream(imageFile).use { output ->
                     output.write(frameData)
@@ -381,7 +407,7 @@ class ThermalRecorder(private val context: Context) {
         intensityData: ByteArray,
         width: Int,
         height: Int,
-        frameSequence: Long
+        frameSequence: Long,
     ) = withContext(Dispatchers.IO) {
         try {
             sessionDirectory?.let { dir ->
@@ -397,7 +423,7 @@ class ThermalRecorder(private val context: Context) {
                 val imageFile =
                     File(
                         dir,
-                        "thermal_frame_${frameSequence}_${TimestampManager.getCurrentTimestampNanos()}.png"
+                        "thermal_frame_${frameSequence}_${TimestampManager.getCurrentTimestampNanos()}.png",
                     )
                 FileOutputStream(imageFile).use { output ->
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
@@ -411,6 +437,6 @@ class ThermalRecorder(private val context: Context) {
     }
 
     fun isRecording(): Boolean = isRecording.get()
+
     fun getFrameCount(): Long = frameSequence.get()
 }
-

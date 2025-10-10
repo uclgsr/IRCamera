@@ -122,9 +122,9 @@ object ByteUtils {
         b4: Byte,
     ): Int =
         (b1.toInt() and 0xFF shl 24) or
-                (b2.toInt() and 0xFF shl 16) or
-                (b3.toInt() and 0xFF shl 8) or
-                (b4.toInt() and 0xFF)
+            (b2.toInt() and 0xFF shl 16) or
+            (b3.toInt() and 0xFF shl 8) or
+            (b4.toInt() and 0xFF)
 
     fun joinPackage(vararg src: ByteArray): ByteArray = byteMerger(*src)
 

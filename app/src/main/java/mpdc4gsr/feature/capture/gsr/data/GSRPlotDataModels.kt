@@ -36,4 +36,3 @@ data class PlotMetadata(
     val samplingRate: Double,
     val dataPoints: Int,
 ) : Serializable
-
