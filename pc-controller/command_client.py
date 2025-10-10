@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# coverage: ignore file
 """
 CommandClient - PC side command sender for multi-modal recording system
 

@@ -7,7 +7,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.core.hardware.gsr.model.GSRSample
+import mpdc4gsr.gsr.model.GsrSample
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.PrintWriter
@@ -258,7 +258,7 @@ class LSLGSROutlet(
             sessionId = sessionId,
         )
     private var outlet: LSLStreamOutlet? = null
-    private val sampleBuffer = ConcurrentLinkedQueue<GSRSample>()
+    private val sampleBuffer = ConcurrentLinkedQueue<GsrSample>()
     private val qualityHistory = ConcurrentLinkedQueue<Double>()
     private val isStreaming = AtomicBoolean(false)
     private val samplesSent = AtomicLong(0)
@@ -286,7 +286,7 @@ class LSLGSROutlet(
     private suspend fun streamingLoop() {
         while (isStreaming.get()) {
             try {
-                val samplesToSend = mutableListOf<GSRSample>()
+                val samplesToSend = mutableListOf<GsrSample>()
                 // Collect batch of samples
                 repeat(BATCH_SIZE) {
                     sampleBuffer.poll()?.let { samplesToSend.add(it) }
@@ -297,10 +297,10 @@ class LSLGSROutlet(
                         samplesToSend
                             .map { sample ->
                                 floatArrayOf(
-                                    sample.gsrRaw.toFloat(),
+                                    (sample.gsrRaw ?: 0).toFloat()(),
                                     sample.gsrMicrosiemens.toFloat(),
-                                    sample.ppgRaw.toFloat(),
-                                    sample.timestamp.toFloat(),
+                                    (sample.ppgRaw ?: 0).toFloat()(),
+                                    sample.timestampMillis.toFloat()(),
                                 )
                             }.toTypedArray()
                     // Send chunk to LSL
@@ -317,7 +317,7 @@ class LSLGSROutlet(
         }
     }
 
-    fun pushSample(sample: GSRSample) {
+    fun pushSample(sample: GsrSample) {
         if (isStreaming.get()) {
             // Add to buffer for batch processing
             sampleBuffer.offer(sample)
@@ -330,7 +330,7 @@ class LSLGSROutlet(
         }
     }
 
-    private fun updateQualityMetrics(sample: GSRSample) {
+    private fun updateQualityMetrics(sample: GsrSample) {
         // Simple quality metric based on signal stability
         val quality = if (sample.gsrMicrosiemens in 0.1..10.0) 1.0 else 0.0
         qualityHistory.offer(quality)

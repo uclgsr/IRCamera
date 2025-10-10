@@ -73,8 +73,7 @@ object Protocol {
 
     fun createErrorMessage(command: String?, errorCode: String, message: String): String {
         val cmdStr = if (command != null) "cmd=$command " else ""
-        return "$MSG_ERROR ${cmdStr}
-code=$errorCode msg=\"$message\""
+        return "$MSG_ERROR ${cmdStr}code=$errorCode msg=\"$message\""
     }
 
 

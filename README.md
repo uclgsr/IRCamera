@@ -1,4 +1,4 @@
-# MPDC4GSR Multi-Sensor Recording Platform
+﻿# MPDC4GSR Multi-Sensor Recording Platform
 
 MPDC4GSR combines an Android capture application and a desktop PC controller to record synchronised galvanic skin
 response (GSR), thermal, and RGB data. The Android app manages sensor lifecycles, high throughput recording, and network
@@ -10,12 +10,12 @@ communication. The PC controller provides orchestration, real-time visualisation
   that exposes remote controls and telemetry on port 8081 with optional mDNS discovery.
 - Camera subsystem built on CameraX with the `RgbCameraRecorder`, dashboards, and Compose-based UI for manual controls,
   sensor diagnostics, and live preview.
-- GSR pipeline using the Shimmer SDK with background scanning, reconnection logic, low-level packet parsing, and export
-  utilities.
-- Thermal capture via the `thermalunified` component and coordinated multi-modal recording orchestrated by
-  `MultiModalRecordingViewModel`.
-- Python PC controller (`pc_controller.py`) with PyQt6 dashboard, CLI mode, recording automation, native packet parsing,
-  and end-to-end protocol compatibility with the Android service.
+- Modular `mpdc4gsr.gsr` package providing the `GsrOrchestrator`, Shimmer3 device manager, simulation sources, JSON
+  command/time-sync clients, and a Compose session dashboard backed by Hilt.
+- Thermal capture via the `thermalunified` component with Topdon TC001 bindings and coordinated multi-modal recording
+  through shared recording/session infrastructure.
+- Python PC controller (`pc_controller.py`) with the new `SensorManager`, `TimeSyncService`, `StimulusController`, PyQt6
+  dashboard, CLI mode, native packet parsing, and end-to-end protocol compatibility with the Android service.
 - Structured logging, telemetry, StrictMode policies, and crash-safe supervisors that keep long running sessions
   observable and recoverable.
 
@@ -78,12 +78,12 @@ CI automation for the Android app lives in `.github/workflows/android-quality-ga
 
 Central documentation lives under `docs/`:
 
-- [docs/system-overview.md](docs/system-overview.md) – architecture, data flow, and module map
-- [docs/android-platform.md](docs/android-platform.md) – Android-specific subsystems and developer notes
-- [docs/pc-controller.md](docs/pc-controller.md) – desktop application overview
-- [docs/testing-and-quality.md](docs/testing-and-quality.md) – testing, analysis, and observability checklists
-- [docs/developer-guides/](docs/developer-guides/) – targeted deep dives (permissions, logging, UI utilities)
-- [pc-controller/docs/](pc-controller/docs/) – comprehensive PC controller manual
+- [docs/system-overview.md](docs/system-overview.md) â€“ architecture, data flow, and module map
+- [docs/android-platform.md](docs/android-platform.md) â€“ Android-specific subsystems and developer notes
+- [docs/pc-controller.md](docs/pc-controller.md) â€“ desktop application overview
+- [docs/testing-and-quality.md](docs/testing-and-quality.md) â€“ testing, analysis, and observability checklists
+- [docs/developer-guides/](docs/developer-guides/) â€“ targeted deep dives (permissions, logging, UI utilities)
+- [pc-controller/docs/](pc-controller/docs/) â€“ comprehensive PC controller manual
 
 ## Contributing
 
@@ -95,3 +95,5 @@ Central documentation lives under `docs/`:
 ## License
 
 The repository currently has no published license. Add licensing information before producing releases.
+
+

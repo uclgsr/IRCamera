@@ -1,4 +1,4 @@
-calibration:
+﻿calibration:
   max_reprojection_error: 0.5
   min_images: 10
   pattern_size:
@@ -36,17 +36,39 @@ security:
   require_tls: true
 session:
   auto_backup: true
-  data_root: /tmp/tmpue9_xz51
+  data_root: pc_data
   max_session_duration: 7200
   metadata_format: json
-test:
-  value: test_data
+  allow_only_one_active: true
+simulation:
+  enable_by_default: true
+  force: false
+  sensors:
+    - sim_gsr
 time_sync:
   max_offset_ms: 15
   sync_interval: 30
   target_accuracy_ms: 5
+time_sync_service:
+  host: 0.0.0.0
+  port: 47017
+  max_clients: 32
+  ttl_seconds: 30
+sensors:
+  shimmer_gsr_01:
+    name: Shimmer3 Unit A
+    address:
+    stream_uuid: 0000fff4-0000-1000-8000-00805f9b34fb
+    sample_rate_hz: 128
+  shimmer_gsr_02:
+    name: Shimmer3 Unit B
+    address:
+    stream_uuid: 0000fff4-0000-1000-8000-00805f9b34fb
+    sample_rate_hz: 128
 transfer:
   chunk_size: 1048576
   compression_enabled: true
   max_retries: 3
   verify_checksums: true
+  checksum_algorithm: sha256
+  expected_ack: true

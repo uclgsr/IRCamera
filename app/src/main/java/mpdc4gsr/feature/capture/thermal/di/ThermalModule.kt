@@ -7,8 +7,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import mpdc4gsr.feature.capture.thermal.data.repository.ThermalRepositoryImpl
+import mpdc4gsr.feature.capture.thermal.data.source.FailoverThermalDataSource
 import mpdc4gsr.feature.capture.thermal.data.source.ThermalHardwareDataSource
 import mpdc4gsr.feature.capture.thermal.data.source.ThermalHardwareDataSourceImpl
+import mpdc4gsr.feature.capture.thermal.data.source.ThermalSimulationDataSource
 import mpdc4gsr.feature.capture.thermal.domain.repository.ThermalRepository
 import mpdc4gsr.feature.capture.thermal.domain.usecase.CaptureThermalSnapshotUseCase
 import mpdc4gsr.feature.capture.thermal.domain.usecase.CheckCameraConnectionUseCase
@@ -29,6 +31,8 @@ import mpdc4gsr.feature.capture.thermal.domain.usecase.StopThermalRecordingUseCa
 import mpdc4gsr.feature.capture.thermal.domain.usecase.StopThermalStreamingUseCase
 import mpdc4gsr.feature.capture.thermal.domain.usecase.ThermalCoreUseCases
 import mpdc4gsr.feature.capture.thermal.domain.usecase.ThermalHardwareUseCases
+import mpdc4gsr.feature.capture.thermal.domain.usecase.IsThermalSimulationModeUseCase
+import mpdc4gsr.feature.connectivity.data.DataManagementService
 import javax.inject.Singleton
 
 @Module
@@ -38,7 +42,11 @@ object ThermalModule {
     @Singleton
     fun provideThermalHardwareDataSource(
         @ApplicationContext context: Context,
-    ): ThermalHardwareDataSource = ThermalHardwareDataSourceImpl(context)
+    ): ThermalHardwareDataSource {
+        val hardware = ThermalHardwareDataSourceImpl(context)
+        val simulation = ThermalSimulationDataSource(context)
+        return FailoverThermalDataSource(hardware, simulation)
+    }
 
     @Provides
     @Singleton
@@ -57,6 +65,7 @@ object ThermalModule {
             stopRecording = StopThermalRecordingUseCase(repository),
             setTemperatureRange = SetTemperatureRangeUseCase(repository),
             checkConnection = CheckCameraConnectionUseCase(repository),
+            isSimulationMode = IsThermalSimulationModeUseCase(repository),
         )
 
     @Provides
@@ -72,4 +81,13 @@ object ThermalModule {
             getDeviceInfo = GetDeviceInfoUseCase(repository),
             getBatteryStatus = GetBatteryStatusUseCase(repository),
         )
+
+    @Provides
+    @Singleton
+    fun provideDataManagementService(
+        @ApplicationContext context: Context,
+    ): DataManagementService =
+        DataManagementService(context).apply {
+            initialize()
+        }
 }

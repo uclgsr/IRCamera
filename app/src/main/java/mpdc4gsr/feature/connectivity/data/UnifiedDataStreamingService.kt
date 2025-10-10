@@ -4,7 +4,7 @@ import android.content.Context
 import kotlinx.coroutines.*
 import mpdc4gsr.core.data.TimestampManager
 import mpdc4gsr.core.data.TimestampRecord
-import mpdc4gsr.core.hardware.gsr.model.GSRSample
+import mpdc4gsr.gsr.model.GsrSample
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.PrintWriter
@@ -37,37 +37,35 @@ class UnifiedDataStreamingService(
     private val packetsSent = AtomicLong(0)
     private val clientsConnected = AtomicLong(0)
     private val streamStartTime = AtomicLong(0)
-    suspend fun startStreaming(sessionId: String, port: Int = DEFAULT_PORT): Boolean {
-        return withContext(Dispatchers.IO) {
+    suspend fun startStreaming(sessionId: String, port: Int = DEFAULT_PORT): Boolean =
+        withContext(Dispatchers.IO) {
+            if (isStreaming.get()) {
+                return@withContext true
+            }
+
             try {
-                if (isStreaming.get()) {
-                    return@withContext true
-                }
- currentSessionId = sessionId
-                        sessionStartReference = TimestampManager.createTimestampRecord()
+                currentSessionId = sessionId
+                sessionStartReference = TimestampManager.createTimestampRecord()
                 streamStartTime.set(System.currentTimeMillis())
-                serverSocket = ServerSocket().apply {
-                    reuseAddress = true
-                    bind(InetSocketAddress(port))
-                }
+
+                serverSocket =
+                    ServerSocket().apply {
+                        reuseAddress = true
+                        bind(InetSocketAddress(port))
+                    }
 
                 isStreaming.set(true)
-                streamingScope.launch {
-                    acceptClients()
-                }
+                streamingScope.launch { acceptClients() }
+                streamingScope.launch { processStreamingData() }
+                streamingScope.launch { distributeHeartbeats() }
 
-                streamingScope.launch {
-                    processStreamingData()
-                }
-
-                streamingScope.launch {
-                    distributeHeartbeats()
-                }
- broadcastSessionSyncEvent (
-                        "session_start", mapOf(
-                "session_id" to sessionId,
-                "timestamp_reference" to sessionStartReference!!.toCsvFormat()
-                )
+                broadcastSessionSyncEvent(
+                    eventType = "session_start",
+                    metadata =
+                        mapOf(
+                            "session_id" to sessionId,
+                            "timestamp_reference" to (sessionStartReference?.toCsvFormat() ?: ""),
+                        ),
                 )
                 true
             } catch (e: Exception) {
@@ -75,7 +73,6 @@ class UnifiedDataStreamingService(
                 false
             }
         }
-    }
 
 
     suspend fun stopStreaming() {
@@ -114,17 +111,22 @@ class UnifiedDataStreamingService(
     }
 
 
-    fun streamGSRData(gsrSample: GSRSample, timestampRecord: TimestampRecord) {
-        if (!isStreaming.get())
+    fun streamGSRData(
+        gsrSample: GsrSample,
+        timestampRecord: TimestampRecord,
+    ) {
+        if (!isStreaming.get()) {
             return
+        }
         val packet = StreamingDataPacket(
             dataType = "GSR",
             timestamp = timestampRecord,
             data = JSONObject().apply {
-                put("conductance_microsiemens", gsrSample.conductance)
-                put("raw_adc", gsrSample.rawValue)
-                put("ppg_value", 0) // Not available in this GSRSample model
-                put("device_id", gsrSample.sessionId) // Use sessionId as device identifier
+                put("conductance_microsiemens", gsrSample.gsrMicrosiemens)
+                put("raw_adc", gsrSample.gsrRaw)
+                put("ppg_value", gsrSample.ppgRaw)
+                put("quality_score", gsrSample.qualityScore)
+                put("device_id", currentSessionId ?: "")
             }
         )
         dataQueue.offer(packet)

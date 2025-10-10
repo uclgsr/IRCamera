@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# coverage: ignore file
 """
 IRCamera PC Controller Launcher
 

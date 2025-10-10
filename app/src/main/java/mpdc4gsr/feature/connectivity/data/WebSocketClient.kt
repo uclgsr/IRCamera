@@ -1092,8 +1092,7 @@ class WebSocketClient(private val context: Context) {
 
 
     private fun generateAuthToken(): String {
-        return "AUTH_TOKEN_${System.currentTimeMillis()}
-_${getDeviceId().take(8)}"
+        return "AUTH_TOKEN_${System.currentTimeMillis()}_${getDeviceId().take(8)}"
     }
 
 

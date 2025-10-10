@@ -11,7 +11,7 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.common.AppLogger
-import mpdc4gsr.core.hardware.gsr.model.GSRSample
+import mpdc4gsr.gsr.model.GsrSample
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -94,14 +94,14 @@ class ShimmerNetworkClient(
     }
 
 
-    fun sendGsrSample(sample: GSRSample, sequenceNumber: Long) {
+    fun sendGsrSample(sample: GsrSample, sequenceNumber: Long) {
         sendJson(
             JSONObject()
                 .put("type", "gsr_sample")
-                .put("timestamp_ms", sample.timestamp)
+                .put("timestamp_ms", sample.timestampMillis)
                 .put("gsr_microsiemens", sample.gsrMicrosiemens)
                 .put("raw_value", sample.gsrRaw)
-                .put("resistance_kohm", sample.resistanceOhms / 1000.0)
+                .put("resistance_kohm", (sample.resistanceOhms ?: 0.0) / 1000.0)
                 .put("sample_sequence", sequenceNumber),
         )
     }

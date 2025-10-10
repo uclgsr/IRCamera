@@ -74,8 +74,7 @@ class NetworkController(private val context: Context) {
                     } catch (e: IllegalStateException) {
                         eventListener?.onError(
                             "start_server",
-                            "Port $port is already in use and no alternative ports available. Please ensure no other services are using ports ${port}
- to ${port + 9}.",
+                            "Port $port is already in use and no alternative ports available. Please ensure no other services are using ports ${port} to ${port + 9}.",
                         )
             return@withContext false
                     }

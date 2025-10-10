@@ -109,25 +109,3 @@ object PreviewIntegration {
         return null
     }
 }
-
-
-fun com.mpdc4gsr.module.thermalunified.tools.CameraPreviewManager.updatePreview(context: Context) {
-    try {
-        val bitmap = this.scaledBitmap()
-        if (bitmap != null && !bitmap.isRecycled) {
-            PreviewIntegration.updateThermalFrame(context, bitmap)
-        }
-    } catch (e: Exception) {
-        mpdc4gsr.core.common.AppLogger.e(
-            "PreviewIntegration",
-            "Unexpected Exception in PreviewIntegration catch block",
-            e
-        )
-    }
-}
-
-
-fun Float.updateGsrPreview(context: Context) {
-    PreviewIntegration.updateGsrValue(context, this)
-}
-

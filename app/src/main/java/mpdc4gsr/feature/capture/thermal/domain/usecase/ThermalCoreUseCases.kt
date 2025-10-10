@@ -86,6 +86,12 @@ class CheckCameraConnectionUseCase(
     operator fun invoke(): Boolean = repository.isCameraConnected()
 }
 
+class IsThermalSimulationModeUseCase(
+    private val repository: ThermalRepository,
+) {
+    operator fun invoke(): Boolean = repository.isSimulationMode()
+}
+
 data class ThermalCoreUseCases(
     val connectCamera: ConnectThermalCameraUseCase,
     val disconnectCamera: DisconnectThermalCameraUseCase,
@@ -96,4 +102,5 @@ data class ThermalCoreUseCases(
     val stopRecording: StopThermalRecordingUseCase,
     val setTemperatureRange: SetTemperatureRangeUseCase,
     val checkConnection: CheckCameraConnectionUseCase,
+    val isSimulationMode: IsThermalSimulationModeUseCase,
 )

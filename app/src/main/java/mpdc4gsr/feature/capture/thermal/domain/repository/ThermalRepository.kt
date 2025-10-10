@@ -28,6 +28,10 @@ interface ThermalRepository {
 
     fun isCameraConnected(): Boolean
 
+    fun isSimulationMode(): Boolean
+
+    fun getLastRecordingPath(): String?
+
     suspend fun setTemperatureRange(
         minTemp: Float,
         maxTemp: Float,
@@ -59,3 +63,4 @@ interface ThermalRepository {
 
     suspend fun getBatteryStatus(): Result<BatteryStatus>
 }
+

@@ -57,7 +57,7 @@ fun ThermalSensorCard(
     onSettingsClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
-    // TODO: Replace with real thermal data from ThermalRecorder via ViewModel
+    // TODO: Replace with real thermal data from ThermalCaptureCoordinator via ViewModel
     var centerTemp by remember { mutableFloatStateOf(25.6f) }
     var maxTemp by remember { mutableFloatStateOf(45.2f) }
     var minTemp by remember { mutableFloatStateOf(18.9f) }

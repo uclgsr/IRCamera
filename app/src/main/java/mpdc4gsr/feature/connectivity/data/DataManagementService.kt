@@ -255,8 +255,7 @@ class DataManagementService(private val context: Context) {
             val exportDir = File(exportsDirectory, sessionId)
             exportDir.mkdirs()
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.UK).format(Date())
-            val exportFileName = "session_${sessionId}
-_$timestamp.${format.name.lowercase()}"
+            val exportFileName = "session_${sessionId}_$timestamp.${format.name.lowercase()}"
             val exportFile = File(exportDir, exportFileName)
             when (format) {
                 ExportFormat.JSON -> exportSessionAsJSON(session, exportFile, includeFiles)
@@ -350,8 +349,7 @@ _$timestamp.${format.name.lowercase()}"
             val archiveSessionDir = File(archiveDirectory, sessionId)
             archiveSessionDir.mkdirs()
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.UK).format(Date())
-            val archiveFile = File(archiveSessionDir, "session_${sessionId}
-_$timestamp.zip")
+            val archiveFile = File(archiveSessionDir, "session_${sessionId}_$timestamp.zip")
             exportSessionAsZIP(session, archiveFile, includeFiles = true)
             sessionDir.deleteRecursively()
             activeSessions.remove(sessionId)
@@ -868,8 +866,7 @@ _$timestamp.zip")
                 File Types:
                 ${
                 session.files.groupBy { file -> file.type }.entries.joinToString("\n") { entry ->
-                    "- ${entry.key}: ${entry.value.size}
- file(s)"
+                    "- ${entry.key}: ${entry.value.size} file(s)"
                 }
             }
 

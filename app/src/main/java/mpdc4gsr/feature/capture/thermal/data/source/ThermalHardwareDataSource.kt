@@ -27,6 +27,10 @@ interface ThermalHardwareDataSource {
 
     fun isConnected(): Boolean
 
+    fun isSimulationMode(): Boolean
+
+    fun getLastRecordingPath(): String?
+
     suspend fun setTemperatureRange(
         min: Float,
         max: Float,

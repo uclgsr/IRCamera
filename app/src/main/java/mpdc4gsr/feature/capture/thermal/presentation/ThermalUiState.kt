@@ -18,6 +18,7 @@ sealed interface ThermalUiState {
         val previewBitmap: Bitmap? = null,
         val isSimulationMode: Boolean = false,
         val frameCount: Long = 0L,
+        val lastRecordingPath: String? = null,
     ) : ThermalUiState
 
     data class Error(

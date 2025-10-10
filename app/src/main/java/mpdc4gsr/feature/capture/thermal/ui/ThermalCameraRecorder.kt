@@ -15,11 +15,14 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.core.common.ErrorHandler
+import mpdc4gsr.core.common.AppLogger
 import mpdc4gsr.core.common.logging.StructuredLogger
+import mpdc4gsr.core.common.logging.StructuredLogger.LogLevel
 import mpdc4gsr.core.data.SessionMetadata
+import mpdc4gsr.core.data.utils.TimeManager
 import mpdc4gsr.core.hardware.api.ErrorType
 import mpdc4gsr.core.hardware.api.RecordingStats
 import mpdc4gsr.core.hardware.api.RecordingStatus
@@ -59,6 +62,7 @@ class ThermalCameraRecorder(
     private val applicationContext = context.applicationContext
     private val logger = StructuredLogger.getInstance(applicationContext)
     private val deviceManager = TopdonThermalDeviceManager(applicationContext)
+    private val timeManager = TimeManager.getInstance(applicationContext)
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val statusFlow =
@@ -70,7 +74,7 @@ class ThermalCameraRecorder(
                 samplesRecorded = 0,
                 currentDataRate = 0.0,
                 storageUsedMB = 0.0,
-                timestampNs = System.nanoTime(),
+                timestampNs = timeManager.getCurrentTimestampNs(),
             ),
         )
     private val errorFlow = MutableSharedFlow<SensorError>(extraBufferCapacity = 8)
@@ -100,10 +104,21 @@ class ThermalCameraRecorder(
     override suspend fun initialize(): Boolean =
         withContext(Dispatchers.IO) {
             runCatching {
-                logger.i(TAG, "Initialising Topdon thermal device manager")
+                logger.log(
+                    LogLevel.INFO,
+                    TAG,
+                    "initialize_device",
+                    mapOf("sensor_id" to sensorId),
+                )
                 val result = deviceManager.connect()
                 if (result.isSuccess) {
-                    DeviceEventManager.broadcastThermalCameraConnected(applicationContext)
+                    DeviceEventManager.emitDeviceConnectionSync(isConnected = true, device = null)
+                    logger.log(
+                        LogLevel.INFO,
+                        TAG,
+                        "thermal_device_connected",
+                        mapOf("sensor_id" to sensorId),
+                    )
                     true
                 } else {
                     emitError("Thermal device connect failed", ErrorType.INITIALIZATION_FAILED)
@@ -115,21 +130,25 @@ class ThermalCameraRecorder(
             }
         }
 
-    override suspend fun startRecording(sessionDirectory: String): Boolean = startRecording(sessionDirectory, sessionMetadata = null)
+    override suspend fun startRecording(sessionDirectory: String): Boolean =
+        startRecordingInternal(File(sessionDirectory), null)
 
     override suspend fun startRecording(
         sessionDirectory: String,
         sessionMetadata: SessionMetadata,
     ): Boolean {
-        this.sessionMetadata = sessionMetadata
-        return startRecordingInternal(File(sessionDirectory))
+        return startRecordingInternal(File(sessionDirectory), sessionMetadata)
     }
 
-    private suspend fun startRecordingInternal(dir: File): Boolean =
+    private suspend fun startRecordingInternal(
+        dir: File,
+        metadata: SessionMetadata?,
+    ): Boolean =
         withContext(Dispatchers.IO) {
             runCatching {
                 dir.mkdirs()
                 sessionDirectory = dir
+                sessionMetadata = metadata
                 recordingStartElapsedMs = SystemClock.elapsedRealtime()
                 sampleCounter.set(0)
                 val config =
@@ -174,9 +193,15 @@ class ThermalCameraRecorder(
     ) {
         // The underlying SDK has no explicit sync marker support.
         // We log the event so that downstream tooling can align timelines.
-        logger.i(
+        logger.log(
+            LogLevel.INFO,
             TAG,
-            "Sync marker received: type=$markerType timestamp=$timestampNs metadata=$metadata",
+            "sync_marker",
+            mapOf(
+                "marker_type" to markerType,
+                "timestamp_ns" to timestampNs,
+                "metadata" to metadata,
+            ),
         )
     }
 
@@ -209,12 +234,22 @@ class ThermalCameraRecorder(
 
     fun enableNetworkStreaming(server: NetworkServer) {
         networkServerRef.set(server)
-        logger.i(TAG, "Thermal network streaming enabled")
+        logger.log(
+            LogLevel.INFO,
+            TAG,
+            "network_streaming_enabled",
+            mapOf("sensor_id" to sensorId),
+        )
     }
 
     fun disableNetworkStreaming() {
         networkServerRef.set(null)
-        logger.i(TAG, "Thermal network streaming disabled")
+        logger.log(
+            LogLevel.INFO,
+            TAG,
+            "network_streaming_disabled",
+            mapOf("sensor_id" to sensorId),
+        )
     }
 
     private fun startStatusPolling() {
@@ -246,7 +281,7 @@ class ThermalCameraRecorder(
                 samplesRecorded = samplesRecorded,
                 currentDataRate = if (isRecording) samplingRate else 0.0,
                 storageUsedMB = computeStorageUsageMb(samplesRecorded),
-                timestampNs = System.nanoTime(),
+                timestampNs = timeManager.getCurrentTimestampNs(),
             )
         statusFlow.value = status
         latestStats =
@@ -277,10 +312,15 @@ class ThermalCameraRecorder(
                 sensorType = sensorType,
                 errorType = errorType,
                 errorMessage = message,
-                timestampNs = System.nanoTime(),
+                timestampNs = timeManager.getCurrentTimestampNs(),
                 isRecoverable = errorType != ErrorType.HARDWARE_DISCONNECTED,
             )
         errorFlow.emit(error)
-        ErrorHandler.default().handle(IllegalStateException(message))
+        AppLogger.e(
+            TAG,
+            message,
+            IllegalStateException(message),
+            component = sensorId,
+        )
     }
 }

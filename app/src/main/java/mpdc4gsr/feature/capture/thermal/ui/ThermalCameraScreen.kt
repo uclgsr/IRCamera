@@ -27,6 +27,7 @@ import mpdc4gsr.feature.capture.thermal.presentation.ThermalCameraViewModel
 import mpdc4gsr.feature.capture.thermal.presentation.ThermalUiEvent
 import mpdc4gsr.feature.capture.thermal.presentation.ThermalUiState
 import mpdc4gsr.feature.capture.thermal.ui.components.*
+import java.io.File
 
 @Composable
 fun ThermalCameraScreen(
@@ -690,6 +691,21 @@ private fun ThermalCameraStatusCard(
                 isHealthy = uiState.isRecording,
             )
             StatusRow(
+                label = "Duration",
+                status = formatDuration(uiState.recordingDuration),
+                icon = Icons.Default.Timer,
+                isHealthy = uiState.recordingDuration > 0L,
+            )
+            StatusRow(
+                label = "Last File",
+                status =
+                    uiState.lastRecordingPath
+                        ?.let { path -> File(path).name }
+                        ?: "N/A",
+                icon = Icons.Default.Save,
+                isHealthy = true,
+            )
+            StatusRow(
                 label = "Frames",
                 status = uiState.frameCount.toString(),
                 icon = Icons.Default.PhotoLibrary,
@@ -785,8 +801,6 @@ private fun getThermalPreviewColor(palette: ThermalPalette): Color =
         ThermalPalette.GRAYSCALE -> Color(0xFF808080)
         ThermalPalette.HOT -> Color(0xFFFF6600)
         ThermalPalette.MEDICAL -> Color(0xFF00CED1)
-        ThermalPalette.LAVA -> Color(0xFFDC143C)
-        ThermalPalette.CONTRAST -> Color(0xFF696969)
     }
 
 private fun getThermalGradient(palette: ThermalPalette): Color =
@@ -797,8 +811,6 @@ private fun getThermalGradient(palette: ThermalPalette): Color =
         ThermalPalette.GRAYSCALE -> Color(0xFFFFFFFF)
         ThermalPalette.HOT -> Color(0xFFFFFF00)
         ThermalPalette.MEDICAL -> Color(0xFF32CD32)
-        ThermalPalette.LAVA -> Color(0xFFFF0000)
-        ThermalPalette.CONTRAST -> Color(0xFFFFFFFF)
     }
 
 private fun formatTemperature(
@@ -806,7 +818,15 @@ private fun formatTemperature(
     unit: TemperatureUnit,
 ): String =
     when (unit) {
-        TemperatureUnit.CELSIUS -> "${String.format("%.1f", temperature)}°C"
-        TemperatureUnit.FAHRENHEIT -> "${String.format("%.1f", temperature * 9 / 5 + 32)}°F"
-        TemperatureUnit.KELVIN -> "${String.format("%.1f", temperature + 273.15)}K"
+        TemperatureUnit.CELSIUS -> "${String.format("%.1f", temperature)} C"
+        TemperatureUnit.FAHRENHEIT -> "${String.format("%.1f", temperature * 9 / 5 + 32)} F"
+        TemperatureUnit.KELVIN -> "${String.format("%.1f", temperature + 273.15)} K"
     }
+
+private fun formatDuration(durationMs: Long): String {
+    if (durationMs <= 0L) return "N/A"
+    val totalSeconds = durationMs / 1000
+    val minutes = totalSeconds / 60
+    val seconds = totalSeconds % 60
+    return String.format("%02d:%02d", minutes, seconds)
+}

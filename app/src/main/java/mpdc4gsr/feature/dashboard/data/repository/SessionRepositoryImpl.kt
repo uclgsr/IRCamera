@@ -17,9 +17,7 @@ constructor(
     @ApplicationContext private val context: Context,
 ) : SessionRepository {
     private val _currentSession = MutableStateFlow<SessionInfo?>(null)
-    private val sessionManager: SessionManager by lazy {
-        sessionManager.getInstance(context)
-    }
+    private val sessionManager: SessionManager by lazy { SessionManager.getInstance(context) }
 
     override suspend fun createSession(
         sessionId: String?,

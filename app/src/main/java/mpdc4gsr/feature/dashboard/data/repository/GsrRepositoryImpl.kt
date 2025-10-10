@@ -1,26 +1,24 @@
 package mpdc4gsr.feature.dashboard.data.repository
 
-import android.content.Context
-import androidx.lifecycle.ProcessLifecycleOwner
-import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.hardware.gsr.DefaultGsrRecorder
 import mpdc4gsr.feature.dashboard.domain.repository.GsrConnectionState
 import mpdc4gsr.feature.dashboard.domain.repository.GsrRepository
+import mpdc4gsr.gsr.device.ShimmerDeviceController
+import mpdc4gsr.gsr.model.ConnectionState
 import java.util.concurrent.atomic.AtomicBoolean
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 class GsrRepositoryImpl
 @Inject
 constructor(
-    @ApplicationContext private val context: Context,
+    private val shimmerDeviceController: ShimmerDeviceController
 ) : GsrRepository {
     private val _connectionState = MutableStateFlow(GsrConnectionState.DISCONNECTED)
     private val _batteryLevel = MutableStateFlow<Int?>(null)
@@ -30,54 +28,32 @@ constructor(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val observationStarted = AtomicBoolean(false)
 
-    private val gsrRecorder: DefaultGsrRecorder by lazy {
-        DefaultGsrRecorder(context, ProcessLifecycleOwner.get()).also { recorder ->
-            startObservingRecorder(recorder)
-        }
-    }
-
     override suspend fun initialize(): Boolean {
-        _connectionState.value = GsrConnectionState.CONNECTING
-        val initialized = gsrRecorder.initialize()
-        if (!initialized) {
-            _connectionState.value = GsrConnectionState.ERROR
-            _deviceStatus.value = "Initialization failed"
-        }
-        return initialized
+        ensureObservation()
+        return true
     }
 
     override suspend fun startDeviceDiscovery(): Boolean {
+        ensureObservation()
         _connectionState.value = GsrConnectionState.DISCOVERING
-        val discovered = gsrRecorder.startDeviceDiscovery()
-        if (!discovered) {
-            _connectionState.value = GsrConnectionState.ERROR
-            _deviceStatus.value = "Discovery failed"
-        }
-        return discovered
+        shimmerDeviceController.startScanning()
+        return true
     }
 
     override suspend fun connectToDevice(deviceAddress: String): Boolean {
-        val device =
-            gsrRecorder
-                .getDiscoveredDevices()
-                .find { it.address == deviceAddress }
-                ?: return false
-
-        val connected = gsrRecorder.connectToDevice(device)
-        _connectionState.value =
-            if (connected) {
-                _deviceStatus.value = "Connected to ${device.name}"
-                GsrConnectionState.CONNECTED
-            } else {
-                _deviceStatus.value = "Failed to connect to ${device.name}"
-                GsrConnectionState.ERROR
-            }
-        return connected
+        ensureObservation()
+        _connectionState.value = GsrConnectionState.CONNECTING
+        val result = shimmerDeviceController.connect(deviceAddress)
+        if (!result) {
+            _connectionState.value = GsrConnectionState.ERROR
+            _deviceStatus.value = "Failed to connect to $deviceAddress"
+        }
+        return result
     }
 
     override suspend fun disconnect() {
-        gsrRecorder.disconnectDevice()
         _connectionState.value = GsrConnectionState.DISCONNECTED
+        shimmerDeviceController.devices.value.keys.forEach { shimmerDeviceController.disconnect(it) }
         _deviceStatus.value = "Disconnected"
     }
 
@@ -89,23 +65,50 @@ constructor(
 
     override fun getConnectionQuality(): Flow<Float> = _connectionQuality
 
-    private fun startObservingRecorder(recorder: DefaultGsrRecorder) {
+    private fun ensureObservation() {
         if (observationStarted.compareAndSet(false, true)) {
             scope.launch {
-                recorder.deviceStatus.collect { status ->
-                    _deviceStatus.value = status
+                shimmerDeviceController.devices.collect { devices ->
+                    if (devices.isEmpty()) {
+                        _connectionState.value = GsrConnectionState.DISCONNECTED
+                        _deviceStatus.value = "No devices"
+                    } else {
+                        val active = devices.values.first()
+                        when (active.connectionState) {
+                            ConnectionState.CONNECTED, ConnectionState.READY, ConnectionState.RECORDING -> {
+                                _connectionState.value = GsrConnectionState.CONNECTED
+                                _deviceStatus.value = "Connected to ${active.displayName}"
+                            }
+                            ConnectionState.CONNECTING -> {
+                                _connectionState.value = GsrConnectionState.CONNECTING
+                                _deviceStatus.value = "Connecting to ${active.displayName}"
+                            }
+                            ConnectionState.ERROR -> {
+                                _connectionState.value = GsrConnectionState.ERROR
+                                _deviceStatus.value = "Device error"
+                            }
+                            ConnectionState.DISCOVERED -> {
+                                _connectionState.value = GsrConnectionState.DISCOVERING
+                                _deviceStatus.value = "Discovered ${active.displayName}"
+                            }
+                            ConnectionState.DISCONNECTED -> {
+                                _connectionState.value = GsrConnectionState.DISCONNECTED
+                                _deviceStatus.value = "Disconnected"
+                            }
+                        }
+                    }
                 }
             }
             scope.launch {
-                recorder.connectionQuality.collect { quality ->
-                    _connectionQuality.value = quality.toFloat()
+                shimmerDeviceController.telemetry.collect { telemetryMap ->
+                    val telemetry = telemetryMap.values.firstOrNull()
+                    _batteryLevel.value = telemetry?.batteryPercent
+                    _connectionQuality.value = telemetry?.rssi?.let { (it + 100) / 100f } ?: _connectionQuality.value
                 }
             }
             scope.launch {
-                recorder.getDataStream().collect { sample ->
-                    // Estimate battery based on RSSI (placeholder until proper metric available)
-                    val estimatedBattery = (sample.connectionRssi + 100).coerceIn(0, 100)
-                    _batteryLevel.value = estimatedBattery
+                shimmerDeviceController.samples.collect { sample ->
+                    _connectionQuality.value = sample.qualityScore?.toFloat() ?: 1f
                 }
             }
         }

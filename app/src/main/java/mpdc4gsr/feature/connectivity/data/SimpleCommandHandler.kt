@@ -196,8 +196,7 @@ class SimpleCommandHandler(
             try {
                 val timestamp = System.currentTimeMillis()
                 val message =
-                    "STATUS Recording stopped at $timestamp, duration: ${duration}
-ms, files saved"
+                    "STATUS Recording stopped at $timestamp, duration: ${duration} ms, files saved"
                 networkManager.sendTelemetry(message)
             } catch (e: Exception) {
                 mpdc4gsr.core.common.AppLogger.e(

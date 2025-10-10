@@ -132,79 +132,10 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name="mpdc4gsr.feature.capture.gsr.ui.MultiModalRecordingComposeActivity"
-            android:exported="false" />
-
-        <activity
-            android:name="mpdc4gsr.feature.capture.gsr.ui.GSRQuickRecordingActivity"
+            android:name="mpdc4gsr.gsr.ui.GsrSessionActivity"
             android:exported="false"
-            android:label="@string/gsr_quick_access" />
-
-        <activity
-            android:name="mpdc4gsr.feature.testing.ui.FaultTolerantRecordingComposeActivity"
-            android:exported="false"
-            android:label="@string/enhanced_recording_label" />
-
-        <activity
-            android:name="mpdc4gsr.feature.capture.gsr.ui.SessionManagerComposeActivity"
-            android:exported="false"
-            android:label="Session Manager" />
-        <activity
-            android:name="mpdc4gsr.feature.capture.gsr.ui.ResearchTemplateComposeActivity"
-            android:exported="false"
-            android:label="Research Templates" />
-        <activity
-            android:name="mpdc4gsr.feature.capture.gsr.ui.SessionDetailComposeActivity"
-            android:exported="false"
-            android:label="Session Details" />
-
-        <activity
-            android:name="mpdc4gsr.feature.capture.gsr.ui.GSRPlotComposeActivity"
-            android:exported="false"
-            android:label="GSR Data Analysis"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="mpdc4gsr.feature.capture.gsr.ui.GSRDataViewComposeActivity"
-            android:exported="false"
-            android:label="GSR Data Viewer"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="mpdc4gsr.feature.capture.gsr.ui.GSRVideoPlayerComposeActivity"
-            android:exported="false"
-            android:label="GSR Video Player"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name="mpdc4gsr.feature.capture.gsr.ui.SessionExportComposeActivity"
-            android:exported="false"
-            android:label="Export Session" />
-
-        <activity
-            android:name="mpdc4gsr.sensors.HubSpokeIntegrationActivity"
-            android:exported="false"
-            android:label="Hub-Spoke Recording" />
-
-        <activity
-            android:name="mpdc4gsr.core.designsystem.PermissionRequestComposeActivity"
-            android:exported="false"
-            android:label="Enhanced Permission System Test" />
-
-        <activity
-            android:name="mpdc4gsr.feature.capture.gsr.ui.GSRDeviceManagementComposeActivity"
-            android:exported="false"
-            android:label="GSR Device Management"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="mpdc4gsr.feature.capture.gsr.ui.GSRRawImageViewComposeActivity"
-            android:exported="false"
-            android:label="GSR Raw Image Viewer" />
-
-        <activity
-            android:name="mpdc4gsr.feature.capture.gsr.ui.GSRDeviceConfigComposeActivity"
-            android:exported="false"
-            android:label="GSR Device Configuration" />
+            android:label="GSR Session Dashboard"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <!-- Main Launcher Activity -->
         <activity

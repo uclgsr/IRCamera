@@ -377,10 +377,7 @@ class FileUploadService(private val context: Context) {
     ): String {
         val timestamp = System.currentTimeMillis()
         val random = Random.nextInt(1000, 9999)
-            return "upload_${sessionId}
-_${deviceId}
-_${timestamp}
-_$random"
+        return "upload_${sessionId}_${deviceId}_${timestamp}_$random"
     }
 
 

@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import hashlib
 import json
 import logging
 import shutil
@@ -32,6 +33,11 @@ from pathlib import Path
 from typing import Any, Callable, Deque, Dict, Iterable, List, Optional, Tuple
 
 try:
+    import yaml  # type: ignore
+except ImportError:  # pragma: no cover - optional dependency
+    yaml = None  # type: ignore[assignment]
+
+try:
     import enhanced_native_backend as native_backend  # type: ignore
 
     NATIVE_BACKEND_AVAILABLE = True
@@ -40,7 +46,10 @@ except ImportError:  # pragma: no cover - optional dependency
     NATIVE_BACKEND_AVAILABLE = False
 
 from protocol_adapter import ProtocolAdapter
+from sensor_manager import SensorManager, SensorConfig, load_sensor_config
+from stimulus_controller import StimulusController, StimulusEvent
 from sync_handler import SyncHandler
+from time_sync_service import TimeSyncConfig, TimeSyncService
 
 logger = logging.getLogger("pc_controller")
 
@@ -98,6 +107,14 @@ class ControllerEvent:
     payload: Dict[str, Any] = field(default_factory=dict)
 
 
+@dataclass
+class _ActiveFile:
+    path: Path
+    hasher: hashlib._Hash
+    size: int = 0
+    chunks: int = 0
+
+
 class SessionStorage:
     """Persistence helper for session telemetry and uploaded artefacts."""
 
@@ -105,7 +122,9 @@ class SessionStorage:
         self.root = root
         self.root.mkdir(parents=True, exist_ok=True)
         self._lock = threading.Lock()
-        self._active_files: Dict[Tuple[str, str, str], Path] = {}
+        self._active_files: Dict[Tuple[str, str, str], _ActiveFile] = {}
+        self._manifests: Dict[str, Dict[str, Any]] = {}
+        self._event_logs: Dict[str, Path] = {}
 
     def _session_dir(self, session_id: str) -> Path:
         path = self.root / session_id
@@ -116,7 +135,16 @@ class SessionStorage:
         session_dir = self._session_dir(session_id)
         info_file = session_dir / "session.json"
         with self._lock:
-            info_file.write_text(json.dumps({"session_id": session_id, **metadata}, indent=2))
+            started_at = time.time()
+            payload = {"session_id": session_id, "started_at": started_at, **metadata}
+            info_file.write_text(json.dumps(payload, indent=2))
+            self._manifests[session_id] = {
+                "session_id": session_id,
+                "started_at": started_at,
+                "files": {},
+                "events": [],
+                "gsr_samples": {},
+            }
         return session_dir
 
     def get_session_dir(self, session_id: str) -> Path:
@@ -127,6 +155,13 @@ class SessionStorage:
         session_dir = self._session_dir(session_id)
         summary_file = session_dir / "summary.json"
         with self._lock:
+            manifest = self._manifests.get(session_id)
+            if manifest:
+                manifest_path = session_dir / "manifest.json"
+                manifest_path.write_text(json.dumps(manifest, indent=2))
+                summary["manifest_path"] = str(manifest_path)
+                summary = {**summary, "manifest": manifest}
+            summary["finished_at"] = time.time()
             summary_file.write_text(json.dumps(summary, indent=2))
 
     def append_gsr_sample(self, session_id: str, device_id: str, timestamp: float, value: float) -> None:
@@ -140,6 +175,26 @@ class SessionStorage:
                 if header_needed:
                     handle.write("timestamp,value\n")
                 handle.write(line)
+            manifest = self._manifests.setdefault(
+                session_id, {"session_id": session_id, "files": {}, "events": [], "gsr_samples": {}}
+            )
+            gsr_stats = manifest.setdefault("gsr_samples", {}).setdefault(
+                device_id, {"count": 0, "last_timestamp": timestamp}
+            )
+            gsr_stats["count"] = int(gsr_stats.get("count", 0)) + 1
+            gsr_stats["last_timestamp"] = timestamp
+
+    def append_session_event(self, session_id: str, event: Dict[str, Any]) -> None:
+        session_dir = self._session_dir(session_id)
+        events_path = session_dir / "events.jsonl"
+        with self._lock:
+            with events_path.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(event) + "\n")
+            manifest = self._manifests.setdefault(
+                session_id, {"session_id": session_id, "files": {}, "events": [], "gsr_samples": {}}
+            )
+            manifest.setdefault("events", []).append(event)
+            self._event_logs[session_id] = events_path
 
     def begin_file(self, session_id: str, device_id: str, filename: str) -> Path:
         session_dir = self._session_dir(session_id)
@@ -148,21 +203,66 @@ class SessionStorage:
         target_path = device_dir / filename
         with self._lock:
             target_path.write_bytes(b"")
-            self._active_files[(session_id, device_id, filename)] = target_path
+            active = _ActiveFile(path=target_path, hasher=hashlib.sha256())
+            self._active_files[(session_id, device_id, filename)] = active
+            manifest = self._manifests.setdefault(
+                session_id, {"session_id": session_id, "files": {}, "events": [], "gsr_samples": {}}
+            )
+            manifest.setdefault("files", {})[f"{device_id}/{filename}"] = {
+                "device": device_id,
+                "filename": filename,
+                "size": 0,
+                "chunks": 0,
+                "sha256": None,
+                "received_at": time.time(),
+            }
         return target_path
 
     def append_file_chunk(self, session_id: str, device_id: str, filename: str, chunk: bytes) -> None:
         key = (session_id, device_id, filename)
         with self._lock:
-            path = self._active_files.get(key)
-            if path is None:
-                path = self.begin_file(session_id, device_id, filename)
-            with path.open("ab") as handle:
+            active = self._active_files.get(key)
+            if active is None:
+                self.begin_file(session_id, device_id, filename)
+                active = self._active_files[key]
+            with active.path.open("ab") as handle:
                 handle.write(chunk)
+            active.hasher.update(chunk)
+            active.size += len(chunk)
+            active.chunks += 1
+            manifest = self._manifests.setdefault(
+                session_id, {"session_id": session_id, "files": {}, "events": [], "gsr_samples": {}}
+            )
+            entry = manifest.setdefault("files", {}).setdefault(
+                f"{device_id}/{filename}",
+                {"device": device_id, "filename": filename, "size": 0, "chunks": 0, "sha256": None},
+            )
+            entry["size"] = active.size
+            entry["chunks"] = active.chunks
 
-    def finalize_file(self, session_id: str, device_id: str, filename: str) -> None:
+    def finalize_file(self, session_id: str, device_id: str, filename: str) -> Optional[str]:
+        key = (session_id, device_id, filename)
         with self._lock:
-            self._active_files.pop((session_id, device_id, filename), None)
+            active = self._active_files.pop(key, None)
+            if not active:
+                return None
+            digest = active.hasher.hexdigest()
+            manifest = self._manifests.setdefault(
+                session_id, {"session_id": session_id, "files": {}, "events": [], "gsr_samples": {}}
+            )
+            entry = manifest.setdefault("files", {}).setdefault(
+                f"{device_id}/{filename}",
+                {"device": device_id, "filename": filename},
+            )
+            entry.update(
+                {
+                    "sha256": digest,
+                    "size": active.size,
+                    "chunks": active.chunks,
+                    "completed_at": time.time(),
+                }
+            )
+            return digest
 
 
 class ConnectionWorker(threading.Thread):
@@ -456,16 +556,200 @@ class NetworkServer:
 class PCControllerCore:
     """Coordinates networking, device state, sessions, and persistence."""
 
-    def __init__(self, storage_dir: Path):
+    def __init__(self, storage_dir: Path, config: Optional[Dict[str, Any]] = None):
         self.storage_dir = storage_dir
         self.storage_dir.mkdir(parents=True, exist_ok=True)
+        self.config = config or {}
         self.devices: Dict[str, DeviceRecord] = {}
         self._lock = threading.Lock()
         self._listeners: List[Callable[[ControllerEvent], None]] = []
         self._session: Optional[SessionInfo] = None
+        self._session_events: List[Dict[str, Any]] = []
         self._storage = SessionStorage(self.storage_dir)
         self._network: Optional[NetworkServer] = None
         self._sync_handler = SyncHandler()
+        self._stimulus = StimulusController(self._notify_stimulus_event)
+        self._time_sync_service = TimeSyncService(self._build_time_sync_config())
+        self._device_offsets: Dict[str, float] = {}
+        self._sensor_manager = self._build_sensor_manager()
+        self._local_sensors_running = False
+        self._command_queue: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+
+    # ---------------------------------------------------------------- builders
+    def _build_time_sync_config(self) -> TimeSyncConfig:
+        cfg = self.config.get("time_sync_service", {}) or self.config.get("time_sync", {})
+        try:
+            host = str(cfg.get("host", "0.0.0.0"))
+        except AttributeError:
+            host = "0.0.0.0"
+        port = int(cfg.get("port", 47017))
+        max_clients = int(cfg.get("max_clients", 32))
+        ttl = float(cfg.get("ttl_seconds", cfg.get("sync_interval", 30)))
+        return TimeSyncConfig(host=host, port=port, max_clients=max_clients, ttl_seconds=ttl)
+
+    def _build_sensor_manager(self) -> SensorManager:
+        raw_sensors = self.config.get("sensors", {})
+        sensor_map: Dict[str, SensorConfig] = {}
+        if isinstance(raw_sensors, dict):
+            try:
+                sensor_map = load_sensor_config(raw_sensors)
+            except Exception as exc:
+                logger.warning("Failed to parse sensor configuration: %s", exc)
+                sensor_map = {}
+
+        if not sensor_map:
+            # Provide a default simulated channel to satisfy FR1 simulation mode.
+            default_rate = float(self.config.get("gsr", {}).get("sampling_rate", 128.0))
+            sensor_map["sim_gsr"] = SensorConfig(name="Simulated GSR", sample_rate_hz=default_rate)
+
+        manager = SensorManager(self._on_local_sensor_sample, sensor_map)
+        simulation_cfg = self.config.get("simulation", {})
+        if isinstance(simulation_cfg, dict) and simulation_cfg.get("force", False):
+            manager.enable_simulation_mode()
+        return manager
+
+    def _start_local_sensors(self) -> List[str]:
+        started = list(self._sensor_manager.start_streaming())
+        if not started:
+            return started
+        with self._lock:
+            for sensor_id in started:
+                device_id = f"sensor_{sensor_id}"
+                record = self.devices.get(device_id)
+                if record is None:
+                    record = DeviceRecord(
+                        device_id=device_id,
+                        connection_id="local",
+                        address="localhost",
+                        status="streaming",
+                        capabilities={"sensors": ["GSR"], "origin": "pc"},
+                        sensors=["GSR"],
+                    )
+                    self.devices[device_id] = record
+                record.status = "streaming"
+                record.session_active = True
+                record.last_seen = time.time()
+        self._local_sensors_running = True
+        return started
+
+    def _stop_local_sensors(self) -> None:
+        self._sensor_manager.stop_streaming()
+        self._local_sensors_running = False
+        with self._lock:
+            for record in self.devices.values():
+                if record.connection_id == "local":
+                    record.status = "standby"
+                    record.session_active = False
+
+    # ---------------------------------------------------------------- stimuli
+    def _notify_stimulus_event(self, code: str, payload: Dict[str, Any]) -> None:
+        timestamp = float(payload.get("timestamp", time.time()))
+        details = {k: v for k, v in payload.items() if k != "timestamp"}
+        marker = {"code": code, "timestamp": timestamp, "details": details}
+        if self._session:
+            marker["session_id"] = self._session.session_id
+            self._storage.append_session_event(self._session.session_id, marker)
+        self._session_events.append(marker)
+        self._emit(ControllerEvent("stimulus_event", payload=marker))
+
+        command_payload = {"code": code, "timestamp": timestamp, "payload": details}
+        if self._session:
+            command_payload["session_id"] = self._session.session_id
+        if self._network:
+            self.broadcast_command("event_marker", **command_payload)
+
+    def trigger_flash_sync(self, intensity: float = 1.0, duration_s: float = 0.25) -> StimulusEvent:
+        event = self._stimulus.flash_sync(intensity=intensity, duration_s=duration_s)
+        self.broadcast_command(
+            "flash_sync",
+            intensity=float(intensity),
+            duration_s=float(duration_s),
+            timestamp=event.timestamp,
+        )
+        return event
+
+    def trigger_audio_beep(self, frequency_hz: float = 440.0, duration_s: float = 0.2) -> StimulusEvent:
+        event = self._stimulus.audio_beep(frequency_hz=frequency_hz, duration_s=duration_s)
+        self.broadcast_command(
+            "audio_beep",
+            frequency_hz=float(frequency_hz),
+            duration_s=float(duration_s),
+            timestamp=event.timestamp,
+        )
+        return event
+
+    def trigger_stimulus_video(self, path: Path, autoplay: bool = True) -> StimulusEvent:
+        event = self._stimulus.stimulus_video(path=path, autoplay=autoplay)
+        self.broadcast_command(
+            "stimulus_video",
+            path=str(path),
+            autoplay=bool(autoplay),
+            timestamp=event.timestamp,
+        )
+        return event
+
+    def mark_event(self, label: str, extra: Optional[Dict[str, Any]] = None) -> StimulusEvent:
+        event = self._stimulus.custom_marker(label, extra)
+        return event
+
+    # ---------------------------------------------------------------- sensors
+    def _on_local_sensor_sample(self, sensor_id: str, timestamp: float, value: float) -> None:
+        device_id = f"sensor_{sensor_id}"
+        with self._lock:
+            record = self.devices.get(device_id)
+            if record is None:
+                record = DeviceRecord(
+                    device_id=device_id,
+                    connection_id="local",
+                    address="localhost",
+                    status="streaming",
+                    capabilities={"sensors": ["GSR"], "origin": "pc"},
+                    sensors=["GSR"],
+                )
+                self.devices[device_id] = record
+            record.last_seen = time.time()
+            record.status = "streaming" if self._local_sensors_running else "standby"
+            record.session_active = bool(self._session)
+            record.gsr_samples.append((timestamp, value))
+            record.gsr_stats = self._compute_gsr_stats(list(record.gsr_samples))
+            if len(record.gsr_samples) >= 2:
+                prev_ts = record.gsr_samples[-2][0]
+                delta = max(timestamp - prev_ts, 1e-6)
+                record.info["last_sample_interval_ms"] = delta * 1000.0
+                record.info["instant_sample_rate_hz"] = 1.0 / delta
+            record.info["samples_received"] = int(record.info.get("samples_received", 0)) + 1
+
+        if self._session:
+            self._storage.append_gsr_sample(self._session.session_id, device_id, timestamp, value)
+
+        self._emit(
+            ControllerEvent(
+                "telemetry_gsr",
+                device_id=device_id,
+                payload={"timestamp": timestamp, "value": value, "source": "pc_sensor"},
+            )
+        )
+
+    def is_simulation_enabled(self) -> bool:
+        return self._sensor_manager.is_simulation_enabled()
+
+    def set_simulation_mode(self, enabled: bool) -> bool:
+        restart = self._local_sensors_running and self._session is not None
+        if restart:
+            self._stop_local_sensors()
+        if enabled:
+            self._sensor_manager.enable_simulation_mode()
+        else:
+            self._sensor_manager.disable_simulation_mode()
+        if restart and self._session:
+            self._start_local_sensors()
+        self.broadcast_command("set_simulation_mode", enabled=bool(enabled))
+        self._emit(ControllerEvent("simulation_mode_changed", payload={"enabled": enabled}))
+        return enabled
+
+    def toggle_simulation_mode(self) -> bool:
+        return self.set_simulation_mode(not self.is_simulation_enabled())
+
 
     def start_server(self, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT, use_ssl: bool = False) -> None:
         if self._network:
@@ -477,11 +761,13 @@ class PCControllerCore:
 
         self._network = NetworkServer(host, port, use_ssl, ssl_context, self._handle_network_event)
         self._network.start()
+        self._time_sync_service.start()
 
     def stop_server(self) -> None:
         if self._network:
             self._network.stop()
             self._network = None
+        self._time_sync_service.stop()
 
     def register_listener(self, listener: Callable[[ControllerEvent], None]) -> None:
         self._listeners.append(listener)
@@ -506,22 +792,89 @@ class PCControllerCore:
     def get_session_dir(self, session_id: str) -> Path:
         return self._storage.get_session_dir(session_id)
 
-    def send_command(self, device_id: str, command: str, **parameters: Any) -> bool:
-        message = {
+    def _queue_command_for_offline_devices(self, message: Dict[str, Any]) -> None:
+        snapshot = dict(message)
+        with self._lock:
+            for device_id, record in self.devices.items():
+                if record.connection_id in {"", None} or record.connection_id == "local" or record.status == "connected":
+                    continue
+                queue = self._command_queue.setdefault(device_id, [])
+                queue.append(snapshot.copy())
+                if len(queue) > 32:
+                    queue.pop(0)
+
+    def _drain_offline_queue(self, device_id: str, context: ConnectionContext) -> bool:
+        with self._lock:
+            queued = list(self._command_queue.pop(device_id, []))
+        for message in queued:
+            context.send(message)
+            self._emit(ControllerEvent("command_replayed", device_id=device_id, payload=message))
+        return bool(queued)
+
+    def _sync_device_state(self, device_id: str, context: ConnectionContext) -> None:
+        if not self._session:
+            return
+        sync_command = self._build_command_message(
+            "start_recording",
+            requires_ack=False,
+            session_id=self._session.session_id,
+            metadata=self._session.metadata,
+        )
+        sync_command["replay"] = True
+        context.send(sync_command)
+        self._emit(ControllerEvent("command_replayed", device_id=device_id, payload=sync_command))
+        for event in self._session_events:
+            if event.get("code") in {"session_started"}:
+                continue
+            payload = {
+                "code": event.get("code"),
+                "timestamp": event.get("timestamp"),
+                "payload": event.get("details", {}),
+            }
+            session_id = event.get("session_id") or (self._session.session_id if self._session else None)
+            if session_id:
+                payload["session_id"] = session_id
+            marker_command = self._build_command_message(
+                "event_marker",
+                requires_ack=False,
+                **payload,
+            )
+            marker_command["replay"] = True
+            context.send(marker_command)
+            self._emit(ControllerEvent("command_replayed", device_id=device_id, payload=marker_command))
+
+    def _build_command_message(
+        self,
+        command: str,
+        *,
+        requires_ack: bool = True,
+        **parameters: Any,
+    ) -> Dict[str, Any]:
+        return {
             "type": "command",
             "command": command,
-            "parameters": parameters,
+            "commandId": str(uuid.uuid4()),
+            "requiresAck": requires_ack,
             "timestamp": time.time(),
+            "payload": parameters,
+            "parameters": parameters,
         }
+
+    def send_command(self, device_id: str, command: str, **parameters: Any) -> bool:
+        message = self._build_command_message(command, **parameters)
+        with self._lock:
+            record = self.devices.get(device_id)
+            if record and record.status != "connected":
+                queue = self._command_queue.setdefault(device_id, [])
+                queue.append(message.copy())
+                if len(queue) > 32:
+                    queue.pop(0)
+                return False
         return self._network.send(device_id, message) if self._network else False
 
     def broadcast_command(self, command: str, **parameters: Any) -> int:
-        message = {
-            "type": "command",
-            "command": command,
-            "parameters": parameters,
-            "timestamp": time.time(),
-        }
+        message = self._build_command_message(command, **parameters)
+        self._queue_command_for_offline_devices(message)
         return self._network.broadcast(message) if self._network else 0
 
     def start_recording(self, session_id: Optional[str] = None, metadata: Optional[Dict[str, Any]] = None) -> str:
@@ -534,7 +887,19 @@ class PCControllerCore:
 
         self._session = SessionInfo(session_id=session_id, started_at=time.time(), metadata=metadata)
         self._storage.start_session(session_id, metadata)
+        self._session_events.clear()
+        start_event = {"code": "session_started", "timestamp": self._session.started_at, "session_id": session_id}
+        self._session_events.append(start_event)
+        self._storage.append_session_event(session_id, start_event)
+        local_sensors = self._start_local_sensors()
         self._emit(ControllerEvent("session_started", payload={"session_id": session_id}))
+        if local_sensors:
+            self._emit(
+                ControllerEvent(
+                    "local_sensors_started",
+                    payload={"session_id": session_id, "sensors": local_sensors},
+                )
+            )
         self.broadcast_command("start_recording", session_id=session_id, metadata=metadata)
         return session_id
 
@@ -549,8 +914,19 @@ class PCControllerCore:
             "session_id": session_id,
             "duration_seconds": duration,
             "devices": [record.snapshot() for record in self.devices.values()],
+            "events": list(self._session_events),
         }
+        stop_event = {
+            "code": "session_stopped",
+            "timestamp": time.time(),
+            "session_id": session_id,
+            "duration_seconds": duration,
+        }
+        self._session_events.append(stop_event)
+        self._storage.append_session_event(session_id, stop_event)
+        summary["events"] = list(self._session_events)
         self._storage.finish_session(session_id, summary)
+        self._stop_local_sensors()
         self.broadcast_command("stop_recording", session_id=session_id)
         self._emit(ControllerEvent("session_stopped", payload={"session_id": session_id, "duration": duration}))
         self._session = None
@@ -602,7 +978,7 @@ class PCControllerCore:
             record = self.devices.get(device_id)
             if record:
                 record.status = "disconnected"
-                record.session_active = False
+                record.session_active = bool(self._session)
                 record.last_seen = time.time()
 
         self._emit(
@@ -648,6 +1024,14 @@ class PCControllerCore:
             self._apply_status_update(device_id, context, message)
         elif msg_type in {"telemetry_gsr", "data_gsr"}:
             self._handle_gsr(device_id, message)
+        elif msg_type == "command_ack":
+            self._emit(
+                ControllerEvent(
+                    "command_ack",
+                    device_id=device_id,
+                    payload=message,
+                )
+            )
         elif msg_type in {"frame_rgb", "frame"}:
             self._handle_frame(device_id, message, frame_type="rgb")
         elif msg_type == "frame_thermal":
@@ -656,6 +1040,8 @@ class PCControllerCore:
             self._handle_session_event(device_id, message)
         elif msg_type == "heartbeat":
             self._touch_device(device_id)
+        elif msg_type == "event_marker":
+            self._handle_event_marker(device_id, message)
         elif msg_type == "file_begin":
             self._handle_file_begin(device_id, message)
         elif msg_type == "file_chunk":
@@ -757,6 +1143,7 @@ class PCControllerCore:
                     record.info["last_sync_offset_ms"] = result.get("offset_ms")
                     record.info["last_sync_rtt_ms"] = result.get("rtt_ms")
                     record.info["last_sync_timestamp"] = result.get("timestamp")
+                self._device_offsets[resolved_id] = float(result.get("offset_ms", 0.0))
             self._emit(ControllerEvent("time_sync_completed", device_id=resolved_id, payload=result))
         else:
             self._emit(
@@ -806,6 +1193,9 @@ class PCControllerCore:
                 payload={"record": record.snapshot()},
             )
         )
+        replayed = self._drain_offline_queue(device_id, context)
+        if self._session and not replayed:
+            self._sync_device_state(device_id, context)
         return device_id
 
     def _apply_status_update(self, device_id: str, context: ConnectionContext, message: Dict[str, Any]) -> None:
@@ -864,6 +1254,12 @@ class PCControllerCore:
             record.last_seen = time.time()
             record.gsr_samples.append((timestamp, float(value)))
             record.gsr_stats = self._compute_gsr_stats(list(record.gsr_samples))
+            if len(record.gsr_samples) >= 2:
+                prev_ts = record.gsr_samples[-2][0]
+                delta = max(timestamp - prev_ts, 1e-6)
+                record.info["last_sample_interval_ms"] = delta * 1000.0
+                record.info["instant_sample_rate_hz"] = 1.0 / delta
+            record.info["samples_received"] = int(record.info.get("samples_received", 0)) + 1
 
         if self._session:
             self._storage.append_gsr_sample(self._session.session_id, device_id, timestamp, float(value))
@@ -971,6 +1367,17 @@ class PCControllerCore:
             if record:
                 record.session_active = event == "started"
 
+    def _handle_event_marker(self, device_id: str, message: Dict[str, Any]) -> None:
+        code = message.get("code") or message.get("label") or "event"
+        timestamp = float(message.get("timestamp", time.time()))
+        info = {k: v for k, v in message.items() if k not in {"type", "code", "label", "timestamp", "device_id"}}
+        marker = {"code": code, "timestamp": timestamp, "device_id": device_id, "details": info}
+        if self._session:
+            marker["session_id"] = self._session.session_id
+            self._storage.append_session_event(self._session.session_id, marker)
+        self._session_events.append(marker)
+        self._emit(ControllerEvent("event_marker", device_id=device_id, payload=marker))
+
     def _handle_file_begin(self, device_id: str, message: Dict[str, Any]) -> None:
         session_id = message.get("session_id") or (self._session.session_id if self._session else None)
         filename = message.get("filename")
@@ -1023,12 +1430,16 @@ class PCControllerCore:
         filename = message.get("filename")
         if not session_id or not filename:
             return
-        self._storage.finalize_file(session_id, device_id, filename)
+        digest = self._storage.finalize_file(session_id, device_id, filename)
         self._emit(
             ControllerEvent(
                 "file_transfer_end",
                 device_id=device_id,
-                payload={"session_id": session_id, "filename": filename},
+                payload={
+                    "session_id": session_id,
+                    "filename": filename,
+                    **({"sha256": digest} if digest else {}),
+                },
             )
         )
 
@@ -1059,38 +1470,77 @@ def run_cli(controller: PCControllerCore) -> None:
 
     try:
         while True:
-            command = input("> ").strip().lower()
-            if command in {"quit", "exit"}:
+            raw = input("> ").strip()
+            if not raw:
+                continue
+            parts = raw.split()
+            cmd = parts[0].lower()
+
+            if cmd in {"quit", "exit"}:
                 break
 
-            if command == "help":
-                print("Commands: help, devices, status, start, stop, quit")
+            if cmd == "help":
+                print(
+                    "Commands: help, devices, status, start, stop, flash, beep, marker <label>, simulate [on|off|toggle], quit"
+                )
                 continue
 
-            if command == "devices":
+            if cmd == "devices":
                 for device in controller.list_devices():
                     print(json.dumps(device, indent=2))
                 continue
 
-            if command == "status":
+            if cmd == "status":
                 session = controller.get_session()
                 if session:
                     print(f"Active session: {session.session_id} (started {time.ctime(session.started_at)})")
                 else:
                     print("No active session")
+                print(f"Simulation: {'on' if controller.is_simulation_enabled() else 'off'}")
                 continue
 
-            if command == "start":
+            if cmd == "start":
                 session_id = controller.start_recording()
                 print(f"Session {session_id} started")
                 continue
 
-            if command == "stop":
+            if cmd == "stop":
                 session_id = controller.stop_recording()
                 if session_id:
                     print(f"Session {session_id} stopped")
                 else:
                     print("No active session to stop")
+                continue
+
+            if cmd == "flash":
+                event = controller.trigger_flash_sync()
+                print(f"Flash sync triggered at {event.timestamp:.2f}s")
+                continue
+
+            if cmd == "beep":
+                event = controller.trigger_audio_beep()
+                print(f"Audio sync beep triggered at {event.timestamp:.2f}s")
+                continue
+
+            if cmd == "marker":
+                label = raw[len(parts[0]) :].strip()
+                if not label:
+                    label = time.strftime("marker_%H%M%S")
+                event = controller.mark_event(label)
+                print(f"Marker '{label}' recorded at {event.timestamp:.2f}s")
+                continue
+
+            if cmd == "simulate":
+                arg = parts[1].lower() if len(parts) > 1 else "toggle"
+                if arg in {"on", "enable"}:
+                    controller.set_simulation_mode(True)
+                    print("Simulation mode enabled")
+                elif arg in {"off", "disable"}:
+                    controller.set_simulation_mode(False)
+                    print("Simulation mode disabled")
+                else:
+                    state = controller.toggle_simulation_mode()
+                    print(f"Simulation mode {'enabled' if state else 'disabled'}")
                 continue
 
             print("Unknown command. Type 'help' for options.")
@@ -1102,355 +1552,13 @@ def run_cli(controller: PCControllerCore) -> None:
 
 
 try:  # pragma: no cover - GUI path exercised in integration tests
-    from PyQt6.QtCore import QObject, Qt, QTimer, pyqtSignal
-    from PyQt6.QtGui import QPixmap
-    from PyQt6.QtWidgets import (
-        QApplication,
-        QFileDialog,
-        QHBoxLayout,
-        QLabel,
-        QMainWindow,
-        QMessageBox,
-        QPushButton,
-        QSplitter,
-        QTabWidget,
-        QTextEdit,
-        QTreeWidget,
-        QTreeWidgetItem,
-        QVBoxLayout,
-        QWidget,
-    )
-
-    import pyqtgraph as pg
-
-    GUI_AVAILABLE = True
-
-
-    class ControllerBridge(QObject):
-        event_received = pyqtSignal(object)
-
-        def __init__(self, controller: PCControllerCore):
-            super().__init__()
-            controller.register_listener(self._forward)
-
-        def _forward(self, event: ControllerEvent) -> None:
-            self.event_received.emit(event)
-
-
-    class MainWindow(QMainWindow):
-        def __init__(self, controller: PCControllerCore):
-            super().__init__()
-            self.controller = controller
-            self.bridge = ControllerBridge(controller)
-            self.bridge.event_received.connect(self._handle_event)
-
-            self.device_items: Dict[str, QTreeWidgetItem] = {}
-            self.gsr_history: Dict[str, Deque[Tuple[float, float]]] = defaultdict(lambda: deque(maxlen=600))
-            self.gsr_curves: Dict[str, pg.PlotDataItem] = {}
-            self._rgb_pixmap: Optional[QPixmap] = None
-            self._thermal_pixmap: Optional[QPixmap] = None
-
-            self._setup_ui()
-
-            self._plot_timer = QTimer(self)
-            self._plot_timer.timeout.connect(self._refresh_plot)
-            self._plot_timer.start(250)
-
-        def _setup_ui(self) -> None:
-            self.setWindowTitle("IRCamera PC Controller")
-            self.resize(1200, 800)
-
-            central = QWidget()
-            self.setCentralWidget(central)
-            root_layout = QVBoxLayout(central)
-
-            controls = QHBoxLayout()
-            root_layout.addLayout(controls)
-
-            self.start_btn = QPushButton("Start Session")
-            self.start_btn.clicked.connect(self._start_session)
-            controls.addWidget(self.start_btn)
-
-            self.stop_btn = QPushButton("Stop Session")
-            self.stop_btn.clicked.connect(self._stop_session)
-            self.stop_btn.setEnabled(False)
-            controls.addWidget(self.stop_btn)
-
-            self.sync_btn = QPushButton("Sync Devices")
-            self.sync_btn.clicked.connect(self._sync_devices)
-            controls.addWidget(self.sync_btn)
-
-            self.export_btn = QPushButton("Export Data")
-            self.export_btn.clicked.connect(self._export_data)
-            controls.addWidget(self.export_btn)
-
-            controls.addStretch(1)
-
-            splitter = QSplitter()
-            root_layout.addWidget(splitter, stretch=1)
-
-            self.device_tree = QTreeWidget()
-            self.device_tree.setHeaderLabels(
-                ["Device", "Status", "Sensors", "Last Update", "Session", "Last Sync"]
-            )
-            self.device_tree.setColumnWidth(0, 160)
-            self.device_tree.setColumnWidth(1, 90)
-            self.device_tree.setColumnWidth(2, 140)
-            self.device_tree.setColumnWidth(3, 120)
-            self.device_tree.setColumnWidth(4, 80)
-            self.device_tree.setColumnWidth(5, 180)
-            splitter.addWidget(self.device_tree)
-
-            self.tabs = QTabWidget()
-            splitter.addWidget(self.tabs)
-
-            # Telemetry tab
-            telemetry_tab = QWidget()
-            telemetry_layout = QVBoxLayout(telemetry_tab)
-            self.gsr_plot = pg.PlotWidget(title="GSR (µS)")
-            self.gsr_plot.setLabel("left", "Conductance", units="µS")
-            self.gsr_plot.setLabel("bottom", "Seconds")
-            self.gsr_plot.addLegend()
-            telemetry_layout.addWidget(self.gsr_plot)
-            self.tabs.addTab(telemetry_tab, "Telemetry")
-
-            # Frames tab
-            frames_tab = QWidget()
-            frames_layout = QHBoxLayout(frames_tab)
-            self.rgb_label = QLabel("RGB frame")
-            self.rgb_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            self.rgb_label.setMinimumSize(320, 240)
-            frames_layout.addWidget(self.rgb_label)
-            self.thermal_label = QLabel("Thermal frame")
-            self.thermal_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            self.thermal_label.setMinimumSize(320, 240)
-            frames_layout.addWidget(self.thermal_label)
-            self.tabs.addTab(frames_tab, "Frames")
-
-            # Log tab
-            log_tab = QWidget()
-            log_layout = QVBoxLayout(log_tab)
-            self.log_text = QTextEdit()
-            self.log_text.setReadOnly(True)
-            log_layout.addWidget(self.log_text)
-            self.tabs.addTab(log_tab, "Log")
-
-        def _start_session(self) -> None:
-            try:
-                session_id = self.controller.start_recording()
-                QMessageBox.information(self, "Session Started", f"Session {session_id} started.")
-                self.start_btn.setEnabled(False)
-                self.stop_btn.setEnabled(True)
-            except Exception as exc:  # pragma: no cover
-                QMessageBox.critical(self, "Error", str(exc))
-
-        def _stop_session(self) -> None:
-            session_id = self.controller.stop_recording()
-            if session_id:
-                QMessageBox.information(self, "Session Stopped", f"Session {session_id} stopped.")
-            self.start_btn.setEnabled(True)
-            self.stop_btn.setEnabled(False)
-
-        def _sync_devices(self) -> None:
-            count = self.controller.broadcast_command("sync_request", server_time=time.time())
-            self._append_log(f"Sync request sent to {count} device(s)")
-
-        def _export_data(self) -> None:
-            # Pick session directory (active session preferred, otherwise latest)
-            session = self.controller.get_session()
-            storage_dir = self.controller.get_storage_dir()
-            if session:
-                session_id = session.session_id
-            else:
-                session_dirs = [p for p in storage_dir.iterdir() if p.is_dir()]
-                if not session_dirs:
-                    QMessageBox.information(self, "Export", "No sessions available yet.")
-                    return
-                session_dirs.sort(key=lambda p: p.stat().st_mtime, reverse=True)
-                session_id = session_dirs[0].name
-
-            source_dir = self.controller.get_session_dir(session_id)
-            default_path = storage_dir / f"{session_id}.zip"
-            save_path, _ = QFileDialog.getSaveFileName(
-                self,
-                "Export Session Archive",
-                str(default_path),
-                "Zip Archives (*.zip)",
-            )
-            if not save_path:
-                return
-
-            target = Path(save_path)
-            base = target.with_suffix("")
-            shutil.make_archive(str(base), "zip", root_dir=source_dir)
-            QMessageBox.information(self, "Export Complete", f"Session archived to {base}.zip")
-
-        def _handle_event(self, event: ControllerEvent) -> None:
-            handlers = {
-                "device_registered": self._on_device_registered,
-                "status_update": self._on_status_update,
-                "device_disconnected": self._on_device_disconnected,
-                "telemetry_gsr": self._on_gsr_sample,
-                "frame_rgb": lambda e: self._update_image(e, frame_type="rgb"),
-                "frame_thermal": lambda e: self._update_image(e, frame_type="thermal"),
-                "session_started": self._on_session_started,
-                "session_stopped": self._on_session_stopped,
-                "time_sync_started": self._on_time_sync_started,
-                "time_sync_completed": self._on_time_sync_completed,
-                "time_sync_failed": self._on_time_sync_failed,
-            }
-            handler = handlers.get(event.type, self._on_generic_event)
-            handler(event)
-
-        def _on_device_registered(self, event: ControllerEvent) -> None:
-            payload = event.payload.get("record", {})
-            self._update_device_row(payload)
-            self._append_log(f"Device {event.device_id} registered.")
-
-        def _on_status_update(self, event: ControllerEvent) -> None:
-            payload = event.payload
-            snapshot = self.controller.devices.get(
-                event.device_id).snapshot() if event.device_id in self.controller.devices else payload
-            self._update_device_row(snapshot)
-
-        def _on_device_disconnected(self, event: ControllerEvent) -> None:
-            record = self.controller.devices.get(event.device_id)
-            if record:
-                self._update_device_row(record.snapshot())
-            self._append_log(f"Device {event.device_id} disconnected.")
-
-        def _on_session_started(self, event: ControllerEvent) -> None:
-            self.start_btn.setEnabled(False)
-            self.stop_btn.setEnabled(True)
-            self._append_log(f"Session {event.payload.get('session_id')} started.")
-
-        def _on_session_stopped(self, event: ControllerEvent) -> None:
-            self.start_btn.setEnabled(True)
-            self.stop_btn.setEnabled(False)
-            self._append_log(f"Session {event.payload.get('session_id')} stopped.")
-
-        def _on_gsr_sample(self, event: ControllerEvent) -> None:
-            history = self.gsr_history[event.device_id]
-            history.append((event.payload["timestamp"], event.payload["value"]))
-
-        def _on_time_sync_started(self, event: ControllerEvent) -> None:
-            device = event.device_id or "unknown device"
-            self._append_log(f"Time sync started for {device}.")
-
-        def _on_time_sync_completed(self, event: ControllerEvent) -> None:
-            device = event.device_id or "unknown device"
-            payload = event.payload or {}
-            offset = payload.get("offset_ms")
-            rtt = payload.get("rtt_ms")
-            details = ""
-            if offset is not None and rtt is not None:
-                details = f" offset={offset} ms, RTT={rtt} ms"
-            self._append_log(f"Time sync completed for {device}.{details}")
-            if event.device_id and event.device_id in self.controller.devices:
-                snapshot = self.controller.devices[event.device_id].snapshot()
-                self._update_device_row(snapshot)
-
-        def _on_time_sync_failed(self, event: ControllerEvent) -> None:
-            device = event.device_id or "unknown device"
-            reason = ""
-            if event.payload and event.payload.get("error"):
-                reason = f": {event.payload.get('error')}"
-            self._append_log(f"Time sync failed for {device}{reason}.")
-
-        def _on_generic_event(self, event: ControllerEvent) -> None:
-            self._append_log(f"{event.type}: {event.payload}")
-
-        def _update_device_row(self, snapshot: Dict[str, Any]) -> None:
-            device_id = snapshot.get("device_id")
-            if not device_id:
-                return
-            item = self.device_items.get(device_id)
-            if not item:
-                item = QTreeWidgetItem([device_id, "", "", "", "", ""])
-                self.device_tree.addTopLevelItem(item)
-                self.device_items[device_id] = item
-            item.setText(1, snapshot.get("status", "unknown"))
-            sensors = ", ".join(snapshot.get("sensors", []))
-            item.setText(2, sensors)
-            last_seen = snapshot.get("last_seen")
-            if last_seen:
-                item.setText(3, time.strftime("%H:%M:%S", time.localtime(last_seen)))
-            item.setText(4, "Yes" if snapshot.get("session_active") else "No")
-            info = snapshot.get("info") or {}
-            offset = info.get("last_sync_offset_ms")
-            rtt = info.get("last_sync_rtt_ms")
-            timestamp = info.get("last_sync_timestamp")
-            if offset is not None and rtt is not None:
-                if timestamp:
-                    ts_str = time.strftime("%H:%M:%S", time.localtime(timestamp))
-                    item.setText(5, f"{offset} ms / {rtt} ms ({ts_str})")
-                else:
-                    item.setText(5, f"{offset} ms / {rtt} ms")
-            else:
-                item.setText(5, "n/a")
-
-        def _update_image(self, event: ControllerEvent, frame_type: str) -> None:
-            frame_b64 = event.payload.get("frame_b64")
-            if not isinstance(frame_b64, str):
-                return
-            image_bytes = base64.b64decode(frame_b64)
-            pixmap = QPixmap()
-            if not pixmap.loadFromData(image_bytes):
-                return
-
-            if frame_type == "rgb":
-                self._rgb_pixmap = pixmap
-                self._apply_pixmap(self.rgb_label, pixmap)
-            else:
-                self._thermal_pixmap = pixmap
-                self._apply_pixmap(self.thermal_label, pixmap)
-
-        def _refresh_plot(self) -> None:
-            for device_id, history in self.gsr_history.items():
-                if device_id not in self.gsr_curves:
-                    color = pg.intColor(len(self.gsr_curves))
-                    curve = self.gsr_plot.plot(pen=pg.mkPen(color=color, width=2), name=device_id)
-                    self.gsr_curves[device_id] = curve
-
-                if not history:
-                    continue
-
-                base_ts = history[0][0]
-                xs = [ts - base_ts for ts, _ in history]
-                ys = [value for _, value in history]
-                self.gsr_curves[device_id].setData(xs, ys)
-
-        def _apply_pixmap(self, label: QLabel, pixmap: Optional[QPixmap]) -> None:
-            if not pixmap:
-                label.setText("No frame")
-                label.setPixmap(QPixmap())
-                return
-            scaled = pixmap.scaled(label.size(), Qt.AspectRatioMode.KeepAspectRatio,
-                                   Qt.TransformationMode.SmoothTransformation)
-            label.setPixmap(scaled)
-
-        def resizeEvent(self, event) -> None:  # type: ignore[override]
-            super().resizeEvent(event)
-            self._apply_pixmap(self.rgb_label, self._rgb_pixmap)
-            self._apply_pixmap(self.thermal_label, self._thermal_pixmap)
-
-        def _append_log(self, message: str) -> None:
-            timestamp = time.strftime("%H:%M:%S")
-            self.log_text.append(f"[{timestamp}] {message}")
-
-
-    def run_gui(controller: PCControllerCore) -> None:
-        app = QApplication.instance() or QApplication([])
-        window = MainWindow(controller)
-        window.show()
-        app.exec()
-
+    from gui_app import GUI_AVAILABLE, run_gui  # type: ignore[assignment]
 except Exception:  # pragma: no cover - GUI optional
     GUI_AVAILABLE = False
 
-
-    def run_gui(_: PCControllerCore) -> None:
+    def run_gui(_: "PCControllerCore") -> None:
         raise RuntimeError("PyQt6 + pyqtgraph are required for the GUI")
+
 
 
 def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:
@@ -1465,6 +1573,12 @@ def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:
     parser.add_argument("--storage-dir", default=str(Path("pc_data")), help="Directory for session storage")
     parser.add_argument("--cli", action="store_true", help="Force CLI even if GUI is available")
     parser.add_argument("--log-level", default="INFO", help="Logging level (DEBUG, INFO, ...)")
+    parser.add_argument("--config", help="Path to YAML/JSON configuration file")
+    parser.add_argument(
+        "--simulate-sensors",
+        action="store_true",
+        help="Force simulation mode for local sensors (overrides config)",
+    )
     return parser.parse_args(argv)
 
 
@@ -1475,7 +1589,31 @@ def main(argv: Optional[Iterable[str]] = None) -> None:
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     )
 
-    controller = PCControllerCore(Path(args.storage_dir).expanduser())
+    config_data: Dict[str, Any] = {}
+    if args.config:
+        config_path = Path(args.config).expanduser()
+        if config_path.exists():
+            try:
+                text = config_path.read_text(encoding="utf-8")
+                suffix = config_path.suffix.lower()
+                if suffix in {".yaml", ".yml"} and yaml is not None:
+                    config_data = yaml.safe_load(text) or {}
+                elif suffix == ".json":
+                    config_data = json.loads(text)
+                elif yaml is not None:
+                    config_data = yaml.safe_load(text) or {}
+                else:
+                    config_data = json.loads(text)
+            except Exception as exc:
+                logger.error("Failed to load config %s: %s", config_path, exc)
+                config_data = {}
+        else:
+            logger.warning("Config file %s not found; proceeding with defaults", config_path)
+    if args.simulate_sensors:
+        simulation_cfg = config_data.setdefault("simulation", {})
+        simulation_cfg["force"] = True
+
+    controller = PCControllerCore(Path(args.storage_dir).expanduser(), config=config_data)
     controller.start_server(host=args.host, port=args.port, use_ssl=args.ssl)
 
     if args.cli:

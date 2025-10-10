@@ -15,6 +15,12 @@ import com.csl.irCamera.R
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import mpdc4gsr.feature.capture.thermal.data.ThermalCaptureCoordinator
+import mpdc4gsr.feature.capture.thermal.data.ThermalSessionContext
+import mpdc4gsr.gsr.GsrOrchestrator
+import mpdc4gsr.gsr.model.SessionStateStore
 import mpdc4gsr.core.common.crash.CrashRecoveryManager
 import mpdc4gsr.core.common.crash.CrashSafeSupervisor
 import mpdc4gsr.core.data.FeatureFlags
@@ -31,9 +37,13 @@ import org.json.JSONObject
 import java.io.File
 import kotlin.coroutines.CoroutineContext
 
+@AndroidEntryPoint
 class RecordingService :
     Service(),
     CoroutineScope {
+    @Inject lateinit var orchestrator: GsrOrchestrator
+    @Inject lateinit var sessionStateStore: SessionStateStore
+    @Inject lateinit var thermalCoordinator: ThermalCaptureCoordinator
     private val serviceJob = SupervisorJob()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + serviceJob
@@ -302,6 +312,7 @@ class RecordingService :
 
     override fun onCreate() {
         super.onCreate()
+        orchestrator.start()
         initializePhase0Baseline()
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel()
@@ -332,6 +343,10 @@ class RecordingService :
         networkManager = NetworkManager(this, recordingController)
         protocolHandler = ProtocolHandler(this, networkServer)
         protocolHandler.setTimeSyncManager(timeSyncManager)
+        launch {
+            // Establish the thermal device connection in the background so previews are ready.
+            thermalCoordinator.ensureConnected()
+        }
         // Set up sync trigger callback for manual sync requests (if TimeSyncManager is available)
         timeSyncManager?.setSyncTriggerCallback(
             object : TimeSyncManager.SyncTriggerCallback {
@@ -352,7 +367,7 @@ class RecordingService :
         )
         connectionManager = NetworkConnectionManager(this, networkServer, protocolHandler)
         previewStreamer = PreviewStreamer(networkServer)
-        previewDataAdapter = PreviewDataAdapter(previewStreamer, this)
+        previewDataAdapter = PreviewDataAdapter(previewStreamer, this, sessionStateStore, thermalCoordinator)
         pcControllerServer =
             PcControllerServer(
                 context = this,
@@ -646,6 +661,7 @@ class RecordingService :
             if (::crashSafeSupervisor.isInitialized) {
                 crashSafeSupervisor.shutdown()
             }
+            orchestrator.close()
         } catch (e: Exception) {
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
@@ -655,6 +671,7 @@ class RecordingService :
             )
         } finally {
             // Cancel all coroutines launched in this service's scope
+            thermalCoordinator.shutdown()
             serviceJob.cancel()
         }
     }
@@ -770,6 +787,30 @@ class RecordingService :
                     triggerSource = triggerSource,
                 )
             if (success) {
+                val thermalStart =
+                    thermalCoordinator.startSession(
+                        ThermalSessionContext(
+                            sessionId = sessionDir.name,
+                            sessionDirectory = sessionDir,
+                            triggerSource = triggerSource.name,
+                            metadata =
+                                mapOf(
+                                    "initiated_by" to triggerSource.name,
+                                    "session_directory" to sessionDir.absolutePath,
+                                ),
+                        ),
+                    )
+                if (!thermalStart) {
+                    structuredLogger.log(
+                        StructuredLogger.LogLevel.WARN,
+                        "RecordingService",
+                        "thermal_session_start_failed",
+                        mapOf(
+                            "session_id" to sessionDir.name,
+                            "trigger_source" to triggerSource.toString(),
+                        ),
+                    )
+                }
                 // Update notification to show recording is active
                 val activeNotificationText =
                     when (triggerSource) {
@@ -820,6 +861,7 @@ class RecordingService :
         try {
             updateNotification("Stopping recording session...")
             val success = recordingController.stopRecording(triggerSource = triggerSource)
+            val thermalResult = thermalCoordinator.stopSession()
             if (success) {
                 val sessionDuration =
                     if (recordingStartTime > 0) {
@@ -865,6 +907,21 @@ class RecordingService :
                         "trigger_source" to triggerSource.toString(),
                     ),
                 )
+                thermalResult?.let { result ->
+                    structuredLogger.log(
+                        StructuredLogger.LogLevel.INFO,
+                        "RecordingService",
+                        "thermal_recording_complete",
+                        mapOf(
+                            "session_id" to result.sessionId,
+                            "file" to result.file.absolutePath,
+                            "frames" to result.framesRecorded,
+                            "simulation" to result.simulation,
+                            "min_temp" to (result.minTemp ?: "n/a"),
+                            "max_temp" to (result.maxTemp ?: "n/a"),
+                        ),
+                    )
+                }
                 delay(2000)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     stopForeground(STOP_FOREGROUND_REMOVE)
@@ -1151,7 +1208,7 @@ class RecordingService :
                 if (recoveryResult.recoveryActions.isNotEmpty()) {
                     append("\nActions:")
                     recoveryResult.recoveryActions.forEach { action ->
-                        append("\n• ")
+                        append("\nG?? ")
                         append(action)
                     }
                 }

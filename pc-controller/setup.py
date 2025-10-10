@@ -1,3 +1,6 @@
+"""Setup helpers for building the native backend."""
+# coverage: ignore file
+
 import os
 import platform
 

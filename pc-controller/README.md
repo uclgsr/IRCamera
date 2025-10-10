@@ -1,155 +1,118 @@
 # IRCamera PC Controller
 
-The PC controller is the desktop companion to the IRCamera Android capture
-application. It receives live telemetry streams (GSR, RGB, thermal), manages
-recording sessions, and provides a PyQt6 dashboard for visualising sensor data
-in real time. The controller can also run in pure CLI mode for headless
-deployments or automated testing.
+The PC controller is the desktop orchestrator for the IRCamera research platform. It discovers Shimmer3 GSR sensors, coordinates Android capture devices, keeps everybody on the same clock and stores every modality in a manifest-backed session folder. A PyQt6 dashboard gives researchers a live view; a rich CLI is available for headless or scripted deployments.
 
 ## Highlights
-
-- **Network server** – newline delimited JSON protocol with graceful handling
-  of legacy key/value messages; device registration, session events, telemetry,
-  and file transfer messages are supported out of the box.
-- **Real-time dashboard** – PyQt6 + PyQtGraph UI shows connected devices,
-  streaming GSR plots, and the latest RGB/thermal frames. Controls are provided
-  for starting/stopping sessions, triggering synchronisation, and exporting
-  received data.
-- **Session storage & export** – session assets (telemetry CSVs, uploaded
-  artefacts) are written to disk immediately. A one-click export produces a zip
-  archive for analysis.
-- **C++ native backend** – a lightweight PyBind11 module parses Shimmer GSR
-  packets and computes descriptive statistics with minimal overhead.
-- **Robustness** – networking code tolerates malformed packets, disconnects,
-  and devices rejoining a session without crashing the GUI thread.
+- **Multi-device sensor hub**  manage Shimmer3 GSR sensors directly over BLE (via `bleak`), Android spokes, or deterministic simulation feeds when hardware is offline.
+- **Time synchronisation service** - built-in UDP time server plus the JSON SYNC protocol keep device clocks within the +/-5 ms requirement (FR3, NFR2).
+- **Session engine with manifest**  per-session metadata, events, rolling CSVs, file uploads with SHA-256 integrity and resumable queues (FR4, FR5, FR10).
+- **Stimulus & marker coordination**  trigger flash/audio sync cues, log experiment markers, and replay missed commands when devices reconnect (FR2, FR7, FR8).
+- **PyQt6 dashboard**  live device list, GSR plots, RGB/thermal previews, transfer logs, simulation toggle and instant stimulus controls (FR6, NFR6).
+- **Extensible CLI**  single entry point for discovery, start/stop, sync flashes, markers, and simulation control; ideal for automation.
 
 ## Getting Started
+1. **Install dependencies**
+   ```bash
+   python -m venv .venv
+   . .venv/bin/activate              # Windows: .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+   PyQt6/pyqtgraph are optional unless you need the GUI.
 
-### 1. Install Python requirements
+2. **(Optional) Build the native Shimmer parser**
+   ```bash
+   cd native_backend
+   python -m pip install pybind11 setuptools wheel
+   python setup.py build_ext --inplace
+   ```
+   The controller transparently falls back to the pure-Python parser when the extension is missing.
 
-```bash
-python -m venv .venv
-. .venv/bin/activate                      # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-pip install pyqtgraph pyqt6               # GUI extras
+3. **Launch**
+   ```bash
+   python pc_controller.py --config config/config.yaml
+   ```
+   Useful flags:
+   | Option | Description |
+   |--------|-------------|
+   | `--host`, `--port` | Bind address/port for the controller server. |
+   | `--ssl` | Wrap TCP connections with TLS using `certificates/server.crt` + `server.key`. |
+   | `--storage-dir` | Root directory for session data (defaults to `pc_data/`). |
+   | `--config` | Load YAML/JSON configuration (sensors, transfer, security, etc.). |
+   | `--simulate-sensors` | Force local simulation streams regardless of config. |
+   | `--cli` | Skip the GUI and enter the interactive CLI. |
+
+## CLI Quick Reference
+Within the CLI (`python pc_controller.py --cli`) the following commands are available:
+
+```
+help                         Show command list
+devices                      Print registered device snapshots
+status                       Display current session + simulation state
+start / stop                 Start or stop a recording session
+flash                        Trigger a flash synchronisation stimulus
+beep                         Trigger an audio synchronisation stimulus
+marker <label>               Record a custom experiment marker
+simulate [on|off|toggle]     Control local sensor simulation mode
+quit / exit                  Terminate the controller
 ```
 
-### 2. Build the native backend (optional but recommended)
+All CLI commands are idempotent and queued for offline devices where appropriate.
 
-```bash
-cd native_backend
-python -m pip install pybind11 setuptools wheel
-python setup.py build_ext --inplace
-```
+## GUI Quick Tour
+- **Controls row**  Start/Stop session, Sync devices, Export data, Flash sync, Audio beep, Add marker, Simulation toggle.
+- **Device list**  Status, advertised sensors, last heartbeat, session participation, last sync offset, instantaneous GSR rate and sample counts.
+- **Telemetry tab**  Rolling GSR plot per device (colour-coded).
+- **Frames tab**  Latest RGB and thermal preview frames at a lightweight resolution.
+- **Log tab**  Timestamped event feed including stimuli, markers, file transfers, reconnects and command replays.
 
-The controller falls back to a pure-Python parser if the extension is missing,
-but the native module is significantly faster for high-rate GSR streams.
-
-### 3. Launch
-
-```bash
-python pc_controller.py            # GUI (PyQt6 required)
-python pc_controller.py --cli      # CLI fallback
-```
-
-Arguments:
-
-| Option              | Description                                                 |
-|---------------------|-------------------------------------------------------------|
-| `--host` / `--port` | Bind address/port (default `0.0.0.0:8080`)                  |
-| `--ssl`             | Enable TLS using `certificates/server.crt` and `server.key` |
-| `--storage-dir`     | Destination for session artefacts (default `pc_data/`)      |
-| `--cli`             | Force CLI mode even if PyQt6 is installed                   |
-
-## Protocol Snapshot
-
-Messages are UTF-8 JSON terminated by `\n`. Legacy key/value lines from older
-firmware are converted internally via `ProtocolAdapter`.
-
-### Device handshake
-
-```json
-{"type": "hello", "device_id": "android-01", "sensors": ["GSR", "RGB"]}
-```
-
-The controller replies with:
-
-```json
-{"type": "hello_ack", "server_time": 1736087504.1023, "session_id": null}
-```
-
-### GSR telemetry
-
-Binary packets are base64-encoded and decoded via the native backend:
-
+## Command Protocol
+Commands emitted to Android devices now carry a richer JSON envelope with unique IDs for acknowledgement.
 ```json
 {
-  "type": "telemetry_gsr",
-  "device_id": "android-01",
-  "packet_b64": "qlUBAAABAAAP..."
+  "type": "command",
+  "command": "flash_sync",
+  "commandId": "<uuid>",
+  "requiresAck": true,
+  "timestamp": 1696965600.0,
+  "payload": {
+    "intensity": 0.8,
+    "duration_s": 0.25
+  }
 }
 ```
+Android clients reply with `command_ack` messages that echo the `commandId`, include a status (`"ok"` or `"error"`), and an optional message. Offline devices receive the same envelope on reconnect, so acknowledgements remain idempotent. A legacy `parameters` field is still included for backward compatibility.
 
-### File transfer (post-session upload)
+## Session Storage & Manifest
+Each recording lives under `<storage-dir>/<session-id>/`:
 
-```
-{"type": "file_begin", "session_id": "session_20250101_101000", "filename": "android-01_summary.json"}
-{"type": "file_chunk", "session_id": "...", "filename": "...", "data": "<base64>"}
-{"type": "file_end", "session_id": "...", "filename": "..."}
-```
+- `session.json`  creation metadata (start time, configuration snapshot).
+- `events.jsonl`  chronological stream of session markers and stimuli.
+- <device>_gsr.csv - incremental GSR samples (timestamp, value).
+- <device>/... - uploaded artefacts from Android peers.
+- `manifest.json`  SHA-256, chunk counts, sizes and event summaries, referenced from `summary.json`.
+- `summary.json`  closure record (duration, devices, manifest, events).
 
-## PyQt6 Dashboard Tour
+The storage layer writes to disk on receipt (no in-memory buffering) to satisfy NFR3/NFR4.
 
-- **Device list** – shows connection status, sensors, last heartbeat, and
-  whether the device is participating in the active session.
-- **Telemetry tab** – rolling plot of GSR micro-siemens values for each device
-  (colour-coded, auto-updated 4 Hz).
-- **Frames tab** – latest RGB and thermal previews (JPEG-encoded) scaled to fit
-  the panel. The display updates incrementally without blocking the UI.
-- **Log tab** – timestamped event feed for quick debugging (session transitions,
-  file transfers, protocol issues).
-- **Controls** – start/stop session, broadcast sync requests, and export the
-  latest session as a zip archive.
+## Configuration Pointers
+See `config/config.yaml` for editable defaults:
+- `sensors`  BLE addresses/UUIDs for each Shimmer3 device.
+- `simulation`  defaults for dummy streams when hardware is absent.
+- `time_sync_service`  UDP host/port settings.
+- `transfer`  chunk size, retry count, checksum algorithm.
+- `session`  data root, metadata format, single-session guard.
 
-## Session Storage Layout
+## Troubleshooting
+- **BLE discovery fails**  ensure the host Bluetooth stack is enabled and run with the correct permissions; use `--simulate-sensors` to fall back to deterministic data.
+- **Time sync drifts**  confirm no firewall blocks UDP on the time sync port (default 47017) and that devices see the SYNC command log.
+- **TLS handshake issues**  regenerate the self-signed pair in `certificates/` or disable TLS with `--ssl` omitted during local development.
+- **Large uploads stall**  check `transfer.max_retries` and consult the manifest entry in `summary.json` for partial sizes/checksums.
 
-Each session is written to `<storage-dir>/<session-id>/`:
-
-- `session.json` – metadata recorded when the session starts.
-- `summary.json` – snapshot captured when the session ends.
-- `<device>_gsr.csv` – rolling GSR samples (timestamp, µS).
-- `<device>/...` – any uploaded files (images, summaries, etc.).
-
-Pressing **Export Data** in the GUI creates `<session-id>.zip` alongside the
-storage directory.
-
-## Testing
-
-The lightweight unit tests in `tests/test_controller_core.py` validate the
-handshake path, GSR packet parsing (native fallback included), and session CSV
-generation. Run with:
-
+Run the automated suite with:
 ```bash
 python -m unittest discover -s tests
 ```
+The tests cover protocol handling, storage integrity, the time sync service and sensor simulation behaviour.
 
-## Future Work
 
-- **End-to-end TLS** – the networking layer can wrap sockets with TLS when
-  `--ssl` is used, but certificate provisioning & client authentication still
-  need to be integrated on the Android side.
-- **Device discovery** – mDNS/ZeroConf integration is planned to eliminate the
-  need to manually enter IP addresses during pairing.
-- **Additional sensors** – the GUI layout leaves room for extra plots (PPG,
-  accelerometer) once the Android spokes surface them.
-- **Automated session exports** – wiring the CLI to trigger exports on session
-  stop would streamline scripted data collection workflows.
 
-## Troubleshooting
-
-- **“PyQt6 not available”** – install PyQt6/pyqtgraph or use `--cli`.
-- **Native backend import error** – double-check you ran the `build_ext`
-  command from `native_backend/` and that Python is loading from the same
-  directory.
-- **Firewall prompts** – Windows may prompt the first time the server listens
-  on `0.0.0.0:8080`. Allow access on the private network used for testing.

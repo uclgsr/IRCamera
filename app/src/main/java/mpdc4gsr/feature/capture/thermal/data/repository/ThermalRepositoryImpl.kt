@@ -36,6 +36,10 @@ class ThermalRepositoryImpl(
 
     override fun isCameraConnected(): Boolean = hardwareDataSource.isConnected()
 
+    override fun isSimulationMode(): Boolean = hardwareDataSource.isSimulationMode()
+
+    override fun getLastRecordingPath(): String? = hardwareDataSource.getLastRecordingPath()
+
     override suspend fun setTemperatureRange(
         minTemp: Float,
         maxTemp: Float,
@@ -69,3 +73,4 @@ class ThermalRepositoryImpl(
 
     override suspend fun getBatteryStatus(): Result<BatteryStatus> = hardwareDataSource.getBatteryStatus()
 }
+

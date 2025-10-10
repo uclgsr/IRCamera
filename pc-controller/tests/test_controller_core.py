@@ -1,9 +1,11 @@
 import base64
+import json
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
-from pc_controller import NetworkEvent, PCControllerCore
+from pc_controller import ConnectionContext, NetworkEvent, PCControllerCore
 
 
 class DummyContext:
@@ -49,6 +51,7 @@ class ControllerCoreTestCase(unittest.TestCase):
         self.context = DummyContext()
 
     def tearDown(self):
+        self.controller._stop_local_sensors()
         self.tmpdir.cleanup()
 
     def test_device_registration_sends_ack(self):
@@ -97,6 +100,59 @@ class ControllerCoreTestCase(unittest.TestCase):
         self.assertTrue(csv_path.exists())
         contents = csv_path.read_text().strip().splitlines()
         self.assertGreaterEqual(len(contents), 2)  # header + at least one sample
+        summary_path = self.controller.get_session_dir(session_id) / "summary.json"
+        summary = json.loads(summary_path.read_text())
+        self.assertIn("manifest", summary)
+        self.assertIn("files", summary["manifest"])
+
+    def test_mark_event_records_in_summary(self):
+        session_id = self.controller.start_recording("session_events")
+        self.controller.mark_event("calibration_start", {"pattern": "checkerboard"})
+        # Ensure event propagation async callbacks settle
+        time.sleep(0.05)
+        self.controller.stop_recording()
+
+        summary_path = self.controller.get_session_dir(session_id) / "summary.json"
+        data = json.loads(summary_path.read_text())
+        events = data.get("events", [])
+        self.assertTrue(any(event["code"] == "calibration_start" for event in events))
+
+    def test_offline_command_replay(self):
+        self.controller._handle_network_event(
+            NetworkEvent("message", self.context, {"type": "hello", "device_id": "android-01"})
+        )
+        record = self.controller.devices["android-01"]
+        record.status = "disconnected"
+
+        self.controller.broadcast_command("sync_request")
+        queue = self.controller._command_queue.get("android-01")
+        self.assertIsNotNone(queue)
+        self.assertGreaterEqual(len(queue), 1)
+
+        sent_messages = []
+
+        class DummyWorker:
+            def __init__(self):
+                self.connection_id = "conn-2"
+                self.device_id = "android-01"
+                self._address = ("127.0.0.1", 60000)
+
+            @property
+            def address(self):
+                return self._address
+
+            def send_json(self, message):
+                sent_messages.append(message)
+
+        worker = DummyWorker()
+        context = ConnectionContext(server=self.controller._network, worker=worker)
+        replayed = self.controller._drain_offline_queue("android-01", context)
+
+        self.assertTrue(replayed)
+        self.assertTrue(any(msg.get("command") == "sync_request" for msg in sent_messages))
+        self.assertTrue(any("commandId" in msg for msg in sent_messages))
+        self.assertTrue(any("payload" in msg for msg in sent_messages))
+        self.assertNotIn("android-01", self.controller._command_queue)
 
 
 if __name__ == "__main__":

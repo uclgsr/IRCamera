@@ -110,8 +110,7 @@ class HardwareValidationController(
             sensorCapabilities["rgb_camera"] = SensorCapability(
                 name = "RGB Camera",
                 isSupported = rgbCameraAvailable,
-                details = "Max resolution: 1920x1080, Max FPS: 30, Formats: MP4/JPEG, Init time: ${initTime}
-ms"
+                details = "Max resolution: 1920x1080, Max FPS: 30, Formats: MP4/JPEG, Init time: ${initTime} ms"
             )
             validationResults["rgb_camera"] = HardwareValidationResult(
                 "rgb_camera", true, emptyList(), emptyList()
@@ -366,8 +365,7 @@ ms"
 
     private fun getDeviceInfo(): DeviceInfo {
         return DeviceInfo(
-            deviceId = "${android.os.Build.MANUFACTURER}
-_${android.os.Build.MODEL}",
+            deviceId = "${android.os.Build.MANUFACTURER}_${android.os.Build.MODEL}",
             model = android.os.Build.MODEL,
             androidVersion = android.os.Build.VERSION.RELEASE,
             availableStorageGB = 10.0, // Would need to calculate actual available storage

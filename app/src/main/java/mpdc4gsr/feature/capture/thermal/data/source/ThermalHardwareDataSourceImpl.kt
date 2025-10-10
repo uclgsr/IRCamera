@@ -2,6 +2,7 @@ package mpdc4gsr.feature.capture.thermal.data.source
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Rect
 import android.hardware.usb.UsbDevice
 import com.energy.iruvc.ircmd.ConcreteIRCMDBuilder
 import com.energy.iruvc.ircmd.IRCMD
@@ -22,9 +23,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withTimeoutOrNull
+import mpdc4gsr.core.data.utils.TimeManager
 import mpdc4gsr.feature.capture.thermal.data.*
+import org.json.JSONObject
+import kotlin.math.max
+import kotlin.math.min
 import java.io.File
 import java.io.FileOutputStream
+import java.io.BufferedOutputStream
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 class ThermalHardwareDataSourceImpl(
     private val context: Context,
@@ -38,6 +46,10 @@ class ThermalHardwareDataSourceImpl(
         private const val MAX_TEMP_RANGE = 400.0f
         private const val FRAME_BUFFER_SIZE = 256 * 192 * 2
         private const val FRAME_RECEIVE_TIMEOUT_MS = 1000L
+        private const val FFC_CALIBRATION_DELAY_MS = 1500L
+        private const val NUC_CALIBRATION_DELAY_MS = 1500L
+        private const val FRAME_MAGIC = 0x54434652 // 'TCFR'
+        private const val FRAME_VERSION = 1
     }
 
     private var isConnected = false
@@ -53,8 +65,14 @@ class ThermalHardwareDataSourceImpl(
     private val imageBuffer = ByteArray(FRAME_BUFFER_SIZE)
     private val temperatureBuffer = ByteArray(FRAME_BUFFER_SIZE)
     private val rgbBuffer = ByteArray(CAMERA_WIDTH * CAMERA_HEIGHT * 4)
+    private val timeManager = TimeManager.getInstance(context)
     private var recordingFile: File? = null
-    private var recordingOutputStream: FileOutputStream? = null
+    private var recordingOutputStream: BufferedOutputStream? = null
+    private var recordingStartTimestampMs: Long = 0L
+    private var recordedFrames: Long = 0L
+    private var sessionMinRecordedTemp: Float = Float.POSITIVE_INFINITY
+    private var sessionMaxRecordedTemp: Float = Float.NEGATIVE_INFINITY
+    private var lastRecordingPath: String? = null
     private var frameCallback: IFrameCallback? = null
     private var connectionDeferred: kotlinx.coroutines.CompletableDeferred<Result<Unit>>? = null
 
@@ -216,6 +234,9 @@ class ThermalHardwareDataSourceImpl(
                             val processedData = processFrame(frame)
                             if (processedData != null) {
                                 val thermalFrame = createThermalFrameData(processedData)
+                                if (isRecording) {
+                                    writeFrameToRecording(thermalFrame)
+                                }
                                 val sendResult = frameChannel.trySend(thermalFrame)
                                 if (sendResult.isFailure) {
                                 }
@@ -298,7 +319,7 @@ class ThermalHardwareDataSourceImpl(
         }
         val bitmap = createBitmapFromFrame(processedData)
         return ThermalFrameData(
-            timestamp = System.currentTimeMillis(),
+            timestamp = timeManager.getCurrentTimestampMs(),
             bitmap = bitmap,
             temperatureMatrix = temperatureMatrix,
             minTemp = minTemp,
@@ -325,6 +346,98 @@ class ThermalHardwareDataSourceImpl(
             mpdc4gsr.core.common.AppLogger.e(
                 "ThermalHardwareDataSourceImpl",
                 "Unexpected Exception in ThermalHardwareDataSourceImpl catch block",
+                e,
+            )
+        }
+    }
+
+    private fun writeFrameToRecording(frame: ThermalFrameData) {
+        val output = recordingOutputStream ?: return
+        try {
+            val bitmap = frame.bitmap
+            val pixelCount = bitmap.width * bitmap.height
+            val bitmapBytes = ByteArray(pixelCount * 4)
+            val pixelBuffer = ByteBuffer.wrap(bitmapBytes)
+            bitmap.copyPixelsToBuffer(pixelBuffer)
+
+            val temperatureMatrix = frame.temperatureMatrix
+            val rowCount = temperatureMatrix.size
+            val columnCount = temperatureMatrix.firstOrNull()?.size ?: 0
+            val matrixSize = rowCount * columnCount
+            val matrixBytes =
+                if (matrixSize > 0) {
+                    val buffer = ByteBuffer.allocate(matrixSize * 4).order(ByteOrder.LITTLE_ENDIAN)
+                    temperatureMatrix.forEach { row ->
+                        row.forEach { value ->
+                            buffer.putFloat(value)
+                        }
+                    }
+                    buffer.array()
+                } else {
+                    ByteArray(0)
+                }
+
+    private fun writeRecordingManifest(recordingFile: File, endTimestampMs: Long) {
+        try {
+            val manifest = JSONObject().apply {
+                put("file", recordingFile.name)
+                put("absolute_path", recordingFile.absolutePath)
+                put("created_at_ms", recordingStartTimestampMs)
+                put("ended_at_ms", endTimestampMs)
+                put("duration_ms", (endTimestampMs - recordingStartTimestampMs).coerceAtLeast(0))
+                put("frames_recorded", recordedFrames)
+                put("mode", if (isSimulationMode()) "simulation" else "hardware")
+                if (sessionMinRecordedTemp != Float.MAX_VALUE) {
+                    put("min_temp_observed", sessionMinRecordedTemp.toDouble())
+                }
+                if (sessionMaxRecordedTemp != Float.MIN_VALUE) {
+                    put("max_temp_observed", sessionMaxRecordedTemp.toDouble())
+                }
+            }
+            val manifestFile = File(
+                recordingFile.parentFile ?: context.filesDir,
+                "${recordingFile.nameWithoutExtension}_manifest.json",
+            )
+            manifestFile.writeText(manifest.toString(2))
+        } catch (e: Exception) {
+            mpdc4gsr.core.common.AppLogger.e(
+                TAG,
+                "Failed to write thermal recording manifest",
+                e,
+            )
+        }
+    }
+
+            val header =
+                ByteBuffer
+                    .allocate(4 + 4 + 8 + 4 * 3 + 4 * 2 + 4 + 4)
+                    .order(ByteOrder.LITTLE_ENDIAN)
+            header.putInt(FRAME_MAGIC)
+            header.putInt(FRAME_VERSION)
+            header.putLong(frame.timestamp)
+            header.putFloat(frame.minTemp)
+            header.putFloat(frame.maxTemp)
+            header.putFloat(frame.centerTemp)
+            header.putInt(bitmap.width)
+            header.putInt(bitmap.height)
+            header.putInt(bitmapBytes.size)
+            header.putInt(matrixSize)
+            output.write(header.array())
+            output.write(bitmapBytes)
+            if (matrixBytes.isNotEmpty()) {
+                output.write(matrixBytes)
+            }
+            recordedFrames += 1
+            if (!frame.minTemp.isNaN()) {
+                sessionMinRecordedTemp = min(sessionMinRecordedTemp, frame.minTemp)
+            }
+            if (!frame.maxTemp.isNaN()) {
+                sessionMaxRecordedTemp = max(sessionMaxRecordedTemp, frame.maxTemp)
+            }
+        } catch (e: Exception) {
+            mpdc4gsr.core.common.AppLogger.e(
+                TAG,
+                "Failed to persist thermal frame",
                 e,
             )
         }
@@ -361,13 +474,57 @@ class ThermalHardwareDataSourceImpl(
                     temperatureMatrix = temperatureMatrix,
                     minTemp = minTemp,
                     maxTemp = maxTemp,
-                    timestamp = System.currentTimeMillis(),
+                    timestamp = timeManager.getCurrentTimestampMs(),
                     location = null,
                 )
             Result.success(snapshot)
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    private fun MeasurementArea.EllipseArea.toBoundingRect(): Rect {
+        val left = (centerX - radiusX).coerceAtLeast(0)
+        val top = (centerY - radiusY).coerceAtLeast(0)
+        val rightCandidate = (centerX + radiusX).coerceAtMost(CAMERA_WIDTH - 1)
+        val bottomCandidate = (centerY + radiusY).coerceAtMost(CAMERA_HEIGHT - 1)
+        val right = ensureMinSize(left, rightCandidate, CAMERA_WIDTH)
+        val bottom = ensureMinSize(top, bottomCandidate, CAMERA_HEIGHT)
+        return Rect(left, top, right, bottom)
+    }
+
+    private fun MeasurementArea.PolygonArea.toBoundingRect(): Rect {
+        if (points.isEmpty()) {
+            return Rect(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT)
+        }
+
+        val minX = points.minOf { it.x }.coerceAtLeast(0)
+        val minY = points.minOf { it.y }.coerceAtLeast(0)
+        val maxX = points.maxOf { it.x }.coerceAtMost(CAMERA_WIDTH - 1)
+        val maxY = points.maxOf { it.y }.coerceAtMost(CAMERA_HEIGHT - 1)
+        val right = ensureMinSize(minX, maxX, CAMERA_WIDTH)
+        val bottom = ensureMinSize(minY, maxY, CAMERA_HEIGHT)
+        return Rect(minX, minY, right, bottom)
+    }
+
+    private fun ensureMinSize(start: Int, end: Int, maxExclusive: Int): Int {
+        val clampedEnd = end.coerceAtMost(maxExclusive)
+        return if (clampedEnd <= start) {
+            (start + 1).coerceAtMost(maxExclusive)
+        } else {
+            clampedEnd
+        }
+    }
+
+    private fun LibIRTemp.TemperatureSampleResult.toMeasurementResult(area: MeasurementArea): MeasurementResult {
+        val min = minTemperature.toFloat()
+        val max = maxTemperature.toFloat()
+        return MeasurementResult(
+            minTemp = min,
+            maxTemp = max,
+            avgTemp = (min + max) / 2f,
+            area = area,
+        )
     }
 
     override suspend fun startRecording(): Result<Unit> {
@@ -377,8 +534,13 @@ class ThermalHardwareDataSourceImpl(
             }
             val recordingDir = File(context.filesDir, "thermal_recordings")
             recordingDir.mkdirs()
-            recordingFile = File(recordingDir, "thermal_${System.currentTimeMillis()}.bin")
-            recordingOutputStream = FileOutputStream(recordingFile)
+            recordingStartTimestampMs = timeManager.getCurrentTimestampMs()
+            recordedFrames = 0L
+            sessionMinRecordedTemp = Float.POSITIVE_INFINITY
+            sessionMaxRecordedTemp = Float.NEGATIVE_INFINITY
+            lastRecordingPath = null
+            recordingFile = File(recordingDir, "thermal_${recordingStartTimestampMs}.tcf")
+            recordingOutputStream = BufferedOutputStream(FileOutputStream(recordingFile))
             isRecording = true
             Result.success(Unit)
         } catch (e: Exception) {
@@ -392,13 +554,24 @@ class ThermalHardwareDataSourceImpl(
             recordingOutputStream?.flush()
             recordingOutputStream?.close()
             recordingOutputStream = null
-            val filePath = recordingFile?.absolutePath ?: ""
+            val file = recordingFile
+            val filePath = file?.absolutePath ?: ""
+            if (file != null) {
+                val endTimestamp = timeManager.getCurrentTimestampMs()
+                writeRecordingManifest(file, endTimestamp)
+                lastRecordingPath = file.absolutePath
+            }
+            recordingFile = null
             Result.success(filePath)
         } catch (e: Exception) {
             Result.failure(e)
         }
 
     override fun isConnected(): Boolean = isConnected
+
+    override fun isSimulationMode(): Boolean = false
+
+    override fun getLastRecordingPath(): String? = lastRecordingPath
 
     override suspend fun setTemperatureRange(
         min: Float,
@@ -487,39 +660,37 @@ class ThermalHardwareDataSourceImpl(
                 val result =
                     when (area) {
                         is MeasurementArea.PointArea -> {
-                            val tempResult = temp.getTemperatureOfPoint(area.point)
-                            tempResult?.let {
-                                MeasurementResult(
-                                    minTemp = it.minTemperature,
-                                    maxTemp = it.maxTemperature,
-                                    avgTemp = (it.minTemperature + it.maxTemperature) / 2,
-                                    area = area,
-                                )
-                            }
+                            val tempResult: LibIRTemp.TemperatureSampleResult? =
+                                temp.getTemperatureOfPoint(area.point)
+                            tempResult?.toMeasurementResult(area)
                         }
 
                         is MeasurementArea.RectangleArea -> {
-                            val tempResult = temp.getTemperatureOfRect(area.rect)
-                            tempResult?.let {
-                                MeasurementResult(
-                                    minTemp = it.minTemperature,
-                                    maxTemp = it.maxTemperature,
-                                    avgTemp = (it.minTemperature + it.maxTemperature) / 2,
-                                    area = area,
-                                )
-                            }
+                            val tempResult: LibIRTemp.TemperatureSampleResult? =
+                                temp.getTemperatureOfRect(area.rect)
+                            tempResult?.toMeasurementResult(area)
                         }
 
                         is MeasurementArea.LineArea -> {
-                            val startResult = temp.getTemperatureOfPoint(area.start)
-                            val endResult = temp.getTemperatureOfPoint(area.end)
+                            val startResult: LibIRTemp.TemperatureSampleResult? =
+                                temp.getTemperatureOfPoint(area.start)
+                            val endResult: LibIRTemp.TemperatureSampleResult? =
+                                temp.getTemperatureOfPoint(area.end)
                             if (startResult != null && endResult != null) {
-                                val minT = minOf(startResult.minTemperature, endResult.minTemperature)
-                                val maxT = maxOf(startResult.maxTemperature, endResult.maxTemperature)
+                                val minT =
+                                    min(
+                                        startResult.minTemperature.toFloat(),
+                                        endResult.minTemperature.toFloat(),
+                                    )
+                                val maxT =
+                                    max(
+                                        startResult.maxTemperature.toFloat(),
+                                        endResult.maxTemperature.toFloat(),
+                                    )
                                 MeasurementResult(
                                     minTemp = minT,
                                     maxTemp = maxT,
-                                    avgTemp = (minT + maxT) / 2,
+                                    avgTemp = (minT + maxT) / 2f,
                                     area = area,
                                 )
                             } else {
@@ -528,33 +699,17 @@ class ThermalHardwareDataSourceImpl(
                         }
 
                         is MeasurementArea.EllipseArea -> {
-                            // TODO: Implement ellipse area measurement
-                            // SDK currently does not provide native ellipse measurement
-                            // Approximate using bounding rectangle for now
-                            val tempResult = temp.getTemperatureOfRect(area.boundingRect)
-                            tempResult?.let {
-                                MeasurementResult(
-                                    minTemp = it.minTemperature,
-                                    maxTemp = it.maxTemperature,
-                                    avgTemp = (it.minTemperature + it.maxTemperature) / 2,
-                                    area = area,
-                                )
-                            }
+                            val rect = area.toBoundingRect()
+                            val tempResult: LibIRTemp.TemperatureSampleResult? =
+                                temp.getTemperatureOfRect(rect)
+                            tempResult?.toMeasurementResult(area)
                         }
 
                         is MeasurementArea.PolygonArea -> {
-                            // TODO: Implement polygon area measurement
-                            // SDK currently does not provide native polygon measurement
-                            // Approximate using bounding rectangle for now
-                            val tempResult = temp.getTemperatureOfRect(area.boundingRect)
-                            tempResult?.let {
-                                MeasurementResult(
-                                    minTemp = it.minTemperature,
-                                    maxTemp = it.maxTemperature,
-                                    avgTemp = (it.minTemperature + it.maxTemperature) / 2,
-                                    area = area,
-                                )
-                            }
+                            val rect = area.toBoundingRect()
+                            val tempResult: LibIRTemp.TemperatureSampleResult? =
+                                temp.getTemperatureOfRect(rect)
+                            tempResult?.toMeasurementResult(area)
                         }
                     }
                 result?.let { Result.success(it) } ?: Result.failure(Exception("Measurement failed"))
@@ -728,3 +883,7 @@ class ThermalHardwareDataSourceImpl(
         }
     }
 }
+
+
+
+

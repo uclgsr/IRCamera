@@ -11,6 +11,8 @@ import androidx.compose.material.icons.filled.Sensors
 import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import java.io.File
 import mpdc4gsr.core.designsystem.components.common.TitleBar
 import mpdc4gsr.core.designsystem.components.settings.SettingsCard
 import mpdc4gsr.core.designsystem.components.settings.SettingsRow
@@ -36,6 +39,7 @@ fun ThermalCalibrationScreen(
 ) {
     val settings by viewModel.calibrationSettings.collectAsStateWithLifecycle()
     val calibrationInfo by viewModel.calibrationInfo.collectAsStateWithLifecycle()
+    val progress by viewModel.calibrationProgress.collectAsStateWithLifecycle()
     Column(
         modifier =
             modifier
@@ -69,16 +73,48 @@ fun ThermalCalibrationScreen(
                 Button(
                     onClick = { viewModel.startThermalCalibration() },
                     modifier = Modifier.fillMaxWidth(),
+                    enabled = !progress.isRunning,
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Start Calibration")
+                    Text(if (progress.isRunning) "Capturing..." else "Start Calibration")
+                }
+                if (progress.isRunning) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    LinearProgressIndicator(
+                        progress = progress.captured.toFloat() / progress.target.coerceAtLeast(1).toFloat(),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Captured ${progress.captured} of ${progress.target}",
+                        color = Color.LightGray,
+                        fontSize = 12.sp,
+                    )
+                }
+                progress.errorMessage?.let { message ->
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.error,
+                        fontSize = 12.sp,
+                    )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Last Calibrated",
                     value = calibrationInfo.thermalLastCalibrated,
                 )
+                SettingsRow(
+                    label = "Calibration Folder",
+                    value = calibrationInfo.thermalLastDirectory ?: "Not captured",
+                )
+                progress.lastSavedPath?.let { path ->
+                    SettingsRow(
+                        label = "Last Capture",
+                        value = File(path).name,
+                    )
+                }
             }
             // GSR Sensor Calibration
             SettingsCard(
@@ -142,3 +178,8 @@ private fun ThermalCalibrationScreenPreview() {
         ThermalCalibrationScreen()
     }
 }
+
+
+
+
+
