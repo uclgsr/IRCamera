@@ -213,3 +213,6 @@ docs/thesis_evaluation/real_session_data/
 /external/
 **/*/external/
 /.gradle-user/
+.gradle*
+**/.gradle-user/
+**/*/.gradle-user/
