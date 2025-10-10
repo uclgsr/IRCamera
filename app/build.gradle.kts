@@ -337,7 +337,6 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation(project(":component:thermalunified"))
-    implementation(project(":component:gsr-recording"))
     implementation(project(":component:user"))
     implementation(project(":libunified"))
     implementation(project(":BleModule"))

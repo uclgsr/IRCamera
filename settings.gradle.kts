@@ -19,8 +19,8 @@ dependencyResolutionManagement {
 rootProject.name = "MPDC4GSR"
 
 include(":app")
-include(":component:gsr-recording")
 include(":component:thermalunified")
+project(":component:thermalunified").projectDir = file("thermalunified")
 include(":component:user")
 include(":libunified")
 include(":BleModule")

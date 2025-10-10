@@ -9,136 +9,103 @@
         tools:targetApi="34" />
 
     <application>
-
-        <!-- Core Activities - Migrated to Compose -->
+        <!-- Monitoring & configuration -->
         <activity
             android:name=".activity.IRMonitorComposeActivity"
+            android:exported="false"
             android:launchMode="singleTop"
             android:screenOrientation="userPortrait" />
-
         <activity
-            android:name=".activity.IRLogMPChartComposeActivity"
+            android:name=".activity.IRMonitorChartComposeActivity"
+            android:exported="false"
             android:launchMode="singleTop"
             android:screenOrientation="userPortrait" />
-
-        <activity
-            android:name=".activity.IRConfigComposeActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="userPortrait" />
-
-        <!-- Report Activities - Migrated to Compose -->
-        <activity
-            android:name=".report.activity.ReportCreateComposeActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.ReportPreviewComposeActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.ReportPreviewSecondComposeActivity"
-            android:screenOrientation="userPortrait" />
-
-        <activity
-            android:name=".activity.IRCorrectionThreeComposeActivity"
-            android:screenOrientation="userPortrait" />
-
-        <!-- Activities from thermal module -->
-
-        <!-- Activities from thermal-lite module - Migrated to Compose -->
-        <activity android:name=".activity.IRMonitorChartComposeActivity" />
-        <activity
-            android:name=".lite.activity.ImagePickIRLiteComposeActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".lite.activity.IRThermalLiteComposeActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:exported="false"
-            android:launchMode="singleTask"
-            android:maxAspectRatio="2.4"
-            android:screenOrientation="userPortrait"
-            android:windowSoftInputMode="adjustPan" />
-
-        <!-- Missing base activities -->
-
-        <activity
-            android:name=".activity.BaseIRPlusActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.ChartActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".lite.ui.activity.IrDisplayActivity"
-            android:screenOrientation="userPortrait" />
-
-        <!-- Jetpack Compose Activities - Thermal Module -->
-        <activity
-            android:name=".activity.ThermalCameraComposeActivity"
-            android:exported="false"
-            android:label="Thermal Camera (Compose)"
-            android:screenOrientation="userPortrait" />
-
-        <!-- New Compose Activities for Phase 5 Thermal Modernization -->
-        <activity
-            android:name=".activity.IRMainComposeActivity"
-            android:exported="false"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/Theme.IRCamera" />
-
-        <activity
-            android:name=".activity.ThermalGalleryComposeActivity"
-            android:exported="false"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/Theme.IRCamera" />
-
-        <activity
-            android:name=".activity.ThermalReportComposeActivity"
-            android:exported="false"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/Theme.IRCamera" />
-
-        <!-- New Compose Activities from PR #477 - Complete Migration -->
         <activity
             android:name=".activity.IRMonitorChartLiteComposeActivity"
             android:exported="false"
             android:screenOrientation="userPortrait"
             android:theme="@style/Theme.IRCamera" />
-
         <activity
-            android:name=".activity.IRThermalDoubleComposeActivity"
+            android:name=".activity.IRLogMPChartComposeActivity"
             android:exported="false"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/Theme.IRCamera" />
-
+            android:launchMode="singleTop"
+            android:screenOrientation="userPortrait" />
         <activity
-            android:name=".activity.ImageColorComposeActivity"
+            android:name=".activity.IRConfigComposeActivity"
             android:exported="false"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/Theme.IRCamera" />
-
+            android:launchMode="singleTop"
+            android:screenOrientation="userPortrait" />
         <activity
-            android:name=".activity.MonitorLogComposeActivity"
+            android:name=".activity.IRCorrectionThreeComposeActivity"
             android:exported="false"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/Theme.IRCamera" />
+            android:screenOrientation="userPortrait" />
 
+        <!-- Reporting -->
         <activity
-            android:name=".activity.ThermalIrNightComposeActivity"
+            android:name=".report.activity.ReportCreateComposeActivity"
             android:exported="false"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/Theme.IRCamera" />
-
+            android:screenOrientation="userPortrait" />
         <activity
             android:name=".report.activity.ReportDetailComposeActivity"
             android:exported="false"
             android:screenOrientation="userPortrait"
             android:theme="@style/Theme.IRCamera" />
-
         <activity
             android:name=".report.activity.ReportPreviewFirstComposeActivity"
             android:exported="false"
             android:screenOrientation="userPortrait"
             android:theme="@style/Theme.IRCamera" />
+        <activity
+            android:name=".activity.ReportPreviewComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".activity.ReportPreviewSecondComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait" />
 
-        <!-- Note: Component Module Compose Activities declared earlier in manifest to avoid duplicates -->
+        <!-- Thermal experiences -->
+        <activity
+            android:name=".activity.ThermalCameraComposeActivity"
+            android:exported="false"
+            android:label="Thermal Camera (Compose)"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".activity.IRMainComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/Theme.IRCamera" />
+        <activity
+            android:name=".activity.ThermalGalleryComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/Theme.IRCamera" />
+        <activity
+            android:name=".activity.ThermalReportComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/Theme.IRCamera" />
+        <activity
+            android:name=".activity.IRThermalDoubleComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/Theme.IRCamera" />
+        <activity
+            android:name=".activity.ThermalIrNightComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/Theme.IRCamera" />
+        <activity
+            android:name=".activity.ImageColorComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/Theme.IRCamera" />
+        <activity
+            android:name=".activity.MonitorLogComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/Theme.IRCamera" />
+        <!-- Note: Component module activities are explicitly listed to avoid duplicate declarations -->
     </application>
 
 </manifest>

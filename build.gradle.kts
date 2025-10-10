@@ -53,7 +53,6 @@ tasks.register("build") {
         ":app:assembleRelease",
         ":BleModule:assembleRelease",
         ":libunified:assembleRelease",
-        ":component:gsr-recording:assembleRelease",
         ":component:thermalunified:assembleRelease",
         ":component:user:assembleRelease"
     )

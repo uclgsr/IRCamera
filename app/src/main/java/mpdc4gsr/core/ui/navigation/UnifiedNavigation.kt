@@ -12,7 +12,6 @@ import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.core.ui.model.SensorType
 import mpdc4gsr.feature.camera.ui.CameraDashboardScreen
 import mpdc4gsr.feature.camera.ui.CameraSettingsScreen
-import mpdc4gsr.feature.camera.ui.DualModeCameraScreen
 import mpdc4gsr.feature.camera.ui.RGBCameraScreen
 import mpdc4gsr.feature.camera.ui.TimeLapseCameraScreen
 import mpdc4gsr.feature.gsr.ui.GSRDataViewScreen
@@ -55,7 +54,6 @@ sealed class UnifiedRoute(val route: String, val displayName: String = "") {
 
     // Camera Integration Routes
     object CameraDashboard : UnifiedRoute("camera_dashboard", "Camera Hub")
-    object DualModeCamera : UnifiedRoute("dual_mode_camera", "Thermal + RGB Camera")
     object RGBCamera : UnifiedRoute("rgb_camera", "RGB Camera")
     object CameraSettings : UnifiedRoute("camera_settings", "Camera Settings")
     object TimeLapseCamera : UnifiedRoute("timelapse_camera", "Time-Lapse Camera")
@@ -181,7 +179,6 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.CameraDashboard.route) {
             CameraDashboardScreen(
                 onBackClick = { navController.popBackStack() },
-                onNavigateToDualMode = { navController.navigate(UnifiedRoute.DualModeCamera.route) },
                 onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) },
                 onNavigateToSingleCamera = { navController.navigate(UnifiedRoute.RGBCamera.route) },
                 onNavigateToGallery = { navController.navigate(UnifiedRoute.ThermalGallery.route) },
@@ -200,27 +197,6 @@ fun UnifiedNavHost(
             TimeLapseCameraScreen(
                 onBackClick = { navController.popBackStack() }
             )
-        }
-        composable(UnifiedRoute.DualModeCamera.route) {
-            LaunchedEffect(Unit) {
-                try {
-                    // Use class reference instead of hard-coded string
-                    val activityClass = try {
-                        mpdc4gsr.feature.camera.ui.DualModeCameraComposeActivity2::class.java
-                    } catch (e: NoClassDefFoundError) {
-                        null
-                    }
-                    if (activityClass != null) {
-                        context.startActivity(Intent(context, activityClass))
-                    } else {
-                        navController.navigate("dual_mode_camera_screen")
-                    }
-                } catch (e: Exception) {
-                    // Fallback to screen
-                    navController.navigate("dual_mode_camera_screen")
-                }
-            }
-            ThermalLoadingScreen("Loading Dual Mode Camera...")
         }
         composable(UnifiedRoute.CameraSettings.route) {
             CameraSettingsScreen(
@@ -368,13 +344,6 @@ fun UnifiedNavHost(
             }
             ThermalLoadingScreen("Loading Permission Manager...")
         }
-        // Fallback routes for screens when activities fail to launch
-        composable("dual_mode_camera_screen") {
-            DualModeCameraScreen(
-                onBackClick = { navController.popBackStack() },
-                onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) }
-            )
-        }
         composable("device_pairing_screen") {
             DevicePairingScreen(
                 onNavigateBack = { navController.popBackStack() }
@@ -457,10 +426,6 @@ object NavigationHelper {
 
     fun startGSRSession(navController: NavHostController) {
         navController.navigate(UnifiedRoute.GSRSettings.route)
-    }
-
-    fun thermalRGBCapture(navController: NavHostController) {
-        navController.navigate(UnifiedRoute.DualModeCamera.route)
     }
 
     fun viewGallery(navController: NavHostController) {

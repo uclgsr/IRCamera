@@ -55,7 +55,6 @@
 
 # GSR-specific ProGuard rules
 -keep class com.mpdc4gsr.sensors.gsr.** { *; }
--keep class com.mpdc4gsr.gsr.** { *; }
 -keep class com.mpdc4gsr.ble.** { *; }
 
 # BLE and Bluetooth classes
@@ -105,7 +104,6 @@
 
 # Network client compatibility (Phase 0-4 implementation)
 -keep class com.mpdc4gsr.network.** { *; }
--keep class com.mpdc4gsr.gsr.network.** { *; }
 
 # ====================================================
 # Performance optimization rules

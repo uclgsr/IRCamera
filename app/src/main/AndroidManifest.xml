@@ -260,11 +260,6 @@
             android:label="Session Lifecycle Test" />
 
         <activity
-            android:name="mpdc4gsr.feature.camera.ui.DualModeCameraComposeActivity2"
-            android:exported="false"
-            android:label="Dual Mode Camera" />
-
-        <activity
             android:name="mpdc4gsr.compose.testing.RawCaptureTestComposeActivity"
             android:exported="false"
             android:label="Raw Capture Test" />

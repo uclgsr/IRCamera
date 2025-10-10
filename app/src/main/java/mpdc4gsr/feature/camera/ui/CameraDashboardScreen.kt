@@ -10,16 +10,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.deferAction
+import mpdc4gsr.feature.camera.presentation.FocusMode
+import mpdc4gsr.feature.camera.presentation.WhiteBalance
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraDashboardScreen(
     onBackClick: () -> Unit,
-    onNavigateToDualMode: () -> Unit,
     onNavigateToSettings: () -> Unit,
     onNavigateToSingleCamera: (() -> Unit)? = null,
     onNavigateToTimeLapse: (() -> Unit)? = null,
@@ -50,7 +54,6 @@ fun CameraDashboardScreen(
             }
         ) { paddingValues ->
             CameraDashboardContent(
-                onNavigateToDualMode = onNavigateToDualMode,
                 onNavigateToSingleCamera = onNavigateToSingleCamera,
                 onNavigateToTimeLapse = onNavigateToTimeLapse,
                 onNavigateToGallery = onNavigateToGallery,
@@ -62,19 +65,42 @@ fun CameraDashboardScreen(
 
 @Composable
 private fun CameraDashboardContent(
-    onNavigateToDualMode: () -> Unit,
     onNavigateToSingleCamera: (() -> Unit)? = null,
     onNavigateToTimeLapse: (() -> Unit)? = null,
     onNavigateToGallery: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
-    val context = androidx.compose.ui.platform.LocalContext.current
+    val context = LocalContext.current
     val showToast: (String) -> Unit = { message ->
         android.widget.Toast.makeText(
             context,
             message,
             android.widget.Toast.LENGTH_SHORT
         ).show()
+    }
+    var isPreviewActive by remember { mutableStateOf(true) }
+    var isRecording by remember { mutableStateOf(false) }
+    var resolution by remember { mutableStateOf("1920A-1080") }
+    var frameRate by remember { mutableStateOf(30) }
+    var exposureTime by remember { mutableStateOf("1/60") }
+    var iso by remember { mutableStateOf(200) }
+    var focusMode by remember { mutableStateOf(FocusMode.AUTO) }
+    var whiteBalance by remember { mutableStateOf(WhiteBalance.AUTO) }
+    var recordingDuration by remember { mutableStateOf(0) }
+    var capturedFrames by remember { mutableStateOf(0) }
+    LaunchedEffect(frameRate) {
+        exposureTime = if (frameRate > 30) "1/120" else "1/60"
+        iso = if (frameRate > 30) 400 else 200
+    }
+    LaunchedEffect(isRecording, frameRate) {
+        if (!isRecording) {
+            return@LaunchedEffect
+        }
+        while (isActive && isRecording) {
+            delay(1000)
+            recordingDuration += 1
+            capturedFrames += frameRate
+        }
     }
     Column(
         modifier = modifier
@@ -83,21 +109,63 @@ private fun CameraDashboardContent(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Camera Status Card
-        CameraStatusCard()
+        CameraStatusCard(
+            isPreviewActive = isPreviewActive,
+            isRecording = isRecording,
+            resolution = resolution,
+            frameRate = frameRate,
+            exposureTime = exposureTime,
+            iso = iso,
+            focusMode = focusMode.displayName,
+            whiteBalance = whiteBalance.displayName
+        )
         // Camera Modes Card
         CameraModesCard(
-            onNavigateToDualMode = onNavigateToDualMode,
             onNavigateToSingleCamera = onNavigateToSingleCamera,
             onNavigateToTimeLapse = onNavigateToTimeLapse,
             showToast = showToast
         )
-        // Recording Controls Card
         RecordingControlsCard(
-            onNavigateToSingleCamera = onNavigateToSingleCamera
+            isRecording = isRecording,
+            isPreviewActive = isPreviewActive,
+            recordingDuration = recordingDuration,
+            capturedFrames = capturedFrames,
+            onToggleRecording = {
+                if (isPreviewActive) {
+                    isRecording = !isRecording
+                    if (isRecording) {
+                        recordingDuration = 0
+                        capturedFrames = 0
+                    }
+                } else {
+                    onNavigateToSingleCamera?.invoke()
+                }
+            },
+            onTogglePreview = {
+                isPreviewActive = !isPreviewActive
+                if (!isPreviewActive) {
+                    isRecording = false
+                }
+            },
+            onCapturePhoto = {
+                onNavigateToSingleCamera?.invoke() ?: showToast("Launching RGB capture")
+            }
         )
-        // Camera Settings Card
-        CameraSettingsCard()
+        CameraSettingsCard(
+            resolution = resolution,
+            frameRate = frameRate,
+            focusMode = focusMode.displayName,
+            whiteBalance = whiteBalance.displayName,
+            currentFocusMode = focusMode,
+            currentWhiteBalance = whiteBalance,
+            onResolutionChange = { resolution = it },
+            onFrameRateChange = {
+                frameRate = it
+                exposureTime = if (it > 30) "1/120" else "1/60"
+            },
+            onFocusModeChange = { focusMode = it },
+            onWhiteBalanceChange = { whiteBalance = it }
+        )
         // Preview and Gallery Card
         PreviewGalleryCard(
             onNavigateToSingleCamera = onNavigateToSingleCamera,
@@ -108,103 +176,7 @@ private fun CameraDashboardContent(
 }
 
 @Composable
-private fun CameraStatusCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Icon(
-                    Icons.Default.Videocam,
-                    contentDescription = "Camera Status",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    "Camera Status",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            HorizontalDivider()
-            // Camera availability indicators
-            CameraStatusRow("Front Camera", true)
-            CameraStatusRow("Back Camera", true)
-            CameraStatusRow("External Camera", false)
-            // Current camera info
-            CameraInfoRow("Active Camera", "Back Camera")
-            CameraInfoRow("Resolution", "1920x1080")
-            CameraInfoRow("Frame Rate", "30 FPS")
-            CameraInfoRow("Focus Mode", "Auto")
-        }
-    }
-}
-
-@Composable
-private fun CameraStatusRow(
-    cameraName: String,
-    isAvailable: Boolean
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = cameraName,
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Icon(
-                if (isAvailable) Icons.Default.CheckCircle else Icons.Default.Cancel,
-                contentDescription = if (isAvailable) "Camera Available" else "Camera Unavailable",
-                tint = if (isAvailable) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                modifier = Modifier.size(16.dp)
-            )
-            Text(
-                text = if (isAvailable) "Available" else "Unavailable",
-                style = MaterialTheme.typography.bodySmall,
-                color = if (isAvailable) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-            )
-        }
-    }
-}
-
-@Composable
-private fun CameraInfoRow(
-    label: String,
-    value: String
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium
-        )
-    }
-}
-
-@Composable
 private fun CameraModesCard(
-    onNavigateToDualMode: () -> Unit,
     onNavigateToSingleCamera: (() -> Unit)? = null,
     onNavigateToTimeLapse: (() -> Unit)? = null,
     showToast: (String) -> Unit
@@ -232,14 +204,6 @@ private fun CameraModesCard(
                 onClick = {
                     onNavigateToSingleCamera?.invoke() ?: showToast("Single camera mode coming soon")
                 }
-            )
-            // Dual Camera Mode
-            CameraModeItem(
-                title = "Dual Camera Mode",
-                description = "Simultaneous RGB and thermal capture",
-                icon = Icons.Default.CameraAlt,
-                isActive = true,
-                onClick = onNavigateToDualMode
             )
             // Time-lapse Mode
             CameraModeItem(
@@ -304,162 +268,6 @@ private fun CameraModeItem(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun RecordingControlsCard(
-    onNavigateToSingleCamera: (() -> Unit)? = null
-) {
-    var isRecording by remember { mutableStateOf(false) }
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Text(
-                "Recording Controls",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-            HorizontalDivider()
-            // Recording status
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    "Recording Status",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Icon(
-                        if (isRecording) Icons.Default.FiberManualRecord else Icons.Default.Stop,
-                        contentDescription = if (isRecording) "Recording" else "Stopped",
-                        tint = if (isRecording) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Text(
-                        if (isRecording) "Recording" else "Stopped",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = if (isRecording) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-            // Control buttons
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                if (isRecording) {
-                    Button(
-                        onClick = { isRecording = false },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error
-                        )
-                    ) {
-                        Icon(Icons.Default.Stop, contentDescription = "Stop Recording")
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Stop")
-                    }
-                } else {
-                    Button(
-                        onClick = { isRecording = true },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(Icons.Default.FiberManualRecord, contentDescription = "Start Recording")
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Record")
-                    }
-                }
-                OutlinedButton(
-                    onClick = {
-                        onNavigateToSingleCamera?.invoke()
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Icon(Icons.Default.CameraAlt, contentDescription = "Take Photo")
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Photo")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun CameraSettingsCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Text(
-                "Quick Settings",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-            HorizontalDivider()
-            // Flash setting
-            SettingRow(
-                title = "Flash",
-                value = "Auto",
-                icon = Icons.Default.FlashOn
-            )
-            // Quality setting
-            SettingRow(
-                title = "Video Quality",
-                value = "1080p",
-                icon = Icons.Default.HighQuality
-            )
-            // Storage location
-            SettingRow(
-                title = "Storage",
-                value = "Internal",
-                icon = Icons.Default.Storage
-            )
-        }
-    }
-}
-
-@Composable
-private fun SettingRow(
-    title: String,
-    value: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Icon(
-            icon,
-            contentDescription = title,
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Text(
-            title,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f)
-        )
-        Text(
-            value,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.primary
-        )
     }
 }
 

@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CameraAlt
@@ -32,7 +31,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,8 +38,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
-import mpdc4gsr.core.ui.components.common.TitleBar
-import mpdc4gsr.core.ui.components.common.TitleBarAction
 import mpdc4gsr.core.ui.theme.Green
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.theme.Orange
@@ -56,7 +52,6 @@ fun RGBCameraScreen(
     onCapturePhoto: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraState by viewModel.cameraState.collectAsState()
     val cameraRecorder by viewModel.cameraRecorder.collectAsState()
@@ -536,217 +531,6 @@ private fun FullScreenCameraPreviewSimulated(
                     color = Color.Gray,
                     fontSize = 18.sp
                 )
-            }
-        }
-    }
-}
-
-@Composable
-private fun RGBCameraPreview(
-    isActive: Boolean,
-    isRecording: Boolean,
-    resolution: String,
-    frameRate: Int,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .aspectRatio(16f / 9f), // Standard camera aspect ratio
-        colors = CardDefaults.cardColors(containerColor = Color.Black)
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            if (isActive) {
-                // Camera preview simulation
-                Canvas(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    val width = size.width
-                    val height = size.height
-                    // Draw camera background
-                    drawRect(
-                        color = Color(0xFF2E2E2E),
-                        size = size
-                    )
-                    // Simulate camera scene
-                    // Background gradient
-                    drawRect(
-                        color = Color(0xFF4A4A4A),
-                        topLeft = Offset(0f, height * 0.6f),
-                        size = Size(width, height * 0.4f)
-                    )
-                    // Simulated objects
-                    drawCircle(
-                        color = Color(0xFF6A6A6A),
-                        radius = width * 0.1f,
-                        center = Offset(width * 0.3f, height * 0.4f)
-                    )
-                    drawRect(
-                        color = Color(0xFF5A5A5A),
-                        topLeft = Offset(width * 0.6f, height * 0.2f),
-                        size = Size(width * 0.25f, height * 0.4f)
-                    )
-                    // Grid lines (rule of thirds)
-                    val strokeWidth = 1.dp.toPx()
-                    val gridColor = Color.White.copy(alpha = 0.3f)
-                    // Vertical lines
-                    drawLine(
-                        color = gridColor,
-                        start = Offset(width / 3f, 0f),
-                        end = Offset(width / 3f, height),
-                        strokeWidth = strokeWidth
-                    )
-                    drawLine(
-                        color = gridColor,
-                        start = Offset(width * 2f / 3f, 0f),
-                        end = Offset(width * 2f / 3f, height),
-                        strokeWidth = strokeWidth
-                    )
-                    // Horizontal lines
-                    drawLine(
-                        color = gridColor,
-                        start = Offset(0f, height / 3f),
-                        end = Offset(width, height / 3f),
-                        strokeWidth = strokeWidth
-                    )
-                    drawLine(
-                        color = gridColor,
-                        start = Offset(0f, height * 2f / 3f),
-                        end = Offset(width, height * 2f / 3f),
-                        strokeWidth = strokeWidth
-                    )
-                    // Focus indicator (center)
-                    val centerX = width / 2
-                    val centerY = height / 2
-                    val focusSize = 30.dp.toPx()
-                    drawRect(
-                        color = Color.White,
-                        topLeft = Offset(centerX - focusSize / 2, centerY - focusSize / 2),
-                        size = Size(focusSize, focusSize),
-                        style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx())
-                    )
-                }
-                // Overlay indicators
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(16.dp)
-                ) {
-                    // Live indicator
-                    Surface(
-                        color = if (isRecording) Color.Red else Color.Green,
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(
-                            text = if (isRecording) "REC" else "LIVE",
-                            color = Color.White,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    // Resolution indicator
-                    Surface(
-                        color = Color.Black.copy(alpha = 0.7f),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(
-                            text = resolution,
-                            color = Color.White,
-                            fontSize = 10.sp,
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                        )
-                    }
-                }
-                // Frame rate indicator
-                Surface(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(16.dp),
-                    color = Color.Black.copy(alpha = 0.7f),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(
-                        text = "${frameRate}fps",
-                        color = Color.Green,
-                        fontSize = 10.sp,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                    )
-                }
-            } else {
-                // Preview off
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.CameraAlt,
-                            contentDescription = "Camera Off",
-                            tint = Color.Gray,
-                            modifier = Modifier.size(64.dp)
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = "Camera Preview Off",
-                            color = Color.Gray,
-                            fontSize = 18.sp
-                        )
-                        Text(
-                            text = "Tap to enable preview",
-                            color = Color.Gray,
-                            fontSize = 14.sp
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun RealCameraPreview(
-    cameraRecorder: mpdc4gsr.core.data.RgbCameraRecorder,
-    isRecording: Boolean,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = Color.Black)
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            AndroidView(
-                factory = { ctx ->
-                    PreviewView(ctx).apply {
-                        scaleType = PreviewView.ScaleType.FILL_CENTER
-                        // Bind camera preview
-                        cameraRecorder.bindPreview(this)
-                    }
-                },
-                modifier = Modifier.fillMaxSize()
-            )
-            // Recording indicator
-            if (isRecording) {
-                Surface(
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(16.dp),
-                    color = Color.Red,
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = "REC",
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                    )
-                }
             }
         }
     }

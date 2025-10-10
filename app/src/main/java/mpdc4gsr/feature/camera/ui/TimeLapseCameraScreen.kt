@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.camera.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -49,71 +48,38 @@ fun TimeLapseCameraScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Camera Preview Placeholder
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(240.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFF2D2A3E)
-                    )
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                Icons.Default.CameraAlt,
-                                contentDescription = null,
-                                modifier = Modifier.size(64.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Text(
-                                "Camera Preview",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = Color.Gray
-                            )
+                CameraStatusCard(
+                    isPreviewActive = true,
+                    isRecording = timeLapseState.isRecording,
+                    resolution = timeLapseState.resolution,
+                    frameRate = 30,
+                    exposureTime = "${timeLapseState.intervalSeconds}s",
+                    iso = timeLapseState.quality,
+                    focusMode = timeLapseState.mode.displayName,
+                    whiteBalance = "Auto"
+                )
+                RecordingControlsCard(
+                    isRecording = timeLapseState.isRecording,
+                    isPreviewActive = true,
+                    recordingDuration = timeLapseState.totalDuration,
+                    capturedFrames = timeLapseState.capturedFrames,
+                    onToggleRecording = {
+                        if (timeLapseState.isRecording) {
+                            viewModel.stopTimeLapse()
+                        } else {
+                            viewModel.startTimeLapse()
                         }
-                    }
-                }
-                // Recording Status
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                "Status",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                if (timeLapseState.isRecording) "Recording" else "Ready",
-                                color = if (timeLapseState.isRecording)
-                                    MaterialTheme.colorScheme.primary
-                                else Color.Gray
-                            )
-                        }
-                        HorizontalDivider()
-                        InfoRow("Frames Captured", "${timeLapseState.capturedFrames}")
-                        InfoRow("Interval", "${timeLapseState.intervalSeconds}s")
-                        InfoRow("Est. Video Length", "${timeLapseState.estimatedVideoLength}s")
-                        InfoRow("Duration", "${timeLapseState.totalDuration}s")
-                    }
-                }
+                    },
+                    onTogglePreview = {
+                        android.widget.Toast.makeText(
+                            context,
+                            "Live preview handled by RGB camera",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onCapturePhoto = { viewModel.captureFrame() }
+                )
+                TimeLapseMetricsCard(timeLapseState)
                 // Mode Selection
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -253,6 +219,30 @@ fun TimeLapseCameraScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun TimeLapseMetricsCard(state: TimeLapseCameraViewModel.TimeLapseState) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                "Recording Status",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            HorizontalDivider()
+            InfoRow("Frames Captured", state.capturedFrames.toString())
+            InfoRow("Interval", "${state.intervalSeconds}s")
+            InfoRow("Est. Video Length", "${state.estimatedVideoLength}s")
+            InfoRow("Elapsed Duration", "${state.totalDuration}s")
         }
     }
 }
