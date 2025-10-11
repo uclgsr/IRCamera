@@ -10,6 +10,14 @@ Use this index to navigate the active documentation for MPDC4GSR.
 - [pc-controller.md](pc-controller.md) – Desktop controller architecture and integration points.
 - [testing-and-quality.md](testing-and-quality.md) – Testing strategy, automation, and quality gates.
 
+## Visual Diagrams
+
+- [System Architecture Diagram](diagrams/system-architecture.md) – High-level component map across Android and PC.
+- [Recording Session Sequence](diagrams/recording-session-sequence.md) – Command and capture orchestration timeline.
+- [Data Pipeline Overview](diagrams/data-pipeline.md) – Sensor artefact flow and ingestion paths.
+- [Time Sync Sequence](diagrams/time-sync-sequence.md) – UDP and HTTP calibration exchange.
+- [Time Sync Components](diagrams/time-sync-components.md) – Responsibilities across clients, timeline smoothing, and PC services.
+
 ## Developer Guides
 
 The following focused guides live in `docs/developer-guides/`:
@@ -39,8 +47,6 @@ core references above for the current state of the system.
 - Keep new documents in `docs/` and wire them into this index.
 - Prefer ASCII-only markdown for compatibility.
 - Update cross-references when directories move or files are removed.
-
-
 
 
 

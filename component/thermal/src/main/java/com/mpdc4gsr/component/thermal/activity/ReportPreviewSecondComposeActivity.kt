@@ -18,10 +18,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import com.mpdc4gsr.component.shared.app.ktbase.BaseViewModel
 
 class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSecondViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = setOf(FeaturePermissionArea.MEDIA_REVIEW)
+
     override fun createViewModel(): ReportPreviewSecondViewModel = ReportPreviewSecondViewModel()
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -399,7 +402,6 @@ data class ReportSection(
 )
 
 class ReportPreviewSecondViewModel : BaseViewModel()
-
 
 
 

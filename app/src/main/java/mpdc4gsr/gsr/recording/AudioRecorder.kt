@@ -1,8 +1,11 @@
 package mpdc4gsr.gsr.recording
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import androidx.core.content.ContextCompat
 import java.io.File
 import java.io.RandomAccessFile
 import java.nio.ByteBuffer
@@ -44,6 +47,15 @@ class AudioRecorder(
 
     override suspend fun start(context: RecordingContext) {
         recordingContext = context
+        if (
+            ContextCompat.checkSelfPermission(
+                this.context,
+                Manifest.permission.RECORD_AUDIO,
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            _state.value = RecorderState.FAILED
+            return
+        }
         _state.value = RecorderState.RECORDING
         val minBuffer =
             AudioRecord.getMinBufferSize(

@@ -20,11 +20,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.component.shared.app.config.RouterConfig
 import com.mpdc4gsr.component.shared.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.viewmodel.MoreViewModel
 
 class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = emptySet()
+
     override fun createViewModel(): MoreViewModel = viewModels<MoreViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -216,5 +219,4 @@ private fun getIconForAction(action: MoreViewModel.SettingsAction): ImageVector 
         MoreViewModel.SettingsAction.DISCONNECT -> Icons.Default.Close
         MoreViewModel.SettingsAction.RESET -> Icons.Default.Refresh
     }
-
 

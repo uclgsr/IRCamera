@@ -243,9 +243,9 @@ class ArchitectureDocumentationGenerator:
             'ThermalCameraManager': ['SensorRecorder', 'ThermalCameraRecorder'],
             'GSRSensorService': ['SensorRecorder', 'GSRSensorRecorder', 'RecordingController'],
             'RgbCameraManager': ['SensorRecorder', 'RgbCameraRecorder'],
-            'TimeSyncManager': ['TimeManager'],
-            'CommandServer': ['NetworkServer', 'ProtocolHandler', 'TimeSyncManager'],
-            'RecordingController': ['sensor_managers', 'TimeSynchronizationService'],
+            'TimeSyncClient': ['TimelineClock'],
+            'CommandServer': ['NetworkServer', 'ProtocolHandler', 'TimeSyncClient'],
+            'RecordingController': ['sensor_managers', 'TimelineClock'],
             'CommandClient': ['socket', 'json', 'threading']
         }
 
@@ -257,12 +257,13 @@ class ArchitectureDocumentationGenerator:
 
         mermaid_content = '''```mermaid
 graph TB
-    subgraph "PC Controller Hub"
+        subgraph "PC Controller Hub"
         PC[PC Controller Application<br/>Python + TCP Client]
         DevMgr[Device Manager<br/>Connection Tracking]
         SessMgr[Session Manager<br/>Recording Coordination]
         CmdClient[Command Client<br/>Network Commands]
         DataAgg[Data Aggregator<br/>Multi-modal Sync]
+        TimeSvc[Time Sync Service<br/>UDP + /time/calibration]
     end
     
     subgraph "Android Sensor Node"
@@ -276,7 +277,8 @@ graph TB
         end
         
         subgraph "Support Services"
-            TimeMgr[Time Sync Manager<br/>NTP-style Sync]
+            TimeClient[Time Sync Client<br/>UDP Probes + HTTP Publish]
+            Timeline[TimelineClock<br/>Smoothed Reference]
             DataStore[Data Storage<br/>CSV + Video Files]
             NetMgr[Network Manager<br/>Protocol Handler]
         end
@@ -292,7 +294,7 @@ graph TB
     PC --> |TCP Commands| CmdServer
     CmdClient --> |START/STOP/SYNC| CmdServer
     CmdServer --> |Acknowledgments| CmdClient
-    DataAgg --> |Time Base| TimeMgr
+    DataAgg --> |Calibration Cache| TimeSvc
     
     %% Android Internal Flow
     CmdServer --> RecCtrl
@@ -300,7 +302,8 @@ graph TB
     RecCtrl --> GSRMgr
     RecCtrl --> RGBMgr
     
-    TimeMgr --> |Sync Timestamps| RecCtrl
+    TimeClient --> |Reference Updates| Timeline
+    Timeline --> |Aligned Timestamps| RecCtrl
     RecCtrl --> DataStore
     
     %% Hardware Connections
@@ -320,7 +323,7 @@ graph TB
     classDef hwClass fill:#fff3e0,stroke:#e65100,stroke-width:2px
     
     class PC,DevMgr,SessMgr,CmdClient,DataAgg pcClass
-    class CmdServer,RecCtrl,TimeMgr,DataStore,NetMgr androidClass
+    class CmdServer,RecCtrl,TimeClient,Timeline,DataStore,NetMgr androidClass
     class ThermalMgr,GSRMgr,RGBMgr sensorClass
     class TC001,Shimmer,PhoneCam hwClass
 ```'''
@@ -334,7 +337,7 @@ graph TB
             f.write("\n\n## Architecture Principles\n\n")
             f.write("1. **Hub-and-Spoke Model**: PC acts as central coordinator for multiple Android devices\n")
             f.write("2. **Modular Design**: Each sensor has dedicated manager class for encapsulation\n")
-            f.write("3. **Synchronized Recording**: All sensors share common time base via NTP-style sync\n")
+            f.write("3. **Synchronized Recording**: TimeSyncClient + TimelineClock maintain <15ms drift across sensors\n")
             f.write("4. **Fault Tolerance**: System continues operation if individual sensors fail\n")
             f.write("5. **Scalable Protocol**: TCP/JSON protocol supports dynamic device addition\n")
 
@@ -348,6 +351,7 @@ graph TB
 sequenceDiagram
     participant PC as PC Controller
     participant Android as Android Device
+    participant TimeSvc as Time Sync Service
     participant Sensors as Sensor Managers
     participant HW as Hardware Sensors
     
@@ -360,12 +364,12 @@ sequenceDiagram
     
     %% Time Synchronization Phase
     Note over PC,Android: Time Synchronization Exchange
-    PC->>Android: SYNC_REQUEST (t1=PC_send_time)
-    Note over Android: Record t2=receive_time
-    Android->>PC: SYNC_RESPONSE (t2, t3=send_time)
-    Note over PC: Record t4=receive_time<br/>Calculate offset = ((t2-t1)+(t3-t4))/2
-    PC->>Android: SYNC_ACK (calculated_offset)
-    Note over Android: Update time offset for sync
+    Android->>TimeSvc: UDP probe (t0)
+    TimeSvc-->>Android: UDP response (t1,t2)
+    Android->>Android: Compute offset/RTT/drift
+    Android->>TimeSvc: POST /time/calibration (best sample)
+    TimeSvc-->>Android: 202 Accepted
+    Android->>Android: TimelineClock update & smoothing
     
     %% Recording Start Phase
     Note over PC,HW: Coordinated Recording Start
@@ -426,13 +430,13 @@ sequenceDiagram
             f.write(mermaid_content)
             f.write("\n\n## Key Sequence Points\n\n")
             f.write("1. **Connection Establishment**: TCP handshake and capability exchange\n")
-            f.write("2. **Time Synchronization**: NTP-style clock offset calculation\n")
+            f.write("2. **Time Synchronization**: TimeSyncClient UDP probes + calibration sharing\n")
             f.write("3. **Coordinated Start**: All sensors begin recording within ~100ms window\n")
             f.write("4. **Data Collection**: Continuous timestamped data capture\n")
             f.write("5. **Status Monitoring**: Optional real-time status queries\n")
             f.write("6. **Coordinated Stop**: Clean shutdown and data finalization\n\n")
             f.write("## Timing Requirements\n\n")
-            f.write("- Time sync accuracy: ±10ms\n")
+            f.write("- Time sync accuracy: ≤15ms drift (smoothed)\n")
             f.write("- Sensor start coordination: <100ms spread\n")
             f.write("- Command acknowledgment: <500ms\n")
             f.write("- Data consistency: All samples timestamped with synchronized clock\n")
@@ -447,128 +451,56 @@ sequenceDiagram
 
 ## Overview
 
-The system implements an NTP-style time synchronization algorithm to ensure all sensor data shares a common time base between PC and Android device.
+The 2024 architecture maintains <15 ms drift between Android devices and the PC controller using nanosecond-precision
+UDP probes augmented by a shared calibration cache.
 
-## Algorithm Description
+## Core Components
 
-The synchronization uses a four-timestamp exchange similar to Network Time Protocol (NTP):
+- **TimeSyncClient (Android)** – Issues UDP probes, calculates offset/RTT/drift, and publishes high-quality calibrations.
+- **TimelineClock (Android)** – Smooths estimates and exposes aligned timestamps to recorders and telemetry.
+- **TimeSyncService (PC)** – Responds to probes with `time.perf_counter_ns()` timestamps and serves `/time/calibration`.
 
-### Message Exchange
+## UDP Probe Exchange
+
 ```
-PC                           Android
-|                                |
-| SYNC_REQUEST (t1)             |
-|------------------------------>|
-|                          (t2) |
-|                               |
-|             (t3) SYNC_RESPONSE|
-|<------------------------------|
-(t4)                            |
+Android (t0) ── UDP probe ──▶ TimeSyncService (records t1, t2) ── response ──▶ Android (t3)
 ```
 
-### Timestamp Definitions
-- **t1**: PC timestamp when SYNC_REQUEST is sent
-- **t2**: Android timestamp when SYNC_REQUEST is received  
-- **t3**: Android timestamp when SYNC_RESPONSE is sent
-- **t4**: PC timestamp when SYNC_RESPONSE is received
+| Symbol | Description | Source |
+|--------|-------------|--------|
+| `t0` | Android send timestamp (`System.nanoTime()`) | Android |
+| `t1` | PC receive timestamp (`time.perf_counter_ns()`) | PC |
+| `t2` | PC transmit timestamp (`time.perf_counter_ns()`) | PC |
+| `t3` | Android receive timestamp (`System.nanoTime()`) | Android |
 
-### Clock Offset Calculation
+### Calculations
+
 ```
-Round Trip Time (RTT) = t4 - t1
-Network Delay = RTT / 2
-Clock Offset = ((t2 - t1) + (t3 - t4)) / 2
-```
-
-### Implementation Details
-
-#### PC Side (CommandClient.py)
-```python
-def send_sync_command(self, device_id: str) -> Optional[Dict[str, Any]]:
-    t1 = time.time_ns()  # PC send time
-    
-    response = self.send_command(device_id, 'SYNC_REQUEST', {
-        'pc_timestamp': t1,
-        'pc_address': self._get_local_ip()
-    })
-    
-    t4 = time.time_ns()  # PC receive time
-    
-    # Calculate RTT and prepare for offset calculation
-    rtt = t4 - t1
-    return {'pc_send': t1, 'pc_receive': t4, 'rtt_ns': rtt}
+offset_ms = ((t1 - t0) + (t2 - t3)) / 2 / 1_000_000
+rtt_ms    = max(0, (t3 - t0) - (t2 - t1)) / 1_000_000
+drift_ppm = ((t2 - t1) - (t3 - t0)) / (t3 - t0) * 1_000_000
+accuracy  = abs(offset_ms) + rtt_ms / 2
 ```
 
-#### Android Side (TimeSyncManager.kt)
-```kotlin
-suspend fun initiateSync(pcAddress: String, port: Int): SyncResult {
-    repeat(SYNC_ROUNDS) { round ->
-        val t1 = SystemClock.elapsedRealtimeNanos() // Send time
-        val syncResponse = timeManager.performTimeSync(pcAddress, port)
-        val t4 = SystemClock.elapsedRealtimeNanos() // Receive time
-        
-        syncResponse?.let { response ->
-            val t2 = response.pcReceiveTime
-            val t3 = response.pcSendTime
-            
-            val clockOffset = ((t2 - t1) + (t3 - t4)) / 2
-            // Store offset for timestamp synchronization
-        }
-    }
-}
-```
+`TimeSyncClient` rejects low-quality samples (accuracy > 15 ms) and feeds accepted ones into `TimelineClock`, which uses
+an adaptive smoothing factor favouring lower RTT values.
 
-## Accuracy Improvements
+## Calibration Cache Workflow
 
-### Multiple Round Averaging
-The system performs multiple sync rounds (typically 3-5) and uses statistical methods to improve accuracy:
+1. Android POSTs the latest best calibration to `/time/calibration`.
+2. The PC retains a TTL-bounded queue of samples (default 30 s) for other devices to reuse.
+3. Devices GET the endpoint during startup or reconnection to bootstrap before their first probe completes.
 
-1. **Outlier Filtering**: Removes sync attempts with excessive RTT (>100ms)
-2. **Median Selection**: Uses median offset to reduce impact of network jitter
-3. **Quality Metrics**: Calculates standard deviation to assess sync quality
+## Legacy Compatibility
 
-### Error Sources and Mitigation
+The historical `SYNC_*` TCP command flow remains available for older controller builds, but production systems default to
+the UDP + calibration service.
 
-| Error Source | Impact | Mitigation |
-|-------------|---------|------------|
-| Network Jitter | ±1-10ms | Multiple rounds, median filtering |
-| Processing Delay | ±1-5ms | High-resolution timestamps, optimized code |
-| Clock Drift | ±1-2ms/hour | Periodic re-synchronization |
-| Asymmetric Network Delay | ±5-20ms | Assumes symmetric delay (acceptable for LAN) |
+## Validation
 
-## Performance Characteristics
-
-Based on automated testing:
-- **Mean Accuracy**: ±5-10ms under normal LAN conditions
-- **Sync Success Rate**: >95% 
-- **Round Trip Time**: 10-50ms (typical LAN)
-- **Sync Frequency**: Every 5 minutes during recording
-- **Re-sync Threshold**: When drift exceeds 50ms
-
-## Usage in Sensor Data
-
-All sensor managers use the synchronized timestamp:
-
-```kotlin
-fun getSyncedTimestampNs(): Long {
-    return timeManager.getCurrentTimestampNs()
-}
-
-// Used when recording sensor data
-val timestamp = timeSyncManager.getSyncedTimestampNs()
-dataLogger.writeRecord(sensorData, timestamp)
-```
-
-This ensures all recorded data (thermal, RGB, GSR) shares the same time reference for accurate multi-modal analysis.
-
-## Validation and Testing
-
-The time sync accuracy is validated through automated tests that:
-1. Perform 50+ sync rounds
-2. Measure RTT stability and offset consistency  
-3. Verify sync success rate under various network conditions
-4. Generate statistical reports for thesis validation
-
-See Chapter 5 for detailed test results and performance analysis.
+- Python tests cover the UDP responder and calibration API (`pc-controller/tests/test_sensor_and_sync.py`).
+- Android unit/integration tests verify that `TimelineClock` smoothing stays within the 15 ms drift envelope.
+- End-to-end soak tests confirm long-running sessions maintain aligned timestamps across all recorders.
 """
 
         with open(self.output_dir / "time_synchronization_algorithm.md", 'w') as f:
@@ -587,7 +519,7 @@ classDiagram
     class RecordingController {
         -sensorRecorders: Map<String, SensorRecorder>
         -sessionDirectoryManager: SessionDirectoryManager
-        -timeSynchronizationService: TimeSynchronizationService
+        -timelineClock: TimelineClock
         +registerSensor(name, recorder)
         +startRecording(sessionId, timestamp)
         +stopRecording()
@@ -597,8 +529,8 @@ classDiagram
     class CommandServer {
         -networkServer: NetworkServer
         -protocolHandler: ProtocolHandler
-        -timeSyncManager: TimeSyncManager
-        +start(callback, syncManager)
+        -timeSyncClient: TimeSyncClient
+        +start(callback, timeSyncClient)
         +sendAck(messageId, status)
         +sendStatusUpdate(status, data)
     }
@@ -629,12 +561,26 @@ classDiagram
         +setPreviewEnabled(enabled)
     }
     
-    class TimeSyncManager {
-        -syncStatus: StateFlow<SyncStatus>
-        -lastSyncOffset: StateFlow<Double>
-        +initiateSync(pcAddress, port): SyncResult
-        +getSyncedTimestampNs(): Long
-        +startDriftMonitoring()
+    class TimeSyncClient {
+        -currentEstimate: StateFlow<TimelineEstimate>
+        -lastCalibration: TimeCalibration?
+        +start()
+        +stop()
+        +publishCalibration()
+    }
+
+    class TimelineClock {
+        -timeline: StateFlow<TimelineEstimate>
+        +updateEstimate(estimate)
+        +nowInstant(): Instant
+    }
+
+    class TimeSyncService {
+        -udpSocket: DatagramSocket
+        -calibrationCache: Deque<CalibrationSample>
+        +start()
+        +stop()
+        +recordCalibration(payload)
     }
     
     %% Network Components
@@ -665,23 +611,24 @@ classDiagram
     RecordingController --> ThermalCameraManager
     RecordingController --> GSRSensorService
     RecordingController --> RgbCameraManager
-    RecordingController --> TimeSyncManager
+    RecordingController --> TimelineClock
     
     CommandServer --> NetworkServer
     CommandServer --> ProtocolHandler
-    CommandServer --> TimeSyncManager
+    CommandServer --> TimeSyncClient
     CommandServer --> RecordingController
     
-    NetworkServer --> ProtocolHandler
+    TimeSyncClient --> TimelineClock
+    CommandClient --> TimeSyncService
     
     %% Styling
     classDef managerClass fill:#e1f5fe,stroke:#01579b
     classDef networkClass fill:#f3e5f5,stroke:#4a148c
     classDef pcClass fill:#e8f5e8,stroke:#1b5e20
     
-    class ThermalCameraManager,GSRSensorService,RgbCameraManager,TimeSyncManager managerClass
+    class ThermalCameraManager,GSRSensorService,RgbCameraManager,TimeSyncClient,TimelineClock managerClass
     class CommandServer,NetworkServer,ProtocolHandler networkClass
-    class CommandClient pcClass
+    class CommandClient,TimeSyncService pcClass
 ```'''
 
         # Data flow diagram
@@ -690,12 +637,10 @@ flowchart TD
     %% PC Controller Flow
     PC[PC Controller] --> CMD{Command Type}
     CMD --> |START| START_CMD[START_RECORD Command]
-    CMD --> |SYNC| SYNC_CMD[SYNC_REQUEST Command] 
     CMD --> |STOP| STOP_CMD[STOP_RECORD Command]
     
     %% Android Command Processing
     START_CMD --> Android[Android Command Server]
-    SYNC_CMD --> Android
     STOP_CMD --> Android
     
     Android --> HANDLER[Protocol Handler]
@@ -718,9 +663,12 @@ flowchart TD
     PHONE_CAM --> |RGB Frames| RGB_DATA[RGB Video Stream]
     
     %% Time Synchronization
-    SYNC[Time Sync Manager] --> |Synchronized Timestamps| THERMAL_DATA
-    SYNC --> |Synchronized Timestamps| GSR_DATA
-    SYNC --> |Synchronized Timestamps| RGB_DATA
+    TimeClient[TimeSyncClient] --> |UDP Probes| TimeSvc[TimeSyncService]
+    TimeSvc --> |Calibration Cache| TimeClient
+    TimeClient --> |Timeline Updates| CTRL
+    TimeClient --> |Aligned Timestamps| THERMAL_DATA
+    TimeClient --> |Aligned Timestamps| GSR_DATA
+    TimeClient --> |Aligned Timestamps| RGB_DATA
     
     %% Data Storage
     THERMAL_DATA --> STORAGE[Data Storage]
@@ -743,8 +691,9 @@ flowchart TD
     classDef hwClass fill:#fff3e0,stroke:#e65100
     classDef dataClass fill:#e8f5e8,stroke:#1b5e20
     
-    class PC,START_CMD,SYNC_CMD,STOP_CMD pcClass
-    class Android,HANDLER,CTRL,SENSORS,THERMAL,GSR,RGB,SYNC,STORAGE,RESPONSE androidClass
+    class PC,START_CMD,STOP_CMD pcClass
+    class Android,HANDLER,CTRL,SENSORS,THERMAL,GSR,RGB,TimeClient,STORAGE,RESPONSE androidClass
+    class TimeSvc pcClass
     class TC001,SHIMMER,PHONE_CAM hwClass
     class THERMAL_DATA,GSR_DATA,RGB_DATA,FILES,CSV,VIDEO,META dataClass
 ```'''
@@ -763,7 +712,7 @@ flowchart TD
             f.write("2. **Observer Pattern**: StateFlow for reactive status updates\n")
             f.write("3. **Command Pattern**: PC commands are encapsulated as discrete operations\n")
             f.write("4. **Factory Pattern**: Sensor recorders are created through factory methods\n")
-            f.write("5. **Singleton Pattern**: TimeSyncManager maintains single time reference\n")
+            f.write("5. **Singleton Pattern**: TimeSyncClient + TimelineClock maintain shared time reference\n")
 
         logger.info("Software design diagrams generated")
 
@@ -863,7 +812,8 @@ The Android application follows a modular architecture with clear separation of 
 - **ThermalCameraManager**: Encapsulates Topdon TC001 integration
 - **GSRSensorService**: Manages Shimmer3 BLE connection and data streaming  
 - **RgbCameraManager**: Handles phone camera recording with Camera2 API
-- **TimeSyncManager**: Provides centralized time synchronization
+- **TimeSyncClient**: Performs UDP probes and calibration publishing
+- **TimelineClock**: Smooths offsets and exposes aligned timestamps
 
 #### Network Layer
 - **CommandServer**: TCP server for receiving PC commands
@@ -882,7 +832,7 @@ The PC controller is implemented in Python with the following components:
 #### Command Interface
 - **CommandClient**: Main interface for sending commands to Android devices
 - **Session Management**: Coordinates multi-device recording sessions
-- **Time Synchronization**: NTP-style clock offset calculation
+- **Time Synchronization**: UDP responder + calibration API (`time_sync_service.py`)
 
 ## Data Storage Strategy
 

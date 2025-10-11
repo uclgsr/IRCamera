@@ -1,0 +1,10 @@
+Event,Timestamp_ms,Actor,Description,Offset_ms
+PC NTP Sync,0,PC Controller,PC synchronizes with NTP server,0
+START Command Sent,50,PC Controller,PC issues START_RECORD command,0
+START Command Received,52,Android Device,Android receives START command (2ms network latency),2
+TimeManager Init,54,Android Device,TimeManager establishes reference timestamp,4
+Sensor Coordination Start,58,Android Device,Broadcast start signal to all sensors,8
+Thermal Camera First Frame,65,TC001 Thermal,First thermal frame captured,15
+GSR First Sample,66,Shimmer3 GSR,First GSR reading captured,16
+RGB First Frame,68,RGB Camera,First RGB frame captured,18
+Sync Verification,200,PC Controller,PC verifies all sensors started within window,150

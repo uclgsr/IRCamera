@@ -18,10 +18,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import com.mpdc4gsr.component.thermal.viewmodel.ImageColorViewModel
 
 class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = setOf(FeaturePermissionArea.MEDIA_REVIEW)
+
     override fun createViewModel(): ImageColorViewModel = viewModels<ImageColorViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -202,7 +205,6 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
         }
     }
 }
-
 
 
 

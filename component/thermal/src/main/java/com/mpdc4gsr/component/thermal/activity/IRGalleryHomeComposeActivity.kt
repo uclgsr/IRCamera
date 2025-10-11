@@ -24,10 +24,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import com.mpdc4gsr.component.thermal.viewmodel.ThermalViewModel
 
 class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = setOf(FeaturePermissionArea.MEDIA_REVIEW)
+
     override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -613,7 +616,6 @@ private fun getGalleryItems(): List<GalleryItem> =
         GalleryItem("7", "thermal_007.jpg", "2024-01-15 14:00", "2.0 MB", 49.3f, false),
         GalleryItem("8", "thermal_008.mp4", "2024-01-15 13:55", "18.7 MB", 43.6f, true),
     )
-
 
 
 

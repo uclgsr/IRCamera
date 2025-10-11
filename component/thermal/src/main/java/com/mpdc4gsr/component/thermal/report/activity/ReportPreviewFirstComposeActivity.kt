@@ -19,10 +19,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import com.mpdc4gsr.component.thermal.viewmodel.ReportPreviewViewModel
 
 class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = setOf(FeaturePermissionArea.MEDIA_REVIEW)
+
     override fun createViewModel(): ReportPreviewViewModel = viewModels<ReportPreviewViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -305,7 +308,6 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
         }
     }
 }
-
 
 
 

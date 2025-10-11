@@ -22,11 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import com.mpdc4gsr.component.thermal.viewmodel.GalleryActivityViewModel
 import kotlinx.coroutines.launch
 
 class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = setOf(FeaturePermissionArea.MEDIA_REVIEW)
+
     override fun createViewModel(): GalleryActivityViewModel = viewModels<GalleryActivityViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -233,7 +236,6 @@ private fun GalleryVideoTab() {
         modifier = Modifier.fillMaxSize(),
     )
 }
-
 
 
 

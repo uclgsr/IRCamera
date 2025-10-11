@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import com.mpdc4gsr.component.thermal.fragment.IRMonitorThermalComposeFragment
 import com.mpdc4gsr.component.thermal.viewmodel.ThermalViewModel
@@ -28,6 +29,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ImagePickIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = setOf(FeaturePermissionArea.MEDIA_REVIEW)
+
     override fun createViewModel(): ThermalViewModel = viewModels<ThermalViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -464,7 +467,6 @@ private fun getRecentImages(): List<RecentImage> =
         RecentImage("5", "thermal_capture_005.jpg", "14:18:12", 47.8f),
         RecentImage("6", "thermal_capture_006.jpg", "14:15:55", 35.2f),
     )
-
 
 
 

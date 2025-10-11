@@ -23,9 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.component.shared.app.ktbase.BaseViewModel
 
 class ThermalGalleryComposeActivity : BaseComposeActivity<ThermalGalleryViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = setOf(FeaturePermissionArea.MEDIA_REVIEW)
+
     override fun createViewModel(): ThermalGalleryViewModel = ThermalGalleryViewModel()
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -414,6 +417,5 @@ private enum class FilterType(
     HIGH_TEMP("High Temp"),
     LOW_TEMP("Low Temp"),
 }
-
 
 

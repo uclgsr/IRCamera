@@ -19,11 +19,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.component.shared.app.compose.theme.Spacing
 import com.mpdc4gsr.module.user.viewmodel.StorageSpaceViewModel
 import com.mpdc4gsr.component.shared.R as RCore
 
 class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = emptySet()
+
     override fun createViewModel(): StorageSpaceViewModel = viewModels<StorageSpaceViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -254,5 +257,4 @@ private fun StorageItem(
         )
     }
 }
-
 

@@ -2,6 +2,37 @@
 
 > **Note:** For complete implementation details, protocol specifications, and testing procedures, see the comprehensive
 > guide: **[pc-controller/docs/time_sync_implementation.md](../../pc-controller/docs/time_sync_implementation.md)**
+>
+> **Current status:** The active architecture now relies on `gsr/network/TimeSyncClient.kt`, `TimelineClock`, and the PC
+> controller `time_sync_service.py` (UDP responder + calibration API).
+
+## Current Architecture (2024 Refresh)
+
+| Component | Responsibilities | Key Files |
+|-----------|------------------|-----------|
+| Android `TimeSyncClient` | Sends UDP probes, calculates offset/RTT/drift, publishes high-quality calibrations | `app/src/main/java/mpdc4gsr/gsr/network/TimeSyncClient.kt` |
+| Android `TimelineClock` | Smooths estimates, exposes monotonic-aligned `Instant` to recorders | `app/src/main/java/mpdc4gsr/gsr/session/TimelineClock.kt` |
+| PC `TimeSyncService` | Responds with server receive/transmit timestamps, hosts `/time/calibration` | `pc-controller/time_sync_service.py` |
+| Session Controller | Applies timeline updates so telemetry/recorders share aligned timestamps | `app/src/main/java/mpdc4gsr/gsr/session/SessionController.kt` |
+
+### Probe Flow
+
+1. Android captures send timestamp `t0` with `System.nanoTime()` and sends an 8-byte UDP payload.
+2. PC records receive time `t1` / transmit time `t2` using `time.perf_counter_ns()` and responds with both values.
+3. Android captures receive time `t3`, computes offset/RTT/drift, and feeds the result into `TimelineClock`.
+4. If accuracy ≤ 15 ms or improves previous best, Android POSTs the calibration to `/time/calibration`.
+5. Other devices (or restarts) GET the best calibration to bootstrap before first UDP probe finishes.
+
+### Advantages Over Legacy Flow
+
+- **Monotonic clocks**: Eliminates wall-clock skew and leap second issues.
+- **Continuous smoothing**: `TimelineClock` blends high-quality samples and rejects outliers.
+- **Shared cache**: Calibration endpoint removes the need for repeated warm-up syncs.
+- **Fallback retained**: Legacy `SYNC_*` TCP protocol still exists for backwards compatibility but is no longer primary.
+
+---
+
+## Legacy Implementation (Archived)
 
 ## Issue Description
 
@@ -240,8 +271,6 @@ Potential improvements:
 4. Sync health monitoring dashboard
 5. Support for multiple PC controllers (multi-master)
 6. IEEE 1588 PTP protocol for microsecond precision
-
-
 
 
 

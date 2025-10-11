@@ -5,20 +5,19 @@ import kotlin.test.assertFalse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import mpdc4gsr.feature.capture.thermal.data.MeasurementArea
 import mpdc4gsr.feature.capture.thermal.data.MeasurementResult
-import mpdc4gsr.feature.capture.thermal.data.ThermalCalibrationData
 import mpdc4gsr.feature.capture.thermal.data.source.ThermalFrameData
 import mpdc4gsr.feature.capture.thermal.data.source.ThermalSnapshot
 import mpdc4gsr.feature.capture.thermal.domain.repository.ThermalRepository
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.onBlocking
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
+import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ThermalCoreUseCasesTest {
@@ -28,15 +27,15 @@ class ThermalCoreUseCasesTest {
 
     @Before
     fun setUp() {
-        repository =
-            mock {
-                onBlocking { connectCamera() } doReturn Result.success(Unit)
-                onBlocking { getThermalStream() } doReturn flowOf(fakeFrame())
-                onBlocking { captureSnapshot() } doReturn Result.success(fakeSnapshot())
-                on { isCameraConnected() } doReturn true
-                on { isSimulationMode() } doReturn false
-                onBlocking { getMeasurementForArea(any()) } doReturn Result.success(fakeMeasurement())
-            }
+        repository = mock()
+        runBlocking {
+            whenever(repository.connectCamera()).thenReturn(Result.success(Unit))
+            whenever(repository.getThermalStream()).thenReturn(flowOf(fakeFrame()))
+            whenever(repository.captureSnapshot()).thenReturn(Result.success(fakeSnapshot()))
+            whenever(repository.getMeasurementForArea(any())).thenReturn(Result.success(fakeMeasurement()))
+        }
+        whenever(repository.isCameraConnected()).thenReturn(true)
+        whenever(repository.isSimulationMode()).thenReturn(false)
         useCases =
             ThermalCoreUseCases(
                 connectCamera = ConnectThermalCameraUseCase(repository),
@@ -57,7 +56,7 @@ class ThermalCoreUseCasesTest {
         val result = useCases.connectCamera()
 
         assert(result.isSuccess)
-        verify(repository).connectCamera()
+        verifyBlocking(repository) { connectCamera() }
     }
 
     @Test
@@ -65,7 +64,7 @@ class ThermalCoreUseCasesTest {
         val frames = useCases.startStreaming().toList(mutableListOf())
 
         assertEquals(1, frames.size)
-        verify(repository).getThermalStream()
+        verifyBlocking(repository) { getThermalStream() }
     }
 
     @Test

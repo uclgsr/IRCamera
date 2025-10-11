@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import com.mpdc4gsr.component.thermal.fragment.GalleryComposeFragment
 import com.mpdc4gsr.component.thermal.report.activity.ThermalReportCreationComposeActivity
@@ -33,6 +34,8 @@ import com.mpdc4gsr.component.thermal.viewmodel.IRGalleryEditViewModel
 import kotlinx.coroutines.launch
 
 class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = setOf(FeaturePermissionArea.MEDIA_REVIEW)
+
     override fun createViewModel(): IRGalleryEditViewModel = viewModels<IRGalleryEditViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -460,7 +463,6 @@ private fun getEditTools(): List<EditTool> =
         EditTool("Measure", Icons.Default.Straighten),
         EditTool("Filter", Icons.Default.FilterAlt),
     )
-
 
 
 

@@ -1,4 +1,14 @@
 ================================================================================
+                    TIME SYNCHRONIZATION FLOW (LEGACY NOTE)
+================================================================================
+
+This document describes the previous `TimeSyncManager` implementation. The active solution pairs
+`gsr/network/TimeSyncClient.kt`, `TimelineClock`, and the PC controller
+`time_sync_service.py` (UDP + calibration API). Refer to the diagrams in
+`docs/diagrams/time-sync-sequence.md` and `docs/diagrams/time-sync-components.md` for the
+current design. The remaining sections are preserved for historical context.
+
+================================================================================
                     TIME SYNCHRONIZATION FLOW (IMPLEMENTED)
 ================================================================================
 

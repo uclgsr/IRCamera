@@ -305,10 +305,6 @@ tasks.withType<Test> {
     enabled = false
 }
 
-tasks.matching { it.name.startsWith("connected") && it.name.endsWith("AndroidTest") }.configureEach {
-    enabled = false
-}
-
 configurations.all {
     resolutionStrategy {
         force("com.google.guava:guava:33.3.1-jre")
@@ -336,6 +332,35 @@ configurations.all {
     exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
 }
 
+tasks.matching { it.name.startsWith("minify") && it.name.endsWith("WithR8") }.configureEach {
+    doFirst {
+        val envHome = System.getenv("GRADLE_USER_HOME")
+        val gradleUserHome =
+            if (envHome.isNullOrBlank()) {
+                File(System.getProperty("user.home"), ".gradle")
+            } else {
+                File(envHome)
+            }
+        val cacheRoot = gradleUserHome.resolve("caches")
+        if (!cacheRoot.exists()) {
+            return@doFirst
+        }
+        cacheRoot.walkTopDown().forEach { file ->
+            if (
+                file.isFile &&
+                file.name == "proguard.txt" &&
+                file.path.contains("jetified-library_1.0")
+            ) {
+                val content = file.readText()
+                if (content.contains("-ignorewarning")) {
+                    val sanitized =
+                        content.replace(Regex("(?m)^\\s*-ignorewarning(s+)?\\b"), "-ignorewarnings")
+                    file.writeText(sanitized)
+                }
+            }
+        }
+    }
+}
 dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
@@ -432,12 +457,14 @@ dependencies {
     androidTestImplementation(libs.test.espresso.contrib)
     androidTestImplementation(libs.test.espresso.intents)
     androidTestImplementation(libs.test.uiautomator)
+    androidTestImplementation(libs.test.core)
     testImplementation(libs.robolectric)
     testImplementation(libs.mockwebserver)
     androidTestImplementation(libs.benchmark.junit4)
     testImplementation(libs.truth)
     androidTestImplementation(libs.truth)
     testImplementation(libs.javafaker)
+    androidTestImplementation(libs.mockk.android)
 }
 
 configurations

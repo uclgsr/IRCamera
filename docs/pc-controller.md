@@ -19,6 +19,7 @@ stores long-running session artefacts.
 - Device discovery, session start/stop, sync-flash triggers, and metadata editing.
 - Live dashboards with PyQtGraph plots for GSR, preview panes for RGB/Thermal frames, and a log console.
 - Immediate storage of CSV/JSON artefacts, zipped exports, and resumable file uploads from Android.
+- High precision clock service (`time_sync_service.py`) serving UDP probes plus `/time/calibration` for <15 ms drift.
 - CLI mode (`python pc_controller.py --cli`) for automation pipelines and headless deployments.
 - Optional TLS sockets when certificates are supplied in `pc-controller/certificates/`.
 
@@ -50,7 +51,6 @@ python -m unittest discover -s tests
 
 Refer to [`pc-controller/docs/`](../pc-controller/docs/) for an exhaustive implementation guide, protocol specification,
 and verification logs.
-
 
 
 

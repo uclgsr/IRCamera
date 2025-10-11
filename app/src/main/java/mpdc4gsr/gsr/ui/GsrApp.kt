@@ -1,6 +1,5 @@
 package mpdc4gsr.gsr.ui
 
-import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -36,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -54,6 +54,7 @@ import kotlinx.coroutines.flow.StateFlow
 import mpdc4gsr.gsr.model.RecorderKind
 import mpdc4gsr.gsr.model.SessionSnapshot
 import mpdc4gsr.gsr.model.TelemetryState
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 
 @Composable
 fun GsrApp(
@@ -64,54 +65,81 @@ fun GsrApp(
 ) {
     LibSharedTheme {
         val context = LocalContext.current
-        val requiredPermissions =
+        val monitoredFeatures =
             remember {
                 listOf(
-                    RequiredPermission(
-                        permission = Manifest.permission.CAMERA,
-                        title = "Camera",
-                        rationale = "Required to capture RGB and IR video streams.",
-                    ),
-                    RequiredPermission(
-                        permission = Manifest.permission.RECORD_AUDIO,
-                        title = "Microphone",
-                        rationale = "Needed to capture audio for synchronized review.",
-                    ),
-                    RequiredPermission(
-                        permission = Manifest.permission.BLUETOOTH_CONNECT,
-                        title = "Bluetooth Connect",
-                        rationale = "Allows the app to communicate with GSR hardware.",
-                    ),
-                    RequiredPermission(
-                        permission = Manifest.permission.BLUETOOTH_SCAN,
-                        title = "Bluetooth Scan",
-                        rationale = "Needed to discover nearby sensor devices.",
-                    ),
-                    RequiredPermission(
-                        permission = Manifest.permission.ACCESS_FINE_LOCATION,
-                        title = "Location",
-                        rationale = "Required on Android 12+ for Bluetooth scanning.",
-                    ),
+                    FeaturePermissionArea.GSR_SENSORS,
+                    FeaturePermissionArea.RGB_VIDEO,
+                    FeaturePermissionArea.THERMAL_IR,
+                    FeaturePermissionArea.NOTIFICATIONS,
                 )
+            }
+        val requiredPermissions =
+            remember(monitoredFeatures) {
+                data class AggregatedPermission(
+                    val id: String,
+                    val permissions: MutableSet<String>,
+                    val title: String,
+                    val rationale: String,
+                    val usedBy: MutableSet<FeaturePermissionArea>,
+                )
+                val aggregated = linkedMapOf<String, AggregatedPermission>()
+                monitoredFeatures.forEach { feature ->
+                    feature.groups.forEach { group ->
+                        val runtimePermissions = group.permissionsForDevice()
+                        if (runtimePermissions.isEmpty()) return@forEach
+                        val entry =
+                            aggregated.getOrPut(group.id) {
+                                AggregatedPermission(
+                                    id = group.id,
+                                    permissions = linkedSetOf(),
+                                    title = group.title,
+                                    rationale = group.rationale,
+                                    usedBy = linkedSetOf(),
+                                )
+                            }
+                        entry.permissions.addAll(runtimePermissions)
+                        entry.usedBy.add(feature)
+                    }
+                }
+                aggregated.values.map { entry ->
+                    RequiredPermission(
+                        id = entry.id,
+                        permissions = entry.permissions.toList(),
+                        title = entry.title,
+                        rationale = entry.rationale,
+                        usedBy = entry.usedBy.toList(),
+                    )
+                }
             }
 
         var grantedPermissions by remember { mutableStateOf<Map<String, Boolean>>(emptyMap()) }
-        LaunchedEffect(requiredPermissions, context) {
-            grantedPermissions =
-                requiredPermissions.associate { permission ->
-                    permission.permission to isPermissionGranted(context, permission.permission)
-                }
-        }
-
+        var autoRequestLaunched by rememberSaveable { mutableStateOf(false) }
         val permissionLauncher =
             rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.RequestMultiplePermissions(),
-            ) { results ->
-                grantedPermissions =
-                    grantedPermissions.toMutableMap().apply {
-                        results.forEach { (key, granted) -> this[key] = granted }
-                    }
+            ) { _ ->
+                // Re-evaluate all groups after user interaction to stay in sync with system settings.
+                grantedPermissions = computeGrantedPermissions(context, requiredPermissions)
             }
+
+        LaunchedEffect(requiredPermissions, context) {
+            grantedPermissions = computeGrantedPermissions(context, requiredPermissions)
+        }
+        LaunchedEffect(grantedPermissions, requiredPermissions, autoRequestLaunched) {
+            if (!autoRequestLaunched) {
+                val pendingPermissions =
+                    requiredPermissions
+                        .filter { grantedPermissions[it.id] != true }
+                        .flatMap { it.permissions }
+                        .distinct()
+                        .toTypedArray()
+                if (pendingPermissions.isNotEmpty()) {
+                    autoRequestLaunched = true
+                    permissionLauncher.launch(pendingPermissions)
+                }
+            }
+        }
 
         val viewModel: GsrSessionViewModel = hiltViewModel()
 
@@ -122,7 +150,7 @@ fun GsrApp(
         val onboardingCompleted by viewModel.onboardingCompleted.collectAsStateWithLifecycle()
 
         val allPermissionsGranted =
-            requiredPermissions.all { grantedPermissions[it.permission] == true } &&
+            requiredPermissions.all { grantedPermissions[it.id] == true } &&
                 grantedPermissions.size == requiredPermissions.size
 
         LaunchedEffect(allPermissionsGranted, onboardingCompleted) {
@@ -140,7 +168,7 @@ fun GsrApp(
                     permissions = requiredPermissions,
                     grantedPermissions = grantedPermissions,
                     onRequestPermission = { permission ->
-                        permissionLauncher.launch(arrayOf(permission))
+                        permissionLauncher.launch(permission.permissions.toTypedArray())
                     },
                     onContinue = {
                         viewModel.completeOnboarding()
@@ -191,6 +219,17 @@ fun GsrApp(
         }
     }
 }
+
+private fun computeGrantedPermissions(
+    context: Context,
+    permissions: List<RequiredPermission>,
+): Map<String, Boolean> =
+    permissions.associate { permission ->
+        permission.id to permission.isGranted(context)
+    }
+
+private fun RequiredPermission.isGranted(context: Context): Boolean =
+    permissions.all { perm -> isPermissionGranted(context, perm) }
 
 @Composable
 private fun MainShell(
@@ -355,9 +394,11 @@ private fun isPermissionGranted(context: Context, permission: String): Boolean =
     ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
 
 private data class RequiredPermission(
-    val permission: String,
+    val id: String,
+    val permissions: List<String>,
     val title: String,
     val rationale: String,
+    val usedBy: List<FeaturePermissionArea>,
 )
 
 private sealed class RootDestination(val route: String) {
@@ -377,7 +418,7 @@ private sealed class RootDestination(val route: String) {
 private fun WelcomeScreen(
     permissions: List<RequiredPermission>,
     grantedPermissions: Map<String, Boolean>,
-    onRequestPermission: (String) -> Unit,
+    onRequestPermission: (RequiredPermission) -> Unit,
     onContinue: () -> Unit,
     isContinueEnabled: Boolean,
 ) {
@@ -410,11 +451,11 @@ private fun WelcomeScreen(
             }
 
             permissions.forEach { item ->
-                val granted = grantedPermissions[item.permission] == true
+                val granted = grantedPermissions[item.id] == true
                 PermissionCard(
                     item = item,
                     granted = granted,
-                    onRequest = { onRequestPermission(item.permission) },
+                    onRequest = onRequestPermission,
                 )
             }
 
@@ -454,7 +495,7 @@ private fun WelcomeScreen(
 private fun PermissionCard(
     item: RequiredPermission,
     granted: Boolean,
-    onRequest: () -> Unit,
+    onRequest: (RequiredPermission) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -466,6 +507,13 @@ private fun PermissionCard(
         ) {
             Text(text = item.title, style = MaterialTheme.typography.titleMedium)
             Text(text = item.rationale, style = MaterialTheme.typography.bodyMedium)
+            if (item.usedBy.isNotEmpty()) {
+                Text(
+                    text = "Used for: ${item.usedBy.joinToString { it.title }}",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Medium,
+                )
+            }
 
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -478,7 +526,7 @@ private fun PermissionCard(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         RowWithIcon(icon = Icons.Filled.Warning, text = "Action required")
-                        OutlinedButton(onClick = onRequest) {
+                        OutlinedButton(onClick = { onRequest(item) }) {
                             Text("Grant permission")
                         }
                     }

@@ -13,12 +13,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.os.ParcelUuid
 import android.util.Log
-import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -67,7 +67,9 @@ class ShimmerDeviceController(
     private val scope = CoroutineScope(dispatcher + SupervisorJob())
     private val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val bluetoothAdapter = bluetoothManager.adapter
-    private val shimmerManager = ShimmerBluetoothManagerAndroid(context, ShimmerMsgHandler(Looper.getMainLooper()))
+    private val shimmerHandler by lazy { ShimmerMsgHandler(Looper.getMainLooper()) }
+    @Volatile private var shimmerManager: ShimmerBluetoothManagerAndroid? = null
+    @Volatile private var bluetoothReceiverRegistered = false
     private val devicesMutex = Mutex()
     private val connectedDevices = mutableMapOf<String, Shimmer>()
     private val sequenceCounter = AtomicLong()
@@ -89,11 +91,23 @@ class ShimmerDeviceController(
             override fun onScanResult(callbackType: Int, result: ScanResult) {
                 scope.launch {
                     val deviceId = result.device.address.uppercase()
+                    val displayName =
+                        if (
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                            ActivityCompat.checkSelfPermission(
+                                context,
+                                Manifest.permission.BLUETOOTH_CONNECT,
+                            ) != PackageManager.PERMISSION_GRANTED
+                        ) {
+                            null
+                        } else {
+                            result.device.name
+                        }
                     updateDevice(
                         deviceId,
                         DeviceDescriptor(
                             id = deviceId,
-                            displayName = result.device.name ?: "Shimmer $deviceId",
+                            displayName = displayName ?: "Shimmer $deviceId",
                             type = DeviceType.SHIMMER_GSR_SENSOR,
                             connectionState = ConnectionState.DISCOVERED,
                             batteryPercent = null,
@@ -120,18 +134,24 @@ class ShimmerDeviceController(
                     }
                 }
             }
-        }
+    }
 
     init {
         lifecycleOwner.lifecycle.addObserver(this)
-        registerBluetoothReceiver()
     }
 
     fun startScanning() {
-        if (!hasPermissions()) {
+        if (
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_SCAN,
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             Log.w(TAG, "Missing Bluetooth permissions for scanning")
             return
         }
+        registerBluetoothReceiver()
         if (scanning) return
         scanning = true
         val filters =
@@ -149,6 +169,16 @@ class ShimmerDeviceController(
 
     fun stopScanning() {
         if (!scanning) return
+        if (
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_SCAN,
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.w(TAG, "Missing Bluetooth permissions for stopScan")
+            return
+        }
         scanning = false
         bluetoothAdapter.bluetoothLeScanner.stopScan(scanCallback)
     }
@@ -158,11 +188,23 @@ class ShimmerDeviceController(
     suspend fun connect(macAddress: String): Boolean =
         devicesMutex.withLock {
             updateConnectionState(macAddress, ConnectionState.CONNECTING)
+            if (
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.BLUETOOTH_CONNECT,
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.w(TAG, "Missing Bluetooth permissions for connect")
+                updateConnectionState(macAddress, ConnectionState.ERROR)
+                return@withLock false
+            }
             val device =
                 runCatching { bluetoothAdapter.getRemoteDevice(macAddress) }
                     .getOrNull()
                     ?: return@withLock false
-            shimmerManager.connectBluetoothDevice(device)
+            val manager = ensureShimmerManager() ?: return@withLock false
+            manager.connectBluetoothDevice(device)
             true
         }
 
@@ -207,20 +249,46 @@ class ShimmerDeviceController(
     }
 
     private fun registerBluetoothReceiver() {
+        if (bluetoothReceiverRegistered) return
+        if (!hasPermissions()) {
+            Log.d(TAG, "Skipping Bluetooth receiver registration; permissions not granted")
+            return
+        }
         val filter = IntentFilter().apply {
             addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
             addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED)
         }
         context.registerReceiver(bluetoothReceiver, filter)
+        bluetoothReceiverRegistered = true
     }
 
     private fun unregisterBluetoothReceiver() {
-        runCatching { context.unregisterReceiver(bluetoothReceiver) }
+        runCatching {
+            if (bluetoothReceiverRegistered) {
+                context.unregisterReceiver(bluetoothReceiver)
+                bluetoothReceiverRegistered = false
+            }
+        }
     }
 
     private fun hasPermissions(): Boolean {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED &&
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            return true
+        }
+        val scanGranted =
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED
+        val connectGranted =
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+        return scanGranted && connectGranted
+    }
+
+    private fun ensureShimmerManager(): ShimmerBluetoothManagerAndroid? {
+        if (!hasPermissions()) {
+            Log.w(TAG, "Missing Bluetooth permissions for Shimmer manager access")
+            return null
+        }
+        registerBluetoothReceiver()
+        return shimmerManager ?: ShimmerBluetoothManagerAndroid(context, shimmerHandler).also { shimmerManager = it }
     }
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
@@ -242,6 +310,7 @@ class ShimmerDeviceController(
             }
         }
         scope.coroutineContext.cancel()
+        shimmerManager = null
     }
 
     private fun updateDevice(deviceId: String, descriptor: DeviceDescriptor) {
@@ -274,9 +343,10 @@ class ShimmerDeviceController(
 
     private fun getShimmer(macAddress: String): Shimmer? {
         connectedDevices[macAddress]?.let { return it }
+        val manager = ensureShimmerManager() ?: return null
         val shimmer =
             runCatching {
-                shimmerManager.getShimmerDeviceBtConnectedFromMac(macAddress)
+                manager.getShimmerDeviceBtConnectedFromMac(macAddress)
             }.getOrNull() as? Shimmer
         if (shimmer != null) {
             connectedDevices[macAddress] = shimmer
@@ -399,4 +469,3 @@ class ShimmerDeviceController(
         private val UUID_GSR_SERVICE: UUID = UUID.fromString("0000ffe5-0000-1000-8000-00805f9b34fb")
     }
 }
-

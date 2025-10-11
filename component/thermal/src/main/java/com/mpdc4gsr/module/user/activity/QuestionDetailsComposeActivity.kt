@@ -16,9 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.module.user.viewmodel.QuestionDetailsViewModel
 
 class QuestionDetailsComposeActivity : BaseComposeActivity<QuestionDetailsViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = emptySet()
+
     override fun createViewModel(): QuestionDetailsViewModel = viewModels<QuestionDetailsViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -117,5 +120,4 @@ class QuestionDetailsComposeActivity : BaseComposeActivity<QuestionDetailsViewMo
         }
     }
 }
-
 

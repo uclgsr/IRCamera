@@ -1,6 +1,8 @@
 package mpdc4gsr.gsr.recording
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Size
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
@@ -76,13 +78,26 @@ class VideoRecorder(
             FileOutputOptions.Builder(outputFile)
                 .setFileSizeLimit(FILE_SEGMENT_BYTES)
                 .build()
-        activeRecording =
+        val canRecordAudio =
+            !context.simulationEnabled &&
+                ContextCompat.checkSelfPermission(
+                    this.context,
+                    Manifest.permission.RECORD_AUDIO,
+                ) == PackageManager.PERMISSION_GRANTED
+        val pendingRecording =
             videoCapture.output
                 .prepareRecording(context.appContext, outputOptions)
-                .apply { if (!context.simulationEnabled) withAudioEnabled() }
-                .start(mainExecutor) { event ->
-                    handleRecordEvent(event, context)
+                .let { pending ->
+                    if (canRecordAudio) {
+                        pending.withAudioEnabled()
+                    } else {
+                        pending
+                    }
                 }
+        activeRecording =
+            pendingRecording.start(mainExecutor) { event ->
+                handleRecordEvent(event, context)
+            }
     }
 
     override suspend fun stop() {
@@ -172,13 +187,26 @@ class VideoRecorder(
         val newFile = createOutputFile(context.sessionId)
         val videoCapture = capture ?: return
         val options = FileOutputOptions.Builder(newFile).build()
-        activeRecording =
+        val canRecordAudio =
+            !context.simulationEnabled &&
+                ContextCompat.checkSelfPermission(
+                    this.context,
+                    Manifest.permission.RECORD_AUDIO,
+                ) == PackageManager.PERMISSION_GRANTED
+        val pendingRecording =
             videoCapture.output
                 .prepareRecording(context.appContext, options)
-                .apply { if (!context.simulationEnabled) withAudioEnabled() }
-                .start(mainExecutor) { event ->
-                    handleRecordEvent(event, context)
+                .let { pending ->
+                    if (canRecordAudio) {
+                        pending.withAudioEnabled()
+                    } else {
+                        pending
+                    }
                 }
+        activeRecording =
+            pendingRecording.start(mainExecutor) { event ->
+                handleRecordEvent(event, context)
+            }
     }
 
     private fun createOutputFile(sessionId: String): File {

@@ -15,10 +15,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.module.user.viewmodel.AutoSaveViewModel
 import com.mpdc4gsr.component.shared.R as RCore
 
 class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = emptySet()
+
     override fun createViewModel(): AutoSaveViewModel = viewModels<AutoSaveViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -117,5 +120,4 @@ class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
         }
     }
 }
-
 

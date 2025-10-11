@@ -585,7 +585,21 @@ class PCControllerCore:
         port = int(cfg.get("port", 47017))
         max_clients = int(cfg.get("max_clients", 32))
         ttl = float(cfg.get("ttl_seconds", cfg.get("sync_interval", 30)))
-        return TimeSyncConfig(host=host, port=port, max_clients=max_clients, ttl_seconds=ttl)
+        http_port_cfg = cfg.get("http_port")
+        if http_port_cfg is None:
+            http_port = None if port == 0 else min(port + 1, 65535)
+        else:
+            http_port_value = int(http_port_cfg)
+            http_port = http_port_value if http_port_value >= 0 else None
+        history_size = int(cfg.get("history_size", TimeSyncConfig.history_size))
+        return TimeSyncConfig(
+            host=host,
+            port=port,
+            http_port=http_port,
+            max_clients=max_clients,
+            ttl_seconds=ttl,
+            history_size=history_size,
+        )
 
     def _build_sensor_manager(self) -> SensorManager:
         raw_sensors = self.config.get("sensors", {})

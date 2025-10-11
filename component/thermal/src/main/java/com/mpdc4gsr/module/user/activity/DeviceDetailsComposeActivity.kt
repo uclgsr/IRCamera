@@ -20,12 +20,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.component.shared.app.config.ExtraKeyConfig
 import com.mpdc4gsr.component.shared.app.lms.weiget.TToast
 import com.mpdc4gsr.module.user.viewmodel.DeviceDetailsViewModel
 import com.mpdc4gsr.component.shared.R as RCore
 
 class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = emptySet()
+
     override fun createViewModel(): DeviceDetailsViewModel = viewModels<DeviceDetailsViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -174,5 +177,4 @@ class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>
         }
     }
 }
-
 

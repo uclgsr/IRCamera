@@ -149,22 +149,11 @@ except ImportError:
 
 **Fix:** Added documentation clarifying thread-safety guarantees.
 
-**Files Changed:**
+**Files Changed (legacy, now superseded by TimeSyncClient):**
 
 - `app/src/main/java/mpdc4gsr/core/data/TimeSyncManager.kt`
 
-**Changes:**
-
-```kotlin
-/**
- * Set callback for manual sync triggers (typically called by PC or user action)
- * Note: This should be set once during initialization. The callback is accessed
- * from coroutine contexts which provide thread-safety for the read operations.
- */
-fun setSyncTriggerCallback(callback: SyncTriggerCallback) {
-    syncTriggerCallback = callback
-}
-```
+> The 2024 refresh replaced this callback path with `gsr/network/TimeSyncClient.kt` and `TimelineClock`. The historical fix remains documented here for traceability.
 
 ## Testing
 
@@ -193,7 +182,6 @@ cd pc-controller && python3 tests/test_sync_handler.py -v
 | Thread safety              | Nitpick  | ✅ Documented | TimeSyncManager.kt     |
 
 All high and medium priority issues have been addressed. All tests pass.
-
 
 
 

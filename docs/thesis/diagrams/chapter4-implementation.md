@@ -3,6 +3,11 @@
 This document contains figures, tables, and code snippets for Chapter 4 of the thesis, focusing on the implementation
 details of the multi-sensor recording system.
 
+> **2024 Refresh:** Time synchronisation content in this chapter now maps to the `TimeSyncClient` + `TimelineClock` +
+> PC `time_sync_service.py` architecture. Updated diagrams live in `docs/diagrams/time-sync-components.md` and
+> `docs/diagrams/time-sync-sequence.md`. Legacy sections referencing `TimeSyncManager` are preserved for historical
+> comparison and explicitly marked.
+
 ## Figure 4.1: Mobile App UI and Data Flow
 
 This diagram illustrates the Android application's user interface structure and internal data flow, showing how user
@@ -2457,7 +2462,6 @@ This chapter has presented the core implementation details of the multi-sensor r
 These implementation details demonstrate that the system achieves its design goals of multi-sensor coordination, precise
 time synchronization, and reliable remote control, forming the foundation for the experimental results presented in
 Chapter 5.
-
 
 
 

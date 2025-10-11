@@ -30,6 +30,12 @@
         android:name="android.permission.ACCESS_FINE_LOCATION"
         android:maxSdkVersion="30" />
 
+    <!-- Wi-Fi discovery for IR bridges (API 33+) -->
+    <uses-permission
+        android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="33" />
+
     <!-- Scoped media access (API 33+) -->
     <uses-permission
         android:name="android.permission.READ_MEDIA_IMAGES"
@@ -116,4 +122,3 @@
     </application>
 
 </manifest>
-

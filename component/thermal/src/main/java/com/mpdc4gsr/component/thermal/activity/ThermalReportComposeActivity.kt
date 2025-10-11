@@ -19,9 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.component.shared.app.ktbase.BaseViewModel
 
 class ThermalReportComposeActivity : BaseComposeActivity<ThermalReportViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = setOf(FeaturePermissionArea.MEDIA_REVIEW)
+
     override fun createViewModel(): ThermalReportViewModel = ThermalReportViewModel()
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -396,6 +399,5 @@ private enum class ExportFormat(
     DOCX("Word"),
     HTML("HTML"),
 }
-
 
 

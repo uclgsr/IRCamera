@@ -17,7 +17,8 @@ feature development.
   `core/data/utils/SessionDirectoryManager.kt`.
 - `CrashRecoveryManager` and `CrashSafeSupervisor` monitor long running sessions and automatically resume incomplete
   recordings.
-- `FeatureFlags` and `TimeSyncManager` manage protocol negotiation and synchronisation with the PC controller.
+- `FeatureFlags` negotiate protocol compatibility, while `gsr/network/TimeSyncClient.kt` pairs with `TimelineClock` to
+  keep device timestamps aligned with the PC reference.
 
 ## Sensor Integrations
 
@@ -49,6 +50,8 @@ feature development.
 - `PcControllerServer` listens for controller connections, performs mDNS registration, and delegates parsed commands.
 - `feature/connectivity/data` contains `NetworkController`, `RecordingController`, `NetworkClient`, `PreviewStreamer`,
   `UnifiedDataStreamingService`, and `FileUploadService`.
+- Continuous clock alignment <15 ms is achieved via `gsr/network/TimeSyncClient.kt` probing the PC controller's
+  `time_sync_service.py`, combining UDP round trips with shared calibration snapshots.
 - Discovery utilities (`PcServerDiscovery`, `NetworkUtils`) allow Android to find controllers on the LAN, while
   `NetworkErrorRecoveryManager` handles reconnection.
 
@@ -80,8 +83,6 @@ feature development.
 During manual testing, ensure the `RecordingService` notification appears (indicating the server is active) and that the
 PC controller can discover the device via mDNS. Use this guide along with the implementation packages to locate code
 when adding new features or debugging sensor pipelines.
-
-
 
 
 

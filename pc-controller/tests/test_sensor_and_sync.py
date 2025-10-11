@@ -1,8 +1,10 @@
 import json
 import socket
+import struct
 import time
 import unittest
 import warnings
+from http.client import HTTPConnection
 from pathlib import Path
 
 from sensor_manager import SensorConfig, SensorManager, load_sensor_config
@@ -102,17 +104,57 @@ class TimeSyncServiceTestCase(unittest.TestCase):
         started = service.start()
         self.assertTrue(started)
         try:
-            sock = service._socket  # type: ignore[attr-defined]
+            sock = service._udp_socket  # type: ignore[attr-defined]
             self.assertIsNotNone(sock)
             addr = sock.getsockname()
 
             with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as client:
                 client.settimeout(1.0)
-                client.sendto(b"ping", addr)
-                data, _ = client.recvfrom(4096)
-            payload = json.loads(data.decode("utf-8"))
-            self.assertEqual(payload["type"], "time_sync")
-            self.assertIn("sequence", payload)
+                client.sendto(struct.pack("!Q", time.perf_counter_ns()), addr)
+                data, _ = client.recvfrom(64)
+            self.assertEqual(len(data), 16)
+            t1, t2 = struct.unpack("!QQ", data)
+            self.assertGreater(t2, t1)
+        finally:
+            service.stop()
+            time.sleep(0.05)
+
+    def test_time_sync_http_calibration_round_trip(self):
+        config = TimeSyncConfig(host="127.0.0.1", port=0, http_port=0, ttl_seconds=5.0)
+        service = TimeSyncService(config)
+        started = service.start()
+        self.assertTrue(started)
+        try:
+            http_server = service._http_server  # type: ignore[attr-defined]
+            self.assertIsNotNone(http_server)
+            host, port = http_server.server_address
+
+            conn = HTTPConnection(host, port, timeout=1.0)
+            payload = {
+                "referenceEpochMillis": time.time() * 1000.0,
+                "offsetMillis": 4.2,
+                "roundTripMillis": 8.4,
+                "driftPpm": 0.5,
+                "accuracyMillis": 6.1,
+            }
+            conn.request(
+                "POST",
+                "/time/calibration",
+                body=json.dumps(payload),
+                headers={"Content-Type": "application/json"},
+            )
+            response = conn.getresponse()
+            self.assertEqual(response.status, 202)
+            response.read()
+
+            conn.request("GET", "/time/calibration")
+            response = conn.getresponse()
+            self.assertEqual(response.status, 200)
+            data = json.loads(response.read().decode("utf-8"))
+            self.assertAlmostEqual(data["offsetMillis"], payload["offsetMillis"])
+            self.assertAlmostEqual(data["roundTripMillis"], payload["roundTripMillis"])
+            self.assertAlmostEqual(data["driftPpm"], payload["driftPpm"])
+            conn.close()
         finally:
             service.stop()
             time.sleep(0.05)

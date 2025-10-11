@@ -34,8 +34,8 @@ document summarises how the major components interact and where to find their im
   mDNS, handles client command parsing, and delegates actions back to the service.
 - **Feature network module (`feature/connectivity/data`)** provides `NetworkController`, `RecordingController`, streaming
   pipelines, TCP/WebSocket clients, file upload services, and error recovery utilities.
-- **Time synchronisation** and protocol definitions live in `core/data/TimeSyncManager.kt` and
-  `feature/connectivity/data/Protocol.kt`.
+- **Time synchronisation** uses the `gsr/network/TimeSyncClient.kt` (Android) and
+  `pc-controller/time_sync_service.py` (PC) pair to maintain <15 ms drift via UDP probes and HTTP calibration sharing.
 
 ### User Experience
 
@@ -95,7 +95,6 @@ document summarises how the major components interact and where to find their im
 - Network health, reconnection, and backoff strategies live in `feature/connectivity/data/NetworkErrorRecoveryManager.kt`.
 
 Consult the platform-specific guides for deeper dives into implementation details.
-
 
 
 

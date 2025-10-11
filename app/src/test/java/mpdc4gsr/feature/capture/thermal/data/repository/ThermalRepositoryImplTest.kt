@@ -5,6 +5,7 @@ import com.mpdc4gsr.component.shared.ir.extension.ColorPalette
 import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import mpdc4gsr.feature.capture.thermal.data.BatteryStatus
 import mpdc4gsr.feature.capture.thermal.data.DeviceInfo
@@ -14,31 +15,49 @@ import mpdc4gsr.feature.capture.thermal.data.ThermalCalibrationData
 import mpdc4gsr.feature.capture.thermal.data.source.ThermalFrameData
 import mpdc4gsr.feature.capture.thermal.data.source.ThermalHardwareDataSource
 import mpdc4gsr.feature.capture.thermal.data.source.ThermalSnapshot
+import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.onBlocking
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
+import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ThermalRepositoryImplTest {
 
-    private val dataSource: ThermalHardwareDataSource = mock {
-        onBlocking { connectDevice() } doReturn Result.success(Unit)
-        onBlocking { captureSnapshot() } doReturn Result.success(fakeSnapshot())
-        onBlocking { startRecording() } doReturn Result.success(Unit)
-        onBlocking { stopRecording() } doReturn Result.success("path")
-        on { isConnected() } doReturn true
-        on { isSimulationMode() } doReturn false
-        onBlocking { getThermalStream() } doReturn flowOf(fakeFrame())
-        onBlocking { getMeasurementForArea(any()) } doReturn Result.success(fakeMeasurement())
-        onBlocking { applyCalibration(any()) } doReturn Result.success(Unit)
-        onBlocking { getDeviceInfo() } doReturn Result.success(fakeDeviceInfo())
-        onBlocking { getBatteryStatus() } doReturn Result.success(fakeBatteryStatus())
-        on { getLastRecordingPath() } doReturn "path"
+    private lateinit var dataSource: ThermalHardwareDataSource
+    private lateinit var repository: ThermalRepositoryImpl
+
+    @Before
+    fun setUp() {
+        dataSource = mock()
+        runBlocking {
+            whenever(dataSource.connectDevice()).thenReturn(Result.success(Unit))
+            whenever(dataSource.captureSnapshot()).thenReturn(Result.success(fakeSnapshot()))
+            whenever(dataSource.startRecording()).thenReturn(Result.success(Unit))
+            whenever(dataSource.stopRecording()).thenReturn(Result.success("path"))
+            whenever(dataSource.startStreaming()).thenReturn(flowOf(fakeFrame()))
+            whenever(dataSource.getMeasurementForArea(any())).thenReturn(Result.success(fakeMeasurement()))
+            whenever(dataSource.applyCalibration(any())).thenReturn(Result.success(Unit))
+            whenever(dataSource.performFFC()).thenReturn(Result.success(Unit))
+            whenever(dataSource.performNUC()).thenReturn(Result.success(Unit))
+            whenever(dataSource.enableISP(any())).thenReturn(Result.success(Unit))
+            whenever(dataSource.setTNRLevel(any())).thenReturn(Result.success(Unit))
+            whenever(dataSource.setBrightness(any())).thenReturn(Result.success(Unit))
+            whenever(dataSource.setContrast(any())).thenReturn(Result.success(Unit))
+            whenever(dataSource.setSharpness(any())).thenReturn(Result.success(Unit))
+            whenever(dataSource.setTemperatureRange(any(), any())).thenReturn(Result.success(Unit))
+            whenever(dataSource.setColorPalette(any())).thenReturn(Result.success(Unit))
+            whenever(dataSource.setAgcMode(any())).thenReturn(Result.success(Unit))
+            whenever(dataSource.getDeviceInfo()).thenReturn(Result.success(fakeDeviceInfo()))
+            whenever(dataSource.getBatteryStatus()).thenReturn(Result.success(fakeBatteryStatus()))
+        }
+        whenever(dataSource.isConnected()).thenReturn(true)
+        whenever(dataSource.isSimulationMode()).thenReturn(false)
+        whenever(dataSource.getLastRecordingPath()).thenReturn("path")
+
+        repository = ThermalRepositoryImpl(dataSource)
     }
-    private val repository = ThermalRepositoryImpl(dataSource)
 
     @Test
     fun `delegates to hardware data source`() = runTest {
@@ -48,8 +67,8 @@ class ThermalRepositoryImplTest {
         repository.startRecording()
         repository.stopRecording()
         repository.setTemperatureRange(10f, 30f)
-        repository.setColorPalette(ColorPalette.IRON)
-        repository.setAgcMode(AgcMode.Auto)
+        repository.setColorPalette(ColorPalette.IRONBOW)
+        repository.setAgcMode(AgcMode.AUTO)
         repository.getMeasurementForArea(MeasurementArea.PointArea(android.graphics.Point(1, 1)))
         repository.applyCalibration(ThermalCalibrationData())
         repository.performFFC()
@@ -62,11 +81,11 @@ class ThermalRepositoryImplTest {
         repository.getDeviceInfo()
         repository.getBatteryStatus()
 
-        verify { dataSource.connectDevice() }
-        verify { dataSource.getThermalStream() }
-        verify { dataSource.captureSnapshot() }
-        verify { dataSource.startRecording() }
-        verify { dataSource.stopRecording() }
+        verifyBlocking(dataSource) { connectDevice() }
+        verifyBlocking(dataSource) { startStreaming() }
+        verifyBlocking(dataSource) { captureSnapshot() }
+        verifyBlocking(dataSource) { startRecording() }
+        verifyBlocking(dataSource) { stopRecording() }
     }
 
     @Test

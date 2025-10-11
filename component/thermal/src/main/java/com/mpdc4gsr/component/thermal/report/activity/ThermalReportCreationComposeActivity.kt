@@ -22,10 +22,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.permissions.FeaturePermissionArea
 import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import com.mpdc4gsr.component.shared.app.ktbase.BaseViewModel
 
 class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>() {
+    override val requiredPermissionAreas: Set<FeaturePermissionArea> = setOf(FeaturePermissionArea.MEDIA_REVIEW)
+
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, ThermalReportCreationComposeActivity::class.java))
@@ -758,7 +761,6 @@ private fun getReportTemplates() =
         ReportTemplate("research", "Research Study", "Academic research and analysis template", "research"),
         ReportTemplate("compliance", "Compliance Report", "Regulatory compliance and audit template", "compliance"),
     )
-
 
 
 

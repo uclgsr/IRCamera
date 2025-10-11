@@ -87,31 +87,37 @@ figures, tables, and code snippets as specified in the requirements.
 
 **Source Files Referenced**:
 
-- `app/src/main/java/mpdc4gsr/core/data/TimeSyncManager.kt`
-- `app/src/main/java/mpdc4gsr/core/data/utils/TimeManager.kt`
+- `app/src/main/java/mpdc4gsr/gsr/network/TimeSyncClient.kt`
+- `app/src/main/java/mpdc4gsr/gsr/session/TimelineClock.kt`
+- `pc-controller/time_sync_service.py`
 
 **Content**:
 
-- NTP-style 4-timestamp exchange protocol
-- Clock offset calculation algorithm
-- Round-trip time (RTT) measurement
-- Sync quality classification (Excellent/Good/Fair/Poor)
-- Transparent timestamp offset application
-- CSV logging for validation
+- UDP probe using four timestamp exchange (client send time + server receive/transmit times)
+- Clock offset and drift estimation updated in `TimelineClock`
+- Round-trip time (RTT) and accuracy scoring
+- Optional calibration sharing over HTTP for fast restarts
+- Timeline smoothing and guardrails against degraded samples
 
 **Mathematical Implementation**:
 
 ```
-RTT = (t4 - t1) - (t3 - t2)
-Offset = ((t2 - t1) + (t3 - t4)) / 2
+Offset = ((t1 - t0) + (t2 - t3)) / 2
+RTT = max(0, (t3 - t0) - (t2 - t1))
+Drift(ppm) = ((t2 - t1) - (t3 - t0)) / (t3 - t0) * 1_000_000
 ```
+
+- `t0`: Android send timestamp (nanoseconds)
+- `t1`: PC receive timestamp (nanoseconds)
+- `t2`: PC transmit timestamp (nanoseconds)
+- `t3`: Android receive timestamp (nanoseconds)
 
 **Key Implementation Details**:
 
-- Non-intrusive (no system clock modification)
-- Nanosecond precision throughout
-- Quality thresholds: Excellent <10ms, Good <50ms, Fair <200ms
-- Periodic re-sync every 5 minutes
+- Uses monotonic clock on both sides for nanosecond precision
+- `TimelineClock` blends new estimates based on accuracy window (<15 ms preferred)
+- Calibrations published via `/time/calibration` so newly connected devices can bootstrap quickly
+- Legacy `SYNC_*` protocol retained only as a fallback path for older controllers
 
 ### 5. Code Snippet 4.5: Remote Command Handling (TCP Server)
 
@@ -275,7 +281,7 @@ All deliverables have been validated:
 - ✅ Figure 4.1: Mermaid syntax valid, renders correctly
 - ✅ Code Snippet 4.2: Matches GsrDeviceManager.kt and GSRSensorRecorder.kt
 - ✅ Code Snippet 4.3: Matches ThermalCameraRecorder.kt and IRUVCTC.java
-- ✅ Code Snippet 4.4: Matches TimeSyncManager.kt and TimeManager.kt
+- ✅ Code Snippet 4.4: Matches TimeSyncClient.kt, TimelineClock.kt, and time_sync_service.py
 - ✅ Code Snippet 4.5: Matches CommandServer.kt and ProtocolHandler.kt
 - ✅ All code compiles and follows project conventions
 - ✅ ASCII-safe characters throughout
@@ -289,8 +295,6 @@ professional presentation, and clear explanations suitable for inclusion in the 
 
 The documentation follows the project's coding conventions, uses Mermaid for maintainable diagrams, and is synchronized
 with the actual codebase to ensure accuracy and reproducibility.
-
-
 
 
 
