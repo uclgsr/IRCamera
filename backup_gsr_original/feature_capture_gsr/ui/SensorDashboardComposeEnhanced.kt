@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import mpdc4gsr.core.designsystem.components.sensors.GSRConnectionState
 import mpdc4gsr.core.designsystem.components.sensors.GSRData
 import mpdc4gsr.core.designsystem.components.sensors.GSRVisualizationCard
@@ -29,7 +29,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
         super.onCreate(savedInstanceState)
         dashboardViewModel = viewModels<MainActivityViewModel>().value
         setContent {
-            LibUnifiedTheme {
+            LibSharedTheme {
                 Content(dashboardViewModel)
             }
         }
@@ -664,3 +664,6 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
             100f + (kotlin.random.Random.nextFloat() - 0.5f) * 50f
         }
 }
+
+
+

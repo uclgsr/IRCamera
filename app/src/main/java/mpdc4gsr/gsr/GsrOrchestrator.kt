@@ -1,6 +1,7 @@
 package mpdc4gsr.gsr
 
 import android.content.Context
+import android.os.Build
 import androidx.lifecycle.LifecycleOwner
 import java.io.File
 import java.time.Instant
@@ -89,7 +90,10 @@ class GsrOrchestrator(
                 when (command) {
                     is SessionCommand.StartRecording -> handleStartRecording(command)
                     is SessionCommand.StopRecording -> handleStopRecording(command)
-                    is SessionCommand.StimulusMarker -> sessionController.applyCommand(command)
+                    is SessionCommand.StimulusMarker -> {
+                        sessionController.applyCommand(command)
+                        scope.launch { notifyStimulusMarker(command) }
+                    }
                     is SessionCommand.ApplyDeviceSnapshot -> sessionController.applyCommand(command)
                     is SessionCommand.UpdateRecorderState -> sessionController.applyCommand(command)
                     is SessionCommand.AppendFault -> sessionController.applyCommand(command)
@@ -162,6 +166,25 @@ class GsrOrchestrator(
         lastThermalStatus = status
     }
 
+    private suspend fun notifyStimulusMarker(command: SessionCommand.StimulusMarker) {
+        val sessionId = sessionStateStore.sessionSnapshot.value?.sessionId
+        val deviceTimestampMs = timelineClock.nowInstant().toEpochMilli()
+        val metadata =
+            command.metadata.toMutableMap().apply {
+                put("scheduled_time_ms", command.scheduledTimeMillis)
+                put("device_timestamp_ms", deviceTimestampMs)
+                putIfAbsent("origin", "device_ack")
+                put("acknowledged_by", Build.DEVICE)
+                put("timeline_offset_ms", timelineClock.timeline.value.offsetMillis)
+            }
+        commandClient.emitEventMarker(
+            code = command.markerId,
+            timestampMillis = deviceTimestampMs,
+            metadata = metadata,
+            sessionId = sessionId,
+        )
+    }
+
     private fun updateThermalTelemetry(status: ThermalStatus) {
         val current = sessionStateStore.deviceTelemetry.value.toMutableMap()
         val base =
@@ -181,6 +204,9 @@ class GsrOrchestrator(
             base.copy(
                 thermalSpotCelsius = status.currentTemperature?.toFloat() ?: base.thermalSpotCelsius,
                 frameRate = frameRate,
+                droppedFrames = status.frameDropCount,
+                batteryPercent = status.batteryPercent ?: base.batteryPercent,
+                ispActive = status.ispActive,
             )
         sessionStateStore.deviceTelemetry.value = current
     }
@@ -279,7 +305,7 @@ class GsrOrchestrator(
             displayName = "Thermal Camera",
             type = DeviceType.ANDROID_HOST,
             connectionState = connectionState,
-            batteryPercent = null,
+            batteryPercent = status.batteryPercent,
             supportsThermal = true,
             supportsRgb = false,
             supportsAudio = false,

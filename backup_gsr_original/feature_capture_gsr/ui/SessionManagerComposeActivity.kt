@@ -53,8 +53,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.recording.session.SessionInfo
 import mpdc4gsr.feature.capture.gsr.presentation.SessionManagerViewModel
@@ -77,7 +77,7 @@ class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewMode
         var searchQuery by remember { mutableStateOf("") }
         var selectedSessions by remember { mutableStateOf(setOf<String>()) }
         var showFilterDialog by remember { mutableStateOf(false) }
-        LibUnifiedTheme {
+        LibSharedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -428,3 +428,6 @@ private fun SessionFilterDialog(
         },
     )
 }
+
+
+

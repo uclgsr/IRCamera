@@ -124,7 +124,7 @@ tasks.register("build") {
         "cleanAll",
         ":app:assembleRelease",
         ":BleModule:assembleRelease",
-        ":libunified:assembleRelease",
-        ":component:thermalunified:assembleRelease"
+        ":component:shared:assembleRelease",
+        ":component:thermal:assembleRelease"
     )
 }

@@ -7,9 +7,13 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.io.File
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
+import mpdc4gsr.feature.capture.thermal.data.ThermalCaptureCoordinator
+import com.csl.irCamera.BuildConfig
 import mpdc4gsr.gsr.GsrOrchestrator
 import mpdc4gsr.gsr.capture.CaptureCoordinator
 import mpdc4gsr.gsr.capture.RecorderFactory
@@ -22,14 +26,13 @@ import mpdc4gsr.gsr.network.TimeSyncClient
 import mpdc4gsr.gsr.network.TransferClient
 import mpdc4gsr.gsr.session.SessionController
 import mpdc4gsr.gsr.session.TimelineClock
-import mpdc4gsr.feature.capture.thermal.data.ThermalCaptureCoordinator
-import mpdc4gsr.feature.capture.thermal.data.ThermalCaptureCoordinator
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import java.io.File
-import java.util.concurrent.TimeUnit
 
-private const val DEFAULT_COMMAND_ENDPOINT = "https://127.0.0.1:8443"
+private const val FALLBACK_COMMAND_ENDPOINT = "https://127.0.0.1:8443"
+
+private fun commandEndpoint(): String =
+    BuildConfig.COMMAND_ENDPOINT.takeUnless { it.isBlank() } ?: FALLBACK_COMMAND_ENDPOINT
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -137,7 +140,7 @@ object GsrModule {
         CommandClient(
             okHttpClient = okHttpClient,
             json = json,
-            endpoint = DEFAULT_COMMAND_ENDPOINT,
+            endpoint = commandEndpoint(),
             deviceId = Build.DEVICE,
             dispatcher = Dispatchers.IO,
             sessionStateStore = stateStore,
@@ -154,7 +157,7 @@ object GsrModule {
         TimeSyncClient(
             okHttpClient = okHttpClient,
             json = json,
-            endpoint = DEFAULT_COMMAND_ENDPOINT,
+            endpoint = commandEndpoint(),
             dispatcher = Dispatchers.IO,
             sessionController = sessionController,
             clock = clock,
@@ -163,12 +166,11 @@ object GsrModule {
     @Provides
     @Singleton
     fun provideTransferClient(
-        okHttpClient: OkHttpClient,
+        commandClient: CommandClient,
     ): TransferClient =
         TransferClient(
-            okHttpClient = okHttpClient,
+            commandClient = commandClient,
             dispatcher = Dispatchers.IO,
-            endpoint = DEFAULT_COMMAND_ENDPOINT,
         )
 
     @Provides

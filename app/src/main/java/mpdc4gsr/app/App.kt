@@ -7,13 +7,13 @@ import android.os.Bundle
 import android.os.StrictMode
 import androidx.appcompat.app.AppCompatDelegate
 import com.csl.irCamera.BuildConfig
-import com.mpdc4gsr.libunified.app.BaseApplication
-import com.mpdc4gsr.libunified.app.common.SharedManager
-import com.mpdc4gsr.libunified.app.config.HttpConfig
-import com.mpdc4gsr.libunified.app.lms.Config
-import com.mpdc4gsr.libunified.app.lms.UrlConstants
-import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
-import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
+import com.mpdc4gsr.component.shared.app.BaseApplication
+import com.mpdc4gsr.component.shared.app.common.SharedManager
+import com.mpdc4gsr.component.shared.app.config.HttpConfig
+import com.mpdc4gsr.component.shared.app.lms.Config
+import com.mpdc4gsr.component.shared.app.lms.UrlConstants
+import com.mpdc4gsr.component.shared.app.lms.utils.SPUtils
+import com.mpdc4gsr.component.thermal.compat.ContextProvider
 import dagger.hilt.android.HiltAndroidApp
 import mpdc4gsr.core.designsystem.InitUtils.initJPush
 import mpdc4gsr.core.designsystem.InitUtils.initLms
@@ -250,3 +250,6 @@ class App : BaseApplication() {
         )
     }
 }
+
+
+

@@ -25,9 +25,11 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
+import com.shimmerresearch.bluetooth.ShimmerBluetooth
 import com.shimmerresearch.driver.CallbackObject
 import com.shimmerresearch.driver.ObjectCluster
 import java.util.UUID
+import java.util.concurrent.atomic.AtomicLong
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -66,6 +68,8 @@ class ShimmerDeviceController(
     private val bluetoothAdapter = bluetoothManager.adapter
     private val shimmerManager = ShimmerBluetoothManagerAndroid(context, ShimmerMsgHandler(Looper.getMainLooper()))
     private val devicesMutex = Mutex()
+    private val connectedDevices = mutableMapOf<String, Shimmer>()
+    private val sequenceCounter = AtomicLong()
 
     private val _devices = MutableStateFlow<Map<String, DeviceDescriptor>>(emptyMap())
     val devices: StateFlow<Map<String, DeviceDescriptor>> = _devices
@@ -152,35 +156,43 @@ class ShimmerDeviceController(
 
     suspend fun connect(macAddress: String): Boolean =
         devicesMutex.withLock {
-            val cached = shimmerManager.bluetoothList[macAddress] as? Shimmer
-            val device =
-                cached ?: shimmerManager.createShimmerDevice(macAddress, macAddress).also {
-                    shimmerManager.addShimmerDevice(it, macAddress, false)
-                }
             updateConnectionState(macAddress, ConnectionState.CONNECTING)
-            shimmerManager.connectShimmerDevice(device)
+            val device =
+                runCatching { bluetoothAdapter.getRemoteDevice(macAddress) }
+                    .getOrNull()
+                    ?: return@withLock false
+            shimmerManager.connectBluetoothDevice(device)
             true
         }
 
     suspend fun disconnect(macAddress: String): Boolean =
         devicesMutex.withLock {
-            val shimmer = shimmerManager.bluetoothList[macAddress] as? Shimmer ?: return@withLock false
-            shimmerManager.disconnectShimmerDevice(shimmer)
+            val shimmer = getShimmer(macAddress) ?: return@withLock false
+            shimmer.stopStreaming()
+            shimmer.disconnect()
+            connectedDevices.remove(macAddress)
             updateConnectionState(macAddress, ConnectionState.DISCONNECTED)
             true
         }
 
     fun startStreaming(macAddress: String) {
-        val shimmer = shimmerManager.bluetoothList[macAddress] as? Shimmer ?: return
-        shimmer.enableAllSensors()
-        shimmer.startStreaming()
-        updateConnectionState(macAddress, ConnectionState.RECORDING)
+        scope.launch {
+            devicesMutex.withLock {
+                val shimmer = getShimmer(macAddress) ?: return@withLock
+                shimmer.startStreaming()
+                updateConnectionState(macAddress, ConnectionState.RECORDING)
+            }
+        }
     }
 
     fun stopStreaming(macAddress: String) {
-        val shimmer = shimmerManager.bluetoothList[macAddress] as? Shimmer ?: return
-        shimmer.stopStreaming()
-        updateConnectionState(macAddress, ConnectionState.READY)
+        scope.launch {
+            devicesMutex.withLock {
+                val shimmer = getShimmer(macAddress) ?: return@withLock
+                shimmer.stopStreaming()
+                updateConnectionState(macAddress, ConnectionState.READY)
+            }
+        }
     }
 
     fun enableSimulation(sessionId: String) {
@@ -221,12 +233,11 @@ class ShimmerDeviceController(
         unregisterBluetoothReceiver()
         scope.launch {
             devicesMutex.withLock {
-                shimmerManager.bluetoothList.values
-                    .filterIsInstance<Shimmer>()
-                    .forEach { shimmerManager.stopStreaming(it) }
-                shimmerManager.bluetoothList.values
-                    .filterIsInstance<Shimmer>()
-                    .forEach { shimmerManager.disconnectShimmerDevice(it) }
+                connectedDevices.values.forEach {
+                    runCatching { it.stopStreaming() }
+                    runCatching { it.disconnect() }
+                }
+                connectedDevices.clear()
             }
         }
         scope.coroutineContext.cancel()
@@ -260,6 +271,18 @@ class ShimmerDeviceController(
         }
     }
 
+    private fun getShimmer(macAddress: String): Shimmer? {
+        connectedDevices[macAddress]?.let { return it }
+        val shimmer =
+            runCatching {
+                shimmerManager.getShimmerDeviceBtConnectedFromMac(macAddress)
+            }.getOrNull() as? Shimmer
+        if (shimmer != null) {
+            connectedDevices[macAddress] = shimmer
+        }
+        return shimmer
+    }
+
     private fun onDeviceConnected(mac: String) {
         updateConnectionState(mac, ConnectionState.READY)
     }
@@ -271,27 +294,42 @@ class ShimmerDeviceController(
     private inner class ShimmerMsgHandler(looper: Looper) : Handler(looper) {
         override fun handleMessage(msg: Message) {
             when (msg.what) {
-                ShimmerBluetoothManagerAndroid.MSG_STATE_CHANGE -> handleStateChange(msg)
-                ShimmerBluetoothManagerAndroid.MSG_DATA_RECEIVED -> handleData(msg)
-                ShimmerBluetoothManagerAndroid.MSG_NOTIFICATION_MESSAGE -> handleNotification(msg)
+                ShimmerBluetooth.MSG_IDENTIFIER_STATE_CHANGE -> handleStateChange(msg.obj)
+                ShimmerBluetooth.MSG_IDENTIFIER_DATA_PACKET -> handleData(msg.obj as? ObjectCluster)
+                ShimmerBluetooth.MSG_IDENTIFIER_NOTIFICATION_MESSAGE -> handleNotification(msg)
             }
         }
 
-        private fun handleStateChange(msg: Message) {
-            val state = msg.arg1
-            val mac = msg.data.getString(ShimmerBluetoothManagerAndroid.EXTRA_DEVICE_ADDRESS) ?: return
-            when (state) {
-                ShimmerBluetoothManagerAndroid.STATE_CONNECTED -> onDeviceConnected(mac)
-                ShimmerBluetoothManagerAndroid.STATE_CONNECTING -> updateConnectionState(mac, ConnectionState.CONNECTING)
-                ShimmerBluetoothManagerAndroid.STATE_NONE -> onDeviceDisconnected(mac)
-                ShimmerBluetoothManagerAndroid.STATE_LISTEN -> updateConnectionState(mac, ConnectionState.DISCOVERED)
+        private fun handleStateChange(payload: Any?) {
+            val (stateName, mac) =
+                when (payload) {
+                    is ObjectCluster -> payload.mState?.toString() to payload.macAddress
+                    is CallbackObject -> payload.mState?.toString() to payload.mBluetoothAddress
+                    else -> return
+                }
+            val address = mac?.takeIf { it.isNotBlank() } ?: return
+            when (stateName?.uppercase()) {
+                "CONNECTED" -> {
+                    getShimmer(address)
+                    onDeviceConnected(address)
+                }
+                "CONNECTING" -> updateConnectionState(address, ConnectionState.CONNECTING)
+                "DISCONNECTED", "CONNECTION_LOST", "NONE" -> {
+                    connectedDevices.remove(address)
+                    onDeviceDisconnected(address)
+                }
+                "FAILED_TO_CONNECT" -> {
+                    connectedDevices.remove(address)
+                    updateConnectionState(address, ConnectionState.ERROR)
+                }
+                "CONNECTION_TIMEOUT" -> updateConnectionState(address, ConnectionState.ERROR)
+                else -> Unit
             }
         }
 
-        private fun handleData(msg: Message) {
-            val callbackObject = msg.obj as? CallbackObject ?: return
-            val mac = callbackObject.shimmerDeviceAddress ?: return
-            val cluster = callbackObject.objectCluster ?: return
+        private fun handleData(cluster: ObjectCluster?) {
+            cluster ?: return
+            val mac = cluster.macAddress ?: return
             val sample = mapCluster(mac, cluster)
             if (sample != null) {
                 scope.launch { _samples.emit(sample) }
@@ -313,36 +351,45 @@ class ShimmerDeviceController(
         }
 
         private fun handleNotification(msg: Message) {
-            val mac = msg.data.getString(ShimmerBluetoothManagerAndroid.EXTRA_DEVICE_ADDRESS) ?: return
+            val payload = msg.obj as? CallbackObject ?: return
+            val mac = payload.mBluetoothAddress ?: return
             when (msg.arg1) {
-                ShimmerBluetoothManagerAndroid.NOTIFICATION_SHIMMER_FULLY_INITIALIZED -> onDeviceConnected(mac)
-                ShimmerBluetoothManagerAndroid.NOTIFICATION_SHIMMER_STOP_STREAMING -> updateConnectionState(mac, ConnectionState.READY)
-                ShimmerBluetoothManagerAndroid.NOTIFICATION_SHIMMER_START_STREAMING -> updateConnectionState(mac, ConnectionState.RECORDING)
+                ShimmerBluetooth.NOTIFICATION_SHIMMER_FULLY_INITIALIZED -> onDeviceConnected(mac)
+                ShimmerBluetooth.NOTIFICATION_SHIMMER_STOP_STREAMING -> updateConnectionState(mac, ConnectionState.READY)
+                ShimmerBluetooth.NOTIFICATION_SHIMMER_START_STREAMING -> updateConnectionState(mac, ConnectionState.RECORDING)
             }
         }
     }
 
     private fun mapCluster(deviceId: String, cluster: ObjectCluster): GsrSample? {
-        val calibrated =
-            cluster.getData(Shimmer.SignalNames.GSR.ordinal, Shimmer.ChannelType.CAL.toInt())
-        val raw =
-            cluster.getData(Shimmer.SignalNames.GSR.ordinal, Shimmer.ChannelType.DEFAULT.toInt())
-        val temp =
-            cluster.getData(Shimmer.SignalNames.TEMPERATURE_SKIN.ordinal, Shimmer.ChannelType.CAL.toInt())
-        val gsrValue = calibrated?.data ?: return null
+        val sensorNames = cluster.mSensorNames ?: return null
+        val calibrated = cluster.mCalData ?: return null
+        val uncalibrated = cluster.mUncalData
+
+        val gsrIndex = sensorNames.indexOfFirst { it.contains("GSR", ignoreCase = true) }
+        if (gsrIndex == -1 || gsrIndex !in calibrated.indices) return null
+
+        val gsrValue = calibrated[gsrIndex]
+        val rawValue =
+            if (uncalibrated != null && gsrIndex in uncalibrated.indices) uncalibrated[gsrIndex].toInt()
+            else null
+        val tempIndex = sensorNames.indexOfFirst { it.contains("TEMP", ignoreCase = true) }
+        val skinTemperature =
+            if (tempIndex != -1 && tempIndex in calibrated.indices) calibrated[tempIndex] else null
+
         val timestamp = clock.nowInstant().toEpochMilli()
-        val resistance =
-            if (gsrValue > 0f) 1_000_000.0 / gsrValue.toDouble() else null
+        val resistance = if (gsrValue > 0.0) 1_000_000.0 / gsrValue else null
+
         return GsrSample(
             deviceId = deviceId,
             timestampMillis = timestamp,
-            gsrMicrosiemens = gsrValue.toDouble(),
-            gsrRaw = raw?.data?.toInt(),
+            gsrMicrosiemens = gsrValue,
+            gsrRaw = rawValue,
             qualityScore = 0.9,
             connectionRssi = null,
             resistanceOhms = resistance,
-            skinTemperatureCelsius = temp?.data?.toDouble(),
-            sequenceNumber = cluster.systemTimestampNsec / 1_000_000L,
+            skinTemperatureCelsius = skinTemperature,
+            sequenceNumber = sequenceCounter.incrementAndGet(),
         )
     }
 

@@ -1,7 +1,7 @@
 package mpdc4gsr.feature.capture.thermal.domain.repository
 
-import com.mpdc4gsr.libunified.ir.extension.AgcMode
-import com.mpdc4gsr.libunified.ir.extension.ColorPalette
+import com.mpdc4gsr.component.shared.ir.extension.AgcMode
+import com.mpdc4gsr.component.shared.ir.extension.ColorPalette
 import kotlinx.coroutines.flow.Flow
 import mpdc4gsr.feature.capture.thermal.data.BatteryStatus
 import mpdc4gsr.feature.capture.thermal.data.DeviceInfo
@@ -63,4 +63,6 @@ interface ThermalRepository {
 
     suspend fun getBatteryStatus(): Result<BatteryStatus>
 }
+
+
 

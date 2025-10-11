@@ -21,7 +21,7 @@ The following focused guides live in `docs/developer-guides/`:
 - [permission-handling-guide.md](developer-guides/permission-handling-guide.md) – Using `PermissionTools` and
   platform-specific permission flows.
 
-Additional utility notes reside in `libunified/PERMISSION_HANDLING.md`.
+Additional utility notes reside in `component/shared/PERMISSION_HANDLING.md`.
 
 ## PC Controller Docs
 
@@ -39,6 +39,8 @@ core references above for the current state of the system.
 - Keep new documents in `docs/` and wire them into this index.
 - Prefer ASCII-only markdown for compatibility.
 - Update cross-references when directories move or files are removed.
+
+
 
 
 

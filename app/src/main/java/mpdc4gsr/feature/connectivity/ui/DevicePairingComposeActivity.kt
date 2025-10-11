@@ -58,8 +58,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.designsystem.deferAction
 import mpdc4gsr.feature.connectivity.presentation.DevicePairingViewModel
@@ -83,7 +83,7 @@ class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>
         var selectedDevice by remember { mutableStateOf<BluetoothDeviceInfo?>(null) }
         var showPairingDialog by remember { mutableStateOf(false) }
         var deviceFilter by remember { mutableStateOf("All") }
-        LibUnifiedTheme {
+        LibSharedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -543,4 +543,7 @@ private fun getMockBluetoothDevices() = listOf(
     BluetoothDeviceInfo("Unknown Device", "FF:EE:DD:CC:BB:AA", "Unknown", -68, "available"),
     BluetoothDeviceInfo("Samsung Galaxy", "11:22:33:44:55:66", "Camera", -42, "available")
 )
+
+
+
 

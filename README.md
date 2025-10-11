@@ -12,7 +12,7 @@ communication. The PC controller provides orchestration, real-time visualisation
   sensor diagnostics, and live preview.
 - Modular `mpdc4gsr.gsr` package providing the `GsrOrchestrator`, Shimmer3 device manager, simulation sources, JSON
   command/time-sync clients, and a Compose session dashboard backed by Hilt.
-- Thermal capture via the `thermalunified` component with Topdon TC001 bindings and coordinated multi-modal recording
+- Thermal capture via the `component/thermal` module with Topdon TC001 bindings and coordinated multi-modal recording
   through shared recording/session infrastructure.
 - Python PC controller (`pc_controller.py`) with the new `SensorManager`, `TimeSyncService`, `StimulusController`, PyQt6
   dashboard, CLI mode, native packet parsing, and end-to-end protocol compatibility with the Android service.
@@ -28,11 +28,11 @@ finalgsr/
     src/main/java/mpdc4gsr/core/        Shared foundations (`common/`, `designsystem/`, `hardware/`, `infrastructure/`, `recording/`)
     src/main/java/mpdc4gsr/feature/     Feature slices (`dashboard/`, `capture/`, `control/`, `connectivity/`, `recording/`)
   BleModule/           BLE utility module for Shimmer devices
-  component/           Additional Android components such as thermal camera bindings
-  libunified/          Shared Kotlin library (permission tools, logging, utilities)
+  component/
+    unified/           Shared Kotlin component (permission tools, logging, utilities)
+    thermal/           Vendor thermal SDK wrapper
   pc-controller/       Desktop controller application and documentation
   docs/                Project documentation (see docs/README.md)
-  thermalunified/      Vendor thermal SDK wrapper
 ```
 
 ## Getting Started

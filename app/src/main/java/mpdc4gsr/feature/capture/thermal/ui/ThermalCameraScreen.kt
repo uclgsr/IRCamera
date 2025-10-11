@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import mpdc4gsr.feature.capture.thermal.data.MeasurementMode
 import mpdc4gsr.feature.capture.thermal.data.TemperatureUnit
 import mpdc4gsr.feature.capture.thermal.data.ThermalPalette
@@ -39,7 +39,7 @@ fun ThermalCameraScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LibUnifiedTheme {
+    LibSharedTheme {
         ThermalScaffold(
             title = "Thermal Imaging",
             onBackClick = onBackClick,
@@ -830,3 +830,6 @@ private fun formatDuration(durationMs: Long): String {
     val seconds = totalSeconds % 60
     return String.format("%02d:%02d", minutes, seconds)
 }
+
+
+

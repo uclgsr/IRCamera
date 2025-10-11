@@ -1,6 +1,9 @@
 package mpdc4gsr.gsr.network
 
 import android.util.Log
+import java.io.IOException
+import java.time.Instant
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -13,13 +16,15 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.floatOrNull
@@ -28,6 +33,8 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull
+import kotlinx.serialization.json.put
+import mpdc4gsr.gsr.model.ConnectionState
 import mpdc4gsr.gsr.model.DeviceDescriptor
 import mpdc4gsr.gsr.model.DeviceType
 import mpdc4gsr.gsr.model.FaultSeverity
@@ -41,13 +48,6 @@ import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
-import java.io.IOException
-import java.time.Instant
-import java.util.concurrent.TimeUnit
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
-
 /**
  * Persistent command channel to the PC orchestrator. Uses a TLS WebSocket with JSON payloads. The
  * client automatically reconnects and emits parsed [SessionCommand] instances to the session layer.
@@ -87,15 +87,22 @@ class CommandClient(
     }
 
     fun stop() {
-        withContextOrNull {
-            outboundQueue.close()
-            webSocket?.close(NORMAL_CLOSURE, "client_shutdown")
-        }
+        if (!started) return
         started = false
+        scope.launch {
+            try {
+                outboundQueue.close()
+                webSocket?.close(NORMAL_CLOSURE, "client_shutdown")
+                webSocket = null
+                _connectionState.value = ConnectionState.DISCONNECTED
+            } catch (_: CancellationException) {
+                // ignored
+            }
+        }
     }
 
     suspend fun sendCommand(payload: CommandEnvelope) {
-        outboundQueue.send(json.encodeToString(CommandEnvelope.serializer(), payload))
+        outboundQueue.send(json.encodeToString(payload))
     }
 
     private suspend fun connect() {
@@ -138,23 +145,22 @@ class CommandClient(
         override fun onOpen(webSocket: WebSocket, response: okhttp3.Response) {
             Log.i(TAG, "Command channel opened: $endpoint")
             scope.launch {
-                val hello =
-                    CommandEnvelope(
-                        type = "hello",
-                        payload =
-                            mapOf(
-                                "deviceId" to deviceId,
-                                "capabilities" to listOf("GSR", "RGB", "THERMAL", "AUDIO"),
-                            ),
-                    )
-                outboundQueue.send(json.encodeToString(CommandEnvelope.serializer(), hello))
+                val helloPayload =
+                    buildJsonObject {
+                        put("deviceId", JsonPrimitive(deviceId))
+                        put(
+                            "capabilities",
+                            JsonArray(listOf("GSR", "RGB", "THERMAL", "AUDIO").map(::JsonPrimitive)),
+                        )
+                    }
+                sendCommand(CommandEnvelope(type = "hello", payload = helloPayload))
             }
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
             scope.launch {
                 try {
-                    val envelope = json.decodeFromString(CommandEnvelope.serializer(), text)
+                    val envelope = json.decodeFromString<CommandEnvelope>(text)
                     handleEnvelope(envelope)
                 } catch (ex: Exception) {
                     Log.e(TAG, "Failed to parse command payload: $text", ex)
@@ -295,6 +301,24 @@ class CommandClient(
         _events.emit(SessionCommand.SetSimulationMode(enabled))
     }
 
+    suspend fun emitEventMarker(
+        code: String,
+        timestampMillis: Long,
+        metadata: Map<String, Any?>,
+        sessionId: String?,
+    ) {
+        val payload =
+            buildJsonObject {
+                put("code", JsonPrimitive(code))
+                put("timestamp", JsonPrimitive(timestampMillis))
+                sessionId?.let { put("session_id", JsonPrimitive(it)) }
+                metadata.forEach { (key, value) ->
+                    value.toJsonElement()?.let { put(key, it) }
+                }
+            }
+        sendCommand(CommandEnvelope(type = "event_marker", payload = payload))
+    }
+
     private suspend fun sendAck(commandId: String, status: String, message: String? = null) {
         val payload =
             buildJsonObject {
@@ -314,14 +338,6 @@ class CommandClient(
     private fun parseTimeline(payload: JsonObject): TimelineEstimate =
         TimelineEstimateFactory.fromPayload(payload)
 
-    private suspend fun withContextOrNull(block: suspend CoroutineScope.() -> Unit) {
-        try {
-            withContext(dispatcher, block)
-        } catch (_: CancellationException) {
-            // Ignored
-        }
-    }
-
     companion object {
         private const val TAG = "GsrCommandClient"
         private const val NORMAL_CLOSURE = 1000
@@ -334,8 +350,6 @@ class CommandClient(
     }
 }
 
-enum class ConnectionState { CONNECTING, CONNECTED, DISCONNECTED, ERROR }
-
 @Serializable
 data class CommandEnvelope(
     val type: String,
@@ -346,13 +360,11 @@ data class CommandEnvelope(
 )
 
 private object SessionFaultFactory {
-    fun timeline(timeline: TimelineEstimate) =
-        SessionCommand.AppendFault(
-            SessionFault(
-                severity = FaultSeverity.INFO,
-                source = null,
-                message = "Timeline updated: offset=${timeline.offsetMillis}ms drift=${timeline.driftPpm}ppm",
-            ),
+    fun timeline(timeline: TimelineEstimate): SessionFault =
+        SessionFault(
+            severity = FaultSeverity.INFO,
+            source = null,
+            message = "Timeline updated: offset=${timeline.offsetMillis}ms drift=${timeline.driftPpm}ppm",
         )
 }
 
@@ -399,6 +411,28 @@ private object TimelineEstimateFactory {
             lastUpdated = Instant.now(),
         )
 }
+
+private fun Any?.toJsonElement(): JsonElement? =
+    when (this) {
+        null -> null
+        is JsonElement -> this
+        is String -> JsonPrimitive(this)
+        is Number -> JsonPrimitive(this)
+        is Boolean -> JsonPrimitive(this)
+        is Map<*, *> -> {
+            val content =
+                this.entries.mapNotNull { (key, value) ->
+                    (key as? String)?.let { stringKey ->
+                        value.toJsonElement()?.let { stringKey to it }
+                    }
+                }.toMap()
+            JsonObject(content)
+        }
+        is Iterable<*> -> JsonArray(this.mapNotNull { it.toJsonElement() })
+        is Array<*> -> JsonArray(this.mapNotNull { it.toJsonElement() })
+        is Enum<*> -> JsonPrimitive(this.name)
+        else -> JsonPrimitive(this.toString())
+    }
 
 private fun JsonObject.toKotlinMap(): Map<String, Any?> =
     entries.associate { it.key to it.value.toKotlinValue() }

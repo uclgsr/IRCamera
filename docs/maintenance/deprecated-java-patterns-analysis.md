@@ -15,7 +15,7 @@ migrated to modern Kotlin/AndroidX alternatives.
 
 ### 1. Resources.updateConfiguration() - **HIGH PRIORITY**
 
-**Location**: `libunified/src/main/java/com/mpdc4gsr/libunified/app/tools/AppLanguageUtils.java`
+**Location**: `component/shared/src/main/java/com/mpdc4gsr/component/shared/app/tools/AppLanguageUtils.java`
 
 **Current Implementation**:
 
@@ -56,9 +56,9 @@ fun changeAppLanguage(context: Context, newLanguage: String) {
 
 **Locations**:
 
-- `libunified/src/main/java/com/mpdc4gsr/libunified/ui/components/MarkerImage.java`
-- `libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/seekbar/Utils.java`
-- `libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/seekbar/SeekBar.java`
+- `component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/components/MarkerImage.java`
+- `component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/widget/seekbar/Utils.java`
+- `component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/widget/seekbar/SeekBar.java`
 
 **Current Pattern**:
 
@@ -93,7 +93,7 @@ val drawable = ResourcesCompat.getDrawable(context.resources, drawableResourceId
 
 ### 3. Chart Library Deprecations - ✅ **ANALYSIS COMPLETE - NO ACTION REQUIRED**
 
-**Locations**: Multiple files in `libunified/src/main/java/com/mpdc4gsr/libunified/ui/`
+**Locations**: Multiple files in `component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/`
 
 The chart library (appears to be MPAndroidChart fork) contains many `@Deprecated` annotations:
 
@@ -186,26 +186,26 @@ practices and uses modern APIs throughout. No code changes required.
 
 ```
 BleModule/src/main/java/com/topdon/ble/callback/ScanListener.java
-libunified/src/main/java/com/mpdc4gsr/libunified/ui/utils/Utils.java
-libunified/src/main/java/com/mpdc4gsr/libunified/ui/interfaces/datasets/ILineDataSet.java (2 methods)
-libunified/src/main/java/com/mpdc4gsr/libunified/ui/components/AxisBase.java (2 methods)
-libunified/src/main/java/com/mpdc4gsr/libunified/ui/components/YAxis.java (5 methods)
-libunified/src/main/java/com/mpdc4gsr/libunified/ui/data/RadarEntry.java (2 methods)
-libunified/src/main/java/com/mpdc4gsr/libunified/ui/data/LineDataSet.java (4 methods)
-libunified/src/main/java/com/mpdc4gsr/libunified/ui/data/PieEntry.java (2 methods)
-libunified/src/main/java/com/mpdc4gsr/libunified/ui/data/BarEntry.java
-libunified/src/main/java/com/mpdc4gsr/libunified/ui/data/CombinedData.java (3 methods)
-libunified/src/main/java/com/mpdc4gsr/libunified/ui/formatter/IValueFormatter.java
-libunified/src/main/java/com/mpdc4gsr/libunified/ui/formatter/ValueFormatter.java (2 methods)
-libunified/src/main/java/com/mpdc4gsr/libunified/ui/formatter/IAxisValueFormatter.java
-libunified/src/main/java/com/mpdc4gsr/libunified/ui/charts/PieChart.java
+component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/utils/Utils.java
+component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/interfaces/datasets/ILineDataSet.java (2 methods)
+component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/components/AxisBase.java (2 methods)
+component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/components/YAxis.java (5 methods)
+component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/data/RadarEntry.java (2 methods)
+component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/data/LineDataSet.java (4 methods)
+component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/data/PieEntry.java (2 methods)
+component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/data/BarEntry.java
+component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/data/CombinedData.java (3 methods)
+component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/formatter/IValueFormatter.java
+component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/formatter/ValueFormatter.java (2 methods)
+component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/formatter/IAxisValueFormatter.java
+component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/charts/PieChart.java
 ```
 
 ### Files with @SuppressWarnings("deprecation") (2)
 
 ```
-libunified/src/main/java/com/mpdc4gsr/libunified/app/tools/AppLanguageUtils.java
-libunified/src/main/java/com/mpdc4gsr/libunified/ui/utils/Utils.java
+component/shared/src/main/java/com/mpdc4gsr/component/shared/app/tools/AppLanguageUtils.java
+component/shared/src/main/java/com/mpdc4gsr/component/shared/ui/utils/Utils.java
 ```
 
 ---
@@ -273,6 +273,8 @@ The deprecated methods serve only as backward compatibility layer within the lib
 **Author**: GitHub Copilot  
 **Related PRs**: #560 (Phase 1 - scaledDensity), #[current PR] (Phase 1 - updateConfiguration/getDrawable + Phase 2
 analysis)
+
+
 
 
 

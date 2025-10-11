@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.theme.Spacing
+import com.mpdc4gsr.component.shared.app.compose.theme.Spacing
 import mpdc4gsr.core.designsystem.components.common.NavigationBreadcrumb
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,4 +63,6 @@ fun AboutScreen(
         }
     }
 }
+
+
 

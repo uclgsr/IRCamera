@@ -2,9 +2,9 @@ package mpdc4gsr.feature.capture.thermal.ui
 
 import android.content.Context
 import android.os.SystemClock
-import com.mpdc4gsr.libunified.app.event.DeviceEventManager
-import com.mpdc4gsr.module.thermalunified.feature.device.ThermalDeviceConfig
-import com.mpdc4gsr.module.thermalunified.feature.device.TopdonThermalDeviceManager
+import com.mpdc4gsr.component.shared.app.event.DeviceEventManager
+import com.mpdc4gsr.component.thermal.feature.device.ThermalDeviceConfig
+import com.mpdc4gsr.component.thermal.feature.device.TopdonThermalDeviceManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -35,11 +35,11 @@ import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 
 /**
- * Thin adapter that bridges the legacy thermal module (`thermalunified`) into the
+ * Thin adapter that bridges the legacy thermal component (`thermal`) into the
  * new `SensorRecorder` abstraction. The implementation focuses on lifecycle coordination
  * and status propagation – the heavy lifting remains inside `TopdonThermalDeviceManager`.
  *
- * The vendor SDK interaction lives inside `thermalunified`, which keeps this class small
+ * The vendor SDK interaction lives inside `thermal`, which keeps this class small
  * and testable while still exposing a familiar API to the rest of the app.
  */
 class ThermalCameraRecorder(
@@ -324,3 +324,6 @@ class ThermalCameraRecorder(
         )
     }
 }
+
+
+

@@ -33,9 +33,9 @@ eliminating all utilcode and RxJava dependencies from the codebase.
 
 **Compatibility Layer Created:**
 
-- `libunified/compat/ContextProvider.kt` - Context access
-- `libunified/compat/DimensionExt.kt` - Context-aware dimension conversions
-- `libunified/compat/SPUtils.kt` - SharedPreferences wrapper
+- `component/shared/compat/ContextProvider.kt` - Context access
+- `component/shared/compat/DimensionExt.kt` - Context-aware dimension conversions
+- `component/shared/compat/SPUtils.kt` - SharedPreferences wrapper
 
 ### Phase 4: Utilcode Dependency Removal (100% Complete)
 
@@ -43,8 +43,8 @@ eliminating all utilcode and RxJava dependencies from the codebase.
 **Files Modified**: 4
 
 - ✅ Removed from `BleModule/build.gradle.kts`
-- ✅ Removed from `libunified/build.gradle.kts`
-- ✅ Removed from `component/thermalunified/build.gradle.kts`
+- ✅ Removed from `component/shared/build.gradle.kts`
+- ✅ Removed from `component/thermal/build.gradle.kts`
 - ✅ Removed from `component/user/build.gradle.kts`
 
 **Result**: Zero utilcode dependencies in build files
@@ -59,10 +59,10 @@ eliminating all utilcode and RxJava dependencies from the codebase.
 
 - `app/src/main/java/mpdc4gsr/app/App.kt`
     - Removed RxJavaPlugins error handler
-- `component/thermalunified/video/VideoRecordMedia.kt`
+- `component/thermal/video/VideoRecordMedia.kt`
     - `Observable.interval()` → coroutine `launch` + `delay`
     - `Disposable` → `Job`
-- `component/thermalunified/video/VideoRecordFFmpeg.kt`
+- `component/thermal/video/VideoRecordFFmpeg.kt`
     - 2x `Observable.interval()` → coroutine launches
     - Multiple `Disposable` → `Job` objects
 
@@ -151,7 +151,7 @@ scope.launch {
 - ✅ **com.blankj.utilcodex** - Completely removed (code + build files)
 - ✅ **io.reactivex.rxjava2** - Completely removed
 - ✅ **io.reactivex.rxandroid** - Completely removed
-- ✅ **org.greenrobot.eventbus** - Removed from libunified (retained in BleModule for TOPDON SDK)
+- ✅ **org.greenrobot.eventbus** - Removed from component/shared (retained in BleModule for TOPDON SDK)
 
 ### Benefits Achieved
 
@@ -190,13 +190,13 @@ scope.launch {
 
 - Files Modified: 76+
 - Imports Replaced/Removed: 277+
-- Modules Affected: All (app, libunified, component/thermalunified, component/user, BleModule)
+- Modules Affected: All (app, component/shared, component/thermal, component/user, BleModule)
 - Utilcode Imports: 200+ → 0
 - Utilcode Dependencies: 4 → 0
 - RxJava Imports: 8 → 0
 - RxJava Dependencies: 2 → 0
 - EventBus Usages: 69+ → 0 (in main app)
-- EventBus Dependencies: 1 → 0 (from libunified)
+- EventBus Dependencies: 1 → 0 (from component/shared)
 
 **Migration Completion Rate:**
 
@@ -214,10 +214,10 @@ scope.launch {
 
 **Files to Migrate:**
 
-- `libunified/app/tools/GlideLoader.kt` (core utility, 225 lines)
-- `libunified/app/comm/dialog/TempAlarmSetDialog.kt`
-- `component/thermalunified/tools/GlideImageEngine.kt`
-- `component/thermalunified/adapter/ReportPreviewAlbumAdapter.kt`
+- `component/shared/app/tools/GlideLoader.kt` (core utility, 225 lines)
+- `component/shared/app/comm/dialog/TempAlarmSetDialog.kt`
+- `component/thermal/tools/GlideImageEngine.kt`
+- `component/thermal/adapter/ReportPreviewAlbumAdapter.kt`
 
 **Rationale for Migration:**
 
@@ -260,7 +260,7 @@ scope.launch {
 - ✅ Centralized event management
 - ✅ Better testability with Flow APIs
 - ✅ Modern Kotlin coroutines architecture
-- ✅ Removed EventBus dependency from libunified
+- ✅ Removed EventBus dependency from component/shared
 - ✅ Improved maintainability and code clarity
 
 **Implementation Highlights:**
@@ -308,6 +308,10 @@ All migration patterns, guidelines, and remaining work are documented in:
 **Total Effort**: ~16 commits over Phases 1-6
 **Breaking Changes**: None
 **Backward Compatibility**: Maintained
+
+
+
+
 
 
 

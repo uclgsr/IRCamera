@@ -1,7 +1,7 @@
 package mpdc4gsr.feature.capture.thermal.domain.usecase
 
-import com.mpdc4gsr.libunified.ir.extension.AgcMode
-import com.mpdc4gsr.libunified.ir.extension.ColorPalette
+import com.mpdc4gsr.component.shared.ir.extension.AgcMode
+import com.mpdc4gsr.component.shared.ir.extension.ColorPalette
 import mpdc4gsr.feature.capture.thermal.data.BatteryStatus
 import mpdc4gsr.feature.capture.thermal.data.DeviceInfo
 import mpdc4gsr.feature.capture.thermal.data.MeasurementArea
@@ -89,3 +89,5 @@ data class ThermalHardwareUseCases(
     val getDeviceInfo: GetDeviceInfoUseCase,
     val getBatteryStatus: GetBatteryStatusUseCase,
 )
+
+

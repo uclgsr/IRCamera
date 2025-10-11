@@ -1,25 +1,23 @@
 package mpdc4gsr.gsr.network
 
 import java.io.File
-import java.io.IOException
-import java.util.concurrent.TimeUnit
+import java.io.InputStream
+import java.security.MessageDigest
+import java.util.Base64
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.asRequestBody
+import kotlinx.serialization.json.JsonObjectBuilder
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 /**
- * Handles post-session data upload to the PC orchestrator (FR10). Files are uploaded via HTTPS
- * with chunk retry logic.
+ * Handles post-session data upload to the PC orchestrator (FR10). Files are streamed over the
+ * command channel so the desktop can persist artefacts alongside metadata manifests.
  */
 class TransferClient(
-    private val okHttpClient: OkHttpClient,
+    private val commandClient: CommandClient,
     private val dispatcher: CoroutineDispatcher,
-    private val endpoint: String,
 ) {
 
     suspend fun uploadFile(
@@ -29,51 +27,110 @@ class TransferClient(
         modality: String,
     ) = withContext(dispatcher) {
         require(file.exists()) { "File does not exist: ${file.absolutePath}" }
-        val requestBody =
-            MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("sessionId", sessionId)
-                .addFormDataPart("deviceId", deviceId)
-                .addFormDataPart("modality", modality)
-                .addFormDataPart(
-                    "file",
-                    file.name,
-                    file.asRequestBody("application/octet-stream".toMediaTypeOrNull()),
-                )
-                .build()
-        val request =
-            Request.Builder()
-                .url("$endpoint/upload")
-                .post(requestBody)
-                .build()
-        retry {
-            okHttpClient.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) {
-                    throw IOException("Upload failed with code ${response.code}")
-                }
-            }
+        val fileName = file.name
+        val sizeBytes = file.length()
+        val mimeType = guessMimeType(file)
+        val estimatedChunks = ((sizeBytes + CHUNK_SIZE_BYTES - 1) / CHUNK_SIZE_BYTES).toInt()
+
+        commandClient.sendCommand(
+            CommandEnvelope(
+                type = "file_begin",
+                payload =
+                    buildJsonObject {
+                        putCommonFields(
+                            sessionId = sessionId,
+                            deviceId = deviceId,
+                            filename = fileName,
+                            modality = modality,
+                        )
+                        put("size_bytes", JsonPrimitive(sizeBytes))
+                        put("chunk_size", JsonPrimitive(CHUNK_SIZE_BYTES))
+                        put("estimated_chunks", JsonPrimitive(estimatedChunks))
+                        mimeType?.let { put("mime_type", JsonPrimitive(it)) }
+                    },
+            ),
+        )
+
+        val digest = MessageDigest.getInstance("SHA-256")
+        var chunkIndex = 0
+        file.inputStream().use { input ->
+            streamFileChunks(
+                input = input,
+                onChunk = { data, bytesRead ->
+                    digest.update(data, 0, bytesRead)
+                    val encoded = Base64.getEncoder().encodeToString(data.copyOf(bytesRead))
+                    chunkIndex += 1
+                    commandClient.sendCommand(
+                        CommandEnvelope(
+                            type = "file_chunk",
+                            payload =
+                                buildJsonObject {
+                                    putCommonFields(
+                                        sessionId = sessionId,
+                                        deviceId = deviceId,
+                                        filename = fileName,
+                                        modality = modality,
+                                    )
+                                    put("chunk_index", JsonPrimitive(chunkIndex))
+                                    put("data", JsonPrimitive(encoded))
+                                },
+                        ),
+                    )
+                },
+            )
+        }
+
+        val checksum =
+            digest.digest().joinToString(separator = "") { byte -> "%02x".format(byte) }
+
+        commandClient.sendCommand(
+            CommandEnvelope(
+                type = "file_end",
+                payload =
+                    buildJsonObject {
+                        putCommonFields(
+                            sessionId = sessionId,
+                            deviceId = deviceId,
+                            filename = fileName,
+                            modality = modality,
+                        )
+                        put("size_bytes", JsonPrimitive(sizeBytes))
+                        put("chunks", JsonPrimitive(chunkIndex))
+                        put("sha256", JsonPrimitive(checksum))
+                        mimeType?.let { put("mime_type", JsonPrimitive(it)) }
+                    },
+            ),
+        )
+    }
+
+    private inline fun streamFileChunks(
+        input: InputStream,
+        onChunk: (ByteArray, Int) -> Unit,
+    ) {
+        val buffer = ByteArray(CHUNK_SIZE_BYTES)
+        while (true) {
+            val bytesRead = input.read(buffer)
+            if (bytesRead == -1) break
+            onChunk(buffer, bytesRead)
         }
     }
 
-    private suspend fun retry(block: suspend () -> Unit) {
-        var attempt = 0
-        var delayMs = INITIAL_DELAY_MS
-        while (true) {
-            try {
-                block()
-                return
-            } catch (ex: Exception) {
-                attempt++
-                if (attempt >= MAX_RETRIES) throw ex
-                delay(delayMs)
-                delayMs = (delayMs * 2).coerceAtMost(MAX_DELAY_MS)
-            }
-        }
+    private fun JsonObjectBuilder.putCommonFields(
+        sessionId: String,
+        deviceId: String,
+        filename: String,
+        modality: String,
+    ) {
+        put("session_id", JsonPrimitive(sessionId))
+        put("device_id", JsonPrimitive(deviceId))
+        put("filename", JsonPrimitive(filename))
+        put("modality", JsonPrimitive(modality))
     }
+
+    private fun guessMimeType(file: File): String? =
+        java.net.URLConnection.guessContentTypeFromName(file.name)
 
     companion object {
-        private const val MAX_RETRIES = 5
-        private val INITIAL_DELAY_MS = TimeUnit.SECONDS.toMillis(2)
-        private val MAX_DELAY_MS = TimeUnit.SECONDS.toMillis(30)
+        private const val CHUNK_SIZE_BYTES = 256 * 1024
     }
 }

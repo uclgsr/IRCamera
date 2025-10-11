@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_16131E"
+    android:fitsSystemWindows="true">
+
+    <com.mpdc4gsr.component.shared.app.view.TitleView
+        android:id="@+id/title_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:isInitLeft="false"
+        app:isTitleCenter="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleText="@string/main_person" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_view">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/dp_24"
+            android:paddingBottom="20dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/setting_user_img_night"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="20dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_default_user_head"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.16" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/setting_user_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="20dp"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@id/tv_email"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/setting_user_img_night"
+                app:layout_constraintTop_toTopOf="@id/setting_user_img_night"
+                tools:text="Roger Mills" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="20dp"
+                android:textColor="@color/color_8A898E"
+                android:textSize="11sp"
+                app:layout_constraintBottom_toBottomOf="@id/setting_user_img_night"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/setting_user_img_night"
+                app:layout_constraintTop_toBottomOf="@id/setting_user_text"
+                tools:text="tigerltr1@gmail.com" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/setting_user_lay"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="28dp"
+                android:src="@drawable/ic_change_night"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/setting_user_img_night"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/iv_winter"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginEnd="20dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_user_winter_bg"
+                app:layout_constraintDimensionRatio="1005:309"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/setting_user_img_night" />
+
+            <View
+                android:id="@+id/space_winter_right"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@id/iv_winter"
+                app:layout_constraintDimensionRatio="W,116:103"
+                app:layout_constraintEnd_toEndOf="@id/iv_winter"
+                app:layout_constraintTop_toTopOf="@id/iv_winter" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_winter_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/tv_winter_sub_title"
+                app:layout_constraintEnd_toStartOf="@+id/space_winter_right"
+                app:layout_constraintStart_toStartOf="@id/iv_winter"
+                app:layout_constraintTop_toTopOf="@id/iv_winter"
+                app:layout_constraintVertical_chainStyle="packed">
+
+                <TextView
+                    android:id="@+id/tv_winter_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="@string/testing_guidance"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/view_winter_point"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/view_winter_point"
+                    android:layout_width="8sp"
+                    android:layout_height="8sp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/shape_oval_ff0000"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_winter_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="SmallSp"
+                    tools:visibility="visible" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/tv_winter_sub_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="@string/unlock_professional_perspectives"
+                android:textColor="#99ffffff"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/iv_winter"
+                app:layout_constraintEnd_toEndOf="@id/cl_winter_title"
+                app:layout_constraintStart_toStartOf="@id/cl_winter_title"
+                app:layout_constraintTop_toBottomOf="@id/cl_winter_title" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/setting_bg_shape"
+                android:padding="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_winter">
+
+                <com.mpdc4gsr.component.shared.ui.SettingNightView
+                    android:id="@+id/setting_electronic_manual"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:setting_icon_night="@drawable/ic_electronic_manual_svg"
+                    app:setting_icon_show_night="true"
+                    app:setting_line_night="false"
+                    app:setting_more_night="true"
+                    app:setting_text_night="@string/electronic_manual" />
+
+                <com.mpdc4gsr.component.shared.ui.SettingNightView
+                    android:id="@+id/setting_faq"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/setting_electronic_manual"
+                    app:setting_icon_night="@drawable/ic_faq_svg"
+                    app:setting_icon_show_night="true"
+                    app:setting_line_night="false"
+                    app:setting_more_night="true"
+                    app:setting_text_night="@string/app_question" />
+
+                <com.mpdc4gsr.component.shared.ui.SettingNightView
+                    android:id="@+id/setting_feedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/setting_faq"
+                    app:setting_icon_night="@drawable/ic_feedback_svg"
+                    app:setting_icon_show_night="true"
+                    app:setting_line_night="false"
+                    app:setting_more_night="true"
+                    app:setting_text_night="@string/user_advice_feedback" />
+
+                <com.mpdc4gsr.component.shared.ui.SettingNightView
+                    android:id="@+id/setting_item_unit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/setting_feedback"
+                    app:setting_icon_night="@drawable/ic_temp_unit_night"
+                    app:setting_icon_show_night="true"
+                    app:setting_line_night="false"
+                    app:setting_more_night="true"
+                    app:setting_text_night="@string/setting_unit" />
+
+                <com.mpdc4gsr.component.shared.ui.SettingNightView
+                    android:id="@+id/setting_item_clear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/setting_item_unit"
+                    app:setting_icon_night="@drawable/ic_clear_cache_night"
+                    app:setting_icon_show_night="true"
+                    app:setting_line_night="false"
+                    app:setting_more_night="true"
+                    app:setting_text_night="@string/set_clear_cache" />
+
+                <com.mpdc4gsr.component.shared.ui.SettingNightView
+                    android:id="@+id/setting_item_version"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/setting_item_clear"
+                    app:setting_icon_night="@drawable/ic_version_night"
+                    app:setting_icon_show_night="true"
+                    app:setting_line_night="false"
+                    app:setting_more_night="true"
+                    app:setting_text_night="@string/setting_version" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <include layout="@layout/layout_customer" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

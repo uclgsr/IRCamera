@@ -52,8 +52,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.recording.session.SessionInfo
 import mpdc4gsr.feature.capture.gsr.presentation.MultiModalRecordingViewModel
@@ -97,7 +97,7 @@ class MultiModalRecordingComposeActivity : BaseComposeActivity<MultiModalRecordi
         var isRecording by remember { mutableStateOf(false) }
         var recordingDuration by remember { mutableStateOf(0L) }
         var selectedSensors by remember { mutableStateOf(setOf("gsr", "thermal", "rgb")) }
-        LibUnifiedTheme {
+        LibSharedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -484,3 +484,6 @@ private fun formatDuration(seconds: Long): String {
     val remainingSeconds = seconds % 60
     return String.format("%02d:%02d", minutes, remainingSeconds)
 }
+
+
+

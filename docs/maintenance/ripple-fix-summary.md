@@ -174,7 +174,7 @@ Run: `grep -r "Card.*onClick.*startActivity" --include="*.kt" app/src/main/java`
 - ASCII-safe characters only
 - Minimal modifications to existing code
 - Documentation included for future maintainers
-- Build blocked by pre-existing libunified compilation errors (unrelated to these changes)
+- Build blocked by pre-existing component/shared compilation errors (unrelated to these changes)
 
 ## References
 
@@ -182,6 +182,7 @@ Run: `grep -r "Card.*onClick.*startActivity" --include="*.kt" app/src/main/java`
 - Compose Material3 Documentation
 - Android Compose Foundation Documentation
 - Press Interaction API documentation
+
 
 
 

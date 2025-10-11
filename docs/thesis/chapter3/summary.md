@@ -276,7 +276,7 @@ If using a markdown-based thesis system:
 
 - **Android App**: app/src/main/java/mpdc4gsr/
 - **PC Controller**: pc-controller/src/
-- **Sensor Components**: component/gsr-recording/, component/thermalunified/
+- **Sensor Components**: component/gsr-recording/, component/thermal/
 - **Network Protocol**: app/src/main/java/mpdc4gsr/network/
 
 ### Related Documentation
@@ -303,6 +303,7 @@ These diagrams and tables provide:
 
 The level of detail supports both understanding the system design and defending architectural choices during thesis
 examination.
+
 
 
 

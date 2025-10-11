@@ -60,7 +60,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.hardware.gsr.model.DeviceInfo
 import mpdc4gsr.feature.capture.gsr.presentation.GSRDeviceConfigViewModel
@@ -89,7 +89,7 @@ class GSRDeviceConfigComposeActivity : ComponentActivity() {
         var isScanning by remember { mutableStateOf(false) }
         var selectedDevice by remember { mutableStateOf<DeviceInfo?>(null) }
         var showConfigDialog by remember { mutableStateOf(false) }
-        LibUnifiedTheme {
+        LibSharedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -527,3 +527,6 @@ private fun DeviceConfigurationDialog(
         },
     )
 }
+
+
+

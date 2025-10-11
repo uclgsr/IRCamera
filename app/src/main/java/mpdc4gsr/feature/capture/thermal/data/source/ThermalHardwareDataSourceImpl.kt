@@ -16,7 +16,7 @@ import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvc.uvc.ConcreateUVCBuilder
 import com.energy.iruvc.uvc.UVCCamera
 import com.energy.iruvc.uvc.UVCType
-import com.mpdc4gsr.libunified.ir.extension.*
+import com.mpdc4gsr.component.shared.ir.extension.*
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -883,6 +883,8 @@ class ThermalHardwareDataSourceImpl(
         }
     }
 }
+
+
 
 
 

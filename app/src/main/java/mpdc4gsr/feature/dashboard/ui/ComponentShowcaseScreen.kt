@@ -13,8 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.compose.theme.Spacing
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
+import com.mpdc4gsr.component.shared.app.compose.theme.Spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,7 +22,7 @@ fun ComponentShowcaseScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LibUnifiedTheme {
+    LibSharedTheme {
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -535,4 +535,7 @@ private fun NavigationFeature(feature: String) {
         )
     }
 }
+
+
+
 

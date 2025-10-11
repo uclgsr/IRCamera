@@ -5,8 +5,8 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.Rect
-import com.mpdc4gsr.libunified.ir.extension.AgcMode
-import com.mpdc4gsr.libunified.ir.extension.ColorPalette
+import com.mpdc4gsr.component.shared.ir.extension.AgcMode
+import com.mpdc4gsr.component.shared.ir.extension.ColorPalette
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -469,6 +469,8 @@ class ThermalSimulationDataSource(
         return inside
     }
 }
+
+
 
 
 

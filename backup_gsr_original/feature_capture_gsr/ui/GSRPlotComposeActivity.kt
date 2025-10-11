@@ -59,8 +59,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.designsystem.AppBaseViewModel
 import kotlin.math.sin
@@ -92,7 +92,7 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
     override fun Content(viewModel: GSRPlotViewModel) {
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID) ?: "unknown"
         val dataPath = intent.getStringExtra(EXTRA_DATA_PATH)
-        LibUnifiedTheme {
+        LibSharedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -910,3 +910,6 @@ class GSRPlotViewModel : AppBaseViewModel() {
     // - Filter state management
     // - Export functionality
 }
+
+
+

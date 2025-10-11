@@ -20,6 +20,7 @@ class GsrSessionActivity : ComponentActivity() {
         setContent {
             SessionDashboardScreen(
                 sessionState = sessionStateStore.sessionSnapshot,
+                telemetryState = sessionStateStore.deviceTelemetry,
                 onStartSimulation = { orchestrator.launchSimulationSession() },
                 onStop = { orchestrator.stopSession() },
             )

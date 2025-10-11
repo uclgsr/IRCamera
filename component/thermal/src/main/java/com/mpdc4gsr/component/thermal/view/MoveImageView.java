@@ -1,0 +1,92 @@
+package com.mpdc4gsr.component.thermal.view;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Color;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.widget.ImageView;
+
+import androidx.annotation.Nullable;
+
+@SuppressLint("AppCompatCustomView")
+public class MoveImageView extends ImageView {
+
+    private static final String TAG = "MoveImageView";
+    private static final int MIN_CLICK_DELAY_TIME = 100;
+    private static long lastClickTime;
+    public OnMoveListener onMoveListener;
+    private float mPreX;
+    private float mPreY;
+
+    public MoveImageView(Context context) {
+        this(context, null);
+    }
+
+    public MoveImageView(Context context, @Nullable AttributeSet attrs) {
+        this(context, attrs, -1);
+    }
+
+    public MoveImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    public static boolean delayMoveTime() {
+        boolean flag = false;
+        long curClickTime = System.currentTimeMillis();
+        if ((curClickTime - lastClickTime) < MIN_CLICK_DELAY_TIME) {
+            flag = false;
+        } else {
+            flag = true;
+            lastClickTime = System.currentTimeMillis();
+        }
+        return flag;
+    }
+
+    private void init() {
+        setBackgroundColor(Color.TRANSPARENT);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int action = event.getAction();
+
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                mPreX = event.getX();
+                mPreY = event.getY();
+                lastClickTime = System.currentTimeMillis();
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                float preX = mPreX;
+                float preY = mPreY;
+                float curX = event.getX();
+                float curY = event.getY();
+
+                if (onMoveListener != null && delayMoveTime()) {
+
+                    onMoveListener.onMove(preX, preY, curX, curY);
+                    mPreX = curX;
+                    mPreY = curY;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                break;
+
+        }
+        return true;
+    }
+
+    public void setOnMoveListener(OnMoveListener onMoveListener) {
+        this.onMoveListener = onMoveListener;
+    }
+
+    public interface OnMoveListener {
+        void onMove(float preX, float preY, float curX, float curY);
+    }
+}
+

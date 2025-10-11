@@ -144,7 +144,7 @@ fun IRCameraNavHost(
                         Intent().apply {
                             setClassName(
                                 context,
-                                "com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity",
+                                "com.mpdc4gsr.component.thermal.activity.ThermalCameraComposeActivity",
                             )
                         }
                     context.startActivity(intent)
@@ -318,3 +318,4 @@ private fun SettingsFragmentScreen(onNavigateBack: () -> Unit) {
         }
     }
 }
+

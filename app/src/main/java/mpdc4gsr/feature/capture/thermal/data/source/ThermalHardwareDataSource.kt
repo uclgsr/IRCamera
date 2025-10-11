@@ -1,8 +1,8 @@
 package mpdc4gsr.feature.capture.thermal.data.source
 
 import android.graphics.Bitmap
-import com.mpdc4gsr.libunified.ir.extension.AgcMode
-import com.mpdc4gsr.libunified.ir.extension.ColorPalette
+import com.mpdc4gsr.component.shared.ir.extension.AgcMode
+import com.mpdc4gsr.component.shared.ir.extension.ColorPalette
 import kotlinx.coroutines.flow.Flow
 import mpdc4gsr.feature.capture.thermal.data.BatteryStatus
 import mpdc4gsr.feature.capture.thermal.data.DeviceInfo
@@ -86,3 +86,5 @@ data class ThermalSnapshot(
     val timestamp: Long,
     val location: String? = null,
 )
+
+

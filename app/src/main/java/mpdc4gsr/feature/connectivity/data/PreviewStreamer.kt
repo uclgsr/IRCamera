@@ -2,7 +2,7 @@ package mpdc4gsr.feature.connectivity.data
 
 import android.graphics.Bitmap
 import android.util.Base64
-import com.mpdc4gsr.libunified.app.utils.BitmapUtils
+import com.mpdc4gsr.component.shared.app.utils.BitmapUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -211,3 +211,5 @@ class PreviewStreamer(
         }
     }
 }
+
+

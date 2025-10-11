@@ -885,7 +885,7 @@ companion object {
 ### Frame Capture Implementation
 
 ```java
-// File: libunified/src/main/java/com/mpdc4gsr/libunified/ir/camera/IRUVCTC.java
+// File: component/shared/src/main/java/com/mpdc4gsr/component/shared/ir/camera/IRUVCTC.java
 
 /**
  * Initialize UVC camera and set up frame callbacks for real-time thermal data
@@ -1056,7 +1056,7 @@ graph TB
         ErrorRecovery[ErrorRecoveryManager<br/>Fault tolerance]
     end
     
-    subgraph LibUnified["libunified Native Library"]
+    subgraph ComponentShared["component/shared Native Library"]
         direction TB
         IRUVCTC[IRUVCTC.java<br/>UVC camera wrapper]
         USBMonitor[USBMonitor<br/>Device detection]
@@ -2457,6 +2457,8 @@ This chapter has presented the core implementation details of the multi-sensor r
 These implementation details demonstrate that the system achieves its design goals of multi-sensor coordination, precise
 time synchronization, and reliable remote control, forming the foundation for the experimental results presented in
 Chapter 5.
+
+
 
 
 

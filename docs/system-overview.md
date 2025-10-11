@@ -23,7 +23,7 @@ document summarises how the major components interact and where to find their im
   metadata, and surfaces state via `feature/capture/camera/presentation/RGBCameraViewModel`.
 - **GSR**: `core/hardware/gsr` and `feature/capture/gsr` integrate the Shimmer SDK, manage BLE connections, resampling,
   statistics, and exports.
-- **Thermal**: `component/thermalunified` and `feature/capture/thermal` wrap the vendor SDK and align thermal frames with
+- **Thermal**: `component/thermal` and `feature/capture/thermal` wrap the vendor SDK and align thermal frames with
   session metadata.
 - **Multi-modal coordination** lives in `feature/capture/gsr/presentation/MultiModalRecordingViewModel` which orchestrates
   simultaneous captures and sync markers.
@@ -75,15 +75,15 @@ document summarises how the major components interact and where to find their im
 - `app/src/main/java/mpdc4gsr/feature/dashboard/` – Compose launch activity, dashboards, and navigation entry points.
 - `app/src/main/java/mpdc4gsr/feature/recording/session/` – Session presentation layer and orchestration helpers.
 - `BleModule/` – BLE helpers compiled as a separate module for Shimmer devices.
-- `component/thermalunified/` and `thermalunified/` – Vendor thermal libraries and glue code.
-- `libunified/` – Shared utilities (permissions, logging, resource helpers).
+- `component/thermal/` – Vendor thermal libraries and glue code.
+- `component/shared/` – Shared utilities (permissions, logging, resource helpers).
 - `pc-controller/` – Desktop controller, scripts, docs, and tests.
 
 ## External Dependencies
 
 - CameraX for RGB capture (`androidx.camera.core`, `androidx.camera.video`, `androidx.camera.view`).
 - Shimmer SDK jars for GSR acquisition.
-- Vendor AARs in `app/libs` and `libunified/libs` for thermal camera support.
+- Vendor AARs in `app/libs` and `component/shared/libs` for thermal camera support.
 - Hilt for dependency injection, Kotlin coroutines for concurrency, and Jetpack Compose for UI.
 - Python packages (PyQt6, pyqtgraph, numpy, OpenCV, pybind11) for the PC controller.
 
@@ -95,6 +95,8 @@ document summarises how the major components interact and where to find their im
 - Network health, reconnection, and backoff strategies live in `feature/connectivity/data/NetworkErrorRecoveryManager.kt`.
 
 Consult the platform-specific guides for deeper dives into implementation details.
+
+
 
 
 

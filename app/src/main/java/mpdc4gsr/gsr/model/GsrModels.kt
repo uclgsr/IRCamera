@@ -152,6 +152,7 @@ data class TelemetryState(
     val droppedFrames: Int,
     val batteryPercent: Int?,
     val rssi: Int?,
+    val ispActive: Boolean? = null,
 )
 
 /**

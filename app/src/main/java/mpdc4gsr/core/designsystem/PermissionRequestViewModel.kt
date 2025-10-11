@@ -1,7 +1,7 @@
 package mpdc4gsr.core.designsystem
 
 import androidx.lifecycle.viewModelScope
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import com.mpdc4gsr.component.shared.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -270,3 +270,5 @@ class PermissionRequestViewModel : BaseViewModel() {
         private const val TAG = "PermissionRequestViewModel"
     }
 }
+
+

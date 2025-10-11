@@ -2,8 +2,8 @@ package mpdc4gsr.feature.dashboard.ui
 
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.ktbase.BaseViewModel
 import mpdc4gsr.core.designsystem.navigation.UnifiedNavHost
 
 class UnifiedComposeActivity : BaseComposeActivity<UnifiedComposeViewModel>() {
@@ -23,4 +23,6 @@ class UnifiedComposeViewModel : BaseViewModel() {
     // - Authentication state
     // - Network connectivity monitoring
 }
+
+
 

@@ -60,8 +60,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.designsystem.AppBaseViewModel
 
@@ -93,7 +93,7 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
         val localContext = this@GSRDataViewComposeActivity
         val filePath = intent.getStringExtra(EXTRA_FILE_PATH) ?: ""
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
-        LibUnifiedTheme {
+        LibSharedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -1149,3 +1149,6 @@ class GSRDataViewViewModel : AppBaseViewModel() {
     // - Export operations
     // - Quality assessment algorithms
 }
+
+
+

@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -21,6 +22,7 @@ import kotlinx.coroutines.withContext
 import mpdc4gsr.core.common.logging.StructuredLogger
 import mpdc4gsr.feature.capture.thermal.data.source.ThermalFrameData
 import mpdc4gsr.feature.capture.thermal.domain.usecase.ThermalCoreUseCases
+import mpdc4gsr.feature.capture.thermal.domain.usecase.ThermalHardwareUseCases
 import mpdc4gsr.feature.connectivity.data.DataManagementService
 import java.io.File
 import java.io.IOException
@@ -29,6 +31,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.min
+
+private const val BATTERY_POLL_INTERVAL_MS = 30_000L
+private const val TARGET_FRAME_RATE_HZ = 9.0
 
 /**
  * Coordinates thermal camera connectivity, streaming, recording, and session bookkeeping.
@@ -45,6 +50,7 @@ class ThermalCaptureCoordinator
     constructor(
         @ApplicationContext private val appContext: Context,
         private val thermalUseCases: ThermalCoreUseCases,
+        private val hardwareUseCases: ThermalHardwareUseCases,
         private val dataManagementService: DataManagementService,
     ) {
         private val logger = StructuredLogger.getInstance(appContext)
@@ -56,15 +62,16 @@ class ThermalCaptureCoordinator
         private val _preview = MutableStateFlow<ThermalFrameData?>(null)
         private val _errors = MutableSharedFlow<String>(extraBufferCapacity = 8)
 
-        private var streamingJob: Job? = null
-        private val isConnected = AtomicBoolean(false)
-        private val isStreaming = AtomicBoolean(false)
-        private val isRecording = AtomicBoolean(false)
+    private var streamingJob: Job? = null
+    private val isConnected = AtomicBoolean(false)
+    private val isStreaming = AtomicBoolean(false)
+    private val isRecording = AtomicBoolean(false)
+    private var batteryPollJob: Job? = null
 
-        private var recordingStartElapsedMs: Long = 0L
-        private var framesRecorded: Long = 0L
-        private var sessionMinTemp: Float = Float.POSITIVE_INFINITY
-        private var sessionMaxTemp: Float = Float.NEGATIVE_INFINITY
+    private var recordingStartElapsedMs: Long = 0L
+    private var framesRecorded: Long = 0L
+    private var sessionMinTemp: Float = Float.POSITIVE_INFINITY
+    private var sessionMaxTemp: Float = Float.NEGATIVE_INFINITY
         private var activeSession: ThermalSessionContext? = null
         private var lastRecordingResult: ThermalRecordingResult? = null
 
@@ -82,6 +89,7 @@ class ThermalCaptureCoordinator
         suspend fun ensureConnected(): Boolean {
             if (isConnected.get()) {
                 startStreamingIfNeeded()
+                startBatteryMonitoring()
                 return true
             }
 
@@ -99,6 +107,7 @@ class ThermalCaptureCoordinator
                         )
                     }
                     startStreamingIfNeeded()
+                    startBatteryMonitoring()
                 }.onFailure { throwable ->
                     emitError("Unable to connect to thermal camera: ${throwable.message ?: "unknown error"}")
                     updateStatus { copy(isConnected = false, isStreaming = false) }
@@ -158,6 +167,7 @@ class ThermalCaptureCoordinator
                                 recordingStartElapsedMs = recordingStartElapsedMs,
                                 lastError = null,
                                 isSimulation = thermalUseCases.isSimulationMode(),
+                                frameDropCount = 0,
                             )
                         }
                         true
@@ -247,11 +257,14 @@ class ThermalCaptureCoordinator
                     thermalUseCases.disconnectCamera()
                 }
                 isConnected.set(false)
+                stopBatteryMonitoring()
                 updateStatus {
                     copy(
                         isConnected = false,
                         isStreaming = false,
                         isRecording = false,
+                        batteryPercent = null,
+                        ispActive = false,
                     )
                 }
             }
@@ -260,7 +273,40 @@ class ThermalCaptureCoordinator
             streamingJob?.cancel()
             streamingJob = null
             isStreaming.set(false)
+            stopBatteryMonitoring()
             scope.coroutineContext.cancel()
+        }
+
+        private fun startBatteryMonitoring() {
+            if (batteryPollJob?.isActive == true) return
+            batteryPollJob =
+                scope.launch {
+                    while (isConnected.get()) {
+                        refreshBatteryStatus()
+                        delay(BATTERY_POLL_INTERVAL_MS)
+                    }
+                }
+        }
+
+        private fun stopBatteryMonitoring() {
+            batteryPollJob?.cancel()
+            batteryPollJob = null
+        }
+
+        private suspend fun refreshBatteryStatus() {
+            hardwareUseCases.getBatteryStatus
+                .invoke()
+                .onSuccess { status ->
+                    updateStatus { copy(batteryPercent = status.level) }
+                }
+                .onFailure { throwable ->
+                    logger.log(
+                        StructuredLogger.LogLevel.DEBUG,
+                        "ThermalCaptureCoordinator",
+                        "battery_status_failed",
+                        mapOf("error" to (throwable.message ?: "unknown")),
+                    )
+                }
         }
 
         private fun updateStatus(transform: ThermalStatus.() -> ThermalStatus) {
@@ -283,11 +329,11 @@ class ThermalCaptureCoordinator
                         }.onFailure { throwable ->
                             emitError("Thermal streaming stopped: ${throwable.message ?: "unknown error"}")
                             isStreaming.set(false)
-                            updateStatus { copy(isStreaming = false) }
+                            updateStatus { copy(isStreaming = false, ispActive = false) }
                         }
                     }
                 isStreaming.set(true)
-                updateStatus { copy(isStreaming = true) }
+                updateStatus { copy(isStreaming = true, ispActive = true) }
             }
 
         private fun handleIncomingFrame(frame: ThermalFrameData) {
@@ -297,6 +343,25 @@ class ThermalCaptureCoordinator
                 sessionMinTemp = min(sessionMinTemp, frame.minTemp)
                 sessionMaxTemp = max(sessionMaxTemp, frame.maxTemp)
             }
+            val recordingDurationMs =
+                if (recordingActive && recordingStartElapsedMs > 0L) {
+                    SystemClock.elapsedRealtime() - recordingStartElapsedMs
+                } else {
+                    _status.value.recordingDurationMs
+                }
+            val expectedFrames =
+                if (recordingActive) {
+                    ((recordingDurationMs / 1000.0) * TARGET_FRAME_RATE_HZ).toLong()
+                } else {
+                    0L
+                }
+            val dropCount =
+                if (recordingActive) {
+                    max(0L, expectedFrames - framesRecorded)
+                } else {
+                    0L
+                }
+            val dropCountInt = minOf(dropCount, Int.MAX_VALUE.toLong()).toInt()
             _preview.value = frame
             updateStatus {
                 copy(
@@ -307,12 +372,9 @@ class ThermalCaptureCoordinator
                     maxTemperature = frame.maxTemp,
                     frameCount = frameCount + 1,
                     lastFrameTimestampMs = frame.timestamp,
-                    recordingDurationMs =
-                        if (recordingActive && recordingStartElapsedMs > 0L) {
-                            SystemClock.elapsedRealtime() - recordingStartElapsedMs
-                        } else {
-                            recordingDurationMs
-                        },
+                    recordingDurationMs = recordingDurationMs,
+                    ispActive = true,
+                    frameDropCount = dropCountInt,
                 )
             }
         }
@@ -493,4 +555,7 @@ data class ThermalStatus(
     val lastRecordingPath: String? = null,
     val lastRecordingMetadata: Map<String, Any?> = emptyMap(),
     val lastError: String? = null,
+    val batteryPercent: Int? = null,
+    val ispActive: Boolean = false,
+    val frameDropCount: Int = 0,
 )

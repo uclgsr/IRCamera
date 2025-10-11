@@ -8,7 +8,7 @@ workflow, failover data sources, and session-aware recording.
 ## Scope
 
 - Android `app` module (thermal capture UI + view models + repositories)
-- `thermalunified` module (Topdon TC001 integration + legacy Compose UIs)
+- `component/thermal` module (Topdon TC001 integration + legacy Compose UIs)
 - Shared infrastructure (`core`, `feature/connectivity`, `DataManagementService`)
 
 ## Findings

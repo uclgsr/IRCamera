@@ -60,5 +60,5 @@ dependencies {
     }
     api(libs.nordic.ble.ktx)
     implementation(files("libs/ini4j-0.5.5.jar"))
-    implementation(project(":libunified"))
+    implementation(project(":component:shared"))
 }

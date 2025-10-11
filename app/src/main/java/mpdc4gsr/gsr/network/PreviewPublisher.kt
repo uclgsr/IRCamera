@@ -52,6 +52,7 @@ class PreviewPublisher(
                         telemetry.frameRate?.let { put("frame_rate", it) }
                         put("dropped_frames", telemetry.droppedFrames)
                         telemetry.batteryPercent?.let { put("battery_percent", it) }
+                        telemetry.ispActive?.let { put("isp_active", it) }
                         telemetry.rssi?.let { put("rssi", it) }
                     }
                 }

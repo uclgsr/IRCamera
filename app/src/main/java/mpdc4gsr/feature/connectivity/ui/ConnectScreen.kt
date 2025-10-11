@@ -36,13 +36,13 @@ fun ConnectScreen(
     val context = LocalContext.current
 
     val deviceConnectionState =
-        com.mpdc4gsr.libunified.app.event.DeviceEventManager.deviceConnectionState.collectAsState()
+        com.mpdc4gsr.component.shared.app.event.DeviceEventManager.deviceConnectionState.collectAsState()
     val socketConnectionState =
-        com.mpdc4gsr.libunified.app.event.DeviceEventManager.socketConnectionState.collectAsState()
+        com.mpdc4gsr.component.shared.app.event.DeviceEventManager.socketConnectionState.collectAsState()
 
     val deviceTypes = remember(deviceConnectionState.value, socketConnectionState.value) {
         val tc001Status = try {
-            val hasUsbDevice = com.mpdc4gsr.libunified.app.tools.DeviceTools.findUsbDevice() != null
+            val hasUsbDevice = com.mpdc4gsr.component.shared.app.tools.DeviceTools.findUsbDevice() != null
             if (hasUsbDevice) {
                 deviceConnectionState.value?.isConnected ?: false
             } else {
@@ -179,4 +179,6 @@ private fun ConnectScreenPreview() {
         ConnectScreen()
     }
 }
+
+
 

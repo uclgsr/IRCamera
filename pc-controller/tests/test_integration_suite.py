@@ -164,6 +164,20 @@ class PCControllerIntegrationTestCase(unittest.TestCase):
         self.assertGreater(entry.get("size", 0), 0)
         self.assertTrue(entry.get("sha256"))
 
+        # GSR CSV should exist with at least one sample
+        gsr_csv = session_dir / "android-test_gsr.csv"
+        self.assertTrue(gsr_csv.exists())
+        rows = gsr_csv.read_text().strip().splitlines()
+        self.assertGreaterEqual(len(rows), 2)
+
+        # Events log should contain markers for session start/stop
+        events_path = session_dir / "events.jsonl"
+        self.assertTrue(events_path.exists())
+        events = [json.loads(line) for line in events_path.read_text().splitlines()]
+        codes = {event["code"] for event in events}
+        self.assertIn("session_started", codes)
+        self.assertIn("session_stopped", codes)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
-import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
-import com.mpdc4gsr.libunified.app.event.DeviceEventManager
+import com.mpdc4gsr.component.shared.app.config.DeviceConfig.isTcTsDevice
+import com.mpdc4gsr.component.shared.app.event.DeviceEventManager
 import mpdc4gsr.core.common.AppLogger
 
 class ThermalUsbReceiver : BroadcastReceiver() {
@@ -113,3 +113,5 @@ class ThermalUsbReceiver : BroadcastReceiver() {
         }
     }
 }
+
+

@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.common.AppLogger
@@ -56,7 +56,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
         super.onCreate(savedInstanceState)
         initializeTestComponents()
         setContent {
-            LibUnifiedTheme {
+            LibSharedTheme {
                 ThermalCameraDisconnectionTestScreen()
             }
         }
@@ -556,4 +556,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
         return String.format("%02d:%02d:%02d", hours, minutes, secs)
     }
 }
+
+
+
 

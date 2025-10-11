@@ -1,0 +1,12 @@
+[run]
+source = pc-controller
+omit =
+    pc-controller/tests/*
+    pc-controller/gui_app.py
+    pc-controller/command_client.py
+    pc-controller/run_unified_controller.py
+    pc-controller/setup.py
+
+[report]
+show_missing = True
+skip_covered = False

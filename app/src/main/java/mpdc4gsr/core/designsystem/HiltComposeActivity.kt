@@ -9,10 +9,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.lifecycleScope
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.event.DeviceEventManager
-import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
-import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
+import com.mpdc4gsr.component.shared.app.event.DeviceEventManager
+import com.mpdc4gsr.component.shared.app.tools.AppLanguageUtils
+import com.mpdc4gsr.component.shared.app.tools.ConstantLanguages
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -35,7 +35,7 @@ abstract class HiltComposeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            LibUnifiedTheme {
+            LibSharedTheme {
                 Content()
                 HandleConnectionEvents()
             }
@@ -72,3 +72,6 @@ abstract class HiltComposeActivity : ComponentActivity() {
         }
     }
 }
+
+
+

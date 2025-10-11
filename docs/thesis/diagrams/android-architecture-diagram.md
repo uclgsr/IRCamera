@@ -40,8 +40,8 @@ graph TB
     end
     
     subgraph "Unified Core Libraries"
-        LibUnified[libunified Module<br/>7 activities, 69 layouts<br/>Core Functionality<br/>UI Components]
-        ComponentThermal[thermalunified Module<br/>93 activities, 103 layouts<br/>Complete Thermal System<br/>Image Processing]
+        ComponentShared[component/shared Module<br/>7 activities, 69 layouts<br/>Core Functionality<br/>UI Components]
+        ComponentThermal[component/thermal Module<br/>93 activities, 103 layouts<br/>Complete Thermal System<br/>Image Processing]
         ComponentUser[user Module<br/>18 activities, 18 layouts<br/>User Management<br/>Authentication System]
         AppModule[app Module<br/>92 activities, 31 layouts<br/>Core Infrastructure<br/>Main Controllers]
     end
@@ -77,11 +77,11 @@ graph TB
     SyncService --> ProtocolHandler
     
     %% Library Dependencies
-    ThermalManager --> LibUnified
+    ThermalManager --> ComponentShared
     ThermalManager --> BLETopdon
     GSRManager --> BLECore
     GSRManager --> BLEShimmer
-    USBManager --> LibUnified
+    USBManager --> ComponentShared
     BLEManager --> BLECore
     
     %% Quality and Monitoring
@@ -233,7 +233,7 @@ app/
 ```kotlin
 // app/build.gradle.kts
 dependencies {
-    implementation(project(":libunified"))
+    implementation(project(":component:shared"))
     implementation(project(":ble-core"))
     implementation(project(":ble-shimmer"))
     implementation(project(":ble-topdon"))
@@ -306,6 +306,7 @@ graph TB
 This architecture provides a clean separation of concerns with well-defined interfaces between
 layers, enabling maintainable and testable code while supporting the complex multi-sensor
 coordination requirements of the research platform.
+
 
 
 

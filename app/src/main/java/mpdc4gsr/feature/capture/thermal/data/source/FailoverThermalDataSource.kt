@@ -6,8 +6,8 @@ import mpdc4gsr.feature.capture.thermal.data.DeviceInfo
 import mpdc4gsr.feature.capture.thermal.data.MeasurementArea
 import mpdc4gsr.feature.capture.thermal.data.MeasurementResult
 import mpdc4gsr.feature.capture.thermal.data.ThermalCalibrationData
-import com.mpdc4gsr.libunified.ir.extension.AgcMode
-import com.mpdc4gsr.libunified.ir.extension.ColorPalette
+import com.mpdc4gsr.component.shared.ir.extension.AgcMode
+import com.mpdc4gsr.component.shared.ir.extension.ColorPalette
 import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
@@ -127,3 +127,5 @@ class FailoverThermalDataSource(
         private const val TAG = "FailoverThermalDataSource"
     }
 }
+
+

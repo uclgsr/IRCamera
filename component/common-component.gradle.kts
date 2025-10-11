@@ -30,7 +30,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":libunified"))
+    implementation(project(":component:shared"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

@@ -16,7 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.designsystem.AppError
 import mpdc4gsr.core.designsystem.ConnectionState
@@ -34,7 +34,7 @@ class SensorDashboardComposeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         dashboardViewModel = viewModels<MainActivityViewModel>().value
         setContent {
-            LibUnifiedTheme {
+            LibSharedTheme {
                 Content(dashboardViewModel)
             }
         }
@@ -357,3 +357,6 @@ class SensorDashboardComposeActivity : ComponentActivity() {
             100f + (kotlin.random.Random.nextFloat() - 0.5f) * 40f
         }
 }
+
+
+

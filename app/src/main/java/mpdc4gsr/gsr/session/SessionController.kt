@@ -210,4 +210,5 @@ sealed interface SessionCommand {
     data class ApplyDeviceSnapshot(val snapshot: List<DeviceDescriptor>) : SessionCommand
     data class UpdateRecorderState(val kind: RecorderKind, val state: RecorderState) : SessionCommand
     data class AppendFault(val fault: SessionFault) : SessionCommand
+    data class SetSimulationMode(val enabled: Boolean) : SessionCommand
 }

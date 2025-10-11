@@ -608,6 +608,15 @@ class PCControllerCore:
             manager.enable_simulation_mode()
         return manager
 
+    @staticmethod
+    def _extract_field(message: Dict[str, Any], key: str, default: Any = None) -> Any:
+        if key in message:
+            return message.get(key, default)
+        payload = message.get("payload")
+        if isinstance(payload, dict):
+            return payload.get(key, default)
+        return default
+
     def _start_local_sensors(self) -> List[str]:
         started = list(self._sensor_manager.start_streaming())
         if not started:
@@ -1040,8 +1049,10 @@ class PCControllerCore:
             self._handle_session_event(device_id, message)
         elif msg_type == "heartbeat":
             self._touch_device(device_id)
-        elif msg_type == "event_marker":
+        elif msg_type in {"event_marker", "stimulus_marker"}:
             self._handle_event_marker(device_id, message)
+        elif msg_type == "telemetry_update":
+            self._handle_telemetry_update(message)
         elif msg_type == "file_begin":
             self._handle_file_begin(device_id, message)
         elif msg_type == "file_chunk":
@@ -1368,19 +1379,67 @@ class PCControllerCore:
                 record.session_active = event == "started"
 
     def _handle_event_marker(self, device_id: str, message: Dict[str, Any]) -> None:
-        code = message.get("code") or message.get("label") or "event"
-        timestamp = float(message.get("timestamp", time.time()))
-        info = {k: v for k, v in message.items() if k not in {"type", "code", "label", "timestamp", "device_id"}}
+        code = (
+            self._extract_field(message, "code")
+            or self._extract_field(message, "marker_id")
+            or self._extract_field(message, "label")
+            or "event"
+        )
+        ts_value = self._extract_field(message, "timestamp")
+        try:
+            timestamp = float(ts_value) if ts_value is not None else time.time()
+        except (TypeError, ValueError):
+            timestamp = time.time()
+
+        info = {
+            k: v
+            for k, v in message.items()
+            if k not in {"type", "code", "label", "timestamp", "device_id", "session_id", "payload"}
+        }
+        payload = message.get("payload")
+        if isinstance(payload, dict):
+            for key, value in payload.items():
+                info.setdefault(key, value)
+
+        session_id = self._extract_field(message, "session_id") or (self._session.session_id if self._session else None)
         marker = {"code": code, "timestamp": timestamp, "device_id": device_id, "details": info}
-        if self._session:
-            marker["session_id"] = self._session.session_id
-            self._storage.append_session_event(self._session.session_id, marker)
+        if session_id:
+            marker["session_id"] = session_id
+            self._storage.append_session_event(session_id, marker)
         self._session_events.append(marker)
         self._emit(ControllerEvent("event_marker", device_id=device_id, payload=marker))
 
+    def _handle_telemetry_update(self, message: Dict[str, Any]) -> None:
+        payload = message.get("payload")
+        if not isinstance(payload, dict):
+            return
+
+        for device_key, metrics in payload.items():
+            if not isinstance(metrics, dict):
+                continue
+
+            with self._lock:
+                record = self.devices.get(device_key)
+                if record is None:
+                    record = DeviceRecord(
+                        device_id=device_key,
+                        connection_id="telemetry",
+                        address="n/a",
+                        status="telemetry",
+                        capabilities={"telemetry_only": True},
+                    )
+                    self.devices[device_key] = record
+                record.info.update(metrics)
+                record.last_seen = time.time()
+                frame_rate = metrics.get("frame_rate")
+                if isinstance(frame_rate, (int, float)) and frame_rate:
+                    record.status = "streaming"
+
+            self._emit(ControllerEvent("telemetry_update", device_id=device_key, payload=metrics))
+
     def _handle_file_begin(self, device_id: str, message: Dict[str, Any]) -> None:
-        session_id = message.get("session_id") or (self._session.session_id if self._session else None)
-        filename = message.get("filename")
+        session_id = self._extract_field(message, "session_id") or (self._session.session_id if self._session else None)
+        filename = self._extract_field(message, "filename")
         if not session_id or not filename:
             self._emit(
                 ControllerEvent(
@@ -1392,18 +1451,34 @@ class PCControllerCore:
             return
 
         path = self._storage.begin_file(session_id, device_id, filename)
+        payload = {"session_id": session_id, "filename": filename, "path": str(path)}
+        modality = self._extract_field(message, "modality")
+        size_bytes = self._extract_field(message, "size_bytes")
+        chunk_size = self._extract_field(message, "chunk_size")
+        estimated_chunks = self._extract_field(message, "estimated_chunks")
+        mime_type = self._extract_field(message, "mime_type")
+        if modality is not None:
+            payload["modality"] = modality
+        if size_bytes is not None:
+            payload["size_bytes"] = size_bytes
+        if chunk_size is not None:
+            payload["chunk_size"] = chunk_size
+        if estimated_chunks is not None:
+            payload["estimated_chunks"] = estimated_chunks
+        if mime_type is not None:
+            payload["mime_type"] = mime_type
         self._emit(
             ControllerEvent(
                 "file_transfer_begin",
                 device_id=device_id,
-                payload={"session_id": session_id, "filename": filename, "path": str(path)},
+                payload=payload,
             )
         )
 
     def _handle_file_chunk(self, device_id: str, message: Dict[str, Any]) -> None:
-        session_id = message.get("session_id") or (self._session.session_id if self._session else None)
-        filename = message.get("filename")
-        data_b64 = message.get("data")
+        session_id = self._extract_field(message, "session_id") or (self._session.session_id if self._session else None)
+        filename = self._extract_field(message, "filename")
+        data_b64 = self._extract_field(message, "data")
 
         if not session_id or not filename or not isinstance(data_b64, str):
             self._emit(
@@ -1417,29 +1492,51 @@ class PCControllerCore:
 
         chunk = base64.b64decode(data_b64)
         self._storage.append_file_chunk(session_id, device_id, filename, chunk)
+        chunk_payload = {
+            "session_id": session_id,
+            "filename": filename,
+            "size": len(chunk),
+        }
+        chunk_index = self._extract_field(message, "chunk_index")
+        if chunk_index is not None:
+            chunk_payload["chunk_index"] = chunk_index
+        modality = self._extract_field(message, "modality")
+        if modality is not None:
+            chunk_payload["modality"] = modality
         self._emit(
             ControllerEvent(
                 "file_transfer_chunk",
                 device_id=device_id,
-                payload={"session_id": session_id, "filename": filename, "size": len(chunk)},
+                payload=chunk_payload,
             )
         )
 
     def _handle_file_end(self, device_id: str, message: Dict[str, Any]) -> None:
-        session_id = message.get("session_id") or (self._session.session_id if self._session else None)
-        filename = message.get("filename")
+        session_id = self._extract_field(message, "session_id") or (self._session.session_id if self._session else None)
+        filename = self._extract_field(message, "filename")
         if not session_id or not filename:
             return
         digest = self._storage.finalize_file(session_id, device_id, filename)
+        payload = {"session_id": session_id, "filename": filename}
+        size_bytes = self._extract_field(message, "size_bytes")
+        chunks = self._extract_field(message, "chunks")
+        modality = self._extract_field(message, "modality")
+        sha_from_message = self._extract_field(message, "sha256") or self._extract_field(message, "checksum")
+        if size_bytes is not None:
+            payload["size_bytes"] = size_bytes
+        if chunks is not None:
+            payload["chunks"] = chunks
+        if modality is not None:
+            payload["modality"] = modality
+        if digest:
+            payload["sha256"] = digest
+        elif sha_from_message:
+            payload["sha256"] = sha_from_message
         self._emit(
             ControllerEvent(
                 "file_transfer_end",
                 device_id=device_id,
-                payload={
-                    "session_id": session_id,
-                    "filename": filename,
-                    **({"sha256": digest} if digest else {}),
-                },
+                payload=payload,
             )
         )
 
@@ -1457,6 +1554,86 @@ class PCControllerCore:
         return context
 
 
+def handle_cli_command(controller: "PCControllerCore", raw: str) -> Tuple[bool, List[str]]:
+    raw = raw.strip()
+    if not raw:
+        return False, []
+
+    parts = raw.split()
+    cmd = parts[0].lower()
+    lines: List[str] = []
+
+    if cmd in {"quit", "exit"}:
+        return True, lines
+
+    if cmd == "help":
+        lines.append(
+            "Commands: help, devices, status, start, stop, flash, beep, marker <label>, simulate [on|off|toggle], quit"
+        )
+        return False, lines
+
+    if cmd == "devices":
+        for device in controller.list_devices():
+            lines.append(json.dumps(device, indent=2))
+        return False, lines
+
+    if cmd == "status":
+        session = controller.get_session()
+        if session:
+            lines.append(f"Active session: {session.session_id} (started {time.ctime(session.started_at)})")
+        else:
+            lines.append("No active session")
+        lines.append(f"Simulation: {'on' if controller.is_simulation_enabled() else 'off'}")
+        return False, lines
+
+    if cmd == "start":
+        session_id = controller.start_recording()
+        lines.append(f"Session {session_id} started")
+        return False, lines
+
+    if cmd == "stop":
+        session_id = controller.stop_recording()
+        if session_id:
+            lines.append(f"Session {session_id} stopped")
+        else:
+            lines.append("No active session to stop")
+        return False, lines
+
+    if cmd == "flash":
+        event = controller.trigger_flash_sync()
+        lines.append(f"Flash sync triggered at {event.timestamp:.2f}s")
+        return False, lines
+
+    if cmd == "beep":
+        event = controller.trigger_audio_beep()
+        lines.append(f"Audio sync beep triggered at {event.timestamp:.2f}s")
+        return False, lines
+
+    if cmd == "marker":
+        label = raw[len(parts[0]) :].strip()
+        if not label:
+            label = time.strftime("marker_%H%M%S")
+        event = controller.mark_event(label)
+        lines.append(f"Marker '{label}' recorded at {event.timestamp:.2f}s")
+        return False, lines
+
+    if cmd == "simulate":
+        arg = parts[1].lower() if len(parts) > 1 else "toggle"
+        if arg in {"on", "enable"}:
+            controller.set_simulation_mode(True)
+            lines.append("Simulation mode enabled")
+        elif arg in {"off", "disable"}:
+            controller.set_simulation_mode(False)
+            lines.append("Simulation mode disabled")
+        else:
+            state = controller.toggle_simulation_mode()
+            lines.append(f"Simulation mode {'enabled' if state else 'disabled'}")
+        return False, lines
+
+    lines.append("Unknown command. Type 'help' for options.")
+    return False, lines
+
+
 def run_cli(controller: PCControllerCore) -> None:
     """Blocking CLI loop for manual interaction."""
 
@@ -1470,81 +1647,12 @@ def run_cli(controller: PCControllerCore) -> None:
 
     try:
         while True:
-            raw = input("> ").strip()
-            if not raw:
-                continue
-            parts = raw.split()
-            cmd = parts[0].lower()
-
-            if cmd in {"quit", "exit"}:
+            raw = input("> ")
+            should_exit, output_lines = handle_cli_command(controller, raw)
+            for line in output_lines:
+                print(line)
+            if should_exit:
                 break
-
-            if cmd == "help":
-                print(
-                    "Commands: help, devices, status, start, stop, flash, beep, marker <label>, simulate [on|off|toggle], quit"
-                )
-                continue
-
-            if cmd == "devices":
-                for device in controller.list_devices():
-                    print(json.dumps(device, indent=2))
-                continue
-
-            if cmd == "status":
-                session = controller.get_session()
-                if session:
-                    print(f"Active session: {session.session_id} (started {time.ctime(session.started_at)})")
-                else:
-                    print("No active session")
-                print(f"Simulation: {'on' if controller.is_simulation_enabled() else 'off'}")
-                continue
-
-            if cmd == "start":
-                session_id = controller.start_recording()
-                print(f"Session {session_id} started")
-                continue
-
-            if cmd == "stop":
-                session_id = controller.stop_recording()
-                if session_id:
-                    print(f"Session {session_id} stopped")
-                else:
-                    print("No active session to stop")
-                continue
-
-            if cmd == "flash":
-                event = controller.trigger_flash_sync()
-                print(f"Flash sync triggered at {event.timestamp:.2f}s")
-                continue
-
-            if cmd == "beep":
-                event = controller.trigger_audio_beep()
-                print(f"Audio sync beep triggered at {event.timestamp:.2f}s")
-                continue
-
-            if cmd == "marker":
-                label = raw[len(parts[0]) :].strip()
-                if not label:
-                    label = time.strftime("marker_%H%M%S")
-                event = controller.mark_event(label)
-                print(f"Marker '{label}' recorded at {event.timestamp:.2f}s")
-                continue
-
-            if cmd == "simulate":
-                arg = parts[1].lower() if len(parts) > 1 else "toggle"
-                if arg in {"on", "enable"}:
-                    controller.set_simulation_mode(True)
-                    print("Simulation mode enabled")
-                elif arg in {"off", "disable"}:
-                    controller.set_simulation_mode(False)
-                    print("Simulation mode disabled")
-                else:
-                    state = controller.toggle_simulation_mode()
-                    print(f"Simulation mode {'enabled' if state else 'disabled'}")
-                continue
-
-            print("Unknown command. Type 'help' for options.")
-
     except KeyboardInterrupt:
         print("\nStopping controller...")
     finally:

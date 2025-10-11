@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 
-import com.mpdc4gsr.libunified.app.utils.UnifiedBleUtils;
-import com.mpdc4gsr.libunified.app.utils.UnifiedMathUtils;
+import com.mpdc4gsr.component.shared.app.utils.SharedBleUtils;
+import com.mpdc4gsr.component.shared.app.utils.SharedMathUtils;
 import com.topdon.ble.callback.RequestCallback;
 import com.topdon.ble.callback.ScanListener;
 import com.topdon.ble.util.Logger;
@@ -581,7 +581,7 @@ class ConnectionImpl implements Connection, ScanListener {
                 options.packageSize = mtu - 3;
             }
             if (value.length > options.packageSize) {
-                List<byte[]> list = UnifiedMathUtils.INSTANCE.splitPackage(value, options.packageSize);
+                List<byte[]> list = SharedMathUtils.INSTANCE.splitPackage(value, options.packageSize);
                 if (!options.isWaitWriteResult) { //，
                     int delay = options.packageWriteDelayMillis;
                     for (int i = 0; i < list.size(); i++) {
@@ -674,7 +674,7 @@ class ConnectionImpl implements Connection, ScanListener {
     }
 
     private String toHex(byte[] bytes) {
-        return UnifiedBleUtils.INSTANCE.bytesToHexString(bytes);
+        return SharedBleUtils.INSTANCE.bytesToHexString(bytes);
     }
 
     private String substringUuid(UUID uuid) {
@@ -1285,3 +1285,7 @@ class ConnectionImpl implements Connection, ScanListener {
         }
     }
 }
+
+
+
+

@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
 import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.designsystem.theme.IRCameraTheme
 import mpdc4gsr.feature.capture.gsr.presentation.GSRRawImageViewViewModel
@@ -299,3 +299,5 @@ private fun formatDate(timestamp: Long): String =
     java.text
         .SimpleDateFormat("MMM dd, yyyy HH:mm", java.util.Locale.getDefault())
         .format(java.util.Date(timestamp))
+
+

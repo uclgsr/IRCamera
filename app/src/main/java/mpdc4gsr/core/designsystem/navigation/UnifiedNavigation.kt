@@ -251,7 +251,7 @@ fun UnifiedNavHost(
                     // Use class reference instead of hard-coded string
                     val activityClass =
                         try {
-                            com.mpdc4gsr.module.thermalunified.activity.ThermalGalleryComposeActivity::class.java
+                            com.mpdc4gsr.component.thermal.activity.ThermalGalleryComposeActivity::class.java
                         } catch (e: NoClassDefFoundError) {
                             null
                         }
@@ -270,7 +270,7 @@ fun UnifiedNavHost(
                     // Use class reference instead of hard-coded string
                     val activityClass =
                         try {
-                            com.mpdc4gsr.module.thermalunified.activity.ThermalReportComposeActivity::class.java
+                            com.mpdc4gsr.component.thermal.activity.ThermalReportComposeActivity::class.java
                         } catch (e: NoClassDefFoundError) {
                             null
                         }
@@ -481,3 +481,4 @@ object NavigationHelper {
         }
     }
 }
+

@@ -188,7 +188,7 @@ All diagrams and tables have been validated against:
     - Protocol implementation matches sequence diagram
     - Command handling matches state transitions
 
-- ✓ **Components**: component/gsr-recording/, component/thermalunified/
+- ✓ **Components**: component/gsr-recording/, component/thermal/
     - ShimmerRecorder matches GSR integration
     - ThermalCameraRecorder matches TC001 integration
     - Error recovery matches state machine
@@ -275,6 +275,7 @@ These documents follow:
 **Status**: Complete and Ready for Integration  
 **Format**: Mermaid diagrams + Markdown tables  
 **Compatibility**: GitHub, VS Code, LaTeX (via image export), HTML (via mermaid.js)
+
 
 
 

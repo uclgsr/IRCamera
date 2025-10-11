@@ -4,10 +4,10 @@ import android.content.Context
 import android.net.TrafficStats
 import android.net.wifi.WifiManager
 import android.os.Process
-import com.mpdc4gsr.libunified.app.discovery.NetworkDiscoveryService
-import com.mpdc4gsr.libunified.app.messaging.ReliableMessageService
-import com.mpdc4gsr.libunified.app.security.CertificateManager
-import com.mpdc4gsr.libunified.app.sync.TimeSyncService
+import com.mpdc4gsr.component.shared.app.discovery.NetworkDiscoveryService
+import com.mpdc4gsr.component.shared.app.messaging.ReliableMessageService
+import com.mpdc4gsr.component.shared.app.security.CertificateManager
+import com.mpdc4gsr.component.shared.app.sync.TimeSyncService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -878,4 +878,6 @@ class NetworkClient(private val context: Context) {
         eventListener = null
     }
 }
+
+
 

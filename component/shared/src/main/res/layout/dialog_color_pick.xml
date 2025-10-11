@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_corners10_solid_3b3e44"
+    android:paddingBottom="24dp">
+
+    <RelativeLayout
+        android:id="@+id/rl_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingTop="28dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:contentDescription="@null"
+            android:src="@drawable/svg_x_cc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/color_board"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/rl_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/rl_close" />
+
+    <com.mpdc4gsr.component.shared.app.view.ColorSelectView
+        android:id="@+id/color_select_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rl_close" />
+
+    <!-- [ph][ph][ph][ph]UI[ph]6[ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]，[ph][ph][ph] RecyclerView、[ph][ph][ph]View [ph]Class[ph][ph][ph][ph][ph][ph] -->
+    <View
+        android:id="@+id/view_color1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/selector_color_pick_0000ff"
+        android:elevation="5dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/view_color2"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="@id/color_select_view"
+        app:layout_constraintTop_toBottomOf="@id/color_select_view"
+        app:layout_constraintWidth_percent="0.09" />
+
+    <View
+        android:id="@+id/view_color2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/selector_color_pick_ff0000"
+        android:elevation="5dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/view_color3"
+        app:layout_constraintStart_toEndOf="@id/view_color1"
+        app:layout_constraintTop_toTopOf="@id/view_color1"
+        app:layout_constraintWidth_percent="0.09" />
+
+    <View
+        android:id="@+id/view_color3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/selector_color_pick_00ff00"
+        android:elevation="5dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/view_color4"
+        app:layout_constraintStart_toEndOf="@id/view_color2"
+        app:layout_constraintTop_toTopOf="@id/view_color1"
+        app:layout_constraintWidth_percent="0.09" />
+
+    <View
+        android:id="@+id/view_color4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/selector_color_pick_ffff00"
+        android:elevation="5dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/view_color5"
+        app:layout_constraintStart_toEndOf="@id/view_color3"
+        app:layout_constraintTop_toTopOf="@id/view_color1"
+        app:layout_constraintWidth_percent="0.09" />
+
+    <View
+        android:id="@+id/view_color5"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/selector_color_pick_000000"
+        android:elevation="5dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/view_color6"
+        app:layout_constraintStart_toEndOf="@id/view_color4"
+        app:layout_constraintTop_toTopOf="@id/view_color1"
+        app:layout_constraintWidth_percent="0.09" />
+
+    <View
+        android:id="@+id/view_color6"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/selector_color_pick_ffffff"
+        android:elevation="5dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@id/color_select_view"
+        app:layout_constraintStart_toEndOf="@id/view_color5"
+        app:layout_constraintTop_toTopOf="@id/view_color1"
+        app:layout_constraintWidth_percent="0.09" />
+
+    <TextView
+        android:id="@+id/tv_size_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/text_size"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_color1"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_size_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/text_size"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/nifty_slider_view"
+        app:layout_constraintStart_toStartOf="@id/nifty_slider_view"
+        app:layout_constraintTop_toBottomOf="@id/tv_size_title"
+        tools:visibility="visible" />
+
+    <com.mpdc4gsr.component.shared.ui.widget.seekbar.RangeSeekBar
+        android:id="@+id/nifty_slider_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toStartOf="@id/tv_nifty_right"
+        app:layout_constraintStart_toEndOf="@id/tv_nifty_left"
+        app:layout_constraintTop_toBottomOf="@id/tv_size_value" />
+
+    <TextView
+        android:id="@+id/tv_nifty_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="5dp"
+        android:text="A"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/nifty_slider_view"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_nifty_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="5dp"
+        android:text="A"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/nifty_slider_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_save"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="36dp"
+        android:background="@drawable/bg_corners05_solid_theme"
+        android:gravity="center"
+        android:text="@string/person_save"
+        android:textColor="#55272F"
+        android:textSize="16sp"
+        app:layout_constraintDimensionRatio="235:44"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nifty_slider_view"
+        app:layout_constraintWidth_percent="0.7" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

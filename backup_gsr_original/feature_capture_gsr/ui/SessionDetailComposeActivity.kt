@@ -36,8 +36,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.designsystem.AppBaseViewModel
 
@@ -64,7 +64,7 @@ class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
     @Composable
     override fun Content(viewModel: AppBaseViewModel) {
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID) ?: "Unknown"
-        LibUnifiedTheme {
+        LibSharedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -439,3 +439,6 @@ class SessionDetailViewModel : AppBaseViewModel() {
     // - Share functionality
     // - Delete confirmation
 }
+
+
+

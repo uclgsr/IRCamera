@@ -50,7 +50,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import mpdc4gsr.core.designsystem.deferAction
@@ -67,7 +67,7 @@ fun CameraDashboardScreen(
     onNavigateToGallery: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
-    LibUnifiedTheme {
+    LibSharedTheme {
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -649,3 +649,6 @@ private fun PreviewGalleryCard(
         }
     }
 }
+
+
+

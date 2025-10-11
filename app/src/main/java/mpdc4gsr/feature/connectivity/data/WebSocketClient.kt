@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.util.Base64
-import com.mpdc4gsr.libunified.app.sync.TimeSyncService
+import com.mpdc4gsr.component.shared.app.sync.TimeSyncService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -1196,4 +1196,6 @@ class WebSocketClient(private val context: Context) {
         return results
     }
 }
+
+
 

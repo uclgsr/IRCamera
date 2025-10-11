@@ -2,11 +2,11 @@ package mpdc4gsr.core.designsystem
 
 import android.content.IntentFilter
 import com.csl.irCamera.BuildConfig
-import com.mpdc4gsr.libunified.app.BaseApplication
-import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
-import com.mpdc4gsr.libunified.app.lms.LMS
-import com.mpdc4gsr.libunified.app.lms.utils.ConstantUtils
-import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtils
+import com.mpdc4gsr.component.shared.app.BaseApplication
+import com.mpdc4gsr.component.shared.app.broadcast.DeviceBroadcastReceiver
+import com.mpdc4gsr.component.shared.app.lms.LMS
+import com.mpdc4gsr.component.shared.app.lms.utils.ConstantUtils
+import com.mpdc4gsr.component.shared.app.lms.utils.LanguageUtils
 
 object InitUtils {
     fun initReceiver() {
@@ -104,3 +104,5 @@ object InitUtils {
         }
     }
 }
+
+

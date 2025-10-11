@@ -1,0 +1,24 @@
+package com.mpdc4gsr.component.shared.app.tools
+
+import android.media.MediaMetadataRetriever
+
+object VideoTools {
+    fun getLocalVideoDuration(videoPath: String): Long =
+        if (videoPath.uppercase().endsWith(".MP4") ||
+            videoPath
+                .uppercase()
+                .endsWith(".AVI")
+        ) {
+            try {
+                val mmr = MediaMetadataRetriever()
+                mmr.setDataSource(videoPath)
+                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)!!.toLong()
+            } catch (e: Exception) {
+                0
+            }
+        } else {
+            0
+        }
+}
+
+

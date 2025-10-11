@@ -62,7 +62,7 @@ figures, tables, and code snippets as specified in the requirements.
 **Source Files Referenced**:
 
 - `app/src/main/java/mpdc4gsr/feature/capture/thermal/ui/ThermalCameraRecorder.kt`
-- `libunified/src/main/java/com/mpdc4gsr/libunified/ir/camera/IRUVCTC.java`
+- `component/shared/src/main/java/com/mpdc4gsr/component/shared/ir/camera/IRUVCTC.java`
 
 **Content**:
 
@@ -289,6 +289,8 @@ professional presentation, and clear explanations suitable for inclusion in the 
 
 The documentation follows the project's coding conventions, uses Mermaid for maintainable diagrams, and is synchronized
 with the actual codebase to ensure accuracy and reproducibility.
+
+
 
 
 

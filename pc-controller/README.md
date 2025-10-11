@@ -112,6 +112,12 @@ Run the automated suite with:
 ```bash
 python -m unittest discover -s tests
 ```
+
+Generate a coverage report (uses `.coveragerc`):
+```bash
+coverage run --rcfile=../.coveragerc -m unittest discover -s tests
+coverage report -m
+```
 The tests cover protocol handling, storage integrity, the time sync service and sensor simulation behaviour.
 
 

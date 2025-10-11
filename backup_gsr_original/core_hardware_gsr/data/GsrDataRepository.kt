@@ -1,6 +1,6 @@
 package mpdc4gsr.core.hardware.gsr.data
 
-import com.mpdc4gsr.libunified.app.repository.BaseRepository
+import com.mpdc4gsr.component.shared.app.repository.BaseRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -149,3 +149,5 @@ class GsrDataRepository : BaseRepository() {
         )
     }
 }
+
+

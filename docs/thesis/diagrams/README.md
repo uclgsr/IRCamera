@@ -61,7 +61,7 @@ All code snippets are extracted from actual implementation files:
 - **GSR/Bluetooth**: `app/src/main/java/mpdc4gsr/core/hardware/gsr/GsrDeviceManager.kt`
 - **GSR Recording**: `app/src/main/java/mpdc4gsr/feature/capture/gsr/data/GSRSensorRecorder.kt`
 - **Thermal Camera**: `app/src/main/java/mpdc4gsr/feature/capture/thermal/ui/ThermalCameraRecorder.kt`
-- **Thermal USB**: `libunified/src/main/java/com/mpdc4gsr/libunified/ir/camera/IRUVCTC.java`
+- **Thermal USB**: `component/shared/src/main/java/com/mpdc4gsr/component/shared/ir/camera/IRUVCTC.java`
 - **Time Sync**: `app/src/main/java/mpdc4gsr/core/data/TimeSyncManager.kt`
 - **Network Server**: `app/src/main/java/mpdc4gsr/feature/connectivity/data/CommandServer.kt`
 - **Protocol Handler**: `app/src/main/java/mpdc4gsr/feature/connectivity/data/ProtocolHandler.kt`
@@ -295,6 +295,8 @@ These diagrams are part of the Multi-Sensor Recording System thesis and follow t
 
 For questions about diagrams or rendering issues, refer to the main project documentation or open an issue in the
 repository.
+
+
 
 
 

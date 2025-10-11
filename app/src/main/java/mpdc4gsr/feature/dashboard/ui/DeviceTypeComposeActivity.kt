@@ -45,9 +45,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.csl.irCamera.R
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import com.mpdc4gsr.libunified.app.config.RouterConfig
-import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.config.RouterConfig
+import com.mpdc4gsr.component.shared.app.navigation.NavigationManager
 import mpdc4gsr.core.designsystem.AppBaseViewModel
 import mpdc4gsr.core.designsystem.components.common.TitleBar
 import mpdc4gsr.core.designsystem.theme.IRCameraTheme
@@ -337,4 +337,6 @@ private fun DeviceTypeCard(
         }
     }
 }
+
+
 

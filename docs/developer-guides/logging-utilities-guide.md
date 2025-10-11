@@ -110,10 +110,11 @@ The following specialized loggers remain available but should consider using App
 
 - StructuredLogger: For structured file-based logging (PC-to-phone protocol)
 - NetworkLogger: For network-specific logging (can be migrated to use AppLogger)
-- CrashHandler: For uncaught exception handling (in libunified module)
+- CrashHandler: For uncaught exception handling (in component/shared module)
 
 These specialized loggers can continue to be used for their specific purposes, but new code
 should prefer AppLogger for consistency.
+
 
 
 

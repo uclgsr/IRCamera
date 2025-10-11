@@ -53,9 +53,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme
+import com.mpdc4gsr.component.shared.app.ktbase.BaseViewModel
 
 class PermissionRequestComposeActivity : BaseComposeActivity<BaseViewModel>() {
     companion object {
@@ -71,7 +71,7 @@ class PermissionRequestComposeActivity : BaseComposeActivity<BaseViewModel>() {
     override fun Content(viewModel: BaseViewModel) {
         var showEducationalDialog by remember { mutableStateOf(false) }
         var selectedPermission by remember { mutableStateOf<PermissionInfo?>(null) }
-        LibUnifiedTheme {
+        LibSharedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -590,3 +590,6 @@ private fun getOptionalPermissions() =
             false,
         ),
     )
+
+
+

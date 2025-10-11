@@ -10,9 +10,14 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
 val buildTimeStr = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
+val commandEndpoint =
+    providers.gradleProperty("COMMAND_ENDPOINT").orNull
+        ?: System.getenv("COMMAND_ENDPOINT")
+        ?: "https://127.0.0.1:8443"
 
 android {
     namespace = "com.csl.irCamera"
@@ -45,6 +50,7 @@ android {
         buildConfigField("String", "SOFT_CODE", "\"TC001_DisplaySW_IRCamera_Adr\"")
         buildConfigField("String", "APP_KEY", "\"5B2F6F1FD80844FCB6E50BCA19222E76\"")
         buildConfigField("String", "APP_SECRET", "\"A4A2EE33347A4D7885C26689515567EC\"")
+        buildConfigField("String", "COMMAND_ENDPOINT", "\"$commandEndpoint\"")
 
         manifestPlaceholders["JPUSH_PKGNAME"] = applicationId!!
         manifestPlaceholders["JPUSH_APPKEY"] = "cbd4eafc9049d751fc5a8c58"
@@ -349,8 +355,8 @@ dependencies {
     androidTestImplementation(libs.bundles.compose.test)
     implementation(libs.coil.compose)
 
-    implementation(project(":component:thermalunified"))
-    implementation(project(":libunified"))
+    implementation(project(":component:thermal"))
+    implementation(project(":component:shared"))
     implementation(project(":BleModule"))
     implementation(files("libs/main-2.2.1-release.aar"))
 

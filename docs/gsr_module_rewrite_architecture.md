@@ -84,7 +84,7 @@ Each recorder publishes state transitions to the `CaptureCoordinator`, which ens
 - Android provides a guided calibration workflow:
   - Launch from PC or device UI.
   - Captures synchronous RGB + IR frames of calibration pattern.
-  - Runs OpenCV-based solver (using `thermalunified` module) on-device or offloaded to PC.
+  - Runs OpenCV-based solver (using `component/thermal` module) on-device or offloaded to PC.
   - Stores calibration JSON in shared config accessible to analytics pipeline.
 - PC UI visualises calibration results and warns if reprojection error exceeds threshold.
 
@@ -131,7 +131,7 @@ mpdc4gsr/gsr/
     GsrModule.kt
 ```
 
-Dependencies include `external/ShimmerAndroidAPI`, `external/Shimmer-Java-Android-API`, CameraX, and the Topdon SDK via existing `thermalunified` module.
+Dependencies include `external/ShimmerAndroidAPI`, `external/Shimmer-Java-Android-API`, CameraX, and the Topdon SDK via the `component/thermal` module.
 
 ### 3.2 PC (`pc-controller/mpdc4gsr/gsr`)
 

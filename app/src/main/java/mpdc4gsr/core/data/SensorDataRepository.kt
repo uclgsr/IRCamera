@@ -1,7 +1,7 @@
 package mpdc4gsr.core.data
 
 import android.content.Context
-import com.mpdc4gsr.libunified.app.repository.BaseRepository
+import com.mpdc4gsr.component.shared.app.repository.BaseRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
@@ -145,3 +145,5 @@ class SensorDataRepository(
             firmwareVersion = null,
         )
 }
+
+

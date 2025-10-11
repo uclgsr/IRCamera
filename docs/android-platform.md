@@ -41,7 +41,7 @@ feature development.
 
 ### Thermal
 
-- Thermal capture flows through the `thermalunified` component and the feature module `feature/capture/thermal`. View models
+- Thermal capture flows through the `component/thermal` module and the feature module `feature/capture/thermal`. View models
   coordinate device warm-up, calibration, and frame delivery into the session directory.
 
 ## Network Communication
@@ -56,7 +56,7 @@ feature development.
 
 - `feature/dashboard/ui/MainComposeActivity` hosts a Compose `NavHost` and acts as the canonical launcher path.
 - Feature screens live under `feature/*/ui`, each paired with a Hilt-backed view model in `feature/*/presentation`.
-- Reusable components and theming live in `core/designsystem/`, and the shared `LibUnifiedTheme` is provided in `libunified`.
+- Reusable components and theming live in `core/designsystem/`, and the shared `LibSharedTheme` is provided in `component/shared`.
 
 ## Dependency Injection and Threading
 
@@ -80,6 +80,8 @@ feature development.
 During manual testing, ensure the `RecordingService` notification appears (indicating the server is active) and that the
 PC controller can discover the device via mDNS. Use this guide along with the implementation packages to locate code
 when adding new features or debugging sensor pipelines.
+
+
 
 
 

@@ -24,7 +24,7 @@ dependencyResolutionManagement {
         maven { url = uri("https://maven.scijava.org/content/groups/public") }
 
         flatDir {
-            dirs("libunified/libs", "app/libs", "BleModule/libs")
+            dirs("component/shared/libs", "app/libs", "BleModule/libs")
         }
     }
 }
@@ -32,7 +32,8 @@ dependencyResolutionManagement {
 rootProject.name = "MPDC4GSR"
 
 include(":app")
-include(":component:thermalunified")
-project(":component:thermalunified").projectDir = file("thermalunified")
-include(":libunified")
+include(":component:thermal")
+project(":component:thermal").projectDir = file("component/thermal")
+include(":component:shared")
+project(":component:shared").projectDir = file("component/shared")
 include(":BleModule")

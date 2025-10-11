@@ -3,7 +3,7 @@ package mpdc4gsr.core.data
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import com.mpdc4gsr.libunified.app.security.CertificateManager
+import com.mpdc4gsr.component.shared.app.security.CertificateManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -563,3 +563,5 @@ class AdvancedAuthenticationManager(
         authListener = null
     }
 }
+
+

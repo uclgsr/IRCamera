@@ -122,7 +122,7 @@ All tests depend on existing app components:
 - `mpdc4gsr.feature.capture.gsr.data.GSRSensorRecorder` - For GSR tests
 - `mpdc4gsr.feature.capture.thermal.ui.ThermalCameraRecorder` - For thermal tests
 - `mpdc4gsr.core.data.UnifiedNetworkController` - For network tests
-- `com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme` - For UI theme
+- `com.mpdc4gsr.component.shared.app.compose.theme.LibSharedTheme` - For UI theme
 
 These are already present in the app, so no additional dependencies are needed.
 
@@ -268,6 +268,9 @@ For questions or issues:
 - Check Android logcat for runtime errors
 - Refer to README.md in docs/thesis-evaluation directory
 - Consult thesis requirements document
+
+
+
 
 
 

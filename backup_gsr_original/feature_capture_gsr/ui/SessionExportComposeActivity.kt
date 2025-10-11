@@ -44,7 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.component.shared.app.compose.base.BaseComposeActivity
 import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.designsystem.theme.IRCameraTheme
 import mpdc4gsr.feature.capture.gsr.presentation.ExportDestination
@@ -510,3 +510,5 @@ private fun EmptyContent() {
         }
     }
 }
+
+
